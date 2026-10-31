@@ -8,7 +8,7 @@ paragraph merging, mathematical image insertion, or diagram replacement.
 from pathlib import Path
 from collections import Counter,defaultdict
 from io import BytesIO
-import argparse,hashlib,json,re
+import argparse,hashlib,json,re,os
 import numpy as np
 import pymupdf as fitz
 from PIL import Image,ImageDraw
@@ -19,6 +19,7 @@ import cpho_cjk_translate as cjk
 from cpho_original_style import source_characters,glyph_key
 from pdf_original_text_ops import suppress_prose
 from pdf_original_style_fonts import subset_font
+from cpho_original_latin_fonts import face as original_latin_face, verify_real_glyphs, word_gap as latin_word_gap, BUILD_ROOT as EN_REPAIR_ROOT
 import cpho_2006_original_captions as raster_captions
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -186,17 +187,17 @@ def translations(data):
     return result
 
 
-def prepare_fonts(data,texts,lang,subset_files=True):
+def prepare_fonts(data,texts,lang,subset_files=True,pages=None):
     groups=defaultdict(str)
     for page in data['pages']:
+        if pages and page['source_page']not in pages:continue
         for s in page['slots']:groups[(s['family'],s['bold'])]+=translated_text(s,texts[s['id']][lang])
     groups[('serif',False)]+='도'if lang=='ko'else'Fig.'
-    result={};cache=BASE/'fonts';cache.mkdir(parents=True,exist_ok=True)
+    result={};cache=EN_REPAIR_ROOT/'2006'/'fonts'if lang=='en'else BASE/'fonts';cache.mkdir(parents=True,exist_ok=True)
     for (family,bold),text in groups.items():
-        if lang=='en'and family=='serif'and not bold:
-            # Original Word CJK/Latin correspondence: Song (CJK prose)
-            # and the original page's Times New Roman Latin family.
-            source=Path('C:/Windows/Fonts/times.ttf');path=subset_font(source,text,cache)if subset_files else source
+        if lang=='en':
+            source=original_latin_face(2006,family,bold);verify_real_glyphs(source,text)
+            path=subset_font(source,text,cache)if subset_files else source
         else:
             name=('NotoSerifCJKkr'if family=='serif'else'NotoSansCJKkr')+('-Bold'if bold else'-Regular')+'.otf'
             path=subset_font(FONTS/name,text,cache)if subset_files else FONTS/name
@@ -210,9 +211,12 @@ def fitting(data,texts,lang,font_files,pages=None):
         if pages and page['source_page']not in pages:continue
         for s in page['slots']:
             text=translated_text(s,texts[s['id']][lang]);font=fonts[(s['family'],s['bold'])]
-            word_gap=s.get(lang+'_word_gap_adjustment',0)
+            word_gap=latin_word_gap(s,lang,2006)
             width=font.text_length(text,fontsize=s['size'])+text.count(' ')*word_gap
             available=s['right']-s['origin'][0];point=list(s['origin'])
+            if lang=='en'and not s.get('align'):
+                later=[q['origin'][0]-.3 for q in page['slots']if q['id']!=s['id']and abs(q['origin'][1]-s['origin'][1])<.3 and q['origin'][0]>s['origin'][0]+.1 and translated_text(q,texts[q['id']][lang])]
+                if later:available=min(available,min(later)-s['origin'][0])
             if s.get(lang+'_origin_dx'):
                 dx=s[lang+'_origin_dx'];point[0]+=dx;available-=dx
             if s.get('align')=='center':point[0]+=(available-width)/2
@@ -230,7 +234,7 @@ def fitting(data,texts,lang,font_files,pages=None):
 def preflight(pages=None):
     data=json.loads((BASE/'slots.json').read_text(encoding='utf8'));texts=translations(data);report=[]
     for lang in ['ko','en']:
-        fonts=prepare_fonts(data,texts,lang,False);rows=fitting(data,texts,lang,fonts,pages)
+        fonts=prepare_fonts(data,texts,lang,False,pages);rows=fitting(data,texts,lang,fonts,pages)
         for r in rows:r['lang']=lang
         report.extend(rows);print(lang,'overflows',sum(r['overflow']>.02 for r in rows),flush=True)
     target=BASE/('preflight'+(''.join('-'+str(n)for n in pages)if pages else'')+'.json')
@@ -255,7 +259,7 @@ def compose(lang,pages,allow_draft=False):
     data=json.loads((BASE/'slots.json').read_text(encoding='utf8'));texts=translations(data)
     reviewed_file=AUTHOR/'reviewed-pages.json';reviewed=json.loads(reviewed_file.read_text(encoding='utf8'))if reviewed_file.exists()else[]
     if not allow_draft and any(n not in reviewed for n in pages):raise ValueError('Unreviewed page translations; use preview mode while editing')
-    fonts=prepare_fonts(data,texts,lang);rows=fitting(data,texts,lang,fonts,pages);bad=[r for r in rows if r['overflow']>.02]
+    fonts=prepare_fonts(data,texts,lang,pages=pages);rows=fitting(data,texts,lang,fonts,pages);bad=[r for r in rows if r['overflow']>.02]
     (BASE/f'fit-{lang}.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf8')
     if bad:raise ValueError('Overflow: '+', '.join(r['id']for r in bad))
     byid={r['id']:r for r in rows};doc=fitz.open()
@@ -286,9 +290,9 @@ def compose(lang,pages,allow_draft=False):
     original=fitz.open(SOURCE)
     caption_report=raster_captions.apply(doc,original,lang,fonts[('serif',False)],pages)
     original.close()
-    folder=BASE/('preview'if allow_draft else'editions');folder.mkdir(parents=True,exist_ok=True)
+    folder=Path(os.environ.get('CPHO_EN_REPAIR_DIR',str(EN_REPAIR_ROOT/'2006'/('preview'if allow_draft else'editions'))))if lang=='en'else BASE/('preview'if allow_draft else'editions');folder.mkdir(parents=True,exist_ok=True)
     part='T'if pages==list(range(1,5))else'TS'if pages==list(range(5,21))else'pages-'+'-'.join(map(str,pages))
-    output=folder/f'CPhO_2006_{part}_{lang.upper()}.pdf';doc.save(output,garbage=4,deflate=True);doc.close()
+    output=folder/f'CPhO_2006_{part}_{lang.upper()}.pdf';doc.save(output,garbage=0,deflate=False);doc.close()
     output.with_suffix('.build.json').write_text(json.dumps({'source_sha256':SOURCE_SHA,'source_pages':pages,'fit_report':rows,'raster_caption_translation':caption_report},ensure_ascii=False,indent=2),encoding='utf8')
     print(output,flush=True);return output
 

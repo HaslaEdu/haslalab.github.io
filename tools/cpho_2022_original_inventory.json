@@ -29,12 +29,13 @@
     },
     {
       "file": "CPhO_2022_T_EN.pdf",
-      "path": "tmp/original-style-repair/2022/editions/CPhO_2022_T_EN.pdf",
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2022\\editions\\CPhO_2022_T_EN.pdf",
       "language": "en",
       "pages": 4,
-      "bytes": 1123237,
-      "sha256": "f90ba01d7ff59093949cc59b04ac382e2d039ac88fc12412c24a79577e12def2",
-      "qa": "tools/ko/cpho/2022/original/qa-en.json"
+      "bytes": 2795344,
+      "sha256": "180a67d20011a532d9904dc94c392536f8e4c1c50e018c9242601d8fb51815db",
+      "qa": "tools/ko/cpho/2022/original/qa-en-same-face.json",
+      "additional_qa": "tools/ko/cpho/2022/original/qa-en-same-face-poppler.json"
     }
   ],
   "authoring_files": [
@@ -64,14 +65,24 @@
     "tools/ko/cpho/2022/original/qa-en.json",
     "tools/ko/cpho/2022/original/qa-poppler.json",
     "tools/ko/cpho/2022/original/qa-final-identity.json",
-    "tools/ko/cpho/2022/original/source-notes.json"
+    "tools/ko/cpho/2022/original/source-notes.json",
+    "tools/cpho_original_en_face_inventory.py",
+    "tools/cpho_original_latin_fonts.py",
+    "tools/cpho_original_en_face_qa.py",
+    "tools/cpho_2022_original_inventory.json",
+    "tools/ko/cpho/2022/original/english-face-spacing.json",
+    "tools/ko/cpho/2022/original/english-face-policy.json",
+    "tools/ko/cpho/2022/original/embedded-latin-coverage.json",
+    "tools/ko/cpho/2022/original/qa-en-same-face.json",
+    "tools/ko/cpho/2022/original/qa-en-same-face-poppler.json",
+    "tools/ko/cpho/2022/original/fixed-slot-fit-en-same-face.json"
   ],
   "typography": {
     "source_body": "Song/SimSun 10.56 pt Tr0; source Latin counterpart Times New Roman",
     "source_heading": "Hei 15.96 pt; date12 pt; original Latin counterpart Calibri",
     "source_footer": "9 pt",
     "korean": "Official Noto Serif CJK KR Regular400 for Song, Noto Sans CJK KR Regular400 for Hei. Actual source font size and baseline retained.",
-    "english": "Times New Roman and Calibri, matching original document Latin font families. Actual source font size and baseline retained.",
+    "english": "Body: installed original SimSun. Source SimHei title/date has no complete embedded or installed same-face font; Calibri400 is the original actual same-run Latin counterpart.",
     "placement": "Prose slots between native math glyphs, at original baselines. Same-line ordinary score/figure-reference/Carnot-process/X-ray language groups are explicitly listed. ASCII inter-word gaps are recorded; one English prose start has a documented +0.65pt horizontal offset within its existing slot to keep antialiasing clear of native t. No scientific glyph is moved.",
     "raster_limits": "The original raster labels have no recoverable font/size/baseline metadata. Serif structure and same-document Song outline measurements infer nominal 10.15pt FEL,11.60pt diffraction and10.67pt crystal labels. Those inferences, rotations and language-only erasure boxes are recorded in raster-labels.json."
   },
@@ -87,5 +98,14 @@
     "tmp/original-style-repair/2022/qa/CPhO_2022_T_KO/contact-poppler.png",
     "tmp/original-style-repair/2022/qa/CPhO_2022_T_EN/contact.png",
     "tmp/original-style-repair/2022/qa/CPhO_2022_T_EN/contact-poppler.png"
-  ]
+  ],
+  "english_same_face_repair": {
+    "policy": "tools/ko/cpho/2022/original/english-face-policy.json",
+    "sha256": "180a67d20011a532d9904dc94c392536f8e4c1c50e018c9242601d8fb51815db",
+    "font_size_reduction": false,
+    "all4_mupdf_and_poppler_pages_passed": true,
+    "real_glyph_outline_failures": 0,
+    "min_effective_word_gap_pt": 0.9400001049041746,
+    "korean_pdf_unchanged": true
+  }
 }

@@ -1,0 +1,62 @@
+{
+  "source_pdf_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "official_article": "https://cpho.pku.edu.cn/info/1053/1139.htm",
+  "source_pages": {
+    "T": [
+      1,
+      2,
+      3
+    ],
+    "TS": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ]
+  },
+  "source_footer_errors_preserved": {
+    "T": "Actual 3 pages; original footer says 2 total.",
+    "TS": "Actual 11 pages; original footer says 10 total."
+  },
+  "source_scan_order_preserved": "Source solution page5 has equations9–13 above3–8; original insertion order and equations retained.",
+  "prose_recoveries": [
+    {
+      "source_page": 2,
+      "question": 6,
+      "pdf": "璃金属盘",
+      "official_doc": "薄金属盘",
+      "translation_ko": "얇은 금속 원판",
+      "translation_en": "thin metal disk",
+      "evidence": "Official Peking University problem DOC; PDF one-character corruption, parent-approved prose recovery."
+    },
+    {
+      "source_page": 2,
+      "question": 7,
+      "pdf_and_official_doc": "钒酸铱自倍频激光器",
+      "translation_ko": "바나듐산 이리듐",
+      "translation_en": "iridium vanadate",
+      "note": "Literal source material retained; no silent change to Nd:YVO4."
+    }
+  ],
+  "bitmap_style": "Font face, point size and baseline are measured estimates because scan pixels contain no typography metadata. Measurements are independent of translated-text fitting.",
+  "added_pdf_errata_or_edition_notes": false,
+  "source_equation_retypesetting": false,
+  "prose_font_policy": {
+    "native_KO": "Original serif/sans, point size, baseline and exact Tr2 effective stroke retained; official static matching Noto CJK KR400 faces only for unsupported Hangul.",
+    "native_EN": "Actual source prose-face Latin outlines and GIDs remain unchanged. Missing SimSun Latin uses installed same-face same-version5.24. Missing SimHei Latin uses original same-run Latin prose counterpart DengXian Light, officially acquired1.14 matching all four actual source1.21 numeral contours/advance/bounds exactly.",
+    "native_prose_font_resources_modified": false,
+    "english_source_actual_glyph_preservation_test": "tools/test_cpho_2013_original_fonts.py",
+    "caption_EN": "Bitmap captions have no metadata; Arial Bold is the measured appearance match for original same-picture (a)/(b) Latin glyphs, with inferred point size recorded separately.",
+    "bitmap_body_EN": "Inferred Song face; SimSun5.24 matches the native original Song family. Bitmap size/baseline remain measured estimates."
+  },
+  "scan_language_backgrounds": "Explicitly reviewed blank language-line background is classified separately from original Chinese erasure, never whitened. Original ink bounds/crop references are recorded; every native curve/number/variable protection wins inside these areas.",
+  "scan_circle_junction": "The original figure circle and Chinese label share resampled AA. Mixed original samples are preserved. A document-only witness reports9 expanded-guard deletion pixels exactly, with native actual ink0 and new language guard0; no common guard threshold is reduced.",
+  "prose_abbreviations": "Fixed native math slots require conventional concise scientific prose. In problem7 body, Ir is the elemental symbol for the source iridium; the full iridium-vanadate term remains on its original figure-label lines. No material or physical condition was changed."
+}

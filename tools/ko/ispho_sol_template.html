@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<!-- Korean solutions of ISPhO theory problems, in the look of the earlier years' Korean solutions (2024/2025):
+     running header «ISPhO … June, 2026» over a thin rule, blue problem title, serif body, bold task codes,
+     boxed final answers, page number «n/N» bottom right.  The header and the page number are CSS page-margin
+     boxes, so render with --bare (the renderer's own footer would replace them):
+         node tools/ko/render.cjs S1.html out.pdf "" --tpl tools/ko/ispho_sol_template.html --bare
+     The right-hand header text («June, 2026») is in the @page rule below: change it for another year.
+     Body: h1.title, then per task <div class="task"><p class="q"><b>A1.</b> … <span class="pt">0.2pt</span></p>
+     … solution … <div class="ans">$$…$$</div></div>.  Math: $…$, $$…$$ or \[…\]. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="KATEX/katex.min.css">
+<style>
+  /* Noto Serif KR as whole TrueType files (Google's sliced web fonts end up as Type 3 fonts in Chromium's PDF) */
+  @font-face{font-family:"Noto Serif KR";font-weight:400;src:url(https://fonts.gstatic.com/s/notoserifkr/v32/3JnoSDn90Gmq2mr3blnHaTZXbOtLJDvui3JOncjmeM52.ttf) format("truetype")}
+  @font-face{font-family:"Noto Serif KR";font-weight:700;src:url(https://fonts.gstatic.com/s/notoserifkr/v32/3JnoSDn90Gmq2mr3blnHaTZXbOtLJDvui3JOncgBf852.ttf) format("truetype")}
+  :root{--blue:#1f5fa8}
+  @page{size:A4;margin:24mm 20mm 21mm;
+    @top-left{content:"ISPhO";font:italic 10.5pt "PT Serif",serif;color:#111;vertical-align:bottom;
+      padding-bottom:1.6mm;border-bottom:.5pt solid #888;margin-bottom:6mm}
+    @top-center{content:"";vertical-align:bottom;padding-bottom:1.6mm;border-bottom:.5pt solid #888;margin-bottom:6mm}
+    @top-right{content:"June, 2026";font:italic 10.5pt "PT Serif",serif;color:#111;vertical-align:bottom;
+      padding-bottom:1.6mm;border-bottom:.5pt solid #888;margin-bottom:6mm}
+    @bottom-right{content:counter(page) "/" counter(pages);font:10.5pt "PT Serif",serif;color:#111;
+      vertical-align:top;padding-top:5mm}}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font:10.8pt/1.6 "PT Serif","Noto Serif KR",serif;color:#111;margin:0;background:#fff}
+  :lang(ko) body{font-family:"PT Serif","Noto Serif KR",serif}
+  h1.title{font:700 15.5pt/1.35 "PT Serif","Noto Serif KR",serif;color:var(--blue);text-align:center;
+    margin:1mm 0 5mm;padding-bottom:4mm;border-bottom:.6pt solid var(--blue)}
+  h2{font:700 11.5pt/1.35 "PT Serif","Noto Serif KR",serif;color:var(--blue);margin:5mm 0 2mm;break-after:avoid}
+  p{margin:0 0 2.2mm;text-align:justify;word-break:keep-all;orphans:2;widows:2}
+  .task{margin:0 0 4.5mm}
+  .task>.q{margin:0 0 2mm;padding:1.6mm 2.6mm;background:#f2f5fa;border-left:2.2pt solid var(--blue);break-after:avoid}
+  .task>.q>b:first-child{font-weight:700;margin-right:1.2mm;color:#000}
+  .pt{float:right;margin-left:3mm;font:italic 9.6pt "PT Serif",serif;color:var(--blue)}
+  .katex{font-size:1.07em}
+  .katex-display{margin:2mm 0;overflow:visible}
+  .task>p{break-after:avoid;break-inside:avoid}  /* a lead-in line stays with the equation it introduces */
+  .ans{display:table;margin:2.4mm auto 3mm;padding:.4mm 4mm;border:.8pt solid #222;break-inside:avoid}
+  .ans .katex-display{margin:1.6mm 0}
+  .ans:has(+ .note){break-after:avoid}
+  figure{margin:3mm auto;text-align:center;break-inside:avoid} figure img{max-width:100%}
+  figcaption{font-size:9.4pt;color:#333;margin-top:1mm}
+  table{border-collapse:collapse;margin:2.5mm auto;font-size:10pt;break-inside:avoid}
+  td,th{border:.6pt solid #777;padding:.8mm 2.6mm;text-align:center}
+  th{background:#f2f5fa;font-weight:700}
+  .note{font-size:9.6pt;color:#444;border-left:1.5pt solid #bbb;padding-left:2.5mm;margin:1.5mm 0 2.5mm;break-inside:avoid}
+  p .katex{white-space:nowrap}
+</style>
+</head>
+<body>
+<!-- BODY -->
+</body>
+</html>

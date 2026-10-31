@@ -1,7 +1,7 @@
 """Original-layout CPhO 2023 prose replacement, with native mathematics locked."""
 from pathlib import Path
 from collections import defaultdict,Counter
-import argparse,hashlib,json,re
+import argparse,hashlib,json,re,os
 import pymupdf as fitz
 import cpho_cjk_translate as cjk
 from pdf_original_text_ops import suppress_prose,native_form_glyphs
@@ -15,7 +15,15 @@ from pdf_original_style_audit import glyphs,key,close_origin
 ROOT=Path(__file__).resolve().parents[1]
 SOURCE=ROOT/'tmp/source-audit/CPhO_2023_T_ZH.pdf'
 OUT=ROOT/'tmp/original-style-repair/2023'
+PROOF_DIR=Path(os.environ.get('HASLA_CPHO2023_PROOF_DIR',str(OUT)))
+FONT_CACHE=Path(os.environ.get('HASLA_CPHO2023_FONT_CACHE',str(OUT/'fonts')))
 _PROSE_SYMBOL_FONT=None
+
+def proof_path(number,lang):
+    return PROOF_DIR/f'CPhO_2023_p{number}_{lang.upper()}_proof.pdf'
+
+def available_width(slot,lang):
+    return slot['right']-slot['origin'][0]+(slot.get('en_left_extension',0)if lang=='en'else 0)
 
 def prose_symbol_font():
     """Use a complete same-face font; the source subset has a blank OR glyph."""
@@ -24,7 +32,7 @@ def prose_symbol_font():
         from fontTools.ttLib import TTFont
         from fontTools.pens.boundsPen import BoundsPen
         installed=Path('C:/Windows/Fonts/simsun.ttc')
-        path=OUT/'fonts/SimSun-complete-face0.ttf';path.parent.mkdir(parents=True,exist_ok=True)
+        path=FONT_CACHE/'SimSun-complete-face0.ttf';path.parent.mkdir(parents=True,exist_ok=True)
         marker=path.with_suffix('.source-sha256')
         signature=hashlib.sha256(installed.read_bytes()).hexdigest()
         if not path.exists()or not marker.exists()or marker.read_text('ascii')!=signature:
@@ -251,17 +259,25 @@ def extract(pages):
     return data
 
 def text_runs(slot,text,lang):
-    latin=Path('C:/Windows/Fonts')/(('times'if slot['role'].startswith('serif')else'arial')+('bd'if'Bold'in slot['source_font']or slot['flags']&16 else'')+'.ttf')
+    latin=prose_symbol_font()if lang=='en'and'SimSun'in slot['source_font']else Path('C:/Windows/Fonts')/(('times'if slot['role'].startswith('serif')else'arial')+('bd'if'Bold'in slot['source_font']or slot['flags']&16 else'')+'.ttf')
+    if lang=='en'and'SimHei'in slot['source_font']:
+        # Complete same-family/same-version SimHei, recovered read-only from
+        # the signed official Microsoft font CAB; original resources stay put.
+        from cpho_official_hans_fonts import font_face
+        latin=font_face('simhei.ttf')
     runs=[]
     for char in text:
         path=prose_symbol_font()if char in '∨∝'else latin if lang=='en'or(char.isascii()and not char.isspace())else FONTS[slot['role']]
-        if slot.get('word_space')and char==' ':runs.append((path,char))
-        elif runs and runs[-1][0]==path and not(slot.get('word_space')and runs[-1][1]==' '):runs[-1]=(path,runs[-1][1]+char)
+        split_spaces=bool(slot.get('word_space')or lang=='en'and'SimSun'in slot['source_font'])
+        if split_spaces and char==' ':runs.append((path,char))
+        elif runs and runs[-1][0]==path and not(split_spaces and runs[-1][1]==' '):runs[-1]=(path,runs[-1][1]+char)
         else:runs.append((path,char))
     return runs
 
-def run_advance(slot,font,run):
+def run_advance(slot,font,run,lang=None):
+    if lang=='en'and'en_word_space'in slot and run==' ':return slot['en_word_space']
     if slot.get('word_space')and run==' ':return slot['word_space']
+    if run==' 'and lang=='en'and'SimSun'in slot['source_font']:return slot['size']*.25
     return font.text_length(run,fontsize=slot['size'])
 
 def build(data,translations,lang,resume=False):
@@ -269,7 +285,7 @@ def build(data,translations,lang,resume=False):
     engine_hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in dependencies}
     for page_data in data['pages']:
         number=page_data['number'];slots=page_data['slots'];fonts=defaultdict(str)
-        target=OUT/f'CPhO_2023_p{number}_{lang.upper()}_proof.pdf'
+        target=proof_path(number,lang);target.parent.mkdir(parents=True,exist_ok=True)
         inputs=dict(source_sha256=data['source_sha256'],engine=engine_hashes,page={k:([dict((a,b)for a,b in s.items()if not a.startswith('_'))for s in v]if k=='slots'else v)for k,v in page_data.items()},translation={s['id']:translations[s['id']][lang]for s in slots})
         fingerprint=hashlib.sha256(json.dumps(inputs,ensure_ascii=False,sort_keys=True).encode()).hexdigest()
         if resume and target.exists()and target.with_suffix('.qa.json').exists():
@@ -284,25 +300,27 @@ def build(data,translations,lang,resume=False):
             slot['_pass']=text==slot['source']
             if slot['_pass']:continue
             for path,run in text_runs(slot,text,lang):fonts[path]+=run
-        subsetted={path:subset_font(path,text,OUT/'fonts')for path,text in fonts.items()}
+        subsetted={path:subset_font(path,text,FONT_CACHE)for path,text in fonts.items()}
         selected=[c for s in slots if not s['_pass']for c in s['glyphs']if not c['c'].isspace()]
         raw,count=suppress_prose(SOURCE,number,selected);doc=fitz.open(stream=raw,filetype='pdf');page=doc[0];placements=[]
         for slot in slots:
             if slot['_pass']:continue
             text=translations[slot['id']][lang];runs=text_runs(slot,text,lang)
-            width=sum(run_advance(slot,fitz.Font(fontfile=str(subsetted[path])),run)for path,run in runs)
-            available=slot['right']-slot['origin'][0]
+            width=sum(run_advance(slot,fitz.Font(fontfile=str(subsetted[path])),run,lang)for path,run in runs)
+            available=available_width(slot,lang)
             if width>available+.02:raise ValueError(f'{slot["id"]}/{lang}: {width:.2f}pt exceeds {available:.2f}pt: {text}')
             point=slot['origin'].copy()
-            if slot['align']=='center':point[0]+=(available-width)/2
-            elif slot['align']=='right':point[0]+=available-width
+            if lang=='en':point[0]-=slot.get('en_left_extension',0)
+            align=slot.get('en_align',slot['align'])if lang=='en'else slot['align']
+            if align=='center':point[0]+=(available-width)/2
+            elif align=='right':point[0]+=available-width
             if slot.get('cell_center')or text.strip()in[',','(',')']:
                 point[0]+=(min(available,slot['rect'][2]-slot['origin'][0])-width)/2
             start=point.copy()
             for path,run in runs:
                 name='Translation'+str(list(subsetted).index(path))
                 page.insert_text(point,run,fontname=name,fontfile=str(subsetted[path]),fontsize=slot['size'],color=tuple(((slot['color']>>shift)&255)/255 for shift in [16,8,0]),render_mode=slot['render_mode'],border_width=slot['border_width']/slot['size'],miter_limit=10)
-                point[0]+=run_advance(slot,fitz.Font(fontfile=str(subsetted[path])),run)
+                point[0]+=run_advance(slot,fitz.Font(fontfile=str(subsetted[path])),run,lang)
             placements.append(dict(id=slot['id'],text=text,size=slot['size'],source_size=slot['size'],origin=start,source_origin=slot['origin'],fonts=[str(path)for path,run in runs],source_font=slot['source_font'],render_mode=slot['render_mode'],border_width=slot['border_width']))
         before_labels=Counter(key(g)for g in glyphs(page))
         labels=figure_language.apply(page,number,lang)
@@ -325,8 +343,9 @@ def build(data,translations,lang,resume=False):
                 if candidates:
                     rect=figure_language.native_prose_ink(page,candidates)
                     new_label_regions.append([rect[0]-.125,rect[1]-.125,rect[2]+.125,rect[3]+.125])
-        target=OUT/f'CPhO_2023_p{number}_{lang.upper()}_proof.pdf';doc.save(target,garbage=0,deflate=False);doc.close()
-        spec=dict(source_page=number,proof_page=1,allowed_rects=[s['allowed_rect']for s in slots]+label_spec['source_language_regions']+new_label_regions,erased_glyph_origins=[c['origin']for c in selected]+mutable,protected_glyph_origins=[p for p in page_data.get('protected_glyph_origins',[])if not any(close_origin(p,q)for q in mutable)],protected_rects=page_data.get('native_rule_rects',[]))
+        doc.save(target,garbage=0,deflate=False);doc.close()
+        body_regions=[([s['allowed_rect'][0]-s.get('en_left_extension',0),*s['allowed_rect'][1:]]if lang=='en'else s['allowed_rect'])for s in slots]
+        spec=dict(source_page=number,proof_page=1,allowed_rects=body_regions+label_spec['source_language_regions']+new_label_regions,erased_glyph_origins=[c['origin']for c in selected]+mutable,protected_glyph_origins=[p for p in page_data.get('protected_glyph_origins',[])if not any(close_origin(p,q)for q in mutable)],protected_rects=page_data.get('native_rule_rects',[]))
         report=audit(SOURCE,target,spec)
         graphics=graphics_audit(SOURCE,target,number,language_regions=[s['allowed_rect']for s in slots if s['id']=='2-8-0']+label_spec['source_language_regions'])
         if graphics['original_graphics_ink_changed_pixels']or not graphics['original_image_and_smask_programs_and_positions_identical']:

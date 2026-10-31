@@ -1,0 +1,49 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "source": "tmp/original-style-sources/CPhO_2005_Chinese_original.pdf",
+  "source_partition": {
+    "problem_pages": [
+      1,
+      2,
+      3
+    ],
+    "solution_pages": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  "translation_scope": "All native problem prose is translated into Korean and English. Scanned solutions remain a separate work in progress.",
+  "font_policy": "Original exact size, baseline, alignment and native math/figures; Korean fallback only for missing Hangul. English uses the installed same SimSun5.24 face, and title uses the clear original same-run TimesNewRoman Latin counterpart.",
+  "actual_face_evidence": "native-font-provenance.json:375 source-used SimSun CJK and30 original TimesNewRoman ASCII have exactly identical advances and contours in the selected full faces.",
+  "source_punctuation_retained": [
+    "1-22-0 original full stop after italic S",
+    "2-3-3 original semicolon after italic W"
+  ],
+  "semantic_word_order_notes": [
+    "English light/horizontal spring and smooth/fixed pulley descriptors occupy the existing blank remainder of the same original paragraph line1-17; no extra facts or lines.",
+    "The English proportional-resistivity wording uses its equivalent constant resistivity/r relation around the unchanged original native r symbols; the original rho=rho0*r equation is untouched."
+  ],
+  "original_identifier_policy": "Original 一、through七、numeral identifiers remain original native SimHei glyphs.",
+  "source_inconsistency_for_solution_provenance_only": "The source solution footer says28th, despite22nd header. Its value will be retained literally. No correction note is added to any PDF.",
+  "no_added_notes": true,
+  "no_autoshrink": true,
+  "no_paragraph_reflow": true,
+  "no_new_equation_rasterisation": true,
+  "status": {
+    "T_KO": "READY",
+    "T_EN": "READY",
+    "TS_KO": "draft",
+    "TS_EN": "draft"
+  }
+}
