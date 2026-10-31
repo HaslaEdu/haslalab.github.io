@@ -49,3 +49,40 @@ test("a Korean sitting gets each requirement in Korean, in the scheme's order, n
   assert.equal(localizeItems(graded, scheme, null), graded, "no translation: the report keeps the original words");
   assert.equal(localizeItems({ items: [graded.items[0]] }, scheme, words).items[0].what, list[0], "a mismatched list is left as graded");
 });
+
+/* IPhO 2025 T3 as printed: question headings add up to 10, but the items of C.3 (headed 1.3 pt) add up to 1.4 */
+const ipho2025T3 = {
+  headings: { "A.1": .2, "A.2": .5, "A.3": 1.2, "A.4": .8, "A.5": .5, "A.6": 1.1, "B.1": 1.1, "B.2": 1.1, "B.3": 1.1, "C.1": .4, "C.2": .7, "C.3": 1.3 },
+  extra: [.2, .2, .1, .3, .1, .1, .2, .2],
+};
+const t3Items = () => [
+  ...Object.entries(ipho2025T3.headings).filter(([id]) => id !== "C.3").map(([id, points]) => ({ id: id + ".1", points })),
+  ...ipho2025T3.extra.map((points, i) => ({ id: `C.3.${i + 1}`, points })),
+];
+
+test("a question counts at most its printed points: IPhO 2025 T3 is 10, not 10.1", async () => {
+  const { cappedSum, schemeTotal, cleanParts } = await import("./src/lab-scheme-items.js");
+  const items = t3Items(), parts = Object.entries(ipho2025T3.headings).map(([id, points]) => ({ id, points }));
+  assert.equal(schemePoints(items), 10.1, "the items as listed");
+  assert.equal(schemeTotal({ items, parts }), 10);
+  assert.equal(schemeTotal({ items, parts: [], total: 10 }), 10, "a printed total bounds the paper too");
+  assert.equal(schemeTotal({ items, parts: [] }), 10.1, "without headings the items stand");
+  const all = items.map(i => ({ ...i, got: i.points }));
+  assert.equal(cappedSum(all, parts, null, i => i.got), 10, "full marks on every item is the paper's 10, never more");
+  const c3 = all.map(i => ({ ...i, got: i.id.startsWith("C.3") ? i.points : 0 }));
+  assert.equal(cappedSum(c3, parts, null, i => i.got), 1.3, "C.3's own items earn at most its 1.3");
+  assert.equal(cappedSum([{ id: "C4.1", points: .5 }, { id: "C.31", points: .4 }], [{ id: "C.4", points: .3 }, { id: "C.3", points: .1 }]), .7,
+    "C.4 holds C4.1 (capped to .3); C.3 does not hold C.31; and a heading under half its items is a misread id, ignored");
+  assert.equal(cappedSum([{ id: "A.1.1", points: .3 }, { id: "A.2.1", points: .4 }], [{ id: "A", points: .6 }, { id: "A.1", points: .2 }]), .6, "nested headings: a problem bounds its questions");
+  assert.deepEqual(cleanParts([{ id: "C.3", points: 1.3 }, { id: "C3", points: 1 }, { id: "", points: 1 }, { id: "D", points: 0 }]), [{ id: "C.3", points: 1.3 }]);
+});
+
+test("a value's interval is kept only with both ends", () => {
+  const [a, b] = tidySchemeItems([
+    { id: "A.2.2", points: .1, type: "value", sheet: "answer", what: "Fmax", full_min: 14.6, partial: [{ min: 1 }] },
+    { id: "A.2.3", points: .1, type: "value", sheet: "answer", what: "h", full_min: 1.9, full_max: 2.1, partial: [{ min: 1.8, max: 2.2, points: .05 }] },
+  ]);
+  assert.equal(a.full_min, undefined, "a lone lower bound would read as «anything above 14.6»");
+  assert.deepEqual(a.partial, []);
+  assert.deepEqual([b.full_min, b.full_max, b.partial.length], [1.9, 2.1, 1]);
+});
