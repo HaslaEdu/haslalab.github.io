@@ -1,5 +1,5 @@
-import { DOCUMENT_ASSETS, decodeDocumentHeatmap, documentGeometry, refineDocumentEdges } from './document-model.mjs?v=6664c29c0e87';
-import { toGray, detectDocumentQuadGray, findSheetMarkersGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=6664c29c0e87';
+import { DOCUMENT_ASSETS, decodeDocumentHeatmap, documentGeometry, refineDocumentEdges } from './document-model.mjs?v=bc509c5941c5';
+import { toGray, detectDocumentQuadGray, findSheetMarkersGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=bc509c5941c5';
 
 const CACHE = 'haslalab-document-assets-' + DOCUMENT_ASSETS.version;
 let ort, session, initializing, modelFailure = null, modelRetryAt = 0, modelFailures = 0;

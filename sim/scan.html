@@ -112,7 +112,7 @@
 
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=6664c29c0e87";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=bc509c5941c5";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -346,7 +346,7 @@ async function redo(corners, m) {
   if ((shot.warpApplied ?? shot.a4WarpApplied) === false) { mode = m; paintShot(); return cornerEditor(); }
   const revision = ++shotRevision;
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
-  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: (keep.warpApplied ?? keep.a4WarpApplied) === false, pageFormat: keep.outputFormat || "auto", signal: keep.abort?.signal }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
+  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: (keep.warpApplied ?? keep.a4WarpApplied) === false, pageFormat: keep.outputFormat || "auto", signal: keep.abort?.signal, source: keep.sourceBlob }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
   catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...keep, busy: false }; }
   paintShot();
 }

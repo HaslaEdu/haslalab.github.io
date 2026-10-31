@@ -30,6 +30,10 @@ export const dpiToWidth = (dpi) => Math.round((210 / 25.4) * dpi);
 
 /* 원본을 줄여 담을 최대 변. 출력보다 넉넉해야 겹샘플링 이득이 있습니다. */
 const WORK_MAX_SIDE = 2400;
+/* The page is straightened from the photo at up to this size, not from the 2400px working copy: shrinking a 12 MP
+   photo to 2400px and then enlarging the page to 1654px wide lost about a third of the stroke sharpness. Detection,
+   the editable baseline and corner coordinates stay in the working copy's space. */
+export const SOURCE_MAX_SIDE = 4096;
 
 /**
  * 답안지에 인쇄한 마커 **중심**이 A4 지면에서 차지하는 위치 (0~1).
@@ -1127,7 +1131,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=6664c29c0e87', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=bc509c5941c5', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1143,14 +1147,14 @@ export async function detectDocumentQuad(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=6664c29c0e87', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=bc509c5941c5', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=6664c29c0e87', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=bc509c5941c5', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1253,7 +1257,7 @@ export async function encodeUpload(blob, { maxBytes = 1850000 } = {}) {
 export async function rotatePhoto(file) {
   const bmp = await loadBitmap(file);
   try {
-    const base = toCanvas(bmp), out = document.createElement('canvas');
+    const base = toCanvas(bmp, SOURCE_MAX_SIDE), out = document.createElement('canvas');   // keep the photo's detail through a turn
     out.width = base.height; out.height = base.width;
     const ctx = out.getContext('2d');
     ctx.translate(out.width, 0); ctx.rotate(Math.PI / 2); ctx.drawImage(base, 0, 0);
@@ -1332,6 +1336,15 @@ export function validatedDetectionHint(hint, width, height) {
   return { corners, method: hint.method, score: Math.min(1, hint.score), scanEligible: true, paperStatus: 'document', engine: 'matched-video-frame' };
 }
 
+/* the canvas the page is straightened from: the photo itself up to SOURCE_MAX_SIDE, or the working copy when the
+   photo is no larger than it, so that each pixel is resampled once */
+function sourceCanvas(bmp, base) {
+  const side = Math.max(bmp.width || 0, bmp.height || 0);
+  return side > Math.max(base.width, base.height) + 1 ? toCanvas(bmp, SOURCE_MAX_SIDE) : base;
+}
+const toSource = (pts, base, source) => source === base ? pts : pts.map(p => ({ x: p.x * source.width / base.width, y: p.y * source.height / base.height }));
+const shortSide = pts => Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y));
+
 /**
  * 사진 한 장을 답안지로 다듬습니다.
  *
@@ -1345,7 +1358,7 @@ export async function processShot(file, opts = {}) {
 
   say(5, '사진 읽는 중');
   const bmp = await loadBitmap(file);
-  const base = toCanvas(bmp);
+  const base = toCanvas(bmp), source = sourceCanvas(bmp, base);
   try { bmp.close?.(); } catch { /* 무시 */ }
   await breathe();
 
@@ -1367,8 +1380,9 @@ export async function processShot(file, opts = {}) {
   /* 마커로 찾았을 때만 인셋을 씁니다. 종이 테두리로 찾았다면
      그 네 점이 곧 지면 모서리이므로 인셋이 필요 없습니다. */
   const inset = method === 'marker' ? MARKER_INSET : null;
-  const rendered = warpApplied ? await renderInWorker(base, pts, mode, dpi, inset, outputFormat, opts.signal, true) : null;
-  let out = rendered ? null : warpApplied ? warp(base, pts, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  const sourcePts = toSource(pts, base, source);
+  const rendered = warpApplied ? await renderInWorker(source, sourcePts, mode, dpi, inset, outputFormat, opts.signal, source === base) : null;
+  let out = rendered ? null : warpApplied ? warp(source, sourcePts, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
   const quality = rendered?.quality || inspectDocument(out);
   await breathe();
 
@@ -1402,7 +1416,8 @@ export async function processShot(file, opts = {}) {
     baseUrl: rendered?.baseBlob ? await blobPreview(rendered.baseBlob) : base.toDataURL('image/png'), // lossless editable baseline
     baseW: base.width,
     baseH: base.height,
-    sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)),
+    sourceBlob: file,            // reprocess straightens from it again, at full resolution
+    sourceShortSide: shortSide(sourcePts),
   };
 }
 
@@ -1412,15 +1427,20 @@ export async function reprocess(baseDataUrl, corners, mode = 'color', dpi = DEFA
   const base = toCanvas(img);
   const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'a4' ? 'a4' : 'auto';
   const a4WarpApplied = warpApplied && outputFormat === 'a4';
-  const ordered = orderCorners(corners), rendered = warpApplied ? await renderInWorker(base, ordered, mode, dpi, inset, outputFormat, options.signal) : null;
-  let out = rendered ? null : warpApplied ? warp(base, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  /* options.source: the photo processShot read (its result's sourceBlob), straightened again at full resolution */
+  let source = base;
+  if (warpApplied && options.source) {
+    try { const bmp = await loadBitmap(options.source); try { source = sourceCanvas(bmp, base); } finally { try { bmp.close?.(); } catch {} } }
+    catch { source = base; }
+  }
+  const ordered = toSource(orderCorners(corners), base, source), rendered = warpApplied ? await renderInWorker(source, ordered, mode, dpi, inset, outputFormat, options.signal) : null;
+  let out = rendered ? null : warpApplied ? warp(source, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
   const quality = rendered?.quality || inspectDocument(out);
   if (warpApplied && out) out = enhance(out, mode);
   const blob = rendered?.blob || await new Promise((r) =>
     !warpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
   );
   if (!blob) throw { code: 'bad_image' };
-  const pts = orderCorners(corners);
   return { blob, previewUrl: rendered ? await blobPreview(blob) : out.toDataURL('image/jpeg', 0.94), quality, width: rendered?.width || out.width, height: rendered?.height || out.height, a4WarpApplied, warpApplied, outputFormat,
-    sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)) };
+    ...(options.source ? { sourceBlob: options.source } : {}), sourceShortSide: shortSide(ordered) };
 }

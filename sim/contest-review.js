@@ -64,7 +64,7 @@
     return qrPromise||(qrPromise=new Promise(resolve=>{const s=document.createElement('script');s.src='../vendor/qrcode/qrcode.js';s.onload=()=>resolve(window.qrcode||null);s.onerror=()=>{qrPromise=null;resolve(null);};document.head.append(s);}));
   }
   let scannerPromise;
-  const scannerLibrary=()=>scannerPromise||(scannerPromise=import('./labscan/scanner.js?v=6664c29c0e87').catch(error=>{scannerPromise=null;throw error;}));
+  const scannerLibrary=()=>scannerPromise||(scannerPromise=import('./labscan/scanner.js?v=bc509c5941c5').catch(error=>{scannerPromise=null;throw error;}));
   async function imageBlob(file){return(await scannerLibrary()).encodeUpload(file,{maxBytes:MAX_IMAGE});}
   async function filePages(file,remaining){
     if(!file||file.size>30*1024*1024)throw{code:'file_too_big'};
@@ -190,7 +190,7 @@
       const account=client.fingerprint();
       const scanner=await scannerLibrary();let scan=p.scan,source=p.source,mode=change.mode||p.mode;
       if(change.rotate){source=await scanner.rotatePhoto(source);scan=await scanner.processShot(source,{mode});}
-      else {const marker=change.marker??scan.method==='marker',corners=change.corners||scan.corners,pageFormat=change.pageFormat||scan.outputFormat||'auto';scan={...scan,...await scanner.reprocess(scan.baseUrl,corners,mode,undefined,marker?scanner.MARKER_INSET:null,{preserveOriginal:(scan.warpApplied??scan.a4WarpApplied)===false&&!change.corners,pageFormat}),corners,method:change.corners?(marker?'marker':'manual'):scan.method,autoScore:change.corners?1:scan.autoScore,...(change.corners?{cornersReliable:true,paperStatus:pageFormat==='a4'?'manual_a4':'manual',warpApplied:true,a4WarpApplied:pageFormat==='a4',outputFormat:pageFormat}:{})};}
+      else {const marker=change.marker??scan.method==='marker',corners=change.corners||scan.corners,pageFormat=change.pageFormat||scan.outputFormat||'auto';scan={...scan,...await scanner.reprocess(scan.baseUrl,corners,mode,undefined,marker?scanner.MARKER_INSET:null,{preserveOriginal:(scan.warpApplied??scan.a4WarpApplied)===false&&!change.corners,pageFormat,source:scan.sourceBlob}),corners,method:change.corners?(marker?'marker':'manual'):scan.method,autoScore:change.corners?1:scan.autoScore,...(change.corners?{cornersReliable:true,paperStatus:pageFormat==='a4'?'manual_a4':'manual',warpApplied:true,a4WarpApplied:pageFormat==='a4',outputFormat:pageFormat}:{})};}
       const blob=await scanner.encodeUpload(scan.blob,{maxBytes:MAX_IMAGE});
       if(!alive||client.fingerprint()!==account||!queue.includes(p))return;
       URL.revokeObjectURL(p.url);Object.assign(p,{blob,url:URL.createObjectURL(blob),scan,source,mode,processingFailed:false});
