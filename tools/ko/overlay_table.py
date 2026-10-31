@@ -79,6 +79,8 @@ def align(segs, idx, tr, full, cells):
             if i < n and j < k:
                 if norm(txt[i]) == etx[j]:
                     c = 0
+                elif not re.search('[가-힣]', txt[i]) and norm(txt[i]) and etx[j].startswith(norm(txt[i])):
+                    c = 0.2                                     # the start of the cell, untranslated
                 elif re.search('[가-힣]', txt[i]):
                     ii = [q for q in segs[i] if q is not None]
                     a_, b_ = tr['chars'][ii[0]][3][0], tr['chars'][ii[-1]][3][2]
@@ -187,6 +189,7 @@ def fix(src, dst, pages=None):
         drop, add, keep, seen = [], [], {}, set()
         hrules = [d['rect'] for d in page.get_drawings() if d['rect'].height < 2 and d['rect'].width > 15]
         pix = page.get_pixmap(dpi=144)
+        whites = [d['rect'] for d in page.get_drawings() if d.get('fill') and min(d['fill']) > 0.97 and d['type'] == 'f']
         for bi, m in enumerate(blocks):
             if not m.group(5):
                 continue
@@ -247,6 +250,20 @@ def fix(src, dst, pages=None):
                 for ci_, c in enumerate(cells):
                     if c[0] < (e[0].x0 + e[0].x1) / 2 < c[1]:
                         units.setdefault((rowkey(e, c), ci_), []).append(e)
+            # a cell's whole English: a further line below it the overlay box missed (words, not numbers or headers above)
+            for (rk, ci_), lst in units.items():
+                c = cells[ci_]
+                below = [h.y0 for h in hrules if min(h.x1, c[1]) - max(h.x0, c[0]) > 0.8 * (c[1] - c[0]) and h.y0 > rk + 1]
+                if rk < 0 or not below:
+                    continue
+                bot_ = min(below)
+                for e in en:
+                    cx, cy = (e[0].x0 + e[0].x1) / 2, (e[0].y0 + e[0].y1) / 2
+                    if e not in lst and c[0] < cx < c[1] and rk < cy < bot_ and bot_ - rk < 60 \
+                            and cy > max(q[0].y1 for q in lst) \
+                            and (re.search('[A-Za-z]{3,}', e[1]) or abs(e[0].x0 - min(q[0].x0 for q in lst)) < 2) \
+                            and not any(w.contains(pymupdf.Point(cx, cy)) for w in whites):   # left visible by the overlay
+                        lst.append(e)
             ukeys = sorted(units)
             if not multi and len({k[0] for k in ukeys}) > 1 and not re.search(r'[가-힣]\S* +-?\d+(\.\d+)? +\S*[가-힣]', text):
                 cy = (covered[0].y0 + covered[0].y1) / 2                   # one entry: the row its box is about
@@ -364,8 +381,8 @@ def fix(src, dst, pages=None):
                 ktxt = ''.join(chr(tr['chars'][i][0]) for i in range(ii[0], ii[-1] + 1))
                 ens = full[ci]
                 etxt = ' '.join(e[1] for e in ens)
-                if norm(ktxt) == norm(etxt):
-                    continue                                            # same in Korean: keep the original
+                if norm(ktxt) == norm(etxt) or not re.search('[가-힣]', ktxt):
+                    continue                                            # no Hangul: the original stays as it is
                 hexs = b''.join(gl[i] for i in range(ii[0], ii[-1] + 1))
                 w = tr['chars'][ii[-1]][3][2] - tr['chars'][ii[0]][3][0]
                 eb = pymupdf.Rect(ens[0][0])
@@ -373,14 +390,22 @@ def fix(src, dst, pages=None):
                     eb |= e[0]
                 c0, c1 = ucells[ci]
                 ecy = (eb.y0 + eb.y1) / 2
-                above = [h.y1 for h in hrules if min(h.x1, c1) - max(h.x0, c0) > 0.8 * (c1 - c0) and h.y1 <= ecy]   # table rules, not underlines
-                below = [h.y0 for h in hrules if min(h.x1, c1) - max(h.x0, c0) > 0.8 * (c1 - c0) and h.y0 >= ecy]
-                top = max(above) + 0.8 if above else band.y0
-                bot = min(below) - 0.8 if below else band.y1
+                above = [h.y1 for h in hrules if min(h.x1, c1) - max(h.x0, c0) > 0.97 * (c1 - c0) and h.y1 <= ecy]   # table rules, not underlines
+                below = [h.y0 for h in hrules if min(h.x1, c1) - max(h.x0, c0) > 0.97 * (c1 - c0) and h.y0 >= ecy]
+                top = max(above) + 0.05 if above else band.y0
+                bot = min(below) - 0.05 if below else band.y1
                 box = pymupdf.Rect(max(eb.x0 - 0.8, c0 + 1.2), max(eb.y0 - 0.3, top), min(eb.x1 + 0.8, c1 - 1.2), min(eb.y1 + 0.3, bot))
-                centred = abs((eb.x0 - c0) - (c1 - eb.x1)) < 8 and eb.width < 0.7 * (c1 - c0)   # English in the middle of its cell
-                lines = sorted({round(e[2]) for e in ens})
-                nb = ens[0][2] if len(lines) == 1 else ecy + 0.35 * size
+                dm = abs((eb.x0 - c0) - (c1 - eb.x1))
+                centred = dm < 4 or (dm < 8 and eb.width < 0.7 * (c1 - c0))   # the English sits in the middle of its cell
+                if eb.width > 0.95 * (c1 - c0) or len({round(e[2]) for e in ens if e[3] > 0.8 * max(q[3] for q in ens)}) > 1 and min(e[0].x0 for e in ens) - c0 < 12:
+                    centred = False                                     # running text filling the cell
+                if any(c0 < e[0].x0 and e[0].x1 <= eb.x0 + 1 and abs(e[2] - ens[0][2]) < 2 for e in en if e not in ens):
+                    centred = False                                     # it follows other text of the cell («22 (…)»)
+                # a row lower than the Korean: smaller type, centred in the row
+                zf = min(1.0, (bot - top) / (1.3 * size)) if len({round(e[2]) for e in ens if e[3] > 0.8 * max(q[3] for q in ens)}) == 1 else 1.0
+                big0 = max(e[3] for e in ens)
+                lines = sorted({round(e[2]) for e in ens if e[3] > 0.8 * big0})
+                nb = max(ens, key=lambda e: e[3])[2] if len(lines) == 1 else ecy + 0.35 * size
                 parts = [(ii[0], ii[-1])]
                 if w > c1 - c0 - 3:
                     # two lines: cut at the space nearest the middle
@@ -394,13 +419,25 @@ def fix(src, dst, pages=None):
                 out.append(b'q\n%.2f %.2f %.2f %.2f re\nh\n%.3f %.3f %.3f rg f\nQ' % (box.x0, H - box.y1, box.width, box.height, *bg))
                 for pi, (a_, b_) in enumerate(parts):
                     hx = b''.join(gl[i] for i in range(a_, b_ + 1))
-                    ww = tr['chars'][b_][3][2] - tr['chars'][a_][3][0]
-                    px = (c0 + c1) / 2 - ww / 2 if (centred or len(parts) > 1) else eb.x0
+                    ww = (tr['chars'][b_][3][2] - tr['chars'][a_][3][0]) * zf
+                    px = (c0 + c1) / 2 - ww / 2 if centred else eb.x0
+                    if px + ww > c1 - 1.5:
+                        px = max(c0 + 1.5, (c0 + c1) / 2 - ww / 2)          # does not fit where the English began
                     if ww > c1 - c0 - 1:
                         overflow = True
                         px = c0 + 1.5
-                    pb = nb if len(parts) == 1 else ecy + (-0.25 + 1.2 * pi) * size
-                    out.append(b'q\nBT\n1 0 0 1 %.2f %.3f Tm\n/%s %s Tf %s[<%s>]TJ\nET\nQ' % (px, H - pb, m.group(7), m.group(8), pre, hx))
+                    bls = sorted({round(e[2], 1) for e in ens})
+                    big = max(e[3] for e in ens)
+                    bls = sorted({round(e[2], 1) for e in ens if e[3] > 0.8 * big})
+                    bls = [b for i_, b in enumerate(bls) if i_ == 0 or b - bls[i_ - 1] > 0.8 * big]
+                    if len(parts) == 1:
+                        pb = nb if zf == 1.0 else (top + bot) / 2 + 0.36 * size * zf
+                    elif len(bls) >= 2:
+                        pb = bls[pi] if pi < len(bls) else bls[-1] + (bls[-1] - bls[-2])   # on the English lines
+                    else:
+                        pb = ecy + (-0.25 + 1.2 * pi) * size
+                    fs = m.group(8) if zf == 1.0 else b'%.2f' % (size * zf)
+                    out.append(b'q\nBT\n1 0 0 1 %.2f %.3f Tm\n/%s %s Tf %s[<%s>]TJ\nET\nQ' % (px, H - pb, m.group(7), fs, pre, hx))
             if overflow:
                 report.append((pno + 1, 'skip (text wider than its cell)', text.strip()[:50]))
                 continue
@@ -409,10 +446,11 @@ def fix(src, dst, pages=None):
                 pieces = [pymupdf.Rect(r.x0, r.y0, r.x1, min(r.y1, band.y0)), pymupdf.Rect(r.x0, max(r.y0, band.y1), r.x1, r.y1),
                           pymupdf.Rect(r.x0, max(r.y0, band.y0), min(r.x1, band.x0), min(r.y1, band.y1)),
                           pymupdf.Rect(max(r.x0, band.x1), max(r.y0, band.y0), r.x1, min(r.y1, band.y1))]
-                # inside the table, go on hiding the English of other rows this box was over
+                # inside the table, go on hiding the English words of other rows this box was over (numbers stay)
                 done_ = {id(e) for _, ci in pairs for e in full[ci]}
                 for e in en:
-                    if id(e) not in done_ and e[0].intersects(r) and band.contains(e[0]):
+                    if id(e) not in done_ and r.contains(pymupdf.Point((e[0].x0 + e[0].x1) / 2, (e[0].y0 + e[0].y1) / 2)) and band.contains(e[0]) \
+                            and abs((e[0].y0 + e[0].y1) / 2 - kbc) > 0.8 * size and re.search('[A-Za-z]{2,}', e[1]):
                         q = r & (e[0] + (-0.6, -0.4, 0.6, 0.4))
                         pieces.append(q)
                 keep[b] = b'\n \n'.join(b'q\n%.2f %.2f %.2f %.2f re\nh\n1 1 1 rg f\nQ' % (q.x0, H - q.y1, q.width, q.height)
