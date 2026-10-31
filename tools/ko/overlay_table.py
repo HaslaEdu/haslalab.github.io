@@ -100,9 +100,72 @@ def align(segs, idx, tr, full, cells):
     return pairs[::-1]
 
 
+def merge_continuations(doc, pages, report):
+    """A table entry the overlay set on two Korean lines inside one cell (the second line often only the points):
+    join the second line onto the first (one space between) and move its white boxes next to the first line's, so
+    the entry is rebuilt as a whole."""
+    for pno, page in enumerate(doc):
+        if pages and pno + 1 not in pages:
+            continue
+        ov = overlay_xref(doc, page)
+        if not ov:
+            continue
+        H = page.rect.height
+        hrules = [d['rect'] for d in page.get_drawings() if d['rect'].height < 2 and d['rect'].width > 15]
+        while True:
+            s = doc.xref_stream(ov)
+            blocks = list(BLOCK.finditer(s))
+            kor = [t for t in page.get_texttrace() if 'Batang' in t['font'] or 'kserif' in t['font']]
+            lines = []
+            for bi, m in enumerate(blocks):
+                if not m.group(5):
+                    continue
+                x, base = float(m.group(5)), H - float(m.group(6))
+                tr = [t for t in kor if abs(t['bbox'][3] - base) < 6 and abs(t['bbox'][0] - x) < 2]
+                if tr:
+                    lines.append((bi, m, pymupdf.Rect(tr[0]['bbox']), float(m.group(8))))
+            done = False
+            for i, (b1, m1, r1, z1) in enumerate(lines):
+                for b2, m2, r2, z2 in lines[i + 1:]:
+                    if not (0.4 * z1 < r2.y1 - r1.y1 < 1.8 * z1 and -3 < r2.x0 - r1.x0 < 60 and m1.group(7) == m2.group(7)):
+                        continue
+                    ux0, ux1 = min(r1.x0, r2.x0), max(r1.x1, r2.x1)
+                    span = lambda h: min(h.x1, ux1) - max(h.x0, ux0) > 0.5 * (min(r1.width, r2.width))
+                    if any(span(h) and r1.y1 - 1 < (h.y0 + h.y1) / 2 < r2.y0 + 1 for h in hrules):
+                        continue                                    # a rule between them: two rows
+                    ab = [h.y1 for h in hrules if span(h) and h.y1 <= r1.y0 + 1]
+                    be = [h.y0 for h in hrules if span(h) and h.y0 >= r2.y1 - 1]
+                    if not ab or not be or min(be) - max(ab) > 4.5 * z1:
+                        continue                                    # not a table cell
+                    # the boxes painted for line 2
+                    bx = []
+                    j = b2 - 1
+                    while j >= 0 and blocks[j].group(1):
+                        bx.append(blocks[j])
+                        j -= 1
+                    joined = m1.group(10) + b'0005' + m2.group(10)
+                    new1 = s[m1.start():m1.start(10)] + joined + s[m1.end(10):m1.end()]
+                    cuts = sorted([(m2.start(), m2.end(), b'')] + [(q.start(), q.end(), b'') for q in bx], key=lambda c: -c[0])
+                    t = s
+                    for a, b, n in cuts:
+                        t = t[:a] + n + t[b:]
+                    # line 1 sits before line 2 and its boxes, so its offsets are unchanged
+                    run = b''.join(q.group(0) + b'\n \n' for q in reversed(bx))
+                    t = t[:m1.start()] + run + new1 + t[m1.end():]
+                    doc.update_stream(ov, t)
+                    report.append((pno + 1, 'joined', '%r + %r' % (round(r1.y0), round(r2.y0))))
+                    done = True
+                    break
+                if done:
+                    break
+            if not done:
+                break
+
+
 def fix(src, dst, pages=None):
     doc = pymupdf.open(src)
     report = []
+    merge_continuations(doc, pages, report)
     for pno, page in enumerate(doc):
         if pages and pno + 1 not in pages:
             continue
@@ -219,9 +282,11 @@ def fix(src, dst, pages=None):
                     else:
                         words[-1].append(i)
                 cur2 = []
-                for w in words:
-                    wt = ''.join(chr(tr['chars'][i][0]) for i in w)
-                    isnum = re.fullmatch(r'-?\d+(\.\d+)?', wt) and depth == 0
+                wts = [''.join(chr(tr['chars'][i][0]) for i in w) for w in words]
+                for wi, w in enumerate(words):
+                    wt = wts[wi]
+                    nxt = wts[wi + 1] if wi + 1 < len(wts) else None
+                    isnum = re.fullmatch(r'-?\d+(\.\d+)?', wt) and depth == 0 and (nxt is None or re.search('[가-힣]', nxt))
                     depth += wt.count('(') - wt.count(')')
                     if isnum:
                         if cur2:
