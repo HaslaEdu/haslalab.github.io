@@ -1102,7 +1102,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=704dbf3dc456"></script>
+<script src="site-catalogue.js?v=49ff5ca24302"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=cd4ce07f5176"></script>
@@ -4547,9 +4547,11 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
   const ex=y.problems.filter(p=>/^E\d+$/.test(p.id)).sort((a,b)=>a.id.localeCompare(b.id,"en",{numeric:true}));
   if(ex.length!==t.x.length) continue;
   /* xk: the experiment's Korean problem, cut from the translated booklet (theory_ko.json) */
-  ex.forEach((p,i)=>{ const c=(t.c||{})[String(t.x[i])], k=(t.xk||{})[String(t.x[i])]; p.no=t.x[i];
-    const en=c?c.paper:(p.files.pdf||{}).en;
-    if(c||k) p.files={...p.files,pdf:{...(en?{en}:{}),...(k?{ko:PDF_BASE+k}:{})},...(c&&c.sol?{sol:c.sol}:{})}; }); }
+  ex.forEach((p,i)=>{ const c=(t.c||{})[String(t.x[i])], k=(t.xk||{})[String(t.x[i])], ks=(t.xs||{})[String(t.x[i])]; p.no=t.x[i];
+    const en=c?c.paper:(p.files.pdf||{}).en, sol=c&&c.sol?c.sol:p.files.sol;
+    if(c||k) p.files={...p.files,pdf:{...(en?{en}:{}),...(k?{ko:PDF_BASE+k}:{})},...(sol?{sol}:{})};
+    /* xs: the experiment's Korean solution */
+    if(ks) p.files.sol={ko:PDF_BASE+ks, en:typeof p.files.sol==="string"?p.files.sol:((p.files.sol||{}).en||"")}; }); }
 
 }
 hydrateCatalogue();

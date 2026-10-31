@@ -200,6 +200,8 @@ def korean(out, bad):
                 if re.match(r'^T\d+$', part) and int(part[1:]) in t.get('x', []):
                     if ko.get('paper'):
                         t.setdefault('xk', {})[part[1:]] = ko['paper']
+                    if ko.get('sol'):
+                        t.setdefault('xs', {})[part[1:]] = ko['sol']     # and its Korean solution (xs)
                     continue
                 if part == rev_at and rev:
                     ko['rev'] = rev
@@ -245,9 +247,11 @@ def split(out):
         t['x'] = e['exp']
         t['c'] = {k: {'paper': 'pdfx/nbpho/' + e['paper'][k], **({'sol': 'pdfx/nbpho/' + e['sol'][k]} if k in e['sol'] else {})}
                   for k in e['paper']}
+        whole = t['f'].get('T', {})
         for k, v in t['c'].items():
             if int(k) not in e['exp']:
-                t['f']['T' + k] = dict(v)
+                # a year whose solutions could not be cut per problem (2024, 2026) opens the whole solution booklet
+                t['f']['T' + k] = dict(v) if 'sol' in v or 'sol' not in whole else dict(v, sol=whole['sol'])
 
 
 def main():
