@@ -173,6 +173,8 @@
     if (!e) return '';
     const en = lang === 'en', r = e.record, awards = names[en?'en':'ko'];
     const reference=e.reference,shownMedal=e.medal||reference?.medal;
+    // The gap to the best score is shown only within the gold range, where it is meaningful.
+    const showBest=finite(e.best)&&shownMedal==='gold';
     const scopeName=r.scope==='theory'?(en?'Theory':'이론'):r.scope==='experiment'?(en?'Experiment':'실험'):(en?'Round':'라운드');
     const population = r.population === 'team' ? (en?'teams':'팀') : (en?'contestants':'명');
     const title = label(r.label,lang) || r.scope;
@@ -218,8 +220,8 @@
       ${e.n?`<div class="hlcr-result-line"><div class="hlcr-rank"><span>${esc(rankTitle)}</span> <strong>${e.rank==null?'—':`${en?'':e.tied?'공동 ':''}${e.rank}${en?'':'위'}`}</strong>${en&&e.tied?'<small>tied</small>':''}</div>
         ${e.rank!=null?`<span class="hlcr-context">${esc(context)}</span>`:''}
         ${e.top_pct==null?'':`<span class="hlcr-history-top">${en?'Top':'상위'} ${fmt(Math.round(e.top_pct*10)/10)}%</span>`}</div>`:''}
-      ${finite(e.best)?`<p class="hlcr-best" data-best="${esc(e.best)}"><span>${esc(component?(en?`Best ${scopeName.toLowerCase()} score`:`${scopeName} 1위 점수`):(en?'Best score':'1위 점수'))}</span> <b>${fmt(e.best)}${finite(r.max)?` / ${fmt(r.max)}`:''}</b> <small>${e.score+EPS>=e.best?(en?'· at or above the best':'· 1위 점수 이상'):(en?`· ${fmt(Math.round((e.best-e.score)*100)/100)} below`:`· 1위와 ${fmt(Math.round((e.best-e.score)*100)/100)}점 차이`)}</small></p>`:''}
-      ${!e.n?`<p class="hlcr-caption">${finite(e.best)||cutEntries.length?(en?`No public ranking · compared with ${[cutEntries.length?'the award thresholds':'',finite(e.best)?'the best score':''].filter(Boolean).join(' and ')}`:`순위표 미공개 · ${cutEntries.length&&finite(e.best)?'메달 컷과 1위 점수로':cutEntries.length?'메달 컷으로':'1위 점수로'} 비교`):(en?'Historical rank data unavailable':'순위 비교 자료 미확보')}</p>`:''}
+      ${showBest?`<p class="hlcr-best" data-best="${esc(e.best)}"><span>${esc(component?(en?`Best ${scopeName.toLowerCase()} score`:`${scopeName} 1위 점수`):(en?'Best score':'1위 점수'))}</span> <b>${fmt(e.best)}${finite(r.max)?` / ${fmt(r.max)}`:''}</b> <small>${e.score+EPS>=e.best?(en?'· at or above the best':'· 1위 점수 이상'):(en?`· ${fmt(Math.round((e.best-e.score)*100)/100)} below`:`· 1위와 ${fmt(Math.round((e.best-e.score)*100)/100)}점 차이`)}</small></p>`:''}
+      ${!e.n?`<p class="hlcr-caption">${showBest||cutEntries.length?(en?`No public ranking · compared with ${[cutEntries.length?'the award thresholds':'',showBest?'the best score':''].filter(Boolean).join(' and ')}`:`순위표 미공개 · ${cutEntries.length&&showBest?'메달 컷과 1위 점수로':cutEntries.length?'메달 컷으로':'1위 점수로'} 비교`):(en?'Historical rank data unavailable':'순위 비교 자료 미확보')}</p>`:''}
       ${!e.complete&&!e.bounded&&e.n?`<p class="hlcr-caption">${e.coverage?(en?`Published scores only · full-field rank exact from ${fmt(e.coverage.floor)} points`:`공개 점수 기준 · ${fmt(e.coverage.floor)}점 이상부터 전체 순위 확정`):(en?'Published scores only · full-field rank unknown':'공개 점수 기준 · 전체 순위 미확인')}</p>`:''}
       ${e.bounded&&component?`<p class="hlcr-caption" data-full-field="true">${en?`Full-field ${scopeName.toLowerCase()} rank · every score at or above ${fmt(e.coverage.floor)} is published`:`전체 참가자 ${scopeName} 순위 · ${fmt(e.coverage.floor)}점 이상 점수는 모두 공개됨`}</p>`:''}
       ${reference?`<p class="hlcr-caption">${reference.population==='published'&&reference.fullField?(en?'Reference medal range on the full-field round ranking':`전체 참가자 ${scopeName} 순위 기준의 참고 메달권`):reference.population==='published'?(en?'Published scores only · reference medal range · may be lower in the full field':`공개 ${scopeName} 점수 기준의 참고 메달권 · 전체 기준으로는 낮아질 수 있음`):(en?'Reference medal range based on this round’s ranking':`${scopeName} 순위 기준의 참고 메달권`)}</p>`:r.scope!=='total'&&!r.awardScope?`<p class="hlcr-caption">${en?'Round score only · medal reference data unavailable':'해당 라운드만 비교 · 메달권 기준 자료 미확보'}</p>`:''}
