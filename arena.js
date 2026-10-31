@@ -407,7 +407,7 @@ function arVisionProvider(root, fallback = "gemini") {
   const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
 }
 function arVisionAvailable(source, provider) { return arVisionCapabilities(source).some(row=>row.id===provider&&row.available); }
-const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=7a972b90a395").catch(error => { arScanner = null; throw error; }));
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=5c3425ad59a1").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
@@ -466,9 +466,9 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     const token=generation,keep=photo;keep.preparing=true;paint();
     try {
       const scanner=await arLoadScanner();if(!current(token))return;
-      const edit=await scanner.editCorners(keep.result.baseUrl,keep.result.corners,{marker:keep.result.method==="marker",lang,pageFormat:keep.result.outputFormat||"auto",signal:keep.abort.signal});
+      const edit=await scanner.editCorners(keep.result.baseUrl,keep.result.corners,{marker:keep.result.method==="marker",lang,pageFormat:keep.result.outputFormat||"a4",signal:keep.abort.signal});
       if(!current(token)||!edit)return;
-      const result=await scanner.reprocess(keep.result.baseUrl,edit.corners,"color",undefined,edit.marker?scanner.MARKER_INSET:null,{preserveOriginal:false,pageFormat:edit.pageFormat||"auto",signal:keep.abort.signal});
+      const result=await scanner.reprocess(keep.result.baseUrl,edit.corners,"clean",undefined,edit.marker?scanner.MARKER_INSET:null,{preserveOriginal:false,pageFormat:edit.pageFormat||"a4",signal:keep.abort.signal,source:keep.result.sourceBlob});
       if(!current(token))return;
       if(keep.cleanUrl){URL.revokeObjectURL(keep.cleanUrl);urls.delete(keep.cleanUrl);}
       keep.result={...keep.result,...result,corners:edit.corners,cornersReliable:true,method:edit.marker?"marker":"manual",autoScore:1};
@@ -535,7 +535,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     try {
       const scanner = await arLoadScanner(); if (!current(token)) return;
       if (!scanner.canProcess()) { photo.warning = T.scanUnavailable; return; }
-      const result = await scanner.processShot(file, { mode: "color",signal:photo.abort.signal });
+      const result = await scanner.processShot(file, { mode: "clean",signal:photo.abort.signal });
       if (!current(token)) return;
       photo.result = result;
       if((result.warpApplied??result.a4WarpApplied)!==false){photo.clean=result.blob;photo.cleanUrl=imageUrl(result.blob);photo.selected="clean";}
@@ -1393,7 +1393,7 @@ async function arLabOne(root, alive, id,preloaded) {
         : x.status === "pending" ? `<div class="cmnote">${L.why[x.why] || L.st.pending}</div>` : x.status === "error" ? `<div class="cmnote">${L.err}</div>`
         : x.status === "empty" ? `<div class="cmnote">${L.empty}</div>` : `<div class="cmnote">${L.st[s.status] || ""}</div>`;
       return `<div class="arpanel"><h3>${esc(t)} ${x.status ? "· " + (L.st[x.status] || "") : ""} ${sol ? `<a style="float:right;font-weight:500;font-size:13px" href="${esc(sol)}" target="_blank" rel="noopener">${L.sol} ↗</a>` : ""}</h3>${body}</div>`; }).join("")}
-    ${s.regulation ? `<div class="arpanel"><details><summary style="cursor:pointer;font-weight:700">${L.regH} <span style="font-weight:400;color:var(--graphite)">${esc(s.regulation.version)}</span></summary>
+    ${s.regulation ? `<div class="arpanel"><details><summary style="cursor:pointer;font-weight:700">${L.regH} <span style="font-weight:400;color:var(--graphite)">${s.regulation.title ? esc(lang === "en" ? s.regulation.title.en : s.regulation.title.ko) + " · " : ""}${esc(s.regulation.version)}</span></summary>
       <p class="arempty" style="margin:8px 0">${L.regNote}</p><ol class="arreg">${s.regulation.rules.map((r) => `<li><b>${esc(r.id)}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details></div>` : ""}
     <div class="arpanel"><h3>${L.pages} · ${s.pages.length}</h3>${s.pages.map((p) => `<details class="arsub"><summary><b>${esc(p.task)}</b> ${p.kind === "answer" ? L.answer : L.working} #${p.no}${p.edited ? " ✎" : ""}</summary>
       ${p.ocr_status==="failed"?`<p class="arinfo bad">${esc(arVisionError(p.ocr_error||p.read?.ocr?.error)||(lang==="en"?"Reading failed. Contact the operator if it continues.":"판독에 실패했습니다. 계속 실패하면 운영자에게 알려 주세요."))}</p>`:""}

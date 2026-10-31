@@ -30,6 +30,14 @@ export const dpiToWidth = (dpi) => Math.round((210 / 25.4) * dpi);
 
 /* 원본을 줄여 담을 최대 변. 출력보다 넉넉해야 겹샘플링 이득이 있습니다. */
 const WORK_MAX_SIDE = 2400;
+/* The page is straightened from the photo at up to this size, not from the 2400px working copy: shrinking a 12 MP
+   photo to 2400px and then enlarging the page to 1654px wide lost about a third of the stroke sharpness. Detection,
+   the editable baseline and corner coordinates stay in the working copy's space. */
+export const SOURCE_MAX_SIDE = 4096;
+/* corners are found on a copy at most this large (about three times faster than on the working copy); the page is
+   cut out of the decoded photo and resampled so that its short side is at most PAGE_SOURCE_SIDE (1.45 × the 1654px
+   output) before it is straightened in the worker */
+const DETECT_MAX_SIDE = 1280, PAGE_SOURCE_SIDE = 2400;
 
 /**
  * 답안지에 인쇄한 마커 **중심**이 A4 지면에서 차지하는 위치 (0~1).
@@ -466,13 +474,16 @@ function assessedDocument(result, W, H) {
   return { ...result, paperStatus: paperAssessment.status, paperAssessment,
     autoCaptureEligible: result.autoCaptureEligible === true && paperAssessment.status === 'a4_candidate' };
 }
-function pageEvidence(corners, g, w, h, refine = false) {
+/* a page that wins by itself covers at least PAGE_COVER of the frame; a sheet found lying inside a larger
+   rectangle (paperOnDesk) may be as small as SHEET_COVER */
+const PAGE_COVER = .095, SHEET_COVER = .04;
+function pageEvidence(corners, g, w, h, refine = false, minCover = PAGE_COVER) {
   if (!corners || corners.some(p => !p || !Number.isFinite(p.x + p.y))) return null;
   const q = orderCorners(corners), poly = [q[0], q[1], q[3], q[2]], margin = Math.max(1.5, Math.min(w, h) * .007);
   if (quadScore(q, w, h) < .18 || q.some(p => p.x < margin || p.y < margin || p.x > w - 1 - margin || p.y > h - 1 - margin)) return null;
   let area = 0; for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
   area = Math.abs(area) / 2; const cover = area / (w * h);
-  if (cover < .095 || cover > .94) return null;
+  if (cover < minCover || cover > .94) return null;
   const lengths = poly.map((p, i) => Math.hypot(p.x - poly[(i + 1) % 4].x, p.y - poly[(i + 1) % 4].y));
   if (Math.min(...lengths) < Math.min(w, h) * .14 || Math.max(...lengths) / Math.min(...lengths) > 5) return null;
   const cx = q.reduce((s, p) => s + p.x, 0) / 4, cy = q.reduce((s, p) => s + p.y, 0) / 4;
@@ -519,13 +530,97 @@ function pageEvidence(corners, g, w, h, refine = false) {
   if (weakest < .44 || support < .64 || Math.min(...contrasts) < 4) return null;
   if (refine) {
     const fitted = lines.map((line, i) => pageIntersection(lines[(i + 3) % 4], line));
-    const improved = pageEvidence(fitted, g, w, h, false);
+    const improved = pageEvidence(fitted, g, w, h, false, minCover);
     if (improved) return improved;
   }
   const strength = Math.min(1, Math.min(...contrasts) / 18);
   const score = Math.min(.96, .34 + .32 * support + .16 * weakest + .12 * strength + .02 * Math.min(1, cover / .3));
-  return { corners: q, score, edgeSupport: support, weakestEdge: weakest, clipped: false, cover,
+  return { corners: q, score, edgeSupport: support, weakestEdge: weakest, clipped: false, cover, interior: interior[4],
     autoCaptureEligible: score >= .78 && support >= .83 && weakest >= .72 };
+}
+
+/** The width/height ratio of the rectangle a quad is the picture of, with the perspective undone
+ * (Zhang & He, "Whiteboard scanning and image enhancement", 2007: the focal length and the aspect ratio follow from
+ * the quad's two vanishing points, square pixels and the principal point at the image centre). With fewer than two
+ * vanishing points (straight on, or tilted about one axis only) the focal length is unknown; `focal` then says what
+ * to assume, and a typical phone camera's (a 26 mm equivalent lens, about 0.6 of the image diagonal) is the default.
+ * Returns the long/short ratio and whether the focal length was measured. */
+function rectify(corners, W, H, focal) {
+  if (!Array.isArray(corners) || corners.length !== 4 || corners.some(p => !p || !Number.isFinite(p.x + p.y))) return null;
+  const q = orderCorners(corners), u0 = W / 2, v0 = H / 2, diag = Math.hypot(W, H);
+  const [m1, m2, m3, m4] = q.map(p => [p.x - u0, p.y - v0, 1]);
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const d2 = dot(cross(m2, m4), m3), d3 = dot(cross(m3, m4), m2);
+  if (Math.abs(d2) < 1e-9 || Math.abs(d3) < 1e-9) return null;
+  const k2 = dot(cross(m1, m4), m3) / d2, k3 = dot(cross(m1, m4), m2) / d3;
+  const n2 = m2.map((v, i) => k2 * v - m1[i]), n3 = m3.map((v, i) => k3 * v - m1[i]);
+  /* each vanishing direction makes n's third component non-zero; f follows only when both are */
+  let f = null; const tiny = 1e-3 * Math.hypot(n2[0], n2[1]) * 1e-3 * Math.hypot(n3[0], n3[1]);
+  if (Math.abs(n2[2] * n3[2]) > tiny / (diag * diag)) { const f2 = -(n2[0] * n3[0] + n2[1] * n3[1]) / (n2[2] * n3[2]); if (f2 > 0) f = Math.sqrt(f2); }
+  const measured = f >= diag * .25 && f <= diag * 4;
+  if (!measured) f = (focal || .6) * diag;
+  const len = n => Math.sqrt((n[0] * n[0] + n[1] * n[1]) / (f * f) + n[2] * n[2]);
+  const a = len(n2), b = len(n3);
+  return a > 0 && b > 0 ? { ratio: Math.max(a, b) / Math.min(a, b), measured } : null;
+}
+export function rectifiedRatio(corners, W, H) { const r = rectify(corners, W, H); return r ? r.ratio : null; }
+/** How far the quad is from A4 once the perspective is undone. Where the focal length cannot be measured, the
+ * closest ratio over the focal lengths of phone main cameras (24–35 mm equivalent, 0.5–0.8 of the diagonal) counts. */
+export function a4RatioMiss(corners, W, H) {
+  const first = rectify(corners, W, H);
+  if (!first) return Infinity;
+  const miss = r => Math.abs(r / A4_RATIO - 1);
+  if (first.measured) return miss(first.ratio);
+  let best = Infinity;
+  for (let focal = .5; focal <= .801; focal += .05) { const r = rectify(corners, W, H, focal); if (r) best = Math.min(best, miss(r.ratio)); }
+  return best;
+}
+const a4Miss = a4RatioMiss;
+function insideQuad(p, q, slack = 0) {
+  const poly = [q[0], q[1], q[3], q[2]]; let sign = 0;
+  for (let i = 0; i < 4; i++) {
+    const a = poly[i], b = poly[(i + 1) % 4], len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    const c = ((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)) / len;
+    if (Math.abs(c) <= slack) continue;
+    if (sign && Math.sign(c) !== sign) return false;
+    sign = Math.sign(c);
+  }
+  return true;
+}
+/* the median brightness of the band inside an outer quad but outside an inner one */
+function ringBrightness(outer, inner, g, w, h) {
+  const values = [];
+  for (let i = 1; i < 12; i++) for (let j = 1; j < 12; j++) {
+    const u = i / 12, v = j / 12;
+    const p = { x: (outer[0].x * (1 - u) + outer[1].x * u) * (1 - v) + (outer[2].x * (1 - u) + outer[3].x * u) * v,
+      y: (outer[0].y * (1 - u) + outer[1].y * u) * (1 - v) + (outer[2].y * (1 - u) + outer[3].y * u) * v };
+    if (!insideQuad(p, inner, -2)) values.push(pagePixel(g, w, h, p.x, p.y));
+  }
+  if (values.length < 8) return null;
+  values.sort((a, b) => a - b); return values[values.length >> 1];
+}
+/** Paper lying on a desk: the desk is the larger rectangle, often wholly in view with edges as clear as the
+ * paper's, so the largest enclosing quad is the desk. Scanning apps judge what a quad encloses and constrain its
+ * shape (Apple Vision's aspect-ratio window; contour-and-contrast detectors); here a measured quad inside the
+ * winner replaces it when it is a sheet lying on it: clearly brighter than the band of the winner around it, or —
+ * where the two are alike in brightness — A4-shaped once the perspective is undone while the winner is not.
+ * A darker or A4-shaped printed region on a non-A4 object, and a printed frame on an A4 page, keep the outside. */
+function paperOnDesk(best, pool, g, w, h) {
+  if (!best || !pool.length) return best;
+  const outerMiss = a4Miss(best.corners, w, h);
+  let pick = null;
+  for (const c of pool) {
+    if (!c || c === best || !c.corners.every(p => insideQuad(p, best.corners, 2))) continue;
+    const share = c.cover / best.cover;
+    if (share < .12 || share > .82 || !(c.interior >= 120)) continue;
+    const ring = ringBrightness(best.corners, c.corners, g, w, h);
+    if (ring == null) continue;
+    const miss = a4Miss(c.corners, w, h), a4 = miss <= .08;
+    if (!(c.interior >= ring + 14 || a4 && outerMiss > .12 && c.interior >= ring - 4)) continue;
+    if (!pick || a4 && !pick.a4 || a4 === pick.a4 && c.cover > pick.cover) pick = { ...c, a4, onDesk: true };
+  }
+  return pick || best;
 }
 
 /** A bounded, markerless detector: both intensity polarities, closed edge regions,
@@ -568,7 +663,7 @@ export function findPageQuadGray(gray, W, H) {
         if (y === h - 1 || !mask[i + w]) edge = true; else if (!seen[i + w]) { seen[i + w] = 1; stack[sp++] = i + w; }
         if (edge) boundary.push(i);
       }
-      if (size < n * .015 || (x1 - x0) * (y1 - y0) < n * .095 || x0 <= 1 || y0 <= 1 || x1 >= w - 2 || y1 >= h - 2 || boundary.length < 4) continue;
+      if (size < n * .015 || (x1 - x0) * (y1 - y0) < n * SHEET_COVER || x0 <= 1 || y0 <= 1 || x1 >= w - 2 || y1 >= h - 2 || boundary.length < 4) continue;
       const quad = pageFour(pageHull(boundary.map(i => ({ x: i % w, y: (i / w) | 0 })))); if (quad) candidates.push(quad);
     }
   };
@@ -585,19 +680,37 @@ export function findPageQuadGray(gray, W, H) {
     regions();
   }
   const finish = best => {
-    const fitted = pageEvidence(best.corners, smooth, w, h, true) || best;
+    const fitted = pageEvidence(best.corners, smooth, w, h, true, SHEET_COVER) || best;
     // Classify only the winning outer boundary. An A4-shaped printed rectangle
     // inside a different object must never replace its real outside corners.
     return assessedDocument({ ...fitted, corners: fitted.corners.map(p => ({ x: (p.x + .5) * sx, y: (p.y + .5) * sy })), method: 'page' }, W, H);
   };
+  /* A region traced from the gradient mask sits a pixel or two inside a sheet whose surroundings are not uniform
+     (paper on a desk), beyond the coarse edge search. Refit such a candidate, but only for paperOnDesk: it never
+     competes for the outer page, so the outer choice stays exactly as it was. */
+  // At most 12 refits, and only of quads whose middle is paper-bright, so busy frames stay cheap.
+  let refits = 0;
+  const measured = [], sheetOnly = candidate => {
+    if (refits >= 12 || candidate.some(p => !p)) return;
+    const q = orderCorners(candidate), mid = [];
+    for (const u of [.3, .5, .7]) for (const v of [.3, .5, .7]) mid.push(pagePixel(smooth, w, h,
+      (q[0].x * (1 - u) + q[1].x * u) * (1 - v) + (q[2].x * (1 - u) + q[3].x * u) * v, (q[0].y * (1 - u) + q[1].y * u) * (1 - v) + (q[2].y * (1 - u) + q[3].y * u) * v));
+    mid.sort((a, b) => a - b); if (mid[4] < 120 || mid[1] < 60) return;
+    refits++; const sheet = pageEvidence(candidate, smooth, w, h, true, SHEET_COVER); if (sheet) measured.push(sheet);
+  };
   let regionBest = null;
   for (const candidate of candidates) {
-    const result = pageEvidence(candidate, smooth, w, h);
-    if (result && (!regionBest || result.cover > regionBest.cover * 1.04 || result.cover >= regionBest.cover * .96 && result.score > regionBest.score)) regionBest = result;
+    const result = pageEvidence(candidate, smooth, w, h, false, SHEET_COVER);
+    if (result) measured.push(result); else sheetOnly(candidate);
+    if (result && result.cover >= PAGE_COVER && (!regionBest || result.cover > regionBest.cover * 1.04 || result.cover >= regionBest.cover * .96 && result.score > regionBest.score)) regionBest = result;
   }
+  regionBest = paperOnDesk(regionBest, measured, smooth, w, h);
   // A closed region with four measured boundaries already supplies the outer
   // page. Avoid letting noisier Hough intersections move its corners outward.
-  if (regionBest && regionBest.score >= .85 && regionBest.weakestEdge >= .72) return finish(regionBest);
+  // A rectangle that is not A4-shaped may be the desk under the sheet; then the line search below runs as well, so
+  // that a sheet whose edges the regions missed can still be found inside it.
+  const settled = regionBest && regionBest.score >= .85 && regionBest.weakestEdge >= .72;
+  if (settled && (regionBest.onDesk || a4Miss(regionBest.corners, w, h) <= .12)) return finish(regionBest);
   // At most 10k points, 60 normal directions, 24 lines and 24 opposite-line
   // pairs: dense handwriting/noise cannot create an unbounded combinatorial pass.
   const regionCount = candidates.length;
@@ -637,20 +750,23 @@ export function findPageQuadGray(gray, W, H) {
     const poly = [q[0], q[1], q[3], q[2]]; let area = 0;
     for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
     const cover = Math.abs(area) / (2 * n);
-    if (cover < .095 || cover > .94) continue;
+    if (cover < SHEET_COVER || cover > .94) continue;
     const key = q.map(p => Math.round(p.x / 5) + ',' + Math.round(p.y / 5)).join('|');
     if (!unique.has(key)) unique.set(key, { q, cover, region: index < regionCount });
   }
   const shortlist = [...unique.values()].sort((a, b) => b.cover - a.cover).slice(0, 40);
   let best = null;
   for (const { q: candidate, region } of shortlist) {
-    const result = pageEvidence(candidate, smooth, w, h);
-    if (result && (!best || region && result.score >= .90 && !best.region && result.cover >= best.cover * .75 ||
+    const result = pageEvidence(candidate, smooth, w, h, false, SHEET_COVER);
+    if (result) measured.push(result); else sheetOnly(candidate);
+    if (result && result.cover >= PAGE_COVER && (!best || region && result.score >= .90 && !best.region && result.cover >= best.cover * .75 ||
         result.cover > best.cover * 1.06 && !(best.region && best.score >= .90 && result.cover < best.cover * 1.14) ||
         result.cover >= best.cover * .94 && result.score > best.score)) best = { ...result, region };
   }
+  // the region winner stands unless a sheet was found lying inside it
+  if (settled) return finish(paperOnDesk(regionBest, measured, smooth, w, h));
   if (!best) return none;
-  return finish(best);
+  return finish(paperOnDesk(best, measured, smooth, w, h));
 }
 
 /* ---------- 원근 보정 ---------- */
@@ -1019,7 +1135,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1029,20 +1145,29 @@ export async function detectDocumentQuad(canvas, options = {}) {
   const working = options.preview ? toCanvas(canvas, 384) : canvas;
   const proposed = detectQuad(working);
   if (working !== canvas && proposed.corners) proposed.corners = proposed.corners.map(p => ({ x: p.x * canvas.width / working.width, y: p.y * canvas.height / working.height }));
-  return { ...proposed, engine: 'manual-fallback', scanEligible: false, autoCaptureEligible: false,
-    reason: 'document_model_unavailable' };
+  return { ...proposed, engine: 'manual-fallback', scanEligible: !!proposed.corners && proposed.method !== 'frame', verified: false,
+    autoCaptureEligible: false, reason: 'document_model_unavailable' };
+}
+
+/* corners on a copy of at most DETECT_MAX_SIDE, returned in the canvas's own coordinates */
+export async function detectOnProbe(canvas, options = {}) {
+  const probe = Math.max(canvas.width, canvas.height) > DETECT_MAX_SIDE ? toCanvas(canvas, DETECT_MAX_SIDE) : canvas;
+  const d = await detectDocumentQuad(probe, options);
+  if (probe === canvas || !d?.corners) return d;
+  const sx = canvas.width / probe.width, sy = canvas.height / probe.height;
+  return { ...d, corners: d.corners.map(p => ({ x: p.x * sx, y: p.y * sy })) };
 }
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=5c3425ad59a1', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1145,7 +1270,7 @@ export async function encodeUpload(blob, { maxBytes = 1850000 } = {}) {
 export async function rotatePhoto(file) {
   const bmp = await loadBitmap(file);
   try {
-    const base = toCanvas(bmp), out = document.createElement('canvas');
+    const base = toCanvas(bmp, SOURCE_MAX_SIDE), out = document.createElement('canvas');   // keep the photo's detail through a turn
     out.width = base.height; out.height = base.width;
     const ctx = out.getContext('2d');
     ctx.translate(out.width, 0); ctx.rotate(Math.PI / 2); ctx.drawImage(base, 0, 0);
@@ -1156,7 +1281,7 @@ export async function rotatePhoto(file) {
 }
 
 /** Optional desktop/weekly corner editor. The caller still decides when to upload. */
-export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko', pageFormat = 'auto', signal } = {}) {
+export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko', pageFormat = 'a4', signal } = {}) {
   if (signal?.aborted) return null;
   const image = await loadImage(baseUrl), W = image.naturalWidth || image.width, H = image.naturalHeight || image.height;
   if (signal?.aborted) return null;
@@ -1224,6 +1349,23 @@ export function validatedDetectionHint(hint, width, height) {
   return { corners, method: hint.method, score: Math.min(1, hint.score), scanEligible: true, paperStatus: 'document', engine: 'matched-video-frame' };
 }
 
+/* the page cut out of the decoded photo for the worker: the quad's bounding box, scaled down only when the page's
+   short side exceeds PAGE_SOURCE_SIDE, with the corners moved into the piece. Null where it cannot be cut. */
+async function pagePiece(photo, cornersOnBase, base) {
+  if (typeof createImageBitmap !== 'function' || !photo || !(photo.width > 0)) return null;
+  const fx = photo.width / base.width, fy = photo.height / base.height, pts = cornersOnBase.map(p => ({ x: p.x * fx, y: p.y * fy }));
+  const pad = 4, x0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p.x)) - pad)), y0 = Math.max(0, Math.floor(Math.min(...pts.map(p => p.y)) - pad));
+  const x1 = Math.min(photo.width, Math.ceil(Math.max(...pts.map(p => p.x)) + pad)), y1 = Math.min(photo.height, Math.ceil(Math.max(...pts.map(p => p.y)) + pad));
+  if (!(x1 - x0 > 8 && y1 - y0 > 8)) return null;
+  const k = Math.min(1, PAGE_SOURCE_SIDE / Math.max(1, shortSide(orderCorners(pts))));
+  const w = Math.max(1, Math.round((x1 - x0) * k)), h = Math.max(1, Math.round((y1 - y0) * k));
+  try {
+    const bitmap = await createImageBitmap(photo, x0, y0, x1 - x0, y1 - y0, k < 1 ? { resizeWidth: w, resizeHeight: h, resizeQuality: 'high' } : undefined);
+    return { bitmap, corners: pts.map(p => ({ x: (p.x - x0) * bitmap.width / (x1 - x0), y: (p.y - y0) * bitmap.height / (y1 - y0) })), photoCorners: pts };
+  } catch { return null; }
+}
+const shortSide = pts => Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y));
+
 /**
  * 사진 한 장을 답안지로 다듬습니다.
  *
@@ -1232,13 +1374,16 @@ export function validatedDetectionHint(hint, width, height) {
  * @returns {{blob, previewUrl, corners, autoScore, method, quality, width, height, baseUrl, baseW, baseH}}
  */
 export async function processShot(file, opts = {}) {
-  const { corners = null, mode = 'color', dpi = DEFAULT_DPI, onProgress, pageFormat = 'auto' } = opts;
+  /* The defaults are those of the first exam-mode scans (IPhO 2023, b900f59), whose pages read and graded well: the
+     clean mode (shadows divided out, ink contrast raised) on an A4 page at 200dpi. Colour and auto proportions remain
+     choices. */
+  const { corners = null, mode = 'clean', dpi = DEFAULT_DPI, onProgress, pageFormat = 'a4' } = opts;
   const say = (pct, label) => { try { onProgress?.(pct, label); } catch { /* 무시 */ } };
 
   say(5, '사진 읽는 중');
   const bmp = await loadBitmap(file);
+  try {
   const base = toCanvas(bmp);
-  try { bmp.close?.(); } catch { /* 무시 */ }
   await breathe();
 
   say(25, '모서리 찾는 중');
@@ -1246,8 +1391,8 @@ export async function processShot(file, opts = {}) {
   let autoScore = 1, method = 'manual', cornersReliable = true, paperStatus = pageFormat === 'a4' ? 'manual_a4' : 'manual', scanEligible = !!pts;
   let detectionReason = null;
   if (!pts) {
-    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectDocumentQuad(base, { retry: true, signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
-    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.scanEligible === true;
+    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectOnProbe(base, { retry: true, signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
+    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.scanEligible === true && d.verified !== false;
     paperStatus = d.paperStatus || 'not_found'; scanEligible = d.scanEligible === true;
     detectionReason = d.reason || null;
   }
@@ -1259,19 +1404,23 @@ export async function processShot(file, opts = {}) {
   /* 마커로 찾았을 때만 인셋을 씁니다. 종이 테두리로 찾았다면
      그 네 점이 곧 지면 모서리이므로 인셋이 필요 없습니다. */
   const inset = method === 'marker' ? MARKER_INSET : null;
-  const rendered = warpApplied ? await renderInWorker(base, pts, mode, dpi, inset, outputFormat, opts.signal, true) : null;
+  const piece = warpApplied ? await pagePiece(bmp, pts, base) : null;
+  let rendered;
+  try { rendered = warpApplied ? await renderInWorker(piece?.bitmap || base, piece?.corners || pts, mode, dpi, inset, outputFormat, opts.signal) : null; }
+  finally { try { piece?.bitmap.close(); } catch { /* 무시 */ } }
+  /* a photo whose corners were not found is still cleaned, as a scan is, at its own proportions */
   let out = rendered ? null : warpApplied ? warp(base, pts, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
   const quality = rendered?.quality || inspectDocument(out);
   await breathe();
 
   say(72, '그림자 지우는 중');
-  if (warpApplied && out) out = enhance(out, mode);
+  if (out) out = enhance(out, mode);
   await breathe();
 
   say(90, '선명도 확인 중');
 
   const blob = rendered?.blob || await new Promise((r) =>
-    !warpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
+    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
   );
   if (!blob) throw { code: 'bad_image' };
   say(100, '완료');
@@ -1294,25 +1443,35 @@ export async function processShot(file, opts = {}) {
     baseUrl: rendered?.baseBlob ? await blobPreview(rendered.baseBlob) : base.toDataURL('image/png'), // lossless editable baseline
     baseW: base.width,
     baseH: base.height,
-    sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)),
+    sourceBlob: file,            // reprocess straightens from it again, at full resolution
+    sourceShortSide: shortSide(piece?.photoCorners || pts.map(p => ({ x: p.x * bmp.width / base.width, y: p.y * bmp.height / base.height }))),
   };
+  } finally { try { bmp.close?.(); } catch { /* 무시 */ } }
 }
 
 /** 이미 잡아둔 원본에서 모서리·모드만 바꿔 다시 만듭니다 */
-export async function reprocess(baseDataUrl, corners, mode = 'color', dpi = DEFAULT_DPI, inset = null, options = {}) {
+export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFAULT_DPI, inset = null, options = {}) {
   const img = await loadImage(baseDataUrl);
   const base = toCanvas(img);
-  const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'a4' ? 'a4' : 'auto';
+  const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'auto' ? 'auto' : 'a4';
   const a4WarpApplied = warpApplied && outputFormat === 'a4';
-  const ordered = orderCorners(corners), rendered = warpApplied ? await renderInWorker(base, ordered, mode, dpi, inset, outputFormat, options.signal) : null;
+  /* options.source: the photo processShot read (its result's sourceBlob), straightened again at full resolution */
+  const ordered = orderCorners(corners);
+  let piece = null, photo = null;
+  if (warpApplied && options.source) {
+    try { photo = await loadBitmap(options.source); piece = await pagePiece(photo, ordered, base); }
+    catch { piece = null; } finally { try { photo?.close?.(); } catch {} }
+  }
+  let rendered;
+  try { rendered = warpApplied ? await renderInWorker(piece?.bitmap || base, piece?.corners || ordered, mode, dpi, inset, outputFormat, options.signal) : null; }
+  finally { try { piece?.bitmap.close(); } catch {} }
   let out = rendered ? null : warpApplied ? warp(base, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
   const quality = rendered?.quality || inspectDocument(out);
-  if (warpApplied && out) out = enhance(out, mode);
+  if (out) out = enhance(out, mode);
   const blob = rendered?.blob || await new Promise((r) =>
-    !warpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
+    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
   );
   if (!blob) throw { code: 'bad_image' };
-  const pts = orderCorners(corners);
   return { blob, previewUrl: rendered ? await blobPreview(blob) : out.toDataURL('image/jpeg', 0.94), quality, width: rendered?.width || out.width, height: rendered?.height || out.height, a4WarpApplied, warpApplied, outputFormat,
-    sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)) };
+    ...(options.source ? { sourceBlob: options.source } : {}), sourceShortSide: shortSide(piece?.photoCorners || ordered) };
 }

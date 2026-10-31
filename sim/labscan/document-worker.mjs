@@ -1,5 +1,5 @@
-import { DOCUMENT_ASSETS, decodeDocumentHeatmap, documentGeometry, refineDocumentEdges } from './document-model.mjs?v=7a972b90a395';
-import { toGray, detectDocumentQuadGray, findSheetMarkersGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=7a972b90a395';
+import { DOCUMENT_ASSETS, decodeDocumentHeatmap, documentGeometry, refineDocumentEdges } from './document-model.mjs?v=5c3425ad59a1';
+import { toGray, detectDocumentQuadGray, findSheetMarkersGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=5c3425ad59a1';
 
 const CACHE = 'haslalab-document-assets-' + DOCUMENT_ASSETS.version;
 let ort, session, initializing, modelFailure = null, modelRetryAt = 0, modelFailures = 0;
@@ -38,6 +38,9 @@ async function initialize(retry = false) {
     ort.env.wasm.wasmBinary = wasm;
     self.postMessage({ type: 'progress', stage: 'compile' });
     session = await ort.InferenceSession.create(model, { executionProviders: ['wasm'], graphOptimizationLevel: 'all' });
+    /* the first run of a WASM session is several times slower than the next ones; spend it while the page is idle */
+    self.postMessage({ type: 'progress', stage: 'prime' });
+    try { await session.run({ [session.inputNames[0]]: new ort.Tensor('float32', new Float32Array(3 * 256 * 256), [1, 3, 256, 256]) }); } catch {}
     modelFailure = null; modelFailures = 0; modelRetryAt = 0;
   })().catch(error => {
     modelFailure = 'document_model_unavailable';
@@ -53,7 +56,7 @@ async function detect(message) {
   context.drawImage(bitmap, 0, 0); bitmap.close();
   const rgba = context.getImageData(0, 0, width, height), gray = toGray(rgba.data, width, height);
   const printed = findSheetMarkersGray(gray, width, height);
-  if (printed?.score >= .85) return { ...printed, paperStatus: 'document', engine: 'printed-markers', scanEligible: true,
+  if (printed?.score >= .85) return { ...printed, paperStatus: 'document', engine: 'printed-markers', scanEligible: true, verified: true,
     autoCaptureEligible: true, clipped: false };
   let modelReady = true;
   try { await initialize(message.retry === true); } catch { modelReady = false; }
@@ -68,13 +71,19 @@ async function detect(message) {
       const refined = refineDocumentEdges(gray, width, height, geometry.corners);
       const verified = refined && refined.edgeSupport >= .52 && refined.weakestEdge >= .28;
       if (verified) return { ...refined, score: Math.min(1, decoded.score), modelConfidence: decoded.confidence,
-        corners: refined.corners, method: 'ml', engine: 'docaligner-lcnet', paperStatus: 'document', scanEligible: true,
+        corners: refined.corners, method: 'ml', engine: 'docaligner-lcnet', paperStatus: 'document', scanEligible: true, verified: true,
         autoCaptureEligible: decoded.score >= .5 && refined.edgeSupport >= .72 && refined.weakestEdge >= .5,
         clipped: false, inferenceMs: performance.now() - started };
+      /* Scanning apps crop with their best quadrilateral and ask for a check rather than leave the photo as it is.
+         The model's quad (refined where its edges were measured) is used; only automatic capture needs verified edges. */
+      return { corners: refined?.corners || geometry.corners, score: Math.min(1, decoded.score), modelConfidence: decoded.confidence,
+        edgeSupport: refined?.edgeSupport ?? 0, weakestEdge: refined?.weakestEdge ?? 0, method: 'ml', engine: 'docaligner-lcnet',
+        paperStatus: 'document', scanEligible: true, verified: false, autoCaptureEligible: false, clipped: false, reason: 'document_edges_weak',
+        inferenceMs: performance.now() - started };
     }
   }
-  const proposal = detectDocumentQuadGray(gray, width, height);
-  return { ...proposal, engine: 'cv-fallback', scanEligible: false, autoCaptureEligible: false,
+  const proposal = detectDocumentQuadGray(gray, width, height), usable = !!proposal.corners && proposal.method !== 'frame';
+  return { ...proposal, engine: 'cv-fallback', scanEligible: usable, verified: false, autoCaptureEligible: false,
     reason: modelFailure || 'document_corners_uncertain' };
 }
 async function render(message) {

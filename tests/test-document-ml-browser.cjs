@@ -57,8 +57,8 @@ test('real local document model scans perspective graphs in colour, stays off th
       const scan=await scanner.processShot(file);
       return {warp:scan.warpApplied,a4:scan.a4WarpApplied,format:scan.outputFormat,width:scan.width,height:scan.height};
     });
-    assert.equal(automatic.warp,true);assert.equal(automatic.a4,false);assert.equal(automatic.format,'auto');
-    assert.equal(automatic.width,1654);assert.ok(automatic.height>2200&&automatic.height<2700,'the default rectifies perspective without forcing an A4 format');
+    assert.equal(automatic.warp,true);assert.equal(automatic.a4,true);assert.equal(automatic.format,'a4');
+    assert.deepEqual([automatic.width,automatic.height],[1654,2339],'by default the page is rectified to A4 at 200dpi, as the first exam scans were');
     await page.evaluate(async()=>{const scanner=await import('/sim/labscan/scanner.js'),canvas=document.createElement('canvas');canvas.width=400;canvas.height=600;canvas.getContext('2d').fillStyle='#ddd';canvas.getContext('2d').fillRect(0,0,400,600);const d=await scanner.detectDocumentQuad(canvas);if(d.scanEligible||d.autoCaptureEligible)throw Error('blank background must stay manual');});
     const unavailable=await browser.newContext();
     try {
@@ -73,7 +73,7 @@ test('real local document model scans perspective graphs in colour, stays off th
         const scan=await scanner.processShot(file);
         return {warp:scan.warpApplied,a4:scan.a4WarpApplied,format:scan.outputFormat,width:scan.width,height:scan.height,type:scan.blob.type};
       });
-      assert.deepEqual(fallback,{warp:false,a4:false,format:'auto',width:900,height:1200,type:'image/png'},'unavailable model keeps the complete original-proportion image for manual confirmation');
+      assert.deepEqual(fallback,{warp:true,a4:true,format:'a4',width:1654,height:2339,type:'image/jpeg'},'without the model the classical page finder still makes an A4 scan, flagged for a corner check');
       await fallbackPage.route('**/sim/labscan/document-worker.mjs*',route=>route.abort());
       await fallbackPage.reload();
       const manual=await fallbackPage.evaluate(async corners=>{

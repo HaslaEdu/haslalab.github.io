@@ -66,8 +66,9 @@ test('real browser recovers a failed model download and rectifies a matching cap
     return{preview,still};
    });
    assert.equal(result.preview.engine,'manual-fallback');assert.notEqual(result.preview.method,'frame');assert.equal(result.preview.corners.length,4);
-   assert.equal(result.preview.scanEligible,false);assert.equal(result.preview.autoCaptureEligible,false);
-   assert.equal(result.still.scanEligible,false);assert.equal(result.still.autoCaptureEligible,false);
+   // without the worker the classical outer quad still makes the scan (flagged for a corner check); only automatic capture waits for verified edges
+   assert.equal(result.preview.scanEligible,true);assert.equal(result.preview.verified,false);assert.equal(result.preview.autoCaptureEligible,false);
+   assert.equal(result.still.scanEligible,true);assert.equal(result.still.verified,false);assert.equal(result.still.autoCaptureEligible,false);
    result.preview.corners.forEach((p,i)=>assert.ok(Math.hypot(p.x-result.still.corners[i].x,p.y-result.still.corners[i].y)<30,'preview proposes the same physical outer corners at bounded resolution'));
   }finally{await blockedWorker.close();}
  }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

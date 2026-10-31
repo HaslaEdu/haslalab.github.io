@@ -189,3 +189,65 @@ test('720p work is bounded on detailed positive and noisy negative frames', t =>
   times.sort((a, b) => a - b); t.diagnostic(`720p serial warm median=${times[5].toFixed(1)}ms p95=${times[9].toFixed(1)}ms`);
   assert.ok(times[9] < 3000, 'generous hang budget; shared CI contention is not a phone performance benchmark');
 });
+
+/* paper lying on a desk that is wholly in view: the desk is the larger, equally sharp rectangle */
+function project3d({ W, H, f, tilt = 0, pan = 0, roll = 0, distance = 1000 }) {
+  // a plane through (0,0,distance) turned about the y axis (pan) and the x axis (tilt), then rolled in the image;
+  // plane units are millimetres. Tilt or pan alone leaves one pair of edges parallel (one vanishing point).
+  const ct = Math.cos(tilt), st = Math.sin(tilt), cp = Math.cos(pan), sp = Math.sin(pan), cr = Math.cos(roll), sr = Math.sin(roll);
+  return (X, Y) => { const x1 = X * cp, z1 = X * sp, y = Y * ct - z1 * st, z = distance + Y * st + z1 * ct, u = f * x1 / z, v = f * y / z;
+    return { x: W / 2 + u * cr - v * sr, y: H / 2 + u * sr + v * cr }; };
+}
+function deskScene({ W = 640, H = 480, desk = [700, 420], paperAt = [-60, -20], paperSize = [210, 297], deskTone = 125, paperTone = 238, floor = 45, grain = 7,
+  view = { f: 560, tilt: 0, roll: 0, distance: 1000 } } = {}) {
+  const P = project3d({ W, H, ...view });
+  const rect = (cx, cy, w, h) => [P(cx - w / 2, cy - h / 2), P(cx + w / 2, cy - h / 2), P(cx - w / 2, cy + h / 2), P(cx + w / 2, cy + h / 2)];
+  const deskQuad = rect(0, 0, desk[0], desk[1]), paperQuad = rect(paperAt[0], paperAt[1], paperSize[0], paperSize[1]), textQuad = inset(paperQuad, .7);
+  const f = photo({ W, H, quad: null, background: (x, y) => inside(x, y, deskQuad) ? deskTone + grain * Math.sin(x / 6 + y / 40) : floor });
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (inside(x, y, paperQuad))
+    f.gray[y * W + x] = y % 18 < 2 && x % 11 < 6 && inside(x, y, textQuad) ? 60 : paperTone;
+  return { ...f, deskQuad, paperQuad };
+}
+
+test('the rectified ratio undoes perspective: a tilted A4 sheet is A4 although its picture is not', () => {
+  // two vanishing points: the focal length and the ratio are both recovered
+  for (const view of [{ f: 560, tilt: .5, pan: .4 }, { f: 900, tilt: .8, pan: -.3, roll: .4 }, { f: 450, tilt: -.6, pan: .5, roll: -1.2 }]) {
+    const P = project3d({ W: 640, H: 480, distance: 900, ...view }), q = [P(-105, -148.5), P(105, -148.5), P(-105, 148.5), P(105, 148.5)];
+    const ratio = scanner.rectifiedRatio(q, 640, 480), picture = scanner.assessA4Candidate(q, 640, 480).projectedRatio;
+    assert.ok(Math.abs(ratio / scanner.A4_RATIO - 1) < .02, `rectified ${ratio} at ${JSON.stringify(view)}`);
+    assert.ok(Math.abs(picture / scanner.A4_RATIO - 1) > .03, 'the picture itself is not A4-shaped');
+  }
+  // straight on, or one vanishing point: the focal length cannot be measured, and A4 must fit some phone lens
+  for (const view of [{ f: 560 }, { f: 450, tilt: .5 }, { f: 560, tilt: .8, roll: .4 }, { f: 700, tilt: .8 }]) {
+    const P = project3d({ W: 640, H: 480, distance: 900, ...view }), q = [P(-105, -148.5), P(105, -148.5), P(-105, 148.5), P(105, 148.5)];
+    assert.ok(scanner.a4RatioMiss(q, 640, 480) < .05, JSON.stringify(view));
+  }
+  const D = project3d({ W: 640, H: 480, f: 560, tilt: .5, distance: 900 });
+  assert.ok(scanner.a4RatioMiss([D(-350, -210), D(350, -210), D(-350, 210), D(350, 210)], 640, 480) > .12, 'a 5:3 desk does not pass for A4 at any phone lens');
+  const P = project3d({ W: 640, H: 480, f: 560, tilt: .7, pan: .3, distance: 900 }), desk = [P(-350, -210), P(350, -210), P(-350, 210), P(350, 210)];
+  assert.ok(Math.abs(scanner.rectifiedRatio(desk, 640, 480) - 700 / 420) < .05, 'a desk keeps its own ratio');
+  assert.equal(scanner.rectifiedRatio(null, 640, 480), null);
+});
+
+test('paper lying on a desk wholly in view is the page, not the desk', () => {
+  for (const [name, options] of [
+    ['wooden desk, straight on', {}],
+    ['light desk, rotated sheet', { deskTone: 205, paperTone: 245, view: { f: 560, tilt: 0, roll: .12, distance: 1000 } }],
+    ['desk seen at an angle', { view: { f: 600, tilt: .55, roll: 0, distance: 900 } }],
+    ['landscape sheet on a dark desk', { deskTone: 80, paperSize: [297, 210], paperAt: [40, 10] }],
+  ]) {
+    const scene = deskScene(options), result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
+    assert.ok(result.corners, name);
+    const toPaper = error(result.corners, scene.paperQuad), toDesk = error(result.corners, scene.deskQuad);
+    assert.ok(toPaper < 16, `${name}: corner error to the sheet ${toPaper.toFixed(1)} px (to the desk ${toDesk.toFixed(1)})`);
+    const shared = scanner.detectDocumentQuadGray(scene.gray, scene.W, scene.H);
+    assert.ok(error(shared.corners, scene.paperQuad) < 16, name + ': the camera path agrees');
+  }
+});
+
+test('a sheet barely brighter than its desk is still the page when the sheet is A4 and the desk is not', () => {
+  // ten grey levels apart, below the brightness rule's margin: only the shapes tell the sheet from the desk
+  const scene = deskScene({ deskTone: 230, paperTone: 240, grain: 2, floor: 70, view: { f: 600, tilt: .3, pan: .25, roll: .05, distance: 950 } });
+  const result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
+  assert.ok(result.corners && error(result.corners, scene.paperQuad) < 16, 'the A4 sheet, not the desk');
+});
