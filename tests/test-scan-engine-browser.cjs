@@ -5,7 +5,7 @@ try{
  executable=process.env.CHROME_BIN||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':['/usr/bin/google-chrome','/usr/bin/chromium',chromium.executablePath()].find(p=>fs.existsSync(p)));
  if(!fs.existsSync(executable))chromium=null;
 }catch{}
-test('real browser finds the page in a photo on the device, with no model and no request, and reuses a matching live frame',
+test('real browser finds the page in a photo on the device, with a self-hosted corner model and no API request, and reuses a matching live frame',
  {skip:!chromium&&'Set HASLA_PLAYWRIGHT_PATH and CHROME_BIN',timeout:120000},async()=>{
  const server=http.createServer((req,res)=>{
   if(req.url==='/__engine_qa'){res.setHeader('Content-Type','text/html');return res.end('<!doctype html><title>Engine QA</title>');}
@@ -35,7 +35,9 @@ test('real browser finds the page in a photo on the device, with no model and no
    assert.equal(result.warm,true);assert.equal(result.warp,true);assert.equal(result.method,'page');assert.equal(result.width,1654);
    result.corners.forEach((p,i)=>assert.ok(Math.hypot(p.x-truth[i].x,p.y-truth[i].y)<18,`corner ${i} within 1.2% of the photo: ${JSON.stringify(p)}`));
    assert.equal(result.cancelled,null);assert.equal(result.openDialogs,0);
-   assert.ok(!requests.some(p=>/\.(onnx|wasm)$|^\/api\//.test(p)),'no model, runtime or API request: '+requests.join(' '));
+   assert.ok(!requests.some(p=>/^\/api\//.test(p)),'no API request: '+requests.join(' '));
+   assert.ok(requests.every(p=>!/\.(ort|wasm|onnx)$/.test(p)||p.startsWith('/vendor/scanic-ml-0.2.0/')),'the corner model and its runtime come from this site only: '+requests.join(' '));
+   assert.ok(requests.includes('/vendor/scanic-ml-0.2.0/doccornernet_lean.ort'),'the learned corner model is loaded (self-hosted)');
   }finally{await context.close();}
   const hintContext=await browser.newContext();
   try{
