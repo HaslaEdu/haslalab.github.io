@@ -118,14 +118,15 @@ def close(a, b, tol=0.111):
     return abs(a - b) <= tol
 
 
-def pdf_rows(data, columns, xmin=0, extra=0):
+def pdf_rows(data, columns, xmin=0, extra=0, positions=False):
     """Read numeric table columns at shared baselines, preserving duplicate scores.
 
     Coordinates are used for old tables whose ranking/name columns contain numbers.
     Column counts and arithmetic are validated by each contest-specific parser.
+    With positions, each row also carries (page index, baseline y, left x).
     """
     document = pymupdf.open(stream=data, filetype="pdf")
-    for page in document:
+    for page_index, page in enumerate(document):
         spans = [s for b in page.get_text("dict")["blocks"] if "lines" in b
                  for line in b["lines"] for s in line["spans"] if s["text"].strip()]
         groups = []
@@ -134,7 +135,7 @@ def pdf_rows(data, columns, xmin=0, extra=0):
                 groups.append([span["origin"][1], [span]])
             else:
                 groups[-1][1].append(span)
-        for _, spans in groups:
+        for baseline, spans in groups:
             spans.sort(key=lambda s: s["bbox"][0])
             raw = " ".join(s["text"] for s in spans)
             # Do not reject a contestant named Max/Maxim: only reject actual headings.
@@ -149,7 +150,10 @@ def pdf_rows(data, columns, xmin=0, extra=0):
                     # forming a single text span ending in "Santiago6.10".
                     values.append(float(m[1]))
             if columns <= len(values) <= columns + extra:
-                yield values[-columns:], raw
+                if positions:
+                    yield values[-columns:], raw, (page_index, baseline, spans[0]["bbox"][0])
+                else:
+                    yield values[-columns:], raw
 
 
 def observed_cutoffs(rows):
@@ -230,6 +234,38 @@ def eupho2020_award_counts(data, rows):
     result = award_counts(found)
     assert result == {"gold": 27, "silver": 49, "bronze": 60}
     return result
+
+
+# Row-band fills in the EuPhO 2021 and 2022 final tables: the award is shown only by the
+# colour of the row behind the name columns (gold, silver, bronze, honourable mention, none).
+EUPHO_BANDS = {
+    2021: {(1.0, 0.89, 0.439): "G", (0.851, 0.851, 0.851): "S", (0.996, 0.745, 0.49): "B", (0.588, 0.91, 1.0): "H", (1.0, 1.0, 1.0): None},
+    2022: {(1.0, 1.0, 0.0): "G", (0.851, 0.851, 0.851): "S", (0.965, 0.698, 0.42): "B", (0.714, 0.843, 0.659): "H", (1.0, 1.0, 1.0): None},
+}
+
+
+def band_award(document, year, position):
+    """The award band (filled rectangle) behind a row's name cell; every row must sit in exactly one."""
+    page_index, y, _ = position
+    found = set()
+    for d in document[page_index].get_drawings():
+        fill, r = d.get("fill"), d["rect"]
+        key = tuple(round(c, 3) for c in fill) if fill is not None else None
+        # The band starts at the name column on the left; a row's first text span may lie further right.
+        if key in EUPHO_BANDS[year] and r.width > 250 and r.x0 < 120 and r.y0 <= y - 2 <= r.y1:
+            found.add(EUPHO_BANDS[year][key])
+    assert len(found) == 1, (year, position, found)
+    return found.pop()
+
+
+def threshold_monotone(rows):
+    """Awards are total-score thresholds: walking down the totals, the award level never rises."""
+    levels = {"G": 3, "S": 2, "B": 1, "H": 0, None: -1}
+    ordered = sorted(rows, key=lambda r: -r[2])
+    return all(levels[a[3]] >= levels[b[3]] or close(a[2], b[2], 1e-9) for a, b in zip(ordered, ordered[1:]))
+
+
+AWARDS_IN_MINUTES = {2018: (277, (42, 69, 99, 67), "https://www.ipho-new.org/download/437/")}
 
 
 def ipho():
@@ -344,6 +380,16 @@ def ipho():
                 total["rankFloor"] = cutoffs[year]["hm"]
         elif rows:
             total.update(medalCutoffs=observed_cutoffs(rows), cutoffKind="observed", medalCutoffRule="gte")
+            # 2018 minutes: "396 students, 277 prizes awarded. 42 Gold, 69 Silver, 99 Bronze, 67 Honourable
+            # mention."  Awards go by total-score thresholds and every one of the 277 awardees has a published
+            # total, so anyone unpublished totalled below the lowest awarded total.
+            award_rows = [r for r in people.get(year, []) if r[4] in "GSBH"]
+            if year in AWARDS_IN_MINUTES and len(rows) == len(award_rows) == AWARDS_IN_MINUTES[year][0] and \
+                    all(all(r[i] for i in [5, 6, 7]) for r in award_rows):
+                assert Counter(r[3] for r in rows) == Counter(dict(zip("GSBH", AWARDS_IN_MINUTES[year][1]))), year
+                assert threshold_monotone(rows), year
+                total["rankFloor"] = min(r[2] for r in rows)
+                total["sources"].append(source(AWARDS_IN_MINUTES[year][2], f"IPhO {year} official minutes: 277 prizes (42 G, 69 S, 99 B, 67 HM)"))
         records.append(total)
     for item in records:
         if item["year"] == 2025:
@@ -379,8 +425,9 @@ def eupho():
     records = []
     for year, (url, columns, xmin, extra, n) in EUPHO.items():
         data = fetch(url, url.rsplit("/", 1)[1])
-        rows = []
-        for v, raw in pdf_rows(data, columns, xmin, extra):
+        document = pymupdf.open(stream=data, filetype="pdf")
+        rows, special = [], []
+        for v, raw, position in pdf_rows(data, columns, xmin, extra, positions=True):
             if year in [2017, 2018]:
                 t, e, total = v[3], v[6], v[7]
                 assert close(sum(v[:3]), t), (year, v)
@@ -407,10 +454,25 @@ def eupho():
             assert 0 <= t <= 30 and 0 <= e <= 20 and 0 <= total <= 50, (year, v)
             m = re.search(r"(?:^|\s)(Gold|Silver|Bronze|G|S|B)(?:\s|,|$)", raw)
             award = {"Gold": "G", "Silver": "S", "Bronze": "B"}.get(m[1], m[1]) if m else None
+            if year in EUPHO_BANDS:
+                # These tables mark the award only by the row's colour band ("B,T,E" etc. are prizes).
+                award = band_award(document, year, position)
+            if year == 2025 and re.search(r"\s(Best|BExp|BThe)\s*$", raw):
+                special.append(len(rows))
             rows.append((t, e, total, award))
         assert len(rows) == n, (year, len(rows), n)
+        if year == 2025:
+            # Three rows carry only a special prize (Best overall / best experiment / best theory).  The rules
+            # award medals by total-score thresholds to everyone above them, and each of these totals is at
+            # or above the lowest gold total, so each of them is a gold medallist as well.
+            gold_floor = min(r[2] for r in rows if r[3] == "G")
+            assert len(special) == 3 and all(rows[i][3] is None and rows[i][2] >= gold_floor for i in special), special
+            for i in special:
+                rows[i] = rows[i][:3] + ("G",)
         counts = None
-        if year in {2017, 2018, 2023, 2024, 2026}:
+        if year in {2017, 2018, 2021, 2022, 2023, 2024, 2025, 2026}:
+            if year in {2021, 2022, 2025}:
+                assert threshold_monotone(rows), year
             counts = award_counts(rows)
         elif year == 2020:
             counts = eupho2020_award_counts(data, rows)
@@ -427,20 +489,28 @@ def eupho():
         if year == 2020:
             note["ko"] += " 결과표에는 수치 행 260개(끝의 0점 행 5개)가 있으나 공식 소개는 257명을 기록합니다. 빈 행 여부를 구분할 수 없어 전체 참가자 백분위를 계산하지 않습니다."
             note["en"] += " The PDF has 260 numeric rows, including five trailing zero rows, while the official overview reports 257 entrants. Possible blank rows cannot be distinguished; no full-field percentile is inferred."
+        if year in EUPHO_BANDS:
+            note["ko"] += " 결과표는 메달을 행 색(금·은·동·장려)으로만 표시하므로 그 색 구간으로 수상 인원과 최저 수상 총점을 셌습니다."
+            note["en"] += " The table marks awards only by row colour (gold, silver, bronze, honourable mention); award counts and lowest awarded totals are read from those colour bands."
         if year == 2025:
-            note["ko"] += " 특별상 표기가 일반 메달 표기를 대신한 행이 있어 단일 점수로 검증할 수 없는 수상 기준은 표시하지 않습니다."
-            note["en"] += " Some special-prize labels replace ordinary medal labels; award tiers that cannot be verified as a single score threshold are withheld."
+            note["ko"] += " 특별상(Best·BExp·BThe)만 적힌 3명은 총점이 최저 금메달 총점 이상이므로, 총점 기준으로 메달을 주는 규정에 따라 금메달로 셌습니다."
+            note["en"] += " Three rows carry only a special prize (Best, BExp, BThe); their totals are at or above the lowest gold total, so under the threshold rule they are counted as gold."
         for scope, maximum, idx in [("theory", 30, 0), ("experiment", 20, 1), ("total", 50, 2)]:
             item = record("eupho", year, scope, maximum, [r[idx] for r in rows], n if year != 2020 else None, year != 2020,
                           src, sets=paper_sets("eupho", year) if scope == "theory" else EXPERIMENT_SETS["eupho"].get(year) if scope == "experiment" else None, note=dict(note))
             if scope in {"theory", "experiment"} and counts:
-                round_reference(item, counts, [source(url, f"EuPhO {year} official final table: actual G/S/B award counts")])
+                round_reference(item, counts, [source(url, f"EuPhO {year} official final table: actual G/S/B award counts")] +
+                                ([source("https://eupho.ee/rules/", "EuPhO rules: medals by total-score thresholds")] if year in {2021, 2022, 2025} else []))
             if scope == "total":
                 item["components"] = components("eupho", year)
+                if year == 2020:
+                    # Only the trailing all-zero rows are in doubt (260 rows against 257 reported entrants); every
+                    # row with a positive total is a real contestant, so ranks at or above it are exact.
+                    item["rankFloor"] = min(r[2] for r in rows if r[2] > 0)
                 if year in [2024, 2026]:
                     vals = [29.6, 22.1, 16.7, 12.3] if year == 2024 else [25.2, 16.5, 11.4, 7.5]
                     item.update(medalCutoffs=dict(zip(["gold", "silver", "bronze", "hm"], vals)), cutoffKind="published", medalCutoffRule="gte")
-                elif year not in {2020, 2021, 2022}:
+                elif year != 2020:
                     cuts = observed_cutoffs(rows)
                     if cuts:
                         item.update(medalCutoffs=cuts, cutoffKind="observed", medalCutoffRule="gte")
@@ -463,10 +533,10 @@ def eupho():
     item.update(components=components("eupho", 2019), medalCutoffs=observed_cutoffs(rows), cutoffKind="observed", medalCutoffRule="gte")
     records.append(item)
     return {"records": records, "coverage": {"checked": CHECKED, "scoreYears": list(range(2017, 2027)),
-            "completeScoreYears": sorted(y for y in EUPHO if y != 2020), "limitations": {"ko": "2019년은 수상자 총점만 공개되었습니다. 2020년 수치 행과 참가 인원에 불일치가 있습니다. 2020–2022년 결과표의 색상만으로 메달 기준을 추정하지 않았습니다.",
-            "en": "2019 provides awardee totals only. 2020 has a row-count/participant-count discrepancy. Medal thresholds were not inferred from colored rows in 2020–2022."},
-            "medalReferenceYears": [2017, 2018, 2020, 2023, 2024, 2026],
-            "medalReferenceOmitted": {"2019": "No separate theory/experiment scores.", "2021": "Ordinary medal categories are color-only; special-prize labels cannot supply G/S/B counts.", "2022": "Ordinary medal categories are color-only; exact published G/S/B counts were not independently verified.", "2025": "Best/BExp/BThe replace ordinary medal labels on three rows; complete G/S/B counts remain ambiguous."},
+            "completeScoreYears": sorted(y for y in EUPHO if y != 2020), "limitations": {"ko": "2019년은 수상자 총점만 공개되었습니다. 2020년 수치 행과 참가 인원에 불일치가 있습니다. 2021·2022년 메달은 결과표의 행 색 구간에서, 2025년 특별상 3명은 총점 기준 규정으로 셌습니다.",
+            "en": "2019 provides awardee totals only. 2020 has a row-count/participant-count discrepancy. 2021/2022 awards are read from the table's row colour bands; 2025's three special-prize rows are counted by the total-threshold rule."},
+            "medalReferenceYears": [2017, 2018, 2020, 2021, 2022, 2023, 2024, 2025, 2026],
+            "medalReferenceOmitted": {"2019": "No separate theory/experiment scores."},
             "medalReferenceMethod": "Actual G/S/B award counts in the official table projected onto same-round score rankings, including source guest populations. These are reference bands, not official component awards.",
             "sources": [source("https://eupho.ee/archive/", "Official EuPhO archive covering every edition")]}}
 
@@ -571,6 +641,19 @@ def rotated_apho_rows(data):
                 yield numbers[2], numbers[1], numbers[3], raw
 
 
+def apho_award_floor(rows, raws):
+    """APhO statutes: every prize and honourable mention goes by total-score thresholds, and the marks of
+    contestants without one are not disclosed.  When the table lists every awardee, ranked 1..n without a gap
+    and each row labelled (Gold/Silver/Bronze/H.M), anyone missing scored a total below the lowest listed
+    total, which is therefore a verified coverage floor."""
+    # Rotated tables can read two adjacent rows in either order; the set of ranks must still be 1..n.
+    ranks = sorted(int(raw.split()[0]) for raw in raws)
+    assert ranks == list(range(1, len(rows) + 1)), ranks[:5]
+    assert all(re.search(r"\b(Gold|Silver|Bronze|Bronz|H\.M)\s*$", raw) for raw in raws)
+    assert threshold_monotone([r[:3] + ("H" if r[3] is None else r[3],) for r in rows])
+    return min(r[2] for r in rows)
+
+
 def apho():
     records = []
     rules = "https://apho2019.asi.edu.au/about/about-apho/"
@@ -590,11 +673,12 @@ def apho():
     groups[2017] = (url, rows, 167, True)
     url = "https://www.apho2025.sa/media/4mkc32ln/apho_2025_نشر-النتائج-1.pdf"
     data = fetch(url, "apho-2025.pdf")
-    rows = []
+    rows, raws = [], {}
     for t, e, total, raw in rotated_apho_rows(data):
         # The official 2025 table consistently spells the category "Bronz".
         m = re.search(r"\b(Gold|Silver|Bronze|Bronz)\s*$", raw)
         rows.append((t, e, total, {"Gold": "G", "Silver": "S", "Bronze": "B", "Bronz": "B"}.get(m[1]) if m else None))
+        raws.setdefault(2025, []).append(raw)
     assert len(rows) == 169
     groups[2025] = (url, rows, None, False)
     url = "https://apho2026.kr/en/APhO_2026_ranking.pdf"
@@ -605,6 +689,7 @@ def apho():
         if close(t + e, total, .011) and 0 <= e <= 20 and 0 <= t <= 30:
             m = re.search(r"\b(Gold|Silver|Bronze)\s*$", raw)
             rows.append((t, e, total, {"Gold": "G", "Silver": "S", "Bronze": "B"}.get(m[1]) if m else None))
+            raws.setdefault(2026, []).append(raw)
     assert len(rows) == 161
     groups[2026] = (url, rows, 201, False)
     for year, (url, rows, n, complete) in groups.items():
@@ -617,8 +702,8 @@ def apho():
         note = {"ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다.",
                 "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries."}
         if not complete:
-            note["ko"] += " 이 결과표는 수상자만 포함하여 전체 참가자 백분위를 제공하지 않습니다."
-            note["en"] += " This table contains awardees only; no full-field percentile is available."
+            note["ko"] += " 이 결과표는 장려상까지 수상자만 포함합니다. 규정상 비수상자는 총점이 최저 수상 총점 미만이므로, 그 점수 이상에서만 전체 참가자 기준 순위가 확정됩니다."
+            note["en"] += " This table lists awardees down to honourable mention only. By the statutes every non-awardee totalled below the lowest award, so full-field ranks are exact only at or above that score."
         if year == 2025:
             note["ko"] += " 발표 기관마다 전체 참가 인원이 달라 분모를 확정하지 않았습니다."
             note["en"] += " Published participant totals differ across delegations; the denominator is left unresolved."
@@ -634,12 +719,14 @@ def apho():
                 round_reference(item, award_counts(rows), [source(url, f"APhO {year} official final table: actual G/S/B award counts")])
             if scope == "total":
                 item.update(components=components("apho", year), medalCutoffs=observed_cutoffs(rows), cutoffKind="observed", medalCutoffRule="gte")
+                if year in raws:
+                    item["rankFloor"] = apho_award_floor(rows, raws[year])
             records.append(item)
     return {"records": records, "coverage": {"checked": CHECKED, "scoreYears": sorted(groups), "completeScoreYears": [2017],
             "medalReferenceYears": sorted(groups),
             "medalReferenceMethod": "Actual G/S/B award counts from each official final table projected onto same-round score rankings; only the published score population is used for incomplete editions. Not official component awards.",
-            "limitations": {"ko": "2017년은 익명 비수상자까지 포함합니다. 2025·2026년은 수상자 점수만 있습니다. 2019년 공식 PDF는 글자·열이 겹쳐 자동 추출 검증을 통과하지 못해 포함하지 않았습니다. 다른 연도의 수상자 수를 점수 분포로 환산하지 않았습니다.",
-                           "en": "2017 includes anonymous non-award scores. 2025/2026 provide awardees only. The overlapping 2019 PDF failed extraction validation and is not imported. Award counts from other editions are not converted into score distributions."},
+            "limitations": {"ko": "2017년은 익명 비수상자까지 포함합니다. 2025·2026년은 장려상까지의 수상자 점수만 있어 최저 수상 총점 이상에서만 전체 순위를 확정합니다. 2019년 공식 PDF는 글자·열이 겹쳐 자동 추출 검증을 통과하지 못해 포함하지 않았습니다. 다른 연도의 수상자 수를 점수 분포로 환산하지 않았습니다.",
+                           "en": "2017 includes anonymous non-award scores. 2025/2026 provide awardees down to honourable mention only; full-field ranks are exact only at or above the lowest awarded total. The overlapping 2019 PDF failed extraction validation and is not imported. Award counts from other editions are not converted into score distributions."},
             "sources": [source("https://apho2019.asi.edu.au/2019-awards-list-2/", "Official 2019 result candidate excluded pending reliable extraction"),
                         source("https://www.apho2025.sa/results-and-questions/results/", "Official 2025 results"), source("https://apho2026.kr/en/sub2_4.html", "Official 2026 results")]}}
 

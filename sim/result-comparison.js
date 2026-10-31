@@ -30,7 +30,7 @@
     if (!record || !['theory','experiment'].includes(record.scope) || record.complete === true || record.awardScope || record.manualOnly) return null;
     const n=(record.scores||[]).length;
     const total=(records||[]).find(t=>t.scope==='total'&&t.awardScope===true&&String(t.year)===String(record.year)&&
-      finite(t.rankFloor)&&t.rankFloor>0&&Number.isInteger(t.participants)&&t.participants===record.participants&&
+      finite(t.rankFloor)&&t.rankFloor>0&&(t.participants==null||Number.isInteger(t.participants))&&t.participants===record.participants&&
       t.complete!==true&&(t.scores||[]).length===n&&n>0&&
       (t.components||[]).some(c=>c.id===record.scope&&finite(c.max)&&Math.abs(c.max-record.max)<EPS));
     return total ? {floor:total.rankFloor,total} : null;
@@ -73,8 +73,9 @@
     // This inference never applies to an individual round of a combined contest.
     const floor = record.scope === 'total' ? record.rankFloor : finite(coverage?.floor) ? coverage.floor : null;
     const bounded = !complete && scores.length > 0 && finite(floor) &&
-      score + EPS >= floor && Number.isInteger(record.participants) && record.participants >= scores.length;
-    const fieldSize = complete || bounded ? record.participants : scores.length;
+      score + EPS >= floor && (record.participants == null || Number.isInteger(record.participants) && record.participants >= scores.length);
+    // An unknown entrant count still allows an exact rank above the floor, but no field size or percentile.
+    const fieldSize = complete || bounded ? record.participants ?? null : scores.length;
     let medal = null;
     if (record.awardScope === true) {
       const cuts = record.medalCutoffs || {};
@@ -83,7 +84,7 @@
         (Object.keys(cuts).length ? 'none' : null);
     }
     return {record, score, manual, n:scores.length, rank:scores.length ? above + 1 : null,
-      tied, complete, bounded, fieldSize, top_pct:(complete||bounded) && fieldSize > 1 && !record.participantCountUncertain ? Math.min(100,100 * (above + 1) / fieldSize) : null, medal,
+      tied, complete, bounded, fieldSize, top_pct:(complete||bounded) && Number.isInteger(fieldSize) && fieldSize > 1 && !record.participantCountUncertain ? Math.min(100,100 * (above + 1) / fieldSize) : null, medal,
       reference:roundReference(record,score,coverage), coverage:record.scope==='total'?null:coverage?{floor:coverage.floor,total:coverage.total.id}:null};
   }
   const mode=s=>s.review_only===true;
@@ -185,7 +186,7 @@
       medal = e.medal === 'none' ? (en?'Below verified cutoffs':'확인된 수상컷 미달') : `${awards[e.medal]}${en ? (observed?' range · reference':' threshold met') : (observed?' 점수대 · 참고':' 기준 충족')}`;
     }
     const icons={gold:'🥇',silver:'🥈',bronze:'🥉',hm:'🏅'};
-    const component=r.scope==='theory'||r.scope==='experiment',fieldCount=r.participantCountUncertain?'':String(r.participants);
+    const component=r.scope==='theory'||r.scope==='experiment',fieldCount=r.participantCountUncertain||!Number.isInteger(r.participants)?'':String(r.participants);
     const context=e.bounded?(en?(fieldCount?`Full field · ${fieldCount} ${population}`:'Full-field rank'):(fieldCount?`전체 ${fieldCount}${population} 기준`:'전체 참가자 기준')):
 
       e.complete?(en?`${e.n} ${population} in the score table`:`전체 ${e.n}${population} 성적 기준`):

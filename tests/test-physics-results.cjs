@@ -60,8 +60,20 @@ test('EuPhO complete tables and ambiguous zero rows have different coverage', ()
   assert.equal(get('eupho', 2020, 'theory').complete, false);
   assert.equal(get('eupho', 2020, 'theory').participants, null);
   assert.equal(get('eupho', 2019, 'theory'), undefined);
-  for (const year of [2020, 2021, 2022, 2025])
-    assert.equal(get('eupho', year, 'total').medalCutoffs, undefined, 'color-only or special-prize labels must not become scalar medal cutoffs');
+  assert.equal(get('eupho', 2020, 'total').medalCutoffs, undefined, 'section headings do not supply per-row award labels');
+  assert.equal(get('eupho', 2020, 'total').rankFloor, 0.5, 'only the trailing all-zero rows are in doubt');
+  // 2021/2022 mark awards by row colour bands; 2025's three special-prize rows are gold by the total-threshold rule.
+  for (const [year, counts, cuts] of [
+    [2021, {gold: 15, silver: 30, bronze: 66}, {gold: 23.5, silver: 16.2, bronze: 10.9}],
+    [2022, {gold: 12, silver: 30, bronze: 44}, {gold: 32.5, silver: 25.5, bronze: 17.5}],
+    [2025, {gold: 18, silver: 38, bronze: 44}, {gold: 29.85, silver: 19.4, bronze: 13}],
+  ]) {
+    assert.deepEqual(get('eupho', year, 'total').medalCutoffs, cuts, String(year));
+    assert.equal(get('eupho', year, 'total').cutoffKind, 'observed');
+    for (const scope of ['theory', 'experiment']) assert.deepEqual(get('eupho', year, scope).medalReference.counts, counts, `${year} ${scope}`);
+    const totals = [...get('eupho', year, 'total').scores].sort((a, b) => b - a);
+    assert.equal(totals[counts.gold - 1], cuts.gold, 'the gold band ends exactly at the lowest gold total');
+  }
 });
 
 test('NBPhO full mixed sittings require both experiments and theory, with published maxima', () => {
@@ -89,7 +101,11 @@ test('APhO awardee tables cannot claim full-field component percentiles', () => 
     assert.equal(get('apho', year, 'total').complete, false);
     assert.equal(get('apho', year, 'total').cutoffKind, 'observed');
     assert.equal(get('apho', year, 'theory').medalCutoffs, undefined);
+    // Every awardee down to honourable mention is listed, so the lowest listed total is a coverage floor.
+    assert.equal(get('apho', year, 'total').rankFloor, Math.min(...get('apho', year, 'total').scores));
   }
+  assert.equal(get('apho', 2025, 'total').rankFloor, 8);
+  assert.equal(get('apho', 2026, 'total').rankFloor, 16.22);
 });
 
 test('component medal references use cumulative actual award counts on the same-round scores', () => {
@@ -118,7 +134,7 @@ test('component medal references use cumulative actual award counts on the same-
     assert.ok(cumulative > 0);
     assert.equal(ref.counts.hm, undefined);
   }
-  assert.equal(references, 36);
+  assert.equal(references, 42);
 });
 
 test('all nine scored IPhO editions keep reference and official total medal thresholds distinct', () => {
@@ -149,20 +165,46 @@ test('source-specific medal labels supply counts only when all award categories 
     assert.equal(get('eupho', 2020, scope).medalReference.population, 'published');
     assert.deepEqual(get('eupho', 2026, scope).medalReference.counts, {gold: 23, silver: 37, bronze: 51});
     for (const year of [2021, 2022, 2025]) {
-      assert.equal(get('eupho', year, scope).medalReference, undefined);
-      assert.ok(data.competitions.eupho.coverage.medalReferenceOmitted[String(year)]);
+      assert.ok(get('eupho', year, scope).medalReference.sources.some(s => s.url === 'https://eupho.ee/rules/'), 'the threshold rule is cited');
+      assert.equal(data.competitions.eupho.coverage.medalReferenceOmitted[String(year)], undefined);
     }
   }
   const receipts = JSON.parse(fs.readFileSync(path.join(root, 'tools/results/physics-receipts.json'), 'utf8'));
-  assert.equal(receipts.medalReferences.length, 36);
+  assert.equal(receipts.medalReferences.length, 42);
   assert.ok(receipts.medalReferences.every(r => r.tieRule.includes('same reference band')));
+});
+
+test('IPhO 2018 minutes count 277 awardees, exactly the published totals, so the lowest awarded total is a floor', () => {
+  const total = get('ipho', 2018, 'total');
+  assert.equal(total.scores.length, 277); assert.equal(total.participants, 396);
+  assert.equal(total.rankFloor, Math.min(...total.scores));
+  assert.ok(total.sources.some(s => /277 prizes/.test(s.title)));
+});
+
+test('APhO and EuPhO rounds get exact full-field ranks wherever the field is covered', () => {
+  const comparison = require('../sim/result-comparison.js');
+  const load = comp => JSON.parse(fs.readFileSync(path.join(root, `sim/results/${comp}.json`), 'utf8'));
+  const apho = load('apho'), eupho = load('eupho');
+  for (const [dataset, comp, year, floor] of [[apho, 'apho', 2025, 8], [apho, 'apho', 2026, 16.22], [eupho, 'eupho', 2020, 0.5]])
+    for (const scope of ['theory', 'experiment']) {
+      const r = dataset.records.find(x => x.year === year && x.scope === scope), coverage = comparison.componentFloor(dataset.records, r);
+      assert.equal(coverage.floor, floor, `${comp} ${year} ${scope}`);
+      const top = comparison.evaluate(r, r.max, false, coverage);
+      assert.equal(top.bounded, true); assert.equal(top.rank, 1);
+      assert.equal(top.top_pct == null, r.participants == null, 'a percentile only with a known entrant count');
+    }
+  const session = {id: 1, comp: 'apho', year: 2026, status: 'graded', score: 20.3, points: 30, kind: 'theory',
+    tasks: apho.records.find(r => r.id === 'apho-2026-theory').taskSets[0]};
+  const [e] = comparison.assess(apho, session).comparisons;
+  assert.equal(e.bounded, true); assert.equal(e.fieldSize, 201); assert.equal(e.reference.medal, 'silver'); assert.equal(e.reference.fullField, true);
+  assert.match(comparison.resultHtml(e, 'ko'), /전체 201명 기준/);
 });
 
 test('IPhO rounds with a published award floor get exact full-field round ranks above that floor only', () => {
   const comparison = require('../sim/result-comparison.js');
   const ipho = JSON.parse(fs.readFileSync(path.join(root, 'sim/results/ipho.json'), 'utf8'));
   const round = (year, scope) => ipho.records.find(r => r.year === year && r.scope === scope);
-  for (const year of [2025, 2024, 2023, 2021, 2016]) for (const scope of ['theory', 'experiment']) {
+  for (const year of [2025, 2024, 2023, 2021, 2018, 2016]) for (const scope of ['theory', 'experiment']) {
     const r = round(year, scope), coverage = comparison.componentFloor(ipho.records, r);
     const total = ipho.records.find(t => t.year === year && t.scope === 'total');
     assert.ok(coverage, `${year} ${scope}`);
@@ -172,8 +214,8 @@ test('IPhO rounds with a published award floor get exact full-field round ranks 
     assert.equal(top.bounded, true); assert.equal(top.rank, 1); assert.equal(top.fieldSize, r.participants);
     assert.equal(low.bounded, false);
   }
-  // 2015 omits one inconsistent pair from its rounds; 2018 has no published award floor; 2012/2022 are complete.
-  for (const year of [2015, 2018, 2012, 2022]) for (const scope of ['theory', 'experiment'])
+  // 2015 omits one inconsistent pair from its rounds; 2012/2022 are complete.
+  for (const year of [2015, 2012, 2022]) for (const scope of ['theory', 'experiment'])
     assert.equal(comparison.componentFloor(ipho.records, round(year, scope)), null, `${year} ${scope}`);
   const session = {id: 1, comp: 'ipho', year: 2025, status: 'graded', score: 22, points: 30, tasks: ['T1', 'T2', 'T3'], kind: 'theory'};
   const [e] = comparison.assess(ipho, session).comparisons;

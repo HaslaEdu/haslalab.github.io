@@ -4879,6 +4879,11 @@
               "url": "https://www.ipho-new.org/statutes-syllabus/",
               "title": "IPhO statutes §5–6: exact paper scope, 30+20 points, non-award score privacy",
               "official": true
+            },
+            {
+              "url": "https://www.ipho-new.org/download/437/",
+              "title": "IPhO 2018 official minutes: 277 prizes (42 G, 69 S, 99 B, 67 HM)",
+              "official": true
             }
           ],
           "taskSets": [
@@ -5226,6 +5231,11 @@
               "url": "https://www.ipho-new.org/statutes-syllabus/",
               "title": "IPhO statutes §5–6: exact paper scope, 30+20 points, non-award score privacy",
               "official": true
+            },
+            {
+              "url": "https://www.ipho-new.org/download/437/",
+              "title": "IPhO 2018 official minutes: 277 prizes (42 G, 69 S, 99 B, 67 HM)",
+              "official": true
             }
           ],
           "taskSets": [
@@ -5572,6 +5582,11 @@
               "url": "https://www.ipho-new.org/statutes-syllabus/",
               "title": "IPhO statutes §5–6: exact paper scope, 30+20 points, non-award score privacy",
               "official": true
+            },
+            {
+              "url": "https://www.ipho-new.org/download/437/",
+              "title": "IPhO 2018 official minutes: 277 prizes (42 G, 69 S, 99 B, 67 HM)",
+              "official": true
             }
           ],
           "note": {
@@ -5615,7 +5630,8 @@
             "bronze": 17.8
           },
           "cutoffKind": "observed",
-          "medalCutoffRule": "gte"
+          "medalCutoffRule": "gte",
+          "rankFloor": 14.05
         },
         {
           "id": "ipho-2021-theory",
@@ -12814,7 +12830,8 @@
                 ]
               ]
             }
-          ]
+          ],
+          "rankFloor": 0.5
         },
         {
           "id": "eupho-2021-theory",
@@ -13068,8 +13085,34 @@
             ]
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 결과표는 메달을 행 색(금·은·동·장려)으로만 표시하므로 그 색 구간으로 수상 인원과 최저 수상 총점을 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. The table marks awards only by row colour (gold, silver, bronze, honourable mention); award counts and lowest awarded totals are read from those colour bands."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 15,
+              "silver": 30,
+              "bronze": 66
+            },
+            "cuts": {
+              "gold": 15.3,
+              "silver": 10.0,
+              "bronze": 5.5
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://eupho.ee/wp-content/uploads/2021/06/EuPhO2021-results.pdf",
+                "title": "EuPhO 2021 official final table: actual G/S/B award counts",
+                "official": true
+              },
+              {
+                "url": "https://eupho.ee/rules/",
+                "title": "EuPhO rules: medals by total-score thresholds",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -13325,8 +13368,34 @@
             ]
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 결과표는 메달을 행 색(금·은·동·장려)으로만 표시하므로 그 색 구간으로 수상 인원과 최저 수상 총점을 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. The table marks awards only by row colour (gold, silver, bronze, honourable mention); award counts and lowest awarded totals are read from those colour bands."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 15,
+              "silver": 30,
+              "bronze": 66
+            },
+            "cuts": {
+              "gold": 9.7,
+              "silver": 7.9,
+              "bronze": 4.7
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://eupho.ee/wp-content/uploads/2021/06/EuPhO2021-results.pdf",
+                "title": "EuPhO 2021 official final table: actual G/S/B award counts",
+                "official": true
+              },
+              {
+                "url": "https://eupho.ee/rules/",
+                "title": "EuPhO rules: medals by total-score thresholds",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -13576,8 +13645,8 @@
             }
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 결과표는 메달을 행 색(금·은·동·장려)으로만 표시하므로 그 색 구간으로 수상 인원과 최저 수상 총점을 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. The table marks awards only by row colour (gold, silver, bronze, honourable mention); award counts and lowest awarded totals are read from those colour bands."
           },
           "components": [
             {
@@ -13607,7 +13676,14 @@
                 ]
               ]
             }
-          ]
+          ],
+          "medalCutoffs": {
+            "gold": 23.5,
+            "silver": 16.2,
+            "bronze": 10.9
+          },
+          "cutoffKind": "observed",
+          "medalCutoffRule": "gte"
         },
         {
           "id": "eupho-2022-theory",
@@ -13824,8 +13900,34 @@
             ]
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 결과표는 메달을 행 색(금·은·동·장려)으로만 표시하므로 그 색 구간으로 수상 인원과 최저 수상 총점을 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. The table marks awards only by row colour (gold, silver, bronze, honourable mention); award counts and lowest awarded totals are read from those colour bands."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 12,
+              "silver": 30,
+              "bronze": 44
+            },
+            "cuts": {
+              "gold": 24.7,
+              "silver": 19.5,
+              "bronze": 12.4
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://eupho.ee/wp-content/uploads/2022/05/EuPhO2022-awards.pdf",
+                "title": "EuPhO 2022 official final table: actual G/S/B award counts",
+                "official": true
+              },
+              {
+                "url": "https://eupho.ee/rules/",
+                "title": "EuPhO rules: medals by total-score thresholds",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -14043,8 +14145,34 @@
             ]
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 결과표는 메달을 행 색(금·은·동·장려)으로만 표시하므로 그 색 구간으로 수상 인원과 최저 수상 총점을 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. The table marks awards only by row colour (gold, silver, bronze, honourable mention); award counts and lowest awarded totals are read from those colour bands."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 12,
+              "silver": 30,
+              "bronze": 44
+            },
+            "cuts": {
+              "gold": 10.2,
+              "silver": 7.4,
+              "bronze": 5.5
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://eupho.ee/wp-content/uploads/2022/05/EuPhO2022-awards.pdf",
+                "title": "EuPhO 2022 official final table: actual G/S/B award counts",
+                "official": true
+              },
+              {
+                "url": "https://eupho.ee/rules/",
+                "title": "EuPhO rules: medals by total-score thresholds",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -14257,8 +14385,8 @@
             }
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 결과표는 메달을 행 색(금·은·동·장려)으로만 표시하므로 그 색 구간으로 수상 인원과 최저 수상 총점을 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. The table marks awards only by row colour (gold, silver, bronze, honourable mention); award counts and lowest awarded totals are read from those colour bands."
           },
           "components": [
             {
@@ -14287,7 +14415,14 @@
                 ]
               ]
             }
-          ]
+          ],
+          "medalCutoffs": {
+            "gold": 32.5,
+            "silver": 25.5,
+            "bronze": 17.5
+          },
+          "cutoffKind": "observed",
+          "medalCutoffRule": "gte"
         },
         {
           "id": "eupho-2023-theory",
@@ -16176,8 +16311,34 @@
             ]
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 특별상 표기가 일반 메달 표기를 대신한 행이 있어 단일 점수로 검증할 수 없는 수상 기준은 표시하지 않습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. Some special-prize labels replace ordinary medal labels; award tiers that cannot be verified as a single score threshold are withheld."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 특별상(Best·BExp·BThe)만 적힌 3명은 총점이 최저 금메달 총점 이상이므로, 총점 기준으로 메달을 주는 규정에 따라 금메달로 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. Three rows carry only a special prize (Best, BExp, BThe); their totals are at or above the lowest gold total, so under the threshold rule they are counted as gold."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 18,
+              "silver": 38,
+              "bronze": 44
+            },
+            "cuts": {
+              "gold": 19.7,
+              "silver": 13.1,
+              "bronze": 8.6
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://eupho.ee/wp-content/uploads/2025/06/EuPhO_2025_results-3.pdf",
+                "title": "EuPhO 2025 official final table: actual G/S/B award counts",
+                "official": true
+              },
+              {
+                "url": "https://eupho.ee/rules/",
+                "title": "EuPhO rules: medals by total-score thresholds",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -16403,8 +16564,34 @@
             ]
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 특별상 표기가 일반 메달 표기를 대신한 행이 있어 단일 점수로 검증할 수 없는 수상 기준은 표시하지 않습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. Some special-prize labels replace ordinary medal labels; award tiers that cannot be verified as a single score threshold are withheld."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 특별상(Best·BExp·BThe)만 적힌 3명은 총점이 최저 금메달 총점 이상이므로, 총점 기준으로 메달을 주는 규정에 따라 금메달로 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. Three rows carry only a special prize (Best, BExp, BThe); their totals are at or above the lowest gold total, so under the threshold rule they are counted as gold."
+          },
+          "medalReference": {
+            "basis": "round_rank",
+            "counts": {
+              "gold": 18,
+              "silver": 38,
+              "bronze": 44
+            },
+            "cuts": {
+              "gold": 10.1,
+              "silver": 6.1,
+              "bronze": 4.1
+            },
+            "population": "complete",
+            "sources": [
+              {
+                "url": "https://eupho.ee/wp-content/uploads/2025/06/EuPhO_2025_results-3.pdf",
+                "title": "EuPhO 2025 official final table: actual G/S/B award counts",
+                "official": true
+              },
+              {
+                "url": "https://eupho.ee/rules/",
+                "title": "EuPhO rules: medals by total-score thresholds",
+                "official": true
+              }
+            ]
           }
         },
         {
@@ -16624,8 +16811,8 @@
             }
           ],
           "note": {
-            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 특별상 표기가 일반 메달 표기를 대신한 행이 있어 단일 점수로 검증할 수 없는 수상 기준은 표시하지 않습니다.",
-            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. Some special-prize labels replace ordinary medal labels; award tiers that cannot be verified as a single score threshold are withheld."
+            "ko": "공개 결과표의 전체 참가자(초청 참가자 포함)를 비교합니다. 유럽 외 국가 참가자는 메달 기준 산정에서 제외되지만 기준 이상의 점수에는 메달을 받습니다. 특별상(Best·BExp·BThe)만 적힌 3명은 총점이 최저 금메달 총점 이상이므로, 총점 기준으로 메달을 주는 규정에 따라 금메달로 셌습니다.",
+            "en": "Comparison includes all entrants in the published table, including guests. Non-European guest scores do not set medal thresholds, but scores above the thresholds receive medals. Three rows carry only a special prize (Best, BExp, BThe); their totals are at or above the lowest gold total, so under the threshold rule they are counted as gold."
           },
           "components": [
             {
@@ -16655,7 +16842,14 @@
                 ]
               ]
             }
-          ]
+          ],
+          "medalCutoffs": {
+            "gold": 29.85,
+            "silver": 19.4,
+            "bronze": 13.0
+          },
+          "cutoffKind": "observed",
+          "medalCutoffRule": "gte"
         },
         {
           "id": "eupho-2026-theory",
@@ -17642,22 +17836,22 @@
           2026
         ],
         "limitations": {
-          "ko": "2019년은 수상자 총점만 공개되었습니다. 2020년 수치 행과 참가 인원에 불일치가 있습니다. 2020–2022년 결과표의 색상만으로 메달 기준을 추정하지 않았습니다.",
-          "en": "2019 provides awardee totals only. 2020 has a row-count/participant-count discrepancy. Medal thresholds were not inferred from colored rows in 2020–2022."
+          "ko": "2019년은 수상자 총점만 공개되었습니다. 2020년 수치 행과 참가 인원에 불일치가 있습니다. 2021·2022년 메달은 결과표의 행 색 구간에서, 2025년 특별상 3명은 총점 기준 규정으로 셌습니다.",
+          "en": "2019 provides awardee totals only. 2020 has a row-count/participant-count discrepancy. 2021/2022 awards are read from the table's row colour bands; 2025's three special-prize rows are counted by the total-threshold rule."
         },
         "medalReferenceYears": [
           2017,
           2018,
           2020,
+          2021,
+          2022,
           2023,
           2024,
+          2025,
           2026
         ],
         "medalReferenceOmitted": {
-          "2019": "No separate theory/experiment scores.",
-          "2021": "Ordinary medal categories are color-only; special-prize labels cannot supply G/S/B counts.",
-          "2022": "Ordinary medal categories are color-only; exact published G/S/B counts were not independently verified.",
-          "2025": "Best/BExp/BThe replace ordinary medal labels on three rows; complete G/S/B counts remain ambiguous."
+          "2019": "No separate theory/experiment scores."
         },
         "medalReferenceMethod": "Actual G/S/B award counts in the official table projected onto same-round score rankings, including source guest populations. These are reference bands, not official component awards.",
         "sources": [
@@ -19920,8 +20114,8 @@
             ]
           ],
           "note": {
-            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 수상자만 포함하여 전체 참가자 백분위를 제공하지 않습니다. 발표 기관마다 전체 참가 인원이 달라 분모를 확정하지 않았습니다.",
-            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table contains awardees only; no full-field percentile is available. Published participant totals differ across delegations; the denominator is left unresolved."
+            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 장려상까지 수상자만 포함합니다. 규정상 비수상자는 총점이 최저 수상 총점 미만이므로, 그 점수 이상에서만 전체 참가자 기준 순위가 확정됩니다. 발표 기관마다 전체 참가 인원이 달라 분모를 확정하지 않았습니다.",
+            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table lists awardees down to honourable mention only. By the statutes every non-awardee totalled below the lowest award, so full-field ranks are exact only at or above that score. Published participant totals differ across delegations; the denominator is left unresolved."
           },
           "participantCountUncertain": true,
           "medalReference": {
@@ -20148,8 +20342,8 @@
             ]
           ],
           "note": {
-            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 수상자만 포함하여 전체 참가자 백분위를 제공하지 않습니다. 발표 기관마다 전체 참가 인원이 달라 분모를 확정하지 않았습니다.",
-            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table contains awardees only; no full-field percentile is available. Published participant totals differ across delegations; the denominator is left unresolved."
+            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 장려상까지 수상자만 포함합니다. 규정상 비수상자는 총점이 최저 수상 총점 미만이므로, 그 점수 이상에서만 전체 참가자 기준 순위가 확정됩니다. 발표 기관마다 전체 참가 인원이 달라 분모를 확정하지 않았습니다.",
+            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table lists awardees down to honourable mention only. By the statutes every non-awardee totalled below the lowest award, so full-field ranks are exact only at or above that score. Published participant totals differ across delegations; the denominator is left unresolved."
           },
           "participantCountUncertain": true,
           "medalReference": {
@@ -20371,8 +20565,8 @@
             }
           ],
           "note": {
-            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 수상자만 포함하여 전체 참가자 백분위를 제공하지 않습니다. 발표 기관마다 전체 참가 인원이 달라 분모를 확정하지 않았습니다.",
-            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table contains awardees only; no full-field percentile is available. Published participant totals differ across delegations; the denominator is left unresolved."
+            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 장려상까지 수상자만 포함합니다. 규정상 비수상자는 총점이 최저 수상 총점 미만이므로, 그 점수 이상에서만 전체 참가자 기준 순위가 확정됩니다. 발표 기관마다 전체 참가 인원이 달라 분모를 확정하지 않았습니다.",
+            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table lists awardees down to honourable mention only. By the statutes every non-awardee totalled below the lowest award, so full-field ranks are exact only at or above that score. Published participant totals differ across delegations; the denominator is left unresolved."
           },
           "participantCountUncertain": true,
           "components": [
@@ -20411,7 +20605,8 @@
             "bronze": 16.2
           },
           "cutoffKind": "observed",
-          "medalCutoffRule": "gte"
+          "medalCutoffRule": "gte",
+          "rankFloor": 8.0
         },
         {
           "id": "apho-2026-theory",
@@ -20614,8 +20809,8 @@
             ]
           ],
           "note": {
-            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 수상자만 포함하여 전체 참가자 백분위를 제공하지 않습니다.",
-            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table contains awardees only; no full-field percentile is available."
+            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 장려상까지 수상자만 포함합니다. 규정상 비수상자는 총점이 최저 수상 총점 미만이므로, 그 점수 이상에서만 전체 참가자 기준 순위가 확정됩니다.",
+            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table lists awardees down to honourable mention only. By the statutes every non-awardee totalled below the lowest award, so full-field ranks are exact only at or above that score."
           },
           "medalReference": {
             "basis": "round_rank",
@@ -20839,8 +21034,8 @@
             ]
           ],
           "note": {
-            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 수상자만 포함하여 전체 참가자 백분위를 제공하지 않습니다.",
-            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table contains awardees only; no full-field percentile is available."
+            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 장려상까지 수상자만 포함합니다. 규정상 비수상자는 총점이 최저 수상 총점 미만이므로, 그 점수 이상에서만 전체 참가자 기준 순위가 확정됩니다.",
+            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table lists awardees down to honourable mention only. By the statutes every non-awardee totalled below the lowest award, so full-field ranks are exact only at or above that score."
           },
           "medalReference": {
             "basis": "round_rank",
@@ -21058,8 +21253,8 @@
             }
           ],
           "note": {
-            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 수상자만 포함하여 전체 참가자 백분위를 제공하지 않습니다.",
-            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table contains awardees only; no full-field percentile is available."
+            "ko": "이론 30점·실험 20점을 구분하여 비교합니다. 메달 수치는 실제 수상자의 최소 총점이며 공식 공표 커트라인과 구분합니다. 이 결과표는 장려상까지 수상자만 포함합니다. 규정상 비수상자는 총점이 최저 수상 총점 미만이므로, 그 점수 이상에서만 전체 참가자 기준 순위가 확정됩니다.",
+            "en": "Theory (30) and experiment (20) are compared separately. Medal values are observed minimum awarded totals, not separately published official boundaries. This table lists awardees down to honourable mention only. By the statutes every non-awardee totalled below the lowest award, so full-field ranks are exact only at or above that score."
           },
           "components": [
             {
@@ -21098,7 +21293,8 @@
             "bronze": 23.0
           },
           "cutoffKind": "observed",
-          "medalCutoffRule": "gte"
+          "medalCutoffRule": "gte",
+          "rankFloor": 16.22
         }
       ],
       "coverage": {
@@ -21118,8 +21314,8 @@
         ],
         "medalReferenceMethod": "Actual G/S/B award counts from each official final table projected onto same-round score rankings; only the published score population is used for incomplete editions. Not official component awards.",
         "limitations": {
-          "ko": "2017년은 익명 비수상자까지 포함합니다. 2025·2026년은 수상자 점수만 있습니다. 2019년 공식 PDF는 글자·열이 겹쳐 자동 추출 검증을 통과하지 못해 포함하지 않았습니다. 다른 연도의 수상자 수를 점수 분포로 환산하지 않았습니다.",
-          "en": "2017 includes anonymous non-award scores. 2025/2026 provide awardees only. The overlapping 2019 PDF failed extraction validation and is not imported. Award counts from other editions are not converted into score distributions."
+          "ko": "2017년은 익명 비수상자까지 포함합니다. 2025·2026년은 장려상까지의 수상자 점수만 있어 최저 수상 총점 이상에서만 전체 순위를 확정합니다. 2019년 공식 PDF는 글자·열이 겹쳐 자동 추출 검증을 통과하지 못해 포함하지 않았습니다. 다른 연도의 수상자 수를 점수 분포로 환산하지 않았습니다.",
+          "en": "2017 includes anonymous non-award scores. 2025/2026 provide awardees down to honourable mention only; full-field ranks are exact only at or above the lowest awarded total. The overlapping 2019 PDF failed extraction validation and is not imported. Award counts from other editions are not converted into score distributions."
         },
         "sources": [
           {
