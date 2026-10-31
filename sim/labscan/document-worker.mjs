@@ -1,6 +1,6 @@
 /* The scanner's worker: finds the page and renders the scan off the main thread. No model and no network: the page is
    found by printed markers or by findPage in scanner.js (v2), both plain arithmetic on the photo's pixels. */
-import { toGray, detectDocumentQuadGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=8e31e6b73e0b';
+import { toGray, detectDocumentQuadGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=8f2b51627da8';
 
 function detect(message) {
   const bitmap = message.bitmap, width = bitmap.width, height = bitmap.height;
@@ -27,7 +27,7 @@ async function render(message) {
     { x: inset.left * size.width, y: inset.top * size.height }, { x: inset.right * size.width, y: inset.top * size.height },
     { x: inset.left * size.width, y: inset.bottom * size.height }, { x: inset.right * size.width, y: inset.bottom * size.height },
   ] : null;
-  const output = warpPixels(input.data, width, height, message.corners, size.width, size.height, target);
+  const output = warpPixels(input.data, width, height, message.corners, size.width, size.height, target, { sharpen: message.mode === 'clean' });
   const quality = inspectDocumentPixels(output.data, size.width, size.height);
   const data = enhancePixels(output.data, size.width, size.height, message.mode || 'original');
   const canvas = new OffscreenCanvas(size.width, size.height);
