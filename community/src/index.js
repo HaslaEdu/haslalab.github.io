@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, restoreLatex, quoteOnPage } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1615,6 +1615,7 @@ const SCHEME_SCHEMA = { type: "object", properties: {
     checks: { type: "array", items: { type: "object", properties: { check: { type: "string", enum: LAB_CHECKS }, n: N({ type: "integer" }), points: { type: "number" } }, required: ["check", "points"] } },
     n_min: N({ type: "integer" }), n_class: N({ type: "string", enum: ["few", "medium", "many"] }),
     role: { type: "string", enum: ["result", "step"] },
+    ref: N({ type: "string" }), tol: N({ type: "string", enum: ["interval", "order", "default"] }),
   }, required: ["id", "points", "type", "sheet", "what"] } } }, required: ["points", "items"] };
 const PAGE_SCHEMA = { type: "object", properties: {
   text: { type: "string" }, confidence: { type: "number" },
@@ -1643,7 +1644,7 @@ function compactRead(read) {
 }
 const GRADE_SCHEMA = { type: "object", properties: {
   items: { type: "array", items: { type: "object", properties: {
-    id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), unit_ok: { type: "boolean" },
+    id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), value_in_unit: N({ type: "number" }), unit_ok: { type: "boolean" },
     visual: N({type:'object',properties:{kind:{type:'string',enum:['value','graph','table','diagram']},box:{type:'array',items:{type:'number'}},description:{type:'string'},value:N({type:'number'}),rows:N({type:'integer'}),columns:{type:'array',items:{type:'string'}},graph:PAGE_SCHEMA.properties.items.items.properties.graph},required:['kind','box','description']}),
     checks_met: { type: "array", items: { type: "string" } }, score: { type: "number" },
     rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: { type: "string" },
@@ -1855,6 +1856,7 @@ async function labScheme(env, s, task, m) {
       "For a numerical value give the full-mark interval (full_min, full_max; turn ± or «within 5 %» into an interval) and every partial-credit interval with its points, as printed; otherwise leave them null and say in `what` exactly what is required (the expected expression or result, and what earns partial marks).",
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
       "A numerical answer whose interval is not printed still names the official value with its unit in `what` (e.g. «correct numerical value of H_c = 7.7 m»), and any alternative value the solution says to accept.",
+      "For every numerical value item also give ref, the official value exactly as printed in the item's unit (digits only, as «-13.6», «7.7» or «2.2e9»), and tol: interval when the scheme prints an interval (give full_min and full_max too), order when it accepts the nearest power of ten, default otherwise.",
       "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
       "notes: the solution's own general marking rules in a few words, above all whether a correct final answer without working earns its marks (e.g. «Rule 2: a formula written without derivation earns no marks unless it can be done in one's head», or a problem's note «writing the correct answer without showing work also receives full marks»), and which questions ask to derive, show or prove.",
       "unit_rule: what the scheme says about units and significant figures, if anything."].join("\n") },
@@ -1971,7 +1973,7 @@ function labStoredReading(env, image, reading) {
 
 /* 3. one experiment, graded */
 const near = (a, b) => Math.abs(a - b) <= Math.max(1e-9, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
-function labScore(scheme, raw, pages) {
+function labScore(scheme, raw, pages, opts = {}) {
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
   const items = scheme.items.map(it => {
@@ -1992,14 +1994,19 @@ function labScore(scheme, raw, pages) {
     const pick = kind => live.find(i => i.kind === kind && (kind !== "graph" || i.graph) && i.label === it.id) || live.find(i => i.kind === kind && (kind !== "graph" || i.graph));
     const nmin = it.n_min > 0 ? it.n_min : N_MIN[it.n_class] || null;
     if (it.sheet === "answer" && pg.kind !== "answer") return zero("R1");          // a final answer off the answer sheet
-    if (it.type === "value" && it.full_min != null && it.full_max != null) {
+    const interval = it.full_min != null && it.full_max != null, byRef = !!opts.theory && !interval && !!refTolerance(it.ref);
+    if (it.type === "value" && (interval || byRef)) {
       const v = Number(g.value);
       if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(x => sameNumber(x, v)))) return zero("R9");   // a value that was not read there
       res.value = v;
       if (it.unit && g.unit_ok === false) return zero("R3");
+      const w = g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
       let pts = 0;
-      if (v >= Math.min(it.full_min, it.full_max) && v <= Math.max(it.full_min, it.full_max)) pts = it.points;
-      else for (const p of it.partial || []) if (v >= Math.min(p.min, p.max) && v <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
+      if (interval) {
+        if (w >= Math.min(it.full_min, it.full_max) && w <= Math.max(it.full_min, it.full_max)) pts = it.points;
+        else for (const p of it.partial || []) if (w >= Math.min(p.min, p.max) && w <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
+      } else if (valueMatches(it, w)) pts = it.points;                                   // R12 in code: the official value and its tolerance
+      else rules.add("R12");
       res.got = pts;
     } else if (it.type === "graph" && Array.isArray(it.checks) && it.checks.length) {
       const gr = pick("graph");
@@ -2128,7 +2135,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
   }
   parts.push({text:'For evidence you can directly see in a supplied original student image, including a graph or handwritten arrow missing from OCR/items, provide visual:{kind,box:[ymin,xmin,ymax,xmax] in 0..1000,description,value,graph,rows,columns}. Graph fields describe observed checks and counts, not an inferred correct answer. Give the actual page and label. This allows visual evidence to be checked without treating an empty transcription as a blank graphical answer. Never claim visual evidence on a typed-only page.'});
   const out = await labVision(env, s, parts, GRADE_SCHEMA, 16384, m, "grade");
-  const sc = labScore(scheme, out.raw, mine);
+  const sc = labScore(scheme, out.raw, mine, { theory });
   return { status: "graded", score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model, regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
