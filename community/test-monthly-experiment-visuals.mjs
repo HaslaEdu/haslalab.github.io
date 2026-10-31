@@ -42,10 +42,10 @@ async function database(run) {
   try{return await run({sql,DB,insert,queries});}finally{sql.close();}
 }
 
-test('only this monthly experiment loads originals; no-photo submissions and earlier theory questions stay text-only',async()=>{
+test('all monthly sheets initialize visual evidence while no-photo submissions remain text-only without database reads',async()=>{
   const DB={prepare(){throw Error('must not access a database');}},value=normalized();
   const first=await prepareMonthlyExperimentVisuals(DB,1,{id:4},value);
-  assert.deepEqual(first,{images:[],imageCount:0,bytes:0});assert.ok(!('visualEvidence'in value));
+  assert.deepEqual(first,{images:[],imageCount:0,bytes:0});assert.ok(value.visualEvidence instanceof Map);assert.equal(value.visualEvidence.size,0);
   const active=await prepareMonthlyExperimentVisuals(DB,1,problem,value);
   assert.deepEqual(active,{images:[],imageCount:0,bytes:0});assert.equal(value.graderAnswer,value.answer);
   assert.ok(value.visualEvidence instanceof Map);assert.equal(value.visualEvidence.size,0);
@@ -117,7 +117,7 @@ test('capture page associations are owner-scoped and can retain a visible graph 
     const id=insert({partId:'A.1'}),session=uuid(100);
     sql.prepare('INSERT INTO monthly_capture_sessions(id,user_id,problem_id,token_hash,created_at,expires_at,submission_id,revision) VALUES(?,1,91,?,1,2,55,8)').run(session,'hash');
     sql.prepare('INSERT INTO monthly_capture_pages(photo_id,session_id,page_no,kind,parts,ocr_status,created_at) VALUES(?,?,2,?,?,?,1)')
-      .run(id,session,'working',JSON.stringify([part('A.2','','')]),'done');
+      .run(id,session,'working',JSON.stringify([part('A.2','',photoMarker(id,'A.2'))]),'done');
     const value=normalized([part('A.2')],[id]);value.sheet.capture={scan_id:session,revision:7};
     const result=await prepareMonthlyExperimentVisuals(DB,1,problem,value);
     assert.deepEqual(result.images[0].part_ids,['A.2']);assert.ok(value.visualEvidence.has('A.2'));assert.ok(!value.visualEvidence.has('A.1'));
@@ -135,8 +135,8 @@ test('oversized visual batches fail explicitly rather than silently omitting rel
     assert.ok(!queries.some(query=>query.startsWith('SELECT no,data')));
   });
   await database(async({DB,insert,queries})=>{
-    const ids=Array.from({length:6},(_,i)=>insert({id:uuid(i+1),declaredBytes:4*1024*1024}));
-    assert.ok(6*4*1024*1024>MONTHLY_EXPERIMENT_VISUAL_MAX_BYTES);
+    const ids=Array.from({length:4},(_,i)=>insert({id:uuid(i+1),declaredBytes:4*1024*1024}));
+    assert.ok(4*4*1024*1024>MONTHLY_EXPERIMENT_VISUAL_MAX_BYTES);
     await assert.rejects(prepareMonthlyExperimentVisuals(DB,1,problem,normalized([part('A.2')],ids)),isError('monthly_visuals_too_large',413));
     assert.ok(!queries.some(query=>query.startsWith('SELECT no,data')));
   });

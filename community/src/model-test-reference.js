@@ -1,3 +1,4 @@
+import {referenceImages} from './reference-images.js';
 import { MODEL_TEST_EXAMS, MODEL_TEST_CATALOGUE_VERSION } from './model-test-catalog.js';
 
 // Only public source text is retained. Neither answer scans nor credentials enter this cache.
@@ -123,6 +124,41 @@ async function fetchPdf(value, options, total) {
     cancelBody(reader);
   }
 }
+// One bounded public PDF pack per cache scope. It is reused for reference
+// preparation and final visual grading; the 16 text-context entries never retain
+// sixteen PDF bundles. No student image or credential is admitted here.
+const documentPacks=new WeakMap();
+async function canonicalDocuments(entry,options){
+  entry=resolveModelTestExam(entry.id);
+  const scope=options.referenceCache||references,key=MODEL_TEST_CATALOGUE_VERSION+'|'+entry.id;
+  const prior=documentPacks.get(scope);
+  if(prior?.key===key&&(prior.promise||prior.expires>Date.now()))return prior.promise||prior.documents;
+  if(prior?.promise)fail('model_test_reference_busy',503);
+  const state={key,promise:null};
+  const promise=(async()=>{
+    const total={bytes:0},sources=[...new Set([entry.paper,entry.solution,entry.mark].filter(Boolean))],controller=new AbortController();
+    try{return await Promise.all(sources.map(async(source)=>({...await fetchPdf(source,{...options,documentSignal:controller.signal},total),
+      source,label:`Canonical ${source===entry.paper?'problem':source===entry.mark?'marking scheme':'solution'}: ${entry.comp} ${entry.year} ${entry.task}; public reference, not student work`,
+      ...(source===entry.paper?{firstPage:entry.paperPage||1,lastPage:entry.paperLastPage}:{} )})));}
+    finally{controller.abort();}
+  })();
+  state.promise=promise;documentPacks.set(scope,state);
+  try{const documents=await promise;documentPacks.set(scope,{key,documents,expires:Date.now()+REFERENCE_TTL});return documents;}
+  catch(error){if(documentPacks.get(scope)===state)documentPacks.delete(scope);throw error;}
+}
+export async function modelTestGradingReferences(env,entry,provider,options={}){
+  options={fetchImpl:globalThis.fetch,...options};
+  const documents=await canonicalDocuments(entry,options),images=[];
+  try{
+    for(const doc of documents){
+      if(provider==='gemini')images.push({...doc});
+      else images.push(...await referenceImages(env,{bytes:Uint8Array.from(atob(doc.data),c=>c.charCodeAt(0)),source:doc.source,label:doc.label,
+        firstPage:doc.firstPage||1,lastPage:doc.lastPage}));
+    }
+    return images;
+  }catch(error){fail(error.code==='reference_too_large'?'model_test_reference_too_large':'model_test_reference_unavailable',error.status||422);}
+}
+
 const REFERENCE_SCHEMA = { type: 'object', properties: {
   scope_verified: { type: 'boolean' }, problem: { type: 'string' }, rubric: { type: 'string' },
   points_verified: { type: 'boolean' }, points: { type: 'number', nullable: true },
@@ -191,12 +227,8 @@ export async function prepareModelTestReference(env, entry, gemini, options = {}
   }
   const state = { promise: null };
   const promise = (async () => {
-    const t0 = Date.now(), total = { bytes: 0 };
-    const sources = [...new Set([entry.paper, entry.solution, entry.mark].filter(Boolean))];
-    const documentController = new AbortController();
-    let documents;
-    try { documents = await Promise.all(sources.map(source => fetchPdf(source, { ...options, documentSignal: documentController.signal }, total))); }
-    finally { documentController.abort(); }
+    const t0=Date.now(),sources=[...new Set([entry.paper,entry.solution,entry.mark].filter(Boolean))];
+    const documents=await canonicalDocuments(entry,options);
     const scoring = reviewedScoring(entry), maximum = scoring?.maximum ?? null;
     const result = await options.providerCall(env, { provider: 'gemini', model: gemini.model }, 'reference', REFERENCE_POLICY,
       { language: lang, comp: entry.comp, competition: entry.competition, title: entry.title,

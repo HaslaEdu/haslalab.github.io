@@ -215,12 +215,54 @@ test('desktop queued photos retain unconfirmed originals through mode changes un
     assert.equal(item.scan.a4WarpApplied,false);assert.equal(item.scan.paperStatus,'aspect_mismatch');assert.equal(item.scan.method,'page','a mode change is not manual corner confirmation');
     assert.equal(item.scan.cornersReliable,false);assert.match(ui.queueHTML(),/original image is retained/);
   }
-  const confirmed=corners.map(point=>({...point}));await ui.rebuildQueue(item,{corners:confirmed,marker:false});
+  const confirmed=corners.map(point=>({...point}));await ui.rebuildQueue(item,{corners:confirmed,marker:false,pageFormat:'a4'});
   assert.equal(calls.at(-1)[5].preserveOriginal,false);assert.equal(item.scan.cornersReliable,true);assert.equal(item.scan.autoScore,1);
   assert.equal(item.scan.paperStatus,'manual_a4');assert.equal(item.scan.a4WarpApplied,true);assert.equal(item.scan.method,'manual');
+  assert.equal(item.scan.warpApplied,true);assert.equal(item.scan.outputFormat,'a4');assert.equal(calls.at(-1)[5].pageFormat,'a4');
   assert.doesNotMatch(ui.queueHTML(),/original image is retained|Check the corners and adjust/);
   await ui.rebuildQueue(item,{mode:'mono'});assert.equal(calls.at(-1)[5].preserveOriginal,false);assert.equal(item.scan.paperStatus,'manual_a4');assert.equal(item.scan.method,'manual');
   assert.ok(encoded.every(call=>call.options.maxBytes===1850000));assert.equal(revoked.length,5);
   item.scan={...item.scan,a4WarpApplied:undefined,paperStatus:undefined,cornersReliable:false,autoScore:.99};assert.match(ui.queueHTML(),/Check the corners and adjust/,'high geometry scores do not hide uncertain-corner warnings');
   item.scan.cornersReliable=true;assert.doesNotMatch(ui.queueHTML(),/Check the corners and adjust/);
+  item.scan={...item.scan,warpApplied:true,a4WarpApplied:false,outputFormat:'auto'};assert.doesNotMatch(ui.queueHTML(),/original image is retained/,'auto-aspect correction is a valid completed warp');
+});
+
+test('KMO selection sends only provider IDs through start, payment, OCR and final review, then obeys the server lock',async()=>{
+  const prior={window:global.window,document:global.document,location:global.location};let controller;
+  global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};
+  global.window={qrcode:()=>({addData(){},make(){},createSvgTag:()=>'<svg></svg>'})};global.document={head:{append(){}},body:{append(){}},createElement:testHost};
+  const host=testHost(),calls=[],vision={default:'gemini',providers:[{id:'deepseek',available:true,model:'PRIVATE_MODEL_A'},{id:'gemini',available:true,model:'PRIVATE_MODEL_B'}]};let paid=false,selected='gemini';
+  const session=()=>({id:12,examId:'kmo-example',status:'scanning',paid,provider:selected,provider_locked:paid,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'typed',confirmed:true,text:'Proof',ocr_status:'done'}]});
+  const fetch=async(url,options)=>{const route=new URL(url).pathname,body=options.body?JSON.parse(options.body):null;calls.push({route,body});
+    if(route.endsWith('/bootstrap'))return{ok:true,json:async()=>({tokens:3,health:{vision}})};
+    if(route.endsWith('/start'))selected=body.provider;if(route.endsWith('/pay')){paid=true;selected=body.provider;}
+    return{ok:true,json:async()=>({session:session(),vision,token:route.endsWith('/start')?'server-upload-grant':undefined,tokens:3})};};
+  try {
+    controller=Review.mount(host,{id:'kmo-example',comp:'kmo',kind:'proof',questions:1},{storage:{getItem:key=>key==='hlCmTok'?'owner-token':null,setItem(){}},fetch});await new Promise(done=>setImmediate(done));
+    assert.deepEqual([...host.innerHTML.matchAll(/<option[^>]*>([^<]+)<\/option>/g)].map(match=>match[1]),['deepseek','gemini']);assert.ok(!host.innerHTML.includes('PRIVATE_MODEL_'));
+    const field=host.querySelector('[data-cr-provider]');assert.equal(field.value,'gemini');field.value='deepseek';field.onchange();assert.equal(calls.length,1,'choosing a provider cannot run OCR or use tokens');
+    await host.querySelector('[data-cr-start]').onclick();assert.equal(calls.find(call=>call.route.endsWith('/start')).body.provider,'deepseek');
+    await host.querySelector('[data-cr-pay]').onclick();assert.equal(host.querySelector('[data-cr-provider]').disabled,true);
+    const locked=host.querySelector('[data-cr-provider]');locked.value='gemini';locked.onchange();assert.equal(locked.value,'deepseek');
+    host.querySelector('[data-cr-approved]').onchange({target:{checked:true}});await host.querySelector('[data-cr-submit]').onclick();
+    for(const suffix of ['/pay','/read','/submit'])assert.equal(calls.find(call=>call.route.endsWith(suffix)).body.provider,'deepseek',suffix);
+    assert.ok(calls.filter(call=>call.route.includes('/qr')).every(call=>!call.body?.provider),'QRs retain the authoritative server session rather than a client override');
+  } finally {controller?.dispose();for(const[key,value]of Object.entries(prior)){if(value===undefined)delete global[key];else global[key]=value;}}
+});
+
+test('a stale KMO payment completion cannot start OCR after account switching or route disposal',async()=>{
+  for(const leave of ['account','route']) {
+    const prior={window:global.window,document:global.document,location:global.location};let controller,finish,auth='owner-A';const calls=[];
+    global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};global.window={};global.document={head:{append(){}},body:{append(){}},createElement:testHost};
+    const session={id:12,examId:'kmo-example',status:'scanning',paid:false,provider:'deepseek',provider_locked:false,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'typed',confirmed:true,text:'Proof',ocr_status:'done'}]};
+    const vision={providers:[{id:'deepseek',available:true},{id:'gemini',available:true}]},host=testHost();
+    const fetch=async(url,options)=>{calls.push({url,options});if(url.endsWith('/pay'))return new Promise(resolve=>finish=()=>resolve({ok:true,json:async()=>({session:{...session,paid:true,provider_locked:true},vision})}));return{ok:true,json:async()=>({session,vision,tokens:3})};};
+    try {
+      controller=Review.mount(host,{id:'kmo-example',comp:'kmo',kind:'proof',questions:1},{session,storage:{getItem:key=>key==='hlCmTok'?auth:null,setItem(){}},fetch});await new Promise(done=>setImmediate(done));
+      const pending=host.querySelector('[data-cr-pay]').onclick();await new Promise(done=>setImmediate(done));assert.equal(typeof finish,'function');
+      if(leave==='account')auth='owner-B';else controller.dispose();finish();await pending;
+      assert.equal(calls.filter(call=>call.url.endsWith('/read')).length,0);assert.equal(calls.find(call=>call.url.endsWith('/pay')).options.headers.Authorization,'Bearer owner-A');
+      assert.equal(JSON.parse(calls.find(call=>call.url.endsWith('/pay')).options.body).provider,'deepseek');
+    } finally {controller?.dispose();for(const[key,value]of Object.entries(prior)){if(value===undefined)delete global[key];else global[key]=value;}}
+  }
 });

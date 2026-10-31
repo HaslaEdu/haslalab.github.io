@@ -106,7 +106,7 @@ function tierIcon(lv, size) {
 }
 const ar = {seq: 0, health: null};
 const arT = () => AT[lang];
-const arErr = (e) => (arT().err[e && e.code]) || cmErr(e);
+const arErr = (e) => ({provider_required:lang==="en"?"Choose a grading provider.":"채점 제공자를 선택하세요.",provider_unavailable:lang==="en"?"This provider is unavailable. Choose an available option before starting.":"선택한 제공자를 사용할 수 없습니다. 시작 전에 사용 가능한 항목을 선택하세요.",provider_locked:lang==="en"?"The provider is fixed after reading or grading starts.":"판독·채점을 시작한 뒤에는 제공자를 바꿀 수 없습니다."})[e?.code] || (arT().err[e && e.code]) || cmErr(e);
 function arTier(lv) { return `<span class="artier" style="--c:${TIER_COL[tierKey(lv)]}">${tierIcon(lv, 14)}${esc(tierName(lv))}</span>`; }
 function arLevel(lv) { return `<span class="arlvl" title="${esc(tierName(lv))}">${tierIcon(lv, 15)}</span>`; }
 function arLeft(sec) { if (sec <= 0) return arT().closed; const d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
@@ -366,7 +366,7 @@ function arResult(s, prob) {
     ${(d.scores || []).length ? `<table class="cmtbl artbl"><thead><tr><th style="width:42%">${T.criteria}</th><th style="width:70px">${T.score}</th><th>${T.evidence}</th></tr></thead><tbody>
       ${d.scores.map((c) => `<tr><td class="t"><b>${esc(arMonthlyPartNumber(prob,c.id,c.display_id))}</b> ${esc(c.name)}<div class="arnote">${esc(c.note)}</div></td>
         <td><b>${c.got}</b>/${c.max}<div class="ardec ${c.decision}">${T[c.decision] || ""}</div></td>
-        <td class="t">${(c.evidence || []).map((e) => `<q>${esc(e)}</q>`).join(" ")}</td></tr>`).join("")}</tbody></table>` : ""}
+        <td class="t">${(c.evidence || []).map((e) => `<q>${esc(arPhotoEvidenceLabel(e))}</q>`).join(" ")}</td></tr>`).join("")}</tbody></table>` : ""}
     ${(d.feedback || []).length ? `<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${d.feedback.map((f) => `<li class="${f.kind}"><em>${f.kind === "good" ? T.good : T.fix}</em><q>${esc(f.quote)}</q> ${esc(f.note)}</li>`).join("")}</ul>` : ""}
     ${d.note ? `<p class="arnote">${esc(d.note)}</p>` : ""}`;
 }
@@ -375,7 +375,22 @@ function arMonthlyFeedbackRelease(submission, problem) {
   return dates.length ? Math.max(...dates) : null;
 }
 let arScanner = null;
-const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=20261030-ocr").catch(error => { arScanner = null; throw error; }));
+const AR_VISION_PROVIDERS = ["deepseek", "gemini"];
+function arVisionCapabilities(source) {
+  const health = source?.health || source || {}, fallback = ar.health || {};
+  const vision = health.vision || health.arena?.vision || fallback.vision || fallback.arena?.vision;
+  return AR_VISION_PROVIDERS.map(id => ({id,available:vision?.providers ? vision.providers.some(row=>row.id===id&&row.available===true) : id==="gemini"}));
+}
+function arVisionHtml(source, provider = "gemini", locked = false) {
+  const selected = AR_VISION_PROVIDERS.includes(provider) ? provider : "gemini";
+  return `<label class="arnote" style="display:block;margin:10px 0">${lang==="en"?"OCR, grading and feedback":"OCR·채점·피드백"}<select data-vision-provider aria-label="${lang==="en"?"Grading provider":"채점 제공자"}" ${locked?"disabled":""}>${arVisionCapabilities(source).map(row=>`<option value="${row.id}" ${row.id===selected?"selected":""} ${row.available?"":"disabled"}>${row.id}</option>`).join("")}</select></label>`;
+}
+function arVisionField(root) { try { return root.querySelector("[data-vision-provider]"); } catch (_) { return null; } }
+function arVisionProvider(root, fallback = "gemini") {
+  const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
+}
+function arVisionAvailable(source, provider) { return arVisionCapabilities(source).some(row=>row.id===provider&&row.available); }
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=d4f342e770a6").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
@@ -426,7 +441,8 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
   };
   async function read() {
     if (!photo || photo.preparing || photo.reading || photo.done || options.blocked?.()) return;
-    const token = generation, selected = photo.clean && photo.selected === "clean" ? photo.clean : photo.file, destination = options.target?.();
+    const token = generation, selected = photo.clean && photo.selected === "clean" ? photo.clean : photo.file, destination = options.target?.(), provider=options.provider?.()||arVisionProvider(f);
+    if(!arVisionAvailable(options.capabilities,provider))return note(lang==="en"?"This provider is unavailable.":"선택한 제공자를 사용할 수 없습니다.",true);
     const request = options.request?.(destination) || {path:"/ocr"};
     photo.reading = true; paint(); note(T.reading);
     const ctrl = new AbortController(); controller = ctrl;
@@ -441,6 +457,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
       const ext = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[blob.type];
       if (!ext) throw { code: "bad_image" };
       const fd = new FormData(); fd.append("image", blob, `answer.${ext}`);
+      fd.append("provider",provider);
       if (request.original) {
         const original = selected === photo.file ? blob : await scanner.encodeUpload(photo.file, {maxBytes:4 * 1024 * 1024}).catch(error => {
           if (error?.code === "image_too_big") throw {code:"ocr_image_too_big"};
@@ -452,16 +469,17 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
         fd.append("original_image",original,`original.${originalExt}`);
       }
       for (const [name,value] of Object.entries(request.fields || {})) fd.append(name,String(value));
-      const response = await fetch(authBase + "/api" + request.path + "?mode=" + (f.math.checked ? "math" : "text"), {
+      if(options.provider&&options.provider()!==provider)return;
+      const response = await fetch(authBase + "/api" + request.path + "?mode=" + (f.math.checked ? "math" : "text")+"&provider="+encodeURIComponent(provider)+(options.problemId?"&problem_id="+encodeURIComponent(options.problemId):""), {
         method: "POST", headers: { Authorization: "Bearer " + authToken }, body: fd, signal: ctrl.signal,
       });
       const result = await response.json().catch(() => ({ error: "server_error" }));
       if (!current(token)) return;
       if (!response.ok) throw { code: result.error };
-      if (typeof result.text !== "string" || !result.text.trim()) throw { code: "ocr_empty" };
-      onRead(result.text, destination, result); photo.done = true;
+      if (typeof result.text !== "string" || !result.text.trim()&&!(typeof result.photo_id==="string"&&result.visuals?.length)) throw { code: "ocr_empty" };
+      options.onProviderPinned?.(provider);onRead(result.text, destination, result); photo.done = true;
       const ta = destination || f.querySelector("textarea");
-      note(ta.value.length > ta.maxLength && ta.maxLength > 0 ? T.scanLong : T.readDone);
+      note(ta.value.length > ta.maxLength && ta.maxLength > 0 ? T.scanLong : !result.text.trim() ? (lang==="en"?"Graphical answer attached. The selected provider will inspect the photo when grading.":"그림 답안을 첨부했습니다. 채점할 때 선택한 제공자가 사진을 함께 확인합니다.") : T.readDone);
       info.className = "arinfo ok"; ta.focus();
     } catch (error) {
       if (current(token)) note(arErr(error), true);
@@ -480,7 +498,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     try {
       const scanner = await arLoadScanner(); if (!current(token)) return;
       if (!scanner.canProcess()) { photo.warning = T.scanUnavailable; return; }
-      const result = await scanner.processShot(file, { mode: "clean" });
+      const result = await scanner.processShot(file, { mode: "original" });
       if (!current(token)) return;
       photo.result = result; photo.clean = result.blob; photo.cleanUrl = imageUrl(result.blob); photo.selected = "clean";
     } catch (error) {
@@ -537,13 +555,14 @@ function arMonthlyPartNumber(problem,id,displayId) {
   return displayed ? (String(displayed).includes(".") ? String(displayed) : "("+displayed+")") : String(id);
 }
 function arSheetFinalPreview(value) {
-  const text = String(value || "").trim();
+  const text = arPhotoEvidenceLabel(value).trim();
   if (!text) return "";
   return /\$/.test(text) || !/[\\_^{}=]|^[\d+−-]/.test(text) ? arSheetWorkingPreview(text) : `<div>$$${esc(text)}$$</div>`;
 }
 function arSheetWorkingPreview(value) {
-  return String(value || "").split(/(\$\$[\s\S]*?\$\$)/).map(part => part.startsWith("$$") && part.endsWith("$$") ? `<div>${esc(part)}</div>` : arText(part)).join("");
+  return arPhotoEvidenceLabel(value).split(/(\$\$[\s\S]*?\$\$)/).map(part => part.startsWith("$$") && part.endsWith("$$") ? `<div>${esc(part)}</div>` : arText(part)).join("");
 }
+function arPhotoEvidenceLabel(value) { return String(value||"").replace(/\[PHOTO(?::[A-Za-z0-9-]{1,100}:[A-Za-z0-9._-]{1,80}| [A-Za-z0-9-]{1,100})\]/g,lang==="en"?"[See the graph or diagram in the submitted photo]":"[제출한 사진의 그래프·그림 답안]"); }
 function arSheetDraftKey(p) {
   const account = cm.me?.id != null ? "id:"+cm.me.id : cm.me?.username ? "legacy:"+cm.me.username : null;
   return account == null ? null : `hlMonthlySheet:${encodeURIComponent(typeof cmBase === "function" ? cmBase() : "")}:${encodeURIComponent(account)}:${p.id}:${p.answerSheet.version}`;
@@ -602,7 +621,7 @@ function arMonthlyCaptureReady(scan) {
 }
 // The photo workflow uses the same upload-only grant and scanner as exam mode.
 // The API, rather than editable text fields, owns the photographed submission.
-function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=()=>{},active=()=>true}={}) {
+function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=()=>{},active=()=>true,provider=()=>"gemini"}={}) {
   const C=arCaptureT(),box=root.querySelector(".arsheet-photo"),qr=box.querySelector("[data-capture-qr]"),pages=box.querySelector("[data-capture-pages]"),info=box.querySelector("[data-capture-info]");
   const owner=cm.me?.id??cm.me?.username,base=cmBase(),auth=typeof cmTok==="function"?cmTok():null;
   let scan=null,grant=null,busy=false,disposed=false,timer=null,signature="";
@@ -643,7 +662,7 @@ function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=(
   }
   async function start(fresh=false){
     if(!current()){dispose();return;}if(busy)return;setBusy(true);note("");
-    try{const response=await cmApi("POST",`/monthly/problems/${p.id}/scan`,fresh?{fresh:true}:{...(scanId?{scan_id:scanId}:{})});if(!current()){revokeLate(response.scan?.id);dispose();return;}apply(response.scan);grant=response.scan?.token||response.token||grant;await paintQr();}
+    try{const selected=fresh?provider():scan?.provider||provider();if(!arVisionAvailable(p,selected))throw{code:"provider_unavailable"};const response=await cmApi("POST",`/monthly/problems/${p.id}/scan`,{provider:selected,...(fresh?{fresh:true}:scanId?{scan_id:scanId}:{})});if(!current()){revokeLate(response.scan?.id);dispose();return;}apply(response.scan);grant=response.scan?.token||response.token||grant;await paintQr();}
     catch(error){note(arSheetError(error),true);}finally{setBusy(false);schedule();}
   }
   async function refresh(force=false){
@@ -664,7 +683,7 @@ function arMonthlyAnswerHtml(p, ocrOn) {
     <p class="arnote">${S.release(p.closes_at ? arDeadline(p.closes_at + 1) : "")}</p><p class="arnote">${S.authorship}</p><p class="arnote">${S.retained}</p>
     ${!signed ? `<p>${T.loginToSubmit} <a class="cmbtn sm pri" href="#/login" id="arLogin">${T.login}</a></p>` : ""}
     ${exhausted ? `<p class="cmnote">${S.exhausted}</p>` : ""}
-    <form id="arSheetF" class="armonthly-sheet">
+    <form id="arSheetF" class="armonthly-sheet">${arVisionHtml(p,p.provider||"gemini")}
       <div class="arsheet-modes" role="group" aria-label="${S.h}"><button type="button" class="cmbtn sm pri" data-sheet-mode="typed" aria-pressed="true">${S.typed}</button><button type="button" class="cmbtn sm" data-sheet-mode="photo" aria-pressed="false">${S.photo}</button></div>
       <div class="arsheet-photo" hidden>${arMonthlyCaptureHtml(p,ocrOn)}</div>
       <div class="arsheet-typed">
@@ -722,11 +741,11 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
   const pageAlive = alive, owner = cm.me?.id ?? cm.me?.username, base = cmBase(), token = typeof cmTok === "function" ? cmTok() : null;
   alive = () => pageAlive() && (cm.me?.id ?? cm.me?.username) === owner && cmBase() === base && (typeof cmTok !== "function" || cmTok() === token);
   const f = root.querySelector("#arSheetF"), out = root.querySelector("#arOut"), S = arSheetT(), T = arT();
-  const button = f.querySelector("button[type=submit]"), key = arSheetDraftKey(p), fields = [...f.querySelectorAll("[data-sheet-answer], [data-sheet-working]")];
+  const button = f.querySelector("button[type=submit]"), key = arSheetDraftKey(p), fields = [...f.querySelectorAll("[data-sheet-answer], [data-sheet-working]")],providerField=arVisionField(f);
   let requestId = null, accepted = false, viaOcr = false, busy = false, photoBusy = false, previewTimer = null, mode="typed",capture=null,scanId=null,photoSignature=null,draftMode="typed";
   const photos = new Map();
   const attempts = () => p.attempts?.remaining !== 0;
-  const save = () => { if (!key || !alive()) return; try { localStorage.setItem(key, JSON.stringify({version:p.answerSheet.version,mode,scan_id:scanId,photo_signature:photoSignature,request_id:requestId,accepted,via_ocr:viaOcr,photos:[...photos].map(([id,part_id])=>({id,part_id})),
+  const save = () => { if (!key || !alive()) return; try { localStorage.setItem(key, JSON.stringify({version:p.answerSheet.version,provider:arVisionProvider(f),mode,scan_id:scanId,photo_signature:photoSignature,request_id:requestId,accepted,via_ocr:viaOcr,photos:[...photos].map(([id,part_id])=>({id,part_id})),
     parts:p.answerSheet.parts.map(part => ({id:part.id, answer:f.querySelector(`[data-sheet-answer="${part.id}"]`).value,working:f.querySelector(`[data-sheet-working="${part.id}"]`).value}))})); } catch (_) {} };
   const preview = () => {
     for (const part of p.answerSheet.parts) {
@@ -742,14 +761,16 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
         f.querySelector(`[data-sheet-answer="${part.id}"]`).value = typeof saved.answer === "string" ? saved.answer.slice(0,4000) : "";
         f.querySelector(`[data-sheet-working="${part.id}"]`).value = typeof saved.working === "string" ? saved.working.slice(0,16000) : ""; }
       requestId = typeof draft.request_id === "string" ? draft.request_id : null; accepted = !!draft.accepted; viaOcr = !!draft.via_ocr;
+      if(providerField&&AR_VISION_PROVIDERS.includes(draft.provider)&&arVisionAvailable(p,draft.provider))providerField.value=draft.provider;
       draftMode=draft.mode==="photo"?"photo":"typed";scanId=typeof draft.scan_id==="string"?draft.scan_id:null;photoSignature=typeof draft.photo_signature==="string"?draft.photo_signature:null;
       for (const photo of draft.photos || []) if (typeof photo.id === "string" && photo.id.length <= 100 && p.answerSheet.parts.some(part=>part.id === photo.part_id)) photos.set(photo.id,photo.part_id);
     }
   } catch (_) {}
-  const updateButton=()=>{const scan=capture?.snapshot();button.disabled=!cm.me||!attempts()||accepted||busy||photoBusy||mode==="photo"&&(!arMonthlyCaptureReady(scan)||!scan.open&&!requestId);};
+  const updateButton=()=>{const scan=capture?.snapshot();if(providerField){if(mode==="photo"&&scan?.provider)providerField.value=scan.provider;providerField.disabled=busy||photoBusy||mode==="photo"&&!!scan?.provider;}button.disabled=!cm.me||!attempts()||accepted||busy||photoBusy||!arVisionAvailable(p,mode==="photo"&&scan?.provider||arVisionProvider(f))||mode==="photo"&&(!arMonthlyCaptureReady(scan)||!scan.open&&!requestId);};
   updateButton();
   if (accepted && attempts()) out.innerHTML = `<p class="arnote">${S.next}</p>`;
   const edited = () => { if (busy || !alive()) return; requestId = null; accepted = false; updateButton(); save(); clearTimeout(previewTimer); previewTimer = setTimeout(preview,250); };
+  if(providerField)providerField.onchange=()=>{if(!alive()||busy||photoBusy||providerField.disabled)return;edited();};
   for (const field of fields) field.oninput = edited;
   preview();
   const switchMode=(selected,restore=false)=>{
@@ -758,7 +779,7 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
     for(const item of f.querySelectorAll("[data-sheet-mode]")){const on=item.dataset.sheetMode===mode;item.classList.toggle("pri",on);item.setAttribute("aria-pressed",String(on));}
     if(changed&&!restore){requestId=null;accepted=false;}
     if(photo&&cm.me&&ocrOn&&attempts()){
-      if(!capture){capture=arBindMonthlyCapture(f,p,alive,{scanId,active:()=>mode==="photo",onBusy:value=>{photoBusy=value;if(alive())updateButton();},
+      if(!capture){capture=arBindMonthlyCapture(f,p,alive,{scanId,provider:()=>arVisionProvider(f),active:()=>mode==="photo",onBusy:value=>{photoBusy=value;if(alive())updateButton();},
         onChange:next=>{if(!alive())return;scanId=next.id;const signature=JSON.stringify([next.id,next.parts,next.photo_ids]);
           if(mode==="photo"&&photoSignature!==null&&signature!==photoSignature&&!busy){requestId=null;accepted=false;}photoSignature=signature;save();updateButton();}});if(restore)capture.restore?.();else capture.start();}
       else capture.resume();
@@ -769,17 +790,19 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
   if(draftMode==="photo")switchMode("photo",true);
   f.onsubmit = async event => {
     event.preventDefault(); if (busy || photoBusy || !cm.me || !attempts() || accepted || !alive()) return;
+    if(!arVisionAvailable(p,arVisionProvider(f)))return;
     let parts,scan;try{if(mode==="photo"){scan=capture?.snapshot();if(!arMonthlyCaptureReady(scan))throw{sheetMessage:scan?.pages?.length?arCaptureT().incomplete:arCaptureT().empty};if(!scan.open&&!requestId)throw{sheetMessage:arCaptureT().closed};}
       else parts=arSheetParts(p,f);}catch(error){out.innerHTML=`<p class="arinfo bad">${esc(arSheetError(error))}</p>`;return;}
     if (!requestId) requestId = typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : "monthly-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2);
     save(); busy = true; button.disabled = true;
+    if(providerField)providerField.disabled=true;
     if(mode==="photo")capture?.setBusy(true);
     for (const field of fields) field.disabled = true;
     for (const control of f.querySelectorAll("input[type=file],select[name=photo_part],input[name=math]")) control.disabled = true;
     out.innerHTML = `<p class="arinfo">${S.grading}</p>`;
     try {
       const photoIds = mode==="typed"?[...photos].filter(([,partId])=>parts.some(part=>part.id === partId && part.answer && part.working)).map(([id])=>id):[];
-      const payload=mode==="photo"?{scan_id:scan.id,request_id:requestId,sheet_version:p.answerSheet.version,lang}:{parts,request_id:requestId,sheet_version:p.answerSheet.version,photo_ids:photoIds,via_ocr:viaOcr,lang};
+      const payload=mode==="photo"?{scan_id:scan.id,provider:scan.provider||arVisionProvider(f),request_id:requestId,sheet_version:p.answerSheet.version,lang}:{parts,provider:arVisionProvider(f),request_id:requestId,sheet_version:p.answerSheet.version,photo_ids:photoIds,via_ocr:viaOcr,lang};
       const result = await cmApi("POST",`/problems/${p.id}/submit`,payload);
       if (!alive()) return;
       if (result.attempts) { p.attempts = result.attempts; root.querySelector("#arSheetAttempts").textContent = S.remaining(result.attempts.remaining); }
@@ -850,12 +873,15 @@ function arBindMonthlyExperiment(root,p,alive) {
   show(mode);
 }
 async function arProblem(root, alive, id,preloaded) {
+  const pageAlive=alive,owner=cm.me?.id??cm.me?.username,base=typeof cmBase==="function"?cmBase():null,auth=typeof cmTok==="function"?cmTok():null;
+  alive=()=>pageAlive()&&(cm.me?.id??cm.me?.username)===owner&&(typeof cmBase!=="function"||cmBase()===base)&&(typeof cmTok!=="function"||cmTok()===auth);
   ar.photoCleanup?.();
   ar.monthlyPhotoCleanup?.();
   ar.monthlyCaptureCleanup?.();
   ar.monthlyExperimentCleanup?.();
   const T = arT(), j = preloaded||await cmApi("GET", `/problems/${id}?lang=${lang}`); if (!alive()) return;
   const p = j.problem, now = Math.floor(Date.now() / 1000), ocrOn = j.health && j.health.ocr;
+  if(j.vision||j.health?.vision)p.vision=j.vision||j.health.vision;
   root.innerHTML = `
     <div class="arcrumb"><a href="#/monthly/${esc(arPeriodId(p))}">← ${T.weekH} ${esc(arPeriodLabel(p))}</a></div>
     <div class="arprob">
@@ -871,6 +897,7 @@ async function arProblem(root, alive, id,preloaded) {
         <form id="arF" class="arshort"><input name="a" inputmode="decimal" autocomplete="off" placeholder="${T.answerPh}" maxlength="60">${p.unit ? `<span>${esc(p.unit)}</span>` : ""}
           <button class="cmbtn pri" type="submit">${T.submit}</button></form>` : `
         <form id="arF" class="aressay">
+          ${arVisionHtml(j,p.provider||"gemini")}
           <div class="arocr">
             <label class="cmbtn sm ${ocrOn ? "" : "dis"}">📷 ${T.photo}<input type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden ${ocrOn ? "" : "disabled"}></label>
             <label class="archk"><input type="checkbox" name="math" checked> ${T.mathMode}</label>
@@ -894,24 +921,27 @@ async function arProblem(root, alive, id,preloaded) {
   const lg = root.querySelector("#arLogin"); if (lg) lg.onclick = () => { try { sessionStorage.setItem("hlCmBack", location.hash); } catch (e) {} };
   if (p.answerSheet?.parts?.length) { arBindMonthlyAnswer(root,p,alive,ocrOn); return; }
   const f = root.querySelector("#arF"); if (!f) return;
-  const out = root.querySelector("#arOut"); let viaOcr = false;
+  const out = root.querySelector("#arOut"); let viaOcr = false,providerPinned=null;const photoIds=new Set();
   const ta = f.querySelector("textarea");
   if (ta) {
     const key = "hlArDraft" + id; try { ta.value = localStorage.getItem(key) || ""; } catch (e) {}
     const prev = root.querySelector("#arPrev"); let tm = 0;
     const upd = () => { prev.innerHTML = arText(ta.value); arMath(prev); try { localStorage.setItem(key, ta.value); } catch (e) {} };
     ta.oninput = () => { clearTimeout(tm); tm = setTimeout(upd, 350); }; upd();
-    arBindAnswerPhoto(f, alive, T, text => { ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + text; viaOcr = true; upd(); });
+    arBindAnswerPhoto(f, alive, T, (text,_destination,result) => { const content=text.trim()?text:(lang==="en"?"[Graphical answer in attached photo]":"[첨부한 사진의 그림 답안]");ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + content; viaOcr = true;if(typeof result?.photo_id==="string"&&result.photo_id.length<=100)photoIds.add(result.photo_id);upd(); },{problemId:id,provider:()=>providerPinned||arVisionProvider(f),capabilities:j,onProviderPinned:value=>{providerPinned=value;const select=arVisionField(f);if(select){select.value=value;select.disabled=true;}},onBusy:value=>{const select=arVisionField(f);if(select)select.disabled=value||!!providerPinned;}});
   }
   f.onsubmit = async (e) => {
-    e.preventDefault(); const btn = f.querySelector("button[type=submit]"); btn.disabled = true;
+    e.preventDefault();if(!alive())return;const provider=providerPinned||arVisionProvider(f),providerField=arVisionField(f);if(p.kind!=="short"&&!arVisionAvailable(j,provider))return;
+    const btn = f.querySelector("button[type=submit]"); btn.disabled = true;if(providerField)providerField.disabled=true;
     out.innerHTML = `<p class="arinfo">${T.grading}</p>`;
     try {
-      const r = await cmApi("POST", `/problems/${id}/submit`, {answer: f.a.value, via_ocr: viaOcr, lang});
+      const r = await cmApi("POST", `/problems/${id}/submit`, {answer: f.a.value, via_ocr: viaOcr, lang,...(p.kind!=="short"?{provider}:{}) ,...(photoIds.size?{photo_ids:[...photoIds]}:{})});
+      if(!alive())return;
       out.innerHTML = `<h4 class="arh4">${T.result}</h4>` + arResult(r, p); arMath(out);
       if (ta && r.status === "graded") try { localStorage.removeItem("hlArDraft" + id); } catch (e) {}
       setTimeout(() => { if (alive()) arProblem(root, alive, id).then(() => { const o = root.querySelector("#arOut"); if (o) { o.innerHTML = `<h4 class="arh4">${T.result}</h4>` + arResult(r, p); o.scrollIntoView({block: "nearest"}); } }); }, 50);
-    } catch (er) { out.innerHTML = `<p class="arinfo bad">${esc(arErr(er))}</p>`; btn.disabled = false; }
+    } catch (er) { if(alive()){out.innerHTML = `<p class="arinfo bad">${esc(arErr(er))}</p>`; btn.disabled = false;} }
+    finally{if(alive()&&providerField)providerField.disabled=!!providerPinned;}
   };
 }
 
@@ -1260,7 +1290,7 @@ function arLabItems(x, reg, rev) {
 function arLabQualitative(x) {
   const english=lang==="en", L=lbt(), T=arT();
   return `<div class="cmnote">${english?"Learning feedback based on the published problem and your submitted work. No official solution or marking scheme is available, so no numerical score is assigned.":"공개 문제와 제출한 답안을 바탕으로 한 학습용 첨삭입니다. 공식 해설·채점 기준이 없어 수치 점수를 매기지 않습니다."}</div>
-    ${Array.isArray(x.evidence)&&x.evidence.length?`<table class="cmtbl artbl"><thead><tr><th>${L.page}</th><th>${L.evid}</th><th>${T.feedback}</th></tr></thead><tbody>${x.evidence.map(e=>`<tr><td>${e.page?esc(e.page):"—"}</td><td class="t">${esc(e.quote||"")}</td><td class="t">${esc(e.note||"")}</td></tr>`).join("")}</tbody></table>`:""}
+    ${Array.isArray(x.evidence)&&x.evidence.length?`<table class="cmtbl artbl"><thead><tr><th>${L.page}</th><th>${L.evid}</th><th>${T.feedback}</th></tr></thead><tbody>${x.evidence.map(e=>`<tr><td>${e.page?esc(e.page):"—"}</td><td class="t">${esc(e.quote||e.description||"")}</td><td class="t">${esc(e.note||"")}</td></tr>`).join("")}</tbody></table>`:""}
     ${(x.feedback||[]).length?`<h4 class="arh4">${T.feedback}</h4><ul class="arfb">${x.feedback.map(f=>`<li class="${f.kind==="good"?"good":"fix"}"><em>${f.kind==="good"?T.good:T.fix}</em>${f.label?`<q>${esc(f.label)}</q> `:""}${esc(f.note||"")}</li>`).join("")}</ul>`:""}
     ${arLabReview(x.review)}`;
 }
@@ -1283,6 +1313,8 @@ async function arWatchLab(root,alive,id,session){
   }catch(e){}
 }
 async function arLabOne(root, alive, id,preloaded) {
+  const pageAlive=alive,owner=cm.me?.id??cm.me?.username,base=typeof cmBase==="function"?cmBase():null,auth=typeof cmTok==="function"?cmTok():null;
+  alive=()=>pageAlive()&&(cm.me?.id??cm.me?.username)===owner&&(typeof cmBase!=="function"||cmBase()===base)&&(typeof cmTok!=="function"||cmTok()===auth);
   ar.poller?.dispose();ar.poller=null;
   const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
@@ -1312,7 +1344,7 @@ async function arLabOne(root, alive, id,preloaded) {
         ${!s.sample_standing && !reviewOnly && arLabHasScore(s) && s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}` : ""}
       ${comparison?'<div id="arLabComparison"></div>':''}</div>
     ${s.status === "ended" && !isContest ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${L.payNote}</p>
-      <button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
+      ${arVisionHtml(s,s.provider||"gemini",!!s.provider_locked)}<button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
       const body = x.status === "graded" && arQualitative(x) ? arLabQualitative(x)
         : x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation, s.reviews ? {task: t, list: s.reviews} : null)
@@ -1329,14 +1361,16 @@ async function arLabOne(root, alive, id,preloaded) {
   if (comparison) window.labComparison.mount(root.querySelector('#arLabComparison'), s, lang, {base:'sim/results/',isCurrent:alive});
   const pay = root.querySelector("#arLabPay");
   if (pay) pay.onclick = async () => {
+    if(!alive())return;const provider=s.provider_locked&&AR_VISION_PROVIDERS.includes(s.provider)?s.provider:arVisionProvider(root,s.provider||"gemini");if(!arVisionAvailable(s,provider))return;
+    const providerField=arVisionField(root);if(providerField)providerField.disabled=true;
     pay.disabled = true; pay.textContent = L.payBusy;
-    try { await cmApi("POST", `/lab/sessions/${s.id}/pay?lang=${lang}`, {lang,max_cost:arLabCost(s)}); if (alive()) arLabOne(root, alive, id); }
+    try { await cmApi("POST", `/lab/sessions/${s.id}/pay?lang=${lang}`, {lang,provider,max_cost:arLabCost(s)}); if (alive()) arLabOne(root, alive, id); }
     catch (e) {
       if(!alive())return;
       if(e.code==='price_changed'){
         await arLabOne(root,alive,id);
         const message=root.querySelector('#arLabPayMsg');if(message)message.textContent=lang==='en'?'The fee changed. Check the updated fee and request grading again.':'채점 비용이 갱신되었습니다. 새 비용을 확인한 뒤 다시 신청해 주세요.';
-      }else{pay.disabled=false;pay.textContent=L.payBtn;root.querySelector('#arLabPayMsg').textContent=e.code==='no_tokens'?L.payNo:arErr(e);}
+      }else{pay.disabled=false;if(providerField)providerField.disabled=!!s.provider_locked;pay.textContent=L.payBtn;root.querySelector('#arLabPayMsg').textContent=e.code==='no_tokens'?L.payNo:arErr(e);}
     }
   };
   root.querySelectorAll("details.arsub").forEach((d) => d.addEventListener("toggle", async () => {
@@ -1661,7 +1695,9 @@ function arModelTestResult(result, T) {
     ${result.failure ? `<p class="arinfo bad">${esc(result.failure)}</p>` : ""}
     <div class="arres${scored ? " ok" : ""}"><b>${T.grading}</b><span>${scored ? esc(g.score.toLocaleString(lang === "en" ? "en" : "ko", {maximumFractionDigits:3})) + " / " + arModelTestNumber(g.points,T) : result.failure ? (["ocr","reference"].includes(result.failureStage) ? T.testIncomplete : T.incomplete) : qualitative ? T.qualitative : T.review}</span></div>
     ${g.feedback ? `<h4 class="arh4">${T.feedback}</h4><p style="white-space:pre-wrap">${esc(g.feedback)}</p>` : ""}
-    <details open><summary>${T.text}</summary><pre class="aranswer">${esc(o.text || T.noOcrResult)}</pre></details>
+    <details open><summary>${T.text}</summary><pre class="aranswer">${esc(o.text || (o.visuals?.length ? (lang==="en"?"Graphical answer: inspect the submitted image.":"그림 답안: 제출한 이미지를 함께 확인하세요.") : T.noOcrResult))}</pre></details>
+    ${o.visuals?.length ? `<ul>${o.visuals.map(v=>`<li>${esc(v.page)} · ${esc(v.description)}</li>`).join("")}</ul>` : ""}
+    ${g.evidence?.length ? `<details open><summary>${lang==="en"?"Grading evidence":"채점 근거"}</summary><ul>${g.evidence.map(e=>`<li>${e.source==="image"?`${lang==="en"?"Image page":"이미지 쪽"} ${esc(e.page)} · `:""}${esc(e.quote||e.description||"")} · ${esc(e.reason||"")}</li>`).join("")}</ul></details>` : ""}
     ${(o.uncertainties || []).length ? `<h4 class="arh4">${T.uncertain}</h4><ul>${o.uncertainties.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
     <details style="margin-top:16px" data-model-metrics><summary style="font-weight:700;cursor:pointer">${T.details}</summary>
       ${stages.map(stage => arModelTestStage(stage,T)).join("") || `<p class="arnote">${T.unknown}</p>`}

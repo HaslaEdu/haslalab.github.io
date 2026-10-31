@@ -266,7 +266,7 @@ test('a real authenticated mixed pipeline writes only its rate-limit admission, 
     assert.equal(result.grading.status, 'graded'); assert.equal(result.grading.score, 1);
     assert.equal(providers.length, 2); assert.match(providers[0].url, /^https:\/\/generativelanguage\.googleapis\.com\//);
     assert.equal(providers[1].url, 'https://api.deepseek.com/chat/completions');
-    assert.ok(!JSON.stringify(providers[1].request).includes('image_url'));
+    assert.ok(JSON.stringify(providers[1].request).includes('image_url'));assert.ok(JSON.stringify(providers[1].request).includes(body.images[0].data),'the selected grader receives the exact original answer image');
     assert.ok(db.queries.every(query => /SELECT u\.id.*sessions s JOIN users/s.test(query) || /^INSERT INTO ratelimits/.test(query)), db.queries.join('\n'));
     assert.equal(db.sql.prepare('SELECT COUNT(*) n FROM ratelimits').get().n, 1);
   } finally { globalThis.fetch = originalFetch; db.sql.close(); }

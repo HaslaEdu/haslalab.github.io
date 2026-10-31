@@ -37,7 +37,7 @@ for (let id = 1; id <= 80; id++) {
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(auth[id]))).toString('base64url');
   sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash, id, time, time + 3600);
 }
-const env = { DB, LAB_JOBS: { async sendBatch() {} }, LAB_KEEP_HOURS: 'off', ADS_REWARDED_UNIT: 'test', ADS_MIN_SEC: '0', ADS_DAILY: '10', TOSS_BASE: 'https://payments.test', TOSS_SECRET_KEY: 'local-stand-in' };
+const env = { DB,GEMINI_API_KEY:'local-selected-provider-no-AI', LAB_JOBS: { async sendBatch() {} }, LAB_KEEP_HOURS: 'off', ADS_REWARDED_UNIT: 'test', ADS_MIN_SEC: '0', ADS_DAILY: '10', TOSS_BASE: 'https://payments.test', TOSS_SECRET_KEY: 'local-stand-in' };
 globalThis.caches = { default: { async match() {}, async put() {} } };
 const originalFetch = globalThis.fetch;
 let paymentCalls = 0;
@@ -48,6 +48,7 @@ globalThis.fetch = async (url, options) => {
 };
 test.after(() => { globalThis.fetch = originalFetch; sql.close(); });
 async function api(path, body, user = 1, settings = env) {
+  if(body&&/^\/lab\/(?:start|sessions\/\d+\/(?:pay|submit))$/.test(path))body={provider:'gemini',...body};
   const r = await worker.fetch(new Request('https://worker.local/api' + path, {
     method: body === undefined ? 'GET' : 'POST', headers: { Authorization: 'Bearer ' + auth[user], ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
@@ -57,7 +58,7 @@ const balance = user => tokenBalance(sql.prepare('SELECT exam_tokens,exam_half F
 const fund = (user, tokens, half = 0) => sql.prepare('UPDATE users SET exam_tokens=?,exam_half=? WHERE id=?').run(tokens, half, user);
 const paidLedger = id => sql.prepare("SELECT * FROM lab_ledger WHERE session_id=? AND reason='grade'").all(id);
 function seed(user, { tasks = ['T1'], theory = tasks.filter(t => t.startsWith('T')), pair = false, review = false, comp = 'ipho', year = 2024, key = comp + year, charged = 0, pricing } = {}) {
-  const sources = Object.fromEntries(tasks.map(task => [task, { ...(theory.includes(task) ? { kind: 'theory' } : {}), sol: `IPhO_${year}_${task}S.pdf` }]));
+  const sources = {_provider:'gemini',...Object.fromEntries(tasks.map(task => [task, { ...(theory.includes(task) ? { kind: 'theory' } : {}), sol: `IPhO_${year}_${task}S.pdf` }]))};
   if (pair) sources._half = 1; if (review) sources._review = 1; if (pricing) sources._pricing = pricing;
   const id = Number(sql.prepare(`INSERT INTO lab_sessions(user_id,comp,year,exam_key,tasks,sources,started_at,ended_at,scan_until,upload_hash,status,charged,created_at)
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(user, comp, year, key, JSON.stringify(tasks), JSON.stringify(sources), time, time + 3600, time + 5400, crypto.randomUUID(), review ? 'scanning' : 'running', charged, time).lastInsertRowid);

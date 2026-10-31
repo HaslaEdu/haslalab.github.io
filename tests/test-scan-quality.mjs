@@ -140,14 +140,14 @@ test('a non-A4 rectangle remains uncropped and unstretched until explicit A4 cor
     const changed=await scanner.reprocess(first.baseUrl,first.corners,'clean',12,null,{preserveOriginal:true});
     assert.equal(changed.a4WarpApplied,false);assert.deepEqual([changed.width,changed.height],[W,H]);
     assert.deepEqual(JSON.parse(await changed.blob.text()).data,[...pixels],'changing the display mode cannot silently force A4');
-    const confirmed=await scanner.reprocess(first.baseUrl,first.corners,'original',12);
+    const confirmed=await scanner.reprocess(first.baseUrl,first.corners,'original',12,null,{pageFormat:'a4'});
     assert.equal(confirmed.a4WarpApplied,true);assert.deepEqual([confirmed.width,confirmed.height],[99,140]);
-    const explicit=await scanner.processShot(original,{corners:first.corners,mode:'original',dpi:12});
+    const explicit=await scanner.processShot(original,{corners:first.corners,mode:'original',dpi:12,pageFormat:'a4'});
     assert.equal(explicit.paperStatus,'manual_a4');assert.equal(explicit.a4WarpApplied,true);
   } finally { fixture.restore(); }
 });
 
-test('a complete unmarked photo flows through processShot as paper corners and preserves coloured page detail', async () => {
+test('without a document worker the proposal stays manual, then explicit correction preserves coloured page detail', async () => {
   const fixture = pixelFixture(), W = 320, H = 450, pixels = new Uint8ClampedArray(W * H * 4);
   const rect = (x0,y0,x1,y1,color) => { for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)pixels.set([...color,255],(y*W+x)*4); };
   rect(0,0,W,H,[42,48,54]); rect(45,40,275,366,[246,244,240]);
@@ -160,9 +160,11 @@ test('a complete unmarked photo flows through processShot as paper corners and p
     assert.equal(result.method,'page'); assert.ok(result.autoScore>.5);
     const expected=[{x:45,y:40},{x:275,y:40},{x:45,y:366},{x:275,y:366}];
     result.corners.forEach((corner,index)=>assert.ok(Math.hypot(corner.x-expected[index].x,corner.y-expected[index].y)<9,'each detected point follows the outer paper edge'));
-    assert.equal(result.width,99); assert.equal(result.height,140); assert.ok(Math.abs(result.sourceShortSide-230)<12);
+    assert.equal(result.warpApplied,false);assert.equal(result.width,W);assert.equal(result.height,H);assert.ok(Math.abs(result.sourceShortSide-230)<12);
+    const corrected=await scanner.reprocess(result.baseUrl,result.corners,'original',12,null,{pageFormat:'a4'});
+    assert.equal(corrected.width,99);assert.equal(corrected.height,140);
     const base=fixture.decode(result.baseUrl); assert.equal(base.width,W); assert.equal(base.height,H); assert.ok(Buffer.from(base.data).equals(Buffer.from(pixels)),'the editable baseline retains every original pixel');
-    const output=JSON.parse(await result.blob.text()), rows=[]; let blue=0,darkBorder=0;
+    const output=JSON.parse(await corrected.blob.text()), rows=[]; let blue=0,darkBorder=0;
     for(let y=0;y<output.height;y++)for(let x=0;x<output.width;x++) {
       const i=(y*output.width+x)*4,[r,g,b]=output.data.slice(i,i+3);
       if(r>140&&g<100&&b<110)rows.push(y);
@@ -208,7 +210,7 @@ test('a newer phone photo survives late progress, correction errors and rotation
     static revokeObjectURL(url) { revoked.push(url); }
   }
   const context = vm.createContext({
-    URL: FixtureURL, URLSearchParams, Blob, console,
+    URL: FixtureURL, URLSearchParams, Blob, AbortController, console,
     document: { getElementById: node, querySelector: node, createElement: () => node('element'), body: { append() {} }, documentElement: {} },
     location: { hash: '', pathname: '/sim/scan.html' }, history: { replaceState() {} },
     navigator: { language: 'ko' }, window: { HLExamNetwork: require('../sim/exam-network.js') },
@@ -235,7 +237,7 @@ test('a newer phone photo survives late progress, correction errors and rotation
   const editingB = context.phone.redo([], 'mono'), takingC = context.phone.take(c);
   rebuilt[0].reject(new Error('older correction failed')); await editingB;
   assert.equal(context.phone.getShot().file, c); assert.equal(context.phone.getShot().busy, true);
-  assert.equal(context.phone.getMode(), 'clean');
+  assert.equal(context.phone.getMode(), 'original');
   processed[2].resolve(result('current-c')); await takingC;
 
   const rotatingC = node('rotate').onclick(), takingD = context.phone.take(d);
@@ -253,14 +255,14 @@ test('photo preview warns on ambiguous high-score corners until the user confirm
   const block=script.slice(script.indexOf('function paintShot()'),script.indexOf('async function redo('));
   const nodes=new Map(), node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',querySelectorAll:()=>[]});return nodes.get(id);};
   const labels={weak:'UNCERTAIN_CORNERS',a4Shape:'UNVERIFIED_A4_ORIGINAL_RETAINED',processFailed:'PROCESS_FAILED',detail:'detail',answer:'answer',working:'working'};
-  const context=vm.createContext({shot:{task:'E1',kind:'answer',previewUrl:'data:fixture',autoScore:.95,cornersReliable:false},$:node,t:()=>labels,
+  const context=vm.createContext({lang:'en',shot:{task:'E1',kind:'answer',previewUrl:'data:fixture',autoScore:.95,cornersReliable:false},$:node,t:()=>labels,
     esc:String,canProcess:()=>false,MONTHLY:false,send(){}});
   vm.runInContext(block,context);context.paintShot();assert.match(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'a balanced quadrilateral is not sufficient evidence for a correct crop');
   context.shot={...context.shot,autoScore:1,cornersReliable:true,method:'manual'};context.paintShot();assert.doesNotMatch(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'confirmed manual paper corners clear the detector warning');
   context.shot={...context.shot,autoScore:.6,cornersReliable:undefined};context.paintShot();assert.match(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'the old score-only response still retains its warning');
   context.shot={...context.shot,autoScore:.95};context.paintShot();assert.doesNotMatch(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'legacy responses without the new flag remain compatible');
   context.shot={...context.shot,a4WarpApplied:false,paperStatus:'aspect_mismatch'};context.paintShot();
-  assert.match(node('shot').innerHTML,/UNVERIFIED_A4_ORIGINAL_RETAINED/,'a non-A4 photo is described as an unchanged original rather than a verified page');
+  assert.match(node('shot').innerHTML,/original was retained/,'an unconfirmed proposal is described as an unchanged original rather than a verified page');
 });
 
 async function liveCameraFixture({ auto = true, capturePhoto } = {}) {
@@ -280,9 +282,9 @@ async function liveCameraFixture({ auto = true, capturePhoto } = {}) {
   const labels = { lvAim: 'aim', lvPage: 'outline found', lvHold: 'hold still', lvTake: 'taking', blurry: 'blurred', lvNoCam: 'no camera', lvAspect: 'not A4', lvPerspective: 'hold parallel' };
   const context = vm.createContext({ navigator: { mediaDevices: { getUserMedia: async () => stream } }, canProcess: () => true,
     localStorage: { getItem: () => auto ? '1' : '0', setItem() {} }, document: { createElement: tag => tag === 'div' ? overlay : canvas(), body: { append() {} } },
-    window: { ImageCapture }, ImageCapture, devicePixelRatio: 1, MONTHLY: false, SCAN_ACCENT: '#abc',
+    window: { ImageCapture }, ImageCapture, AbortController, lang:'en', devicePixelRatio: 1, MONTHLY: false, SCAN_ACCENT: '#abc',
     t: () => labels, toast() {}, toGray: () => new Uint8Array(1), inspectDocumentPixels: () => ({ focus: state.focus }),
-    detectDocumentQuadGray: (_gray, width, height) => { detections.push({ width, height }); return state.detection; },
+    detectDocumentQuad: async canvas => { detections.push({ width:canvas.width, height:canvas.height }); return state.pending ? await state.pending : state.detection; },
     take: async (blob, live) => photos.push({ blob, live }),
     setTimeout: fn => { const id = ++timerId; timers.set(id, fn); return id; }, clearTimeout: id => timers.delete(id) });
   vm.runInContext(block + '\nglobalThis.openCamera = liveCamera;', context);
@@ -301,6 +303,21 @@ test('markerless live preview automatically captures only a sharp validated outl
   assert.ok(live.detections.every(size => size.width === 540 && size.height === 720), 'live detection stays bounded instead of processing full-resolution video');
 });
 
+test('high-confidence learned perspective uses three stable observations without an A4 frontality gate', async () => {
+  const live=await liveCameraFixture();
+  live.state.detection={...live.state.detection,method:'ml',paperStatus:'document',scanEligible:true};
+  await live.next(2);assert.equal(live.photos.length,0);
+  await live.next();assert.equal(live.photos.length,1);assert.equal(live.calls.nativePhotos,1);
+});
+
+test('closing a camera during asynchronous detection ignores its late outline and never resumes capture', async () => {
+  const live=await liveCameraFixture();let resolve;
+  live.state.pending=new Promise(done=>{resolve=done;});
+  const next=live.next();await new Promise(done=>setImmediate(done));
+  await live.click('close');resolve(live.state.detection);await next;
+  assert.equal(live.photos.length,0);assert.equal(live.calls.stopped,1);assert.equal(live.timers.size,0);
+});
+
 test('uncertain or clipped paper outlines remain manual-shutter candidates rather than triggering automatic photos', async () => {
   for (const method of ['page', 'marker', 'frame']) {
     const live = await liveCameraFixture(); live.state.detection = { ...live.state.detection, method, score: .99, edgeSupport: .2, clipped: true, autoCaptureEligible: false };
@@ -310,8 +327,8 @@ test('uncertain or clipped paper outlines remain manual-shutter candidates rathe
   }
 });
 
-test('a non-A4 rectangle or uncertain perspective requests alignment instead of automatic capture', async () => {
-  for (const [paperStatus, expected] of [['aspect_mismatch','not A4'],['perspective_uncertain','hold parallel']]) {
+test('unconfirmed model proposals stay manual independently of a projected A4 classification', async () => {
+  for (const [paperStatus, expected] of [['aspect_mismatch','outline found'],['perspective_uncertain','outline found']]) {
     const live=await liveCameraFixture();
     live.state.detection={...live.state.detection,paperStatus,autoCaptureEligible:false};
     await live.next(12);assert.equal(live.photos.length,0);assert.equal(live.message.textContent,expected);

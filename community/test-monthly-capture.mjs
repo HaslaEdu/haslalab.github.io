@@ -26,7 +26,7 @@ async function environment(run) {
       sql.exec('BEGIN');try{const value=statements.map(st=>{const result=st.executeSync();if(failPhoto&&st.query.includes('INSERT INTO monthly_capture_pages')){failPhoto=false;throw Error('local photo interruption');}return result;});sql.exec('COMMIT');return value;}catch(error){sql.exec('ROLLBACK');throw error;}}};
   const saved={fetch:globalThis.fetch,caches:globalThis.caches,now:Date.now};
   let clock=NOW,transcript=TRANSCRIPT,extracted=parts(),beforeOcr=async()=>{},beforeGrade=async()=>{},beforeExtract=async()=>{};
-  const calls={ocr:0,extract:0,grade:0,screen:0};
+  const calls={ocr:0,extract:0,grade:0,screen:0},providerCalls=[];
   Date.now=()=>clock*1000;globalThis.caches={default:{async match(){},async put(){}}};
   const tokens=[];
   for(let id=1;id<=2;id++){
@@ -36,39 +36,38 @@ async function environment(run) {
     sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash,id,NOW-100,NOW+864000);
   }
   globalThis.fetch=async(url,init)=>{
-    if(String(url).includes('document-digitization')){
-      calls.ocr++;await beforeOcr();
-      assert.deepEqual(new Uint8Array(await init.body.get('document').arrayBuffer()),png(32));
-      return Response.json({content:{markdown:transcript},confidence:0.98,usage:{pages:1}});
-    }
-    assert.match(String(url),/:generateContent$/);
-    const request=JSON.parse(init.body),schema=request.generationConfig.responseSchema;
+    const gemini=String(url).endsWith(':generateContent');assert.ok(gemini||String(url).endsWith('/chat/completions'),'no OCR service or fallback endpoint may be called');
+    const request=JSON.parse(init.body),schema=gemini?request.generationConfig.responseSchema:JSON.parse(request.messages[0].content.split('JSON schema:\n')[1]);
+    providerCalls.push({provider:gemini?'gemini':'deepseek',request,schema});
     let raw;
-    if(schema.properties.parts){calls.extract++;await beforeExtract();raw={parts:extracted};}
+    if(schema.properties.visuals){calls.ocr++;await beforeOcr();assert.ok(JSON.stringify(request).includes(Buffer.from(png(32)).toString('base64')));raw={text:transcript,confidence:0.98,legible:true,uncertainties:[],visuals:[]};}
+    else if(schema.properties.parts){calls.extract++;await beforeExtract();raw={parts:extracted};}
     else if(schema.properties.assessment){calls.screen++;raw={assessment:'uncertain',confidence:0.5,signals:[]};}
     else{
       calls.grade++;await beforeGrade();
       const rubric=JSON.parse(sql.prepare('SELECT rubric FROM problems WHERE id=4').get().rubric);
-      raw={scores:rubric.map(c=>({id:c.id,got:c.id==='a'?c.max:0,note:'PRIVATE_CAPTURE_NOTE',decision:c.id==='a'?'met':'not_met',evidence:c.id==='a'?[ANSWER]:[]})),feedback:[],confidence:0.99};
+      const marker=JSON.stringify(request).match(/\[PHOTO:[a-f0-9-]{36}:a\]/)?.[0];
+      raw={scores:rubric.map(c=>({id:c.id,got:c.id==='a'?c.max:0,note:'PRIVATE_CAPTURE_NOTE',decision:c.id==='a'?'met':'not_met',evidence:c.id==='a'?[transcript?ANSWER:marker||'unverified']:[]})),feedback:[],confidence:0.99};
     }
-    return Response.json({candidates:[{content:{parts:[{text:JSON.stringify(raw)}]}}]});
+    return Response.json(gemini?{candidates:[{content:{parts:[{text:JSON.stringify(raw)}]}}]}:{choices:[{message:{content:JSON.stringify(raw)},finish_reason:'stop'}]});
   };
-  const env={DB,ALLOWED_ORIGINS:'http://localhost:8765',UPSTAGE_API_KEY:'local-ocr',GEMINI_API_KEY:'local-grader',LAB_KEEP_HOURS:'off'};
+  const env={DB,ALLOWED_ORIGINS:'http://localhost:8765',GEMINI_API_KEY:'local-grader',DEEPSEEK_API_KEY:'local-deepseek',LAB_KEEP_HOURS:'off'};
   const api=async(path,{user=1,body,method,headers={}}={})=>{
+    if(body&&!(body instanceof FormData)&&path==='/problems/4/submit')body={provider:'gemini',...body};
     const form=body instanceof FormData,response=await worker.fetch(new Request('http://monthly.local/api'+path,{method:method||(body===undefined?'GET':'POST'),
       headers:{Origin:'http://localhost:8765','Cache-Control':'no-cache',...(user?{Authorization:'Bearer '+tokens[user-1]}:{}),...(!form&&body!==undefined?{'Content-Type':'application/json'}:{}),...headers},
       ...(body===undefined?{}:{body:form?body:JSON.stringify(body)})}),env);
     return{status:response.status,response,data:response.headers.get('Content-Type')?.includes('application/json')?await response.json():new Uint8Array(await response.arrayBuffer())};
   };
-  const grant=async(body={},user=1)=>api('/monthly/problems/4/scan',{user,body});
+  const grant=async(body={},user=1)=>api('/monthly/problems/4/scan',{user,body:{provider:'gemini',...body}});
   const phone=async(scan,path='',options={})=>api('/monthly/up'+path,{user:0,...options,headers:{'X-Lab-Token':scan.token,...options.headers}});
   const upload=async(scan,{page=1,kind='answer',original=png(200),image=png(32),request_id=crypto.randomUUID()}={})=>{
     const form=new FormData();form.set('image',new File([image],'scan.png',{type:'image/png'}));form.set('original_image',new File([original],'original.png',{type:'image/png'}));
     if(request_id!==null)form.set('request_id',request_id);
     return phone(scan,`/pages?task=${page}&kind=${kind}`,{body:form});
   };
-  const submit=async(scan,key,extra={})=>api('/problems/4/submit',{body:{scan_id:scan.id,request_id:requestId(key),lang:'ko',...extra}});
-  try{return await run({sql,DB,api,grant,phone,upload,submit,calls,time:value=>{clock=value;},
+  const submit=async(scan,key,extra={})=>api('/problems/4/submit',{body:{scan_id:scan.id,provider:scan.provider||'gemini',request_id:requestId(key),lang:'ko',...extra}});
+  try{return await run({sql,DB,api,grant,phone,upload,submit,calls,providerCalls,time:value=>{clock=value;},
     transcript:value=>{transcript=value;},extract:value=>{extracted=value;},beforeOcr:callback=>{beforeOcr=callback;},beforeGrade:callback=>{beforeGrade=callback;},beforeExtract:callback=>{beforeExtract=callback;},beforeReserve:callback=>{beforeReserve=callback;},beforeGrant:callback=>{beforeGrant=callback;},failPhoto:()=>{failPhoto=true;},reservationBatches});}
   finally{globalThis.fetch=saved.fetch;globalThis.caches=saved.caches;Date.now=saved.now;sql.close();}
 }
@@ -431,7 +430,7 @@ test('photo/page/receipt transaction interruption rolls back together and the sa
 
 test('capture uploads bound OCR transcripts and request journals before retaining any bytes',async()=>{
   await environment(async({sql,grant,upload,transcript,calls,phone})=>{
-    const scan=(await grant()).data.scan;transcript('x'.repeat(256*1024+1));
+    const scan=(await grant()).data.scan;transcript('가'.repeat(Math.floor(256*1024/3)+1));
     assert.equal((await upload(scan)).data.error,'ocr_too_big');assert.equal(calls.extract,0);
     assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_answer_photos').get().n,0);
     for(let i=1;i<80;i++)sql.prepare("INSERT INTO monthly_capture_uploads(session_id,request_id,payload_hash,claim,created_at,updated_at) VALUES(?,?,?,'',?,0)").run(scan.id,'failed-request-'+String(i).padStart(3,'0'),'fixture',NOW);
@@ -452,5 +451,43 @@ test('old empty capabilities are cleaned up without removing photographed drafts
     assert.equal(sql.prepare('SELECT session_id FROM monthly_capture_uploads WHERE session_id=?').get(empty.id),undefined);
     assert.ok(sql.prepare('SELECT id FROM monthly_capture_sessions WHERE id=?').get(photographed.id));
     assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_answer_photos').get().n,1);
+  });
+});
+
+test('both selected providers receive original graph-only pages for extraction and final theory grading',async()=>{
+  for(const provider of ['gemini','deepseek'])await environment(async({sql,grant,upload,submit,transcript,extract,providerCalls,calls,phone})=>{
+    transcript('');extract([{id:'a',answer:'',working:'',visual_answer:true,visual_working:true}]);
+    const scan=(await grant({provider})).data.scan;assert.equal(scan.provider,provider);assert.equal(scan.provider_locked,true);
+    assert.equal((await phone(scan)).data.provider,provider);assert.equal(sql.prepare('SELECT provider FROM monthly_capture_sessions WHERE id=?').get(scan.id).provider,provider);
+    const sent=await upload(scan);assert.equal(sent.status,200);assert.equal(sent.data.ocr_status,'done');
+    assert.equal(sql.prepare('SELECT provider FROM monthly_answer_photos WHERE id=?').get(sent.data.id).provider,provider);
+    const saved=(await phone(scan)).data,answer=saved.parts.find(part=>part.id==='a'),marker=`[PHOTO:${sent.data.id}:a]`;
+    assert.equal(answer.answer,marker);assert.equal(answer.working,marker);assert.ok(saved.parts.filter(part=>part.id!=='a').every(part=>!part.answer&&!part.working),'one graphical part cannot fill every printed part');
+    const result=await submit(scan,'graph-only-'+provider);assert.equal(result.status,200);assert.equal(result.data.status,'graded');assert.ok(result.data.score>0);
+    assert.equal(result.data.answer_sheet.provider,provider);assert.equal(calls.screen,0,'server-verified photographed content is not recategorized as typed authorship');
+    assert.equal(calls.ocr,1);assert.equal(calls.extract,1);assert.equal(calls.grade,1);assert.ok(providerCalls.every(call=>call.provider===provider),'a selected provider cannot silently fall back');
+    const extraction=providerCalls.find(call=>call.schema.properties.parts),grading=providerCalls.find(call=>call.schema.properties.scores),original=Buffer.from(png(200)).toString('base64');
+    assert.ok(JSON.stringify(extraction.request).includes(original),'part extraction receives the stored original photograph');assert.ok(JSON.stringify(grading.request).includes(original),'all monthly theory grading receives the stored original photograph');
+    assert.ok(JSON.stringify(grading.request).includes(marker));
+    const conflict=await submit(scan,'graph-only-'+provider,{provider:provider==='gemini'?'deepseek':'gemini'});assert.equal(conflict.status,409);assert.equal(conflict.data.error,'provider_locked');assert.equal(calls.grade,1);
+  });
+});
+
+test('blank photographs cannot manufacture submitted parts and fabricated visual text still fails verbatim validation',async()=>{
+  await environment(async({sql,grant,upload,submit,transcript,extract,calls})=>{
+    transcript('');extract([]);const scan=(await grant()).data.scan;assert.equal((await upload(scan)).status,200);
+    const result=await submit(scan,'blank-photo');assert.equal(result.status,400);assert.equal(sql.prepare('SELECT COUNT(*) n FROM submissions').get().n,0);assert.equal(calls.grade,0);
+    extract([{id:'a',answer:'invented answer',working:'invented working',visual_answer:true}]);const fresh=(await grant({fresh:true})).data.scan;
+    const bad=await upload(fresh);assert.equal(bad.data.ocr_status,'failed');assert.equal((await submit(fresh,'invented-photo')).data.error,'capture_read_failed');assert.equal(calls.grade,0);
+  });
+});
+
+test('a QR provider is frozen, cannot be overridden by a phone, and fresh grants revoke only the same owner',async()=>{
+  await environment(async({grant,phone,api,upload,calls})=>{
+    const foreign=(await grant({provider:'gemini'},2)).data.scan,scan=(await grant({provider:'deepseek'})).data.scan;
+    const changed=await grant({scan_id:scan.id,provider:'gemini'});assert.equal(changed.status,409);assert.equal(changed.data.error,'provider_locked');
+    const blocked=await phone(scan,'/pages?task=1&provider=gemini',{body:new FormData()});assert.equal(blocked.status,409);assert.equal(calls.ocr,0);
+    assert.equal((await api('/monthly/problems/4/scan?scan_id='+scan.id,{user:2})).status,404);
+    const fresh=(await grant({fresh:true,provider:'gemini'})).data.scan;assert.equal(fresh.provider,'gemini');assert.equal((await phone(scan)).status,403);assert.equal((await phone(foreign)).status,200);assert.equal((await upload(fresh)).status,200);
   });
 });

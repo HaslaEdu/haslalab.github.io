@@ -64,3 +64,15 @@ test('scored review-only reports keep the earned score but suppress timed standi
   assert.doesNotMatch(host.innerHTML,/99%|5명 중 1위|다시 응시한 시험/);
   assert.equal(a.medalCalls(),0);
 });
+
+test('account grading payment sends the selected provider and cannot continue under a changed account',async()=>{
+  const a=app(),s=qualitativeSession(),nodes=new Map(),calls=[];let auth='owner-A',finish;
+  s.status='ended';s.provider='gemini';s.provider_locked=false;s.vision={providers:[{id:'deepseek',available:true,model:'PRIVATE_MODEL'},{id:'gemini',available:true}]};
+  a.context.cmBase=()=> 'https://api.test';a.context.cmTok=()=>auth;a.context.cm.me.id=1;
+  const node=key=>{if(!nodes.has(key))nodes.set(key,{value:'gemini',disabled:false,textContent:''});return nodes.get(key);};
+  const host={innerHTML:'',querySelector:node,querySelectorAll:()=>[]};
+  a.context.cmApi=(method,path,body)=>{calls.push({method,path,body});return new Promise(resolve=>finish=resolve);};
+  await a.context.arLabOne(host,()=>true,s.id,s);assert.ok(!host.innerHTML.includes('PRIVATE_MODEL'));
+  node('[data-vision-provider]').value='deepseek';const pending=node('#arLabPay').onclick();assert.equal(calls[0].body.provider,'deepseek');assert.equal(node('[data-vision-provider]').disabled,true);
+  auth='owner-B';finish({});await pending;assert.equal(calls.length,1,'a completed old payment cannot refresh or initiate another action for the new account');
+});

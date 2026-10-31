@@ -113,7 +113,7 @@ const quoteKey = value => String(value ?? '').normalize('NFKC').replace(/\s+/g, 
 // from the matching subquestion can support its marks. A blank slot always earns zero.
 export function guardMonthlyGrade(grade, problem, normalized, lang) {
   if (!grade) return grade;
-  const visualExperiment = getMonthlyAnswerSheet(problem)?.key === 'pressure-wave-experiment-v1';
+  const visualSubmission = !!getMonthlyAnswerSheet(problem);
   const parts = [...normalized.sheet.parts].sort((a, b) => b.id.length - a.id.length);
   const allUserText = quoteKey(parts.flatMap(part => [part.answer, part.working]).join('\n'));
   let evidenceIssue = !!grade.detail.evidenceIssue;
@@ -123,7 +123,7 @@ export function guardMonthlyGrade(grade, problem, normalized, lang) {
     const corpus = answered ? quoteKey(part.answer + '\n' + part.working) : '';
     const evidence = answered ? (row.evidence || []).filter(value => {
       const key = quoteKey(value);
-      if (visualExperiment && key.startsWith('[PHOTO:')) {
+      if (visualSubmission && key.startsWith('[PHOTO:')) {
         const match = /^\[PHOTO:([a-f0-9-]{36}):([^\]]+)\]$/.exec(key);
         return !!match && match[2] === part.id && normalized.visualEvidence instanceof Map &&
           normalized.visualEvidence.get(part.id) instanceof Set && normalized.visualEvidence.get(part.id).has(key);

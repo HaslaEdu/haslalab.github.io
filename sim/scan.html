@@ -112,7 +112,7 @@
 
 <script src="exam-network.js"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, toGray, detectDocumentQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=27c09e666503";
+import { processShot, reprocess, canProcess, detectDocumentQuad, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=d4f342e770a6";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -161,7 +161,7 @@ const T = {
     left: "스캔 마감까지", closed: "스캔 시간이 끝났습니다. 더 보낼 수 없습니다.", notYet: "아직 시험 중입니다. 시험이 끝나면 다시 이 QR을 열어 주세요.",
     badLink: "QR 코드가 오래되었거나 잘못되었습니다. 컴퓨터 화면의 QR 코드를 다시 찍어 주세요.",
     over: "스캔 시간이 끝났습니다. 이 링크는 파기되어 더 이상 쓸 수 없습니다.",
-    ceTop: "A4 용지가 맞는지 확인한 뒤 네 점을 종이의 네 귀퉁이에 맞추세요.", ceOk: "A4로 보정", ceCancel: "취소",
+    ceTop: "네 점을 종이의 네 귀퉁이에 맞춰 주세요. 출력 비율은 확인 화면에서 선택할 수 있습니다.", ceOk: "모서리 적용", ceCancel: "취소",
     noCanvas: "이 브라우저에서는 사진을 다듬을 수 없어 원본 그대로 보냅니다.",
     err: { network: "연결이 끊겼습니다. 다시 보내 주세요.", closed: "스캔 시간이 끝났습니다.", image_too_big: "작은 글씨를 보존하는 화질로는 사진 용량이 너무 큽니다. 원본/흑백 모드를 바꾸거나 종이가 화면을 채우게 다시 찍어 주세요.", too_many_pages: "보낼 수 있는 쪽 수(40)를 넘었습니다.", bad_image: "JPG, PNG, WebP 사진을 선택해 주세요.", input_too_big: "12MB 이하의 사진을 선택해 주세요.", bad_token: "QR 코드가 바뀌었습니다. 컴퓨터 화면의 QR을 다시 찍어 주세요." },
   },
@@ -188,7 +188,7 @@ const T = {
     left: "Scanning closes in", closed: "Scanning has closed. No more pages can be sent.", notYet: "The exam is still running. Open this QR code again when it ends.",
     badLink: "This QR code is old or wrong. Scan the code on the computer screen again.",
     over: "Scanning has ended. This link has been destroyed and can no longer be used.",
-    ceTop: "Confirm this is an A4 sheet, then put the four points on its corners.", ceOk: "Correct as A4", ceCancel: "Cancel",
+    ceTop: "Put the four points on the paper corners. Choose output proportions in the review screen.", ceOk: "Apply corners", ceCancel: "Cancel",
     noCanvas: "This browser cannot straighten photos, so they are sent as taken.",
     err: { network: "Connection lost. Please send again.", closed: "Scanning has closed.", image_too_big: "This photo is too large at a readable resolution. Try Original/B&W or retake with the page filling the frame.", too_many_pages: "That is more than the 40 pages allowed.", bad_image: "Choose a JPG, PNG or WebP photo.", input_too_big: "Choose a photo no larger than 12 MB.", bad_token: "The QR code has changed. Scan the code on the computer screen again." },
   },
@@ -222,7 +222,7 @@ const NETWORK=window.HLExamNetwork,transport=NETWORK.createTransport({getBase:()
 let mutationEpoch=0;
 function api(method,path,body,type){if(method!=='GET')mutationEpoch++;return transport.request(method,path,body,{binary:true,headers:{'X-Lab-Token':KEY,...(type?{'Content-Type':type}:{})}});}
 
-let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "clean";
+let INFO = null, SKEW = 0, task = "", kind = "answer", shot = null, mode = "original";
 let shotRevision = 0, closeShotEditor = null, monthlySending = false;
 const srvNow = () => Date.now() / 1000 + SKEW;
 
@@ -285,24 +285,24 @@ async function take(file, live, internal = false) {
   const captureFile = internal && shot?.captureFile || file;
   releaseShot();
   const revision = shotRevision;
-  shot = { file, captureFile, originalUrl: URL.createObjectURL(file), busy: true, pct: 0, task, kind, live: !!live };phonePoll.stop();
-  mode = "clean"; paintShot();
+  shot = { file, captureFile, originalUrl: URL.createObjectURL(file), abort: new AbortController(), busy: true, pct: 0, task, kind, live: !!live };phonePoll.stop();
+  mode = "original"; paintShot();
   if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; return paintShot(); }
   try {
-    const r = await processShot(file, { mode, onProgress: p => { if (revision !== shotRevision || !shot) return; shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } });
+    const r = await processShot(file, { mode, signal: shot.abort.signal, onProgress: p => { if (revision !== shotRevision || !shot) return; shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } });
     if (revision !== shotRevision || !shot) return;
     shot = { ...shot, ...r, busy: false };
   } catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; }
   paintShot();
 }
-function releaseShot() { ++shotRevision; if (closeShotEditor) closeShotEditor(); if (shot?.originalUrl) URL.revokeObjectURL(shot.originalUrl); shot = null;phonePoll.start(); }
+function releaseShot() { ++shotRevision; shot?.abort?.abort(); if (closeShotEditor) closeShotEditor(); if (shot?.originalUrl) URL.revokeObjectURL(shot.originalUrl); shot = null;phonePoll.start(); }
 function paintShot() {
   const box = $("shot"); if (!box) return;
   if (!shot) { box.innerHTML = ""; return; }
   if (shot.busy) { box.innerHTML = `<div class="card"><h2>${t().working0}</h2><div class="bar"><i style="width:${shot.pct || 3}%"></i></div></div>`; return; }
   const q = shot.quality || {}, warn = [];
   if (shot.processFailed) warn.push(t().processFailed);
-  else if (shot.a4WarpApplied === false) warn.push(t().a4Shape);
+  else if ((shot.warpApplied ?? shot.a4WarpApplied) === false) warn.push(lang === "ko" ? "문서 테두리를 확실히 찾지 못해 원본을 유지했습니다. 모서리를 직접 맞추거나 원본 그대로 보내세요." : "Document edges are uncertain, so the original was retained. Adjust the corners or send the original.");
   else if (shot.cornersReliable === false || shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
   if (q.focus != null && q.focus < 22) warn.push(t().blurry);          // (the cleaned page is white on purpose, so glare is not judged on it)
   if (shot.sourceShortSide != null && shot.sourceShortSide < 1200) warn.push(t().lowRes);
@@ -312,9 +312,11 @@ function paintShot() {
     <div class="row"><button id="compare">${shot.showOriginal ? t().processed : t().compare}</button><button id="zoom">${t().zoom}</button>${canProcess() ? `<button id="rotate">${t().rotate}</button>` : ""}</div>
     ${warn.map(w => `<div class="note w">${w}</div>`).join("")}
     ${shot.baseUrl ? `<div class="chips" style="margin-top:10px">${Object.entries(t().modes).map(([k, v]) => `<button data-m="${k}" class="${k === mode ? "on" : ""}">${v}</button>`).join("")}</div>` : ""}
+    ${shot.baseUrl ? `<label style="display:block;margin-top:10px">${lang === "ko" ? "출력 비율" : "Output proportions"} <select id="paper-format"><option value="auto" ${shot.outputFormat !== "a4" ? "selected" : ""}>${lang === "ko" ? "문서 비율 유지" : "Keep document proportions"}</option><option value="a4" ${shot.outputFormat === "a4" ? "selected" : ""}>A4 · 200dpi</option></select></label>` : ""}
     <div class="row">${shot.baseUrl ? `<button id="fix">${t().corners}</button>` : ""}<button id="again">${t().retake}</button></div>
     <div class="row"><button class="pri" id="send">${t().send}</button></div></div>`;
   box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => redo(shot.corners, b.dataset.m));
+  if ($("paper-format")) $("paper-format").onchange = () => { shot.outputFormat = $("paper-format").value; redo(shot.corners, mode); };
   if ($("fix")) $("fix").onclick = () => cornerEditor();
   $("compare").onclick = () => { shot.showOriginal = !shot.showOriginal; paintShot(); };
   $("zoom").onclick = () => { const ov = document.createElement("div"); ov.className = "image-check"; ov.innerHTML = `<button>${t().lvClose}</button><img alt="${esc(t().detail)}" src="${shot.showOriginal ? shot.originalUrl : shot.previewUrl}">`; document.body.append(ov); ov.querySelector("button").onclick = () => ov.remove(); };
@@ -327,7 +329,7 @@ async function redo(corners, m) {
   if (!shot || MONTHLY && monthlySending) return;
   const revision = ++shotRevision;
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
-  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: keep.a4WarpApplied === false }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
+  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: (keep.warpApplied ?? keep.a4WarpApplied) === false, pageFormat: keep.outputFormat || "auto", signal: keep.abort?.signal }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
   catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...keep, busy: false }; }
   paintShot();
 }
@@ -408,7 +410,7 @@ async function cornerEditor() {
     if (revision !== shotRevision || !shot) return close();
     const ordered = orderCorners(pts);
     if (quadScore(ordered, img.width, img.height) < 0.1) return toast(t().badCorners);
-    close(); shot.autoScore = 1; shot.cornersReliable = true; shot.a4WarpApplied = true; shot.paperStatus = "manual_a4"; shot.method = pointMode === "marker" ? "marker" : "manual"; redo(ordered, mode);
+    close(); shot.autoScore = 1; shot.cornersReliable = true; shot.warpApplied = true; shot.a4WarpApplied = shot.outputFormat === "a4"; shot.paperStatus = shot.a4WarpApplied ? "manual_a4" : "manual"; shot.method = pointMode === "marker" ? "marker" : "manual"; redo(ordered, mode);
   };
 }
 
@@ -429,7 +431,8 @@ async function liveCamera() {
   v.srcObject = stream; await v.play().catch(() => {});
   const small = document.createElement("canvas"), sg = small.getContext("2d", { willReadFrequently: true });
   let alive = true, busy = false, hist = [], last = null, timer = null;
-  const close = () => { if (!alive) return; alive = false; clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
+  const detectorAbort = new AbortController();
+  const close = () => { if (!alive) return; alive = false; detectorAbort.abort(); clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
   const say = (m, ok) => { msg.textContent = m; msg.classList.toggle("ok", !!ok); };
   say(t().lvAim);
   async function capture() {
@@ -444,15 +447,18 @@ async function liveCamera() {
     if (!alive) return;
     close(); if (blob) take(blob, true);
   }
-  function frame() {
+  async function frame() {
     if (!alive) return;
     if (v.videoWidth) {
       const k = Math.min(1, 720 / Math.max(v.videoWidth, v.videoHeight)), w = Math.round(v.videoWidth * k), h = Math.round(v.videoHeight * k);
       if (small.width !== w || small.height !== h) { small.width = w; small.height = h; }
       sg.drawImage(v, 0, 0, w, h);
-      const pixels = sg.getImageData(0, 0, w, h).data, gray = toGray(pixels, w, h);
-      const candidate = detectDocumentQuadGray(gray, w, h);
-      const d = candidate?.corners && (candidate.method === "marker" && candidate.score >= 0.5 || candidate.method === "page" && candidate.score > 0.45) ? candidate : null;
+      const pixels = sg.getImageData(0, 0, w, h).data;
+      let candidate;
+      try { candidate = await detectDocumentQuad(small, { preview: true, signal: detectorAbort.signal, onProgress: () => say(lang === "ko" ? "기기 안에서 문서 모델을 준비하는 중… 첫 사용에만 파일을 내려받습니다." : "Preparing the on-device document model… Assets download only on first use.") }); }
+      catch { if (!alive) return; candidate = null; }
+      if (!alive || busy) return;
+      const d = candidate?.corners && candidate.method !== "frame" && candidate.score > .25 ? candidate : null;
       const how = d?.method;
       /* the overlay, where the video is drawn (object-fit: contain) */
       const r = cv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
@@ -468,12 +474,12 @@ async function liveCamera() {
       const focused = inspectDocumentPixels(pixels, w, h).focus >= 22;
       if (d?.autoCaptureEligible === true && focused) {
         if (last !== how) hist = []; last = how;
-        const count = how === "page" ? 8 : 6, tolerance = how === "page" ? 0.008 : 0.012;
+        const count = how === "ml" ? 3 : how === "page" ? 8 : 6, tolerance = how === "marker" ? 0.012 : 0.008;
         hist.push(d.corners.map(p => ({...p}))); if (hist.length > count) hist.shift();
         const span = Math.max(w, h), still = hist.length === count && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * tolerance));
         say(t().lvHold, true);
         if (still && AUTO) return capture();
-      } else { hist = []; last = null; say(d?.paperStatus === "aspect_mismatch" ? t().lvAspect : d?.paperStatus === "perspective_uncertain" ? t().lvPerspective : !focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
+      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
     }
     timer = setTimeout(frame, 140);
   }
@@ -481,7 +487,7 @@ async function liveCamera() {
     if (b.dataset.x === "close") close();
     else if (b.dataset.x === "shoot") capture();
     else if (b.dataset.x === "auto") { AUTO = !AUTO; b.classList.toggle("on", AUTO); hist = []; try { localStorage.setItem("hlScanAuto", AUTO ? "1" : "0"); } catch (e) {} } };
-  frame();
+  await frame();
 }
 
 /* the deadline, on the server's clock */

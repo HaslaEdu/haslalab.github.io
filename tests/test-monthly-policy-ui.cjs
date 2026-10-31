@@ -81,7 +81,7 @@ test('native monthly provenance is absent from the header while other contest at
 });
 
 function binding(context,p=clone(problem),ocr=false,withModes=false) {
-  const fields=new Map(),previews=new Map(),button={disabled:false},out={innerHTML:''},counter={textContent:''};
+  const fields=new Map(),previews=new Map(),button={disabled:false},out={innerHTML:''},counter={textContent:''},provider={value:'gemini',disabled:false};
   const typedPanel={hidden:false},photoPanel={hidden:true};
   const modes=['typed','photo'].map(sheetMode=>({dataset:{sheetMode},classList:{toggle(){}},setAttribute(name,value){this[name]=value;}}));
   for(const part of p.answerSheet.parts)for(const kind of ['answer','working']){
@@ -90,6 +90,7 @@ function binding(context,p=clone(problem),ocr=false,withModes=false) {
   }
   const form={photo_part:{value:'a'},querySelector(selector){
     if(selector==='button[type=submit]')return button;
+    if(selector==='[data-vision-provider]')return provider;
     if(selector==='.arsheet-typed')return typedPanel;if(selector==='.arsheet-photo')return photoPanel;
     let match=/^\[data-sheet-(answer|working)="([^"]+)"\]$/.exec(selector);if(match)return fields.get(`${match[1]}:${match[2]}`);
     match=/^\[data-sheet-(answer|working)-preview="([^"]+)"\]$/.exec(selector);if(match)return previews.get(`${match[1]}:${match[2]}`);
@@ -97,7 +98,7 @@ function binding(context,p=clone(problem),ocr=false,withModes=false) {
   },querySelectorAll:selector=>selector.startsWith('[data-sheet-answer]')?[...fields.values()]:selector==='[data-sheet-mode]'&&withModes?modes:[]};
   const root={querySelector:selector=>({'#arSheetF':form,'#arOut':out,'#arSheetAttempts':counter}[selector])};
   context.arBindMonthlyAnswer(root,p,()=>true,ocr);
-  return {form,fields,button,out,p,modes,typedPanel,photoPanel};
+  return {form,fields,button,out,p,modes,typedPanel,photoPanel,provider};
 }
 
 test('legacy photographed draft attachments remain deduplicated when reopened in LaTeX mode',async()=>{
@@ -268,7 +269,7 @@ test('monthly OCR sends the selected scan and a separately preserved capture wit
   context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),(text,destination,response)=>{result={text,destination,response};destination.value=text;},
     {target:()=>fixture.destination,request:destination=>({path:'/monthly/problems/4/photos',fields:{part_id:destination.dataset.sheetWorking},original:true})});
   await fixture.file.onchange();await fixture.buttons.read.onclick();
-  assert.equal(request.url,'https://api.test/api/monthly/problems/4/photos?mode=math');
+  assert.equal(request.url,'https://api.test/api/monthly/problems/4/photos?mode=math&provider=gemini');
   assert.equal(request.options.headers.Authorization,'Bearer owner-token');assert.ok(!request.url.includes('owner-token'));
   assert.equal(await request.options.body.get('image').text(),'clean');
   assert.equal(await request.options.body.get('original_image').text(),'capture');
@@ -294,8 +295,50 @@ test('legacy photo OCR keeps its existing endpoint and sends no monthly capture 
   context.fetch=async(url,options)=>{request={url,options};return{ok:true,json:async()=>({text:'legacy working'})};};
   context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),(text,destination)=>{(destination||fixture.destination).value=text;});
   await fixture.file.onchange();await fixture.buttons.read.onclick();
-  assert.equal(request.url,'https://api.test/api/ocr?mode=math');assert.equal(request.options.body.has('original_image'),false);
+  assert.equal(request.url,'https://api.test/api/ocr?mode=math&provider=gemini');assert.equal(request.options.body.has('original_image'),false);
   assert.equal(fixture.destination.value,'legacy working');
+});
+
+test('explicit photo OCR sends and pins the selected available provider without model names or cross-account requests',async()=>{
+  const {context,setAuth}=app(),fixture=scannerForm(),capabilities={vision:{providers:[{id:'deepseek',available:true,model:'private-model'},{id:'gemini',available:true}]}};let request,pinned;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.clean}),encodeUpload:async blob=>blob};vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async(url,options)=>{request={url,options};return{ok:true,json:async()=>({text:'Visible graph and answer',provider:'deepseek'})};};
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),text=>{fixture.destination.value=text;},{provider:()=> 'deepseek',capabilities,onProviderPinned:value=>pinned=value});
+  await fixture.file.onchange();assert.equal(request,undefined,'file choice is local only');await fixture.buttons.read.onclick();
+  assert.match(request.url,/provider=deepseek$/);assert.equal(request.options.body.get('provider'),'deepseek');assert.equal(pinned,'deepseek');assert.equal(fixture.destination.value,'Visible graph and answer');
+  const stale=scannerForm();let encode,network=0;context.testScanner.encodeUpload=()=>new Promise(resolve=>encode=resolve);context.fetch=async()=>{network++;return{ok:true,json:async()=>({text:'stale'})};};
+  context.arBindAnswerPhoto(stale.form,()=>true,vm.runInContext('arT()',context),()=>assert.fail('stale OCR rendered'),{provider:()=> 'deepseek',capabilities});
+  await stale.file.onchange();const pending=stale.buttons.read.onclick();await new Promise(done=>setImmediate(done));setAuth('new-owner');encode(stale.clean);await pending;assert.equal(network,0);
+});
+
+test('graph-only photo evidence reaches the callback without invented transcription or an empty OCR failure',async()=>{
+  const {context}=app(),fixture=scannerForm();let received,request;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.clean}),encodeUpload:async blob=>blob};vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async(url)=>{request=url;return{ok:true,json:async()=>({text:'',photo_id:'owned-photo',visuals:[{page:1,kind:'direction',description:'blue arrow'}]})};};
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),(text,_target,result)=>{received={text,result};},{problemId:7});
+  await fixture.file.onchange();await fixture.buttons.read.onclick();
+  assert.equal(request,'https://api.test/api/ocr?mode=math&provider=gemini&problem_id=7');
+  assert.equal(received.text,'');assert.equal(received.result.photo_id,'owned-photo');assert.match(fixture.info.textContent,/그림 답안/);
+  assert.match(context.arSheetWorkingPreview('[PHOTO:11111111-1111-4111-8111-111111111111:a]'),/사진의 그래프/);
+});
+
+test('monthly QR grants use the chosen server provider and renewal cannot override it in the URL',async()=>{
+  const {context}=app(),ui=captureFixture(context),requests=[],p=clone(problem);let choice='deepseek';p.vision={providers:[{id:'deepseek',available:true},{id:'gemini',available:true}]};
+  const scan={id:'capture-provider',token:'opaque-grant',provider:'deepseek',provider_locked:true,open:true,status:'scanning',revision:1,pages:[],parts:[]};
+  context.cmApi=async(method,path,body)=>{requests.push({method,path,body:clone(body)});return{scan:clone(scan)};};
+  const controller=context.arBindMonthlyCapture(ui.root,p,()=>true,{provider:()=>choice});await controller.start();assert.equal(requests[0].body.provider,'deepseek');
+  choice='gemini';await controller.start();assert.equal(requests[1].body.provider,'deepseek','renewing an existing grant uses its server-stored provider');
+  for(const value of ui.urls){const hash=new URLSearchParams(new URL(value).hash.slice(1));assert.equal(hash.has('provider'),false);assert.equal(hash.get('c'),'opaque-grant');}
+  controller.dispose();
+});
+
+test('photo answer submission locks to the provider already stored by the capture',async()=>{
+  const {context}=app(),p=clone(problem);p.vision={providers:[{id:'deepseek',available:true},{id:'gemini',available:true}]};let hooks,body;
+  const scan={id:'capture-deepseek',provider:'deepseek',provider_locked:true,open:true,status:'scanning',pages:[{id:'page',ocr_status:'done'}],parts:[{id:'a',answer:'42',working:'Drawn graph'}]};
+  context.arBindMonthlyCapture=(_form,_p,_alive,options)=>{hooks=options;return{snapshot:()=>scan,start(){hooks.onChange(scan);},resume(){},pause(){},refresh(){},setBusy(value){hooks.onBusy(value);}};};
+  context.cmApi=async(_method,_path,payload)=>{body=clone(payload);return{status:'pending',attempts:{remaining:2}};};
+  const f=binding(context,p,true,true);f.provider.value='deepseek';f.modes[1].onclick();assert.equal(f.provider.value,'deepseek');assert.equal(f.provider.disabled,true);
+  await f.form.onsubmit({preventDefault(){}});assert.equal(body.provider,'deepseek');assert.equal(body.scan_id,'capture-deepseek');assert.equal(body.parts,undefined);
 });
 
 test('original photos are fetched privately, remain owner-scoped and release blob URLs on navigation',async()=>{
