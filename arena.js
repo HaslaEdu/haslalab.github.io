@@ -216,7 +216,7 @@ function arMeOverview() {
 }
 async function arMount() {
   const root = document.getElementById("arRoot"); if (!root) return;
-  ar.monthlyCaptureCleanup?.();ar.monthlyPhotoCleanup?.();
+  ar.monthlyCaptureCleanup?.();ar.monthlyPhotoCleanup?.();ar.monthlyExperimentCleanup?.();
   const my = ++ar.seq,scope=cmIdentityScope(),currentLang=lang,routeAlive=()=>my === ar.seq && document.getElementById("arRoot") === root && lang===currentLang, alive = () => routeAlive() && cmIdentityScope()===scope;
   const parts = location.hash.replace(/^#\/?/, "").split("?")[0].split("/").filter(Boolean), [a, b, c] = parts;
   ar.poller?.dispose();ar.poller=null;let bootstrap=null,primary=null,version=0;
@@ -798,10 +798,62 @@ function arBindMonthlyAnswer(root, p, alive, ocrOn) {
     }
   };
 }
+function arMonthlyExperimentHtml(p) {
+  if(p.answerSheet?.key!=="pressure-wave-experiment-v1")return `<div class="arstmt" id="arStmt">${arPublishedText(p.body)}</div>`;
+  const en=lang==="en",src=`sim/monthly-pressure-wave/index.html?embed=1&id=${Number(p.id)}&lang=${en?"en":"ko"}&view=cmd`;
+  return `<div class="ar-experiment" data-mode="problem">
+    <div class="ar-experiment-toolbar" role="group" aria-label="${en?"Problem and apparatus view":"문제와 실험 화면"}">
+      <button type="button" class="cmbtn sm" data-experiment-mode="problem" aria-pressed="true" aria-controls="arStmt">${en?"Problem":"문제"}</button>
+      <button type="button" class="cmbtn sm" data-experiment-mode="lab" aria-pressed="false" aria-controls="arExperimentLab">${en?"Experiment":"실험"}</button>
+      <button type="button" class="cmbtn sm ar-experiment-split" data-experiment-mode="split" aria-pressed="false" aria-controls="arStmt arExperimentLab">${en?"Side by side":"나란히 보기"}</button>
+      <span>${en?"CMD apparatus · measurements saved to your account":"CMD 실험 장치 · 계정별 측정 기록 저장"}</span>
+    </div>
+    <div class="ar-experiment-workspace">
+      <div class="arstmt" id="arStmt">${arPublishedText(p.body)}</div>
+      <aside class="ar-experiment-lab" id="arExperimentLab" aria-label="${en?"Pressure-wave simulator":"압력파 시뮬레이터"}" hidden>
+        <div class="ar-experiment-lab-title"><b>${en?"Experiment console":"실험 콘솔"}</b><span>waterhammer</span></div>
+        <iframe title="${en?"Pressure-wave CMD experiment":"압력파 CMD 실험"}" data-experiment-src="${esc(src)}"></iframe>
+        <p class="arnote">${en?"Record your tables, graphs and analysis on the answer sheet below. Your instrument records are linked when you submit.":"표·그래프·분석은 아래 답안지에 작성하세요. 제출 시 계측 기록도 함께 연결됩니다."}</p>
+      </aside>
+    </div>
+  </div>`;
+}
+function arBindMonthlyExperiment(root,p,alive) {
+  if(p.answerSheet?.key!=="pressure-wave-experiment-v1")return;
+  const workspace=root.querySelector(".ar-experiment"),frame=workspace?.querySelector("iframe");if(!frame)return;
+  const statement=workspace.querySelector("#arStmt"),lab=workspace.querySelector("#arExperimentLab"),buttons=[...workspace.querySelectorAll("[data-experiment-mode]")],wide=window.matchMedia("(min-width: 1200px)");
+  let disposed=false,loaded=false,mode=wide.matches?"split":"problem";
+  const valid=()=>!disposed&&alive()&&workspace.isConnected;
+  const theme=()=>document.documentElement.dataset.theme==="dark"?"dark":"light";
+  const syncTheme=()=>{if(!valid()){dispose();return;}if(loaded)frame.contentWindow?.postMessage({type:"haslalab-experiment-theme",theme:theme()},location.origin);};
+  const show=next=>{
+    if(!valid()){dispose();return;}
+    mode=next==="split"&&!wide.matches?"lab":next;workspace.dataset.mode=mode;
+    statement.hidden=mode==="lab";lab.hidden=mode==="problem";
+    for(const button of buttons)button.setAttribute("aria-pressed",String(button.dataset.experimentMode===mode));
+    if(mode!=="problem"&&!loaded){loaded=true;frame.src=frame.dataset.experimentSrc+"&theme="+theme();}
+  };
+  const resize=()=>{if(mode==="split"&&!wide.matches)show("lab");};
+  const identity=()=>{if(!valid())dispose();};
+  const observer=new MutationObserver(syncTheme);
+  const dispose=()=>{
+    if(disposed)return;disposed=true;observer.disconnect();wide.removeEventListener("change",resize);frame.removeEventListener("load",syncTheme);
+    window.removeEventListener("hashchange",dispose);window.removeEventListener("pagehide",dispose);window.removeEventListener("storage",identity);window.removeEventListener("focus",identity);
+    for(const button of buttons)button.onclick=null;
+    if(loaded)frame.src="about:blank";
+    if(ar.monthlyExperimentCleanup===dispose)ar.monthlyExperimentCleanup=null;
+  };
+  ar.monthlyExperimentCleanup?.();ar.monthlyExperimentCleanup=dispose;
+  for(const button of buttons)button.onclick=()=>show(button.dataset.experimentMode);
+  frame.addEventListener("load",syncTheme);observer.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});wide.addEventListener("change",resize);
+  window.addEventListener("hashchange",dispose);window.addEventListener("pagehide",dispose);window.addEventListener("storage",identity);window.addEventListener("focus",identity);
+  show(mode);
+}
 async function arProblem(root, alive, id,preloaded) {
   ar.photoCleanup?.();
   ar.monthlyPhotoCleanup?.();
   ar.monthlyCaptureCleanup?.();
+  ar.monthlyExperimentCleanup?.();
   const T = arT(), j = preloaded||await cmApi("GET", `/problems/${id}?lang=${lang}`); if (!alive()) return;
   const p = j.problem, now = Math.floor(Date.now() / 1000), ocrOn = j.health && j.health.ocr;
   root.innerHTML = `
@@ -810,8 +862,7 @@ async function arProblem(root, alive, id,preloaded) {
       <div class="arph"><span class="arno">${p.no}</span><div><h1>${esc(p.title)}</h1>
         <div class="armeta">${arProblemKindBadge(p)}<span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
           <span>${p.points}${T.pts}</span>${p.answerSheet&&Number.isFinite(p.best)?`<span>${T.best} ${p.best} / ${p.points}${T.pts}</span>`:""}<span>${T.deadline} ${arDeadline(p.closes_at)}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source && !p.answerSheet ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
-      <div class="arstmt" id="arStmt">${arPublishedText(p.body)}</div>
-      ${p.answerSheet?.key==="pressure-wave-experiment-v1"?`<div class="ar-experiment-tools"><a class="cmbtn pri" href="sim/monthly-pressure-wave/index.html?id=${p.id}&lang=${lang}&view=cmd" target="_blank" rel="noopener">${lang==="en"?"Open CMD apparatus":"CMD 실험 장치 열기"}</a><p class="arnote">${lang==="en"?"Measurements are saved to your account. Enter the tables, graphs and analysis in your answer sheet; the submission is linked to your instrument records.":"측정 기록은 계정에 저장됩니다. 표·그래프·분석을 답안지에 작성하면 제출 시 계측 기록도 함께 연결됩니다."}</p></div>`:""}
+      ${arMonthlyExperimentHtml(p)}
       ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(arMonthlyPartNumber(p,c.id,c.display_id))}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
     <div class="arpanel" id="arAns">
@@ -838,6 +889,7 @@ async function arProblem(root, alive, id,preloaded) {
         ${arMonthlySavedAnswer(s,p)}${arResult(s, p)}</details>`).join("")}</div>` : ""}
     <div class="arpanel"><h3>${T.solution}</h3>${p.solution ? `<div class="arstmt" id="arSol">${arPublishedText(p.solution)}</div>` : `<p class="arempty">${T.solutionLater}</p>`}</div>`;
   arMath(root);
+  arBindMonthlyExperiment(root,p,alive);
   arBindMonthlyPhotos(root,alive);
   const lg = root.querySelector("#arLogin"); if (lg) lg.onclick = () => { try { sessionStorage.setItem("hlCmBack", location.hash); } catch (e) {} };
   if (p.answerSheet?.parts?.length) { arBindMonthlyAnswer(root,p,alive,ocrOn); return; }

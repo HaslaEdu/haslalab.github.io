@@ -1,7 +1,11 @@
 // Instrument generation and saved measurements belong to the authenticated Worker.
 const $=id=>document.getElementById(id),screen=$('screen'),q=new URLSearchParams(location.search);
 const lang=q.get('lang')==='en'?'en':'ko';
+const embedded=q.get('embed')==='1';
 let problemId=Number(q.get('id')),inside=false,revision=0,sessionId=null,busy=false;
+let accountChanged=false;
+const validProblemId=()=>Number.isSafeInteger(problemId)&&problemId>0;
+if(embedded)document.body.dataset.embedded='true';
 let commandHistory=[],historyIndex=0,fullLog=[];
 let apiBase='https://haslalab-community-edge.haslalab.workers.dev';
 try{apiBase=(localStorage.getItem('hlCmApi')||apiBase).replace(/\/+$/,'');}catch{}
@@ -20,11 +24,41 @@ function math(el,text){
 }
 const para=text=>math(document.createElement('p'),text);
 function download(data,name,type='text/plain;charset=utf-8'){const blob=new Blob([data],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-function mode(cmd){$('problem').hidden=cmd;$('terminal').hidden=!cmd;$('problemTab').setAttribute('aria-selected',String(!cmd));$('cmdTab').setAttribute('aria-selected',String(cmd));if(cmd)$('command').focus();}
+function mode(cmd,focus=true){cmd=embedded||cmd;$('problem').hidden=cmd;$('terminal').hidden=!cmd;$('problemTab').setAttribute('aria-selected',String(!cmd));$('cmdTab').setAttribute('aria-selected',String(cmd));if(cmd&&focus)$('command').focus();}
 $('problemTab').onclick=()=>mode(false);$('cmdTab').onclick=()=>mode(true);
 const selectedTheme=q.get('theme');let storedTheme;try{storedTheme=localStorage.getItem('hlTheme');}catch{}
 document.body.dataset.theme=selectedTheme==='dark'||selectedTheme!=='light'&&(storedTheme==='dark'||!storedTheme&&matchMedia('(prefers-color-scheme:dark)').matches)?'dark':'light';
 $('theme').onclick=()=>{document.body.dataset.theme=document.body.dataset.theme==='dark'?'light':'dark';};
+function embeddedNotice(text,signIn=false){
+ if(!embedded)return;
+ $('embeddedNotice').hidden=!text;$('embeddedMessage').textContent=text;$('embeddedLogin').hidden=!signIn;
+}
+function commandState(){
+ const blocked=embedded&&(!validProblemId()||!ownerToken||accountChanged);
+ $('command').disabled=busy||blocked;
+ if(embedded){$('downloadCsv').disabled=blocked;$('downloadAllCsv').disabled=blocked;}
+}
+if(embedded){
+ document.documentElement.lang=lang;
+ $('embeddedLogin').href='../../?lang='+lang+'#/login';
+ $('embeddedLogin').onclick=()=>{try{sessionStorage.setItem('hlCmBack','#/monthly/p/'+problemId);}catch{}};
+ if(lang==='en'){
+  $('embeddedLogin').textContent='Sign in';$('command').setAttribute('aria-label','Experiment command');
+  $('terminal').setAttribute('aria-label','Experiment command terminal');$('screen').setAttribute('aria-label','Experiment log');
+  $('clear').textContent='Clear screen';$('saveLog').textContent='Save log';$('downloadCsv').textContent='Latest trace CSV';$('downloadAllCsv').textContent='All records CSV';
+ }
+ window.addEventListener('message',event=>{
+  if(event.source!==parent||event.origin!==location.origin)return;
+  if(event.data?.type==='haslalab-experiment-theme'&&['dark','light'].includes(event.data.theme))document.body.dataset.theme=event.data.theme;
+ });
+ window.addEventListener('storage',event=>{
+  if(event.key!=='hlCmTok'&&event.key!==null)return;
+  let token;try{token=localStorage.getItem('hlCmTok')||'';}catch{return;}
+  if(token===ownerToken)return;
+  accountChanged=true;inside=false;pending=null;setPrompt();commandState();
+  embeddedNotice(lang==='ko'?'로그인 정보가 바뀌었습니다. 문제 페이지를 새로고침하세요.':'Your sign-in changed. Reload the problem page.');
+ });
+}
 function plot(trace){
  const ns='http://www.w3.org/2000/svg',figure=document.createElement('figure');figure.className='trace';
  const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 880 285');svg.setAttribute('role','img');svg.setAttribute('aria-label',`${trace.sensor} RUN ${trace.run_id} pressure-time graph`);
@@ -39,9 +73,11 @@ function plot(trace){
 }
 async function api(method,path,body){
  let currentToken;try{currentToken=localStorage.getItem('hlCmTok')||'';}catch{}
- if(currentToken!==ownerToken)throw{code:'account_changed'};
+ if(currentToken!==ownerToken){if(embedded)accountChanged=true;throw{code:'account_changed'};}
  const r=await fetch(apiBase+'/api'+path,{method,cache:'no-store',signal:AbortSignal.timeout(30000),headers:{...(ownerToken?{Authorization:'Bearer '+ownerToken}:{}),...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
- const data=await r.json();if(!r.ok)throw{code:data.error||'experiment_unavailable',...data,status:r.status};return data;
+ const data=await r.json();
+ if(embedded){let current;try{current=localStorage.getItem('hlCmTok')||'';}catch{}if(current!==ownerToken){accountChanged=true;throw{code:'account_changed'};}}
+ if(!r.ok)throw{code:data.error||'experiment_unavailable',...data,status:r.status};return data;
 }
 async function restore(){
  if(!ownerToken){line(message.login,'notice');return false;}
@@ -52,10 +88,10 @@ async function restore(){
 }
 let pending=null;
 async function accept(command){
- const input=command.trim();if(!input||busy)return;commandHistory.push(input);historyIndex=commandHistory.length;
+ const input=command.trim();if(!input||busy||embedded&&(!validProblemId()||!ownerToken||accountChanged))return;commandHistory.push(input);historyIndex=commandHistory.length;
  line($('prompt').textContent+input,'typed');
  if(input==='clear'){screen.replaceChildren();return;}
- if(!inside){if(input==='ls')line('waterhammer');else if(['./waterhammer','waterhammer','waterhammer.exe'].includes(input)){try{busy=true;if(await restore()){inside=true;setPrompt();line('Water-hammer laboratory\nL = 120.0 m | sensors S0-S7 | 0.10 ms sampling\nhelp');}}catch(error){line(error.code==='login_required'?message.login:message.network,'error');}finally{busy=false;}}else if(input==='help')line('ls\n./waterhammer\nclear');else line(input+': command not found','error');return;}
+ if(!inside){if(input==='ls')line('waterhammer');else if(['./waterhammer','waterhammer','waterhammer.exe'].includes(input)){try{busy=true;if(embedded)commandState();if(await restore()){inside=true;setPrompt();embeddedNotice('');line('Water-hammer laboratory\nL = 120.0 m | sensors S0-S7 | 0.10 ms sampling\nhelp');}}catch(error){line(error.code==='login_required'?message.login:message.network,'error');if(embedded&&error.code==='login_required')embeddedNotice(message.login,true);else if(embedded&&error.code==='account_changed'){accountChanged=true;embeddedNotice(lang==='ko'?'로그인 정보가 바뀌었습니다. 문제 페이지를 새로고침하세요.':'Your sign-in changed. Reload the problem page.');}}finally{busy=false;if(embedded)commandState();}}else if(input==='help')line('ls\n./waterhammer\nclear');else line(input+': command not found','error');return;}
  if(['exit','quit'].includes(input)){inside=false;setPrompt();return;}
  if(pending&&pending.command!==input){line(message.retry,'notice');return;}
  pending ||= {command:input,revision,request_id:crypto.randomUUID()};
@@ -64,14 +100,20 @@ async function accept(command){
   if(r.clear)screen.replaceChildren();else line(r.text,r.ok?'':'error');if(r.trace)plot(r.trace);if(r.csv)download(r.csv,r.filename,'text/csv;charset=utf-8');
   $('status').textContent=lang==='ko'?'측정 기록이 계정에 저장됩니다.':'Measurements are saved to your account.';
  }catch(error){if(error.code==='experiment_changed'){pending=null;await restore();line(message.changed,'notice');}else if(error.code==='account_changed'){pending=null;line(lang==='ko'?'로그인 정보가 바뀌었습니다. 페이지를 새로고침한 뒤 장치를 다시 여세요.':'Your sign-in changed. Reload this page and reopen the apparatus.','error');}else if(error.code==='login_required'){pending=null;line(message.login,'error');}else if(error.code==='experiment_command_limit'){pending=null;line(lang==='ko'?'명령 기록 한도에 도달했습니다. 저장한 측정 자료로 답안을 작성하세요.':'The command-history limit has been reached. Use your saved measurements to complete the answer sheet.','error');}else if(error.code&&error.status<500&&![408,429].includes(error.status)&&!['TypeError','NetworkError'].includes(error.code)){pending=null;line(error.message||error.code,'error');}else line(message.network+' '+message.retry,'error');}
- finally{busy=false;$('command').disabled=false;$('command').focus();}
+ finally{busy=false;commandState();$('command').focus();}
 }
 $('bar').onsubmit=e=>{e.preventDefault();const input=$('command').value;$('command').value='';void accept(input);};
 $('command').onkeydown=e=>{if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();historyIndex=Math.max(0,Math.min(commandHistory.length,historyIndex+(e.key==='ArrowUp'?-1:1)));$('command').value=commandHistory[historyIndex]||'';}if(e.ctrlKey&&e.key.toLowerCase()==='c'){e.preventDefault();if(!busy){inside=false;setPrompt();$('command').value='';line('^C');}}};
 $('clear').onclick=()=>{screen.replaceChildren();$('command').focus();};$('saveLog').onclick=()=>download(fullLog.join('\n\n'),'waterhammer-log.txt');
 $('downloadCsv').onclick=()=>{if(inside)void accept('export');else line(message.login,'notice');};$('downloadAllCsv').onclick=()=>{if(inside)void accept('export all');else line(message.login,'notice');};
 line('HaslaLab Experimental Laboratory\n\n./waterhammer');
-try{
+if(embedded){
+ mode(true,false);
+ if(!validProblemId())embeddedNotice(lang==='ko'?'실험 정보를 확인할 수 없습니다. 월별 문제에서 장치를 다시 여세요.':'The experiment could not be identified. Reopen the apparatus from the monthly problem.');
+ else if(!ownerToken)embeddedNotice(message.login,true);
+ else await accept('./waterhammer');
+ commandState();
+}else try{
  const [content,svg]=await Promise.all([fetch('./problem.json').then(r=>r.json()),fetch('../../weekly/figures/pressure-wave-apparatus.svg').then(r=>r.text())]);
  const d=content,statement=$('statement');statement.append(para(d.intro));
  const figure=document.createElement('figure'),drawing=document.createElement('div');drawing.id='apparatus';drawing.append(document.importNode(new DOMParser().parseFromString(svg,'image/svg+xml').documentElement,true));const caption=math(document.createElement('figcaption'),d.figure_caption);figure.append(drawing,caption);statement.append(figure);
@@ -97,4 +139,4 @@ try{
  if(!ownerToken){$('status').textContent=message.login;$('login').hidden=false;$('login').href='../../?lang='+lang+'#/login';}
  else {$('status').textContent=lang==='ko'?'측정 기록은 계정별로 저장됩니다.':'Measurements are saved to your account.';}
 }catch(error){$('loadError').hidden=false;console.error(error);}
-if(q.get('view')==='cmd')mode(true);
+if(!embedded&&q.get('view')==='cmd')mode(true);

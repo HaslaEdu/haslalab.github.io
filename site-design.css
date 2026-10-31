@@ -478,6 +478,31 @@ html[data-theme="dark"] body.hl-site .ar .ar-rank-top .artier[style*="--c:#2d2d2
   body.hl-site .ar .ar-rank-table .ar-rank-score b{font-size:15px}
 }
 
+/* Keep the experiment beside its statement without replacing the answer workspace. */
+body.hl-site .ar-experiment{margin-top:22px;min-width:0}
+body.hl-site .ar-experiment-toolbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--grid-bold)}
+body.hl-site .ar-experiment-toolbar .cmbtn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper,#fff)}
+body.hl-site .ar-experiment-toolbar>span{margin-left:auto;font-size:11px;color:var(--graphite)}
+body.hl-site .ar-experiment-workspace{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:start;min-width:0}
+body.hl-site .ar-experiment[data-mode="split"] .ar-experiment-workspace{grid-template-columns:minmax(0,1.08fr) minmax(0,1fr)}
+body.hl-site .ar-experiment-workspace>.arstmt{min-width:0;margin-top:0}
+body.hl-site .ar-experiment-lab{min-width:0;position:sticky;top:90px;border:1px solid var(--grid-bold);border-radius:8px;overflow:hidden;background:var(--paper,#fff)}
+body.hl-site .ar-experiment-lab[hidden],body.hl-site .ar-experiment .arstmt[hidden]{display:none}
+body.hl-site .ar-experiment-lab-title{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--grid-bold);font-size:12px;color:var(--ink)}
+body.hl-site .ar-experiment-lab-title>span{font:11px var(--mono);color:var(--graphite)}
+body.hl-site .ar-experiment-lab iframe{display:block;width:100%;height:clamp(420px,68dvh,720px);border:0;color-scheme:light dark}
+body.hl-site .ar-experiment-lab>.arnote{margin:0;padding:12px 14px;border-top:1px solid var(--grid-bold);font-size:11px;line-height:1.7}
+html[data-theme="dark"] body.hl-site .ar-experiment-toolbar .cmbtn[aria-pressed="true"]{background:#bea4ee;border-color:#bea4ee;color:#1b1226}
+html[data-theme="dark"] body.hl-site .ar-experiment-lab{background:#17131f}
+@media(max-width:1199px){
+  body.hl-site .ar-experiment-toolbar .ar-experiment-split{display:none}
+  body.hl-site .ar-experiment-lab{position:static}
+}
+@media(max-width:600px){
+  body.hl-site .ar-experiment-toolbar>span{width:100%;margin:3px 0 0}
+  body.hl-site .ar-experiment-lab iframe{height:68dvh;min-height:380px}
+}
+
 /* The canonical monthly capture workspace shares the homepage's black/purple palette. */
 body.hl-site .ar .armonthly-capture{display:grid;grid-template-columns:minmax(270px,340px) minmax(0,1fr);gap:22px;align-items:start;margin:16px 0 22px}
 body.hl-site .ar .arpanel.armonthly-qr-card{margin:0;padding:24px;border:1px solid #50405f;border-radius:14px;background:#1b1625;color:#eee8f7;box-shadow:0 7px 22px #15102012}
