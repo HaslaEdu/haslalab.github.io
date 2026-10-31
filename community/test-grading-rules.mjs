@@ -7,8 +7,7 @@ import { REG_VERSION, familyOf, paperKind, rulesFor, regulationOf, regulationId,
 const KINDS = ["theory", "experiment", "data", "observation"];
 
 test("competitions that mark alike share a family; everything else is general", () => {
-  for (const c of ["ipho", "apho", "ispho", "gpho", "rmph", "izho", "usapho"]) assert.equal(familyOf(c), "ipho", c);
-  for (const c of ["eupho", "nbpho", "physcup"]) assert.equal(familyOf(c), "kalda", c);
+  for (const c of ["ipho", "apho", "eupho", "ispho", "nbpho", "physcup", "gpho", "rmph", "izho", "usapho"]) assert.equal(familyOf(c), "ipho", c);
   for (const c of ["cpho", "rupho"]) assert.equal(familyOf(c), "derivation", c);
   assert.equal(familyOf("opho"), "answer"); assert.equal(familyOf("kphe"), "kphe");
   for (const c of ["ioaa", "ioaajr", "usaaao"]) assert.equal(familyOf(c), "ioaa", c);
@@ -56,7 +55,7 @@ test("the cacheable prefix holds rules only: nothing from the year, the scheme o
 
 test("prefixes are shared from the most general block down: common, then kind, then family", () => {
   const common = (a, b) => { let i = 0; while (i < a.length && a[i] === b[i]) i++; return i; };
-  const ipT = stablePrefix("ipho", "theory"), ipE = stablePrefix("ipho", "experiment"), kaE = stablePrefix("kalda", "experiment");
+  const ipT = stablePrefix("ipho", "theory"), ipE = stablePrefix("ipho", "experiment"), kaE = stablePrefix("derivation", "experiment");
   const core = ipE.indexOf("[Paper rules"), kindEnd = ipE.indexOf("[Competition rules");
   assert.ok(core > 0 && kindEnd > 0);
   assert.ok(common(ipT, ipE) >= ipT.indexOf("[Review"), "theory and experiment share the common block");
@@ -66,12 +65,21 @@ test("prefixes are shared from the most general block down: common, then kind, t
   assert.ok(rulesText("ioaa", "data").indexOf("[Paper rules") < rulesText("ioaa", "data").indexOf("[Competition rules"));
 });
 
+test("a sign error carried into later parts is penalised once, as the official IPhO/APhO/EuPhO schemes say", () => {
+  const ip1 = rulesFor("ipho", "theory").find(r => r.id === "IP1");
+  assert.match(ip1.en, /penalised once, where the mistake is made/); assert.match(ip1.en, /sign/); assert.match(ip1.en, /only the first part loses marks/);
+  assert.match(ip1.en, /dimensionally wrong/); assert.match(ip1.en, /wrong sign of a physical effect/, "IPhO 2022 Rule 1(a): an obviously wrong sign of the effect may be penalised again");
+  for (const c of ["ipho", "apho", "eupho", "ispho"]) assert.ok(rulesFor(familyOf(c), "theory").includes(ip1), c);
+  assert.ok(rulesFor("ioaa", "theory").some(r => r.id === "IO1" && r.en === ip1.en));
+  assert.ok(!rulesFor("answer", "theory").some(r => r.id === "IP1"), "OPhO marks answers only");
+});
+
 test("a session shows the union of its papers' rules under one family title", () => {
   const reg = regulationOf("nbpho", ["experiment", "theory", "experiment"]);
-  assert.equal(reg.version, REG_VERSION); assert.equal(reg.family, "kalda"); assert.deepEqual(reg.kinds, ["experiment", "theory"]);
+  assert.equal(reg.version, REG_VERSION); assert.equal(reg.family, "ipho"); assert.deepEqual(reg.kinds, ["experiment", "theory"]);
   assert.ok(reg.title.ko && reg.title.en);
   const ids = reg.rules.map(r => r.id); assert.equal(new Set(ids).size, ids.length);
-  assert.ok(ids.includes("R11") && ids.includes("KA4") && ids.includes("KA2"));
+  assert.ok(ids.includes("R11") && ids.includes("IP6") && ids.includes("IP7"), "NBPhO's booklet: experiment and theory rules together");
   assert.equal(regulationOf("icho", []).rules.length, 11, "an unknown kind list falls back to the general experiment rules");
   assert.equal(regulationId("ipho", "theory"), REG_VERSION + "/ipho/theory");
   assert.equal(cacheKey("ioaa", "observation"), "hl-grade-ioaa-observation");

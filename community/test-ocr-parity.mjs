@@ -275,7 +275,7 @@ test("actual Gemini grading bodies share the cacheable rules prefix of their fam
   const runs = [];
   for (const scope of [{ comp: "ipho", year: 2024, task: "E1", lang: "ko" },
     { comp: "apho", year: 2025, task: "E2", lang: "en" }, { comp: "ipho", year: 2026, task: "T2", theory: true, lang: "ko" },
-    { comp: "eupho", year: 2024, task: "E1", lang: "ko" }]) {
+    { comp: "cpho", year: 2024, task: "E1", lang: "ko" }]) {
     const s = await session(scope), marker = `PRIVATE_STUDENT_${s.id}_FINAL_ANSWER`, original = FORMULA + "\n" + marker;
     const image = Buffer.concat([png, Buffer.from(marker)]), reading = readFixture(); reading.header.task = scope.task;
     reset({ upstage: { content: { markdown: original }, confidence: 0.94 }, read: reading,
@@ -304,7 +304,7 @@ test("actual Gemini grading bodies share the cacheable rules prefix of their fam
   assert.equal(runs[0].prefix, runs[1].prefix, "IPhO and APhO experiments: one family, one kind, one cached prefix");
   assert.notEqual(runs[1].prefix, runs[2].prefix, "a theory paper has its own paper rules");
   assert.ok(shared(runs[1].prefix, runs[2].prefix) > runs[1].prefix.indexOf("handwriting:"), "theory and experiment still share the common block");
-  assert.notEqual(runs[0].prefix, runs[3].prefix, "EuPhO marks by its own family's rules");
+  assert.notEqual(runs[0].prefix, runs[3].prefix, "CPhO marks by its own family's rules");
   assert.ok(shared(runs[0].prefix, runs[3].prefix) >= runs[0].prefix.indexOf("[Competition rules"), "two families of one kind share the common and kind blocks");
   assert.ok(runs[0].prefix.length > 1000, "compare the substantive common policy, not only a task tag");
   for (let i = 0; i < runs.length; i++) for (let j = 0; j < runs.length; j++) if (i !== j) assert.ok(!runs[i].prompt.includes(runs[j].original), "another student's tail never leaks into a reused prefix");
