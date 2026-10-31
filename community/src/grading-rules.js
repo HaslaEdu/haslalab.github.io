@@ -16,7 +16,7 @@
  * leading prefix at the cached rate, so nothing that varies may appear before the end of block 3. No cache objects
  * are created and nothing is padded.
  */
-export const REG_VERSION = "2026-11-01";
+export const REG_VERSION = "2026-11-01b";
 
 const r = (id, en, ko) => ({ id, en, ko });
 
@@ -79,7 +79,8 @@ const FAMILIES = {
       r("IP3", "A numerical value earns its marks only when the formula it is computed from is correct, or is a propagated error under IP1.", "수치 값은 그것을 계산한 식이 맞거나 IP1에 따른 전파된 오류일 때만 점수를 받습니다."),
       r("IP4", "A correct method other than the official one earns the marks of the scheme's equivalent steps, never more. When the candidate tries several approaches, the one that scores higher is marked. Correct-looking equations that come from a wrong physical idea earn nothing.", "공식 풀이와 다른 올바른 방법도 기준표의 대응하는 단계 점수를 받으며 그 이상은 받지 않습니다. 여러 방법을 시도했으면 점수가 높은 쪽으로 채점합니다. 틀린 물리적 아이디어에서 나온 식은 겉보기에 맞아도 점수가 없습니다."),
       r("IP5", "Where the problem fixes no sign convention, any convention used consistently earns full marks; the signs that follow from it are not errors.", "문제가 부호 규약을 정하지 않았으면 일관되게 쓴 어떤 규약도 만점이며, 그 규약에서 나온 부호는 오류가 아닙니다.")],
-    theory: [r("IP6", "Intermediate results on working sheets earn the method marks the scheme lists for them. A final expression earns its marks only in terms of the quantities the problem gives (and constants), or as a number with its unit.", "연습지의 중간 결과는 기준표가 정한 풀이 점수를 받습니다. 최종 식은 문제에서 준 양(과 상수)으로 나타냈거나 단위가 있는 수일 때만 점수를 받습니다.")],
+    theory: [r("IP6", "Intermediate results on working sheets earn the method marks the scheme lists for them. A final expression earns its marks only in terms of the quantities the problem gives (and constants), or as a number with its unit.", "연습지의 중간 결과는 기준표가 정한 풀이 점수를 받습니다. 최종 식은 문제에서 준 양(과 상수)으로 나타냈거나 단위가 있는 수일 때만 점수를 받습니다."),
+      r("IP8", "A correct final answer written in its answer-sheet box earns every mark of its question, the intermediate (method) items included, even when no working is shown: working sheets serve partial credit and moderation. The final answer's page is the evidence for those items (R9). This does not apply where the question asks to derive, show or prove something, where the scheme gives an item only for a written derivation (e.g. «must have correct formula», «derivation required»), or where that year's own marking rules withhold marks from an answer given without working (e.g. «a formula written without derivation earns nothing unless it could be obtained in one's head»); then only work that can be seen earns those items. A wrong or missing final answer earns only the method marks for work that can be seen.", "답안지 칸에 쓴 최종 답이 맞으면 풀이가 없어도 그 문항의 중간(풀이) 점수까지 모두 받습니다. 연습지는 부분 점수와 모더레이션을 위한 것입니다. 이때 중간 점수의 근거(R9)는 최종 답이 있는 쪽입니다. 다만 문제가 유도·증명을 요구하거나, 기준표가 쓴 유도에만 점수를 주거나(예: «식이 맞아야 함», «유도 필요»), 그해 채점 규정이 풀이 없는 답에 점수를 주지 않으면(예: «머릿속으로 바로 얻을 수 없는 식은 유도 없이 쓰면 0점») 보이는 풀이만 점수를 받습니다. 최종 답이 틀리거나 없으면 보이는 풀이의 점수만 받습니다.")],
     lab: [r("IP7", "Every measured or final value needs the uncertainty the scheme asks for, and its significant figures must match that uncertainty.", "측정값과 최종값에는 기준표가 요구하는 불확도가 있어야 하고, 유효숫자는 그 불확도에 맞아야 합니다.")] },
   /* the USAPhO instructions and solutions (2022–2025): official answer sheets only, partial credit for reasoning,
      either sign convention where none is given. BAUPC publishes no rules of its own and is marked the same way. */

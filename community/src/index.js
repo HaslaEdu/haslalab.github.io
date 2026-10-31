@@ -1841,6 +1841,7 @@ async function labScheme(env, s, task, m) {
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
       "A numerical answer whose interval is not printed still names the official value with its unit in `what` (e.g. «correct numerical value of H_c = 7.7 m»), and any alternative value the solution says to accept.",
       "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
+      "notes: the solution's own general marking rules in a few words, above all whether a correct final answer without working earns its marks (e.g. «Rule 2: a formula written without derivation earns no marks unless it can be done in one's head», or a problem's note «writing the correct answer without showing work also receives full marks»), and which questions ask to derive, show or prove.",
       "unit_rule: what the scheme says about units and significant figures, if anything."].join("\n") },
     { inline_data: { mime_type: "application/pdf", data: b64(res) } },
     ...(mark ? [{ text: "The official marking scheme:" }, { inline_data: { mime_type: "application/pdf", data: b64(mark) } }] : []),

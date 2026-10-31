@@ -84,3 +84,13 @@ test("a session shows the union of its papers' rules under one family title", ()
   assert.equal(regulationOf("icho", []).rules.length, 11, "an unknown kind list falls back to the general experiment rules");
   assert.equal(regulationId("ipho", "theory"), REG_VERSION + "/ipho/theory");
 });
+
+test("IPhO-style theory: a correct boxed answer earns its question's method marks unless a derivation is required", () => {
+  const ip8 = rulesFor("ipho", "theory").find(r => r.id === "IP8");
+  assert.ok(ip8, "IPhO, APhO and the base family grade theory with IP8");
+  assert.match(ip8.en, /correct final answer .* earns every mark of its question/);
+  assert.match(ip8.en, /derive, show or prove/); assert.match(ip8.en, /without derivation earns nothing/);
+  for (const c of ["ipho", "apho", "eupho"]) assert.ok(rulesFor(familyOf(c), "theory").includes(ip8), c);
+  assert.ok(!rulesFor("ipho", "experiment").some(r => r.id === "IP8"), "experiments keep their own evidence rules");
+  assert.ok(!rulesFor("usapho", "theory").some(r => r.id === "IP8") && !rulesFor("general", "theory").some(r => r.id === "IP8"));
+});
