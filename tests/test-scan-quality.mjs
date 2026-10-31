@@ -299,7 +299,7 @@ test('markerless live preview automatically captures only a sharp validated outl
   assert.equal(live.photos.length, 0, 'four frames are not yet enough for paper-edge capture');
   assert.ok(live.calls.overlay >= 4); assert.equal(live.message.textContent, 'hold still');
   await live.next(); assert.equal(live.photos.length, 1); assert.equal(live.photos[0].blob, live.photo); assert.equal(live.photos[0].live, true);
-  assert.equal(live.calls.nativePhotos, 1); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
+  assert.equal(live.calls.nativePhotos, 0, 'no second native photo: the outlined video frame is scanned'); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
   assert.ok(live.detections.every(size => size.width === 768 && size.height === 1024), 'live detection uses a bounded sharper preview rather than losing weak paper edges at 720 pixels');
 });
 
@@ -307,7 +307,7 @@ test('printed markers use six stable observations', async () => {
   const live=await liveCameraFixture();
   live.state.detection={...live.state.detection,method:'marker',paperStatus:'document',scanEligible:true};
   await live.next(5);assert.equal(live.photos.length,0);
-  await live.next();assert.equal(live.photos.length,1);assert.equal(live.calls.nativePhotos,1);
+  await live.next();assert.equal(live.photos.length,1);assert.equal(live.calls.nativePhotos,0);
 });
 
 test('closing a camera during asynchronous detection ignores its late outline and never resumes capture', async () => {
@@ -354,10 +354,12 @@ test('turning automatic capture off retains the shutter and toggling it back sta
   await toggled.click('auto'); await toggled.next(4); assert.equal(toggled.photos.length, 0); await toggled.next(); assert.equal(toggled.photos.length, 1);
 });
 
-test('closing a camera while a native photo is pending stops tracks and ignores its late result', async () => {
-  let resolve; const pending = new Promise(done => resolve = done), live = await liveCameraFixture({ auto: false, capturePhoto: () => pending });
-  await live.click('shoot'); assert.equal(live.calls.nativePhotos, 1); await live.click('close'); assert.equal(live.calls.stopped, 1);
-  resolve(live.photo); await new Promise(done => setImmediate(done)); assert.equal(live.photos.length, 0); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
+test('the shutter never takes a second native photo: the outlined video frame is what is scanned (Hasla Nonsul\'s way)', async () => {
+  const live = await liveCameraFixture({ auto: false, capturePhoto: () => { throw Error('a native still must not be taken'); } });
+  live.state.detection = { ...live.state.detection, scanEligible: true };
+  await live.next(); await live.click('shoot');
+  assert.equal(live.calls.nativePhotos, 0); assert.equal(live.photos.length, 1); assert.equal(live.photos[0].blob, live.photo);
+  assert.equal(live.photos[0].options.detectionHint.source, 'same-video-frame'); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
 });
 
 test('a manual shutter retains any fresh accepted video frame without requiring the automatic hold',async()=>{
@@ -365,10 +367,10 @@ test('a manual shutter retains any fresh accepted video frame without requiring 
   live.state.detection={...live.state.detection,method:'ml',scanEligible:true,autoCaptureEligible:false};
   await live.next();await live.click('shoot');
   const options=live.photos[0].options;
-  assert.equal(options.detectionHint,undefined,'native still photo always earns its own detection first');
-  assert.equal(options.fallback.detectionHint.source,'same-video-frame');
-  assert.equal(options.fallback.detectionHint.scanEligible,true);
-  assert.ok(options.fallback.detectionHint.corners.every(p=>p.x>=0&&p.x<=1&&p.y>=0&&p.y<=1));
+  assert.equal(options.fallback,undefined,'there is no second photo to fall back from');
+  assert.equal(options.detectionHint.source,'same-video-frame');
+  assert.equal(options.detectionHint.scanEligible,true);assert.equal(options.detectionHint.verified,true);
+  assert.ok(options.detectionHint.corners.every(p=>p.x>=0&&p.x<=1&&p.y>=0&&p.y<=1));
 });
 
 test('expired or delayed live detections never transfer stale corners to a new still photo',async()=>{
@@ -381,7 +383,7 @@ test('expired or delayed live detections never transfer stale corners to a new s
   assert.equal(live.photos.length,1);assert.deepEqual(Object.keys(live.photos[0].options),[],'manual capture remains available but a 2-second-old sampled frame is not reused');
 });
 
-test('native camera failure may reuse the matching video frame but a CV proposal cannot supply a hint',async()=>{
+test('the outlined video frame carries its corners, while a rectangle that is not a usable page supplies no hint',async()=>{
   const live=await liveCameraFixture({auto:false,capturePhoto:async()=>{throw Error('native camera fixture');}});
   live.state.detection={...live.state.detection,method:'ml',scanEligible:true,autoCaptureEligible:false};
   await live.next();await live.click('shoot');

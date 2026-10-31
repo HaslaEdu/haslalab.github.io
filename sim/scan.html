@@ -113,7 +113,7 @@
 
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=08420579ed34";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=438b55d2189a";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -295,19 +295,6 @@ async function take(file, live, internal = false, captureOptions = {}) {
     try { r = await processShot(file, { ...options, ...(captureOptions.detectionHint ? { detectionHint: captureOptions.detectionHint } : {}) }); }
     catch (error) { processingError = error; }
     if (revision !== shotRevision || !shot) return;
-    // Native Android ImageCapture may change crop, orientation or exposure. Its
-    // photo must earn its own detection; live coordinates only belong to the
-    // exact frozen video frame that was analysed, never to another photo.
-    // An uncertain quad in the native still is cropped by processShot (a manual corner fix can follow), but when the
-    // live view had verified the page in its own frame, that frame is the better page: use it instead.
-    if (captureOptions.fallback && (processingError || r?.warpApplied === false || r?.cornersReliable !== true)) {
-      const fallback = captureOptions.fallback;
-      r = await processShot(fallback.file, { ...options, detectionHint: fallback.detectionHint });
-      if (revision !== shotRevision || !shot) return;
-      URL.revokeObjectURL(shot.originalUrl);
-      shot = { ...shot, file: fallback.file, captureFile: fallback.file, originalUrl: URL.createObjectURL(fallback.file), liveFrameFallback: true };
-      processingError = null;
-    }
     if (processingError) throw processingError;
     if (revision !== shotRevision || !shot) return;
     shot = { ...shot, ...r, busy: false };
@@ -441,8 +428,12 @@ let AUTO = true;
 try { AUTO = localStorage.getItem("hlScanAuto") !== "0"; } catch (e) {}
 async function liveCamera() {
   let stream;
-  try { stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: "environment" }, width: { ideal: 3840 }, height: { ideal: 2160 } } }); }
+  /* the scan is cut from this video, so ask for the most pixels: 4:3 at up to 12 MP (most phone sensors' own shape,
+     which puts more pixels on a portrait sheet than 16:9), and keep it in focus where the camera can */
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: "environment" }, width: { ideal: 4032 }, height: { ideal: 3024 } } }); }
   catch (e) { toast(t().lvNoCam, 5000); return; }
+  try { const track = stream.getVideoTracks?.()[0], caps = track?.getCapabilities?.();
+    if (Array.isArray(caps?.focusMode) && caps.focusMode.includes("continuous")) await track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }); } catch (e) {}
   const ov = document.createElement("div"); ov.className = "lv";
   ov.innerHTML = `<div class="vw"><video playsinline muted autoplay></video><canvas></canvas></div><div class="msg"></div>
     <div class="ctl"><button data-x="close">${t().lvClose}</button><button class="sh" data-x="shoot" aria-label="shutter"></button><button data-x="auto" class="${AUTO ? "on" : ""}">${t().lvAuto}</button></div>`;
@@ -456,38 +447,31 @@ async function liveCamera() {
   const say = (m, ok) => { msg.textContent = m; msg.classList.toggle("ok", !!ok); };
   say(t().lvAim);
   void warmDocumentDetector({ retry: true }).catch(() => {});
+  /* The shutter keeps the very video frame the outline was drawn on, at the camera's full video resolution, and
+     scans it with those corners, as Hasla Nonsul's scanner did. A second, native still photo (ImageCapture) is not
+     taken: on phones it has another crop, exposure and flash, and the sheet had to be found again in it, which is how
+     a well-outlined sheet came out as the desk. Without a fresh outline the current frame is scanned and searched. */
   async function capture() {
     if (busy || !alive) return;
     if (!v.videoWidth || !v.videoHeight) return say(t().lvAim);
     busy = true; say(t().lvTake, true);
-    const accepted = verifiedFrame && performance.now() - verifiedFrame.time < 1500 ? verifiedFrame : null;
-    const fallbackFile = accepted ? await new Promise(resolve => accepted.canvas.toBlob(resolve, "image/jpeg", .96)) : null;
-    const fallback = fallbackFile ? { file: fallbackFile, detectionHint: accepted.detectionHint } : null;
-    let blob = null, fromVideo = false;
-    /* the still is taken without the flash or torch: on paper it blows out the middle and leaves a glare the clean
-       mode then spreads (Samsung's default fill light is auto) */
-    try {
-      if (window.ImageCapture) {
-        const still = new ImageCapture(stream.getVideoTracks()[0]), caps = await still.getPhotoCapabilities?.().catch(() => null);
-        blob = await still.takePhoto(Array.isArray(caps?.fillLightMode) && caps.fillLightMode.includes("off") ? { fillLightMode: "off" } : undefined);
-      }
-    } catch (e) { blob = null; }
+    const shown = verifiedFrame && performance.now() - verifiedFrame.time < 1500 ? verifiedFrame : null;
+    let blob = shown ? await new Promise(resolve => shown.canvas.toBlob(resolve, "image/jpeg", .96)) : null;
     if (!alive) return;
-    if (!blob && fallback) { blob = fallback.file; fromVideo = true; }
     if (!blob) {
       const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
-      blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.95));
+      blob = await new Promise(r => c.toBlob(r, "image/jpeg", .96));
     }
     if (!alive) return;
     if (!blob) { busy = false; say(t().lvNoCam); timer = setTimeout(frame, 140); return; }
-    close(); take(blob, true, false, fromVideo ? { detectionHint: fallback.detectionHint } : fallback ? { fallback } : {});
+    close(); take(blob, true, false, blob && shown ? { detectionHint: shown.detectionHint } : {});
   }
   async function frame() {
     if (!alive) return;
     if (v.videoWidth) {
       const frameCapturedAt = performance.now();
       /* one frame buffer is reused unless the last verified frame still holds it */
-      const frameSource = spareFrame && spareFrame !== verifiedFrame?.canvas ? spareFrame : document.createElement("canvas"), fullScale = Math.min(1, 2560 / Math.max(v.videoWidth, v.videoHeight));
+      const frameSource = spareFrame && spareFrame !== verifiedFrame?.canvas ? spareFrame : document.createElement("canvas"), fullScale = Math.min(1, 3840 / Math.max(v.videoWidth, v.videoHeight));
       spareFrame = frameSource;
       const fw = Math.round(v.videoWidth * fullScale), fh = Math.round(v.videoHeight * fullScale);
       if (frameSource.width !== fw || frameSource.height !== fh) { frameSource.width = fw; frameSource.height = fh; }
@@ -501,8 +485,9 @@ async function liveCamera() {
       catch { if (!alive) return; candidate = null; }
       if (!alive || busy) return;
       const d = candidate?.corners && candidate.method !== "frame" && candidate.score > .25 ? candidate : null;
-      verifiedFrame = d?.scanEligible === true && d.verified !== false ? { canvas: frameSource, time: frameCapturedAt, detectionHint: {
-        source: "same-video-frame", scanEligible: true, method: d.method, score: d.score,
+      /* the frame an outline is drawn on, kept for the shutter with that outline (verified or still to be checked) */
+      verifiedFrame = d?.scanEligible === true ? { canvas: frameSource, time: frameCapturedAt, detectionHint: {
+        source: "same-video-frame", scanEligible: true, method: d.method, score: d.score, verified: d.verified !== false,
         corners: d.corners.map(point => ({ x: point.x / w, y: point.y / h })), paperStatus: d.paperStatus,
       } } : null;
       const how = d?.method;

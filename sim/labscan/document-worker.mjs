@@ -2,7 +2,7 @@
    markers, by findPage in scanner.js (v2, plain arithmetic on the photo's pixels) and by the learned corner model
    DocCornerNet (scanic-ml, MIT, served from this site: vendor/scanic-ml-0.2.0), whose quad is fitted to the measured
    edges like any other before chooseDocument picks one. No photo leaves the device. */
-import { toGray, detectDocumentQuadGray, findPageQuadGray, chooseDocument, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=08420579ed34';
+import { toGray, detectDocumentQuadGray, findPageQuadGray, chooseDocument, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=438b55d2189a';
 
 const ML_ASSETS = new URL('../../vendor/scanic-ml-0.2.0/', import.meta.url).href;
 let ml = null, mlFailedAt = 0;

@@ -9,7 +9,7 @@ try{
  executable=process.env.CHROME_BIN||(process.platform==='win32'?'C:/Program Files/Google/Chrome/Application/chrome.exe':['/usr/bin/google-chrome','/usr/bin/chromium',chromium.executablePath()].find(file=>fs.existsSync(file)));
  if(!fs.existsSync(executable))chromium=null;
 }catch{}
-test('actual live camera keeps accepted video geometry separate from native still photos and creates a clean scan that keeps colours',
+test('actual live camera scans the very video frame it outlined (no second native photo) and creates a clean scan that keeps colours',
  {skip:!chromium&&'Set HASLA_PLAYWRIGHT_PATH and CHROME_BIN for camera UI integration',timeout:120000},async()=>{
  const server=http.createServer((request,response)=>{
   const target=path.resolve(root,'.'+new URL(request.url,'http://localhost').pathname);
@@ -47,7 +47,7 @@ test('actual live camera keeps accepted video geometry separate from native stil
     for(const track of stream.getTracks()){const stop=track.stop.bind(track);track.stop=()=>{window.__stopped++;stop();};}
     window.__camera={canvas,file};return stream;
    }});
-   window.ImageCapture=class{async takePhoto(){
+   window.ImageCapture=class{async takePhoto(){window.__nativeCalls=(window.__nativeCalls||0)+1;
     if(window.__nativeMode==='original')return window.__camera.file;
     if(window.__nativeMode==='throw')throw Error('Camera hardware fixture');
     if(window.__nativeMode==='weak'){
@@ -76,13 +76,13 @@ test('actual live camera keeps accepted video geometry separate from native stil
    return page.evaluate(()=>{const s=window.__scan.getShot();return{warp:s.warpApplied,width:s.width,height:s.height,method:s.method,fallback:s.liveFrameFallback===true,baseW:s.baseW,baseH:s.baseH,fileType:s.file.type,captureMatchesFile:s.captureFile===s.file,calls:window.__scanCalls,stopped:window.__stopped};});
   }
   await openAndHold();const fallback=await shoot();
-  assert.equal(fallback.warp,true);assert.equal(fallback.fallback,true);assert.equal(fallback.method,'page');
+  assert.equal(fallback.warp,true);assert.equal(fallback.method,'page');
   assert.equal(fallback.width,1654);assert.ok(fallback.height>2200&&fallback.height<2700);
-  assert.deepEqual([fallback.baseW,fallback.baseH],[900,1200],'fallback uses the same portrait video frame, not the different native crop');
-  assert.equal(fallback.calls.length,2);assert.equal(fallback.calls[0].hint,null);
-  assert.equal(fallback.calls[1].hint.source,'same-video-frame');assert.equal(fallback.calls[1].mode,'clean');
+  assert.deepEqual([fallback.baseW,fallback.baseH],[900,1200],'the scan is cut from the portrait video frame the outline was drawn on');
+  assert.equal(fallback.calls.length,1,'one scan, with the outlined frame\'s own corners');assert.equal(fallback.calls[0].hint.source,'same-video-frame');assert.equal(fallback.calls[0].mode,'clean');
   assert.equal(fallback.stopped,1);assert.equal(await page.locator('.lv').count(),0);
-  assert.equal(fallback.captureMatchesFile,true,'monthly original evidence uses the matching video frame, not the failed native still');
+  assert.equal(fallback.captureMatchesFile,true,'monthly original evidence is the same video frame');
+  assert.equal(await page.evaluate(()=>window.__nativeCalls||0),0,'the phone\'s native still camera is never used');
   const colours=await page.evaluate(async()=>{
    const bitmap=await createImageBitmap(window.__scan.getShot().blob),canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;canvas.getContext('2d').drawImage(bitmap,0,0);bitmap.close();
    const pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height).data;let blue=0,red=0;
@@ -90,21 +90,7 @@ test('actual live camera keeps accepted video geometry separate from native stil
    return{blue,red};
   });
   assert.ok(colours.blue>2000&&colours.red>500,'the scan retains the drawn direction arrow and red graph points');
-  await page.evaluate(()=>{window.__nativeMode='original';window.__scanCalls=[];});
-  await page.locator('#again').click();
-  await page.waitForFunction(()=>document.querySelector('.lv .msg')?.textContent==='Hold still…',{timeout:45000});
-  await page.waitForTimeout(1800);
-  const native=await shoot();
-  assert.equal(native.warp,true);assert.equal(native.fallback,false,'a valid native high-resolution photo remains preferred');
-  assert.equal(native.calls.length,1);assert.equal(native.calls[0].hint,null,'live coordinates never leak into native photo detection');
-  assert.equal(native.captureMatchesFile,true);
-  await page.evaluate(()=>{window.__nativeMode='weak';window.__scanCalls=[];});
-  await page.locator('#again').click();
-  await page.waitForFunction(()=>document.querySelector('.lv .msg')?.textContent==='Hold still…',{timeout:45000});
-  await page.waitForTimeout(1800);
-  const weak=await shoot();
-  assert.equal(weak.fallback,true,'an uncertain quad in the native still gives way to the live frame whose page was verified');
-  assert.equal(weak.warp,true);assert.deepEqual([weak.baseW,weak.baseH],[900,1200]);assert.equal(weak.calls.length,2);
+  const native=fallback;
   await page.evaluate(()=>{window.__scanCalls=[];});
   await page.locator('#cam').setInputFiles({name:'phone-camera.jpg',mimeType:'image/jpeg',buffer:fs.readFileSync(path.join(root,'tests/fixtures/scanner-graph-photo.jpg'))});
   await page.waitForFunction(()=>window.__scan.getShot()?.file.name==='phone-camera.jpg'&&!window.__scan.getShot().busy,{timeout:45000});
