@@ -84,3 +84,12 @@ export function numbersIn(text) {
   return out;
 }
 export const sameNumber = (a, b) => Math.abs(a - b) <= Math.max(1e-12, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
+
+/* LaTeX the model put into its JSON without doubling the backslash comes back with JSON escapes turned into control
+   characters: «\frac» as a form feed + «rac», «\beta» as a backspace + «eta», «\theta» / «\times» / «\text» as a tab,
+   «\rho» / «\right» as a carriage return, «\nabla» as a newline (seen in IPhO 2025 T1: «Η = \x0crac{R}{G}»). Form
+   feeds and backspaces never belong in a transcript; a tab or carriage return directly before letters is a command. */
+export function restoreLatex(text) {
+  return typeof text !== "string" ? text : text.replace(/\f/g, "\\f").replace(/\x08/g, "\\b")
+    .replace(/\t(?=[a-zA-Z])/g, "\\t").replace(/\r(?=[a-zA-Z])/g, "\\r").replace(/\n(?=abla\b)/g, "\\n");
+}

@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, restoreLatex } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1925,6 +1925,8 @@ async function labReadPage(env,s,buf,mime,_legacy,m) {
     throw Object.assign(new HttpError(502,'vision_response_schema'),{provider:labProvider(s),provider_status:200});
   }
   const confidence=Number.isFinite(raw.confidence)?Math.max(0,Math.min(1,raw.confidence)):null;
+  raw.text=restoreLatex(raw.text);
+  for(const item of raw.items)for(const key of ['label','text'])item[key]=restoreLatex(item[key]);
   const {text:originalText,...reading}=raw;
   return {...reading,items:raw.items.slice(0,160),structure_status:'done',ocr:{text:originalText,engine:labProvider(s),model:out.model,
     format:'markdown-latex',confidence,low:[],review_required:raw.legible!=='good'||confidence!==null&&confidence<OCR_LOW_MARK}};

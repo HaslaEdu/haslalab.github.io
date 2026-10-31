@@ -107,3 +107,12 @@ test("a value is found on its page in scientific notation, not only in the reade
   assert.ok(!has(String.raw`r_1 = 5.31 \cdot 10^{-11} m`, 5.31e-10), "a different exponent is a different number");
   assert.ok(!has("W = 20 mJ", 2), "no number is invented");
 });
+
+test("LaTeX the reader left unescaped in its JSON is restored, ordinary line breaks are kept", async () => {
+  const { restoreLatex } = await import("./src/lab-scheme-items.js");
+  const parsed = JSON.parse(String.raw`{"t":"H = \frac{R}{G}, \beta, \theta \times \text{m}, \rho, \nabla\nnext line"}`).t;
+  assert.equal(restoreLatex(parsed), String.raw`H = \frac{R}{G}, \beta, \theta \times \text{m}, \rho, \nabla` + "\nnext line");
+  assert.equal(restoreLatex("a\tb"), "a\\tb", "a tab before a letter is a command");
+  assert.equal(restoreLatex("x =\t2"), "x =\t2", "a tab before a digit stays a tab");
+  assert.equal(restoreLatex(null), null);
+});
