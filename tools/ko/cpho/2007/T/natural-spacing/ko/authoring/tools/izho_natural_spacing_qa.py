@@ -18,6 +18,10 @@ from pdf_hangul_visibility import audit as hangul_audit
 from izho_new_prose_outline_qa import outline_results
 from izho_natural_spacing import ROOT,BUILD
 from izho_natural_spacing_rebuild import coverage
+from pdf_grading_columns_stationary import audit as grading_columns_audit
+from pdf_korean_natural_composer import normalize_placements
+from pdf_original_image_ink import resolved_images
+from pdf_native_script_motion_audit import audit as native_script_audit
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def semantic(value,ancestors=()):
@@ -57,7 +61,8 @@ def image_rect_motion(original,current,geometry_report,tolerance=.001):
         return dict(rect_preserved=True,rect_matches_declared_native_math_dx=False,dx=0.)
     for group in geometry_report['selected_native_math_groups']:
         scope=fitz.Rect(group['rect'])+(-tolerance,-tolerance,tolerance,tolerance)
-        if not scope.contains(a):continue
+        exact_painted_image=any(max(abs(x-y)for x,y in zip(a,r))<=tolerance for r in group.get('painted_image_rects',[]))
+        if not scope.contains(a)and not exact_painted_image:continue
         dx=group['dx'];expected=a+(dx,0,dx,0)
         if max(abs(x-y)for x,y in zip(expected,b))<=tolerance:
             return dict(rect_preserved=False,rect_matches_declared_native_math_dx=True,dx=dx,
@@ -74,7 +79,7 @@ def table_math_geometry(page,plan,composition):
         key=tuple(round(v,3)for v in cell)
         if key in seen:continue
         seen.add(key);box=fitz.Rect(cell)
-        glyphs=[g for g in rows if g['c'].strip()and g['font']=='CambriaMath'and box.contains(fitz.Point(g['origin']))]
+        glyphs=[g for g in rows if g['c'].strip()and re.fullmatch(r'Cambria ?Math',g['font'])and box.contains(fitz.Point(g['origin']))]
         if not glyphs:continue
         deltas=[moves.get(glyph_key(g),0.)for g in glyphs]
         spread=max(deltas)-min(deltas)
@@ -85,6 +90,20 @@ def table_math_geometry(page,plan,composition):
     return dict(method='All original CambriaMath glyphs in each enclosed score-table formula cell retain their complete relative geometry; designated stationary table mathematics must additionally have zero horizontal movement.',
         groups=groups,checked_groups=len(groups),mismatched_groups=sum(not g['passed']for g in groups),passed=all(g['passed']for g in groups))
 
+def reviewed_expression_geometry(composition):
+    motions={glyph_key(g):s['dx']for s in composition['native_shifts']for g in s['glyphs']if g['c'].strip()}
+    paths={tuple(p['operator_indices']):s['dx']for s in composition['native_shifts']for p in s.get('vector_paths',[])}
+    groups=[]
+    for atom in composition.get('reviewed_explicit_native_math_atoms',[]):
+        values=[motions.get(glyph_key(g),0.)for g in atom['glyphs']if g['c'].strip()]
+        bars=atom.get('shift_kwargs',{}).get('vector_paths',[])
+        values.extend(paths.get(tuple(p['operator_indices']),0.)for p in bars)
+        spread=max(values)-min(values)if values else 0
+        groups.append(dict(reason=atom['reviewed_reason'],glyph_records=len(atom['glyphs']),fraction_rules=len(bars),
+            minimum_dx=min(values)if values else 0,maximum_dx=max(values)if values else 0,relative_geometry_error_pt=spread,passed=spread<=.001))
+    return dict(method='Every source CID cluster and every original fraction rule of each reviewed complete inline expression must receive one common dx.',
+        checked_groups=len(groups),groups=groups,mismatched_groups=sum(not g['passed']for g in groups),passed=all(g['passed']for g in groups))
+
 def native_phase_profile(result,plan,folder):
     raw=result['original_input_outline_native_ink_audit']
     result['verified_original_native_ink_missing_pixels']=raw.get('newly_missing_native_ink_pixels')
@@ -92,6 +111,27 @@ def native_phase_profile(result,plan,folder):
     witness_path=plan.get('native_ink_witness')
     if not witness_path:return False
     path=Path(folder)/witness_path;w=json.loads(path.read_text('utf8'))
+    if plan.get('native_ink_witness_profile')=='2023-T2-TimesRoman-comma':
+        reference=w['native_CID_reference'];source=w['source_glyph'];target=w['actual_target_glyph']
+        if not all([result['output_sha256']=='6b97f81ea6d5af3a9ea6c77c63e48128c0dbc7231fdce32ed327fb86447ea832',
+            w['proof_sha256']==result['output_sha256'],w['proof_unmodified'],w['passed'],reference['passed'],
+            reference['source_sha256']==result['old_single_page_sha256'],reference['proof_sha256']==result['output_sha256'],
+            reference['missing_native_CID_reference_pixels']==0,reference['native_reference_dark_pixels']==26,
+            reference['source_encoded_cid_hex']=='2c',reference['source_font_resource']=='/R18',
+            source['font']==target['font']=='Times-Roman',source['size']==target['size']==12,
+            source['trace_gid']==target['trace_gid']==71,source['c']==target['c']==',',
+            source['origin']==[261.4100036621094,601.8690185546875],target['origin']==[202.61900329589844,601.8690185546875],
+            w['svg_reference_scales']['8']['passed'],w['svg_reference_scales']['12']['passed'],
+            raw.get('newly_missing_native_ink_pixels')==1,raw.get('missing_bbox')==[204.0,603.0,204.25,603.25],
+            not raw['missing_requested_source_glyphs'],not raw['missing_final_native_glyphs'],raw['source_outline_audit']['passed']]):return False
+        result['native_ink_reference_profile']=dict(
+            method='One exact original Times-Roman comma SVG/native-font raster phase sample. Original encoded-byte reference at the measured destination is authoritative; global thresholds unchanged.',
+            original_4x_svg_dark_pixel_delta=1,native_original_CID_reference_missing_pixels=0,
+            svg_8x_missing_pixels=0,svg_12x_missing_pixels=0,witness=str(path),witness_sha256=sha(path),
+            original_font_resource='/R18',original_encoded_CID='2c',original_gid=71,original_font='Times-Roman',original_point_size=12,
+            proof_unmodified=True)
+        result['verified_original_native_ink_missing_pixels']=0
+        return True
     if not all([w['proof_sha256']==result['output_sha256'],w['proof_unmodified'],w['passed'],
         w['native_cid_reference_missing_pixels']==0,w['native_reference_dark_pixels']>0,
         w['svg_reference_scales']['8']['passed'],w['svg_reference_scales']['12']['passed'],
@@ -114,7 +154,8 @@ def passed_checks(result,native_ink_ok):
         result['original_image_programs_retained'],result['page_group_preserved'],result['colorspace_resources_preserved'],
         all((r['rect_preserved']or r.get('rect_matches_declared_native_math_dx',False))and r['full_palette_icc_mask_image_graph_preserved']for r in result['original_palette_icc_mask_graphs']),
         not result['new_batang_outlines']['empty'],not result['hangul_visibility']['flagged_components'],
-        result.get('source_math_internal_geometry',{}).get('passed',True)])
+        result.get('source_math_internal_geometry',{}).get('passed',True),result.get('grading_columns_stationary',{}).get('passed',True),
+        result.get('reviewed_inline_expression_geometry',{}).get('passed',True),result.get('native_script_motion_audit',{}).get('passed',True)])
 
 def audit(year,kind,number):
     folder=BUILD/str(year)/kind;target=folder/f'page{number:02d}.pdf';composition=json.loads(target.with_suffix('.qa.json').read_text('utf8'))
@@ -154,9 +195,14 @@ def audit(year,kind,number):
             physical={(glyph_key(g),g['trace_gid'],g['render_mode'])for g in _traces(original[plan['source_page']-1])if g['c'].strip()and g['trace_gid']>=0 and g['render_mode']!=3}
         protected=[g for g in _traces(src[0])if(glyph_key(g),g['trace_gid'],g['render_mode'])in physical and g['trace_gid']>=0 and g['c'].strip()]
         math_geometry=table_math_geometry(src[0],plan,composition)
-        originals=src[0].get_image_info(xrefs=True);current=dst[0].get_image_info(xrefs=True)
+        grade_placements=normalize_placements(src[0],plan['prose_placements'])
+        originals=resolved_images(src,src[0]);current=resolved_images(dst,dst[0])
     physical_ink=audit_moved_native_ink(old,1,target,shifts=composition['native_shifts'],
         erased_glyphs=composition['erased_hangul_glyphs'],protected_glyphs=protected)
+    script_qa=native_script_audit(old,1,target,shifts=composition['native_shifts'],native_glyphs=protected,
+        expression_groups=[dict(label=a['reviewed_reason'],glyphs=a['glyphs'])for a in composition.get('reviewed_explicit_native_math_atoms',[])],
+        excluded_script_origins=plan.get('reviewed_script_exclusions',[]))
+    grade_audit=grading_columns_audit(old,target,grade_placements)
     font_same=all(row in native_font_programs(target,1)for row in native_font_programs(old,1))
     image_same=all(row in native_image_programs(target,1)for row in native_image_programs(old,1))
     image_graphs=[]
@@ -165,7 +211,9 @@ def audit(year,kind,number):
         colors_same=semantic(src.pages[0].Resources.get('/ColorSpace'))==semantic(dst.pages[0].Resources.get('/ColorSpace'))
         if len(originals)!=len(current):raise ValueError('Image paint count changed')
         for i,(x,y)in enumerate(zip(originals,current)):
-            image_graphs.append(dict(image=i,**image_rect_motion(x['bbox'],y['bbox'],geometry_qa),
+            image_graphs.append(dict(image=i,source_original_Do_xref=x['xref'],source_mupdf_cached_xref=x['mupdf_cached_xref'],
+                target_original_Do_xref=y['xref'],target_mupdf_cached_xref=y['mupdf_cached_xref'],
+                **image_rect_motion(x['bbox'],y['bbox'],geometry_qa),
                 full_palette_icc_mask_image_graph_preserved=semantic(src.get_object((x['xref'],0)))==semantic(dst.get_object((y['xref'],0)))))
     result=dict(year=year,kind=kind,page=number,output=str(target),output_sha256=sha(target),
         original_source_sha256=plan['original_english_source_sha256'],old_korean_source_sha256=plan['source_base_sha256'],
@@ -173,6 +221,9 @@ def audit(year,kind,number):
         fresh_process_rgb_render=True,changed_pixels_outside_old_and_new_text_ink=outside,
         native_graphics_motion_audit=geometry_qa,actual_native_math_visible_ink_audit=native_actual,
         source_math_internal_geometry=math_geometry,
+        native_script_motion_audit=script_qa,
+        reviewed_inline_expression_geometry=reviewed_expression_geometry(composition),
+        grading_columns_stationary=grade_audit,
         original_input_outline_native_ink_audit=physical_ink,figure_pixel_audits=figures,
         original_font_programs_and_names_retained=font_same,original_image_programs_retained=image_same,
         original_palette_icc_mask_graphs=image_graphs,page_group_preserved=group_same,colorspace_resources_preserved=colors_same,

@@ -7,7 +7,29 @@ import cv2
 import pymupdf as fitz
 import pikepdf
 from pdf_original_image_ink import image_programs
-from pdf_original_text_ops import replace_show_regions
+
+def _analysis_show_regions(page,replacements):
+    """Remove quote ink only in the non-text analysis copy, preserving state."""
+    class Tokens(pikepdf.TokenFilter):
+        def __init__(self):super().__init__();self.items=[]
+        def handle_token(self,token):self.items.append((token.type_,token.raw_value));return token
+    collector=Tokens();raw=page.get_filtered_contents(collector);regions=[];offset=start=0
+    for typ,value in collector.items:
+        offset+=len(value)
+        if typ==pikepdf.TokenType.inline_image:raise ValueError('Inline image token surgery needs a separate profile')
+        if typ==pikepdf.TokenType.word:
+            regions.append((start,offset,value.decode('ascii')));start=offset
+    parsed=pikepdf.parse_content_stream(page)
+    if len(regions)!=len(parsed)or any(op!=str(ins.operator)for(_,_,op),ins in zip(regions,parsed)):
+        raise ValueError('Raw non-text-analysis token mapping is not exact')
+    pieces=[];position=0
+    for index,instruction in sorted(replacements.items()):
+        a,z,op=regions[index]
+        if op not in['Tj','TJ',"'",'"']:raise ValueError('Only text shows may change in a non-text analysis copy')
+        if op in["'",'"']and str(instruction.operator)!=op:raise ValueError('Quoted text state must remain intact')
+        prefix=re.match(rb'\s*',raw[a:z])[0]
+        pieces.extend([raw[position:a],prefix,pikepdf.unparse_content_stream([instruction]).rstrip(b'\r\n')]);position=z
+    pieces.append(raw[position:]);return b''.join(pieces)
 
 def graphics_control(doc,page):
     """Read-only non-text control retaining original image clipping and masks.
@@ -27,18 +49,24 @@ def graphics_control(doc,page):
             for index,instruction in enumerate(pikepdf.parse_content_stream(node)):
                 op=str(instruction.operator)
                 if op=='Tr'and int(instruction.operands[0])>=4:raise ValueError('Text clipping requires a separate non-text control profile')
-                if op in["'",'"']:raise ValueError('Quoted text-show requires a separate non-text control profile')
+                if op in["'",'"']:
+                    values=list(instruction.operands)
+                    if len(values)!=(1 if op=="'"else 3)or not isinstance(values[-1],pikepdf.String):
+                        raise ValueError('Malformed quoted text show in non-text analysis')
+                    # Keeping the quote operator preserves T* and, for double
+                    # quote, the original Tw/Tc operands. Only glyph ink goes.
+                    replacements[index]=pikepdf.ContentStreamInstruction(values[:-1]+[pikepdf.String(b'')],instruction.operator)
                 if op in['Tj','TJ']:replacements[index]=pikepdf.ContentStreamInstruction([pikepdf.Array([])],pikepdf.Operator('TJ'))
                 if op=='Do':
                     child=resources.get('/XObject',{}).get(instruction.operands[0])
                     if child is not None and str(child.get('/Subtype'))=='/Form':strip(child,child.get('/Resources',resources))
             if is_page:
-                raw=replace_show_regions(node,replacements);node.Contents=control.make_stream(raw)
+                raw=_analysis_show_regions(node,replacements);node.Contents=control.make_stream(raw)
             else:
                 # The raw token filter is a Page API. A temporary wrapper
                 # exposes this Form stream without rewriting any operands.
                 wrapper=control.add_blank_page(page_size=(3,3));wrapper.Contents=node
-                raw=replace_show_regions(wrapper,replacements);del control.pages[-1]
+                raw=_analysis_show_regions(wrapper,replacements);del control.pages[-1]
                 node.write(raw)
         strip(control.pages[0],control.pages[0].Resources,True)
         data=BytesIO();control.save(data,compress_streams=False);control.close()

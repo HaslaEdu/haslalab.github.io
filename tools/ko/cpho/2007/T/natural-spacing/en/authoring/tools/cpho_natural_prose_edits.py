@@ -11,18 +11,46 @@ from pdf_original_text_ops import glyph_key
 EDITS={(2007,1):{
     '1-5-1':('이며, 비신축 줄의 길이는','이며, 비신축 줄(길이'),
     '1-6-0':('그림처럼 잇고',')로 연결된다.'),
+},(2022,1):{
+    '1-6-0':('가는 막대를 움직이면 충분한 시간 뒤 평형 위치에 멈춘다. 이때 막대와 수평 방향의',
+        '가는 막대를 움직인 뒤 충분히 오래 두면 평형에 멈춘다. 이때 막대와 수평선의'),
+},(2022,2):{
+    '2-12-0':('과 코리올리 힘을 ‘느낀다’. 원환을 미소요소의 집합으로 보고 모든 요소가 받는 원심력의 합력',
+        '과 코리올리 힘을 받는다. 원환을 미소요소로 나누어 각 요소가 받는 원심력의 합력'),
+},(2022,4):{
+    '4-0-0':('이때','여기서'),
+}}
+EN_EDITS={(2006,1):{'1-20-0':('Ans:','A:')},(2022,1):{
+    '1-4-2':('of this thin uniform rod have small round holes for wire; smooth fit.',
+        'each have one small round hole on the wire; very smooth contact.'),
+},(2022,2):{
+    '2-19-0':('4.(60pts) A free-electron laser uses free relativistic electrons to turn beam K.E. into coherent radiation.',
+        '4. (60 pts) A free-electron laser converts free relativistic electron-beam K.E. to coherent radiation.'),
+},(2022,3):{
+    '3-11-0':('5. (50 pts) Uniaxial crystal optics is anisotropic. Polarizations:',
+        '5. (50 pts) Uniaxial crystal optics is anisotropic. Polarization:'),
+    '3-31-1':('A key crystal use: frequency conversion. Doubling turns two equal-frequency fundamental photons into a',
+        'A key use: frequency conversion. Doubling turns two equal-frequency fundamental photons into a'),
+    '3-32-1':('gives photon momentum','sets photon momentum'),
+},(2022,4):{
+    '4-17-8':('2nd derivative; etc.','2nd deriv.; etc.'),
 }}
 
 
-def prepare_korean_prose(year,source,page_number,placements,folder):
-    edits=EDITS.get((year,page_number),{})
-    if not edits:return Path(source),page_number,placements,None
+def prepare_korean_prose(year,source,page_number,placements,folder,language='ko',input_page=None):
+    input_page=input_page or page_number
+    edits=EDITS.get((year,page_number),{})if language=='ko'else EN_EDITS.get((year,page_number),{})
+    if not edits:return Path(source),input_page,placements,None
     folder=Path(folder);folder.mkdir(parents=True,exist_ok=True)
     with fitz.open(source)as doc:
-        rows=visible(records(doc[page_number-1]))
-    physical={glyph_key(g)for g in native_records(year,page_number,source,page_number)}
+        rows=visible(records(doc[input_page-1]))
+    physical={glyph_key(g)for g in native_records(year,page_number,source,input_page)}
     erase=[];inserts=[];updated={};journal=[]
-    donor=subset_font(ROOT/'tools/ko/fonts/NotoSerifCJKkr-Regular.otf',''.join(v[1]for v in edits.values()),folder/'fonts')
+    if language=='en':
+        from cpho_original_latin_fonts import simsun
+        font=simsun()
+    else:font=ROOT/'tools/ko/fonts/NotoSerifCJKkr-Regular.otf'
+    donor=subset_font(font,''.join(v[1]for v in edits.values()),folder/'fonts')
     metric=fitz.Font(fontfile=str(donor))
     for p in placements:
         if p['id']not in edits:continue
@@ -41,8 +69,8 @@ def prepare_korean_prose(year,source,page_number,placements,folder):
                 cursor+=metric.text_length(word,fontsize=size)
         updated[p['id']]=dict(p,text=text,width=cursor-x)
         journal.append(dict(id=p['id'],before=before,after=text,point_size=size,baseline=y,
-            reason='Complete Korean syntax around the unchanged native rope-length l; light/flexible properties and figure reference remain in the following original prose slot.'))
-    raw,qa=reposition_inline(source,page_number,erased_glyphs=erase)
+            reason=('Complete Korean syntax around the unchanged native rope-length l; light/flexible properties and figure reference remain in the following original prose slot.'if year==2007 else'Complete Korean wording retaining every physical condition and quantity, including sufficient settling time or all microelement force contributions; original column geometry and point size are retained.')if language=='ko'else('Answer label uses A: to fit the original printed-answer-blank cell, retaining actual SimSun face/size and the unchanged blank geometry.'if year==2006 else'Faithful concise English within the original prose column; physical conditions, categories, quantities and meaning are retained at the same point size and baseline.')))
+    raw,qa=reposition_inline(source,input_page,erased_glyphs=erase)
     out=fitz.open(stream=raw,filetype='pdf');page=out[0]
     for item in inserts:
         color=item['color'];color=tuple(color)*3 if len(color)==1 else color

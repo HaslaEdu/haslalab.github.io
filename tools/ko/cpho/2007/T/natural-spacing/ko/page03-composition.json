@@ -2,7 +2,7 @@
   "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_KO.pdf",
   "source_page": 3,
   "source_sha256": "7612c585b4419fa20eca486f2d83ccd69b65bf0ba11409b703d98c1608312db1",
-  "output_sha256": "4c79eb766c54677885496f1dbd2b21b2cd995bbb19291188b4da4c8261df44d5",
+  "output_sha256": "e0828eb69cdcacc3624d4f690ec6d6738576e37d949bae5b7c54f73ba66e83d2",
   "font": "Windows Batang TTC face0; subset only",
   "font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
   "font_resource_name": "KO_Natural_Batang",
@@ -5554,29 +5554,6 @@
     {
       "glyphs": [
         {
-          "c": "C",
-          "font": "Times New Roman Italic+FPEF",
-          "size": 10.5600004196167,
-          "origin": [
-            113.76286315917969,
-            134.40289306640625
-          ]
-        },
-        {
-          "c": "0",
-          "font": "Times New Roman+FPEF",
-          "size": 6.960000038146973,
-          "origin": [
-            120.72119903564453,
-            135.3582763671875
-          ]
-        }
-      ],
-      "dx": -1.1920928955078125e-06
-    },
-    {
-      "glyphs": [
-        {
           "c": ".",
           "font": "NotoSerifCJKkr-Regular",
           "size": 10.5600004196167,
@@ -5936,6 +5913,15 @@
           ]
         },
         {
+          "c": "－",
+          "font": "ËÎÌå+FPEF",
+          "size": 5.519999980926514,
+          "origin": [
+            222.72096252441406,
+            222.4794921875
+          ]
+        },
+        {
           "c": "1",
           "font": "Times New Roman+FPEF",
           "size": 6.960000038146973,
@@ -6089,7 +6075,8 @@
           ]
         }
       ],
-      "dx": -3.991687297821045
+      "dx": -3.991687297821045,
+      "vector_paths": []
     },
     {
       "glyphs": [
@@ -6160,20 +6147,6 @@
         }
       ],
       "dx": -6.196908235549927
-    },
-    {
-      "glyphs": [
-        {
-          "c": "O",
-          "font": "Times New Roman Italic+FPEF",
-          "size": 10.5600004196167,
-          "origin": [
-            103.20286560058594,
-            344.884765625
-          ]
-        }
-      ],
-      "dx": -4.0531158447265625e-06
     },
     {
       "glyphs": [
@@ -6395,20 +6368,6 @@
         }
       ],
       "dx": -36.70647382736206
-    },
-    {
-      "glyphs": [
-        {
-          "c": "P",
-          "font": "Times New Roman Italic+FPEF",
-          "size": 10.5600004196167,
-          "origin": [
-            113.75228118896484,
-            415.20379638671875
-          ]
-        }
-      ],
-      "dx": -1.1920928955078125e-06
     },
     {
       "glyphs": [
@@ -11971,13 +11930,16 @@
       ]
     }
   ],
+  "stationary_native_glyphs": [],
+  "stationary_native_glyph_keys_matched": 0,
   "native_move_qa": {
     "api": "native-inline-reposition-v1",
     "page_number": 3,
     "text_shift_mode": "tj",
     "erased_glyphs": 511,
-    "shifted_top_level_glyphs": 162,
+    "shifted_top_level_glyphs": 159,
     "shifted_form_instances": 0,
+    "shifted_direct_image_instances": 0,
     "shifted_atomic_clip_groups": 0,
     "shifted_reviewed_vector_paths": 0,
     "unchanged_white_background_panels_ignored": 0,
@@ -11985,9 +11947,11 @@
     "private_form_ancestor_copies": 0,
     "font_programs_unchanged": true,
     "original_form_streams_unchanged": true,
+    "original_image_streams_unchanged": true,
     "native_vector_path_bytes_preserved": true,
     "native_atomic_clip_bytes_preserved": true,
-    "output_sha256": "8b3e4d72cd3cfac91977eba4a99943ed48d1baf707a3113bb6ba122e56f5adb7",
+    "output_sha256": "573b3d1d8ef2865d680efd6bab64ece25a4aabe25b32d296c7388afc77ad1113",
+    "atomic_nonpainting_space_occurrence_shifts": [],
     "expected_native_glyphs": 397,
     "unexpected_glyphs": 0,
     "native_glyph_mismatches": [],
@@ -12155,12 +12119,12 @@
         },
         {
           "left": ". 값",
-          "right": "C0=70pF=7×1011F，C1=5pF，C2=1pF",
+          "right": "[native complete capacitance list with ten-to-minus-eleven]",
           "old_gap": 6.9273681640625,
           "new_gap": 2.640000104904175
         },
         {
-          "left": "C0=70pF=7×1011F，C1=5pF，C2=1pF",
+          "left": "[native complete capacitance list with ten-to-minus-eleven]",
           "right": "일 때 견딜 수 있는 최대",
           "old_gap": 5.410858154296875,
           "new_gap": 0
@@ -12917,7 +12881,7 @@
   ],
   "no_font_scaling": true,
   "original_native_ascii_latin_math_programs_retained": true,
-  "native_control_sha256": "8b3e4d72cd3cfac91977eba4a99943ed48d1baf707a3113bb6ba122e56f5adb7",
+  "native_control_sha256": "573b3d1d8ef2865d680efd6bab64ece25a4aabe25b32d296c7388afc77ad1113",
   "native_control_output": null,
   "retained_native_glyphs_after_new_text_insertion": 202,
   "retained_native_style_or_geometry_mismatches_after_insertion": 0,

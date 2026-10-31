@@ -163,20 +163,26 @@ def boundary_gap(left,right,word_space_pt=None):
     if left['kind']=='native'and right['kind']=='korean'and JOSA.match(head):return 0
     if left['kind']=='native'and re.search('[0-9]$',tail)and re.match(r'^(?:년|월|일|점|회|번|쪽|차)(?=\s|$|[,.!?;:)）])',head):return 0
     if left['kind']=='native'and re.search('[0-9]$',tail)and re.match(r'^(?:st|nd|rd|th)\b',head):return 0
+    if left['kind']=='native'and re.match(r"^['’]s(?:\b|$)",head):return 0
     # The source math layout inside a native token has already been retained.
     return .25*size if word_space_pt is None else float(word_space_pt)
 
 def inject_atomic_tokens(lines,atoms):
     """Replace ordinary fragments by complete source Form/clip expressions."""
     from pdf_original_text_ops import glyph_key
+    for atom in atoms:
+        matches=[line for line in lines if abs(atom['y']-line['baseline'])<.02]
+        if len(matches)!=1:raise ValueError(('A native atom must match exactly one reviewed prose baseline',atom['y'],[line['baseline']for line in lines]))
     claimed={glyph_key(r)for atom in atoms for r in atom['glyphs']}
     for line in lines:
         kept=[]
         for item in line['tokens']:
             remaining=[r for r in item['glyphs']if glyph_key(r)not in claimed]
             if visible(remaining):
-                revised=token(remaining,item['kind'])
-                if 'placement'in item:revised['placement']=item['placement']
+                if len(remaining)==len(item['glyphs']):revised=dict(item)
+                else:
+                    revised=token(remaining,item['kind'])
+                    if 'placement'in item:revised['placement']=item['placement']
                 kept.append(revised)
         kept.extend(atom for atom in atoms if abs(atom['y']-line['baseline'])<.02)
         line['tokens']=sorted(kept,key=lambda t:t['x0'])

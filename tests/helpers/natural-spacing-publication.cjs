@@ -26,7 +26,21 @@ module.exports = function validate(root, record, item) {
     assert.equal(move.font_programs_unchanged, true);
     assert.equal(move.native_vector_path_bytes_preserved, true);
     assert.deepEqual(move.native_glyph_mismatches, []);
-    assert.equal(pinned(page.qa, page.qa_sha256).passed, true);
+    const full = pinned(page.qa, page.qa_sha256);
+    assert.equal(full.passed, true);
+    if (full.native_script_motion_audit) {
+      const geometry = full.native_script_motion_audit;
+      assert.equal(geometry.passed, true);
+      assert.equal(geometry.final_sha256, page.proof_sha256);
+      assert.deepEqual(geometry.glyph_signature_or_position_errors, []);
+      assert.deepEqual(geometry.relative_geometry_failures, []);
+      for (const pair of geometry.script_base_pairs) assert.equal(pair.passed, true);
+    }
+    for (const key of ['source_math_internal_geometry', 'reviewed_inline_expression_geometry']) {
+      if (!full[key]) continue;
+      assert.equal(full[key].passed, true);
+      assert.equal(full[key].mismatched_groups, 0);
+    }
     const ledger = pinned(page.original_native_ink, page.original_native_ink_sha256);
     assert.equal(ledger.output_sha256, page.proof_sha256);
     assert.equal(ledger.verified_native_ink_missing_pixels, 0);
@@ -46,8 +60,35 @@ module.exports = function validate(root, record, item) {
       assert.equal(witness.passed, true);
       assert.equal(witness.proof_sha256, page.proof_sha256);
       assert.equal(witness.proof_unmodified, true);
-      assert.equal(witness.native_cid_reference_missing_pixels, 0);
-      assert.ok(witness.native_reference_dark_pixels > 0);
+      if (witness.native_CID_reference) {
+        const cid = witness.native_CID_reference;
+        assert.equal(cid.passed, true);
+        assert.equal(cid.proof_sha256, page.proof_sha256);
+        assert.equal(cid.source_sha256, raw.source_sha256);
+        assert.equal(cid.publication_PDF_modified, false);
+        assert.equal(cid.original_font_programs_unchanged, true);
+        assert.equal(cid.missing_native_CID_reference_pixels, 0);
+        assert.ok(cid.native_reference_dark_pixels > 0);
+        assert.equal(cid.source_font_resource, profile.original_font_resource);
+        assert.equal(cid.source_encoded_cid_hex, profile.original_encoded_CID);
+        assert.equal(cid.gid, profile.original_gid);
+        assert.equal(cid.font, profile.original_font);
+        assert.equal(cid.size, profile.original_point_size);
+        const original = witness.source_glyph, actual = witness.actual_target_glyph;
+        for (const key of ['c', 'font', 'size', 'trace_gid', 'render_mode', 'color', 'opacity']) assert.deepEqual(actual[key], original[key]);
+        assert.equal(original.trace_gid, cid.gid);
+        assert.equal(original.size, cid.size);
+        assert.equal(original.font, cid.font);
+        assert.ok(Math.abs(actual.origin[1] - original.origin[1]) < .001);
+        assert.ok(Math.abs(actual.origin[0] - original.origin[0] - witness.requested_dx) < .001);
+        for (const scale of ['8', '12']) {
+          assert.equal(witness.svg_reference_scales[scale].passed, true);
+          assert.equal(witness.svg_reference_scales[scale].newly_missing_native_ink_pixels, 0);
+        }
+      } else {
+        assert.equal(witness.native_cid_reference_missing_pixels, 0);
+        assert.ok(witness.native_reference_dark_pixels > 0);
+      }
     } else {
       const witnesses = ledger.original_native_form_witnesses;
       assert.ok(witnesses.length > 0);

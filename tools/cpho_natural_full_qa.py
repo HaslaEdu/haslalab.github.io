@@ -11,7 +11,7 @@ os.environ.setdefault('OPENBLAS_NUM_THREADS','1');os.environ.setdefault('OMP_NUM
 import numpy as np
 import pikepdf
 import pymupdf as fitz
-from cpho_natural_spacing import baseline,OUT,sha
+from cpho_natural_spacing import baseline,OUT,ROOT,sha
 from cpho_natural_spacing_qa import original_native_glyphs
 from pdf_moved_native_ink import audit_moved_native_ink
 from pdf_native_inline_reposition import _traces
@@ -19,6 +19,8 @@ from pdf_native_geometry_motion import audit as geometry_audit
 from pdf_text_motion_ink import ink_envelope
 from pdf_hangul_visibility import audit as hangul_audit
 from pdf_new_hangul_graphics_overlap import audit as prose_graphics_overlap
+from pdf_original_image_ink import resolved_images
+from pdf_native_script_motion_audit import audit as script_geometry_audit
 from izho_natural_spacing_qa import fresh_render,semantic,image_rect_motion
 from izho_early_fixed_style import native_image_programs
 import hashlib
@@ -84,13 +86,24 @@ def audit(year,language,number):
             outside_bbox=[float(xx.min()/4),float(yy.min()/4),float((xx.max()+1)/4),float((yy.max()+1)/4)]
         # Old language-only masks are already present in this immutable input;
         # the original bitmap bytes and their exact paint positions stay locked.
-        original_images=src[0].get_image_info(xrefs=True);current_images=dst[0].get_image_info(xrefs=True)
+        original_images=resolved_images(src,src[0]);current_images=resolved_images(dst,dst[0])
         native=[g for g in original_native_glyphs(year,language,number)if g['c'].strip()and g['trace_gid']>=0]
         regular_left=[dict(c=g['c'],font=g['font'],origin=g['origin'])for g in after
             if language=='ko'and 0xac00<=ord(g['c'])<=0xd7a3 and 'NotoSerif'in g['font']and'Regular'in g['font']]
         nul=sum(g['c']=='\x00'for g in after)
     physical=audit_moved_native_ink(source,number,target,shifts=composition['native_shifts'],
         erased_glyphs=composition['erased_hangul_glyphs'],protected_glyphs=native)
+    atom_plan=ROOT/f'tools/ko/cpho/{year}/natural/atomic-inline.json'
+    expression_groups=[]
+    if atom_plan.exists():
+        for rule in json.loads(atom_plan.read_text('utf8'))['atoms']:
+            if rule['page']!=number:continue
+            glyphs=[g for g in native if fitz.Rect(rule['rect']).contains(fitz.Point(g['origin']))]
+            if len(glyphs)!=rule['expected_physical_glyphs']:
+                raise ValueError('Independent complete-expression source glyph count changed')
+            expression_groups.append(dict(label=rule['label'],glyphs=glyphs))
+    relative_geometry=script_geometry_audit(source,number,target,shifts=composition['native_shifts'],
+        native_glyphs=native,expression_groups=expression_groups)
     physical_verified=physical['passed'];native_phase=None
     if (year,language,number)==(2006,'ko',1)and physical.get('newly_missing_native_ink_pixels')==1 and physical.get('missing_bbox')==[224.5,283.5,224.75,283.75]and not physical['missing_final_native_glyphs']and physical['source_outline_audit']['passed']:
         from pdf_original_text_ops import glyph_key
@@ -118,10 +131,14 @@ def audit(year,language,number):
         # The source compiler footer is printed underneath the original
         # apparatus bitmap. Preserve that original order; do not lift a new
         # translation over the figure to make the footer artificially visible.
-        band=fitz.Rect(0,759.5,595.2,780.5);photo=np.zeros(changed.shape,bool)
+        band=fitz.Rect(0,759.5,595.2,780.5);photo=np.zeros(changed.shape,bool);photo_core=np.zeros(changed.shape,bool)
         for info in original_images:
             rect=fitz.Rect(info['bbox'])&band
             if rect.is_empty:continue
+            core=rect+(.5,.5,-.5,-.5)
+            if not core.is_empty:
+                x0,y0,x1,y1=[int(v*4)for v in core]
+                photo_core[max(0,y0):y1,max(0,x0):x1]=True
             rect+=(-.5,-.5,.5,.5)
             x0,y0,x1,y1=[int(v*4)for v in rect]
             photo[max(0,y0):y1,max(0,x0):x1]=True
@@ -131,7 +148,7 @@ def audit(year,language,number):
                 (t['font']=='Batang'if language=='ko'else'SimSun'in t['font'])]
             image_paints=[i for i,(kind,rect,*_)in enumerate(current[0].get_bboxlog())if kind=='fill-image'and fitz.Rect(rect).intersects(band)]
         behind=bool(footer_paints and image_paints and max(footer_paints)<min(image_paints))
-        unchanged_photo=int((changed&photo).sum())==0
+        unchanged_photo=int((changed&photo_core).sum())==0
         def contained(box):
             x0,y0,x1,y1=[int(v*4)for v in box]
             return bool(x1>x0 and y1>y0 and photo[max(0,y0):y1,max(0,x0):x1].all())
@@ -142,10 +159,12 @@ def audit(year,language,number):
             if overlap.get('overlap_bbox')and contained(overlap['overlap_bbox']):prose_graphics_ok=True
         inherited_overlay=dict(source_role='Original institution/compiler footer, not an added translation note.',
             original_source_paint_order_preserved=behind,original_picture_pixels_in_footer_band_changed=int((changed&photo).sum()),
+            original_picture_opaque_interior_pixels_changed=int((changed&photo_core).sum()),
+            picture_edge_antialias_pixels_over_changed_underlay=int((changed&photo&~photo_core).sum()),
             source_bitmap_and_SMask_programs_preserved=image_same,raw_visibility_components=hangul['flagged_components'],
             inherited_source_image_occlusion_components=len(inherited)if behind and unchanged_photo else 0,
             unexpected_visibility_components=unexpected_hangul,footer_baseline=775.446472,
-            method='Exact original photo-strip rectangles intersecting the source footer; actual final text-paint sequence precedes every overlapping original image, and original image RGB pixels are identical.')
+            method='Exact original photo-strip rectangles intersecting the source footer; final text-paint sequence precedes every overlapping original image. Original image opaque interiors and all native foreground ink are unchanged. Antialiased strip edges can blend with the translated underlay; those raw RGB edge differences are reported separately.')
     stages=[composition['native_move_qa']]
     if composition.get('picture_language_and_caption_stage'):stages.append(composition['picture_language_and_caption_stage']['native_move_qa'])
     if composition.get('rotated_language_label_stage'):stages.append(composition['rotated_language_label_stage']['native_move_qa'])
@@ -154,6 +173,7 @@ def audit(year,language,number):
         changed_pixels_outside_old_and_new_text_ink=outside,old_text_outline_uses=old_uses,new_text_outline_uses=new_uses,
         outside_bbox=outside_bbox,
         original_physical_native_ink=physical,native_graphics_motion_audit=geometry,
+        original_native_expression_relative_geometry=relative_geometry,
         verified_original_native_ink_passed=physical_verified,exact_native_CID_raster_phase_witness=native_phase,
         original_font_programs_and_names_retained=font_same,original_image_programs_retained=image_same,
         image_palette_icc_mask_and_motion_audits=images,page_group_preserved=group_same,colorspace_resources_preserved=colors_same,
@@ -164,6 +184,7 @@ def audit(year,language,number):
         fresh_process_RGB_render=True,visual_review_required=True)
     report['passed']=all([not outside,not geometry['changed_nonselected_native_graphical_pixels'],physical_verified,
         font_same,image_same,group_same,colors_same,report['native_move_stages_passed'],not unexpected_hangul,prose_graphics_ok,not regular_left,not nul,
+        relative_geometry['passed'],
         all((v['rect_preserved']or v['rect_matches_declared_native_math_dx'])and v['full_palette_icc_mask_image_graph_preserved']for v in images)])
     target.with_suffix('.audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),'utf8')
     print(json.dumps(dict(year=year,language=language,page=number,passed=report['passed'],outside=outside,

@@ -28,6 +28,25 @@ def explicit_image_atoms(spec):
     return result
 
 
+def explicit_form_atoms(spec):
+    path=ROOT/f'tools/ko/cpho/{spec["year"]}/natural/atomic-forms.json'
+    if not path.exists():return[]
+    data=json.loads(path.read_text('utf8'))
+    if data['source_sha256']!=spec['original_sha256']:raise ValueError('Reviewed native Form source SHA changed')
+    rules=[r for r in data['forms']if r['page']==spec['page']]
+    if not rules:return[]
+    inv=inspect_inline_groups(spec['input'],spec['input_page']);result=[]
+    for rule in rules:
+        matches=[f for f in inv['forms']if f['original_raw_sha256']==rule['original_raw_sha256']and all(abs(a-b)<.001 for a,b in zip(f['native_page_bbox'],rule['bbox']))]
+        if len(matches)!=1:raise ValueError('A reviewed native mathematical Form is not unique')
+        group=matches[0]
+        if len([g for g in group['glyphs']if g['c'].strip()and g['trace_gid']>=0])!=rule['expected_physical_glyphs']:raise ValueError('Reviewed Form physical glyph count changed')
+        box=rule['bbox'];result.append(dict(text=rule['label'],kind='native',glyphs=[dict(g,gid=g['trace_gid'])for g in group['glyphs']],
+            x0=box[0],x1=box[2],y=rule['baseline'],size=rule['size'],fonts=sorted({g['font']for g in group['glyphs']}),
+            bbox=box,shift_kwargs=dict(form_path=group['path']),atomic_native_group='reviewed complete native mathematical Form',source_rule=rule))
+    return result
+
+
 def explicit_atoms(spec):
     path=ROOT/f'tools/ko/cpho/{spec["year"]}/natural/atomic-inline.json'
     if not path.exists():return[]

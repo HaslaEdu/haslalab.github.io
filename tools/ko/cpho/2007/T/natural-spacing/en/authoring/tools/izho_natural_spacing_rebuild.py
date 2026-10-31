@@ -132,6 +132,19 @@ def prepare(year,kind):
     for final_page,original_plan in enumerate(plans,1):
         d=json.loads(original_plan.read_text('utf8'));source=ROOT/d['source'];doc=fitz.open(source);page=doc[d['page']]
         fitz.TOOLS.set_small_glyph_heights(d.get('small_glyph_heights',True));raw=page.get_text('rawdict')
+        section_prefixes=[]
+        for block in raw['blocks']:
+            if block['type']:continue
+            for line in block['lines']:
+                line_chars=[c for s in line['spans']for c in s['chars']if c['c'].strip()]
+                if not line_chars:continue
+                first_x=min(c['origin'][0]for c in line_chars)
+                for span in line['spans']:
+                    value=''.join(c['c']for c in span['chars'])
+                    visible=[c for c in span['chars']if c['c'].strip()]
+                    if not visible or abs(visible[0]['origin'][0]-first_x)>.1:continue
+                    if not(span['flags']&16)or not re.fullmatch(r'\d+\.\d+\s*',value):continue
+                    section_prefixes.extend(dict(c=c['c'],font=span['font'],size=span['size'],origin=list(c['origin']))for c in span['chars']if c['c'].strip())
         qa_candidates=[ROOT/f'tmp/original-style-repair/{year}/{kind}/{original_plan.stem}.qa.json',ROOT/f'tmp/izho-original-style/{year}/{kind}/{original_plan.stem}.qa.json']
         oldqa=next((p for p in qa_candidates if p.exists()),None)
         if oldqa is None:raise ValueError(('Missing original placement journal',original_plan))
@@ -193,7 +206,7 @@ def prepare(year,kind):
                 cell_rect=table_cell_bounds(drawings,(x0+x1)/2 if is_center else x0,y,full=True)if cell else None
                 rects.append(rect);scopes.append(dict(source_at=[bi,li],source_text=group_text,rect=rect,baseline=y,
                     original_grid_cell_bounds=cell,original_grid_cell_rect=cell_rect))
-                if is_center:centers.append(dict(baseline=y,center=(x0+x1)/2 if is_caption else(line['bbox'][0]+line['bbox'][2])/2,rect=rect))
+                if is_center:centers.append(dict(baseline=y,center=(x0+x1)/2,rect=rect))
                 if y<60 and re.search(r'Page\s*\d',group_text,re.I):rights.append(dict(baseline=y,right=x1,rect=rect))
         # Word can emit the last phrase of one visible line as a second block.
         # Coalesce only overlapping horizontal scopes on the same baseline;
@@ -233,6 +246,7 @@ def prepare(year,kind):
             excluded_figure_rects=reviewed_figures,prose_placements=placements,
             frozen_display_math_rects=display_rects,
             stationary_table_math=table_math,
+            section_number_prefixes=section_prefixes,
             policy='Batang regular Hangul at original point size; source Latin/math/CIDs and display equations remain native; natural quarter-em word spaces',
             visual_review_required=True)
         plan.update(page_override);plan['frozen_display_math_rects']=display_rects
@@ -243,11 +257,27 @@ def _page_build(plan,body_only=False):
     d=json.loads(Path(plan).read_text('utf8'));source=Path(d['source_base'])
     if sha(source)!=d['source_base_sha256']:raise ValueError('Reviewed base changed')
     if body_only:d['allowed_line_rects']=[r for r in d['allowed_line_rects']if r[1]>60]
-    revisions=d.get('hangul_word_revisions',[]);original_units=composer._units;applied=[]
+    revisions=d.get('hangul_word_revisions',[]);original_units=composer._units;original_gap=composer.boundary_gap;applied=[];paragraph_gaps=[]
+    baseline_revisions=d.get('reviewed_hangul_baseline_revisions',[]);baseline_applied=set()
+    from pdf_original_text_ops import glyph_key
+    section_keys={glyph_key(g)for g in d.get('section_number_prefixes',[])}
+    def paragraph_gap(left,right,word_space_pt=None):
+        keys={glyph_key(g)for g in left['glyphs']if g['c'].strip()}
+        if right['kind']=='korean'and keys and keys<=section_keys:
+            gap=.25*min(left['size'],right['size'])if word_space_pt is None else word_space_pt
+            paragraph_gaps.append(dict(label=left['text'],following=right['text'],gap=gap));return gap
+        return original_gap(left,right,word_space_pt)
     def reviewed_units(item,placements,metric):
         units=original_units(item,placements,metric)
         if 'placement'not in item:return units
         placement=placements[item['placement']];at=placement.get('source_slot',placement.get('at'))
+        for index,rule in enumerate(baseline_revisions):
+            if at!=rule['source_at']:continue
+            if not rule.get('evidence'):raise ValueError('A Korean baseline correction requires original-source evidence')
+            for unit in units:
+                if unit['kind']!='batang':continue
+                if abs(unit['glyphs'][0]['origin'][1]-rule['old'])>.001:raise ValueError('Korean baseline correction does not match its exact input')
+                unit['target_baseline']=rule['new'];baseline_applied.add(index)
         for rule in revisions:
             if at!=rule['source_at']:continue
             for unit in units:
@@ -285,11 +315,21 @@ def _page_build(plan,body_only=False):
         underline=[v for v in inv['vector_paths']if v['rect'][1]<60 and v['rect'][2]-v['rect'][0]>400 and v['rect'][3]-v['rect'][1]<2]
         if underline:move_options['reviewed_stationary_vector_paths']=underline
     composer._units=reviewed_units
+    composer.boundary_gap=paragraph_gap
     locked=[g for region in d.get('stationary_table_math',[])for g in region['native_glyphs']]
-    try:raw,qa=compose_page(source,d['page'],native_control_output=out.with_suffix('.native-control.pdf'),native_move_options=move_options,native_atomic_tokens=explicit or None,stationary_native_glyphs=locked,include_image_only_native_math=d.get('include_image_only_native_math',False),**{k:d[k]for k in['allowed_line_rects','prose_placements','excluded_figure_rects','centered_lines','right_aligned_lines']})
-    finally:composer._units=original_units
+    compose_args={k:d[k]for k in['allowed_line_rects','prose_placements','excluded_figure_rects','centered_lines','right_aligned_lines']}
+    if d.get('reviewed_layout_figure_rects'):
+        # Only explicitly reviewed white bitmap padding may differ from the
+        # layout exclusion. Independent figure QA still uses the FULL source
+        # rectangle in excluded_figure_rects, not this layout-only boundary.
+        compose_args['excluded_figure_rects']=d['reviewed_layout_figure_rects']
+    try:raw,qa=compose_page(source,d['page'],native_control_output=out.with_suffix('.native-control.pdf'),native_move_options=move_options,native_atomic_tokens=explicit or None,stationary_native_glyphs=locked,include_image_only_native_math=d.get('include_image_only_native_math',False),baseline_tolerance_pt=d.get('baseline_tolerance_pt',.12),**compose_args)
+    finally:composer._units=original_units;composer.boundary_gap=original_gap
     if len(applied)!=len(revisions):raise ValueError(('Reviewed word revision was not applied exactly once',revisions,applied))
+    if len(baseline_applied)!=len(baseline_revisions):raise ValueError('A reviewed Korean baseline correction was not applied')
     qa['reviewed_hangul_word_revisions']=applied
+    qa['reviewed_hangul_baseline_revisions']=baseline_revisions
+    qa['section_number_prefix_gaps']=paragraph_gaps
     qa['native_move_options']=move_options
     qa['reviewed_explicit_native_math_atoms']=explicit
     qa['body_font_coverage']=coverage(d,qa)
