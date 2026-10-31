@@ -13,7 +13,7 @@ import pymupdf as fitz
 from fontTools import subset
 from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
-from izho_natural_spacing import baseline_lines,boundary_gap,records,visible,inject_atomic_tokens
+from izho_natural_spacing import baseline_lines,boundary_gap,records,visible,inject_atomic_tokens,authored_fragment
 from pdf_native_inline_reposition import reposition_inline
 
 BATANG=Path('C:/Windows/Fonts/batang.ttc')
@@ -71,7 +71,8 @@ def _units(item,placements,metric):
         return[dict(kind='native',glyphs=item['glyphs'],width=item['x1']-item['x0'],old_x=item['x0'],shift_kwargs=item.get('shift_kwargs',{}))]
     text=(p or{}).get('text',item['text'])
     if _plain(text)!=''.join(r['c']for r in rows):
-        text=item['text']
+        restored=authored_fragment(text,''.join(r['c']for r in rows))if p is not None else None
+        text=restored if restored is not None else item['text']
     if _plain(text)!=''.join(r['c']for r in rows):
         raise ValueError(('Authored prose text differs from visible glyph sequence',text,''.join(r['c']for r in rows)))
     # Edge spaces are represented once by boundary_gap. Keeping authored

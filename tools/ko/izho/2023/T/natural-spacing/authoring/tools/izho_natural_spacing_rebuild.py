@@ -313,7 +313,9 @@ def _page_build(plan,body_only=False):
         from izho_native_atomic_tokens import _inventory
         stat=source.stat();inv=_inventory(str(source.resolve()),d['page'],stat.st_mtime_ns,stat.st_size)
         underline=[v for v in inv['vector_paths']if v['rect'][1]<60 and v['rect'][2]-v['rect'][0]>400 and v['rect'][3]-v['rect'][1]<2]
-        if underline:move_options['reviewed_stationary_vector_paths']=underline
+        if underline:
+            values=move_options.get('reviewed_stationary_vector_paths',[])+underline
+            move_options['reviewed_stationary_vector_paths']=list({tuple(v['operator_indices']):v for v in values}.values())
     image_bindings=d.get('reviewed_sibling_math_image_bindings',[]);compiled_image_bindings=[]
     original_move=composer.reposition_inline
     def move_with_reviewed_sibling_images(input_source,input_page,*,erased_glyphs,shifts,**options):

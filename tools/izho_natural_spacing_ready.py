@@ -39,7 +39,9 @@ def ready(year,kind):
            'test_izho_natural_spacing.py','test_pdf_korean_natural_composer.py']
     snapshot=BUILD/f'{year}-{kind}-authoring';snapshot.mkdir(exist_ok=True);authoring={}
     for name in names:
-        source=ROOT/'tools'/name;payload=source.read_bytes();target=snapshot/'tools'/name;target.parent.mkdir(parents=True,exist_ok=True)
+        source=Path(__file__).resolve().parent/name
+        if not source.exists():source=ROOT/'tools'/name
+        payload=source.read_bytes();target=snapshot/'tools'/name;target.parent.mkdir(parents=True,exist_ok=True)
         target.write_bytes(payload);authoring[str(Path('tools')/name)]=hashlib.sha256(payload).hexdigest()
     data_root=snapshot/f'tools/ko/izho/{year}/{kind}/natural_spacing';data_root.mkdir(parents=True,exist_ok=True)
     for plan in plans:shutil.copyfile(plan,data_root/plan.name)

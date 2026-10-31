@@ -92,6 +92,18 @@ for (const item of published) {
       assert.deepEqual(ink.missing_final_native_glyphs, []);
       assert.deepEqual(ink.source_outline_audit.missing_source_outline_signatures, []);
     }
+    if (qa.independent_display_equation_number_audits) {
+      assert.equal(qa.independent_display_equation_number_audits.length, item.pages);
+      for (const row of qa.independent_display_equation_number_audits) {
+        const raw = fs.readFileSync(path.join(root, row.path));
+        assert.equal(crypto.createHash('sha256').update(raw).digest('hex'), row.sha256);
+        const checked = JSON.parse(raw);
+        assert.equal(checked.passed, true);
+        assert.equal(checked.proof_sha256, qa.page_proofs.find(p => p.page === row.page).proof_sha256);
+        assert.deepEqual(checked.changed_marker_glyphs, []);
+        assert.match(checked.original_english_source_sha256, /^[a-f0-9]{64}$/);
+      }
+    }
     if (qa.independent_native_script_geometry_audits) {
       assert.equal(qa.independent_native_script_geometry_audits.length, item.pages);
       for (const row of qa.independent_native_script_geometry_audits) {
