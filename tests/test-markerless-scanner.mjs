@@ -291,3 +291,15 @@ test('the learned corner model and the page finder: agreement keeps the measured
   assert.equal(scanner.chooseDocument(marker, sheet, .99), marker, 'printed markers always stand');
   assert.equal(scanner.chooseDocument({ corners: null, method: 'frame' }, { ...sheet, verified: false }, .7).engine, 'doccornernet', 'with no page of its own, the model\'s quad is offered for a check');
 });
+
+test('the corner model downloads as fp16 and is rebuilt byte for byte into the packer\'s fp32 model', async () => {
+  const { createHash } = await import('node:crypto');
+  const packed = await fs.readFile(new URL('../vendor/scanic-ml-0.2.0/doccornernet_lean.f16.bin', import.meta.url));
+  const model = scanner.decodeCornerModel(packed);
+  assert.equal(model.length, 1925824, 'the original .ort length');
+  assert.equal(String.fromCharCode(...model.subarray(4, 8)), 'ORTM', 'an ORT-format flatbuffer');
+  assert.equal(createHash('sha256').update(model).digest('hex'), '15f586b0f16731818d2bab27bb2cd3b34952c412b3f08aa548885fa9fe6fbd23', 'tools/pack_corner_model.py reference rebuild');
+  assert.ok(packed.length < 1.1e6, 'about half the 1.93 MB original');
+  assert.throws(() => scanner.decodeCornerModel(packed.subarray(0, packed.length - 1)), /corner_model_size/);
+  assert.throws(() => scanner.decodeCornerModel(new Uint8Array(32)), /corner_model_format/);
+});

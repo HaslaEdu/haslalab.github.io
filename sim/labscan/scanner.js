@@ -1240,6 +1240,37 @@ export function chooseDocument(page, learned, score) {
   return score >= .8 ? tagged : page;
 }
 
+let halfTable = null;
+/** The corner model's download (tools/pack_corner_model.py: its large weights as fp16, high then low byte planes)
+ * rebuilt into the fp32 .ort the runtime expects. Every fp16 value is exact in fp32, so this is the packer's
+ * reference rebuild byte for byte; the model runs at full fp32 speed. */
+export function decodeCornerModel(buffer) {
+  const bytes = new Uint8Array(buffer), view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (bytes.length < 12 || String.fromCharCode(...bytes.subarray(0, 4)) !== 'HCM1') throw new Error('corner_model_format');
+  const length = view.getUint32(4, true), count = view.getUint32(8, true), segments = [];
+  let total = 0;
+  for (let i = 0; i < count; i++) { const at = view.getUint32(12 + 8 * i, true), n = view.getUint32(16 + 8 * i, true); segments.push([at, n]); total += n; }
+  const skeletonAt = 12 + 8 * count, skeletonEnd = skeletonAt + length - 4 * total;
+  if (skeletonEnd + 2 * total !== bytes.length) throw new Error('corner_model_size');
+  if (!halfTable) {
+    halfTable = new Float32Array(65536);
+    for (let h = 0; h < 65536; h++) {
+      const e = h >> 10 & 31, m = h & 1023, v = e === 0 ? m * 2 ** -24 : e === 31 ? (m ? NaN : Infinity) : (1 + m / 1024) * 2 ** (e - 15);
+      halfTable[h] = h & 0x8000 ? -v : v;
+    }
+  }
+  const out = new Uint8Array(length), outView = new DataView(out.buffer), high = skeletonEnd, low = skeletonEnd + total;
+  let read = skeletonAt, write = 0, used = 0;
+  for (const [at, n] of segments) {
+    if (at < write || at + 4 * n > length) throw new Error('corner_model_layout');
+    out.set(bytes.subarray(read, read + at - write), write); read += at - write;
+    for (let i = 0; i < n; i++, used++) outView.setFloat32(at + 4 * i, halfTable[bytes[high + used] << 8 | bytes[low + used]], true);
+    write = at + 4 * n;
+  }
+  out.set(bytes.subarray(read, skeletonEnd), write);
+  return out;
+}
+
 /** Shared by live camera and full-resolution capture. Partial dark blobs never
  * acquire marker insets, and automatic capture requires measured edge evidence. */
 export function detectDocumentQuadGray(g, W, H, rgba = null) {
@@ -1275,7 +1306,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=438b55d2189a', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=b444c7b8a1e2', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1296,14 +1327,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=438b55d2189a', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=b444c7b8a1e2', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=438b55d2189a', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=b444c7b8a1e2', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }

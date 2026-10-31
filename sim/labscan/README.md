@@ -15,7 +15,7 @@ v1의 DocAligner 모델(ONNX, 약 16MB)은 종이가 화면 밖으로 나가거�
 
 ## 학습된 모서리 모델 (DocCornerNet, scanic-ml)
 
-어지러운 책상·흰 종이 위 흰 종이처럼 밝기만으로 종이가 구분되지 않는 사진을 위해, Worker는 [scanic](https://github.com/marquaye/scanic)(MIT)의 **DocCornerNet LEAN** 모서리 모델(1.9MB)과 그 전용 최소 ONNX Runtime(1.5MB)을 함께 돌립니다. 파일은 `vendor/scanic-ml-0.2.0/`, 로더는 `vendor/scanic-1.7.1/`에 그대로 두고 이 사이트에서만 받습니다(CDN·API 없음, 처음 한 번 약 3.4MB, 이후 브라우저 캐시). 모델이 낸 사각형도 같은 변 맞춤(`findPage`의 seed)을 거치고, `chooseDocument`가 고릅니다: 두 결과가 같은 종이면 측정이 확인된 쪽, 다르면 네 변이 더 잘 측정된 쪽, 둘 다 확인되지 않으면 자신 있는(0.8 이상) 모델 쪽. 인쇄 마커는 언제나 우선합니다. 합성 장면에서 어지러운 책상 254px → 2px, 그림자만 있는 흰 책상의 흰 종이 (없음) → 3px.
+어지러운 책상·흰 종이 위 흰 종이처럼 밝기만으로 종이가 구분되지 않는 사진을 위해, Worker는 [scanic](https://github.com/marquaye/scanic)(MIT)의 **DocCornerNet LEAN** 모서리 모델과 그 전용 최소 ONNX Runtime(1.5MB, gzip 0.55MB)을 함께 돌립니다. 파일은 `vendor/scanic-ml-0.2.0/`, 로더는 `vendor/scanic-1.7.1/`에 두고 이 사이트에서만 받습니다(CDN·API 없음, 이후 브라우저 캐시). 모델은 큰 가중치 48개를 fp16으로 담은 `doccornernet_lean.f16.bin`(1.09MB, 전송 gzip 0.84MB; 원본 .ort는 1.93MB, gzip 1.67MB)으로 받아 Worker에서 원래의 fp32 모델로 되살려 돌립니다(`decodeCornerModel`, 한 번 약 40ms). 그래서 추론 속도는 그대로이고(약 21ms), 모서리 차이는 고정 사진에서 0.01px, 합성 장면에서 224px 입력 기준 최대 0.44px입니다. INT8은 최대 15px(224px 기준) 어긋나서 쓰지 않습니다. 처음 한 번 받는 양은 모델·런타임 합쳐 약 1.4MB(gzip)입니다. 다시 만들기: `python3 tools/pack_corner_model.py <scanic-ml 0.2.0의 doccornernet_lean.ort> vendor/scanic-ml-0.2.0/doccornernet_lean.f16.bin`. 모델이 낸 사각형도 같은 변 맞춤(`findPage`의 seed)을 거치고, `chooseDocument`가 고릅니다: 두 결과가 같은 종이면 측정이 확인된 쪽, 다르면 네 변이 더 잘 측정된 쪽, 둘 다 확인되지 않으면 자신 있는(0.8 이상) 모델 쪽. 인쇄 마커는 언제나 우선합니다. 합성 장면에서 어지러운 책상 254px → 2px, 그림자만 있는 흰 책상의 흰 종이 (없음) → 3px.
 
 인쇄 마커가 있는 답안지는 지금처럼 마커로 찾습니다(`MARKER_INSET`).
 
