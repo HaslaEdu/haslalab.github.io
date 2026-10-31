@@ -1107,12 +1107,14 @@ function screwEye(t, id){ const [x, y, z] = t; cyl3("y", BASE_H, BASE_H + 0.12, 
   sphere3([x, y, z], 0.42, "rgba(0,0,0,0.004)", {id});
   /* the bare wire from the eye into the box */
   poly3([[x, y - 0.1, z], [x + 0.25, y - 0.2, z], [BB.x0 + 0.02, BASE_H + 0.5, z]], "#d7dade", 1.4); }
+/* a sub-miniature toggle through the front wall of the box: washer and hex nut on its bush, the chrome bat
+   (up = ON) sticking out towards you */
 function toggle3(x, y, z, on, id){
-  cyl3("y", y, y + 0.08, x, z, 0.52, "#c7ccd1", {seg: 16, id, cap: "#d7dbdf"});
-  cyl3("y", y + 0.08, y + 0.34, x, z, 0.42, "#b9bfc5", {seg: 6, id, cap: "#cfd4d8"});
-  cyl3("y", y + 0.34, y + 0.58, x, z, 0.28, "#aeb4ba", {seg: 12, id, cap: "#9aa1a8"});
-  const a = on ? -0.45 : 0.45, L = 1.3; cylAB([x, y + 0.58, z], [x, y + 0.58 + L * Math.cos(a), z + L * Math.sin(a)], 0.12, "#e3e6e9", {seg: 8, id, r1: 0.09});
-  sphere3([x, y + 0.8, z], 1.0, "rgba(0,0,0,0.004)", {id}); }
+  cyl3("z", z, z + 0.08, x, y, 0.52, "#c7ccd1", {seg: 16, id, cap: "#d7dbdf"});
+  cyl3("z", z + 0.08, z + 0.34, x, y, 0.42, "#b9bfc5", {seg: 6, id, cap: "#cfd4d8"});
+  cyl3("z", z + 0.34, z + 0.58, x, y, 0.28, "#aeb4ba", {seg: 12, id, cap: "#9aa1a8"});
+  const a = on ? 0.45 : -0.45, L = 1.3; cylAB([x, y, z + 0.58], [x, y + L * Math.sin(a), z + 0.58 + L * Math.cos(a)], 0.12, "#e3e6e9", {seg: 8, id, r1: 0.09});
+  sphere3([x, y, z + 0.8], 1.0, "rgba(0,0,0,0.004)", {id}); }
 /* a crocodile clip: the jaws at J, the body along d (unit, on the desk), its PVC boot; returns where the cable goes in */
 function crocClip(J, d, col, id){
   const side = [-d[2], 0, d[0]], at = (s, w, h) => [J[0] + d[0] * s + side[0] * w, J[1] + h, J[2] + d[2] * s + side[2] * w];
@@ -1176,7 +1178,7 @@ function scene3(){
   cyl3("y", OSC.h, OSC.h + 0.1, 6.0, -0.4, 0.3, "#c9ced3", {seg: 14, id: "osc"});
   sphere3([6.0, OSC.h + 0.12, -0.4], 0.22, st === 2 ? "#5dff7c" : st === 1 ? "#a6d86a" : "#2b5f33", {glow: st > 0});
   if (st) sphere3([6.0, OSC.h + 0.2, -0.4], 0.55, st === 2 ? "rgba(110,255,140,0.33)" : "rgba(170,220,120,0.22)");
-  toggle3(3.2, BASE_H, 6.4, kit.sw, "switch");
+  toggle3(3.2, BASE_H + 1.6, OSC.z1, kit.sw, "switch");
   /* the blackbox and its plate screws */
   box3(BB.x0, BB.x1, BASE_H, BB.h, BB.z0, BB.z1, "#7b4529", {id: "bb", noTop: true});
   tex3(T_BOX, 0, 0, T_BOX.width, T_BOX.height, [BB.x0, BB.h, BB.z0], [BB.x1 - BB.x0, 0, 0], [0, 0, BB.z1 - BB.z0], {id: "bb"});
