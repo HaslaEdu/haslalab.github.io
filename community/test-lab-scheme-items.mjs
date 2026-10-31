@@ -116,3 +116,14 @@ test("LaTeX the reader left unescaped in its JSON is restored, ordinary line bre
   assert.equal(restoreLatex("x =\t2"), "x =\t2", "a tab before a digit stays a tab");
   assert.equal(restoreLatex(null), null);
 });
+
+test("R13: a step's quote must be on its page, however the formula was typed", async () => {
+  const { quoteOnPage, numbersIn } = await import("./src/lab-scheme-items.js");
+  const page = String.raw`C.4 (1pt) F_s^* = \frac{1}{2} A S_L  W^* = \frac{A^2}{2\rho g} S_L  수치값: W^* = 20 mJ`;
+  assert.ok(quoteOnPage("W* = A^2/(2 ρ g) S_L", page) || quoteOnPage(String.raw`W^* = \frac{A^2}{2\rho g} S_L`, page), "the same formula typed differently");
+  assert.ok(quoteOnPage("수치값: W^* = 20 mJ", page));
+  assert.ok(!quoteOnPage("W = 4 F_s X", page), "IPhO 2025 T2 C.4.1: the starting point is not on the answer sheet");
+  assert.ok(!quoteOnPage("mass conservation of the fluid in both vessels", page), "a step that was never written");
+  assert.ok(!quoteOnPage("", page) && !quoteOnPage(null, page), "no quote, no marks");
+  assert.deepEqual(numbersIn(String.raw`K = 1.04 \cdot 10^{-9} m s^{-1}`).filter(x => Math.abs(x - 1.04) < 1e-9), [], "the mantissa alone is not a written number");
+});

@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, restoreLatex } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, restoreLatex, quoteOnPage } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1646,7 +1646,7 @@ const GRADE_SCHEMA = { type: "object", properties: {
     id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), unit_ok: { type: "boolean" },
     visual: N({type:'object',properties:{kind:{type:'string',enum:['value','graph','table','diagram']},box:{type:'array',items:{type:'number'}},description:{type:'string'},value:N({type:'number'}),rows:N({type:'integer'}),columns:{type:'array',items:{type:'string'}},graph:PAGE_SCHEMA.properties.items.items.properties.graph},required:['kind','box','description']}),
     checks_met: { type: "array", items: { type: "string" } }, score: { type: "number" },
-    rules: { type: "array", items: { type: "string" } }, note: { type: "string" },
+    rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: N({ type: "string" }),
   }, required: ["id", "found", "page", "score", "rules", "note"] } },
   feedback: { type: "array", items: { type: "object", properties: { page: N({ type: "integer" }), label: N({ type: "string" }), note: { type: "string" }, kind: { type: "string", enum: ["good", "fix"] } }, required: ["note", "kind"] } },
   review: { type: "object", properties: {
@@ -1850,7 +1850,7 @@ async function labScheme(env, s, task, m) {
       ONE_ITEM_ONE_ID,
       "When no separate marking scheme exists and the solution gives only the points of each part, make one item per part with those points and describe the expected answer.",
       "type: value (a numerical final answer, with its unit), derivation (a formula, an expression or reasoning; also a symbolic final answer), graph (a sketch or plot the scheme marks), or other (a multiple-choice answer, a statement, a diagram).",
-      "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»).",
+      "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»). Where the solution says a correct final answer earns an item anyway, that item is a result.",
       "sheet: answer for a final answer that must be written in the answer-sheet box, any for intermediate steps and method marks.",
       "For a numerical value give the full-mark interval (full_min, full_max; turn ± or «within 5 %» into an interval) and every partial-credit interval with its points, as printed; otherwise leave them null and say in `what` exactly what is required (the expected expression or result, and what earns partial marks).",
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
@@ -1867,7 +1867,7 @@ async function labScheme(env, s, task, m) {
       "List every marked item of the marking scheme exactly as printed: its id (e.g. A.1), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
       ONE_ITEM_ONE_ID,
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
-      "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»).",
+      "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»). Where the solution says a correct final answer earns an item anyway, that item is a result.",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
       "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
       "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
@@ -2018,6 +2018,8 @@ function labScore(scheme, raw, pages) {
     } else {
       res.by = "model";
       res.got = Math.max(0, Math.min(it.points, Math.round((Number(g.score) || 0) * 10) / 10));
+      /* R13: a step earns marks only where it is written; the grader's quote of it must be on the page it cites */
+      if (it.role === "step" && res.got > 0 && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))) return zero("R13");
     }
     /* a table or graph with fewer measurements than it needs, where the scheme has no count check to take marks from: half (R11) */
     if (nmin && (it.type === "graph" || it.type === "table") && !(it.checks || []).some(c => c.check === "points_min" || c.check === "rows_min")) {
