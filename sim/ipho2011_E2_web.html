@@ -170,8 +170,9 @@ let lang = LANG;
 const I18N = {
   trayTitle: ["Parts box", "부품함"],
   it_ruler: ["ruler (35 cm)", "자 (35 cm)"], it_pencil: ["pencil", "연필"], it_eraser: ["rubber", "지우개"],
-  trayTake: ["click: take it out", "클릭: 꺼내기"], trayBack: ["out · click: put back", "꺼냄 · 클릭: 넣기"],
-  trayHelp: ["drag tools against the tube\nwheel over the ruler: turn it\nright-click: back in the box", "도구는 끌어서 원통에 대기\n자 위에서 휠: 자 돌리기\n우클릭: 부품함에 넣기"],
+  trayTake: ["drag it onto the bench", "끌어서 실험대에 놓기"], trayBack: ["out · click: put back", "꺼냄 · 클릭: 넣기"],
+  toolHand: ["In your hand: move it where you want and click (or let go if you dragged it). Right-click or Esc: back in the box.", "손에 들었습니다. 원하는 곳으로 옮겨 클릭하세요(끌었다면 놓으면 됩니다). 우클릭·Esc: 부품함으로."],
+  trayHelp: ["drag a tool out of the box\nwheel over the ruler: turn it\nright-click: back in the box", "도구를 끌어서 꺼내기\n자 위에서 휠: 자 돌리기\n우클릭: 부품함에 넣기"],
   pPart: ["What you are doing", "실험 단계"],
   partA: ["A · balance on the thread", "A · 실 고리로 균형"], partB: ["B · swing on the pin", "B · 핀에 걸어 흔들기"],
   pSw: ["Stopwatch", "초시계"],
@@ -1248,6 +1249,94 @@ function pick3(x,y){
 
 
 /* ==================================================================
+   SHAPES, SURFACES AND CABLES SHARED BY THE TWO 2011 BENCHES
+   ================================================================== */
+const mk = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const add3 = (a, b, s) => [a[0] + b[0] * (s === undefined ? 1 : s), a[1] + b[1] * (s === undefined ? 1 : s), a[2] + b[2] * (s === undefined ? 1 : s)];
+const lerpC = (a, b, t) => { const A = hex2rgb(a), B = hex2rgb(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
+function rand32(s){ return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+/* planed wood: long wavy grain lines, a few darker streaks and knots, along the canvas width */
+function woodTex(w, h, base, dark, seed, P){
+  P = P || 24; const c = mk(Math.round(w * P), Math.round(h * P)), g = c.getContext("2d"), r = rand32(seed || 7);
+  g.fillStyle = base; g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < c.height / 3; i++){ const y0 = r() * c.height, a = 1 + r() * 3, f = 0.002 + r() * 0.006, ph = r() * 6;
+    g.strokeStyle = r() < 0.5 ? dark : lerpC(base, "#ffffff", 0.12); g.globalAlpha = 0.08 + r() * 0.22; g.lineWidth = 0.6 + r() * 1.8;
+    g.beginPath(); for (let x = 0; x <= c.width; x += 6){ const y = y0 + a * Math.sin(x * f + ph) + 2 * Math.sin(x * f * 3.1 + ph * 2); if (x) g.lineTo(x, y); else g.moveTo(x, y); } g.stroke(); }
+  for (let k = 0; k < 2; k++){ const cx = r() * c.width, cy = r() * c.height; g.globalAlpha = 0.25; g.strokeStyle = dark;
+    for (let i = 1; i < 6; i++){ g.lineWidth = 1; g.beginPath(); g.ellipse(cx, cy, i * 7, i * 2.4, 0, 0, 7); g.stroke(); } }
+  g.globalAlpha = 1; c._static = true; return c; }
+/* a rounded rectangle in the (x, z) plane, counter-clockwise, n points per corner */
+function rrect2(cx, cz, hw, hd, r, n){ const P = []; n = n || 5;
+  for (const [sx, sz, a0] of [[1, 1, 0], [-1, 1, 90], [-1, -1, 180], [1, -1, 270]]) for (let i = 0; i <= n; i++){ const a = (a0 + 90 * i / n) * Math.PI / 180;
+    P.push([cx + sx * (hw - r) + r * Math.cos(a), cz + sz * (hd - r) + r * Math.sin(a)]); }
+  return P; }
+/* a box with rounded vertical corners and a softened top edge */
+function rbox3(cx, cz, hw, hd, y0, y1, r, col, o){ o = o || {};
+  const out = rrect2(cx, cz, hw, hd, r, 4), e = Math.min(0.25, (y1 - y0) * 0.2), inn = rrect2(cx, cz, hw - e, hd - e, Math.max(0.05, r - e), 4);
+  prism3("y", y0, y1 - e, out.map(p => [p[0], p[1]]), col, Object.assign({}, o, {cull: true}));
+  const n = out.length;
+  for (let i = 0; i < n; i++){ const j = (i + 1) % n, A = out[i], B = out[j], a = inn[i], b = inn[j];
+    face(orient([[A[0], y1 - e, A[1]], [B[0], y1 - e, B[1]], [b[0], y1, b[1]], [a[0], y1, a[1]]], [(A[0] + B[0]) / 2 - cx, 1, (A[1] + B[1]) / 2 - cz]), Object.assign({}, o, {fill: lerpC(col, "#ffffff", 0.06), cull: true})); }
+  face(orient(inn.map(p => [p[0], y1, p[1]]), [0, 1, 0]), Object.assign({}, o, {fill: o.top || col, cull: true}));
+}
+/* a knurled knob: a short cylinder with ribs round its rim */
+function knurl3(axis, a0, a1, u, v, r, col, o){
+  cyl3(axis, a0, a1, u, v, r, col, Object.assign({seg: 20, cap: lerpC(col, "#ffffff", 0.22)}, o || {}));
+  for (let i = 0; i < 18; i++){ const t = i / 18 * 2 * Math.PI, cu = u + r * 1.01 * Math.cos(t), cv = v + r * 1.01 * Math.sin(t);
+    const W = a => axis === "x" ? [a, cu, cv] : axis === "y" ? [cu, a, cv] : [cu, cv, a];
+    line3(W(a0 + (a1 - a0) * 0.12), W(a0 + (a1 - a0) * 0.88), lerpC(col, "#000000", 0.40), 0.8); }
+}
+function ring3(c, r, col, lw, n, axis){ n = n || 28; const pts = []; for (let i = 0; i <= n; i++){ const a = i / n * 2 * Math.PI;
+  pts.push(axis === "z" ? [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a), c[2]] : axis === "x" ? [c[0], c[1] + r * Math.cos(a), c[2] + r * Math.sin(a)] : [c[0] + r * Math.cos(a), c[1], c[2] + r * Math.sin(a)]); }
+  poly3(pts, col, lw); }
+function bez(P0, P1, P2, P3, n){ const out = []; for (let i = 0; i <= n; i++){ const t = i / n, u = 1 - t;
+  out.push([0, 1, 2].map(j => u * u * u * P0[j] + 3 * u * u * t * P1[j] + 3 * u * t * t * P2[j] + t * t * t * P3[j])); } return out; }
+const plen = pts => { let s = 0; for (let i = 1; i < pts.length; i++) s += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]); return s; };
+/* the things on the bench a cable has to go over: [x0, x1, z0, z1, top] */
+let OBST = [];
+/* a cable keeps out of the things on the bench and never sinks into the desk; it bends over an edge, never steps */
+function avoid(pts, r){
+  const fine = [pts[0]];
+  for (let i = 1; i < pts.length; i++){ const a = pts[i - 1], b = pts[i], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / 0.5));
+    for (let j = 1; j <= n; j++) fine.push([a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n, a[2] + (b[2] - a[2]) * j / n]); }
+  const out = fine.map(([x, y, z], i) => { if (i === 0 || i === fine.length - 1) return [x, y, z]; y = Math.max(y, r + 0.03);
+    for (const [x0, x1, z0, z1, top] of OBST) if (x > x0 - r && x < x1 + r && z > z0 - r && z < z1 + r && y < top + r) y = top + r + 0.02;
+    return [x, y, z]; });
+  for (let k = 0; k < 12; k++) for (let i = 1; i < out.length - 1; i++){ const m = 0.5 * (out[i - 1][1] + out[i + 1][1]) - 0.05; if (m > out[i][1]) out[i] = [out[i][0], m, out[i][2]]; }
+  return out;
+}
+/* a cable of a given length from a fixed point (leaving along d0) to its end (arriving along d1): the slack hangs as a
+   loop that lies on whatever is under it */
+function cablePath(A, d0, B, d1, len, side){
+  const D = Math.hypot(B[0] - A[0], B[1] - A[1], B[2] - A[2]), slack = Math.max(0, len - D);
+  const k = Math.max(1.5, Math.min(D * 0.4 + slack * 0.15, len * 0.3));
+  /* the spare length lies to one side in a loose bow, a little lower than the ends */
+  let nx = -(B[2] - A[2]), nz = B[0] - A[0]; const nl = Math.hypot(nx, nz) || 1; nx /= nl; nz /= nl;
+  const bow = Math.min(slack * 0.3, 9) * (side || 1), drop = Math.min(slack * 0.15, 3);
+  const P1 = add3(A, d0, k), P2 = add3(B, d1, -k);
+  P1[0] += nx * bow; P1[2] += nz * bow; P2[0] += nx * bow; P2[2] += nz * bow; P1[1] -= drop; P2[1] -= drop;
+  return bez(A, P1, P2, B, 30);
+}
+/* the spare length bows to whichever side keeps it lower, off the things on the bench */
+function cableRoute(A, d0, B, d1, len, r){
+  let best = null, bh = Infinity;
+  for (const side of [1, -1]){ const p = avoid(cablePath(A, d0, B, d1, len, side), r), h = p.reduce((s, q) => s + q[1], 0); if (h < bh){ bh = h; best = p; } }
+  return best; }
+/* the cable itself: a dark ribbon as wide as the wire is on screen, with a lit stripe along it */
+function tube(pts, r, col, o){ o = o || {}; const lw = Math.max(1.4, 2 * r * CAM.k);
+  poly3(pts, lerpC(col, "#000000", 0.30), lw + 1, {bias: o.bias || 0, cap: "butt"});
+  poly3(pts, col, lw, {bias: (o.bias || 0) + 2, cap: "butt"});
+  poly3(pts, lerpC(col.startsWith("#") ? col : "#888888", "#ffffff", 0.4), Math.max(0.6, lw * 0.28), {bias: (o.bias || 0) + 4, cap: "butt"});
+  if (o.id){ const step = Math.max(1, Math.floor(pts.length / 14)); for (let i = step; i < pts.length - 1; i += step) sphere3(pts[i], Math.max(r * 1.6, 0.35), "rgba(0,0,0,0.004)", {id: o.id}); }
+}
+/* the highest surface under a screen point, and the point on it: tops are [x0, x1, z0, z1, top] boxes over the desk */
+function surfaceUnder(p, tops){
+  let best = null;
+  for (const t of tops){ const q = onPlane(p[0], p[1], t[4]); if (q[0] > t[0] && q[0] < t[1] && q[2] > t[2] && q[2] < t[3] && (!best || t[4] > best[1])) best = q; }
+  return best || onPlane(p[0], p[1], 0);
+}
+
+/* ==================================================================
    THE BENCH IN 3-D.  World units are cm: x along the table edge, y up,
    z towards the student.  The clear base plate is clamped on the table
    with its pin sticking out over the front edge; the tube hangs (or lies
@@ -1262,7 +1351,6 @@ let truth = makeTruth(seed), rig = makeRig(truth);
 const TOOLS = {ruler: false, pencil: false, eraser: false};
 const W = (x, y, dz) => [PIN_X + 100 * x, PIN_Y - 100 * y, PLANE_Z + (dz || 0)];
 const shelfY = () => PIN_Y - 100 * truth.bench_y;
-const mk = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
 
 /* ---- textures ---- */
 const R_INSET = RULER_H * 0.22;
@@ -1280,11 +1368,15 @@ function rulerTex(){ const P = 40, Lc = (RULER_LEN + 2 * R_INSET) * 100, Hc = RU
 const RULER_TEX = rulerTex();
 const SW_TEX = mk(360, 220); SW_TEX._ver = 0; let SW_KEY = "";
 function drawSW(){ const s = rig.stopwatch_display(); if (s === SW_KEY) return; SW_KEY = s; SW_TEX._ver++;
-  const g = SW_TEX.getContext("2d"); g.fillStyle = "#2a8f98"; g.fillRect(0, 0, 360, 220);
-  g.fillStyle = "#9fb09a"; g.fillRect(40, 50, 280, 110); g.fillStyle = "#c8d4c0"; g.fillRect(48, 58, 264, 94);
-  g.fillStyle = "#1c2118"; g.font = "700 64px 'Courier New',monospace"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(s, 180, 108);
-  g.fillStyle = "#e9f3f3"; g.font = "700 18px Arial"; g.fillText(rig.sw_running ? "RUN" : "STOP", 180, 186); }
-
+  const g = SW_TEX.getContext("2d"); g.fillStyle = "#1f8a96"; g.fillRect(0, 0, 360, 220);
+  g.fillStyle = "#0f3d44"; g.fillRect(28, 38, 304, 132); g.fillStyle = "#a9b8a3"; g.fillRect(40, 50, 280, 108);
+  g.fillStyle = "#18201a"; g.font = "700 62px 'Courier New',monospace"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(s, 180, 106);
+  g.font = "700 16px Arial"; g.fillStyle = "#2d3a2f"; g.textAlign = "left"; g.fillText(rig.sw_running ? "▶ RUN" : "■ STOP", 50, 66);
+  g.fillStyle = "#d9f1f3"; g.font = "700 18px Arial"; g.textAlign = "center"; g.fillText("STOPWATCH", 180, 196); }
+/* a roll of tape and the coil of thread, lying on the table */
+function tapeRoll(x, z){ cyl3("y", 0, 1.9, x, z, 3.0, "#2f5fb8", {seg: 28, cap: "#3a6dc8"}); cyl3("y", 1.9, 1.92, x, z, 2.1, "#d23b3b", {seg: 26, cap: "#d23b3b"});
+  cyl3("y", 1.92, 1.94, x, z, 1.75, "#94ad8f", {seg: 24, cap: "#94ad8f"}); ring3([x, 1.95, z], 2.1, "#b52c2c", 1.5, 26); }
+function threadCoil(x, z){ for (let i = 0; i < 6; i++) ring3([x + i * 0.18, 0.1 + i * 0.04, z + i * 0.12], 3.2 + i * 0.15, "#f4f2ec", 1.3, 30); }
 /* ---- parts ---- */
 function tube(){
   if (rig.mode === null) return;
@@ -1351,10 +1443,14 @@ function scene3(){
   cylAB([-5.3, 1.4, -8.5], [-5.3, 4.2, -8.5], 0.25, "#9aa0a6", {seg: 8}); cylAB([-6.8, 4.2, -8.5], [-3.8, 4.2, -8.5], 0.18, "#9aa0a6", {seg: 8});
   /* the black pin cap, put down beside the plate */
   cylAB([10, 0.45, -5], [12.4, 0.45, -5], 0.45, "#16181a", {seg: 12, id: "cap"});
-  /* the stopwatch on the table */
-  drawSW(); cyl3("y", 0, 1.3, 24, -9, 3.6, "#2a8f98", {seg: 26, id: "sw", cap: "#2f9aa3"});
-  tex3(SW_TEX, 0, 0, 360, 220, [21.0, 1.31, -10.8], [6, 0, 0], [0, 0, 3.7], {id: "sw"});
-  cylAB([24, 1.0, -12.6], [24, 1.0, -13.6], 0.5, "#d9dfe2", {seg: 10, id: "sw"});
+  /* the acrylic edges catch the light */
+  for (const [p, q] of [[[-7.5, 0.5, -12], [7.5, 0.5, -12]], [[7.5, 0.5, -12], [7.5, 0.5, -0.4]], [[7.5, 0.5, -0.4], [-7.5, 0.5, -0.4]], [[-7.5, 0.5, -0.4], [-7.5, 0.5, -12]]]) line3(p, q, "#eef6f8", 1.2);
+  /* the stopwatch on the table: a teal oval with its display and three buttons */
+  drawSW(); rbox3(24, -9, 4.0, 3.1, 0, 1.4, 2.4, "#1f8a96", {id: "sw", top: "#2497a3"});
+  tex3(SW_TEX, 0, 0, 360, 220, [21.0, 1.41, -10.8], [6, 0, 0], [0, 0, 3.7], {id: "sw"});
+  for (const [x, z] of [[21.6, -12.1], [26.4, -12.1], [24, -12.4]]) cyl3("z", z - 0.6, z, x, 0.75, 0.42, "#d9dfe2", {seg: 12, id: "sw"});
+  ring3([24, 0.75, -4.6], 0.7, "#173f45", 2, 16, "z");
+  tapeRoll(-24, -12); threadCoil(12, -17);
   thread(); tube();
   if (rig.mode !== null) sphere3([PIN_X, PIN_Y, PLANE_Z + 2.2], 0.12, "#a6acb1");
   ruler(); pencil(); eraser();
@@ -1421,19 +1517,26 @@ function drawTray(){
     trayCells.push([k, y, y + TROW - 4]); y += TROW; }
   c.font = '10.5px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a";
   tr("trayHelp").split("\n").forEach((ln, i) => c.fillText(ln, TRW / 2, y + 6 + i * 14)); }
-/* a tool comes out next to the tube, in the middle of the view */
-function placeTool(k){
-  const c = s2w([CAM.W / 2, CAM.H / 2]);
-  if (k === "ruler") rig.move_ruler(c[0] - RULER_LEN / 2, c[1] + 0.04);
-  else if (k === "pencil") rig.pencil_to(c[0] + 0.06, c[1] + 0.03, false);
-  else rig.eraser_to(c[0] + 0.10, c[1] + 0.06, false);
-  TOOLS[k] = true; statusMsg = T[lang].mPlaced(T[lang].items[k]); }
-trayCv.addEventListener("contextmenu", e => e.preventDefault());
-trayCv.addEventListener("mousedown", e => {
+/* a tool from the box is in the hand: it follows the pointer over the bench; let go (or click) to leave it there */
+let toolCarry = null, trayPress = null;
+function toolTo(k, p){ const [x, y] = s2w(p, front() + (k === "ruler" ? 0.5 : 0.8));
+  if (k === "ruler") rig.move_ruler(x - RULER_LEN / 2, y); else if (k === "pencil") rig.pencil_to(x, y, false); else rig.eraser_to(x, y, false); }
+function toolDown(){ if (!toolCarry) return; statusMsg = T[lang].mPlaced(T[lang].items[toolCarry]); toolCarry = null; drawTray(); }
+function toolCancel(){ if (!toolCarry) return false; TOOLS[toolCarry] = false; toolCarry = null; statusMsg = ""; drawTray(); return true; }
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); toolCancel(); });
+trayCv.addEventListener("pointerdown", e => {
   if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top;
   for (const [k, y0, y1] of trayCells) if (y >= y0 && y <= y1){
-    if (TOOLS[k]){ TOOLS[k] = false; statusMsg = T[lang].mBack(T[lang].items[k]); } else placeTool(k);
-    drawTray(); return; } });
+    if (toolCarry === k){ toolCancel(); return; }
+    toolCancel();
+    if (TOOLS[k]){ TOOLS[k] = false; statusMsg = T[lang].mBack(T[lang].items[k]); drawTray(); return; }
+    toolCarry = k; TOOLS[k] = true; toolTo(k, [CAM.W / 2, CAM.H / 2]); trayPress = {x: e.clientX, y: e.clientY};
+    statusMsg = tr("toolHand"); drawTray(); return; } });
+window.addEventListener("pointermove", e => { if (!toolCarry) return; const r = cv3.getBoundingClientRect();
+  if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) toolTo(toolCarry, [e.clientX - r.left, e.clientY - r.top]); });
+window.addEventListener("pointerup", e => { if (!trayPress) return; const moved = Math.hypot(e.clientX - trayPress.x, e.clientY - trayPress.y) > 6; trayPress = null;
+  const r = cv3.getBoundingClientRect(); if (moved && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom){ toolTo(toolCarry, [e.clientX - r.left, e.clientY - r.top]); toolDown(); } });
+window.addEventListener("keydown", e => { if (e.key === "Escape") toolCancel(); });
 window.addEventListener("resize", () => { trayLayout(); layout3(); });
 
 /* ---- the panel ---- */
@@ -1500,8 +1603,10 @@ function onRelease(){ if (dragMode === "swing") rig.release(); else if (dragMode
 cv3.addEventListener("contextmenu", e => e.preventDefault());
 cv3.addEventListener("pointerdown", e => {
   const p = pe(e); mPrev = p; cv3.setPointerCapture(e.pointerId);
+  if (e.button === 2 && toolCarry){ e.preventDefault(); toolCancel(); return; }
   if (e.button === 1 || e.button === 2){ e.preventDefault(); down = {p, btn: e.button, moved: false}; dragMode = "pan"; return; }
   if (e.button) return;
+  if (toolCarry){ toolTo(toolCarry, p); toolDown(); return; }
   if (pick3(p[0], p[1]) === "sw"){ swToggle(); return; }
   down = {p, btn: 0, moved: false}; onPress(p); });
 cv3.addEventListener("pointermove", e => {

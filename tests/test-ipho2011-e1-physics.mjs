@@ -20,16 +20,17 @@ const fit = (X, Y) => { const n = X.length, mx = X.reduce((a, b) => a + b) / n, 
 
 function bench(){
   const k = new P.Kit(7);
-  Object.assign(k, {battV: 9.3, sw: true, dial: 'hz', jit: 0});
-  k.snap = {p: 'BINP', n: 'BINN'}; k.probe = {r: 'JR', b: 'JB'};
+  Object.assign(k, {battV: 9.3, sw: true, dmmOn: true, dial: 'hz', jit: 0, snapped: true});
+  k.probe = {r: 'JR', b: 'JB'};
   return k;
 }
 const read = k => parseFloat(k.display());
 
-test('the meter reads nothing until the oscillator is wired, switched on and the dial is on Hz', () => {
+test('the meter reads nothing until it is on, the oscillator powered and switched on and the dial on 20k Hz', () => {
   const k = bench();
+  k.dmmOn = false; assert.equal(k.display(), ''); k.dmmOn = true;
   k.sw = false; assert.equal(k.display(), '0.00'); k.sw = true;
-  k.snap.n = null; assert.equal(k.display(), '0.00'); k.snap.n = 'BINN';
+  k.snapped = false; assert.equal(k.display(), '0.00'); k.snapped = true;
   k.probe.b = 'BATN'; assert.equal(k.display(), '0.00'); k.probe.b = 'JB';
   assert.ok(read(k) > 3 && read(k) < 10);
 });
