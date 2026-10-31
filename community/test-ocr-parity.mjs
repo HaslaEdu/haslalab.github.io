@@ -87,6 +87,7 @@ const server = http.createServer(async (request, response) => {
       const body = JSON.parse(bytes);
       captures.push({ provider: "deepseek", body, system: body.messages[0].content, user: body.messages[1].content });
       response.setHeader("Content-Type", "application/json");
+      if (fixture.deepseekStatus && fixture.deepseekStatus !== 200) { response.statusCode = fixture.deepseekStatus; return response.end('{"error":"fixture deepseek unavailable"}'); }
       const result = { items: [{ id: "A.1", found: true, page: 1, value: 108.2, unit_ok: true, score: 1, checks_met: [], rules: [], note: "fixture backup value" }], feedback: [],
         review: { summary: "fixture", habits: [], handwriting: { rating: "clear", notes: "" } } };
       return response.end(JSON.stringify({ model: "deepseek-flash", choices: [{ finish_reason: "stop", message: { content: JSON.stringify(result) } }],
@@ -322,23 +323,54 @@ test("actual Gemini grading bodies share the cacheable rules prefix of their fam
   for (let i = 0; i < runs.length; i++) for (let j = 0; j < runs.length; j++) if (i !== j) assert.ok(!runs[i].prompt.includes(runs[j].original), "another student's tail never leaks into a reused prefix");
 });
 
-test("when Gemini fails at grading, DeepSeek grades from the same cached rules and the page transcripts", async () => {
+async function scoredSession(scope, settings) {
+  const s = await session(scope); assert.equal((await upload(s, png, s.scan, settings)).data.ocr_status, "done");
+  sqlite.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,'fixture',?)")
+    .run(s.examKey, s.task, s.sol, JSON.stringify({ points: 1, items: [{ id: "A.1", points: 1, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 108, full_max: 109, partial: [] }] }), Math.floor(Date.now() / 1000));
+  return s;
+}
+const submit = (s, settings) => api(`/lab/sessions/${s.id}/submit`, { method: "POST", headers: { Authorization: "Bearer " + s.token, "Content-Type": "application/json" }, body: "{}" }, settings);
+
+test("a theory paper is graded by DeepSeek from the same cached rules and the page transcripts, without images", async () => {
   reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
   const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };
-  const s = await session({ comp: "usapho", year: 2023, task: "T", theory: true }); assert.equal((await upload(s, png, s.scan, settings)).data.ocr_status, "done");
-  sqlite.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,'fixture',?)")
-    .run(s.examKey, "T", s.sol, JSON.stringify({ points: 1, items: [{ id: "A.1", points: 1, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 108, full_max: 109, partial: [] }] }), Math.floor(Date.now() / 1000));
-  fixture.geminiStatus = 503;
-  const result = await api(`/lab/sessions/${s.id}/submit`, { method: "POST", headers: { Authorization: "Bearer " + s.token, "Content-Type": "application/json" }, body: "{}" }, settings);
+  const s = await scoredSession({ comp: "usapho", year: 2023, task: "T", theory: true }, settings);
+  const result = await submit(s, settings);
   assert.equal(result.status, 200); assert.equal(result.data.session.status, "graded"); assert.equal(result.data.session.score, 1);
-  const task = result.data.session.detail.tasks.T; assert.equal(task.backup, true); assert.match(task.grader, /^deepseek:/);
+  const task = result.data.session.detail.tasks.T; assert.match(task.grader, /^deepseek:/); assert.equal(task.backup, undefined);
+  assert.ok(!captures.some(row => row.provider === "gemini" && row.prompt.startsWith("[TASK: grade]")), "Gemini does not grade the theory paper as well");
   const call = captures.find(row => row.provider === "deepseek"); assert.ok(call);
   assert.ok(call.system.startsWith(stablePrefix("usapho", "theory")), "the fixed rules are DeepSeek's system message, so its cache can reuse them");
   assert.ok(!call.system.includes(FORMULA) && call.user.includes(FORMULA), "the candidate's work is only in the user message");
-  assert.equal(call.body.response_format.type, "json_object"); assert.ok(!JSON.stringify(call.body).includes("inline_data"), "no images go to the backup grader");
-  const metered = sqlite.prepare("SELECT provider,in_tok,out_tok,cached_tok,ok FROM lab_calls WHERE session_id=? AND step='grade' ORDER BY id").all(s.id);
-  assert.deepEqual(metered.map(row => [row.provider, row.ok]), [["gemini", 0], ["deepseek", 1]]);
-  assert.equal(metered[1].cached_tok, 1024); assert.equal(metered[1].in_tok, 1200);
+  assert.equal(call.body.response_format.type, "json_object"); assert.ok(!JSON.stringify(call.body).includes("inline_data"), "no images go to DeepSeek");
+  const metered = sqlite.prepare("SELECT provider,in_tok,cached_tok,ok FROM lab_calls WHERE session_id=? AND step='grade' ORDER BY id").all(s.id);
+  assert.deepEqual(metered.map(row => [row.provider, row.ok]), [["deepseek", 1]]);
+  assert.equal(metered[0].cached_tok, 1024); assert.equal(metered[0].in_tok, 1200);
+});
+
+test("an experiment is graded by Gemini alone: a Gemini failure waits for a retry and never goes to DeepSeek", async () => {
+  reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
+  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };
+  const ok = await scoredSession({ comp: "ipho", year: 2024, task: "E1" }, settings);
+  const graded = await submit(ok, settings);
+  assert.equal(graded.data.session.status, "graded"); assert.match(graded.data.session.detail.tasks.E1.grader, /^gemini:/);
+  const failing = await scoredSession({ comp: "ipho", year: 2025, task: "E1" }, settings);
+  fixture.geminiStatus = 503;
+  const result = await submit(failing, settings);
+  assert.equal(result.data.session.detail.tasks.E1.status, "error");
+  assert.ok(!captures.some(row => row.provider === "deepseek"), "no experiment is sent to DeepSeek");
+});
+
+test("when DeepSeek fails on a theory paper, Gemini grades it once and the result says so", async () => {
+  reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
+  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };
+  const s = await scoredSession({ comp: "ipho", year: 2026, task: "T2", theory: true }, settings);
+  fixture.deepseekStatus = 503;
+  const result = await submit(s, settings);
+  assert.equal(result.data.session.status, "graded"); const task = result.data.session.detail.tasks.T2;
+  assert.equal(task.backup, true); assert.match(task.grader, /^gemini:/);
+  const metered = sqlite.prepare("SELECT provider,ok FROM lab_calls WHERE session_id=? AND step='grade' ORDER BY id").all(s.id);
+  assert.deepEqual(metered.map(row => [row.provider, row.ok]), [["deepseek", 0], ["gemini", 1]]);
 });
 
 test("real Worker metering retains alias overrides and bills known-usage parse failures exactly once", async () => {

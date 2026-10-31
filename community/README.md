@@ -72,8 +72,8 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 2. **코드 올리기**: `src/index.js`를 대시보드에 다시 붙여 넣고 **Deploy**를 누릅니다. `/api/health`가 `v: 4`를 돌려주면 사이트가 새 화면을 엽니다.
 3. **키 넣기**: **Settings → Variables and Secrets**에서 *Secret*으로 넣습니다. 키는 서버에만 있고 사이트에는 들어가지 않습니다.
    - `UPSTAGE_API_KEY`: 사진 읽기(OCR)
-   - `GEMINI_API_KEY`: 서술형 채점. 모델은 `GEMINI_MODEL`로 바꿀 수 있고, 기본값은 `gemini-flash-latest`입니다.
-   - `DEEPSEEK_API_KEY`: 예비 채점기. Gemini 키가 없거나 Gemini 호출이 실패하면 같은 규칙과 기준표로, 사진 없이 판독된 글만으로 채점합니다. 모델은 `DEEPSEEK_MODEL`로 바꿀 수 있고 기본값은 `deepseek-flash`입니다.
+   - `GEMINI_API_KEY`: 답안 쪽 읽기, 채점 기준표 만들기, **실험·자료 분석·관측 채점**(사진을 보고 채점). 모델은 `GEMINI_MODEL`(쪽 읽기, 기본값 `gemini-flash-latest`), `GEMINI_GRADE_MODEL`(채점), `GEMINI_SCHEME_MODEL`(기준표, 시험마다 한 번)로 따로 정할 수 있고, 따로 정하지 않으면 `GEMINI_MODEL`을 씁니다. 실험 채점이 실패하면 다른 채점기로 넘기지 않고 나중에 다시 채점합니다.
+   - `DEEPSEEK_API_KEY`: **이론 채점**. 같은 규칙과 기준표로, 사진 없이 판독된 글만으로 채점합니다. DeepSeek이 실패하면 그 이론 문제만 Gemini가 한 번 채점하고 결과에 `backup`을 표시합니다. 모델은 `DEEPSEEK_MODEL`(기본값 `deepseek-flash`).
 4. **관리자 지정**: 아래 「관리」의 명령으로 관리자를 정하면 `#/weekly/admin`이 열립니다.
 
 로컬 시험: `.dev.vars`에 키 대신 시험용 값과 `GEMINI_BASE`·`UPSTAGE_BASE`(가짜 서버 주소)를 넣고 `node test-arena.mjs`를 실행합니다.

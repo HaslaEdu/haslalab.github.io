@@ -1578,8 +1578,11 @@ async function meterSave(env, sid, task, pageId, m) {
   } catch (e) { console.error("lab meter", e && e.message); }        // before migration 0009 there is nowhere to keep it; grading goes on
 }
 
+/* GEMINI_MODEL reads the pages; GEMINI_GRADE_MODEL grades and GEMINI_SCHEME_MODEL builds the marking scheme (once per
+   exam, kept), each falling back to GEMINI_MODEL */
+const geminiModelFor = (env, step) => (step === "grade" && env.GEMINI_GRADE_MODEL) || (step === "scheme" && env.GEMINI_SCHEME_MODEL) || env.GEMINI_MODEL || "gemini-flash-latest";
 async function gemini(env, parts, schema, max, m, step) {
-  const model = env.GEMINI_MODEL || "gemini-flash-latest";
+  const model = geminiModelFor(env, step);
   const t0 = Date.now(); let usage = {};
   try {
     const r = await fetch(`${env.GEMINI_BASE || AR.gemini}/${model}:generateContent`, {
@@ -2009,18 +2012,19 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
     const size = img ? img.byteLength * 4 / 3 : Infinity;
     if (size < budget) { parts.push({ inline_data: { mime_type: row.mime, data: b64(img) } }); budget -= size; }
   }
+  /* Experiments, data analysis and observation are graded by Gemini alone: it sees the graphs and drawings, and a
+     failure is retried later rather than handed to a grader that cannot. A theory paper goes to DeepSeek, as text
+     (the same rules, scheme, transcripts and page readings); Gemini takes it only if DeepSeek fails. One grader per
+     task: nothing is graded twice or passed between them. */
+  const viaDeepseek = () => { const [fixed, rest] = splitFixed(head.text);
+    return deepseek(env, fixed, [rest, pagesNote.text, ...parts.slice(2).filter(p => p.text).map(p => p.text),
+      "[The page images are not given to this grader. Judge graphs, tables, sketches and diagrams only from what was read on each page; whatever cannot be checked that way is not found (R10).]"].join("\n"),
+      GRADE_SCHEMA, 16384, m, "grade"); };
   let out, backup = false;
-  try { out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade"); }
-  catch (e) {
-    if (!env.DEEPSEEK_API_KEY) throw e;
-    /* the backup grader: the same rules and scheme, the transcripts and what was read on each page, but no images */
-    console.error("lab grade gemini, trying deepseek", e && e.message);
-    const [fixed, rest] = splitFixed(head.text);
-    out = await deepseek(env, fixed, [rest, pagesNote.text, ...parts.slice(2).filter(p => p.text).map(p => p.text),
-      "[The page images are not available to this grader. Judge graphs, tables and drawings only from what was read on each page; whatever cannot be checked that way is not found (R10).]"].join("\n"),
-      GRADE_SCHEMA, 16384, m, "grade");
-    backup = true;
-  }
+  if (theory && env.DEEPSEEK_API_KEY) {
+    try { out = await viaDeepseek(); }
+    catch (e) { console.error("lab grade deepseek, trying gemini", e && e.message); out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade"); backup = true; }
+  } else out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade");
   const sc = labScore(scheme, out.raw, mine);
   return { status: "graded", score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model, ...(backup ? { backup: true } : {}), regulation: regulationId(family, kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
