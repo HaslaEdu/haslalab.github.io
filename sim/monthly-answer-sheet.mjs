@@ -1,4 +1,4 @@
-import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=45eefd877513';
+import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=498c8dab65d4';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const copy = {
@@ -61,7 +61,7 @@ export function buildAnswerPages(problem, sheet, lang='ko') {
       <p class="instructions">${esc(sheet['instructions_'+lang]||t.note)}</p></header>
     <div class="parts" style="--part-count:${ids.length}">${ids.map(id=>{
       const p=byId.get(id);if(!p)throw Error('Unknown answer-sheet part');
-      const display=p.displayId?`(${p.displayId})`:id;
+      const display=p.displayId?(String(p.displayId).includes('.')?String(p.displayId):`(${p.displayId})`):id;
       return `<section class="part" data-part="${esc(id)}" data-display-part="${esc(display)}"><h2>${esc(t.part)} ${esc(display)} · ${esc(p['label_'+lang]||p.label_ko)} · ${p.points}${esc(t.points)}</h2>
         <div class="label">${esc(t.answer)}</div><div class="answer">${resultBoxes(p,lang)}</div>${(p.tables||[]).map(table=>buildResponseTable(table,lang)).join('')}${(p.graphs||[]).map(graph=>buildResponseGraph(graph,lang)).join('')}<div class="label">${esc(t.working)}</div><div class="working"></div></section>`;
     }).join('')}</div><footer><span>${esc(t.footer)}</span><span>HL-MONTHLY-${esc(problem.id)} · ${esc(sheet.version)} · ${index+1}/${sheet.pages.length}</span></footer></section>`).join('');

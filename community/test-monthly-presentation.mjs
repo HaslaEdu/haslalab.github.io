@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { monthlyPublicPresentation } from './src/monthly-presentation.js';
+import { presentProtonText } from './src/proton-presentation.js';
 
 const content = JSON.parse(readFileSync(new URL('./weekly/2026-W44.json', import.meta.url), 'utf8'));
 const rows = content.problems.map(problem => ({ ...problem, id: problem.no }));
@@ -18,10 +19,13 @@ test('public monthly credits are removed without altering supplied problem recor
     assert.equal(published.rubric, row.rubric, 'the private rubric is not rewritten');
     if (row.id === 4) {
       for (const field of ['body_ko', 'body_en']) {
-        assert.equal(published[field], row[field].slice(row[field].indexOf('\n\n') + 2), 'only the introductory score-conversion paragraph is omitted');
+        assert.equal(published[field], presentProtonText(row[field],field));
+        assert.equal((published[field].match(/^### [AB]\.[1-5] /gm)||[]).length,10);
+        assert.match(published[field],/## Part A\./);assert.match(published[field],/## Part B\./);
+        assert.ok(published[field].includes('$$\\displaystyle\\sum_{k=1}^{\\infty}(\\cdots)$$'));
         assert.doesNotMatch(published[field], /원문 총 15점|Original total: 15 points/);
       }
-      for (const field of ['model_ko', 'model_en']) assert.equal(published[field], row[field]);
+      for (const field of ['model_ko', 'model_en']) assert.equal(published[field], presentProtonText(row[field],field));
       assert.equal(published.points, 100);
       assert.equal(published.rubric.reduce((sum, criterion) => sum + criterion.max, 0), 100);
       continue;
@@ -42,12 +46,13 @@ test('public monthly credits are removed without altering supplied problem recor
 });
 
 test('proton introduction removal handles already-published rows without trimming maintained text or mathematical content', () => {
-  const proton = rows[0], preserved = proton.body_en.slice(proton.body_en.indexOf('\n\n') + 2);
+  const proton = rows[0], preserved = presentProtonText(proton.body_en,'body_en');
   assert.equal(monthlyPublicPresentation(proton).body_en, preserved);
   const crlf = { ...proton, body_en: proton.body_en.replaceAll('\n', '\r\n') };
-  assert.equal(monthlyPublicPresentation(crlf).body_en, preserved.replaceAll('\n', '\r\n'));
+  assert.equal(monthlyPublicPresentation(crlf).body_en, presentProtonText(crlf.body_en,'body_en'));
   const maintained = 'A separately maintained introduction.\n\n' + proton.body_en;
-  assert.equal(monthlyPublicPresentation({ ...proton, body_en: maintained }).body_en, maintained, 'an internal discussion is not removed');
+  assert.equal(monthlyPublicPresentation({ ...proton, body_en: maintained }).body_en, presentProtonText(maintained,'body_en'), 'a maintained introduction remains while known subquestion labels change');
+  assert.ok(monthlyPublicPresentation({ ...proton, body_en: maintained }).body_en.startsWith('A separately maintained introduction.'));
   for (const id of [1, 7, 99]) {
     const unrelated = { ...proton, id };
     assert.equal(monthlyPublicPresentation(unrelated), unrelated);

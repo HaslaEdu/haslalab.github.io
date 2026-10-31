@@ -145,6 +145,36 @@ test('letter-labelled astronomy pages map to the durable submitted part IDs for 
   }
 });
 
+test('proton section labels and legacy letters map to the same durable keys on their selected printed pages',async()=>{
+  const sheet=getMonthlyAnswerSheet({id:4,week:'2026-11'});
+  for(const [pageNo,expected] of [[1,[['a','A.1'],['b','A.2'],['c','A.3']]],[2,[['d','A.4'],['e','A.5'],['f','B.1']]]]){
+    assert.deepEqual(sheet.pages[pageNo-1],expected.map(([id])=>id),'page assignments stay compatible with existing captures');
+    for(const legacy of [false,true]){
+      const submitted=expected.map(([id],index)=>({id,answer:`$x_${index+1}=${pageNo}$`,working:`Calculation written for canonical part ${id}.`}));
+      const text=submitted.map((part,index)=>`Part ${legacy?part.id:expected[index][1]}\nFinal answer\n${part.answer}\nWorking\n${part.working}`).join('\n\n');
+      const result=await extractMonthlyCaptureParts(sheet,pageNo,text,'answer',async prompt=>{
+        const allowedLine=prompt.split('\n').find(line=>line.startsWith('Only these part IDs'));
+        assert.equal(allowedLine,'Only these part IDs are allowed on the selected printed page: '+JSON.stringify(expected.map(([id])=>id)));
+        for(const [id,printed] of expected)assert.ok(prompt.includes(JSON.stringify({id,printed_label:printed,legacy_label:id})),'the extractor receives the current and legacy labels for '+id);
+        assert.ok(prompt.includes('Return canonical IDs, including when an older printed sheet uses the legacy labels.'));
+        return{raw:{parts:submitted}};
+      });
+      assert.deepEqual(result,submitted,'only the printed labels change; retained answer and working are verbatim');
+    }
+  }
+});
+
+test('proton capture extraction rejects display IDs and canonical keys belonging to another selected page',async()=>{
+  const sheet=getMonthlyAnswerSheet({id:4,week:'2026-11'});
+  for(const [pageNo,invalidIds] of [[1,['A.1','A.2','B.1','B.4','16','f']],[2,['A.4','A.5','B.1','a','c']]]){
+    const text=`Part A.1 / B.1\nFinal answer\n${ANSWER}\nWorking\n${WORKING}`;
+    for(const id of invalidIds){
+      await assert.rejects(extractMonthlyCaptureParts(sheet,pageNo,text,'answer',async()=>({raw:{parts:[{id,answer:ANSWER,working:WORKING}]}})),
+        error=>error.code==='capture_read_failed',`page ${pageNo} must reject noncanonical or foreign key ${id}`);
+    }
+  }
+});
+
 test('unsupported extraction is saved for retake and cannot be submitted or consume a chance',async()=>{
   await environment(async({grant,phone,upload,submit,extract,sql,calls})=>{
     const scan=(await grant()).data.scan;extract([{id:'a',answer:'invented answer',working:WORKING}]);

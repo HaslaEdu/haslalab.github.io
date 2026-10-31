@@ -1,4 +1,5 @@
 import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
+import { presentProtonText } from './proton-presentation.js';
 
 // Keep the supplied source records intact for grading and administration. Only
 // the public presentation omits credits and the proton-chain score-conversion introduction.
@@ -7,13 +8,15 @@ const protonScoreIntro = /^(?:원문 총 15점 → 웹 채점 100점 기준으�
 const textFields = ['body_ko', 'body_en', 'model_ko', 'model_en'];
 
 export function monthlyPublicPresentation(problem) {
-  if (!getMonthlyAnswerSheet(problem)) return problem;
+  const sheet=getMonthlyAnswerSheet(problem);
+  if (!sheet) return problem;
+  const proton=sheet.key==='proton-chain-v1';
   const publicProblem = { ...problem, source: null };
   for (const field of textFields) {
     if (typeof problem[field] === 'string') {
       let text = problem[field].replace(creditFooter, '');
       if (Number(problem.id) === 4 && field.startsWith('body_')) text = text.replace(protonScoreIntro, '');
-      publicProblem[field] = text;
+      publicProblem[field] = proton ? presentProtonText(text,field) : text;
     }
   }
   return publicProblem;

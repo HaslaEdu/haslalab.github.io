@@ -48,6 +48,44 @@ test('the astronomy sheet prints letter labels while keeping existing answer and
   assert.equal(getMonthlyProblemRound({answerSheet:{round:'experiment'}}),'experiment');
 });
 
+test('the proton sheet displays two five-part sections without changing saved answer or photo identifiers',async()=>{
+  const {getMonthlyAnswerSheet,MONTHLY_SHEET_VERSION}=await import('../monthly-problems.mjs');
+  const original=JSON.parse(fs.readFileSync(path.join(root,'community/weekly/2026-W44.json'),'utf8')).problems[0];
+  const expectedIds=['a','b','c','d','e','f','g','h','i','j'];
+  const expectedDisplayIds=['A.1','A.2','A.3','A.4','A.5','B.1','B.2','B.3','B.4','B.5'];
+  for(const problem of [4,{id:4,no:1,week:'2026-11',title:original.title_ko}]){
+    const sheet=getMonthlyAnswerSheet(problem);
+    assert.equal(sheet.key,'proton-chain-v1');
+    assert.equal(sheet.version,MONTHLY_SHEET_VERSION);
+    assert.equal(sheet.version,'2026-11-v1','existing scan sessions and saved drafts stay compatible');
+    assert.equal(sheet.limit,3);
+    assert.deepEqual(sheet.parts.map(p=>p.id),expectedIds);
+    assert.deepEqual(sheet.parts.map(p=>p.displayId),expectedDisplayIds);
+    assert.deepEqual(sheet.pages,[['a','b','c'],['d','e','f'],['g','h','i'],['j']]);
+    assert.equal(sheet.parts.reduce((sum,p)=>sum+p.points,0),100);
+    for(const part of sheet.parts){
+      assert.equal(part.points,original.rubric.find(criterion=>criterion.id===part.id).max);
+      assert.ok(!('requirement' in part));
+    }
+    sheet.parts[0].displayId='changed';
+    assert.equal(getMonthlyAnswerSheet(problem).parts[0].displayId,'A.1','public display metadata is cloned');
+  }
+  assert.ok(getMonthlyAnswerSheet(5).parts.every(part=>!part.displayId),'the collision problem keeps its current labels');
+});
+
+test('the printed proton sheet uses dotted section labels while retaining the canonical scan keys',async()=>{
+  const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
+  const {buildAnswerPages}=await import('../sim/monthly-answer-sheet.mjs');
+  for(const lang of ['ko','en']){
+    const sheet=getMonthlyAnswerSheet(4),html=buildAnswerPages({id:4,no:1,title:'Proton chain'},sheet,lang);
+    assert.equal((html.match(/data-display-part="[AB]\.[1-5]"/g)||[]).length,10);
+    assert.equal((html.match(/class="paper"/g)||[]).length,4);
+    assert.ok(html.includes('data-part="a" data-display-part="A.1"'));
+    assert.ok(html.includes('data-part="j" data-display-part="B.5"'));
+    assert.ok(!/소문항 \([a-j]\)|Part \([a-j]\)|\([AB]\.[1-5]\)/.test(html));
+  }
+});
+
 test('native theory forms prompt for the actual outputs and keep all response cells blank',async()=>{
   const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
   for(const id of [4,5,6,7]){

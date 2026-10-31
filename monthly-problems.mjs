@@ -123,10 +123,13 @@ export function getMonthlyAnswerSheet(problem) {
   if (!value) return null;
   return {
     version: MONTHLY_SHEET_VERSION,
+    ...(id === 4 ? {key:'proton-chain-v1'} : {}),
     ...((greenhouse || !object && id === 7) ? {key:'greenhouse-part-d-v1'} : {}),
     limit: MONTHLY_ANSWER_LIMIT,
     round: value.round || 'theory',
-    parts: value.parts.map((p,index) => ({...p,...JSON.parse(JSON.stringify(responseForms[greenhouse?7:id]?.[p.id]||{})),...(greenhouse || !object && id === 7 ? {displayId:String.fromCharCode(97+index)} : {})})),
+    parts: value.parts.map((p,index) => ({...p,...JSON.parse(JSON.stringify(responseForms[greenhouse?7:id]?.[p.id]||{})),
+      ...(id === 4 ? {displayId:`${index < 5 ? 'A' : 'B'}.${index % 5 + 1}`} : {}),
+      ...(greenhouse || !object && id === 7 ? {displayId:String.fromCharCode(97+index)} : {})})),
     pages: value.pages.map(page => [...page]),
   };
 }
