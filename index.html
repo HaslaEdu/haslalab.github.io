@@ -5236,8 +5236,8 @@ function theoryHtml(key,yr){
      const paperLanguages=PaperLanguages.files({...f,ko:k}), selectedLanguage=Object.keys(paperLanguages).find(language=>paperLanguages[language]===P[0]);
      const paperSourceType=f.paperSourceTypes?.[selectedLanguage];
      const paperDisplay=P[0]===f.paper&&f.sourcePages?.length?P[0]+"#page="+f.sourcePages[0]:P[0];
-     const languageDocs=Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,key==="kphe"?d.thyPaper:`${f.paperContainsSolutions?.[language]?(ko?"문제·해설 합본":"Problems & solutions"):d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
-     if(selectedLanguage) P[1]=PaperLanguages.label(selectedLanguage,lang);
+     const languageDocs=ko?[]:Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,key==="kphe"?d.thyPaper:`${f.paperContainsSolutions?.[language]?"Problems & solutions":d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
+     if(selectedLanguage) P[1]=ko&&selectedLanguage==="ko"?"":PaperLanguages.label(selectedLanguage,lang);
      const K=o(k.key,f.key), A=o(k.answer,f.answer);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
