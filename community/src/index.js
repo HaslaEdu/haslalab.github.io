@@ -1334,8 +1334,8 @@ async function labOwned(env, id, me) {
   return s;
 }
 /* the phone's scan link carries one code and nothing else (not the session's number): the time it was made in base 36
-   and 128 random bits in base 62.  Only its SHA-256 is kept, unique across all sessions (migration 0009), so two
-   candidates can never share a link; when scanning ends the hash is struck out ('void:' + hash) and the link is dead. */
+   and 128 cryptographically random bits in base 62. Only its SHA-256 is kept; migration 0009 rejects duplicate
+   stored hashes. When scanning ends the hash is struck out ('void:' + hash) and that grant is dead. */
 const B62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 function labScanCode() {
   let n = BigInt("0x" + [...crypto.getRandomValues(new Uint8Array(16))].map(b => b.toString(16).padStart(2, "0")).join("")), r = "";
@@ -2814,7 +2814,14 @@ async function lab(p, m, body, me, req, env, url) {
     const s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (s.status !== "running" && s.status !== "scanning") throw new HttpError(409, "closed");
     const token = labScanCode();
-    await env.DB.prepare("UPDATE lab_sessions SET upload_hash=? WHERE id=?").bind(await sha256(token), s.id).run();
+    // Finalization may win while the new hash is being computed. Recheck the
+    // live state atomically so an old QR request cannot restore a retired grant.
+    const tokenHash = await sha256(token), timestamp = now(), changed = await env.DB.prepare(`UPDATE lab_sessions SET upload_hash=? WHERE id=?
+      AND status IN ('running','scanning') AND upload_hash NOT LIKE 'void:%'
+      AND (?=1 OR (status='running' AND ended_at>?) OR (status='scanning' AND scan_until+?>=?))
+      AND EXISTS(SELECT 1 FROM users WHERE id=? AND deleted=0)`)
+      .bind(tokenHash, s.id, labReview(s) ? 1 : 0, timestamp, LAB.graceSec, timestamp, s.user_id).run();
+    if (!changed.meta?.changes) throw new HttpError(409, "closed");
     return { token };
   }
   if (p === "/api/lab/sessions" && m === "GET") {

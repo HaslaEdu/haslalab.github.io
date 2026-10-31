@@ -194,3 +194,33 @@ test('the account dashboard reads balances and sessions once and loads the ledge
   await context.arLabList(host,()=>true);assert.equal(calls.length,2);assert.ok(calls.some(c=>c.path==='/lab/bootstrap?include=sessions,health'));assert.ok(!calls.some(c=>c.path==='/lab/tokens'));
   ledger.open=true;await ledger.toggle();await ledger.toggle();assert.equal(calls.filter(c=>c.path==='/lab/tokens').length,1);
 });
+
+test('desktop queued photos retain unconfirmed originals through mode changes until explicit A4 corner confirmation',async()=>{
+  const fs=require('node:fs'),vm=require('node:vm'),source=fs.readFileSync(require.resolve('../sim/contest-review.js'),'utf8');
+  // Execute the actual queue renderer/controller with an injected scanner. No
+  // browser image decoder or provider is needed to verify the transport intent.
+  const code=source.slice(source.indexOf('    function queueHTML()'),source.indexOf('    function inspectQueue('))+
+    source.slice(source.indexOf('    async function rebuildQueue('),source.indexOf('    function bindQueue('));
+  const calls=[],encoded=[],revoked=[],corners=[{x:0,y:0},{x:400,y:0},{x:0,y:250},{x:400,y:250}];let urls=0;
+  const original=new Blob(['original card pixels'],{type:'image/png'}),corrected=new Blob(['confirmed A4 pixels'],{type:'image/png'});
+  const item={name:'answer.png',url:'blob:initial',task:'Q5',mode:'clean',source:original,blob:original,scan:{blob:original,baseUrl:'data:original',corners,method:'page',autoScore:.98,cornersReliable:false,paperStatus:'aspect_mismatch',a4WarpApplied:false,quality:{ok:true}}};
+  const scanner={MARKER_INSET:{left:.045},async reprocess(...args){calls.push(args);return{blob:corrected};},async encodeUpload(blob,options){encoded.push({blob,options});return blob;}};
+  const context=vm.createContext({scannerLibrary:async()=>scanner,MAX_IMAGE:1850000,queue:[item],busy:'',tr:(_ko,en)=>en,taskOptions:()=>'',escape:value=>String(value),
+    URL:{revokeObjectURL:url=>revoked.push(url),createObjectURL:()=>`blob:rebuilt-${++urls}`}});
+  vm.runInContext(code+'\nglobalThis.queueController={rebuildQueue,queueHTML};',context);const ui=context.queueController;
+  assert.match(ui.queueHTML(),/original image is retained/);
+  for(const mode of ['mono','original','clean']) {
+    await ui.rebuildQueue(item,{mode});const args=calls.at(-1);
+    assert.equal(args[0],'data:original');assert.equal(args[1],corners);assert.equal(args[2],mode);assert.equal(args[5].preserveOriginal,true);
+    assert.equal(item.scan.a4WarpApplied,false);assert.equal(item.scan.paperStatus,'aspect_mismatch');assert.equal(item.scan.method,'page','a mode change is not manual corner confirmation');
+    assert.equal(item.scan.cornersReliable,false);assert.match(ui.queueHTML(),/original image is retained/);
+  }
+  const confirmed=corners.map(point=>({...point}));await ui.rebuildQueue(item,{corners:confirmed,marker:false});
+  assert.equal(calls.at(-1)[5].preserveOriginal,false);assert.equal(item.scan.cornersReliable,true);assert.equal(item.scan.autoScore,1);
+  assert.equal(item.scan.paperStatus,'manual_a4');assert.equal(item.scan.a4WarpApplied,true);assert.equal(item.scan.method,'manual');
+  assert.doesNotMatch(ui.queueHTML(),/original image is retained|Check the corners and adjust/);
+  await ui.rebuildQueue(item,{mode:'mono'});assert.equal(calls.at(-1)[5].preserveOriginal,false);assert.equal(item.scan.paperStatus,'manual_a4');assert.equal(item.scan.method,'manual');
+  assert.ok(encoded.every(call=>call.options.maxBytes===1850000));assert.equal(revoked.length,5);
+  item.scan={...item.scan,a4WarpApplied:undefined,paperStatus:undefined,cornersReliable:false,autoScore:.99};assert.match(ui.queueHTML(),/Check the corners and adjust/,'high geometry scores do not hide uncertain-corner warnings');
+  item.scan.cornersReliable=true;assert.doesNotMatch(ui.queueHTML(),/Check the corners and adjust/);
+});

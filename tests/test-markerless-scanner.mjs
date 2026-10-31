@@ -60,8 +60,42 @@ test('unmarked portrait, landscape and 35/45 degree rotations use four distinct 
   for (const quad of [rotated(), rotated(35), rotated(45), rotated(8, 240, 320, 360, 250)]) {
     const result = findsOuter(photo({ quad }));
     assert.equal(new Set(result.corners.map(p => `${p.x},${p.y}`)).size, 4);
-    assert.ok(result.score >= .75); assert.equal(result.autoCaptureEligible, true);
+    assert.ok(result.score >= .75); assert.equal(result.autoCaptureEligible, true); assert.equal(result.paperStatus, 'a4_candidate');
   }
+});
+
+test('projected A-series shape assessment is rotation invariant but never measures physical A4 size', () => {
+  for(const degrees of [0,35,45,90]) {
+    const assessed=scanner.assessA4Candidate(rotated(degrees,240,320,210,297),480,640);
+    assert.equal(assessed.status,'a4_candidate'); assert.ok(Math.abs(assessed.projectedRatio-scanner.A4_RATIO)<1e-10);
+    assert.ok(assessed.angleError<1e-10); assert.ok(assessed.parallelError<1e-10); assert.ok(assessed.skewQuality>.999);
+  }
+  for(const width of [100,200,300]) assert.equal(scanner.assessA4Candidate(rotated(0,240,320,width,width*297/210),480,640).status,'a4_candidate','same-aspect A3/A4/A5 cannot be distinguished by a camera-space ratio');
+});
+
+test('well-supported squares, screens, receipts, cards and Letter remain rectangles without automatic A4 classification', () => {
+  for(const [name,width,height,paper] of [['square',320,320,235],['screen',400,225,235],['receipt',135,500,235],['card',340,212.5,235],['Letter',300,300*11/8.5,235],['gray object',320,320,100]]) {
+    const f=photo({quad:rotated(0,240,320,width,height),background:36,paper,text:false}), result=findsOuter(f);
+    assert.ok(result.score>.85,name+' still has genuine high-quality rectangular edges');
+    assert.equal(result.paperStatus,'aspect_mismatch',name); assert.equal(result.autoCaptureEligible,false,name+' must not auto-capture as A4');
+    assert.ok(result.paperAssessment.aspectError>.05); assert.ok(result.paperAssessment.oppositeBalance>.88);
+  }
+});
+
+test('ambiguous perspective retains the outside corners for review without inferring a paper ratio', () => {
+  const q=[{x:140,y:70},{x:397,y:173},{x:50,y:490},{x:343,y:567}], assessed=scanner.assessA4Candidate(q,480,640);
+  assert.equal(assessed.status,'perspective_uncertain'); assert.ok(assessed.projectedRatio>1); assert.ok(assessed.angleError>.15);
+  const result=findsOuter(photo({quad:q,paper:205,shade:-100}));
+  assert.equal(result.paperStatus,'perspective_uncertain'); assert.equal(result.autoCaptureEligible,false);
+  for(const points of [null,[],[{x:0,y:0}],Array(4).fill({x:10,y:10}),[{x:NaN,y:0},{x:1,y:0},{x:0,y:1},{x:1,y:1}]]) assert.equal(scanner.assessA4Candidate(points,480,640).status,'perspective_uncertain');
+});
+
+test('an internal A4-shaped rectangle cannot replace an outside square during candidate classification', () => {
+  const f=photo({quad:rotated(0,240,320,350,350),background:36,paper:235,text:false}), inner=rotated(0,240,320,160,160*297/210);
+  for(let y=0;y<f.H;y++)for(let x=0;x<f.W;x++)if(inside(x,y,inner))f.gray[y*f.W+x]=190;
+  const result=findsOuter(f);
+  assert.equal(result.paperStatus,'aspect_mismatch'); assert.equal(result.autoCaptureEligible,false);
+  assert.ok(error(result.corners,f.quad)<18,'classification only runs after the outside boundary wins');
 });
 
 test('perspective and illumination gradients retain the complete page rather than a bright half', () => {
@@ -134,8 +168,16 @@ test('complete printed marker geometry keeps its marker centres and existing mar
     .map(([u, v]) => ({ x: q[0].x + (q[1].x - q[0].x) * u, y: q[0].y + (q[2].y - q[0].y) * v }));
   for (const p of centers) for (let y = Math.round(p.y) - 4; y <= Math.round(p.y) + 4; y++) for (let x = Math.round(p.x) - 4; x <= Math.round(p.x) + 4; x++) f.gray[y * f.W + x] = 10;
   const result = scanner.detectDocumentQuadGray(f.gray, f.W, f.H);
-  assert.equal(result.method, 'marker'); assert.equal(result.autoCaptureEligible, true);
+  assert.equal(result.method, 'marker'); assert.equal(result.autoCaptureEligible, true); assert.equal(result.paperStatus, 'a4_candidate');
   assert.ok(error(result.corners, centers) < 2); assert.deepEqual(scanner.MARKER_INSET, { left: .045, top: .035, right: .955, bottom: .965 });
+});
+
+test('strong marker-like squares on a front-facing card do not bypass the aspect check', () => {
+  const f=photo({quad:rotated(0,240,320,340,212.5),background:36,paper:235,text:false}), q=f.quad, m=scanner.MARKER_INSET;
+  const centers=[[m.left,m.top],[m.right,m.top],[m.left,m.bottom],[m.right,m.bottom]].map(([u,v])=>({x:q[0].x+(q[1].x-q[0].x)*u,y:q[0].y+(q[2].y-q[0].y)*v}));
+  for(const p of centers)for(let y=Math.round(p.y)-4;y<=Math.round(p.y)+4;y++)for(let x=Math.round(p.x)-4;x<=Math.round(p.x)+4;x++)f.gray[y*f.W+x]=10;
+  const result=scanner.detectDocumentQuadGray(f.gray,f.W,f.H);
+  assert.equal(result.method,'marker'); assert.ok(result.score>=.75); assert.equal(result.paperStatus,'aspect_mismatch'); assert.equal(result.autoCaptureEligible,false);
 });
 
 test('720p work is bounded on detailed positive and noisy negative frames', t => {

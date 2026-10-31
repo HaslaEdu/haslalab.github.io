@@ -112,7 +112,7 @@
 
 <script src="exam-network.js"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, toGray, detectDocumentQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=ddfd9c8cdd0f";
+import { processShot, reprocess, canProcess, toGray, detectDocumentQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=27c09e666503";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -145,6 +145,8 @@ const T = {
     lvHold: "그대로 멈추세요…", lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
     working0: "다듬는 중…", corners: "모서리 맞추기", modes: { clean: "또렷하게", mono: "흑백", original: "원본" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
+    a4Shape: "A4 비율을 확인하지 못해 사진을 자르거나 늘리지 않았습니다. A4 답안지라면 «모서리 맞추기»에서 확인한 뒤 A4로 보정하거나 원본 그대로 보내세요.",
+    lvAspect: "A4 비율과 다릅니다. A4 용지인지 확인하고 카메라를 종이와 평행하게 맞춰 주세요.", lvPerspective: "A4 비율을 확인하려면 카메라를 종이와 평행하게 맞춰 주세요. 직접 촬영하면 원본을 유지합니다.",
     blurry: "사진이 흐립니다. 다시 찍으면 글자를 더 잘 읽습니다.",
     lowRes: "종이가 작게 찍혀 글씨의 원래 해상도가 낮습니다. 종이가 화면을 채우도록 가까이 찍어 주세요.",
     processFailed: "자동 보정에 실패했습니다. 원본을 확인하고 다시 촬영하거나 원본 그대로 보내세요.",
@@ -159,7 +161,7 @@ const T = {
     left: "스캔 마감까지", closed: "스캔 시간이 끝났습니다. 더 보낼 수 없습니다.", notYet: "아직 시험 중입니다. 시험이 끝나면 다시 이 QR을 열어 주세요.",
     badLink: "QR 코드가 오래되었거나 잘못되었습니다. 컴퓨터 화면의 QR 코드를 다시 찍어 주세요.",
     over: "스캔 시간이 끝났습니다. 이 링크는 파기되어 더 이상 쓸 수 없습니다.",
-    ceTop: "네 점을 종이의 네 귀퉁이에 맞추세요.", ceOk: "이대로 펴기", ceCancel: "취소",
+    ceTop: "A4 용지가 맞는지 확인한 뒤 네 점을 종이의 네 귀퉁이에 맞추세요.", ceOk: "A4로 보정", ceCancel: "취소",
     noCanvas: "이 브라우저에서는 사진을 다듬을 수 없어 원본 그대로 보냅니다.",
     err: { network: "연결이 끊겼습니다. 다시 보내 주세요.", closed: "스캔 시간이 끝났습니다.", image_too_big: "작은 글씨를 보존하는 화질로는 사진 용량이 너무 큽니다. 원본/흑백 모드를 바꾸거나 종이가 화면을 채우게 다시 찍어 주세요.", too_many_pages: "보낼 수 있는 쪽 수(40)를 넘었습니다.", bad_image: "JPG, PNG, WebP 사진을 선택해 주세요.", input_too_big: "12MB 이하의 사진을 선택해 주세요.", bad_token: "QR 코드가 바뀌었습니다. 컴퓨터 화면의 QR을 다시 찍어 주세요." },
   },
@@ -170,6 +172,8 @@ const T = {
     lvHold: "Hold still…", lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
     working0: "Straightening…", corners: "Fix corners", modes: { clean: "Clean", mono: "B&W", original: "Original" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
+    a4Shape: "The A4 aspect ratio could not be verified, so the photo was not cropped or stretched. For an A4 sheet, confirm its corners and correct as A4, or send the original.",
+    lvAspect: "This does not match the A4 aspect ratio. Check the sheet and hold the camera parallel to it.", lvPerspective: "Hold the camera parallel to the sheet to check its A4 aspect ratio. Manual capture keeps the original.",
     blurry: "The photo is blurry. A sharper one reads better.",
     lowRes: "The page occupies too little of the photo. Move closer so small writing keeps enough detail.",
     processFailed: "Automatic correction failed. Inspect the original, retake it, or send the original photo.",
@@ -184,7 +188,7 @@ const T = {
     left: "Scanning closes in", closed: "Scanning has closed. No more pages can be sent.", notYet: "The exam is still running. Open this QR code again when it ends.",
     badLink: "This QR code is old or wrong. Scan the code on the computer screen again.",
     over: "Scanning has ended. This link has been destroyed and can no longer be used.",
-    ceTop: "Put the four points on the four corners of the paper.", ceOk: "Straighten", ceCancel: "Cancel",
+    ceTop: "Confirm this is an A4 sheet, then put the four points on its corners.", ceOk: "Correct as A4", ceCancel: "Cancel",
     noCanvas: "This browser cannot straighten photos, so they are sent as taken.",
     err: { network: "Connection lost. Please send again.", closed: "Scanning has closed.", image_too_big: "This photo is too large at a readable resolution. Try Original/B&W or retake with the page filling the frame.", too_many_pages: "That is more than the 40 pages allowed.", bad_image: "Choose a JPG, PNG or WebP photo.", input_too_big: "Choose a photo no larger than 12 MB.", bad_token: "The QR code has changed. Scan the code on the computer screen again." },
   },
@@ -298,6 +302,7 @@ function paintShot() {
   if (shot.busy) { box.innerHTML = `<div class="card"><h2>${t().working0}</h2><div class="bar"><i style="width:${shot.pct || 3}%"></i></div></div>`; return; }
   const q = shot.quality || {}, warn = [];
   if (shot.processFailed) warn.push(t().processFailed);
+  else if (shot.a4WarpApplied === false) warn.push(t().a4Shape);
   else if (shot.cornersReliable === false || shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
   if (q.focus != null && q.focus < 22) warn.push(t().blurry);          // (the cleaned page is white on purpose, so glare is not judged on it)
   if (shot.sourceShortSide != null && shot.sourceShortSide < 1200) warn.push(t().lowRes);
@@ -322,7 +327,7 @@ async function redo(corners, m) {
   if (!shot || MONTHLY && monthlySending) return;
   const revision = ++shotRevision;
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
-  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
+  try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: keep.a4WarpApplied === false }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
   catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...keep, busy: false }; }
   paintShot();
 }
@@ -403,7 +408,7 @@ async function cornerEditor() {
     if (revision !== shotRevision || !shot) return close();
     const ordered = orderCorners(pts);
     if (quadScore(ordered, img.width, img.height) < 0.1) return toast(t().badCorners);
-    close(); shot.autoScore = 1; shot.cornersReliable = true; shot.method = pointMode === "marker" ? "marker" : "manual"; redo(ordered, mode);
+    close(); shot.autoScore = 1; shot.cornersReliable = true; shot.a4WarpApplied = true; shot.paperStatus = "manual_a4"; shot.method = pointMode === "marker" ? "marker" : "manual"; redo(ordered, mode);
   };
 }
 
@@ -468,7 +473,7 @@ async function liveCamera() {
         const span = Math.max(w, h), still = hist.length === count && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * tolerance));
         say(t().lvHold, true);
         if (still && AUTO) return capture();
-      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
+      } else { hist = []; last = null; say(d?.paperStatus === "aspect_mismatch" ? t().lvAspect : d?.paperStatus === "perspective_uncertain" ? t().lvPerspective : !focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
     }
     timer = setTimeout(frame, 140);
   }

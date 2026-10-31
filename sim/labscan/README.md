@@ -18,6 +18,8 @@ Upstage 원문과 LaTeX·신뢰도 정보를 보존하고, Gemini의 항목·그
 
 검은 표식이 없는 일반 A4도 종이 바깥 테두리로 찾습니다. 촬영 화면과 사진 보정은 같은 검출 함수를 사용하며, 네 변의 근거가 충분하고 초점·위치가 안정적인 경우에만 자동 촬영합니다. 경계가 불확실하면 직접 촬영한 뒤 「모서리 맞추기」에서 조정할 수 있습니다. 종이 모서리로 잡은 좌표에는 검은 표식용 여백 보정을 적용하지 않습니다. 이 처리는 기기 안에서 실행하며 별도 서버 요청이나 AI 사용료를 추가하지 않습니다.
 
+사각형 검출과 A4 후보 판별은 분리합니다. 거의 정면인 후보는 297:210 비율의 ±5% 범위와 각도·마주 보는 변의 균형을 확인합니다. 정사각형·카드·화면·영수증·Letter처럼 비율이 다른 직사각형이나 원근이 불확실한 경우 자동 촬영과 A4 변환을 하지 않고 작업용 원본의 픽셀·가로세로 비율을 유지합니다. 색상 모드를 바꿔도 이 제한을 유지하며, 사용자가 「A4로 보정」을 선택해 모서리를 확정한 경우에만 A4로 변환합니다. A3·A4·A5처럼 같은 비율의 실제 크기는 기준 물체 없는 사진 한 장으로 구별할 수 없으므로 결과는 A4 후보이며 크기 인증이 아닙니다. [Scanbot의 비율별 자동 촬영 설정](https://docs.scanbot.io/flutter/document-scanner-sdk/ready-to-use-ui/common-implementations/single-page-scanning-with-viewfinder/)처럼 비율·원근 조건을 자동 촬영과 구분해 적용합니다.
+
 `node --test tests/test-markerless-scanner.mjs tests/test-scan-quality.mjs tests/test-monthly-scan.cjs`로 표식 없는 용지·오인식·자동 촬영·기존 화질 보존을 검증합니다. `node tools/build-site-catalogue.cjs`는 촬영 화면·KMO 업로드·스캔 비교 화면의 공통 엔진 URL을 내용 해시로 갱신합니다.
 
 참고: [Upstage API](https://console.upstage.ai/api/parse/document-parsing), [수식·좌표 출력](https://console.upstage.ai/docs/capabilities/parse/understanding-output), [D1 제한](https://developers.cloudflare.com/d1/platform/limits/).

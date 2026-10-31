@@ -36,7 +36,7 @@ jobs:
       - run: node --test test-weekly-content.mjs test-greenhouse-content.mjs test-astronomy-revision.mjs test-pressure-wave-content.mjs test-monthly-experiment*.mjs test-monthly-period.mjs test-monthly-answers.mjs test-monthly-capture.mjs test-monthly-policy.mjs test-monthly-photos.mjs test-monthly-presentation.mjs test-proton-presentation.mjs test-monthly-rewards.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-*.cjs
       - run: node --test test-omr.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
-      - run: node --test test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
+      - run: node --test test-qr-isolation.mjs test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
       - run: node --test test-lab-standings.mjs ../tests/test-result-comparison.cjs ../tests/test-*-results.cjs
       - run: node --test test-community-latency.mjs test-account-latency.mjs
       - run: node --test test-notice-pins.mjs test-public-data.mjs test-global-public-read.mjs ../tests/test-site-mailbox.cjs ../tests/test-admin-notice-ui.cjs ../tests/test-ranking-ui.cjs

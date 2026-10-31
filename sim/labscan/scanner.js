@@ -432,6 +432,39 @@ function pageIntersection(a, b) {
   const det = a.nx * b.ny - a.ny * b.nx;
   return Math.abs(det) < .12 ? null : { x: (a.r * b.ny - a.ny * b.r) / det, y: (a.nx * b.r - a.r * b.nx) / det };
 }
+/** Projected A-series shape candidate, never a physical size measurement.
+ * A3/A4/A5 share a ratio, and an unknown camera pose can make another rectangle
+ * look identical. Keep perspective-ambiguous corners for manual confirmation.
+ * The 5% near-frontal tolerance excludes Letter, cards, screens and squares
+ * without rejecting ordinary corner-fit error or in-plane page rotation. */
+export function assessA4Candidate(corners, W, H) {
+  const uncertain = { status: 'perspective_uncertain', projectedRatio: null, aspectError: null,
+    angleError: null, parallelError: null, oppositeBalance: null, skewQuality: 0 };
+  if (!Array.isArray(corners) || corners.length !== 4 || !Number.isFinite(W) || !Number.isFinite(H) || !(W > 0 && H > 0) ||
+      corners.some(p => !p || !Number.isFinite(p.x) || !Number.isFinite(p.y))) return uncertain;
+  const q = orderCorners(corners), poly = [q[0], q[1], q[3], q[2]];
+  if (quadScore(q, W, H) <= 0 || q.some(p => p.x < 0 || p.y < 0 || p.x > W || p.y > H)) return uncertain;
+  const edges = poly.map((p, i) => ({ x: poly[(i + 1) % 4].x - p.x, y: poly[(i + 1) % 4].y - p.y }));
+  const lengths = edges.map(p => Math.hypot(p.x, p.y));
+  if (Math.min(...lengths) < 8) return uncertain;
+  const dot = (a, b) => Math.abs(edges[a].x * edges[b].x + edges[a].y * edges[b].y) / (lengths[a] * lengths[b]);
+  const cross = (a, b) => Math.abs(edges[a].x * edges[b].y - edges[a].y * edges[b].x) / (lengths[a] * lengths[b]);
+  const angleError = Math.max(...edges.map((_, i) => dot(i, (i + 1) % 4)));
+  const parallelError = Math.max(cross(0, 2), cross(1, 3));
+  const oppositeBalance = Math.min(Math.min(lengths[0], lengths[2]) / Math.max(lengths[0], lengths[2]),
+    Math.min(lengths[1], lengths[3]) / Math.max(lengths[1], lengths[3]));
+  const horizontal = (lengths[0] + lengths[2]) / 2, vertical = (lengths[1] + lengths[3]) / 2;
+  const projectedRatio = Math.max(horizontal, vertical) / Math.min(horizontal, vertical), aspectError = Math.abs(projectedRatio / A4_RATIO - 1);
+  const skewQuality = Math.max(0, 1 - Math.max(angleError, parallelError, 1 - oppositeBalance));
+  const nearFrontal = angleError <= .15 && parallelError <= .12 && oppositeBalance >= .88;
+  return { status: !nearFrontal ? 'perspective_uncertain' : aspectError <= .05 ? 'a4_candidate' : 'aspect_mismatch',
+    projectedRatio, aspectError, angleError, parallelError, oppositeBalance, skewQuality };
+}
+function assessedDocument(result, W, H) {
+  const paperAssessment = assessA4Candidate(result.corners, W, H);
+  return { ...result, paperStatus: paperAssessment.status, paperAssessment,
+    autoCaptureEligible: result.autoCaptureEligible === true && paperAssessment.status === 'a4_candidate' };
+}
 function pageEvidence(corners, g, w, h, refine = false) {
   if (!corners || corners.some(p => !p || !Number.isFinite(p.x + p.y))) return null;
   const q = orderCorners(corners), poly = [q[0], q[1], q[3], q[2]], margin = Math.max(1.5, Math.min(w, h) * .007);
@@ -498,7 +531,7 @@ function pageEvidence(corners, g, w, h, refine = false) {
  * and gradient-directed lines propose quads. Only four supported OUTER paper
  * transitions may win; an inner printed frame or the image boundary is not a page. */
 export function findPageQuadGray(gray, W, H) {
-  const none = { corners: null, score: 0, method: 'page', edgeSupport: 0, clipped: false, autoCaptureEligible: false };
+  const none = { corners: null, score: 0, method: 'page', edgeSupport: 0, clipped: false, autoCaptureEligible: false, paperStatus: 'not_found', paperAssessment: null };
   if (W < 32 || H < 32 || gray.length < W * H) return none;
   const scale = Math.min(1, 320 / Math.max(W, H)), w = Math.round(W * scale), h = Math.round(H * scale), n = w * h;
   const g = new Uint8Array(n), sx = W / w, sy = H / h;
@@ -552,7 +585,9 @@ export function findPageQuadGray(gray, W, H) {
   }
   const finish = best => {
     const fitted = pageEvidence(best.corners, smooth, w, h, true) || best;
-    return { ...fitted, corners: fitted.corners.map(p => ({ x: (p.x + .5) * sx, y: (p.y + .5) * sy })), method: 'page' };
+    // Classify only the winning outer boundary. An A4-shaped printed rectangle
+    // inside a different object must never replace its real outside corners.
+    return assessedDocument({ ...fitted, corners: fitted.corners.map(p => ({ x: (p.x + .5) * sx, y: (p.y + .5) * sy })), method: 'page' }, W, H);
   };
   let regionBest = null;
   for (const candidate of candidates) {
@@ -940,12 +975,12 @@ export function findMarkers(canvas) {
  * acquire marker insets, and automatic capture requires measured edge evidence. */
 export function detectDocumentQuadGray(g, W, H) {
   const marker = findSheetMarkersGray(g, W, H);
-  if (marker && marker.score >= .75) return { ...marker, clipped: false, autoCaptureEligible: true };
+  if (marker && marker.score >= .75) return assessedDocument({ ...marker, clipped: false, autoCaptureEligible: true }, W, H);
   const page = findPageQuadGray(g, W, H);
   if (page.corners) return page;
-  if (marker && marker.score >= .5) return { ...marker, clipped: false, autoCaptureEligible: false };
+  if (marker && marker.score >= .5) return assessedDocument({ ...marker, clipped: false, autoCaptureEligible: false }, W, H);
   const legacy = findMarkersGray(g, W, H);
-  if (legacy.found === 4 && legacy.score >= .82) return { ...legacy, clipped: false, autoCaptureEligible: false };
+  if (legacy.found === 4 && legacy.score >= .82) return assessedDocument({ ...legacy, clipped: false, autoCaptureEligible: false }, W, H);
   return {
     corners: [
       { x: W * 0.05, y: H * 0.05 }, { x: W * 0.95, y: H * 0.05 },
@@ -953,6 +988,8 @@ export function detectDocumentQuadGray(g, W, H) {
     ],
     score: 0,
     method: 'frame',
+    paperStatus: 'not_found',
+    paperAssessment: null,
     autoCaptureEligible: false,
     clipped: false,
   };
@@ -1089,7 +1126,7 @@ export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko
   });
   const controls = document.createElement('div'); Object.assign(controls.style, { display: 'flex', gap: '10px' });
   const cancel = document.createElement('button'), apply = document.createElement('button');
-  cancel.textContent = txt('취소', 'Cancel'); apply.textContent = txt('이대로 적용', 'Apply');
+  cancel.textContent = txt('취소', 'Cancel'); apply.textContent = txt('A4로 보정', 'Correct as A4');
   for (const button of [cancel, apply]) { button.type = 'button'; Object.assign(button.style, { flex: '1', padding: '12px', cursor: 'pointer', borderRadius: '7px' }); controls.append(button); }
   dialog.append(title, select, hint, wrap, controls); document.body.append(dialog);
   return new Promise(resolve => {
@@ -1123,28 +1160,29 @@ export async function processShot(file, opts = {}) {
 
   say(25, '모서리 찾는 중');
   let pts = corners ? orderCorners(corners) : null;
-  let autoScore = 1, method = 'manual', cornersReliable = true;
+  let autoScore = 1, method = 'manual', cornersReliable = true, paperStatus = 'manual_a4';
   if (!pts) {
     const d = detectQuad(base);
-    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.autoCaptureEligible === true;
+    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.autoCaptureEligible === true; paperStatus = d.paperStatus || 'not_found';
   }
   await breathe();
 
-  say(50, '기울기 펴는 중');
+  const a4WarpApplied = paperStatus === 'a4_candidate' || paperStatus === 'manual_a4';
+  say(50, a4WarpApplied ? '기울기 펴는 중' : '원본 유지');
   /* 마커로 찾았을 때만 인셋을 씁니다. 종이 테두리로 찾았다면
      그 네 점이 곧 지면 모서리이므로 인셋이 필요 없습니다. */
-  let out = warp(base, pts, dpiToWidth(dpi), method === 'marker' ? MARKER_INSET : null);
+  let out = a4WarpApplied ? warp(base, pts, dpiToWidth(dpi), method === 'marker' ? MARKER_INSET : null) : base;
   const quality = inspectDocument(out);
   await breathe();
 
   say(72, '그림자 지우는 중');
-  out = enhance(out, mode);
+  if (a4WarpApplied) out = enhance(out, mode);
   await breathe();
 
   say(90, '선명도 확인 중');
 
   const blob = await new Promise((r) =>
-    mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
+    !a4WarpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
   );
   if (!blob) throw { code: 'bad_image' };
   say(100, '완료');
@@ -1154,6 +1192,8 @@ export async function processShot(file, opts = {}) {
     previewUrl: out.toDataURL('image/jpeg', 0.92),
     corners: pts,
     cornersReliable,
+    paperStatus,
+    a4WarpApplied,
     autoScore,
     method,
     quality,
@@ -1167,17 +1207,18 @@ export async function processShot(file, opts = {}) {
 }
 
 /** 이미 잡아둔 원본에서 모서리·모드만 바꿔 다시 만듭니다 */
-export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFAULT_DPI, inset = null) {
+export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFAULT_DPI, inset = null, options = {}) {
   const img = await loadImage(baseDataUrl);
   const base = toCanvas(img);
-  let out = warp(base, orderCorners(corners), dpiToWidth(dpi), inset);
+  const a4WarpApplied = options.preserveOriginal !== true;
+  let out = a4WarpApplied ? warp(base, orderCorners(corners), dpiToWidth(dpi), inset) : base;
   const quality = inspectDocument(out);
-  out = enhance(out, mode);
+  if (a4WarpApplied) out = enhance(out, mode);
   const blob = await new Promise((r) =>
-    mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
+    !a4WarpApplied || mode === 'mono' ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.92)
   );
   if (!blob) throw { code: 'bad_image' };
   const pts = orderCorners(corners);
-  return { blob, previewUrl: out.toDataURL('image/jpeg', 0.92), quality, width: out.width, height: out.height,
+  return { blob, previewUrl: out.toDataURL('image/jpeg', 0.92), quality, width: out.width, height: out.height, a4WarpApplied,
     sourceShortSide: Math.min(Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y), Math.hypot(pts[2].x - pts[0].x, pts[2].y - pts[0].y)) };
 }

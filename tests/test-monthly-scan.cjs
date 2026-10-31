@@ -95,7 +95,7 @@ test('monthly upload changes only its payload/endpoint while retaining actual IP
   assert.match(html,/api\(MONTHLY \? "POST" : "PUT"/);
   assert.match(html,/function liveCamera\(/);assert.match(html,/function cornerEditor\(/);assert.match(html,/rotatePhoto\(keep.file\)/);
   assert.match(html,/const captureFile = internal && shot\?\.captureFile \|\| file/);
-  assert.match(html,/reprocess\(keep.baseUrl, corners, m, undefined, keep.method === "marker" \? MARKER_INSET : null\)/);
+  assert.match(html,/reprocess\(keep.baseUrl, corners, m, undefined, keep.method === "marker" \? MARKER_INSET : null, \{ preserveOriginal: keep.a4WarpApplied === false \}\)/);
   assert.match(html,/const MAX_BYTES = 1850000/,'the existing exam upload limit remains intact');
 });
 
