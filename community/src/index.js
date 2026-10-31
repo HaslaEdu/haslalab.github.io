@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, schemePoints } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1605,6 +1605,8 @@ const N_MIN = { few: 3, medium: 5, many: 7 };
 const N = (o) => ({ ...o, nullable: true });
 const SCHEME_SCHEMA = { type: "object", properties: {
   points: { type: "number" }, unit_rule: { type: "string" }, notes: { type: "string" },
+  total: N({ type: "number" }),
+  parts: { type: "array", items: { type: "object", properties: { id: { type: "string" }, points: { type: "number" } }, required: ["id", "points"] } },
   items: { type: "array", items: { type: "object", properties: {
     id: { type: "string" }, points: { type: "number" }, type: { type: "string", enum: ["value", "graph", "table", "derivation", "other"] },
     sheet: { type: "string", enum: ["answer", "any"] }, what: { type: "string" }, unit: N({ type: "string" }),
@@ -1799,16 +1801,25 @@ async function labCanonicalPdf(env,source) {
   return labPdf(env,source);
 }
 const ONE_ITEM_ONE_ID = "Every item has its own id, used once (when a part repeats the same mark for several cases, e.g. one per concentration, write A1.a, A1.b, …), and its own points only — never the total of its part repeated on each row. The items' points add up to the task's printed total.";
+/* a scheme as it is used: its items tidied, its printed headings kept, its points bounded by them */
+function settleScheme(sc) {
+  sc.items = tidySchemeItems(sc.items);
+  sc.parts = cleanParts(sc.parts);
+  /* a printed total only trims a small excess (10.1 → 10); one far below the items is a misread heading, not the total */
+  if (!(+sc.total > 0) || +sc.total < .9 * cappedSum(sc.items, sc.parts, null)) delete sc.total;
+  sc.points = schemeTotal(sc);
+  return sc;
+}
 async function labScheme(env, s, task, m) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol, theory=sx.kind==="theory";
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = [labProvider(s),VISION_MODELS[labProvider(s)],REG_VERSION,src,sx.mark||''].join(':');
+  const key = [labProvider(s),VISION_MODELS[labProvider(s)],REG_VERSION,src,sx.mark||''].join(':');   // a new REG_VERSION builds every scheme again
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
     const sc = JSON.parse(kept.scheme);
-    if (Array.isArray(sc.items) && sc.items.length) { sc.items = tidySchemeItems(sc.items); sc.points = schemePoints(sc.items); }
+    if (Array.isArray(sc.items) && sc.items.length) settleScheme(sc);
     return sc;
   }
   const res = await labCanonicalPdf(env,src);
@@ -1828,6 +1839,8 @@ async function labScheme(env, s, task, m) {
       "sheet: answer for a final answer that must be written in the answer-sheet box, any for intermediate steps and method marks.",
       "For a numerical value give the full-mark interval (full_min, full_max; turn ± or «within 5 %» into an interval) and every partial-credit interval with its points, as printed; otherwise leave them null and say in `what` exactly what is required (the expected expression or result, and what earns partial marks).",
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
+      "A numerical answer whose interval is not printed still names the official value with its unit in `what` (e.g. «correct numerical value of H_c = 7.7 m»), and any alternative value the solution says to accept.",
+      "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
       "unit_rule: what the scheme says about units and significant figures, if anything."].join("\n") },
     { inline_data: { mime_type: "application/pdf", data: b64(res) } },
     ...(mark ? [{ text: "The official marking scheme:" }, { inline_data: { mime_type: "application/pdf", data: b64(mark) } }] : []),
@@ -1840,6 +1853,7 @@ async function labScheme(env, s, task, m) {
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
       "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
+      "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
       "unit_rule: what the scheme says about units, if anything."].join("\n") },
     { inline_data: { mime_type: "application/pdf", data: b64(res) } },
     ...(mark ? [{ text: "The official marking scheme:" }, { inline_data: { mime_type: "application/pdf", data: b64(mark) } }] : []),
@@ -1847,9 +1861,8 @@ async function labScheme(env, s, task, m) {
   const sc = out.raw;
   if (eotvos && (!sc || sc.points_verified !== true || !Array.isArray(sc.items) || !sc.items.length)) return { unscored: true, points: null, items: [], notes: "no_official_points" };
   if (!sc || !Array.isArray(sc.items) || !sc.items.length) throw new Error("empty scheme");
-  sc.items = tidySchemeItems(sc.items);
+  settleScheme(sc);
   if (!sc.items.length) throw new Error("empty scheme");
-  sc.points = schemePoints(sc.items);
   await env.DB.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)")
     .bind(s.exam_key, task, key, JSON.stringify(sc), out.model, now()).run();
   return sc;
@@ -2012,7 +2025,7 @@ function labScore(scheme, raw, pages) {
     habits: (Array.isArray(rv.habits) ? rv.habits : []).filter(h => h && h.habit).slice(0, 5).map(h => ({ habit: str(h.habit, 300), fix: str(h.fix, 400), pages: (Array.isArray(h.pages) ? h.pages : []).filter(n => byNo.has(n)).slice(0, 8) })),
     handwriting: rv.handwriting && ["clear", "readable", "hard"].includes(rv.handwriting.rating) ? { rating: rv.handwriting.rating, notes: str(rv.handwriting.notes, 600) } : null,
     presentation: rv.presentation ? str(rv.presentation, 500) : null } : null;
-  return { items, feedback, review, score: +Math.min(scheme.points, items.reduce((a, i) => a + i.got, 0)).toFixed(2) };
+  return { items, feedback, review, score: +Math.min(scheme.points, cappedSum(items, scheme.parts, scheme.total, i => i.got)).toFixed(2) };
 }
 /* a page's photo: in R2 when the Worker has the LAB_PAGES bucket, otherwise in the row; null once removed after its keeping time */
 async function labPageBytes(env, row) {

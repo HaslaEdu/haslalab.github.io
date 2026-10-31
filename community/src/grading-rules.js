@@ -16,7 +16,7 @@
  * leading prefix at the cached rate, so nothing that varies may appear before the end of block 3. No cache objects
  * are created and nothing is padded.
  */
-export const REG_VERSION = "2026-10-31";
+export const REG_VERSION = "2026-11-01";
 
 const r = (id, en, ko) => ({ id, en, ko });
 
@@ -37,7 +37,8 @@ const R11 = r("R11", "Every measured table and graph must hold at least the numb
 
 /* what a paper of each kind is marked on, and what the coach's review looks at */
 const KINDS = {
-  theory: { name: { ko: "이론", en: "theory" }, rules: [], review: [
+  theory: { name: { ko: "이론", en: "theory" }, rules: [
+    r("R12", "A numerical final answer is checked against the official value in the same unit. A tolerance or interval printed in the scheme decides. Where none is printed, the answer is right when it lies within ±1 in the official value's last printed digit or within 2 % of it, whichever is wider, or when it is a value the solution itself accepts (another valid approach, an error carried forward that the scheme allows). The competition's own rules below override this.", "수치 최종 답은 같은 단위로 바꿔 공식 값과 비교합니다. 기준표에 허용 오차나 구간이 있으면 그것을 따릅니다. 없으면 공식 값의 마지막 자리 ±1 또는 ±2 % 가운데 넓은 범위 안이거나, 해설이 인정하는 값(다른 올바른 풀이, 기준표가 허용한 이어받은 오류)이면 맞습니다. 아래 대회별 규정이 있으면 그것이 우선합니다.")], review: [
     "summary: 2–4 sentences — how the candidate did on this paper overall and what decided the mark.",
     "strengths: up to 3 things done well, concrete (an item, an idea, a clean derivation, a good approximation).",
     "habits: up to 5 recurring habits that cost marks here or would at the real olympiad, each with a concrete fix and the pages where it shows — e.g. a final answer not written in its box or not in terms of the given quantities, steps skipped so method marks are lost, no dimension or limiting-case check, an approximation used without saying so, a sign or factor of 2 lost and carried on, numbers put in too early, units or significant figures missing in a numerical answer, a part left blank although the earlier result would have given its marks.",
