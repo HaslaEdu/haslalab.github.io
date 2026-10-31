@@ -714,7 +714,7 @@ function rateUser(solvedLevels) {
 }
 
 function arenaHealth(env) {
-  return { ocr: !!env.UPSTAGE_API_KEY, grader: env.GEMINI_API_KEY ? "gemini" : env.DEEPSEEK_API_KEY ? "deepseek" : null, backup: env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY ? "deepseek" : null };
+  return { ocr: !!env.UPSTAGE_API_KEY, grader: env.GEMINI_API_KEY ? "gemini" : env.DEEPSEEK_API_KEY ? "deepseek" : null, theory: env.DEEPSEEK_API_KEY && env.THEORY_GRADER === "deepseek" ? "deepseek" : env.GEMINI_API_KEY ? "gemini" : null };
 }
 function pubProblem(r, lang, open, full) {
   const answerSheet = getMonthlyAnswerSheet(r);
@@ -802,7 +802,7 @@ function splitFixed(prompt) {
   }
   return ["", prompt];
 }
-/* Gemini first (it sees images); DeepSeek when there is no Gemini key or Gemini fails, from the text alone */
+/* Gemini first; DeepSeek when there is no Gemini key, or (THEORY_GRADER = "deepseek") when Gemini fails, from the text */
 async function callGrader(env, prompt, schema = SCORE_SCHEMA, images = [], opts = {}) {
   if (env.GEMINI_API_KEY) {
     try {
@@ -815,7 +815,7 @@ async function callGrader(env, prompt, schema = SCORE_SCHEMA, images = [], opts 
       if (!r.ok) throw new Error("gemini " + r.status);
       const j = await r.json();
       return { raw: parseJsonText((j.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("")), model: "gemini:" + model };
-    } catch (e) { if (!env.DEEPSEEK_API_KEY) throw e; console.error("grader gemini, trying deepseek", e && e.message); }
+    } catch (e) { if (!env.DEEPSEEK_API_KEY || env.THEORY_GRADER !== "deepseek") throw e; console.error("grader gemini, trying deepseek", e && e.message); }
   }
   if (env.DEEPSEEK_API_KEY) {
     const [fixed, rest] = splitFixed(prompt);
@@ -1603,8 +1603,9 @@ async function gemini(env, parts, schema, max, m, step) {
   }
 }
 /* DeepSeek (chat completions, JSON mode). The fixed head goes in the system message: DeepSeek caches a repeated
-   leading prefix on its own and bills it at the cache-hit rate. JSON mode has no schema, so the shape is stated. */
-async function deepseek(env, system, user, schema, max, m, step) {
+   leading prefix on its own and bills it at the cache-hit rate. JSON mode has no schema, so the shape is stated.
+   deepseek-flash reads images in user messages (each resized to at most 1024 tokens). */
+async function deepseek(env, system, user, schema, max, m, step, images = []) {
   const model = env.DEEPSEEK_MODEL || "deepseek-flash";
   const t0 = Date.now(); let usage = {};
   try {
@@ -1612,7 +1613,7 @@ async function deepseek(env, system, user, schema, max, m, step) {
       method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + env.DEEPSEEK_API_KEY },
       body: JSON.stringify({ model, temperature: 0, max_tokens: max || 8192, response_format: { type: "json_object" }, thinking: { type: "disabled" },
         messages: [{ role: "system", content: system + "\n\nAnswer with one JSON object only, following this JSON schema:\n" + JSON.stringify(schema) },
-          { role: "user", content: user }] }),
+          { role: "user", content: images.length ? [{ type: "text", text: user }, ...images.map(image => ({ type: "image_url", image_url: { url: "data:" + image.mime + ";base64," + image.data } }))] : user }] }),
       signal: labProviderSignal(env,110000) });
     if (!r.ok) { try { await r.body?.cancel(); } catch {} throw new Error("deepseek " + r.status); }
     const j = await r.json(); usage = deepseekLabUsage(j, t0);
@@ -2012,16 +2013,17 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
     const size = img ? img.byteLength * 4 / 3 : Infinity;
     if (size < budget) { parts.push({ inline_data: { mime_type: row.mime, data: b64(img) } }); budget -= size; }
   }
-  /* Experiments, data analysis and observation are graded by Gemini alone: it sees the graphs and drawings, and a
-     failure is retried later rather than handed to a grader that cannot. A theory paper goes to DeepSeek, as text
-     (the same rules, scheme, transcripts and page readings); Gemini takes it only if DeepSeek fails. One grader per
-     task: nothing is graded twice or passed between them. */
+  /* Experiments, data analysis and observation are graded by Gemini alone, and a failure is retried later. A theory
+     paper goes to DeepSeek only when THEORY_GRADER is "deepseek" (with its key): the same rules, scheme, transcripts
+     and page readings, and the page images, which it reads too; Gemini takes it only if DeepSeek fails. Otherwise
+     Gemini grades every paper. One grader per task: nothing is graded twice or passed between them. */
   const viaDeepseek = () => { const [fixed, rest] = splitFixed(head.text);
-    return deepseek(env, fixed, [rest, pagesNote.text, ...parts.slice(2).filter(p => p.text).map(p => p.text),
-      "[The page images are not given to this grader. Judge graphs, tables, sketches and diagrams only from what was read on each page; whatever cannot be checked that way is not found (R10).]"].join("\n"),
-      GRADE_SCHEMA, 16384, m, "grade"); };
+    const texts = [], images = [];
+    for (const part of parts.slice(2)) { if (part.text) texts.push(part.text); else if (part.inline_data) images.push({ mime: part.inline_data.mime_type, data: part.inline_data.data }); }
+    return deepseek(env, fixed, [rest, pagesNote.text, ...texts,
+      `[The ${images.length} page images follow in the order of the pages above.]`].join("\n"), GRADE_SCHEMA, 16384, m, "grade", images); };
   let out, backup = false;
-  if (theory && env.DEEPSEEK_API_KEY) {
+  if (theory && env.DEEPSEEK_API_KEY && env.THEORY_GRADER === "deepseek") {
     try { out = await viaDeepseek(); }
     catch (e) { console.error("lab grade deepseek, trying gemini", e && e.message); out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade"); backup = true; }
   } else out = await gemini(env, parts, GRADE_SCHEMA, 16384, m, "grade");

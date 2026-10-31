@@ -85,7 +85,7 @@ const server = http.createServer(async (request, response) => {
     }
     if (request.url === "/deepseek/chat/completions") {
       const body = JSON.parse(bytes);
-      captures.push({ provider: "deepseek", body, system: body.messages[0].content, user: body.messages[1].content });
+      captures.push({ provider: "deepseek", body, system: body.messages[0].content });
       response.setHeader("Content-Type", "application/json");
       if (fixture.deepseekStatus && fixture.deepseekStatus !== 200) { response.statusCode = fixture.deepseekStatus; return response.end('{"error":"fixture deepseek unavailable"}'); }
       const result = { items: [{ id: "A.1", found: true, page: 1, value: 108.2, unit_ok: true, score: 1, checks_met: [], rules: [], note: "fixture backup value" }], feedback: [],
@@ -331,9 +331,9 @@ async function scoredSession(scope, settings) {
 }
 const submit = (s, settings) => api(`/lab/sessions/${s.id}/submit`, { method: "POST", headers: { Authorization: "Bearer " + s.token, "Content-Type": "application/json" }, body: "{}" }, settings);
 
-test("a theory paper is graded by DeepSeek from the same cached rules and the page transcripts, without images", async () => {
+test("with THEORY_GRADER=deepseek a theory paper is graded by DeepSeek from the same cached rules, transcripts and page images", async () => {
   reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
-  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };
+  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek", THEORY_GRADER: "deepseek" };
   const s = await scoredSession({ comp: "usapho", year: 2023, task: "T", theory: true }, settings);
   const result = await submit(s, settings);
   assert.equal(result.status, 200); assert.equal(result.data.session.status, "graded"); assert.equal(result.data.session.score, 1);
@@ -341,11 +341,23 @@ test("a theory paper is graded by DeepSeek from the same cached rules and the pa
   assert.ok(!captures.some(row => row.provider === "gemini" && row.prompt.startsWith("[TASK: grade]")), "Gemini does not grade the theory paper as well");
   const call = captures.find(row => row.provider === "deepseek"); assert.ok(call);
   assert.ok(call.system.startsWith(stablePrefix("usapho", "theory")), "the fixed rules are DeepSeek's system message, so its cache can reuse them");
-  assert.ok(!call.system.includes(FORMULA) && call.user.includes(FORMULA), "the candidate's work is only in the user message");
-  assert.equal(call.body.response_format.type, "json_object"); assert.ok(!JSON.stringify(call.body).includes("inline_data"), "no images go to DeepSeek");
+  const user = call.body.messages[1].content, text = user.find(part => part.type === "text").text;
+  assert.ok(!call.system.includes(FORMULA) && text.includes(FORMULA), "the candidate's work is only in the user message");
+  assert.equal(call.body.response_format.type, "json_object");
+  const image = user.find(part => part.type === "image_url"); assert.ok(image, "DeepSeek reads the page image too");
+  assert.ok(Buffer.from(image.image_url.url.split(",")[1], "base64").equals(png));
   const metered = sqlite.prepare("SELECT provider,in_tok,cached_tok,ok FROM lab_calls WHERE session_id=? AND step='grade' ORDER BY id").all(s.id);
   assert.deepEqual(metered.map(row => [row.provider, row.ok]), [["deepseek", 1]]);
   assert.equal(metered[0].cached_tok, 1024); assert.equal(metered[0].in_tok, 1200);
+});
+
+test("by default Gemini grades a theory paper even when a DeepSeek key is set", async () => {
+  reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
+  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };
+  const s = await scoredSession({ comp: "ipho", year: 2023, task: "T1", theory: true }, settings);
+  const result = await submit(s, settings);
+  assert.equal(result.data.session.status, "graded"); assert.match(result.data.session.detail.tasks.T1.grader, /^gemini:/);
+  assert.ok(!captures.some(row => row.provider === "deepseek"));
 });
 
 test("an experiment is graded by Gemini alone: a Gemini failure waits for a retry and never goes to DeepSeek", async () => {
@@ -363,7 +375,7 @@ test("an experiment is graded by Gemini alone: a Gemini failure waits for a retr
 
 test("when DeepSeek fails on a theory paper, Gemini grades it once and the result says so", async () => {
   reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
-  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };
+  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek", THEORY_GRADER: "deepseek" };
   const s = await scoredSession({ comp: "ipho", year: 2026, task: "T2", theory: true }, settings);
   fixture.deepseekStatus = 503;
   const result = await submit(s, settings);
