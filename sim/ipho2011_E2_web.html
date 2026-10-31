@@ -141,7 +141,6 @@
 
   <aside class="panel">
     <h2 data-i18n="pPart"></h2>
-    <div class="row"><button id="partA"></button><button id="partB"></button></div>
     <div id="actA"><button id="btnHold"></button><button id="btnRehang"></button></div>
     <div id="actB" class="read"></div>
     <h2 data-i18n="pSw"></h2>
@@ -170,40 +169,66 @@ let lang = LANG;
 const I18N = {
   trayTitle: ["Parts box", "부품함"],
   it_ruler: ["ruler (35 cm)", "자 (35 cm)"], it_pencil: ["pencil", "연필"], it_eraser: ["rubber", "지우개"],
+  it_tube: ["cylinder with holes", "구멍 뚫린 원통"], it_plate: ["base plate with pin", "핀이 꽂힌 받침판"], it_tape: ["adhesive tape", "접착테이프"],
+  it_thread: ["thread", "실"], it_sw: ["stopwatch", "초시계"],
+  trayHand: ["in your hand: click where it goes", "손에 있음: 놓을 곳을 클릭"],
+  hand_tube: ["The cylinder is in your hand: put it on the table (or into the thread loop under the pin).", "원통을 들었습니다. 책상 위에 놓거나 핀 아래 실 고리에 넣으세요."],
+  hand_plate: ["The base plate is in your hand: put it on the table at its front edge; the pin sticks out over the edge.", "받침판을 들었습니다. 책상 앞 모서리에 놓으면 핀이 모서리 밖으로 나옵니다."],
+  hand_tape: ["The tape is in your hand: put it on the base plate to tape the plate to the table.", "테이프를 들었습니다. 받침판 위에 놓으면 판을 책상에 붙입니다."],
+  hand_thread: ["The thread is in your hand: put it on the pin to hang a loop from it.", "실을 들었습니다. 핀에 놓으면 고리가 걸립니다."],
+  hand_sw: ["The stopwatch is in your hand: put it on the table.", "초시계를 들었습니다. 책상 위에 놓으세요."],
+  hand_ruler: ["In your hand: move it where you want and click (or let go if you dragged it).", "손에 들었습니다. 원하는 곳으로 옮겨 클릭하세요(끌었다면 놓으면 됩니다)."],
+  st_setup: ["Take the apparatus out of the parts box.", "부품함에서 장비를 꺼내세요."],
+  st_plateWhere: ["Put the base plate on the table.", "받침판은 책상 위에 놓으세요."],
+  st_plateOn: ["The base plate lies at the table edge. Tape it down, then take the cap off the pin.", "받침판을 책상 모서리에 놓았습니다. 테이프로 붙인 뒤 핀 뚜껑을 빼세요."],
+  st_taped: ["The base plate is taped to the table.", "받침판을 책상에 테이프로 붙였습니다."],
+  st_tapeFirst: ["The base plate is not fixed: tape it to the table first.", "받침판이 고정되지 않았습니다. 먼저 테이프로 붙이세요."],
+  st_capFirst: ["The pin still has its cap on: click the cap to take it off.", "핀에 아직 뚜껑이 씌워져 있습니다. 뚜껑을 클릭해 빼세요."],
+  st_capOffMsg: ["Cap off: mind the sharp pin.", "뚜껑을 뺐습니다. 핀 끝이 날카로우니 조심하세요."],
+  st_capOnMsg: ["The cap is back on the pin.", "핀에 뚜껑을 씌웠습니다."],
+  st_capBusy: ["Take the thread and the cylinder off the pin first.", "먼저 실과 원통을 핀에서 빼세요."],
+  st_loopOn: ["The thread loop hangs from the pin. Put the cylinder into it.", "핀에 실 고리를 걸었습니다. 원통을 고리에 넣으세요."],
+  st_onTableOnly: ["Put it on the table.", "책상 위에 놓으세요."],
+  st_tubeTable: ["The cylinder lies on the table: lay the ruler beside it to measure; click a hole and then the pin to hang it.", "원통을 책상에 눕혔습니다. 옆에 자를 대고 재세요. 구멍을 클릭한 뒤 핀을 클릭하면 걸립니다."],
+  st_offFirst: ["Take the cylinder off the pin (right-click) first.", "먼저 원통을 핀에서 빼세요(우클릭)."],
+  st_plateBusy: ["Take the thread and the cylinder off the pin first.", "먼저 실과 원통을 핀에서 빼세요."],
+  st_backBox: ["Put back in the parts box.", "부품함에 넣었습니다."],
   trayTake: ["drag it onto the bench", "끌어서 실험대에 놓기"], trayBack: ["out · click: put back", "꺼냄 · 클릭: 넣기"],
   toolHand: ["In your hand: move it where you want and click (or let go if you dragged it). Right-click or Esc: back in the box.", "손에 들었습니다. 원하는 곳으로 옮겨 클릭하세요(끌었다면 놓으면 됩니다). 우클릭·Esc: 부품함으로."],
-  trayHelp: ["drag a tool out of the box\nwheel over the ruler: turn it\nright-click: back in the box", "도구를 끌어서 꺼내기\n자 위에서 휠: 자 돌리기\n우클릭: 부품함에 넣기"],
-  pPart: ["What you are doing", "실험 단계"],
+  trayHelp: ["drag a part out of the box, or click\nit and click where it goes\nright-click: back in the box", "부품을 끌어서 꺼내거나, 클릭 후\n놓을 곳을 클릭 · 우클릭: 되돌리기"],
+  pPart: ["The cylinder", "원통"],
   partA: ["A · balance on the thread", "A · 실 고리로 균형"], partB: ["B · swing on the pin", "B · 핀에 걸어 흔들기"],
   pSw: ["Stopwatch", "초시계"],
   swHint: ["click the stopwatch on the table, or press the space bar", "책상 위 초시계를 클릭하거나 스페이스바를 누르세요"],
-  cap_3d: ["the bench — drag the empty space to turn · right-drag: pan · wheel: zoom (over the tube in A: slide the loop) · double-click the empty space: view back",
-           "실험대 — 빈 곳을 끌어 회전 · 오른쪽 끌기: 이동 · 휠: 확대 (A에서 원통 위 휠: 실 고리 이동) · 빈 곳 더블클릭: 처음 시점"],
+  cap_3d: ["the bench — drag the empty space to turn · right-drag: pan · wheel: zoom (over the cylinder in the loop: slide the loop) · double-click the empty space: view back",
+           "실험대 — 빈 곳을 끌어 회전 · 오른쪽 끌기: 이동 · 휠: 확대 (고리 속 원통 위 휠: 고리 이동) · 빈 곳 더블클릭: 처음 시점"],
   cap_close: ["close-up — straight on to the tube · right-click: back", "확대 — 원통을 정면에서 · 우클릭: 돌아가기"],
   back: ["◀ the bench", "◀ 실험대"],
   newExp: ["New apparatus (another blackbox)", "새 장치 (다른 블랙박스)"],
   resetQ: ["Take a new cylinder with a different ball inside? The marks and the stopwatch are cleared.", "공의 위치가 다른 새 원통으로 바꿀까요? 연필 자국과 초시계도 지워집니다."],
   yes: ["New apparatus", "새 장치"], no: ["Cancel", "취소"],
-  info: [`<h4>The apparatus (page 2 of the paper)</h4><ul>
-<li>A long aluminium tube with a row of holes; a small ball is fixed inside it somewhere on its axis.</li>
-<li>A clear base plate clamped to the table, with a thin pin sticking out over the edge (its black pin cap lies beside it), a thread loop for balancing, a ruler, a stopwatch, a pencil and a rubber.</li></ul>
-<h4>Part A — the centre of mass</h4><ul>
-<li>The tube lies in the thread loop hanging from the pin, held level by your finger. Roll the wheel over the tube to slide the loop (Shift: fine steps), then click the tube to let go and see which end goes down.</li>
-<li>Too far off, it slips out; click it while it slips to catch it, or pick it up and click at the loop to put it back.</li>
-<li>Mark the balance point with the pencil (drag it across the tube) and measure with the ruler; the rubber wipes marks off.</li></ul>
-<h4>Part B — the periods</h4><ul>
-<li>Click a hole of the tube lying on the shelf, then click the pin: the tube hangs by that hole. Drag it aside and let go; time several swings with the stopwatch. Right-click takes it off the pin.</li></ul>
+  info: [`<h4>The apparatus (pages 1–2 of the paper)</h4><ul>
+<li>Everything starts in the parts box: the aluminium cylinder with its row of holes (a ball is fixed inside it on the axis), the base plate (a thick clear plate with a thin pin in its end face, its black cap on), adhesive tape, thread, a ruler, a stopwatch, a pencil and a rubber. Drag a part out, or click it and then click where it goes; right-click puts it back.</li></ul>
+<h4>Setting up</h4><ul>
+<li>Put the base plate at the front edge of the table: the pin sticks out over the edge. Put the tape on the plate to tape it down, and click the cap to take it off the pin.</li>
+<li>Put the cylinder on the table to measure it: lay the ruler beside it (the wheel over the ruler turns it) and mark it with the pencil; the rubber wipes marks off.</li></ul>
+<h4>Centre of mass</h4><ul>
+<li>Put the thread on the pin: a loop hangs from it. Drag the cylinder from the table into the loop; it lies level, held by your finger. Roll the wheel over it to slide the loop (Shift: fine), click it to let go and see which end goes down.</li>
+<li>Too far off, it slips out; click it while it slips to catch it, or pick it up and click at the loop to put it back.</li></ul>
+<h4>Periods</h4><ul>
+<li>With the cylinder on the table, click a hole and then the pin: it hangs by that hole. Drag it aside and let go; time several swings with the stopwatch (click it, or the space bar). Right-click puts it back on the table.</li></ul>
 <h4>Measuring</h4><ul>
 <li>Nothing is computed for you. Positions are read on the ruler; the stopwatch has your reaction time in it, as a real one does.</li></ul>`,
-`<h4>장비 (문제지 2쪽 사진)</h4><ul>
-<li>구멍이 한 줄로 뚫린 긴 알루미늄 원통입니다. 안쪽 축 위 어딘가에 작은 공이 고정되어 있습니다.</li>
-<li>책상에 고정한 투명 받침판에서 가는 핀이 책상 모서리 밖으로 나와 있고(검은 핀 뚜껑은 옆에 있습니다), 균형용 실 고리, 자, 초시계, 연필, 지우개가 있습니다.</li></ul>
-<h4>A — 무게중심</h4><ul>
-<li>원통은 핀에 걸린 실 고리 안에 손가락으로 받쳐 수평으로 놓여 있습니다. 원통 위에서 휠을 굴려 고리를 옮기고(Shift: 미세), 원통을 클릭해 손을 떼면 어느 쪽이 내려가는지 보입니다.</li>
-<li>너무 치우치면 미끄러져 빠집니다. 미끄러지는 중에 클릭하면 붙잡고, 떨어진 원통은 집어서 고리 위치에서 클릭하면 다시 끼워집니다.</li>
-<li>연필을 원통에 문질러 균형점을 표시하고 자로 재세요. 지우개로 자국을 지웁니다.</li></ul>
-<h4>B — 주기</h4><ul>
-<li>선반 위 원통의 구멍을 클릭한 뒤 핀을 클릭하면 그 구멍으로 걸립니다. 끌어서 젖혔다 놓고 초시계로 여러 번의 진동을 재세요. 우클릭하면 핀에서 뺍니다.</li></ul>
+`<h4>장비 (문제지 1–2쪽)</h4><ul>
+<li>모든 장비는 부품함에서 시작합니다. 구멍이 한 줄로 뚫린 알루미늄 원통(축 위에 공이 고정됨), 받침판(끝면에 가는 핀이 꽂힌 두꺼운 투명판, 검은 뚜껑이 씌워져 있음), 접착테이프, 실, 자, 초시계, 연필, 지우개입니다. 부품을 끌어서 꺼내거나, 클릭한 뒤 놓을 곳을 클릭하세요. 우클릭하면 부품함으로 돌아갑니다.</li></ul>
+<h4>준비</h4><ul>
+<li>받침판을 책상 앞 모서리에 놓으면 핀이 모서리 밖으로 나옵니다. 테이프를 받침판 위에 놓아 붙이고, 뚜껑을 클릭해 핀에서 빼세요.</li>
+<li>원통을 책상에 눕혀 놓고 옆에 자를 대어 재세요(자 위에서 휠: 회전). 연필로 표시하고 지우개로 지웁니다.</li></ul>
+<h4>무게중심</h4><ul>
+<li>실을 핀에 놓으면 고리가 걸립니다. 책상 위 원통을 끌어 고리에 넣으면 손가락으로 받쳐 수평으로 놓입니다. 원통 위에서 휠을 굴려 고리를 옮기고(Shift: 미세), 원통을 클릭해 손을 떼면 어느 쪽이 내려가는지 보입니다.</li>
+<li>너무 치우치면 미끄러져 빠집니다. 미끄러지는 중에 클릭하면 붙잡고, 떨어진 원통은 집어서 고리 위치에서 클릭하면 다시 끼워집니다.</li></ul>
+<h4>주기</h4><ul>
+<li>책상 위 원통의 구멍을 클릭한 뒤 핀을 클릭하면 그 구멍으로 걸립니다. 끌어서 젖혔다 놓고 초시계(클릭 또는 스페이스바)로 여러 번의 진동을 재세요. 우클릭하면 책상으로 돌아갑니다.</li></ul>
 <h4>측정</h4><ul>
 <li>프로그램은 아무것도 계산해 주지 않습니다. 위치는 자로 읽고, 초시계에는 실제처럼 반응 시간이 들어갑니다.</li></ul>`],
 };
@@ -1345,13 +1370,22 @@ function surfaceUnder(p, tops){
    front.  The rig works in that plane in metres, x right and y down from
    the pin, exactly as in the 2-D version; W() puts its points in the room.
    ================================================================== */
-const PIN_X = 0, PIN_Y = 0.62, PLANE_Z = 2.4;
+let PIN_X = 0, CARRY = null;                                       /* where the base plate is taped along the table edge */
+const PIN_Y = 0.5, PLANE_Z = 2.4, PIN_TIP = 3.9, TZ0 = -46;
 let seed = (() => { const q = new URLSearchParams(location.search).get("seed"); return q ? (parseInt(q, 10) | 0) : OFFICIAL_SEED; })();
 let truth = makeTruth(seed), rig = makeRig(truth);
 const TOOLS = {ruler: false, pencil: false, eraser: false};
-const W = (x, y, dz) => [PIN_X + 100 * x, PIN_Y - 100 * y, PLANE_Z + (dz || 0)];
+/* everything starts in the parts box; what is out is on the table */
+const OUT = {plate: false, tape: false, thread: false, sw: false};
+const KIT = {taped: false, capOn: true, tapeAt: [-22, -12], threadAt: [12, -17], swAt: [24, -9], tableAt: [0, 0.18]};
+/* the tube lies on the table, or hangs (in the thread loop or on the pin) in the plane in front of the edge;
+   the ruler, pencil and rubber go with it: flat on the table, or held up against it */
+const onTable = () => rig.mode === "free";
+const W = (x, y, dz) => onTable() ? [PIN_X + 100 * x, dz || 0, TZ0 + 100 * y] : [PIN_X + 100 * x, PIN_Y - 100 * y, PLANE_Z + (dz || 0)];
+/* a vector of the rig's plane, in the room */
+const WV = (vx, vy) => onTable() ? [100 * vx, 0, 100 * vy] : [100 * vx, -100 * vy, 0];
 const shelfY = () => PIN_Y - 100 * truth.bench_y;
-
+const plateReady = () => OUT.plate && KIT.taped && !KIT.capOn;
 /* ---- textures ---- */
 const R_INSET = RULER_H * 0.22;
 function rulerTex(){ const P = 40, Lc = (RULER_LEN + 2 * R_INSET) * 100, Hc = RULER_H * 100, c = mk(Math.round(Lc * P), Math.round(Hc * P)), g = c.getContext("2d");
@@ -1374,24 +1408,26 @@ function drawSW(){ const s = rig.stopwatch_display(); if (s === SW_KEY) return; 
   g.font = "700 16px Arial"; g.fillStyle = "#2d3a2f"; g.textAlign = "left"; g.fillText(rig.sw_running ? "▶ RUN" : "■ STOP", 50, 66);
   g.fillStyle = "#d9f1f3"; g.font = "700 18px Arial"; g.textAlign = "center"; g.fillText("STOPWATCH", 180, 196); }
 /* a roll of tape and the coil of thread, lying on the table */
-function tapeRoll(x, z){ cyl3("y", 0, 1.9, x, z, 3.0, "#2f5fb8", {seg: 28, cap: "#3a6dc8"}); cyl3("y", 1.9, 1.92, x, z, 2.1, "#d23b3b", {seg: 26, cap: "#d23b3b"});
+function tapeRoll(x, z){ cyl3("y", 0, 1.9, x, z, 3.0, "#2f5fb8", {seg: 28, cap: "#3a6dc8", id: "tape"}); cyl3("y", 1.9, 1.92, x, z, 2.1, "#d23b3b", {seg: 26, cap: "#d23b3b"});
   cyl3("y", 1.92, 1.94, x, z, 1.75, "#94ad8f", {seg: 24, cap: "#94ad8f"}); ring3([x, 1.95, z], 2.1, "#b52c2c", 1.5, 26); }
-function threadCoil(x, z){ for (let i = 0; i < 6; i++) ring3([x + i * 0.18, 0.1 + i * 0.04, z + i * 0.12], 3.2 + i * 0.15, "#f4f2ec", 1.3, 30); }
+function threadCoil(x, z){ for (let i = 0; i < 6; i++) ring3([x + i * 0.18, 0.1 + i * 0.04, z + i * 0.12], 3.2 + i * 0.15, "#f4f2ec", 1.3, 30); cyl3("y", 0, 0.4, x + 0.5, z + 0.3, 3.6, "rgba(0,0,0,0.004)", {alpha: 0.004, id: "thread"}); }
 /* ---- parts ---- */
 function tube(){
   if (rig.mode === null) return;
   const [ox, oy, ux, uy] = rig.cyl_world(), r = truth.d_out * 50;
-  const A = W(ox, oy), B = W(ox + ux * truth.L, oy + uy * truth.L);
+  const tb = onTable(), A = W(ox, oy, tb ? r : 0), B = W(ox + ux * truth.L, oy + uy * truth.L, tb ? r : 0);
   cylAB(A, B, r, "#c3c8cc", {seg: 22, id: "tube", cap: "#8d9397"});
   /* the open ends show the bore */
-  for (const [P, s] of [[A, -1], [B, 1]]){ const c = [P[0] + s * ux * 0.02, P[1] - s * uy * 0.02, P[2]]; cylAB(c, [c[0] + s * ux * 0.01, c[1] - s * uy * 0.01, c[2]], truth.d_in * 50, "#3a3f43", {seg: 18}); }
-  const nx = -uy, ny = ux, front = r + 0.02;
+  const ua = WV(ux, uy).map(v => v / 100);
+  for (const [P, s] of [[A, -1], [B, 1]]){ const c = add3(P, ua, s * 0.02); cylAB(c, add3(c, ua, s * 0.01), truth.d_in * 50, "#3a3f43", {seg: 18}); }
+  const nx = -uy, ny = ux, front = tb ? 2 * r + 0.02 : r + 0.02;
+  /* a small disc lying on the face of the tube you look at: up on the table, towards you when it hangs */
   const disc = (s, rad, col, id) => { const C = W(ox + ux * s, oy + uy * s, front), pts = [];
-    for (let i = 0; i < 12; i++){ const a = i / 12 * 2 * Math.PI; pts.push([C[0] + rad * Math.cos(a), C[1] + rad * Math.sin(a), C[2]]); }
-    face(pts, {fill: col, id, flat: true}); };
+    for (let i = 0; i < 12; i++){ const a = i / 12 * 2 * Math.PI; pts.push(tb ? [C[0] + rad * Math.cos(a), C[1], C[2] + rad * Math.sin(a)] : [C[0] + rad * Math.cos(a), C[1] + rad * Math.sin(a), C[2]]); }
+    face(tb ? orient(pts, [0, 1, 0]) : pts, {fill: col, id, flat: true}); };
   truth.holes.forEach((h, i) => disc(h, 0.17, "#202428", "hole" + i));
   if (rig.sel_hole !== null && (rig.mode === "free" || rig.mode === "pendulum")){ const C = W(ox + ux * truth.holes[rig.sel_hole], oy + uy * truth.holes[rig.sel_hole], front + 0.03);
-    const pts = []; for (let i = 0; i <= 24; i++){ const a = i / 24 * 2 * Math.PI; pts.push([C[0] + 0.45 * Math.cos(a), C[1] + 0.45 * Math.sin(a), C[2]]); } poly3(pts, "#ffd54f", 2.5); }
+    const pts = []; for (let i = 0; i <= 24; i++){ const a = i / 24 * 2 * Math.PI; pts.push(tb ? [C[0] + 0.45 * Math.cos(a), C[1], C[2] + 0.45 * Math.sin(a)] : [C[0] + 0.45 * Math.cos(a), C[1] + 0.45 * Math.sin(a), C[2]]); } poly3(pts, "#ffd54f", 2.5); }
   /* pencil marks across the tube */
   for (const s of rig.marks){ const a = W(ox + ux * s + nx * truth.d_out * 0.42, oy + uy * s + ny * truth.d_out * 0.42, front + 0.01), b = W(ox + ux * s - nx * truth.d_out * 0.42, oy + uy * s - ny * truth.d_out * 0.42, front + 0.01); line3(a, b, "#3a3836", 1.6); }
 }
@@ -1412,64 +1448,77 @@ function ruler(){
   const [x, y] = rig.ruler_pos, a = rig.ruler_angle, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
   const L = RULER_LEN + 2 * R_INSET, h = RULER_H;
   const o = [x - ux * R_INSET - nx * h / 2, y - uy * R_INSET - ny * h / 2];
-  const O = W(o[0], o[1], truth.d_out * 50 + 0.5), U = [100 * ux * L, -100 * uy * L, 0], V = [100 * nx * h, -100 * ny * h, 0];
+  const O = W(o[0], o[1], onTable() ? 0.06 : truth.d_out * 50 + 0.5), U = WV(ux * L, uy * L), V = WV(nx * h, ny * h);
   tex3(RULER_TEX, 0, 0, RULER_TEX.width, RULER_TEX.height, O, U, V, {id: "ruler"});
 }
 function pencil(){
   if (!TOOLS.pencil) return;
-  const [x, y] = rig.pencil_pos, d = truth.d_out * 50 + 0.9, tip = W(x, y, d), u = [PENCIL_U, -PENCIL_V, 0];
+  const [x, y] = rig.pencil_pos, d = onTable() ? 0.32 : truth.d_out * 50 + 0.9, tip = W(x, y, d), u = WV(PENCIL_U, PENCIL_V).map(v => v / 100);
   const at = s => [tip[0] + u[0] * s, tip[1] + u[1] * s, tip[2]];
   cylAB(tip, at(1.6), 0.03, "#3c3a37", {seg: 6, r1: 0.3, id: "pencil"});
   cylAB(at(1.6), at(10), 0.32, "#e2b13c", {seg: 6, id: "pencil"}); cylAB(at(10), at(11), 0.32, "#c0392b", {seg: 8, id: "pencil"});
 }
 function eraser(){
   if (!TOOLS.eraser) return;
-  const [x, y] = rig.eraser_pos, C = W(x, y, truth.d_out * 50 + 0.8);
+  const [x, y] = rig.eraser_pos;
+  if (onTable()){ const C = W(x, y, 0); box3(C[0] - ERASER_W * 50, C[0] + ERASER_W * 50, 0, 1.0, C[2] - ERASER_H * 50, C[2] + ERASER_H * 50, "#f0d6db", {id: "eraser"});
+    box3(C[0] - 0.8, C[0] + 1.2, 0, 1.02, C[2] - ERASER_H * 50 - 0.02, C[2] + ERASER_H * 50 + 0.02, "#4b6fb0", {id: "eraser"}); return; }
+  const C = W(x, y, truth.d_out * 50 + 0.8);
   box3(C[0] - ERASER_W * 50, C[0] + ERASER_W * 50, C[1] - ERASER_H * 50, C[1] + ERASER_H * 50, C[2] - 0.5, C[2] + 0.5, "#f0d6db", {id: "eraser"});
   box3(C[0] - 0.8, C[0] + 1.2, C[1] - ERASER_H * 50 - 0.02, C[1] + ERASER_H * 50 + 0.02, C[2] - 0.52, C[2] + 0.52, "#4b6fb0", {id: "eraser"});
 }
 
+/* the base plate, as drawn on page 1 of the paper: a thick clear block lying on the table, the thin pin
+   pushed into the middle of its end face and sticking out over the edge; fixed down with adhesive tape */
+function basePlate(){
+  const x = PIN_X, z0 = -12.4, z1 = -0.15, y1 = 1.0;
+  box3(x - 4, x + 4, 0, y1, z0, z1, "#d4e6ec", {alpha: 0.42, id: "plate"});
+  for (const [p, q] of [[[x - 4, y1, z0], [x + 4, y1, z0]], [[x + 4, y1, z0], [x + 4, y1, z1]], [[x + 4, y1, z1], [x - 4, y1, z1]], [[x - 4, y1, z1], [x - 4, y1, z0]],
+    [[x - 4, 0, z1], [x + 4, 0, z1]], [[x - 4, 0, z1], [x - 4, y1, z1]], [[x + 4, 0, z1], [x + 4, y1, z1]]]) line3(p, q, "#f2fafc", 1.3);
+  /* the pin: its head sunk in the end face, the thin steel shank over the edge */
+  cyl3("z", z1 - 0.9, z1 + 0.02, x, PIN_Y, 0.16, "#3a3f44", {seg: 10, id: "pin"});
+  cylAB([x, PIN_Y, z1], [x, PIN_Y, PIN_TIP], 0.05, "#aab0b6", {seg: 8, id: "pin"});
+  sphere3([x, PIN_Y, PLANE_Z + 0.4], 0.75, "rgba(0,0,0,0.004)", {id: "pin"});
+  /* the black pin cap: on the tip, or put down beside the plate */
+  if (KIT.capOn) cyl3("z", PIN_TIP - 1.4, PIN_TIP + 0.15, x, PIN_Y, 0.2, "#141618", {seg: 12, id: "cap", cap: "#222528"});
+  else cylAB([x + 6, 0.2, -3.5], [x + 7.6, 0.2, -3.1], 0.2, "#141618", {seg: 12, id: "cap"});
+  /* two strips of tape across the plate onto the table */
+  if (KIT.taped) for (const zz of [-10.6, -3.2]) box3(x - 6.5, x + 6.5, 0, y1 + 0.03, zz - 1.0, zz + 1.0, "#bcd2e6", {alpha: 0.5, id: "plate"});
+}
 function scene3(){
   /* the table, its front edge at z = 0, and the shelf under the pin that catches the tube */
-  box3(-75, 75, -3, 0, -55, 0, "#94ad8f", {top: "#9ab494", id: "room"});
+  box3(-75, 75, -3, 0, -60, 0, "#94ad8f", {top: "#9ab494", id: "room"});
   const sy = shelfY();
   box3(-42, 42, sy - 2, sy, -2, 16, "#b08a62", {top: "#bb956c", id: "shelf"});
   for (const x of [-40, 40]) for (const z of [0, 14]) box3(x - 1, x + 1, sy - 45, sy - 2, z - 1, z + 1, "#8b6a48");
-  /* the clear base plate, the block that holds the pin, the clamp */
-  box3(-7.5, 7.5, 0, 0.5, -12, -0.4, "#d7e4e8", {alpha: 0.45, id: "plate"});
-  box3(-1.2, 1.2, 0.5, 1.0, -4.5, -2.2, "#2f3438", {id: "plate"});
-  cylAB([PIN_X, PIN_Y + 0.3, -3.4], [PIN_X, PIN_Y, PLANE_Z + 2.2], 0.055, "#a6acb1", {seg: 8, id: "pin"});
-  box3(-6.8, -3.8, 0.5, 1.4, -10, -7, "#30363b"); box3(-6.8, -3.8, -3, 1.4, -0.4, 0.4, "#30363b"); box3(-6.8, -3.8, -3, -2.4, -10, 0.4, "#30363b");
-  cylAB([-5.3, 1.4, -8.5], [-5.3, 4.2, -8.5], 0.25, "#9aa0a6", {seg: 8}); cylAB([-6.8, 4.2, -8.5], [-3.8, 4.2, -8.5], 0.18, "#9aa0a6", {seg: 8});
-  /* the black pin cap, put down beside the plate */
-  cylAB([10, 0.45, -5], [12.4, 0.45, -5], 0.45, "#16181a", {seg: 12, id: "cap"});
-  /* the acrylic edges catch the light */
-  for (const [p, q] of [[[-7.5, 0.5, -12], [7.5, 0.5, -12]], [[7.5, 0.5, -12], [7.5, 0.5, -0.4]], [[7.5, 0.5, -0.4], [-7.5, 0.5, -0.4]], [[-7.5, 0.5, -0.4], [-7.5, 0.5, -12]]]) line3(p, q, "#eef6f8", 1.2);
-  /* the stopwatch on the table: a teal oval with its display and three buttons */
-  drawSW(); rbox3(24, -9, 4.0, 3.1, 0, 1.4, 2.4, "#1f8a96", {id: "sw", top: "#2497a3"});
-  tex3(SW_TEX, 0, 0, 360, 220, [21.0, 1.41, -10.8], [6, 0, 0], [0, 0, 3.7], {id: "sw"});
-  for (const [x, z] of [[21.6, -12.1], [26.4, -12.1], [24, -12.4]]) cyl3("z", z - 0.6, z, x, 0.75, 0.42, "#d9dfe2", {seg: 12, id: "sw"});
-  ring3([24, 0.75, -4.6], 0.7, "#173f45", 2, 16, "z");
-  tapeRoll(-24, -12); threadCoil(12, -17);
+  if (OUT.plate) basePlate();
+  if (OUT.sw){ const [sx, sz] = KIT.swAt; drawSW(); rbox3(sx, sz, 4.0, 3.1, 0, 1.4, 2.4, "#1f8a96", {id: "sw", top: "#2497a3"});
+    tex3(SW_TEX, 0, 0, 360, 220, [sx - 3, 1.41, sz - 1.8], [6, 0, 0], [0, 0, 3.7], {id: "sw"});
+    for (const [dx, dz] of [[-2.4, -3.1], [2.4, -3.1], [0, -3.4]]) cyl3("z", sz + dz - 0.6, sz + dz, sx + dx, 0.75, 0.42, "#d9dfe2", {seg: 12, id: "sw"}); }
+  if (OUT.tape) tapeRoll(...KIT.tapeAt);
+  if (OUT.thread && !rig.loop_present) threadCoil(...KIT.threadAt);
   thread(); tube();
-  if (rig.mode !== null) sphere3([PIN_X, PIN_Y, PLANE_Z + 2.2], 0.12, "#a6acb1");
   ruler(); pencil(); eraser();
+  if (CARRY && CARRY.ghost) CARRY.ghost();
 }
 
 /* ==================================================================
-   CAMERA, TRAY, PANEL AND THE HANDS.  The pointer is taken onto the
-   vertical plane of the tube and handed to the rig in its own metres,
-   so every action of the 2-D version works the same way here.
+   CAMERA, TRAY, PANEL AND THE HANDS.  Everything starts in the parts box
+   and is dragged out (or clicked, then put down with a click).  The tube
+   lies on the table, where the ruler, pencil and rubber lie flat beside
+   it, or hangs in the plane in front of the edge, where they are held up
+   against it.  The pointer is taken onto that surface and handed to the
+   rig in its own metres, so the actions of the 2-D version work as before.
    ================================================================== */
 const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
 const $ = id => document.getElementById(id);
-let view3 = "3d", freeCam = null, part = "A", statusMsg = "";
+let statusMsg = "";
 function layout3(){
   const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
   const h = Math.max(460, Math.min(Math.round(w * 0.66), Math.round(window.innerHeight * 0.8)));
   cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
   const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
-  if (first){ Object.assign(CAM, {yaw: -0.18, pitch: 0.2, k: h / 52, tx: 4, ty: -13, tz: 0, px: 0, py: 0}); camSave(); }
+  if (first){ Object.assign(CAM, {yaw: -0.12, pitch: 0.42, k: h / 58, tx: 2, ty: -10, tz: -6, px: 0, py: 0}); camSave(); }
 }
 function syncTabs(){ $("t-cap3").textContent = tr("cap_3d"); $("back").hidden = true; }
 
@@ -1477,161 +1526,249 @@ function syncTabs(){ $("t-cap3").textContent = tr("cap_3d"); $("back").hidden = 
 function onPlaneZ(px, py, z0){
   const c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw), cp = Math.cos(CAM.pitch), sp = Math.sin(CAM.pitch);
   const xr = (px - CAM.W / 2 - CAM.px) / CAM.k, up = -(py - CAM.H / 2 - CAM.py) / CAM.k;
-  /* xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp, with dz fixed */
   const dz = z0 - CAM.tz; if (Math.abs(c) < 1e-4) return null;
   const dx = (xr + dz * s) / c, dy = (up + (dx * s + dz * c) * sp) / cp;
   return [CAM.tx + dx, CAM.ty + dy, z0];
 }
-/* the rig's own coordinates (m, y down from the pin) of a screen point on a plane just in front of the tube */
-function s2w(p, dz){ const q = onPlaneZ(p[0], p[1], PLANE_Z + (dz || 0)); return q ? [(q[0] - PIN_X) / 100, (PIN_Y - q[1]) / 100] : [0, 0]; }
-const ppm = () => CAM.k * 100;                      /* screen pixels per metre */
+/* the rig's own coordinates (m) of a screen point: on the table, or on the plane just in front of the tube */
+function s2w(p, dz){
+  if (onTable()){ const q = onPlane(p[0], p[1], dz || 0); return [(q[0] - PIN_X) / 100, (q[2] - TZ0) / 100]; }
+  const q = onPlaneZ(p[0], p[1], PLANE_Z + (dz || 0)); return q ? [(q[0] - PIN_X) / 100, (PIN_Y - q[1]) / 100] : [0, 0]; }
+const ppm = () => CAM.k * 100;
+const front = () => onTable() ? 2 * truth.d_out * 50 : truth.d_out * 50;
+const toolH = k => onTable() ? (k === "ruler" ? 0.06 : k === "pencil" ? 0.32 : 0.5) : front() + (k === "ruler" ? 0.5 : 0.8);
+const tableAt = p => onPlane(p[0], p[1], 0);
+const onTableTop = q => q[2] < -0.8 && q[2] > -58 && Math.abs(q[0]) < 72;
 
 function draw3(){
   const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
   const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25");
   ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
   begin3(); scene3(); render3(ctx3);
+  /* where the thing in the hand can go: the pin, the thread loop or the plate, ringed in green */
+  if (CARRY){ const rings = [];
+    if (CARRY.item === "thread" && plateReady()) rings.push([PIN_X, PIN_Y, PLANE_Z]);
+    if (CARRY.item === "tube" && rig.loop_present && plateReady()) rings.push([PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z]);
+    if (CARRY.item === "tape" && OUT.plate && !KIT.taped) rings.push([PIN_X, 1.0, -6.5]);
+    for (const w of rings){ const s = P3(...w), near = Math.hypot(s[0] - MOUSE[0], s[1] - MOUSE[1]) < 60;
+      ctx3.strokeStyle = near ? "#7dff6a" : "rgba(125,255,106,0.55)"; ctx3.lineWidth = near ? 4 : 2; ctx3.beginPath(); ctx3.arc(s[0], s[1], near ? 22 : 18, 0, 6.2832); ctx3.stroke(); } }
+  if (rig.mode === "free" && rig.sel_hole !== null && plateReady()){ const s = P3(PIN_X, PIN_Y, PLANE_Z);
+    ctx3.strokeStyle = "rgba(125,255,106,0.8)"; ctx3.lineWidth = 2.5; ctx3.beginPath(); ctx3.arc(s[0], s[1], 18, 0, 6.2832); ctx3.stroke(); }
 }
 
-/* ---- the tray: the ruler, the pencil and the rubber ---- */
-const trayCv = $("tray"), tctx = trayCv.getContext("2d"), TROW = 46, TRAY_UI = ["ruler", "pencil", "eraser"];
+/* ---- the tray ---- */
+const trayCv = $("tray"), tctx = trayCv.getContext("2d"), TROW = 44, TRAY_UI = ["tube", "plate", "tape", "thread", "sw", "ruler", "pencil", "eraser"];
 let TRW = 190, trayCells = [];
+const isOut = k => k === "tube" ? rig.mode !== null : TOOLS[k] !== undefined ? TOOLS[k] : OUT[k];
 function trayLayout(){
   const dpr = window.devicePixelRatio || 1; TRW = Math.max(150, trayCv.parentElement.clientWidth - 18 || 190);
   const h = TRAY_UI.length * TROW + 64; trayCv.style.width = TRW + "px"; trayCv.style.height = h + "px";
   trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(h * dpr); drawTray(); }
 function trayIcon(c, k, x, y){
-  if (k === "ruler"){ c.fillStyle = "rgba(236,244,247,.9)"; c.fillRect(x - 17, y - 6, 34, 12); c.fillStyle = "#c9302c"; c.fillRect(x - 17, y - 6, 34, 2); c.strokeStyle = "#333"; for (let i = -15; i <= 15; i += 3){ c.beginPath(); c.moveTo(x + i, y - 4); c.lineTo(x + i, y - (i % 15 ? 1 : -1)); c.stroke(); } }
-  else if (k === "pencil"){ c.save(); c.translate(x, y); c.rotate(-0.5); c.fillStyle = "#e2b33c"; c.fillRect(-14, -3, 24, 6); c.fillStyle = "#f1d3a4"; c.beginPath(); c.moveTo(10, -3); c.lineTo(17, 0); c.lineTo(10, 3); c.fill(); c.fillStyle = "#d4524a"; c.fillRect(-17, -3, 3, 6); c.restore(); }
-  else { c.fillStyle = "#f0d6db"; c.fillRect(x - 12, y - 6, 24, 12); c.fillStyle = "#4b6fb0"; c.fillRect(x - 3, y - 6, 8, 12); } }
+  c.save(); c.translate(x, y);
+  if (k === "ruler"){ c.fillStyle = "rgba(236,244,247,.9)"; c.fillRect(-17, -6, 34, 12); c.fillStyle = "#c9302c"; c.fillRect(-17, -6, 34, 2); c.strokeStyle = "#333"; for (let i = -15; i <= 15; i += 3){ c.beginPath(); c.moveTo(i, -4); c.lineTo(i, i % 15 ? -1 : 1); c.stroke(); } }
+  else if (k === "pencil"){ c.rotate(-0.5); c.fillStyle = "#e2b33c"; c.fillRect(-14, -3, 24, 6); c.fillStyle = "#f1d3a4"; c.beginPath(); c.moveTo(10, -3); c.lineTo(17, 0); c.lineTo(10, 3); c.fill(); c.fillStyle = "#d4524a"; c.fillRect(-17, -3, 3, 6); }
+  else if (k === "eraser"){ c.fillStyle = "#f0d6db"; c.fillRect(-12, -6, 24, 12); c.fillStyle = "#4b6fb0"; c.fillRect(-3, -6, 8, 12); }
+  else if (k === "tube"){ const g = c.createLinearGradient(0, -4, 0, 4); g.addColorStop(0, "#e2e6e9"); g.addColorStop(1, "#8d9397"); c.fillStyle = g; c.fillRect(-19, -4, 38, 8); c.fillStyle = "#222"; for (let i = -15; i < 2; i += 3) c.fillRect(i, -1, 1.4, 1.4); }
+  else if (k === "plate"){ c.fillStyle = "rgba(212,230,236,.55)"; c.strokeStyle = "#e9f5f8"; c.beginPath(); c.moveTo(-14, 2); c.lineTo(-4, -8); c.lineTo(14, -8); c.lineTo(4, 2); c.closePath(); c.fill(); c.stroke();
+    c.fillRect(-14, 2, 18, 4); c.strokeStyle = "#aab0b6"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-5, 4); c.lineTo(-12, 11); c.stroke(); }
+  else if (k === "tape"){ c.fillStyle = "#2f5fb8"; c.beginPath(); c.arc(0, 0, 11, 0, 7); c.fill(); c.fillStyle = "#d23b3b"; c.beginPath(); c.arc(0, 0, 7, 0, 7); c.fill(); c.fillStyle = "#15181d"; c.beginPath(); c.arc(0, 0, 5.5, 0, 7); c.fill(); }
+  else if (k === "thread"){ c.strokeStyle = "#f4f2ec"; for (let i = 0; i < 4; i++){ c.beginPath(); c.ellipse(i, 0, 11 + i, 7, 0, 0, 7); c.stroke(); } }
+  else if (k === "sw"){ c.fillStyle = "#1f8a96"; c.beginPath(); c.ellipse(0, 0, 14, 11, 0, 0, 7); c.fill(); c.fillStyle = "#a9b8a3"; c.fillRect(-9, -5, 18, 9); }
+  c.restore(); }
 function drawTray(){
   const dpr = window.devicePixelRatio || 1, c = tctx, h = TRAY_UI.length * TROW + 64;
   c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = "#15181d"; c.fillRect(0, 0, TRW, h);
   trayCells = []; let y = 6; const wd = TRW - 12;
-  for (const k of TRAY_UI){ const on = TOOLS[k];
-    c.fillStyle = on ? "#1a1d22" : "#1f242b"; c.fillRect(6, y, wd, TROW - 4); c.strokeStyle = on ? "#3f4650" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
-    c.globalAlpha = on ? 0.45 : 1; trayIcon(c, k, 28, y + (TROW - 4) / 2); c.globalAlpha = 1;
+  for (const k of TRAY_UI){ const on = isOut(k) && !(CARRY && CARRY.item === k && CARRY.fresh), hand = CARRY && CARRY.item === k;
+    c.fillStyle = on ? "#1a1d22" : "#1f242b"; c.fillRect(6, y, wd, TROW - 4); c.strokeStyle = hand ? "#f2c14e" : on ? "#3f4650" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
+    c.globalAlpha = on || hand ? 0.45 : 1; trayIcon(c, k, 28, y + (TROW - 4) / 2); c.globalAlpha = 1;
     c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle";
-    c.fillStyle = on ? "#8b939b" : "#e8eef2"; c.fillText(tr("it_" + k), 52, y + 14);
-    c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = on ? "#f2c14e" : "#69717a"; c.fillText(tr(on ? "trayBack" : "trayTake"), 52, y + 30);
+    c.fillStyle = on ? "#8b939b" : "#e8eef2"; c.fillText(tr("it_" + k), 52, y + 13);
+    c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = on || hand ? "#f2c14e" : "#69717a"; c.fillText(tr(hand ? "trayHand" : on ? "trayBack" : "trayTake"), 52, y + 29);
     trayCells.push([k, y, y + TROW - 4]); y += TROW; }
   c.font = '10.5px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a";
   tr("trayHelp").split("\n").forEach((ln, i) => c.fillText(ln, TRW / 2, y + 6 + i * 14)); }
-/* a tool from the box is in the hand: it follows the pointer over the bench; let go (or click) to leave it there */
-let toolCarry = null, trayPress = null;
-function toolTo(k, p){ const [x, y] = s2w(p, front() + (k === "ruler" ? 0.5 : 0.8));
+
+/* ---- the hand ---- */
+let MOUSE = [0, 0], trayPress = null;
+function toolTo(k, p){ const [x, y] = s2w(p, toolH(k));
   if (k === "ruler") rig.move_ruler(x - RULER_LEN / 2, y); else if (k === "pencil") rig.pencil_to(x, y, false); else rig.eraser_to(x, y, false); }
-function toolDown(){ if (!toolCarry) return; statusMsg = T[lang].mPlaced(T[lang].items[toolCarry]); toolCarry = null; drawTray(); }
-function toolCancel(){ if (!toolCarry) return false; TOOLS[toolCarry] = false; toolCarry = null; statusMsg = ""; drawTray(); return true; }
-trayCv.addEventListener("contextmenu", e => { e.preventDefault(); toolCancel(); });
+/* a ghost of the part in the hand, under the pointer on the table */
+function ghostOf(item){ return () => { const q = tableAt(MOUSE);
+  if (item === "plate"){ box3(q[0] - 4, q[0] + 4, 0.6, 1.6, -12.4, -0.15, "#d4e6ec", {alpha: 0.35}); }
+  else if (item === "tape") cyl3("y", 0.5, 2.4, q[0], q[2], 3.0, "#2f5fb8", {seg: 24, alpha: 0.7});
+  else if (item === "thread") for (let i = 0; i < 4; i++) ring3([q[0], 0.6, q[2]], 3.2 + i * 0.15, "#f4f2ec", 1.3, 24);
+  else if (item === "sw") rbox3(q[0], q[2], 4.0, 3.1, 0.5, 1.9, 2.4, "#1f8a96", {alpha: 0.8});
+  else if (item === "tube" && CARRY.fresh) cylAB([q[0] - truth.L * 50, truth.d_out * 50 + 0.6, q[2]], [q[0] + truth.L * 50, truth.d_out * 50 + 0.6, q[2]], truth.d_out * 50, "#c3c8cc", {seg: 18}); }; }
+function take(item, fresh){ CARRY = {item, fresh, ghost: ["ruler", "pencil", "eraser"].includes(item) || (item === "tube" && !fresh) ? null : ghostOf(item)};
+  if (["ruler", "pencil", "eraser"].includes(item)){ CARRY.wasOut = TOOLS[item]; TOOLS[item] = true; toolTo(item, MOUSE); }
+  if (item === "tube" && !fresh){ CARRY.was = rig.free_pos.slice(); }
+  statusMsg = tr("hand_" + (["pencil", "eraser"].includes(item) ? "ruler" : item)); drawTray(); }
+function cancelCarry(){ if (!CARRY) return false; const c = CARRY; CARRY = null;
+  if (["ruler", "pencil", "eraser"].includes(c.item) && c.fresh) TOOLS[c.item] = false;
+  if (c.item === "tube" && !c.fresh) rig.free_pos = c.was;
+  statusMsg = ""; drawTray(); return true; }
+/* put down what is in the hand where the pointer is */
+function putDown(p){
+  const c = CARRY; if (!c) return; const q = tableAt(p), t = T[lang];
+  const nearScr = (w, r) => { const s = P3(...w); return Math.hypot(s[0] - p[0], s[1] - p[1]) < r; };
+  if (["ruler", "pencil", "eraser"].includes(c.item)){ toolTo(c.item, p); statusMsg = t.mPlaced(t.items[c.item]); CARRY = null; drawTray(); return; }
+  if (c.item === "plate"){ if (!onTableTop([q[0], 0, -3])){ statusMsg = tr("st_plateWhere"); return; }
+    PIN_X = Math.max(-38, Math.min(38, q[0])); OUT.plate = true; KIT.taped = false; KIT.capOn = true; statusMsg = tr("st_plateOn"); }
+  else if (c.item === "tape"){
+    if (OUT.plate && !KIT.taped && Math.abs(q[0] - PIN_X) < 6 && q[2] > -14 && q[2] < 1){ KIT.taped = true; KIT.tapeAt = [PIN_X - 12, -9]; statusMsg = tr("st_taped"); }
+    else if (onTableTop(q)){ KIT.tapeAt = [q[0], q[2]]; statusMsg = ""; } else return;
+    OUT.tape = true; }
+  else if (c.item === "thread"){
+    if (nearScr([PIN_X, PIN_Y, PLANE_Z], 60) && OUT.plate){ if (!plateReady()){ statusMsg = tr(KIT.capOn ? "st_capFirst" : "st_tapeFirst"); return; }
+      rig.loop_present = true; statusMsg = tr("st_loopOn"); }
+    else if (onTableTop(q)){ KIT.threadAt = [q[0], q[2]]; rig.loop_present = false; statusMsg = ""; } else return;
+    OUT.thread = true; }
+  else if (c.item === "sw"){ if (!onTableTop(q)) return; KIT.swAt = [q[0], q[2]]; OUT.sw = true; statusMsg = ""; }
+  else if (c.item === "tube"){
+    if (rig.loop_present && nearScr([PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z], 90)){ if (!plateReady()){ statusMsg = tr(KIT.capOn ? "st_capFirst" : "st_tapeFirst"); return; }
+      rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); statusMsg = T[lang].mInLoop; }
+    else { if (!onTableTop(q)){ statusMsg = tr("st_onTableOnly"); return; }
+      rig.mode = "free"; rig.free_pos = [(q[0] - PIN_X) / 100, (q[2] - TZ0) / 100]; rig.sel_hole = null; rig.hole_index = null;
+      rig.theta = rig.omega = 0; rig.released = false; statusMsg = tr("st_tubeTable"); } }
+  CARRY = null; drawTray(); }
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); cancelCarry(); });
 trayCv.addEventListener("pointerdown", e => {
   if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top;
   for (const [k, y0, y1] of trayCells) if (y >= y0 && y <= y1){
-    if (toolCarry === k){ toolCancel(); return; }
-    toolCancel();
-    if (TOOLS[k]){ TOOLS[k] = false; statusMsg = T[lang].mBack(T[lang].items[k]); drawTray(); return; }
-    toolCarry = k; TOOLS[k] = true; toolTo(k, [CAM.W / 2, CAM.H / 2]); trayPress = {x: e.clientX, y: e.clientY};
-    statusMsg = tr("toolHand"); drawTray(); return; } });
-window.addEventListener("pointermove", e => { if (!toolCarry) return; const r = cv3.getBoundingClientRect();
-  if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) toolTo(toolCarry, [e.clientX - r.left, e.clientY - r.top]); });
+    if (CARRY && CARRY.item === k){ cancelCarry(); return; }
+    cancelCarry();
+    if (isOut(k)){ backInBox(k); return; }
+    take(k, true); trayPress = {x: e.clientX, y: e.clientY}; return; } });
+window.addEventListener("pointermove", e => { const r = cv3.getBoundingClientRect(); MOUSE = [e.clientX - r.left, e.clientY - r.top];
+  if (CARRY && ["ruler", "pencil", "eraser"].includes(CARRY.item)) toolTo(CARRY.item, MOUSE);
+});
 window.addEventListener("pointerup", e => { if (!trayPress) return; const moved = Math.hypot(e.clientX - trayPress.x, e.clientY - trayPress.y) > 6; trayPress = null;
-  const r = cv3.getBoundingClientRect(); if (moved && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom){ toolTo(toolCarry, [e.clientX - r.left, e.clientY - r.top]); toolDown(); } });
-window.addEventListener("keydown", e => { if (e.key === "Escape") toolCancel(); });
+  const r = cv3.getBoundingClientRect(); if (moved && CARRY && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) putDown([e.clientX - r.left, e.clientY - r.top]); });
+/* back in the box: only what nothing else is resting on */
+function backInBox(k){
+  const t = T[lang];
+  if (["ruler", "pencil", "eraser"].includes(k)){ TOOLS[k] = false; statusMsg = t.mBack(t.items[k]); }
+  else if (k === "tube"){ if (rig.mode === "pendulum" || rig.mode === "balance"){ statusMsg = tr("st_offFirst"); drawTray(); return; } rig.mode = null; rig.sel_hole = null; statusMsg = tr("st_backBox"); }
+  else if (k === "plate"){ if (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present){ statusMsg = tr("st_plateBusy"); drawTray(); return; } OUT.plate = false; KIT.taped = false; KIT.capOn = true; statusMsg = tr("st_backBox"); }
+  else if (k === "thread"){ if (rig.mode === "balance"){ statusMsg = tr("st_offFirst"); drawTray(); return; } OUT.thread = false; rig.loop_present = false; statusMsg = tr("st_backBox"); }
+  else { OUT[k] = false; if (k === "tape") KIT.taped = KIT.taped; statusMsg = tr("st_backBox"); }
+  drawTray(); }
+window.addEventListener("keydown", e => { if (e.key === "Escape") cancelCarry(); });
 window.addEventListener("resize", () => { trayLayout(); layout3(); });
 
 /* ---- the panel ---- */
 function status(m){ if (m) statusMsg = m; }
 function syncPanel(){
   const d = T[lang];
-  $("partA").className = part === "A" ? "on" : ""; $("partB").className = part === "B" ? "on" : "";
-  $("actA").hidden = part !== "A"; $("actB").hidden = part !== "B";
+  $("actA").hidden = rig.mode !== "balance"; $("actB").hidden = !(rig.mode === "free" || rig.mode === "pendulum");
   setTxt("btnHold", rig.held ? d.letgo : d.hold); setTxt("btnRehang", d.rehang);
-  if (part === "B") setTxt("actB", rig.mode === "pendulum" ? fmt(d.selPin, rig.hole_index + 1) : rig.sel_hole !== null ? fmt(d.selSel, rig.sel_hole + 1) : d.selNone);
-  setTxt("swDisp", rig.stopwatch_display());
-  setTxt("status", (statusMsg ? statusMsg + "\n" : "") + rig.status_line());
+  if (!$("actB").hidden) setTxt("actB", rig.mode === "pendulum" ? fmt(d.selPin, rig.hole_index + 1) : rig.sel_hole !== null ? fmt(d.selSel, rig.sel_hole + 1) : d.selNone);
+  setTxt("swDisp", OUT.sw ? rig.stopwatch_display() : "--:--.--");
+  for (const id of ["swStart", "swStop", "swReset"]) $(id).disabled = !OUT.sw;
+  setTxt("status", (statusMsg ? statusMsg + "\n" : "") + (rig.mode === null ? tr("st_setup") : rig.status_line()));
 }
-function setPart(p){ part = p; statusMsg = ""; if (p === "A") rig.enter_part_a(); else rig.enter_part_b(); syncPanel(); }
-$("partA").onclick = () => setPart("A"); $("partB").onclick = () => setPart("B");
 $("btnHold").onclick = () => status(rig.hold(!rig.held)[1]);
 $("btnRehang").onclick = () => { const x = rig.thread_x || truth.L * 0.5; rig.take_cylinder_off(); rig.loop_present = true; rig.mount_on_loop(x); rig.hold(true); };
 $("swStart").onclick = () => rig.stopwatch_start(); $("swStop").onclick = () => rig.stopwatch_stop(); $("swReset").onclick = () => rig.stopwatch_reset();
-function swToggle(){ if (rig.sw_running) rig.stopwatch_stop(); else rig.stopwatch_start(); }
-window.addEventListener("keydown", e => { if (e.code === "Space" || e.key === " "){ if (document.activeElement && document.activeElement.tagName === "BUTTON") document.activeElement.blur(); e.preventDefault(); swToggle(); } });
+function swToggle(){ if (!OUT.sw) return; if (rig.sw_running) rig.stopwatch_stop(); else rig.stopwatch_start(); }
+window.addEventListener("keydown", e => { if ((e.code === "Space" || e.key === " ") && OUT.sw){ if (document.activeElement && document.activeElement.tagName === "BUTTON") document.activeElement.blur(); e.preventDefault(); swToggle(); } });
 $("newExp").onclick = () => { $("resetQ").textContent = tr("resetQ"); $("resetNo").textContent = tr("no"); $("resetYes").textContent = tr("yes"); $("resetDlg").showModal(); };
 $("resetNo").onclick = () => $("resetDlg").close();
 $("resetYes").onclick = () => { $("resetDlg").close(); seed = (Math.floor(Math.random() * 1e8) + 1) | 0; truth = makeTruth(seed); rig = makeRig(truth);
-  for (const k of TRAY_UI) TOOLS[k] = false; statusMsg = ""; setPart(part); };
+  for (const k of ["ruler", "pencil", "eraser"]) TOOLS[k] = false; for (const k in OUT) OUT[k] = false; KIT.taped = false; KIT.capOn = true; CARRY = null; statusMsg = ""; drawTray(); };
 
-/* ---- the hands: the 2-D press / motion / release, on the plane of the tube ---- */
+/* ---- the hands on the bench: the 2-D press / motion / release ---- */
 let dragMode = null, pendingHole = null, pressXY = [0, 0], grab = [0, 0], down = null, mPrev = [0, 0];
 function holeAt(wx, wy){
   const [ox, oy, ux, uy] = rig.cyl_world(); let best = null, bd = 1e9;
   truth.holes.forEach((h, i) => { const d = Math.hypot(ox + ux * h - wx, oy + uy * h - wy); if (d < bd){ best = i; bd = d; } });
   return bd < Math.max(0.0035, 8.0 / ppm()) ? best : null; }
 const pe = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-const front = () => truth.d_out * 50;
 function onPress(p){
-  const [wx, wy] = s2w(p), [tx, ty] = s2w(p, front() + 0.8);
-  if (TOOLS.eraser && rig.on_eraser(tx, ty)){ dragMode = "eraser"; grab = [tx - rig.eraser_pos[0], ty - rig.eraser_pos[1]]; rig.eraser_to(tx - grab[0], ty - grab[1], true); return; }
+  const id = pick3(p[0], p[1]);
+  const [wx, wy] = s2w(p, onTable() ? 2 * truth.d_out * 50 : 0), [tx, ty] = s2w(p, toolH("pencil")), [ex, ey] = s2w(p, toolH("eraser"));
+  if (TOOLS.eraser && rig.on_eraser(ex, ey)){ dragMode = "eraser"; grab = [ex - rig.eraser_pos[0], ey - rig.eraser_pos[1]]; rig.eraser_to(ex - grab[0], ey - grab[1], true); return; }
   if (TOOLS.pencil && rig.on_pencil(tx, ty)){ dragMode = "pencil"; grab = [tx - rig.pencil_pos[0], ty - rig.pencil_pos[1]]; rig.pencil_to(tx - grab[0], ty - grab[1], true); return; }
-  if (part === "A"){
+  if (id === "cap"){ if (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present){ status(tr("st_capBusy")); dragMode = null; return; }
+    KIT.capOn = !KIT.capOn; status(tr(KIT.capOn ? "st_capOnMsg" : "st_capOffMsg")); dragMode = null; return; }
+  if (id === "tape" && OUT.plate && !KIT.taped){ KIT.taped = true; KIT.tapeAt = [PIN_X - 12, -9]; status(tr("st_taped")); dragMode = null; return; }
+  if (id === "tape" || id === "thread" || id === "sw" || id === "plate"){ dragMode = "item:" + id; pressXY = p.slice(); return; }
+  if (rig.mode === "balance"){
     if (rig.carried){ if (Math.hypot(wx, wy - LOOP_DROP) < 0.030) status(rig.insert_into_loop()[1]); else status(T[lang].mClickLoop); return; }
     if (rig.slipping || (rig.fallen && rig.on_cylinder(wx, wy, 0.010))){ const m = rig.catch_()[1]; rig.carry_pos = [wx, wy]; status(m); return; }
     if (rig.held && rig.on_cylinder(wx, wy, truth.d_out)){ status(rig.hold(false)[1]); return; }
-  } else {
-    if (Math.hypot(wx, wy) < Math.max(0.008, 10.0 / ppm())){ status(rig.connect_selected_to_pin()[1]); return; }
+  } else if (rig.mode === "free" || rig.mode === "pendulum"){
+    if (rig.mode === "free" && (id === "pin") && rig.sel_hole !== null){
+      if (!plateReady()){ status(tr(KIT.capOn ? "st_capFirst" : "st_tapeFirst")); return; }
+      KIT.tableAt = rig.free_pos.slice(); status(rig.connect_selected_to_pin()[1]); return; }
     const i = holeAt(wx, wy);
     if (i !== null){ dragMode = "hole"; pendingHole = i; pressXY = p.slice(); grab = [wx - rig.free_pos[0], wy - rig.free_pos[1]]; return; }
     if (rig.on_cylinder(wx, wy, truth.d_out * 0.4)){
       if (rig.mode === "pendulum"){ dragMode = "swing"; rig.released = false; return; }
-      if (rig.mode === "free"){ dragMode = "move"; grab = [wx - rig.free_pos[0], wy - rig.free_pos[1]]; return; } }
+      if (rig.mode === "free"){ dragMode = "move"; pressXY = p.slice(); grab = [wx - rig.free_pos[0], wy - rig.free_pos[1]]; return; } }
   }
-  const [rx, ry] = s2w(p, front() + 0.5);
+  const [rx, ry] = s2w(p, toolH("ruler"));
   if (TOOLS.ruler && rig.on_ruler(rx, ry)){ dragMode = "ruler"; grab = [rx - rig.ruler_pos[0], ry - rig.ruler_pos[1]]; return; }
   dragMode = "orbit"; }
 function onMotion(p, dx, dy){
-  const [wx, wy] = s2w(p), [tx, ty] = s2w(p, front() + 0.8);
+  const [wx, wy] = s2w(p, onTable() ? 2 * truth.d_out * 50 : 0), [tx, ty] = s2w(p, toolH("pencil")), [ex, ey] = s2w(p, toolH("eraser"));
   if (dragMode === "hole"){ if (Math.hypot(p[0] - pressXY[0], p[1] - pressXY[1]) < 5) return; dragMode = rig.mode === "pendulum" ? "swing" : "move"; if (dragMode === "swing") rig.released = false; }
-  if (dragMode === "orbit"){ CAM.yaw = Math.max(-1.2, Math.min(1.2, CAM.yaw + dx * 0.006)); CAM.pitch = Math.min(1.45, Math.max(-0.2, CAM.pitch + dy * 0.005)); cv3.classList.add("grabbing"); }
+  if (dragMode && dragMode.startsWith("item:")){ if (Math.hypot(p[0] - pressXY[0], p[1] - pressXY[1]) < 5) return;
+    const k = dragMode.slice(5), item = k === "plate" ? "plate" : k; if (item === "plate" && (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present)){ status(tr("st_plateBusy")); dragMode = null; return; }
+    OUT[item] = false; if (item === "thread") rig.loop_present = false; if (item === "plate"){ KIT.taped = false; }
+    take(item, true); dragMode = "carry"; return; }
+  if (dragMode === "orbit"){ CAM.yaw = Math.max(-1.3, Math.min(1.3, CAM.yaw + dx * 0.006)); CAM.pitch = Math.min(1.5, Math.max(-0.2, CAM.pitch + dy * 0.005)); cv3.classList.add("grabbing"); }
   else if (dragMode === "pan"){ CAM.px += dx; CAM.py += dy; cv3.classList.add("grabbing"); }
-  else if (dragMode === "ruler"){ const [rx, ry] = s2w(p, front() + 0.5); rig.move_ruler(rx - grab[0], ry - grab[1]); }
+  else if (dragMode === "ruler"){ const [rx, ry] = s2w(p, toolH("ruler")); rig.move_ruler(rx - grab[0], ry - grab[1]); }
   else if (dragMode === "pencil") rig.pencil_to(tx - grab[0], ty - grab[1], true);
-  else if (dragMode === "eraser") rig.eraser_to(tx - grab[0], ty - grab[1], true);
-  else if (dragMode === "move") rig.free_pos = [wx - grab[0], Math.min(truth.bench_y - truth.d_out * 0.5, wy - grab[1])];
+  else if (dragMode === "eraser") rig.eraser_to(ex - grab[0], ey - grab[1], true);
+  else if (dragMode === "move"){ rig.free_pos = [wx - grab[0], wy - grab[1]];
+    /* lifted off the table and brought to the thread loop, it goes into the loop */
+    const s = P3(PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z); if (rig.loop_present && Math.hypot(s[0] - p[0], s[1] - p[1]) < 90) CARRY = {item: "tube", fresh: false, ghost: null, was: rig.free_pos}; else if (CARRY && CARRY.item === "tube") CARRY = null; }
   else if (dragMode === "swing") rig.pull_aside(Math.atan2(wx, wy) * 180 / Math.PI); }
-function onRelease(){ if (dragMode === "swing") rig.release(); else if (dragMode === "hole") status(rig.select_hole(pendingHole)[1]); dragMode = null; }
+function onRelease(p){
+  if (dragMode === "swing") rig.release();
+  else if (dragMode === "hole") status(rig.select_hole(pendingHole)[1]);
+  else if (dragMode === "carry") putDown(p);
+  else if (dragMode === "move" && CARRY && CARRY.item === "tube"){ CARRY = null; if (!plateReady()) status(tr(KIT.capOn ? "st_capFirst" : "st_tapeFirst")); else { rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); status(T[lang].mInLoop); } }
+  else if (dragMode === "move"){ const [x, y] = rig.free_pos, q = W(x, y, 0); if (!onTableTop(q)) rig.free_pos = [x, Math.min(y, (-3 - TZ0) / 100)]; }
+  else if (dragMode && dragMode.startsWith("item:")){ const k = dragMode.slice(5); if (k === "sw") swToggle(); }
+  dragMode = null; drawTray(); }
 cv3.addEventListener("contextmenu", e => e.preventDefault());
 cv3.addEventListener("pointerdown", e => {
-  const p = pe(e); mPrev = p; cv3.setPointerCapture(e.pointerId);
-  if (e.button === 2 && toolCarry){ e.preventDefault(); toolCancel(); return; }
+  const p = pe(e); mPrev = p; MOUSE = p; cv3.setPointerCapture(e.pointerId);
+  if (e.button === 2 && CARRY){ e.preventDefault(); cancelCarry(); return; }
   if (e.button === 1 || e.button === 2){ e.preventDefault(); down = {p, btn: e.button, moved: false}; dragMode = "pan"; return; }
   if (e.button) return;
-  if (toolCarry){ toolTo(toolCarry, p); toolDown(); return; }
-  if (pick3(p[0], p[1]) === "sw"){ swToggle(); return; }
+  if (CARRY){ putDown(p); return; }
   down = {p, btn: 0, moved: false}; onPress(p); });
 cv3.addEventListener("pointermove", e => {
-  const p = pe(e), dx = p[0] - mPrev[0], dy = p[1] - mPrev[1]; mPrev = p;
+  const p = pe(e), dx = p[0] - mPrev[0], dy = p[1] - mPrev[1]; mPrev = p; MOUSE = p;
   if (rig.carried) rig.carry_pos = s2w(p);
   if (!down) return;
   if (Math.hypot(p[0] - down.p[0], p[1] - down.p[1]) > 3) down.moved = true;
   onMotion(p, dx, dy); });
 cv3.addEventListener("pointerup", e => {
-  cv3.classList.remove("grabbing"); const d = down; down = null; if (!d) return;
+  cv3.classList.remove("grabbing"); const d = down; down = null; if (!d) return; const p = pe(e);
   if (d.btn === 2 && !d.moved){
-    const [tx, ty] = s2w(d.p, front() + 0.8), [rx, ry] = s2w(d.p, front() + 0.5);
-    for (const [k, f, x, y] of [["eraser", "on_eraser", tx, ty], ["pencil", "on_pencil", tx, ty], ["ruler", "on_ruler", rx, ry]])
-      if (TOOLS[k] && rig[f](x, y)){ TOOLS[k] = false; statusMsg = T[lang].mBack(T[lang].items[k]); drawTray(); dragMode = null; return; }
-    if (part === "B") status(rig.unmount_from_pin()[1]);
-    dragMode = null; return; }
-  onRelease(); });
-cv3.addEventListener("dblclick", e => { const p = pe(e), id = pick3(p[0], p[1]); if (id && id !== "room" && id !== "shelf") return; Object.assign(CAM, CAM0); });
+    const id = pick3(p[0], p[1]), [tx, ty] = s2w(d.p, toolH("pencil")), [ex, ey] = s2w(d.p, toolH("eraser")), [rx, ry] = s2w(d.p, toolH("ruler"));
+    for (const [k, f, x, y] of [["eraser", "on_eraser", ex, ey], ["pencil", "on_pencil", tx, ty], ["ruler", "on_ruler", rx, ry]])
+      if (TOOLS[k] && rig[f](x, y)){ backInBox(k); dragMode = null; return; }
+    if (rig.mode === "pendulum" || rig.mode === "balance"){ rig.take_cylinder_off(); rig.mode = "free"; rig.free_pos = KIT.tableAt.slice(); rig.loop_present = OUT.thread && rig.loop_present; statusMsg = tr("st_tubeTable"); }
+    else if (id === "tube" && rig.mode === "free") backInBox("tube");
+    else if (id && ["tape", "thread", "sw", "plate"].includes(id)) backInBox(id);
+    dragMode = null; drawTray(); return; }
+  onRelease(p); });
+cv3.addEventListener("dblclick", e => { const p = pe(e), id = pick3(p[0], p[1]); if (CARRY || (id && id !== "room" && id !== "shelf")) return; Object.assign(CAM, CAM0); });
 cv3.addEventListener("wheel", e => { e.preventDefault();
   const p = pe(e), d = e.deltaY < 0 ? 1 : -1, fine = e.shiftKey, [wx, wy] = s2w(p);
   if (!(e.ctrlKey || e.metaKey)){
-    if (part === "A" && rig.mode === "balance" && !(rig.fallen || rig.carried) && rig.on_cylinder(wx, wy, truth.d_out)){
+    if (rig.mode === "balance" && !(rig.fallen || rig.carried) && rig.on_cylinder(wx, wy, truth.d_out)){
       const step = fine ? 0.0002 : 0.0020; rig.hold(true); rig.nudge_loop(d > 0 ? -step : step); return; }
-    const [rx, ry] = s2w(p, front() + 0.5);
-    if (TOOLS.ruler && rig.on_ruler(rx, ry)){ const step = (fine ? 0.5 : 2.5) * Math.PI / 180; rig.rotate_ruler(d > 0 ? step : -step, rx, ry); return; } }
+    const [rx, ry] = s2w(p, toolH("ruler"));
+    if (TOOLS.ruler && rig.on_ruler(rx, ry)){ const step = (fine ? 0.5 : 2.5) * Math.PI / 180; rig.rotate_ruler(onTable() ? (d > 0 ? -step : step) : (d > 0 ? step : -step), rx, ry); return; } }
   const f = d > 0 ? 1.12 : 1 / 1.12, nk = Math.min(400, Math.max(3, CAM.k * f)), r = nk / CAM.k;
   CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive: false});
 
@@ -1642,7 +1779,6 @@ function applyLang(){
   $("btn-en").className = LANG === "en" ? "on" : ""; $("btn-ko").className = LANG === "ko" ? "on" : "";
   document.documentElement.lang = LANG; $("info").innerHTML = tr("info");
   document.title = LANG === "ko" ? "IPhO 2011 E2 — 역학 블랙박스 · HaslaLab" : "IPhO 2011 E2 — Mechanical Blackbox · HaslaLab";
-  $("partA").textContent = tr("partA"); $("partB").textContent = tr("partB");
   $("swStart").textContent = d.start; $("swStop").textContent = d.stop; $("swReset").textContent = d.reset; $("swHint").textContent = tr("swHint");
   $("newExp").textContent = tr("newExp");
   for (const k in _dom) delete _dom[k];
@@ -1657,7 +1793,8 @@ function loop(now){
   const n = Math.max(1, Math.floor(dt / 0.004) + 1); for (let i = 0; i < n; i++) rig.step(dt / n);
   draw3(); syncPanel(); requestAnimationFrame(loop); }
 document.addEventListener("visibilitychange", () => { lastT = performance.now(); });
-layout3(); setPart("A"); applyLang(); requestAnimationFrame(loop);
+rig.loop_present = false;
+layout3(); applyLang(); requestAnimationFrame(loop);
 
 </script>
 <script src="adfit.js"></script>
