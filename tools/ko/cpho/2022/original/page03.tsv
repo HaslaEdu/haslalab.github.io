@@ -1,94 +1,94 @@
 3-0-0		
-3-0-1	언듈레이터 자기장의 공간 주기가	Let the undulator field's period be
-3-0-2	(정확한 값)이고	(exact). For positive
+3-0-1	언듈레이터 자기장의 공간 주기가	Undulator field period:
+3-0-2	(정확한 값)이고	(exact). Along +
 3-1-0	축 양의 X선 레이저 파장이	-directed X-ray laser at
-3-1-2	이면 가속 전압을 구하라.	, find the accelerating voltage.
-3-2-0	전자 정지질량	Electron rest mass:
-3-2-1	, 기본 전하량	; unit charge:
+3-1-2	이면 가속 전압을 구하라.	, find accelerating voltage.
+3-2-0	전자 정지질량	Electron mass:
+3-2-1	, 기본 전하량	unit charge:
 3-3-0		
 3-3-1	파장이	Use
 3-3-2	인 레이저를 입사 평면파로 쓴다(그림 4b).	laser light as a plane wave (Fig. 4b).
-3-4-0	이때	In the
-3-4-1	평면에 같은 마름모로 된 2차원 결정이 있다. 한 변은	plane is a 2D coplanar crystal of equal rhombi of side
+3-4-0	이때	In
+3-4-1	평면에 같은 마름모로 된 2차원 결정이 있다. 한 변은	plane: 2D coplanar crystal of equal rhombi, side
 3-5-0	, 두 꼭짓각은	, with angles
 3-5-1		
-3-5-2	이다. 산란은 약해서 산란파가 다시 산란되는	. Scattering is weak: neglect the rescattering of
+3-5-2	이다. 산란은 약해서 산란파가 다시 산란되는	. Weak scattering: ignore rescattered
 3-6-0	영향은 무시한다.	waves. Count main peaks in the
 3-6-1	평면의 먼 곳에 보이는 회절	plane visible far away.
 3-7-0	주극대의 수와 방향을 그림 4b의	Give their directions using Fig. 4b's
 3-7-2	로 구하여라.	.
-3-8-0	주어짐: 두 관성계	Given: in inertial frames
+3-8-0	주어짐: 두 관성계	For inertial frames
 3-8-1		
 3-8-2	의 전자기장 변환식은	the field transforms as
 3-9-0	그림	Fig.
 3-10-0	이때	Here
 3-10-1	는 진공 중 빛의 속력이다.	is the speed of light in vacuum.
-3-11-0	5. (50점) 단축 결정에서 빛은 이방성을 보이며, 편광에 따라	5. (50 pts) Light in a uniaxial crystal is anisotropic. Polarization gives
+3-11-0	5. (50점) 단축 결정에서 빛은 이방성을 보이며, 편광에 따라	5. (50 pts) Uniaxial crystal optics is anisotropic. Polarizations:
 3-12-0		
 3-12-1	광(정상광)과	(ordinary) and
-3-12-2	광(이상광)으로 나뉜다. 특정 방향으로	 (extraordinary) light. In a certain direction,
+3-12-2	광(이상광)으로 나뉜다. 특정 방향으로	(extraordinary). In one direction,
 3-12-3		
 3-13-0	전파할 때	the two types
 3-13-1	광과	and
-3-13-2	광의 속력이 같고 전파 방향이 나뉘지 않는다.	have equal speeds and no directional separation.
-3-14-0	이 방향이 광축이다.	This is its optic axis.
-3-14-1	광의 굴절률은 모든 방향에 대해 같은	light sees an isotropic refractive index
+3-13-2	광의 속력이 같고 전파 방향이 나뉘지 않는다.	have equal speeds and no separation.
+3-14-0	이 방향이 광축이다.	This is optic axis.
+3-14-1	광의 굴절률은 모든 방향에 대해 같은	sees isotropic refractive index
 3-14-2		
 3-15-0	이고 파동 속력은	and wave speed
 3-15-1		
-3-15-2	는 진공 광속),	vacuum light speed);
+3-15-2	는 진공 광속),	vac. lightspeed);
 3-15-3	광이 광축과 수직인	light normal to it
 3-16-0	방향일 때 굴절률은	sees refractive index
-3-16-1	, 속력은	and speed
-3-16-2	다.	. For
-3-16-3	광의 방향이	light travelling
-3-17-0	광축에 평행한 방향과 수직인 방향 사이이면 굴절률은 광축과의	between parallel and perpendicular to the axis, its refractive index varies
-3-18-0	각에 따라 단조롭게 변한다. 결정 내 점광원이나 호이겐스 2차 파원의	monotonically with angle. An internal point or Huygens wavelet source emits
-3-19-0	파면은 광축 대칭의 회전타원면이다. 그림 5a처럼	a wavefront spheroidal about the optic axis. In Fig. 5a, set
+3-16-1	, 속력은	, speed
+3-16-2	다.	.If
+3-16-3	광의 방향이	travels
+3-17-0	광축에 평행한 방향과 수직인 방향 사이이면 굴절률은 광축과의	between parallel and normal to the axis, the index varies
+3-18-0	각에 따라 단조롭게 변한다. 결정 내 점광원이나 호이겐스 2차 파원의	monotonically with angle. A point or Huygens wavelet source inside
+3-19-0	파면은 광축 대칭의 회전타원면이다. 그림 5a처럼	emits spheroidal fronts about optic axis. Fig.5a:
 3-19-2	축을 광축과	along the
 3-20-0	맞춘 직교계이다. 이하	optic axis. Analyse
 3-20-1	광과	and
-3-20-2	광의 전파는	light propagation only in the
+3-20-2	광의 전파는	propagation only in
 3-21-0	그림	Fig.
 3-22-0	단면에서만 분석한다.	section below.
 3-23-0		
 3-23-1	호이겐스 원리에 따라 작도하여라.	Construct the following using Huygens' principle.
 3-24-0	그림 5a에서 진공 파장	Fig. 5a: a plane wave of
-3-24-2	인 평면파가 공기에서 결정면에 수직 입사한다. 표면 법선과 광축의 각은	vacuum wavelength enters normally from air. Normal and optic axis make angle
+3-24-2	인 평면파가 공기에서 결정면에 수직 입사한다. 표면 법선과 광축의 각은	vacuum wavelength enters normally from air; normal/axis angle is
 3-24-3	이다.	. Draw
-3-25-0	결정 내	Draw the crystal's
+3-25-0	결정 내	the crystal
 3-25-1	광과	and
 3-25-2	광의 파면을 그려라. 각	wavefronts. Mark
 3-25-3	광,	and
 3-25-4	광의 파동벡터	wave vectors
 3-25-5		
-3-25-6	의 방향(2차 등위상면 포락면의 법	directions (the normals to envelopes of
-3-26-0	선, 즉 등위상면 전파 방향)과 호이겐스 원리로 정한 각 광선 방향	secondary phase fronts, i.e. their propagation directions), plus the Huygens ray directions
+3-25-6	의 방향(2차 등위상면 포락면의 법	directions (normal to envelopes of
+3-26-0	선, 즉 등위상면 전파 방향)과 호이겐스 원리로 정한 각 광선 방향	secondary phase fronts, i.e. phase motion); Huygens ray directions
 3-26-1		
-3-26-2	를	. Let
-3-26-3	에서	; put
+3-26-2	를	.Set
+3-26-3	에서	;put
 3-26-4	광과	and
 3-27-0	광의 전파와 함께 같은 그림에 나타내어라.	light propagation on one diagram.
 3-28-0		
 3-28-1		Let
-3-28-2	광의 광선 방향	light's ray direction
-3-28-3	와 광축 사이의 각이	and the axis form angle
-3-28-4	일 때	. Relate
+3-28-2	광의 광선 방향	ray direction
+3-28-3	와 광축 사이의 각이	and axis angle:
+3-28-4	일 때	; find
 3-28-5	와	&
-3-28-6	의 탄젠트 사이의 관계를 유도하여라.	by deriving a relation between their tangents.
+3-28-6	의 탄젠트 사이의 관계를 유도하여라.	's tangent relation by derivation.
 3-29-0		
-3-29-1	단축 결정	A uniaxial
+3-29-1	단축 결정	Uniaxial
 3-29-2	의 굴절률 분산곡선은 다음과 같다(	crystal has dispersion equations (
 3-29-3	는 진공 파장,	in
 3-29-4	단위).	is the vacuum wavelength):
 3-30-0	각 진공 파장	For wavelengths
 3-30-1	와	&
-3-30-2	에서	find
+3-30-2	에서	get
 3-30-3	단축 결정의	crystal's
 3-30-4	와	&
 3-30-5	를 구하라.	at the respective vacuum wavelengths.
 3-31-0		
-3-31-1	광학 결정의 주요 용도는 주파수 변환이다. 제2고조파 생성은 같은 주파수의 기본파 광자 2개를 주파수가 두	Optical crystals convert frequency. In second-harmonic generation, two equal-frequency fundamental photons form a
-3-32-0	배인 광자 1개로 바꾸며 에너지와 운동량이 보존되어야 한다. 결정 내 파동벡터	photon at twice the frequency, conserving energy and momentum. In crystals, vector
+3-31-1	광학 결정의 주요 용도는 주파수 변환이다. 제2고조파 생성은 같은 주파수의 기본파 광자 2개를 주파수가 두	A key crystal use: frequency conversion. Doubling turns two equal-frequency fundamental photons into a
+3-32-0	배인 광자 1개로 바꾸며 에너지와 운동량이 보존되어야 한다. 결정 내 파동벡터	doubled-frequency photon; energy and momentum are conserved. Wave vector
 3-32-1	인 광자의 운동량은	gives photon momentum
 3-33-0	3 / 4 쪽	Page 3 of 4

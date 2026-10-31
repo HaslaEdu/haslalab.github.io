@@ -24,7 +24,7 @@ def join(lang,output_dir=None):
     with pikepdf.open(b.SOURCE)as out:
         assert len(out.pages)==36
         for number,page in enumerate(out.pages,1):
-            proof=b.OUT/f'CPhO_2023_p{number}_{lang.upper()}_proof.pdf'
+            proof=b.proof_path(number,lang)
             q=json.loads(proof.with_suffix('.qa.json').read_text('utf8'))
             assert q['passed']and q['proof_sha256']==sha(proof)
             with pikepdf.open(proof)as doc:
@@ -45,7 +45,7 @@ def join(lang,output_dir=None):
         redrawn_figures=0,printed_editorial_notes=0,page_audits=[],passed=True)
     source=fitz.open(b.SOURCE);final=fitz.open(target)
     for number,q in enumerate(records,1):
-        proof=b.OUT/q['proof'];single=fitz.open(proof)
+        proof=b.proof_path(number,lang);single=fitz.open(proof)
         def pixels(page):
             p=page.get_pixmap(matrix=fitz.Matrix(4,4),colorspace=fitz.csRGB,alpha=False)
             return np.frombuffer(p.samples,np.uint8).reshape(p.height,p.width,3)

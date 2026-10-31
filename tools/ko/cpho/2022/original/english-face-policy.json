@@ -1,0 +1,44 @@
+{
+  "priority": [
+    "Complete actual original prose face",
+    "Installed same family",
+    "Proven same-run Latin counterpart",
+    "Explicit last fallback"
+  ],
+  "source_sha256": "89d1718db8a92afebb741b755beadd4476ac11654b50a5b79d4eaa2d13b91e04",
+  "new_english_faces": {
+    "serif": {
+      "family": "SimSun",
+      "version": "Version 5.24",
+      "weight": 400,
+      "sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+      "local_full_face": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+      "full_font_distributed": false
+    },
+    "sans": {
+      "family": "Calibri",
+      "version": "Version 6.27",
+      "weight": 400,
+      "sha256": "57e93ff143572bcc092c1f56202d43ddc07bb119aa104c6d7af163470fb551f6",
+      "local_full_face": "C:\\Windows\\Fonts\\calibri.ttf",
+      "full_font_distributed": false
+    }
+  },
+  "selection": "Body: installed original SimSun. Source SimHei title/date has no complete embedded or installed same-face font; Calibri400 is the original actual same-run Latin counterpart.",
+  "simsun_collection_face": 0,
+  "simsun_collection_sha256": "1526ac24375f51f6eb73bc2d3f8072dbe4a80a3a65217677c9d9a84f67dab2ab",
+  "embedded_ascii_evidence": "embedded-latin-coverage.json",
+  "new_prose_word_space": "0.25em for SimSun native prose before explicit reviewed local adjustments. No letter scaling. Original unselected whitespace operators unchanged.",
+  "local_adjustments": "english-face-spacing.json",
+  "native_preservation": "Original mathematical glyphs/font programs and figures retained. Fixed point sizes/baselines and render states. No equation images, diagram replacement, reflow, shrinking, new edition labels or printed notes.",
+  "korean_artifact_unchanged": {
+    "file": "CPhO_2022_T_KO.pdf",
+    "path": "tmp/original-style-repair/2022/editions/CPhO_2022_T_KO.pdf",
+    "language": "ko",
+    "pages": 4,
+    "bytes": 1413811,
+    "sha256": "3d344b3f40bc148907a710c67c4ab77ad3a23f6277dc3b2f64e071c3b0f36d6a",
+    "qa": "tools/ko/cpho/2022/original/qa-ko.json"
+  },
+  "raster_limit": "Original raster labels have no recoverable font metadata. Same-document Song-family/size/baseline inference remains documented in the caption/label plans."
+}

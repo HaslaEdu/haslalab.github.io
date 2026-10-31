@@ -1,0 +1,78 @@
+{
+  "acquisition": {
+    "official_url": "https://software-download.microsoft.com/download/pr/19041.1.191206-1406.vb_release_amd64fre_FOD-PACKAGES_OEM_PT1_amd64fre_MULTI.iso",
+    "method": "Read-only UDF metadata and requested CAB byte extents over HTTP Range; no OS installation.",
+    "files": [
+      {
+        "name": "Microsoft-Windows-LanguageFeatures-Fonts-Hans-Package~31bf3856ad364e35~amd64~~.cab",
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\official-hans-fonts\\Microsoft-Windows-LanguageFeatures-Fonts-Hans-Package~31bf3856ad364e35~amd64~~.cab",
+        "size": 43477060,
+        "sha256": "58c671efc437f424a8cc40e2beef66ee652c12b1dfb5db06c36b701d0306e438"
+      }
+    ]
+  },
+  "faces": [
+    {
+      "file": "Deng.ttf",
+      "bytes": 16093132,
+      "sha256": "765be9ce80a602fca63934de9d12847743e0de6401c9306ae4416e2eabdaff06",
+      "postscript_name": "DengXian",
+      "version": "Version 1.17",
+      "weight": 400,
+      "embedding_flags": 8
+    },
+    {
+      "file": "Dengb.ttf",
+      "bytes": 16218920,
+      "sha256": "068c30d238a6f8426083cf77f4f4319a4dd53aff1ec53992fb428e8cef087ccd",
+      "postscript_name": "DengXian-Bold",
+      "version": "Version 1.17",
+      "weight": 700,
+      "embedding_flags": 8
+    },
+    {
+      "file": "Dengl.ttf",
+      "bytes": 15150940,
+      "sha256": "7b47625d0127a2772203c753be965101e75582a51b9d306982a7a72bc66ec0ad",
+      "postscript_name": "DengXian-Light",
+      "version": "Version 1.17",
+      "weight": 300,
+      "embedding_flags": 8
+    },
+    {
+      "file": "simfang.ttf",
+      "bytes": 10578152,
+      "sha256": "3e2d44b01c9a248a61bedae4f15c8aae501328b1f7adfe6e111a5da5aa5c5104",
+      "postscript_name": "FangSong",
+      "version": "Version 5.01",
+      "weight": 400,
+      "embedding_flags": 8
+    },
+    {
+      "file": "simhei.ttf",
+      "bytes": 9753388,
+      "sha256": "aa4560dd8fe5645745fed3ffa301c3ca4d6c03cbd738145b613303961ba733b8",
+      "postscript_name": "SimHei",
+      "version": "Version 5.03",
+      "weight": 400,
+      "embedding_flags": 8
+    },
+    {
+      "file": "simkai.ttf",
+      "bytes": 11787328,
+      "sha256": "9dd76f7ab430edd091db24c3f18e71410325c1414141aad5fe67947873ffba06",
+      "postscript_name": "KaiTi",
+      "version": "Version 5.01",
+      "weight": 400,
+      "embedding_flags": 8
+    }
+  ],
+  "catalog_signature_status": "Valid; Windows Get-AuthenticodeSignature on extracted update.cat",
+  "no_system_installation": true,
+  "redistribution": "Public repository contains provenance and needed font subsets embedded in translated PDFs; complete fonts remain task-only cache.",
+  "documentation": [
+    "https://learn.microsoft.com/en-us/typography/font-list/simhei",
+    "https://learn.microsoft.com/en-us/typography/font-list/kaiti",
+    "https://learn.microsoft.com/en-us/typography/font-list/fangsong"
+  ]
+}

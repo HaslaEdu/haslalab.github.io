@@ -167,6 +167,9 @@ def suppress_prose(source,page_number,selected_glyphs,protected_form_glyphs=None
                 family=family_name(bytes(font.get('/BaseFont')).decode('latin1'))
                 if family not in trace_names:
                     aliases=[value for value in trace_names if family.startswith(value)]
+                    if not aliases:
+                        folded=lambda value:re.sub('[^a-z0-9]','',value.lower())
+                        aliases=[value for value in trace_names if folded(family)==folded(value)]
                     if len(aliases)==1:family=aliases[0]
                 if family not in selected_families and protected_form_glyphs is None:continue
                 enc=str(font.get('/Encoding'));code_bytes=source_code_bytes(font)

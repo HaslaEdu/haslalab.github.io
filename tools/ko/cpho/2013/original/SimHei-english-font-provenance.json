@@ -1,0 +1,674 @@
+{
+  "authoring": {
+    "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+    "donor_sha256": "fc1cfb6ff7b8126aeaacfb0d55e0fdd29cc8a2bee9c312554f5d3953feace08b",
+    "builder_sha256": "0e2ce797892756768cc65d673af12ebb2d2984b31b8c22996d2eaa69c89c7d9f"
+  },
+  "source_face": "SimHei",
+  "source_font_program_sha256": "a018c145e052500c110616792baf22efe587abb7a9561e7afffcf20c6d95c4cb",
+  "actual_source_glyphs_kept": [
+    {
+      "char": "!",
+      "glyph": "exclam",
+      "gid": 4,
+      "bounds": [
+        48,
+        5,
+        76,
+        189
+      ]
+    },
+    {
+      "char": "\"",
+      "glyph": "quotedbl",
+      "gid": 5,
+      "bounds": [
+        32,
+        129,
+        96,
+        181
+      ]
+    },
+    {
+      "char": "M",
+      "glyph": "M",
+      "gid": 48,
+      "bounds": [
+        9,
+        5,
+        117,
+        176
+      ]
+    },
+    {
+      "char": "d",
+      "glyph": "d",
+      "gid": 71,
+      "bounds": [
+        9,
+        3,
+        110,
+        176
+      ]
+    },
+    {
+      "char": "r",
+      "glyph": "r",
+      "gid": 85,
+      "bounds": [
+        26,
+        5,
+        100,
+        119
+      ]
+    }
+  ],
+  "missing_actual_glyphs_filled": [
+    {
+      "char": " ",
+      "glyph": "newlatin0020",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "space"
+    },
+    {
+      "char": "#",
+      "glyph": "newlatin0023",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "numbersign"
+    },
+    {
+      "char": "$",
+      "glyph": "newlatin0024",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "dollar"
+    },
+    {
+      "char": "%",
+      "glyph": "newlatin0025",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "percent"
+    },
+    {
+      "char": "&",
+      "glyph": "newlatin0026",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "ampersand"
+    },
+    {
+      "char": "'",
+      "glyph": "newlatin0027",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quotesingle"
+    },
+    {
+      "char": "(",
+      "glyph": "newlatin0028",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "parenleft"
+    },
+    {
+      "char": ")",
+      "glyph": "newlatin0029",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "parenright"
+    },
+    {
+      "char": "*",
+      "glyph": "newlatin002A",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "asterisk"
+    },
+    {
+      "char": "+",
+      "glyph": "newlatin002B",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "plus"
+    },
+    {
+      "char": ",",
+      "glyph": "newlatin002C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "comma"
+    },
+    {
+      "char": "-",
+      "glyph": "newlatin002D",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "hyphen"
+    },
+    {
+      "char": ".",
+      "glyph": "newlatin002E",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "period"
+    },
+    {
+      "char": "/",
+      "glyph": "newlatin002F",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "slash"
+    },
+    {
+      "char": "0",
+      "glyph": "newlatin0030",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "zero"
+    },
+    {
+      "char": "1",
+      "glyph": "newlatin0031",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "one"
+    },
+    {
+      "char": "2",
+      "glyph": "newlatin0032",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "two"
+    },
+    {
+      "char": "3",
+      "glyph": "newlatin0033",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "three"
+    },
+    {
+      "char": "4",
+      "glyph": "newlatin0034",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "four"
+    },
+    {
+      "char": "5",
+      "glyph": "newlatin0035",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "five"
+    },
+    {
+      "char": "6",
+      "glyph": "newlatin0036",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "six"
+    },
+    {
+      "char": "7",
+      "glyph": "newlatin0037",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "seven"
+    },
+    {
+      "char": "8",
+      "glyph": "newlatin0038",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "eight"
+    },
+    {
+      "char": "9",
+      "glyph": "newlatin0039",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "nine"
+    },
+    {
+      "char": ":",
+      "glyph": "newlatin003A",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "colon"
+    },
+    {
+      "char": ";",
+      "glyph": "newlatin003B",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "semicolon"
+    },
+    {
+      "char": "<",
+      "glyph": "newlatin003C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "less"
+    },
+    {
+      "char": "=",
+      "glyph": "newlatin003D",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "equal"
+    },
+    {
+      "char": ">",
+      "glyph": "newlatin003E",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "greater"
+    },
+    {
+      "char": "?",
+      "glyph": "newlatin003F",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "question"
+    },
+    {
+      "char": "@",
+      "glyph": "newlatin0040",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "at"
+    },
+    {
+      "char": "A",
+      "glyph": "newlatin0041",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "A"
+    },
+    {
+      "char": "B",
+      "glyph": "newlatin0042",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "B"
+    },
+    {
+      "char": "C",
+      "glyph": "newlatin0043",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "C"
+    },
+    {
+      "char": "D",
+      "glyph": "newlatin0044",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "D"
+    },
+    {
+      "char": "E",
+      "glyph": "newlatin0045",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "E"
+    },
+    {
+      "char": "F",
+      "glyph": "newlatin0046",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "F"
+    },
+    {
+      "char": "G",
+      "glyph": "newlatin0047",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "G"
+    },
+    {
+      "char": "H",
+      "glyph": "newlatin0048",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "H"
+    },
+    {
+      "char": "I",
+      "glyph": "newlatin0049",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "I"
+    },
+    {
+      "char": "J",
+      "glyph": "newlatin004A",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "J"
+    },
+    {
+      "char": "K",
+      "glyph": "newlatin004B",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "K"
+    },
+    {
+      "char": "L",
+      "glyph": "newlatin004C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "L"
+    },
+    {
+      "char": "N",
+      "glyph": "newlatin004E",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "N"
+    },
+    {
+      "char": "O",
+      "glyph": "newlatin004F",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "O"
+    },
+    {
+      "char": "P",
+      "glyph": "newlatin0050",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "P"
+    },
+    {
+      "char": "Q",
+      "glyph": "newlatin0051",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "Q"
+    },
+    {
+      "char": "R",
+      "glyph": "newlatin0052",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "R"
+    },
+    {
+      "char": "S",
+      "glyph": "newlatin0053",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "S"
+    },
+    {
+      "char": "T",
+      "glyph": "newlatin0054",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "T"
+    },
+    {
+      "char": "U",
+      "glyph": "newlatin0055",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "U"
+    },
+    {
+      "char": "V",
+      "glyph": "newlatin0056",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "V"
+    },
+    {
+      "char": "W",
+      "glyph": "newlatin0057",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "W"
+    },
+    {
+      "char": "X",
+      "glyph": "newlatin0058",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "X"
+    },
+    {
+      "char": "Y",
+      "glyph": "newlatin0059",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "Y"
+    },
+    {
+      "char": "Z",
+      "glyph": "newlatin005A",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "Z"
+    },
+    {
+      "char": "[",
+      "glyph": "newlatin005B",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "bracketleft"
+    },
+    {
+      "char": "\\",
+      "glyph": "newlatin005C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "backslash"
+    },
+    {
+      "char": "]",
+      "glyph": "newlatin005D",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "bracketright"
+    },
+    {
+      "char": "^",
+      "glyph": "newlatin005E",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "asciicircum"
+    },
+    {
+      "char": "_",
+      "glyph": "newlatin005F",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "underscore"
+    },
+    {
+      "char": "`",
+      "glyph": "newlatin0060",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "grave"
+    },
+    {
+      "char": "a",
+      "glyph": "newlatin0061",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "a"
+    },
+    {
+      "char": "b",
+      "glyph": "newlatin0062",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "b"
+    },
+    {
+      "char": "c",
+      "glyph": "newlatin0063",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "c"
+    },
+    {
+      "char": "e",
+      "glyph": "newlatin0065",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "e"
+    },
+    {
+      "char": "f",
+      "glyph": "newlatin0066",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "f"
+    },
+    {
+      "char": "g",
+      "glyph": "newlatin0067",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "g"
+    },
+    {
+      "char": "h",
+      "glyph": "newlatin0068",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "h"
+    },
+    {
+      "char": "i",
+      "glyph": "newlatin0069",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "i"
+    },
+    {
+      "char": "j",
+      "glyph": "newlatin006A",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "j"
+    },
+    {
+      "char": "k",
+      "glyph": "newlatin006B",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "k"
+    },
+    {
+      "char": "l",
+      "glyph": "newlatin006C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "l"
+    },
+    {
+      "char": "m",
+      "glyph": "newlatin006D",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "m"
+    },
+    {
+      "char": "n",
+      "glyph": "newlatin006E",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "n"
+    },
+    {
+      "char": "o",
+      "glyph": "newlatin006F",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "o"
+    },
+    {
+      "char": "p",
+      "glyph": "newlatin0070",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "p"
+    },
+    {
+      "char": "q",
+      "glyph": "newlatin0071",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "q"
+    },
+    {
+      "char": "s",
+      "glyph": "newlatin0073",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "s"
+    },
+    {
+      "char": "t",
+      "glyph": "newlatin0074",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "t"
+    },
+    {
+      "char": "u",
+      "glyph": "newlatin0075",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "u"
+    },
+    {
+      "char": "v",
+      "glyph": "newlatin0076",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "v"
+    },
+    {
+      "char": "w",
+      "glyph": "newlatin0077",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "w"
+    },
+    {
+      "char": "x",
+      "glyph": "newlatin0078",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "x"
+    },
+    {
+      "char": "y",
+      "glyph": "newlatin0079",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "y"
+    },
+    {
+      "char": "z",
+      "glyph": "newlatin007A",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "z"
+    },
+    {
+      "char": "{",
+      "glyph": "newlatin007B",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "braceleft"
+    },
+    {
+      "char": "|",
+      "glyph": "newlatin007C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "bar"
+    },
+    {
+      "char": "}",
+      "glyph": "newlatin007D",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "braceright"
+    },
+    {
+      "char": "~",
+      "glyph": "newlatin007E",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "asciitilde"
+    },
+    {
+      "char": "–",
+      "glyph": "newlatin2013",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "endash"
+    },
+    {
+      "char": "—",
+      "glyph": "newlatin2014",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "emdash"
+    },
+    {
+      "char": "’",
+      "glyph": "newlatin2019",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quoteright"
+    },
+    {
+      "char": "“",
+      "glyph": "newlatin201C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quotedblleft"
+    },
+    {
+      "char": "”",
+      "glyph": "newlatin201D",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quotedblright"
+    },
+    {
+      "char": "×",
+      "glyph": "newlatin00D7",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "multiply"
+    },
+    {
+      "char": "°",
+      "glyph": "newlatin00B0",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "degree"
+    },
+    {
+      "char": "²",
+      "glyph": "newlatin00B2",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "uni00B2"
+    },
+    {
+      "char": "³",
+      "glyph": "newlatin00B3",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "uni00B3"
+    },
+    {
+      "char": "·",
+      "glyph": "newlatin00B7",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "periodcentered"
+    }
+  ],
+  "donor": "D:\\CodexBuilds\\Hasla-original-style-20261031\\2013-fonts\\faces\\DENGL.TTF",
+  "donor_role": "Original same-run Latin prose counterpart DengXian-Light. Official1.14 matches all four live source1.21 numeral contours, bbox and advance exactly; see deng-light-source-comparison.json. Source SimHei5.05 itself is not installed.",
+  "changed_original_pdf_font_programs": false,
+  "existing_source_glyph_outlines_modified": false,
+  "source_to_donor_upem_scale": 0.125,
+  "output_sha256": "3a8de6c27b08369c998b08eff3dcd0c2ff10d1080235e73dc55422d2d879458c"
+}

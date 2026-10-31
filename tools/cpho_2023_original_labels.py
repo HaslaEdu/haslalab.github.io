@@ -238,7 +238,12 @@ def fonts(lang):
     paths = {}
     for family, text in texts.items():
         source = (ROOT / 'tools/ko/fonts' / ('NotoSerifCJKkr-Regular.otf' if family == 'serif' else 'NotoSansCJKkr-Regular.otf')) if lang == 'ko' else Path('C:/Windows/Fonts/' + ('times.ttf' if family == 'serif' else 'arial.ttf'))
-        paths[family] = subset_font(source, text, BASE / 'fonts')
+        cache = BASE / 'fonts'
+        if lang == 'en' and family == 'serif':
+            from cpho_2023_original_style import prose_symbol_font, FONT_CACHE
+            source = prose_symbol_font()
+            cache = FONT_CACHE
+        paths[family] = subset_font(source, text, cache)
     return paths
 
 
@@ -301,7 +306,11 @@ def apply(page, source_page, lang, font_paths=None):
         name = 'FigureLanguage' + label['family'].title()
         for run in runs:
             page.insert_text(fitz.Point(*run['origin']), run['text'], fontsize=label['size'], fontname=name, fontfile=str(path), color=(0, 0, 0), fill=(0, 0, 0), rotate=run['rotate'], overlay=True)
-        report.append(dict(label, translation=label[lang], language=lang, placed_runs=runs, font_path=str(path.relative_to(ROOT))))
+        try:
+            recorded_path = str(path.relative_to(ROOT))
+        except ValueError:
+            recorded_path = str(path)
+        report.append(dict(label, translation=label[lang], language=lang, placed_runs=runs, font_path=recorded_path))
     return report
 
 
