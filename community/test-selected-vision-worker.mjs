@@ -185,3 +185,13 @@ test('the language chosen when grading is requested is the report language, what
   await api(`/lab/sessions/${sid}/submit?lang=ko`,{body:{provider:'gemini',lang:'ko'}});
   assert.equal(sql.prepare('SELECT lang FROM lab_sessions WHERE id=?').get(sid).lang,'en','a graded sitting keeps its report language');
 }));
+
+test('a printed header read by the model never refiles a page: the student\'s task and sheet stand',async()=>fixture(async({api,start,upload,drain,sql})=>{
+  const a=(await start('gemini')).data,sid=a.session.id;await upload(a.token);
+  sql.prepare("UPDATE lab_pages SET kind='working' WHERE session_id=?").run(sid);   // filed as a working sheet; the model reads «answer»
+  await api(`/lab/sessions/${sid}/pay`,{body:{provider:'gemini'}});await drain();
+  const page=sql.prepare('SELECT task,kind,ocr_status,read FROM lab_pages WHERE session_id=?').get(sid);
+  assert.equal(page.ocr_status,'done');
+  assert.equal(JSON.parse(page.read).header.sheet,'answer','the header is kept for reference');
+  assert.deepEqual([page.task,page.kind],['T1','working']);
+}));
