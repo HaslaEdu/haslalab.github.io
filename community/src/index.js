@@ -1441,6 +1441,8 @@ async function labAdvance(env, s) {
   // Reads advance the clock, durably enqueue IDs and quote eligible unpaid pairs. AI runs only in the Queue consumer.
   return labQuote(env, s);
 }
+/* a sitting can be cancelled until its result is in; 'ended' (finished without asking for grading) stays as it is */
+const LAB_CANCELLABLE = ['running', 'scanning', 'grading', 'pending', 'error'];
 const labActive = async (env, userId) => labAdvance(env, await env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(userId).first());
 /* Legacy half-token balances remain readable. All new monetary arithmetic uses integer tenths. */
 let HALF_READY = false;
@@ -3057,6 +3059,20 @@ async function lab(p, m, body, me, req, env, url) {
     if (s.status === "ended") s = await labFinalize(env, s, s.lang);
     else if(!contestMeta(s)&&['running','scanning'].includes(s.status))await labQueueOcr(env,s);
     return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id), queued: s.status === "grading" };
+  }
+  /* Cancelling a grading request stops it where it stands: the sitting is closed as 'cancelled', its phone link is
+     voided and queued reading/grading jobs are closed (a running job sees the status and stops without writing).
+     The token stays spent: the request was made and providers may already have been called. */
+  if ((r = /^\/api\/lab\/sessions\/(\d+)\/cancel$/.exec(p)) && m === "POST") {
+    const s = await labOwned(env, +r[1], me);
+    if (!LAB_CANCELLABLE.includes(s.status)) throw new HttpError(409, "closed");
+    const t = now(), states = LAB_CANCELLABLE.map(() => "?").join(",");
+    await env.DB.batch([
+      env.DB.prepare(`UPDATE lab_sessions SET status='cancelled',submitted_at=COALESCE(submitted_at,?),
+        upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END WHERE id=? AND status IN (${states})`).bind(t, s.id, ...LAB_CANCELLABLE),
+      env.DB.prepare(`UPDATE lab_jobs SET status='done',result='{"cancelled":true}',lease_until=NULL,lease_token=NULL,updated_at=? WHERE session_id=? AND status IN ('pending','queued')`).bind(t, s.id),
+    ]);
+    return { session: pubLab(await labGet(env, s.id), await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id) };
   }
   if((r=/^\/api\/lab\/sessions\/(\d+)\/retry-ocr$/.exec(p))&&m==='POST'){
     let s=await labOwned(env,+r[1],me);

@@ -298,3 +298,19 @@ test('paying for an untimed review never submits it through GET, bootstrap or th
     assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM lab_jobs WHERE session_id=?').get(id).n,0);
   }finally{globalThis.fetch=savedFetch;}
 });
+
+test('a grading request can be cancelled where it stands; the token stays spent and queued work is closed', async () => {
+  const user = 21; sqlite.prepare('UPDATE users SET exam_tokens=5 WHERE id=?').run(user);
+  const started = await request('/lab/start', { ...exam, year: 2022 }, user), id = started.data.session.id;
+  assert.equal(started.data.tokens, 4.7);
+  await request('/lab/sessions/' + id + '/text', { answers: { T1: 'A typed answer.' } }, user);
+  sqlite.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,task,lang,status,available_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)").run('grade:cancel-fixture:'+id, 'grade', id, 'T1', 'ko', 'pending', timestamp, timestamp, timestamp);
+  assert.equal((await request('/lab/sessions/' + id + '/cancel', {}, 2)).status, 404, 'only the owner (or an admin) cancels');
+  const cancelled = await request('/lab/sessions/' + id + '/cancel', {}, user);
+  assert.equal(cancelled.status, 200); assert.equal(cancelled.data.session.status, 'cancelled'); assert.equal(cancelled.data.tokens, 4.7, 'no refund');
+  assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_jobs WHERE session_id=? AND status IN ('pending','queued')").get(id).n, 0, 'queued work is closed');
+  assert.match(sqlite.prepare('SELECT upload_hash FROM lab_sessions WHERE id=?').get(id).upload_hash, /^void:/, 'the phone link no longer uploads');
+  assert.equal((await request('/lab/sessions/' + id + '/cancel', {}, user)).status, 409, 'a cancelled sitting cannot be cancelled again');
+  assert.equal((await request('/lab/sessions/' + id + '/submit', { grade: true }, user)).data.session.status, 'cancelled', 'nor graded afterwards');
+  assert.equal((await request('/lab/start', { ...exam, year: 2021 }, user)).status, 200, 'the active slot is free again');
+});
