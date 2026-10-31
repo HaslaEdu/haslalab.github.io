@@ -2395,6 +2395,12 @@ const LAB_JOB_HANDLERS = {
     if (job.kind !== 'grade' || s.status !== 'grading' || !JSON.parse(s.tasks).includes(job.task)) return { cancelled: true };
     const existing = s.detail ? JSON.parse(s.detail).tasks?.[job.task] : null;
     if (existing) return { cancelled: true };
+    /* one sitting's tasks are graded one after another: each Gemini request carries the problem and solution PDFs and the
+       page photos, and three at once in one isolate ran out of memory and died without a trace (IPhO 2025 theory:
+       every task of the sitting stuck until its lease ran out; the same tasks staggered finished in ~30 s each) */
+    const ahead = await env.DB.prepare(`SELECT 1 FROM lab_jobs WHERE session_id=? AND kind='grade' AND id<? AND (status IN ('queued','running')
+      OR (status='pending' AND available_at<=?)) LIMIT 1`).bind(s.id, job.id, now() + 5).first();
+    if (ahead) throw new LabJobDeferred(20);
     const pages = await labPagesOf(env, s.id), mine = pages.filter(p => p.task === job.task);
     if (!contestMeta(s)) {
       const failedPages=mine.filter(p=>p.mime!=='text/plain'&&p.ocr_status==='failed');
