@@ -1,0 +1,328 @@
+{
+  "status": "READY_NATURAL_SPACING_ORIGINAL_RESOURCES",
+  "qa_schema": "cpho-early-original-natural-v1",
+  "year": 2013,
+  "generated_at": "2026-10-31T21:43:32.540234",
+  "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\source-originals\\CPhO_2013_Chinese_original.pdf",
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "source_pages": [
+    1,
+    2,
+    3
+  ],
+  "files": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\editions\\CPhO_2013_T_KO.pdf",
+      "sha256": "600214b12a334152882e89a4b33417de2b166893427594fa7cfcc3972e2d33ff",
+      "bytes": 10652417,
+      "pages": 3,
+      "language": "KO",
+      "kind": "T",
+      "qa": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\editions\\CPhO_2013_T_KO.qa.json",
+      "qa_sha256": "30db145e2c908f9887c4aef9d4a2f126a4f330d66909f0dcceb1d1531a933cf2",
+      "immutable_translation_input": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+      "immutable_translation_input_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\editions\\CPhO_2013_T_EN.pdf",
+      "sha256": "f544f841f9d68644bafac8062b1454d6e8a9abae71c932f52795c9b88986759a",
+      "bytes": 1886002,
+      "pages": 3,
+      "language": "EN",
+      "kind": "T",
+      "qa": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\editions\\CPhO_2013_T_EN.qa.json",
+      "qa_sha256": "43142f2cfde766df5a846cc57abd3c5393f44bbf73bc692fd9d53cd50ea48c50",
+      "immutable_translation_input": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_EN.pdf",
+      "immutable_translation_input_sha256": "944ee0d78806861a81c8a2cb2babfd79cd061f23389c1bf352460a7f2bdb3c39"
+    }
+  ],
+  "style_policy": "Original Chinese-native layout and original figures. Native physical CID/font/GID/program/point-size/paint/y preserved, reviewed x motion only; full fractions/radicals move atomically with original bars. Regular Korean serif is Batang at original size; original sans/bold/italic roles retained. English source SimSun/official SimHei; source TNR numerical title/footer faces restored. Quarter-em word space, no font scaling or reflow.",
+  "checked_pages": 6,
+  "original_physical_native_ink_missing_pixels": 0,
+  "nonselected_native_graphics_changed_pixels": 0,
+  "changed_pixels_outside_text_and_declared_math_motion": 0,
+  "Hangul_visibility_components": 0,
+  "prose_over_native_text_dark_pixels": 0,
+  "original_expression_relative_geometry_preserved": true,
+  "native_script_base_pairs_checked": 82,
+  "complete_native_expressions_checked": 8,
+  "maximum_complete_expression_relative_x_error_pt": 7.62939453125e-06,
+  "source_numeric_font_programs_and_GIDs_verified": true,
+  "maximum_whole_heading_alignment_error_pt": 6.103515625e-05,
+  "translation_style_violations": [],
+  "translation_size_max_delta_pt": 0.0,
+  "translation_baseline_max_delta_pt": 0.0,
+  "image_palette_ICC_SMask_graphs_preserved": true,
+  "combined_vs_proof_both_renderers_changed_pixels": 0,
+  "no_added_edition_title_or_translator_note": true,
+  "original_printed_footer_total_preserved": "Original total 2 remains on all three source T pages, including page 3. No PDF erratum is added.",
+  "figure_language_correction": {
+    "original": "钒酸钇自倍频",
+    "ko": "바나듐산 이트륨",
+    "en": "Self-doubled yttrium vanadate",
+    "reason": "Source crop independently confirmed by parent; corrects prior OCR confusion with iridium."
+  },
+  "source_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1",
+  "source_snapshot_authoring_hashes_verified": true,
+  "source_plan_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-input-journals\\2013\\native-slots.json",
+  "source_plan_snapshot_sha256": "37d5efb4a4c6d50db06d23b08c151006eb49422c813415456b2552b0d5f35135",
+  "authoring_files": [
+    {
+      "path": "tools/cpho_early_english_faces.py",
+      "sha256": "6c53101875ee813617bc4e1c091ef0a698c2890b1d06fc04f04e6efde69f0e87"
+    },
+    {
+      "path": "tools/cpho_early_full_qa.py",
+      "sha256": "3b41b1654cc52f5f3fa1b4779a9426eb56b7bd4c91a57b43b2a0ad8e50ce0efa"
+    },
+    {
+      "path": "tools/cpho_early_heading_numbers.py",
+      "sha256": "00bd267a46c0b43b55c8f0b92422a54b7824da51fea4d3bd2c54d4bccca31c90"
+    },
+    {
+      "path": "tools/cpho_early_heading_qa.py",
+      "sha256": "472894c0c2e8e603f956e44fad5baf41d33e2f2599e1439b5317cd69f94e6d52"
+    },
+    {
+      "path": "tools/cpho_early_natural.py",
+      "sha256": "2a874a1b6656805f7bfabd45d0d41a8e73c538fbf6c66f498f1076bf589236ff"
+    },
+    {
+      "path": "tools/cpho_early_preflight.py",
+      "sha256": "fb46489ec63c2559336d1a4562f44c60636b712f99f2f2c4604c17ba4e1ee39d"
+    },
+    {
+      "path": "tools/cpho_natural_atoms.py",
+      "sha256": "870c7e161ecca3281bf55d7a72b0628349d50dc83e3f4122eeed9fd7789adb35"
+    },
+    {
+      "path": "tools/cpho_natural_english_fonts.py",
+      "sha256": "597bafebb1984e52da37ab08cd69ae267651efaa7a9f5c4013c730ad8e2c7435"
+    },
+    {
+      "path": "tools/cpho_natural_full_qa.py",
+      "sha256": "4bc4858bb868f319027916242ffe0b5eb694c810ab6a8ff13cddeb895e13968e"
+    },
+    {
+      "path": "tools/cpho_natural_prose_edits.py",
+      "sha256": "07024e5aaed75ba2b9250ee008fbc79cbb4edb27c0c569197d8e93bcd9a665ca"
+    },
+    {
+      "path": "tools/cpho_natural_rotated_labels.py",
+      "sha256": "ead27cdda4415053bd7b43e037e3806d099c04f5a1eff9b567644a1719a95429"
+    },
+    {
+      "path": "tools/cpho_natural_spacing.py",
+      "sha256": "1d51a1cf55022647f61ddb16adf041b3e2b5ee01e652eabda6d549504eca0b75"
+    },
+    {
+      "path": "tools/cpho_natural_spacing_qa.py",
+      "sha256": "4d0307faf55ff1a99b09bef2651afcc16c61305db913140393dc9cc4d09fdd6b"
+    },
+    {
+      "path": "tools/cpho_original_latin_fonts.py",
+      "sha256": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2"
+    },
+    {
+      "path": "tools/izho_early_fixed_style.py",
+      "sha256": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826"
+    },
+    {
+      "path": "tools/izho_extract_word.py",
+      "sha256": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e"
+    },
+    {
+      "path": "tools/izho_math_clean.py",
+      "sha256": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65"
+    },
+    {
+      "path": "tools/izho_native_atomic_tokens.py",
+      "sha256": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377"
+    },
+    {
+      "path": "tools/izho_native_math_audit.py",
+      "sha256": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8"
+    },
+    {
+      "path": "tools/izho_natural_spacing.py",
+      "sha256": "1e6b72c6966c6a4a7537fde9cd11bd27a43d67843f05613f3f2d6e0dbc64e3b2"
+    },
+    {
+      "path": "tools/izho_natural_spacing_qa.py",
+      "sha256": "4f14f08c77a693c384d8179edd84d5f8245bdbe1beb5e3c5d34b7daf4b74f943"
+    },
+    {
+      "path": "tools/izho_natural_spacing_rebuild.py",
+      "sha256": "b916e1810476db5343bd539149494d958cd87c5de711bbbbef0e11675619630e"
+    },
+    {
+      "path": "tools/izho_new_prose_outline_qa.py",
+      "sha256": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9"
+    },
+    {
+      "path": "tools/izho_translate.py",
+      "sha256": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e"
+    },
+    {
+      "path": "tools/pdf_grading_columns_stationary.py",
+      "sha256": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c"
+    },
+    {
+      "path": "tools/pdf_hangul_visibility.py",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473"
+    },
+    {
+      "path": "tools/pdf_korean_natural_composer.py",
+      "sha256": "5a4015327660d21f935aadb7484129c80e51c8efa6b0814064ac779602ffce1a"
+    },
+    {
+      "path": "tools/pdf_memory_gate.py",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436"
+    },
+    {
+      "path": "tools/pdf_moved_native_ink.py",
+      "sha256": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7"
+    },
+    {
+      "path": "tools/pdf_native_geometry_motion.py",
+      "sha256": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf"
+    },
+    {
+      "path": "tools/pdf_native_glyph_promote.py",
+      "sha256": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80"
+    },
+    {
+      "path": "tools/pdf_native_glyph_raster_witness.py",
+      "sha256": "8c7d6fc1856d1161e710beb66c69e8bd38dfebd33ab5ae88b6e61994620e139e"
+    },
+    {
+      "path": "tools/pdf_native_inline_reposition.py",
+      "sha256": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862"
+    },
+    {
+      "path": "tools/pdf_native_script_motion_audit.py",
+      "sha256": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76"
+    },
+    {
+      "path": "tools/pdf_new_hangul_graphics_overlap.py",
+      "sha256": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620"
+    },
+    {
+      "path": "tools/pdf_new_prose_native_text_overlap.py",
+      "sha256": "2ef62c1b79d38e455a95e85de0812a8b2096443362d62dd0689818531acffb3c"
+    },
+    {
+      "path": "tools/pdf_original_graphics_ink.py",
+      "sha256": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a"
+    },
+    {
+      "path": "tools/pdf_original_image_ink.py",
+      "sha256": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea"
+    },
+    {
+      "path": "tools/pdf_original_style_audit.py",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514"
+    },
+    {
+      "path": "tools/pdf_original_style_fonts.py",
+      "sha256": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758"
+    },
+    {
+      "path": "tools/pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230"
+    },
+    {
+      "path": "tools/pdf_text_motion_ink.py",
+      "sha256": "cc523d4d00cd3785259975d6b8bc5dcbfb1e9a2685969fcf12453c5be053d5e0"
+    },
+    {
+      "path": "tools/test_early_natural_prose_events.py",
+      "sha256": "7efe9b7a7838a17258635d3a6496a7b326dc009dec9a30ac1958cc75024ccc7a"
+    },
+    {
+      "path": "tools/pdf_native_geometry_stroke_motion.py",
+      "sha256": "2f431e2a7210d2c95fa56d7eb8afd889a31ce8802d0c49cbd8f92ecfeb5893d8"
+    },
+    {
+      "path": "tools/test_native_stroke_motion.py",
+      "sha256": "f5bb077b117793bfe03ea3d2f412b18fc7d133cf2af973a37fd0f706e2ddcc87"
+    },
+    {
+      "path": "tools/cpho_early_validation.py",
+      "sha256": "239d507ab097f261e1dfd6eeca6b770f39c817fec1f463ab3106e42c5b849c36"
+    },
+    {
+      "path": "tools/cpho_early_release.py",
+      "sha256": "6e8570a8be72e6168011b3f80b0cd7bcbed24fe06a816825a4a240fe6595bfd2"
+    },
+    {
+      "path": "tools/cpho_2013_yttrium_revision.py",
+      "sha256": "7c6a67c0d8a5211b1e6aa098e072a69ca24a79b4e3562f7204deb4ce049333e8"
+    },
+    {
+      "path": "tools/ko/cpho/2013/original/native-slots.json",
+      "sha256": "37d5efb4a4c6d50db06d23b08c151006eb49422c813415456b2552b0d5f35135"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/prose-edits.json",
+      "sha256": "a5e43fa5088aa2f45bfc7802b0e8bb5b11626a76a7c7b46c4bb9e64cad2a6ba2"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/atomic-inline.json",
+      "sha256": "b661cdaa5f03e94b6b3c42d5904edb03eda369d70d14200877ef4b6c9ae22daa"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/immutable-input-journals/ko/page01.build.json",
+      "sha256": "c476fb40a22449ac5c7a0de59792e7fbc8704ec3a428af35322a1ad16432e3f1"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/immutable-input-journals/ko/page02.build.json",
+      "sha256": "0c0fbacea6307b7f0c7e5728a8f06ed4fbcf49c01b97bc8d022be4be97be38aa"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/immutable-input-journals/ko/page03.build.json",
+      "sha256": "9df8c782b40b2d94203b6fa633f70e89ab18e2945ddab709795338902692ea4b"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/numeric-face-stage/ko.json",
+      "sha256": "7060341814eee51917398aab5fa76196934cc71c4937393febff25e58302857a"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/immutable-input-journals/en/page01.build.json",
+      "sha256": "d004e913dff9a0c5f354292bd4a5d40c50a767f6b2da2de0fec06cbee25765a8"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/immutable-input-journals/en/page02.build.json",
+      "sha256": "d52a4e4ebd9af091e062687fb076a8c1b9dcbf3f9bdb989d3f83b5e6b2d94b7e"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/immutable-input-journals/en/page03.build.json",
+      "sha256": "2f3a1b3d066e06eec8a9bd83c75f2d12dd8399009ed24dab7ed398d41e1ec180"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/numeric-face-stage/en.json",
+      "sha256": "0fe93954ef2c61bd868470414946581e53ec8c2187999ef787a6295c236d5251"
+    },
+    {
+      "path": "tools/ko/cpho/early-natural/immutable-inputs.json",
+      "sha256": "e8a7222572543d0f81cd193659c30a9020c704b420d4cdab8646104057e9a356"
+    },
+    {
+      "path": "tools/ko/cpho/early-natural/build-engine-manifest.json",
+      "sha256": "a6da662804c0cf81527d48bc1e7a5c95c6643972a2c1a543823954501e22c153"
+    },
+    {
+      "path": "tools/ko/cpho/early-natural/stroke-audit-regression.json",
+      "sha256": "8f533c5eb9eb67109c9646d7ca09643eda3c59527bd3e2ae7b8f1f161de9109b"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/source-yttrium-label.png",
+      "sha256": "6e86b4b590c9dae2d26cc2cbbe687b354e197f79a1d640ea4fb867cc271446f6"
+    },
+    {
+      "path": "tools/ko/cpho/2013/natural/material-terminology-revision.json",
+      "sha256": "b713ef4ffa65b4fc49e43867efcc5178a553326ba6b460e24a4ec8d221b538e6"
+    }
+  ],
+  "authoring_dependency_files": []
+}
