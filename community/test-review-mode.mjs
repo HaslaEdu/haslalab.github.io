@@ -20,7 +20,7 @@ const DB = {
 };
 globalThis.caches = { default: { async match() {}, async put() {} } };
 const timestamp = Math.floor(Date.now() / 1000), tokens = {};
-for (let id = 1; id <= 20; id++) {
+for (let id = 1; id <= 21; id++) {
   sqlite.prepare('INSERT INTO users(id,username,nickname,pw,role,created_at,exam_tokens) VALUES(?,?,?,?,?,?,?)').run(id, 'review' + id, 'Review ' + id, 'unused', 'user', timestamp, 5);
   const token = String(id).padStart(48, 'a'); tokens[id] = token;
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');
@@ -51,19 +51,19 @@ async function settled(path,body,id=1){
 }
 const exam = { comp: 'ipho', year: 2024, tasks: ['T1'], sources: { T1: { kind: 'theory', sol: 'IPhO_2024_T1S.pdf' } }, entry: '?c=ipho&y=2024&m=t&e=T1&review=1', review: true };
 let first;
-test('standalone review starts without an exam or upload timer and preserves the grading price', async () => {
+test('standalone review starts without an exam or upload timer and spends its grading price at the first press', async () => {
   const r = await request('/lab/start', { ...exam, pair: true }); assert.equal(r.status, 200); first = r.data;
   assert.equal(first.session.status, 'scanning'); assert.equal(first.session.review_only, true);
   assert.equal(first.session.exam_sec, 0); assert.equal(first.session.scan_sec, null); assert.equal(first.session.scan_until, 0);
-  assert.equal(first.session.started_at, first.session.ended_at); assert.equal(first.session.cost, 0.3); assert.equal(first.session.paid, false); assert.equal(first.tokens, 5);
+  assert.equal(first.session.started_at, first.session.ended_at); assert.equal(first.session.cost, 0.3); assert.equal(first.session.paid, true); assert.equal(first.tokens, 4.7);
   const saved = sqlite.prepare('SELECT sources FROM lab_sessions WHERE id=?').get(first.session.id);
   assert.equal(JSON.parse(saved.sources)._review, 1);
-  const resume = await request('/lab/start', { ...exam, pair: true }); assert.equal(resume.data.session.id, first.session.id); assert.equal(resume.data.resumed, true);
+  const resume = await request('/lab/start', { ...exam, pair: true }); assert.equal(resume.data.session.id, first.session.id); assert.equal(resume.data.resumed, true); assert.equal(resume.data.tokens, 4.7, 'coming back spends nothing more');
 });
 test('review mode survives old timestamps and has a usable phone scan link without a deadline', async () => {
   const id = first.session.id;
   sqlite.prepare('UPDATE lab_sessions SET started_at=?,ended_at=? WHERE id=?').run(timestamp - 10 * 86400, timestamp - 10 * 86400, id);
-  const r = await request('/lab/sessions/' + id); assert.equal(r.data.session.status, 'scanning'); assert.equal(r.data.session.paid, false);
+  const r = await request('/lab/sessions/' + id); assert.equal(r.data.session.status, 'scanning'); assert.equal(r.data.session.paid, true);
   const phone = await request('/lab/up', undefined, null, 'GET', { 'X-Lab-Token': first.token });
   assert.equal(phone.status, 200); assert.equal(phone.data.open, true); assert.equal(phone.data.review_only, true); assert.equal(phone.data.scan_until, 0);
 });
@@ -71,12 +71,12 @@ test('timed and standalone sessions of the same paper cannot resume each other',
   const r = await request('/lab/start', { ...exam, review: false });
   assert.equal(r.status, 409); assert.equal(r.data.error, 'other_active'); assert.equal(r.data.other.review_only, true);
 });
-test('typed work is validated, saved and replaced without spending tokens', async () => {
+test('typed work is validated, saved and replaced without spending more tokens', async () => {
   const path = '/lab/sessions/' + first.session.id + '/text';
   assert.equal((await request(path, { answers: { T1: 'foreign' } }, 2)).status, 404);
   for (const answers of [[], { T2: 'wrong task' }, { T1: true }, { T1: 'x'.repeat(50001) }]) assert.equal((await request(path, { answers })).status, 400);
   let r = await request(path, { answers: { T1: 'Let x denote displacement. Then F = ma.' } });
-  assert.equal(r.status, 200); assert.equal(r.data.tokens, 5); assert.equal(r.data.session.pages.length, 1); assert.equal(r.data.session.pages[0].source, 'typed');
+  assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.7); assert.equal(r.data.session.pages.length, 1); assert.equal(r.data.session.pages[0].source, 'typed');
   r = await request(path, { answers: { T1: 'Updated solution: F = ma.' } }); assert.equal(r.data.session.pages.length, 1); assert.equal(r.data.session.pages[0].text, 'Updated solution: F = ma.');
 });
 test('grading is charged once, closes the review, and never assigns a timed ranking', async () => {
@@ -93,14 +93,17 @@ test('Physics Cup, Ortvay, OPhO and WOPHO enforce review-only even for old timed
   for (const [index, comp] of ['physcup', 'ortvay', 'opho', 'wopho'].entries()) {
     const r = await request('/lab/start', { ...exam, comp, review: false }, index + 3);
     assert.equal(r.status, 200); assert.equal(r.data.session.status, 'scanning'); assert.equal(r.data.session.review_only, true); assert.equal(r.data.session.exam_sec, 0);
-    assert.equal(r.data.tokens, 5);
+    assert.equal(r.data.tokens, 4.7, 'review-only competitions spend at the first press too');
   }
 });
-test('empty reviews cannot spend tokens, but can close for free to release the active session', async () => {
-  const r = await request('/lab/start', exam, 7), id = r.data.session.id;
+test('an empty review is never graded, and closing it releases the active session without spending again', async () => {
+  const r = await request('/lab/start', exam, 7), id = r.data.session.id; assert.equal(r.data.tokens, 4.7);
   const empty = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 7); assert.equal(empty.status, 400); assert.equal(empty.data.error, 'no_answers');
-  assert.equal((await request('/lab/sessions/' + id + '/pay', {}, 7)).data.error, 'no_answers');
-  const ended = await settled('/lab/sessions/' + id + '/submit', { grade: false }, 7); assert.equal(ended.status, 200); assert.equal(ended.data.session.status, 'ended'); assert.equal(ended.data.tokens, 5);
+  const ended = await settled('/lab/sessions/' + id + '/submit', { grade: false }, 7); assert.equal(ended.status, 200); assert.equal(ended.data.session.status, 'ended'); assert.equal(ended.data.tokens, 4.7);
+  assert.equal((await request('/lab/start', { ...exam, year: 2023 }, 7)).status, 200, 'another paper can be opened');
+  sqlite.prepare('UPDATE users SET exam_tokens=0 WHERE id=21').run();
+  const unpaid = await request('/lab/start', exam, 21); assert.equal(unpaid.status, 402); assert.equal(unpaid.data.error, 'no_tokens');
+  assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM lab_sessions WHERE user_id=21').get().n, 0, 'without a token nothing is opened and nothing can be read');
 });
 test('ordinary timed exams retain their duration, scan window and answer lock', async () => {
   const r = await request('/lab/start', { ...exam, review: false, entry: '?c=ipho&y=2024&m=t&e=T1' }, 8), s = r.data.session;
@@ -117,7 +120,8 @@ test('typed numeric answers are indexed independently and fabricated grader valu
     assert.ok(String(url).includes(':generateContent'));
     const parts = JSON.parse(options.body).contents[0].parts, prompt = parts.map(p => p.text || '').join('\n'); prompts.push(prompt);
     let raw;
-    if (prompt.includes('[TASK: index typed answer]')) {
+    if (prompt.startsWith('[TASK: translate marking-scheme items]')) raw = { items: ['힘', '쓰지 않은 값'] };
+    else if (prompt.includes('[TASK: index typed answer]')) {
       assert.ok(prompt.includes('A.1: F = 42 N')); assert.ok(!parts.some(p => p.inline_data));
       raw = { legible: 'good', items: [{ label: 'A.1', kind: 'value', text: 'F = 42 N', value: 42, unit: 'N', crossed_out: false }] };
     } else {
@@ -135,7 +139,8 @@ test('typed numeric answers are indexed independently and fabricated grader valu
     assert.equal(prompts.length, 0, 'saving a solution makes no provider request');
     const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 9), result = graded.data.session.detail.tasks.T1;
     assert.equal(graded.status, 200); assert.equal(result.status, 'graded'); assert.equal(result.score, 1); assert.equal(result.points, 2);
-    assert.equal(result.items[0].got, 1); assert.equal(result.items[1].got, 0); assert.ok(result.items[1].rules.includes('R9')); assert.equal(prompts.length, 2);
+    assert.equal(result.items[0].got, 1); assert.equal(result.items[1].got, 0); assert.ok(result.items[1].rules.includes('R9')); assert.equal(prompts.length, 3);
+    assert.deepEqual(result.items.map(i => i.what), ['힘', '쓰지 않은 값'], 'a Korean sitting reads each requirement in Korean');
     assert.equal(graded.data.session.pages[0].text, 'A.1: F = 42 N');
   } finally { env.GEMINI_API_KEY='local-selected-provider-no-AI'; globalThis.fetch = savedFetch; }
 });

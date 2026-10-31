@@ -385,14 +385,14 @@ const COST = () => { let s = null; try { s = SES; } catch (e) {} return s && Num
 const costify = v => typeof v === "string" ? v.replace(/토큰 1개/g, `토큰 ${COST()}개`).replace(/\b(one exam token|1 exam token|one token|1 token)\b/g, `${COST()} token`)
   : typeof v === "function" ? (...a) => costify(v(...a)) : Array.isArray(v) ? v.map(costify) : v;
 const R = {
-  ko: { exam: "채점 · 첨삭", scanH: "답안 제출", scanLeft: "시간 제한 없음", start: "답안 제출 화면 열기", loginReq: "채점 · 첨삭은 로그인 후 이용할 수 있습니다.",
+  ko: { exam: "채점 · 첨삭", scanH: "답안 제출", scanLeft: "시간 제한 없음", start: "채점하기 · 실전 토큰 1개 사용", loginReq: "채점 · 첨삭은 로그인 후 이용할 수 있습니다.",
     pendingWhy: { no_solution: "공식 해설을 확인하지 못해 채점을 보류했습니다.", no_grader: "첨삭 처리기를 사용할 수 없어 접수를 보류했습니다.", problem_unavailable: "공식 문제 원문을 불러오지 못해 첨삭을 보류했습니다.", scan_unavailable: "원본 답안 사진을 불러오지 못해 첨삭을 보류했습니다.", ocr_storage_limit: "답안 사진과 판독 내용이 저장 한도를 넘어 첨삭을 보류했습니다.", ungrounded_review: "답안에서 확인 가능한 근거가 부족해 첨삭을 보류했습니다." },
     resume: "저장된 채점 접수를 이어갑니다. 시간 제한 없이 답안을 준비할 수 있습니다.",
     steps: ["QR 코드를 휴대전화로 스캔하거나 아래 링크를 이 기기에서 여세요.", "이미 작성한 답안 사진을 올리거나 아래에 풀이를 직접 입력하세요.", "답안을 확인한 뒤 채점 · 첨삭을 요청하세요. 제출 전까지 시간 제한이 없습니다."],
     infoTimeV: "시간 제한 없음 · 준비한 답안으로 바로 채점 요청", rcStart: "접수 시작", rcEnd: "풀이 제한", back: "채점 목록으로", noEdit: "스캔 판독 결과는 원본과 대조하세요. 잘못 찍힌 사진은 삭제하고 다시 올릴 수 있습니다.",
     endNoGrade: "채점 없이 접수 종료", endNoGradeQ: "접수를 종료할까요? 저장된 답안은 결과 화면에서 나중에 채점을 요청할 수 있습니다.",
     again: "다른 답안 제출", noTokens: "채점에 필요한 실전 토큰이 부족합니다. #/lab에서 충전할 수 있습니다." },
-  en: { exam: "Grading & feedback", scanH: "Submit your work", scanLeft: "No time limit", start: "Open answer submission", loginReq: "Sign in to request grading and feedback.",
+  en: { exam: "Grading & feedback", scanH: "Submit your work", scanLeft: "No time limit", start: "Grade my work · 1 exam token", loginReq: "Sign in to request grading and feedback.",
     pendingWhy: { no_solution: "The official solution could not be verified; grading is pending.", no_grader: "The feedback provider is unavailable; review is pending.", problem_unavailable: "The official problem paper could not be loaded; feedback is pending.", scan_unavailable: "The original answer scan could not be loaded; feedback is pending.", ocr_storage_limit: "The scan and its transcription exceed the storage limit; feedback is pending.", ungrounded_review: "The review lacked verifiable evidence from the submitted work and is pending." },
     resume: "Resuming your saved review. There is no time limit to prepare your answers.",
     steps: ["Scan the QR code with your phone, or open the link on this device.", "Upload photos of completed work, or type your solution below.", "Check your answers and request grading and feedback. There is no submission timer."],
@@ -632,7 +632,7 @@ function reviewIntroView() {
   $("main").innerHTML = `<div class="page"><section class="card"><span class="badge">${t().exam}</span><h1>${esc(label())} · ${esc(EX.tasks.join(" + "))}</h1>
     <p class="lead">${ko ? "이미 푼 답안을 제출하고 채점 · 첨삭만 받으세요." : "Submit completed work directly for grading and feedback."}</p>
     <p>${ko ? "시험을 시작하거나 타이머를 기다릴 필요 없이 종이 답안 사진 또는 화면에 입력한 풀이를 제출할 수 있습니다. 답안을 준비하는 동안에는 시간 제한이 없습니다." : "Upload your written answers or type your solutions without starting an exam. There is no time limit while preparing your submission."}</p>
-    <p>${ko ? `접수와 답안 저장은 무료이며, 채점 · 첨삭을 요청할 때만 실전 토큰 ${COST()}개를 사용합니다.` : `Opening a review and saving work are free. Grading and feedback cost ${COST()} exam token only when requested.`}</p>
+    <p>${ko ? `채점하기를 누르는 순간 실전 토큰 ${COST()}개를 사용합니다. 그 뒤 답안 판독과 채점 · 첨삭에는 토큰이 더 들지 않습니다.` : `Pressing Grade my work spends ${COST()} exam token at once. Reading your pages, grading and feedback then cost nothing more.`}</p>
     ${EX.tasks.some((_, i) => !EX.sols[i]) ? `<p class="note">${ko ? "공식 해설·배점이 없는 문제는 문제 원문과 제출한 풀이를 바탕으로 학습용 첨삭을 제공합니다. 공식 점수나 임의의 수치 점수를 만들지 않습니다." : "For problems without official solutions or point schemes, feedback is qualitative and based on the published problem and your work. No official or invented numeric score is assigned."}</p>` : ""}
     <div>${EX.tasks.map((task, i) => `<p><b>${esc(task)}</b> ${esc(EX.titles[i] || "")}${EX.pdfs[i] ? ` · <a class="reviewPaperLink" data-paper="${i}" href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${ko ? "문제지 보기" : "View problem paper"}</a>` : ""}</p>`).join("")}</div>
     ${paperLanguageHtml()}${providerHtml()}${gate}<p><a href="../#/${esc(EX.c)}/review">${t().back}</a></p></section></div>`;
