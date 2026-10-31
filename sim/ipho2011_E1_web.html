@@ -2,11 +2,12 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
 <meta name="theme-color" content="#1c2027">
 <title>IPhO 2011 E1 — 전기 블랙박스 · Electrical Blackbox · HaslaLab</title>
-<meta name="description" content="IPhO 2011 실험 1번을 브라우저에서 실행합니다. 발진기에 물린 정전용량식 변위 센서의 주파수를 멀티미터로 읽고, 알려진 축전기로 눈금을 매깁니다. 계산은 대신 해주지 않습니다.">
+<meta name="description" content="IPhO 2011 실험 1을 브라우저에서 실행합니다. 이완 발진기와 멀티미터로 빗살 평행판 축전기 블랙박스의 모양과 크기를 알아냅니다.">
 <link rel="canonical" href="https://haslalab.org/sim/ipho2011_E1_web.html">
 <link rel="alternate" hreflang="ko" href="https://haslalab.org/sim/ipho2011_E1_web.html?lang=ko">
 <link rel="alternate" hreflang="en" href="https://haslalab.org/sim/ipho2011_E1_web.html?lang=en">
@@ -14,7 +15,7 @@
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IPhO 2011 E1 — 전기 블랙박스 · Electrical Blackbox">
-<meta property="og:description" content="IPhO 2011 실험 1번을 브라우저에서 실행합니다. 발진기에 물린 정전용량식 변위 센서의 주파수를 멀티미터로 읽고, 알려진 축전기로 눈금을 매깁니다.">
+<meta property="og:description" content="IPhO 2011 실험 1을 브라우저에서 실행합니다. 이완 발진기와 멀티미터로 빗살 평행판 축전기 블랙박스의 모양과 크기를 알아냅니다.">
 <meta property="og:url" content="https://haslalab.org/sim/ipho2011_E1_web.html">
 <meta property="og:image" content="https://haslalab.org/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -39,7 +40,6 @@
   .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
            color:var(--accent);text-align:center}
   #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
-  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
   @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
   @media (max-width:760px){ .tray{flex:1 1 100%} }
 
@@ -47,16 +47,24 @@
   .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
   .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
   .tabs{display:flex;gap:6px;flex-wrap:wrap}
   .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
   .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .tabs button.on:hover{background:var(--accent);color:#1c2027}
   .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
         font-size:13.5px;line-height:1.7;color:#d6dde2}
   .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
   .info h4:first-child{margin-top:0}
-  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info ul{margin:4px 0 4px 20px;padding:0}
   .info .warn{color:#f0a79f;font-weight:600}
+  .cvwrap{position:relative}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;background:#1b1f25;cursor:grab}
+  #cv.grabbing{cursor:grabbing}
+  #cv.copy{cursor:copy}
+  #cv.pointer{cursor:pointer}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
 
   /* ── control panel ── */
   .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
@@ -74,41 +82,42 @@
   button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
   button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
   button:disabled{opacity:.45;cursor:default}
-  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
-  #redBtn:hover{background:#a3322b}
+  .panel button{width:100%}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  #sw{background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600}
+  #sw:hover{background:#a3322b}
+  #sw.on{background:#2f7d43;border-color:#3d9a55}
   .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
   .chk input{accent-color:var(--accent);width:15px;height:15px}
   .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;margin-top:4px;white-space:pre-line}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .dark{color:#9fb6ff}
   .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
           background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
-          margin-top:12px;min-height:120px}
-  .status div + div{margin-top:8px}
-  .status .w{color:#f0a79f}
+          margin-top:12px;min-height:70px;white-space:pre-line}
 
   /* ── header ── */
   header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header > div:first-child{flex:1 1 320px;min-width:0}
   header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
   .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
   .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
                font-weight:600;color:var(--muted);text-align:center;background:transparent}
   .lang button.on{background:var(--accent);color:#1c2027}
-  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
-        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
-  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
-  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;white-space:pre-wrap}
-  .panel button{width:100%}
-  #bench{touch-action:none}
-  #closeCv{max-width:760px;margin:0 auto}
+  dialog{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:16px;max-width:360px}
+  dialog::backdrop{background:rgba(0,0,0,.55)}
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <h1 id="t-title"></h1>
-    <p id="t-sub"></p>
+    <h1 data-i18n="title"></h1>
+    <p data-i18n="sub"></p>
   </div>
   <div class="lang">
     <button id="btn-ko" class="on">한국어</button>
@@ -118,1058 +127,1131 @@
 
 <div class="wrap">
   <aside class="tray">
-    <h3 id="t-tray"></h3>
+    <h3 data-i18n="trayTitle"></h3>
     <canvas id="tray"></canvas>
   </aside>
 
   <div class="stage">
     <div class="card">
-      <h3 id="t-benchcap"></h3>
-      <canvas id="bench"></canvas>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap"><canvas id="cv"></canvas><button class="back" id="back" hidden></button></div>
     </div>
-    <div class="card">
-      <h3 id="t-closecap"></h3>
-      <canvas id="closeCv"></canvas>
-    </div>
+    <div class="info" id="info"></div>
   </div>
 
   <aside class="panel">
-    <h2 id="t-h-table"></h2>
-    <div class="read" id="t-t1"></div>
-    <h2 id="t-h-bench"></h2>
-    <button id="btnReset"></button>
-    <p class="hint" id="t-note"></p>
+    <h2 data-i18n="pOsc"></h2>
+    <button id="sw"></button>
+    <h2 data-i18n="pWire"></h2>
+    <div class="read" id="wires"></div>
+    <h2 data-i18n="pTable"></h2>
+    <div class="read" id="t1"></div>
     <div class="status" id="status"></div>
+    <button id="newExp"></button>
   </aside>
 </div>
 
+<dialog id="resetDlg"><p id="resetQ"></p><div class="row"><button id="resetNo"></button><button id="resetYes" class="on"></button></div></dialog>
+
 <script>
-"use strict";
-
-/* ══════════════════════════════════════════════════════════════
-   0.  i18n  —  language is switched by a button, no page reload
-   ══════════════════════════════════════════════════════════════ */
-const T = {
-  ko:{
-    title:"IPhO 2011 실험 1 — 전기 블랙박스 : 정전용량식 변위 센서",
-    sub:"가상 실험실 · 리드선 끝을 끌어다 단자에 물리고, 위 극판을 밀어 보세요",
-    hBench:"실험대", newbatt:"새 건전지", reset:"처음으로 (모두 되돌리기)",
-    tray:"부품함", trayTake:"클릭해서 집기", trayOut:"실험대 위", trayAlways:"클릭한 뒤 발진기의 건전지를 클릭",
-    trayHelp:"좌클릭 집기 · 놓기 / 우클릭 되돌리기\n끌어다 놓기도 됩니다",
-    itCap:c=>"축전기 "+c, itBatt:"9 V 건전지 상자 (새것·헌것 섞임)",
-    closecap:"클로즈업 — 왼쪽: MASTECH 멀티미터 / 오른쪽: 위 극판 끝과 mm 눈금 (3배)",
-    mBatt:"발진기의 건전지를 상자에서 꺼낸 다른 건전지로 바꿨습니다.", mNeedBatt:"건전지는 발진기 위의 9 V 건전지 자리를 클릭해서 바꿉니다.",
-    mCapOn:c=>"축전기 "+c+" 을(를) 실험대에 놓았습니다.", mCapBack:c=>"축전기 "+c+" 을(를) 부품함에 넣었습니다.",
-    hTable:"TABLE 1 — 축전기 표시값",
-    t1:"TABLE 1   33J: 34±1   68: 68±1   82J: 84±1   151: 150±1  (pF)",
-    benchcap:"실험대 — 나무 밑판 위의 블랙박스 · 발진기 · MASTECH 멀티미터",
-    note:"• 스위치를 올리고 다이얼을 Hz 에 맞추면 발진 주파수가 보입니다.\n"+
-         "• 멀티미터 리드선 끝을 끌어 발진기의 빨강·검정 잭에 물리세요.\n"+
-         "• 9 V 건전지의 스냅 리드선을 발진기의 (+)(−) 입력에 물려야 발진합니다.\n"+
-         "• 건전지 상자에는 다 쓴 것이 섞여 있습니다. 리드선을 건전지 단자에 대고 다이얼을 20 V 에 두면 전압을 잴 수 있습니다.\n"+
-         "• 나무 블랙박스의 위 극판은 끌어서 밀 수 있고, 오른쪽 끝이 mm 눈금을 가리킵니다.\n"+
-         "• 부품 상자의 축전기를 실험대로 꺼내 악어클립으로 물면 블랙박스 대신 그 축전기가 발진기에 붙습니다. 두 축전기를 겹쳐 놓으면 다리가 묶여 병렬이 됩니다.\n"+
-         "• 다이얼 위에서 휠을 굴리면 한 칸씩 돌아갑니다.\n"+
-         "프로그램은 아무것도 계산해 주지 않습니다."
-  },
-  en:{
-    title:"IPhO 2011 Experiment 1 — Electrical Blackbox: Capacitive Displacement Sensor",
-    sub:"Virtual laboratory · drag the lead ends onto the terminals and push the upper plate",
-    hBench:"Bench", newbatt:"New battery", reset:"Restart (put everything back)",
-    tray:"Parts box", trayTake:"click to pick up", trayOut:"on the bench", trayAlways:"click, then click the oscillator battery",
-    trayHelp:"L-click pick/place, R-click return\ndrag and drop works too",
-    itCap:c=>"Capacitor "+c, itBatt:"Box of 9 V batteries (new and flat mixed)",
-    closecap:"close-up — left: the MASTECH multimeter / right: the edge of the upper plate on the mm scale (3×)",
-    mBatt:"The oscillator battery was swapped for another one from the box.", mNeedBatt:"Click the 9 V battery on the oscillator to swap it.",
-    mCapOn:c=>"Capacitor "+c+" put on the bench.", mCapBack:c=>"Capacitor "+c+" put back in the box.",
-    hTable:"TABLE 1 — marking on the capacitors",
-    t1:"TABLE 1   33J: 34±1   68: 68±1   82J: 84±1   151: 150±1  (pF)",
-    benchcap:"bench — the blackbox, the oscillator and the MASTECH multimeter on the wooden base",
-    note:"• Throw the switch and set the dial to Hz to see the oscillator frequency.\n"+
-         "• Drag the ends of the meter leads onto the red and black jacks of the oscillator.\n"+
-         "• The snap leads of the 9 V battery must sit on the (+)(−) inputs of the oscillator.\n"+
-         "• The box of batteries has flat ones in it. Put the meter leads on the battery terminals and turn the dial to 20 V to measure it.\n"+
-         "• The upper plate of the wooden blackbox is dragged along; its right-hand edge reads against the millimetre scale.\n"+
-         "• Take a capacitor out of the tray and grip it with the crocodile clips: it then replaces the blackbox at the oscillator. Stack two of them and their leads are tied together, i.e. in parallel.\n"+
-         "• The wheel over the dial turns it one position at a time.\n"+
-         "Nothing is computed for you."
-  }
+/* ==================================================================
+   IPhO 2011 (Bangkok) — Experiment 1 "Electrical Blackbox: Capacitive
+   Displacement Sensor", in 3-D after Figures 1–3 of the official paper:
+   the dark wooden base with the 9 V battery, the white relaxation
+   oscillator with its switch and its red and black frequency output, the
+   wooden blackbox with the two screws to its plates and the sliding upper
+   plate over a millimetre scale, the yellow MASTECH multimeter, and the
+   four capacitors 33J, 68, 82J and 151 on their green cards.
+   Nothing is computed for the student: the meter shows a frequency or a
+   voltage and the edge of the plate is read on the scale.
+   ================================================================== */
+let LANG = new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko";
+const I18N = {
+  title: ["IPhO 2011 Experiment 1 — Electrical Blackbox: Capacitive Displacement Sensor", "IPhO 2011 실험 1 — 전기 블랙박스: 정전용량식 변위 센서"],
+  sub: ["Virtual laboratory · wire the oscillator, read its frequency on the multimeter, push the upper plate along the scale",
+        "가상 실험실 · 발진기를 연결하고 멀티미터로 진동수를 읽으며, 위 극판을 눈금을 따라 밀어 보세요"],
+  trayTitle: ["Parts box", "부품함"],
+  trayTake: ["click: put on the desk", "클릭: 책상에 꺼내기"],
+  trayBack: ["on the desk · click: put back", "책상 위 · 클릭: 넣기"],
+  trayBatt: ["click: take a fresh one", "클릭: 새 건전지 받기"],
+  trayHand: ["in your hand · click the battery", "손에 있음 · 발진기 건전지 클릭"],
+  trayHelp: ["click a part on the desk: drag it\nright-click: back in the box", "책상 위 부품은 끌어서 옮김\n우클릭: 부품함에 넣기"],
+  it_cap: ["capacitor %s", "축전기 %s"],
+  it_batt: ["9 V batteries (new and old mixed)", "9 V 건전지 (새것·헌것 섞임)"],
+  cap_3d: ["the bench — drag to turn · wheel to zoom · click the meter or the scale to look closely · double-click the empty desk: view back",
+           "실험대 — 끌어서 회전 · 휠로 확대 · 멀티미터나 눈금을 클릭하면 확대 · 빈 책상 더블클릭: 처음 시점"],
+  cap_dmm: ["close-up: the multimeter — click a setting on the dial or roll the wheel over it · right-click: back",
+            "확대: 멀티미터 — 다이얼의 눈금을 클릭하거나 휠로 돌리기 · 우클릭: 돌아가기"],
+  cap_scale: ["close-up: the edge of the upper plate on the millimetre scale — drag the plate · right-click: back",
+              "확대: mm 눈금 위의 위 극판 끝 — 극판을 끌어서 밀기 · 우클릭: 돌아가기"],
+  cap_osc: ["close-up: the oscillator — drag the lead ends onto the terminals · right-click: back",
+            "확대: 발진기 — 리드선 끝을 끌어 단자에 물리기 · 우클릭: 돌아가기"],
+  back: ["◀ the bench", "◀ 실험대"],
+  pOsc: ["Oscillator", "발진기"],
+  swOn: ["Switch: ON", "스위치: 켜짐"], swOff: ["Switch: OFF", "스위치: 꺼짐"],
+  pWire: ["Connections", "연결"],
+  pTable: ["Table 1 — marking on the capacitors", "표 1 — 축전기 표시값"],
+  t1: ["33J: 34 ± 1   68: 68 ± 1\n82J: 84 ± 1   151: 150 ± 1  (pF)", "33J: 34 ± 1   68: 68 ± 1\n82J: 84 ± 1   151: 150 ± 1  (pF)"],
+  newExp: ["Start again (everything back)", "처음부터 (모두 되돌리기)"],
+  resetQ: ["Put everything back as it was at the start? A new battery is drawn from the box.", "모든 장비를 처음 상태로 되돌릴까요? 건전지도 상자에서 새로 뽑습니다."],
+  yes: ["Start again", "처음부터"], no: ["Cancel", "취소"],
+  w_snap: ["battery → oscillator 9 V input", "건전지 → 발진기 9 V 입력"],
+  w_probe: ["meter probes → oscillator output", "멀티미터 리드 → 발진기 출력"],
+  w_clip: ["crocodile clips → ", "악어클립 → "],
+  w_bb: ["the blackbox", "블랙박스"],
+  w_caps: ["capacitor(s) %s", "축전기 %s"],
+  w_open: ["(not on a capacitor)", "(축전기에 물리지 않음)"],
+  w_ok: ["✓", "✓"], w_no: ["—", "—"],
+  st_ready: ["Connect the battery snap to the 9 V input of the oscillator, the meter probes to its red and black output, switch on and set the dial to Hz.",
+             "건전지 스냅을 발진기의 9 V 입력에, 멀티미터 리드를 빨강·검정 출력에 물린 뒤 스위치를 켜고 다이얼을 Hz에 맞추세요."],
+  st_batt: ["The battery on the oscillator was swapped for another one from the box.", "발진기의 건전지를 상자에서 꺼낸 다른 건전지로 바꿨습니다."],
+  st_needBatt: ["Click the 9 V battery on the base to swap it.", "밑판 위 9 V 건전지를 클릭하면 바꿉니다."],
+  st_capOn: ["Capacitor %s is on the desk. Drag a crocodile clip onto each of its leads.", "축전기 %s를 책상에 놓았습니다. 악어클립을 각 다리에 하나씩 물리세요."],
+  st_capBack: ["Capacitor %s is back in the box.", "축전기 %s를 부품함에 넣었습니다."],
+  st_stack: ["The leads are twisted together: the capacitors are in parallel.", "다리를 꼬아 묶었습니다: 두 축전기가 병렬입니다."],
+  st_unstack: ["The capacitor is untwisted from the others.", "축전기를 풀어 따로 놓았습니다."],
+  st_on: ["Snapped on: %s", "물렸습니다: %s"],
+  st_free: ["Left on the desk.", "책상 위에 내려놓았습니다."],
+  t_BINP: ["9 V input +", "9 V 입력 +"], t_BINN: ["9 V input −", "9 V 입력 −"],
+  t_JR: ["output (red)", "출력 (빨강)"], t_JB: ["output (black)", "출력 (검정)"],
+  t_BATP: ["battery snap +", "건전지 스냅 +"], t_BATN: ["battery snap −", "건전지 스냅 −"],
+  t_BBL: ["blackbox: lower plate", "블랙박스: 아래 극판"], t_BBU: ["blackbox: upper plate", "블랙박스: 위 극판"],
+  t_lead: ["a lead of %s", "%s의 다리"],
+  info: [`<h4>The apparatus (Figures 1–3 of the paper)</h4><ul>
+<li>On the dark wooden base: the 9 V battery, the white relaxation oscillator with its switch at the front, and its red and black frequency output on top.</li>
+<li>The wooden blackbox is a parallel-plate capacitor: two plates of small teeth with a dielectric sheet (K = 1.5, d = 0.20 mm) between them. Its two screws are the connectors to the plates; the crocodile clips of the oscillator sit on them.</li>
+<li>The upper plate slides in and out on the right. Its edge reads against the white millimetre scale.</li>
+<li>The MASTECH multimeter on the desk measures the frequency on the Hz setting (Figure 3), and d.c. volts on the V settings.</li>
+<li>The parts box holds the capacitors 33J, 68, 82J and 151 (Table 1) and a box of 9 V batteries, new and old mixed.</li></ul>
+<h4>Handling</h4><ul>
+<li>Drag any lead end (the battery snap, the meter probes, the crocodile clips) onto a terminal: it snaps on when it is close. Dropped elsewhere it lies on the desk.</li>
+<li>Click the switch on the base to turn the oscillator on; its lamp shows that it runs.</li>
+<li>Check the battery: put the probes on the snap ends and turn the dial to 20 V. Below 9 V, take a new one from the box and click the battery on the base.</li>
+<li>Take a capacitor out of the box and clip both crocodile clips to its two leads: it then replaces the blackbox. Drag one capacitor onto another to twist their leads together (in parallel); drag it off again to separate them.</li>
+<li>Click the meter, the scale or the oscillator for a close-up. Right-click goes back, or puts a part back in the box.</li></ul>
+<h4>Measuring</h4><ul>
+<li>The simulator computes nothing for you. Read the frequency on the meter and the position of the plate edge on the 1 mm scale yourself.</li>
+<li>The last digit of the meter flickers, as on the real one, and a tired battery makes the oscillator slow and finally stop.</li></ul>`,
+`<h4>장비 (문제지 그림 1–3)</h4><ul>
+<li>짙은 나무 밑판 위에 9 V 건전지, 앞쪽에 스위치가 달린 흰 이완 발진기가 있고, 발진기 윗면에 빨강·검정 진동수 출력 단자가 있습니다.</li>
+<li>나무 블랙박스는 평행판 축전기입니다. 작은 이빨이 줄지은 두 극판 사이에 유전체 판(K = 1.5, d = 0.20 mm)이 있습니다. 상자의 나사 두 개가 극판에 연결된 단자이고, 발진기의 악어클립이 여기에 물려 있습니다.</li>
+<li>오른쪽의 위 극판은 밀어 넣고 빼낼 수 있으며, 그 끝이 흰 mm 눈금을 가리킵니다.</li>
+<li>책상 위 MASTECH 멀티미터는 Hz 위치에서 진동수를(그림 3), V 위치에서 직류 전압을 잽니다.</li>
+<li>부품함에는 축전기 33J, 68, 82J, 151(표 1)과 새것·헌것이 섞인 9 V 건전지 상자가 있습니다.</li></ul>
+<h4>조작</h4><ul>
+<li>리드선 끝(건전지 스냅, 멀티미터 리드, 악어클립)을 끌어 단자 가까이 놓으면 물립니다. 다른 곳에 놓으면 책상 위에 놓입니다.</li>
+<li>밑판 앞의 스위치를 클릭하면 발진기가 켜지고, 램프로 작동 여부를 알 수 있습니다.</li>
+<li>건전지 확인: 리드를 스냅 끝에 대고 다이얼을 20 V에 두세요. 9 V보다 낮으면 부품함에서 새 건전지를 받아 밑판의 건전지를 클릭합니다.</li>
+<li>축전기를 꺼내 두 악어클립을 각 다리에 물리면 블랙박스 대신 그 축전기가 연결됩니다. 축전기를 다른 축전기 위로 끌어다 놓으면 다리가 꼬여 병렬이 되고, 다시 끌어내면 풀립니다.</li>
+<li>멀티미터·눈금·발진기를 클릭하면 확대됩니다. 우클릭하면 돌아가거나, 부품을 부품함에 넣습니다.</li></ul>
+<h4>측정</h4><ul>
+<li>시뮬레이터는 아무것도 계산해 주지 않습니다. 멀티미터의 진동수와 1 mm 눈금 위 극판 끝의 위치를 직접 읽으세요.</li>
+<li>실제 계기처럼 마지막 자리가 깜박이고, 닳은 건전지는 발진기를 느리게 하다가 결국 멈추게 합니다.</li></ul>`],
 };
-let lang = (new URLSearchParams(location.search).get("lang")==="en") ? "en" : "ko";
-const $ = id=>document.getElementById(id);
+function tr(k){ const e = I18N[k]; return e ? (LANG === "ko" ? e[1] : e[0]) : k; }
 
-/* ══════════════════════════════════════════════════════════════
-   1.  HIDDEN TRUTH  —  identical to the Python constants
-   ══════════════════════════════════════════════════════════════ */
-const EPS0    = 8.85e-12;
-const K_DIEL  = 1.5;
-const D_GAP   = 0.20e-3;
-const W_TOOTH = 5.0e-3;
-const B_TOOTH = 60.0e-3;
-const DC_STEP = K_DIEL * EPS0 * B_TOOTH * W_TOOTH / D_GAP;
-const C_OFF   = 60.0e-12;
-const ALPHA0  = 714e-9;
-const C_STRAY = 17.9e-12;
+/* ==== PHYSICS START ====================================================
+   What the instruments read.  Nothing here hands the student a derived
+   quantity: the meter shows a frequency or a voltage, the scale shows
+   where the edge of the upper plate is, and that is all.
+
+   The oscillator:   f = alpha / (C + C_s)
+       alpha = 714 nF/s,  C_s = 17.9 pF                 (official Part 1)
+   The capacitors of Table 1 have their own true values, close to the
+   marking.
+
+   The blackbox is Pattern I: two combs of rectangular teeth, pitch 1.0 cm,
+   the upper one sliding into the lower one over a 0.20 mm sheet of K = 1.5.
+       C(s) = C_par + K eps0 b / d * (overlap of the teeth, in length)
+   As the plate goes in, one more tooth engages every pitch, so the peaks
+   of C climb by K eps0 w b / d = 19.9 pF per period (the official C_max
+   against node), and the troughs climb too: the teeth of the kit are a
+   little wider than the gaps (6.6 mm on a 10 mm pitch), so they never
+   quite clear one another.  The flat bottoms and the climbing troughs of
+   the official C-x table come from that.  C_par, the engagement at s = 0
+   and the phase are fitted to the 59 rows of the official table (rms 5.7 pF,
+   about the scatter of reading a slider by hand).
+   ==================================================================== */
+const EPS0 = 8.85e-12, K_DIEL = 1.5, D_GAP = 0.20e-3;
+const ALPHA0 = 714e-9, C_STRAY = 17.9e-12;
+const CAPS = [["33J", 34, 33.6e-12], ["68", 68, 67.4e-12], ["82J", 84, 83.8e-12], ["151", 150, 149.2e-12]];
+const PITCH_MM = 10.0, TOOTH_MM = 6.60, B_TOOTH = 49.1e-3;
+const KAPPA = K_DIEL * EPS0 * B_TOOTH / D_GAP * 1e-3;     /* farad per mm of overlap */
+const C_PAR = 44.35e-12, LEAD0_MM = 16.64, PHASE_MM = -1.48;
 const TRAVEL_MM = 60.0;
 const DMM_HZ_FS = 19.99;
-const BATT_GOOD = [9.05, 9.55];   /* nearly new battery */
-const BATT_WEAK = [6.60, 8.85];   /* flat battery       */
-const BATT_DRAIN = 0.0008;
+const BATT_GOOD = [9.05, 9.55], BATT_WEAK = [6.60, 8.85], BATT_DRAIN = 0.0008;
+const V_OSC_MIN = 7.60, V_OSC_OK = 8.60;
 
-const uni = (a,b)=>a+Math.random()*(b-a);
-function newBattery(pWeak=0.30){
-  const [lo,hi] = (Math.random()<pWeak) ? BATT_WEAK : BATT_GOOD;
-  return Math.round(uni(lo,hi)*100)/100;
+/* length of tooth overlap with the upper plate pushed in by s mm */
+function overlapMM(s){
+  const lead = LEAD0_MM + s; let sum = 0;
+  for (let k = 0; k < 40; k++){
+    const u1 = lead - k * PITCH_MM, u0 = u1 - TOOTH_MM; if (u1 <= 0) break;
+    for (let j = -1; j < 40; j++){
+      const l0 = PHASE_MM + j * PITCH_MM, l1 = l0 + TOOTH_MM;
+      const lo = Math.max(u0, l0, 0), hi = Math.min(u1, l1);
+      if (hi > lo) sum += hi - lo;
+    }
+  }
+  return sum;
 }
+function C_blackbox(s){ return C_PAR + KAPPA * overlapMM(Math.min(Math.max(s, 0), TRAVEL_MM)); }
 
-const CAPS = [["33J",34,33.6e-12], ["68",68,67.4e-12],
-              ["82J",84,83.8e-12], ["151",150,149.2e-12]];
-
-/* ── palette ── */
-const C_BG="#d6dadb", C_TRAY="#c5cacb", C_WIRE_R="#a5251f", C_WIRE_B="#17191a",
-      C_GHOST="#8b9096", C_SEL="#ffb300";
-const BOARD_S=1.00, DMM_S=0.66, CARD_S=0.62, BODY_S=0.85;
-
-/* ── coordinates inside the board photograph (1072 x 394) ── */
-const BW=1072, BH=394;
-const JR=[167,135], JB=[165,215];
-const SCREW1=[292,81], SCREW2=[283,312];
-const SWI=[33,281];
-const CLIP_OUT_R=[226,168], CLIP_OUT_B=[226,206];
-const BATT_P=[52,40], BATT_N=[52,66];
-const BINP=[24,116], BINN=[24,142];
-
-/* ── the real dial of the MASTECH (screen angles, 0 deg = right) ── */
-const DIAL = [["off",-90,"OFF"],
-              ["v1000",-52,"1000"], ["v200",-30,"200"], ["v20",-8,"20"],
-              ["v2",14,"2"],   ["a20m",36,"20m"], ["a200m",58,"200m"],
-              ["hz",82,"Hz"],  ["temp",104,"°C"],
-              ["c20u",126,"20µ"], ["c200n",148,"200n"],
-              ["r200k",170,"200k"], ["r20k",192,"20k"],
-              ["r2k",214,"2k"],  ["r200",236,"200"]];
-const DIAL_ORDER = DIAL.map(d=>d[0]);
-const DIAL_ANG = {}; DIAL.forEach(d=>DIAL_ANG[d[0]]=d[1]);
-const SLIDER_XR=825, SLIDER_Y=58, SLIDER_Y2=338, SLIDER_W=300, PXMM=2.334;
-const CLIP_HOME_R=[330,258], CLIP_HOME_B=[412,196];
-
-/* ══════════════════════════════════════════════════════════════
-   2.  PHYSICS
-   ══════════════════════════════════════════════════════════════ */
-function C_blackbox(x_mm){
-  const x = Math.min(Math.max(x_mm,0.0), TRAVEL_MM-1e-9);
-  const n = 1 + Math.floor(x/(2*W_TOOTH*1e3));
-  const ph = x % (2*W_TOOTH*1e3);
-  const tri = 1.0 - Math.abs(ph - W_TOOTH*1e3)/(W_TOOTH*1e3);
-  return C_OFF + n*DC_STEP*tri;
+function newBattery(rng, pWeak){
+  const [lo, hi] = rng() < (pWeak === undefined ? 0.30 : pWeak) ? BATT_WEAK : BATT_GOOD;
+  return Math.round((lo + rng() * (hi - lo)) * 100) / 100;
 }
-const V_OSC_MIN = 7.60;   /* below this the oscillator will not start at all */
-const V_OSC_OK  = 8.60;   /* only above this does it run to specification    */
 function oscState(battV, connected){
-  if(!connected || battV < V_OSC_MIN) return 0;
+  if (!connected || battV < V_OSC_MIN) return 0;
   return battV >= V_OSC_OK ? 2 : 1;
 }
+/* a tired battery slows the oscillator down: the threshold of its comparator moves */
 function frequency(Ctot, battV){
-  if(Ctot <= 0) return null;
+  if (!(Ctot > 0)) return null;
   let a = ALPHA0;
-  if(battV < V_OSC_OK) a *= 1.0 - 0.16*(V_OSC_OK - battV);
-  return a/Ctot;
+  if (battV < V_OSC_OK) a *= 1.0 - 0.16 * (V_OSC_OK - battV);
+  return a / Ctot;
 }
 
-/* ══════════════════════════════════════════════════════════════
-   3.  CANVAS — a thin tkinter-shaped drawing layer
-   ══════════════════════════════════════════════════════════════ */
-const CW = 1340, CH = 624;             /* logical canvas size, as in Python */
-const cv = $("bench");
-let ctx = cv.getContext("2d"); const benchCtx = ctx;
-let DPR = 1, cssW = CW;
+/* the dial of the MASTECH meter, clockwise from OFF (angle on the face, 0 = right, + clockwise on screen) */
+const DIAL = [["off", -90, "OFF"], ["v1000", -52, "1000"], ["v200", -30, "200"], ["v20", -8, "20"],
+              ["v2", 14, "2"], ["a20m", 36, "20m"], ["a200m", 58, "200m"], ["hz", 82, "Hz"], ["temp", 104, "°C"],
+              ["c20u", 126, "20µ"], ["c200n", 148, "200n"], ["r200k", 170, "200k"], ["r20k", 192, "20k"],
+              ["r2k", 214, "2k"], ["r200", 236, "200"]];
+const DIAL_ORDER = DIAL.map(d => d[0]);
 
-const PT = 4/3;                        /* tk point size -> css pixels */
-function fnt(size, family, weight){
-  const fam = (family==="Courier New") ? '"Courier New",Consolas,monospace'
-                                       : 'Helvetica,Arial,"Malgun Gothic",sans-serif';
-  return (weight?weight+" ":"") + (size*PT).toFixed(1) + "px " + fam;
-}
-function setStroke(col,w,cap,dash){
-  ctx.strokeStyle = col; ctx.lineWidth = w||1;
-  ctx.lineCap = cap||"butt"; ctx.lineJoin = "round";
-  ctx.setLineDash(dash||[]);
-}
-function gRect(x0,y0,x1,y1,fill,outline,width){
-  if(fill){ ctx.fillStyle=fill; ctx.fillRect(x0,y0,x1-x0,y1-y0); }
-  if(outline){ setStroke(outline,width||1); ctx.strokeRect(x0,y0,x1-x0,y1-y0); }
-}
-function gOval(x0,y0,x1,y1,fill,outline,width,dash){
-  const cx=(x0+x1)/2, cy=(y0+y1)/2, rx=Math.abs(x1-x0)/2, ry=Math.abs(y1-y0)/2;
-  ctx.beginPath(); ctx.ellipse(cx,cy,Math.max(rx,.01),Math.max(ry,.01),0,0,2*Math.PI);
-  if(fill){ ctx.fillStyle=fill; ctx.fill(); }
-  if(outline){ setStroke(outline,width||1,"butt",dash); ctx.stroke(); ctx.setLineDash([]); }
-}
-function gLine(pts,col,width,cap,dash){
-  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
-  for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
-  setStroke(col,width,cap,dash); ctx.stroke(); ctx.setLineDash([]);
-}
-/* tk's smooth 3-point line: passes through the ends, pulled towards the middle */
-function gSmooth(p0,pm,p1,col,width,cap){
-  ctx.beginPath(); ctx.moveTo(p0[0],p0[1]);
-  ctx.quadraticCurveTo(pm[0],pm[1],p1[0],p1[1]);
-  setStroke(col,width,cap); ctx.stroke();
-}
-function gPoly(pts,fill,outline,width){
-  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
-  for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
-  ctx.closePath();
-  if(fill){ ctx.fillStyle=fill; ctx.fill(); }
-  if(outline){ setStroke(outline,width||1); ctx.stroke(); }
-}
-function gRound(x0,y0,x1,y1,r,fill,outline,width){
-  ctx.beginPath();
-  ctx.moveTo(x0+r,y0);
-  ctx.lineTo(x1-r,y0); ctx.quadraticCurveTo(x1,y0,x1,y0+r);
-  ctx.lineTo(x1,y1-r); ctx.quadraticCurveTo(x1,y1,x1-r,y1);
-  ctx.lineTo(x0+r,y1); ctx.quadraticCurveTo(x0,y1,x0,y1-r);
-  ctx.lineTo(x0,y0+r); ctx.quadraticCurveTo(x0,y0,x0+r,y0);
-  ctx.closePath();
-  if(fill){ ctx.fillStyle=fill; ctx.fill(); }
-  if(outline){ setStroke(outline,width||1); ctx.stroke(); }
-}
-function gText(x,y,txt,fill,font,anchor){
-  ctx.font = font; ctx.fillStyle = fill;
-  ctx.textAlign = anchor==="e" ? "right" : (anchor==="nw"||anchor==="w") ? "left" : "center";
-  ctx.textBaseline = anchor==="nw" ? "top" : "middle";
-  ctx.fillText(txt,x,y);
-}
+function mulberry(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
-/* ══════════════════════════════════════════════════════════════
-   4.  APPARATUS ARTWORK
-        (the problem-sheet photograph measured pixel by pixel and
-         redrawn as vectors — no image files anywhere)
-   ══════════════════════════════════════════════════════════════ */
-const C_WOOD="#7a5a46",  C_WOOD_D="#4e392c",
-      C_LID="#6c4c33",   C_LID_D="#4a3221",
-      C_SLIDE="#8a6a52", C_TRACK="#5e483c", C_TAPE="#0a0a0a",
-      C_END="#6e4d3c",   C_BOX="#bec0bb",   C_BOX_D="#9ea09b",
-      C_JR="#9c211e",    C_JB="#333331",    C_SCALE="#dfe3e6",
-      C_SCREW="#c9ccce", C_STICK="#f4f4f6", C_BATT="#3a3a3e",
-      C_DMM_Y="#f2c231", C_DMM_K="#333533", C_LCD="#96a896", C_CARD="#9cdfdd";
-const PXMM_ART = 2.334;
-
-function grain(x0,y0,x1,y1,col,step,P,slant){
-  slant = (slant===undefined)?6:slant;
-  for(let x=Math.floor(x0); x<x1; x+=step){
-    const a=P(x,y0), b=P(x+slant,y1);
-    gLine([a,b],col,1);
+/* ---- the kit on the bench ----
+   Every connection is a place a conductor end sits:
+     the battery snap leads  snap.p / snap.n : "BINP", "BINN" or a point on the desk
+     the meter probes        probe.r / probe.b : "JR", "JB" (the oscillator output),
+                             "BATP", "BATN" (the snap ends), or a point
+     the crocodile clips     clip.r / clip.b : "BBL", "BBU" (the blackbox screws),
+                             "A3", "B0" ... (a lead of capacitor 3, 0), or a point  */
+class Kit {
+  constructor(seed){
+    this.rng = mulberry(seed || (Date.now() & 0x7fffffff));
+    this.reset();
   }
-}
-
-/* the sliding upper plate — its right-hand edge reads the scale */
-function artSlider(P, s, slideMm){
-  const rect=(x0,y0,x1,y1,fill,outline,width)=>{
-    const a=P(x0,y0), b=P(x1,y1); gRect(a[0],a[1],b[0],b[1],fill,outline,width);
-  };
-  const xr = 825 + slideMm*PXMM_ART;
-  const xl = xr - 300.0;                       /* the left end runs under the lid */
-  rect(xl,58,xr,338,C_SLIDE,"#4c3626",Math.max(1,Math.floor(2*s)));
-  grain(xl+4,62,xr-4,334,"#7b5c46",22,P,2);
-  rect(xl,58,xr,68,"#9d7d63",null);                       /* highlight on the top edge */
-  rect(xr-9,58,xr,338,"#9d7d63","#4c3626",Math.max(1,Math.floor(s)));  /* grip edge */
-  rect(xr,62,xr+5,342,"#3d2c22",null);                    /* shadow */
-  const a=P(xr,340), b=P(xr,350);                         /* index line for the scale */
-  gLine([a,b],"#c0202a",Math.max(1,Math.floor(2*s)));
-}
-
-function artIndicators(P, s, swOn, led){
-  const ovl=(x0,y0,x1,y1,fill,outline,width)=>{
-    const a=P(x0,y0), b=P(x1,y1); gOval(a[0],a[1],b[0],b[1],fill,outline,width);
-  };
-  /* LED */
-  ovl(70,171,82,183,(led===2?"#57ff57":(led===1?"#2e7a33":"#26331f")),"#2c3a2c",1);
-  /* power switch */
-  const sx=SWI[0], sy=SWI[1];
-  const ang = (swOn?72:108)*Math.PI/180;                   /* which way the lever lies */
-  const a=P(sx+26*Math.cos(ang), sy+26*Math.sin(ang)), b=P(sx,sy);
-  gLine([a,b],"#9aa0a6",Math.max(2,Math.floor(5*s)),"round");
-  gLine([a,b],"#e2e6ea",Math.max(1,Math.floor(2*s)),"round");
-  ovl(sx-8,sy-6,sx+8,sy+6,"#c3c7cb","#6f7376",Math.max(1,Math.floor(1.5*s)));
-  for(let i=0;i<4;i++){                                    /* knurling */
-    gLine([P(sx-5+i*3.4,sy-5),P(sx-5+i*3.4,sy+5)],"#8b9096",1);
+  reset(){
+    this.sw = false; this.dial = "off"; this.slide = 0.0;
+    this.battV = newBattery(this.rng);
+    this.snap = {p: null, n: null};
+    this.probe = {r: null, b: null};
+    this.clip = {r: "BBU", b: "BBL"};
+    this.caps = {};              /* i -> [x, z] on the desk, for the ones taken out */
+    this.stack = {};             /* i -> the capacitor whose leads it is twisted to */
+    this.jit = 0.0;
   }
-}
-
-function screws(P,s){
-  const ovl=(x0,y0,x1,y1,fill,outline,width)=>{
-    const a=P(x0,y0), b=P(x1,y1); gOval(a[0],a[1],b[0],b[1],fill,outline,width);
-  };
-  for(const [sx,sy] of [SCREW1,SCREW2]){
-    ovl(sx-9,sy-9,sx+9,sy+9,C_SCREW,"#6f7376",Math.max(1,Math.floor(2*s)));
-    gLine([P(sx-6,sy),P(sx+6,sy)],"#6f7376",1);
+  battIn(){ return this.snap.p === "BINP" && this.snap.n === "BINN"; }
+  osc(){ return this.sw ? oscState(this.battV, this.battIn()) : 0; }
+  root(i){ const seen = new Set(); while (this.stack[i] !== undefined && !seen.has(i)){ seen.add(i); i = this.stack[i]; } return i; }
+  /* the conductor a clip end is on */
+  node(c){
+    if (c === "BBL" || c === "BBU") return c;
+    if (typeof c === "string" && /^[AB]\d$/.test(c) && this.caps[+c[1]] !== undefined) return c[0] + this.root(+c[1]);
+    return null;
   }
-}
-
-/*  The board seen from above.  `part` selects the layer:
-      "bot"    base plate, track, tape, millimetre scale
-      "slider" the sliding upper plate
-      "top"    lid, rail, end block, oscillator, battery, jacks, screws
-      "ind"    LED and switch
-    The layers are painted in that order so that the plate slides *under*
-    the blackbox lid while staying visible where the track is open.       */
-function artBoard(ox, oy, s, slideMm, swOn, led, part){
-  const P=(x,y)=>[ox+x*s, oy+y*s];
-  const rect=(x0,y0,x1,y1,fill,outline,width)=>{
-    const a=P(x0,y0), b=P(x1,y1); gRect(a[0],a[1],b[0],b[1],fill,outline,width);
-  };
-  const ovl=(x0,y0,x1,y1,fill,outline,width)=>{
-    const a=P(x0,y0), b=P(x1,y1); gOval(a[0],a[1],b[0],b[1],fill,outline,width);
-  };
-
-  if(part==="ind"){ artIndicators(P,s,swOn,led); return P; }
-  if(part==="slider"){ artSlider(P,s,slideMm); return P; }
-
-  if(part==="bot"){
-    /* ---- base plate ---------------------------------------------- */
-    rect(6,6,1062,382,C_WOOD,C_WOOD_D,Math.max(1,Math.floor(2*s)));
-    grain(10,8,1058,380,"#6d4f3d",44,P);
-    /* ---- track (the milled groove) -------------------------------- */
-    rect(736,52,972,342,C_TRACK,"#463529",Math.max(1,Math.floor(2*s)));
-    grain(740,56,970,340,"#544035",30,P,3);
-    /* black tape stuck to the right of the track (fixed) */
-    rect(890,60,970,112,C_TAPE,null);
-    rect(890,285,970,338,C_TAPE,null);
-    /* ---- mm scale (below the track, glued to the base plate) ------- */
-    rect(736,346,982,384,C_SCALE,"#9aa0a4",1);
-    for(let v=-38; v<68; v++){
-      const xx = 825 + v*PXMM_ART;
-      if(!(xx>=740 && xx<=980)) continue;
-      const h = (v%10===0) ? 17 : ((v%5===0) ? 12 : 7);
-      gLine([P(xx,348),P(xx,348+h)],"#1a1a1a",
-            Math.max(1,Math.floor((v%10===0?2:1)*s)));
-      if(v%10===0 && v>=0 && v<=60){
-        const q=P(xx,374);
-        gText(q[0],q[1],String(v),"#1a1a1a",fnt(Math.max(5,Math.floor(9*s))));
-      }
+  /* capacitance between the two clips, or null when the clips short or nothing is held */
+  load(){
+    const a = this.node(this.clip.r), b = this.node(this.clip.b);
+    if (a === null || b === null) return 0;
+    if (a === b) return null;
+    const pair = (p, q) => (a === p && b === q) || (a === q && b === p);
+    let C = 0;
+    if (pair("BBL", "BBU")) C += C_blackbox(this.slide);
+    const groups = {};
+    for (const k of Object.keys(this.caps)){ const r = this.root(+k); groups[r] = (groups[r] || 0) + CAPS[+k][2]; }
+    for (const r of Object.keys(groups)) if (pair("A" + r, "B" + r)) C += groups[r];
+    return C;
+  }
+  frequencyHz(){
+    if (this.osc() === 0) return 0;
+    const C = this.load();
+    if (C === null) return 0;                      /* timing capacitor shorted: the oscillator stalls */
+    return frequency(C + C_STRAY, this.battV);
+  }
+  display(){
+    const d = this.dial;
+    if (d === "off") return "";
+    const pr = this.probe.r, pb = this.probe.b;
+    if (d[0] === "v"){
+      const fs = {v1000: 1000, v200: 200, v20: 20, v2: 2}[d];
+      let v = 0;
+      if (pr === "BATP" && pb === "BATN") v = this.battV; else if (pr === "BATN" && pb === "BATP") v = -this.battV;
+      /* the output is a square wave; a d.c. range shows its mean */
+      else if ((pr === "JR" && pb === "JB") || (pr === "JB" && pb === "JR")) v = (this.osc() ? 0.47 * this.battV : 0) * (pr === "JR" ? 1 : -1);
+      if (Math.abs(v) > fs) return "1   ";
+      const dec = fs <= 2 ? 3 : fs <= 20 ? 2 : fs <= 200 ? 1 : 0;
+      return v.toFixed(dec);
     }
-    return P;
+    if (d[0] === "r") return "1   ";
+    if (d === "temp" || d === "c20u" || d === "c200n" || d[0] === "a") return "0.00";
+    /* frequency: the meter counts what comes in on the probes */
+    const onOut = (pr === "JR" && pb === "JB") || (pr === "JB" && pb === "JR");
+    if (!onOut) return "0.00";
+    const f = this.frequencyHz();
+    if (!f) return "0.00";
+    const k = f / 1000 + this.jit;
+    return k > DMM_HZ_FS ? "1   " : k.toFixed(2);
   }
-
-  /* ---- blackbox lid ---------------------------------------------- */
-  rect(300,4,736,358,C_LID,C_LID_D,Math.max(1,Math.floor(2*s)));
-  grain(304,8,732,354,"#77543a",38,P);
-  rect(462,143,600,212,C_STICK,"#d6d6d8",1);
-  let q=P(531,163);
-  gText(q[0],q[1],"IPhO 42","#c0166b",fnt(Math.max(6,Math.floor(13*s)),"Helvetica","bold"));
-  q=P(531,190);
-  gText(q[0],q[1],"Bangkok 2011","#4a4a4a",fnt(Math.max(5,Math.floor(8*s))));
-
-  /* ---- right-hand frame rail + end block -------------------------- */
-  rect(970,46,990,348,"#59402f","#3f2c1f",Math.max(1,Math.floor(s)));
-  rect(988,2,1062,386,C_END,C_WOOD_D,Math.max(1,Math.floor(2*s)));
-  grain(992,6,1058,382,"#7a5745",26,P,2);
-
-  /* ---- the oscillator box ----------------------------------------- */
-  rect(6,264,228,276,C_BOX_D,null);
-  rect(4,95,226,268,C_BOX,"#93958f",Math.max(1,Math.floor(2*s)));
-  rect(4,95,226,107,"#d2d4cf",null);
-  /* 9 V battery */
-  rect(47,26,180,93,C_BATT,"#232326",Math.max(1,Math.floor(2*s)));
-  rect(64,36,164,78,"#ececed","#b9b9ba",1);
-  for(let i=0;i<9;i++){
-    const xx = 68 + i*10.4;
-    gLine([P(xx,40),P(xx,72)],"#1c1c1c",Math.max(1,Math.floor((i%3?2:1)*s)));
+  unit(){ const d = this.dial; return d === "off" ? "" : d[0] === "v" ? "V" : d[0] === "r" ? "Ω" : d[0] === "a" ? "mA" : d[0] === "c" ? "nF" : d === "temp" ? "°C" : "kHz"; }
+  /* the 220 ms housekeeping of the original: the battery runs down, the last digit flickers */
+  tick(){
+    if (this.sw && this.battIn()) this.battV = Math.max(7.5, this.battV - BATT_DRAIN * 0.2 / 60.0);
+    const r = this.rng(); this.jit = r < 0.6 ? 0 : r < 0.8 ? 0.004 : -0.004;
   }
-  q=P(114,86);
-  gText(q[0],q[1],"9V","#e4e4e6",fnt(Math.max(6,Math.floor(10*s)),"Helvetica","bold"));
-  for(const [tx,ty,col] of [[BINP[0],BINP[1],"#a5251f"],[BINN[0],BINN[1],"#1a1a1a"]]){
-    ovl(tx-8,ty-8,tx+8,ty+8,"#c9ccce","#6f7376",Math.max(1,Math.floor(2*s)));
-    ovl(tx-4,ty-4,tx+4,ty+4,col,null);
+}
+/* ==== PHYSICS END ==================================================== */
+
+/* ══════════════════════════════════════════════════════════════
+   LAB3D — a small orthographic 3-D bench renderer for canvas
+   (the APhO 2026 bench style: a wooden desk seen from above at an
+   angle; drag to turn it round, wheel to zoom, shift-drag to pan)
+
+   World units are centimetres: x and z lie on the desk, y is up.
+   Every frame the scene is described again as a list of faces, lines,
+   texts and custom items; they are sorted far-to-near and painted.
+   ══════════════════════════════════════════════════════════════ */
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
+}
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+/* the room light: 1 with the hall lit, low in the blackout; o.glow parts (laser light) ignore it */
+let LUX=1;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.glow?1:o.flat?LUX:LUX*(0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]));
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
   }
-  /* the banana jacks */
-  ovl(148,116,186,154,C_JR,"#6d201a",Math.max(1,Math.floor(2*s)));
-  ovl(158,126,176,144,"#3a1512",null);
-  ovl(146,196,184,234,C_JB,"#1c1c1a",Math.max(1,Math.floor(2*s)));
-  ovl(156,206,174,224,"#131315",null);
-  screws(P,s);
-  return P;
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
+}
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
+}
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
+
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
+    }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
+  }
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
+  }
+}
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
+}
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
+}
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
 }
 
-/* MASTECH digital multimeter.  reference size 264 x 441 px */
-function artDMM(ox, oy, s, dial, disp, unit){
-  const P=(x,y)=>[ox+x*s, oy+y*s];
-  const rr=(x0,y0,x1,y1,r,fill,outline,width)=>{
-    const a=P(x0,y0), b=P(x1,y1); gRound(a[0],a[1],b[0],b[1],r*s,fill,outline,width);
-  };
-  rr(2,4,262,437,20,C_DMM_Y,"#c79a1c",Math.max(1,Math.floor(2*s)));
-  rr(18,20,246,400,12,C_DMM_K,"#1d1f1d",Math.max(1,Math.floor(2*s)));
-  rr(46,36,218,112,6,C_LCD,"#5d6b5d",Math.max(1,Math.floor(2*s)));
-  let q=P(212,76);
-  gText(q[0],q[1],disp,"#161d16",fnt(Math.max(8,Math.floor(30*s)),"Courier New","bold"),"e");
-  q=P(212,102);
-  gText(q[0],q[1],unit,"#161d16",fnt(Math.max(5,Math.floor(10*s)),"Helvetica","bold"),"e");
-  let a=P(28,126), b=P(60,144);
-  gRect(a[0],a[1],b[0],b[1],"#cc2b22","#7d1a15",1);
-  q=P(152,122);
-  gText(q[0],q[1],"AUTO POWER OFF","#4aa3e0",fnt(Math.max(4,Math.floor(9*s)),"Helvetica","bold"));
+/* ══════════════════════════════════════════════════════════════
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
+   ══════════════════════════════════════════════════════════════ */
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;uniform float l;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=vec4(c.rgb*l,c.a);}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),ptL:gl.getUniformLocation(pt,"l"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
+}
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
+}
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
+}
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
+}
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
+}
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
+}
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
+  }else{
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.glow||(o.flat&&LUX===1)?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke){ const sc=o.glow||LUX===1?o.stroke:shade(o.stroke,LUX); for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,sc,undefined,"round"); }
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      const lc=o.glow||LUX===1?o.col:shade(o.col,LUX); for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,lc,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,l:o.glow?1:LUX,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      if(o.alpha!==undefined&&o.alpha<1) G.tr.push({dep:(a[2]+b[2]+c[2]+d[2])/4+ee,tex:_srcTex(it.src).tex,a:o.alpha,l:o.glow?1:LUX,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      else G.tq.push({src:it.src,q,l:o.glow?1:LUX,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,l:LUX,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,l:LUX,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
+    }
+  }
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a,l)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a); gl.uniform1f(GL3.ptL,l===undefined?1:l);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1,t.l);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,t.uv,t.a,t.l); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
+}
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
+}
+
+
+/* ==================================================================
+   THE BENCH IN 3-D.  World units are cm: x along the base board (left to
+   right as in Figure 1), z towards the student, y up from the desk.
+   ================================================================== */
+const BASE_H = 1.6;                                   /* the dark wooden base board */
+const OSC = {x0: 2, x1: 16, z0: -4.6, z1: 5.2, h: 6.4};
+const BB = {x0: 20, x1: 44, z0: -9, z1: 9, h: 4.8};
+const EDGE0 = 61.2;                                   /* the plate edge at s = 0, and the zero of the scale */
+const DMMF = {x: 25.6, z: 13.6, w: 8.3, l: 17.8, h: 3.42};   /* the face of the meter on the desk */
+const DIAL_C = [4.15, 10.0], DIAL_R = 2.55;           /* on the face, cm */
+const JACK = {"10A": 1.0, mA: 2.9, COM: 4.95, VHz: 7.0}, JACK_V = 15.7;
+let kit = new Kit();
+const UI = {hand: null, drag: null, hot: null};
+const edgeX = () => EDGE0 - kit.slide / 10;
+const mk = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+
+/* ---- fixed points ---- */
+const TERM = {
+  JR: [13.6, OSC.h, -0.6], JB: [13.6, OSC.h, 2.6],
+  BINP: [4.4, OSC.h, -3.0], BINN: [6.8, OSC.h, -3.0],
+  BBU: [21.6, BB.h, -3.2], BBL: [21.6, BB.h, 3.2],
+};
+const SNAP_AT = [8.1, 2.5, -7.3];                                /* the snap on the battery */
+const CLIP_FROM = {r: [16, 3.4, -1.6], b: [16, 3.4, 1.6]};       /* the clip leads leave the oscillator here */
+const JACK_W = k => [DMMF.x + JACK[k], DMMF.h, DMMF.z + JACK_V];
+const HOME = {snap_p: [7.0, BASE_H, 7.4], snap_n: [9.6, BASE_H, 7.4],
+              pr_r: [37.5, 0.45, 26.5], pr_b: [37.5, 0.45, 29.5],
+              clip_r: [19.0, BASE_H, -6.5], clip_b: [19.0, BASE_H, 6.5]};
+const SLOT = i => [42 + i * 6.5, 19];
+/* where a capacitor's lead ends are (the root of a twisted stack carries them) */
+function leadEnd(i, side){ const r = kit.root(i), p = kit.caps[r]; if (!p) return null; return [p[0] + (side === "A" ? -0.62 : 0.62), 0.12, p[1] - 4.4]; }
+/* the world point of a target name */
+function target(n){
+  if (TERM[n]) return TERM[n];
+  if (n === "BATP") return endPos("snap_p"); if (n === "BATN") return endPos("snap_n");
+  if (/^[AB]\d$/.test(n) && kit.caps[+n[1]] !== undefined) return leadEnd(+n[1], n[0]);
+  return null;
+}
+/* the targets each kind of end can go on */
+function targetsFor(key){
+  if (key.startsWith("snap")) return ["BINP", "BINN"];
+  if (key.startsWith("pr")) return ["JR", "JB", "BATP", "BATN"];
+  const out = ["BBU", "BBL"];
+  for (const i of Object.keys(kit.caps)) if (kit.root(+i) === +i) out.push("A" + i, "B" + i);
+  return out;
+}
+const STATE = key => key.startsWith("snap") ? [kit.snap, key.slice(5)] : key.startsWith("pr") ? [kit.probe, key.slice(3)] : [kit.clip, key.slice(5)];
+/* the tip of a lead end, in the world */
+function endPos(key){
+  if (UI.drag && UI.drag.kind === "end" && UI.drag.key === key) return UI.drag.at;
+  const [o, k] = STATE(key), v = o[k];
+  if (Array.isArray(v)) return v;
+  if (typeof v === "string"){ const t = target(v); if (t) return t; }
+  return HOME[key];
+}
+
+/* ---- textures ---- */
+function scaleTex(){ const R = 60, c = mk(Math.round(9.4 * R), Math.round(2.2 * R)), g = c.getContext("2d");
+  g.fillStyle = "#f4f4ef"; g.fillRect(0, 0, c.width, c.height);
+  /* zero at x = 61.2 (texture u = 61.2 - 52.6 = 8.6 cm), millimetres to the left */
+  g.strokeStyle = "#1b1b1b"; g.fillStyle = "#1b1b1b"; g.textAlign = "center"; g.textBaseline = "top";
+  for (let mm = 0; mm <= 84; mm++){ const u = (8.6 - mm / 10) * R; if (u < 2) break;
+    const L = mm % 10 === 0 ? 0.85 : mm % 5 === 0 ? 0.6 : 0.38; g.lineWidth = mm % 10 === 0 ? 2.2 : 1.4;
+    g.beginPath(); g.moveTo(u, 0); g.lineTo(u, L * R); g.stroke();
+    if (mm % 10 === 0){ g.font = "600 " + Math.round(0.62 * R) + "px Arial,sans-serif"; g.fillText(String(mm), u, 0.95 * R); } }
+  g.font = "600 " + Math.round(0.4 * R) + "px Arial,sans-serif"; g.textAlign = "right"; g.fillText("mm", c.width - 4, 1.62 * R);
+  c._static = true; return c; }
+function stickerTex(){ const c = mk(240, 150), g = c.getContext("2d"); g.fillStyle = "#fbfbf8"; g.fillRect(0, 0, 240, 150);
+  g.fillStyle = "#e0337a"; for (const [x, y, s] of [[40, 50, 26], [64, 74, 20], [26, 86, 16], [52, 104, 12]]){ g.save(); g.translate(x, y); g.rotate(Math.PI / 4); g.fillRect(-s / 2, -s / 2, s, s); g.restore(); }
+  g.fillStyle = "#283a8c"; g.font = "700 46px Georgia,serif"; g.fillText("IPhO", 92, 82); g.fillStyle = "#e0337a"; g.font = "700 22px Arial"; g.fillText("42", 196, 56);
+  g.fillStyle = "#555"; g.font = "15px Arial"; g.fillText("Bangkok, Thailand 2011", 92, 112); c._static = true; return c; }
+function battTex(){ const c = mk(480, 260), g = c.getContext("2d"); g.fillStyle = "#1e2024"; g.fillRect(0, 0, 480, 260);
+  g.fillStyle = "#2c5fb4"; g.fillRect(0, 60, 480, 140); g.fillStyle = "#f2f2f2"; g.font = "800 92px Arial"; g.fillText("9V", 40, 162);
+  g.font = "700 30px Arial"; g.fillText("ALKALINE", 210, 120); g.fillText("6LR61", 210, 168); c._static = true; return c; }
+const SCALE_TEX = scaleTex(), STICKER = stickerTex(), BATT_TEX = battTex();
+/* the face of the meter: redrawn when what it shows changes */
+const DMM_TEX = mk(Math.round(DMMF.w * 50), Math.round(DMMF.l * 50)); DMM_TEX._ver = 0; let DMM_KEY = "";
+function drawDMMFace(){
+  const disp = kit.display(), key = disp + "|" + kit.dial + "|" + kit.unit(); if (key === DMM_KEY) return; DMM_KEY = key; DMM_TEX._ver++;
+  const R = 50, g = DMM_TEX.getContext("2d"), W = DMM_TEX.width, H = DMM_TEX.height;
+  g.fillStyle = "#2a2c2f"; g.fillRect(0, 0, W, H);
+  /* the window and the digits */
+  g.fillStyle = "#8f9a86"; g.fillRect(0.9 * R, 1.0 * R, 6.5 * R, 3.6 * R);
+  g.fillStyle = "#b9c4ad"; g.fillRect(1.05 * R, 1.15 * R, 6.2 * R, 3.3 * R);
+  g.fillStyle = "#1c2118"; g.textAlign = "right"; g.textBaseline = "middle";
+  g.font = "700 " + Math.round(2.2 * R) + "px 'DSEG7 Classic','Courier New',monospace"; g.fillText(disp, 6.6 * R, 2.85 * R);
+  g.font = "700 " + Math.round(0.55 * R) + "px Arial"; g.fillText(kit.unit(), 7.1 * R, 4.15 * R);
+  /* brand, the power button */
+  g.fillStyle = "#c8302c"; g.fillRect(0.9 * R, 5.2 * R, 1.3 * R, 0.6 * R); g.fillStyle = "#ddd"; g.font = Math.round(0.32 * R) + "px Arial"; g.textAlign = "left"; g.fillText("POWER", 2.4 * R, 5.5 * R);
   /* the dial */
-  const cx=128.0, cy=246.0, R=48.0;
-  for(const [nm,deg,lbl] of DIAL){
-    const t = deg*Math.PI/180;
-    const p = P(cx+(R+11)*Math.cos(t), cy+(R+11)*Math.sin(t));
-    gOval(p[0]-1.8*s,p[1]-1.8*s,p[0]+1.8*s,p[1]+1.8*s,"#e8e8e8",null);
-    const col = (nm==="hz"||nm==="off") ? "#ff9a3c" : "#d8d8d8";
-    const w = P(cx+(R+23)*Math.cos(t), cy+(R+23)*Math.sin(t));
-    gText(w[0],w[1],lbl,col,fnt(Math.max(4,Math.floor(8*s)),"Helvetica","bold"));
+  const cx = DIAL_C[0] * R, cy = DIAL_C[1] * R;
+  g.fillStyle = "#1b1c1e"; g.beginPath(); g.arc(cx, cy, (DIAL_R + 1.25) * R, 0, 7); g.fill();
+  g.textAlign = "center"; g.textBaseline = "middle";
+  for (const [nm, deg, lbl] of DIAL){ const a = deg * Math.PI / 180, on = nm === kit.dial;
+    g.fillStyle = on ? "#ffd84a" : "#e8e8e8"; g.font = (on ? "700 " : "") + Math.round(0.36 * R) + "px Arial";
+    g.fillText(lbl, cx + Math.cos(a) * (DIAL_R + 0.78) * R, cy + Math.sin(a) * (DIAL_R + 0.78) * R);
+    g.beginPath(); g.arc(cx + Math.cos(a) * (DIAL_R + 0.25) * R, cy + Math.sin(a) * (DIAL_R + 0.25) * R, 0.06 * R, 0, 7); g.fill(); }
+  g.fillStyle = "#151617"; g.beginPath(); g.arc(cx, cy, DIAL_R * R, 0, 7); g.fill();
+  const a = DIAL[DIAL_ORDER.indexOf(kit.dial)][1] * Math.PI / 180;
+  g.save(); g.translate(cx, cy); g.rotate(a); g.fillStyle = "#2b2d30"; g.fillRect(-DIAL_R * R * 0.95, -0.55 * R, DIAL_R * R * 1.9, 1.1 * R);
+  g.fillStyle = "#f0f0f0"; g.fillRect(DIAL_R * R * 0.55, -0.1 * R, DIAL_R * R * 0.38, 0.2 * R); g.restore();
+  /* the jacks */
+  for (const [k, u] of Object.entries(JACK)){ g.fillStyle = "#0c0c0d"; g.beginPath(); g.arc(u * R, JACK_V * R, 0.42 * R, 0, 7); g.fill();
+    g.strokeStyle = k === "COM" ? "#777" : "#b22"; g.lineWidth = 3; g.stroke();
+    g.fillStyle = "#ddd"; g.font = Math.round(0.3 * R) + "px Arial"; g.fillText(k === "VHz" ? "VΩHz" : k, u * R, (JACK_V - 0.85) * R); }
+  g.fillStyle = "#1f5aa8"; g.fillRect(0.4 * R, 16.75 * R, 3.6 * R, 0.6 * R); g.fillStyle = "#fff"; g.font = "700 " + Math.round(0.42 * R) + "px Arial"; g.fillText("MASTECH", 2.2 * R, 17.06 * R);
+}
+
+/* ---- parts ---- */
+function wire(a, b, col, sag, lw, id){
+  const pts = [], n = 26, d = Math.hypot(b[0] - a[0], b[2] - a[2]);
+  for (let i = 0; i <= n; i++){ const t = i / n;
+    let x = a[0] + (b[0] - a[0]) * t, z = a[2] + (b[2] - a[2]) * t, y = a[1] + (b[1] - a[1]) * t + (sag || 0) * Math.sin(Math.PI * t) * Math.min(1, d / 25);
+    const floor = x > -0.2 && x < 64.2 && z > -9.2 && z < 9.2 ? (x > OSC.x0 - 0.2 && x < OSC.x1 + 0.2 && z > OSC.z0 - 0.2 && z < OSC.z1 + 0.2 ? OSC.h + 0.15 : x > BB.x0 && x < BB.x1 ? BB.h + 0.15 : BASE_H + 0.15) : 0.15;
+    if (i > 1 && i < n - 1) y = Math.max(y, floor);
+    pts.push([x, y, z]); }
+  poly3(pts, col, lw || 2.2, id ? {id} : undefined);
+}
+function knob(c, r, col, id){ cyl3("y", c[1] - 0.05, c[1] + 0.45, c[0], c[2], r, col, {seg: 16, id, cap: shade(col, 1.15)}); }
+function crocClip(J, dir, y, col, id){             /* jaw at J, the body along dir (unit, on the desk) */
+  const B = [J[0] + dir[0] * 2.6, y, J[2] + dir[1] * 2.6], M = [J[0] + dir[0] * 0.9, y, J[2] + dir[1] * 0.9];
+  cylAB([J[0], y, J[2]], M, 0.22, "#b9bec4", {seg: 8, id});
+  cylAB(M, B, 0.42, col, {seg: 10, id});
+  return B;
+}
+function probe(key, col){
+  const tip = endPos(key), on = typeof STATE(key)[0][STATE(key)[1]] === "string", drag = UI.drag && UI.drag.key === key;
+  let back;
+  if (on || drag){ back = [tip[0] + 0.3, tip[1] + 8.5, tip[2] + 3.2]; cylAB(tip, [tip[0] + 0.03, tip[1] + 1.2, tip[2] + 0.45], 0.06, "#c9ced3", {seg: 6, id: key}); cylAB([tip[0] + 0.03, tip[1] + 1.2, tip[2] + 0.45], back, 0.38, col, {seg: 12, id: key}); }
+  else { back = [tip[0] + 11, tip[1], tip[2]]; cylAB(tip, [tip[0] + 1.2, tip[1], tip[2]], 0.06, "#c9ced3", {seg: 6, id: key}); cylAB([tip[0] + 1.2, tip[1], tip[2]], back, 0.4, col, {seg: 12, id: key}); }
+  wire(JACK_W(key === "pr_r" ? "VHz" : "COM"), back, col, 3, 2.4);
+}
+function capacitor(i){
+  const r = kit.root(i), mates = Object.keys(kit.caps).map(Number).filter(j => j !== r && kit.root(j) === r).sort((a, b) => a - b);
+  const lvl = i === r ? 0 : mates.indexOf(i) + 1, p = kit.caps[r], y0 = lvl * 0.4, x = p[0] + lvl * 0.25, z = p[1] - lvl * 0.15, id = "cap" + i;
+  box3(x - 1.8, x + 1.8, y0, y0 + 0.08, z - 2.3, z + 2.3, "#9fe0c4", {id});
+  text3([x - 1.4, y0 + 0.09, z + 2.2], [1, 0, 0], [0, 0, -1], CAPS[i][0], 0.8, "#1d3b6a", {id});
+  cyl3("y", y0 + 0.08, y0 + 0.32, x, z - 0.6, 0.62, "#c96c2a", {seg: 18, id});
+  text3([x - 0.35, y0 + 0.33, z - 0.45], [1, 0, 0], [0, 0, -1], CAPS[i][1] === 150 ? "151" : String(CAPS[i][1]), 0.32, "#3a1d08", {id});
+  /* the two leads, out over the far edge of the card (to the root's ends when twisted) */
+  for (const s of ["A", "B"]){ const e = leadEnd(i, s), a = [x + (s === "A" ? -0.32 : 0.32), y0 + 0.2, z - 1.15];
+    line3(a, [e[0], Math.max(0.12, y0 * 0.4) + 0.06, e[2] + 1.4], "#cfd3d6", 1.6, {id: "lead" + s + i}); line3([e[0], Math.max(0.12, y0 * 0.4) + 0.06, e[2] + 1.4], e, "#cfd3d6", 1.6, {id: "lead" + s + i}); }
+}
+
+function scene3(){
+  /* the desk */
+  box3(-40, 115, -3, 0, -45, 62, "#c4c6be", {noBot: true, top: "#c9cbc3", id: "room"});
+  /* the base board */
+  box3(0, 64, 0, BASE_H, -9, 9, "#5a3b28", {top: "#6a4631", id: "base"});
+  /* the battery and its snap */
+  box3(2.5, 7.3, BASE_H, BASE_H + 1.7, -8.6, -6.0, "#1d1e22", {id: "batt"});
+  tex3(BATT_TEX, 0, 0, 480, 260, [2.5, BASE_H + 1.71, -8.6], [4.8, 0, 0], [0, 0, 2.6], {id: "batt"});
+  box3(7.3, 8.1, BASE_H + 0.2, BASE_H + 1.5, -8.2, -6.4, "#141416", {id: "batt"});
+  /* the oscillator */
+  box3(OSC.x0, OSC.x1, BASE_H, OSC.h, OSC.z0, OSC.z1, "#e7e5de", {top: "#efede6", id: "osc"});
+  for (const [n, col] of [["JR", "#c81e1e"], ["JB", "#1a1a1c"], ["BINP", "#c81e1e"], ["BINN", "#1a1a1c"]]){
+    const t = TERM[n], r = n[0] === "J" ? 0.62 : 0.42; knob(t, r, col, n); cyl3("y", t[1] + 0.45, t[1] + 0.47, t[0], t[2], r * 0.38, "#0b0b0b", {seg: 10, id: n}); }
+  text3([12.6, OSC.h + 0.01, 4.4], [1, 0, 0], [0, 0, -1], "f OUT", 0.55, "#555", {id: "osc"});
+  text3([3.6, OSC.h + 0.01, -1.6], [1, 0, 0], [0, 0, -1], "+  9V  −", 0.5, "#555", {id: "osc"});
+  const st = kit.osc(), led = st === 2 ? "#4cff7a" : st === 1 ? "#ffb24a" : "#5a2222";
+  cyl3("y", OSC.h, OSC.h + 0.25, 9.6, -3.2, 0.32, led, {seg: 12, glow: st > 0, id: "osc"});
+  if (st) sphere3([9.6, OSC.h + 0.3, -3.2], 0.55, st === 2 ? "rgba(90,255,130,0.35)" : "rgba(255,170,70,0.3)");
+  /* the switch on the base, at the front */
+  box3(1.4, 4.8, BASE_H, BASE_H + 0.3, 6.2, 8.6, "#1b1c1e", {id: "switch"});
+  const ang = kit.sw ? -0.5 : 0.5; cylAB([3.1, BASE_H + 0.3, 7.4], [3.1, BASE_H + 0.3 + 1.4 * Math.cos(ang), 7.4 + 1.4 * Math.sin(ang)], 0.17, "#c9ced3", {seg: 8, id: "switch"});
+  text3([1.6, BASE_H + 0.31, 8.5], [1, 0, 0], [0, 0, -1], kit.sw ? "ON" : "OFF", 0.42, "#ddd", {id: "switch"});
+  /* the blackbox, its screws and the sticker */
+  box3(BB.x0, BB.x1, BASE_H, BB.h, BB.z0, BB.z1, "#a87650", {top: "#b5845c", id: "bb"});
+  tex3(STICKER, 0, 0, 240, 150, [29.5, BB.h + 0.01, -2.2], [6.4, 0, 0], [0, 0, 4.0], {id: "bb"});
+  for (const n of ["BBU", "BBL"]){ const t = TERM[n]; cyl3("y", t[1], t[1] + 0.25, t[0], t[2], 0.48, "#c9a24a", {seg: 14, id: n}); line3([t[0] - 0.3, t[1] + 0.27, t[2]], [t[0] + 0.3, t[1] + 0.27, t[2]], "#6e5420", 1.5, {id: n}); }
+  /* the sliding upper plate, its black pads, the stop, the scale and the pointer */
+  const xe = edgeX();
+  box3(BB.x1, xe, BASE_H, BASE_H + 0.9, -6.5, 6.5, "#4a3020", {top: "#56392a", id: "plate"});
+  for (const z of [-3.4, 3.4]) box3(BB.x1 + 2.2, xe - 1.3, BASE_H + 0.9, BASE_H + 0.95, z - 1.2, z + 1.2, "#111214", {id: "plate"});
+  box3(62, 64, BASE_H, 6.0, -9, 9, "#3c2619", {id: "stop"});
+  box3(52.6, 62.0, BASE_H, BASE_H + 0.05, 6.7, 8.9, "#f4f4ef", {id: "scale"});
+  tex3(SCALE_TEX, 0, 0, SCALE_TEX.width, SCALE_TEX.height, [52.6, BASE_H + 0.06, 6.7], [9.4, 0, 0], [0, 0, 2.2], {id: "scale"});
+  box3(xe - 0.06, xe, BASE_H + 0.5, BASE_H + 0.56, 6.5, 7.6, "#c9ced3", {id: "plate"});
+  line3([xe, BASE_H + 0.12, 6.7], [xe, BASE_H + 0.12, 7.7], "#d01818", 1.2);
+  /* the multimeter on the desk, face up, display away from you */
+  box3(DMMF.x - 0.6, DMMF.x + DMMF.w + 0.6, 0, DMMF.h, DMMF.z - 0.6, DMMF.z + DMMF.l + 0.6, "#f2b600", {top: "#f5bf12", id: "dmm"});
+  drawDMMFace(); tex3(DMM_TEX, 0, 0, DMM_TEX.width, DMM_TEX.height, [DMMF.x, DMMF.h + 0.01, DMMF.z], [DMMF.w, 0, 0], [0, 0, DMMF.l], {id: "dmm"});
+  /* the battery snap leads */
+  for (const [k, col] of [["snap_p", "#c81e1e"], ["snap_n", "#1a1a1c"]]){ const e = endPos(k);
+    wire([SNAP_AT[0], SNAP_AT[1], SNAP_AT[2] + (k === "snap_p" ? -0.4 : 0.4)], [e[0] + 1.2, e[1] + 0.35, e[2]], col, 1.5, 2.2);
+    cylAB([e[0], e[1] + 0.3, e[2]], [e[0] + 1.2, e[1] + 0.35, e[2]], 0.28, col, {seg: 10, id: k}); cylAB([e[0], e[1] + 0.05, e[2]], [e[0], e[1] + 0.32, e[2]], 0.12, "#c9ced3", {seg: 6, id: k}); }
+  /* the crocodile clips */
+  for (const [k, col] of [["clip_r", "#c81e1e"], ["clip_b", "#1a1a1c"]]){ const e = endPos(k), from = CLIP_FROM[k.slice(5)];
+    let dx = from[0] - e[0], dz = from[2] - e[2]; const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl;
+    const B = crocClip(e, [dx, dz], e[1] + 0.3, col, k); wire(from, B, col, 2.5, 2.4); }
+  for (const i of Object.keys(kit.caps)) capacitor(+i);
+  probe("pr_r", "#c81e1e"); probe("pr_b", "#1a1a1c");
+  /* while an end is dragged, the terminal it would snap to */
+  if (UI.hot){ const t = target(UI.hot); if (t) sphere3([t[0], t[1] + 0.35, t[2]], 0.7, "rgba(242,193,78,0.55)"); }
+}
+
+/* ==================================================================
+   CAMERA, CLOSE-UPS, TRAY, PANEL AND THE HANDS
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+const $ = id => document.getElementById(id);
+let view3 = "3d", freeCam = null;
+function layout3(){
+  const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ Object.assign(CAM, {yaw: -0.22, pitch: 0.86, k: w / 76, tx: 32, ty: 2, tz: 10, px: 0, py: 14}); camSave(); }
+  else if (view3 !== "3d") Object.assign(CAM, viewCam(view3));
+}
+const TOP = Math.PI / 2 - 1e-3;
+function viewCam(v){
+  const W = CAM.W, H = CAM.H;
+  if (v === "dmm") return {yaw: 0, pitch: TOP, k: Math.min(W / 12, H / 20.5), tx: DMMF.x + DMMF.w / 2, ty: DMMF.h, tz: DMMF.z + DMMF.l / 2, px: 0, py: 0};
+  if (v === "scale") return {yaw: 0, pitch: TOP, k: Math.min(W / 11.5, H / 9), tx: 57.4, ty: BASE_H, tz: 5.2, px: 0, py: 0};
+  if (v === "osc") return {yaw: 0, pitch: 1.05, k: Math.min(W / 27, H / 19), tx: 9.5, ty: OSC.h, tz: -0.5, px: 0, py: 0};
+  return freeCam || CAM0;
+}
+function showView(v){
+  if (v !== view3){
+    if (window.HLzoom) HLzoom(cv3, {out: v === "3d"});
+    if (view3 === "3d") freeCam = {yaw: CAM.yaw, pitch: CAM.pitch, k: CAM.k, tx: CAM.tx, ty: CAM.ty, tz: CAM.tz, px: CAM.px, py: CAM.py};
+    Object.assign(CAM, viewCam(v));
   }
-  a=P(cx-R-6,cy-R-6); b=P(cx+R+6,cy+R+6);
-  gOval(a[0],a[1],b[0],b[1],"#232522","#4a4d4a",1);
-  a=P(cx-R,cy-R); b=P(cx+R,cy+R);
-  gOval(a[0],a[1],b[0],b[1],"#2b2d2b","#111",1);
-  for(let i=0;i<10;i++){                                   /* grooves on the knob */
-    const t=i*36*Math.PI/180;
-    gLine([P(cx+R*0.62*Math.cos(t), cy+R*0.62*Math.sin(t)),
-           P(cx+R*0.94*Math.cos(t), cy+R*0.94*Math.sin(t))],"#3d403d",1);
-  }
-  const ang = ((DIAL_ANG[dial]!==undefined)?DIAL_ANG[dial]:-90)*Math.PI/180;
-  gLine([P(cx,cy),P(cx+R*0.86*Math.cos(ang), cy+R*0.86*Math.sin(ang))],
-        "#f2f2f2",Math.max(2,Math.floor(5*s)));
-  /* the sockets */
-  for(const [jx,name] of [[44,"10A"],[98,"mA"],[156,"COM"],[212,"VΩHz"]]){
-    a=P(jx-15,316); b=P(jx+15,346);
-    gOval(a[0],a[1],b[0],b[1],"#7a1f1f","#c8c8c8",Math.max(1,Math.floor(2*s)));
-    a=P(jx-8,323); b=P(jx+8,339);
-    gOval(a[0],a[1],b[0],b[1],"#1a1a1a",null);
-    q=P(jx,358);
-    gText(q[0],q[1],name,"#e8e8e8",fnt(Math.max(4,Math.floor(9*s)),"Helvetica","bold"));
-  }
-  a=P(26,376); b=P(126,396);
-  gRect(a[0],a[1],b[0],b[1],"#13447c",null);
-  q=P(76,386);
-  gText(q[0],q[1],"MASTECH","#ffffff",fnt(Math.max(5,Math.floor(11*s)),"Helvetica","bold"));
-  a=P(214,252); b=P(238,298);
-  gRect(a[0],a[1],b[0],b[1],"#2f7d3a","#1d4f25",1);
+  view3 = v; syncTabs();
+}
+function syncTabs(){ $("t-cap3").textContent = tr("cap_" + view3); $("back").hidden = view3 === "3d"; $("back").textContent = tr("back"); }
+$("back").onclick = () => showView("3d");
+
+function draw3(){
+  const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25");
+  ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
+  begin3(); scene3(); render3(ctx3);
 }
 
-/* the green card in the component tray; the slot empties when taken out */
-function artCapCard(cx,cy,s,code,taken){
-  const W=118.0, H=150.0;
-  const P=(x,y)=>[cx+(x-W/2)*s, cy+(y-H/2)*s];
-  let a=P(2,2), b=P(116,148);
-  gRect(a[0],a[1],b[0],b[1],C_CARD,"#5aa8a6",Math.max(1,Math.floor(2*s)));
-  const q=P(59,26);
-  gText(q[0],q[1],code,"#1b3f8b",fnt(Math.max(6,Math.floor(24*s)),"Helvetica","bold"));
-  if(taken){
-    a=P(38,78); b=P(80,118);
-    gOval(a[0],a[1],b[0],b[1],null,"#7fbfbd",1,[3,2]);
-  }else{
-    artCapBody(cx, cy+24*s, s*1.05, code, true);
-  }
-}
-
-/* ceramic disc capacitor; the code is printed small on the disc */
-function artCapBody(cx,cy,s,code,leads){
-  const W=80.0, H=90.0;
-  const P=(x,y)=>[cx+(x-W/2)*s, cy+(y-H/2)*s];
-  if(leads){
-    for(const [x0,x1] of [[34,6],[46,74]]){
-      gSmooth(P(x0,46), P((x0+x1)/2,68), P(x1,88), "#9aa5aa", Math.max(1,Math.floor(3*s)));
-    }
-  }
-  let a=P(16,12), b=P(64,54);
-  gOval(a[0],a[1],b[0],b[1],"#8b7a4e","#5f5433",Math.max(1,Math.floor(1.5*s)));
-  a=P(22,17); b=P(44,31);
-  gOval(a[0],a[1],b[0],b[1],"#a2905f",null);
-  const q=P(40,34);
-  gText(q[0],q[1],code,"#241d0e",fnt(Math.max(4,Math.floor(13*s)),"Helvetica","bold"));
-}
-
-/* ══════════════════════════════════════════════════════════════
-   5.  THE STATE OF THE EXPERIMENT
-   ══════════════════════════════════════════════════════════════ */
-const SC = {
-  swOn:false, dial:"off",
-  probe:{r:null,b:null}, freeProbe:{r:null,b:null},
-  slide:0.0,
-  batt:{p:null,n:null}, freeBatt:{p:null,n:null},
-  caps:{},            /* i -> [x,y]  capacitors taken out onto the bench */
-  clipPos:{r:null,b:null},
-  stack:{},           /* i -> capacitor whose leads it is tied to        */
-  battV:newBattery(), jit:0.0
-};
-function scReset(){
-  SC.swOn=false; SC.dial="off";
-  SC.probe={r:null,b:null}; SC.freeProbe={r:null,b:null};
-  SC.slide=0.0;
-  SC.batt={p:null,n:null}; SC.freeBatt={p:null,n:null};
-  SC.caps={}; SC.clipPos={r:null,b:null}; SC.stack={};
-  SC.battV=newBattery(); SC.jit=0.0;
-}
-const battIn = ()=> SC.batt.p==="BINP" && SC.batt.n==="BINN";
-const meterOk = ()=>{
-  const a=SC.probe.r, b=SC.probe.b;
-  return (a==="JR"&&b==="JB")||(a==="JB"&&b==="JR");
-};
-const osc = ()=> SC.swOn ? oscState(SC.battV, battIn()) : 0;
-
-function display(){
-  const d = SC.dial;
-  if(d==="off") return "";
-  if(d[0]==="v"){                                       /* d.c. volts */
-    const fs = {v1000:1000.0, v200:200.0, v20:20.0, v2:2.0}[d];
-    const p=SC.probe.r, q=SC.probe.b;
-    const onBatt = (p==="BATP"&&q==="BATN")||(p==="BATN"&&q==="BATP");
-    const v = onBatt ? SC.battV : 0.0;
-    if(v > fs) return "1  ";
-    const dec = fs<=20 ? 2 : (fs<=200 ? 1 : 0);
-    return v.toFixed(dec);
-  }
-  if(d[0]==="r") return "1  ";                          /* resistance: open -> overflow */
-  if(d==="temp"||d==="c20u"||d==="c200n"||d[0]==="a") return "0.00";
-  /* --- frequency --- */
-  if(!meterOk()) return "0.00";
-  if(osc()===0) return "0.00";
-  const C = loadC();
-  if(C===null || C<=0) return "1  ";
-  const f = frequency(C + C_STRAY, SC.battV)/1000.0 + SC.jit;
-  return f > DMM_HZ_FS ? "1  " : f.toFixed(2);
-}
-function unitTxt(){
-  const d=SC.dial;
-  if(d==="off") return "";
-  if(d[0]==="v") return "V";
-  if(d[0]==="r") return "Ω";
-  if(d[0]==="a") return "mA";
-  if(d[0]==="c") return "nF";
-  if(d==="temp") return "°C";
-  return "kHz";
-}
-const ready = ()=> osc()===2 && SC.dial==="hz" && meterOk();
-
-/* ══════════════════════════════════════════════════════════════
-   6.  BOARD GEOMETRY AND HIT TESTING
-   ══════════════════════════════════════════════════════════════ */
-const OX=16, OY=14, SCB=BOARD_S;
-const DMM_AT=[1132,44];
-const X = a=>OX+a*SCB, Y = a=>OY+a*SCB;
-const TERM = {JR:JR, JB:JB, BINP:BINP, BINN:BINN};
-
-let drag = null;          /* [kind, key, x, y] */
-let sel = null;
-
-const TOUCH = 20.0;       /* conductors closer than this are taken as touching */
-
-function rootOf(i){
-  const seen=new Set();
-  while(SC.stack[i]!==undefined && !seen.has(i)){ seen.add(i); i=SC.stack[i]; }
-  return i;
-}
-function leadXY(i,which){
-  const [x,y] = SC.caps[rootOf(i)];
-  return [x + (which==="A" ? -34 : 34)*BODY_S, y + 43*BODY_S];
-}
-function battEnd(k){
-  if(drag && drag[0]==="batt" && drag[1]===k) return [drag[2],drag[3]];
-  if(SC.batt[k]){ const p=TERM[SC.batt[k]]; return [X(p[0]),Y(p[1])]; }
-  if(SC.freeBatt[k]) return SC.freeBatt[k];
-  const h = (k==="p") ? [208,16] : [252,16];
-  return [X(h[0]),Y(h[1])];
-}
-function probeEnd(k){
-  if(drag && drag[0]==="probe" && drag[1]===k) return [drag[2],drag[3]];
-  if(SC.probe[k]==="BATP"||SC.probe[k]==="BATN")
-    return battEnd(SC.probe[k]==="BATP" ? "p" : "n");
-  if(SC.probe[k]){ const p=TERM[SC.probe[k]]; return [X(p[0]),Y(p[1])]; }
-  if(SC.freeProbe[k]) return SC.freeProbe[k];
-  const jx = DMM_AT[0] + (k==="b" ? 156 : 212)*DMM_S;
-  return [k==="b" ? jx-34 : jx+30, DMM_AT[1] + 412*DMM_S];
-}
-function clipEnd(k){
-  if(drag && drag[0]==="clip" && drag[1]===k) return [drag[2],drag[3]];
-  if(SC.clipPos[k]) return SC.clipPos[k].slice();
-  const h = (k==="r") ? CLIP_HOME_R : CLIP_HOME_B;
-  return [X(h[0]),Y(h[1])];
-}
-function targetsFor(kind){
-  const out=[];
-  if(kind==="probe"){
-    for(const n of ["JR","JB"]){ const p=TERM[n]; out.push([X(p[0]),Y(p[1]),n]); }
-    for(const [k,n] of [["p","BATP"],["n","BATN"]]){
-      const e=battEnd(k); out.push([e[0],e[1],n]);
-    }
-  }else if(kind==="batt"){
-    for(const n of ["BINP","BINN"]){ const p=TERM[n]; out.push([X(p[0]),Y(p[1]),n]); }
-  }else{
-    for(const i of Object.keys(SC.caps)) for(const w of ["A","B"]){
-      const l=leadXY(+i,w); out.push([l[0],l[1],"c"+w+i]);
-    }
-  }
-  return out;
-}
-function snap(kind,x,y){
-  let best=null, bd=1e9;
-  for(const [tx,ty,n] of targetsFor(kind)){
-    const d=Math.hypot(x-tx,y-ty);
-    if(d<22 && d<bd){ bd=d; best=n; }
-  }
-  return best;
-}
-
-/* ── wiring solver: conductors that touch are welded together ─────── */
-function loadC(){
-  const pts = {R:clipEnd("r"), B:clipEnd("b")};
-  const idx = Object.keys(SC.caps).map(Number);
-  for(const i of idx){ pts["cA"+i]=leadXY(i,"A"); pts["cB"+i]=leadXY(i,"B"); }
-  const par={};
-  const find=a=>{ if(par[a]===undefined) par[a]=a;
-                  while(par[a]!==a){ par[a]=par[par[a]]; a=par[a]; } return a; };
-  const join=(a,b)=>{ const ra=find(a), rb=find(b); if(ra!==rb) par[ra]=rb; };
-  const keys=Object.keys(pts);
-  for(let ii=0;ii<keys.length;ii++) for(let jj=ii+1;jj<keys.length;jj++){
-    const ka=keys[ii], kb=keys[jj];
-    if((ka==="R"||ka==="B") && (kb==="R"||kb==="B")) continue;  /* the two clips never touch */
-    const a=pts[ka], b=pts[kb];
-    if((a[0]-b[0])**2 + (a[1]-b[1])**2 < TOUCH*TOUCH) join(ka,kb);
-  }
-  const gr=find("R"), gb=find("B");
-  const held = idx.some(i=>{
-    const a=find("cA"+i), b=find("cB"+i);
-    return a===gr||a===gb||b===gr||b===gb;
-  });
-  if(!held) return C_blackbox(SC.slide);   /* nothing gripped -> the blackbox is in circuit */
-  if(gr===gb) return null;
-  let tot=0.0;
-  for(const i of idx){
-    const a=find("cA"+i), b=find("cB"+i);
-    if((a===gr&&b===gb)||(a===gb&&b===gr)) tot += CAPS[i][2];
-  }
-  return tot>0 ? tot : null;
-}
-function joints(){
-  const pts=[clipEnd("r"), clipEnd("b")];
-  for(const i of Object.keys(SC.caps)){ pts.push(leadXY(+i,"A")); pts.push(leadXY(+i,"B")); }
-  const out=[];
-  for(let ii=0;ii<pts.length;ii++) for(let jj=ii+1;jj<pts.length;jj++){
-    if(ii<2 && jj<2) continue;
-    const a=pts[ii], b=pts[jj];
-    if((a[0]-b[0])**2 + (a[1]-b[1])**2 < TOUCH*TOUCH)
-      out.push([(a[0]+b[0])/2, (a[1]+b[1])/2]);
-  }
-  return out;
-}
-const trayXY = i => [110 + i*100, 700];
-
-/* ── hit tests ─────────────────────────────────────────────────── */
-function hitTerm(ex,ey){
-  for(const n of ["JR","JB","BINP","BINN"]){
-    const p=TERM[n];
-    if(Math.hypot(ex-X(p[0]), ey-Y(p[1])) < 15) return n;
-  }
-  return null;
-}
-const hitSwitch = (ex,ey)=>
-  Math.abs(ex-X(SWI[0])) < 18*SCB && (ey-Y(SWI[1])) > -12*SCB && (ey-Y(SWI[1])) < 30*SCB;
-function hitDial(ex,ey){
-  const kx = DMM_AT[0]+128*DMM_S, ky = DMM_AT[1]+232*DMM_S;
-  if(Math.hypot(ex-kx, ey-ky) > 80*DMM_S) return null;
-  const a = Math.atan2(ey-ky, ex-kx)*180/Math.PI;
-  let best="off", bd=1e9;
-  for(const [nm,deg] of DIAL){
-    const dd = Math.abs(((a-deg+180)%360+360)%360 - 180);
-    if(dd<bd){ bd=dd; best=nm; }
-  }
-  return best;
-}
-function hitSlider(ex,ey){
-  const xr = X(SLIDER_XR + SC.slide*PXMM);
-  return xr - SLIDER_W*SCB < ex && ex < xr+6 && Y(SLIDER_Y) < ey && ey < Y(SLIDER_Y2);
-}
-
-/* ══════════════════════════════════════════════════════════════
-   7.  DRAWING THE WHOLE BENCH
-   ══════════════════════════════════════════════════════════════ */
-function clipHead(x,y,col){
-  gPoly([[x-15,y-7],[x+8,y-2],[x-15,y+3]],col,"#111",1);
-  gPoly([[x-15,y+9],[x+8,y+4],[x-15,y-1]],col,"#111",1);
-}
-function probeHead(x,y,col){
-  gLine([[x,y],[x-18,y+14]],col,6,"round");
-  gOval(x-4,y-4,x+4,y+4,"#d8d8d8","#555",1);
-}
-
-function redraw(){
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.clearRect(0,0,cv.width,cv.height);
-  const k = (cssW/CW)*DPR;
-  ctx.setTransform(k,0,0,k,0,0);
-
-  /* --- bench and tray --------------------------------------------- */
-  gRect(0,0,CW,CH,C_BG,null);
-
-  /* --- the board, layer by layer ----------------------------------- */
-  const st = osc();
-  artBoard(OX,OY,SCB,SC.slide,SC.swOn,st,"bot");
-  artBoard(OX,OY,SCB,SC.slide,SC.swOn,st,"slider");
-  artBoard(OX,OY,SCB,SC.slide,SC.swOn,st,"top");
-  artBoard(OX,OY,SCB,SC.slide,SC.swOn,st,"ind");
-  artDMM(DMM_AT[0],DMM_AT[1],DMM_S,SC.dial,"","");
-
-  /* --- what the LCD says -------------------------------------------- */
-  const mx=DMM_AT[0], my=DMM_AT[1];
-  gText(mx+212*DMM_S, my+76*DMM_S, display(), "#161d16",
-        fnt(Math.max(8,Math.floor(30*DMM_S)),"Courier New","bold"), "e");
-  gText(mx+212*DMM_S, my+102*DMM_S, unitTxt(), "#161d16",
-        fnt(Math.max(5,Math.floor(10*DMM_S)),"Helvetica","bold"), "e");
-
-  /* --- the battery snap leads --------------------------------------- */
-  for(const [kk,col,src] of [["p","#a5251f",BATT_P],["n","#1a1a1a",BATT_N]]){
-    const [px,py]=battEnd(kk);
-    const sx=X(src[0]), sy=Y(src[1]);
-    gSmooth([sx,sy], [(sx+px)/2,(sy+py)/2-26], [px,py], col, 4);
-    gOval(px-5,py-5,px+5,py+5,col,"#e0e0e0",2);
-  }
-  /* --- the crocodile leads (oscillator -> specimen) ------------------ */
-  for(const [kk,col,src] of [["r",C_WIRE_R,CLIP_OUT_R],["b",C_WIRE_B,CLIP_OUT_B]]){
-    const [px,py]=clipEnd(kk);
-    const sx=X(src[0]), sy=Y(src[1]);
-    gSmooth([sx,sy], [(sx+px)/2-20,(sy+py)/2+34], [px,py], col, 5);
-    clipHead(px,py,col);
-  }
-  /* --- the meter leads ---------------------------------------------- */
-  for(const [kk,col,jx] of [["b",C_WIRE_B,mx+156*DMM_S],["r",C_WIRE_R,mx+212*DMM_S]]){
-    const y0 = my+346*DMM_S;
-    const [px,py]=probeEnd(kk);
-    ctx.beginPath();
-    ctx.moveTo(jx,y0); ctx.lineTo(jx,y0+34);
-    ctx.quadraticCurveTo((jx+px)/2, py+70, px, py);
-    setStroke(col,4); ctx.stroke();
-    probeHead(px,py,col);
-  }
-
-  /* --- capacitors out on the bench ---------------------------------- */
-  for(const key of Object.keys(SC.caps)){
-    const i=+key, [x,y]=SC.caps[key];
-    if(drag && drag[0]==="card" && drag[1]===i) continue;
-    for(const w of ["A","B"]){                     /* leads bent to the shared point */
-      const [lx,ly]=leadXY(i,w);
-      const sx = x + (w==="A" ? -6 : 6)*BODY_S;
-      gSmooth([sx, y+20*BODY_S], [(sx+lx)/2, y+40*BODY_S], [lx,ly], "#9aa5aa", 3);
-    }
-    artCapBody(x,y,BODY_S,CAPS[i][0],false);
-  }
-  for(const key of Object.keys(SC.caps)){
-    for(const w of ["A","B"]){
-      const [lx,ly]=leadXY(+key,w);
-      gOval(lx-4,ly-4,lx+4,ly+4,"#c9ccce","#6f7376",1);
-    }
-  }
-  for(const [jx,jy] of joints())                   /* where they touch */
-    gOval(jx-6,jy-6,jx+6,jy+6,"#d8b24a","#8a6b1f",1);
-
-  /* --- the component tray -------------------------------------------- */
-  if(drag && drag[0]==="card")
-    artCapBody(drag[2],drag[3],BODY_S,CAPS[drag[1]][0],true);
-  if(drag && (drag[0]==="probe"||drag[0]==="clip"||drag[0]==="batt")){
-    for(const [tx,ty] of targetsFor(drag[0]))
-      gOval(tx-13,ty-13,tx+13,ty+13,null,C_SEL,2,[3,2]);
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   8.  MOUSE
-   ══════════════════════════════════════════════════════════════ */
-function evXY(e){
-  const r = cv.getBoundingClientRect();
-  return [ (e.clientX-r.left)*CW/r.width, (e.clientY-r.top)*CH/r.height ];
-}
-function press(ex,ey){
-  /* 1) grab a lead end (it comes off whatever it was on) */
-  for(const k of ["r","b"]){
-    const [px,py]=probeEnd(k);
-    if(Math.hypot(ex-px,ey-py) < 17){ SC.probe[k]=null; drag=["probe",k,ex,ey]; return; }
-  }
-  for(const k of ["r","b"]){
-    const [px,py]=clipEnd(k);
-    if(Math.hypot(ex-px,ey-py) < 17){ drag=["clip",k,ex,ey]; return; }
-  }
-  for(const k of ["p","n"]){
-    const [px,py]=battEnd(k);
-    if(Math.hypot(ex-px,ey-py) < 15){ SC.batt[k]=null; drag=["batt",k,ex,ey]; return; }
-  }
-  /* 2) switch / dial */
-  if(hitSwitch(ex,ey)){ SC.swOn = !SC.swOn; return; }
-  const d = hitDial(ex,ey);
-  if(d){ SC.dial=d; return; }
-  /* 3) drag the upper plate */
-  if(hitSlider(ex,ey)){ drag=["slide", ex - X(SLIDER_XR + SC.slide*PXMM)]; return; }
-  /* 4) pick up a capacitor (from the bench, or out of the tray) */
-  for(const key of Object.keys(SC.caps)){
-    const i=+key, [x,y]=SC.caps[key];
-    if(Math.abs(ex-x) < 34*BODY_S && Math.abs(ey-y) < 48*BODY_S){
-      drag=["card",i,ex,ey]; return;
-    }
-  }
-}
-let lastMt = 0;
-function motion(ex,ey){
-  if(!drag) return;
-  const now = performance.now()/1000;
-  if(now - lastMt < 0.022) return;
-  lastMt = now;
-  const kind = drag[0];
-  if(kind==="slide"){
-    const v = Math.round(((ex - drag[1] - OX)/SCB - SLIDER_XR)*10)/10;
-    SC.slide = Math.min(TRAVEL_MM, Math.max(0.0, v/PXMM));
-  }else if(kind==="card"){
-    drag[2]=ex; drag[3]=ey; SC.caps[drag[1]]=[ex,ey];
-  }else{
-    drag[2]=ex; drag[3]=ey;
-  }
-  dirty = true;
-}
-function release(ex,ey){
-  const d = drag; drag = null;
-  if(!d) return;
-  const kind = d[0];
-  if(kind==="card"){
-    const i=d[1];
-    delete SC.stack[i];
-    for(const j of Object.keys(SC.stack)) if(SC.stack[j]===i) delete SC.stack[j];
-    if(ey > CH + 40){                           /* dropped off the bench: back in the box */
-      delete SC.caps[i];
-    }else{
-      const y = Math.max(60, Math.min(CH-80, ey));
-      SC.caps[i]=[ex,y];
-      /* put it next to another one and the leads are tied: parallel */
-      let best=null;
-      for(const key of Object.keys(SC.caps)){
-        const j=+key; if(j===i) continue;
-        const r=rootOf(j); const [rx,ry]=SC.caps[r];
-        if(Math.abs(ex-rx) < 74 && Math.abs(y-ry) < 96){ best=r; break; }
-      }
-      if(best!==null){
-        let lvl = 1;
-        for(const j of Object.keys(SC.stack)) if(rootOf(+j)===best) lvl++;
-        SC.stack[i]=best;
-        SC.caps[i]=[SC.caps[best][0], SC.caps[best][1] - 46*lvl];
-      }
-    }
-  }else if(kind==="clip"){
-    const k=d[1];
-    const tgt = snap("clip",ex,ey);
-    if(tgt){                                    /* laid exactly on a lead */
-      const i = parseInt(tgt.slice(2),10);
-      SC.clipPos[k] = leadXY(i, tgt[1]).slice();
-    }else{
-      SC.clipPos[k] = [ex,ey];
-    }
-  }else if(kind==="probe" || kind==="batt"){
-    const k=d[1];
-    const tgt = snap(kind,ex,ey);
-    const store = (kind==="probe") ? SC.probe : SC.batt;
-    const free  = (kind==="probe") ? SC.freeProbe : SC.freeBatt;
-    const other = {r:"b", b:"r", p:"n", n:"p"}[k];
-    if(tgt){
-      if(store[other]===tgt){ store[other]=null; free[other]=null; }
-      store[k]=tgt; free[k]=null;
-    }else{
-      store[k]=null; free[k]=[ex,ey];
-    }
-  }
-  dirty = true;
-}
-function wheel(ex,ey,d){
-  /* the wheel over the dial turns it one position at a time, as on the real thing */
-  const kx = DMM_AT[0]+128*DMM_S, ky = DMM_AT[1]+242*DMM_S;
-  if(Math.hypot(ex-kx, ey-ky) > 92*DMM_S) return false;
-  let i = DIAL_ORDER.indexOf(SC.dial); if(i<0) i=0;
-  SC.dial = DIAL_ORDER[((i - d) % DIAL_ORDER.length + DIAL_ORDER.length) % DIAL_ORDER.length];
-  dirty = true;
-  return true;
-}
-
-let down = false;
-cv.addEventListener("pointerdown", e=>{
-  const [x,y]=evXY(e); down=true; cv.setPointerCapture(e.pointerId);
-  if(e.button===2){ e.preventDefault(); return; }
-  if(hand!==null){ down=false; placeFromHand(x,y); } else press(x,y); dirty=true; drawTray(); e.preventDefault();
-});
-cv.addEventListener("pointermove", e=>{
-  if(!down) return;
-  const [x,y]=evXY(e); motion(x,y);
-});
-cv.addEventListener("pointerup", e=>{
-  if(!down) return;
-  down=false; const [x,y]=evXY(e); release(x,y);
-});
-cv.addEventListener("pointercancel", ()=>{ down=false; drag=null; dirty=true; });
-cv.addEventListener("wheel", e=>{
-  const [x,y]=evXY(e);
-  if(wheel(x,y, e.deltaY<0 ? 1 : -1)) e.preventDefault();
-}, {passive:false});
-
-/* ══════════════════════════════════════════════════════════════
-   9.  PANEL
-   ══════════════════════════════════════════════════════════════ */
-$("btnReset").onclick = ()=>{ scReset(); sel=null; drag=null; hand=null; dirty=true; drawTray(); };
-
-/* ══════════════════════════════════════════════════════════════
-   10.  LANGUAGE
-   ══════════════════════════════════════════════════════════════ */
-function applyLang(){
-  const d = T[lang];
-  document.documentElement.lang = lang;
-  document.title = (lang==="ko")
-    ? "IPhO 2011 E1 — 전기 블랙박스 · Electrical Blackbox · HaslaLab"
-    : "IPhO 2011 E1 — Electrical Blackbox · HaslaLab";
-  $("t-title").textContent = d.title;
-  $("t-sub").textContent   = d.sub;
-  $("t-h-bench").textContent = d.hBench;
-  $("t-tray").textContent = d.tray; $("t-closecap").textContent = d.closecap;
-  $("btnReset").textContent  = d.reset;
-  $("t-h-table").textContent = d.hTable;
-  $("t-t1").textContent      = d.t1;
-  $("t-note").textContent    = d.note;
-  $("t-benchcap").textContent= d.benchcap;
-  $("btn-ko").className = lang==="ko" ? "on" : "";
-  $("btn-en").className = lang==="en" ? "on" : "";
-  dirty = true;
-}
-$("btn-ko").onclick = ()=>{ lang="ko"; applyLang(); };
-$("btn-en").onclick = ()=>{ lang="en"; applyLang(); };
-
-/* ══════════════════════════════════════════════════════════════
-   11.  MAIN LOOP
-   ══════════════════════════════════════════════════════════════ */
-let dirty = true;
-function layout(){
-  DPR = window.devicePixelRatio || 1;
-  const r = cv.parentElement.getBoundingClientRect();
-  cssW = Math.max(360, Math.floor(r.width - 24));
-  const cssH = Math.round(cssW*CH/CW);
-  cv.style.height = cssH + "px";
-  cv.width  = Math.round(cssW*DPR);
-  cv.height = Math.round(cssH*DPR);
-  trayLayout(); closeLayout();
-  dirty = true;
-}
-/* the 220 ms housekeeping tick of the Python version */
-let lastState = null;
-setInterval(()=>{
-  if(SC.swOn && battIn())
-    SC.battV = Math.max(7.5, SC.battV - BATT_DRAIN*0.2/60.0);
-  const r = Math.random();
-  SC.jit = r<0.6 ? 0.0 : (r<0.8 ? 0.004 : -0.004);
-  const state = display()+"|"+osc()+"|"+SC.dial;
-  if(state !== lastState){ lastState = state; dirty = true; }
-}, 220);
-
-function tick(){
-  if(dirty){ redraw(); drawHand(); drawClose(); dirty = false; }
-  requestAnimationFrame(tick);
-}
-
-
-/* ══════════════════════════════════════════════════════════════
-   12.  PARTS BOX, HAND AND CLOSE-UP
-   ══════════════════════════════════════════════════════════════ */
-const trayCv=$("tray"), trayCtx=trayCv.getContext("2d");
-const TRAY=[0,1,2,3,"batt"], TROW=48;
-let hand=null, hover=null, TRW=190, trayCells=[], msg={k:null,a:[],t:0};
-function say(k,...a){ msg={k,a,t:performance.now()}; renderStatus(); }
-function renderStatus(){
-  const box=$("status"); box.innerHTML="";
-  if(msg.k&&performance.now()-msg.t<9000){ const f=T[lang][msg.k]; const el=document.createElement("div");
-    el.textContent="• "+(typeof f==="function"?f(...msg.a):f); box.appendChild(el); }
-}
-setInterval(renderStatus,1000);
+/* ---- the tray ---- */
+const trayCv = $("tray"), tctx = trayCv.getContext("2d"), TROW = 50, TRAY_UI = [0, 1, 2, 3, "batt"];
+let TRW = 190, trayCells = [];
 function trayLayout(){
-  const dpr=window.devicePixelRatio||1, r=trayCv.parentElement.getBoundingClientRect();
-  TRW=Math.max(150,Math.floor(r.width-16)); const h=TRAY.length*TROW+50;
-  trayCv.style.height=h+"px"; trayCv.width=Math.round(TRW*dpr); trayCv.height=Math.round(h*dpr);
-  drawTray();
-}
-const trayAvail=k=>k==="batt"?hand!=="batt":(SC.caps[k]===undefined&&hand!==k);
+  const dpr = window.devicePixelRatio || 1; TRW = Math.max(150, trayCv.parentElement.clientWidth - 18 || 190);
+  const h = TRAY_UI.length * TROW + 52; trayCv.style.width = TRW + "px"; trayCv.style.height = h + "px";
+  trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(h * dpr); drawTray(); }
+function trayIcon(c, k, x, y){
+  c.save(); c.translate(x, y);
+  if (k === "batt"){ c.fillStyle = "#1d1e22"; c.fillRect(-15, -9, 26, 18); c.fillStyle = "#2c5fb4"; c.fillRect(-15, -4, 26, 9); c.fillStyle = "#fff"; c.font = "800 8px Arial"; c.fillText("9V", -12, 3);
+    c.fillStyle = "#111"; c.fillRect(11, -6, 5, 12); }
+  else { c.fillStyle = "#9fe0c4"; c.fillRect(-14, -12, 28, 24); c.fillStyle = "#c96c2a"; c.beginPath(); c.arc(0, -2, 6.5, 0, 7); c.fill();
+    c.strokeStyle = "#cfd3d6"; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-3, 3); c.lineTo(-4, 15); c.moveTo(3, 3); c.lineTo(4, 15); c.stroke();
+    c.fillStyle = "#1d3b6a"; c.font = "700 8px Arial"; c.textAlign = "center"; c.fillText(CAPS[k][0], 0, -6 + 16); }
+  c.restore(); }
 function drawTray(){
-  const dpr=window.devicePixelRatio||1, c=trayCtx, d=T[lang], h=TRAY.length*TROW+50;
-  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,h);
-  trayCells=[]; let y=6; const wd=TRW-12;
-  for(const k of TRAY){
-    const av=trayAvail(k), sel=hand===k;
-    c.fillStyle=av||sel?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
-    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+.5,wd-1,TROW-5);
-    const old=ctx; ctx=c; ctx.save(); ctx.globalAlpha=av||sel?1:.35;
-    if(k==="batt"){ gRect(12,y+12,40,y+32,C_BATT,"#232326",1); gRect(16,y+15,36,y+27,"#ececed",null); gText(26,y+38,"9V","#aaa",fnt(6),"c"); }
-    else artCapBody(28,y+(TROW-4)/2+2,0.42,CAPS[k][0],true);
-    ctx.restore(); ctx=old;
-    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
-    c.fillStyle=av||sel?"#e8eef2":"#868e96"; let nm=k==="batt"?d.itBatt:d.itCap(CAPS[k][0]);
-    while(c.measureText(nm).width>wd-52&&nm.length>4) nm=nm.slice(0,-2)+"…"; c.fillText(nm,50,y+14);
-    c.font='9.5px "Malgun Gothic",sans-serif'; c.fillStyle="#69717a";
-    c.fillText(sel?"":k==="batt"?d.trayAlways:(av?d.trayTake:d.trayOut),50,y+30);
-    trayCells.push([k,y,y+TROW-4]); y+=TROW;
-  }
-  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
-  d.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
-}
-function placeFromHand(ex,ey){
-  if(hand==="batt"){
-    if(ex>X(47)&&ex<X(180)&&ey>Y(26)&&ey<Y(93)){ SC.battV=newBattery(0.30); hand=null; say("mBatt"); }
-    else say("mNeedBatt");
-    dirty=true; drawTray(); return;
-  }
-  const i=hand; hand=null;
-  SC.caps[i]=[ex,ey]; drag=["card",i,ex,ey]; release(ex,ey);
-  say("mCapOn",CAPS[i][0]); dirty=true; drawTray();
-}
-function capAt(ex,ey){
-  for(const key of Object.keys(SC.caps)){ const [x,y]=SC.caps[key];
-    if(Math.abs(ex-x)<34*BODY_S&&Math.abs(ey-y)<48*BODY_S) return +key; }
-  return null;
-}
-cv.addEventListener("contextmenu",e=>{ e.preventDefault();
-  if(hand!==null){ hand=null; dirty=true; drawTray(); return; }
-  const [x,y]=evXY(e), i=capAt(x,y); if(i===null) return;
-  delete SC.caps[i]; delete SC.stack[i]; for(const j of Object.keys(SC.stack)) if(SC.stack[j]===i) delete SC.stack[j];
-  say("mCapBack",CAPS[i][0]); dirty=true; drawTray(); });
-cv.addEventListener("pointermove",e=>{ hover=evXY(e); if(hand!==null) dirty=true; });
-cv.addEventListener("pointerleave",()=>{ hover=null; if(hand!==null) dirty=true; });
-let trayDrag=false;
-trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); hand=null; dirty=true; drawTray(); });
-trayCv.addEventListener("pointerdown",e=>{
-  if(e.button!==0) return; const y=e.clientY-trayCv.getBoundingClientRect().top; trayDrag=true;
-  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
-    const same=hand===k; hand=null; if(!same&&trayAvail(k)) hand=k; dirty=true; drawTray(); return; } });
-window.addEventListener("pointerup",e=>{ if(trayDrag&&hand!==null&&e.target===cv){ const [x,y]=evXY(e); placeFromHand(x,y); } trayDrag=false; });
-function drawHand(){
-  if(hand===null||!hover) return;
-  ctx.save(); ctx.globalAlpha=.8;
-  if(hand==="batt"){ gRect(hover[0]-30,hover[1]-16,hover[0]+30,hover[1]+16,C_BATT,"#232326",2); gRect(hover[0]-22,hover[1]-10,hover[0]+22,hover[1]+6,"#ececed",null); }
-  else artCapBody(hover[0],hover[1],BODY_S,CAPS[hand][0],true);
-  ctx.restore();
-}
+  const dpr = window.devicePixelRatio || 1, c = tctx, h = TRAY_UI.length * TROW + 52;
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = "#15181d"; c.fillRect(0, 0, TRW, h);
+  trayCells = []; let y = 6; const wd = TRW - 12;
+  for (const k of TRAY_UI){
+    const on = k !== "batt" && kit.caps[k] !== undefined, inHand = UI.hand === k;
+    c.fillStyle = on ? "#1a1d22" : "#1f242b"; c.fillRect(6, y, wd, TROW - 4);
+    c.strokeStyle = inHand ? "#f2c14e" : on ? "#3f4650" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
+    c.globalAlpha = on ? 0.45 : 1; trayIcon(c, k, 28, y + (TROW - 4) / 2); c.globalAlpha = 1;
+    c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle";
+    c.fillStyle = on ? "#8b939b" : "#e8eef2"; let nm = k === "batt" ? tr("it_batt") : tr("it_cap").replace("%s", CAPS[k][0]);
+    while (c.measureText(nm).width > wd - 56 && nm.length > 4) nm = nm.slice(0, -2) + "…";
+    c.fillText(nm, 52, y + 15);
+    c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = on || inHand ? "#f2c14e" : "#69717a";
+    c.fillText(tr(inHand ? "trayHand" : k === "batt" ? "trayBatt" : on ? "trayBack" : "trayTake"), 52, y + 32);
+    trayCells.push([k, y, y + TROW - 4]); y += TROW; }
+  c.font = '10.5px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a";
+  tr("trayHelp").split("\n").forEach((ln, i) => c.fillText(ln, TRW / 2, y + 6 + i * 14)); }
+function freeSlot(i){ let [x, z] = SLOT(i);
+  for (let t = 0; t < 8; t++){ if (!Object.values(kit.caps).some(p => Math.hypot(p[0] - x, p[1] - z) < 3)) break; x += 1.5; z += 2.2; }
+  return [x, z]; }
+function capOut(i){ kit.caps[i] = freeSlot(i); note(tr("st_capOn").replace("%s", CAPS[i][0])); }
+function capBack(i){
+  const r = kit.root(i), mates = Object.keys(kit.caps).map(Number).filter(j => j !== i && kit.root(j) === r);
+  /* the clips on this capacitor's leads drop on the desk */
+  if (r === i && !mates.length) for (const k of ["r", "b"]){ const v = kit.clip[k];
+    if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i){ const e = leadEnd(i, v[0]); kit.clip[k] = [e[0], 0.45, e[2] - 0.8]; } }
+  if (r === i && mates.length){ const nr = Math.min(...mates); kit.caps[nr] = kit.caps[i]; delete kit.stack[nr];
+    for (const j of mates) if (j !== nr) kit.stack[j] = nr;
+    for (const k of ["r", "b"]){ const v = kit.clip[k]; if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i) kit.clip[k] = v[0] + nr; } }
+  delete kit.caps[i]; delete kit.stack[i];
+  note(tr("st_capBack").replace("%s", CAPS[i][0])); }
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); UI.hand = null; drawTray(); });
+trayCv.addEventListener("mousedown", e => {
+  if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top;
+  for (const [k, y0, y1] of trayCells) if (y >= y0 && y <= y1){
+    if (k === "batt"){ UI.hand = UI.hand === "batt" ? null : "batt"; note(UI.hand ? tr("st_needBatt") : ""); refresh(); return; }
+    if (kit.caps[k] === undefined) capOut(k); else capBack(k);
+    refresh(); return; } });
+window.addEventListener("resize", () => { trayLayout(); layout3(); });
 
-/* the close-up: the meter face, and the plate edge on the scale */
-const closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), CLW=760, CLH=300;
-let clW=CLW;
-function closeLayout(){
-  const dpr=window.devicePixelRatio||1; clW=Math.min(CLW,closeCv.parentElement.clientWidth-20);
-  closeCv.style.width=clW+"px"; closeCv.style.height=(clW*CLH/CLW)+"px";
-  closeCv.width=Math.round(clW*dpr); closeCv.height=Math.round(clW*CLH/CLW*dpr);
-}
-function drawClose(){
-  const dpr=window.devicePixelRatio||1, k=clW/CLW*dpr, old=ctx; ctx=closeCtx;
-  ctx.setTransform(k,0,0,k,0,0); gRect(0,0,CLW,CLH,"#15181d",null);
-  artDMM(14,6,0.65,SC.dial,display(),unitTxt());
-  const S3=3, xr=825+SC.slide*PXMM, ox=200+280-xr*S3, oy=-300*S3+14;
-  ctx.save(); ctx.beginPath(); ctx.rect(200,8,550,284); ctx.clip();
-  gRect(200,8,750,292,C_BG,null);
-  artBoard(ox,oy,S3,SC.slide,SC.swOn,osc(),"bot");
-  artBoard(ox,oy,S3,SC.slide,SC.swOn,osc(),"slider");
-  ctx.restore(); gRect(200.5,8.5,749.5,291.5,null,"#3a4048",1.5);
-  ctx=old;
-}
+/* ---- the panel ---- */
+function note(s){ $("status").textContent = s || ""; }
+function refresh(){
+  $("sw").textContent = tr(kit.sw ? "swOn" : "swOff"); $("sw").className = kit.sw ? "on" : "";
+  const ok = b => b ? "✓ " : "· ";
+  const pr = [kit.probe.r, kit.probe.b], onOut = pr.includes("JR") && pr.includes("JB");
+  const cr = kit.node(kit.clip.r), cb = kit.node(kit.clip.b);
+  let clipTxt;
+  if ((cr === "BBL" && cb === "BBU") || (cr === "BBU" && cb === "BBL")) clipTxt = tr("w_bb");
+  else if (cr && cb && cr[0] !== "B" && cb[0] !== "B" && cr.slice(1) === cb.slice(1) && cr !== cb){
+    const r = +cr.slice(1), all = Object.keys(kit.caps).map(Number).filter(j => kit.root(j) === r).map(j => CAPS[j][0]);
+    clipTxt = tr("w_caps").replace("%s", all.join(" + ")); }
+  else clipTxt = tr("w_open");
+  $("wires").textContent = ok(kit.battIn()) + tr("w_snap") + "\n" + ok(onOut) + tr("w_probe") + "\n" + ok(clipTxt !== tr("w_open")) + tr("w_clip") + clipTxt;
+  $("t1").textContent = tr("t1"); $("newExp").textContent = tr("newExp");
+  drawTray(); syncTabs(); }
+$("sw").onclick = () => { kit.sw = !kit.sw; refresh(); };
+$("newExp").onclick = () => { $("resetQ").textContent = tr("resetQ"); $("resetNo").textContent = tr("no"); $("resetYes").textContent = tr("yes"); $("resetDlg").showModal(); };
+$("resetNo").onclick = () => $("resetDlg").close();
+$("resetYes").onclick = () => { $("resetDlg").close(); kit.reset(); UI.hand = null; UI.drag = null; showView("3d"); note(tr("st_ready")); refresh(); };
 
-window.addEventListener("resize", layout);
-layout(); applyLang(); requestAnimationFrame(tick);
+/* ---- the hands ---- */
+let down = null, mPrev = [0, 0];
+const pe = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+/* a point on the desk, the base or the top of the oscillator under the pointer */
+function surfaceAt(p){
+  let q = onPlane(p[0], p[1], OSC.h); if (q[0] > OSC.x0 && q[0] < OSC.x1 && q[2] > OSC.z0 && q[2] < OSC.z1) return q;
+  q = onPlane(p[0], p[1], BB.h); if (q[0] > BB.x0 && q[0] < BB.x1 && q[2] > BB.z0 && q[2] < BB.z1) return q;
+  q = onPlane(p[0], p[1], BASE_H); if (q[0] > 0 && q[0] < 64 && q[2] > -9 && q[2] < 9) return q;
+  return onPlane(p[0], p[1], 0.45); }
+/* the terminal nearest the pointer on the screen, if it is close */
+function nearTarget(key, p){
+  let best = null, bd = 26;
+  for (const n of targetsFor(key)){ const t = target(n); if (!t) continue; const s = P3(...t), d = Math.hypot(s[0] - p[0], s[1] - p[1]); if (d < bd){ bd = d; best = n; } }
+  return best; }
+/* the point on the face of the meter under the pointer, in face cm */
+function faceAt(p){
+  const a = P3(DMMF.x, DMMF.h, DMMF.z), b = P3(DMMF.x + DMMF.w, DMMF.h, DMMF.z), c = P3(DMMF.x, DMMF.h, DMMF.z + DMMF.l);
+  const ux = b[0] - a[0], uy = b[1] - a[1], vx = c[0] - a[0], vy = c[1] - a[1], det = ux * vy - uy * vx; if (Math.abs(det) < 1e-9) return null;
+  const dx = p[0] - a[0], dy = p[1] - a[1]; return [(dx * vy - dy * vx) / det * DMMF.w, (ux * dy - uy * dx) / det * DMMF.l]; }
+function dialAt(p){ const f = faceAt(p); if (!f) return null; const dx = f[0] - DIAL_C[0], dy = f[1] - DIAL_C[1], r = Math.hypot(dx, dy);
+  if (r > DIAL_R + 1.25) return null; if (r < 0.6) return "centre";
+  const ang = Math.atan2(dy, dx) * 180 / Math.PI; let best = null, bd = 1e9;
+  for (const [nm, deg] of DIAL){ const d = Math.abs(((ang - deg) % 360 + 540) % 360 - 180); if (d < bd){ bd = d; best = nm; } }
+  return best; }
+function stepDial(s){ let i = DIAL_ORDER.indexOf(kit.dial); i = (i + s + DIAL_ORDER.length) % DIAL_ORDER.length; kit.dial = DIAL_ORDER[i]; }
+const isEnd = id => id && /^(pr_[rb]|snap_[pn]|clip_[rb])$/.test(id);
+cv3.addEventListener("contextmenu", e => e.preventDefault());
+cv3.addEventListener("pointerdown", e => {
+  const p = pe(e); mPrev = p; cv3.setPointerCapture(e.pointerId);
+  let id = pick3(p[0], p[1]);
+  if (e.button === 1 || e.button === 2){ e.preventDefault(); down = {p, kind: "pan", btn: e.button, moved: false, id}; return; }
+  if (e.button) return;
+  if (UI.hand === "batt"){ if (id === "batt"){ kit.battV = newBattery(kit.rng); UI.hand = null; note(tr("st_batt")); } else note(tr("st_needBatt")); refresh(); return; }
+  /* a terminal with a lead end on it: you grab the end, not the terminal */
+  if (id && !isEnd(id)){ const lead = /^lead([AB])(\d)$/.exec(id), t = lead ? lead[1] + kit.root(+lead[2]) : id;
+    for (const k of ["clip_r", "clip_b", "pr_r", "pr_b", "snap_p", "snap_n"]){ const [o, c] = STATE(k); if (o[c] === t){ id = k; break; } } }
+  if (isEnd(id)){ const [o, k] = STATE(id); UI.drag = {kind: "end", key: id, at: endPos(id).slice(), was: o[k]}; down = {p, kind: "end", key: id, moved: false}; return; }
+  if (id && id.startsWith("cap")){ const i = +id.slice(3), q = onPlane(p[0], p[1], 0), c = kit.caps[kit.root(i)];
+    down = {p, kind: "cap", i, off: [q[0] - c[0], q[2] - c[1]], moved: false}; return; }
+  if (id === "plate"){ down = {p, kind: "plate", x0: onPlane(p[0], p[1], BASE_H + 0.9)[0], s0: kit.slide, moved: false}; return; }
+  if (id === "dmm"){ const d = dialAt(p); if (d && d !== "centre"){ down = {p, kind: "dial", d, moved: false}; return; } }
+  down = {p, kind: view3 === "3d" ? "orbit" : "pan", id, moved: false}; });
+cv3.addEventListener("pointermove", e => {
+  const p = pe(e), dx = p[0] - mPrev[0], dy = p[1] - mPrev[1]; mPrev = p;
+  if (!down){ const id = pick3(p[0], p[1]); cv3.className = UI.hand ? "copy" : id && id !== "room" && id !== "base" ? "pointer" : ""; return; }
+  if (Math.hypot(p[0] - down.p[0], p[1] - down.p[1]) > 4) down.moved = true; if (!down.moved) return;
+  const k = down.kind;
+  if (k === "orbit"){ CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.5, Math.max(0.12, CAM.pitch + dy * 0.006)); cv3.classList.add("grabbing"); }
+  else if (k === "pan"){ CAM.px += dx; CAM.py += dy; cv3.classList.add("grabbing"); }
+  else if (k === "end"){ const hot = nearTarget(down.key, p); UI.hot = hot; UI.drag.at = hot ? target(hot).slice() : surfaceAt(p); }
+  else if (k === "cap"){ const q = onPlane(p[0], p[1], 0), r = kit.root(down.i);
+    if (r !== down.i){ kit.caps[down.i] = kit.caps[r].slice(); delete kit.stack[down.i]; note(tr("st_unstack")); }
+    kit.caps[down.i] = [Math.max(-35, Math.min(110, q[0] - down.off[0])), Math.max(11.5, Math.min(58, q[2] - down.off[1]))];
+    /* its mates come with it */
+    for (const j of Object.keys(kit.stack)) if (kit.root(+j) === down.i) kit.caps[+j] = kit.caps[down.i].slice(); }
+  else if (k === "plate"){ const x = onPlane(p[0], p[1], BASE_H + 0.9)[0]; kit.slide = Math.max(0, Math.min(TRAVEL_MM, down.s0 - (x - down.x0) * 10)); }
+});
+cv3.addEventListener("pointerup", e => {
+  cv3.classList.remove("grabbing"); const d = down; down = null; if (!d) return;
+  if (d.kind === "pan" && !d.moved && d.btn === 2){ if (UI.hand){ UI.hand = null; note(""); } else if (!putBack(d.id) && view3 !== "3d") showView("3d"); refresh(); return; }
+  if (d.kind === "end"){ const key = d.key, [o, k] = STATE(key), hot = UI.hot; UI.hot = null;
+    if (!d.moved){ UI.drag = null; refresh(); return; }
+    if (hot){ const other = {r: "b", b: "r", p: "n", n: "p"}[k]; if (o[other] === hot) o[other] = HOME[key.slice(0, -1) + other].slice();
+      o[k] = hot; note(tr("st_on").replace("%s", termName(hot))); }
+    else { o[k] = UI.drag.at.slice(); note(tr("st_free")); }
+    UI.drag = null; refresh(); return; }
+  if (d.kind === "cap"){
+    if (d.moved){ const i = d.i, p = kit.caps[i];
+      for (const j of Object.keys(kit.caps).map(Number)) if (j !== i && kit.root(j) === j && Math.hypot(kit.caps[j][0] - p[0], kit.caps[j][1] - p[1]) < 2.6){
+        kit.stack[i] = j; for (const m of Object.keys(kit.stack)) if (kit.stack[m] === i) kit.stack[m] = j;
+        for (const c of ["r", "b"]){ const v = kit.clip[c]; if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i) kit.clip[c] = v[0] + j; }
+        note(tr("st_stack")); break; } }
+    refresh(); return; }
+  if (d.kind === "dial"){ kit.dial = d.d; refresh(); return; }
+  if (!d.moved && view3 === "3d"){
+    if (d.id === "switch"){ kit.sw = !kit.sw; refresh(); return; }
+    if (d.id === "dmm"){ showView("dmm"); return; } if (d.id === "scale" || d.id === "plate" || d.id === "stop"){ showView("scale"); return; }
+    if (d.id === "osc" || d.id === "batt" || ["JR", "JB", "BINP", "BINN"].includes(d.id)){ showView("osc"); return; } }
+  if (!d.moved && d.id === "switch"){ kit.sw = !kit.sw; refresh(); return; }
+  refresh(); });
+function termName(n){ if (/^[AB]\d$/.test(n)) return tr("t_lead").replace("%s", CAPS[+n[1]][0]); return tr("t_" + n); }
+cv3.addEventListener("dblclick", e => { const p = pe(e), id = pick3(p[0], p[1]);
+  if (id && id !== "room" && id !== "base") return;
+  freeCam = null; if (view3 !== "3d") showView("3d"); Object.assign(CAM, CAM0); });
+/* a right click on a part puts it back: a capacitor into the box, a lead end to where it lies at the start */
+function putBack(id){
+  if (!id) return false;
+  if (id.startsWith("cap")){ capBack(+id.slice(3)); return true; }
+  if (isEnd(id)){ const [o, k] = STATE(id); o[k] = id.startsWith("clip") ? (k === "r" ? "BBU" : "BBL") : null; note(""); return true; }
+  return false; }
+cv3.addEventListener("wheel", e => { e.preventDefault(); const p = pe(e), up = e.deltaY < 0, id = pick3(p[0], p[1]);
+  if (id === "dmm" && dialAt(p)){ stepDial(up ? -1 : 1); refresh(); return; }
+  if (id === "plate" && view3 === "scale"){ kit.slide = Math.max(0, Math.min(TRAVEL_MM, kit.slide + (up ? 0.5 : -0.5) * (e.shiftKey ? 0.2 : 1))); return; }
+  const f = up ? 1.12 : 1 / 1.12, nk = Math.min(240, Math.max(2, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive: false});
+
+/* ---- language ---- */
+function applyLang(){
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = tr(el.getAttribute("data-i18n")); });
+  $("btn-en").className = LANG === "en" ? "on" : ""; $("btn-ko").className = LANG === "ko" ? "on" : "";
+  document.documentElement.lang = LANG; $("info").innerHTML = tr("info");
+  document.title = LANG === "ko" ? "IPhO 2011 E1 — 전기 블랙박스 · HaslaLab" : "IPhO 2011 E1 — Electrical Blackbox · HaslaLab";
+  trayLayout(); refresh(); if (!$("status").textContent) note(tr("st_ready")); }
+function setLang(l){ LANG = l; const u = new URL(location.href); u.searchParams.set("lang", l); history.replaceState(null, "", u); note(""); applyLang(); }
+$("btn-en").onclick = () => setLang("en"); $("btn-ko").onclick = () => setLang("ko");
+
+/* ---- the clock ---- */
+setInterval(() => kit.tick(), 220);
+function loop(){ draw3(); requestAnimationFrame(loop); }
+layout3(); applyLang(); requestAnimationFrame(loop);
+
 </script>
 <script src="adfit.js"></script>
-  <script src="simfull.js"></script>
+<script src="simfull.js"></script>
 </body>
 </html>
