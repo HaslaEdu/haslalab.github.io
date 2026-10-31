@@ -122,7 +122,7 @@ def merge_continuations(doc, pages, report):
                 if not m.group(5):
                     continue
                 x, base = float(m.group(5)), H - float(m.group(6))
-                tr = [t for t in kor if abs(t['bbox'][3] - base) < 6 and abs(t['bbox'][0] - x) < 2]
+                tr = sorted([t for t in kor if abs(t['bbox'][3] - base) < 6 and abs(t['bbox'][0] - x) < 2], key=lambda t: abs(t['bbox'][3] - base - 2))
                 if tr:
                     lines.append((bi, m, pymupdf.Rect(tr[0]['bbox']), float(m.group(8))))
             done = False
@@ -191,7 +191,7 @@ def fix(src, dst, pages=None):
             if not m.group(5):
                 continue
             x, base = float(m.group(5)), H - float(m.group(6))
-            tr = [t for t in kor if abs(t['bbox'][3] - base) < 6 and abs(t['bbox'][0] - x) < 2]
+            tr = sorted([t for t in kor if abs(t['bbox'][3] - base) < 6 and abs(t['bbox'][0] - x) < 2], key=lambda t: abs(t['bbox'][3] - base - 2))
             if not tr:
                 continue
             tr = tr[0]
