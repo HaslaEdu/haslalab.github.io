@@ -465,13 +465,16 @@ function assessedDocument(result, W, H) {
   return { ...result, paperStatus: paperAssessment.status, paperAssessment,
     autoCaptureEligible: result.autoCaptureEligible === true && paperAssessment.status === 'a4_candidate' };
 }
-function pageEvidence(corners, g, w, h, refine = false) {
+/* a page that wins by itself covers at least PAGE_COVER of the frame; a sheet found lying inside a larger
+   rectangle (paperOnDesk) may be as small as SHEET_COVER */
+const PAGE_COVER = .095, SHEET_COVER = .04;
+function pageEvidence(corners, g, w, h, refine = false, minCover = PAGE_COVER) {
   if (!corners || corners.some(p => !p || !Number.isFinite(p.x + p.y))) return null;
   const q = orderCorners(corners), poly = [q[0], q[1], q[3], q[2]], margin = Math.max(1.5, Math.min(w, h) * .007);
   if (quadScore(q, w, h) < .18 || q.some(p => p.x < margin || p.y < margin || p.x > w - 1 - margin || p.y > h - 1 - margin)) return null;
   let area = 0; for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
   area = Math.abs(area) / 2; const cover = area / (w * h);
-  if (cover < .095 || cover > .94) return null;
+  if (cover < minCover || cover > .94) return null;
   const lengths = poly.map((p, i) => Math.hypot(p.x - poly[(i + 1) % 4].x, p.y - poly[(i + 1) % 4].y));
   if (Math.min(...lengths) < Math.min(w, h) * .14 || Math.max(...lengths) / Math.min(...lengths) > 5) return null;
   const cx = q.reduce((s, p) => s + p.x, 0) / 4, cy = q.reduce((s, p) => s + p.y, 0) / 4;
@@ -518,13 +521,97 @@ function pageEvidence(corners, g, w, h, refine = false) {
   if (weakest < .44 || support < .64 || Math.min(...contrasts) < 4) return null;
   if (refine) {
     const fitted = lines.map((line, i) => pageIntersection(lines[(i + 3) % 4], line));
-    const improved = pageEvidence(fitted, g, w, h, false);
+    const improved = pageEvidence(fitted, g, w, h, false, minCover);
     if (improved) return improved;
   }
   const strength = Math.min(1, Math.min(...contrasts) / 18);
   const score = Math.min(.96, .34 + .32 * support + .16 * weakest + .12 * strength + .02 * Math.min(1, cover / .3));
-  return { corners: q, score, edgeSupport: support, weakestEdge: weakest, clipped: false, cover,
+  return { corners: q, score, edgeSupport: support, weakestEdge: weakest, clipped: false, cover, interior: interior[4],
     autoCaptureEligible: score >= .78 && support >= .83 && weakest >= .72 };
+}
+
+/** The width/height ratio of the rectangle a quad is the picture of, with the perspective undone
+ * (Zhang & He, "Whiteboard scanning and image enhancement", 2007: the focal length and the aspect ratio follow from
+ * the quad's two vanishing points, square pixels and the principal point at the image centre). With fewer than two
+ * vanishing points (straight on, or tilted about one axis only) the focal length is unknown; `focal` then says what
+ * to assume, and a typical phone camera's (a 26 mm equivalent lens, about 0.6 of the image diagonal) is the default.
+ * Returns the long/short ratio and whether the focal length was measured. */
+function rectify(corners, W, H, focal) {
+  if (!Array.isArray(corners) || corners.length !== 4 || corners.some(p => !p || !Number.isFinite(p.x + p.y))) return null;
+  const q = orderCorners(corners), u0 = W / 2, v0 = H / 2, diag = Math.hypot(W, H);
+  const [m1, m2, m3, m4] = q.map(p => [p.x - u0, p.y - v0, 1]);
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const d2 = dot(cross(m2, m4), m3), d3 = dot(cross(m3, m4), m2);
+  if (Math.abs(d2) < 1e-9 || Math.abs(d3) < 1e-9) return null;
+  const k2 = dot(cross(m1, m4), m3) / d2, k3 = dot(cross(m1, m4), m2) / d3;
+  const n2 = m2.map((v, i) => k2 * v - m1[i]), n3 = m3.map((v, i) => k3 * v - m1[i]);
+  /* each vanishing direction makes n's third component non-zero; f follows only when both are */
+  let f = null; const tiny = 1e-3 * Math.hypot(n2[0], n2[1]) * 1e-3 * Math.hypot(n3[0], n3[1]);
+  if (Math.abs(n2[2] * n3[2]) > tiny / (diag * diag)) { const f2 = -(n2[0] * n3[0] + n2[1] * n3[1]) / (n2[2] * n3[2]); if (f2 > 0) f = Math.sqrt(f2); }
+  const measured = f >= diag * .25 && f <= diag * 4;
+  if (!measured) f = (focal || .6) * diag;
+  const len = n => Math.sqrt((n[0] * n[0] + n[1] * n[1]) / (f * f) + n[2] * n[2]);
+  const a = len(n2), b = len(n3);
+  return a > 0 && b > 0 ? { ratio: Math.max(a, b) / Math.min(a, b), measured } : null;
+}
+export function rectifiedRatio(corners, W, H) { const r = rectify(corners, W, H); return r ? r.ratio : null; }
+/** How far the quad is from A4 once the perspective is undone. Where the focal length cannot be measured, the
+ * closest ratio over the focal lengths of phone main cameras (24–35 mm equivalent, 0.5–0.8 of the diagonal) counts. */
+export function a4RatioMiss(corners, W, H) {
+  const first = rectify(corners, W, H);
+  if (!first) return Infinity;
+  const miss = r => Math.abs(r / A4_RATIO - 1);
+  if (first.measured) return miss(first.ratio);
+  let best = Infinity;
+  for (let focal = .5; focal <= .801; focal += .05) { const r = rectify(corners, W, H, focal); if (r) best = Math.min(best, miss(r.ratio)); }
+  return best;
+}
+const a4Miss = a4RatioMiss;
+function insideQuad(p, q, slack = 0) {
+  const poly = [q[0], q[1], q[3], q[2]]; let sign = 0;
+  for (let i = 0; i < 4; i++) {
+    const a = poly[i], b = poly[(i + 1) % 4], len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    const c = ((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)) / len;
+    if (Math.abs(c) <= slack) continue;
+    if (sign && Math.sign(c) !== sign) return false;
+    sign = Math.sign(c);
+  }
+  return true;
+}
+/* the median brightness of the band inside an outer quad but outside an inner one */
+function ringBrightness(outer, inner, g, w, h) {
+  const values = [];
+  for (let i = 1; i < 12; i++) for (let j = 1; j < 12; j++) {
+    const u = i / 12, v = j / 12;
+    const p = { x: (outer[0].x * (1 - u) + outer[1].x * u) * (1 - v) + (outer[2].x * (1 - u) + outer[3].x * u) * v,
+      y: (outer[0].y * (1 - u) + outer[1].y * u) * (1 - v) + (outer[2].y * (1 - u) + outer[3].y * u) * v };
+    if (!insideQuad(p, inner, -2)) values.push(pagePixel(g, w, h, p.x, p.y));
+  }
+  if (values.length < 8) return null;
+  values.sort((a, b) => a - b); return values[values.length >> 1];
+}
+/** Paper lying on a desk: the desk is the larger rectangle, often wholly in view with edges as clear as the
+ * paper's, so the largest enclosing quad is the desk. Scanning apps judge what a quad encloses and constrain its
+ * shape (Apple Vision's aspect-ratio window; contour-and-contrast detectors); here a measured quad inside the
+ * winner replaces it when it is a sheet lying on it: clearly brighter than the band of the winner around it, or —
+ * where the two are alike in brightness — A4-shaped once the perspective is undone while the winner is not.
+ * A darker or A4-shaped printed region on a non-A4 object, and a printed frame on an A4 page, keep the outside. */
+function paperOnDesk(best, pool, g, w, h) {
+  if (!best || !pool.length) return best;
+  const outerMiss = a4Miss(best.corners, w, h);
+  let pick = null;
+  for (const c of pool) {
+    if (!c || c === best || !c.corners.every(p => insideQuad(p, best.corners, 2))) continue;
+    const share = c.cover / best.cover;
+    if (share < .12 || share > .82 || !(c.interior >= 120)) continue;
+    const ring = ringBrightness(best.corners, c.corners, g, w, h);
+    if (ring == null) continue;
+    const miss = a4Miss(c.corners, w, h), a4 = miss <= .08;
+    if (!(c.interior >= ring + 14 || a4 && outerMiss > .12 && c.interior >= ring - 4)) continue;
+    if (!pick || a4 && !pick.a4 || a4 === pick.a4 && c.cover > pick.cover) pick = { ...c, a4, onDesk: true };
+  }
+  return pick || best;
 }
 
 /** A bounded, markerless detector: both intensity polarities, closed edge regions,
@@ -567,7 +654,7 @@ export function findPageQuadGray(gray, W, H) {
         if (y === h - 1 || !mask[i + w]) edge = true; else if (!seen[i + w]) { seen[i + w] = 1; stack[sp++] = i + w; }
         if (edge) boundary.push(i);
       }
-      if (size < n * .015 || (x1 - x0) * (y1 - y0) < n * .095 || x0 <= 1 || y0 <= 1 || x1 >= w - 2 || y1 >= h - 2 || boundary.length < 4) continue;
+      if (size < n * .015 || (x1 - x0) * (y1 - y0) < n * SHEET_COVER || x0 <= 1 || y0 <= 1 || x1 >= w - 2 || y1 >= h - 2 || boundary.length < 4) continue;
       const quad = pageFour(pageHull(boundary.map(i => ({ x: i % w, y: (i / w) | 0 })))); if (quad) candidates.push(quad);
     }
   };
@@ -584,19 +671,37 @@ export function findPageQuadGray(gray, W, H) {
     regions();
   }
   const finish = best => {
-    const fitted = pageEvidence(best.corners, smooth, w, h, true) || best;
+    const fitted = pageEvidence(best.corners, smooth, w, h, true, SHEET_COVER) || best;
     // Classify only the winning outer boundary. An A4-shaped printed rectangle
     // inside a different object must never replace its real outside corners.
     return assessedDocument({ ...fitted, corners: fitted.corners.map(p => ({ x: (p.x + .5) * sx, y: (p.y + .5) * sy })), method: 'page' }, W, H);
   };
+  /* A region traced from the gradient mask sits a pixel or two inside a sheet whose surroundings are not uniform
+     (paper on a desk), beyond the coarse edge search. Refit such a candidate, but only for paperOnDesk: it never
+     competes for the outer page, so the outer choice stays exactly as it was. */
+  // At most 12 refits, and only of quads whose middle is paper-bright, so busy frames stay cheap.
+  let refits = 0;
+  const measured = [], sheetOnly = candidate => {
+    if (refits >= 12 || candidate.some(p => !p)) return;
+    const q = orderCorners(candidate), mid = [];
+    for (const u of [.3, .5, .7]) for (const v of [.3, .5, .7]) mid.push(pagePixel(smooth, w, h,
+      (q[0].x * (1 - u) + q[1].x * u) * (1 - v) + (q[2].x * (1 - u) + q[3].x * u) * v, (q[0].y * (1 - u) + q[1].y * u) * (1 - v) + (q[2].y * (1 - u) + q[3].y * u) * v));
+    mid.sort((a, b) => a - b); if (mid[4] < 120 || mid[1] < 60) return;
+    refits++; const sheet = pageEvidence(candidate, smooth, w, h, true, SHEET_COVER); if (sheet) measured.push(sheet);
+  };
   let regionBest = null;
   for (const candidate of candidates) {
-    const result = pageEvidence(candidate, smooth, w, h);
-    if (result && (!regionBest || result.cover > regionBest.cover * 1.04 || result.cover >= regionBest.cover * .96 && result.score > regionBest.score)) regionBest = result;
+    const result = pageEvidence(candidate, smooth, w, h, false, SHEET_COVER);
+    if (result) measured.push(result); else sheetOnly(candidate);
+    if (result && result.cover >= PAGE_COVER && (!regionBest || result.cover > regionBest.cover * 1.04 || result.cover >= regionBest.cover * .96 && result.score > regionBest.score)) regionBest = result;
   }
+  regionBest = paperOnDesk(regionBest, measured, smooth, w, h);
   // A closed region with four measured boundaries already supplies the outer
   // page. Avoid letting noisier Hough intersections move its corners outward.
-  if (regionBest && regionBest.score >= .85 && regionBest.weakestEdge >= .72) return finish(regionBest);
+  // A rectangle that is not A4-shaped may be the desk under the sheet; then the line search below runs as well, so
+  // that a sheet whose edges the regions missed can still be found inside it.
+  const settled = regionBest && regionBest.score >= .85 && regionBest.weakestEdge >= .72;
+  if (settled && (regionBest.onDesk || a4Miss(regionBest.corners, w, h) <= .12)) return finish(regionBest);
   // At most 10k points, 60 normal directions, 24 lines and 24 opposite-line
   // pairs: dense handwriting/noise cannot create an unbounded combinatorial pass.
   const regionCount = candidates.length;
@@ -636,20 +741,23 @@ export function findPageQuadGray(gray, W, H) {
     const poly = [q[0], q[1], q[3], q[2]]; let area = 0;
     for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
     const cover = Math.abs(area) / (2 * n);
-    if (cover < .095 || cover > .94) continue;
+    if (cover < SHEET_COVER || cover > .94) continue;
     const key = q.map(p => Math.round(p.x / 5) + ',' + Math.round(p.y / 5)).join('|');
     if (!unique.has(key)) unique.set(key, { q, cover, region: index < regionCount });
   }
   const shortlist = [...unique.values()].sort((a, b) => b.cover - a.cover).slice(0, 40);
   let best = null;
   for (const { q: candidate, region } of shortlist) {
-    const result = pageEvidence(candidate, smooth, w, h);
-    if (result && (!best || region && result.score >= .90 && !best.region && result.cover >= best.cover * .75 ||
+    const result = pageEvidence(candidate, smooth, w, h, false, SHEET_COVER);
+    if (result) measured.push(result); else sheetOnly(candidate);
+    if (result && result.cover >= PAGE_COVER && (!best || region && result.score >= .90 && !best.region && result.cover >= best.cover * .75 ||
         result.cover > best.cover * 1.06 && !(best.region && best.score >= .90 && result.cover < best.cover * 1.14) ||
         result.cover >= best.cover * .94 && result.score > best.score)) best = { ...result, region };
   }
+  // the region winner stands unless a sheet was found lying inside it
+  if (settled) return finish(paperOnDesk(regionBest, measured, smooth, w, h));
   if (!best) return none;
-  return finish(best);
+  return finish(paperOnDesk(best, measured, smooth, w, h));
 }
 
 /* ---------- 원근 보정 ---------- */
