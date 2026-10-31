@@ -48,6 +48,7 @@ export function presentProtonText(value, field = 'body_ko') {
           (body ? en ? ` (${points} points)` : ` (${points}점)` : '') + '\n\n' + heading;
       }
       return heading;
-    }).replace(/(?<![\p{L}\p{N}_])\(([a-j])\)/gu, (_, old) => PROTON_PART_LABELS[old.charCodeAt(0)-97]);
+    }).replace(/(?<![\p{L}\p{N}_])\(([a-j])\)/gu, (_, old) => PROTON_PART_LABELS[old.charCodeAt(0)-97])
+      .replace(/\b([AB]\.[13])를/g, '$1을');
   }).join('');
 }

@@ -277,7 +277,8 @@ test('published native problems use authenticated, evidence-backed grading and r
     evidenceMode = 'valid';
     db.prepare('UPDATE problems SET closes_at=? WHERE id=?').run(t - 1, row.id);
     const closed = await request(`/problems/${row.id}?lang=ko`, { authenticated: true });
-    assert.equal(closed.data.problem.solution, row.model_ko);
+    assert.equal(closed.data.problem.solution, monthlyPublicPresentation(row).model_ko);
+    assert.equal(db.prepare('SELECT model_ko FROM problems WHERE id=?').get(row.id).model_ko,row.model_ko,'display numbering does not rewrite the stored solution');
     assert.equal(closed.data.problem.open, false);
     assert.equal(closed.data.problem.mine.length, 2);
     assert.equal(closed.data.problem.mine[0].feedback_held, false);
