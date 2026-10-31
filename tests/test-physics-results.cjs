@@ -99,7 +99,7 @@ test('APhO awardee tables cannot claim full-field component percentiles', () => 
   for (const [year, count] of [[2025, 169], [2026, 161]]) {
     assert.equal(get('apho', year, 'total').scores.length, count);
     assert.equal(get('apho', year, 'total').complete, false);
-    assert.equal(get('apho', year, 'total').cutoffKind, 'observed');
+    assert.equal(get('apho', year, 'total').cutoffKind, 'published', 'the Wikipedia thresholds classify every official row as awarded');
     assert.equal(get('apho', year, 'theory').medalCutoffs, undefined);
     // Every awardee down to honourable mention is listed, so the lowest listed total is a coverage floor.
     assert.equal(get('apho', year, 'total').rankFloor, Math.min(...get('apho', year, 'total').scores));
@@ -223,4 +223,30 @@ test('IPhO rounds with a published award floor get exact full-field round ranks 
   assert.equal(e.bounded, true); assert.equal(e.reference.medal, 'gold'); assert.equal(e.reference.fullField, true);
   assert.equal(e.top_pct, null, 'the disputed 2025 entrant count still suppresses a percentile');
   assert.match(comparison.resultHtml(e, 'ko'), /전체 참가자 기준/);
+});
+
+test('APhO editions without a score table carry verified thresholds and best scores', () => {
+  const minutes = {2000: [38, 33, 27, 21], 2001: [28, 25, 20, 16], 2003: [40, 34, 29, 22], 2004: [39, 34, 28, 22], 2005: [40, 35, 29, 22],
+    2007: [38, 33, 28, 21], 2008: [37, 32, 27, 20], 2009: [42, 36, 30, 23], 2010: [32, 28, 23, 18], 2011: [31, 27, 22, 17],
+    2012: [35, 31, 25, 19], 2013: [24, 20, 17, 13], 2014: [40, 34, 29, 22], 2015: [30, 26, 21, 16], 2016: [38, 33, 28, 21], 2017: [26, 23, 19, 14]};
+  const tiers = ['gold', 'silver', 'bronze', 'hm'];
+  for (const [year, cuts] of Object.entries(minutes)) {
+    const total = get('apho', Number(year), 'total');
+    assert.deepEqual(total.medalCutoffs, Object.fromEntries(tiers.map((k, i) => [k, cuts[i]])), year);
+    assert.equal(total.cutoffKind, 'published');
+    assert.ok(total.sources.some(s => /official minutes: award thresholds/.test(s.title) && s.official), year);
+  }
+  assert.equal(get('apho', 2004, 'total').medalCutoffRule, 'gt', 'the 2004 minutes state strict thresholds');
+  assert.equal(get('apho', 2015, 'total').topScore, 45.5, 'the minutes outrank Wikipedia (48.00) for the best score');
+  assert.equal(get('apho', 2024, 'total').topScore, 45.55);
+  assert.match(get('apho', 2024, 'total').note.ko, /초청팀/);
+  for (const year of [2018, 2019, 2021, 2022, 2023, 2024]) {
+    const total = get('apho', year, 'total');
+    assert.equal(total.scores.length, 0); assert.ok(total.medalCutoffs.hm > 0 && Number.isFinite(total.topScore));
+    assert.ok(total.sources.some(s => /wikipedia\.org.*oldid=\d+/.test(s.url) && s.official === false), 'a pinned Wikipedia revision');
+  }
+  assert.equal(get('apho', 2020, 'total'), undefined, 'not held');
+  assert.equal(get('apho', 2024, 'theory').topScore, 29.8);
+  assert.equal(get('apho', 2019, 'experiment').topScore, 12.6);
+  for (const year of [2017, 2025, 2026]) assert.equal(get('apho', year, 'total').topScore, undefined, 'a published table supplies its own best');
 });

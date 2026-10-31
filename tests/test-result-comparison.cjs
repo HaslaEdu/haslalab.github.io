@@ -112,6 +112,16 @@ test('a round score at or above the total coverage floor gets an exact full-fiel
   assert.equal(comparison.evaluate(round,26).bounded,false,'a bare round record never infers coverage');
 });
 
+test('the best score comes from a declared topScore or the highest published score',()=>{
+  const declared={...total,scores:[],topScore:44.75,medalCutoffs:{gold:38,silver:33,bronze:27,hm:21}};
+  const e=comparison.evaluate(declared,40);
+  assert.equal(e.best,44.75);assert.equal(e.rank,null);assert.equal(e.medal,'gold');
+  assert.match(text(comparison.resultHtml(e,'ko')),/1위 점수 44.75 \/ 50 · 1위와 4.75점 차이/);
+  assert.match(text(comparison.resultHtml(comparison.evaluate(declared,45,true),'en')),/Best score 44.75 \/ 50 · at or above the best/);
+  assert.equal(comparison.evaluate(total,30).best,48);
+  assert.match(text(comparison.resultHtml(comparison.evaluate(roundTheory,20),'ko')),/이론 1위 점수/);
+});
+
 test('medals use verified thresholds for the full award scope, including exact-boundary rules',()=>{
   assert.equal(comparison.evaluate(total,40).medal,'gold');
   assert.equal(comparison.evaluate(total,35).medal,'silver');
