@@ -68,7 +68,9 @@ export function cappedSum(items, parts, total, value = i => i.points) {
 }
 
 /* the paper's points: its items, bounded by the printed headings and total */
-export const schemeTotal = scheme => cappedSum(scheme.items, scheme.parts, scheme.total);
+/* the paper's points: its items bounded by the printed headings and total; a printed total is the paper's maximum even
+   when the scheme missed an item under it (IPhO 2025 T3 came out at 9.9 when one 0.1-pt item was not listed) */
+export const schemeTotal = scheme => +scheme.total > 0 ? +(+scheme.total).toFixed(2) : cappedSum(scheme.items, scheme.parts, null);
 
 /* Every number written in a transcribed answer, scientific notation included: «5.31 \\cdot 10^{-11} m», «2.2 × 10^9»,
    «1.0 * 10^-10», «3e8», «−4.5». A value the grader reports must be one of the numbers on its page; the reader's own
@@ -84,6 +86,9 @@ export function numbersIn(text) {
   return out;
 }
 export const sameNumber = (a, b) => Math.abs(a - b) <= Math.max(1e-12, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
+/* the same number with a unit prefix moved (0.415 mm reported as 0.000415 m): a grader that converts a value it should
+   have copied still points at a number on the page, never at a new one */
+export const samePrefixed = (a, b) => [0, 2, 3, 6, 9, -2, -3, -6, -9].some(k => sameNumber(a * 10 ** k, b));
 
 /* LaTeX the model put into its JSON without doubling the backslash comes back with JSON escapes turned into control
    characters: «\frac» as a form feed + «rac», «\beta» as a backspace + «eta», «\theta» / «\times» / «\text» as a tab,

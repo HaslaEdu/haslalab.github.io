@@ -140,3 +140,17 @@ test("R12 in code: the official value, its last printed digit or 2 %, and neares
   assert.deepEqual(refTolerance("2.2e9"), { value: 2.2e9, tol: 1e8 });
   assert.equal(refTolerance("about 7"), null, "no official number, no code check: the grader judges");
 });
+
+test("a value converted by a unit prefix still points at the number on the page", async () => {
+  const { samePrefixed } = await import("./src/lab-scheme-items.js");
+  assert.ok(samePrefixed(0.415, 0.000415), "0.415 mm reported as metres (IPhO 2025 T3 A.5.2)");
+  assert.ok(samePrefixed(20, 0.02) && samePrefixed(6.9, 0.069), "mJ → J, cm → m");
+  assert.ok(!samePrefixed(0.415, 0.000416) && !samePrefixed(20, 0.2e-1 * 3), "a different number is still different");
+});
+
+test("a printed total is the paper's maximum even when an item under it was missed", async () => {
+  const { schemeTotal } = await import("./src/lab-scheme-items.js");
+  const items = t3Items().filter(i => i.id !== "A.1.1");                 // 9.9 listed
+  assert.equal(schemeTotal({ items, parts: [], total: 10 }), 10);
+  assert.equal(schemeTotal({ items, parts: [] }), 9.9, "no printed total: the items as listed");
+});

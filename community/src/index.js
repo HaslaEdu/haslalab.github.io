@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1821,7 +1821,7 @@ function settleScheme(sc) {
   sc.items = tidySchemeItems(sc.items);
   sc.parts = cleanParts(sc.parts);
   /* a printed total only trims a small excess (10.1 → 10); one far below the items is a misread heading, not the total */
-  if (!(+sc.total > 0) || +sc.total < .9 * cappedSum(sc.items, sc.parts, null)) delete sc.total;
+  { const listed = cappedSum(sc.items, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
   sc.points = schemeTotal(sc);
   return sc;
 }
@@ -1997,7 +1997,7 @@ function labScore(scheme, raw, pages, opts = {}) {
     const interval = it.full_min != null && it.full_max != null, byRef = !!opts.theory && !interval && !!refTolerance(it.ref);
     if (it.type === "value" && (interval || byRef)) {
       const v = Number(g.value);
-      if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(x => sameNumber(x, v)))) return zero("R9");   // a value that was not read there
+      if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(x => samePrefixed(x, v)))) return zero("R9");   // a value that was not read there
       res.value = v;
       if (it.unit && g.unit_ok === false) return zero("R3");
       const w = g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
@@ -2395,6 +2395,12 @@ const LAB_JOB_HANDLERS = {
     if (job.kind !== 'grade' || s.status !== 'grading' || !JSON.parse(s.tasks).includes(job.task)) return { cancelled: true };
     const existing = s.detail ? JSON.parse(s.detail).tasks?.[job.task] : null;
     if (existing) return { cancelled: true };
+    /* one sitting's tasks are graded one after another: each Gemini request carries the problem and solution PDFs and the
+       page photos, and three at once in one isolate ran out of memory and died without a trace (IPhO 2025 theory:
+       every task of the sitting stuck until its lease ran out; the same tasks staggered finished in ~30 s each) */
+    const ahead = await env.DB.prepare(`SELECT 1 FROM lab_jobs WHERE session_id=? AND kind='grade' AND id<? AND (status IN ('queued','running')
+      OR (status='pending' AND available_at<=?)) LIMIT 1`).bind(s.id, job.id, now() + 5).first();
+    if (ahead) throw new LabJobDeferred(20);
     const pages = await labPagesOf(env, s.id), mine = pages.filter(p => p.task === job.task);
     if (!contestMeta(s)) {
       const failedPages=mine.filter(p=>p.mime!=='text/plain'&&p.ocr_status==='failed');
