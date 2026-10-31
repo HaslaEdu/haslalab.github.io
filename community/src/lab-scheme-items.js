@@ -84,6 +84,9 @@ export function numbersIn(text) {
   return out;
 }
 export const sameNumber = (a, b) => Math.abs(a - b) <= Math.max(1e-12, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
+/* the same number with a unit prefix moved (0.415 mm reported as 0.000415 m): a grader that converts a value it should
+   have copied still points at a number on the page, never at a new one */
+export const samePrefixed = (a, b) => [0, 2, 3, 6, 9, -2, -3, -6, -9].some(k => sameNumber(a * 10 ** k, b));
 
 /* LaTeX the model put into its JSON without doubling the backslash comes back with JSON escapes turned into control
    characters: «\frac» as a form feed + «rac», «\beta» as a backspace + «eta», «\theta» / «\times» / «\text» as a tab,

@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1997,7 +1997,7 @@ function labScore(scheme, raw, pages, opts = {}) {
     const interval = it.full_min != null && it.full_max != null, byRef = !!opts.theory && !interval && !!refTolerance(it.ref);
     if (it.type === "value" && (interval || byRef)) {
       const v = Number(g.value);
-      if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(x => sameNumber(x, v)))) return zero("R9");   // a value that was not read there
+      if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(x => samePrefixed(x, v)))) return zero("R9");   // a value that was not read there
       res.value = v;
       if (it.unit && g.unit_ok === false) return zero("R3");
       const w = g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
