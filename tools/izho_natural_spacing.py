@@ -86,7 +86,7 @@ def annotate_placements(tokens,placements):
         if len(candidates)==1:item['placement']=candidates[0];item['kind']='korean'
     return tokens
 
-def baseline_lines(page, bounds=None, *, allowed_line_rects=None, excluded_figure_rects=None,prose_placements=None,prose_trace_predicate=None,baseline_tolerance_pt=.12):
+def baseline_lines(page, bounds=None, *, allowed_line_rects=None, excluded_figure_rects=None,prose_placements=None,prose_trace_predicate=None,baseline_tolerance_pt=.12,stationary_native_glyphs=None):
     """Conservative final-PDF line inventory anchored by Korean text runs.
 
     Native spans are assigned only inside the requested paragraph rectangle.
@@ -100,7 +100,9 @@ def baseline_lines(page, bounds=None, *, allowed_line_rects=None, excluded_figur
         if not ink:return False
         if allowed and not any(all(rect.contains(fitz.Point(r['origin']))for r in ink)for rect in allowed):return False
         return not any(rect.intersects(fitz.Rect(r['bbox']))for rect in excluded for r in ink)
-    rows=records(page);traces={}
+    from pdf_original_text_ops import glyph_key
+    stationary={glyph_key(g)for g in stationary_native_glyphs or[]}
+    rows=[r for r in records(page)if glyph_key(r)not in stationary];traces={}
     for row in rows:traces.setdefault(row['trace'],[]).append(row)
     prose={ti:rs for ti,rs in traces.items()if(prose_trace_predicate(rs)if prose_trace_predicate else HANGUL.search(''.join(r['c']for r in rs)))}
     prose={ti:rs for ti,rs in prose.items()if eligible(rs)}
@@ -201,7 +203,7 @@ def inspect(pdf,page,bounds=None):
     doc=fitz.open(pdf);result=[pack_line(line)for line in baseline_lines(doc[page-1],bounds)]
     doc.close();return result
 
-def plan_page(page, *, allowed_line_rects, excluded_figure_rects=None, centered_lines=None,word_space_pt=None,prose_placements=None,prose_trace_predicate=None,baseline_tolerance_pt=.12):
+def plan_page(page, *, allowed_line_rects, excluded_figure_rects=None, centered_lines=None,word_space_pt=None,prose_placements=None,prose_trace_predicate=None,baseline_tolerance_pt=.12,stationary_native_glyphs=None):
     """Build reviewed rectangular line plans for an existing translated page.
 
     ``centered_lines`` contains ``{baseline, center}`` entries. The center is
@@ -214,7 +216,7 @@ def plan_page(page, *, allowed_line_rects, excluded_figure_rects=None, centered_
     # Each explicit rectangle is a separate column/paragraph. Never merge two
     # intentional columns merely because their baselines are equal.
     for rect in allowed_line_rects:
-        lines=baseline_lines(page,allowed_line_rects=[rect],excluded_figure_rects=excluded_figure_rects,prose_placements=prose_placements,prose_trace_predicate=prose_trace_predicate,baseline_tolerance_pt=baseline_tolerance_pt)
+        lines=baseline_lines(page,allowed_line_rects=[rect],excluded_figure_rects=excluded_figure_rects,prose_placements=prose_placements,prose_trace_predicate=prose_trace_predicate,baseline_tolerance_pt=baseline_tolerance_pt,stationary_native_glyphs=stationary_native_glyphs)
         for line in lines:
             keys={(r['c'],r['font'],r['size'],tuple(r['origin']))for t in line['tokens']for r in visible(t['glyphs'])}
             if claimed&keys:raise ValueError('Overlapping reviewed line rectangles select a glyph twice')

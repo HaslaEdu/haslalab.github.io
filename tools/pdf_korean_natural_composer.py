@@ -97,7 +97,7 @@ def _units(item,placements,metric):
 def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,excluded_figure_rects=None,
                  centered_lines=None,right_aligned_lines=None,font_path=BATANG,native_atomic_tokens=None,
                  native_move_options=None,native_control_output=None,prose_trace_predicate=None,baseline_tolerance_pt=.12,
-                 font_resource_name='KO_Natural_Batang'):
+                 font_resource_name='KO_Natural_Batang',stationary_native_glyphs=None):
     """Return single-page PDF bytes and review report; no files are overwritten.
 
     Rectangles are separate reviewed lines/columns. Header/folio columns must
@@ -108,12 +108,17 @@ def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,e
     font=TTFont(font_path,fontNumber=0 if str(font_path).lower().endswith('.ttc')else-1,recalcTimestamp=False)
     font.recalcTimestamp=False
     initial=BytesIO();font.save(initial);metric=fitz.Font(fontbuffer=initial.getvalue())
+    from pdf_original_text_ops import glyph_key
+    if any(_hangul(g['c'])for g in stationary_native_glyphs or[]):raise ValueError('A stationary native-math journal must not exclude Korean prose')
+    locked={glyph_key(g)for g in stationary_native_glyphs or[]}
+    if locked-{glyph_key(g)for g in records(page)}:raise ValueError('A stationary native glyph is absent from the exact input PDF')
     shifts=[];erase=[];insertions=[];journals=[];claimed=set()
     for rect in allowed_line_rects:
-        lines=baseline_lines(page,allowed_line_rects=[rect],excluded_figure_rects=excluded_figure_rects,prose_placements=placements,prose_trace_predicate=prose_trace_predicate,baseline_tolerance_pt=baseline_tolerance_pt)
+        lines=baseline_lines(page,allowed_line_rects=[rect],excluded_figure_rects=excluded_figure_rects,prose_placements=placements,prose_trace_predicate=prose_trace_predicate,baseline_tolerance_pt=baseline_tolerance_pt,stationary_native_glyphs=stationary_native_glyphs)
         if native_atomic_tokens is not False:
             from izho_native_atomic_tokens import atomic_tokens
             atoms=atomic_tokens(source,page_number,rect,[dict(baseline=line['baseline'],size=max(t['size']for t in line['tokens']))for line in lines],excluded_figure_rects)
+            atoms=[a for a in atoms if not any(glyph_key(g)in locked for g in a['glyphs'])]
             if isinstance(native_atomic_tokens,list):
                 from pdf_original_text_ops import glyph_key
                 explicit=[]
@@ -121,6 +126,7 @@ def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,e
                     if not(rect[0]-1<=item['x0']and item['x1']<=rect[2]+1 and rect[1]<=item['y']<=rect[3]):continue
                     box=fitz.Rect(item.get('bbox',[item['x0'],item['y']-item['size'],item['x1'],item['y']+item['size']/3]))
                     if any(box.intersects(fitz.Rect(r))for r in excluded_figure_rects or[]):continue
+                    if any(glyph_key(g)in locked for g in item['glyphs']):raise ValueError('An explicitly moving atom includes stationary native mathematics')
                     explicit.append(item)
                 keys={glyph_key(r)for item in explicit for r in item['glyphs']}
                 atoms=[a for a in atoms if not any(glyph_key(r)in keys for r in a['glyphs'])]+explicit
@@ -205,6 +211,8 @@ def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,e
         font_resource_name=font_resource_name if insertions else None,
         replaced_hangul_glyphs=len(erase),new_batang_runs=len(insertions),new_batang_placements=insertions,
         native_shifts=shifts,erased_hangul_glyphs=erase,
+        stationary_native_glyphs=stationary_native_glyphs or[],
+        stationary_native_glyph_keys_matched=len(locked),
         native_move_qa=move_qa,lines=journals,no_font_scaling=True,original_native_ascii_latin_math_programs_retained=True,
         native_control_sha256=hashlib.sha256(raw).hexdigest(),native_control_output=str(native_control_output)if native_control_output is not None else None,
         retained_native_glyphs_after_new_text_insertion=sum(before.values()),retained_native_style_or_geometry_mismatches_after_insertion=0,

@@ -52,6 +52,10 @@ for (const item of published) {
     require('./helpers/natural-spacing-publication.cjs')(root, qa, item);
     continue;
   }
+  if (item.audit_schema === 'natural-spacing-cpho') {
+    require('./helpers/cpho-natural-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'natural-spacing-reviewed') {
     assert.equal(qa.status, 'READY');
     assert.equal(qa.sha256, item.sha256);

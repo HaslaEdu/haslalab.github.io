@@ -18,6 +18,8 @@ from pdf_hangul_visibility import audit as hangul_audit
 from izho_new_prose_outline_qa import outline_results
 from izho_natural_spacing import ROOT,BUILD
 from izho_natural_spacing_rebuild import coverage
+from pdf_grading_columns_stationary import audit as grading_columns_audit
+from pdf_korean_natural_composer import normalize_placements
 
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def semantic(value,ancestors=()):
@@ -74,13 +76,15 @@ def table_math_geometry(page,plan,composition):
         key=tuple(round(v,3)for v in cell)
         if key in seen:continue
         seen.add(key);box=fitz.Rect(cell)
-        glyphs=[g for g in rows if g['c'].strip()and g['font']=='CambriaMath'and box.contains(fitz.Point(g['origin']))]
+        glyphs=[g for g in rows if g['c'].strip()and re.fullmatch(r'Cambria ?Math',g['font'])and box.contains(fitz.Point(g['origin']))]
         if not glyphs:continue
         deltas=[moves.get(glyph_key(g),0.)for g in glyphs]
         spread=max(deltas)-min(deltas)
-        groups.append(dict(source_at=scope['source_at'],cell=cell,glyphs=len(glyphs),
-            minimum_dx=min(deltas),maximum_dx=max(deltas),relative_coordinate_error_pt=spread,passed=spread<=.001))
-    return dict(method='All original CambriaMath glyphs in each enclosed score-table formula cell must share one horizontal translation, including numerator, denominator and scripts.',
+        stationary=bool(plan.get('stationary_table_math'))
+        groups.append(dict(source_at=scope['source_at'],cell=cell,glyphs=len(glyphs),stationary_original_table_design=stationary,
+            minimum_dx=min(deltas),maximum_dx=max(deltas),relative_coordinate_error_pt=spread,
+            passed=spread<=.001 and(not stationary or max(abs(v)for v in deltas)<=.001)))
+    return dict(method='All original CambriaMath glyphs in each enclosed score-table formula cell retain their complete relative geometry; designated stationary table mathematics must additionally have zero horizontal movement.',
         groups=groups,checked_groups=len(groups),mismatched_groups=sum(not g['passed']for g in groups),passed=all(g['passed']for g in groups))
 
 def native_phase_profile(result,plan,folder):
@@ -112,7 +116,7 @@ def passed_checks(result,native_ink_ok):
         result['original_image_programs_retained'],result['page_group_preserved'],result['colorspace_resources_preserved'],
         all((r['rect_preserved']or r.get('rect_matches_declared_native_math_dx',False))and r['full_palette_icc_mask_image_graph_preserved']for r in result['original_palette_icc_mask_graphs']),
         not result['new_batang_outlines']['empty'],not result['hangul_visibility']['flagged_components'],
-        result.get('source_math_internal_geometry',{}).get('passed',True)])
+        result.get('source_math_internal_geometry',{}).get('passed',True),result.get('grading_columns_stationary',{}).get('passed',True)])
 
 def audit(year,kind,number):
     folder=BUILD/str(year)/kind;target=folder/f'page{number:02d}.pdf';composition=json.loads(target.with_suffix('.qa.json').read_text('utf8'))
@@ -152,9 +156,11 @@ def audit(year,kind,number):
             physical={(glyph_key(g),g['trace_gid'],g['render_mode'])for g in _traces(original[plan['source_page']-1])if g['c'].strip()and g['trace_gid']>=0 and g['render_mode']!=3}
         protected=[g for g in _traces(src[0])if(glyph_key(g),g['trace_gid'],g['render_mode'])in physical and g['trace_gid']>=0 and g['c'].strip()]
         math_geometry=table_math_geometry(src[0],plan,composition)
+        grade_placements=normalize_placements(src[0],plan['prose_placements'])
         originals=src[0].get_image_info(xrefs=True);current=dst[0].get_image_info(xrefs=True)
     physical_ink=audit_moved_native_ink(old,1,target,shifts=composition['native_shifts'],
         erased_glyphs=composition['erased_hangul_glyphs'],protected_glyphs=protected)
+    grade_audit=grading_columns_audit(old,target,grade_placements)
     font_same=all(row in native_font_programs(target,1)for row in native_font_programs(old,1))
     image_same=all(row in native_image_programs(target,1)for row in native_image_programs(old,1))
     image_graphs=[]
@@ -171,6 +177,7 @@ def audit(year,kind,number):
         fresh_process_rgb_render=True,changed_pixels_outside_old_and_new_text_ink=outside,
         native_graphics_motion_audit=geometry_qa,actual_native_math_visible_ink_audit=native_actual,
         source_math_internal_geometry=math_geometry,
+        grading_columns_stationary=grade_audit,
         original_input_outline_native_ink_audit=physical_ink,figure_pixel_audits=figures,
         original_font_programs_and_names_retained=font_same,original_image_programs_retained=image_same,
         original_palette_icc_mask_graphs=image_graphs,page_group_preserved=group_same,colorspace_resources_preserved=colors_same,

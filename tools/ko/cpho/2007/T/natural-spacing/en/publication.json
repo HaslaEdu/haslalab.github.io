@@ -1,0 +1,73 @@
+{
+  "status": "READY",
+  "file": "CPhO_2007_T_EN.pdf",
+  "year": 2007,
+  "kind": "T",
+  "language": "en",
+  "pages": 4,
+  "bytes": 1745900,
+  "sha256": "b4684224b5dd9c4140f8df69db69f67d0c918273586360cd5e33509a568aa5aa",
+  "source_inventory": "tools/ko/cpho/2007/T/natural-spacing/en/source-inventory.json",
+  "source_inventory_sha256": "db48f19ad5701c2f32e54f6c99f3d4c96540bf0762e0b373e00202bcf4565d8c",
+  "combined_qa": "tools/ko/cpho/2007/T/natural-spacing/en/combined.qa.json",
+  "combined_qa_sha256": "7b19dfcc099f6dab69d16f695850663a3f6f2ee2be970b12075eeae86d9ce280",
+  "page_proofs": [
+    {
+      "page": 1,
+      "proof_sha256": "7fc62534c5a799455eee60cd1d49496d98d20cbaa01b9e9d5500322fdc7726e4",
+      "composition": "tools/ko/cpho/2007/T/natural-spacing/en/page01-composition.json",
+      "composition_sha256": "8f77e8b74638782c715d829a72fdcc15f48ebbdb51b8afdf5d19ea76f0f59171"
+    },
+    {
+      "page": 2,
+      "proof_sha256": "a1a65d5f01fc65474c9049981c2bebaa59046aa67fb415c12a60c517a3aed93c",
+      "composition": "tools/ko/cpho/2007/T/natural-spacing/en/page02-composition.json",
+      "composition_sha256": "3286867bba10bd7f0f1d79ade0ed483cd705ba0e9f1bfc230275821424232573"
+    },
+    {
+      "page": 3,
+      "proof_sha256": "189f6a772c64bcdd2a8fcbc19a52425e51ddb6b1df70648400753da22e6fcfb8",
+      "composition": "tools/ko/cpho/2007/T/natural-spacing/en/page03-composition.json",
+      "composition_sha256": "15f0342286a3c1d26e541093559f00e18810c72974c3ea32e2a2267c335a403b"
+    },
+    {
+      "page": 4,
+      "proof_sha256": "3bcd99dfc85274c5becdef85b2e45ab69503da960036de717c533be46f966dca",
+      "composition": "tools/ko/cpho/2007/T/natural-spacing/en/page04-composition.json",
+      "composition_sha256": "5fad7f10fece0e02ef19723a877f0127a669ab3450450622aa11acc18d7d6d34"
+    }
+  ],
+  "authoring_snapshotroot": "tools/ko/cpho/2007/T/natural-spacing/en/authoring",
+  "authoring_snapshot_sha256": {
+    "tools/cpho_natural_spacing.py": "9fff78d4a48f09818eed84a0f75a9861371869a7d9109fb9f4acc860cfde2318",
+    "tools/cpho_natural_spacing_qa.py": "4d0307faf55ff1a99b09bef2651afcc16c61305db913140393dc9cc4d09fdd6b",
+    "tools/cpho_natural_full_qa.py": "fe0b293b2c05976c68f30bb2bc765b51e8b29097603a5dbe24f83b10801057fa",
+    "tools/cpho_natural_inventory.py": "efa6c33f6b7807d4d932c25ef1eaf3fe6177c622c07082c0fb7439b549f5fddb",
+    "tools/cpho_natural_atoms.py": "bee2c02cb3448741b89c4964b0afa0d397987c9d670bd86365188f855f4fc3d6",
+    "tools/cpho_natural_english_fonts.py": "fc17fc8f956afdab4f8bc6b609bfc83e2edb7a1eea7255f4eafdd5a92e0505e6",
+    "tools/cpho_natural_prose_edits.py": "10708af88b979cb743e831e76390fd6de006e0e4e0b6323ebd6999f7be8e6592",
+    "tools/pdf_native_inline_reposition.py": "5805e2585627f719da73a667f17bd9347b843ba1aba695090ea907c5fe4f2756",
+    "tools/pdf_native_inline_reposition_regression.py": "430a9e7f39f73358aa3b346b2df61ea812bc4ed0df43ccef897db19850cb75c0",
+    "tools/pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools/pdf_korean_natural_composer.py": "f176ede2030098de7bce0cf4aea524654e6ae403540222408995244e69139837",
+    "tools/izho_natural_spacing.py": "95feeaac2a35a6d615ed6f4b4f09b2aceb996bd9a8774447339b27826ccb12d1",
+    "tools/izho_native_atomic_tokens.py": "40c44a626b772ce630dab39679dfea088294c1bbd1df00ba0152717a168745ab",
+    "tools/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+    "tools/pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+    "tools/pdf_native_geometry_motion.py": "b4f507d0c357fb9727aa464dcb1843ed6429a8416f5991fa37888547f6a309cd",
+    "tools/pdf_text_motion_ink.py": "556bdea67fc2851273f03c1ed205a25bdfda98c4967c86059a65ad15fa718690",
+    "tools/pdf_original_graphics_ink.py": "f50790d984ecfb079c9e7693c42938bd10a929bc970544a9ea3d4dade653e272",
+    "tools/pdf_original_image_ink.py": "0840a882e4f0f98e6c7279ec925cb7bfefcb331082a31a88bb4f08c7fd06995a",
+    "tools/pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools/pdf_hangul_visibility.py": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+    "tools/izho_natural_spacing_qa.py": "a8d071c9c8b07a2c00d60ee399e55556e90bd4bee8c9313f47cc1477b06b560c",
+    "tools/izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+    "tools/izho_new_prose_outline_qa.py": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+    "tools/cpho_original_latin_fonts.py": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2",
+    "tools/ko/cpho/2007/original/page01.tsv": "e17f3ea7a385fce5d1c2ecb65e9925f813520a67e98090c778a8f13259a182b7",
+    "tools/ko/cpho/2007/original/page02.tsv": "c6ef97fa3f641bab0f81d09ff30504517a852c7673e540d7eeab18f066bfda75",
+    "tools/ko/cpho/2007/original/page03.tsv": "fb4b400562c4298989cc8a5b38a00e5f62183fc7fe3cdbf105b26797b716a9c2",
+    "tools/ko/cpho/2007/original/page04.tsv": "d172f5db20b5f92cf9a36355750f39677ae8564751596d20e4e078402e00087e",
+    "tools/ko/cpho/2007/natural/atomic-inline.json": "09cdac92df2ff75496b8b2a6fbd90f30049b970b4edc2c11fbc6d20cde26e85a"
+  }
+}
