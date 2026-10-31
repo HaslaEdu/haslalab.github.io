@@ -171,11 +171,11 @@ const I18N = {
   sub: ["Virtual laboratory · wire the oscillator, read its frequency on the multimeter, push the upper plate along the scale",
         "가상 실험실 · 발진기를 연결하고 멀티미터로 진동수를 읽으며, 위 극판을 눈금을 따라 밀어 보세요"],
   trayTitle: ["Parts box", "부품함"],
-  trayTake: ["click: put on the desk", "클릭: 책상에 꺼내기"],
+  trayTake: ["drag onto the desk", "끌어서 책상에 놓기"],
   trayBack: ["on the desk · click: put back", "책상 위 · 클릭: 넣기"],
-  trayBatt: ["click: take a fresh one", "클릭: 새 건전지 받기"],
-  trayHand: ["in your hand · click the battery", "손에 있음 · 발진기 건전지 클릭"],
-  trayHelp: ["click a part on the desk: drag it\nright-click: back in the box", "책상 위 부품은 끌어서 옮김\n우클릭: 부품함에 넣기"],
+  trayBatt: ["drag onto the battery", "끌어서 건전지 위에 놓기"],
+  trayHand: ["in your hand · click where it goes", "손에 있음 · 놓을 곳을 클릭"],
+  trayHelp: ["drag a part out, or click it and\nclick the bench · right-click: back", "부품을 끌어서 꺼내거나, 클릭 후\n실험대를 클릭 · 우클릭: 되돌리기"],
   it_cap: ["capacitor %s", "축전기 %s"],
   it_batt: ["9 V batteries (new and old mixed)", "9 V 건전지 (새것·헌것 섞임)"],
   cap_3d: ["the bench — drag to turn · wheel to zoom · click the meter or the scale to look closely · double-click the empty desk: view back",
@@ -195,18 +195,24 @@ const I18N = {
   newExp: ["Start again (everything back)", "처음부터 (모두 되돌리기)"],
   resetQ: ["Put everything back as it was at the start? A new battery is drawn from the box.", "모든 장비를 처음 상태로 되돌릴까요? 건전지도 상자에서 새로 뽑습니다."],
   yes: ["Start again", "처음부터"], no: ["Cancel", "취소"],
-  w_snap: ["battery → oscillator 9 V input", "건전지 → 발진기 9 V 입력"],
+  w_snap: ["battery snap on the battery", "건전지 스냅 연결"],
   w_probe: ["meter probes → oscillator output", "멀티미터 리드 → 발진기 출력"],
   w_clip: ["crocodile clips → ", "악어클립 → "],
   w_bb: ["the blackbox", "블랙박스"],
   w_caps: ["capacitor(s) %s", "축전기 %s"],
   w_open: ["(not on a capacitor)", "(축전기에 물리지 않음)"],
   w_ok: ["✓", "✓"], w_no: ["—", "—"],
-  st_ready: ["Connect the battery snap to the 9 V input of the oscillator, the meter probes to its red and black output, switch on and set the dial to Hz.",
-             "건전지 스냅을 발진기의 9 V 입력에, 멀티미터 리드를 빨강·검정 출력에 물린 뒤 스위치를 켜고 다이얼을 Hz에 맞추세요."],
+  st_capHand: ["Capacitor %s is in your hand: drag it, or click the desk where it goes.", "축전기 %s를 들었습니다. 끌어서 놓거나 책상을 클릭하세요."],
+  st_inHand: ["The end is in your hand: click a terminal (it snaps on) or the bench. Right-click or Esc: back where it was.", "리드선 끝을 들었습니다. 단자를 클릭하면 물리고, 다른 곳을 클릭하면 놓입니다. 우클릭·Esc: 제자리."],
+  st_taut: ["The cable is taut: it does not reach any further.", "케이블이 팽팽합니다. 더 멀리는 닿지 않습니다."],
+  st_tooFar: ["The lead does not reach that far: bring the capacitor closer to the oscillator.", "리드선이 거기까지 닿지 않습니다. 축전기를 발진기 쪽으로 더 가까이 놓으세요."],
+  st_snapOn: ["The snap is pressed onto the battery.", "건전지에 스냅을 끼웠습니다."],
+  st_snapOff: ["The snap is pulled off the battery: the oscillator has no power.", "건전지에서 스냅을 뺐습니다. 발진기에 전원이 없습니다."],
+  st_ready: ["Check the battery (probes on its terminals, 20 V), put the probes on the red and black posts of the oscillator, switch on, press ON/OFF on the meter and turn the dial to 20k Hz.",
+             "건전지를 확인하고(리드를 단자에, 20 V), 리드를 발진기의 빨강·검정 단자에 댄 뒤 스위치를 켜고 멀티미터 ON/OFF를 눌러 다이얼을 20k Hz에 맞추세요."],
   st_batt: ["The battery on the oscillator was swapped for another one from the box.", "발진기의 건전지를 상자에서 꺼낸 다른 건전지로 바꿨습니다."],
-  st_needBatt: ["Click the 9 V battery on the base to swap it.", "밑판 위 9 V 건전지를 클릭하면 바꿉니다."],
-  st_capOn: ["Capacitor %s is on the desk. Drag a crocodile clip onto each of its leads.", "축전기 %s를 책상에 놓았습니다. 악어클립을 각 다리에 하나씩 물리세요."],
+  st_needBatt: ["A fresh battery is in your hand: put it on the battery on the base to swap them.", "새 건전지를 들었습니다. 밑판 위 건전지에 놓으면 바꿉니다."],
+  st_capOn: ["Capacitor %s is on the desk. Put a crocodile clip on each of its leads.", "축전기 %s를 책상에 놓았습니다. 악어클립을 각 다리에 하나씩 물리세요."],
   st_capBack: ["Capacitor %s is back in the box.", "축전기 %s를 부품함에 넣었습니다."],
   st_stack: ["The leads are twisted together: the capacitors are in parallel.", "다리를 꼬아 묶었습니다: 두 축전기가 병렬입니다."],
   st_unstack: ["The capacitor is untwisted from the others.", "축전기를 풀어 따로 놓았습니다."],
@@ -214,35 +220,37 @@ const I18N = {
   st_free: ["Left on the desk.", "책상 위에 내려놓았습니다."],
   t_BINP: ["9 V input +", "9 V 입력 +"], t_BINN: ["9 V input −", "9 V 입력 −"],
   t_JR: ["output (red)", "출력 (빨강)"], t_JB: ["output (black)", "출력 (검정)"],
-  t_BATP: ["battery snap +", "건전지 스냅 +"], t_BATN: ["battery snap −", "건전지 스냅 −"],
+  t_BATP: ["battery +", "건전지 +"], t_BATN: ["battery −", "건전지 −"],
   t_BBL: ["blackbox: lower plate", "블랙박스: 아래 극판"], t_BBU: ["blackbox: upper plate", "블랙박스: 위 극판"],
   t_lead: ["a lead of %s", "%s의 다리"],
   info: [`<h4>The apparatus (Figures 1–3 of the paper)</h4><ul>
-<li>On the dark wooden base: the 9 V battery, the white relaxation oscillator with its switch at the front, and its red and black frequency output on top.</li>
+<li>On the dark wooden base: the 9 V battery with its snap, the grey relaxation oscillator with its lamp, its toggle switch at the front, and its red and black frequency output posts.</li>
 <li>The wooden blackbox is a parallel-plate capacitor: two plates of small teeth with a dielectric sheet (K = 1.5, d = 0.20 mm) between them. Its two screws are the connectors to the plates; the crocodile clips of the oscillator sit on them.</li>
 <li>The upper plate slides in and out on the right. Its edge reads against the white millimetre scale.</li>
 <li>The MASTECH multimeter on the desk measures the frequency on the Hz setting (Figure 3), and d.c. volts on the V settings.</li>
 <li>The parts box holds the capacitors 33J, 68, 82J and 151 (Table 1) and a box of 9 V batteries, new and old mixed.</li></ul>
 <h4>Handling</h4><ul>
-<li>Drag any lead end (the battery snap, the meter probes, the crocodile clips) onto a terminal: it snaps on when it is close. Dropped elsewhere it lies on the desk.</li>
-<li>Click the switch on the base to turn the oscillator on; its lamp shows that it runs.</li>
-<li>Check the battery: put the probes on the snap ends and turn the dial to 20 V. Below 9 V, take a new one from the box and click the battery on the base.</li>
-<li>Take a capacitor out of the box and clip both crocodile clips to its two leads: it then replaces the blackbox. Drag one capacitor onto another to twist their leads together (in parallel); drag it off again to separate them.</li>
+<li>Take a lead end (a meter probe, a crocodile clip): drag it onto a terminal, or click it and click the terminal. It follows the pointer as far as its cable reaches and snaps on when it is close; elsewhere it is put down. Right-click or Esc puts it back where it was.</li>
+<li>Click the switch on the base to turn the oscillator on; its lamp shows that it runs. Click the battery snap to pull it off or press it on.</li>
+<li>The meter: press its red ON/OFF button, and turn the dial by clicking a range or rolling the wheel over it (the frequency range is 20k Hz at the bottom).</li>
+<li>Check the battery: put the probes on its terminals and turn the dial to 20 V. Below 9 V, drag a new one from the box onto it.</li>
+<li>Drag a capacitor out of the box onto the desk and clip both crocodile clips to its two leads: it then replaces the blackbox. Put one capacitor on another to twist their leads together (in parallel); take it off again to separate them.</li>
 <li>Click the meter, the scale or the oscillator for a close-up. Right-click goes back, or puts a part back in the box.</li></ul>
 <h4>Measuring</h4><ul>
 <li>The simulator computes nothing for you. Read the frequency on the meter and the position of the plate edge on the 1 mm scale yourself.</li>
 <li>The last digit of the meter flickers, as on the real one, and a tired battery makes the oscillator slow and finally stop.</li></ul>`,
 `<h4>장비 (문제지 그림 1–3)</h4><ul>
-<li>짙은 나무 밑판 위에 9 V 건전지, 앞쪽에 스위치가 달린 흰 이완 발진기가 있고, 발진기 윗면에 빨강·검정 진동수 출력 단자가 있습니다.</li>
+<li>짙은 나무 밑판 위에 스냅이 끼워진 9 V 건전지와 램프가 달린 회색 이완 발진기가 있고, 앞쪽에 토글 스위치, 발진기 윗면에 빨강·검정 진동수 출력 단자가 있습니다.</li>
 <li>나무 블랙박스는 평행판 축전기입니다. 작은 이빨이 줄지은 두 극판 사이에 유전체 판(K = 1.5, d = 0.20 mm)이 있습니다. 상자의 나사 두 개가 극판에 연결된 단자이고, 발진기의 악어클립이 여기에 물려 있습니다.</li>
 <li>오른쪽의 위 극판은 밀어 넣고 빼낼 수 있으며, 그 끝이 흰 mm 눈금을 가리킵니다.</li>
 <li>책상 위 MASTECH 멀티미터는 Hz 위치에서 진동수를(그림 3), V 위치에서 직류 전압을 잽니다.</li>
 <li>부품함에는 축전기 33J, 68, 82J, 151(표 1)과 새것·헌것이 섞인 9 V 건전지 상자가 있습니다.</li></ul>
 <h4>조작</h4><ul>
-<li>리드선 끝(건전지 스냅, 멀티미터 리드, 악어클립)을 끌어 단자 가까이 놓으면 물립니다. 다른 곳에 놓으면 책상 위에 놓입니다.</li>
-<li>밑판 앞의 스위치를 클릭하면 발진기가 켜지고, 램프로 작동 여부를 알 수 있습니다.</li>
-<li>건전지 확인: 리드를 스냅 끝에 대고 다이얼을 20 V에 두세요. 9 V보다 낮으면 부품함에서 새 건전지를 받아 밑판의 건전지를 클릭합니다.</li>
-<li>축전기를 꺼내 두 악어클립을 각 다리에 물리면 블랙박스 대신 그 축전기가 연결됩니다. 축전기를 다른 축전기 위로 끌어다 놓으면 다리가 꼬여 병렬이 되고, 다시 끌어내면 풀립니다.</li>
+<li>리드선 끝(멀티미터 리드, 악어클립)을 끌어 단자에 놓거나, 클릭한 뒤 단자를 클릭하면 물립니다. 끝은 케이블이 닿는 곳까지만 커서를 따라오고, 단자 가까이에서 물리며, 다른 곳에서는 내려놓입니다. 우클릭·Esc: 제자리.</li>
+<li>밑판 앞의 스위치를 클릭하면 발진기가 켜지고, 램프로 작동 여부를 알 수 있습니다. 건전지 스냅을 클릭하면 빼거나 끼웁니다.</li>
+<li>멀티미터: 빨간 ON/OFF 버튼을 누르고, 다이얼의 눈금을 클릭하거나 휠로 돌립니다(진동수는 아래쪽 20k Hz).</li>
+<li>건전지 확인: 리드를 건전지 단자에 대고 다이얼을 20 V에 두세요. 9 V보다 낮으면 부품함에서 새 건전지를 끌어 건전지 위에 놓습니다.</li>
+<li>축전기를 부품함에서 끌어 책상에 놓고 두 악어클립을 각 다리에 물리면 블랙박스 대신 그 축전기가 연결됩니다. 축전기를 다른 축전기 위에 놓으면 다리가 꼬여 병렬이 되고, 다시 들어내면 풀립니다.</li>
 <li>멀티미터·눈금·발진기를 클릭하면 확대됩니다. 우클릭하면 돌아가거나, 부품을 부품함에 넣습니다.</li></ul>
 <h4>측정</h4><ul>
 <li>시뮬레이터는 아무것도 계산해 주지 않습니다. 멀티미터의 진동수와 1 mm 눈금 위 극판 끝의 위치를 직접 읽으세요.</li>
@@ -314,11 +322,14 @@ function frequency(Ctot, battV){
   return a / Ctot;
 }
 
-/* the dial of the MASTECH meter, clockwise from OFF (angle on the face, 0 = right, + clockwise on screen) */
-const DIAL = [["off", -90, "OFF"], ["v1000", -52, "1000"], ["v200", -30, "200"], ["v20", -8, "20"],
-              ["v2", 14, "2"], ["a20m", 36, "20m"], ["a200m", 58, "200m"], ["hz", 82, "Hz"], ["temp", 104, "°C"],
-              ["c20u", 126, "20µ"], ["c200n", 148, "200n"], ["r200k", 170, "200k"], ["r20k", 192, "20k"],
-              ["r2k", 214, "2k"], ["r200", 236, "200"]];
+/* the dial of the MASTECH MY64 (Figure 3), clockwise: 32 positions 11.25 degrees apart, 200M ohm at the top right
+   and the 20 kHz frequency range at the bottom; angle on the face, 0 = right, + clockwise on screen */
+const DIAL = (() => {
+  const L = [["r200", "200"], ["r2k", "2k"], ["r20k", "20k"], ["r200k", "200k"], ["r2M", "2M"], ["r20M", "20M"], ["r200M", "200M"], ["hfe", "hFE"],
+    ["v200m", "200m"], ["v2", "2"], ["v20", "20"], ["v200", "200"], ["v1000", "1000"], ["ac700", "700"], ["ac200", "200"], ["ac20", "20"], ["ac2", "2"],
+    ["temp", "°C"], ["hz", "20k"], ["c2n", "2n"], ["c20n", "20n"], ["c200n", "200n"], ["c2u", "2µ"], ["c20u", "20µ"],
+    ["aac20m", "20m"], ["aac200m", "200m"], ["aac10", "10"], ["adc10", "10"], ["adc200m", "200m"], ["adc20m", "20m"], ["adc2m", "2m"], ["diode", "→|"]];
+  return L.map(([k, lbl], i) => [k, -117.5 + 11.25 * i, lbl]); })();
 const DIAL_ORDER = DIAL.map(d => d[0]);
 
 function mulberry(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
@@ -326,9 +337,9 @@ function mulberry(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; let t =
 
 /* ---- the kit on the bench ----
    Every connection is a place a conductor end sits:
-     the battery snap leads  snap.p / snap.n : "BINP", "BINN" or a point on the desk
+     the battery snap        snapped: on the battery terminals or pulled off
      the meter probes        probe.r / probe.b : "JR", "JB" (the oscillator output),
-                             "BATP", "BATN" (the snap ends), or a point
+                             "BATP", "BATN" (the battery terminals), or a point
      the crocodile clips     clip.r / clip.b : "BBL", "BBU" (the blackbox screws),
                              "A3", "B0" ... (a lead of capacitor 3, 0), or a point  */
 class Kit {
@@ -337,16 +348,16 @@ class Kit {
     this.reset();
   }
   reset(){
-    this.sw = false; this.dial = "off"; this.slide = 0.0;
+    this.sw = false; this.dmmOn = false; this.dial = "r200"; this.slide = 0.0;
     this.battV = newBattery(this.rng);
-    this.snap = {p: null, n: null};
+    this.snapped = true;           /* the battery snap is on the battery */
     this.probe = {r: null, b: null};
     this.clip = {r: "BBU", b: "BBL"};
     this.caps = {};              /* i -> [x, z] on the desk, for the ones taken out */
     this.stack = {};             /* i -> the capacitor whose leads it is twisted to */
     this.jit = 0.0;
   }
-  battIn(){ return this.snap.p === "BINP" && this.snap.n === "BINN"; }
+  battIn(){ return this.snapped; }
   osc(){ return this.sw ? oscState(this.battV, this.battIn()) : 0; }
   root(i){ const seen = new Set(); while (this.stack[i] !== undefined && !seen.has(i)){ seen.add(i); i = this.stack[i]; } return i; }
   /* the conductor a clip end is on */
@@ -376,29 +387,31 @@ class Kit {
   }
   display(){
     const d = this.dial;
-    if (d === "off") return "";
-    const pr = this.probe.r, pb = this.probe.b;
-    if (d[0] === "v"){
-      const fs = {v1000: 1000, v200: 200, v20: 20, v2: 2}[d];
+    if (!this.dmmOn) return "";
+    const pr = this.probe.r, pb = this.probe.b, on = (a, b) => (pr === a && pb === b) || (pr === b && pb === a);
+    const sign = pr === "BATN" || pr === "JB" ? -1 : 1;
+    if (/^v\d|^v200m/.test(d)){
+      const fs = {v200m: 0.2, v2: 2, v20: 20, v200: 200, v1000: 1000}[d];
       let v = 0;
-      if (pr === "BATP" && pb === "BATN") v = this.battV; else if (pr === "BATN" && pb === "BATP") v = -this.battV;
+      if (on("BATP", "BATN")) v = sign * this.battV;
       /* the output is a square wave; a d.c. range shows its mean */
-      else if ((pr === "JR" && pb === "JB") || (pr === "JB" && pb === "JR")) v = (this.osc() ? 0.47 * this.battV : 0) * (pr === "JR" ? 1 : -1);
-      if (Math.abs(v) > fs) return "1   ";
-      const dec = fs <= 2 ? 3 : fs <= 20 ? 2 : fs <= 200 ? 1 : 0;
-      return v.toFixed(dec);
+      else if (on("JR", "JB")) v = sign * (this.osc() ? 0.47 * this.battV : 0);
+      if (Math.abs(v) >= fs * 0.9995) return "1";
+      const dec = fs <= 0.2 ? 1 : fs <= 2 ? 3 : fs <= 20 ? 2 : fs <= 200 ? 1 : 0;
+      return (fs <= 0.2 ? v * 1000 : v).toFixed(dec);
     }
-    if (d[0] === "r") return "1   ";
-    if (d === "temp" || d === "c20u" || d === "c200n" || d[0] === "a") return "0.00";
-    /* frequency: the meter counts what comes in on the probes */
-    const onOut = (pr === "JR" && pb === "JB") || (pr === "JB" && pb === "JR");
-    if (!onOut) return "0.00";
-    const f = this.frequencyHz();
-    if (!f) return "0.00";
-    const k = f / 1000 + this.jit;
-    return k > DMM_HZ_FS ? "1   " : k.toFixed(2);
+    if (d[0] === "r" || d === "diode") return "1";
+    if (d === "hz"){
+      /* the meter counts what comes in on the probes */
+      if (!on("JR", "JB")) return "0.00";
+      const f = this.frequencyHz();
+      if (!f) return "0.00";
+      const k = f / 1000 + this.jit;
+      return k > DMM_HZ_FS ? "1" : k.toFixed(2);
+    }
+    if (d === "temp") return "25";
+    return "0.00";
   }
-  unit(){ const d = this.dial; return d === "off" ? "" : d[0] === "v" ? "V" : d[0] === "r" ? "Ω" : d[0] === "a" ? "mA" : d[0] === "c" ? "nF" : d === "temp" ? "°C" : "kHz"; }
   /* the 220 ms housekeeping of the original: the battery runs down, the last digit flickers */
   tick(){
     if (this.sw && this.battIn()) this.battV = Math.max(7.5, this.battV - BATT_DRAIN * 0.2 / 60.0);
@@ -827,221 +840,416 @@ function pick3(x,y){
 
 
 /* ==================================================================
-   THE BENCH IN 3-D.  World units are cm: x along the base board (left to
-   right as in Figure 1), z towards the student, y up from the desk.
+   SHAPES, SURFACES AND CABLES SHARED BY THE TWO 2011 BENCHES
    ================================================================== */
-const BASE_H = 1.6;                                   /* the dark wooden base board */
-const OSC = {x0: 2, x1: 16, z0: -4.6, z1: 5.2, h: 6.4};
-const BB = {x0: 20, x1: 44, z0: -9, z1: 9, h: 4.8};
-const EDGE0 = 61.2;                                   /* the plate edge at s = 0, and the zero of the scale */
-const DMMF = {x: 25.6, z: 13.6, w: 8.3, l: 17.8, h: 3.42};   /* the face of the meter on the desk */
-const DIAL_C = [4.15, 10.0], DIAL_R = 2.55;           /* on the face, cm */
-const JACK = {"10A": 1.0, mA: 2.9, COM: 4.95, VHz: 7.0}, JACK_V = 15.7;
-let kit = new Kit();
-const UI = {hand: null, drag: null, hot: null};
-const edgeX = () => EDGE0 - kit.slide / 10;
 const mk = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const add3 = (a, b, s) => [a[0] + b[0] * (s === undefined ? 1 : s), a[1] + b[1] * (s === undefined ? 1 : s), a[2] + b[2] * (s === undefined ? 1 : s)];
+const lerpC = (a, b, t) => { const A = hex2rgb(a), B = hex2rgb(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
+function rand32(s){ return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+/* planed wood: long wavy grain lines, a few darker streaks and knots, along the canvas width */
+function woodTex(w, h, base, dark, seed, P){
+  P = P || 24; const c = mk(Math.round(w * P), Math.round(h * P)), g = c.getContext("2d"), r = rand32(seed || 7);
+  g.fillStyle = base; g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < c.height / 3; i++){ const y0 = r() * c.height, a = 1 + r() * 3, f = 0.002 + r() * 0.006, ph = r() * 6;
+    g.strokeStyle = r() < 0.5 ? dark : lerpC(base, "#ffffff", 0.12); g.globalAlpha = 0.08 + r() * 0.22; g.lineWidth = 0.6 + r() * 1.8;
+    g.beginPath(); for (let x = 0; x <= c.width; x += 6){ const y = y0 + a * Math.sin(x * f + ph) + 2 * Math.sin(x * f * 3.1 + ph * 2); if (x) g.lineTo(x, y); else g.moveTo(x, y); } g.stroke(); }
+  for (let k = 0; k < 2; k++){ const cx = r() * c.width, cy = r() * c.height; g.globalAlpha = 0.25; g.strokeStyle = dark;
+    for (let i = 1; i < 6; i++){ g.lineWidth = 1; g.beginPath(); g.ellipse(cx, cy, i * 7, i * 2.4, 0, 0, 7); g.stroke(); } }
+  g.globalAlpha = 1; c._static = true; return c; }
+/* a rounded rectangle in the (x, z) plane, counter-clockwise, n points per corner */
+function rrect2(cx, cz, hw, hd, r, n){ const P = []; n = n || 5;
+  for (const [sx, sz, a0] of [[1, 1, 0], [-1, 1, 90], [-1, -1, 180], [1, -1, 270]]) for (let i = 0; i <= n; i++){ const a = (a0 + 90 * i / n) * Math.PI / 180;
+    P.push([cx + sx * (hw - r) + r * Math.cos(a), cz + sz * (hd - r) + r * Math.sin(a)]); }
+  return P; }
+/* a box with rounded vertical corners and a softened top edge */
+function rbox3(cx, cz, hw, hd, y0, y1, r, col, o){ o = o || {};
+  const out = rrect2(cx, cz, hw, hd, r, 4), e = Math.min(0.25, (y1 - y0) * 0.2), inn = rrect2(cx, cz, hw - e, hd - e, Math.max(0.05, r - e), 4);
+  prism3("y", y0, y1 - e, out.map(p => [p[0], p[1]]), col, Object.assign({}, o, {cull: true}));
+  const n = out.length;
+  for (let i = 0; i < n; i++){ const j = (i + 1) % n, A = out[i], B = out[j], a = inn[i], b = inn[j];
+    face(orient([[A[0], y1 - e, A[1]], [B[0], y1 - e, B[1]], [b[0], y1, b[1]], [a[0], y1, a[1]]], [(A[0] + B[0]) / 2 - cx, 1, (A[1] + B[1]) / 2 - cz]), Object.assign({}, o, {fill: lerpC(col, "#ffffff", 0.06), cull: true})); }
+  face(orient(inn.map(p => [p[0], y1, p[1]]), [0, 1, 0]), Object.assign({}, o, {fill: o.top || col, cull: true}));
+}
+/* a knurled knob: a short cylinder with ribs round its rim */
+function knurl3(axis, a0, a1, u, v, r, col, o){
+  cyl3(axis, a0, a1, u, v, r, col, Object.assign({seg: 20, cap: lerpC(col, "#ffffff", 0.22)}, o || {}));
+  for (let i = 0; i < 18; i++){ const t = i / 18 * 2 * Math.PI, cu = u + r * 1.01 * Math.cos(t), cv = v + r * 1.01 * Math.sin(t);
+    const W = a => axis === "x" ? [a, cu, cv] : axis === "y" ? [cu, a, cv] : [cu, cv, a];
+    line3(W(a0 + (a1 - a0) * 0.12), W(a0 + (a1 - a0) * 0.88), lerpC(col, "#000000", 0.40), 0.8); }
+}
+function ring3(c, r, col, lw, n, axis){ n = n || 28; const pts = []; for (let i = 0; i <= n; i++){ const a = i / n * 2 * Math.PI;
+  pts.push(axis === "z" ? [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a), c[2]] : axis === "x" ? [c[0], c[1] + r * Math.cos(a), c[2] + r * Math.sin(a)] : [c[0] + r * Math.cos(a), c[1], c[2] + r * Math.sin(a)]); }
+  poly3(pts, col, lw); }
+function bez(P0, P1, P2, P3, n){ const out = []; for (let i = 0; i <= n; i++){ const t = i / n, u = 1 - t;
+  out.push([0, 1, 2].map(j => u * u * u * P0[j] + 3 * u * u * t * P1[j] + 3 * u * t * t * P2[j] + t * t * t * P3[j])); } return out; }
+const plen = pts => { let s = 0; for (let i = 1; i < pts.length; i++) s += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]); return s; };
+/* the things on the bench a cable has to go over: [x0, x1, z0, z1, top] */
+let OBST = [];
+/* a cable keeps out of the things on the bench and never sinks into the desk; it bends over an edge, never steps */
+function avoid(pts, r){
+  const fine = [pts[0]];
+  for (let i = 1; i < pts.length; i++){ const a = pts[i - 1], b = pts[i], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / 0.5));
+    for (let j = 1; j <= n; j++) fine.push([a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n, a[2] + (b[2] - a[2]) * j / n]); }
+  const out = fine.map(([x, y, z], i) => { if (i === 0 || i === fine.length - 1) return [x, y, z]; y = Math.max(y, r + 0.03);
+    for (const [x0, x1, z0, z1, top] of OBST) if (x > x0 - r && x < x1 + r && z > z0 - r && z < z1 + r && y < top + r) y = top + r + 0.02;
+    return [x, y, z]; });
+  for (let k = 0; k < 12; k++) for (let i = 1; i < out.length - 1; i++){ const m = 0.5 * (out[i - 1][1] + out[i + 1][1]) - 0.05; if (m > out[i][1]) out[i] = [out[i][0], m, out[i][2]]; }
+  return out;
+}
+/* a cable of a given length from a fixed point (leaving along d0) to its end (arriving along d1): the slack hangs as a
+   loop that lies on whatever is under it */
+function cablePath(A, d0, B, d1, len, side){
+  const D = Math.hypot(B[0] - A[0], B[1] - A[1], B[2] - A[2]), slack = Math.max(0, len - D);
+  const k = Math.max(1.5, Math.min(D * 0.4 + slack * 0.15, len * 0.3));
+  /* the spare length lies to one side in a loose bow, a little lower than the ends */
+  let nx = -(B[2] - A[2]), nz = B[0] - A[0]; const nl = Math.hypot(nx, nz) || 1; nx /= nl; nz /= nl;
+  const bow = Math.min(slack * 0.3, 9) * (side || 1), drop = Math.min(slack * 0.15, 3);
+  const P1 = add3(A, d0, k), P2 = add3(B, d1, -k);
+  P1[0] += nx * bow; P1[2] += nz * bow; P2[0] += nx * bow; P2[2] += nz * bow; P1[1] -= drop; P2[1] -= drop;
+  return bez(A, P1, P2, B, 30);
+}
+/* the spare length bows to whichever side keeps it lower, off the things on the bench */
+function cableRoute(A, d0, B, d1, len, r){
+  let best = null, bh = Infinity;
+  for (const side of [1, -1]){ const p = avoid(cablePath(A, d0, B, d1, len, side), r), h = p.reduce((s, q) => s + q[1], 0); if (h < bh){ bh = h; best = p; } }
+  return best; }
+/* the cable itself: a dark ribbon as wide as the wire is on screen, with a lit stripe along it */
+function tube(pts, r, col, o){ o = o || {}; const lw = Math.max(1.4, 2 * r * CAM.k);
+  poly3(pts, lerpC(col, "#000000", 0.30), lw + 1, {bias: o.bias || 0, cap: "butt"});
+  poly3(pts, col, lw, {bias: (o.bias || 0) + 2, cap: "butt"});
+  poly3(pts, lerpC(col.startsWith("#") ? col : "#888888", "#ffffff", 0.4), Math.max(0.6, lw * 0.28), {bias: (o.bias || 0) + 4, cap: "butt"});
+  if (o.id){ const step = Math.max(1, Math.floor(pts.length / 14)); for (let i = step; i < pts.length - 1; i += step) sphere3(pts[i], Math.max(r * 1.6, 0.35), "rgba(0,0,0,0.004)", {id: o.id}); }
+}
+/* the highest surface under a screen point, and the point on it: tops are [x0, x1, z0, z1, top] boxes over the desk */
+function surfaceUnder(p, tops){
+  let best = null;
+  for (const t of tops){ const q = onPlane(p[0], p[1], t[4]); if (q[0] > t[0] && q[0] < t[1] && q[2] > t[2] && q[2] < t[3] && (!best || t[4] > best[1])) best = q; }
+  return best || onPlane(p[0], p[1], 0);
+}
 
-/* ---- fixed points ---- */
-const TERM = {
-  JR: [13.6, OSC.h, -0.6], JB: [13.6, OSC.h, 2.6],
-  BINP: [4.4, OSC.h, -3.0], BINN: [6.8, OSC.h, -3.0],
-  BBU: [21.6, BB.h, -3.2], BBL: [21.6, BB.h, 3.2],
-};
-const SNAP_AT = [8.1, 2.5, -7.3];                                /* the snap on the battery */
-const CLIP_FROM = {r: [16, 3.4, -1.6], b: [16, 3.4, 1.6]};       /* the clip leads leave the oscillator here */
-const JACK_W = k => [DMMF.x + JACK[k], DMMF.h, DMMF.z + JACK_V];
-const HOME = {snap_p: [7.0, BASE_H, 7.4], snap_n: [9.6, BASE_H, 7.4],
-              pr_r: [37.5, 0.45, 26.5], pr_b: [37.5, 0.45, 29.5],
-              clip_r: [19.0, BASE_H, -6.5], clip_b: [19.0, BASE_H, 6.5]};
-const SLOT = i => [42 + i * 6.5, 19];
-/* where a capacitor's lead ends are (the root of a twisted stack carries them) */
-function leadEnd(i, side){ const r = kit.root(i), p = kit.caps[r]; if (!p) return null; return [p[0] + (side === "A" ? -0.62 : 0.62), 0.12, p[1] - 4.4]; }
-/* the world point of a target name */
+/* ==================================================================
+   THE BENCH IN 3-D, after Figure 1 (the board seen from above), Figure 2
+   (the capacitors on their green card) and Figure 3 (the MASTECH MY64).
+   World units are cm: x along the base board, z towards the student,
+   y up from the desk.
+   ================================================================== */
+const BASE_H = 1.8;
+const OSC = {x0: 0.8, x1: 16.3, z0: -5.4, z1: 5.0, h: 6.8};       /* the box sits on the board, inside its edges */
+const BB = {x0: 19.2, x1: 44.8, z0: -9.7, z1: 9.7, h: 5.4};
+const PLATE = {z0: -7.1, z1: 9.1, y0: BASE_H + 0.15, y1: BASE_H + 0.95};
+const ENDB = {x0: 59.3, x1: 64, h: 5.0};
+const EDGE0 = 58.6;                                   /* the plate edge at s = 0: the zero of the scale */
+const DMM = {x0: 22, x1: 31.6, z0: 14, z1: 33, h: 3.6};
+const FACE = {x: 22.6, z: 14.7, w: 8.4, l: 17.6, h: 3.38};   /* the meter face, recessed in the holster */
+const DIAL_C = [4.2, 9.1], DIAL_R = 2.05, DIAL_LR = 3.15;     /* on the face, cm */
+const JACKS = {"10A": [1.15, 15.0], mA: [2.75, 15.0], COM: [4.75, 15.0], VHz: [6.9, 15.0]};
+const PWR = [1.6, 4.55, 0.55, 0.25];                           /* the ON/OFF button: centre u, v, half width, half height */
+const POST_TOP = OSC.h + 1.85;
+const TERM = {JR: [11.4, POST_TOP, -2.7], JB: [11.0, POST_TOP, 2.0],
+  BBU: [18.7, BASE_H + 0.95, -7.0], BBL: [18.5, BASE_H + 0.95, 7.8],
+  BATP: [4.05, BASE_H + 0.88, -8.55], BATN: [4.05, BASE_H + 0.88, -7.65]};
+const CLIP_FROM = [16.35, BASE_H + 2.2, -0.4], CLIP_LEN = 40;
+const PROBE_LEN = 95, PROBE_L = 11.5;
+const JACK_W = k => [FACE.x + JACKS[k][0], FACE.h + 1.25, FACE.z + JACKS[k][1]];
+const REST = {pr_r: {tip: [35.5, 0.45, 24.5], dir: [1, 0, 0.08]}, pr_b: {tip: [35.5, 0.45, 28.2], dir: [1, 0, 0.12]},
+              clip_r: [18.4, BASE_H + 0.3, 3.6], clip_b: [18.2, BASE_H + 0.3, -3.6]};
+let kit = new Kit();
+const UI = {carry: null, mouse: [0, 0], hot: null, msgTaut: false};
+const edgeX = () => EDGE0 - kit.slide / 10;
+const TOPS = () => [[0, 64, -10, 10, BASE_H], [OSC.x0, OSC.x1, OSC.z0, OSC.z1, OSC.h], [3.6, 9.2, -9.4, -6.8, BASE_H + 1.75],
+  [BB.x0, BB.x1, BB.z0, BB.z1, BB.h], [BB.x1, edgeX(), PLATE.z0, PLATE.z1, PLATE.y1], [ENDB.x0, ENDB.x1, -10, 10, ENDB.h], [DMM.x0, DMM.x1, DMM.z0, DMM.z1, DMM.h]];
+
+/* ---- capacitors on the desk: card centre; the leads point at you ---- */
+const CARD = {hw: 1.65, hd: 1.8};
+function leadEnd(i, side){ const r = kit.root(i), p = UI.carry && UI.carry.kind === "cap" && UI.carry.i === r ? UI.carry.at : kit.caps[r]; if (!p) return null;
+  return [p[0] + (side === "A" ? -0.42 : 0.42), 0.16, p[1] + CARD.hd + 2.6]; }
 function target(n){
   if (TERM[n]) return TERM[n];
-  if (n === "BATP") return endPos("snap_p"); if (n === "BATN") return endPos("snap_n");
   if (/^[AB]\d$/.test(n) && kit.caps[+n[1]] !== undefined) return leadEnd(+n[1], n[0]);
   return null;
 }
-/* the targets each kind of end can go on */
 function targetsFor(key){
-  if (key.startsWith("snap")) return ["BINP", "BINN"];
   if (key.startsWith("pr")) return ["JR", "JB", "BATP", "BATN"];
   const out = ["BBU", "BBL"];
   for (const i of Object.keys(kit.caps)) if (kit.root(+i) === +i) out.push("A" + i, "B" + i);
   return out;
 }
-const STATE = key => key.startsWith("snap") ? [kit.snap, key.slice(5)] : key.startsWith("pr") ? [kit.probe, key.slice(3)] : [kit.clip, key.slice(5)];
-/* the tip of a lead end, in the world */
+const STATE = key => key.startsWith("pr") ? [kit.probe, key.slice(3)] : [kit.clip, key.slice(5)];
+const ORIGIN = key => key.startsWith("pr") ? JACK_W(key === "pr_r" ? "VHz" : "COM") : CLIP_FROM;
+const REACH = key => (key.startsWith("pr") ? PROBE_LEN - PROBE_L : CLIP_LEN - 3.5) * 0.93;
+/* where the end in the hand is: under the pointer, a little above what is under it, as far as its cable lets it */
+function carriedAt(key){
+  const s = surfaceUnder(UI.mouse, TOPS()), lift = key.startsWith("pr") ? 0.9 : 0.5;
+  let q = onPlane(UI.mouse[0], UI.mouse[1], s[1] + lift);
+  const o = ORIGIN(key), dx = q[0] - o[0], dy = q[1] - o[1], dz = q[2] - o[2], d = Math.hypot(dx, dy, dz), R = REACH(key);
+  UI.msgTaut = d > R;
+  if (d > R) q = [o[0] + dx * R / d, o[1] + dy * R / d, o[2] + dz * R / d];
+  return q;
+}
 function endPos(key){
-  if (UI.drag && UI.drag.kind === "end" && UI.drag.key === key) return UI.drag.at;
+  if (UI.carry && UI.carry.kind === "end" && UI.carry.key === key) return UI.hot ? target(UI.hot) : carriedAt(key);
   const [o, k] = STATE(key), v = o[k];
   if (Array.isArray(v)) return v;
   if (typeof v === "string"){ const t = target(v); if (t) return t; }
-  return HOME[key];
+  return key.startsWith("pr") ? REST[key].tip : REST[key];
 }
+const endOn = key => { const [o, k] = STATE(key); return typeof o[k] === "string" && !(UI.carry && UI.carry.key === key); };
 
 /* ---- textures ---- */
-function scaleTex(){ const R = 60, c = mk(Math.round(9.4 * R), Math.round(2.2 * R)), g = c.getContext("2d");
-  g.fillStyle = "#f4f4ef"; g.fillRect(0, 0, c.width, c.height);
-  /* zero at x = 61.2 (texture u = 61.2 - 52.6 = 8.6 cm), millimetres to the left */
+const T_BASE = woodTex(64, 20, "#5d3420", "#2d170c", 11), T_BOX = woodTex(25.6, 21.8, "#8b5434", "#4f2a16", 23),
+      T_PLATE = woodTex(16, 16.2, "#996240", "#5a321b", 31), T_END = woodTex(20, 4.7, "#7a4428", "#3c1f0f", 41);
+function scaleTex(){ const R = 60, c = mk(Math.round(14.4 * R), Math.round(1.25 * R)), g = c.getContext("2d");
+  g.fillStyle = "#f6f6f2"; g.fillRect(0, 0, c.width, c.height);
   g.strokeStyle = "#1b1b1b"; g.fillStyle = "#1b1b1b"; g.textAlign = "center"; g.textBaseline = "top";
-  for (let mm = 0; mm <= 84; mm++){ const u = (8.6 - mm / 10) * R; if (u < 2) break;
-    const L = mm % 10 === 0 ? 0.85 : mm % 5 === 0 ? 0.6 : 0.38; g.lineWidth = mm % 10 === 0 ? 2.2 : 1.4;
+  for (let mm = 0; mm <= 140; mm++){ const u = (EDGE0 - 44.8 - mm / 10) * R; if (u < 3) break;
+    const L = mm % 10 === 0 ? 0.55 : mm % 5 === 0 ? 0.4 : 0.26; g.lineWidth = mm % 10 === 0 ? 2.2 : 1.3;
     g.beginPath(); g.moveTo(u, 0); g.lineTo(u, L * R); g.stroke();
-    if (mm % 10 === 0){ g.font = "600 " + Math.round(0.62 * R) + "px Arial,sans-serif"; g.fillText(String(mm), u, 0.95 * R); } }
-  g.font = "600 " + Math.round(0.4 * R) + "px Arial,sans-serif"; g.textAlign = "right"; g.fillText("mm", c.width - 4, 1.62 * R);
+    if (mm % 10 === 0){ g.font = "600 " + Math.round(0.38 * R) + "px Arial,sans-serif"; g.fillText(String(mm / 10), u, 0.62 * R); } }
+  g.textAlign = "left"; g.font = "600 " + Math.round(0.3 * R) + "px Arial"; g.fillText("cm", (EDGE0 - 44.8 + 0.15) * R, 0.66 * R);
   c._static = true; return c; }
-function stickerTex(){ const c = mk(240, 150), g = c.getContext("2d"); g.fillStyle = "#fbfbf8"; g.fillRect(0, 0, 240, 150);
-  g.fillStyle = "#e0337a"; for (const [x, y, s] of [[40, 50, 26], [64, 74, 20], [26, 86, 16], [52, 104, 12]]){ g.save(); g.translate(x, y); g.rotate(Math.PI / 4); g.fillRect(-s / 2, -s / 2, s, s); g.restore(); }
-  g.fillStyle = "#283a8c"; g.font = "700 46px Georgia,serif"; g.fillText("IPhO", 92, 82); g.fillStyle = "#e0337a"; g.font = "700 22px Arial"; g.fillText("42", 196, 56);
-  g.fillStyle = "#555"; g.font = "15px Arial"; g.fillText("Bangkok, Thailand 2011", 92, 112); c._static = true; return c; }
-function battTex(){ const c = mk(480, 260), g = c.getContext("2d"); g.fillStyle = "#1e2024"; g.fillRect(0, 0, 480, 260);
-  g.fillStyle = "#2c5fb4"; g.fillRect(0, 60, 480, 140); g.fillStyle = "#f2f2f2"; g.font = "800 92px Arial"; g.fillText("9V", 40, 162);
-  g.font = "700 30px Arial"; g.fillText("ALKALINE", 210, 120); g.fillText("6LR61", 210, 168); c._static = true; return c; }
-const SCALE_TEX = scaleTex(), STICKER = stickerTex(), BATT_TEX = battTex();
-/* the face of the meter: redrawn when what it shows changes */
-const DMM_TEX = mk(Math.round(DMMF.w * 50), Math.round(DMMF.l * 50)); DMM_TEX._ver = 0; let DMM_KEY = "";
-function drawDMMFace(){
-  const disp = kit.display(), key = disp + "|" + kit.dial + "|" + kit.unit(); if (key === DMM_KEY) return; DMM_KEY = key; DMM_TEX._ver++;
-  const R = 50, g = DMM_TEX.getContext("2d"), W = DMM_TEX.width, H = DMM_TEX.height;
-  g.fillStyle = "#2a2c2f"; g.fillRect(0, 0, W, H);
-  /* the window and the digits */
-  g.fillStyle = "#8f9a86"; g.fillRect(0.9 * R, 1.0 * R, 6.5 * R, 3.6 * R);
-  g.fillStyle = "#b9c4ad"; g.fillRect(1.05 * R, 1.15 * R, 6.2 * R, 3.3 * R);
-  g.fillStyle = "#1c2118"; g.textAlign = "right"; g.textBaseline = "middle";
-  g.font = "700 " + Math.round(2.2 * R) + "px 'DSEG7 Classic','Courier New',monospace"; g.fillText(disp, 6.6 * R, 2.85 * R);
-  g.font = "700 " + Math.round(0.55 * R) + "px Arial"; g.fillText(kit.unit(), 7.1 * R, 4.15 * R);
-  /* brand, the power button */
-  g.fillStyle = "#c8302c"; g.fillRect(0.9 * R, 5.2 * R, 1.3 * R, 0.6 * R); g.fillStyle = "#ddd"; g.font = Math.round(0.32 * R) + "px Arial"; g.textAlign = "left"; g.fillText("POWER", 2.4 * R, 5.5 * R);
-  /* the dial */
-  const cx = DIAL_C[0] * R, cy = DIAL_C[1] * R;
-  g.fillStyle = "#1b1c1e"; g.beginPath(); g.arc(cx, cy, (DIAL_R + 1.25) * R, 0, 7); g.fill();
-  g.textAlign = "center"; g.textBaseline = "middle";
+function stickerTex(){ const c = mk(360, 210), g = c.getContext("2d"); g.fillStyle = "#fbfbf9"; g.fillRect(0, 0, 360, 210);
+  const dia = (x, y, s, col) => { g.save(); g.translate(x, y); g.rotate(Math.PI / 4); g.fillStyle = col; g.fillRect(-s / 2, -s / 2, s, s); g.restore(); };
+  dia(70, 70, 30, "#c9cace"); dia(104, 70, 30, "#e8478f"); dia(70, 104, 30, "#e8478f"); dia(104, 104, 30, "#e8478f");
+  g.fillStyle = "#3b3c41"; g.font = "500 64px 'Times New Roman',serif"; g.fillText("I", 150, 100); g.fillRect(170, 66, 8, 6); g.fillText("Ph", 182, 100);
+  g.strokeStyle = "#e8478f"; g.lineWidth = 5; g.beginPath(); g.arc(282, 80, 24, 0, 7); g.stroke(); g.fillStyle = "#e8478f"; g.font = "700 22px Arial"; g.fillText("42", 268, 88);
+  g.fillStyle = "#3b3c41"; g.font = "20px Arial"; g.fillText("International", 150, 132); g.fillText("Physics Olympiad", 150, 156);
+  g.fillStyle = "#e8478f"; g.font = "15px Arial"; g.fillText("Bangkok Thailand, 2011", 150, 178); c._static = true; return c; }
+function battTex(){ const c = mk(480, 260), g = c.getContext("2d"); g.fillStyle = "#151517"; g.fillRect(0, 0, 480, 260);
+  g.fillStyle = "#f4f4f2"; g.fillRect(150, 30, 300, 190); const r = rand32(5);
+  g.fillStyle = "#111"; for (let x = 170; x < 330; x += 2 + Math.floor(r() * 4)) g.fillRect(x, 50, 1 + Math.floor(r() * 3), 110);
+  g.font = "22px Arial"; g.fillText("5 012345 789636", 168, 190); g.fillStyle = "#cfd2d6"; g.fillRect(350, 60, 80, 80);
+  g.fillStyle = "#e9e9e9"; g.font = "700 46px Arial"; g.fillText("+", 50, 150); c._static = true; return c; }
+function velcroTex(){ const c = mk(240, 80), g = c.getContext("2d"), r = rand32(9); g.fillStyle = "#0d0d0e"; g.fillRect(0, 0, 240, 80);
+  for (let i = 0; i < 2500; i++){ g.fillStyle = r() < 0.5 ? "#1c1c1e" : "#050506"; g.fillRect(r() * 240, r() * 80, 1.5, 1.5); } c._static = true; return c; }
+const SCALE_TEX = scaleTex(), STICKER = stickerTex(), BATT_TEX = battTex(), VELCRO = velcroTex();
+
+/* ---- the face of the MY64, redrawn when what it shows changes ---- */
+const FACE_TEX = mk(Math.round(FACE.w * 60), Math.round(FACE.l * 60)); FACE_TEX._ver = 0; let FACE_KEY = "";
+const SEG = {"0": "abcdef", "1": "bc", "2": "abged", "3": "abgcd", "4": "fgbc", "5": "afgcd", "6": "afgedc", "7": "abc", "8": "abcdefg", "9": "abcfgd", "-": "g", " ": ""};
+/* a seven-segment digit, slanted like an LCD's: segments a (top) to g (middle) */
+function seg7(g, x, y, w, h, ch, lit){
+  const t = w * 0.18, on = SEG[ch] || "", sk = w * 0.12, S = (u, v) => [x + u * w + (1 - v) * sk, y + v * h];
+  const hseg = v => [[0.1, v, -1], [0.9, v, -1], [0.9 - 0.12, v, 1], [0.1 + 0.12, v, 1]];
+  const shapes = {
+    a: [[0.08, 0], [0.92, 0], [0.8, 0.09], [0.2, 0.09]], d: [[0.2, 0.91], [0.8, 0.91], [0.92, 1], [0.08, 1]],
+    g: [[0.12, 0.5], [0.22, 0.455], [0.78, 0.455], [0.88, 0.5], [0.78, 0.545], [0.22, 0.545]],
+    f: [[0, 0.04], [0.12, 0.12], [0.12, 0.44], [0, 0.48]], e: [[0, 0.52], [0.12, 0.56], [0.12, 0.88], [0, 0.96]],
+    b: [[1, 0.04], [1, 0.48], [0.88, 0.44], [0.88, 0.12]], c: [[1, 0.52], [1, 0.96], [0.88, 0.88], [0.88, 0.56]]};
+  for (const s of "abcdefg"){ g.fillStyle = on.includes(s) && lit ? "#151b16" : "rgba(30,50,30,0.06)"; g.beginPath();
+    shapes[s].forEach(([u, v], i) => { const [px, py] = S(u, v); if (i) g.lineTo(px, py); else g.moveTo(px, py); }); g.closePath(); g.fill(); } }
+function drawFace(){
+  const disp = kit.display(), key = disp + "|" + kit.dial + "|" + kit.dmmOn; if (key === FACE_KEY) return; FACE_KEY = key; FACE_TEX._ver++;
+  const R = 60, g = FACE_TEX.getContext("2d"), W = FACE_TEX.width, H = FACE_TEX.height, U = u => u * R;
+  g.fillStyle = "#2b2d31"; g.fillRect(0, 0, W, H);
+  /* the window: four digits, the leftmost a half digit */
+  g.fillStyle = "#16171a"; g.fillRect(U(0.55), U(0.5), U(7.3), U(3.3));
+  g.fillStyle = "#a9b4a1"; g.fillRect(U(0.85), U(0.8), U(6.7), U(2.7));
+  const lit = kit.dmmOn && disp !== "";
+  let digits = ["1", " ", " ", " "], dot = -1;
+  if (lit){ if (disp === "1") digits = ["1", " ", " ", " "];
+    else { const neg = disp[0] === "-", body = neg ? disp.slice(1) : disp, i = body.indexOf("."), ds = body.replace(".", "").padStart(4, " ").slice(-4).split("");
+      digits = ds; dot = i < 0 ? -1 : i + (4 - body.replace(".", "").length) - 1; if (digits[0] === "0" && dot !== 0) digits[0] = " ";
+      if (neg){ g.fillStyle = "#151b16"; g.fillRect(U(0.98), U(2.05), U(0.32), U(0.12)); } } }
+  for (let i = 0; i < 4; i++){ seg7(g, U(1.42 + i * 1.5), U(1.15), U(1.12), U(1.95), digits[i], lit);
+    if (lit && i === dot){ g.fillStyle = "#151b16"; g.fillRect(U(1.42 + i * 1.5 + 1.2), U(2.95), U(0.17), U(0.17)); } }
+  if (kit.dmmOn){ g.fillStyle = "#3f4c41"; g.font = Math.round(U(0.24)) + "px Arial"; g.textAlign = "center"; g.fillText("20", U(4.2), U(3.4)); }
+  /* the ON/OFF button, AUTO POWER OFF, the transistor socket */
+  g.fillStyle = kit.dmmOn ? "#c8241c" : "#d42a20"; g.beginPath(); g.ellipse(U(PWR[0]), U(PWR[1]), U(PWR[2]), U(PWR[3]), 0, 0, 7); g.fill();
+  g.fillStyle = "rgba(255,180,170,0.6)"; g.fillRect(U(PWR[0] - 0.3), U(PWR[1] - 0.15), U(0.6), U(0.06));
+  g.fillStyle = "#ef3b3b"; g.font = Math.round(U(0.22)) + "px Arial"; g.textAlign = "center"; g.textBaseline = "alphabetic"; g.fillText("ON/OFF ⓘ", U(PWR[0]), U(5.1));
+  g.fillStyle = "#3d8ee8"; g.font = "700 " + Math.round(U(0.26)) + "px Arial"; g.textAlign = "left"; g.fillText("AUTO POWER OFF", U(2.5), U(4.65));
+  g.fillStyle = "#9fa3a8"; g.beginPath(); g.arc(U(6.95), U(4.55), U(0.42), 0, 7); g.fill(); g.fillStyle = "#3a3c40";
+  for (let i = 0; i < 8; i++){ const a = i / 8 * 6.283; g.beginPath(); g.arc(U(6.95 + 0.25 * Math.cos(a)), U(4.55 + 0.25 * Math.sin(a)), U(0.05), 0, 7); g.fill(); }
+  g.fillStyle = "#e38a3a"; g.font = Math.round(U(0.18)) + "px Arial"; g.textAlign = "center"; g.fillText("PNP    NPN", U(6.95), U(5.25));
+  /* the dial: the ranges round it, grouped as on the real one */
+  const cx = U(DIAL_C[0]), cy = U(DIAL_C[1]);
+  g.textBaseline = "middle";
   for (const [nm, deg, lbl] of DIAL){ const a = deg * Math.PI / 180, on = nm === kit.dial;
-    g.fillStyle = on ? "#ffd84a" : "#e8e8e8"; g.font = (on ? "700 " : "") + Math.round(0.36 * R) + "px Arial";
-    g.fillText(lbl, cx + Math.cos(a) * (DIAL_R + 0.78) * R, cy + Math.sin(a) * (DIAL_R + 0.78) * R);
-    g.beginPath(); g.arc(cx + Math.cos(a) * (DIAL_R + 0.25) * R, cy + Math.sin(a) * (DIAL_R + 0.25) * R, 0.06 * R, 0, 7); g.fill(); }
-  g.fillStyle = "#151617"; g.beginPath(); g.arc(cx, cy, DIAL_R * R, 0, 7); g.fill();
+    g.fillStyle = "#f2f2f2"; g.beginPath(); g.arc(cx + Math.cos(a) * U(DIAL_R + 0.3), cy + Math.sin(a) * U(DIAL_R + 0.3), U(0.05), 0, 7); g.fill();
+    g.fillStyle = on ? "#ffd84a" : "#f0f0f0"; g.font = (on ? "700 " : "") + Math.round(U(0.23)) + "px Arial";
+    g.fillText(lbl, cx + Math.cos(a) * U(DIAL_LR - 0.05), cy + Math.sin(a) * U(DIAL_LR - 0.05)); }
+  const grp = (txt, deg, r, col, px) => { const a = deg * Math.PI / 180; g.fillStyle = col; g.font = "700 " + Math.round(U(px || 0.3)) + "px Arial"; g.fillText(txt, cx + Math.cos(a) * U(r), cy + Math.sin(a) * U(r)); };
+  grp("Ω", -82, 3.8, "#f0f0f0", 0.34); grp("V⎓", 2, 3.95, "#f0f0f0"); grp("V~", 50, 3.9, "#f0f0f0"); grp("Hz", 88, 3.78, "#ef4a3a", 0.3);
+  grp("F", 128, 3.65, "#f0f0f0"); grp("A~", 168, 3.7, "#f0f0f0", 0.26); grp("A⎓", 222, 3.75, "#f0f0f0", 0.26);
+  /* the knob: a dark disc with a raised grip bar pointing at the range */
+  g.fillStyle = "#121315"; g.beginPath(); g.arc(cx, cy, U(DIAL_R), 0, 7); g.fill();
+  g.strokeStyle = "#34363b"; g.lineWidth = U(0.08); g.stroke();
   const a = DIAL[DIAL_ORDER.indexOf(kit.dial)][1] * Math.PI / 180;
-  g.save(); g.translate(cx, cy); g.rotate(a); g.fillStyle = "#2b2d30"; g.fillRect(-DIAL_R * R * 0.95, -0.55 * R, DIAL_R * R * 1.9, 1.1 * R);
-  g.fillStyle = "#f0f0f0"; g.fillRect(DIAL_R * R * 0.55, -0.1 * R, DIAL_R * R * 0.38, 0.2 * R); g.restore();
-  /* the jacks */
-  for (const [k, u] of Object.entries(JACK)){ g.fillStyle = "#0c0c0d"; g.beginPath(); g.arc(u * R, JACK_V * R, 0.42 * R, 0, 7); g.fill();
-    g.strokeStyle = k === "COM" ? "#777" : "#b22"; g.lineWidth = 3; g.stroke();
-    g.fillStyle = "#ddd"; g.font = Math.round(0.3 * R) + "px Arial"; g.fillText(k === "VHz" ? "VΩHz" : k, u * R, (JACK_V - 0.85) * R); }
-  g.fillStyle = "#1f5aa8"; g.fillRect(0.4 * R, 16.75 * R, 3.6 * R, 0.6 * R); g.fillStyle = "#fff"; g.font = "700 " + Math.round(0.42 * R) + "px Arial"; g.fillText("MASTECH", 2.2 * R, 17.06 * R);
+  g.save(); g.translate(cx, cy); g.rotate(a); const gr = g.createLinearGradient(0, -U(0.55), 0, U(0.55)); gr.addColorStop(0, "#44474c"); gr.addColorStop(0.5, "#26282c"); gr.addColorStop(1, "#141518");
+  g.fillStyle = gr; g.beginPath(); g.moveTo(U(DIAL_R * 0.99), 0); g.lineTo(U(DIAL_R * 0.55), -U(0.55)); g.lineTo(-U(DIAL_R * 0.88), -U(0.5)); g.lineTo(-U(DIAL_R * 0.88), U(0.5)); g.lineTo(U(DIAL_R * 0.55), U(0.55)); g.closePath(); g.fill();
+  for (let i = -3; i <= 3; i++){ g.strokeStyle = "rgba(255,255,255,0.09)"; g.lineWidth = 1; g.beginPath(); g.moveTo(-U(1.0), U(i * 0.12)); g.lineTo(U(0.3), U(i * 0.12)); g.stroke(); }
+  g.fillStyle = "#fafafa"; g.fillRect(U(DIAL_R * 0.62), -U(0.05), U(DIAL_R * 0.32), U(0.1)); g.restore();
+  /* CE, the Cx slot, TEMP */
+  g.textAlign = "center"; g.fillStyle = "#e6e6e6"; g.font = "700 " + Math.round(U(0.32)) + "px Arial"; g.fillText("CE", U(0.6), U(12.0));
+  g.fillStyle = "#0b0b0c"; g.fillRect(U(0.6), U(12.75), U(1.9), U(0.35)); g.fillStyle = "#e6e6e6"; g.font = Math.round(U(0.22)) + "px Arial"; g.fillText("Cx", U(1.55), U(12.5));
+  g.fillStyle = "#2fa04a"; g.fillRect(U(7.0), U(11.6), U(0.6), U(1.2)); g.fillStyle = "#0b0b0c"; g.fillRect(U(7.15), U(11.75), U(0.3), U(0.3)); g.fillRect(U(7.15), U(12.3), U(0.3), U(0.3));
+  g.fillStyle = "#e6e6e6"; g.fillText("TEMP", U(6.3), U(12.2));
+  /* the jacks with their warning triangles, MASTECH */
+  for (const [k, [u, v]] of Object.entries(JACKS)){ g.fillStyle = "#070708"; g.beginPath(); g.arc(U(u), U(v), U(0.44), 0, 7); g.fill();
+    g.strokeStyle = k === "COM" ? "#555" : "#b81f1f"; g.lineWidth = U(0.1); g.stroke();
+    g.fillStyle = k === "COM" ? "#f2f2f2" : "#ef4a3a"; g.font = "700 " + Math.round(U(0.26)) + "px Arial"; g.fillText(k === "VHz" ? "VΩHz" : k, U(u), U(v - 0.8)); }
+  for (const u of [2.0, 3.75, 5.85]){ g.fillStyle = "#f2c200"; g.beginPath(); g.moveTo(U(u), U(14.75)); g.lineTo(U(u + 0.28), U(15.25)); g.lineTo(U(u - 0.28), U(15.25)); g.closePath(); g.fill(); }
+  g.fillStyle = "#d6d6d6"; g.font = Math.round(U(0.17)) + "px Arial"; g.fillText("20A 15SEC MAX   200mA MAX FUSED", U(3.6), U(16.0));
+  g.fillStyle = "#1e5fb0"; g.fillRect(U(0.3), U(16.45), U(4.6), U(0.62)); g.fillStyle = "#fff"; g.font = "700 italic " + Math.round(U(0.42)) + "px Arial"; g.fillText("MASTECH", U(2.6), U(16.78));
+  g.fillStyle = "#e6e6e6"; g.font = "700 " + Math.round(U(0.4)) + "px Arial"; g.fillText("MY64", U(6.7), U(16.78));
 }
 
 /* ---- parts ---- */
-function wire(a, b, col, sag, lw, id){
-  const pts = [], n = 26, d = Math.hypot(b[0] - a[0], b[2] - a[2]);
-  for (let i = 0; i <= n; i++){ const t = i / n;
-    let x = a[0] + (b[0] - a[0]) * t, z = a[2] + (b[2] - a[2]) * t, y = a[1] + (b[1] - a[1]) * t + (sag || 0) * Math.sin(Math.PI * t) * Math.min(1, d / 25);
-    const floor = x > -0.2 && x < 64.2 && z > -9.2 && z < 9.2 ? (x > OSC.x0 - 0.2 && x < OSC.x1 + 0.2 && z > OSC.z0 - 0.2 && z < OSC.z1 + 0.2 ? OSC.h + 0.15 : x > BB.x0 && x < BB.x1 ? BB.h + 0.15 : BASE_H + 0.15) : 0.15;
-    if (i > 1 && i < n - 1) y = Math.max(y, floor);
-    pts.push([x, y, z]); }
-  poly3(pts, col, lw || 2.2, id ? {id} : undefined);
+function bindingPost(t, col, id){ const [x, , z] = t, y = OSC.h;
+  cyl3("y", y, y + 0.12, x, z, 1.0, "#c9ccd0", {seg: 6, id, cap: "#d8dbde"});
+  cyl3("y", y + 0.12, y + 1.0, x, z, 0.72, col, {seg: 20, id, cap: lerpC(col, "#ffffff", 0.12)});
+  knurl3("y", y + 1.0, y + 1.78, x, z, 0.84, col, {id});
+  cyl3("y", y + 1.78, y + 1.86, x, z, 0.3, "#d2c08a", {seg: 14, id, cap: "#2a2a2a"});
 }
-function knob(c, r, col, id){ cyl3("y", c[1] - 0.05, c[1] + 0.45, c[0], c[2], r, col, {seg: 16, id, cap: shade(col, 1.15)}); }
-function crocClip(J, dir, y, col, id){             /* jaw at J, the body along dir (unit, on the desk) */
-  const B = [J[0] + dir[0] * 2.6, y, J[2] + dir[1] * 2.6], M = [J[0] + dir[0] * 0.9, y, J[2] + dir[1] * 0.9];
-  cylAB([J[0], y, J[2]], M, 0.22, "#b9bec4", {seg: 8, id});
-  cylAB(M, B, 0.42, col, {seg: 10, id});
-  return B;
+function screwEye(t, id){ const [x, y, z] = t; cyl3("y", BASE_H, BASE_H + 0.12, x, z, 0.3, "#b8bcc0", {seg: 10, id, cap: "#9ea3a8"});
+  cylAB([x, BASE_H + 0.1, z], [x, y - 0.35, z], 0.08, "#c8ccd0", {seg: 6, id});
+  ring3([x, y, z], 0.34, "#d3d6da", Math.max(1.5, 0.14 * CAM.k), 20, "x");
+  sphere3([x, y, z], 0.42, "rgba(0,0,0,0.004)", {id});
+  /* the bare wire from the eye into the box */
+  poly3([[x, y - 0.1, z], [x + 0.25, y - 0.2, z], [BB.x0 + 0.02, BASE_H + 0.5, z]], "#d7dade", 1.4); }
+function toggle3(x, y, z, on, id){
+  cyl3("y", y, y + 0.08, x, z, 0.52, "#c7ccd1", {seg: 16, id, cap: "#d7dbdf"});
+  cyl3("y", y + 0.08, y + 0.34, x, z, 0.42, "#b9bfc5", {seg: 6, id, cap: "#cfd4d8"});
+  cyl3("y", y + 0.34, y + 0.58, x, z, 0.28, "#aeb4ba", {seg: 12, id, cap: "#9aa1a8"});
+  const a = on ? -0.45 : 0.45, L = 1.3; cylAB([x, y + 0.58, z], [x, y + 0.58 + L * Math.cos(a), z + L * Math.sin(a)], 0.12, "#e3e6e9", {seg: 8, id, r1: 0.09});
+  sphere3([x, y + 0.8, z], 1.0, "rgba(0,0,0,0.004)", {id}); }
+/* a crocodile clip: the jaws at J, the body along d (unit, on the desk), its PVC boot; returns where the cable goes in */
+function crocClip(J, d, col, id){
+  const side = [-d[2], 0, d[0]], at = (s, w, h) => [J[0] + d[0] * s + side[0] * w, J[1] + h, J[2] + d[2] * s + side[2] * w];
+  /* the two jaws, slightly open, with their teeth */
+  for (const [h0, h1] of [[0.02, 0.0], [0.1, 0.34]]){
+    face([at(0, -0.1, h0), at(0, 0.1, h0), at(1.5, 0.3, h1), at(1.5, -0.3, h1)], {fill: "#c3c7cb", id, cull: false});
+    for (let i = 0; i < 5; i++) line3(at(0.15 + i * 0.25, -0.16 - i * 0.025, h0 + (h1 - h0) * (0.1 + i * 0.17)), at(0.15 + i * 0.25, 0.16 + i * 0.025, h0 + (h1 - h0) * (0.1 + i * 0.17)), "#7d8287", 1); }
+  cylAB(at(1.4, 0, 0.17), at(1.8, 0, 0.17), 0.22, "#a9aeb3", {seg: 8, id});
+  cylAB(at(1.7, 0, 0.17), at(3.7, 0, 0.2), 0.44, col, {seg: 12, id, r1: 0.3, cap: lerpC(col, "#000000", 0.20)});
+  return at(3.7, 0, 0.2);
 }
-function probe(key, col){
-  const tip = endPos(key), on = typeof STATE(key)[0][STATE(key)[1]] === "string", drag = UI.drag && UI.drag.key === key;
-  let back;
-  if (on || drag){ back = [tip[0] + 0.3, tip[1] + 8.5, tip[2] + 3.2]; cylAB(tip, [tip[0] + 0.03, tip[1] + 1.2, tip[2] + 0.45], 0.06, "#c9ced3", {seg: 6, id: key}); cylAB([tip[0] + 0.03, tip[1] + 1.2, tip[2] + 0.45], back, 0.38, col, {seg: 12, id: key}); }
-  else { back = [tip[0] + 11, tip[1], tip[2]]; cylAB(tip, [tip[0] + 1.2, tip[1], tip[2]], 0.06, "#c9ced3", {seg: 6, id: key}); cylAB([tip[0] + 1.2, tip[1], tip[2]], back, 0.4, col, {seg: 12, id: key}); }
-  wire(JACK_W(key === "pr_r" ? "VHz" : "COM"), back, col, 3, 2.4);
-}
+/* a meter probe: the needle at T, the handle along d (from the tip towards the cable) */
+function probe3(T, d, col, id){ const at = s => add3(T, d, s);
+  cylAB(T, at(1.3), 0.05, "#d4d8dc", {seg: 6, id, r1: 0.07});
+  cylAB(at(1.3), at(1.9), 0.28, col, {seg: 12, id, r1: 0.33});
+  cylAB(at(1.9), at(2.1), 0.62, col, {seg: 16, id});
+  cylAB(at(2.1), at(PROBE_L - 1.5), 0.42, col, {seg: 14, id});
+  cylAB(at(PROBE_L - 1.5), at(PROBE_L), 0.42, col, {seg: 12, id, r1: 0.18});
+  return at(PROBE_L); }
 function capacitor(i){
   const r = kit.root(i), mates = Object.keys(kit.caps).map(Number).filter(j => j !== r && kit.root(j) === r).sort((a, b) => a - b);
-  const lvl = i === r ? 0 : mates.indexOf(i) + 1, p = kit.caps[r], y0 = lvl * 0.4, x = p[0] + lvl * 0.25, z = p[1] - lvl * 0.15, id = "cap" + i;
-  box3(x - 1.8, x + 1.8, y0, y0 + 0.08, z - 2.3, z + 2.3, "#9fe0c4", {id});
-  text3([x - 1.4, y0 + 0.09, z + 2.2], [1, 0, 0], [0, 0, -1], CAPS[i][0], 0.8, "#1d3b6a", {id});
-  cyl3("y", y0 + 0.08, y0 + 0.32, x, z - 0.6, 0.62, "#c96c2a", {seg: 18, id});
-  text3([x - 0.35, y0 + 0.33, z - 0.45], [1, 0, 0], [0, 0, -1], CAPS[i][1] === 150 ? "151" : String(CAPS[i][1]), 0.32, "#3a1d08", {id});
-  /* the two leads, out over the far edge of the card (to the root's ends when twisted) */
-  for (const s of ["A", "B"]){ const e = leadEnd(i, s), a = [x + (s === "A" ? -0.32 : 0.32), y0 + 0.2, z - 1.15];
-    line3(a, [e[0], Math.max(0.12, y0 * 0.4) + 0.06, e[2] + 1.4], "#cfd3d6", 1.6, {id: "lead" + s + i}); line3([e[0], Math.max(0.12, y0 * 0.4) + 0.06, e[2] + 1.4], e, "#cfd3d6", 1.6, {id: "lead" + s + i}); }
+  const lvl = i === r ? 0 : mates.indexOf(i) + 1, p = UI.carry && UI.carry.kind === "cap" && (UI.carry.i === i || UI.carry.i === r) ? UI.carry.at : kit.caps[r];
+  if (!p) return;
+  const lift = UI.carry && UI.carry.kind === "cap" && (UI.carry.i === i || UI.carry.i === r) ? 1.0 : 0;
+  const y0 = lvl * 0.35 + lift, x = p[0] + lvl * 0.3, z = p[1] - lvl * 0.25, id = "cap" + i;
+  box3(x - CARD.hw, x + CARD.hw, y0, y0 + 0.05, z - CARD.hd, z + CARD.hd, "#a5e6c4", {id, top: "#aeeccd"});
+  poly3([[x - CARD.hw, y0 + 0.06, z - CARD.hd], [x + CARD.hw, y0 + 0.06, z - CARD.hd], [x + CARD.hw, y0 + 0.06, z + CARD.hd], [x - CARD.hw, y0 + 0.06, z + CARD.hd], [x - CARD.hw, y0 + 0.06, z - CARD.hd]], "#1f2a24", 1);
+  text3([x - 0.95, y0 + 0.07, z - 0.95], [1, 0, 0], [0, 0, -1], CAPS[i][0], 0.72, "#20304a", {id, weight: "700", font: "Georgia,serif"});
+  cyl3("y", y0 + 0.05, y0 + 0.22, x, z + 0.55, 0.42, "#c98d52", {seg: 18, id, cap: "#d29a60"});
+  text3([x - 0.22, y0 + 0.23, z + 0.62], [1, 0, 0], [0, 0, -1], CAPS[i][0].replace("J", ""), 0.2, "#6b4320", {id});
+  box3(x - 1.25, x + 1.25, y0 + 0.05, y0 + 0.24, z + 0.05, z + 1.5, "rgba(225,238,244,0.3)", {id, alpha: 0.3});
+  const e0 = leadEnd(i, "A") || [x - 0.42, 0.16, z + CARD.hd + 2.6];
+  for (const s of ["A", "B"]){ const e = lift ? [x + (s === "A" ? -0.42 : 0.42), y0 + 0.1, z + CARD.hd + 2.6] : leadEnd(i, s) || e0, a = [x + (s === "A" ? -0.18 : 0.18), y0 + 0.14, z + 0.95];
+    const m = [x + (s === "A" ? -0.32 : 0.32), y0 * 0.5 + 0.12, z + CARD.hd + 0.4];
+    poly3([a, m, e], "#cfd3d6", Math.max(1.2, 0.07 * CAM.k)); sphere3(e, 0.3, "rgba(0,0,0,0.004)", {id: "lead" + s + i}); }
+  if (i === 0 || i === 2) box3(x - 0.95, x + 0.95, y0 + 0.02, y0 + 0.1, z + CARD.hd + 0.6, z + CARD.hd + 1.9, i === 2 ? "#b59a72" : "#d9cdb8", {id});
 }
 
 function scene3(){
-  /* the desk */
-  box3(-40, 115, -3, 0, -45, 62, "#c4c6be", {noBot: true, top: "#c9cbc3", id: "room"});
+  OBST = TOPS().concat([[TERM.JR[0] - 1, TERM.JR[0] + 1, TERM.JR[2] - 1, TERM.JR[2] + 1, POST_TOP], [TERM.JB[0] - 1, TERM.JB[0] + 1, TERM.JB[2] - 1, TERM.JB[2] + 1, POST_TOP]]);
+  /* the desk (white, as in the photographs) */
+  box3(-40, 110, -3, 0, -40, 60, "#d6d6d2", {noBot: true, top: "#e3e3df", id: "room"});
   /* the base board */
-  box3(0, 64, 0, BASE_H, -9, 9, "#5a3b28", {top: "#6a4631", id: "base"});
-  /* the battery and its snap */
-  box3(2.5, 7.3, BASE_H, BASE_H + 1.7, -8.6, -6.0, "#1d1e22", {id: "batt"});
-  tex3(BATT_TEX, 0, 0, 480, 260, [2.5, BASE_H + 1.71, -8.6], [4.8, 0, 0], [0, 0, 2.6], {id: "batt"});
-  box3(7.3, 8.1, BASE_H + 0.2, BASE_H + 1.5, -8.2, -6.4, "#141416", {id: "batt"});
-  /* the oscillator */
-  box3(OSC.x0, OSC.x1, BASE_H, OSC.h, OSC.z0, OSC.z1, "#e7e5de", {top: "#efede6", id: "osc"});
-  for (const [n, col] of [["JR", "#c81e1e"], ["JB", "#1a1a1c"], ["BINP", "#c81e1e"], ["BINN", "#1a1a1c"]]){
-    const t = TERM[n], r = n[0] === "J" ? 0.62 : 0.42; knob(t, r, col, n); cyl3("y", t[1] + 0.45, t[1] + 0.47, t[0], t[2], r * 0.38, "#0b0b0b", {seg: 10, id: n}); }
-  text3([12.6, OSC.h + 0.01, 4.4], [1, 0, 0], [0, 0, -1], "f OUT", 0.55, "#555", {id: "osc"});
-  text3([3.6, OSC.h + 0.01, -1.6], [1, 0, 0], [0, 0, -1], "+  9V  −", 0.5, "#555", {id: "osc"});
-  const st = kit.osc(), led = st === 2 ? "#4cff7a" : st === 1 ? "#ffb24a" : "#5a2222";
-  cyl3("y", OSC.h, OSC.h + 0.25, 9.6, -3.2, 0.32, led, {seg: 12, glow: st > 0, id: "osc"});
-  if (st) sphere3([9.6, OSC.h + 0.3, -3.2], 0.55, st === 2 ? "rgba(90,255,130,0.35)" : "rgba(255,170,70,0.3)");
-  /* the switch on the base, at the front */
-  box3(1.4, 4.8, BASE_H, BASE_H + 0.3, 6.2, 8.6, "#1b1c1e", {id: "switch"});
-  const ang = kit.sw ? -0.5 : 0.5; cylAB([3.1, BASE_H + 0.3, 7.4], [3.1, BASE_H + 0.3 + 1.4 * Math.cos(ang), 7.4 + 1.4 * Math.sin(ang)], 0.17, "#c9ced3", {seg: 8, id: "switch"});
-  text3([1.6, BASE_H + 0.31, 8.5], [1, 0, 0], [0, 0, -1], kit.sw ? "ON" : "OFF", 0.42, "#ddd", {id: "switch"});
-  /* the blackbox, its screws and the sticker */
-  box3(BB.x0, BB.x1, BASE_H, BB.h, BB.z0, BB.z1, "#a87650", {top: "#b5845c", id: "bb"});
-  tex3(STICKER, 0, 0, 240, 150, [29.5, BB.h + 0.01, -2.2], [6.4, 0, 0], [0, 0, 4.0], {id: "bb"});
-  for (const n of ["BBU", "BBL"]){ const t = TERM[n]; cyl3("y", t[1], t[1] + 0.25, t[0], t[2], 0.48, "#c9a24a", {seg: 14, id: n}); line3([t[0] - 0.3, t[1] + 0.27, t[2]], [t[0] + 0.3, t[1] + 0.27, t[2]], "#6e5420", 1.5, {id: n}); }
-  /* the sliding upper plate, its black pads, the stop, the scale and the pointer */
+  box3(0, 64, 0, BASE_H, -10, 10, "#4b2a19", {id: "base", noTop: true});
+  tex3(T_BASE, 0, 0, T_BASE.width, T_BASE.height, [0, BASE_H, -10], [64, 0, 0], [0, 0, 20], {id: "base"});
+  /* the battery, lying behind the oscillator, and its snap */
+  box3(4.4, 9.2, BASE_H, BASE_H + 1.75, -9.4, -6.8, "#141416", {id: "batt", noTop: true});
+  tex3(BATT_TEX, 0, 0, 480, 260, [4.4, BASE_H + 1.76, -9.4], [4.8, 0, 0], [0, 0, 2.6], {id: "batt"});
+  cyl3("x", 4.15, 4.4, BASE_H + 0.88, -8.55, 0.32, "#c9ced3", {seg: 14, id: "batt"});
+  cyl3("x", 4.15, 4.4, BASE_H + 0.88, -7.65, 0.36, "#c9ced3", {seg: 6, id: "batt"});
+  const snapX = kit.snapped ? 3.55 : 1.6;
+  box3(snapX, snapX + 0.6, BASE_H + 0.3, BASE_H + 1.45, -9.15, -7.05, "#17181a", {id: "snap"});
+  for (const [z, col] of [[-8.5, "#c81e1e"], [-7.7, "#1a1a1c"]]) tube(avoid(bez([snapX, BASE_H + 0.85, z], [snapX - 1.6, BASE_H + 0.9, z], [1.2, BASE_H + 2.5, -6.2], [2.0, BASE_H + 2.6, OSC.z0 + 0.1], 14), 0.09), 0.09, col);
+  /* the oscillator: a grey project box with a lid, its binding posts and its lamp */
+  rbox3((OSC.x0 + OSC.x1) / 2, (OSC.z0 + OSC.z1) / 2, (OSC.x1 - OSC.x0) / 2, (OSC.z1 - OSC.z0) / 2, BASE_H, OSC.h, 0.9, "#c9cac5", {id: "osc", top: "#d9dad5"});
+  const lid = rrect2((OSC.x0 + OSC.x1) / 2, (OSC.z0 + OSC.z1) / 2, (OSC.x1 - OSC.x0) / 2 + 0.01, (OSC.z1 - OSC.z0) / 2 + 0.01, 0.9, 4); lid.push(lid[0]);
+  poly3(lid.map(p => [p[0], OSC.h - 0.6, p[1]]), "#a4a5a0", 1);
+  for (const [x, z] of [[OSC.x0 + 0.75, OSC.z0 + 0.75], [OSC.x1 - 0.75, OSC.z0 + 0.75], [OSC.x0 + 0.75, OSC.z1 - 0.75], [OSC.x1 - 0.75, OSC.z1 - 0.75]]) cyl3("y", OSC.h, OSC.h + 0.02, x, z, 0.18, "#8f908c", {seg: 10});
+  bindingPost(TERM.JR, "#d01a1a", "JR"); bindingPost(TERM.JB, "#18181a", "JB");
+  const st = kit.osc();
+  cyl3("y", OSC.h, OSC.h + 0.1, 6.0, -0.4, 0.3, "#c9ced3", {seg: 14, id: "osc"});
+  sphere3([6.0, OSC.h + 0.12, -0.4], 0.22, st === 2 ? "#5dff7c" : st === 1 ? "#a6d86a" : "#2b5f33", {glow: st > 0});
+  if (st) sphere3([6.0, OSC.h + 0.2, -0.4], 0.55, st === 2 ? "rgba(110,255,140,0.33)" : "rgba(170,220,120,0.22)");
+  toggle3(3.2, BASE_H, 6.4, kit.sw, "switch");
+  /* the blackbox and its plate screws */
+  box3(BB.x0, BB.x1, BASE_H, BB.h, BB.z0, BB.z1, "#7b4529", {id: "bb", noTop: true});
+  tex3(T_BOX, 0, 0, T_BOX.width, T_BOX.height, [BB.x0, BB.h, BB.z0], [BB.x1 - BB.x0, 0, 0], [0, 0, BB.z1 - BB.z0], {id: "bb"});
+  tex3(STICKER, 0, 0, 360, 210, [28.6, BB.h + 0.01, -2.1], [7.4, 0, 0], [0, 0, 4.3], {id: "bb"});
+  screwEye(TERM.BBU, "BBU"); screwEye(TERM.BBL, "BBL");
+  /* the velcro pads on the base, the sliding upper plate, the end block, the scale */
+  for (const [z0, z1] of [[-6.8, -4.0], [6.2, 9.1]]){ box3(53.1, ENDB.x0, BASE_H, BASE_H + 0.12, z0, z1, "#0e0e10", {noTop: true, id: "base"});
+    tex3(VELCRO, 0, 0, 240, 80, [53.1, BASE_H + 0.125, z0], [ENDB.x0 - 53.1, 0, 0], [0, 0, z1 - z0], {id: "base"}); }
   const xe = edgeX();
-  box3(BB.x1, xe, BASE_H, BASE_H + 0.9, -6.5, 6.5, "#4a3020", {top: "#56392a", id: "plate"});
-  for (const z of [-3.4, 3.4]) box3(BB.x1 + 2.2, xe - 1.3, BASE_H + 0.9, BASE_H + 0.95, z - 1.2, z + 1.2, "#111214", {id: "plate"});
-  box3(62, 64, BASE_H, 6.0, -9, 9, "#3c2619", {id: "stop"});
-  box3(52.6, 62.0, BASE_H, BASE_H + 0.05, 6.7, 8.9, "#f4f4ef", {id: "scale"});
-  tex3(SCALE_TEX, 0, 0, SCALE_TEX.width, SCALE_TEX.height, [52.6, BASE_H + 0.06, 6.7], [9.4, 0, 0], [0, 0, 2.2], {id: "scale"});
-  box3(xe - 0.06, xe, BASE_H + 0.5, BASE_H + 0.56, 6.5, 7.6, "#c9ced3", {id: "plate"});
-  line3([xe, BASE_H + 0.12, 6.7], [xe, BASE_H + 0.12, 7.7], "#d01818", 1.2);
-  /* the multimeter on the desk, face up, display away from you */
-  box3(DMMF.x - 0.6, DMMF.x + DMMF.w + 0.6, 0, DMMF.h, DMMF.z - 0.6, DMMF.z + DMMF.l + 0.6, "#f2b600", {top: "#f5bf12", id: "dmm"});
-  drawDMMFace(); tex3(DMM_TEX, 0, 0, DMM_TEX.width, DMM_TEX.height, [DMMF.x, DMMF.h + 0.01, DMMF.z], [DMMF.w, 0, 0], [0, 0, DMMF.l], {id: "dmm"});
-  /* the battery snap leads */
-  for (const [k, col] of [["snap_p", "#c81e1e"], ["snap_n", "#1a1a1c"]]){ const e = endPos(k);
-    wire([SNAP_AT[0], SNAP_AT[1], SNAP_AT[2] + (k === "snap_p" ? -0.4 : 0.4)], [e[0] + 1.2, e[1] + 0.35, e[2]], col, 1.5, 2.2);
-    cylAB([e[0], e[1] + 0.3, e[2]], [e[0] + 1.2, e[1] + 0.35, e[2]], 0.28, col, {seg: 10, id: k}); cylAB([e[0], e[1] + 0.05, e[2]], [e[0], e[1] + 0.32, e[2]], 0.12, "#c9ced3", {seg: 6, id: k}); }
-  /* the crocodile clips */
-  for (const [k, col] of [["clip_r", "#c81e1e"], ["clip_b", "#1a1a1c"]]){ const e = endPos(k), from = CLIP_FROM[k.slice(5)];
-    let dx = from[0] - e[0], dz = from[2] - e[2]; const dl = Math.hypot(dx, dz) || 1; dx /= dl; dz /= dl;
-    const B = crocClip(e, [dx, dz], e[1] + 0.3, col, k); wire(from, B, col, 2.5, 2.4); }
+  box3(BB.x1, xe, PLATE.y0, PLATE.y1, PLATE.z0, PLATE.z1, "#7d4c30", {id: "plate", noTop: true});
+  tex3(T_PLATE, 0, 0, Math.max(4, Math.round((xe - BB.x1) / 16 * T_PLATE.width)), T_PLATE.height, [BB.x1, PLATE.y1, PLATE.z0], [xe - BB.x1, 0, 0], [0, 0, PLATE.z1 - PLATE.z0], {id: "plate"});
+  box3(ENDB.x0, ENDB.x1, BASE_H, ENDB.h, -10, 10, "#5e3219", {id: "stop", noTop: true});
+  tex3(T_END, 0, 0, T_END.width, T_END.height, [ENDB.x0, ENDB.h, -10], [ENDB.x1 - ENDB.x0, 0, 0], [0, 0, 20], {id: "stop"});
+  box3(44.8, 59.2, BASE_H, BASE_H + 0.04, 9.2, 10.45, "#f6f6f2", {id: "scale", noTop: true});
+  tex3(SCALE_TEX, 0, 0, SCALE_TEX.width, SCALE_TEX.height, [44.8, BASE_H + 0.05, 9.2], [14.4, 0, 0], [0, 0, 1.25], {id: "scale"});
+  /* the multimeter in its yellow holster, face up, display away from you */
+  /* the holster: a yellow shell whose raised rim frames the face */
+  rbox3((DMM.x0 + DMM.x1) / 2, (DMM.z0 + DMM.z1) / 2, (DMM.x1 - DMM.x0) / 2, (DMM.z1 - DMM.z0) / 2, 0, FACE.h - 0.25, 1.1, "#f2a900", {id: "dmm", top: "#f6b40f"});
+  for (const [x0, x1, z0, z1] of [[DMM.x0 + 0.1, DMM.x1 - 0.1, DMM.z0 + 0.1, FACE.z], [DMM.x0 + 0.1, DMM.x1 - 0.1, FACE.z + FACE.l, DMM.z1 - 0.1],
+    [DMM.x0 + 0.1, FACE.x, FACE.z, FACE.z + FACE.l], [FACE.x + FACE.w, DMM.x1 - 0.1, FACE.z, FACE.z + FACE.l]]) box3(x0, x1, FACE.h - 0.3, DMM.h, z0, z1, "#f0a800", {id: "dmm", top: "#f7b81a"});
+  for (let z = DMM.z0 + 2; z < DMM.z1 - 1.5; z += 1.1) for (const x of [DMM.x0 - 0.02, DMM.x1 + 0.02]) line3([x, 0.6, z], [x, DMM.h - 0.5, z], "#c48700", 1.2);
+  box3(FACE.x - 0.05, FACE.x + FACE.w + 0.05, FACE.h - 0.2, FACE.h, FACE.z - 0.05, FACE.z + FACE.l + 0.05, "#2b2d31", {id: "dmm", noTop: true});
+  drawFace(); tex3(FACE_TEX, 0, 0, FACE_TEX.width, FACE_TEX.height, [FACE.x, FACE.h + 0.01, FACE.z], [FACE.w, 0, 0], [0, 0, FACE.l], {id: "dmm"});
+  /* the banana plugs in COM and VΩHz */
+  for (const [jack, col] of [["COM", "#1a1a1c"], ["VHz", "#c81e1e"]]){ const j = [FACE.x + JACKS[jack][0], FACE.h, FACE.z + JACKS[jack][1]];
+    cyl3("y", j[1], j[1] + 1.25, j[0], j[2], 0.42, col, {seg: 14, id: "dmm", cap: lerpC(col, "#000000", 0.15)}); }
+  /* the crocodile clip leads */
+  for (const [k, col] of [["clip_r", "#c81e1e"], ["clip_b", "#1a1a1c"]]){
+    const e = endPos(k), on = endOn(k), held = UI.carry && UI.carry.key === k;
+    /* the clip lies with its body towards where its lead comes from */
+    const dx = CLIP_FROM[0] - e[0], dz = CLIP_FROM[2] - e[2], L = Math.hypot(dx, dz) || 1, d = [dx / L, 0, dz / L];
+    const J = [e[0], e[1] + (held && !UI.hot ? 0.4 : 0.0), e[2]], back = crocClip(J, d, col, k);
+    const A = [CLIP_FROM[0], CLIP_FROM[1], CLIP_FROM[2] + (k === "clip_r" ? -0.25 : 0.25)];
+    tube(cableRoute(A, [1, 0, 0], back, [-d[0], 0, -d[2]], CLIP_LEN, 0.12), 0.12, col, {id: k}); }
   for (const i of Object.keys(kit.caps)) capacitor(+i);
-  probe("pr_r", "#c81e1e"); probe("pr_b", "#1a1a1c");
-  /* while an end is dragged, the terminal it would snap to */
-  if (UI.hot){ const t = target(UI.hot); if (t) sphere3([t[0], t[1] + 0.35, t[2]], 0.7, "rgba(242,193,78,0.55)"); }
+  if (UI.carry && UI.carry.kind === "cap" && kit.caps[UI.carry.i] === undefined) capacitor(UI.carry.i);
+  /* the probes and their leads */
+  for (const [k, col] of [["pr_r", "#c81e1e"], ["pr_b", "#1a1a1c"]]){
+    const T = endPos(k), held = UI.carry && UI.carry.key === k;
+    const d = endOn(k) || held ? [0.12, 0.93, 0.36] : REST[k].dir, n = Math.hypot(...d), dd = d.map(v => v / n);
+    const back = probe3(T, dd, col, k), jack = JACK_W(k === "pr_r" ? "VHz" : "COM");
+    tube(cableRoute(jack, [0, 1, 0], back, dd.map(v => -v), PROBE_LEN, 0.14), 0.14, col, {id: k}); }
+  /* the battery in the hand, the terminal an end would snap to */
+  if (UI.carry && UI.carry.kind === "tray" && UI.carry.item === "batt"){ const s = surfaceUnder(UI.mouse, TOPS()), q = onPlane(UI.mouse[0], UI.mouse[1], s[1] + 1.2);
+    box3(q[0] - 2.4, q[0] + 2.4, q[1], q[1] + 1.75, q[2] - 1.3, q[2] + 1.3, "#141416", {top: "#2c5fb4"}); }
+  if (UI.hot){ const t = target(UI.hot); if (t) sphere3(t, 0.75, "rgba(242,193,78,0.5)"); }
 }
 
 /* ==================================================================
    CAMERA, CLOSE-UPS, TRAY, PANEL AND THE HANDS
+   A lead end, a capacitor or a part from the box is taken in the hand:
+   pressed and dragged it goes where it is let go; clicked, it follows the
+   pointer until the next click puts it down.  An end in the hand stays
+   under the pointer, a little above what is under it, as far as its cable
+   reaches; on a terminal it snaps on.
    ================================================================== */
 const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
 const $ = id => document.getElementById(id);
 let view3 = "3d", freeCam = null;
 function layout3(){
   const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
-  const h = Math.max(440, Math.min(Math.round(w * 0.62), Math.round(window.innerHeight * 0.78)));
+  const h = Math.max(440, Math.min(Math.round(w * 0.64), Math.round(window.innerHeight * 0.8)));
   cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
   const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
-  if (first){ Object.assign(CAM, {yaw: -0.22, pitch: 0.86, k: w / 76, tx: 32, ty: 2, tz: 10, px: 0, py: 14}); camSave(); }
+  if (first){ Object.assign(CAM, {yaw: -0.12, pitch: 0.92, k: w / 78, tx: 31, ty: 2, tz: 10, px: 0, py: 18}); camSave(); }
   else if (view3 !== "3d") Object.assign(CAM, viewCam(view3));
 }
 const TOP = Math.PI / 2 - 1e-3;
 function viewCam(v){
   const W = CAM.W, H = CAM.H;
-  if (v === "dmm") return {yaw: 0, pitch: TOP, k: Math.min(W / 12, H / 20.5), tx: DMMF.x + DMMF.w / 2, ty: DMMF.h, tz: DMMF.z + DMMF.l / 2, px: 0, py: 0};
-  if (v === "scale") return {yaw: 0, pitch: TOP, k: Math.min(W / 11.5, H / 9), tx: 57.4, ty: BASE_H, tz: 5.2, px: 0, py: 0};
-  if (v === "osc") return {yaw: 0, pitch: 1.05, k: Math.min(W / 27, H / 19), tx: 9.5, ty: OSC.h, tz: -0.5, px: 0, py: 0};
+  if (v === "dmm") return {yaw: 0, pitch: TOP, k: Math.min(W / 11.5, H / 20), tx: FACE.x + FACE.w / 2, ty: FACE.h, tz: FACE.z + FACE.l / 2, px: 0, py: 0};
+  if (v === "scale") return {yaw: 0, pitch: TOP, k: Math.min(W / 12, H / 9), tx: 54.5, ty: BASE_H, tz: 6.5, px: 0, py: 0};
+  if (v === "osc") return {yaw: 0, pitch: 1.0, k: Math.min(W / 30, H / 21), tx: 8, ty: OSC.h, tz: -1.5, px: 0, py: 0};
   return freeCam || CAM0;
 }
 function showView(v){
@@ -1060,6 +1268,7 @@ function draw3(){
   const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25");
   ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
   begin3(); scene3(); render3(ctx3);
+  /* a capacitor from the box, in the hand */
 }
 
 /* ---- the tray ---- */
@@ -1071,21 +1280,22 @@ function trayLayout(){
   trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(h * dpr); drawTray(); }
 function trayIcon(c, k, x, y){
   c.save(); c.translate(x, y);
-  if (k === "batt"){ c.fillStyle = "#1d1e22"; c.fillRect(-15, -9, 26, 18); c.fillStyle = "#2c5fb4"; c.fillRect(-15, -4, 26, 9); c.fillStyle = "#fff"; c.font = "800 8px Arial"; c.fillText("9V", -12, 3);
-    c.fillStyle = "#111"; c.fillRect(11, -6, 5, 12); }
-  else { c.fillStyle = "#9fe0c4"; c.fillRect(-14, -12, 28, 24); c.fillStyle = "#c96c2a"; c.beginPath(); c.arc(0, -2, 6.5, 0, 7); c.fill();
-    c.strokeStyle = "#cfd3d6"; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-3, 3); c.lineTo(-4, 15); c.moveTo(3, 3); c.lineTo(4, 15); c.stroke();
-    c.fillStyle = "#1d3b6a"; c.font = "700 8px Arial"; c.textAlign = "center"; c.fillText(CAPS[k][0], 0, -6 + 16); }
+  if (k === "batt"){ c.fillStyle = "#141416"; c.fillRect(-15, -9, 26, 18); c.fillStyle = "#f4f4f2"; c.fillRect(-9, -7, 18, 14); c.fillStyle = "#111"; for (let i = -7; i < 7; i += 2) c.fillRect(i, -5, 1, 8);
+    c.fillStyle = "#c9ced3"; c.fillRect(-18, -5, 3, 3); c.fillRect(-18, 2, 3, 3); }
+  else { c.fillStyle = "#a5e6c4"; c.fillRect(-14, -13, 28, 22); c.strokeStyle = "#1f2a24"; c.strokeRect(-14, -13, 28, 22);
+    c.fillStyle = "#20304a"; c.font = "700 8px Georgia"; c.textAlign = "center"; c.fillText(CAPS[k][0], 0, -5);
+    c.fillStyle = "#c98d52"; c.beginPath(); c.arc(0, 2, 4, 0, 7); c.fill();
+    c.strokeStyle = "#cfd3d6"; c.lineWidth = 1.1; c.beginPath(); c.moveTo(-1.5, 4); c.lineTo(-3, 16); c.moveTo(1.5, 4); c.lineTo(3, 16); c.stroke(); }
   c.restore(); }
 function drawTray(){
   const dpr = window.devicePixelRatio || 1, c = tctx, h = TRAY_UI.length * TROW + 52;
   c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = "#15181d"; c.fillRect(0, 0, TRW, h);
   trayCells = []; let y = 6; const wd = TRW - 12;
   for (const k of TRAY_UI){
-    const on = k !== "batt" && kit.caps[k] !== undefined, inHand = UI.hand === k;
+    const on = k !== "batt" && kit.caps[k] !== undefined, inHand = UI.carry && ((UI.carry.kind === "tray" && UI.carry.item === k) || (UI.carry.kind === "cap" && UI.carry.i === k));
     c.fillStyle = on ? "#1a1d22" : "#1f242b"; c.fillRect(6, y, wd, TROW - 4);
     c.strokeStyle = inHand ? "#f2c14e" : on ? "#3f4650" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
-    c.globalAlpha = on ? 0.45 : 1; trayIcon(c, k, 28, y + (TROW - 4) / 2); c.globalAlpha = 1;
+    c.globalAlpha = on || inHand ? 0.45 : 1; trayIcon(c, k, 28, y + (TROW - 4) / 2); c.globalAlpha = 1;
     c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle";
     c.fillStyle = on ? "#8b939b" : "#e8eef2"; let nm = k === "batt" ? tr("it_batt") : tr("it_cap").replace("%s", CAPS[k][0]);
     while (c.measureText(nm).width > wd - 56 && nm.length > 4) nm = nm.slice(0, -2) + "…";
@@ -1095,27 +1305,32 @@ function drawTray(){
     trayCells.push([k, y, y + TROW - 4]); y += TROW; }
   c.font = '10.5px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a";
   tr("trayHelp").split("\n").forEach((ln, i) => c.fillText(ln, TRW / 2, y + 6 + i * 14)); }
-function freeSlot(i){ let [x, z] = SLOT(i);
-  for (let t = 0; t < 8; t++){ if (!Object.values(kit.caps).some(p => Math.hypot(p[0] - x, p[1] - z) < 3)) break; x += 1.5; z += 2.2; }
-  return [x, z]; }
-function capOut(i){ kit.caps[i] = freeSlot(i); note(tr("st_capOn").replace("%s", CAPS[i][0])); }
 function capBack(i){
   const r = kit.root(i), mates = Object.keys(kit.caps).map(Number).filter(j => j !== i && kit.root(j) === r);
-  /* the clips on this capacitor's leads drop on the desk */
+  /* clips on the leads of a capacitor that goes back drop on the desk */
   if (r === i && !mates.length) for (const k of ["r", "b"]){ const v = kit.clip[k];
-    if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i){ const e = leadEnd(i, v[0]); kit.clip[k] = [e[0], 0.45, e[2] - 0.8]; } }
+    if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i){ const e = leadEnd(i, v[0]); kit.clip[k] = [e[0], 0.3, e[2] + 0.6]; } }
   if (r === i && mates.length){ const nr = Math.min(...mates); kit.caps[nr] = kit.caps[i]; delete kit.stack[nr];
     for (const j of mates) if (j !== nr) kit.stack[j] = nr;
     for (const k of ["r", "b"]){ const v = kit.clip[k]; if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i) kit.clip[k] = v[0] + nr; } }
   delete kit.caps[i]; delete kit.stack[i];
   note(tr("st_capBack").replace("%s", CAPS[i][0])); }
-trayCv.addEventListener("contextmenu", e => { e.preventDefault(); UI.hand = null; drawTray(); });
-trayCv.addEventListener("mousedown", e => {
+/* pressing a part in the box takes it in the hand: drag it onto the bench, or click and then click the bench */
+let trayPress = null;
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); if (UI.carry && UI.carry.kind === "tray"){ UI.carry = null; refresh(); } });
+trayCv.addEventListener("pointerdown", e => {
   if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top;
   for (const [k, y0, y1] of trayCells) if (y >= y0 && y <= y1){
-    if (k === "batt"){ UI.hand = UI.hand === "batt" ? null : "batt"; note(UI.hand ? tr("st_needBatt") : ""); refresh(); return; }
-    if (kit.caps[k] === undefined) capOut(k); else capBack(k);
-    refresh(); return; } });
+    if (k !== "batt" && kit.caps[k] !== undefined){ capBack(k); refresh(); return; }
+    if (UI.carry && UI.carry.kind === "tray" && UI.carry.item === k){ UI.carry = null; note(""); refresh(); return; }
+    UI.carry = k === "batt" ? {kind: "tray", item: "batt"} : {kind: "cap", i: k, at: null, fresh: true};
+    trayPress = {x: e.clientX, y: e.clientY}; note(tr(k === "batt" ? "st_needBatt" : "st_capHand").replace("%s", k === "batt" ? "" : CAPS[k][0])); refresh(); return; } });
+window.addEventListener("pointermove", e => { if (!trayPress || !UI.carry) return; const r = cv3.getBoundingClientRect();
+  UI.mouse = [e.clientX - r.left, e.clientY - r.top]; if (UI.carry.kind === "cap") UI.carry.at = capAt(UI.mouse); });
+window.addEventListener("pointerup", e => {
+  if (!trayPress) return; const moved = Math.hypot(e.clientX - trayPress.x, e.clientY - trayPress.y) > 6; trayPress = null;
+  const r = cv3.getBoundingClientRect(), over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+  if (moved && over && UI.carry){ UI.mouse = [e.clientX - r.left, e.clientY - r.top]; putDown(UI.mouse); } });
 window.addEventListener("resize", () => { trayLayout(); layout3(); });
 
 /* ---- the panel ---- */
@@ -1125,103 +1340,120 @@ function refresh(){
   const ok = b => b ? "✓ " : "· ";
   const pr = [kit.probe.r, kit.probe.b], onOut = pr.includes("JR") && pr.includes("JB");
   const cr = kit.node(kit.clip.r), cb = kit.node(kit.clip.b);
-  let clipTxt;
+  let clipTxt = tr("w_open");
   if ((cr === "BBL" && cb === "BBU") || (cr === "BBU" && cb === "BBL")) clipTxt = tr("w_bb");
-  else if (cr && cb && cr[0] !== "B" && cb[0] !== "B" && cr.slice(1) === cb.slice(1) && cr !== cb){
-    const r = +cr.slice(1), all = Object.keys(kit.caps).map(Number).filter(j => kit.root(j) === r).map(j => CAPS[j][0]);
-    clipTxt = tr("w_caps").replace("%s", all.join(" + ")); }
-  else clipTxt = tr("w_open");
-  $("wires").textContent = ok(kit.battIn()) + tr("w_snap") + "\n" + ok(onOut) + tr("w_probe") + "\n" + ok(clipTxt !== tr("w_open")) + tr("w_clip") + clipTxt;
+  else if (cr && cb && /^[AB]\d$/.test(cr) && /^[AB]\d$/.test(cb) && cr.slice(1) === cb.slice(1) && cr !== cb){
+    const r = +cr.slice(1); clipTxt = tr("w_caps").replace("%s", Object.keys(kit.caps).map(Number).filter(j => kit.root(j) === r).map(j => CAPS[j][0]).join(" + ")); }
+  $("wires").textContent = ok(kit.snapped) + tr("w_snap") + "\n" + ok(onOut) + tr("w_probe") + "\n" + ok(clipTxt !== tr("w_open")) + tr("w_clip") + clipTxt;
   $("t1").textContent = tr("t1"); $("newExp").textContent = tr("newExp");
   drawTray(); syncTabs(); }
 $("sw").onclick = () => { kit.sw = !kit.sw; refresh(); };
 $("newExp").onclick = () => { $("resetQ").textContent = tr("resetQ"); $("resetNo").textContent = tr("no"); $("resetYes").textContent = tr("yes"); $("resetDlg").showModal(); };
 $("resetNo").onclick = () => $("resetDlg").close();
-$("resetYes").onclick = () => { $("resetDlg").close(); kit.reset(); UI.hand = null; UI.drag = null; showView("3d"); note(tr("st_ready")); refresh(); };
+$("resetYes").onclick = () => { $("resetDlg").close(); kit.reset(); UI.carry = null; UI.hot = null; showView("3d"); note(tr("st_ready")); refresh(); };
 
 /* ---- the hands ---- */
 let down = null, mPrev = [0, 0];
 const pe = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-/* a point on the desk, the base or the top of the oscillator under the pointer */
-function surfaceAt(p){
-  let q = onPlane(p[0], p[1], OSC.h); if (q[0] > OSC.x0 && q[0] < OSC.x1 && q[2] > OSC.z0 && q[2] < OSC.z1) return q;
-  q = onPlane(p[0], p[1], BB.h); if (q[0] > BB.x0 && q[0] < BB.x1 && q[2] > BB.z0 && q[2] < BB.z1) return q;
-  q = onPlane(p[0], p[1], BASE_H); if (q[0] > 0 && q[0] < 64 && q[2] > -9 && q[2] < 9) return q;
-  return onPlane(p[0], p[1], 0.45); }
+/* where a capacitor in the hand would lie: on the desk under the pointer, clear of the base and the meter */
+function capAt(p){ const q = onPlane(p[0], p[1], 0); let x = Math.max(-35, Math.min(105, q[0])), z = Math.max(12.2, Math.min(55, q[2]));
+  /* never on top of the meter: it goes beside it */
+  if (x > DMM.x0 - CARD.hw - 0.3 && x < DMM.x1 + CARD.hw + 0.3 && z < DMM.z1 + CARD.hd + 4.8) x = x < (DMM.x0 + DMM.x1) / 2 ? DMM.x0 - CARD.hw - 0.3 : DMM.x1 + CARD.hw + 0.3;
+  return [x, z]; }
 /* the terminal nearest the pointer on the screen, if it is close */
-function nearTarget(key, p){
-  let best = null, bd = 26;
-  for (const n of targetsFor(key)){ const t = target(n); if (!t) continue; const s = P3(...t), d = Math.hypot(s[0] - p[0], s[1] - p[1]); if (d < bd){ bd = d; best = n; } }
+function nearTarget(key, p, any){
+  let best = null, bd = 30;
+  for (const n of targetsFor(key)){ const t = target(n); if (!t) continue;
+    const s = P3(...t), d = Math.hypot(s[0] - p[0], s[1] - p[1]); if (d < bd){ bd = d; best = n; } }
+  if (best && !any){ const o = ORIGIN(key), t = target(best); if (Math.hypot(t[0] - o[0], t[1] - o[1], t[2] - o[2]) > REACH(key)) return null; }
   return best; }
 /* the point on the face of the meter under the pointer, in face cm */
 function faceAt(p){
-  const a = P3(DMMF.x, DMMF.h, DMMF.z), b = P3(DMMF.x + DMMF.w, DMMF.h, DMMF.z), c = P3(DMMF.x, DMMF.h, DMMF.z + DMMF.l);
+  const a = P3(FACE.x, FACE.h, FACE.z), b = P3(FACE.x + FACE.w, FACE.h, FACE.z), c = P3(FACE.x, FACE.h, FACE.z + FACE.l);
   const ux = b[0] - a[0], uy = b[1] - a[1], vx = c[0] - a[0], vy = c[1] - a[1], det = ux * vy - uy * vx; if (Math.abs(det) < 1e-9) return null;
-  const dx = p[0] - a[0], dy = p[1] - a[1]; return [(dx * vy - dy * vx) / det * DMMF.w, (ux * dy - uy * dx) / det * DMMF.l]; }
-function dialAt(p){ const f = faceAt(p); if (!f) return null; const dx = f[0] - DIAL_C[0], dy = f[1] - DIAL_C[1], r = Math.hypot(dx, dy);
-  if (r > DIAL_R + 1.25) return null; if (r < 0.6) return "centre";
+  const dx = p[0] - a[0], dy = p[1] - a[1]; return [(dx * vy - dy * vx) / det * FACE.w, (ux * dy - uy * dx) / det * FACE.l]; }
+function faceHit(p){ const f = faceAt(p); if (!f) return null;
+  if (Math.abs(f[0] - PWR[0]) < PWR[2] + 0.2 && Math.abs(f[1] - PWR[1]) < PWR[3] + 0.25) return "power";
+  const dx = f[0] - DIAL_C[0], dy = f[1] - DIAL_C[1], r = Math.hypot(dx, dy);
+  if (r > DIAL_LR + 0.35 || r < 0.5) return null;
   const ang = Math.atan2(dy, dx) * 180 / Math.PI; let best = null, bd = 1e9;
   for (const [nm, deg] of DIAL){ const d = Math.abs(((ang - deg) % 360 + 540) % 360 - 180); if (d < bd){ bd = d; best = nm; } }
-  return best; }
+  return "dial:" + best; }
 function stepDial(s){ let i = DIAL_ORDER.indexOf(kit.dial); i = (i + s + DIAL_ORDER.length) % DIAL_ORDER.length; kit.dial = DIAL_ORDER[i]; }
-const isEnd = id => id && /^(pr_[rb]|snap_[pn]|clip_[rb])$/.test(id);
+const isEnd = id => id && /^(pr_[rb]|clip_[rb])$/.test(id);
+function termName(n){ if (/^[AB]\d$/.test(n)) return tr("t_lead").replace("%s", CAPS[+n[1]][0]); return tr("t_" + n); }
+/* take a lead end in the hand */
+function pickEnd(key){ const [o, k] = STATE(key); UI.carry = {kind: "end", key, was: o[k]}; o[k] = null; UI.hot = nearTarget(key, UI.mouse); note(tr("st_inHand")); }
+/* put down what is in the hand at the pointer */
+function putDown(p){
+  const c = UI.carry; if (!c) return;
+  if (c.kind === "end"){ const [o, k] = STATE(c.key), hot = nearTarget(c.key, p);
+    if (hot){ const other = {r: "b", b: "r"}[k]; if (o[other] === hot) o[other] = c.was === hot ? null : c.was;
+      o[k] = hot; note(tr("st_on").replace("%s", termName(hot))); }
+    else { UI.mouse = p; o[k] = carriedAt(c.key); note(nearTarget(c.key, p, true) ? tr("st_tooFar") : UI.msgTaut ? tr("st_taut") : tr("st_free")); }
+    UI.carry = null; UI.hot = null; refresh(); return; }
+  if (c.kind === "cap"){ const at = capAt(p), i = c.i;
+    if (kit.caps[i] === undefined && !c.fresh) return;
+    let joined = false;
+    for (const j of Object.keys(kit.caps).map(Number)) if (j !== i && kit.root(j) === j && Math.hypot(kit.caps[j][0] - at[0], kit.caps[j][1] - at[1]) < 2.6){
+      kit.caps[i] = kit.caps[j].slice(); kit.stack[i] = j; for (const m of Object.keys(kit.stack)) if (kit.stack[m] === i) kit.stack[m] = j;
+      for (const s of ["r", "b"]){ const v = kit.clip[s]; if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i) kit.clip[s] = v[0] + j; }
+      joined = true; break; }
+    if (!joined){ kit.caps[i] = at; for (const j of Object.keys(kit.stack)) if (kit.stack[j] === i) kit.caps[+j] = at.slice(); }
+    note(joined ? tr("st_stack") : c.fresh ? tr("st_capOn").replace("%s", CAPS[i][0]) : "");
+    UI.carry = null; refresh(); return; }
+  if (c.kind === "tray" && c.item === "batt"){ const id = pick3(p[0], p[1]);
+    if (id === "batt" || id === "snap"){ kit.battV = newBattery(kit.rng); kit.snapped = true; UI.carry = null; note(tr("st_batt")); }
+    else note(tr("st_needBatt"));
+    refresh(); return; }
+}
+/* cancel what is in the hand: an end goes back where it was, a part from the box back in the box */
+function cancelCarry(){ const c = UI.carry; if (!c) return false;
+  if (c.kind === "end"){ const [o, k] = STATE(c.key); o[k] = c.was; }
+  if (c.kind === "cap" && c.fresh) delete kit.caps[c.i];
+  UI.carry = null; UI.hot = null; note(""); refresh(); return true; }
 cv3.addEventListener("contextmenu", e => e.preventDefault());
 cv3.addEventListener("pointerdown", e => {
-  const p = pe(e); mPrev = p; cv3.setPointerCapture(e.pointerId);
+  const p = pe(e); mPrev = p; UI.mouse = p; cv3.setPointerCapture(e.pointerId);
   let id = pick3(p[0], p[1]);
   if (e.button === 1 || e.button === 2){ e.preventDefault(); down = {p, kind: "pan", btn: e.button, moved: false, id}; return; }
   if (e.button) return;
-  if (UI.hand === "batt"){ if (id === "batt"){ kit.battV = newBattery(kit.rng); UI.hand = null; note(tr("st_batt")); } else note(tr("st_needBatt")); refresh(); return; }
-  /* a terminal with a lead end on it: you grab the end, not the terminal */
+  if (UI.carry){ down = {p, kind: "put", moved: false}; return; }
+  /* a terminal with a lead end on it: you take the end, not the terminal */
   if (id && !isEnd(id)){ const lead = /^lead([AB])(\d)$/.exec(id), t = lead ? lead[1] + kit.root(+lead[2]) : id;
-    for (const k of ["clip_r", "clip_b", "pr_r", "pr_b", "snap_p", "snap_n"]){ const [o, c] = STATE(k); if (o[c] === t){ id = k; break; } } }
-  if (isEnd(id)){ const [o, k] = STATE(id); UI.drag = {kind: "end", key: id, at: endPos(id).slice(), was: o[k]}; down = {p, kind: "end", key: id, moved: false}; return; }
-  if (id && id.startsWith("cap")){ const i = +id.slice(3), q = onPlane(p[0], p[1], 0), c = kit.caps[kit.root(i)];
-    down = {p, kind: "cap", i, off: [q[0] - c[0], q[2] - c[1]], moved: false}; return; }
-  if (id === "plate"){ down = {p, kind: "plate", x0: onPlane(p[0], p[1], BASE_H + 0.9)[0], s0: kit.slide, moved: false}; return; }
-  if (id === "dmm"){ const d = dialAt(p); if (d && d !== "centre"){ down = {p, kind: "dial", d, moved: false}; return; } }
+    for (const k of ["clip_r", "clip_b", "pr_r", "pr_b"]){ const [o, c] = STATE(k); if (o[c] === t){ id = k; break; } } }
+  if (isEnd(id)){ pickEnd(id); down = {p, kind: "carry", moved: false}; return; }
+  if (id && (id.startsWith("cap") || id.startsWith("lead"))){ const i = id.startsWith("cap") ? +id.slice(3) : +id.slice(-1);
+    if (kit.root(i) !== i){ kit.caps[i] = kit.caps[kit.root(i)].slice(); delete kit.stack[i]; note(tr("st_unstack")); }
+    UI.carry = {kind: "cap", i, at: capAt(p), fresh: false}; down = {p, kind: "carry", moved: false}; return; }
+  if (id === "plate"){ down = {p, kind: "plate", x0: onPlane(p[0], p[1], PLATE.y1)[0], s0: kit.slide, moved: false}; return; }
+  if (id === "dmm"){ const h = faceHit(p); if (h){ down = {p, kind: "face", h, moved: false}; return; } }
   down = {p, kind: view3 === "3d" ? "orbit" : "pan", id, moved: false}; });
 cv3.addEventListener("pointermove", e => {
-  const p = pe(e), dx = p[0] - mPrev[0], dy = p[1] - mPrev[1]; mPrev = p;
-  if (!down){ const id = pick3(p[0], p[1]); cv3.className = UI.hand ? "copy" : id && id !== "room" && id !== "base" ? "pointer" : ""; return; }
+  const p = pe(e), dx = p[0] - mPrev[0], dy = p[1] - mPrev[1]; mPrev = p; UI.mouse = p;
+  if (UI.carry){ if (UI.carry.kind === "end") UI.hot = nearTarget(UI.carry.key, p); if (UI.carry.kind === "cap") UI.carry.at = capAt(p); }
+  if (!down){ const id = pick3(p[0], p[1]); cv3.className = UI.carry ? "copy" : id && id !== "room" && id !== "base" ? "pointer" : ""; return; }
   if (Math.hypot(p[0] - down.p[0], p[1] - down.p[1]) > 4) down.moved = true; if (!down.moved) return;
   const k = down.kind;
   if (k === "orbit"){ CAM.yaw += dx * 0.008; CAM.pitch = Math.min(1.5, Math.max(0.12, CAM.pitch + dy * 0.006)); cv3.classList.add("grabbing"); }
   else if (k === "pan"){ CAM.px += dx; CAM.py += dy; cv3.classList.add("grabbing"); }
-  else if (k === "end"){ const hot = nearTarget(down.key, p); UI.hot = hot; UI.drag.at = hot ? target(hot).slice() : surfaceAt(p); }
-  else if (k === "cap"){ const q = onPlane(p[0], p[1], 0), r = kit.root(down.i);
-    if (r !== down.i){ kit.caps[down.i] = kit.caps[r].slice(); delete kit.stack[down.i]; note(tr("st_unstack")); }
-    kit.caps[down.i] = [Math.max(-35, Math.min(110, q[0] - down.off[0])), Math.max(11.5, Math.min(58, q[2] - down.off[1]))];
-    /* its mates come with it */
-    for (const j of Object.keys(kit.stack)) if (kit.root(+j) === down.i) kit.caps[+j] = kit.caps[down.i].slice(); }
-  else if (k === "plate"){ const x = onPlane(p[0], p[1], BASE_H + 0.9)[0]; kit.slide = Math.max(0, Math.min(TRAVEL_MM, down.s0 - (x - down.x0) * 10)); }
+  else if (k === "plate"){ const x = onPlane(p[0], p[1], PLATE.y1)[0]; kit.slide = Math.max(0, Math.min(TRAVEL_MM, down.s0 - (x - down.x0) * 10)); }
 });
 cv3.addEventListener("pointerup", e => {
-  cv3.classList.remove("grabbing"); const d = down; down = null; if (!d) return;
-  if (d.kind === "pan" && !d.moved && d.btn === 2){ if (UI.hand){ UI.hand = null; note(""); } else if (!putBack(d.id) && view3 !== "3d") showView("3d"); refresh(); return; }
-  if (d.kind === "end"){ const key = d.key, [o, k] = STATE(key), hot = UI.hot; UI.hot = null;
-    if (!d.moved){ UI.drag = null; refresh(); return; }
-    if (hot){ const other = {r: "b", b: "r", p: "n", n: "p"}[k]; if (o[other] === hot) o[other] = HOME[key.slice(0, -1) + other].slice();
-      o[k] = hot; note(tr("st_on").replace("%s", termName(hot))); }
-    else { o[k] = UI.drag.at.slice(); note(tr("st_free")); }
-    UI.drag = null; refresh(); return; }
-  if (d.kind === "cap"){
-    if (d.moved){ const i = d.i, p = kit.caps[i];
-      for (const j of Object.keys(kit.caps).map(Number)) if (j !== i && kit.root(j) === j && Math.hypot(kit.caps[j][0] - p[0], kit.caps[j][1] - p[1]) < 2.6){
-        kit.stack[i] = j; for (const m of Object.keys(kit.stack)) if (kit.stack[m] === i) kit.stack[m] = j;
-        for (const c of ["r", "b"]){ const v = kit.clip[c]; if (typeof v === "string" && /^[AB]\d$/.test(v) && +v[1] === i) kit.clip[c] = v[0] + j; }
-        note(tr("st_stack")); break; } }
-    refresh(); return; }
-  if (d.kind === "dial"){ kit.dial = d.d; refresh(); return; }
-  if (!d.moved && view3 === "3d"){
+  cv3.classList.remove("grabbing"); const d = down; down = null; if (!d) return; const p = pe(e);
+  if (d.kind === "pan" && !d.moved && d.btn === 2){ if (cancelCarry()) return; if (!putBack(d.id) && view3 !== "3d") showView("3d"); refresh(); return; }
+  /* pressed and dragged: put down where it is let go; just clicked: it stays in the hand until the next click */
+  if (d.kind === "carry"){ if (d.moved) putDown(p); else refresh(); return; }
+  if (d.kind === "put"){ putDown(p); return; }
+  if (d.kind === "face" && !d.moved){ if (d.h === "power") kit.dmmOn = !kit.dmmOn; else kit.dial = d.h.slice(5); refresh(); return; }
+  if (!d.moved){
     if (d.id === "switch"){ kit.sw = !kit.sw; refresh(); return; }
-    if (d.id === "dmm"){ showView("dmm"); return; } if (d.id === "scale" || d.id === "plate" || d.id === "stop"){ showView("scale"); return; }
-    if (d.id === "osc" || d.id === "batt" || ["JR", "JB", "BINP", "BINN"].includes(d.id)){ showView("osc"); return; } }
-  if (!d.moved && d.id === "switch"){ kit.sw = !kit.sw; refresh(); return; }
+    if (d.id === "snap"){ kit.snapped = !kit.snapped; note(tr(kit.snapped ? "st_snapOn" : "st_snapOff")); refresh(); return; }
+    if (view3 === "3d"){ if (d.id === "dmm"){ showView("dmm"); return; } if (d.id === "scale" || d.id === "plate" || d.id === "stop"){ showView("scale"); return; }
+      if (d.id === "osc" || d.id === "batt" || d.id === "JR" || d.id === "JB"){ showView("osc"); return; } } }
   refresh(); });
-function termName(n){ if (/^[AB]\d$/.test(n)) return tr("t_lead").replace("%s", CAPS[+n[1]][0]); return tr("t_" + n); }
 cv3.addEventListener("dblclick", e => { const p = pe(e), id = pick3(p[0], p[1]);
-  if (id && id !== "room" && id !== "base") return;
+  if (UI.carry || (id && id !== "room" && id !== "base")) return;
   freeCam = null; if (view3 !== "3d") showView("3d"); Object.assign(CAM, CAM0); });
 /* a right click on a part puts it back: a capacitor into the box, a lead end to where it lies at the start */
 function putBack(id){
@@ -1230,10 +1462,11 @@ function putBack(id){
   if (isEnd(id)){ const [o, k] = STATE(id); o[k] = id.startsWith("clip") ? (k === "r" ? "BBU" : "BBL") : null; note(""); return true; }
   return false; }
 cv3.addEventListener("wheel", e => { e.preventDefault(); const p = pe(e), up = e.deltaY < 0, id = pick3(p[0], p[1]);
-  if (id === "dmm" && dialAt(p)){ stepDial(up ? -1 : 1); refresh(); return; }
+  if (id === "dmm"){ const h = faceHit(p); if (h && h.startsWith("dial")){ stepDial(up ? -1 : 1); refresh(); return; } }
   if (id === "plate" && view3 === "scale"){ kit.slide = Math.max(0, Math.min(TRAVEL_MM, kit.slide + (up ? 0.5 : -0.5) * (e.shiftKey ? 0.2 : 1))); return; }
   const f = up ? 1.12 : 1 / 1.12, nk = Math.min(240, Math.max(2, CAM.k * f)), r = nk / CAM.k;
   CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive: false});
+window.addEventListener("keydown", e => { if (e.key === "Escape") cancelCarry(); });
 
 /* ---- language ---- */
 function applyLang(){
@@ -1247,7 +1480,10 @@ $("btn-en").onclick = () => setLang("en"); $("btn-ko").onclick = () => setLang("
 
 /* ---- the clock ---- */
 setInterval(() => kit.tick(), 220);
-function loop(){ draw3(); requestAnimationFrame(loop); }
+let tauntShown = false;
+function loop(){ draw3();
+  if (UI.carry && UI.carry.kind === "end"){ if (UI.msgTaut && !tauntShown){ note(tr("st_taut")); tauntShown = true; } else if (!UI.msgTaut && tauntShown){ note(tr("st_inHand")); tauntShown = false; } }
+  requestAnimationFrame(loop); }
 layout3(); applyLang(); requestAnimationFrame(loop);
 
 </script>
