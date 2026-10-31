@@ -47,7 +47,7 @@
   <div class="card"><b>결과 (정답을 저장한 사진만)</b><div id="sum" style="margin-top:8px"></div></div>
 </div>
 <script type="module">
-import { detectQuad, solveHomography, MARKER_INSET } from "./labscan/scanner.js?v=438b55d2189a";
+import { detectQuad, solveHomography, MARKER_INSET } from "./labscan/scanner.js?v=b444c7b8a1e2";
 const COMMUNITY_API="https://haslalab-community-edge.haslalab.workers.dev";
 const API = (() => { let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; })();
 const TOK = (() => { try { return localStorage.getItem("hlCmTok") || ""; } catch (e) { return ""; } })();

@@ -36,8 +36,20 @@ test('real browser finds the page in a photo on the device, with a self-hosted c
    result.corners.forEach((p,i)=>assert.ok(Math.hypot(p.x-truth[i].x,p.y-truth[i].y)<18,`corner ${i} within 1.2% of the photo: ${JSON.stringify(p)}`));
    assert.equal(result.cancelled,null);assert.equal(result.openDialogs,0);
    assert.ok(!requests.some(p=>/^\/api\//.test(p)),'no API request: '+requests.join(' '));
-   assert.ok(requests.every(p=>!/\.(ort|wasm|onnx)$/.test(p)||p.startsWith('/vendor/scanic-ml-0.2.0/')),'the corner model and its runtime come from this site only: '+requests.join(' '));
-   assert.ok(requests.includes('/vendor/scanic-ml-0.2.0/doccornernet_lean.ort'),'the learned corner model is loaded (self-hosted)');
+   assert.ok(requests.every(p=>!/\.(ort|wasm|onnx|bin)$/.test(p)||p.startsWith('/vendor/scanic-ml-0.2.0/')),'the corner model and its runtime come from this site only: '+requests.join(' '));
+   assert.ok(requests.includes('/vendor/scanic-ml-0.2.0/doccornernet_lean.f16.bin'),'the learned corner model is loaded (self-hosted, fp16 download)');
+   assert.ok(!requests.some(p=>p.endsWith('.ort')),'the full-size fp32 file is never downloaded');
+   /* the rebuilt fp32 model itself, run on the fixture photo: confident, and its corners on the sheet */
+   const model=await page.evaluate(async()=>{
+    const scanner=await import('/sim/labscan/scanner.js'),{detectDocumentMl}=await import('/vendor/scanic-1.7.1/scanic-mlDetector.js');
+    const modelBytes=scanner.decodeCornerModel(await(await fetch('/vendor/scanic-ml-0.2.0/doccornernet_lean.f16.bin')).arrayBuffer());
+    const image=await createImageBitmap(await(await fetch('/tests/fixtures/scanner-graph-photo.jpg')).blob()),canvas=document.createElement('canvas');
+    canvas.width=image.width;canvas.height=image.height;canvas.getContext('2d').drawImage(image,0,0);
+    const r=await detectDocumentMl(canvas,{assetBaseUrl:'/vendor/scanic-ml-0.2.0/',modelUrl:'fp16-check',modelBytes,numThreads:1,minScore:0});
+    const c=r.corners;return{score:r.score,corners:[c.topLeft,c.topRight,c.bottomLeft,c.bottomRight].map(p=>({x:p.x*900/image.width,y:p.y*1200/image.height}))};
+   });
+   assert.ok(model.score>.8,'the rebuilt model is confident on the fixture: '+model.score);
+   model.corners.forEach((p,i)=>assert.ok(Math.hypot(p.x-truth[i].x,p.y-truth[i].y)<40,`model corner ${i} on the sheet's corner: ${JSON.stringify(p)}`));
   }finally{await context.close();}
   const hintContext=await browser.newContext();
   try{
