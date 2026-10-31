@@ -98,13 +98,14 @@ def prepare(year,language,number,input_path=None,input_page=None,prose_placement
         # Source Word drawings outside an image can include its axis/arrows.
         # Expanding only horizontally catches those native labels without
         # swallowing separate captions below the image's blank bottom margin.
-        excluded=[list(fitz.Rect(r)+(-4,0,4,0)) for r in images]
+        pad=0 if year==2022 else 4
+        excluded=[list(fitz.Rect(r)+(-pad,0,pad,0)) for r in images]
         content=[min(24.,min(p['point'][0] for p in journal)),{2006:513.2,2007:508.,2022:561.7}[year]]
         regions=[];centers=[];caption_regions=[];picture_labels=[]
         for y,items in sorted(by_y.items()):
             inside=[];outside=[]
             for item in items:
-                (inside if item.get('raster_label') or any(fitz.Rect(r).contains(fitz.Point(item['point'])) for r in images) else outside).append(item)
+                (inside if item.get('raster_label') or item.get('overlay')is False or any(fitz.Rect(r).contains(fitz.Point(item['point'])) for r in images) else outside).append(item)
             for item in inside:
                 size=item['size'];x=item['point'][0]
                 picture_labels.append(dict(rect=[x-size,y-.85*size,x+item['width']+size,y+.32*size],
@@ -145,6 +146,21 @@ def prepare(year,language,number,input_path=None,input_page=None,prose_placement
             caption_regions.append(dict(rect=[400,517.534,562,529.89],baseline=526.51,
                 placements=['1-25-6','1-25-7','1-25-8'],caption=True,alignment='center',
                 center=(412.75+557.5038452148438)/2))
+        if (year,number)==(2006,3):
+            # These are printed answer blanks, not prose word spacing. Their
+            # original rules and final native punctuation stay stationary.
+            for r in regions:
+                for y,right in [(246.960083,317.9),(378.95993,233.9),(422.879974,173.9)]:
+                    if abs(r['baseline']-y)<.03:r['rect'][2]=right
+        if (year,number)==(2006,1):
+            split=[]
+            for r in regions:
+                if abs(r['baseline']-554.87988)<.03:
+                    left=dict(r,rect=[r['rect'][0],r['rect'][1],111.9,r['rect'][3]])
+                    right=dict(r,rect=[269.95,r['rect'][1],r['rect'][2],r['rect'][3]])
+                    split.extend([left,right])
+                else:split.append(r)
+            regions=split
         return dict(year=year,language=language,page=number,input=str(input_path),input_page=input_page or number,input_sha256=sha(input_path),
                     original=str(source),original_sha256=sha(source),regions=regions,
                     caption_regions=caption_regions,picture_label_regions=picture_labels,centered_lines=centers,
@@ -160,6 +176,28 @@ def native_records(year,number,input_path,input_page):
         return out
 
 
+def compose_number_shift_journals(first,second):
+    """Map font-stage native numerals back to immutable input coordinates."""
+    if not first:return second
+    earlier=[dict(glyph=g,dx=s['dx'],used=False)for s in first for g in s['glyphs']]
+    result=[]
+    for shift in second:
+        kept=[]
+        for g in shift['glyphs']:
+            matches=[v for v in earlier if v['glyph']['c']==g['c']and v['glyph']['font']==g['font']
+                and abs(v['glyph']['size']-g['size'])<.0001 and abs(v['glyph']['origin'][1]-g['origin'][1])<.001
+                and abs(v['glyph']['origin'][0]+v['dx']-g['origin'][0])<.002]
+            if len(matches)>1:raise ValueError('Font-stage numeral motion is ambiguous')
+            if not matches:kept.append(g);continue
+            if 'form_path'in shift:raise ValueError('A font-stage prose numeral unexpectedly belongs to an original mathematical Form')
+            item=matches[0]
+            if item['used']:raise ValueError('A font-stage numeral was moved twice in the line journal')
+            item['used']=True;result.append(dict(glyphs=[item['glyph']],dx=item['dx']+shift['dx']))
+        if kept or not shift['glyphs']:result.append(dict(shift,glyphs=kept))
+    result.extend(dict(glyphs=[v['glyph']],dx=v['dx'])for v in earlier if not v['used'])
+    return result
+
+
 def build(year,language,number):
     spec=prepare(year,language,number);folder=OUT/str(year)/language;folder.mkdir(parents=True,exist_ok=True)
     target=folder/f'page{number:02}.pdf'
@@ -172,6 +210,10 @@ def build(year,language,number):
         newinput,newpage,newplacements,proseqa=prepare_korean_prose(year,spec['input'],number,spec['prose_placements'],folder/'prose-stage')
         if proseqa:
             spec=prepare(year,language,number,newinput,newpage,newplacements);spec['reviewed_Korean_prose_stage']=proseqa
+    if language=='en'and (year,number)==(2006,1):
+        from cpho_natural_prose_edits import prepare_korean_prose
+        newinput,newpage,newplacements,proseqa=prepare_korean_prose(year,spec['input'],number,spec['prose_placements'],folder/'prose-stage',language='en')
+        spec=prepare(year,language,number,newinput,newpage,newplacements);spec['reviewed_English_prose_stage']=proseqa
     target.with_suffix('.plan.json').write_text(json.dumps(spec,ensure_ascii=False,indent=2),'utf8')
     kwargs={}
     from cpho_natural_atoms import explicit_atoms
@@ -208,6 +250,10 @@ def build(year,language,number):
     # Strict 2007 English figure prose already uses the documented quarter-em
     # SimSun word space. Keep its label anchors/paint order exactly unchanged.
     label_regions=([] if year==2007 and language=='en' else spec['picture_label_regions'])+spec['caption_regions']
+    if year==2006 and language=='en':
+        # Fig. has no internal word space; the strict edition aligned its
+        # actual SimSun ink (not its trailing advance) to the raster number.
+        label_regions=[r for r in label_regions if not any(v.startswith('raster-caption-')for v in r['placements'])]
     if label_regions:
         body_path=folder/f'page{number:02}-before-labels.pdf';body_path.write_bytes(raw)
         centers=[dict(baseline=r['baseline'],center=r['center'],rect=r['rect']) for r in label_regions if r['alignment']=='center']
@@ -220,6 +266,9 @@ def build(year,language,number):
                 matched=[g for g in rows if abs(g['origin'][1]-r['baseline'])<2 and fitz.Rect(r['rect']).contains(fitz.Point(g['origin']))]
                 rights.append(dict(baseline=r['baseline'],right=r.get('right') or max(g['bbox'][2] for g in matched),rect=r['rect']))
         label_kwargs={}
+        from cpho_natural_atoms import explicit_image_atoms
+        image_atoms=explicit_image_atoms(dict(spec,input=str(body_path),input_page=1))
+        if image_atoms:label_kwargs['native_atomic_tokens']=image_atoms
         if language=='en':
             sourcekeys={glyph_key(g) for g in native_records(year,number,body_path,1)}
             label_kwargs['prose_trace_predicate']=lambda rows:any(r['c'].strip() and glyph_key(r) not in sourcekeys for r in rows)
@@ -227,11 +276,34 @@ def build(year,language,number):
             prose_placements=spec['prose_placements'],excluded_figure_rects=[],centered_lines=centers,right_aligned_lines=rights,
             font_resource_name=f'KO_Natural_BatangLabels{number}',**label_kwargs)
         qa['picture_language_and_caption_stage']=labelqa
-        qa['native_shifts']+=labelqa['native_shifts'];qa['erased_hangul_glyphs']+=labelqa['erased_hangul_glyphs']
+        # The combined journal refers back to the immutable original operator
+        # paths; the nested stage journal retains its exact body-input paths.
+        normalized=[]
+        for shift in labelqa['native_shifts']:
+            shift=dict(shift)
+            if 'image_path'in shift:
+                matches=[a for a in image_atoms if a['shift_kwargs']['image_path']==shift['image_path']]
+                if len(matches)!=1:raise ValueError('Moved bitmap-math atom has no original operator identity')
+                shift['stage_input_image_path']=shift['image_path'];shift['image_path']=matches[0]['original_image_path']
+            normalized.append(shift)
+        qa['native_shifts']+=normalized;qa['erased_hangul_glyphs']+=labelqa['erased_hangul_glyphs']
         qa['replaced_hangul_glyphs']+=labelqa['replaced_hangul_glyphs']
         qa['new_batang_placements']+=labelqa['new_batang_placements']
         qa['new_batang_runs']+=labelqa['new_batang_runs']
         qa['lines']+=labelqa['lines'];qa['output_sha256']=labelqa['output_sha256']
+    from cpho_natural_rotated_labels import apply as rotated_labels
+    raw,rotatedqa=rotated_labels(raw,year,language,number)
+    if rotatedqa:
+        qa['rotated_language_label_stage']=rotatedqa
+        qa['erased_hangul_glyphs']+=rotatedqa['erased_hangul_glyphs']
+        qa['replaced_hangul_glyphs']+=len(rotatedqa['erased_hangul_glyphs'])
+        qa['new_batang_placements']+=rotatedqa['new_batang_placements']
+        qa['new_batang_runs']+=len(rotatedqa['new_batang_placements'])
+        qa['output_sha256']=__import__('hashlib').sha256(raw).hexdigest()
+    if spec.get('english_face_stage'):
+        first=spec['english_face_stage'].get('native_number_shifts',[])
+        qa['native_shifts']=compose_number_shift_journals(first,qa['native_shifts'])
+        qa['font_stage_native_number_shifts_composed']=len(first)
     target.write_bytes(raw)
     qa.update(input_sha256=spec['input_sha256'],original_sha256=spec['original_sha256'],
               prototype=True,caption_regions_pending=[],picture_and_caption_regions_processed=label_regions)

@@ -35,7 +35,7 @@ def ready(year,kind):
     names=['izho_natural_spacing.py','pdf_korean_natural_composer.py','izho_native_atomic_tokens.py','pdf_native_inline_reposition.py',
            'pdf_native_glyph_promote.py','pdf_native_geometry_motion.py','pdf_moved_native_ink.py','pdf_text_motion_ink.py','pdf_memory_gate.py',
            'izho_natural_spacing_rebuild.py','izho_natural_spacing_qa.py','izho_native_ink_witness.py','izho_natural_spacing_ready.py',
-           'test_izho_natural_spacing.py','test_pdf_korean_natural_composer.py']
+           'pdf_grading_columns_stationary.py','test_izho_natural_spacing.py','test_pdf_korean_natural_composer.py']
     snapshot=BUILD/f'{year}-{kind}-authoring';snapshot.mkdir(exist_ok=True);authoring={}
     for name in names:
         source=ROOT/'tools'/name;payload=source.read_bytes();target=snapshot/'tools'/name;target.parent.mkdir(parents=True,exist_ok=True)
@@ -66,6 +66,12 @@ def ready(year,kind):
         new_batang_hangul_glyphs_checked=sum(a['new_batang_outlines']['checked']for a in audits),
         hangul_visibility_loss_candidates=sum(a['hangul_visibility']['flagged_components']for a in audits),
         unconverted_regular_body_hangul=sum(a['body_font_coverage']['unreplaced_regular_body_hangul']for a in audits),
+        stationary_table_math_glyphs=sum(len(a['composition'].get('stationary_native_glyphs',[]))for a in audits),
+        table_math_internal_geometry_mismatches=sum(a.get('source_math_internal_geometry',{}).get('mismatched_groups',0)for a in audits),
+        original_grading_glyphs_checked=sum(a.get('grading_columns_stationary',{}).get('original_grading_glyphs_checked',0)for a in audits),
+        grading_glyphs_moved_from_source_cells=sum(len(a.get('grading_columns_stationary',{}).get('grading_glyphs_moved_from_source_cells',[]))for a in audits),
+        reviewed_complete_inline_expressions=sum(a.get('reviewed_inline_expression_geometry',{}).get('checked_groups',0)for a in audits),
+        reviewed_inline_expression_geometry_mismatches=sum(a.get('reviewed_inline_expression_geometry',{}).get('mismatched_groups',0)for a in audits),
         original_font_image_palette_icc_mask_programs_and_page_groups_retained=all(a['original_font_programs_and_names_retained']and a['original_image_programs_retained']and a['page_group_preserved']and a['colorspace_resources_preserved']and all(r['full_palette_icc_mask_image_graph_preserved']for r in a['original_palette_icc_mask_graphs'])for a in audits),
         assembly='pikepdf native page append; fresh-process 4x RGB exact comparison to reviewed proofs',page_audits=assembly,
         audit_reports=[dict(page=i,path=str(p.with_suffix('.audit.json')),sha256=sha(p.with_suffix('.audit.json')))for i,p in enumerate(proofs,1)],

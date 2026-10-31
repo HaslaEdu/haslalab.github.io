@@ -128,6 +128,7 @@ def baseline_lines(page, bounds=None, *, allowed_line_rects=None, excluded_figur
             size=max([r['size']for t in lines[y]for r in t['glyphs']]or[12])
             # Small-font scripts must stay with the nearest body baseline.
             limit=.48*size if max(r['size']for r in ink)<.85*size else .12*size
+            limit=max(limit,baseline_tolerance_pt)
             if abs(y-mid)>limit:continue
             lines[y].append(token(rs,'native'))
     result=[]

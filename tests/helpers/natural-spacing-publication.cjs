@@ -74,5 +74,15 @@ module.exports = function validate(root, record, item) {
     const raw = fs.readFileSync(path.join(root, record.authoring_snapshotroot, file.replaceAll('\\', '/')));
     assert.equal(crypto.createHash('sha256').update(raw).digest('hex'), hash, file);
   }
-  for (const row of record.extra_evidence) pinned(row.path, row.sha256);
+  for (const row of record.extra_evidence) {
+    const evidence = pinned(row.path, row.sha256);
+    if (row.kind === 'native-script-relative-geometry') {
+      assert.equal(evidence.passed, true);
+      assert.equal(evidence.final_sha256, record.page_proofs.find(p => p.page === row.page).proof_sha256);
+      assert.deepEqual(evidence.glyph_signature_or_position_errors, []);
+      assert.deepEqual(evidence.relative_geometry_failures, []);
+      for (const pair of evidence.script_base_pairs) assert.equal(pair.passed, true);
+      for (const group of evidence.reviewed_expression_groups) assert.equal(group.passed, true);
+    }
+  }
 };

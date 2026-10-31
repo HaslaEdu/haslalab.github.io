@@ -97,7 +97,7 @@ def _units(item,placements,metric):
 def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,excluded_figure_rects=None,
                  centered_lines=None,right_aligned_lines=None,font_path=BATANG,native_atomic_tokens=None,
                  native_move_options=None,native_control_output=None,prose_trace_predicate=None,baseline_tolerance_pt=.12,
-                 font_resource_name='KO_Natural_Batang',stationary_native_glyphs=None):
+                 font_resource_name='KO_Natural_Batang',stationary_native_glyphs=None,include_image_only_native_math=False):
     """Return single-page PDF bytes and review report; no files are overwritten.
 
     Rectangles are separate reviewed lines/columns. Header/folio columns must
@@ -117,7 +117,8 @@ def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,e
         lines=baseline_lines(page,allowed_line_rects=[rect],excluded_figure_rects=excluded_figure_rects,prose_placements=placements,prose_trace_predicate=prose_trace_predicate,baseline_tolerance_pt=baseline_tolerance_pt,stationary_native_glyphs=stationary_native_glyphs)
         if native_atomic_tokens is not False:
             from izho_native_atomic_tokens import atomic_tokens
-            atoms=atomic_tokens(source,page_number,rect,[dict(baseline=line['baseline'],size=max(t['size']for t in line['tokens']))for line in lines],excluded_figure_rects)
+            atom_options={'include_image_only':True}if include_image_only_native_math else{}
+            atoms=atomic_tokens(source,page_number,rect,[dict(baseline=line['baseline'],size=max(t['size']for t in line['tokens']))for line in lines],excluded_figure_rects,**atom_options)
             atoms=[a for a in atoms if not any(glyph_key(g)in locked for g in a['glyphs'])]
             if isinstance(native_atomic_tokens,list):
                 from pdf_original_text_ops import glyph_key
@@ -154,10 +155,13 @@ def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,e
                 x=unit['x']+adjust
                 if unit['kind']=='batang':
                     erase.extend(_glyph(r)for r in unit['glyphs'])
-                    insertions.append(dict(text=unit['text'],point=[x,unit['glyphs'][0]['origin'][1]],style=unit['style']))
+                    insertions.append(dict(text=unit['text'],point=[x,unit.get('target_baseline',unit['glyphs'][0]['origin'][1])],style=unit['style']))
                 else:
                     dx=x-unit['old_x']
-                    if abs(dx)>1e-6:shifts.append(dict(glyphs=[_glyph(r)for r in unit['glyphs']if r['c'].strip()],dx=dx,**unit.get('shift_kwargs',{})))
+                    # An original float32 coordinate and the same recomputed
+                    # center can differ by one ULP. Keep that native text at
+                    # its original position instead of issuing a fake motion.
+                    if abs(dx)>1e-4:shifts.append(dict(glyphs=[_glyph(r)for r in unit['glyphs']if r['c'].strip()],dx=dx,**unit.get('shift_kwargs',{})))
             journals.append(dict(baseline=line['baseline'],rect=rect,old_right=max(t['x1']for t in tokens),new_right=cursor+adjust,gaps=gaps,center=centers[0]if centers else None))
     raw,move_qa=reposition_inline(source,page_number,erased_glyphs=erase,shifts=shifts,**(native_move_options or{}))
     if native_control_output is not None:

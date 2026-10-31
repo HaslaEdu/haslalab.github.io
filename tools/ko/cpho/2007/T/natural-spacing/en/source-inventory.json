@@ -168,5 +168,31 @@
   "source_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing\\2007\\authoring-snapshot",
   "source_snapshot_authoring_hashes_verified": true,
   "source_plan_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing\\2007\\authoring-snapshot\\tmp\\original-style-repair\\2007\\slots.json",
-  "source_plan_snapshot_sha256": "f343edd02822c86d52aec4a98f7e63a66ecc2d68cc1b2270b63e6b69254e3078"
+  "source_plan_snapshot_sha256": "f343edd02822c86d52aec4a98f7e63a66ecc2d68cc1b2270b63e6b69254e3078",
+  "authoring_dependency_files": [
+    {
+      "path": "tools/pdf_original_style_audit.py",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514"
+    },
+    {
+      "path": "tools/izho_natural_spacing_rebuild.py",
+      "sha256": "7089f5d65cebc27182e66ffaf03d8efa9694a4484cd8f3936948511ab2a37b15"
+    },
+    {
+      "path": "tools/izho_native_math_audit.py",
+      "sha256": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8"
+    },
+    {
+      "path": "tools/izho_extract_word.py",
+      "sha256": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e"
+    },
+    {
+      "path": "tools/izho_translate.py",
+      "sha256": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e"
+    },
+    {
+      "path": "tools/izho_math_clean.py",
+      "sha256": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65"
+    }
+  ]
 }

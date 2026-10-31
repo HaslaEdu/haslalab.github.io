@@ -548,9 +548,10 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
         if group['form_path'] is not None:
             # A pure bitmap/math-path Form legitimately has no glyphs. Its
             # exact invocation is still one complete native mathematical atom.
-            candidates=[n for n in nodes[1:]if n['path']==list(group['form_path'])and nonspace(n['keys'])==nonspace(remaining)]
-            if candidates and candidates[0]['image_paths']and candidates[0]['image_paths']<=atomic_clip_images:
+            exact=[n for n in nodes[1:]if n['path']==list(group['form_path'])]
+            if exact and (exact[0]['keys']or exact[0]['image_paths']) and exact[0]['keys']<=atomic_clip_keys and exact[0]['image_paths']<=atomic_clip_images:
                 continue
+            candidates=[n for n in exact if nonspace(n['keys'])==nonspace(remaining)]
         else:
             contained=[n for n in nodes[1:] if n['keys']&remaining]
             if not contained:continue
@@ -603,6 +604,18 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
                     visible &= fitz.Rect(own['rect'])
                 if not v['own_clips'] or (not visible.is_empty and not fitz.Rect(clip['rect']).contains(visible+(dx,0,dx,0))):
                     raise ValueError('Moved atomic clip group would leave an unchanged ancestor clip')
+        for image in images:
+            if image['path']not in v['image_paths']:continue
+            physical=fitz.Rect(image['bbox']);ancestor=image['node']
+            while ancestor is not root:
+                physical &= fitz.Rect(native_form_bbox(ancestor));ancestor=ancestor['parent']
+            for own in v['own_clips']:
+                if own['rect']is None:raise ValueError('Atomic image requires known own-clip physical bounds')
+                physical &= fitz.Rect(own['rect'])
+            if not physical.is_empty:
+                for clip in v['parent_clips']:
+                    if clip['rect']is None or not fitz.Rect(clip['rect']).contains(physical+(item['dx'],0,item['dx'],0)):
+                        raise ValueError('Moved atomic native image would leave an unchanged ancestor clip')
         fragment=raw_content[a:z]
         tx,ty=_inverse_vector(_multiply(v['ctm'],page_matrix),item['dx'])
         prefix=('q 1 0 0 1 '+_number(tx)+' '+_number(ty)+' cm ').encode('ascii')
@@ -625,6 +638,11 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
     for group in groups:
         node=group.get('form_node')
         if node is None:continue
+        if not nonspace(node['keys']):
+            moved=fitz.Rect(native_form_bbox(node))+(group['dx'],0,group['dx'],0)
+            for clip in node['invocation']['clips']:
+                if clip['rect']is None or not fitz.Rect(clip['rect']).contains(moved):
+                    raise ValueError('Pure native mathematical Form would leave an unchanged source clip')
         for ch in trace:
             if glyph_key(ch) not in node['keys']:continue
             r=fitz.Rect(ch['bbox']);dx=group['dx'];moved=fitz.Rect(r.x0+dx,r.y0,r.x1+dx,r.y1)
@@ -765,6 +783,11 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
     def build(node):
         nonlocal clone_count
         resources=node['resources'];replacement_resources=None
+        for image in node['direct_images']:
+            if not image['shift']:continue
+            tx,ty=_inverse_vector(_multiply(image['ctm'],page_matrix),image['shift'])
+            raw,regions=_raw_regions(node['container']);a,z,_=regions[image['index']]
+            node['replacements'][image['index']]=('q 1 0 0 1 '+_number(tx)+' '+_number(ty)+' cm ').encode('ascii')+raw[a:z]+b' Q'
         for child in node['children']:
             changed_child=build(child)
             if changed_child is None and not child['shift']:continue
@@ -800,6 +823,7 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
             text_shift_mode=text_shift_mode,
             erased_glyphs=removed,shifted_top_level_glyphs=changed_glyphs,
             shifted_form_instances=sum(bool(n['shift']) for n in nodes[1:]),
+            shifted_direct_image_instances=sum(bool(i['shift'])for i in images),
             shifted_atomic_clip_groups=len(atomic_clips),
             shifted_reviewed_vector_paths=len(selected_paths),
             unchanged_white_background_panels_ignored=len(ignored_backgrounds) if reject_vector_overlap else 0,
@@ -810,6 +834,7 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
                 hashlib.sha256(n['container'].read_raw_bytes()).hexdigest()==n['original_raw_sha256']
                 and hashlib.sha256(n['container'].read_bytes()).hexdigest()==n['original_decoded_sha256']
                 for n in nodes[1:]),
+            original_image_streams_unchanged=all(hashlib.sha256(i['container'].read_raw_bytes()).hexdigest()==i['raw_sha256']for i in images),
             native_vector_path_bytes_preserved=all(item['fragment'] in p.Contents.read_bytes() for item in selected_paths),
             native_atomic_clip_bytes_preserved=all(item['fragment'] in p.Contents.read_bytes() for item in atomic_clips),
             output_sha256=hashlib.sha256(result).hexdigest())
@@ -827,7 +852,7 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
         qa['atomic_nonpainting_space_occurrence_shifts']=[dict(source_trace_index=i,source_origin=c['origin'],dx=occurrence_offsets[i])
             for i,c in enumerate(trace) if c['c']==' ' and occurrence_offsets[i]!=requested_offsets.get(glyph_key(c),0.)]
         qa.update(_verify_glyphs(page,result,erase,offsets,tolerance=float(position_tolerance_pt),occurrence_offsets=occurrence_offsets))
-        qa['passed']=not qa['native_glyph_mismatches'] and not qa['unexpected_glyphs'] and qa['font_programs_unchanged'] and qa['original_form_streams_unchanged'] and qa['native_vector_path_bytes_preserved'] and qa['native_atomic_clip_bytes_preserved']
+        qa['passed']=not qa['native_glyph_mismatches'] and not qa['unexpected_glyphs'] and qa['font_programs_unchanged'] and qa['original_form_streams_unchanged'] and qa['original_image_streams_unchanged'] and qa['native_vector_path_bytes_preserved'] and qa['native_atomic_clip_bytes_preserved']
         if not qa['passed']:raise ValueError('Native inline move failed its glyph invariant: '+repr(qa))
     else:qa['passed']=None
     native.close();out.close();source_pdf.close()

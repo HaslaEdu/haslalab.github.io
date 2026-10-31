@@ -11,18 +11,28 @@ from pdf_original_text_ops import glyph_key
 EDITS={(2007,1):{
     '1-5-1':('이며, 비신축 줄의 길이는','이며, 비신축 줄(길이'),
     '1-6-0':('그림처럼 잇고',')로 연결된다.'),
+},(2022,1):{
+    '1-6-0':('가는 막대를 움직이면 충분한 시간 뒤 평형 위치에 멈춘다. 이때 막대와 수평 방향의',
+        '가는 막대를 움직인 뒤 충분히 오래 두면 평형에 멈춘다. 이때 막대와 수평선의'),
+},(2022,2):{
+    '2-12-0':('과 코리올리 힘을 ‘느낀다’. 원환을 미소요소의 집합으로 보고 모든 요소가 받는 원심력의 합력',
+        '과 코리올리 힘을 받는다. 원환을 미소요소로 나누어 각 요소가 받는 원심력의 합력'),
 }}
 
 
-def prepare_korean_prose(year,source,page_number,placements,folder):
-    edits=EDITS.get((year,page_number),{})
+def prepare_korean_prose(year,source,page_number,placements,folder,language='ko'):
+    edits=EDITS.get((year,page_number),{})if language=='ko'else { '1-20-0':('Ans:','A:') }if(year,page_number)==(2006,1)else{}
     if not edits:return Path(source),page_number,placements,None
     folder=Path(folder);folder.mkdir(parents=True,exist_ok=True)
     with fitz.open(source)as doc:
         rows=visible(records(doc[page_number-1]))
     physical={glyph_key(g)for g in native_records(year,page_number,source,page_number)}
     erase=[];inserts=[];updated={};journal=[]
-    donor=subset_font(ROOT/'tools/ko/fonts/NotoSerifCJKkr-Regular.otf',''.join(v[1]for v in edits.values()),folder/'fonts')
+    if language=='en':
+        from cpho_original_latin_fonts import simsun
+        font=simsun()
+    else:font=ROOT/'tools/ko/fonts/NotoSerifCJKkr-Regular.otf'
+    donor=subset_font(font,''.join(v[1]for v in edits.values()),folder/'fonts')
     metric=fitz.Font(fontfile=str(donor))
     for p in placements:
         if p['id']not in edits:continue
@@ -41,7 +51,7 @@ def prepare_korean_prose(year,source,page_number,placements,folder):
                 cursor+=metric.text_length(word,fontsize=size)
         updated[p['id']]=dict(p,text=text,width=cursor-x)
         journal.append(dict(id=p['id'],before=before,after=text,point_size=size,baseline=y,
-            reason='Complete Korean syntax around the unchanged native rope-length l; light/flexible properties and figure reference remain in the following original prose slot.'))
+            reason=('Complete Korean syntax around the unchanged native rope-length l; light/flexible properties and figure reference remain in the following original prose slot.'if year==2007 else'Complete Korean wording retaining every physical condition and quantity, including sufficient settling time or all microelement force contributions; original column geometry and point size are retained.')if language=='ko'else'Answer label uses A: to fit the original printed-answer-blank cell, retaining actual SimSun face/size and the unchanged blank geometry.'))
     raw,qa=reposition_inline(source,page_number,erased_glyphs=erase)
     out=fitz.open(stream=raw,filetype='pdf');page=out[0]
     for item in inserts:
