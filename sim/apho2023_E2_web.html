@@ -300,10 +300,11 @@ function gauss(rng){                                     /* Box-Muller */
 class ThermoModel {
   constructor(rng){
     this.rng = rng;
-    this.R_base_lam = R_BASE_LAMBDA * (1 + 0.015 * gauss(rng));
-    this.P_th = P_THRESHOLD * (1 + 0.004 * gauss(rng));
-    this.slope = N_SLOPE * (1 + 0.03 * gauss(rng));
-    this.P_yield = P_YIELD_NOM * (1 + 0.02 * gauss(rng));
+    this.R_base_lam = R_BASE_LAMBDA * (1 + 0.003 * gauss(rng));
+    this.P_th = P_THRESHOLD * (1 + 0.001 * gauss(rng));
+    /* each plate differs a little from the next, but the official values are what a careful measurement gives */
+    this.slope = N_SLOPE * (1 + 0.005 * gauss(rng));
+    this.P_yield = P_YIELD_NOM * (1 + 0.005 * gauss(rng));
     this.hidden = 2.0 + 0.10 * gauss(rng);
     this.iv_a = 0.35928;
     this.iv_b = 0.73823 * (1 + 0.004 * gauss(rng));
