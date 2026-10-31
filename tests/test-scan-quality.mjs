@@ -294,19 +294,19 @@ async function liveCameraFixture({ auto = true, capturePhoto } = {}) {
   return { state, photos, calls, timers, detections, next, click, message, photo };
 }
 
-test('markerless live preview automatically captures only a sharp validated outline held for eight frames', async () => {
-  const live = await liveCameraFixture(); await live.next(6);
-  assert.equal(live.photos.length, 0, 'seven frames are not yet enough for paper-edge capture');
-  assert.ok(live.calls.overlay >= 7); assert.equal(live.message.textContent, 'hold still');
+test('markerless live preview automatically captures only a sharp validated outline held for five frames', async () => {
+  const live = await liveCameraFixture(); await live.next(3);
+  assert.equal(live.photos.length, 0, 'four frames are not yet enough for paper-edge capture');
+  assert.ok(live.calls.overlay >= 4); assert.equal(live.message.textContent, 'hold still');
   await live.next(); assert.equal(live.photos.length, 1); assert.equal(live.photos[0].blob, live.photo); assert.equal(live.photos[0].live, true);
   assert.equal(live.calls.nativePhotos, 1); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
   assert.ok(live.detections.every(size => size.width === 768 && size.height === 1024), 'live detection uses a bounded sharper preview rather than losing weak paper edges at 720 pixels');
 });
 
-test('high-confidence learned perspective uses three stable observations without an A4 frontality gate', async () => {
+test('printed markers use six stable observations', async () => {
   const live=await liveCameraFixture();
-  live.state.detection={...live.state.detection,method:'ml',paperStatus:'document',scanEligible:true};
-  await live.next(2);assert.equal(live.photos.length,0);
+  live.state.detection={...live.state.detection,method:'marker',paperStatus:'document',scanEligible:true};
+  await live.next(5);assert.equal(live.photos.length,0);
   await live.next();assert.equal(live.photos.length,1);assert.equal(live.calls.nativePhotos,1);
 });
 
@@ -339,19 +339,19 @@ test('unconfirmed model proposals stay manual independently of a projected A4 cl
 test('blur, moving corners and detector-method changes reset the live hold instead of accumulating old frames', async () => {
   const blurred = await liveCameraFixture(); blurred.state.focus = 10; await blurred.next(12);
   assert.equal(blurred.photos.length, 0); assert.equal(blurred.message.textContent, 'blurred');
-  blurred.state.focus = 40; await blurred.next(7); assert.equal(blurred.photos.length, 0); await blurred.next(); assert.equal(blurred.photos.length, 1);
+  blurred.state.focus = 40; await blurred.next(4); assert.equal(blurred.photos.length, 0); await blurred.next(); assert.equal(blurred.photos.length, 1);
   const moving = await liveCameraFixture(), points = moving.state.detection.corners;
   for (let frame = 0; frame < 12; frame++) { const shift = frame % 2 ? 20 : -20; for (const point of points) point.x += shift; await moving.next(); }
   assert.equal(moving.photos.length, 0, 'history retains copies even when a detector reuses its corner objects'); await moving.click('close');
-  const switched = await liveCameraFixture(); await switched.next(4); switched.state.detection = { ...switched.state.detection, method: 'marker' };
+  const switched = await liveCameraFixture(); await switched.next(3); switched.state.detection = { ...switched.state.detection, method: 'marker' };
   await switched.next(5); assert.equal(switched.photos.length, 0, 'paper-edge frames cannot complete the marker hold'); await switched.next(); assert.equal(switched.photos.length, 1);
 });
 
 test('turning automatic capture off retains the shutter and toggling it back starts a fresh hold', async () => {
   const manual = await liveCameraFixture({ auto: false }); await manual.next(12); assert.equal(manual.photos.length, 0);
   await manual.click('shoot'); assert.equal(manual.photos.length, 1);
-  const toggled = await liveCameraFixture(); await toggled.next(4); await toggled.click('auto'); await toggled.next(5); assert.equal(toggled.photos.length, 0);
-  await toggled.click('auto'); await toggled.next(7); assert.equal(toggled.photos.length, 0); await toggled.next(); assert.equal(toggled.photos.length, 1);
+  const toggled = await liveCameraFixture(); await toggled.next(3); await toggled.click('auto'); await toggled.next(5); assert.equal(toggled.photos.length, 0);
+  await toggled.click('auto'); await toggled.next(4); assert.equal(toggled.photos.length, 0); await toggled.next(); assert.equal(toggled.photos.length, 1);
 });
 
 test('closing a camera while a native photo is pending stops tracks and ignores its late result', async () => {

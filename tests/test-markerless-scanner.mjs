@@ -86,7 +86,9 @@ test('ambiguous perspective retains the outside corners for review without infer
   const q=[{x:140,y:70},{x:397,y:173},{x:50,y:490},{x:343,y:567}], assessed=scanner.assessA4Candidate(q,480,640);
   assert.equal(assessed.status,'perspective_uncertain'); assert.ok(assessed.projectedRatio>1); assert.ok(assessed.angleError>.15);
   const result=findsOuter(photo({quad:q,paper:205,shade:-100}));
-  assert.equal(result.paperStatus,'perspective_uncertain'); assert.equal(result.autoCaptureEligible,false);
+  // the picture's own ratio is not trusted; automatic capture follows the rectified ratio (an A4 seen at an angle)
+  assert.equal(result.paperStatus,'perspective_uncertain');
+  assert.equal(result.autoCaptureEligible, scanner.a4RatioMiss(result.corners,480,640) < .07);
   for(const points of [null,[],[{x:0,y:0}],Array(4).fill({x:10,y:10}),[{x:NaN,y:0},{x:1,y:0},{x:0,y:1},{x:1,y:1}]]) assert.equal(scanner.assessA4Candidate(points,480,640).status,'perspective_uncertain');
 });
 
@@ -254,4 +256,25 @@ test('a sheet barely brighter than its desk is still the page when the sheet is 
   const scene = deskScene({ deskTone: 230, paperTone: 240, grain: 2, floor: 70, view: { f: 600, tilt: .3, pan: .25, roll: .05, distance: 950 } });
   const result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
   assert.ok(result.corners && error(result.corners, scene.paperQuad) < 16, 'the A4 sheet, not the desk');
+});
+
+test('automatic capture says why it waits: a strongly tilted sheet, a clipped sheet, a small sheet', () => {
+  const tilted = photo({ quad: [{ x: 90, y: 90 }, { x: 390, y: 90 }, { x: 165, y: 560 }, { x: 315, y: 560 }], background: 70 });
+  const t = scanner.findPageQuadGray(tilted.gray, tilted.W, tilted.H);
+  assert.ok(t.corners); assert.equal(t.autoCaptureEligible, false); assert.equal(t.autoBlock, 'tilt', 'the far end has too few pixels: hold the phone parallel');
+  const clipped = photo({ quad: rotated(15, 240, 215, 315, 490) }), c = scanner.findPageQuadGray(clipped.gray, clipped.W, clipped.H);
+  if (c.corners) assert.equal(c.autoBlock, 'clipped');
+  const fine = scanner.findPageQuadGray(photo().gray, 480, 640);
+  assert.equal(fine.autoBlock === null, fine.autoCaptureEligible);
+});
+
+test('a stretched part of the page is sharpened in proportion to the stretch', () => {
+  // a 100×100 photo with a vertical step, straightened to 200×200: twice the output pixels per photo pixel
+  const W = 100, H = 100, src = new Uint8ClampedArray(W * H * 4);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = x < 50 ? 40 : 230, o = (y * W + x) * 4; src[o] = src[o + 1] = src[o + 2] = v; src[o + 3] = 255; }
+  const corners = [{ x: 0, y: 0 }, { x: 99, y: 0 }, { x: 0, y: 99 }, { x: 99, y: 99 }];
+  const steepest = data => { let m = 0; for (let x = 1; x < 200; x++) m = Math.max(m, Math.abs(data[(100 * 200 + x) * 4] - data[(100 * 200 + x - 1) * 4])); return m; };
+  const plain = scanner.warpPixels(src, W, H, corners, 200, 200).data, sharp = scanner.warpPixels(src, W, H, corners, 200, 200, null, { sharpen: true }).data;
+  assert.ok(steepest(sharp) > steepest(plain) * 1.3, `edge ${steepest(sharp)} vs ${steepest(plain)}`);
+  assert.equal(sharp[(100 * 200 + 10) * 4], plain[(100 * 200 + 10) * 4], 'flat paper is left as it is');
 });

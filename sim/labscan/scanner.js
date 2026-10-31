@@ -838,12 +838,17 @@ export function findPageQuadGray(gray, W, H, rgba = null) {
   if (!found.corners) return none;
   const corners = orderCorners(found.corners);
   /* the A-series shape is reported, but a sheet seen at an angle is still a sheet: automatic capture asks for four
-     strongly measured edges and a sheet that fills a fair part of the frame, not a front-on view */
-  const paperAssessment = assessA4Candidate(corners, W, H);
+     measured edges, a sheet that fills a fair part of the frame and a sheet's shape (A4 or Letter once the perspective
+     is undone; front-on squares, screens and cards are not taken by themselves). autoBlock says what is missing. */
+  const paperAssessment = assessA4Candidate(corners, W, H), clipped = found.sidesOnFrame > 0;
+  const shapeOk = paperAssessment.status === 'a4_candidate' || paperAssessment.status === 'perspective_uncertain' && a4RatioMiss(corners, W, H) < .07;   // Letter misses A4 by .085
+  /* a strongly tilted sheet: its far end has far fewer photo pixels and comes out soft, so wait for a flatter view */
+  const lengths = [[0, 1], [2, 3], [0, 2], [1, 3]].map(([i, j]) => Math.hypot(corners[j].x - corners[i].x, corners[j].y - corners[i].y));
+  const tilted = Math.min(lengths[0], lengths[1]) / Math.max(lengths[0], lengths[1]) < .77 || Math.min(lengths[2], lengths[3]) / Math.max(lengths[2], lengths[3]) < .77;
+  const autoBlock = clipped ? 'clipped' : found.cover < .1 ? 'small' : !found.verified || found.weakestEdge < .55 || found.edgeSupport < .7 ? 'edges' : tilted ? 'tilt' : !shapeOk ? 'shape' : null;
   return { corners, score: found.score, method: 'page', edgeSupport: found.edgeSupport, weakestEdge: found.weakestEdge,
-    verified: found.verified, clipped: found.sidesOnFrame > 0, cover: found.cover, paperStatus: paperAssessment.status, paperAssessment,
-    autoCaptureEligible: found.verified && found.weakestEdge >= .7 && found.edgeSupport >= .8 && found.cover >= .12 &&
-      (paperAssessment.status === 'a4_candidate' || paperAssessment.status === 'perspective_uncertain' && a4RatioMiss(corners, W, H) < .07) };   // Letter misses A4 by .085
+    verified: found.verified, clipped, cover: found.cover, paperStatus: paperAssessment.status, paperAssessment,
+    autoCaptureEligible: autoBlock === null, autoBlock };
 }
 
 /* ---------- 원근 보정 ---------- */
@@ -887,7 +892,7 @@ export function solveHomography(src, dst) {
  * @param {Uint8ClampedArray} src RGBA
  * @returns {{data:Uint8ClampedArray, width:number, height:number}}
  */
-export function warpPixels(src, sw, sh, corners, outW, outH, dstQuad = null) {
+export function warpPixels(src, sw, sh, corners, outW, outH, dstQuad = null, options = {}) {
   const dst = dstQuad || [
     { x: 0, y: 0 }, { x: outW, y: 0 },
     { x: 0, y: outH }, { x: outW, y: outH },
@@ -897,8 +902,9 @@ export function warpPixels(src, sw, sh, corners, outW, outH, dstQuad = null) {
   if (!Hm) return { data: out, width: outW, height: outH };
 
   /* 원본에서 출력 한 칸이 차지하는 크기로 겹샘플 수를 정합니다 */
-  const srcSpan = Math.hypot(corners[1].x - corners[0].x, corners[1].y - corners[0].y);
-  const ratio = srcSpan / outW;
+  /* the nearest side of a tilted sheet decides: it has the most photo pixels per output pixel */
+  const span = (a, b) => Math.hypot(corners[b].x - corners[a].x, corners[b].y - corners[a].y);
+  const ratio = Math.max(span(0, 1) / outW, span(2, 3) / outW, span(0, 2) / outH, span(1, 3) / outH);
   const ss = ratio > 2.2 ? 3 : ratio > 1.25 ? 2 : 1;
   const inv = 1 / (ss * ss);
   const off = [];
@@ -939,7 +945,36 @@ export function warpPixels(src, sw, sh, corners, outW, outH, dstQuad = null) {
       out[o + 3] = 255;
     }
   }
+  if (options.sharpen) sharpenByScale(out, outW, outH, Hm);
   return { data: out, width: outW, height: outH };
+}
+
+/* An unsharp mask as strong as the stretch: where the far end of a tilted sheet had few photo pixels per output pixel,
+   its strokes come out soft and the clean filter would wash the faint ones out, so they are sharpened more there. The
+   stretch is measured from the homography (output → photo) on a 32-pixel grid. */
+function sharpenByScale(px, W, H, Hm) {
+  const G = 32, gw = Math.ceil(W / G) + 1, gh = Math.ceil(H / G) + 1, amount = new Float32Array(gw * gh);
+  const map = (x, y) => { const w = Hm[6] * x + Hm[7] * y + Hm[8]; return [(Hm[0] * x + Hm[1] * y + Hm[2]) / w, (Hm[3] * x + Hm[4] * y + Hm[5]) / w]; };
+  for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) {
+    const x = Math.min(W - 1, i * G), y = Math.min(H - 1, j * G), p = map(x, y), a = map(x + 1, y), b = map(x, y + 1);
+    const area = Math.abs((a[0] - p[0]) * (b[1] - p[1]) - (a[1] - p[1]) * (b[0] - p[0]));      // photo px² per output px²
+    const stretch = area > 0 ? 1 / Math.sqrt(area) : 1;
+    amount[j * gw + i] = Math.max(.35, Math.min(1.6, .35 + .9 * (stretch - 1)));
+  }
+  const copy = px.slice(), row = new Float32Array(W * 3);
+  for (let y = 0; y < H; y++) {
+    const y0 = Math.max(0, y - 1), y1 = Math.min(H - 1, y + 1);
+    for (let x = 0; x < W; x++) for (let c = 0; c < 3; c++)                                      // vertical [1 2 1]
+      row[x * 3 + c] = (copy[(y0 * W + x) * 4 + c] + 2 * copy[(y * W + x) * 4 + c] + copy[(y1 * W + x) * 4 + c]) / 4;
+    const k = amount[((y / G) | 0) * gw], ky = Math.min(gh - 1, Math.round(y / G));
+    for (let x = 0; x < W; x++) {
+      const a = amount[ky * gw + Math.min(gw - 1, Math.round(x / G))] ?? k, x0 = Math.max(0, x - 1), x1 = Math.min(W - 1, x + 1), o = (y * W + x) * 4;
+      for (let c = 0; c < 3; c++) {
+        const blur = (row[x0 * 3 + c] + 2 * row[x * 3 + c] + row[x1 * 3 + c]) / 4;
+        px[o + c] = copy[o + c] + a * (copy[o + c] - blur);
+      }
+    }
+  }
 }
 
 /* ---------- 보정 필터 ---------- */
@@ -1213,7 +1248,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8e31e6b73e0b', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8f2b51627da8', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1234,14 +1269,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8e31e6b73e0b', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8f2b51627da8', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8e31e6b73e0b', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8f2b51627da8', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1286,7 +1321,7 @@ export function warp(canvas, corners, outW = dpiToWidth(DEFAULT_DPI), inset = nu
   }
 
   const img = imgData(canvas);
-  const r = warpPixels(img.data, canvas.width, canvas.height, pts, w, h, dstQuad);
+  const r = warpPixels(img.data, canvas.width, canvas.height, pts, w, h, dstQuad, { sharpen: options.sharpen === true });
   return fromPixels(r.data, w, h);
 }
 
@@ -1483,7 +1518,7 @@ export async function processShot(file, opts = {}) {
   try { rendered = warpApplied ? await renderInWorker(piece?.bitmap || base, piece?.corners || pts, mode, dpi, inset, outputFormat, opts.signal) : null; }
   finally { try { piece?.bitmap.close(); } catch { /* 무시 */ } }
   /* a photo whose corners were not found is still cleaned, as a scan is, at its own proportions */
-  let out = rendered ? null : warpApplied ? warp(base, pts, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  let out = rendered ? null : warpApplied ? warp(base, pts, dpiToWidth(dpi), inset, { pageFormat: outputFormat, sharpen: mode === 'clean' }) : base;
   const quality = rendered?.quality || inspectDocument(out);
   await breathe();
 
@@ -1539,7 +1574,7 @@ export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFA
   let rendered;
   try { rendered = warpApplied ? await renderInWorker(piece?.bitmap || base, piece?.corners || ordered, mode, dpi, inset, outputFormat, options.signal) : null; }
   finally { try { piece?.bitmap.close(); } catch {} }
-  let out = rendered ? null : warpApplied ? warp(base, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat }) : base;
+  let out = rendered ? null : warpApplied ? warp(base, ordered, dpiToWidth(dpi), inset, { pageFormat: outputFormat, sharpen: mode === 'clean' }) : base;
   const quality = rendered?.quality || inspectDocument(out);
   if (out) out = enhance(out, mode);
   const blob = rendered?.blob || await new Promise((r) =>

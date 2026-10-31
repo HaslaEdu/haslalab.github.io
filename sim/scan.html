@@ -113,7 +113,7 @@
 
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=8e31e6b73e0b";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=8f2b51627da8";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -143,7 +143,7 @@ const T = {
     title: "답안 스캔", task: "실험", kind: "종류", answer: "답안지", working: "Working sheet",
     shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 바탕과 구분되는 곳에 놓고, 종이의 네 모서리와 테두리가 모두 보이게 위에서 찍으세요. 검은 표식이 없어도 됩니다. 한 번에 한 쪽씩 찍습니다.",
     live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이의 네 모서리와 테두리가 모두 화면에 들어오게 하세요. 검은 표식은 선택 사항입니다.", lvPage: "종이를 찾았습니다. 테두리를 확인하고 촬영하거나, 더 선명하게 맞춰 주세요.", lvCandidate: "테두리 후보입니다. 촬영 후 네 모서리를 확인해 스캔하세요.",
-    lvHold: "그대로 멈추세요…", lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
+    lvHold: "그대로 멈추세요…", lvWhy: { tilt: "종이가 비스듬히 보여 먼 쪽 글씨가 흐려집니다. 휴대폰을 종이와 평행하게, 바로 위에서 들어 주세요.", clipped: "종이 네 모서리가 모두 화면 안에 들어오게 조금 멀리서 찍으세요.", small: "종이가 작게 보입니다. 조금 더 가까이 대 주세요.", edges: "종이 테두리가 바닥과 잘 구분되지 않습니다. 셔터를 눌러 찍거나 어두운 바탕에 놓아 주세요.", shape: "A4 종이 모양이 아닙니다. 맞다면 셔터를 눌러 찍으세요." }, lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
     working0: "다듬는 중…", corners: "모서리 확인·스캔 만들기", modes: { clean: "또렷하게", color: "컬러 스캔", mono: "흑백", original: "색 보정 없음" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
     a4Shape: "A4 비율을 확인하지 못해 사진을 자르거나 늘리지 않았습니다. A4 답안지라면 «모서리 맞추기»에서 확인한 뒤 A4로 보정하거나 원본 그대로 보내세요.",
@@ -170,7 +170,7 @@ const T = {
     title: "Answer scan", task: "Experiment", kind: "Sheet", answer: "Answer sheet", working: "Working sheet",
     shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a contrasting surface and shoot from above with all four paper corners and edges visible. Black markers are optional. One page per photo.",
     live: "📷 Scan", camApp: "Camera app", lvAim: "Keep all four paper corners and edges in view. Black markers are optional.", lvPage: "Page found. Check the outline and take a photo, or adjust for a clearer view.", lvCandidate: "Possible page outline. Take a photo, then confirm its four corners to create a scan.",
-    lvHold: "Hold still…", lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
+    lvHold: "Hold still…", lvWhy: { tilt: "The sheet is seen at a slant, so its far end blurs. Hold the phone parallel to the paper, straight above it.", clipped: "Keep all four corners of the sheet on screen; step back a little.", small: "The sheet looks small. Move a little closer.", edges: "The sheet's edges are hard to tell from the surface. Take the photo with the shutter, or use a darker background.", shape: "This does not look like an A4 sheet. If it is, take the photo with the shutter." }, lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
     working0: "Straightening…", corners: "Confirm corners and scan", modes: { clean: "Clean", color: "Color scan", mono: "B&W", original: "No color correction" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
     a4Shape: "The A4 aspect ratio could not be verified, so the photo was not cropped or stretched. For an A4 sheet, confirm its corners and correct as A4, or send the original.",
@@ -521,12 +521,12 @@ async function liveCamera() {
       const focused = inspectDocumentPixels(pixels, w, h).focus >= 22;
       if (d?.autoCaptureEligible === true && focused) {
         if (last !== how) hist = []; last = how;
-        const count = how === "ml" ? 3 : how === "page" ? 8 : 6, tolerance = how === "marker" ? 0.012 : 0.008;
+        const count = how === "page" ? 5 : 6, tolerance = 0.012;
         hist.push(d.corners.map(p => ({...p}))); if (hist.length > count) hist.shift();
         const span = Math.max(w, h), still = hist.length === count && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * tolerance));
         say(t().lvHold, true);
         if (still && AUTO) return capture();
-      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? d.scanEligible === true ? t().lvPage : t().lvCandidate : t().lvAim); }
+      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? d.scanEligible === true ? (AUTO && t().lvWhy[d.autoBlock]) || t().lvPage : t().lvCandidate : t().lvAim); }
     }
     timer = setTimeout(frame, 140);
   }
