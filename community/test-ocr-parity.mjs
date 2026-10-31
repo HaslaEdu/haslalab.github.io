@@ -351,6 +351,22 @@ test("with THEORY_GRADER=deepseek a theory paper is graded by DeepSeek from the 
   assert.equal(metered[0].cached_tok, 1024); assert.equal(metered[0].in_tok, 1200);
 });
 
+test("EXPERIMENT_GRADER=deepseek sends an experiment with its page images to DeepSeek, and Gemini covers a DeepSeek failure once", async () => {
+  reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
+  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek", EXPERIMENT_GRADER: "deepseek" };
+  const s = await scoredSession({ comp: "apho", year: 2025, task: "E2" }, settings);
+  const result = await submit(s, settings);
+  assert.equal(result.data.session.status, "graded"); assert.match(result.data.session.detail.tasks.E2.grader, /^deepseek:/);
+  const call = captures.find(row => row.provider === "deepseek"); assert.ok(call.system.startsWith(stablePrefix("ipho", "experiment")));
+  assert.ok(call.body.messages[1].content.some(part => part.type === "image_url"), "the experiment's page images go to DeepSeek");
+  assert.ok(!captures.some(row => row.provider === "gemini" && row.prompt.startsWith("[TASK: grade]")));
+  reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
+  const t = await scoredSession({ comp: "apho", year: 2024, task: "E1" }, settings);
+  fixture.deepseekStatus = 503;
+  const backup = await submit(t, settings);
+  assert.equal(backup.data.session.status, "graded"); assert.equal(backup.data.session.detail.tasks.E1.backup, true); assert.match(backup.data.session.detail.tasks.E1.grader, /^gemini:/);
+});
+
 test("by default Gemini grades a theory paper even when a DeepSeek key is set", async () => {
   reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
   const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };

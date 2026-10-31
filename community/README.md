@@ -73,7 +73,7 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 3. **키 넣기**: **Settings → Variables and Secrets**에서 *Secret*으로 넣습니다. 키는 서버에만 있고 사이트에는 들어가지 않습니다.
    - `UPSTAGE_API_KEY`: 사진 읽기(OCR)
    - `GEMINI_API_KEY`: 답안 쪽 읽기, 채점 기준표 만들기, **실험·자료 분석·관측 채점**(사진을 보고 채점). 모델은 `GEMINI_MODEL`(쪽 읽기, 기본값 `gemini-flash-latest`), `GEMINI_GRADE_MODEL`(채점), `GEMINI_SCHEME_MODEL`(기준표, 시험마다 한 번)로 따로 정할 수 있고, 따로 정하지 않으면 `GEMINI_MODEL`을 씁니다. 실험 채점이 실패하면 다른 채점기로 넘기지 않고 나중에 다시 채점합니다.
-   - `DEEPSEEK_API_KEY`와 변수 `THEORY_GRADER = "deepseek"`: 이론 채점을 DeepSeek에 맡깁니다(같은 규칙·기준표·판독 원문과 답안 사진; DeepSeek은 이미지를 장당 최대 1024토큰으로 줄여 읽습니다). DeepSeek이 실패하면 그 이론 문제만 Gemini가 한 번 채점하고 `backup`을 표시합니다. `THEORY_GRADER`가 없으면 키가 있어도 모든 채점을 Gemini가 합니다. 모델은 `DEEPSEEK_MODEL`(기본값 `deepseek-flash`).
+   - `DEEPSEEK_API_KEY`: DeepSeek 채점. 채점기는 대시보드 변수로 종류별로 고릅니다. `THEORY_GRADER`(이론)와 `EXPERIMENT_GRADER`(실험·자료 분석·관측)에 `gemini`(기본값) 또는 `deepseek`. DeepSeek도 같은 규칙·기준표·판독 원문과 답안 사진으로 채점합니다(이미지는 장당 최대 1024토큰으로 줄여 읽음). DeepSeek이 실패하면 그 문제만 Gemini가 한 번 채점하고 `backup`을 표시하며, Gemini가 실패하면 나중에 다시 채점합니다. 쪽 읽기와 채점 기준표 만들기는 언제나 Gemini입니다. 모델은 `DEEPSEEK_MODEL`(기본값 `deepseek-flash`).
 4. **관리자 지정**: 아래 「관리」의 명령으로 관리자를 정하면 `#/weekly/admin`이 열립니다.
 
 로컬 시험: `.dev.vars`에 키 대신 시험용 값과 `GEMINI_BASE`·`UPSTAGE_BASE`(가짜 서버 주소)를 넣고 `node test-arena.mjs`를 실행합니다.
