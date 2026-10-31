@@ -1821,7 +1821,7 @@ function settleScheme(sc) {
   sc.items = tidySchemeItems(sc.items);
   sc.parts = cleanParts(sc.parts);
   /* a printed total only trims a small excess (10.1 → 10); one far below the items is a misread heading, not the total */
-  if (!(+sc.total > 0) || +sc.total < .9 * cappedSum(sc.items, sc.parts, null)) delete sc.total;
+  { const listed = cappedSum(sc.items, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
   sc.points = schemeTotal(sc);
   return sc;
 }

@@ -68,7 +68,9 @@ export function cappedSum(items, parts, total, value = i => i.points) {
 }
 
 /* the paper's points: its items, bounded by the printed headings and total */
-export const schemeTotal = scheme => cappedSum(scheme.items, scheme.parts, scheme.total);
+/* the paper's points: its items bounded by the printed headings and total; a printed total is the paper's maximum even
+   when the scheme missed an item under it (IPhO 2025 T3 came out at 9.9 when one 0.1-pt item was not listed) */
+export const schemeTotal = scheme => +scheme.total > 0 ? +(+scheme.total).toFixed(2) : cappedSum(scheme.items, scheme.parts, null);
 
 /* Every number written in a transcribed answer, scientific notation included: «5.31 \\cdot 10^{-11} m», «2.2 × 10^9»,
    «1.0 * 10^-10», «3e8», «−4.5». A value the grader reports must be one of the numbers on its page; the reader's own
