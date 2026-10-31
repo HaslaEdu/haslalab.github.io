@@ -117,3 +117,21 @@ test('an owner OCR retry result cannot render after account or route changes, an
     assert.equal(calls,1);
   }
 });
+
+test('a report is shown in the language the exam was sat in, whatever the page language, and the page language comes back',async()=>{
+  const a=app('en'),s=qualitativeSession(),host=a.host();
+  s.lang='ko';s.comp='ipho';s.review_only=false;s.score=1;s.points=2;
+  s.detail={tasks:{T:{status:'graded',score:1,points:2,items:[{id:'A.1',what:'번역된 요구 사항',points:2,got:1,decision:'partial',by:'model',rules:[],note:'한국어 첨삭'}],feedback:[]}}};
+  a.context.cmApi=async()=>({session:s});
+  await a.context.arLabOne(host,()=>true,s.id);
+  assert.ok(host.innerHTML.includes('실전 응시'),'labels in Korean for a Korean sitting');
+  assert.ok(host.innerHTML.includes('부분'),'decisions in Korean');
+  assert.ok(!host.innerHTML.includes('Timed attempt'));
+  await Promise.resolve();
+  assert.equal(a.context.lang,'en','the page keeps its own language after the report is drawn');
+  const b=app('ko'),t=qualitativeSession(),host2=b.host();t.lang='en';
+  b.context.cmApi=async()=>({session:t});
+  await b.context.arLabOne(host2,()=>true,t.id);
+  assert.ok(host2.innerHTML.includes('Grading & feedback')&&!host2.innerHTML.includes('채점·첨삭'),'an English sitting reads in English on a Korean page');
+  await Promise.resolve();assert.equal(b.context.lang,'ko');
+});

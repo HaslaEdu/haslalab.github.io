@@ -6,6 +6,7 @@
 //   [TASK: build marking scheme]  a fixed scheme (A.1, A.2, A.3 values, B.1 graph, C.1 derivation; 3.5 points)
 //   [TASK: read page]             a fixed reading (A.1 108.2 ohm, A.2 395, a graph with 6 points, C.1 text); a page image
 //                                 longer than 300 bytes carries the header «E2, working sheet», one longer than 600 is «poor»
+//   [TASK: translate marking-scheme items]  each requirement, prefixed «번역: » (a Korean sitting's report)
 //   [TASK: grade]                 every item found on the first answer page of the task (else the first page), half marks,
 //                                 values as read — except A.3, claimed as 11, which is on no page (the Worker must give 0)
 //   anything else                 the old text grader: half marks with a quote from the answer
@@ -99,6 +100,10 @@ http.createServer(async (req, res) => {
       if (/Leave out problems ([\d, ]+) entirely/.test(prompt)) seen.leftOut = RegExp.$1;
       if (/theory paper/.test(prompt)) (seen.theorySchemes = seen.theorySchemes || []).push({ pdfs: parts.filter(p => p.inline_data).map(p => Buffer.from(p.inline_data.data, "base64").toString().replace("%PDF-1.4 fake solution ", "")) });
       return respond(/_table/.test(name) ? SCHEME_T : SCHEME);
+    }
+    if (prompt.startsWith("[TASK: translate marking-scheme items]")) {   // a Korean sitting's item wording: each string, marked
+      seen.translations = (seen.translations || 0) + 1;
+      return respond({ items: JSON.parse(prompt.split("\n").at(-1)).map(w => "번역: " + w) });
     }
     if (prompt.startsWith("[TASK: read page]")) {
       if (/theory exam/.test(prompt)) seen.theoryReads = (seen.theoryReads || 0) + 1;

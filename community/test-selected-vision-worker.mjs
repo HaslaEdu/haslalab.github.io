@@ -63,7 +63,7 @@ async function fixture(run){
     return provider==='gemini'?Response.json({modelVersion:VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
   };
   const api=async(path,{id=1,body,method=body===undefined?'GET':'POST',settings=env}={})=>{const response=await worker.fetch(new Request('https://vision.local/api'+path,{method,headers:{Authorization:'Bearer '+tokens[id],'Cache-Control':'no-cache',...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),settings);return{status:response.status,data:await response.json()};};
-  const start=async(provider,id=1)=>api('/lab/start',{id,body:{comp:'ipho',year:2025,tasks:['T1'],review:true,...(provider?{provider}:{})}});
+  const start=async(provider,id=1,review=true)=>api('/lab/start',{id,body:{comp:'ipho',year:2025,tasks:['T1'],review,...(provider?{provider}:{})}});
   const upload=async(token)=>{const response=await worker.fetch(new Request('https://vision.local/api/lab/up/pages?task=T1&kind=answer',{method:'PUT',headers:{'X-Lab-Token':token,'Content-Type':'image/jpeg'},body:scan}),env);return{status:response.status,data:await response.json()};};
   const drain=async()=>{let safety=0;while(queue.length){assert.ok(++safety<40);const item=queue.shift();sql.prepare('UPDATE lab_jobs SET available_at=0 WHERE id=?').run(item.body.jobId);await worker.queue({messages:[{body:item.body,ack(){},retry(){queue.push(item);}}]},env);}};
   const seedScheme=(sid,provider)=>{const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=[provider,VISION_MODELS[provider],REG_VERSION,entry.solution,entry.mark||''].join(':');sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[{id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]}]}),'fixture:'+provider,t);};
@@ -72,8 +72,20 @@ async function fixture(run){
   try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;}});}finally{Object.assign(globalThis,old);sql.close();}
 }
 
+test('grading mode spends its token when the sitting opens: the provider is pinned then, and an unpaid start leaves nothing open',async()=>fixture(async({api,start,sql,calls})=>{
+  const before=sql.prepare('SELECT exam_tokens,exam_half FROM users WHERE id=1').get();
+  const none=await start();assert.equal(none.data.error,'provider_required');
+  assert.equal(sql.prepare('SELECT COUNT(*) n FROM lab_sessions WHERE user_id=1').get().n,0,'a start that could not be paid for is removed');
+  const a=(await start('deepseek')).data,sid=a.session.id;assert.equal(a.session.paid,true);assert.equal(a.session.provider,'deepseek');assert.equal(a.session.provider_locked,true);
+  assert.equal(sql.prepare("SELECT count(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);
+  assert.notDeepEqual(sql.prepare('SELECT exam_tokens,exam_half FROM users WHERE id=1').get(),before,'the token is spent at the first press');
+  const again=(await start('deepseek')).data;assert.equal(again.session.id,sid);assert.equal(again.resumed,true);
+  assert.equal(sql.prepare("SELECT count(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1,'coming back does not spend again');
+  assert.equal((await api(`/lab/sessions/${sid}/provider`,{body:{provider:'gemini'}})).data.error,'provider_locked');assert.equal(calls.length,0);
+}));
+
 test('free choice is owner-only and editable; first paid operation atomically pins one concurrent provider',async()=>fixture(async({api,start,upload,sql,calls})=>{
-  const a=(await start()).data,sid=a.session.id;assert.equal(a.session.provider,null);await upload(a.token);
+  const a=(await start(undefined,1,false)).data,sid=a.session.id;assert.equal(a.session.provider,null);await upload(a.token);
   assert.equal((await api(`/lab/sessions/${sid}/pay`,{body:{}})).data.error,'provider_required');
   assert.equal(sql.prepare('SELECT charged FROM lab_sessions WHERE id=?').get(sid).charged,0);assert.equal(calls.length,0);
   assert.equal((await api(`/lab/sessions/${sid}/provider`,{id:2,body:{provider:'gemini'}})).status,404);
@@ -87,7 +99,7 @@ test('free choice is owner-only and editable; first paid operation atomically pi
 }));
 
 test('a previously paid legacy session requires an explicit first provider and pins it without another charge',async()=>fixture(async({api,start,sql,calls})=>{
-  const a=(await start()).data,sid=a.session.id;
+  const a=(await start(undefined,1,false)).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET charged=1,sources=json_set(sources,'$._legacy','preserved') WHERE id=?").run(sid);
   sql.prepare("INSERT INTO lab_ledger(user_id,delta,reason,note,session_id,created_at)VALUES(1,-1,'grade','legacy',?,?)").run(sid,Math.floor(Date.now()/1000));
   assert.equal((await api(`/lab/sessions/${sid}/provider`,{body:{}})).data.error,'provider_required');

@@ -89,7 +89,7 @@ test('an explicit owner retry resets failed OCR atomically, queues once and reta
   env.LAB_JOBS.sendBatch=originalSend;await drain();
   const done=(await api('/lab/sessions/'+sid)).data.session;assert.equal(done.status,'graded');assert.equal(done.pages.length,4);assert.ok(done.pages.every(page=>page.ocr_status==='done'));
   assert.deepEqual(done.tasks,['T1','T2']);assert.deepEqual(done.detail.tasks.T2,completedTask,'a completed other task is preserved without another grading call');
-  assert.equal(calls.length,before+5);assert.equal(sql.prepare("SELECT count(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);assert.deepEqual(sql.prepare('SELECT exam_tokens,exam_half FROM users WHERE id=1').get(),balance);
+  assert.equal(calls.length,before+6,'four pages, one grade, and the Korean wording of the scheme once');assert.equal(sql.prepare("SELECT count(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);assert.deepEqual(sql.prepare('SELECT exam_tokens,exam_half FROM users WHERE id=1').get(),balance);
   assert.equal((await api('/lab/sessions/'+sid+'/retry-ocr',{provider:'gemini'})).data.error,'provider_locked');
 }));
 
@@ -98,7 +98,7 @@ test('admin regrade recovers failed OCR through the same committed queue before 
   const before=calls.length,response=await api('/admin/lab/'+sid,{task:'T1',regrade:true});
   assert.equal(response.status,200);assert.equal(response.data.session.status,'grading');assert.equal(queue.length,2);assert.equal(calls.length,before);
   assert.equal(sql.prepare('SELECT read FROM lab_pages WHERE session_id=?').get(sid).read,null);await drain();
-  const done=(await api('/lab/sessions/'+sid)).data.session;assert.equal(done.status,'graded');assert.equal(done.pages[0].ocr_status,'done');assert.equal(calls.length,before+2);
+  const done=(await api('/lab/sessions/'+sid)).data.session;assert.equal(done.status,'graded');assert.equal(done.pages[0].ocr_status,'done');assert.equal(calls.length,before+3,'one page, one grade, and the Korean wording of the scheme once');
   assert.equal(sql.prepare("SELECT count(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);
 }));
 

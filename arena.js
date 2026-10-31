@@ -1114,6 +1114,8 @@ const arIsContest = s => s && s.comp === "kmo" && s.purpose === "review" && type
 const arReviewOnly = s => !!(s && (s.review_only || arIsContest(s)));
 const arQualitative = x => !!(x && (x.grading_mode === "qualitative_review" || x.reference === "published_problem_only"));
 const arLabHasScore = x => !!(x && Number.isFinite(x.score) && Number.isFinite(x.points) && x.points > 0);
+/* the language a sitting was taken in (and is graded and reported in); older records without one follow the page */
+const arLabLang = s => s && (s.lang === "en" || s.lang === "ko") ? s.lang : lang;
 const arLabModeLabel = s => arReviewOnly(s) ? (lang === "en" ? "Grading & feedback" : "채점·첨삭") : (lang === "en" ? "Timed attempt" : "실전 응시");
 const arLabScoreLabel = x => arLabHasScore(x) ? `${x.score} / ${x.points}` : x.status === "graded" ? (lang === "en" ? "Feedback complete · no score" : "첨삭 완료 · 점수 없음") : "–";
 const arLabCost = s => Number.isFinite(s?.cost) && s.cost >= 0 ? s.cost : s?.kind === "mixed" ? 0.5 : 0.3;
@@ -1355,9 +1357,13 @@ async function arLabOne(root, alive, id,preloaded) {
   const pageAlive=alive,owner=cm.me?.id??cm.me?.username,base=typeof cmBase==="function"?cmBase():null,auth=typeof cmTok==="function"?cmTok():null;
   alive=()=>pageAlive()&&(cm.me?.id??cm.me?.username)===owner&&(typeof cmBase!=="function"||cmBase()===base)&&(typeof cmTok!=="function"||cmTok()===auth);
   ar.poller?.dispose();ar.poller=null;
-  const T = arT();
   if (!cm.me) { try { sessionStorage.setItem("hlCmBack", "#/lab/" + id); } catch (e) {} location.hash = "#/login"; return; }
   const s = preloaded||(await cmApi("GET", `/lab/sessions/${id}`)).session; if (!alive()) return;
+  /* a report is written in the language the exam was sat in, labels included: the page's language is lent to it until this
+     synchronous render ends (the microtask runs even if the render throws) */
+  const siteLang = lang, viewLang = arLabLang(s);
+  lang = viewLang; Promise.resolve().then(() => { if (lang === viewLang) lang = siteLang; });
+  const T = arT();
   const isContest = arIsContest(s), reviewOnly = arReviewOnly(s), english = lang === "en", L = isContest ? {...arLabLabels(s),
     resume: english ? "Open answer submission / review" : "답안 제출·검토 화면 열기",
     reportH: english ? "Written-proof learning review" : "서술형 학습용 검토 기록", total: english ? "Reference score" : "학습용 참고점수",
@@ -1416,12 +1422,12 @@ async function arLabOne(root, alive, id,preloaded) {
     if(!alive())return;const provider=s.provider_locked&&AR_VISION_PROVIDERS.includes(s.provider)?s.provider:arVisionProvider(root,s.provider||"gemini");if(!arVisionAvailable(s,provider))return;
     const providerField=arVisionField(root);if(providerField)providerField.disabled=true;
     pay.disabled = true; pay.textContent = L.payBusy;
-    try { await cmApi("POST", `/lab/sessions/${s.id}/pay?lang=${lang}`, {lang,provider,max_cost:arLabCost(s)}); if (alive()) arLabOne(root, alive, id); }
+    try { await cmApi("POST", `/lab/sessions/${s.id}/pay?lang=${viewLang}`, {lang:viewLang,provider,max_cost:arLabCost(s)}); if (alive()) arLabOne(root, alive, id); }
     catch (e) {
       if(!alive())return;
       if(e.code==='price_changed'){
         await arLabOne(root,alive,id);
-        const message=root.querySelector('#arLabPayMsg');if(message)message.textContent=lang==='en'?'The fee changed. Check the updated fee and request grading again.':'채점 비용이 갱신되었습니다. 새 비용을 확인한 뒤 다시 신청해 주세요.';
+        const message=root.querySelector('#arLabPayMsg');if(message)message.textContent=english?'The fee changed. Check the updated fee and request grading again.':'채점 비용이 갱신되었습니다. 새 비용을 확인한 뒤 다시 신청해 주세요.';
       }else{pay.disabled=false;if(providerField)providerField.disabled=!!s.provider_locked;pay.textContent=L.payBtn;root.querySelector('#arLabPayMsg').textContent=e.code==='no_tokens'?L.payNo:arErr(e);}
     }
   };

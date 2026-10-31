@@ -122,22 +122,23 @@ test('simultaneous complementary payments share one discount and never reuse a p
   assert.equal(competing.filter(r => r.data.session.paired_with === first).length, 1);
 });
 
-test('start, resume, selected GET and bootstrap quote the eligible 0.2 price without spending or reserving tokens', async () => {
+test('a grading-mode start spends the eligible 0.2 paired price at once; resume, GET and bootstrap show it without spending again', async () => {
   fund(27, 0.5); const first = seed(27, { tasks: theory, pair: true }); await pay(first, 27);
   const request = { comp:'ipho',year:2024,tasks:lab,pair:true,review:true,
     sources:Object.fromEntries(lab.map(task => [task,{sol:`IPhO_2024_S${task.slice(1)}.pdf`}])) };
   const opened = await api('/lab/start', request, 27); assert.equal(opened.status, 200, JSON.stringify(opened.data));
   const id = opened.data.session.id;
+  assert.equal(opened.data.session.paid, true); assert.equal(opened.data.tokens, 0);
   const snapshots = [opened, await api('/lab/start', request, 27), await api('/lab/sessions/' + id, undefined, 27), await api('/lab/sessions/' + id)];
   const boot = await api('/lab/bootstrap?id=' + id, undefined, 27); snapshots.push(boot);
   for (const result of snapshots) {
-    assert.equal(result.data.session.cost, 0.2); assert.equal(result.data.session.price_estimate, true);
+    assert.equal(result.data.session.cost, 0.2); assert.equal(result.data.session.price_estimate, false);
     assert.equal(result.data.session.paired_with, first); assert.equal(result.data.session.discount, 0.1);
   }
-  assert.equal(boot.data.active.cost, 0.2); assert.equal(balance(27), 0.2); assert.equal(paidLedger(id).length, 0);
+  assert.equal(boot.data.active.cost, 0.2); assert.equal(balance(27), 0); assert.equal(paidLedger(id).length, 1, 'one charge, at the first press');
   assert.equal((await api('/lab/sessions/' + id, undefined, 28)).status, 404);
   await api('/lab/sessions/' + id + '/text', { answers:{[lab[0]]:'Completed answer'} }, 27);
-  const paid = await pay(id, 27); assert.equal(paid.status, 200); assert.equal(paid.data.tokens, 0);
+  const paid = await pay(id, 27); assert.equal(paid.status, 200); assert.equal(paid.data.tokens, 0); assert.equal(paidLedger(id).length, 1);
   assert.equal(paid.data.session.cost, 0.2); assert.equal(paid.data.session.price_estimate, false);
 });
 

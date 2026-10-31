@@ -5,6 +5,8 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
+import { tidySchemeItems, schemePoints } from "./lab-scheme-items.js";
+import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
@@ -1794,6 +1796,7 @@ async function labCanonicalPdf(env,source) {
   if(source?.startsWith('https://'))return labTrustedPdf(source,value=>value===source);
   return labPdf(env,source);
 }
+const ONE_ITEM_ONE_ID = "Every item has its own id, used once (when a part repeats the same mark for several cases, e.g. one per concentration, write A1.a, A1.b, …), and its own points only — never the total of its part repeated on each row. The items' points add up to the task's printed total.";
 async function labScheme(env, s, task, m) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol, theory=sx.kind==="theory";
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
@@ -1801,7 +1804,11 @@ async function labScheme(env, s, task, m) {
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
   const key = [labProvider(s),VISION_MODELS[labProvider(s)],REG_VERSION,src,sx.mark||''].join(':');
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
-  if (kept) return JSON.parse(kept.scheme);
+  if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
+    const sc = JSON.parse(kept.scheme);
+    if (Array.isArray(sc.items) && sc.items.length) { sc.items = tidySchemeItems(sc.items); sc.points = schemePoints(sc.items); }
+    return sc;
+  }
   const res = await labCanonicalPdf(env,src);
   if (!res) return null;                                              // there is no such solution
   const mark = sx.mark ? await labCanonicalPdf(env,sx.mark).catch(e => { console.error("lab marking", e && e.message); return null; }) : null;
@@ -1813,6 +1820,7 @@ async function labScheme(env, s, task, m) {
         "Set points_verified=true ONLY if this current-year section explicitly prints its problem or item point values. Never invent equal weights, partial credits, a total or a marking rubric. If no explicit point values are printed, return points_verified=false, points=0, items=[], notes=no_official_points."] : []),
       ...(sx.skip ? [`Leave out problems ${sx.skip.replace(/,/g, ", ")} entirely: they are experimental problems, graded separately.`] : []),
       "List every marked item of the marking scheme exactly as printed: its id (prefix it with the problem number when the paper has several, e.g. 1.A.2 or T2-B.3), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
+      ONE_ITEM_ONE_ID,
       "When no separate marking scheme exists and the solution gives only the points of each part, make one item per part with those points and describe the expected answer.",
       "type: value (a numerical final answer, with its unit), derivation (a formula, an expression or reasoning; also a symbolic final answer), graph (a sketch or plot the scheme marks), or other (a multiple-choice answer, a statement, a diagram).",
       "sheet: answer for a final answer that must be written in the answer-sheet box, any for intermediate steps and method marks.",
@@ -1826,6 +1834,7 @@ async function labScheme(env, s, task, m) {
       sx.no ? `In the competition's booklet this experiment is Problem ${sx.no}; if the document holds several problems, use only Problem ${sx.no}.`
         : `If the document holds several problems, use only ${task} (it may be called Problem ${task.replace(/\D/g, "") || task}, Experiment ${task.replace(/\D/g, "")} or ${task}).`,
       "List every marked item of the marking scheme exactly as printed: its id (e.g. A.1), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
+      ONE_ITEM_ONE_ID,
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
       "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
@@ -1836,11 +1845,30 @@ async function labScheme(env, s, task, m) {
   const sc = out.raw;
   if (eotvos && (!sc || sc.points_verified !== true || !Array.isArray(sc.items) || !sc.items.length)) return { unscored: true, points: null, items: [], notes: "no_official_points" };
   if (!sc || !Array.isArray(sc.items) || !sc.items.length) throw new Error("empty scheme");
-  sc.items = sc.items.filter(i => i && i.id && i.points > 0).map(i => ({ ...i, id: String(i.id).slice(0, 20) }));
-  sc.points = +sc.items.reduce((a, i) => a + i.points, 0).toFixed(2);
+  sc.items = tidySchemeItems(sc.items);
+  if (!sc.items.length) throw new Error("empty scheme");
+  sc.points = schemePoints(sc.items);
   await env.DB.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)")
     .bind(s.exam_key, task, key, JSON.stringify(sc), out.model, now()).run();
   return sc;
+}
+/* a Korean sitting's requirements in Korean (lab-localize.js): translated once per scheme, kept as source "l10n:<lang>:<hash>" */
+async function labSchemeWords(env, s, task, scheme, lang, m) {
+  const list = schemeWords(scheme);
+  if (lang === "en" || !list.length || !list.some(Boolean)) return null;
+  const key = `l10n:${lang}:` + await sha256(JSON.stringify(list));
+  const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
+  if (kept) return JSON.parse(kept.scheme);
+  const out = await labVision(env, s, [{ text: translationPrompt(list) }], WORDS_SCHEMA, 16384, m, "translate");
+  const clean = checkTranslation(out.raw?.items, list);
+  await env.DB.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)")
+    .bind(s.exam_key, task, key, JSON.stringify(clean), out.model, now()).run();
+  return clean;
+}
+async function labLocalize(env, s, task, scheme, res, lang, m) {
+  if (lang === "en" || !Array.isArray(res?.items) || !res.items.length) return res;
+  try { return localizeItems(res, scheme, await labSchemeWords(env, s, task, scheme, lang, m)); }
+  catch (e) { console.error("lab translate", e && e.message); return res; }          // the original words are a fair fallback
 }
 /* an admin's own rubric, when there is one, stands in for the solution's scheme */
 const schemeFromRubric = rb => { const items = JSON.parse(rb.rubric).map(c => ({ id: String(c.id), points: +c.max, type: "other", sheet: "any", what: `${c.name || ""}: ${c.requirement}${c.partial ? " (partial: " + c.partial + ")" : ""}` }));
@@ -2102,7 +2130,7 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
       if (labReview(s) && paper) { try { return await labQualitative(env, s, task, mine, paper, lang, m); } catch (error) { console.error("lab qualitative", error?.message); return { status: "error", why: "review_failed", points: null, score: null, pages: mine.length }; } }
       return { status: "pending", why: "no_solution", points: null, pages: mine.length };
     }
-    try { return await labGradeVision(env, s, task, mine, scheme, lang, m); }
+    try { return await labLocalize(env, s, task, scheme, await labGradeVision(env, s, task, mine, scheme, lang, m), lang, m); }
     catch (e) { console.error("lab grade", e && e.message); return { status: "error", ...(e?.code ? { why: e.code } : {}), points: scheme.points, pages: mine.length }; }
   }
   return {status:'pending',why:'provider_required',score:null,pages:mine.length};
@@ -2140,6 +2168,20 @@ async function labSave(env, s, tasks, per, tries, ms) {
   await env.DB.prepare("UPDATE lab_sessions SET status=?,score=?,points=?,detail=?,graded_at=? WHERE id=?")
     .bind(tot.status, tot.status === "graded" ? tot.score : null, tot.points, JSON.stringify(detail), tot.status === "graded" ? t : null, s.id).run();
   return env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(s.id).first();
+}
+/* Grading mode: pressing 채점하기 asks for grading, so the token is spent as the sitting opens, before any page can be
+   read; nothing is read for free and then left unpaid.  A new sitting that cannot be paid for is removed again, so the
+   candidate is not left holding an open, unpaid one. */
+async function labReviewCharge(env, s, body, fresh) {
+  if (!s || !labReview(s) || s.charged || contestMeta(s)) return s;
+  try {
+    await labRequireJobs(env);
+    s = await labSelectProvider(env, s, body.provider, true);
+    return await labCharge(env, s, body.max_cost);
+  } catch (e) {
+    if (fresh) await env.DB.prepare("DELETE FROM lab_sessions WHERE id=? AND charged=0 AND NOT EXISTS(SELECT 1 FROM lab_pages WHERE session_id=?)").bind(s.id, s.id).run();
+    throw e;
+  }
 }
 /* Price, paid-pair matching, balance and charged flag are one D1 transaction. A full paid pair's
    first round costs 0.3 and its one complementary round 0.2; mixed sittings cost 0.5.
@@ -2181,10 +2223,10 @@ async function labCharge(env, s, maxCost) {
 }
 /* scanning over (or «finish without grading») and nothing paid: the sitting is kept as it stands, ungraded ('ended');
    grading can still be asked for later from the score report */
-async function labEnd(env, s) {
+async function labEnd(env, s, paid = false) {
   const t = now();
   await env.DB.prepare(`UPDATE lab_sessions SET status='ended',submitted_at=?,upload_hash=CASE WHEN upload_hash LIKE 'void:%' THEN upload_hash ELSE 'void:'||upload_hash END
-    WHERE id=? AND status='scanning' AND charged=0`).bind(t, s.id).run();
+    WHERE id=? AND status='scanning' AND (charged=0 OR ?=1)`).bind(t, s.id, paid ? 1 : 0).run();
   return labQuote(env, await labGet(env, s.id));
 }
 /* submit once: the session moves from 'scanning' to 'grading' in one statement, so a second click or a
@@ -2851,6 +2893,7 @@ async function lab(p, m, body, me, req, env, url) {
     if (open && (open.status === "running" || open.status === "scanning")) {
       if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks) || labReview(open) !== reviewOnly) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
       if (provider) open = await labSelectProvider(env, open, provider);
+      open = await labReviewCharge(env, open, body, false);
       return { session: pubLab(open, null), resumed: true, tokens: await labTokens(env, me.id) };
     }
     const kind = labKind({ comp,year,tasks:JSON.stringify(tasks),sources:JSON.stringify(sources) });
@@ -2869,6 +2912,7 @@ async function lab(p, m, body, me, req, env, url) {
     if (open.exam_key !== key || open.tasks !== JSON.stringify(tasks) || labReview(open) !== reviewOnly) throw new HttpError(409, "other_active", { other: pubLab(open, null), tokens: await labTokens(env, me.id) });
     /* the session that won is this call's only if it was written with this call's upload token */
     const mine = open.upload_hash === await sha256(token);
+    open = await labReviewCharge(env, open, body, mine);
     return { session: pubLab(open, null), resumed: !mine, token: mine ? token : undefined, tokens: await labTokens(env, me.id) };
   }
   if (p === "/api/lab/tokens" && m === "GET") {
@@ -2983,7 +3027,8 @@ async function lab(p, m, body, me, req, env, url) {
     let s = await labAdvance(env, await labOwned(env, +r[1], me));
     if (s.status === "running") throw new HttpError(409, "running");                         // finish the exam first
     /* grade: false ends the sitting ungraded and spends nothing; otherwise grading is paid for (once) and runs */
-    if (body.grade === false) s = s.charged ? s : await labEnd(env, s);
+    /* a grading-mode sitting paid at its opening and still empty can be closed, to free the active slot (the token stays spent) */
+    if (body.grade === false) s = !s.charged ? await labEnd(env, s) : labReview(s) && !(await labPagesOf(env, s.id)).length ? await labEnd(env, s, true) : s;
     else if (s.status === "scanning" || s.status === "ended") {
       if (labReview(s) && !(await labPagesOf(env, s.id)).length) bad("no_answers");
       if (contestMeta(s)) {
@@ -2992,7 +3037,7 @@ async function lab(p, m, body, me, req, env, url) {
         if (pages.some(p => !p.edited)) throw new HttpError(409, "needs_confirmation");
       }
       s = await labSelectProvider(env, s, body.provider, true);
-      await labRequireJobs(env); s = await labCharge(env, s, body.max_cost); s = await labFinalize(env, s, lang);
+      await labRequireJobs(env); s = await labCharge(env, s, body.max_cost); s = await labFinalize(env, s, s.lang);
     }
     const [pages, tokens, standings, related] = await Promise.all([
       labPagesOf(env, s.id), labTokens(env, s.user_id), s.status === 'graded' ? labStandings(env, s) : null,
@@ -3009,7 +3054,7 @@ async function lab(p, m, body, me, req, env, url) {
     s = await labSelectProvider(env, s, body.provider, true);
     await labRequireJobs(env);
     s = await labCharge(env, s, body.max_cost);
-    if (s.status === "ended") s = await labFinalize(env, s, lang);
+    if (s.status === "ended") s = await labFinalize(env, s, s.lang);
     else if(!contestMeta(s)&&['running','scanning'].includes(s.status))await labQueueOcr(env,s);
     return { session: pubLab(s, await labPagesOf(env, s.id)), tokens: await labTokens(env, s.user_id), queued: s.status === "grading" };
   }

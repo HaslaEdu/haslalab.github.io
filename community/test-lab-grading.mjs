@@ -57,8 +57,10 @@ ok(e1.feedback.length === 1 && e1.feedback[0].page === 1, "feedback pointing at 
 ok(e1.review && /graph/.test(e1.review.summary) && e1.review.habits.length === 1 && e1.review.habits[0].pages.join() === "1" && e1.review.handwriting.rating === "readable" && /7 and 1/.test(e1.review.handwriting.notes),
   "the coach's review: summary, a habit to fix (on pages that exist), handwriting " + JSON.stringify(e1.review));
 ok(e2.status === "pending" && e2.why === "no_solution", "E2: no official solution file → waits (no_solution)");
-const kept = sql("SELECT source FROM lab_schemes");
+const kept = sql("SELECT source FROM lab_schemes WHERE source NOT LIKE 'l10n:%'");
 ok(/IPhO_2024_S1_KO\.pdf/.test(kept) && (kept.match(/"source"/g) || []).length === 1, "the scheme drawn from the English original is kept under the solution the exam named");
+ok(it("A.1").what === "번역: R0" && it("C.1").what === "번역: lambda = P L / (A dT)", "a Korean sitting reads each requirement in Korean " + JSON.stringify(e1.items.map(x => x.what)));
+ok((sql("SELECT source FROM lab_schemes WHERE source LIKE 'l10n:ko:%'").match(/"source"/g) || []).length === 1, "the translation is kept beside the scheme");
 
 /* a final answer on a working sheet does not count (R1) */
 const H = await sign("grB");
