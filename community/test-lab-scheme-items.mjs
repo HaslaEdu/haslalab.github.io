@@ -127,3 +127,16 @@ test("R13: a step's quote must be on its page, however the formula was typed", a
   assert.ok(!quoteOnPage("", page) && !quoteOnPage(null, page), "no quote, no marks");
   assert.deepEqual(numbersIn(String.raw`K = 1.04 \cdot 10^{-9} m s^{-1}`).filter(x => Math.abs(x - 1.04) < 1e-9), [], "the mantissa alone is not a written number");
 });
+
+test("R12 in code: the official value, its last printed digit or 2 %, and nearest powers of ten", async () => {
+  const { valueMatches, refTolerance } = await import("./src/lab-scheme-items.js");
+  const ok = (ref, v, tol = "default") => valueMatches({ ref, tol }, v);
+  assert.ok(ok("-13.6", -13.5), "IPhO 2025 T1 A.3.3: −13.5 eV against −13.6 eV is within the last digit");
+  assert.ok(!ok("-13.6", -13.3));
+  assert.ok(ok("7.7", 7.6) && !ok("7.7", 7.9) && !ok("7.7", 0.069), "H_c = 6.9 cm is 0.069 m, far from 7.7 m");
+  assert.ok(ok("184.3", 184) && !ok("184.3", 194));
+  assert.ok(!ok("1.0e-4", 1.04e-9), "an exponent off by five orders is wrong");
+  assert.ok(ok("1e11", 6.1e10, "order") && !ok("1e11", 2.2e9, "order"), "IPhO 2025 T1 B.3.11: nearest power of ten");
+  assert.deepEqual(refTolerance("2.2e9"), { value: 2.2e9, tol: 1e8 });
+  assert.equal(refTolerance("about 7"), null, "no official number, no code check: the grader judges");
+});

@@ -107,3 +107,23 @@ export function quoteOnPage(quote, page) {
   let hit = 0; for (let i = 0; i < q.length - 1; i++) if (pairs.has(q.slice(i, i + 2))) hit++;
   return hit / (q.length - 1) >= .75;
 }
+
+/* R12 in code, where the scheme gives the official value but prints no interval: the candidate's value (converted into
+   the item's unit by the grader) is right within ±1 in the official value's last printed digit or 2 %, whichever is
+   wider; «nearest power of ten» items compare orders of magnitude. The models got these sums wrong in both directions
+   (IPhO 2025 T1: −13.5 eV marked wrong against −13.6 eV, 6.1×10¹⁰ M☉ wrong against «nearest power of ten» 10¹¹). */
+export function refTolerance(ref) {
+  const text = String(ref ?? "").trim().replace(/[−–]/g, "-").replace(/\s+/g, "");
+  const m = text.match(/^(-?)(\d*)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  if (!m || !(m[2] || m[3])) return null;
+  const value = +text, decimals = (m[3] || "").length, exp = +(m[4] || 0);
+  if (!Number.isFinite(value)) return null;
+  return { value, tol: Math.max(.02 * Math.abs(value), 10 ** (exp - decimals)) };
+}
+export function valueMatches(item, v) {
+  if (!Number.isFinite(v)) return false;
+  const r = refTolerance(item.ref);
+  if (!r) return false;
+  if (item.tol === "order") return r.value !== 0 && v !== 0 && Math.sign(v) === Math.sign(r.value) && Math.round(Math.log10(Math.abs(v))) === Math.round(Math.log10(Math.abs(r.value)));
+  return Math.abs(v - r.value) <= r.tol * (1 + 1e-9);
+}
