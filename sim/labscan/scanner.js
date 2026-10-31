@@ -739,15 +739,24 @@ const pfArea = q => Math.abs(pfCross(q[0], q[1], q[3]) + pfCross(q[0], q[3], q[2
  * @param {Uint8ClampedArray} [rgba]           the same photo's RGBA, to tell colourless paper from coloured surfaces
  * @returns {{corners, score, method:'page', verified, edgeSupport, weakestEdge, sidesOnFrame}|{corners:null}}
  */
-export function findPage(gray, W, H, rgba = null) {
-  const coarse = pfShrink(rgba || gray, W, H, COARSE, !!rgba), small = pfMax3(pfBlur(coarse.data, coarse.w, coarse.h), coarse.w, coarse.h);
-  const found = pfRegion(small, coarse.w, coarse.h);
-  if (!found) return { corners: null, score: 0, method: 'page', verified: false };
-  const { w, h } = coarse, four = found.four;
+export function findPage(gray, W, H, rgba = null, seed = null) {
   /* the fine copy, where the edges are fitted */
-  const fine = pfShrink(rgba || gray, W, H, FINE, !!rgba), fs = coarse.k / fine.k;
-  const snap = p => ({ x: p.x < 1 ? 0 : p.x > w - 1 ? fine.w - 1 : p.x * fs, y: p.y < 1 ? 0 : p.y > h - 1 ? fine.h - 1 : p.y * fs });
-  const r = pfRefine(fine.data, fine.w, fine.h, four.map(snap), found.polarity);
+  const fine = pfShrink(rgba || gray, W, H, FINE, !!rgba);
+  let start, polarity = 1;
+  if (seed) {
+    /* a quad proposed elsewhere (the learned corner model): its sides are fitted and measured the same way */
+    const q = orderCorners(seed).map(p => ({ x: Math.max(0, Math.min(fine.w - 1, p.x / fine.k - .5)), y: Math.max(0, Math.min(fine.h - 1, p.y / fine.k - .5)) }));
+    const near = (v, edge) => v < 1.5 || v > edge - 2.5;
+    start = q.map(p => ({ x: near(p.x, fine.w) ? (p.x < fine.w / 2 ? 0 : fine.w - 1) : p.x, y: near(p.y, fine.h) ? (p.y < fine.h / 2 ? 0 : fine.h - 1) : p.y }));
+  } else {
+    const coarse = pfShrink(rgba || gray, W, H, COARSE, !!rgba), small = pfMax3(pfBlur(coarse.data, coarse.w, coarse.h), coarse.w, coarse.h);
+    const found = pfRegion(small, coarse.w, coarse.h);
+    if (!found) return { corners: null, score: 0, method: 'page', verified: false };
+    const { w, h } = coarse, fs = coarse.k / fine.k;
+    start = found.four.map(p => ({ x: p.x < 1 ? 0 : p.x > w - 1 ? fine.w - 1 : p.x * fs, y: p.y < 1 ? 0 : p.y > h - 1 ? fine.h - 1 : p.y * fs }));
+    polarity = found.polarity;
+  }
+  const r = pfRefine(fine.data, fine.w, fine.h, start, polarity);
   const corners = r.corners.map(p => ({ x: (p.x + .5) * fine.k, y: (p.y + .5) * fine.k }));
   const inner = r.support.filter((_, i) => !r.onFrame[i]), cover = pfArea(corners) / (W * H);
   const edgeSupport = inner.length ? inner.reduce((a, b) => a + b, 0) / inner.length : 1, weakestEdge = inner.length ? Math.min(...inner) : 1;
@@ -831,10 +840,10 @@ export function a4RatioMiss(corners, W, H) {
 }
 const a4Miss = a4RatioMiss;
 /** v2 page finder on a grey image, with the photo's RGBA when there is one (paper is colourless, wood and desks are not) */
-export function findPageQuadGray(gray, W, H, rgba = null) {
+export function findPageQuadGray(gray, W, H, rgba = null, seed = null) {
   const none = { corners: null, score: 0, method: 'page', edgeSupport: 0, clipped: false, autoCaptureEligible: false, paperStatus: 'not_found', paperAssessment: null };
   if (W < 32 || H < 32 || gray.length < W * H) return none;
-  const found = findPage(gray, W, H, rgba && rgba.length >= W * H * 4 ? rgba : null);
+  const found = findPage(gray, W, H, rgba && rgba.length >= W * H * 4 ? rgba : null, seed);
   if (!found.corners) return none;
   const corners = orderCorners(found.corners);
   /* the A-series shape is reported, but a sheet seen at an angle is still a sheet: automatic capture asks for four
@@ -1213,6 +1222,24 @@ export function findMarkers(canvas) {
   return findMarkersGray(g, canvas.width, canvas.height);
 }
 
+/** Two proposals for one photo: the page finder's own (or printed markers) and the learned corner model's quad after
+ * the same edge fitting (`learned`, with the model's confidence `score`). Where they agree the measured one stands;
+ * where they disagree the one whose four edges were measured better wins; where neither was measured, a confident model
+ * is trusted over a guess. Printed markers always stand. */
+export function chooseDocument(page, learned, score) {
+  if (!learned?.corners || !(score >= .5) || page?.method === 'marker') return page;
+  const pageOk = !!page?.corners && page.method !== 'frame';
+  const tagged = { ...learned, engine: 'doccornernet', modelScore: score };
+  if (!pageOk) return tagged;
+  const a = orderCorners(page.corners), b = orderCorners(learned.corners);
+  const span = Math.hypot(Math.max(...a.map(p => p.x)) - Math.min(...a.map(p => p.x)), Math.max(...a.map(p => p.y)) - Math.min(...a.map(p => p.y)));
+  const apart = Math.max(...a.map((p, i) => Math.hypot(p.x - b[i].x, p.y - b[i].y)));
+  if (apart < span * .03) return page.verified || !learned.verified ? page : tagged;     // the same sheet
+  if (learned.verified && (!page.verified || (learned.weakestEdge ?? 0) > (page.weakestEdge ?? 0) + .1)) return tagged;
+  if (page.verified) return page;
+  return score >= .8 ? tagged : page;
+}
+
 /** Shared by live camera and full-resolution capture. Partial dark blobs never
  * acquire marker insets, and automatic capture requires measured edge evidence. */
 export function detectDocumentQuadGray(g, W, H, rgba = null) {
@@ -1248,7 +1275,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8f2b51627da8', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=08420579ed34', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1269,14 +1296,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8f2b51627da8', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=08420579ed34', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8f2b51627da8', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=08420579ed34', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }

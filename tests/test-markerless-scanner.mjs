@@ -278,3 +278,16 @@ test('a stretched part of the page is sharpened in proportion to the stretch', (
   assert.ok(steepest(sharp) > steepest(plain) * 1.3, `edge ${steepest(sharp)} vs ${steepest(plain)}`);
   assert.equal(sharp[(100 * 200 + 10) * 4], plain[(100 * 200 + 10) * 4], 'flat paper is left as it is');
 });
+
+test('the learned corner model and the page finder: agreement keeps the measured quad, a better-measured disagreement wins', () => {
+  const q = (x0, y0, x1, y1) => [{ x: x0, y: y0 }, { x: x1, y: y0 }, { x: x0, y: y1 }, { x: x1, y: y1 }];
+  const page = { corners: q(100, 100, 400, 520), method: 'page', verified: true, weakestEdge: .8 };
+  assert.equal(scanner.chooseDocument(page, { corners: q(102, 101, 399, 521), method: 'page', verified: true, weakestEdge: .9 }, .95), page, 'the same sheet: the page finder stands');
+  const desk = { corners: q(10, 10, 470, 630), method: 'page', verified: false, weakestEdge: .3 };
+  const sheet = { corners: q(150, 150, 350, 450), method: 'page', verified: true, weakestEdge: .85 };
+  assert.equal(scanner.chooseDocument(desk, sheet, .9).engine, 'doccornernet', 'a better-measured model quad replaces an unverified guess');
+  assert.equal(scanner.chooseDocument(page, sheet, .4), page, 'an unsure model is ignored');
+  const marker = { corners: q(50, 50, 430, 590), method: 'marker', verified: true };
+  assert.equal(scanner.chooseDocument(marker, sheet, .99), marker, 'printed markers always stand');
+  assert.equal(scanner.chooseDocument({ corners: null, method: 'frame' }, { ...sheet, verified: false }, .7).engine, 'doccornernet', 'with no page of its own, the model\'s quad is offered for a check');
+});
