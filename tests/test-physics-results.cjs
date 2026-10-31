@@ -157,3 +157,28 @@ test('source-specific medal labels supply counts only when all award categories 
   assert.equal(receipts.medalReferences.length, 36);
   assert.ok(receipts.medalReferences.every(r => r.tieRule.includes('same reference band')));
 });
+
+test('IPhO rounds with a published award floor get exact full-field round ranks above that floor only', () => {
+  const comparison = require('../sim/result-comparison.js');
+  const ipho = JSON.parse(fs.readFileSync(path.join(root, 'sim/results/ipho.json'), 'utf8'));
+  const round = (year, scope) => ipho.records.find(r => r.year === year && r.scope === scope);
+  for (const year of [2025, 2024, 2023, 2021, 2016]) for (const scope of ['theory', 'experiment']) {
+    const r = round(year, scope), coverage = comparison.componentFloor(ipho.records, r);
+    const total = ipho.records.find(t => t.year === year && t.scope === 'total');
+    assert.ok(coverage, `${year} ${scope}`);
+    assert.equal(coverage.floor, total.rankFloor);
+    assert.equal(r.scores.length, total.scores.length, 'the round scores belong to the same published contestants');
+    const top = comparison.evaluate(r, r.max, false, coverage), low = comparison.evaluate(r, 0, false, coverage);
+    assert.equal(top.bounded, true); assert.equal(top.rank, 1); assert.equal(top.fieldSize, r.participants);
+    assert.equal(low.bounded, false);
+  }
+  // 2015 omits one inconsistent pair from its rounds; 2018 has no published award floor; 2012/2022 are complete.
+  for (const year of [2015, 2018, 2012, 2022]) for (const scope of ['theory', 'experiment'])
+    assert.equal(comparison.componentFloor(ipho.records, round(year, scope)), null, `${year} ${scope}`);
+  const session = {id: 1, comp: 'ipho', year: 2025, status: 'graded', score: 22, points: 30, tasks: ['T1', 'T2', 'T3'], kind: 'theory'};
+  const [e] = comparison.assess(ipho, session).comparisons;
+  assert.equal(e.record.id, 'ipho-2025-theory');
+  assert.equal(e.bounded, true); assert.equal(e.reference.medal, 'gold'); assert.equal(e.reference.fullField, true);
+  assert.equal(e.top_pct, null, 'the disputed 2025 entrant count still suppresses a percentile');
+  assert.match(comparison.resultHtml(e, 'ko'), /전체 참가자 기준/);
+});

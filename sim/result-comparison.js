@@ -21,7 +21,21 @@
     return !record.manualOnly && hasScore(session) && uniqueTasks(session) && Math.abs(session.points - record.max) < EPS &&
       record.taskSets?.some(tasks => taskKey(tasks) === taskKey(session.tasks));
   }
-  function roundReference(record, score) {
+  /* A theory or experiment score can never exceed its own total.  When the year's total has a
+   * source-verified coverage floor (every total at or above it is published) and the published
+   * round scores belong to exactly those published totals, any unpublished contestant scored
+   * strictly below the floor in this round too.  A round score at or above the floor therefore
+   * has an exact rank in the whole field. */
+  function componentFloor(records, record) {
+    if (!record || !['theory','experiment'].includes(record.scope) || record.complete === true || record.awardScope || record.manualOnly) return null;
+    const n=(record.scores||[]).length;
+    const total=(records||[]).find(t=>t.scope==='total'&&t.awardScope===true&&String(t.year)===String(record.year)&&
+      finite(t.rankFloor)&&t.rankFloor>0&&Number.isInteger(t.participants)&&t.participants===record.participants&&
+      t.complete!==true&&(t.scores||[]).length===n&&n>0&&
+      (t.components||[]).some(c=>c.id===record.scope&&finite(c.max)&&Math.abs(c.max-record.max)<EPS));
+    return total ? {floor:total.rankFloor,total} : null;
+  }
+  function roundReference(record, score, coverage = null) {
     const ref=record?.medalReference,tiers=['gold','silver','bronze'];
     if (!ref || ref.basis!=='round_rank' || record.awardScope || record.manualOnly ||
         !['theory','experiment'].includes(record.scope) || !validScore(score,record.max)) return null;
@@ -42,9 +56,14 @@
       }else if(ref.cuts?.[tier]!=null)return null;
     }
     const medal=tiers.find(k=>finite(cuts[k])&&score+EPS>=cuts[k])||'none';
-    return {medal,scope:record.scope,counts:{...ref.counts},cuts,population:ref.population,sources:ref.sources};
+    /* Unpublished scores can only raise a cut, so "below every band" can never improve.  At or
+     * above the coverage floor the rank itself is exact in the whole field, and so is its band;
+     * below it, a band is unchanged only when its own cut is at or above the floor. */
+    const floor=finite(coverage?.floor)?coverage.floor:null;
+    const fullField=complete||medal==='none'||floor!=null&&(score+EPS>=floor||cuts[medal]+EPS>=floor);
+    return {medal,scope:record.scope,counts:{...ref.counts},cuts,population:ref.population,sources:ref.sources,fullField,floor};
   }
-  function evaluate(record, score, manual = false) {
+  function evaluate(record, score, manual = false, coverage = null) {
     if (!record || record.manualOnly && !manual || !validReference(record,score)) return null;
     const scores = (record.scores || []).filter(x => validReference(record,x));
     const above = scores.filter(x => x > score + EPS).length;
@@ -52,8 +71,9 @@
     const complete = record.complete === true && scores.length > 0 && record.participants === scores.length;
     // Missing totals can affect rank only below a source-verified coverage floor.
     // This inference never applies to an individual round of a combined contest.
-    const bounded = !complete && scores.length > 0 && record.scope === 'total' && finite(record.rankFloor) &&
-      score + EPS >= record.rankFloor && Number.isInteger(record.participants) && record.participants >= scores.length;
+    const floor = record.scope === 'total' ? record.rankFloor : finite(coverage?.floor) ? coverage.floor : null;
+    const bounded = !complete && scores.length > 0 && finite(floor) &&
+      score + EPS >= floor && Number.isInteger(record.participants) && record.participants >= scores.length;
     const fieldSize = complete || bounded ? record.participants : scores.length;
     let medal = null;
     if (record.awardScope === true) {
@@ -63,7 +83,8 @@
         (Object.keys(cuts).length ? 'none' : null);
     }
     return {record, score, manual, n:scores.length, rank:scores.length ? above + 1 : null,
-      tied, complete, bounded, fieldSize, top_pct:(complete||bounded) && fieldSize > 1 && !record.participantCountUncertain ? Math.min(100,100 * (above + 1) / fieldSize) : null, medal,reference:roundReference(record,score)};
+      tied, complete, bounded, fieldSize, top_pct:(complete||bounded) && fieldSize > 1 && !record.participantCountUncertain ? Math.min(100,100 * (above + 1) / fieldSize) : null, medal,
+      reference:roundReference(record,score,coverage), coverage:record.scope==='total'?null:coverage?{floor:coverage.floor,total:coverage.total.id}:null};
   }
   const mode=s=>s.review_only===true;
   const stamp=s=>finite(s.graded_at)?s.graded_at:finite(s.created_at)?s.created_at:0;
@@ -103,7 +124,11 @@
       if(!fill(0,new Set([session.id]),new Set(session.tasks)))continue;
       const score=Math.round(chosen.reduce((n,s)=>n+s.score,0)*1e8)/1e8,e=evaluate(record,score);
       if(!e)continue;
-      e.combined={sessions:chosen.map((s,i)=>({id:s.id,scope:components[i].id,label:components[i].label,score:s.score,points:s.points,review_only:mode(s)})),
+      // Each round also keeps its own round-rank reference, so a combined total never hides it.
+      const roundOf=(c,s)=>{const rec=records.find(r=>r.scope===c.id&&matches(r,s));return rec?evaluate(rec,s.score,false,componentFloor(records,rec)):null;};
+      e.combined={sessions:chosen.map((s,i)=>{const round=roundOf(components[i],s);
+        return {id:s.id,scope:components[i].id,label:components[i].label,score:s.score,points:s.points,review_only:mode(s),
+          round:round?{record:round.record.id,rank:round.rank,tied:round.tied,exact:round.complete||round.bounded,n:round.n,medal:round.reference?.medal||null,fullField:round.reference?.fullField??null}:null};}),
         mixedMode:chosen.some(s=>mode(s)!==mode(session))};
       results.push(e);
     }
@@ -112,9 +137,10 @@
   function assess(data, session) {
     if (!hasScore(session)) return {records:[], comparisons:[], totals:[]};
     const records = (data?.comp === session.comp ? data.records || [] : []).filter(r => String(r.year) === String(session.year));
-    const direct=records.filter(r=>matches(r,session)).map(r=>evaluate(r,session.score));
+    const direct=records.filter(r=>matches(r,session)).map(r=>evaluate(r,session.score,false,componentFloor(records,r)));
     const combined=direct.some(e=>e.record.awardScope||e.record.scope==='total')?[]:combinedResults(data,session);
-    const comparisons=combined.length?combined:direct,covered=new Set(comparisons.map(e=>e.record.id));
+    // A graded round keeps its own round card; an automatically combined total is added after it.
+    const comparisons=combined.length?[...direct.filter(e=>e.record.scope!=='total'&&!e.record.awardScope),...combined]:direct,covered=new Set(comparisons.map(e=>e.record.id));
     return {records, scaleMismatch:records.some(r=>r.taskSets?.some(tasks=>taskKey(tasks)===taskKey(session.tasks))&&Math.abs(session.points-r.max)>=EPS),
       comparisons,totals:records.filter(r => (r.scope==='total'||r.awardScope) && (r.medalCutoffs||r.scores?.length) && !covered.has(r.id))};
   }
@@ -124,12 +150,21 @@
   };
   function sourcesHtml(record, lang) {
     const en = lang === 'en';
-    const sources=(record.sources || []).filter(s => /^https?:\/\//.test(s.url));
+    const sources=(record.sources || []).filter((s,i,a) => /^https?:\/\//.test(s.url) && a.findIndex(x => x.url === s.url) === i);
     const links=sources.map(s => {
       const title=label(s.title,lang) || (en?'Source':'출처');
       return `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(title)}${s.official===false&&!/unofficial|비공식/i.test(title)?(en?' (unofficial)':' (비공식)'):''} ↗</a>`;
     }).join(' · ');
     return `<div class="hlcr-source"><b>${en?'Data sources':'자료 출처'}${sources.some(s=>s.official===false)?(en?' · includes unofficial records':' · 비공식 기록 포함'):''}</b><p>${links}</p></div>`;
+  }
+  function roundNote(s, lang) {
+    const r=s.round,en=lang==='en';
+    if(!r||r.rank==null)return '';
+    const awards=names[en?'en':'ko'],scope=s.scope==='theory'?(en?'theory':'이론'):(en?'experiment':'실험');
+    const icons={gold:'🥇',silver:'🥈',bronze:'🥉'};
+    const rank=en?`#${r.rank}${r.tied?' tied':''}${r.exact?'':` of ${r.n} published`}`:`${r.exact?'':`공개 ${r.n}개 중 `}${r.tied?'공동 ':''}${r.rank}위`;
+    const medal=r.medal&&r.medal!=='none'?(en?` · ${icons[r.medal]} ${scope} ${awards[r.medal]} range${r.fullField?'':' among published'}`:` · ${icons[r.medal]} ${scope} 기준 ${awards[r.medal]}권${r.fullField?'':'(공개 점수 기준)'}`):'';
+    return ` <small class="hlcr-round-note" data-round-medal="${esc(r.medal||'')}">(${esc(rank+medal)})</small>`;
   }
   function resultHtml(e, lang) {
     if (!e) return '';
@@ -150,30 +185,40 @@
       medal = e.medal === 'none' ? (en?'Below verified cutoffs':'확인된 수상컷 미달') : `${awards[e.medal]}${en ? (observed?' range · reference':' threshold met') : (observed?' 점수대 · 참고':' 기준 충족')}`;
     }
     const icons={gold:'🥇',silver:'🥈',bronze:'🥉',hm:'🏅'};
-    const context=e.bounded?(en?'Within the fully published score range':'순위 확인이 가능한 점수 범위'):
+    const component=r.scope==='theory'||r.scope==='experiment',fieldCount=r.participantCountUncertain?'':String(r.participants);
+    const context=e.bounded?(en?(fieldCount?`Full field · ${fieldCount} ${population}`:'Full-field rank'):(fieldCount?`전체 ${fieldCount}${population} 기준`:'전체 참가자 기준')):
+
       e.complete?(en?`${e.n} ${population} in the score table`:`전체 ${e.n}${population} 성적 기준`):
       (en?`Among ${e.n} published scores`:`${e.n}개 공개 점수 중`);
     const limitations=[
-      e.bounded?(en?'All scores above this published coverage floor are available.':'이 점수 이상의 기록이 모두 공개되어 가상 순위를 계산할 수 있습니다.'):null,
+      e.bounded&&component?(en?`Every contestant whose score is unpublished had a total below ${fmt(e.coverage.floor)} (the lowest award), so their ${scopeName.toLowerCase()} score was lower too. At or above ${fmt(e.coverage.floor)} this ${scopeName.toLowerCase()} rank is therefore exact in the whole field.`:
+        `점수가 공개되지 않은 참가자는 모두 총점이 최저 수상점 ${fmt(e.coverage.floor)}점 미만이므로 ${scopeName} 점수도 그보다 낮습니다. 따라서 ${scopeName} ${fmt(e.coverage.floor)}점 이상은 전체 참가자 기준 순위가 확정됩니다.`):
+      e.bounded?(en?`All totals at or above ${fmt(r.rankFloor)} (the lowest award) are published, so this rank is exact in the whole field.`:`최저 수상점 ${fmt(r.rankFloor)}점 이상의 총점은 모두 공개되어 전체 참가자 기준 순위가 확정됩니다.`):null,
+      !e.complete&&!e.bounded&&e.n&&e.coverage?(en?`Below ${fmt(e.coverage.floor)} points unpublished scores may be higher, so the full-field rank is a lower bound only.`:`${fmt(e.coverage.floor)}점 미만에서는 비공개 점수가 더 높을 수 있어 전체 참가자 순위를 확정할 수 없습니다.`):
       !e.complete&&!e.bounded&&e.n?(en?'The full-field rank is unavailable.':'전체 참가자 순위는 확인할 수 없습니다.'):null,
       r.scope!=='total'&&!r.awardScope?(en?'This round alone does not determine the overall medal.':'이 라운드 점수만으로 실제 대회 메달이 정해지지는 않습니다.'):null,
+      reference&&!reference.fullField?(en?`The ${awards[reference.medal]} band among published scores (cut ${fmt(reference.cuts[reference.medal])}) lies below ${fmt(reference.floor ?? 0)}; unpublished scores could raise that cut, so the band may be lower in the whole field.`:
+        `공개 점수 기준 ${awards[reference.medal]}권 컷(${fmt(reference.cuts[reference.medal])}점)이 ${reference.floor!=null?`최저 수상점 ${fmt(reference.floor)}점보다 낮아`:'공개 범위 밖이라'} 비공개 점수가 포함되면 컷이 올라갈 수 있습니다. 전체 참가자 기준으로는 더 낮은 메달권일 수 있습니다.`):null,
       reference?(en?`The actual award counts (${reference.counts.gold} gold, ${reference.counts.silver} silver, ${reference.counts.bronze} bronze) are applied to scores ranked within this round. This is a round-specific reference, not an official medal allocation.`:
         `그해 실제 금·은·동메달 ${r.population==='team'?'팀 수':'인원'}(${reference.counts.gold}·${reference.counts.silver}·${reference.counts.bronze}${r.population==='team'?'팀':'명'})을 해당 라운드의 점수 순위에 적용했습니다. 라운드별 참고 메달권이며 공식 수상 결과는 아닙니다.`):null,
       r.cutoffKind==='observed'&&medal?(en?'Observed award-winning scores, not an official cutoff declaration. Eligibility and tie rules may apply.':'공식 컷 발표가 아닌 공개 수상 점수의 관측값입니다. 자격·동점 처리 등 다른 수상 규정은 별도로 적용됩니다.'):null,
-      r.note?label(r.note,lang):null
+      // The edition note describes the published-only distribution; above the floor the exact full-field rank replaces it.
+      r.note&&!e.bounded?label(r.note,lang):null,
+      e.bounded&&r.participantCountUncertain?(en?'Published entrant counts disagree, so no full-field percentile is shown.':'공개된 참가 인원 자료가 서로 달라 전체 백분위는 표시하지 않습니다.'):null
     ].filter(Boolean);
     const rankTitle=(r.scope==='total'||r.awardScope)?(en?'Overall score rank':'총합 기준 가상 순위'):(en?`${scopeName} score rank`:`${scopeName} 기준 가상 순위`);
     const sources=reference?{...r,sources:[...(r.sources||[]),...reference.sources].filter((s,i,a)=>a.findIndex(x=>x.url===s.url)===i)}:r;
     return `<article class="hlcr-result" data-comparison="${esc(r.id)}"${shownMedal?` data-medal="${esc(shownMedal)}" data-medal-basis="${reference?'round_rank':esc(r.cutoffKind||'published')}"`:''}>
       <div class="hlcr-result-head"><h4>${esc(title)} <span class="hlcr-score">${fmt(e.score)}${finite(r.max)?` / ${fmt(r.max)}`:''}</span></h4>
         ${medal?`<span class="hlcr-medal" data-medal="${esc(shownMedal)}">${icons[shownMedal]?`<span aria-hidden="true">${icons[shownMedal]}</span> `:''}${esc(medal)}</span>`:`<span class="hlcr-scope">${en?'Score comparison':'점수 비교'}</span>`}</div>
-      ${e.combined?`<div class="hlcr-combined" data-combined="true"><b>${en?'Theory + experiment · automatically combined':'이론 + 실험 자동 합산'}</b><p>${e.combined.sessions.map(s=>`<a href="/#/lab/${s.id}">${esc(label(s.label,lang)||s.scope)} ${fmt(s.score)} / ${fmt(s.points)}</a>`).join(' + ')}</p><p class="hlcr-caption">${e.combined.mixedMode?(en?'Mixed timed and untimed records · reference total':'실전·시간 제한 없는 채점 기록을 합산한 참고 총점'):(en?'This result plus the latest matching result from the other round':'이번 성적표와 같은 모드의 최근 다른 라운드 성적을 합산했습니다.')}</p></div>`:''}
+      ${e.combined?`<div class="hlcr-combined" data-combined="true"><b>${en?'Theory + experiment · automatically combined':'이론 + 실험 자동 합산'}</b><p>${e.combined.sessions.map(s=>`<a href="/#/lab/${s.id}">${esc(label(s.label,lang)||s.scope)} ${fmt(s.score)} / ${fmt(s.points)}</a>${roundNote(s,lang)}`).join(' + ')}</p><p class="hlcr-caption">${e.combined.mixedMode?(en?'Mixed timed and untimed records · reference total':'실전·시간 제한 없는 채점 기록을 합산한 참고 총점'):(en?'This result plus the latest matching result from the other round':'이번 성적표와 같은 모드의 최근 다른 라운드 성적을 합산했습니다.')}</p></div>`:''}
       <div class="hlcr-result-line"><div class="hlcr-rank"><span>${esc(rankTitle)}</span> <strong>${e.rank==null?'—':`${en?'':e.tied?'공동 ':''}${e.rank}${en?'':'위'}`}</strong>${en&&e.tied?'<small>tied</small>':''}</div>
         ${e.rank!=null?`<span class="hlcr-context">${esc(context)}</span>`:''}
         ${e.top_pct==null?'':`<span class="hlcr-history-top">${en?'Top':'상위'} ${fmt(Math.round(e.top_pct*10)/10)}%</span>`}</div>
       ${!e.n?`<p class="hlcr-caption">${en?'Historical rank data unavailable':'순위 비교 자료 미확보'}</p>`:''}
-      ${!e.complete&&!e.bounded&&e.n?`<p class="hlcr-caption">${en?'Published scores only · full-field rank unknown':'공개 점수 기준 · 전체 순위 미확인'}</p>`:''}
-      ${reference?`<p class="hlcr-caption">${reference.population==='published'?(en?'Published scores only · reference medal range':`공개 ${scopeName} 점수 기준의 참고 메달권`):(en?'Reference medal range based on this round’s ranking':`${scopeName} 순위 기준의 참고 메달권`)}</p>`:r.scope!=='total'&&!r.awardScope?`<p class="hlcr-caption">${en?'Round score only · medal reference data unavailable':'해당 라운드만 비교 · 메달권 기준 자료 미확보'}</p>`:''}
+      ${!e.complete&&!e.bounded&&e.n?`<p class="hlcr-caption">${e.coverage?(en?`Published scores only · full-field rank exact from ${fmt(e.coverage.floor)} points`:`공개 점수 기준 · ${fmt(e.coverage.floor)}점 이상부터 전체 순위 확정`):(en?'Published scores only · full-field rank unknown':'공개 점수 기준 · 전체 순위 미확인')}</p>`:''}
+      ${e.bounded&&component?`<p class="hlcr-caption" data-full-field="true">${en?`Full-field ${scopeName.toLowerCase()} rank · every score at or above ${fmt(e.coverage.floor)} is published`:`전체 참가자 ${scopeName} 순위 · ${fmt(e.coverage.floor)}점 이상 점수는 모두 공개됨`}</p>`:''}
+      ${reference?`<p class="hlcr-caption">${reference.population==='published'&&reference.fullField?(en?'Reference medal range on the full-field round ranking':`전체 참가자 ${scopeName} 순위 기준의 참고 메달권`):reference.population==='published'?(en?'Published scores only · reference medal range · may be lower in the full field':`공개 ${scopeName} 점수 기준의 참고 메달권 · 전체 기준으로는 낮아질 수 있음`):(en?'Reference medal range based on this round’s ranking':`${scopeName} 순위 기준의 참고 메달권`)}</p>`:r.scope!=='total'&&!r.awardScope?`<p class="hlcr-caption">${en?'Round score only · medal reference data unavailable':'해당 라운드만 비교 · 메달권 기준 자료 미확보'}</p>`:''}
       ${e.manual?`<p class="hlcr-caption hlcr-manual-note">${en?'Entered score · does not change your grade or HaslaLab standing':'직접 입력한 점수 · 채점 성적·HaslaLab 순위에 반영되지 않음'}</p>`:''}
       ${cuts?`<div class="hlcr-cuts"><span class="hlcr-cut-label">${esc(cutLabel)}</span>${cuts}</div>`:''}
       <details class="hlcr-details"><summary>${en?'Comparison details & sources':'비교 기준·출처'}</summary>
@@ -237,7 +282,7 @@
 .hlcr-manual{border:1px dashed var(--hlcr-line);border-radius:9px;background:var(--hlcr-soft);padding:10px 13px;margin:8px 0}.hlcr-manual>summary{font-size:12.5px;font-weight:650}.hlcr-manual>.hlcr-note{margin-top:9px}.hlcr-inputs{display:flex;align-items:flex-end;gap:10px 12px;flex-wrap:wrap;margin-top:10px}.hlcr label{display:flex;flex-direction:column;gap:5px;font-size:12px;max-width:100%;font-weight:600}.hlcr input{font:inherit;color:inherit;background:transparent;border:1px solid var(--hlcr-line);border-radius:6px;padding:8px 10px;width:146px;max-width:100%}.hlcr input[readonly]{opacity:.65}.hlcr button{font:inherit;font-size:12.5px;font-weight:700;color:inherit;background:transparent;border:1px solid var(--hlcr-line);border-radius:6px;padding:8px 12px;cursor:pointer}.hlcr input:focus,.hlcr button:focus-visible,.hlcr summary:focus-visible{outline:2px solid var(--accent,#637d9e);outline-offset:3px}.hlcr [data-result-error]{font-size:12px;color:#bd3d35;margin-top:5px}.hlcr [data-result-error]:empty{display:none}
 .hlcr-empty{border:1px solid var(--hlcr-line);border-radius:9px;padding:11px 13px;margin:8px 0;font-size:12px}.hlcr-empty p{font-size:12px;color:var(--hlcr-muted);margin-top:3px}.hlcr-footer{font-size:11px;color:var(--hlcr-muted);margin-top:9px!important}
 .hlcr-averages dd{display:flex;align-items:baseline;flex-wrap:wrap;gap:0 4px;white-space:normal;line-height:1.5;padding-top:2px}
-.hlcr-combined{margin:9px 0 7px;padding-bottom:8px;border-bottom:1px dashed var(--hlcr-line);font-size:12px}.hlcr-combined p{margin-top:4px}.hlcr-combined a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.hlcr-combined{margin:9px 0 7px;padding-bottom:8px;border-bottom:1px dashed var(--hlcr-line);font-size:12px}.hlcr-combined p{margin-top:4px}.hlcr-combined a{color:inherit;text-decoration:underline;text-underline-offset:3px}.hlcr-round-note{font-size:11px;opacity:.78;white-space:nowrap}
 @media(max-width:760px){.hlcr .hlcr-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.hlcr-total{grid-column:1/-1;border-bottom:1px solid var(--hlcr-line);border-right:0}.hlcr-metric{padding:11px 13px}.hlcr-metric:nth-child(2),.hlcr-metric:nth-child(3){border-bottom:1px solid var(--hlcr-line)}.hlcr-metric:nth-child(3){border-right:0}.hlcr-metric dd{font-size:23px}.hlcr-total dd{font-size:28px}.hlcr-averages dd{font-size:17px;line-height:1.75}.hlcr-result{padding:11px 12px}.hlcr-result-head{align-items:flex-start}.hlcr-history-top{margin-left:0}.hlcr-section-head{align-items:flex-start}.hlcr-section-head>span{text-align:right}.hlcr-inputs>*{flex:1 1 125px}.hlcr input{width:100%}.hlcr-inputs>button{flex-grow:0}.hlcr-rank strong{font-size:22px}}
 @media print{.hlcr{--hlcr-line:#bbb;--hlcr-muted:#444;--hlcr-soft:#fff;color:#111}.hlcr-result,.hlcr-metrics{break-inside:avoid}.hlcr-medal{color:#111;border-color:#888}.hlcr input,.hlcr button{color:#111}.hlcr-coverage{display:none}}
 </style>`;
@@ -288,5 +333,5 @@
       });
     }
   }
-  return {hasScore, taskKey, matches, roundReference, combinedResults, evaluate, assess, sampleHtml, resultHtml, html, load, mount};
+  return {hasScore, taskKey, matches, componentFloor, roundReference, combinedResults, evaluate, assess, sampleHtml, resultHtml, html, load, mount};
 });
