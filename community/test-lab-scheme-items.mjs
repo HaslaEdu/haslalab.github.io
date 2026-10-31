@@ -95,3 +95,15 @@ test("each item keeps whether the answer alone earns it (R13): result or step, n
   ]);
   assert.deepEqual([a.role, b.role, c.role], ["step", "result", undefined]);
 });
+
+test("a value is found on its page in scientific notation, not only in the reader's value field (IPhO 2025 T1 A.2.3)", async () => {
+  const { numbersIn, sameNumber } = await import("./src/lab-scheme-items.js");
+  const has = (text, v) => numbersIn(text).some(x => sameNumber(x, v));
+  assert.ok(has(String.raw`숫자 값: r_1 = 5.31 \cdot 10^{-11} m`, 5.31e-11), "LaTeX \\cdot 10^{-11}");
+  assert.ok(has("M_b = 2.2 × 10^9 M_☉", 2.2e9));
+  assert.ok(has("a_m = 1.0 * 10^-10 m/s^2", 1e-10));
+  assert.ok(has("E_1 = −13.5 eV", -13.5), "a typographic minus");
+  assert.ok(has("c = 3e8 m/s", 3e8));
+  assert.ok(!has(String.raw`r_1 = 5.31 \cdot 10^{-11} m`, 5.31e-10), "a different exponent is a different number");
+  assert.ok(!has("W = 20 mJ", 2), "no number is invented");
+});

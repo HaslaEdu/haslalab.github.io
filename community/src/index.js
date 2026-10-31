@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1992,7 +1992,7 @@ function labScore(scheme, raw, pages) {
     if (it.sheet === "answer" && pg.kind !== "answer") return zero("R1");          // a final answer off the answer sheet
     if (it.type === "value" && it.full_min != null && it.full_max != null) {
       const v = Number(g.value);
-      if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v))) return zero("R9");   // a value that was not read there
+      if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(x => sameNumber(x, v)))) return zero("R9");   // a value that was not read there
       res.value = v;
       if (it.unit && g.unit_ok === false) return zero("R3");
       let pts = 0;
@@ -2374,15 +2374,10 @@ const LAB_JOB_HANDLERS = {
         const bytes = await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
         const read = await labReadPage(env, s, bytes, page.mime, null, mt), text = readText(read), up=read.ocr;
         const stored = labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: 'done' });
-        let task = page.task, kind = page.kind;
-        if (!contestMeta(s)) {
-          const h = read.header || {}; let ht = String(h.task || '').trim().toUpperCase().replace(/^EXP(ERIMENT)?\s*|^PROBLEM\s*/i, '');
-          const code = /^([AW])(\d)(?:-\d+)?$/.exec(ht);
-          if (code) { ht = 'E' + code[2]; if (!h.sheet) h.sheet = code[1] === 'A' ? 'answer' : 'working'; }
-          const hit = JSON.parse(s.tasks).find(t => t.toUpperCase() === ht || t.toUpperCase() === 'E' + ht);
-          if (hit) task = hit;
-          if (h.sheet === 'answer' || h.sheet === 'working') kind = h.sheet;
-        }
+        /* the task and sheet the student filed the page under stand: a printed header read by the model only goes into
+           the reading for reference. Moving pages by it filed IPhO 2025 T3 pages under T1 (DeepSeek read «T1») and a T2
+           answer sheet as a working sheet (Gemini read «A2» as working), and their answers lost their marks. */
+        const task = page.task, kind = page.kind;
         return { ...stored, conf: up?.confidence ?? null, task, kind };
       } finally { await meterSave(env, s.id, page.task, page.id, mt); }
     }
