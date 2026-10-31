@@ -20,8 +20,8 @@ async function original(db){await publishWeeklyContent(db);await migrateMonthlyP
 
 test('the deployment seed check validates original publications and the separate astronomy revision',()=>{
   const {publications,revisions}=validateReviewedSources();
-  assert.equal(publications.length,2);
-  assert.equal(publications.reduce((sum,source)=>sum+source.problems.length,0),4);
+  assert.equal(publications.length,3);
+  assert.equal(publications.reduce((sum,source)=>sum+source.problems.length,0),5);
   assert.equal(revisions.length,1);
   assert.deepEqual(revisions[0],ASTRONOMY_REVISION_CONTENT);
   assert.equal(publications[1].problems[0].subject,'physics');

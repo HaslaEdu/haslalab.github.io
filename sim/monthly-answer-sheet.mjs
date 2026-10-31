@@ -1,4 +1,4 @@
-import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=d1a5769b2294';
+import { getMonthlyAnswerSheet } from '../monthly-problems.mjs?v=45eefd877513';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const copy = {
@@ -31,7 +31,17 @@ export function buildResponseGraph(graph,lang='ko') {
   for(let i=0;i<=columns;i++){const x=left+i*width/columns;lines.push(`<line x1="${x}" y1="${top}" x2="${x}" y2="${bottom}" stroke="${i%5===0?'#8996a7':'#cbd3dd'}" stroke-width="${i%5===0?'.35':'.15'}"/>`);}
   for(let i=0;i<=rows;i++){const y=top+i*height/rows;lines.push(`<line x1="${left}" y1="${y}" x2="${left+width}" y2="${y}" stroke="${i%5===0?'#8996a7':'#cbd3dd'}" stroke-width="${i%5===0?'.35':'.15'}"/>`);}
   const title=titleOf(graph,lang),xLabel=graph['x_label_'+lang]||graph.x_label_ko||graph.x_label_en||'',yLabel=graph['y_label_'+lang]||graph.y_label_ko||graph.y_label_en||'';
-  return `<figure class="response-graph"><figcaption>${esc(title)}</figcaption><svg role="img" aria-label="${esc(title)}" viewBox="0 0 200 ${height+19}" xmlns="http://www.w3.org/2000/svg">${lines.join('')}<path d="M${left},${top}V${bottom}H${left+width}" fill="none" stroke="#202735" stroke-width=".6"/><text x="${left+width/2}" y="${bottom+11}" text-anchor="middle" font-size="4" fill="#202735">${esc(xLabel)}</text><text x="4" y="${top+height/2}" transform="rotate(-90 4 ${top+height/2})" text-anchor="middle" font-size="4" fill="#202735">${esc(yLabel)}</text></svg></figure>`;
+  const mathAxes=xLabel.includes('$')||yLabel.includes('$');
+  const labels=mathAxes?'':`<text x="${left+width/2}" y="${bottom+11}" text-anchor="middle" font-size="4" fill="#202735">${esc(xLabel)}</text><text x="4" y="${top+height/2}" transform="rotate(-90 4 ${top+height/2})" text-anchor="middle" font-size="4" fill="#202735">${esc(yLabel)}</text>`;
+  const grid=`<svg role="img" aria-label="${esc(title)}" viewBox="0 0 200 ${height+19}" xmlns="http://www.w3.org/2000/svg">${lines.join('')}<path d="M${left},${top}V${bottom}H${left+width}" fill="none" stroke="#202735" stroke-width=".6"/>${labels}</svg>`;
+  // KaTeX auto-render works in HTML, so mathematical axes sit over the vector grid.
+  const plotted=mathAxes?`<div class="graph-math-plane">${grid}<div class="graph-x-label">${esc(xLabel)}</div><div class="graph-y-label" style="top:${100*(top+height/2)/(height+19)}%">${esc(yLabel)}</div></div>`:grid;
+  return `<figure class="response-graph"><figcaption>${esc(title)}</figcaption>${plotted}</figure>`;
+}
+
+export function renderAnswerSheetMath(root) {
+  if (typeof globalThis.renderMathInElement !== 'function') return;
+  globalThis.renderMathInElement(root,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,trust:false});
 }
 
 function resultBoxes(part,lang){
@@ -70,7 +80,9 @@ async function mount() {
     const sheet=getMonthlyAnswerSheet(problem);
     if(!sheet)throw Error('Unknown answer sheet');
     document.title=problem.title+' · '+t.name+' · HaslaLab';
-    document.getElementById('sheets').innerHTML=buildAnswerPages(problem,sheet,lang);
+    const sheets=document.getElementById('sheets');
+    sheets.innerHTML=buildAnswerPages(problem,sheet,lang);
+    renderAnswerSheetMath(sheets);
     message.hidden=true;button.disabled=false;button.addEventListener('click',()=>window.print());
   } catch { message.textContent=t.failed; }
 }

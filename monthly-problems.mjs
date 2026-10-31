@@ -1,5 +1,6 @@
 // Public answer-sheet structure, shared by the website, printable form and grader.
 // No model answers or private marking requirements belong in this module.
+import { getPressureWaveAnswerSheet, isMonthlyPressureWaveProblem } from './monthly-experiment-sheet.mjs';
 export const MONTHLY_ANSWER_LIMIT = 3;
 export const MONTHLY_SHEET_VERSION = '2026-11-v1';
 
@@ -111,6 +112,9 @@ const responseForms={
 export function getMonthlyAnswerSheet(problem) {
   const object = typeof problem === 'object' && problem !== null;
   const id = Number(object ? problem.id : problem);
+  // Database IDs differ between deployments; match the experiment's stable identity.
+  // Resolve this before the unrelated legacy-id guard below.
+  if (object && isMonthlyPressureWaveProblem(problem)) return getPressureWaveAnswerSheet();
   const greenhouse = object && (problem.week || problem.period || problem.month) === '2026-11' && Number(problem.no) === 4 &&
     (problem.answerSheet?.key === 'greenhouse-part-d-v1' || problem.source === '제공 자료 · Part D' ||
       [problem.title_ko,problem.title_en,problem.title].some(title => title === '원판 모형의 복사 평형과 세차' || title === 'Radiative equilibrium and precession of a disk'));

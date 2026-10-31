@@ -133,7 +133,8 @@ function arText(s) { return esc(s || "").replace(/\n/g, "<br>"); }
 function arPublishedText(s) {
   const prose = text => {
     const blocks = [], lines = [];
-    const flush = () => { if (lines.length) blocks.push(`<p>${lines.splice(0).map(esc).join("<br>")}</p>`); };
+    const inline = text => esc(text).replace(/`([^`]+)`/g, '<code>$1</code>');
+    const flush = () => { if (lines.length) blocks.push(`<p>${lines.splice(0).map(inline).join("<br>")}</p>`); };
     for (const line of text.replace(/\r\n?/g, "\n").split("\n")) {
       const heading = /^(#{2,3})\s+(.+)$/.exec(line);
       const figure = /^!\[([^\]\n]{1,300})\]\((weekly\/figures\/[a-z0-9][a-z0-9-]*\.svg)\)$/.exec(line);
@@ -810,6 +811,7 @@ async function arProblem(root, alive, id,preloaded) {
         <div class="armeta">${arProblemKindBadge(p)}<span>${esc(p.subject)}</span>${arLevel(p.level)}<span>${esc(tierName(p.level))}</span>
           <span>${p.points}${T.pts}</span>${p.answerSheet&&Number.isFinite(p.best)?`<span>${T.best} ${p.best} / ${p.points}${T.pts}</span>`:""}<span>${T.deadline} ${arDeadline(p.closes_at)}</span><span>${p.open ? `${T.closesIn} ${arLeft(p.closes_at - now)}` : T.closed}</span>${p.source && !p.answerSheet ? `<span>${esc(p.source)}</span>` : ""}</div></div></div>
       <div class="arstmt" id="arStmt">${arPublishedText(p.body)}</div>
+      ${p.answerSheet?.key==="pressure-wave-experiment-v1"?`<div class="ar-experiment-tools"><a class="cmbtn pri" href="sim/monthly-pressure-wave/index.html?id=${p.id}&lang=${lang}&view=cmd" target="_blank" rel="noopener">${lang==="en"?"Open CMD apparatus":"CMD 실험 장치 열기"}</a><p class="arnote">${lang==="en"?"Measurements are saved to your account. Enter the tables, graphs and analysis in your answer sheet; the submission is linked to your instrument records.":"측정 기록은 계정에 저장됩니다. 표·그래프·분석을 답안지에 작성하면 제출 시 계측 기록도 함께 연결됩니다."}</p></div>`:""}
       ${p.criteria ? `<div class="arcrit">${p.criteria.map((c) => `<span><b>${esc(arMonthlyPartNumber(p,c.id,c.display_id))}</b> ${esc(c.name)} · ${c.max}${T.pts}</span>`).join("")}</div>` : ""}
     </div>
     <div class="arpanel" id="arAns">

@@ -12,7 +12,7 @@ export { validateContent } from '../src/weekly-content.js';
 export function validateReviewedSources() {
   const load = name => validateContent(JSON.parse(readFileSync(new URL(name,import.meta.url),'utf8')));
   return {
-    publications: ['./2026-W44.json','./2026-11-greenhouse-part-d.json'].map(load),
+    publications: ['./2026-W44.json','./2026-11-greenhouse-part-d.json','./2026-11-pressure-wave.json'].map(load),
     revisions: ['./2026-11-astronomy-revision.json'].map(load),
   };
 }

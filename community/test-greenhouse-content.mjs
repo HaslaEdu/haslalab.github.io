@@ -31,7 +31,7 @@ test('additive publication creates problem 4 at id7 and preserves existing probl
   const {sql,db}=database();try{
     await ensureWeeklyContent(db);const before=sql.prepare('SELECT * FROM problems WHERE id<=6 ORDER BY id').all();
     const added=sql.prepare('SELECT * FROM problems WHERE week=? AND no=4').get('2026-11');assert.equal(added.id,7);
-    assert.ok(getMonthlyAnswerSheet(added));assert.equal(sql.prepare('SELECT COUNT(*) n FROM problems').get().n,7);
+    assert.ok(getMonthlyAnswerSheet(added));assert.equal(sql.prepare('SELECT COUNT(*) n FROM problems').get().n,8);
     assert.ok(sql.prepare('SELECT id FROM weekly_publications WHERE id=?').get(GREENHOUSE_PUBLICATION_ID));
     sql.prepare("UPDATE problems SET title_ko='관리자가 유지한 제목',body_ko='수정한 문제' WHERE id=7").run();
     await ensureWeeklyContent(db,{});assert.deepEqual(sql.prepare('SELECT * FROM problems WHERE id<=6 ORDER BY id').all(),before);

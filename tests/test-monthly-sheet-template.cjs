@@ -66,14 +66,14 @@ test('native theory forms prompt for the actual outputs and keep all response ce
   assert.notEqual(getMonthlyAnswerSheet(6).parts[0].results[0].label_en,'mutated');
 });
 
-test('custom experiment worksheets render seven-row measurement tables and real printable graph grids',async()=>{
+test('custom experiment worksheets render arbitrary blank data tables and real printable graph grids',async()=>{
   const {buildAnswerPages,buildResponseGraph}=await import('../sim/monthly-answer-sheet.mjs');
   const sheet={version:'review',pages:[['A.1']],parts:[{id:'A.1',label_ko:'측정',label_en:'Measurement',points:100,
     results:[{label_ko:'기울기',label_en:'Slope',unit:'m/s'}],
-    tables:[{title_ko:'7회 반복 측정',title_en:'Seven repeated measurements',columns:[{label_ko:'횟수',label_en:'Trial'},{label_ko:'측정값',label_en:'Reading'}],rows:Array.from({length:7},(_,i)=>[String(i+1),''])}],
+    tables:[{title_ko:'측정 자료',title_en:'Measured data',columns:[{label_ko:'횟수',label_en:'Trial'},{label_ko:'측정값',label_en:'Reading'}],rows:Array.from({length:3},()=>['',''])}],
     graphs:[{title_ko:'측정 그래프',title_en:'Measurement graph',x_label_ko:'x (m)',x_label_en:'x (m)',y_label_ko:'t (ms)',y_label_en:'t (ms)',columns:28,rows:20,heightMm:65}]}]};
   const html=buildAnswerPages({id:'draft-5',no:5,title:'실험'},sheet,'ko');
-  assert.equal((html.match(/<tr>/g)||[]).length,8,'one heading row and seven blank measurement rows');
+  assert.equal((html.match(/<tr>/g)||[]).length,4,'one heading row and three blank record rows');
   assert.equal((html.match(/<line /g)||[]).length,50,'the grid is printable vector ink rather than a CSS background');
   assert.match(html,/class="result-field"/);assert.match(html,/\[m\/s\]/);
   assert.match(html,/x \(m\)/);assert.match(html,/t \(ms\)/);
@@ -145,4 +145,106 @@ test('corner geometry matches scanner calibration and keeps clear of A4 writing 
     assert.ok(viewport*.072>quietZoneEnd,'mobile side clearance');
   }
   assert.match(html,/padding:6\.2vw 7\.2vw/);
+});
+
+test('the monthly experiment resolves by stable identity at any database ID without claiming unrelated records',async()=>{
+  const {getMonthlyAnswerSheet,getMonthlyProblemRound}=await import('../monthly-problems.mjs');
+  const base={week:'2026-11',no:5,title:'압력파를 이용한 관의 내부 지름 측정'};
+  for(const id of [7,8,413]){
+    const sheet=getMonthlyAnswerSheet({...base,id});
+    assert.equal(sheet.key,'pressure-wave-experiment-v1');
+    assert.equal(sheet.version,'2026-11-pressure-wave-v1');
+    assert.equal(sheet.round,'experiment');assert.equal(sheet.limit,3);
+    assert.equal(sheet.experimentUrl,'/sim/monthly-pressure-wave/index.html');
+    assert.equal(getMonthlyProblemRound({...base,id}),'experiment');
+  }
+  for(const period of ['week','period','month']){
+    const problem={id:22,[period]:'2026-11',no:'5',title:'Other title',source:'HaslaLab · pressure-wave-experiment-v1'};
+    assert.equal(getMonthlyAnswerSheet(problem).key,'pressure-wave-experiment-v1');
+  }
+  assert.equal(getMonthlyAnswerSheet({id:8,week:'2026-11',no:5,title_en:'Measuring the internal diameter of a pipe with pressure waves'}).round,'experiment');
+  assert.equal(getMonthlyAnswerSheet({id:7,month:'2026-11',no:5,answerSheet:{key:'pressure-wave-experiment-v1'}}).round,'experiment');
+  for(const id of [7,8,413])assert.equal(getMonthlyAnswerSheet({id,week:'2026-11',no:5,title:'Unrelated problem'}),null);
+  assert.equal(getMonthlyAnswerSheet({...base,id:8,no:4}),null);
+  assert.equal(getMonthlyAnswerSheet({...base,id:8,week:'2026-12'}),null);
+  assert.equal(getMonthlyAnswerSheet(8),null,'a new database number alone does not identify the experiment');
+  assert.equal(getMonthlyAnswerSheet(5).parts[0].id,'a','legacy problem 2 is unchanged');
+});
+
+test('published experiment metadata contains blank forms linked to canonical rubric parts, not private answers',async()=>{
+  const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
+  const problem={id:817,week:'2026-11',no:5,source:'HaslaLab · pressure-wave-experiment-v1'};
+  const sheet=getMonthlyAnswerSheet(problem);
+  const seeded=JSON.parse(fs.readFileSync(path.join(root,'community/weekly/2026-11-pressure-wave.json'),'utf8')).problems[0];
+  assert.deepEqual(sheet.parts.map(p=>p.id),['A.1','A.2','B.1','B.2','B.3','C.1','C.2']);
+  assert.deepEqual(sheet.pages,sheet.parts.map(p=>[p.id]));assert.equal(sheet.pages.length,7);
+  assert.equal(sheet.parts.reduce((sum,p)=>sum+p.points,0),100);
+  for(const p of sheet.parts){
+    const criteria=seeded.rubric.filter(row=>row.id.startsWith(p.id+'.'));
+    assert.ok(criteria.length>0,'canonical rubric covers '+p.id);
+    assert.equal(criteria.reduce((sum,c)=>sum+c.max,0),p.points);
+    for(const field of p.results){assert.ok(field.label_ko&&field.label_en);assert.ok(!('value'in field));}
+  }
+  const json=JSON.stringify(sheet);
+  for(const forbidden of ['requirement','reference','hidden','expected','repeat_credit','minimum_repeats','D0_m','c_m_s'])assert.ok(!json.includes('"'+forbidden+'"'));
+  assert.ok(!/최소\s*7|7회|7개|적어도|at least|minimum number/i.test(json));
+  assert.match(sheet.instructions_ko,/빈칸은 측정 횟수를 뜻하지/);
+  assert.match(sheet.instructions_ko,/CSV.*선택/);
+  for(const lang of ['ko','en'])assert.match(sheet.parts.find(p=>p.id==='A.2').tables[0]['title_'+lang],/\$2\\,\\mathrm\{ms\}\$/,'initial acquisition uses the closure valid throughout the model range');
+  assert.deepEqual(sheet.parts.find(p=>p.id==='C.2').tables[0].rows.map(row=>row[0]),['2','5','10','20','50'],'candidate 5 ms remains available for valid models');
+  const mutable=getMonthlyAnswerSheet(problem);mutable.parts[0].tables[0].columns[0].label_ko='mutated';mutable.pages[0][0]='mutated';
+  assert.notEqual(getMonthlyAnswerSheet(problem).parts[0].tables[0].columns[0].label_ko,'mutated');
+  assert.equal(getMonthlyAnswerSheet(problem).pages[0][0],'A.1');
+});
+
+test('experiment labels are valid LaTeX and remain escaped until the explicit browser render step',async()=>{
+  const {getMonthlyAnswerSheet}=await import('../monthly-problems.mjs');
+  const {buildAnswerPages,renderAnswerSheetMath}=await import('../sim/monthly-answer-sheet.mjs');
+  const katex=require('../vendor/katex/katex.min.js');
+  const problem={id:817,week:'2026-11',no:5,title:'압력파를 이용한 관의 내부 지름 측정'};
+  const sheet=getMonthlyAnswerSheet(problem);
+  let mathCount=0;
+  function check(value){
+    if(typeof value==='string'){
+      const pieces=value.split('$');assert.equal(pieces.length%2,1,'paired inline delimiters');
+      for(let i=1;i<pieces.length;i+=2){katex.renderToString(pieces[i],{throwOnError:true,trust:false,strict:'error'});mathCount++;}
+    }else if(value&&typeof value==='object')for(const item of Object.values(value))check(item);
+  }
+  check(sheet);assert.ok(mathCount>100);
+  const previous=global.renderMathInElement,calls=[];
+  global.renderMathInElement=(element,options)=>calls.push({element,options});
+  try{
+    const html=buildAnswerPages({...problem,title:'<script>alert(1)</script>'},sheet);
+    assert.equal(calls.length,0,'HTML construction is pure and does not typeset or execute content');
+    assert.equal((html.match(/class="paper"/g)||[]).length,7);
+    assert.equal((html.match(/data-scan-corner=/g)||[]).length,28);
+    assert.match(html,/class="graph-math-plane"/);
+    assert.match(html,/class="graph-x-label"/);assert.match(html,/class="graph-y-label"/);
+    assert.ok(html.includes('&lt;script&gt;'));assert.ok(!/<script|<iframe|foreignObject/.test(html));
+    const node={};renderAnswerSheetMath(node);assert.equal(calls[0].element,node);
+    assert.equal(calls[0].options.trust,false);assert.equal(calls[0].options.throwOnError,false);
+    assert.ok(calls[0].options.delimiters.some(d=>d.left==='$'&&d.right==='$'));
+  }finally{if(previous===undefined)delete global.renderMathInElement;else global.renderMathInElement=previous;}
+  const entry=fs.readFileSync(path.join(root,'sim/monthly-answer-sheet.html'),'utf8');
+  assert.match(entry,/vendor\/katex\/katex\.min\.css/);assert.match(entry,/vendor\/katex\/katex\.min\.js/);assert.match(entry,/vendor\/katex\/contrib\/auto-render\.min\.js/);
+});
+
+test('the printable experiment fetches its actual database record and typesets the seven-page form',async()=>{
+  const previous={document:global.document,location:global.location,fetch:global.fetch,renderMathInElement:global.renderMathInElement};
+  try{
+    for(const id of [7,8,413]){
+      const nodes=Object.fromEntries(['back','print','message','help','sheets'].map(key=>[key,{textContent:'',innerHTML:'',hidden:false,disabled:true,addEventListener(){}}]));
+      const rendered=[];
+      global.document={documentElement:{},getElementById:key=>nodes[key]};global.location={search:`?id=${id}&lang=en`};
+      global.fetch=async url=>{assert.match(url,new RegExp(`/problems/${id}\\?lang=en$`));return Response.json({problem:{id,week:'2026-11',no:5,title:'Measuring the internal diameter of a pipe with pressure waves'}});};
+      global.renderMathInElement=(element,options)=>rendered.push({element,options});
+      await import('../sim/monthly-answer-sheet.mjs?case=experiment-id'+id);
+      for(let i=0;i<5&&nodes.print.disabled;i++)await new Promise(resolve=>setImmediate(resolve));
+      assert.equal(nodes.print.disabled,false);assert.equal(nodes.message.hidden,true);
+      assert.equal((nodes.sheets.innerHTML.match(/class="paper"/g)||[]).length,7);
+      assert.ok(nodes.sheets.innerHTML.includes('HL-MONTHLY-'+id));
+      assert.equal(rendered.length,1);assert.equal(rendered[0].element,nodes.sheets);
+      assert.equal(rendered[0].options.trust,false);
+    }
+  }finally{for(const [key,value]of Object.entries(previous)){if(value===undefined)delete global[key];else global[key]=value;}}
 });

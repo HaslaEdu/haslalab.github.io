@@ -12,7 +12,7 @@ const prefixed = (svg, prefix) => svg
   .replace(/aria-labelledby="([^"]+)"/g, (_, ids) => `aria-labelledby="${ids.split(/\s+/).map(id => `${prefix}-${id}`).join(' ')}"`);
 
 test('the inline diagram bundle exactly matches all reviewed transparent SVG sources', () => {
-  assert.deepEqual(figures.paths, ['weekly/figures/proton-chain.svg', 'weekly/figures/walls-targets.svg', 'weekly/figures/optical-rutherford.svg','weekly/figures/greenhouse-precession.svg','weekly/figures/greenhouse-cycles.svg']);
+  assert.deepEqual(figures.paths, ['weekly/figures/pressure-wave-apparatus.svg','weekly/figures/proton-chain.svg', 'weekly/figures/walls-targets.svg', 'weekly/figures/optical-rutherford.svg','weekly/figures/greenhouse-precession.svg','weekly/figures/greenhouse-cycles.svg']);
   for (const source of figures.paths) {
     const svg = normalize(fs.readFileSync(path.join(root, source), 'utf8'));
     assert.equal(figures.render(source, 'proof'), prefixed(svg, 'proof'), source);
