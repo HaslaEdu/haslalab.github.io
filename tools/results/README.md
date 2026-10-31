@@ -21,7 +21,12 @@ All individual marks, including ties and zeroes, are retained; no participant
 names, countries, or personal information are needed by the comparison UI.
 
 `rankFloor` can identify a source-verified overall-score boundary above which all
-contestants' totals are published. It permits an exact hypothetical rank only
+contestants' totals are published. It is set from a published lowest award (IPhO
+minutes), from the lowest listed total when the statutes award every prize and
+honourable mention by total thresholds and the table provably lists every awardee
+(IPhO 2018 minutes' prize count; APhO 2025/2026 ranks 1..n, each labelled), or,
+for EuPhO 2020, above the trailing all-zero rows that are the only rows in doubt.
+The entrant count may stay unknown: ranks are then exact, but no percentile. It permits an exact hypothetical rank only
 above that boundary, even when lower totals are private. Set
 `participantCountUncertain` to suppress population percentages when published
 participant counts conflict. A theory/experiment score cannot exceed its own
@@ -38,6 +43,11 @@ declared a threshold; `observed` means a lowest published award-winning score,
 which the UI explicitly distinguishes. `medalCutoffRule: gt` marks a strict
 threshold; the default is inclusive. Do not invent total-score thresholds for
 awards defined by a complete individual problem, quotas, or other criteria.
+
+Where a table shows awards only by row colour (EuPhO 2021/2022), the collector reads
+each row's filled band and requires the bands to follow the total-threshold order.
+EuPhO 2025 rows carrying only a special prize at or above the lowest gold total are
+counted as gold under the published threshold rule.
 
 `medalReference` is separate from an official medal cutoff. For a complete
 theory or experimental paper it records the actual edition's gold/silver/bronze

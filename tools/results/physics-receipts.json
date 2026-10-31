@@ -232,8 +232,8 @@
     {
       "url": "https://apho2017.mipt.ru/results/",
       "file": "apho2017.html",
-      "bytes": 114422,
-      "sha256": "5eb33dc41e0c2fcaffc6a6f27b17cc8a62169b1a3e7c0f4d22c54d3507727af9"
+      "bytes": 112081,
+      "sha256": "5d0af45e9010b0809c2d501516a6f1d835e9cdb6e0d1d285b61f7d86b041f94b"
     },
     {
       "url": "https://www.apho2025.sa/media/4mkc32ln/apho_2025_نشر-النتائج-1.pdf",
@@ -658,6 +658,74 @@
       "tieRule": "all scores equal to the boundary remain in the same reference band"
     },
     {
+      "record": "eupho-2021-theory",
+      "method": "same-round descending score at cumulative actual G/S/B award counts",
+      "scoreCount": 219,
+      "counts": {
+        "gold": 15,
+        "silver": 30,
+        "bronze": 66
+      },
+      "cuts": {
+        "gold": 15.3,
+        "silver": 10.0,
+        "bronze": 5.5
+      },
+      "population": "complete",
+      "tieRule": "all scores equal to the boundary remain in the same reference band"
+    },
+    {
+      "record": "eupho-2021-experiment",
+      "method": "same-round descending score at cumulative actual G/S/B award counts",
+      "scoreCount": 219,
+      "counts": {
+        "gold": 15,
+        "silver": 30,
+        "bronze": 66
+      },
+      "cuts": {
+        "gold": 9.7,
+        "silver": 7.9,
+        "bronze": 4.7
+      },
+      "population": "complete",
+      "tieRule": "all scores equal to the boundary remain in the same reference band"
+    },
+    {
+      "record": "eupho-2022-theory",
+      "method": "same-round descending score at cumulative actual G/S/B award counts",
+      "scoreCount": 182,
+      "counts": {
+        "gold": 12,
+        "silver": 30,
+        "bronze": 44
+      },
+      "cuts": {
+        "gold": 24.7,
+        "silver": 19.5,
+        "bronze": 12.4
+      },
+      "population": "complete",
+      "tieRule": "all scores equal to the boundary remain in the same reference band"
+    },
+    {
+      "record": "eupho-2022-experiment",
+      "method": "same-round descending score at cumulative actual G/S/B award counts",
+      "scoreCount": 182,
+      "counts": {
+        "gold": 12,
+        "silver": 30,
+        "bronze": 44
+      },
+      "cuts": {
+        "gold": 10.2,
+        "silver": 7.4,
+        "bronze": 5.5
+      },
+      "population": "complete",
+      "tieRule": "all scores equal to the boundary remain in the same reference band"
+    },
+    {
       "record": "eupho-2023-theory",
       "method": "same-round descending score at cumulative actual G/S/B award counts",
       "scoreCount": 176,
@@ -721,6 +789,40 @@
         "gold": 7.4,
         "silver": 5.5,
         "bronze": 4.2
+      },
+      "population": "complete",
+      "tieRule": "all scores equal to the boundary remain in the same reference band"
+    },
+    {
+      "record": "eupho-2025-theory",
+      "method": "same-round descending score at cumulative actual G/S/B award counts",
+      "scoreCount": 189,
+      "counts": {
+        "gold": 18,
+        "silver": 38,
+        "bronze": 44
+      },
+      "cuts": {
+        "gold": 19.7,
+        "silver": 13.1,
+        "bronze": 8.6
+      },
+      "population": "complete",
+      "tieRule": "all scores equal to the boundary remain in the same reference band"
+    },
+    {
+      "record": "eupho-2025-experiment",
+      "method": "same-round descending score at cumulative actual G/S/B award counts",
+      "scoreCount": 189,
+      "counts": {
+        "gold": 18,
+        "silver": 38,
+        "bronze": 44
+      },
+      "cuts": {
+        "gold": 10.1,
+        "silver": 6.1,
+        "bronze": 4.1
       },
       "population": "complete",
       "tieRule": "all scores equal to the boundary remain in the same reference band"
