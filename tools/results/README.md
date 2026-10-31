@@ -37,6 +37,13 @@ is at or above that floor. Below it the round stays a published-only comparison.
 A round-reference band is labelled full-field only when that rank is exact or the
 band's own cut is at or above the floor; unpublished scores can only raise a cut.
 
+`topScore` records a declared best score for an edition without a score table (the
+UI otherwise shows the highest published score, which is always an awardee's). APhO
+2000–2026 thresholds and best scores come from the official minutes (2000–2017, all
+thresholds cross-checked against Wikipedia; the minutes win for best scores) and a
+pinned Wikipedia revision; a table year's thresholds must classify every official
+row as it was awarded.
+
 `medalCutoffs` is allowed only with `awardScope: true`: these scores determine
 that competition's overall awards. `cutoffKind: published` means the organiser
 declared a threshold; `observed` means a lowest published award-winning score,

@@ -19866,6 +19866,16 @@
               "url": "https://apho2019.asi.edu.au/about/about-apho/",
               "title": "APhO statutes §9: theory 30 + experiment 20",
               "official": true
+            },
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2017_Minutes_of_18th_APhO.pdf",
+              "title": "APhO 2017 official minutes: award thresholds",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
             }
           ],
           "note": {
@@ -19903,11 +19913,12 @@
             }
           ],
           "medalCutoffs": {
-            "gold": 26.05,
-            "silver": 23.05,
-            "bronze": 19.0
+            "gold": 26.0,
+            "silver": 23.0,
+            "bronze": 19.0,
+            "hm": 14.0
           },
-          "cutoffKind": "observed",
+          "cutoffKind": "published",
           "medalCutoffRule": "gte"
         },
         {
@@ -20562,6 +20573,11 @@
               "url": "https://apho2019.asi.edu.au/about/about-apho/",
               "title": "APhO statutes §9: theory 30 + experiment 20",
               "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
             }
           ],
           "note": {
@@ -20601,10 +20617,11 @@
           ],
           "medalCutoffs": {
             "gold": 29.0,
-            "silver": 23.1,
-            "bronze": 16.2
+            "silver": 23.0,
+            "bronze": 16.0,
+            "hm": 8.0
           },
-          "cutoffKind": "observed",
+          "cutoffKind": "published",
           "medalCutoffRule": "gte",
           "rankFloor": 8.0
         },
@@ -21250,6 +21267,11 @@
               "url": "https://www.jpho.jp/international/sanka/",
               "title": "Japan's participating committee: 201 APhO 2026 entrants",
               "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
             }
           ],
           "note": {
@@ -21289,12 +21311,2251 @@
           ],
           "medalCutoffs": {
             "gold": 38.0,
-            "silver": 30.1,
-            "bronze": 23.0
+            "silver": 30.0,
+            "bronze": 23.0,
+            "hm": 16.0
           },
-          "cutoffKind": "observed",
+          "cutoffKind": "published",
           "medalCutoffRule": "gte",
           "rankFloor": 16.22
+        },
+        {
+          "id": "apho-2000-total",
+          "year": 2000,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2000-5-2_Minutes_of_1st_APhO.pdf",
+              "title": "APhO 2000 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 38.0,
+            "silver": 33.0,
+            "bronze": 27.0,
+            "hm": 21.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 44.75
+        },
+        {
+          "id": "apho-2001-total",
+          "year": 2001,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2001-4-30_Minutes_of_2nd_APhO.pdf",
+              "title": "APhO 2001 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 28.0,
+            "silver": 25.0,
+            "bronze": 20.0,
+            "hm": 16.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 34.5
+        },
+        {
+          "id": "apho-2002-total",
+          "year": 2002,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 35.0,
+            "silver": 30.0,
+            "bronze": 25.0,
+            "hm": 19.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 40.59
+        },
+        {
+          "id": "apho-2003-total",
+          "year": 2003,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2003-4-30_Minutes_of_4th_APhO.pdf",
+              "title": "APhO 2003 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 40.0,
+            "silver": 34.0,
+            "bronze": 29.0,
+            "hm": 22.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 45.9
+        },
+        {
+          "id": "apho-2004-total",
+          "year": 2004,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2004-5-2_Minutes_of_5th_APhO.pdf",
+              "title": "APhO 2004 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다. 이 해 회의록은 각 기준을 '초과'(>)로 적었습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table. The minutes state each threshold as strictly greater than (>)."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 39.0,
+            "silver": 34.0,
+            "bronze": 28.0,
+            "hm": 22.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gt",
+          "topScore": 45.1
+        },
+        {
+          "id": "apho-2004-theory",
+          "year": 2004,
+          "scope": "theory",
+          "label": {
+            "ko": "이론 전체",
+            "en": "Complete theory exam"
+          },
+          "max": 30,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 27.9
+        },
+        {
+          "id": "apho-2004-experiment",
+          "year": 2004,
+          "scope": "experiment",
+          "label": {
+            "ko": "실험 전체",
+            "en": "Complete experimental exam"
+          },
+          "max": 20,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "E1",
+              "E2"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 19.75
+        },
+        {
+          "id": "apho-2005-total",
+          "year": 2005,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2005-6-3_Minutes_of_6th_APhO.pdf",
+              "title": "APhO 2005 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 40.0,
+            "silver": 35.0,
+            "bronze": 29.0,
+            "hm": 22.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 45.6
+        },
+        {
+          "id": "apho-2005-theory",
+          "year": 2005,
+          "scope": "theory",
+          "label": {
+            "ko": "이론 전체",
+            "en": "Complete theory exam"
+          },
+          "max": 30,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 29.0
+        },
+        {
+          "id": "apho-2005-experiment",
+          "year": 2005,
+          "scope": "experiment",
+          "label": {
+            "ko": "실험 전체",
+            "en": "Complete experimental exam"
+          },
+          "max": 20,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "E1",
+              "E2"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 19.15
+        },
+        {
+          "id": "apho-2006-total",
+          "year": 2006,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 39.0,
+            "silver": 34.0,
+            "bronze": 28.0,
+            "hm": 21.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 44.3
+        },
+        {
+          "id": "apho-2007-total",
+          "year": 2007,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2007-4-28_Minutes_of_8th_APhO.pdf",
+              "title": "APhO 2007 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 38.0,
+            "silver": 33.0,
+            "bronze": 28.0,
+            "hm": 21.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 43.3
+        },
+        {
+          "id": "apho-2008-total",
+          "year": 2008,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2008-10-10_Minutes_of_the_9th_APhO%28official_version%29.pdf",
+              "title": "APhO 2008 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 37.0,
+            "silver": 32.0,
+            "bronze": 27.0,
+            "hm": 20.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 42.7
+        },
+        {
+          "id": "apho-2009-total",
+          "year": 2009,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2009-08-25_Minutes_of_the_10th_APhO.pdf",
+              "title": "APhO 2009 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 42.0,
+            "silver": 36.0,
+            "bronze": 30.0,
+            "hm": 23.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 47.5
+        },
+        {
+          "id": "apho-2010-total",
+          "year": 2010,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2010-12-02_Minutes_of_the_11th_APhO.pdf",
+              "title": "APhO 2010 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 32.0,
+            "silver": 28.0,
+            "bronze": 23.0,
+            "hm": 18.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 43.8
+        },
+        {
+          "id": "apho-2011-total",
+          "year": 2011,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2012-01-24_Minutes_of_the_12th_APhO.pdf",
+              "title": "APhO 2011 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 31.0,
+            "silver": 27.0,
+            "bronze": 22.0,
+            "hm": 17.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 42.6
+        },
+        {
+          "id": "apho-2012-total",
+          "year": 2012,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2012-12-16_Minutes_of_the_13th_APhO%20%28revised%29.pdf",
+              "title": "APhO 2012 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 35.0,
+            "silver": 31.0,
+            "bronze": 25.0,
+            "hm": 19.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 43.6
+        },
+        {
+          "id": "apho-2013-total",
+          "year": 2013,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2014-06-23_Minutes_of_the_14th_APhO_%28revised-final%29.pdf",
+              "title": "APhO 2013 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 24.0,
+            "silver": 20.0,
+            "bronze": 17.0,
+            "hm": 13.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 35.9
+        },
+        {
+          "id": "apho-2014-total",
+          "year": 2014,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2014-09-09_Minutes_of_the_15th_APhO.pdf",
+              "title": "APhO 2014 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 40.0,
+            "silver": 34.0,
+            "bronze": 29.0,
+            "hm": 22.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 45.5
+        },
+        {
+          "id": "apho-2015-total",
+          "year": 2015,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2015-12-15_Minutes_of_the_16th_APhO_%28revised%29.pdf",
+              "title": "APhO 2015 official minutes: award thresholds and best score",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 30.0,
+            "silver": 26.0,
+            "bronze": 21.0,
+            "hm": 16.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 45.5
+        },
+        {
+          "id": "apho-2016-total",
+          "year": 2016,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "http://asianphysicsolympiad.org/download/minutes/2016_Minutes_of_the_17th_APhO_2016.pdf",
+              "title": "APhO 2016 official minutes: award thresholds",
+              "official": true
+            },
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 38.0,
+            "silver": 33.0,
+            "bronze": 28.0,
+            "hm": 21.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 48.9
+        },
+        {
+          "id": "apho-2018-total",
+          "year": 2018,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 24.0,
+            "silver": 21.0,
+            "bronze": 17.0,
+            "hm": 13.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 39.07
+        },
+        {
+          "id": "apho-2019-total",
+          "year": 2019,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 28.0,
+            "silver": 25.0,
+            "bronze": 20.0,
+            "hm": 16.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 33.4
+        },
+        {
+          "id": "apho-2019-theory",
+          "year": 2019,
+          "scope": "theory",
+          "label": {
+            "ko": "이론 전체",
+            "en": "Complete theory exam"
+          },
+          "max": 30,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 23.9
+        },
+        {
+          "id": "apho-2019-experiment",
+          "year": 2019,
+          "scope": "experiment",
+          "label": {
+            "ko": "실험 전체",
+            "en": "Complete experimental exam"
+          },
+          "max": 20,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "E1",
+              "E2"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 12.6
+        },
+        {
+          "id": "apho-2021-total",
+          "year": 2021,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 22.0,
+            "silver": 19.0,
+            "bronze": 16.0,
+            "hm": 12.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 33.85
+        },
+        {
+          "id": "apho-2021-theory",
+          "year": 2021,
+          "scope": "theory",
+          "label": {
+            "ko": "이론 전체",
+            "en": "Complete theory exam"
+          },
+          "max": 30,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 16.6
+        },
+        {
+          "id": "apho-2021-experiment",
+          "year": 2021,
+          "scope": "experiment",
+          "label": {
+            "ko": "실험 전체",
+            "en": "Complete experimental exam"
+          },
+          "max": 20,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "E1",
+              "E2"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 17.85
+        },
+        {
+          "id": "apho-2022-total",
+          "year": 2022,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 42.0,
+            "silver": 36.0,
+            "bronze": 30.0,
+            "hm": 23.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 47.6
+        },
+        {
+          "id": "apho-2022-theory",
+          "year": 2022,
+          "scope": "theory",
+          "label": {
+            "ko": "이론 전체",
+            "en": "Complete theory exam"
+          },
+          "max": 30,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 28.7
+        },
+        {
+          "id": "apho-2022-experiment",
+          "year": 2022,
+          "scope": "experiment",
+          "label": {
+            "ko": "실험 전체",
+            "en": "Complete experimental exam"
+          },
+          "max": 20,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "E1",
+              "E2"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 19.4
+        },
+        {
+          "id": "apho-2023-total",
+          "year": 2023,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1",
+                  "E2"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 19.0,
+            "silver": 16.0,
+            "bronze": 13.0,
+            "hm": 10.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 33.5
+        },
+        {
+          "id": "apho-2023-theory",
+          "year": 2023,
+          "scope": "theory",
+          "label": {
+            "ko": "이론 전체",
+            "en": "Complete theory exam"
+          },
+          "max": 30,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 23.6
+        },
+        {
+          "id": "apho-2023-experiment",
+          "year": 2023,
+          "scope": "experiment",
+          "label": {
+            "ko": "실험 전체",
+            "en": "Complete experimental exam"
+          },
+          "max": 20,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "E1",
+              "E2"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 13.4
+        },
+        {
+          "id": "apho-2024-total",
+          "year": 2024,
+          "scope": "total",
+          "label": {
+            "ko": "이론·실험 합계",
+            "en": "Theory and experiment total"
+          },
+          "max": 50,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": true,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다. 1위 45.55점은 초청팀 참가자이며, 정식 참가자 최고점은 43.20점입니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table. The best total 45.55 is a guest-team contestant's; the best official contestant scored 43.20."
+          },
+          "components": [
+            {
+              "id": "theory",
+              "label": {
+                "ko": "이론 전체",
+                "en": "Complete theory"
+              },
+              "max": 30,
+              "taskSets": [
+                [
+                  "T1",
+                  "T2",
+                  "T3"
+                ]
+              ]
+            },
+            {
+              "id": "experiment",
+              "label": {
+                "ko": "실험 전체",
+                "en": "Complete experiment"
+              },
+              "max": 20,
+              "taskSets": [
+                [
+                  "E1"
+                ]
+              ]
+            }
+          ],
+          "medalCutoffs": {
+            "gold": 37.0,
+            "silver": 35.0,
+            "bronze": 30.0,
+            "hm": 24.0
+          },
+          "cutoffKind": "published",
+          "medalCutoffRule": "gte",
+          "topScore": 45.55
+        },
+        {
+          "id": "apho-2024-theory",
+          "year": 2024,
+          "scope": "theory",
+          "label": {
+            "ko": "이론 전체",
+            "en": "Complete theory exam"
+          },
+          "max": 30,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "T1",
+              "T2",
+              "T3"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 29.8
+        },
+        {
+          "id": "apho-2024-experiment",
+          "year": 2024,
+          "scope": "experiment",
+          "label": {
+            "ko": "실험 전체",
+            "en": "Complete experimental exam"
+          },
+          "max": 20,
+          "scores": [],
+          "complete": false,
+          "participants": null,
+          "population": "individual",
+          "awardScope": false,
+          "sources": [
+            {
+              "url": "https://en.wikipedia.org/w/index.php?title=Asian_Physics_Olympiad&oldid=1374487847",
+              "title": "Asian Physics Olympiad, Wikipedia (revision 1374487847): cutoffs and best scores by year",
+              "official": false
+            },
+            {
+              "url": "https://apho2019.asi.edu.au/about/about-apho/",
+              "title": "APhO statutes §9: theory 30 + experiment 20, thresholds on the total",
+              "official": true
+            }
+          ],
+          "taskSets": [
+            [
+              "E1"
+            ]
+          ],
+          "note": {
+            "ko": "이 해는 순위표가 공개되지 않아 메달 컷과 1위 점수만 비교합니다. 공식 회의록이 있는 해는 그 값을, 없는 해는 위키백과 표를 따랐습니다.",
+            "en": "No score table is public for this edition; only the award thresholds and the best scores are compared, from the official minutes where available and otherwise the Wikipedia table."
+          },
+          "topScore": 16.6
         }
       ],
       "coverage": {
@@ -21307,6 +23568,52 @@
         "completeScoreYears": [
           2017
         ],
+        "cutoffYears": [
+          2000,
+          2001,
+          2002,
+          2003,
+          2004,
+          2005,
+          2006,
+          2007,
+          2008,
+          2009,
+          2010,
+          2011,
+          2012,
+          2013,
+          2014,
+          2015,
+          2016,
+          2017,
+          2018,
+          2019,
+          2021,
+          2022,
+          2023,
+          2024,
+          2025,
+          2026
+        ],
+        "officialCutoffYears": [
+          2000,
+          2001,
+          2003,
+          2004,
+          2005,
+          2007,
+          2008,
+          2009,
+          2010,
+          2011,
+          2012,
+          2013,
+          2014,
+          2015,
+          2016,
+          2017
+        ],
         "medalReferenceYears": [
           2017,
           2025,
@@ -21314,8 +23621,8 @@
         ],
         "medalReferenceMethod": "Actual G/S/B award counts from each official final table projected onto same-round score rankings; only the published score population is used for incomplete editions. Not official component awards.",
         "limitations": {
-          "ko": "2017년은 익명 비수상자까지 포함합니다. 2025·2026년은 장려상까지의 수상자 점수만 있어 최저 수상 총점 이상에서만 전체 순위를 확정합니다. 2019년 공식 PDF는 글자·열이 겹쳐 자동 추출 검증을 통과하지 못해 포함하지 않았습니다. 다른 연도의 수상자 수를 점수 분포로 환산하지 않았습니다.",
-          "en": "2017 includes anonymous non-award scores. 2025/2026 provide awardees down to honourable mention only; full-field ranks are exact only at or above the lowest awarded total. The overlapping 2019 PDF failed extraction validation and is not imported. Award counts from other editions are not converted into score distributions."
+          "ko": "2000–2026년 메달 컷(금·은·동·장려)과 1위 점수를 수록했습니다. 2000–2017년은 공식 회의록과 위키백과 표가 모든 컷에서 일치함을 확인했고(2002·2006 회의록은 수치가 없거나 스캔본), 1위 점수는 회의록을 우선했습니다(2015년 위키백과 48.00점 대신 회의록 45.50점). 2018–2024년은 위키백과 표만 있습니다. 2017년은 익명 비수상자까지 포함합니다. 2025·2026년은 장려상까지의 수상자 점수만 있어 최저 수상 총점 이상에서만 전체 순위를 확정합니다. 2019년 공식 PDF는 글자·열이 겹쳐 자동 추출 검증을 통과하지 못해 포함하지 않았습니다. 다른 연도의 수상자 수를 점수 분포로 환산하지 않았습니다.",
+          "en": "Award thresholds (G/S/B/HM) and the best score for 2000–2026. For 2000–2017 the official minutes agree with the Wikipedia table on every threshold (the 2002 minutes state none and 2006's are a scan); the minutes take precedence for the best score (2015: 45.50, not Wikipedia's 48.00). 2018–2024 rest on the Wikipedia table alone. 2017 includes anonymous non-award scores. 2025/2026 provide awardees down to honourable mention only; full-field ranks are exact only at or above the lowest awarded total. The overlapping 2019 PDF failed extraction validation and is not imported. Award counts from other editions are not converted into score distributions."
         },
         "sources": [
           {

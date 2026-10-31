@@ -45,6 +45,9 @@ def validate(record):
     if record.get('rankFloor') is not None:
         require(record['scope'] == 'total' and number(record['rankFloor']) and 0 <= record['rankFloor'] <= ceiling and (count is None or type(count) is int) and bool(scores), 'rank coverage floor requires a sourced total distribution')
         require(any(s >= record['rankFloor'] - 1e-9 for s in scores), 'the coverage floor must lie within the published scores')
+    if record.get('topScore') is not None:
+        require(number(record['topScore']) and 0 <= record['topScore'] <= ceiling, 'best score must fit the scoring scale')
+        require(not scores or record['topScore'] >= max(scores) - 1e-9, 'best score cannot be below a published score')
     for tasks in record.get('taskSets', []):
         require(isinstance(tasks, list) and bool(tasks) and len(set(tasks)) == len(tasks) and all(isinstance(t, str) and t for t in tasks), 'invalid full-paper task set')
     cuts = record.get('medalCutoffs', {})
