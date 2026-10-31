@@ -15,7 +15,7 @@ for(const provider of ['deepseek','gemini'])test(provider+': exact selected mode
  const result=await visionJSON({...env,GEMINI_MODEL:'unwanted',DEEPSEEK_MODEL:'unwanted'},{
   provider,policy:'fixed competition rubric',images:[image],input:{answer:'arrow to the left'},schema:{type:'object'},
   fetchImpl:async(url,request)=>{
-   calls++;assert.equal(request.redirect,'error');const body=JSON.parse(request.body);
+   calls++;assert.equal(request.redirect,'manual');const body=JSON.parse(request.body);
    if(provider==='gemini'){
     assert.match(url,/gemini-3\.5-flash-lite:generateContent$/);assert.equal(request.headers['x-goog-api-key'],'fixture-g');
     assert.deepEqual(body.contents[0].parts[2].inline_data,{mime_type:image.mime,data:image.data});
@@ -69,5 +69,28 @@ test('graph-only OCR works while invented page/bounding-box records are rejected
  const result=await visionTranscript(env,'gemini',[image],{fetchImpl:async()=>response('gemini',raw)});
  assert.equal(result.text,'');assert.equal(result.visuals[0].kind,'direction');
  for(const visual of [{...raw.visuals[0],page:2},{...raw.visuals[0],box:[0,0,2,2]}])
-  await assert.rejects(visionTranscript(env,'gemini',[image],{fetchImpl:async()=>response('gemini',{...raw,visuals:[visual]})}),e=>e.code==='vision_invalid_response');
+  await assert.rejects(visionTranscript(env,'gemini',[image],{fetchImpl:async()=>response('gemini',{...raw,visuals:[visual]})}),e=>e.code==='vision_response_schema');
+});
+
+test('HTTP causes remain distinguishable without exposing upstream error text',async()=>{
+ for(const [status,code]of [[400,'vision_request_rejected'],[401,'vision_provider_auth'],[402,'vision_provider_credits'],[403,'vision_provider_auth'],[404,'vision_model_unavailable'],[413,'vision_request_rejected'],[422,'vision_request_rejected'],[429,'vision_provider_rate_limited'],[503,'vision_provider_failed']]){
+  await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:async()=>Response.json({error:{code:'invalid_request_error',message:'private fixture-d user data'}},{status})}),error=>{
+   assert.equal(error.code,code);assert.equal(error.provider_status,status);assert.equal(error.provider_code,'invalid_request_error');assert.ok(error.ms>=0);
+   assert.ok(!JSON.stringify(error).includes('private fixture-d'));return true;
+  });
+ }
+ await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:async()=>Response.json({error:{code:'sk-private-token',message:'sensitive'}},{status:400})}),error=>error.provider_code===undefined&&!JSON.stringify(error).includes('sk-private'));
+});
+test('blank JSON-mode output and truncated/blocked responses retain paid usage and distinct causes',async()=>{
+ for(const [content,finish,code]of [['   ','stop','vision_response_empty'],['{"text":"cut','length','vision_response_truncated'],['','content_filter','vision_response_blocked']]){
+  await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:async()=>response('deepseek',{}, {choices:[{finish_reason:finish,message:{content}}]})}),error=>error.code===code&&error.usage.input_tokens===100&&error.usage.ok===false&&error.provider_status===200);
+ }
+ await assert.rejects(visionJSON(env,{provider:'gemini',fetchImpl:async()=>response('gemini',{}, {candidates:[{finishReason:'MAX_TOKENS',content:{parts:[{text:'{'}]}}]})}),error=>error.code==='vision_response_truncated'&&error.usage.input_tokens===100);
+});
+test('DeepSeek OCR receives an explicit JSON example with required fields and no student content in the prefix',async()=>{
+ await visionTranscript(env,'deepseek',[image],{fetchImpl:async(_url,request)=>{
+  const body=JSON.parse(request.body),system=body.messages[0].content;
+  assert.match(system,/JSON structure example/);assert.match(system,/"text":""/);assert.match(system,/"visuals":\[\]/);assert.ok(!system.includes(image.data));
+  return response('deepseek',{text:'visible handwritten answer',legible:true,uncertainties:[],visuals:[]});
+ }});
 });

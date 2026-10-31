@@ -106,7 +106,24 @@ function tierIcon(lv, size) {
 }
 const ar = {seq: 0, health: null};
 const arT = () => AT[lang];
-const arErr = (e) => ({provider_required:lang==="en"?"Choose a grading provider.":"채점 제공자를 선택하세요.",provider_unavailable:lang==="en"?"This provider is unavailable. Choose an available option before starting.":"선택한 제공자를 사용할 수 없습니다. 시작 전에 사용 가능한 항목을 선택하세요.",provider_locked:lang==="en"?"The provider is fixed after reading or grading starts.":"판독·채점을 시작한 뒤에는 제공자를 바꿀 수 없습니다."})[e?.code] || (arT().err[e && e.code]) || cmErr(e);
+const AR_VISION_ERRORS={
+  vision_provider_auth:["판독 제공자의 인증 설정에 문제가 있습니다. 운영자에게 문의해 주세요.","The reading provider rejected its authentication settings. Contact the site operator."],
+  vision_provider_credits:["판독 제공자의 API 잔액이 부족합니다. 운영자에게 문의해 주세요.","The reading provider has insufficient API credit. Contact the site operator."],
+  vision_provider_rate_limited:["판독 제공자의 요청 한도에 걸렸습니다. 잠시 후 다시 읽기를 요청해 주세요.","The reading provider reached its request limit. Request reading again later."],
+  vision_model_unavailable:["선택한 판독 모델을 사용할 수 없습니다. 운영자에게 문의해 주세요.","The selected reading model is unavailable. Contact the site operator."],
+  vision_request_rejected:["판독 제공자가 이미지 요청을 거절했습니다. 운영자가 파일 형식·크기와 연결 설정을 확인해야 합니다.","The reading provider rejected the image request. The operator must check file format, size and connection settings."],
+  vision_provider_failed:["판독 제공자의 서버 오류로 처리하지 못했습니다. 잠시 후 다시 읽기를 요청해 주세요.","The reading provider returned a server error. Request reading again later."],
+  vision_provider_timeout:["판독 응답 시간이 초과됐습니다. 잠시 후 다시 읽기를 요청해 주세요.","The reading request timed out. Request reading again later."],
+  vision_response_empty:["판독 모델의 응답이 비어 있어 처리하지 못했습니다. 다시 읽기를 요청하거나 운영자에게 알려 주세요.","The reading model returned an empty response. Request reading again or contact the operator."],
+  vision_response_truncated:["판독 모델의 응답이 중간에 끊겼습니다. 운영자에게 문의해 주세요.","The reading model response was cut off. Contact the site operator."],
+  vision_response_blocked:["판독 모델이 응답을 제한했습니다. 운영자에게 문의해 주세요.","The reading model restricted its response. Contact the site operator."],
+  vision_invalid_response:["판독 모델의 응답 형식을 해석하지 못했습니다. 운영자에게 문의해 주세요.","The reading model response could not be decoded. Contact the site operator."],
+  vision_response_schema:["판독 응답의 필수 항목을 확인하지 못했습니다. 운영자에게 문의해 주세요.","Required fields were missing or invalid in the reading response. Contact the operator."],
+  ocr_bad_response:["판독 응답의 필수 항목을 확인하지 못했습니다. 운영자에게 문의해 주세요.","Required fields were missing or invalid in the reading response. Contact the operator."],
+  ocr_storage_limit:["사진과 읽은 원문의 합계 용량이 큽니다. 파일 용량을 줄여 다시 올려 주세요.","The photo and full recognized text exceed the storage limit. Reduce the file size and upload again."],
+};
+function arVisionError(code){return typeof code==="string"&&Object.hasOwn(AR_VISION_ERRORS,code)?AR_VISION_ERRORS[code][lang==="en"?1:0]:"";}
+const arErr = (e) => arVisionError(e?.code)||({provider_required:lang==="en"?"Choose a grading provider.":"채점 제공자를 선택하세요.",provider_unavailable:lang==="en"?"This provider is unavailable. Choose an available option before starting.":"선택한 제공자를 사용할 수 없습니다. 시작 전에 사용 가능한 항목을 선택하세요.",provider_locked:lang==="en"?"The provider is fixed after reading or grading starts.":"판독·채점을 시작한 뒤에는 제공자를 바꿀 수 없습니다."})[e?.code] || (arT().err[e && e.code]) || cmErr(e);
 function arTier(lv) { return `<span class="artier" style="--c:${TIER_COL[tierKey(lv)]}">${tierIcon(lv, 14)}${esc(tierName(lv))}</span>`; }
 function arLevel(lv) { return `<span class="arlvl" title="${esc(tierName(lv))}">${tierIcon(lv, 15)}</span>`; }
 function arLeft(sec) { if (sec <= 0) return arT().closed; const d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
@@ -660,7 +677,7 @@ function arBindMonthlyCapture(root,p,alive,{scanId=null,onChange=()=>{},onBusy=(
     const next=JSON.stringify([scan.id,scan.revision,scan.open,scan.status,scan.parts,scan.pages]);
     if(next===signature)return;signature=next;
     pages.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><h4 class="arh4">${C.pages} · ${scan.pages?.length||0}</h4><button type="button" class="cmbtn sm" data-capture-refresh>${C.refresh}</button></div><p class="arnote">${C.noEdit}</p>`+
-      (scan.pages?.length?scan.pages.map(page=>`<article class="arpanel" style="padding:12px;margin:10px 0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b>${esc(C.page(page.page_no||page.task||page.no))}</b><span class="arnote">${page.ocr_status==="done"?C.done:page.ocr_status==="failed"?C.failed:C.reading}</span><button type="button" class="cmbtn sm" data-capture-remove="${esc(page.id)}" ${busy||!scan.open?"disabled":""}>${C.remove}</button></div>
+      (scan.pages?.length?scan.pages.map(page=>`<article class="arpanel" style="padding:12px;margin:10px 0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b>${esc(C.page(page.page_no||page.task||page.no))}</b><span class="arnote">${page.ocr_status==="done"?C.done:page.ocr_status==="failed"?esc(arVisionError(page.ocr_error)||C.failed):C.reading}</span><button type="button" class="cmbtn sm" data-capture-remove="${esc(page.id)}" ${busy||!scan.open?"disabled":""}>${C.remove}</button></div>
         <div class="arsheet-photo-saved"><button type="button" class="cmbtn sm" data-monthly-photo="${esc(page.id)}" style="margin-top:8px">${C.original}</button><p class="arinfo" hidden></p><img alt="${C.original}" hidden style="max-width:100%;height:auto"></div>
         <details style="margin-top:8px"><summary>${C.read}</summary><div class="arsheet-preview">${arSheetWorkingPreview(page.text||"")}</div></details></article>`).join(""):`<p class="arnote">${C.none}</p>`)+
       (scan.parts?.some(part=>part.answer||part.working)?`<h4 class="arh4">${C.read}</h4><div class="arsheet-saved">${scan.parts.filter(part=>part.answer||part.working).map(part=>`<section><h4>${esc(arMonthlyPartNumber(p,part.id))}</h4><b>${arSheetT().answer}</b><div>${arSheetFinalPreview(part.answer)}</div><b>${arSheetT().working}</b><div>${arSheetWorkingPreview(part.working)}</div></section>`).join("")}</div>`:"")+
@@ -1329,7 +1346,7 @@ function arLabReview(r) {
 let arNetworkPromise=null;
 async function arWatchLab(root,alive,id,session){
   if(typeof document!=='object')return;
-  try{const network=window.HLExamNetwork||await(arNetworkPromise||(arNetworkPromise=import('./sim/exam-network.js').then(()=>window.HLExamNetwork).catch(e=>{arNetworkPromise=null;throw e;})));if(!alive())return;
+  try{const network=window.HLExamNetwork||await(arNetworkPromise||(arNetworkPromise=import('./sim/exam-network.js?v=78b6a42ed001').then(()=>window.HLExamNetwork).catch(e=>{arNetworkPromise=null;throw e;})));if(!alive())return;
     let signature=network.sessionSignature(session);
     ar.poller?.dispose();ar.poller=network.createPoll({active:()=>{if(!alive()){ar.poller?.dispose();return false;}return true;},task:async()=>{const r=await cmApi('GET','/lab/sessions/'+id);if(!alive())return false;const next=network.sessionSignature(r.session),changed=signature!==next;signature=next;if(changed)await arLabOne(root,alive,id,r.session);return changed;}});ar.poller.start();
   }catch(e){}
@@ -1351,6 +1368,7 @@ async function arLabOne(root, alive, id,preloaded) {
     why: Object.fromEntries(["needs_confirmation", "no_grader", "problem_unavailable", "uncertain_proof", "review_disagreement", "grader_unavailable", "answer_too_long", "scan_unavailable", "scan_too_large"].map(key => [key, english ? "The proof or review evidence needs manual checking. No score is final yet." : "답안 또는 검토 근거를 확인할 필요가 있어 관리자 검토를 기다립니다. 아직 확정된 점수는 없습니다."]))
   } : arLabLabels(s);
   const per = (s.detail && s.detail.tasks) || {}, open = s.status === "running" || s.status === "scanning";
+  const retryOcr=!isContest&&!!s.paid&&["pending","error"].includes(s.status)&&AR_VISION_PROVIDERS.includes(s.provider)&&(s.pages||[]).some(p=>p.ocr_status==="failed");
   const comparison = !isContest && window.labComparison?.hasScore?.(s) && typeof window.labComparison.mount === 'function';
   if (!alive()) return;
   root.innerHTML = `
@@ -1367,6 +1385,7 @@ async function arLabOne(root, alive, id,preloaded) {
       ${comparison?'<div id="arLabComparison"></div>':''}</div>
     ${s.status === "ended" && !isContest ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${L.payNote}</p>
       ${arVisionHtml(s,s.provider||"gemini",!!s.provider_locked)}<button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
+    ${retryOcr?`<div class="arpanel"><p>${english?"Read the failed pages again from the saved answer photos with the same provider.":"보관된 답안 사진에서 실패한 쪽을 같은 제공자로 다시 판독합니다."}</p><button class="cmbtn pri" id="arLabRetryOcr">${english?"Retry failed reading · no additional exam token":"실패한 판독 다시 시도 · 추가 토큰 없음"}</button><p class="arinfo" id="arLabRetryOcrMsg" role="status"></p></div>`:""}
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
       const body = x.status === "graded" && arQualitative(x) ? arLabQualitative(x)
         : x.status === "graded" && Array.isArray(x.items) ? arLabItems(x, s.regulation, s.reviews ? {task: t, list: s.reviews} : null)
@@ -1377,10 +1396,21 @@ async function arLabOne(root, alive, id,preloaded) {
     ${s.regulation ? `<div class="arpanel"><details><summary style="cursor:pointer;font-weight:700">${L.regH} <span style="font-weight:400;color:var(--graphite)">${esc(s.regulation.version)}</span></summary>
       <p class="arempty" style="margin:8px 0">${L.regNote}</p><ol class="arreg">${s.regulation.rules.map((r) => `<li><b>${esc(r.id)}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details></div>` : ""}
     <div class="arpanel"><h3>${L.pages} · ${s.pages.length}</h3>${s.pages.map((p) => `<details class="arsub"><summary><b>${esc(p.task)}</b> ${p.kind === "answer" ? L.answer : L.working} #${p.no}${p.edited ? " ✎" : ""}</summary>
+      ${p.ocr_status==="failed"?`<p class="arinfo bad">${esc(arVisionError(p.ocr_error||p.read?.ocr?.error)||(lang==="en"?"Reading failed. Contact the operator if it continues.":"판독에 실패했습니다. 계속 실패하면 운영자에게 알려 주세요."))}</p>`:""}
       <div style="display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:12px;margin-top:8px"><div data-img="${p.id}" style="background:#f3f4f6;border-radius:8px;min-height:120px"></div><pre class="aranswer">${esc(p.text)}</pre></div></details>`).join("") || `<p class="arempty">${T.empty}</p>`}
       ${open ? "" : `<p style="margin:12px 0 0"><button class="cmbtn sm" id="arLabDel">${L.del}</button></p>`}</div>`;
   arMath(root);
   if (comparison) window.labComparison.mount(root.querySelector('#arLabComparison'), s, lang, {base:'sim/results/',isCurrent:alive});
+  const retryButton=root.querySelector("#arLabRetryOcr");
+  if(retryButton&&retryOcr){
+    let retrying=false;
+    retryButton.onclick=async()=>{
+      if(retrying||!alive())return;retrying=true;retryButton.disabled=true;
+      const message=root.querySelector("#arLabRetryOcrMsg");if(message)message.textContent=english?"Requesting reading…":"다시 판독을 요청하는 중…";
+      try{const response=await cmApi("POST",`/lab/sessions/${s.id}/retry-ocr`,{provider:s.provider});if(!alive())return;await arLabOne(root,alive,id,response.session);}
+      catch(error){if(!alive())return;if(message){message.textContent=arErr(error);message.className="arinfo bad";}retrying=false;retryButton.disabled=false;}
+    };
+  }
   const pay = root.querySelector("#arLabPay");
   if (pay) pay.onclick = async () => {
     if(!alive())return;const provider=s.provider_locked&&AR_VISION_PROVIDERS.includes(s.provider)?s.provider:arVisionProvider(root,s.provider||"gemini");if(!arVisionAvailable(s,provider))return;

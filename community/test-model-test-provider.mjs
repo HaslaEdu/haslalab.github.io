@@ -64,7 +64,7 @@ for (const [pipeline,providers] of [
   assert.ok(result.usage.input_tokens>0&&result.usage.output_tokens>0);
   assert.ok(result.elapsed_ms>=0);
   for(const call of mock.calls){
-    assert.equal(call.options.redirect,'error');
+    assert.equal(call.options.redirect,'manual');
     assert.ok(call.options.signal instanceof AbortSignal);
     if(call.provider==='deepseek'){
       assert.equal(call.url,'https://api.deepseek.com/chat/completions');

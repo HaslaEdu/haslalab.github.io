@@ -53,6 +53,9 @@
       ],
       operate: '느리거나 멈췄을 때',
       runbooks: [
+        ['OCR이 모두 판독 실패로 표시됨', ['저장된 ocr_error와 HTTP 상태를 먼저 확인합니다. 인증·잔액·요청 제한·시간 초과·빈 응답·잘린 JSON·응답 형식을 구분하고, 사진 불량으로 단정하지 마세요.',
+          'Cloudflare Workers의 fetch는 redirect: error를 지원하지 않아 전송 전에 실패합니다. manual로 호출하고 3xx를 직접 거절합니다. 전역 fetch를 다른 객체의 메서드로 호출할 때는 올바른 this도 보존합니다.',
+          '배포 전 community/test-vision-runtime.mjs를 실제 workerd에서 실행합니다. Node 모의 응답만으로 런타임 호환성을 확인하지 마세요. 원인을 고친 뒤 소유자가 기존 사진으로 재시도를 누르면 추가 실전 토큰 없이 같은 제공자에 접수합니다.']],
         ['화면·API가 느림', ['브라우저 개발자 도구 Network에서 느린 요청 URL·상태 코드·시각·최초/반복 여부를 기록합니다. 정적 파일과 API 요청을 구분합니다.',
           'API의 X-Edge-Cache와 Server-Timing을 확인합니다. hit는 캐시 적중, db는 DB 왕복을 포함한 대기, sql은 DB 내부 실행 시간입니다. gateway·total과 합산하지 마세요. 동시 실행 시간은 겹칠 수 있습니다.',
           'd1_region·d1_colo에서 primary/replica와 지역을 확인합니다. 캐시가 없는 공개 조회와 인증이 필요한 조회를 따로 비교합니다. 이 화면의 읽기 진단은 그 순간의 한 요청만 확인합니다.']],
@@ -129,6 +132,9 @@
           note:'Tests do not modify exam records, rankings or token ledgers, but provider API charges may apply. Keep provider keys in backend Secrets and use samples without personal information.'}
       ],
       operate:'When requests slow down or stop', runbooks:[
+        ['Every page reports OCR failure',['Inspect the stored OCR code and HTTP status. Separate authentication, credit, rate, timeout, empty/truncated JSON and schema errors before blaming image quality.',
+          'Workers rejects fetch redirect:error before HTTP. Use manual and reject 3xx explicitly; preserve the native global fetch receiver when injecting it into an options object.',
+          'Run community/test-vision-runtime.mjs in actual workerd before deployment. Node-only mocks do not prove runtime compatibility. After fixing the cause, the owner can explicitly retry saved photos with the pinned provider without another exam-token charge.']],
         ['Slow interface or API',['In browser Network tools, record the request URL, status, time and whether it was a first or repeated load. Separate static assets from API requests.',
           'Inspect X-Edge-Cache and Server-Timing. hit means a cache hit; db includes binding/network wait; sql is execution inside D1. Do not add these to gateway/total: concurrent times can overlap.',
           'Inspect d1_region and d1_colo for primary/replica and location. Compare uncached public reads separately from authenticated reads. The diagnostic below describes one request, not overall health.']],

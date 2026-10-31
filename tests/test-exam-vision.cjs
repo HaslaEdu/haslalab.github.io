@@ -72,3 +72,35 @@ test('finishing an old exam cannot retry under the next account or overwrite its
  vm.runInContext(html.slice(start,end),context);const pending=context.finishExam();identity='new';context.SES={id:2,status:'running'};reject({code:'account_changed'});await pending;
  assert.equal(calls,1);assert.equal(context.SES.id,2);assert.equal(context.finishing,false);
 });
+
+function retryFixture(){
+ let identity='owner',resolve,reject;const calls=[],button={disabled:false},info={textContent:''};
+ const s={id:7,paid:true,status:'pending',provider:'deepseek',pages:[{id:8,ocr_status:'failed'}]};
+ const context=vm.createContext({SES:s,BUSY:false,lang:'ko',shown:'done',transport:{fingerprint:()=>identity},
+  $:id=>id==='retryOcr'?button:info,api:(method,path,body)=>{calls.push({method,path,body});return new Promise((yes,no)=>{resolve=yes;reject=no;});},
+  errMsg:e=>e.code,setSession(value){context.SES=value;},render(){context.renders=(context.renders||0)+1;}});
+ vm.runInContext(html.slice(html.indexOf('function bindOcrRetry('),html.indexOf('function doneView()')),context);
+ context.bindOcrRetry(s);
+ return{context,s,button,info,calls,identity:value=>identity=value,finish:value=>resolve(value),fail:value=>reject(value)};
+}
+
+test('exam failure retry is explicit, sends the pinned provider once and renders the queued session without paying',async()=>{
+ const f=retryFixture();assert.equal(f.calls.length,0);
+ const pending=f.button.onclick();await f.button.onclick();
+ assert.equal(f.button.disabled,true);assert.equal(f.calls.length,1);
+ assert.equal(f.calls[0].method,'POST');assert.equal(f.calls[0].path,'/lab/sessions/7/retry-ocr');assert.equal(f.calls[0].body.provider,'deepseek');
+ f.finish({session:{...f.s,status:'grading'}});await pending;
+ assert.equal(f.context.SES.status,'grading');assert.equal(f.context.renders,1);
+ assert.ok(f.calls.every(c=>!c.path.includes('/pay')));
+});
+
+test('a failed OCR retry can be requested again, while stale account/session results never repaint',async()=>{
+ const failed=retryFixture(),attempt=failed.button.onclick();failed.fail({code:'vision_provider_credits'});await attempt;
+ assert.equal(failed.button.disabled,false);assert.equal(failed.info.textContent,'vision_provider_credits');
+ for(const changed of ['account','session']){
+  const f=retryFixture(),pending=f.button.onclick();
+  if(changed==='account')f.identity('other');else f.context.SES={id:99};
+  f.finish({session:{...f.s,status:'graded',nickname:'PRIVATE_LATE_DATA'}});await pending;
+  assert.equal(f.context.renders,undefined);assert.notEqual(f.context.SES.nickname,'PRIVATE_LATE_DATA');assert.equal(f.calls.length,1);
+ }
+});

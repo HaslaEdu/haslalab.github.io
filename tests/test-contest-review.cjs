@@ -8,6 +8,17 @@ function transport(){
   return{client,calls};
 }
 
+test('stored KMO OCR failures show safe provider categories rather than advice to reshoot valid work',()=>{
+  const Review=require('../sim/contest-review.js');
+  for(const [code,pattern]of [['vision_provider_auth',/authentication/],['vision_provider_credits',/API credit/],
+    ['vision_response_empty',/empty response/],['vision_response_truncated',/cut off/],['vision_response_schema',/fields/]]){
+    const text=Review.uploadWarning({ocr_status:'failed',legible:'good',ocr_error:code},'en');
+    assert.match(text,pattern);assert.doesNotMatch(text,/retake|photograph it again|read well/i);
+  }
+  const unknown=Review.uploadWarning({ocr_status:'failed',ocr_error:'<script>provider-secret</script>'},'en');
+  assert.doesNotMatch(unknown,/script|provider-secret/);assert.match(unknown,/photo was saved/i);
+});
+
 test('loading the review client never creates or charges a session',()=>{
   const {calls}=transport();assert.equal(calls.length,0);
 });

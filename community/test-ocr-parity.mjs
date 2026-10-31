@@ -172,7 +172,7 @@ test("malformed, oversized and structurally invalid provider payloads fail withi
     assert.equal(captures.length,1);assert.ok(!JSON.stringify(result).includes("PRIVATE_NOT_JSON"));
   }
   reset({transcript:{text:"x".repeat(160001),legible:true,uncertainties:[],visuals:[]}});
-  assert.equal((await recognize(await session())).data.error,"vision_invalid_response");
+  assert.equal((await recognize(await session())).data.error,"vision_response_schema");
 });
 
 test("scan text and metadata preserve the complete selected-provider transcription beside its index", async () => {

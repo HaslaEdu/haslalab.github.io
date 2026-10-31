@@ -6,6 +6,9 @@ const root=path.resolve(__dirname,'..'),check=process.argv.includes('--check');
 const derivedSources=new Map();
 const read=f=>derivedSources.get(f)??fs.readFileSync(path.join(root,f),'utf8').replace(/\r\n/g,'\n');
 const digest=s=>crypto.createHash('sha256').update(s).digest('hex').slice(0,12);
+const networkVersion=digest(read('sim/exam-network.js'));
+const networkArena=read('arena.js').replace(/import\((['"])\.\/sim\/exam-network\.js(?:\?[^'"\n]*)?\1\)/g,(_match,q)=>'import('+q+'./sim/exam-network.js?v='+networkVersion+q+')');
+derivedSources.set('arena.js',networkArena);
 const window={},scope={window,URL,URLSearchParams,localStorage:{getItem:()=>null},console};
 vm.createContext(scope);
 const sourceFiles=['paper-languages.js','theory.js','contest-exams.js','iypt.js','usaco.js','rupho-selection.js','rupho-archive.js'];
@@ -115,7 +118,8 @@ outputs.set('sim/monthly-answer-sheet.mjs',sheetModule);
 outputs.set('sim/monthly-answer-sheet.html',read('sim/monthly-answer-sheet.html').replace(/src="monthly-answer-sheet\.mjs(?:\?[^"\n]*)?"/,'src="monthly-answer-sheet.mjs?v='+digest(sheetModule)+'"'));
 const monthlyScanVersion=digest(read('sim/monthly-scan.mjs'));
 outputs.set('sim/monthly-scan.html',read('sim/monthly-scan.html').replace(/src="monthly-scan\.mjs(?:\?[^"\n]*)?"/,'src="monthly-scan.mjs?v='+monthlyScanVersion+'"'));
-outputs.set('sim/scan.html',read('sim/scan.html').replace(/import\("\.\/monthly-scan\.mjs(?:\?[^"\n]*)?"\)/,'import("./monthly-scan.mjs?v='+monthlyScanVersion+'")'));
+outputs.set('sim/scan.html',read('sim/scan.html').replace(/import\("\.\/monthly-scan\.mjs(?:\?[^"\n]*)?"\)/,'import("./monthly-scan.mjs?v='+monthlyScanVersion+'")')
+  .replace(/src="exam-network\.js(?:\?[^"\n]*)?"/,'src="exam-network.js?v='+networkVersion+'"'));
 const stale=[];
 for(const [name,content]of outputs){const file=path.join(root,name);if(check){if(!fs.existsSync(file)||fs.readFileSync(file,'utf8').replace(/\r\n/g,'\n')!==content.replace(/\r\n/g,'\n'))stale.push(name);}else{fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,content);}}
 if(stale.length){console.error('Generated catalogue is stale: '+stale.join(', '));process.exitCode=1;}

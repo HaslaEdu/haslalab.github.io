@@ -261,6 +261,40 @@ function scannerForm() {
   return {form,file,info,destination,buttons,capture,clean,box};
 }
 
+test('generic photo OCR displays a provider credit error without calling it a bad photo or exposing provider text',async()=>{
+  const {context}=app(),fixture=scannerForm();
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.clean}),encodeUpload:async blob=>blob};
+  vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async()=>({ok:false,json:async()=>({error:'vision_provider_credits',message:'private-provider-secret-body'})});
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),()=>assert.fail('failed reading cannot produce answers'));
+  await fixture.file.onchange();await fixture.buttons.read.onclick();
+  assert.match(fixture.info.textContent,/API 잔액/);assert.doesNotMatch(fixture.info.textContent,/다시 찍|private-provider|secret/);
+});
+
+test('monthly capture pages display stored response failures while unknown diagnostic text remains hidden',async()=>{
+  const {context}=app(),ui=captureFixture(context);
+  const scan={id:'scan-error',open:true,status:'scanning',revision:1,pages:[{id:'photo-1',page_no:1,ocr_status:'failed',ocr_error:'vision_response_empty',text:''}],parts:[]};
+  context.cmApi=async()=>({scan:clone(scan)});
+  const controller=context.arBindMonthlyCapture(ui.root,clone(problem),()=>true);await controller.start();
+  const message=ui.pages.innerHTML.match(/<span class="arnote">([^<]+)<\/span>/)[1];
+  assert.match(message,/응답이 비어/);assert.doesNotMatch(message,/다시 촬영/);
+  scan.pages[0].ocr_error='<script>private-provider-error</script>';scan.revision++;
+  await controller.refresh(true);
+  assert.doesNotMatch(ui.pages.innerHTML,/private-provider-error|<script>/);controller.dispose();
+});
+
+test('generic and exam error categories share the same safe bilingual explanations',()=>{
+  const {context}=app(),Network=require('../sim/exam-network.js');
+  for(const lang of ['ko','en']){
+    context.lang=lang;
+    for(const code of ['vision_provider_auth','vision_provider_credits','vision_provider_rate_limited','vision_model_unavailable',
+      'vision_request_rejected','vision_provider_failed','vision_provider_timeout','vision_response_empty','vision_response_truncated',
+      'vision_response_blocked','vision_invalid_response','vision_response_schema','ocr_bad_response','ocr_storage_limit'])
+      assert.equal(context.arVisionError(code),Network.ocrErrorMessage(code,lang));
+    assert.equal(context.arVisionError('<script>provider-secret</script>'),'');
+  }
+});
+
 test('an uncorrected camera photo is not called a scan; corner confirmation makes and uploads a corrected color image',async()=>{
   const {context}=app(),fixture=scannerForm(),corners=[{x:20,y:10},{x:80,y:10},{x:20,y:110},{x:80,y:110}];let rendered=0,uploaded;
   context.testScanner={canProcess:()=>true,MARKER_INSET:.02,processShot:async(_file,options)=>{
