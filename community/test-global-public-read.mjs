@@ -8,7 +8,7 @@ import backend from './src/index.js';
 import { selectOnly, primaryCheckpointRequest } from './src/public-consistency.js';
 import { DB_SCOPE, READ_METRICS, publicRead } from './src/public-read-cache.js';
 import { createD1Metrics } from './src/d1-timing.js';
-import { GREENHOUSE_PUBLICATION_ID } from './src/weekly-content.js';
+import { GREENHOUSE_PUBLICATION_ID, PRESSURE_WAVE_PUBLICATION_ID } from './src/weekly-content.js';
 
 const fixtures = [], ORIGIN = 'https://haslalab.org';
 const sensitiveSQL = /\b(?:pw|token_hash|exam_tokens|exam_half|token_parts|sessions|lab_sessions|lab_pages|lab_ledger|pay_orders|identities|answer|rubric|model_ko|model_en)\b/i;
@@ -18,10 +18,11 @@ async function fixture({ actualBackend = false, enabled = true, supported = true
   sql.exec('DELETE FROM submissions; DELETE FROM problems');
   sql.exec('CREATE TABLE monthly_problem_retirements(problem_id INTEGER PRIMARY KEY, retired_at INTEGER NOT NULL, reason TEXT NOT NULL)');
   // This routing fixture owns its synthetic slots/IDs. The independent content
-  // publication is exercised with fresh/colliding databases in its own suite.
+  // publications are exercised with fresh/colliding databases in their own suites.
   // Leave the original publication unmarked so the cold cron test still writes it.
   sql.exec('CREATE TABLE weekly_publications(id TEXT PRIMARY KEY,problems INTEGER NOT NULL,created_at INTEGER NOT NULL)');
   sql.prepare('INSERT INTO weekly_publications VALUES(?,1,1)').run(GREENHOUSE_PUBLICATION_ID);
+  sql.prepare('INSERT INTO weekly_publications VALUES(?,1,1)').run(PRESSURE_WAVE_PUBLICATION_ID);
   const time = Math.floor(Date.now() / 1000), token = 'local_global_read_owner'.padEnd(48, 'x');
   sql.prepare("INSERT INTO users(id,username,nickname,pw,role,avatar,created_at,exam_tokens) VALUES(1,'PRIVATE_LOGIN','Public Owner','PRIVATE_HASH','user','publicAvatar',?,7)").run(time);
   const tokenHash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');

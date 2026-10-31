@@ -3,10 +3,11 @@
  * Never publish this file as a static browser asset.
  *
  * This is the stated first-wave, slowly varying rigid-pipe approximation,
- * not a general water-hammer solver. The incident ramp and its first
- * pressure-release reflection are superposed. Recording stops before the
- * reflected wave returns to the closed valve, where a further reflection
- * would require the next part of the model.
+ * not a general water-hammer solver. Superpose the incident ramp, the first
+ * pressure-release reflection at the reservoir, and its first reflection
+ * at the closed valve. At the highest wave speeds that last echo reaches
+ * S0 near the end of the record. The next reservoir reflection lies outside
+ * the recording interval at every sensor.
  *
  * All command results are instrument readings. Parameters that students
  * infer (diameter, elastic modulus and taper coefficients) are not returned.
@@ -107,9 +108,12 @@ export class PressureWaveLab {
   #pressure(sensor,timeMs,closeMs){
     const direct=TIME_OFFSET_MS+1000*sensor.x/this.#model.c;
     const reflected=TIME_OFFSET_MS+1000*(2*LENGTH-sensor.x)/this.#model.c;
+    const valveEcho=TIME_OFFSET_MS+1000*(2*LENGTH+sensor.x)/this.#model.c;
     const launch=DENSITY*this.#model.c*this.#model.Q/area(0,this.#model)/1000;
     const amplitude=launch*this.#model.D0/diameter(sensor.x,this.#model);
-    return this.#base(sensor)+amplitude*(ramp((timeMs-direct)/closeMs)-ramp((timeMs-reflected)/closeMs));
+    // The reservoir changes the pressure sign; the closed valve preserves
+    // that negative sign. At x=0 both returning negative ramps coincide.
+    return this.#base(sensor)+amplitude*(ramp((timeMs-direct)/closeMs)-ramp((timeMs-reflected)/closeMs)-ramp((timeMs-valveEcho)/closeMs));
   }
   #resolveRun(token){
     if(token===undefined)return this.#records.at(-1);
@@ -229,7 +233,7 @@ export class PressureWaveLab {
       '  clear          터미널 화면 지우기 (기록 유지)',
       `표본 ${SAMPLE_INTERVAL_MS.toFixed(2)} ms, 기록 ${RECORD_START_MS}..${RECORD_DURATION_MS} ms, 최대 ${MAX_RUNS}회.`,
       '같은 RUN/CAL ID를 다시 읽으면 보관된 측정값을 반환합니다.',
-      '첫 진행파와 수조에서 한 번 반사된 파를 사용하는 가상 장치입니다.',
+      '첫 진행파와 수조·닫힌 밸브의 첫 반사를 기록하는 가상 장치입니다.',
     ].join('\n')};
     if(cmd==='clear'&&args.length===0)return{ok:true,text:'',clear:true};
     if(cmd==='cal'&&args.length===1&&args[0].toLowerCase()==='history'){

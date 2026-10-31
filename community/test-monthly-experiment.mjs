@@ -213,3 +213,19 @@ test('on-demand regenerated traces and metadata replay preserve exact stored win
   const csv=a.execute('export 1').csv.trim().split('\r\n').slice(1).map(line=>line.split(',').map(Number));
   assert.equal(summary.after_kPa,quantise(mean(csv.filter(row=>row[3]>=summary.read_start_ms&&row[3]<summary.read_end_ms).map(row=>row[8]))));
 });
+
+test('a fast wave reflects its returning rarefaction at the closed valve with the same negative pressure sign',()=>{
+  const parameters={D0:.05,a:.08,b:.04,K:2.30e9,Q:.00015},lab=new PressureWaveLab({seed:'high-K-second-echo',parameters});
+  const c=Math.sqrt(parameters.K/1000),returnAtValve=.30+240000/c;
+  assert.ok(returnAtValve<160&&returnAtValve>158,'the first return reaches the valve inside the recorded tail');
+  assert.ok(.30+255000/c>160,'the reflected return cannot yet reach S1');
+  lab.execute('set close 2');const run=lab.execute('run').run;
+  const s0=lab.execute('trace S0 1').trace.points,at=t=>s0.find(p=>p.t_ms===t).r_kPa;
+  const displayedAmplitude=run.sensors[0].after_kPa-run.sensors[0].before_kPa;
+  // Incoming rarefaction and its +1-pressure-coefficient closed-end echo
+  // overlap at S0. A 0.5 ms interval therefore drops 2*(0.5/2)*P.
+  assert.ok(Math.abs((at(159)-at(159.5))/displayedAmplitude-.5)<.003);
+  assert.ok(at(160)<run.sensors[0].before_kPa-20,'the double rarefaction has crossed below the initial pressure');
+  const s1=lab.execute('trace S1 1').trace.points;
+  assert.ok(Math.abs(s1.at(-1).r_kPa-run.sensors[1].before_kPa)<.3,'S1 has only the reservoir return before its valve echo arrives');
+});
