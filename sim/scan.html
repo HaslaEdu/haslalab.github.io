@@ -297,7 +297,9 @@ async function take(file, live, internal = false, captureOptions = {}) {
     // Native Android ImageCapture may change crop, orientation or exposure. Its
     // photo must earn its own detection; live coordinates only belong to the
     // exact frozen video frame that was analysed, never to another photo.
-    if (captureOptions.fallback && (processingError || r?.warpApplied === false)) {
+    // An uncertain quad in the native still is cropped by processShot (a manual corner fix can follow), but when the
+    // live view had verified the page in its own frame, that frame is the better page: use it instead.
+    if (captureOptions.fallback && (processingError || r?.warpApplied === false || r?.cornersReliable !== true)) {
       const fallback = captureOptions.fallback;
       r = await processShot(fallback.file, { ...options, detectionHint: fallback.detectionHint });
       if (revision !== shotRevision || !shot) return;
@@ -461,7 +463,14 @@ async function liveCamera() {
     const fallbackFile = accepted ? await new Promise(resolve => accepted.canvas.toBlob(resolve, "image/jpeg", .96)) : null;
     const fallback = fallbackFile ? { file: fallbackFile, detectionHint: accepted.detectionHint } : null;
     let blob = null, fromVideo = false;
-    try { if (window.ImageCapture) blob = await new ImageCapture(stream.getVideoTracks()[0]).takePhoto(); } catch (e) { blob = null; }
+    /* the still is taken without the flash or torch: on paper it blows out the middle and leaves a glare the clean
+       mode then spreads (Samsung's default fill light is auto) */
+    try {
+      if (window.ImageCapture) {
+        const still = new ImageCapture(stream.getVideoTracks()[0]), caps = await still.getPhotoCapabilities?.().catch(() => null);
+        blob = await still.takePhoto(Array.isArray(caps?.fillLightMode) && caps.fillLightMode.includes("off") ? { fillLightMode: "off" } : undefined);
+      }
+    } catch (e) { blob = null; }
     if (!alive) return;
     if (!blob && fallback) { blob = fallback.file; fromVideo = true; }
     if (!blob) {
