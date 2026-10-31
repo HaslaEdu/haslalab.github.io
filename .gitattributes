@@ -1,0 +1,4 @@
+# Preserve the exact user-supplied simulator, including its original line endings.
+src/ipho2019_E1_sim_KO.py -text
+# Vendored upstream runtime files must remain byte-identical.
+vendor/pyodide/* -text

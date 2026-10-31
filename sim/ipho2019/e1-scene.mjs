@@ -21,6 +21,15 @@ export function opticalFocus(lab,key) {
   return {target:[x,key==='laser'?3:1.5,z],distance:({disk:43,ruler:80,laser:24,holder:32,holder12b:24,ruler8:42,screen:145,tape6:20})[key]||85};
 }
 
+// Device wheels retain the original Tk laboratory's 2 degree steps and
+// Shift fine adjustment. Camera zoom belongs to the empty table instead.
+export function opticalWheelAction(meta,shiftKey,deltaY) {
+  if(!meta||!Number.isFinite(deltaY)||deltaY===0)return null;
+  const key=meta.role==='holderRotate'||meta.key==='holder12b'?'holder12b':meta.role==='fine'||meta.key==='laser'?'laser':meta.key;
+  if(!['ruler','disk','holder','screen','ruler8','laser','holder12b'].includes(key))return null;
+  return {key,delta:(deltaY<0?1:-1)*(shiftKey?.25:2)};
+}
+
 export function createOpticalScene(container,options={}) {
   const geometries=new Set(),materials=new Set(),textures=new Set(),gcache=new Map(),mcache=new Map();
   const scene=new THREE.Scene();scene.background=new THREE.Color('#26352f');
@@ -35,7 +44,7 @@ export function createOpticalScene(container,options={}) {
   const controls=new OrbitControls(camera,canvas);controls.target.set(136,1,130);camera.position.copy(controls.target).add(new THREE.Vector3(.23,.68,.70).normalize().multiplyScalar(150));
   controls.enableDamping=true;controls.dampingFactor=.12;controls.minDistance=13;controls.maxDistance=550;
   controls.maxPolarAngle=Math.PI*.49;controls.minPolarAngle=.018;controls.screenSpacePanning=false;
-  controls.mouseButtons.LEFT=THREE.MOUSE.ROTATE;controls.mouseButtons.RIGHT=THREE.MOUSE.PAN;
+  controls.mouseButtons.LEFT=THREE.MOUSE.ROTATE;controls.mouseButtons.MIDDLE=THREE.MOUSE.PAN;controls.mouseButtons.RIGHT=THREE.MOUSE.PAN;
   let lab=null,lastTrace=null,disposed=false,frame=0,selectedKey=null,viewMode='perspective',lastDark=null,protractorZero=null,warmed=false,initialFit=true;
   const roots={},pickables=[],pointer=new THREE.Vector2(),ray=new THREE.Raycaster(),ground=new THREE.Plane(new THREE.Vector3(0,1,0),0);
   const groundPoint=new THREE.Vector3(),dragPointers=new Map();let action=null,gesture=null;
@@ -197,9 +206,9 @@ export function createOpticalScene(container,options={}) {
     while(group.children.length<items.length){const strip=box(group,[3.2,.045,2],[0,0,0],mat.paper);strip.userData.hit={key,role:'tapeStrip',index:group.children.length-1};}
     items.forEach((point,index)=>{const value=group.children[index];value.position.set(point[0],key==='ruler'?1.28:key==='disk'?3.48:key==='holder'?1.15:.5,-point[1]);});
   }
-  const selectBox=new THREE.BoxHelper(ruler,0xc5a3f5);selectBox.visible=false;selectBox.material.transparent=true;selectBox.material.opacity=.78;selectBox.material.depthTest=false;selectBox.renderOrder=100;scene.add(selectBox);geometries.add(selectBox.geometry);materials.add(selectBox.material);
+  const selectBox=new THREE.BoxHelper(ruler,0xf2c14e);selectBox.visible=false;selectBox.material.transparent=true;selectBox.material.opacity=.78;selectBox.material.depthTest=false;selectBox.renderOrder=100;scene.add(selectBox);geometries.add(selectBox.geometry);materials.add(selectBox.material);
   // Only already-traced segments INSIDE GLASS are drawn. These simple instanced
-  // cylinders are a renderer; all refraction/diffraction stays in e1-physics.
+  // cylinders are a renderer; all refraction/diffraction stays in Python.
   const rayMaterial=new THREE.MeshBasicMaterial({color:'#ff3214',transparent:true,opacity:.96,blending:THREE.NormalBlending,depthWrite:false,toneMapped:false});materials.add(rayMaterial);
   const rays=new THREE.InstancedMesh(geo('rayCylinder',()=>new THREE.CylinderGeometry(1,1,1,5)),rayMaterial,4096);rays.count=0;rays.frustumCulled=false;rays.renderOrder=22;scene.add(rays);
   // Create the instanced shader variant before the student first switches on
@@ -304,6 +313,12 @@ export function createOpticalScene(container,options={}) {
     const target=new THREE.Vector3(...specification.target),distance=specification.distance;
     const offset=camera.position.clone().sub(controls.target).normalize();if(viewMode==='top')offset.set(0,1,.0001);camera.position.copy(target).addScaledVector(offset,distance);controls.target.copy(target);controls.update();invalidate();
   }
+  function placementPoint(){
+    const point=new THREE.Vector3();
+    camera.updateMatrixWorld();ray.setFromCamera(new THREE.Vector2(0,0),camera);
+    const at=ray.ray.intersectPlane(ground,point);
+    return at&&finite(at.x)&&finite(at.z)?[at.x,at.z]:[controls.target.x,controls.target.z];
+  }
   function setView(view){
     viewMode=['top','screen'].includes(view)?view:'perspective';controls.enableRotate=viewMode==='perspective';
     if(viewMode==='screen'&&lab?.obj?.screen?.on){const [x,z,a]=pose('screen'),normal=new THREE.Vector3(Math.sin(a*DEG),0,Math.cos(a*DEG)),laser=lab.laser?.()||[136,170];if((laser[0]-x)*normal.x+(laser[1]-z)*normal.z<0)normal.negate();const distance=Math.max(65,120/(2*Math.tan(camera.fov*DEG/2)*camera.aspect)*1.08);controls.target.set(x,lab.level==='high'?HIGH:LOW,z);camera.position.copy(controls.target).addScaledVector(normal,distance);camera.position.y+=.04;}
@@ -316,9 +331,19 @@ export function createOpticalScene(container,options={}) {
   function planeAt(event){hitAt(event);return ray.ray.intersectPlane(ground,groundPoint)?.clone()||null;}
   const actualKey=key=>key==='laser'?'ruler':key==='holder12b'?'holder':key;
   function pointerDown(event){
-    if(disposed||!lab)return;dragPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+    if(disposed||!lab||event.button!==0&&event.pointerType!=='touch')return;dragPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
     if(event.pointerType==='touch'&&dragPointers.size===2){action=null;controls.enabled=false;const points=[...dragPointers.values()];gesture={distance:Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y),mid:[(points[0].x+points[1].x)/2,(points[0].y+points[1].y)/2],position:camera.position.clone(),target:controls.target.clone()};event.stopImmediatePropagation();return;}
-    const hit=hitAt(event),meta=hitMeta(hit),point=planeAt(event);if(!meta){options.onSelect?.(null);selected(null);if(lab.tape_held)options.onTapeHeld?.(false);return;}
+    const hit=hitAt(event),meta=hitMeta(hit),point=planeAt(event);
+    if(lab.tape_held&&lab.obj?.tape6?.on&&point){
+      // The carried roll follows the pointer and may hide the apparatus. The
+      // original stick_tape method tests the table point before item picking.
+      if(options.onTapeStick?.(meta?.key,[point.x,point.z])){event.stopImmediatePropagation();event.preventDefault();return;}
+      if(!meta||meta.key==='tape6'){
+        options.onTapeHover?.([point.x,point.z]);options.onTapeHeld?.(false);
+        event.stopImmediatePropagation();event.preventDefault();return;
+      }
+    }
+    if(!meta){options.onSelect?.(null);selected(null);return;}
     if(viewMode==='screen'&&meta.role!=='frontTapeEnd'){options.onSelect?.(meta.key);selected(meta.key);return;}
     if(meta.key!=='tape6')options.onSelect?.(meta.key);selected(meta.key);canvas.focus({preventScroll:true});controls.enabled=false;canvas.setPointerCapture(event.pointerId);event.stopImmediatePropagation();event.preventDefault();
     const key=actualKey(meta.key),position=lab.obj?.[key]?.pos||[0,0];
@@ -327,11 +352,15 @@ export function createOpticalScene(container,options={}) {
   function pointerMove(event){
     if(dragPointers.has(event.pointerId))dragPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
     if(gesture&&dragPointers.size>=2){const points=[...dragPointers.values()],distance=Math.max(1,Math.hypot(points[0].x-points[1].x,points[0].y-points[1].y)),mid=[(points[0].x+points[1].x)/2,(points[0].y+points[1].y)/2],ratio=clamp(gesture.distance/distance,.15,6),offset=gesture.position.clone().sub(gesture.target).multiplyScalar(ratio),scale=gesture.position.distanceTo(gesture.target)*.0015,right=new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld,0);right.y=0;right.normalize();const forward=new THREE.Vector3().crossVectors(up,right).normalize(),delta=right.multiplyScalar((gesture.mid[0]-mid[0])*scale).addScaledVector(forward,(mid[1]-gesture.mid[1])*scale);controls.target.copy(gesture.target).add(delta);camera.position.copy(controls.target).add(offset);controls.update();invalidate();event.stopImmediatePropagation();return;}
-    if(!action)return;event.stopImmediatePropagation();const a=action,meta=a.meta,point=planeAt(event),dx=event.clientX-a.previous[0];
+    if(!action){
+      if(lab?.tape_held&&lab.obj?.tape6?.on){const point=planeAt(event);if(point)options.onTapeHover?.([point.x,point.z]);}
+      return;
+    }
+    event.stopImmediatePropagation();const a=action,meta=a.meta,point=planeAt(event),dx=event.clientX-a.previous[0];
     a.moved||=Math.hypot(event.clientX-a.start[0],event.clientY-a.start[1])>4;if(!a.moved)return;
     if(meta.role==='frontTapeEnd'){
       screen.updateWorldMatrix(true,false);const normal=new THREE.Vector3(0,0,1).transformDirection(screen.matrixWorld),plane=new THREE.Plane().setFromNormalAndCoplanarPoint(normal,screen.localToWorld(new THREE.Vector3(0,0,1.35))),q=ray.ray.intersectPlane(plane,new THREE.Vector3());if(q){screen.worldToLocal(q);options.onFrontTapeMove?.(meta.end,[q.x,(lab.level==='high'?HIGH:LOW)-q.y]);}
-    }else if(meta.role==='tapeEnd'&&point)options.onTapeMove?.(meta.end,[clamp(point.x,0,ROOM_W),clamp(point.z,0,ROOM_D)]);
+    }else if(meta.role==='tapeEnd'&&point)options.onTapeMove?.(meta.end,[point.x,point.z]);
     else if(a.rotate||meta.role==='fine'){
       let delta=dx*(event.shiftKey?.125:.5);if(point&&Math.hypot(point.x-a.position[0],point.z-a.position[1])>4){const angle=Math.atan2(point.z-a.position[1],point.x-a.position[0]);delta=THREE.MathUtils.radToDeg(a.angle-angle);if(delta>180)delta-=360;if(delta< -180)delta+=360;a.angle=angle;}
       if(meta.role==='holderRotate')options.onHolderRotate?.(delta);else if(meta.role==='fine'||meta.key==='laser')options.onFineRotate?.(delta);else options.onRotate?.(a.key,delta);
@@ -346,11 +375,19 @@ export function createOpticalScene(container,options={}) {
       else if(a.key==='tape6')options.onTapeHeld?.(!lab.tape_held);
       else if(lab.tape_held&&lab.obj?.tape6?.on&&point)options.onTapeStick?.(a.key,[point.x,point.z]);
       else if(a.meta.role==='switch')options.onSwitch?.(!lab.laser_on);
+      else if(a.key==='screen')options.onOpenScreen?.();
     }
+    else if(a.meta.role==='tapeEnd')options.onRelease?.(`tape_${a.meta.end}`);
+    else if(a.meta.role!=='frontTapeEnd'&&a.meta.key!=='laser'&&a.meta.role!=='fine'&&!a.rotate)options.onRelease?.(a.key);
     invalidate();
   }
   function wheel(event){
-    if(!event.shiftKey||!lab)return;const meta=hitMeta(hitAt(event));if(!meta)return;event.preventDefault();event.stopImmediatePropagation();const delta=event.deltaY<0?.25:-.25;if(meta.role==='holderRotate')options.onHolderRotate?.(delta);else if(meta.key==='laser')options.onFineRotate?.(delta);else options.onRotate?.(actualKey(meta.key),delta);
+    if(!lab)return;const meta=hitMeta(hitAt(event));if(!meta)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    const action=opticalWheelAction(meta,event.shiftKey,event.deltaY);if(!action)return;
+    if(action.key==='holder12b')options.onHolderRotate?.(action.delta);
+    else if(action.key==='laser')options.onFineRotate?.(action.delta);
+    else options.onRotate?.(action.key,action.delta);
   }
   function keyDown(event){
     if(!lab||!selectedKey)return;const key=actualKey(selectedKey),step=event.shiftKey?.1:.5,position=lab.obj?.[key]?.pos;
@@ -366,5 +403,5 @@ export function createOpticalScene(container,options={}) {
     for(const value of geometries)value.dispose();for(const value of materials)value.dispose();for(const value of textures)value.dispose();renderer.dispose();canvas.remove();
   }
   resize();controls.update();invalidate();
-  return{update,setView,selected,focus,resize,dispose,canvas};
+  return{update,setView,selected,focus,placementPoint,resize,dispose,canvas};
 }

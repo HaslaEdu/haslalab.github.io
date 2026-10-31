@@ -31,6 +31,7 @@ test('the learning overview marks every subject coming soon without publishing r
       assert.deepEqual(Runtime.routeNeeds('#/learn/'+key),[],'learning navigation does not download archive papers');
     }
     assert.ok(links(html).every(href=>href.startsWith('#/learn/')));
+    assert.doesNotMatch(html,/IPhO|APhO|EuPhO|IChO|IBO|IMO|IOAA|IESO|IJSO|in preparation|when ready|준비하고 있습니다|준비가 끝나면/);
     assert.doesNotMatch(html,/<dl>|<dd>|class="ritem"|Start learning|학습을 시작하세요/);
   }
 });
@@ -42,6 +43,7 @@ test('every learning subject and unknown deep link shows a placeholder instead o
     const html=a.run(`viewLearnSubject(${JSON.stringify(key)})`);
     assert.match(html,language==='ko'?/준비중/:/Coming soon/);
     assert.ok(links(html).every(href=>href.startsWith('#/learn')));
+    assert.doesNotMatch(html,/IPhO|APhO|EuPhO|IChO|IBO|IMO|IOAA|IESO|IJSO|in preparation|when ready|준비하고 있습니다|준비가 끝나면/);
     assert.doesNotMatch(html,/<a[^>]*class="ritem"|<dd>|https?:\/\/(?:openstax|ocw\.mit|stellarium|bio\.libretexts)/);
     if(keys.includes(key)){
       assert.match(html,/<section class="learn-pending" role="status">/);

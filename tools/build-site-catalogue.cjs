@@ -98,7 +98,11 @@ outputs.set('sim/monthly-answer-sheet.html',read('sim/monthly-answer-sheet.html'
 const monthlyScanVersion=digest(read('sim/monthly-scan.mjs'));
 outputs.set('sim/monthly-scan.html',read('sim/monthly-scan.html').replace(/src="monthly-scan\.mjs(?:\?[^"\n]*)?"/,'src="monthly-scan.mjs?v='+monthlyScanVersion+'"'));
 outputs.set('sim/scan.html',read('sim/scan.html').replace(/import\("\.\/monthly-scan\.mjs(?:\?[^"\n]*)?"\)/,'import("./monthly-scan.mjs?v='+monthlyScanVersion+'")'));
-const opticalModules={'physics':read('sim/ipho2019/e1-physics.mjs'),'scene':read('sim/ipho2019/e1-scene.mjs')};
+const opticalPython=read('sim/ipho2019/e1-python.mjs')
+  .replace(/new URL\('\.\/e1-bridge\.py(?:\?[^'\n]*)?',import\.meta\.url\)/,"new URL('./e1-bridge.py?v="+digest(read('sim/ipho2019/e1-bridge.py'))+"',import.meta.url)")
+  .replace(/new URL\('\.\.\/\.\.\/src\/ipho2019_E1_sim_KO\.py(?:\?[^'\n]*)?',import\.meta\.url\)/,"new URL('../../src/ipho2019_E1_sim_KO.py?v="+digest(read('src/ipho2019_E1_sim_KO.py'))+"',import.meta.url)");
+outputs.set('sim/ipho2019/e1-python.mjs',opticalPython);
+const opticalModules={'python':opticalPython,'scene':read('sim/ipho2019/e1-scene.mjs')};
 let opticalApp=read('sim/ipho2019/e1-app.mjs');
 for(const [name,source]of Object.entries(opticalModules))opticalApp=opticalApp.replace(new RegExp("from '\\./e1-"+name+"\\.mjs(?:\\?[^'\\n]*)?'"),"from './e1-"+name+".mjs?v="+digest(source)+"'");
 outputs.set('sim/ipho2019/e1-app.mjs',opticalApp);

@@ -307,10 +307,8 @@ section{padding:58px 0}
 .lsubj .abbr{font-size:1.35rem}
 .learn-state{display:inline-block;padding:3px 10px;border:1px solid var(--grid-bold);border-radius:20px;color:var(--graphite);font-size:12px;font-weight:600;line-height:1.5;letter-spacing:0;white-space:nowrap}
 .phead h1 .learn-state{margin-left:12px;vertical-align:middle}
-.learn-note{margin:16px 0 0;color:var(--graphite);font-size:13px;line-height:1.7}
 .learn-pending{max-width:760px;margin:0 0 48px;padding:32px;border:1px dashed var(--grid-bold);border-radius:12px}
-.learn-pending h2{margin:0 0 12px;font-size:1.35rem}
-.learn-pending p{margin:0;color:var(--graphite);font-size:14px;line-height:1.8}
+.learn-pending h2{margin:0;font-size:1.35rem}
 @media(max-width:600px){.learn-pending{padding:24px}.phead h1 .learn-state{margin-left:8px}}
 .lsec{margin:0 0 38px}
 .lsec>h2{font-size:1.25rem;margin:0 0 6px}
@@ -1134,8 +1132,6 @@ const UI={
 ko:{
   navHome:"홈", navComps:"아카이브", navLearn:"학습", navAbout:"소개", navComm:"커뮤니티", navWeekly:"월별문제",
   ebLearn:"학습", hLearn:"학습", learnSoon:"준비중",
-  pLearn:"과목별 교재·학습 가이드와 기초 실험·관측 콘텐츠를 준비하고 있습니다.",
-  learnSoonNote:"이 과목의 학습 콘텐츠를 준비하고 있습니다. 준비가 끝나면 이곳에서 안내하겠습니다.",
   lGuides:"교재 · 학습 가이드", lBasics:"기초 실험 및 관측", lOwn:"HaslaLab", lFound:"공개 자료",
   ownGuide:"HaslaLab 교재 · 학습 가이드", ownBasics:"HaslaLab 기초 실험 및 관측", soonOwn:"준비 중입니다.",
   foundNote:"아래 자료는 각 기관과 저자가 인터넷에 무료로 공개한 것입니다. 링크는 원래 사이트로 연결되고, HaslaLab이 내용을 고치거나 다시 올리지 않았습니다.",
@@ -1204,8 +1200,6 @@ ko:{
 en:{
   navHome:"Home", navComps:"Archive", navLearn:"Learn", navAbout:"About", navComm:"Community", navWeekly:"Monthly",
   ebLearn:"Learn", hLearn:"Learn", learnSoon:"Coming soon",
-  pLearn:"Subject textbooks, study guides, basic experiments and observation materials are in preparation.",
-  learnSoonNote:"Learning materials for this subject are in preparation. They will appear here when ready.",
   lGuides:"Textbooks · study guides", lBasics:"Basic experiments and observation", lOwn:"HaslaLab", lFound:"Published elsewhere",
   ownGuide:"HaslaLab textbook · study guide", ownBasics:"HaslaLab basic experiments and observation", soonOwn:"In preparation.",
   foundNote:"The material below is published free on the internet by its institutions and authors. The links go to the original sites; HaslaLab has not edited or re-hosted it.",
@@ -4893,14 +4887,11 @@ function viewLearn(){
     <div class="phead">
       <p class="eyebrow">${d.ebLearn}</p>
       <h1>${d.hLearn} <span class="learn-state">${d.learnSoon}</span></h1>
-      <div class="sub">${d.pLearn}</div>
     </div>
     <div class="comps" data-lang="${lang}">
       ${Object.entries(LEARN).map(([key,L])=>{
         return `<a class="comp lsubj" href="#/learn/${key}">
           <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${d.learnSoon}</span></div>
-          <div class="full">${L.comps}</div>
-          <p class="learn-note">${d.learnSoonNote}</p>
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
@@ -4916,11 +4907,9 @@ function viewLearnSubject(key){
     <div class="phead">
       <p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p>
       <h1>${L.name[lang]}</h1>
-      <div class="sub">${L.comps}</div>
     </div>
     <section class="learn-pending" role="status">
       <h2>${d.learnSoon}</h2>
-      <p>${d.learnSoonNote}</p>
     </section>
   </div>
   ${adFitBanner("primary")}`;
