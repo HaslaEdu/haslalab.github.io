@@ -63,8 +63,9 @@ def fix(src, orig, dst):
                 if r.height > 1:
                     edits.append((rm.span(), b'%.2f %.2f %.2f %.2f re\nh\n1 1 1 rg f' % (r.x0, H - r.y1, r.width, r.height)))
         # 2. the middle item of the running header, centred as in the original
-        box = [d['rect'] for d in page.get_drawings() if d['rect'].y1 < 80 and d['rect'].width > 300 and d['rect'].height < 1.5]
-        if len(box) >= 2 and pno < len(en):
+        # (a running header: two long rules no more than 20 pt apart within the top 60 pt — not a table near the top)
+        box = [d['rect'] for d in page.get_drawings() if d['rect'].y1 < 60 and d['rect'].width > 300 and d['rect'].height < 1.5]
+        if len(box) >= 2 and max(r.y1 for r in box) - min(r.y0 for r in box) <= 20 and pno < len(en):
             top, bot = min(r.y0 for r in box), max(r.y1 for r in box)
             mid = (box[0].x0 + box[0].x1) / 2
             ech = [c for b in en[pno].get_text('rawdict')['blocks'] if b['type'] == 0 for l in b['lines'] for sp in l['spans']
