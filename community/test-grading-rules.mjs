@@ -2,7 +2,7 @@
 // The grading regulation by competition family and paper kind, and the cacheable prompt prefix it builds.
 import assert from "node:assert/strict";
 import test from "node:test";
-import { REG_VERSION, familyOf, paperKind, rulesFor, regulationOf, regulationId, stablePrefix, rulesText, cacheKey, RULE_ID, FAMILY_LIST } from "./src/grading-rules.js";
+import { REG_VERSION, familyOf, paperKind, rulesFor, regulationOf, regulationId, stablePrefix, rulesText, RULE_ID, FAMILY_LIST } from "./src/grading-rules.js";
 
 const KINDS = ["theory", "experiment", "data", "observation"];
 
@@ -83,5 +83,4 @@ test("a session shows the union of its papers' rules under one family title", ()
   assert.ok(ids.includes("R11") && ids.includes("IP6") && ids.includes("IP7"), "NBPhO's booklet: experiment and theory rules together");
   assert.equal(regulationOf("icho", []).rules.length, 11, "an unknown kind list falls back to the general experiment rules");
   assert.equal(regulationId("ipho", "theory"), REG_VERSION + "/ipho/theory");
-  assert.equal(cacheKey("ioaa", "observation"), "hl-grade-ioaa-observation");
 });

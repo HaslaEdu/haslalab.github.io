@@ -83,6 +83,15 @@ const server = http.createServer(async (request, response) => {
       return response.end(JSON.stringify({ candidates: [{ content: { parts: [{ text: fixture.geminiText ?? JSON.stringify(result) }] } }],
         ...(fixture.geminiModel ? { modelVersion: fixture.geminiModel } : {}), usageMetadata: fixture.geminiUsage || { promptTokenCount: 100, candidatesTokenCount: 50 } }));
     }
+    if (request.url === "/deepseek/chat/completions") {
+      const body = JSON.parse(bytes);
+      captures.push({ provider: "deepseek", body, system: body.messages[0].content, user: body.messages[1].content });
+      response.setHeader("Content-Type", "application/json");
+      const result = { items: [{ id: "A.1", found: true, page: 1, value: 108.2, unit_ok: true, score: 1, checks_met: [], rules: [], note: "fixture backup value" }], feedback: [],
+        review: { summary: "fixture", habits: [], handwriting: { rating: "clear", notes: "" } } };
+      return response.end(JSON.stringify({ model: "deepseek-flash", choices: [{ finish_reason: "stop", message: { content: JSON.stringify(result) } }],
+        usage: { prompt_tokens: 1200, completion_tokens: 90, prompt_cache_hit_tokens: 1024, prompt_cache_miss_tokens: 176 } }));
+    }
     response.statusCode = 404; response.end("unexpected fixture path");
   } catch (error) { response.statusCode = 500; response.end(String(error.message)); }
 });
@@ -313,6 +322,25 @@ test("actual Gemini grading bodies share the cacheable rules prefix of their fam
   for (let i = 0; i < runs.length; i++) for (let j = 0; j < runs.length; j++) if (i !== j) assert.ok(!runs[i].prompt.includes(runs[j].original), "another student's tail never leaks into a reused prefix");
 });
 
+test("when Gemini fails at grading, DeepSeek grades from the same cached rules and the page transcripts", async () => {
+  reset({ upstage: { content: { markdown: FORMULA }, confidence: 0.94 } });
+  const settings = { ...env, DEEPSEEK_API_KEY: "fixture-deepseek-key", DEEPSEEK_BASE: base + "/deepseek" };
+  const s = await session({ comp: "usapho", year: 2023, task: "T", theory: true }); assert.equal((await upload(s, png, s.scan, settings)).data.ocr_status, "done");
+  sqlite.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,'fixture',?)")
+    .run(s.examKey, "T", s.sol, JSON.stringify({ points: 1, items: [{ id: "A.1", points: 1, type: "value", sheet: "answer", what: "R0", unit: "ohm", full_min: 108, full_max: 109, partial: [] }] }), Math.floor(Date.now() / 1000));
+  fixture.geminiStatus = 503;
+  const result = await api(`/lab/sessions/${s.id}/submit`, { method: "POST", headers: { Authorization: "Bearer " + s.token, "Content-Type": "application/json" }, body: "{}" }, settings);
+  assert.equal(result.status, 200); assert.equal(result.data.session.status, "graded"); assert.equal(result.data.session.score, 1);
+  const task = result.data.session.detail.tasks.T; assert.equal(task.backup, true); assert.match(task.grader, /^deepseek:/);
+  const call = captures.find(row => row.provider === "deepseek"); assert.ok(call);
+  assert.ok(call.system.startsWith(stablePrefix("usapho", "theory")), "the fixed rules are DeepSeek's system message, so its cache can reuse them");
+  assert.ok(!call.system.includes(FORMULA) && call.user.includes(FORMULA), "the candidate's work is only in the user message");
+  assert.equal(call.body.response_format.type, "json_object"); assert.ok(!JSON.stringify(call.body).includes("inline_data"), "no images go to the backup grader");
+  const metered = sqlite.prepare("SELECT provider,in_tok,out_tok,cached_tok,ok FROM lab_calls WHERE session_id=? AND step='grade' ORDER BY id").all(s.id);
+  assert.deepEqual(metered.map(row => [row.provider, row.ok]), [["gemini", 0], ["deepseek", 1]]);
+  assert.equal(metered[1].cached_tok, 1024); assert.equal(metered[1].in_tok, 1200);
+});
+
 test("real Worker metering retains alias overrides and bills known-usage parse failures exactly once", async () => {
   const alias = "gemini-fixture-alias", settings = { ...env, GEMINI_MODEL: alias, LAB_PRICES: JSON.stringify({ [alias]: [2,5,0.25] }) };
   const expected = ((1000-400)*2 + 400*0.25 + 100*5)/1e6;
@@ -367,7 +395,7 @@ test("auth, QR token, payment, upload limit and read-only exam transcript checks
 test("text-grader fallback explicitly defers overlong answers instead of silently discarding the tail", async () => {
   const original = FORMULA + "\n" + "x".repeat(61000) + " END_MUST_NEVER_DISAPPEAR";
   reset({ upstage: { content: { markdown: original }, confidence: 0.94 } });
-  const s = await session(), fallback = { ...env, GEMINI_API_KEY: "", OPENAI_API_KEY: "fixture-openai-unused" };
+  const s = await session(), fallback = { ...env, GEMINI_API_KEY: "", DEEPSEEK_API_KEY: "fixture-deepseek-unused", DEEPSEEK_BASE: base + "/deepseek" };
   assert.equal((await upload(s, png, s.scan, fallback)).data.ocr_status, "done");
   sqlite.prepare("INSERT OR REPLACE INTO lab_rubrics(exam_key,task,points,rubric,reference,updated_at) VALUES('ipho2024','E1',1,?,'fixture',?)")
     .run(JSON.stringify([{ id: "A.1", max: 1, name: "value", requirement: "grounded value" }]), Math.floor(Date.now() / 1000));

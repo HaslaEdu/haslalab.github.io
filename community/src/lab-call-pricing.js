@@ -32,6 +32,20 @@ export function geminiLabUsage(response = {}, startedAt) {
   return result;
 }
 
+/** Normalize DeepSeek chat-completions usage: prompt_cache_hit_tokens are the cached part of the prompt. */
+export function deepseekLabUsage(response = {}, startedAt) {
+  const raw = response?.usage, value = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+  const input = token(value.prompt_tokens), output = token(value.completion_tokens), miss = token(value.prompt_cache_miss_tokens);
+  let cached = token(value.prompt_cache_hit_tokens ?? value.prompt_tokens_details?.cached_tokens);
+  if (cached === null && miss !== null && input !== null && miss <= input) cached = input - miss;
+  let known = input !== null && output !== null && cached !== null;
+  if (cached !== null && input !== null && (cached > input || miss !== null && cached + miss !== input)) known = false;
+  const resolved = modelId(response?.model);
+  const result = { in: input, out: output, cached, usage_known: known, resolved_model: resolved, model_unknown: response?.model !== undefined && !resolved };
+  if (typeof startedAt === 'number' && Number.isFinite(startedAt)) result.started_at = new Date(startedAt).toISOString();
+  return result;
+}
+
 function overrides(env) {
   try {
     const parsed = env?.LAB_PRICES ? JSON.parse(env.LAB_PRICES) : null;

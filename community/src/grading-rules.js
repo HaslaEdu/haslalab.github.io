@@ -12,8 +12,9 @@
  *   --- everything above is stablePrefix(family, kind): byte-identical for every year and every candidate ---
  *   4. exam    — competition, year, task, language, then that year's marking scheme (shared by everyone sitting it)
  *   5. pages   — the candidate's own answer and working sheets
- * Gemini's implicit cache and OpenAI's automatic prompt cache bill a repeated leading prefix at the cached rate,
- * so nothing that varies may appear before the end of block 3. No cache objects are created and nothing is padded.
+ * Gemini's implicit cache and DeepSeek's context cache (where blocks 1–3 are the system message) bill a repeated
+ * leading prefix at the cached rate, so nothing that varies may appear before the end of block 3. No cache objects
+ * are created and nothing is padded.
  */
 export const REG_VERSION = "2026-10-31";
 
@@ -149,6 +150,4 @@ export function rulesText(family, kind) {
   return [`[Grading regulation ${REG_VERSION}]`, CORE.map(x => `${x.id}. ${x.en}`).join("\n"),
     ...block(`[Paper rules — ${k.name.en}]`, k.rules), ...block(`[Competition rules — ${f.name.en}]`, familyRules(family, kind))].join("\n");
 }
-/* OpenAI routes requests with the same key to the same cache */
-export const cacheKey = (family, kind) => `hl-grade-${family}-${kind}`;
 export const FAMILY_LIST = Object.fromEntries(Object.entries(FAMILIES).map(([id, f]) => [id, { name: f.name, comps: f.comps || [] }]));

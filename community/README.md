@@ -73,7 +73,7 @@ D1 데이터베이스 `haslalab-community`(id `96761b6d-c194-4ee5-9836-7845b51a5
 3. **키 넣기**: **Settings → Variables and Secrets**에서 *Secret*으로 넣습니다. 키는 서버에만 있고 사이트에는 들어가지 않습니다.
    - `UPSTAGE_API_KEY`: 사진 읽기(OCR)
    - `GEMINI_API_KEY`: 서술형 채점. 모델은 `GEMINI_MODEL`로 바꿀 수 있고, 기본값은 `gemini-flash-latest`입니다.
-   - 또는 `OPENAI_API_KEY`: 모델은 `OPENAI_MODEL`로 정하고, 기본값은 `gpt-5.4`입니다.
+   - `DEEPSEEK_API_KEY`: 예비 채점기. Gemini 키가 없거나 Gemini 호출이 실패하면 같은 규칙과 기준표로, 사진 없이 판독된 글만으로 채점합니다. 모델은 `DEEPSEEK_MODEL`로 바꿀 수 있고 기본값은 `deepseek-flash`입니다.
 4. **관리자 지정**: 아래 「관리」의 명령으로 관리자를 정하면 `#/weekly/admin`이 열립니다.
 
 로컬 시험: `.dev.vars`에 키 대신 시험용 값과 `GEMINI_BASE`·`UPSTAGE_BASE`(가짜 서버 주소)를 넣고 `node test-arena.mjs`를 실행합니다.
