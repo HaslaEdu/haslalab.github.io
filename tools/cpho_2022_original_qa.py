@@ -13,6 +13,7 @@ from PIL import Image,ImageDraw
 import cpho_2022_original_build as b
 import cpho_2022_original_labels as labels
 import pdf_original_style_audit as preservation
+from cpho_original_latin_fonts import BUILD_ROOT as EN_REPAIR_ROOT
 import pdf_hangul_visibility as visibility
 from pdf_original_image_ink import image_ink_mask,image_programs
 cv2.setNumThreads(1)
@@ -125,7 +126,7 @@ def style_checks(additional,page,raster):
 
 def audit(path,scale=4):
     data=json.loads((b.BASE/'slots.json').read_text(encoding='utf8'));source=fitz.open(b.SOURCE);proof=fitz.open(path)
-    build=json.loads(path.with_suffix('.build.json').read_text(encoding='utf8'));folder=b.BASE/'qa'/path.stem;folder.mkdir(parents=True,exist_ok=True)
+    build=json.loads(path.with_suffix('.build.json').read_text(encoding='utf8'));folder=EN_REPAIR_ROOT/'2022'/'qa'/path.stem if '_EN'in path.stem else b.BASE/'qa'/path.stem;folder.mkdir(parents=True,exist_ok=True)
     report=dict(pdf=str(path.resolve()),sha256=sha(path.read_bytes()),source_sha256=b.SOURCE_SHA,pages=[],passed=True)
     previews=[]
     for pi,page in enumerate(data['pages']):

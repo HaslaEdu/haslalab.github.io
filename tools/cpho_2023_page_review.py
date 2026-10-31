@@ -17,8 +17,9 @@ def review(number,build=True):
             width=0
             for path,run in m.text_runs(s,text,lang):
                 if path not in fonts:fonts[path]=Font(fontfile=str(path))
-                width+=m.run_advance(s,fonts[path],run)
-            if width>s['right']-s['origin'][0]+.02:errors.append(dict(id=s['id'],lang=lang,excess=round(width-s['right']+s['origin'][0],2),text=text))
+                width+=m.run_advance(s,fonts[path],run,lang)
+            available=m.available_width(s,lang)
+            if width>available+.02:errors.append(dict(id=s['id'],lang=lang,excess=round(width-available,2),text=text))
     print(json.dumps(errors,ensure_ascii=False,indent=2),flush=True)
     if errors:raise SystemExit(1)
     if build:

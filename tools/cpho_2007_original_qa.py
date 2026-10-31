@@ -9,6 +9,7 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
 import cpho_2007_original_build as b
 import pdf_original_style_audit as preservation
+from cpho_original_latin_fonts import BUILD_ROOT as EN_REPAIR_ROOT
 import pdf_hangul_visibility as visibility
 
 
@@ -56,10 +57,61 @@ def translated_ink_rects(doc,page,original_page):
     return rects
 
 
+def translation_style_checks(original,proof,plan,fit_rows):
+    """Compare actual added glyph metadata with the original prose slots."""
+    before=Counter(exact_glyph_key(g)for g in preservation.glyphs(original));added=[]
+    for glyph in preservation.glyphs(proof):
+        token=exact_glyph_key(glyph)
+        if before[token]:before[token]-=1
+        elif not glyph['c'].isspace():added.append(glyph)
+    expected=[];fit={r['id']:r for r in fit_rows}
+    for slot in plan['slots']:
+        if slot.get('retain_native'):continue
+        # A Chinese figure-reference group can contain both original black
+        # and magenta words; translation preserves that same source palette.
+        colours={slot['color'],*[c['color']for c in slot['source_characters']]}
+        placed=fit[slot['id']]
+        if not placed['text']:continue
+        expected.append(dict(id=slot['id'],size=slot['size'],baseline=slot['origin'][1],left=placed['origin'][0],right=placed['origin'][0]+placed['width'],
+                             render_mode=slot.get('render_mode',0),colours=colours))
+    failures=[];max_size=0;max_baseline=0
+    for glyph in added:
+        frames=[e for e in expected if e['left']-.08<=glyph['origin'][0]<=e['right']+.08 and abs(e['baseline']-glyph['origin'][1])<.0001 and abs(e['size']-glyph['size'])<.0001]
+        closest=min(frames or expected,key=lambda e:abs(e['baseline']-glyph['origin'][1])+10*abs(e['size']-glyph['size']))
+        dy=abs(closest['baseline']-glyph['origin'][1]);ds=abs(closest['size']-glyph['size'])
+        max_size=max(max_size,ds);max_baseline=max(max_baseline,dy)
+        modes={0,1}if closest['render_mode']==2 else{closest['render_mode']}
+        colours=[tuple(((colour>>n)&255)/255 for n in [16,8,0])for colour in closest['colours']]
+        colour_ok=any(all(abs(a-b)<.0001 for a,b in zip(glyph['color'],rgb))for rgb in colours)
+        if not frames or ds>.0001 or dy>.0001 or glyph['render_type']not in modes or not colour_ok:
+            failures.append(dict(glyph=glyph,source_slot=closest['id'],baseline_delta_pt=dy,size_delta_pt=ds,
+                                 source_render_mode=closest['render_mode'],source_colour_palette=colours))
+    return dict(translation_style_violations=failures,translation_size_max_delta_pt=max_size,
+                translation_baseline_max_delta_pt=max_baseline,translation_style_added_nonspace_glyphs_checked=len(added),
+                translation_style_method='Actual extra glyph traces versus original fixedslot size, baseline, render mode and original prose colour palette; tolerance0.0001pt')
+
+
+def add_style_metadata(path,pages):
+    """Read-only supplementation of an already hash-matched pixel audit."""
+    path=path.resolve();folder=EN_REPAIR_ROOT/'2007'/'qa'/path.stem
+    report=json.loads((folder/'audit.json').read_text(encoding='utf8'))
+    assert report['sha256']==sha(path.read_bytes())and report['source_sha256']==b.SOURCE_SHA
+    data=json.loads((b.BASE/'slots.json').read_text(encoding='utf8'))
+    fit=json.loads(path.with_suffix('.build.json').read_text(encoding='utf8'))['fit_report']
+    with fitz.open(b.SOURCE)as source,fitz.open(path)as proof:
+        for pi,number in enumerate(pages):
+            row=report['pages'][pi];assert row['source_page']==number
+            row.update(translation_style_checks(source[number-1],proof[pi],data['pages'][number-1],[r for r in fit if r['page']==number]))
+            row['passed']&=not row['translation_style_violations'];report['passed']&=row['passed']
+    (folder/'audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+    return report
+
+
 def audit(path,pages,scale=4):
     data=json.loads((b.BASE/'slots.json').read_text(encoding='utf8'))
     source=fitz.open(b.SOURCE);proof=fitz.open(path);assert len(proof)==len(pages)
-    folder=b.BASE/'qa'/path.stem;folder.mkdir(parents=True,exist_ok=True)
+    folder=EN_REPAIR_ROOT/'2007'/'qa'/path.stem;folder.mkdir(parents=True,exist_ok=True)
+    fit=json.loads(path.with_suffix('.build.json').read_text(encoding='utf8'))['fit_report']
     report={'pdf':str(path.resolve()),'sha256':sha(path.read_bytes()),'source_sha256':b.SOURCE_SHA,
             'source_pages':pages,'pages':[],'passed':True}
     previews=[]
@@ -94,10 +146,11 @@ def audit(path,pages,scale=4):
         # The damaged native source character is intentionally retained on p18.
         row['unexpected_nul']=sum(g['c']=='\x00'and not any(preservation.close_origin(g['origin'],p['origin'])
                    for p in kept if p['c']=='\x00')for g in preservation.glyphs(proof[pi]))
+        row.update(translation_style_checks(source[number-1],proof[pi],page,[r for r in fit if r['page']==number]))
         row['passed']=not(row['native_glyphs_changed']or missing or row['protected_glyphs_selected_for_erasure']
              or row['changed_pixels_outside_prose']or row['changed_pixels_in_native_glyph_neighborhood']
              or not row['original_images_identical']or not row['original_font_programs_identical']
-             or row['remaining_han']or row['unexpected_nul'])
+             or row['remaining_han']or row['unexpected_nul']or row['translation_style_violations'])
         report['passed']&=row['passed'];report['pages'].append(row)
         pix=proof[pi].get_pixmap(matrix=fitz.Matrix(1.6,1.6),alpha=False)
         image=Image.frombytes('RGB',[pix.width,pix.height],pix.samples)

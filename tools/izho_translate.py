@@ -204,6 +204,17 @@ def build(folder: Path, target: Path):
                 if block["type"] != 0: continue
                 for line in block["lines"]:
                     for span in line["spans"]:
+                        override = next((item for item in data.get("prose_mask_overrides", [])
+                                         if item["page"] == pi and max(abs(a-b) for a, b in
+                                         zip(item["source_rect"], span["bbox"])) < .05), None)
+                        if override is not None:
+                            # Reviewed prose can share a CambriaMath span with an equation.
+                            # Its explicit prefix mask takes priority over font heuristics.
+                            box = fitz.Rect(override["rect"]) & rect
+                            if not box.is_empty:
+                                draw.rectangle((box.x0*4-pix.x, box.y0*4-pix.y,
+                                                box.x1*4-pix.x, box.y1*4-pix.y), fill="white")
+                            continue
                         words = re.findall(r"[A-Za-z]{2,}", span["text"])
                         if data.get("word_math_preserve"):
                             from izho_extract_word import mathword
@@ -376,7 +387,7 @@ def build(folder: Path, target: Path):
             align = patch.get("align", "center")
             label_html = f'<p style="font-size:{patch.get("size", 10)}pt;text-align:{align};">{label}</p>'
             spare, scale = page.insert_htmlbox(patch_rect, label_html, css=css,
-                archive=archive, scale_low=patch.get("scale_low", .72))
+                archive=archive, rotate=patch.get("rotate", 0), scale_low=patch.get("scale_low", .72))
             key = f"post-{pi+1}-{oi}"
             report.append({"id": key, "scale": scale, "spare": spare})
             if spare < 0:

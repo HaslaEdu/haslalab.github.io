@@ -1,19 +1,48 @@
 [
   {
+    "file": "CPhO_2005_T_EN.pdf",
+    "language": "en",
+    "pages": 3,
+    "bytes": 1021637,
+    "sha256": "86606f4587ca18a4604e8642633eedcaba1af53e2d14e936fac252065bac2cfb",
+    "qa": "tools/ko/cpho/2005/original/T-en-audit.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\CPhO_2005_T_EN.pdf",
+    "audit_schema": "cpho-2005-native-problems",
+    "poppler_qa": "tools/ko/cpho/2005/original/T-poppler-control-ink-audit.json",
+    "image_render_qa": "tools/ko/cpho/2005/original/T-isolated-image-palette-audit.json",
+    "aliases": [
+      "CPhO_2005_T_BAUPC_EN.pdf"
+    ]
+  },
+  {
+    "file": "CPhO_2005_T_KO.pdf",
+    "language": "ko",
+    "pages": 3,
+    "bytes": 3967567,
+    "sha256": "eb6c88f129f075172af9dfdc4fb3bb9db11aea8014862328d85e136714a026f7",
+    "qa": "tools/ko/cpho/2005/original/T-ko-audit.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\CPhO_2005_T_KO.pdf",
+    "audit_schema": "cpho-2005-native-problems",
+    "poppler_qa": "tools/ko/cpho/2005/original/T-poppler-control-ink-audit.json",
+    "image_render_qa": "tools/ko/cpho/2005/original/T-isolated-image-palette-audit.json",
+    "hangul_qa": "tools/ko/cpho/2005/original/T-hangul-final.json"
+  },
+  {
     "file": "CPhO_2006_T_EN.pdf",
     "pages": 4,
-    "bytes": 370899,
-    "sha256": "e67564d060e0c6ead3bac24b65d6af1c0a8d34325d991c892e492bf0f70c850c",
-    "qa": "tools/ko/cpho/2006/original/qa-en.json",
-    "generated_file": "tmp/original-style-repair/2006/editions/CPhO_2006_T_EN.pdf",
-    "audit_schema": "cpho-native-raster-problems",
+    "bytes": 931429,
+    "sha256": "041642afe4d01d11e20c324a9bc091a0a327231467b9e66447369a0f3e780b56",
+    "qa": "tools/ko/cpho/2006/original/qa-en-same-face.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2006\\editions\\CPhO_2006_T_EN.pdf",
+    "audit_schema": "cpho-same-face-problems",
     "language": "en",
-    "poppler_qa": "tools/ko/cpho/2006/original/qa-poppler.json",
+    "poppler_qa": "tools/ko/cpho/2006/original/qa-en-same-face-poppler.json",
     "raster_caption_provenance": "tools/ko/cpho/2006/original/raster-caption-provenance.json",
     "source_notes": "tools/ko/cpho/2006/original/source-notes.json",
     "aliases": [
       "CPhO_2006_T_BAUPC_EN.pdf"
-    ]
+    ],
+    "font_policy": "tools/ko/cpho/2006/original/english-face-policy.json"
   },
   {
     "file": "CPhO_2006_T_KO.pdf",
@@ -31,44 +60,76 @@
   {
     "file": "CPhO_2007_T_EN.pdf",
     "pages": 4,
-    "bytes": 575812,
-    "sha256": "3fe3fc3f05e97c1605ebc8d003bbc7daa974e7fe2159074752a55497553c0641",
-    "qa": "tools/ko/cpho/2007/original/qa-problems-en.json",
-    "generated_file": "tmp/original-style-repair/2007/editions/CPhO_2007_T_EN.pdf",
-    "audit_schema": "cpho-native-problems",
+    "bytes": 1258644,
+    "sha256": "f48bd7047f147f45585d6e4d58c95e597839028c7937fa45ce7c79ddb10fdee7",
+    "qa": "tools/ko/cpho/2007/original/qa-en-same-face.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_EN.pdf",
+    "audit_schema": "cpho-same-face-problems",
     "aliases": [
       "CPhO_2007_T_BAUPC_EN.pdf"
     ],
     "language": "en",
-    "poppler_qa": "tools/ko/cpho/2007/original/qa-problems-poppler.json",
-    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json"
+    "poppler_qa": "tools/ko/cpho/2007/original/qa-en-same-face-poppler.json",
+    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json",
+    "font_policy": "tools/ko/cpho/2007/original/english-face-policy.json"
   },
   {
     "file": "CPhO_2007_T_KO.pdf",
     "pages": 4,
-    "bytes": 770276,
-    "sha256": "6d45fbd4ab984933febe512157a0d9dea839714169f4d01064f1bf5333c69aa2",
-    "qa": "tools/ko/cpho/2007/original/qa-problems-ko.json",
-    "generated_file": "tmp/original-style-repair/2007/editions/CPhO_2007_T_KO.pdf",
-    "audit_schema": "cpho-native-problems",
+    "bytes": 2498728,
+    "sha256": "7612c585b4419fa20eca486f2d83ccd69b65bf0ba11409b703d98c1608312db1",
+    "qa": "tools/ko/cpho/2007/original/qa-ko-same-face.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_KO.pdf",
+    "audit_schema": "cpho-same-face-problems",
     "language": "ko",
-    "poppler_qa": "tools/ko/cpho/2007/original/qa-problems-poppler.json",
-    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json"
+    "poppler_qa": "tools/ko/cpho/2007/original/qa-ko-same-face-poppler.json",
+    "render_identity_qa": "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json",
+    "font_policy": "tools/ko/cpho/2007/original/english-face-policy.json"
+  },
+  {
+    "file": "CPhO_2013_T_EN.pdf",
+    "language": "en",
+    "pages": 3,
+    "bytes": 1550347,
+    "sha256": "944ee0d78806861a81c8a2cb2babfd79cd061f23389c1bf352460a7f2bdb3c39",
+    "qa": "tools/ko/cpho/2013/original/qa-T-en.json",
+    "generated_file": "D:/CodexBuilds/Hasla-original-style-20261031/cpho2013/editions/CPhO_2013_T_EN.pdf",
+    "audit_schema": "cpho-2013-reviewed-problems",
+    "poppler_qa": "tools/ko/cpho/2013/original/qa-poppler-T.json",
+    "visual_qa": "tools/ko/cpho/2013/original/visual-review-T.json",
+    "font_ink_qa": "tools/ko/cpho/2013/original/qa-new-outlines-T-en.json",
+    "aliases": [
+      "CPhO_2013_T_BAUPC_EN.pdf"
+    ]
+  },
+  {
+    "file": "CPhO_2013_T_KO.pdf",
+    "language": "ko",
+    "pages": 3,
+    "bytes": 6818104,
+    "sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+    "qa": "tools/ko/cpho/2013/original/qa-T-ko.json",
+    "generated_file": "D:/CodexBuilds/Hasla-original-style-20261031/cpho2013/editions/CPhO_2013_T_KO.pdf",
+    "audit_schema": "cpho-2013-reviewed-problems",
+    "poppler_qa": "tools/ko/cpho/2013/original/qa-poppler-T.json",
+    "visual_qa": "tools/ko/cpho/2013/original/visual-review-T.json",
+    "font_ink_qa": "tools/ko/cpho/2013/original/qa-new-outlines-T-ko.json"
   },
   {
     "file": "CPhO_2022_T_EN.pdf",
     "pages": 4,
-    "bytes": 1123237,
-    "sha256": "f90ba01d7ff59093949cc59b04ac382e2d039ac88fc12412c24a79577e12def2",
-    "qa": "tools/ko/cpho/2022/original/qa-en.json",
-    "generated_file": "tmp/original-style-repair/2022/editions/CPhO_2022_T_EN.pdf",
-    "audit_schema": "cpho-native-labelled-problems",
+    "bytes": 2795344,
+    "sha256": "180a67d20011a532d9904dc94c392536f8e4c1c50e018c9242601d8fb51815db",
+    "qa": "tools/ko/cpho/2022/original/qa-en-same-face.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2022\\editions\\CPhO_2022_T_EN.pdf",
+    "audit_schema": "cpho-same-face-problems",
     "language": "en",
-    "poppler_qa": "tools/ko/cpho/2022/original/qa-poppler.json",
+    "poppler_qa": "tools/ko/cpho/2022/original/qa-en-same-face-poppler.json",
     "render_identity_qa": "tools/ko/cpho/2022/original/qa-final-identity.json",
     "aliases": [
       "CPhO_2022_T_BAUPC_EN.pdf"
-    ]
+    ],
+    "font_policy": "tools/ko/cpho/2022/original/english-face-policy.json"
   },
   {
     "file": "CPhO_2022_T_KO.pdf",
@@ -81,6 +142,20 @@
     "language": "ko",
     "poppler_qa": "tools/ko/cpho/2022/original/qa-poppler.json",
     "render_identity_qa": "tools/ko/cpho/2022/original/qa-final-identity.json"
+  },
+  {
+    "file": "CPhO_2023_Combined_EN.pdf",
+    "pages": 36,
+    "bytes": 5780902,
+    "sha256": "ace65fc20c6704de037fc2dc8d549bc9699ed477d9753e2c04696a62b2b31e8e",
+    "language": "en",
+    "qa": "tools/ko/cpho/2023/original/qa-en.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2023\\strict-en\\editions\\CPhO_2023_Combined_EN.pdf",
+    "audit_schema": "cpho-original-combined",
+    "poppler_qa": "tools/ko/cpho/2023/original/qa-poppler-en.json",
+    "font_ink_qa": "tools/ko/cpho/2023/original/qa-fonts-en.json",
+    "visual_qa": "tools/ko/cpho/2023/original/visual-en.json",
+    "provenance": "tools/ko/cpho/2023/original/english-font-provenance.json"
   },
   {
     "file": "CPhO_2023_Combined_KO.pdf",
@@ -158,14 +233,14 @@
   },
   {
     "file": "IZhO_2021_T_KO.pdf",
+    "language": "ko",
     "pages": 6,
-    "bytes": 4220266,
-    "sha256": "d25ac8f8a92db049e1d9567870f4992c80e53fed80c1c935b54280b870d43a25",
-    "qa": "tools/qa/original-style/IZhO_2021_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2021_T_KO.pdf",
-    "audit_schema": "legacy-reviewed-ready",
-    "hangul_qa": "tools/qa/original-style/IZhO_2021_T_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2021/T/original_style/native-ascii-audit.json"
+    "bytes": 5914871,
+    "sha256": "3b13c6121bd8afcd385db86543c3194d25c2d44c112c574d5c046b5e1f92730c",
+    "qa": "tools/ko/izho/2021/T/natural-spacing/ready.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\editions\\IZhO_2021_T_KO.pdf",
+    "audit_schema": "natural-spacing-reviewed",
+    "visual_qa": "tools/ko/izho/2021/T/natural-spacing/visual-review.json"
   },
   {
     "file": "IZhO_2022_TS_KO.pdf",
@@ -180,14 +255,14 @@
   },
   {
     "file": "IZhO_2022_T_KO.pdf",
+    "language": "ko",
     "pages": 7,
-    "bytes": 21740459,
-    "sha256": "98f4ee28b296a7174f6f7fc2af08c318c52bee1df994948643ea9ea699a81d74",
-    "qa": "tools/qa/original-style/IZhO_2022_T_KO.qa.json",
-    "generated_file": "pdfx/izho/original-style/IZhO_2022_T_KO.pdf",
-    "audit_schema": "legacy-reviewed-ready",
-    "hangul_qa": "tools/qa/original-style/IZhO_2022_T_KO.hangul.json",
-    "native_ascii_qa": "tools/ko/izho/2022/T/original_style/native-ascii-audit.json"
+    "bytes": 23584477,
+    "sha256": "83cd48af2d5f9f974e10cb60ff5170c8da5769e48a3805aea84fe9db08721a64",
+    "qa": "tools/ko/izho/2022/T/natural-spacing/ready.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2021-2022\\editions\\IZhO_2022_T_KO.pdf",
+    "audit_schema": "natural-spacing-reviewed",
+    "visual_qa": "tools/ko/izho/2022/T/natural-spacing/visual-review.json"
   },
   {
     "file": "IZhO_2023_TS_KO.pdf",

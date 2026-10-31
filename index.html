@@ -1102,10 +1102,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=01061af7d69f"></script>
+<script src="site-catalogue.js?v=c0bc31609c56"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=818e8a424448"></script>
+<script src="site-design.js?v=c8e7a162664f"></script>
 <script>
 "use strict";
 
@@ -1523,7 +1523,9 @@ const DATA={
    {y:2019,host:{ko:"이스라엘 · 텔아비브",en:"Tel Aviv, Israel"},cc:"il",
     problems:[
       {id:"E1", title:{ko:"광학 측정",en:"Optical Measurements"},
-       desc:{ko:"가상 실험대의 광학 장치를 조작하며 IPhO 2019 실험 1의 측정을 진행합니다.",en:"Operate the optical apparatus on a virtual bench for IPhO 2019 Experiment 1."},
+       desc:{ko:"자 위 슬라이더의 다이오드 레이저로 각도기에 붙은 투명 원판 속을 여러 번 반사하는 빛을 따라가 굴절률을 재고, 회전 홀더의 회절격자와 삼각 프리즘으로 파장/격자 상수 비와 프리즘의 굴절률을 잽니다. 빛은 공기 중에서 보이지 않습니다.",
+             en:"Follow the diode laser on its slider through the transparent disk on a printed protractor to measure its refractive index, then use the grating and the triangular prism on the rotating holder for the ratio of wavelength to lattice constant and the prism's index. The beam is invisible in air."},
+       tags:["굴절률","회절격자","프리즘"], tagsEn:["Refractive index","Diffraction grating","Prism"],
        files:{sim:"sim/ipho2019_E1_web.html",
               pdf:{ko:"pdf/IPhO_2019_E1_KO.pdf", en:"pdf/IPhO_2019_E1_EN.pdf"},
               sol:{ko:"pdf/IPhO_2019_S1_KO.pdf", en:"pdf/IPhO_2019_S1.pdf"}}},
@@ -4381,7 +4383,7 @@ const compOf=key=>RUPHO_ARCHIVE?.catalogue(key)||DATA[key];
 const ruphoPage=(key,html,year="")=>RUPHO_ARCHIVE?RUPHO_ARCHIVE.decorate(key,html,year,lang):html;
 const thyOf=(key,y)=>(THEORY[key]||{})[String(y)]||null;
 /* ORIGINAL_LAYOUT_PDF_VERSIONS */
-const ORIGINAL_LAYOUT_PDF_VERSIONS={"CPhO_2006_T_BAUPC_EN.pdf":"e67564d060e0c6ea","CPhO_2006_T_EN.pdf":"e67564d060e0c6ea","CPhO_2006_T_KO.pdf":"b226b6458b62763c","CPhO_2007_T_BAUPC_EN.pdf":"3fe3fc3f05e97c16","CPhO_2007_T_EN.pdf":"3fe3fc3f05e97c16","CPhO_2007_T_KO.pdf":"6d45fbd4ab984933","CPhO_2022_T_BAUPC_EN.pdf":"f90ba01d7ff59093","CPhO_2022_T_EN.pdf":"f90ba01d7ff59093","CPhO_2022_T_KO.pdf":"3d344b3f40bc1489","CPhO_2023_Combined_KO.pdf":"c312c828202d236f","IZhO_2010_T_KO.pdf":"570cd8a1430268a7","IZhO_2011_T_KO.pdf":"f0ee3c03e8f655f8","IZhO_2013_T_KO.pdf":"f2a13308d8853dff","IZhO_2015_T_KO.pdf":"27bbd0ee97961d74","IZhO_2016_T_KO.pdf":"73de2de1684d429b","IZhO_2020_T_KO.pdf":"fe08ad7d3d3db539","IZhO_2021_TS_KO.pdf":"dcc72d0162266ade","IZhO_2021_T_KO.pdf":"d25ac8f8a92db049","IZhO_2022_TS_KO.pdf":"bc47fddc9f1fb984","IZhO_2022_T_KO.pdf":"98f4ee28b296a717","IZhO_2023_TS_KO.pdf":"8dcc21a85d8e0579","IZhO_2023_T_KO.pdf":"c7cc9ee694050524","IZhO_2024_TS_KO.pdf":"8de2960f06e48615","IZhO_2024_T_KO.pdf":"0c5d4060c432a1b0","IZhO_2025_TS_KO.pdf":"1c950c887445d26f","IZhO_2025_T_KO.pdf":"16a6afed6cb36aa7","IZhO_2026_TS_KO.pdf":"07e3310f4e1c1ca4","IZhO_2026_T_KO.pdf":"3217bd6317b40b46"};
+const ORIGINAL_LAYOUT_PDF_VERSIONS={"CPhO_2005_T_BAUPC_EN.pdf":"86606f4587ca18a4","CPhO_2005_T_EN.pdf":"86606f4587ca18a4","CPhO_2005_T_KO.pdf":"eb6c88f129f07517","CPhO_2006_T_BAUPC_EN.pdf":"041642afe4d01d11","CPhO_2006_T_EN.pdf":"041642afe4d01d11","CPhO_2006_T_KO.pdf":"b226b6458b62763c","CPhO_2007_T_BAUPC_EN.pdf":"f48bd7047f147f45","CPhO_2007_T_EN.pdf":"f48bd7047f147f45","CPhO_2007_T_KO.pdf":"7612c585b4419fa2","CPhO_2013_T_BAUPC_EN.pdf":"944ee0d78806861a","CPhO_2013_T_EN.pdf":"944ee0d78806861a","CPhO_2013_T_KO.pdf":"5b0180c0389953d2","CPhO_2022_T_BAUPC_EN.pdf":"180a67d20011a532","CPhO_2022_T_EN.pdf":"180a67d20011a532","CPhO_2022_T_KO.pdf":"3d344b3f40bc1489","CPhO_2023_Combined_EN.pdf":"ace65fc20c6704de","CPhO_2023_Combined_KO.pdf":"c312c828202d236f","IZhO_2010_T_KO.pdf":"570cd8a1430268a7","IZhO_2011_T_KO.pdf":"f0ee3c03e8f655f8","IZhO_2013_T_KO.pdf":"f2a13308d8853dff","IZhO_2015_T_KO.pdf":"27bbd0ee97961d74","IZhO_2016_T_KO.pdf":"73de2de1684d429b","IZhO_2020_T_KO.pdf":"fe08ad7d3d3db539","IZhO_2021_TS_KO.pdf":"dcc72d0162266ade","IZhO_2021_T_KO.pdf":"3b13c6121bd8afcd","IZhO_2022_TS_KO.pdf":"bc47fddc9f1fb984","IZhO_2022_T_KO.pdf":"83cd48af2d5f9f97","IZhO_2023_TS_KO.pdf":"8dcc21a85d8e0579","IZhO_2023_T_KO.pdf":"c7cc9ee694050524","IZhO_2024_TS_KO.pdf":"8de2960f06e48615","IZhO_2024_T_KO.pdf":"0c5d4060c432a1b0","IZhO_2025_TS_KO.pdf":"1c950c887445d26f","IZhO_2025_T_KO.pdf":"16a6afed6cb36aa7","IZhO_2026_TS_KO.pdf":"07e3310f4e1c1ca4","IZhO_2026_T_KO.pdf":"3217bd6317b40b46"};
 /* END_ORIGINAL_LAYOUT_PDF_VERSIONS */
 const thyUrl=f=>{
   const url=/^(pdfx\/|https?:)/.test(f)?f:PDF_BASE+f;

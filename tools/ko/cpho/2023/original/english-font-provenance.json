@@ -1,0 +1,86 @@
+{
+  "source_sha256": "956f132218ce6591d418a1faa998648b00a6195b2f2b522e6e16c1a405a418f0",
+  "body_policy": "Complete same-face SimSun5.24 Latin; actual source SimSun5.21 live contours and advance match. Most embedded source ASCII are empty stubs and cannot supply the translated prose.",
+  "title_policy": "Complete same-face/same-version SimHei5.03, read-only extraction from official signed Microsoft Fonts-Hans CAB. Source-live Latin contours and advances match exactly; original size, baseline and Tr2 stroke retained.",
+  "word_spaces": "0.25em as documented same-document Latin prose convention, except individually recorded fixed-blank source-cell spaces. No glyph scaling or font shrinking.",
+  "figures": "Measured Song/serif English figure prose uses the same complete SimSun face. Native variables, digits, Greek symbols, fonts and image programs remain unchanged.",
+  "original_font_programs_modified": false,
+  "comparisons": [
+    {
+      "original_postscript_name": "SimSun",
+      "original_version": "Version 5.21",
+      "installed_postscript_name": "SimSun",
+      "installed_version": "Version 5.24",
+      "installed_sha256": "1526ac24375f51f6eb73bc2d3f8072dbe4a80a3a65217677c9d9a84f67dab2ab",
+      "face_index": 0,
+      "actual_source_live_glyph_comparisons": [
+        {
+          "character": "!",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "\"",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "M",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "d",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "r",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "∝",
+          "actual_decomposed_contours_and_advance_identical": true
+        }
+      ]
+    },
+    {
+      "original_postscript_name": "SimHei",
+      "original_version": "Version 5.03",
+      "installed_postscript_name": "SimHei",
+      "installed_version": "Version 5.03",
+      "installed_sha256": "aa4560dd8fe5645745fed3ffa301c3ca4d6c03cbd738145b613303961ba733b8",
+      "face_index": null,
+      "actual_source_live_glyph_comparisons": [
+        {
+          "character": "!",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "\"",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "M",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "d",
+          "actual_decomposed_contours_and_advance_identical": true
+        },
+        {
+          "character": "r",
+          "actual_decomposed_contours_and_advance_identical": true
+        }
+      ]
+    }
+  ],
+  "official_font_acquisition": {
+    "official_url": "https://software-download.microsoft.com/download/pr/19041.1.191206-1406.vb_release_amd64fre_FOD-PACKAGES_OEM_PT1_amd64fre_MULTI.iso",
+    "method": "Read-only UDF metadata and requested CAB byte extents over HTTP Range; no OS installation.",
+    "files": [
+      {
+        "name": "Microsoft-Windows-LanguageFeatures-Fonts-Hans-Package~31bf3856ad364e35~amd64~~.cab",
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\official-hans-fonts\\Microsoft-Windows-LanguageFeatures-Fonts-Hans-Package~31bf3856ad364e35~amd64~~.cab",
+        "size": 43477060,
+        "sha256": "58c671efc437f424a8cc40e2beef66ee652c12b1dfb5db06c36b701d0306e438"
+      }
+    ]
+  }
+}

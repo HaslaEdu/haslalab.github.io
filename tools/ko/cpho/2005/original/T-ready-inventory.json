@@ -1,0 +1,119 @@
+{
+  "copy_files": [
+    {
+      "path": "tools/cpho_2005_original_extract.py",
+      "sha256": "d66ce491bd833d901e05eced666be433472c127b8800b9cf4dff3a2f4be08cc0",
+      "bytes": 11308
+    },
+    {
+      "path": "tools/cpho_2005_original_fonts.py",
+      "sha256": "ad0aa065ef595b0d85fb9bd90b102f29473068b7b58dcbb0241b449a7413ae4c",
+      "bytes": 6761
+    },
+    {
+      "path": "tools/cpho_2005_original_build.py",
+      "sha256": "4cad575373d4de4eee25ae7447a1285f4a9a491c40b309a58cc699c7480ff5ab",
+      "bytes": 7035
+    },
+    {
+      "path": "tools/cpho_2005_original_qa.py",
+      "sha256": "e21b94bf029ddca9fb0d8115993fb4004239072dda296daa657351dcc6d03188",
+      "bytes": 10360
+    },
+    {
+      "path": "tools/cpho_2005_original_rebuild.py",
+      "sha256": "a86ac7767107bb5890d8f5803aec3b768d7ed0692e64bf339c22e619b23598b7",
+      "bytes": 6797
+    },
+    {
+      "path": "tools/cpho_2005_original_poppler.py",
+      "sha256": "009aa6b0663eda5f5ca6b0123dbd9d9e6d1efc6590c3762f4c1fc06a7b0301b4",
+      "bytes": 4215
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/page01.tsv",
+      "sha256": "599e07b5eacec14852d7b3f5afea918eed95f8af4c94545dc5a9e9c0bef2850c",
+      "bytes": 4326
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/page02.tsv",
+      "sha256": "f842a175f11c8344c062896c53f35c3aee40815094829af99dece19b73ba004f",
+      "bytes": 4769
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/page03.tsv",
+      "sha256": "bec1d644647e16377429e11f28b2cb0bd7bd33ba171e441d1eacbdb4665a298b",
+      "bytes": 1349
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/native-slots.json",
+      "sha256": "eab58199132f5fe48824ae0d30665297d7576c2a0789003e21499112f60ac333",
+      "bytes": 1572033
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/native-slots.txt",
+      "sha256": "3f3b100d386d7668236cdd577fe7af6bffa70e1f0375178a4658d005a5c3b431",
+      "bytes": 19374
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/source-summary.json",
+      "sha256": "e4b86e38abdeefdce6a547c58c8dd4cda9a673347e13d37b8051afd34337c5cd",
+      "bytes": 2090
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/native-font-provenance.json",
+      "sha256": "18acbaa7dcc2cbc045eec55c7abd994d3df706aaf864d24a18f825303370610b",
+      "bytes": 308821
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/T-ko-audit.json",
+      "sha256": "4325843f85fdac91683cf5ac1d5fff252bfaecac507f181f8224eaee65ccfd40",
+      "bytes": 21490
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/T-en-audit.json",
+      "sha256": "36c5e6ee3093aa2ff5df67ef13562db75b36ab8780edd9913ea0a9121259c26f",
+      "bytes": 20028
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/T-poppler-pixel-audit.json",
+      "sha256": "23a70f603de7808bc7cc4ff47d8a7b8b94f31c425f0ddaab0f6f66e5ba87fac2",
+      "bytes": 3104
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/T-poppler-control-ink-audit.json",
+      "sha256": "57d3da61f69e0b088f5327ca48e4a61099f61c27ed2cbebf663b6b3f8583dcbf",
+      "bytes": 4952
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/provenance.json",
+      "sha256": "77438938192470f23765a8e3c50516cec7a105445452384ebf78e66585ad39db",
+      "bytes": 2124
+    },
+    {
+      "path": "tools/cpho_2005_original_isolated_render.py",
+      "sha256": "8cee9e33e497f7f4b5985597fa6a579f9c12a7d027aee9a78ae301e2cdde5fff",
+      "bytes": 4977
+    },
+    {
+      "path": "tools/ko/cpho/2005/original/T-isolated-image-palette-audit.json",
+      "sha256": "9ee9a740d2a8a5a7fe8a78257da1ef8bd13d0ae97aa295fa3f7eb6eee28e1a45",
+      "bytes": 6695
+    }
+  ],
+  "final_pdfs": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\CPhO_2005_T_KO.pdf",
+      "sha256": "eb6c88f129f075172af9dfdc4fb3bb9db11aea8014862328d85e136714a026f7",
+      "bytes": 3967567
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\CPhO_2005_T_EN.pdf",
+      "sha256": "86606f4587ca18a4604e8642633eedcaba1af53e2d14e936fac252065bac2cfb",
+      "bytes": 1021637
+    }
+  ],
+  "external_fonts": "Windows installed SimSun collection face0 5.24 and TimesNewRoman7.13 are read/exported to D cache; system fonts unchanged. Existing licensed NotoKR assets are reused.",
+  "source_pdf": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-sources\\CPhO_2005_Chinese_original.pdf",
+  "extra_review_evidence": "D:/CodexBuilds/Hasla-original-style-20261031/cpho2005/root-review/contact-isolated.png"
+}

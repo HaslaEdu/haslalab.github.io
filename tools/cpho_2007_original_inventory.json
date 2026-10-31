@@ -15,32 +15,33 @@
   "restoration": "Original figures, native math glyphs, tables, font programs, sizes, baselines and render states are retained. Only selected prose CIDs are suppressed, with exact native text advances.",
   "translation_fonts": {
     "ko": "Source Song -> official Noto Serif CJK KR Regular 400; source Hei -> official Noto Sans CJK KR Regular 400. Source prose is Tr0 and has no actual bold/italic.",
-    "en": "Original Word CJK/Latin correspondence: Song body -> actual Times New Roman Latin family, same point size/baseline; Hei headings -> official Sans Regular 400."
+    "en": "Interim strict baseline: body uses installed original SimSun; heading/date/section labels retain the previously declared Arial400 fallback. The subsequently acquired official SimHei full face is queued for the separate natural-spacing edition, and is not claimed in these frozen PDFs."
   },
   "limitations": [
     "All original mathematical list punctuation remains native.",
-    "Two English ASCII word gaps in slot 3-23-2 are each 0.4pt narrower to preserve the full term unstable equilibrium without touching native math.",
-    "English label vacuum lightspeed uses 4.2pt of the genuine empty gap preceding its original label slot. Its baseline and point size remain unchanged.",
-    "TS16 pages are not ready and are excluded from this publication inventory."
+    "TS16 pages are not ready and are excluded from this publication inventory.",
+    "English uses documented technical abbreviations and explicit positive word gaps; original point sizes, baselines and mathematical glyphs remain fixed."
   ],
   "files": [
     {
-      "path": "tmp/original-style-repair/2007/editions/CPhO_2007_T_KO.pdf",
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_KO.pdf",
       "file": "CPhO_2007_T_KO.pdf",
       "language": "ko",
       "pages": 4,
-      "bytes": 770276,
-      "sha256": "6d45fbd4ab984933febe512157a0d9dea839714169f4d01064f1bf5333c69aa2",
-      "qa": "tools/ko/cpho/2007/original/qa-problems-ko.json"
+      "bytes": 2498728,
+      "sha256": "7612c585b4419fa20eca486f2d83ccd69b65bf0ba11409b703d98c1608312db1",
+      "qa": "tools/ko/cpho/2007/original/qa-ko-same-face.json",
+      "additional_qa": "tools/ko/cpho/2007/original/qa-ko-same-face-poppler.json"
     },
     {
-      "path": "tmp/original-style-repair/2007/editions/CPhO_2007_T_EN.pdf",
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2007\\editions\\CPhO_2007_T_EN.pdf",
       "file": "CPhO_2007_T_EN.pdf",
       "language": "en",
       "pages": 4,
-      "bytes": 575812,
-      "sha256": "3fe3fc3f05e97c1605ebc8d003bbc7daa974e7fe2159074752a55497553c0641",
-      "qa": "tools/ko/cpho/2007/original/qa-problems-en.json"
+      "bytes": 1258644,
+      "sha256": "f48bd7047f147f45585d6e4d58c95e597839028c7937fa45ce7c79ddb10fdee7",
+      "qa": "tools/ko/cpho/2007/original/qa-en-same-face.json",
+      "additional_qa": "tools/ko/cpho/2007/original/qa-en-same-face-poppler.json"
     }
   ],
   "authoring_files": [
@@ -77,10 +78,43 @@
     "tools/ko/cpho/2007/original/qa-problems-ko.json",
     "tools/ko/cpho/2007/original/qa-problems-poppler.json",
     "tools/ko/cpho/2007/original/qa-problems-preview-final-identity.json",
-    "tools/ko/cpho/2007/original/reviewed-pages.json"
+    "tools/ko/cpho/2007/original/reviewed-pages.json",
+    "tools/cpho_original_en_face_inventory.py",
+    "tools/cpho_original_latin_fonts.py",
+    "tools/cpho_original_en_face_qa.py",
+    "tools/cpho_2007_original_inventory.json",
+    "tools/ko/cpho/2007/original/english-face-spacing.json",
+    "tools/ko/cpho/2007/original/english-face-policy.json",
+    "tools/ko/cpho/2007/original/embedded-latin-coverage.json",
+    "tools/ko/cpho/2007/original/qa-en-same-face.json",
+    "tools/ko/cpho/2007/original/qa-en-same-face-poppler.json",
+    "tools/ko/cpho/2007/original/fixed-slot-fit-en-same-face.json",
+    "tools/cpho_2007_colour_freeze.py",
+    "tools/ko/cpho/2007/original/qa-ko-same-face.json",
+    "tools/ko/cpho/2007/original/qa-ko-same-face-poppler.json"
   ],
   "qa_summary": "Both languages: 4x MuPDF outside-prose/native-ink changes 0; all original nonspace glyph font/gid/size/origin/color/render mode bit-identical; original font programs and raster image bytes/bboxes identical; Chinese prose and new NUL glyphs 0. KO Hangul visibility candidates 0. Independent Poppler outside changes 0 for all 8 pages; final editions render identically to reviewed previews. All pages visually checked in both renderers.",
   "printed_editorial_notes": 0,
   "new_edition_labels": 0,
-  "redrawn_figures": 0
+  "redrawn_figures": 0,
+  "english_same_face_repair": {
+    "policy": "tools/ko/cpho/2007/original/english-face-policy.json",
+    "sha256": "f48bd7047f147f45585d6e4d58c95e597839028c7937fa45ce7c79ddb10fdee7",
+    "font_size_reduction": false,
+    "all4_mupdf_and_poppler_pages_passed": true,
+    "real_glyph_outline_failures": 0,
+    "min_effective_word_gap_pt": 1.9400001049041746,
+    "korean_pdf_unchanged": false,
+    "korean_change_reason": "Explicitly authorized repair of figure-reference prose colours to the original source palette; 4-page colour/font/size/baseline checks all zero."
+  },
+  "strict_colour_repair": {
+    "status": "READY",
+    "natural_spacing_applied": false,
+    "batang_applied": false,
+    "full_simhei_applied": false,
+    "original_native_math_and_figures_preserved": true,
+    "source_palette_style_size_baseline_violations": 0,
+    "previous_korean_sha256": "6d45fbd4ab984933febe512157a0d9dea839714169f4d01064f1bf5333c69aa2",
+    "previous_english_sha256": "468832f5e9fcce91dfcb313f74accdeba169530f14c59ca62109b7e58eaf374e"
+  }
 }

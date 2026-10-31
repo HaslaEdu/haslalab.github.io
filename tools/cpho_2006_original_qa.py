@@ -10,6 +10,7 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
 import cpho_2006_original_build as b
 import pdf_original_style_audit as preservation
+from cpho_original_latin_fonts import BUILD_ROOT as EN_REPAIR_ROOT
 import pdf_hangul_visibility as visibility
 from cpho_2006_original_captions import CAPTIONS,SIZE
 preservation.cv2.setNumThreads(1)
@@ -63,7 +64,7 @@ def translated_ink_rects(doc,page,original_page):
 def audit(path,pages,scale=4):
     data=json.loads((b.BASE/'slots.json').read_text(encoding='utf8'))
     source=fitz.open(b.SOURCE);proof=fitz.open(path);assert len(proof)==len(pages)
-    folder=b.BASE/'qa'/path.stem;folder.mkdir(parents=True,exist_ok=True)
+    folder=EN_REPAIR_ROOT/'2006'/'qa'/path.stem if '_EN'in path.stem else b.BASE/'qa'/path.stem;folder.mkdir(parents=True,exist_ok=True)
     report={'pdf':str(path.resolve()),'sha256':sha(path.read_bytes()),'source_sha256':b.SOURCE_SHA,
             'source_pages':pages,'pages':[],'passed':True}
     previews=[]
@@ -111,6 +112,10 @@ def audit(path,pages,scale=4):
             inner=(slice(max(0,math.ceil(r.y0*scale)),min(aa.height,math.floor(r.y1*scale))),
                    slice(max(0,math.ceil(r.x0*scale)),min(aa.width,math.floor(r.x1*scale))))
             part[inner]=False;image_edges|=part;original_images[region(r)]=True
+        # A fragment edge can blend the underlying original footer within
+        # one renderer pixel. This guard is restricted below to the original
+        # under-image footer, never the opaque diagram's interior.
+        image_edges=preservation.cv2.dilate(image_edges.astype(np.uint8),np.ones((3,3),np.uint8)).astype(bool)&original_images
         for item in captions:caption_mask[region(item['comparison_rect'])]=True
         row['original_image_pixels_changed_outside_caption_text']=int((difference&original_images&~caption_mask).sum())
         footer=np.zeros(difference.shape,bool)
@@ -119,6 +124,7 @@ def audit(path,pages,scale=4):
                 if slot.get('overlay')is False:footer[region(slot['allowed_rect'])]=True
         inherited_footer_edge=difference&original_images&~caption_mask&footer&image_edges
         row['inherited_footer_prose_at_image_antialias_edge']=int(inherited_footer_edge.sum())
+        row['inherited_footer_image_edge_antialias_guard_pixels']=1
         row['unexplained_original_image_pixel_changes']=int((difference&original_images&~caption_mask&~inherited_footer_edge).sum())
         row['caption_number_pixels_changed']=[{'number':item['number'],
                    'changed_pixels':int(difference[region(item['numeric_protected_rect'])].sum())}for item in captions]

@@ -5,10 +5,11 @@
   "notes": [
     "Source Question 3 gravitational-acceleration unit m s^-1 remains native and unchanged. No correction or note has been printed.",
     "The original opaque fragmented illustration obscures the page-2 footer. Its original stacking order is retained. 34 raw Hangul visibility components occur only behind that same image; there is no unexpected text loss.",
-    "15 KO / 7 EN changed pixels at 4x occur at fractional original image edges within the translated footer language region. These are the changed underlying prose seen through the same original image antialias edge, not changed diagram pixels.",
+    "Existing KO artifact has15 original footer-edge pixels; current same-face EN has10 at4x with a one-raster-pixel edge classification. These are changed underlying footer prose at original fractional image edges, not changes to opaque diagram interiors.",
     "The native 6pt source exponent-minus glyph on page4 maps to Chinese 一 in its original text layer. Its exact native outline, font and position are preserved.",
     "Only the raster caption character 图 is overlaid as 도 / Fig.; original numeric 1/2 pixels and all other diagram pixels remain unchanged. Original image bytes and coordinates remain identical.",
     "The two raster caption point sizes and baselines are inferred from measured ink and the same-document Song glyph; their raster font metadata does not exist. Full measurement/provenance is recorded separately.",
     "English title rd uses 4pt of the genuine blank after the original 23, preserving the numeric source glyph and baseline. Slot2-24-2 has two ASCII word gaps 0.6pt narrower; all glyph sizes and baselines remain fixed."
-  ]
+  ],
+  "english_same_face_repair": "english-face-policy.json"
 }

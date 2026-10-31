@@ -10,6 +10,7 @@ UNIT |= {'mu','eEx','eBu','eB','eBx','mE','mru','dp','er','rdr','eE','Rdl','NI',
 UNIT |= {'mgR','pV','RT','gR','Rd','Qdq','mgd','mg','nRT','KR','cn','xdx','Vdt','GM','FR','mVR','rdrd','cR'}
 UNIT |= {'sly','sgy','kx','ky','my','mx','gs','Vg','pS','gH','Hl','CU','Nk','ne','kc','ak','edq','AB','CD','AF'}
 UNIT |= {'dk','LI','mr','NW','sl','ABCD','ABEF','dx','dq','dy','dz','du','da','dv'}
+UNIT |= {'dn','th'}  # Derivative numerator and threshold subscript in laser equations.
 UNIT |= {'Па','Кл','Дж','Вт','Гц','кг','см','мм','км'}
 MATH_FONTS=set()
 def configure_math_fonts(doc):

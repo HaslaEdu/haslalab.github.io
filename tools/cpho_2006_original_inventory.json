@@ -28,12 +28,13 @@
     },
     {
       "file": "CPhO_2006_T_EN.pdf",
-      "path": "tmp/original-style-repair/2006/editions/CPhO_2006_T_EN.pdf",
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\2006\\editions\\CPhO_2006_T_EN.pdf",
       "language": "en",
       "pages": 4,
-      "bytes": 370899,
-      "sha256": "e67564d060e0c6ead3bac24b65d6af1c0a8d34325d991c892e492bf0f70c850c",
-      "qa": "tools/ko/cpho/2006/original/qa-en.json"
+      "bytes": 931429,
+      "sha256": "041642afe4d01d11e20c324a9bc091a0a327231467b9e66447369a0f3e780b56",
+      "qa": "tools/ko/cpho/2006/original/qa-en-same-face.json",
+      "additional_qa": "tools/ko/cpho/2006/original/qa-en-same-face-poppler.json"
     }
   ],
   "authoring_files": [
@@ -57,9 +58,19 @@
     "tools/ko/cpho/2006/original/qa-poppler.json",
     "tools/ko/cpho/2006/original/raster-caption-provenance.json",
     "tools/ko/cpho/2006/original/reviewed-pages.json",
-    "tools/ko/cpho/2006/original/source-notes.json"
+    "tools/ko/cpho/2006/original/source-notes.json",
+    "tools/cpho_original_en_face_inventory.py",
+    "tools/cpho_original_latin_fonts.py",
+    "tools/cpho_original_en_face_qa.py",
+    "tools/cpho_2006_original_inventory.json",
+    "tools/ko/cpho/2006/original/english-face-spacing.json",
+    "tools/ko/cpho/2006/original/english-face-policy.json",
+    "tools/ko/cpho/2006/original/embedded-latin-coverage.json",
+    "tools/ko/cpho/2006/original/qa-en-same-face.json",
+    "tools/ko/cpho/2006/original/qa-en-same-face-poppler.json",
+    "tools/ko/cpho/2006/original/fixed-slot-fit-en-same-face.json"
   ],
-  "typography": "Source Song mapped to official Noto Serif CJK KR Regular400 in KO, Times New Roman Latin serif in EN. Native source mathematics, font programs, figures, tables and coordinates stay unchanged. Header/footer red16.08pt and title15.12pt Tr2 at0.302pt stroke are retained. Body12pt Tr0 is retained. Raster caption7.44pt is measured, not claimed as exact font metadata.",
+  "typography": "Source Song mapped to official Noto Serif CJK KR Regular400 in KO, installed original SimSun5.24 family in EN. Native source mathematics, font programs, figures, tables and coordinates stay unchanged. Header/footer red16.08pt and title15.12pt Tr2 at0.302pt stroke are retained. Body12pt Tr0 is retained. Raster caption7.44pt is measured, not claimed as exact font metadata.",
   "validation": "Both languages, all4 pages: fixed-slot fit0; native nonspace glyph font/gid/size/origin/color/render-state bit-exact; font-program and original image-byte/rect identity; 4x MuPDF outside-prose/native-ink/rule changes0; no unexpected Han/NUL/style violations; caption numbers1/2 pixels0; no unexplained diagram pixels; KO unexpected visibility0 (34 source-occluded footer components separately recorded); independent Poppler outside-prose changes0 across8 pages. Every page and caption reviewed visually in both renderers.",
   "source_notes": "tools/ko/cpho/2006/original/source-notes.json",
   "review_contacts": [
@@ -67,5 +78,14 @@
     "tmp/original-style-repair/2006/qa/CPhO_2006_T_EN/contact-mupdf.png",
     "tmp/original-style-repair/2006/qa/CPhO_2006_T_KO/contact-poppler.png",
     "tmp/original-style-repair/2006/qa/CPhO_2006_T_EN/contact-poppler.png"
-  ]
+  ],
+  "english_same_face_repair": {
+    "policy": "tools/ko/cpho/2006/original/english-face-policy.json",
+    "sha256": "041642afe4d01d11e20c324a9bc091a0a327231467b9e66447369a0f3e780b56",
+    "font_size_reduction": false,
+    "all4_mupdf_and_poppler_pages_passed": true,
+    "real_glyph_outline_failures": 0,
+    "min_effective_word_gap_pt": 2.4,
+    "korean_pdf_unchanged": true
+  }
 }

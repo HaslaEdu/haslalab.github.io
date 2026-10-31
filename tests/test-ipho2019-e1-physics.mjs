@@ -1,157 +1,110 @@
-// Exercise actual application callbacks with the original Python in WebAssembly.
-// Source/physics parity lives in test-ipho2019-e1-python.mjs.
+// The optical bench of sim/ipho2019_E1_web.html against the original Python
+// (src/ipho2019_E1_sim_KO.py).  tests/fixtures/ipho2019-e1-python.json is the
+// output of tests/fixtures/ipho2019-e1-oracle.py, which runs the original Lab
+// and LabTab methods in CPython: the specimen of Lab(201901), ray traces of 26
+// arrangements and the state after a sequence of handlers.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {loadOriginalPython,OpticalLab,vis} from '../sim/ipho2019/e1-python.mjs';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 
-await loadOriginalPython();
-const close=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
-const source=readFileSync(new URL('../sim/ipho2019/e1-app.mjs',import.meta.url),'utf8')
-  .replace(/^import .*;\r?\n/gm,'')
-  .replace('await loadOriginalPython();','')
-  .replace('await startScene();','startScene();');
+const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
+const fixture = JSON.parse(read('tests/fixtures/ipho2019-e1-python.json'));
+const html = read('sim/ipho2019_E1_web.html');
+const block = html.slice(html.indexOf('/* ==== PHYSICS START'), html.indexOf('/* ==== PHYSICS END'));
+const P = runInNewContext(block + ';({Lab, vis, TRAY_KEYS})', {Math, JSON});
 
-function appHarness(language='ko'){
-  const nodes=new Map(),events=new Map(),frames=new Map(),canvasCalls=[];
-  let now=0,nextFrame=1,seed=201901,renderedLab,callbacks,placement=[136,104];
-  const context2d=Object.fromEntries(['fillRect','strokeRect','beginPath','arc','fill','stroke','lineTo','moveTo','closePath','save','restore','translate','rotate','fillText']
-    .map(name=>[name,(...args)=>canvasCalls.push([name,...args])]));
-  context2d.createRadialGradient=()=>({addColorStop(){}});
-  const node=id=>{
-    if(!nodes.has(id)){
-      const classes=new Set();
-      nodes.set(id,{id,innerHTML:'',textContent:'',value:'',checked:false,hidden:false,open:false,width:1440,height:450,style:{},dataset:{},
-        classList:{toggle(name,on){if(on)classes.add(name);else classes.delete(name);},contains:name=>classes.has(name)},
-        querySelector(selector){return node(id+selector);},querySelectorAll(){return[];},setAttribute(){},
-        showModal(){this.open=true;},close(){this.open=false;},getContext:()=>context2d,
-        getBoundingClientRect:()=>({left:0,top:0,width:1440,height:450}),setPointerCapture(){}});
-    }
-    return nodes.get(id);
-  };
-  const groups={
-    lang:['ko','en'],equipment:['ruler','disk','holder','screen','tape6','tape','ruler8'],view:['perspective','top'],
-    move:['0,-1','-1,0','1,0','0,1'],rotate:['2','-2'],fine:['0.25','-0.25'],holder:['2','-2'],
-  };
-  const query=selector=>{
-    const key=selector.match(/^\[data-(\w+)\]$/)?.[1];
-    return (groups[key]||[]).map(value=>{const n=node(`${key}:${value}`);n.dataset[key]=value;return n;});
-  };
-  const document={hidden:false,documentElement:{lang:''},title:'',getElementById:node,querySelectorAll:query,
-    addEventListener:(name,fn)=>events.set(name,fn)};
-  runInNewContext(source,{
-    OpticalLab,vis,URL,URLSearchParams,document,location:{search:'?lang='+language,href:'https://haslalab.org/sim/ipho2019_E1_web.html?lang='+language},
-    performance:{now:()=>now},console,crypto:{getRandomValues(array){array[0]=seed++;return array;}},history:{replaceState(){}},
-    sessionStorage:{getItem(){throw Error('The original lab starts fresh');},setItem(){throw Error('The original lab does not save a browser draft');}},
-    window:{addEventListener:(name,fn)=>events.set('window:'+name,fn)},
-    requestAnimationFrame:fn=>{const id=nextFrame++;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id),
-    createOpticalScene:(_container,options)=>{callbacks=options;return{
-      update:lab=>{renderedLab=lab;},selected(){},setView(){},focus(){},dispose(){},placementPoint:()=>placement,
-    };},
-  },{filename:'e1-app-behavior.mjs'});
-  assert.ok(renderedLab,'the application must pass its real Python-backed lab to the renderer');
-  return{node,canvasCalls,lab:()=>renderedLab,callbacks:()=>callbacks,
-    choose(key){node('selection').value=key;node('selection').onchange();},
-    mount(key,point=placement){placement=point;node('equipment:'+key).onclick();},
-    frame(timestamp){now=timestamp;const [id,fn]=frames.entries().next().value;frames.delete(id);fn(timestamp);},
-    visibility(hidden,timestamp){now=timestamp;document.hidden=hidden;events.get('visibilitychange')();},
-    scheduled:()=>frames.size,dispose:()=>renderedLab.dispose()};
-}
-
-test('the common tray, stage and panel start with the original empty equipment tray in both languages',()=>{
-  for(const language of ['ko','en']){
-    const app=appHarness(language),lab=app.lab(),markup=app.node('app').innerHTML;
-    try{
-      for(const name of ['tray','stage','panel'])assert.ok(markup.includes(`class="${name}"`));
-      assert.doesNotMatch(markup,/masthead|titlebar|workbench|class="footer"/);
-      assert.match(markup,language==='ko'?/장비/:/Equipment/);
-      assert.equal(Object.values(lab.obj).some(item=>item.on),false);
-      assert.equal(lab.tape_on,false);assert.equal(lab.laser_on,false);assert.equal(lab.clock,0);
-      assert.equal(app.node('power').disabled,true);assert.equal(app.node('selection').value,'');
-      for(const value of [lab.n_disk,lab.n_prism,lab.lam_over_d])assert.equal(markup.includes(String(value)),false,'hidden specimen values are not readouts');
-    }finally{app.dispose();}
+const close = (actual, expected, path = 'value') => {
+  if (typeof expected === 'number')
+    return assert.ok(Math.abs(actual - expected) <= 1e-9 * Math.max(1, Math.abs(expected)), `${path}: ${actual} != ${expected}`);
+  if (Array.isArray(expected)){
+    assert.ok(Array.isArray(actual), path); assert.equal(actual.length, expected.length, path);
+    return expected.forEach((entry, i) => close(actual[i], entry, `${path}[${i}]`));
   }
+  if (expected && typeof expected === 'object') return Object.keys(expected).forEach(k => close(actual[k], expected[k], `${path}.${k}`));
+  assert.equal(actual, expected, path);
+};
+/* a lab with the specimen the original drew for seed 201901 */
+function lab(){
+  const l = new P.Lab(7);
+  Object.assign(l, structuredClone(fixture.specimen));
+  return l;
+}
+const state = l => JSON.parse(JSON.stringify(Object.fromEntries(
+  ['obj', 'order', 'slider', 'laser_fine', 'hold_rot', 'tape_on', 'tape_held', 'tape_a', 'tape_b', 'clock', 't', 'dark'].map(k => [k, l[k]]))));
+
+test('the fixture is the output of the supplied original source', () => {
+  assert.equal(createHash('sha256').update(readFileSync(new URL('../src/ipho2019_E1_sim_KO.py', import.meta.url))).digest('hex'), fixture.source_sha256);
+  assert.equal(fixture.cases.length, 26);
 });
 
-test('equipment buttons place apparatus at the camera centre and retain original measuring-tape placement',()=>{
-  const app=appHarness(),lab=app.lab();
-  try{
-    app.mount('ruler',[120,160]);assert.deepEqual(lab.obj.ruler.pos,[120,160]);assert.equal(lab.obj.ruler.on,true);
-    assert.equal(app.node('power').disabled,false);
-    app.mount('tape',[160,120]);assert.deepEqual(lab.tape_a,[100,134]);assert.deepEqual(lab.tape_b,[220,134]);
-    app.mount('ruler');assert.equal(lab.obj.ruler.on,false);assert.equal(app.node('power').disabled,true);
-    const fresh=appHarness();try{assert.equal(fresh.lab().tape_on,false);assert.equal(fresh.lab().obj.ruler.on,false);}finally{fresh.dispose();}
-  }finally{app.dispose();}
+test('the frozen fixture is still what the original prints', t => {
+  const oracle = fileURLToPath(new URL('./fixtures/ipho2019-e1-oracle.py', import.meta.url));
+  const run = ['python3', 'python'].map(py => spawnSync(py, [oracle], {encoding: 'utf8', maxBuffer: 1 << 26})).find(r => r.status === 0);
+  if (!run) return t.skip('no Python on this machine');
+  close(JSON.parse(run.stdout), fixture);
 });
 
-test('selection callbacks raise transparent rulers above and below the disk without altering specimen values',()=>{
-  const app=appHarness(),lab=app.lab();
-  try{
-    app.mount('disk',[136,96]);app.mount('ruler8',[136,96]);
-    const specimen=[lab.n_disk,lab.n_prism,lab.lam_over_d];
-    app.choose('ruler8');assert.equal(lab.order.at(-1),'ruler8');assert.equal(lab.in_ruler8(136,96),true);
-    app.choose('disk');assert.equal(lab.order.at(-1),'disk');assert.equal(lab.in_ruler8(136,96),false);
-    app.choose('ruler8');assert.equal(lab.in_ruler8(136,96),true);
-    assert.deepEqual([lab.n_disk,lab.n_prism,lab.lam_over_d],specimen);
-    app.choose('');assert.equal(app.node('focus').disabled,true);
-  }finally{app.dispose();}
+test('a new lab draws its specimen from the original ranges and starts with the tray full', () => {
+  for (let seed = 1; seed < 60; seed++){
+    const l = new P.Lab(seed);
+    assert.ok(l.n_disk >= 1.505 && l.n_disk <= 1.524);
+    assert.ok(l.n_prism >= 1.6395 && l.n_prism <= 1.6455);
+    assert.ok(l.lam_over_d >= 0.3955 && l.lam_over_d <= 0.4045);
+    assert.match(l.grating_id, /^#[1-9]\d\d$/);
+    assert.ok(Math.abs(l.prism_eps.reduce((a, b) => a + b)) < 1e-12);
+    assert.ok(Math.abs(l.prot_zero) <= 0.4);
+    assert.ok(Object.values(l.obj).every(o => !o.on));
+  }
+  assert.deepEqual([...P.TRAY_KEYS], ['ruler', 'disk', 'holder', 'screen', 'tape6', 'tape', 'ruler8']);
 });
 
-test('dragging beyond the cubicle keeps apparatus until the original release rule returns it to the tray',()=>{
-  const app=appHarness(),lab=app.lab();
-  try{
-    app.mount('disk',[136,96]);app.callbacks().onMove('disk',[-100,-100]);
-    assert.equal(lab.obj.disk.on,true);app.callbacks().onRelease('disk');assert.equal(lab.obj.disk.on,false);
-    app.mount('tape',[160,120]);app.callbacks().onTapeMove('a',[-30,120]);
-    assert.equal(lab.tape_on,true);app.callbacks().onRelease('tape_a');assert.equal(lab.tape_on,false);
-  }finally{app.dispose();}
+for (const entry of fixture.cases) test(`ray trace matches the original: ${entry.input.name}`, () => {
+  const l = lab(); l.laser_on = true;
+  for (const [k, v] of Object.entries(entry.input.objects)) Object.assign(l.obj[k], structuredClone(v));
+  for (const [k, v] of Object.entries(entry.input)) if (k !== 'name' && k !== 'objects') l[k] = v;
+  l.clearPose();
+  const t = l.trace();
+  close({segs: t.segs, spots: t.spots, hits: t.hits, shots: t.shots}, entry.trace);
+  assert.equal(t.shotSide.length, t.shots.length);
 });
 
-test('animation batches original Python ticks every quarter second instead of crossing WebAssembly every frame',()=>{
-  const app=appHarness(),lab=app.lab(),advance=lab.advance.bind(lab),steps=[];
-  lab.advance=(...args)=>{steps.push(args);return advance(...args);};
-  try{
-    app.frame(1000);assert.equal(steps.length,1);close(lab.clock,0);
-    app.frame(1100);app.frame(1249);assert.equal(steps.length,1);close(lab.clock,0);
-    app.frame(1250);assert.equal(steps.length,2);close(lab.clock,.25);
-    app.node('speed').value='10';app.node('speed').onchange();app.frame(1500);close(lab.clock,2.75);
-  }finally{app.dispose();}
+test('placing, dragging, turning, taping, the slider and the clock follow the original handlers', () => {
+  const l = lab(), out = [];
+  for (const [k, c] of [['ruler', [136, 170]], ['disk', [136, 150]], ['holder', [136, 96]], ['screen', [136, 100]], ['tape6', [40, 60]]]){
+    l.toggle(k, c); out.push(state(l)); }
+  l.side = l.screen_side('disk'); l.dragTo('disk', 142, 112); l.side = 0; out.push(state(l));
+  l.turn('disk', true, false); out.push(state(l));
+  l.turn('holder12b', false, true); out.push(state(l));
+  l.turn('laser', true, true); out.push(state(l));
+  l.tape_held = true;
+  let [x, y] = l.pose('disk'); l.stick_tape(x - 5, y); out.push(state(l));
+  [x, y] = l.pose('disk'); l.stick_tape(x + 5, y); out.push(state(l));
+  assert.equal(l.turn('disk', true, false), false); out.push(state(l));
+  [x, y] = l.pose('ruler'); l.stick_tape(x - 20, y); l.stick_tape(x + 20, y); l.stick_tape(x + l.slider + 2, y); out.push(state(l));
+  l.dragSlider(x + 25, y); out.push(state(l));
+  l.dragSlider(x - 25, y); out.push(state(l));
+  l.tick(18.1, 10); out.push(state(l));
+  l.tick(3.0, 10); out.push(state(l));
+  close(out, fixture.handlers);
+  assert.equal(l.dark, true);
 });
 
-test('visibility callbacks advance the hidden lab clock and lighting at the selected speed',()=>{
-  const app=appHarness(),lab=app.lab();
-  try{
-    app.frame(1000);app.frame(2000);close(lab.clock,1);
-    app.node('speed').value='10';app.node('speed').onchange();
-    app.visibility(true,2500);assert.equal(app.scheduled(),0);
-    app.visibility(false,22500);close(lab.clock,201);close(lab.t,201);
-    assert.equal(lab.dark,true);assert.equal(app.node('lightState').classList.contains('dark'),true);
-    assert.equal(app.scheduled(),1);assert.equal(lab.light_phase()[0],true);
-  }finally{app.dispose();}
+test('visibility of a spot in the lit hall and in the dark is the original rule', () => {
+  assert.equal(P.vis(1, false), 0.8); assert.equal(P.vis(0.019, false), 0);
+  assert.equal(P.vis(0.00009, true), 0); assert.equal(P.vis(1, true), 1);
+  assert.ok(Math.abs(P.vis(0.05, false) - 0.05 ** 0.42 * 0.8) < 1e-15);
 });
 
-test('the screen front view draws physical tape graduations and lets the user move a tape endpoint',()=>{
-  const app=appHarness(),lab=app.lab();
-  try{
-    app.callbacks().onOpenScreen();assert.equal(app.node('front').open,false);
-    app.mount('screen',[136,30]);app.callbacks().onOpenScreen();assert.equal(app.node('front').open,true);
-    assert.ok(app.canvasCalls.some(([name])=>name==='fillText'),'the measurement view must draw printed graduations');
-    const canvas=app.node('frontCanvas'),event=([x,y])=>({clientX:(x/132+.5)*canvas.width,clientY:(y/132+canvas.height/canvas.width*.5)*canvas.width,pointerId:1});
-    canvas.onpointerdown(event(lab.ftape_a));canvas.onpointermove(event([-40,5]));canvas.onpointerup();
-    close(lab.ftape_a[0],-40);close(lab.ftape_a[1],5);
-    app.node('closeFront').onclick();assert.equal(app.node('front').open,false);
-  }finally{app.dispose();}
-});
-
-test('a new experiment resets the original apparatus, clock and specimen after confirmation',()=>{
-  const app=appHarness();
-  try{
-    app.mount('ruler',[136,170]);const original=app.lab();original.advance(80);
-    app.node('reset').onclick();assert.equal(app.node('resetPrompt').open,true);assert.equal(app.lab(),original);
-    app.node('cancelReset').onclick();assert.equal(app.node('resetPrompt').open,false);assert.equal(app.lab(),original);
-    app.node('reset').onclick();app.node('confirmReset').onclick();
-    const next=app.lab();assert.notEqual(next,original);assert.equal(original._id,null);assert.equal(next.clock,0);
-    assert.equal(next.obj.ruler.on,false);assert.notEqual(next.n_disk,original.n_disk);assert.equal(app.node('selection').value,'');
-  }finally{app.dispose();}
+test('the transparent ruler covers the path only when it lies on top of the disk', () => {
+  const l = lab();
+  Object.assign(l.obj.disk, {on: true, pos: [136, 96], ang: 270, tapes: [[-12, -2], [12, 2]]});
+  Object.assign(l.obj.ruler8, {on: true, pos: [136, 96], ang: 90, tapes: [[-12, -1], [12, 1]]});
+  l.order = l.order.filter(k => k !== 'ruler8').concat('ruler8'); l.clearPose();
+  assert.equal(l.in_ruler8(136, 96), true);
+  l.order = ['ruler8', ...l.order.filter(k => k !== 'ruler8')]; l.clearPose();
+  assert.equal(l.in_ruler8(136, 96), false);
 });

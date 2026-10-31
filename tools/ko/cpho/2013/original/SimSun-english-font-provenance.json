@@ -1,0 +1,679 @@
+{
+  "authoring": {
+    "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+    "donor_sha256": "1526ac24375f51f6eb73bc2d3f8072dbe4a80a3a65217677c9d9a84f67dab2ab",
+    "builder_sha256": "0e2ce797892756768cc65d673af12ebb2d2984b31b8c22996d2eaa69c89c7d9f"
+  },
+  "source_face": "SimSun",
+  "source_font_program_sha256": "511f5a3aca2f9b2b1ed7b40c149fcb858fb77caf441d87efb9363f17716b30b7",
+  "actual_source_glyphs_kept": [
+    {
+      "char": " ",
+      "glyph": "space",
+      "gid": 3,
+      "bounds": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "char": "!",
+      "glyph": "exclam",
+      "gid": 4,
+      "bounds": [
+        49,
+        1,
+        77,
+        180
+      ]
+    },
+    {
+      "char": "\"",
+      "glyph": "quotedbl",
+      "gid": 5,
+      "bounds": [
+        18,
+        143.33333333333334,
+        107,
+        205
+      ]
+    },
+    {
+      "char": "M",
+      "glyph": "M",
+      "gid": 48,
+      "bounds": [
+        2,
+        4,
+        125,
+        175
+      ]
+    },
+    {
+      "char": "d",
+      "glyph": "d",
+      "gid": 71,
+      "bounds": [
+        15,
+        3,
+        121,
+        183
+      ]
+    },
+    {
+      "char": "r",
+      "glyph": "r",
+      "gid": 85,
+      "bounds": [
+        8,
+        4,
+        117,
+        121
+      ]
+    }
+  ],
+  "missing_actual_glyphs_filled": [
+    {
+      "char": "#",
+      "glyph": "numbersign",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "numbersign"
+    },
+    {
+      "char": "$",
+      "glyph": "dollar",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "dollar"
+    },
+    {
+      "char": "%",
+      "glyph": "percent",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "percent"
+    },
+    {
+      "char": "&",
+      "glyph": "ampersand",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "ampersand"
+    },
+    {
+      "char": "'",
+      "glyph": "quotesingle",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quotesingle"
+    },
+    {
+      "char": "(",
+      "glyph": "parenleft",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "parenleft"
+    },
+    {
+      "char": ")",
+      "glyph": "parenright",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "parenright"
+    },
+    {
+      "char": "*",
+      "glyph": "asterisk",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "asterisk"
+    },
+    {
+      "char": "+",
+      "glyph": "plus",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "plus"
+    },
+    {
+      "char": ",",
+      "glyph": "comma",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "comma"
+    },
+    {
+      "char": "-",
+      "glyph": "hyphen",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "hyphen"
+    },
+    {
+      "char": ".",
+      "glyph": "period",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "period"
+    },
+    {
+      "char": "/",
+      "glyph": "slash",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "slash"
+    },
+    {
+      "char": "0",
+      "glyph": "zero",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "zero"
+    },
+    {
+      "char": "1",
+      "glyph": "one",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "one"
+    },
+    {
+      "char": "2",
+      "glyph": "two",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "two"
+    },
+    {
+      "char": "3",
+      "glyph": "three",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "three"
+    },
+    {
+      "char": "4",
+      "glyph": "four",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "four"
+    },
+    {
+      "char": "5",
+      "glyph": "five",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "five"
+    },
+    {
+      "char": "6",
+      "glyph": "six",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "six"
+    },
+    {
+      "char": "7",
+      "glyph": "seven",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "seven"
+    },
+    {
+      "char": "8",
+      "glyph": "eight",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "eight"
+    },
+    {
+      "char": "9",
+      "glyph": "nine",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "nine"
+    },
+    {
+      "char": ":",
+      "glyph": "colon",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "colon"
+    },
+    {
+      "char": ";",
+      "glyph": "semicolon",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "semicolon"
+    },
+    {
+      "char": "<",
+      "glyph": "less",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "less"
+    },
+    {
+      "char": "=",
+      "glyph": "equal",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "equal"
+    },
+    {
+      "char": ">",
+      "glyph": "greater",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "greater"
+    },
+    {
+      "char": "?",
+      "glyph": "question",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "question"
+    },
+    {
+      "char": "@",
+      "glyph": "at",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "at"
+    },
+    {
+      "char": "A",
+      "glyph": "A",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "A"
+    },
+    {
+      "char": "B",
+      "glyph": "B",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "B"
+    },
+    {
+      "char": "C",
+      "glyph": "C",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "C"
+    },
+    {
+      "char": "D",
+      "glyph": "D",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "D"
+    },
+    {
+      "char": "E",
+      "glyph": "E",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "E"
+    },
+    {
+      "char": "F",
+      "glyph": "F",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "F"
+    },
+    {
+      "char": "G",
+      "glyph": "G",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "G"
+    },
+    {
+      "char": "H",
+      "glyph": "H",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "H"
+    },
+    {
+      "char": "I",
+      "glyph": "I",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "I"
+    },
+    {
+      "char": "J",
+      "glyph": "J",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "J"
+    },
+    {
+      "char": "K",
+      "glyph": "K",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "K"
+    },
+    {
+      "char": "L",
+      "glyph": "L",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "L"
+    },
+    {
+      "char": "N",
+      "glyph": "N",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "N"
+    },
+    {
+      "char": "O",
+      "glyph": "O",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "O"
+    },
+    {
+      "char": "P",
+      "glyph": "P",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "P"
+    },
+    {
+      "char": "Q",
+      "glyph": "Q",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "Q"
+    },
+    {
+      "char": "R",
+      "glyph": "R",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "R"
+    },
+    {
+      "char": "S",
+      "glyph": "S",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "S"
+    },
+    {
+      "char": "T",
+      "glyph": "T",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "T"
+    },
+    {
+      "char": "U",
+      "glyph": "U",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "U"
+    },
+    {
+      "char": "V",
+      "glyph": "V",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "V"
+    },
+    {
+      "char": "W",
+      "glyph": "W",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "W"
+    },
+    {
+      "char": "X",
+      "glyph": "X",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "X"
+    },
+    {
+      "char": "Y",
+      "glyph": "Y",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "Y"
+    },
+    {
+      "char": "Z",
+      "glyph": "Z",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "Z"
+    },
+    {
+      "char": "[",
+      "glyph": "bracketleft",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "bracketleft"
+    },
+    {
+      "char": "\\",
+      "glyph": "backslash",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "backslash"
+    },
+    {
+      "char": "]",
+      "glyph": "bracketright",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "bracketright"
+    },
+    {
+      "char": "^",
+      "glyph": "asciicircum",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "asciicircum"
+    },
+    {
+      "char": "_",
+      "glyph": "underscore",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "underscore"
+    },
+    {
+      "char": "`",
+      "glyph": "grave",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "grave"
+    },
+    {
+      "char": "a",
+      "glyph": "a",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "a"
+    },
+    {
+      "char": "b",
+      "glyph": "b",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "b"
+    },
+    {
+      "char": "c",
+      "glyph": "c",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "c"
+    },
+    {
+      "char": "e",
+      "glyph": "e",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "e"
+    },
+    {
+      "char": "f",
+      "glyph": "f",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "f"
+    },
+    {
+      "char": "g",
+      "glyph": "g",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "g"
+    },
+    {
+      "char": "h",
+      "glyph": "h",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "h"
+    },
+    {
+      "char": "i",
+      "glyph": "i",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "i"
+    },
+    {
+      "char": "j",
+      "glyph": "j",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "j"
+    },
+    {
+      "char": "k",
+      "glyph": "k",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "k"
+    },
+    {
+      "char": "l",
+      "glyph": "l",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "l"
+    },
+    {
+      "char": "m",
+      "glyph": "m",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "m"
+    },
+    {
+      "char": "n",
+      "glyph": "n",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "n"
+    },
+    {
+      "char": "o",
+      "glyph": "o",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "o"
+    },
+    {
+      "char": "p",
+      "glyph": "p",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "p"
+    },
+    {
+      "char": "q",
+      "glyph": "q",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "q"
+    },
+    {
+      "char": "s",
+      "glyph": "s",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "s"
+    },
+    {
+      "char": "t",
+      "glyph": "t",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "t"
+    },
+    {
+      "char": "u",
+      "glyph": "u",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "u"
+    },
+    {
+      "char": "v",
+      "glyph": "v",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "v"
+    },
+    {
+      "char": "w",
+      "glyph": "w",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "w"
+    },
+    {
+      "char": "x",
+      "glyph": "x",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "x"
+    },
+    {
+      "char": "y",
+      "glyph": "y",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "y"
+    },
+    {
+      "char": "z",
+      "glyph": "z",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "z"
+    },
+    {
+      "char": "{",
+      "glyph": "braceleft",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "braceleft"
+    },
+    {
+      "char": "|",
+      "glyph": "bar",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "bar"
+    },
+    {
+      "char": "}",
+      "glyph": "braceright",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "braceright"
+    },
+    {
+      "char": "~",
+      "glyph": "asciitilde",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "asciitilde"
+    },
+    {
+      "char": "–",
+      "glyph": "endash",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "endash"
+    },
+    {
+      "char": "—",
+      "glyph": "emdash",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "emdash"
+    },
+    {
+      "char": "’",
+      "glyph": "quoteright",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quoteright"
+    },
+    {
+      "char": "“",
+      "glyph": "quotedblleft",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quotedblleft"
+    },
+    {
+      "char": "”",
+      "glyph": "quotedblright",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "quotedblright"
+    },
+    {
+      "char": "×",
+      "glyph": "multiply",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "multiply"
+    },
+    {
+      "char": "°",
+      "glyph": "degree",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "degree"
+    },
+    {
+      "char": "²",
+      "glyph": "uni00B2",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "uni00B2"
+    },
+    {
+      "char": "³",
+      "glyph": "uni00B3",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "uni00B3"
+    },
+    {
+      "char": "·",
+      "glyph": "periodcentered",
+      "source_missing_actual_outline": true,
+      "donor_glyph": "periodcentered"
+    }
+  ],
+  "donor": "C:\\Windows\\Fonts\\simsun.ttc",
+  "donor_role": "Same face and version SimSun5.24",
+  "changed_original_pdf_font_programs": false,
+  "existing_source_glyph_outlines_modified": false,
+  "source_to_donor_upem_scale": 1.0,
+  "output_sha256": "530dfb42f2e99878c3423f6aab344354847f4f5bb45e01af6fec6a7f89080497"
+}

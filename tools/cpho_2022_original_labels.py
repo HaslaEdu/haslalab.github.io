@@ -16,8 +16,8 @@ AUTHOR=ROOT/'tools/ko/cpho/2022/original'
 BASE=ROOT/'tmp/original-style-repair/2022/labels'
 SOURCE=ROOT/'tmp/source-audit/CPhO_2022_T_ZH.pdf'
 RECIPES=[
- ('fel-accelerator',2,'fel',[122,14,379,68],'电子束加速器','전자빔 가속기','Electron-beam accelerator',10.15,'left'),
- ('fel-collector',2,'fel',[853,14,1063,68],'电子束收集','전자빔 수집기','Electron-beam collector',10.15,'right'),
+ ('fel-accelerator',2,'fel',[122,14,379,68],'电子束加速器','전자빔 가속기','e-beam accel.',10.15,'left'),
+ ('fel-collector',2,'fel',[853,14,1063,68],'电子束收集','전자빔 수집기','e-beam collector',10.15,'right'),
  ('fel-beam-left',2,'fel',[148,150,279,205],'电子束','전자빔','e-beam',10.15,'center'),
  ('fel-beam-right',2,'fel',[928,150,1057,205],'电子束','전자빔','e-beam',10.15,'center'),
  ('fel-bender-left',2,'fel',[129,292,302,343],'弯曲磁体','편향자석','Bend mag',10.15,'right'),
@@ -29,7 +29,7 @@ RECIPES=[
  ('diffraction-laser',3,'diffraction',[24,241,79,352],'激光','레이저','Laser',11.6,'vertical'),
  ('crystal-air',3,'crystal',[690,142,789,193],'空气','공기','Air',10.67,'right'),
  ('crystal-body',3,'crystal',[690,204,789,255],'晶体','결정','Crystal',10.67,'right'),
- ('crystal-axis',3,'crystal',[65,365,160,414],'光轴','광축','Opt. ax.',10.67,'right'),
+ ('crystal-axis',3,'crystal',[65,365,160,414],'光轴','광축','Opt ax',10.67,'right'),
 ]
 PANELS={'fel':(2,[132.3,375.15,459.3,537.15]),
         'diffraction':(3,[364.05,44.4,555.45,189]),
