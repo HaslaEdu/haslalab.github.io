@@ -112,7 +112,7 @@
 
 <script src="exam-network.js"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=d4f342e770a6";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=7a972b90a395";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -141,9 +141,9 @@ const T = {
   ko: {
     title: "답안 스캔", task: "실험", kind: "종류", answer: "답안지", working: "Working sheet",
     shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 바탕과 구분되는 곳에 놓고, 종이의 네 모서리와 테두리가 모두 보이게 위에서 찍으세요. 검은 표식이 없어도 됩니다. 한 번에 한 쪽씩 찍습니다.",
-    live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이의 네 모서리와 테두리가 모두 화면에 들어오게 하세요. 검은 표식은 선택 사항입니다.", lvPage: "종이를 찾았습니다. 테두리를 확인하고 촬영하거나, 더 선명하게 맞춰 주세요.",
+    live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이의 네 모서리와 테두리가 모두 화면에 들어오게 하세요. 검은 표식은 선택 사항입니다.", lvPage: "종이를 찾았습니다. 테두리를 확인하고 촬영하거나, 더 선명하게 맞춰 주세요.", lvCandidate: "테두리 후보입니다. 촬영 후 네 모서리를 확인해 스캔하세요.",
     lvHold: "그대로 멈추세요…", lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
-    working0: "다듬는 중…", corners: "모서리 맞추기", modes: { clean: "또렷하게", mono: "흑백", original: "원본" },
+    working0: "다듬는 중…", corners: "모서리 확인·스캔 만들기", modes: { color: "컬러 스캔", clean: "또렷하게", mono: "흑백", original: "색 보정 없음" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
     a4Shape: "A4 비율을 확인하지 못해 사진을 자르거나 늘리지 않았습니다. A4 답안지라면 «모서리 맞추기»에서 확인한 뒤 A4로 보정하거나 원본 그대로 보내세요.",
     lvAspect: "A4 비율과 다릅니다. A4 용지인지 확인하고 카메라를 종이와 평행하게 맞춰 주세요.", lvPerspective: "A4 비율을 확인하려면 카메라를 종이와 평행하게 맞춰 주세요. 직접 촬영하면 원본을 유지합니다.",
@@ -168,9 +168,9 @@ const T = {
   en: {
     title: "Answer scan", task: "Experiment", kind: "Sheet", answer: "Answer sheet", working: "Working sheet",
     shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a contrasting surface and shoot from above with all four paper corners and edges visible. Black markers are optional. One page per photo.",
-    live: "📷 Scan", camApp: "Camera app", lvAim: "Keep all four paper corners and edges in view. Black markers are optional.", lvPage: "Page found. Check the outline and take a photo, or adjust for a clearer view.",
+    live: "📷 Scan", camApp: "Camera app", lvAim: "Keep all four paper corners and edges in view. Black markers are optional.", lvPage: "Page found. Check the outline and take a photo, or adjust for a clearer view.", lvCandidate: "Possible page outline. Take a photo, then confirm its four corners to create a scan.",
     lvHold: "Hold still…", lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
-    working0: "Straightening…", corners: "Fix corners", modes: { clean: "Clean", mono: "B&W", original: "Original" },
+    working0: "Straightening…", corners: "Confirm corners and scan", modes: { color: "Color scan", clean: "Clean", mono: "B&W", original: "No color correction" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
     a4Shape: "The A4 aspect ratio could not be verified, so the photo was not cropped or stretched. For an A4 sheet, confirm its corners and correct as A4, or send the original.",
     lvAspect: "This does not match the A4 aspect ratio. Check the sheet and hold the camera parallel to it.", lvPerspective: "Hold the camera parallel to the sheet to check its A4 aspect ratio. Manual capture keeps the original.",
@@ -278,7 +278,7 @@ function wireSent() {
 }
 
 /* ── one photo: straighten, check, send ── */
-async function take(file, live, internal = false) {
+async function take(file, live, internal = false, captureOptions = {}) {
   if (!file || MONTHLY && monthlySending) return;
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return toast(t().err.bad_image);
   if (!internal && file.size > 12 * 1024 * 1024) return toast(t().err.input_too_big);
@@ -286,10 +286,26 @@ async function take(file, live, internal = false) {
   releaseShot();
   const revision = shotRevision;
   shot = { file, captureFile, originalUrl: URL.createObjectURL(file), abort: new AbortController(), busy: true, pct: 0, task, kind, live: !!live };phonePoll.stop();
-  mode = "original"; paintShot();
+  mode = "color"; paintShot();
   if (!canProcess()) { shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; return paintShot(); }
   try {
-    const r = await processShot(file, { mode, signal: shot.abort.signal, onProgress: p => { if (revision !== shotRevision || !shot) return; shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } });
+    const options = { mode, signal: shot.abort.signal, onProgress: p => { if (revision !== shotRevision || !shot) return; shot.pct = p; const i = document.querySelector("#shot .bar i"); if (i) i.style.width = p + "%"; } };
+    let r, processingError;
+    try { r = await processShot(file, { ...options, ...(captureOptions.detectionHint ? { detectionHint: captureOptions.detectionHint } : {}) }); }
+    catch (error) { processingError = error; }
+    if (revision !== shotRevision || !shot) return;
+    // Native Android ImageCapture may change crop, orientation or exposure. Its
+    // photo must earn its own detection; live coordinates only belong to the
+    // exact frozen video frame that was analysed, never to another photo.
+    if (captureOptions.fallback && (processingError || r?.warpApplied === false)) {
+      const fallback = captureOptions.fallback;
+      r = await processShot(fallback.file, { ...options, detectionHint: fallback.detectionHint });
+      if (revision !== shotRevision || !shot) return;
+      URL.revokeObjectURL(shot.originalUrl);
+      shot = { ...shot, file: fallback.file, captureFile: fallback.file, originalUrl: URL.createObjectURL(fallback.file), liveFrameFallback: true };
+      processingError = null;
+    }
+    if (processingError) throw processingError;
     if (revision !== shotRevision || !shot) return;
     shot = { ...shot, ...r, busy: false };
   } catch (e) { if (revision !== shotRevision || !shot) return; shot = { ...shot, busy: false, blob: file, previewUrl: shot.originalUrl, autoScore: 0, quality: null, processFailed: true }; }
@@ -302,7 +318,7 @@ function paintShot() {
   if (shot.busy) { box.innerHTML = `<div class="card"><h2>${t().working0}</h2><div class="bar"><i style="width:${shot.pct || 3}%"></i></div></div>`; return; }
   const q = shot.quality || {}, warn = [];
   if (shot.processFailed) warn.push(t().processFailed);
-  else if ((shot.warpApplied ?? shot.a4WarpApplied) === false) warn.push(lang === "ko" ? "문서 테두리를 확실히 찾지 못해 원본을 유지했습니다. 모서리를 직접 맞추거나 원본 그대로 보내세요." : "Document edges are uncertain, so the original was retained. Adjust the corners or send the original.");
+  else if ((shot.warpApplied ?? shot.a4WarpApplied) === false) warn.push(lang === "ko" ? "아직 스캔 이미지로 변환하지 않았습니다. 아래 ‘모서리 확인·스캔 만들기’에서 네 모서리를 확인해 주세요." : "This photo has not been converted to a scan yet. Use ‘Confirm corners and scan’ below to check all four corners.");
   else if (shot.cornersReliable === false || shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
   if (q.focus != null && q.focus < 22) warn.push(t().blurry);          // (the cleaned page is white on purpose, so glare is not judged on it)
   if (shot.sourceShortSide != null && shot.sourceShortSide < 1200) warn.push(t().lowRes);
@@ -327,6 +343,7 @@ function paintShot() {
 }
 async function redo(corners, m) {
   if (!shot || MONTHLY && monthlySending) return;
+  if ((shot.warpApplied ?? shot.a4WarpApplied) === false) { mode = m; paintShot(); return cornerEditor(); }
   const revision = ++shotRevision;
   mode = m; const keep = shot; shot = { ...shot, busy: true, pct: 50 }; paintShot();
   try { const r = await reprocess(keep.baseUrl, corners, m, undefined, keep.method === "marker" ? MARKER_INSET : null, { preserveOriginal: (keep.warpApplied ?? keep.a4WarpApplied) === false, pageFormat: keep.outputFormat || "auto", signal: keep.abort?.signal }); if (revision !== shotRevision || !shot) return; shot = { ...keep, ...r, ...(MONTHLY ? {requestId:null} : {}), corners, busy: false, showOriginal: false }; }
@@ -430,35 +447,51 @@ async function liveCamera() {
   const v = ov.querySelector("video"), cv = ov.querySelector("canvas"), g = cv.getContext("2d"), msg = ov.querySelector(".msg");
   v.srcObject = stream; await v.play().catch(() => {});
   const small = document.createElement("canvas"), sg = small.getContext("2d", { willReadFrequently: true });
-  let alive = true, busy = false, hist = [], last = null, timer = null;
+  let alive = true, busy = false, hist = [], last = null, timer = null, verifiedFrame = null;
   const detectorAbort = new AbortController();
   const close = () => { if (!alive) return; alive = false; detectorAbort.abort(); clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
   const say = (m, ok) => { msg.textContent = m; msg.classList.toggle("ok", !!ok); };
   say(t().lvAim);
+  void warmDocumentDetector({ retry: true }).catch(() => {});
   async function capture() {
-    if (busy || !alive) return; busy = true; say(t().lvTake, true);
-    let blob = null;
+    if (busy || !alive) return;
+    if (!v.videoWidth || !v.videoHeight) return say(t().lvAim);
+    busy = true; say(t().lvTake, true);
+    const accepted = verifiedFrame && performance.now() - verifiedFrame.time < 1500 ? verifiedFrame : null;
+    const fallbackFile = accepted ? await new Promise(resolve => accepted.canvas.toBlob(resolve, "image/jpeg", .96)) : null;
+    const fallback = fallbackFile ? { file: fallbackFile, detectionHint: accepted.detectionHint } : null;
+    let blob = null, fromVideo = false;
     try { if (window.ImageCapture) blob = await new ImageCapture(stream.getVideoTracks()[0]).takePhoto(); } catch (e) { blob = null; }
     if (!alive) return;
+    if (!blob && fallback) { blob = fallback.file; fromVideo = true; }
     if (!blob) {
       const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
       blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.95));
     }
     if (!alive) return;
-    close(); if (blob) take(blob, true);
+    if (!blob) { busy = false; say(t().lvNoCam); timer = setTimeout(frame, 140); return; }
+    close(); take(blob, true, false, fromVideo ? { detectionHint: fallback.detectionHint } : fallback ? { fallback } : {});
   }
   async function frame() {
     if (!alive) return;
     if (v.videoWidth) {
-      const k = Math.min(1, 720 / Math.max(v.videoWidth, v.videoHeight)), w = Math.round(v.videoWidth * k), h = Math.round(v.videoHeight * k);
+      const frameCapturedAt = performance.now();
+      const frameSource = document.createElement("canvas"), fullScale = Math.min(1, 2560 / Math.max(v.videoWidth, v.videoHeight));
+      frameSource.width = Math.round(v.videoWidth * fullScale); frameSource.height = Math.round(v.videoHeight * fullScale);
+      frameSource.getContext("2d").drawImage(v, 0, 0, frameSource.width, frameSource.height);
+      const k = Math.min(1, 1024 / Math.max(frameSource.width, frameSource.height)), w = Math.round(frameSource.width * k), h = Math.round(frameSource.height * k);
       if (small.width !== w || small.height !== h) { small.width = w; small.height = h; }
-      sg.drawImage(v, 0, 0, w, h);
+      sg.drawImage(frameSource, 0, 0, w, h);
       const pixels = sg.getImageData(0, 0, w, h).data;
       let candidate;
       try { candidate = await detectDocumentQuad(small, { preview: true, signal: detectorAbort.signal, onProgress: () => say(lang === "ko" ? "기기 안에서 문서 모델을 준비하는 중… 첫 사용에만 파일을 내려받습니다." : "Preparing the on-device document model… Assets download only on first use.") }); }
       catch { if (!alive) return; candidate = null; }
       if (!alive || busy) return;
       const d = candidate?.corners && candidate.method !== "frame" && candidate.score > .25 ? candidate : null;
+      verifiedFrame = d?.scanEligible === true ? { canvas: frameSource, time: frameCapturedAt, detectionHint: {
+        source: "same-video-frame", scanEligible: true, method: d.method, score: d.score,
+        corners: d.corners.map(point => ({ x: point.x / w, y: point.y / h })), paperStatus: d.paperStatus,
+      } } : null;
       const how = d?.method;
       /* the overlay, where the video is drawn (object-fit: contain) */
       const r = cv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
@@ -468,6 +501,7 @@ async function liveCamera() {
         const s = Math.min(cv.width / w, cv.height / h), ox = (cv.width - w * s) / 2, oy = (cv.height - h * s) / 2;
         const q = [0, 1, 3, 2].map(i => ({ x: ox + d.corners[i].x * s, y: oy + d.corners[i].y * s }));
         g.fillStyle = how === "marker" ? "rgba(87,171,90,.22)" : MONTHLY ? "rgba(197,163,245,.18)" : "rgba(242,193,78,.18)"; g.strokeStyle = how === "marker" ? "#57ab5a" : SCAN_ACCENT; g.lineWidth = 3 * dpr;
+        g.setLineDash?.(d.scanEligible === true ? [] : [8 * dpr, 6 * dpr]);
         g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.fill(); g.stroke();
       }
       /* Paper edges need a longer, tighter hold than printed markers. Geometry alone never enables capture. */
@@ -479,7 +513,7 @@ async function liveCamera() {
         const span = Math.max(w, h), still = hist.length === count && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * tolerance));
         say(t().lvHold, true);
         if (still && AUTO) return capture();
-      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
+      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? d.scanEligible === true ? t().lvPage : t().lvCandidate : t().lvAim); }
     }
     timer = setTimeout(frame, 140);
   }

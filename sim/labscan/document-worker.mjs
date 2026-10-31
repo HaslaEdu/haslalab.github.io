@@ -1,10 +1,10 @@
-import { DOCUMENT_ASSETS, decodeDocumentHeatmap, documentGeometry, refineDocumentEdges } from './document-model.mjs?v=d4f342e770a6';
-import { toGray, detectDocumentQuadGray, findSheetMarkersGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=d4f342e770a6';
+import { DOCUMENT_ASSETS, decodeDocumentHeatmap, documentGeometry, refineDocumentEdges } from './document-model.mjs?v=7a972b90a395';
+import { toGray, detectDocumentQuadGray, findSheetMarkersGray, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=7a972b90a395';
 
 const CACHE = 'haslalab-document-assets-' + DOCUMENT_ASSETS.version;
-let ort, session, initializing, modelFailure = null;
+let ort, session, initializing, modelFailure = null, modelRetryAt = 0, modelFailures = 0;
 const digest = async bytes => [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(v => v.toString(16).padStart(2, '0')).join('');
-async function asset(info) {
+async function asset(info, signal) {
   const url = new URL(info.path, import.meta.url), request = new Request(url, { credentials: 'omit' });
   let cache; try { cache = await caches.open(CACHE); } catch {}
   let response = await cache?.match(request), bytes;
@@ -13,7 +13,7 @@ async function asset(info) {
     if (bytes.byteLength !== info.bytes || await digest(bytes) !== info.sha256) { await cache.delete(request); response = null; }
   }
   if (!response) {
-    response = await fetch(request, { cache: 'force-cache', signal: AbortSignal.timeout(30000) });
+    response = await fetch(request, { cache: 'force-cache', signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000) });
     if (!response.ok || Number(response.headers.get('Content-Length') || 0) > info.bytes) throw new Error('document_asset_unavailable');
     const reader = response.body.getReader(), parts = []; let count = 0;
     for (;;) { const part = await reader.read(); if (part.done) break; count += part.value.byteLength; if (count > info.bytes) { await reader.cancel(); throw new Error('document_asset_size'); } parts.push(part.value); }
@@ -23,21 +23,27 @@ async function asset(info) {
   }
   return new Uint8Array(bytes);
 }
-async function initialize() {
+async function initialize(retry = false) {
   if (session) return;
-  if (modelFailure) throw new Error(modelFailure);
   if (initializing) return initializing;
+  if (modelFailure && !retry && Date.now() < modelRetryAt) throw new Error(modelFailure);
   initializing = (async () => {
     self.postMessage({ type: 'progress', stage: 'download' });
-    const [model, wasm] = await Promise.all([asset(DOCUMENT_ASSETS.model), asset(DOCUMENT_ASSETS.wasm)]);
+    const assetsAbort = new AbortController(); let model, wasm;
+    try { [model, wasm] = await Promise.all([asset(DOCUMENT_ASSETS.model, assetsAbort.signal), asset(DOCUMENT_ASSETS.wasm, assetsAbort.signal)]); }
+    finally { assetsAbort.abort(); }
     ort = await import(new URL(DOCUMENT_ASSETS.runtime, import.meta.url).href);
     ort.env.wasm.numThreads = 1; ort.env.wasm.proxy = false;
     ort.env.wasm.wasmPaths = { mjs: new URL(DOCUMENT_ASSETS.runtimeModule, import.meta.url).href };
     ort.env.wasm.wasmBinary = wasm;
     self.postMessage({ type: 'progress', stage: 'compile' });
     session = await ort.InferenceSession.create(model, { executionProviders: ['wasm'], graphOptimizationLevel: 'all' });
-    modelFailure = null;
-  })().catch(error => { modelFailure = 'document_model_unavailable'; throw error; }).finally(() => { initializing = null; });
+    modelFailure = null; modelFailures = 0; modelRetryAt = 0;
+  })().catch(error => {
+    modelFailure = 'document_model_unavailable';
+    modelRetryAt = Date.now() + Math.min(60000, 5000 * 2 ** Math.min(4, modelFailures++));
+    throw error;
+  }).finally(() => { initializing = null; });
   return initializing;
 }
 const tiny = new OffscreenCanvas(256, 256), tinyContext = tiny.getContext('2d', { willReadFrequently: true });
@@ -50,7 +56,7 @@ async function detect(message) {
   if (printed?.score >= .85) return { ...printed, paperStatus: 'document', engine: 'printed-markers', scanEligible: true,
     autoCaptureEligible: true, clipped: false };
   let modelReady = true;
-  try { await initialize(); } catch { modelReady = false; }
+  try { await initialize(message.retry === true); } catch { modelReady = false; }
   if (modelReady) {
     tinyContext.drawImage(canvas, 0, 0, 256, 256);
     const data = tinyContext.getImageData(0, 0, 256, 256).data, tensor = new Float32Array(3 * 256 * 256);
@@ -99,7 +105,7 @@ self.onmessage = event => {
   chain = chain.then(async () => {
     if (!inbox.has(message.id)) return;
     try {
-      if (message.type === 'warm') { await initialize(); self.postMessage({ type: 'ready', id: message.id }); }
+      if (message.type === 'warm') { await initialize(message.retry === true); self.postMessage({ type: 'ready', id: message.id }); }
       else if (message.type === 'detect') self.postMessage({ type: 'result', id: message.id, result: await detect(message) });
       else if (message.type === 'render') self.postMessage({ type: 'result', id: message.id, result: await render(message) });
     } catch { try { message.bitmap?.close(); } catch {} self.postMessage({ type: 'error', id: message.id, code: 'document_model_unavailable' }); }

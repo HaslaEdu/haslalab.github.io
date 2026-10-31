@@ -205,7 +205,7 @@ test('desktop queued photos retain unconfirmed originals through mode changes un
   const original=new Blob(['original card pixels'],{type:'image/png'}),corrected=new Blob(['confirmed A4 pixels'],{type:'image/png'});
   const item={name:'answer.png',url:'blob:initial',task:'Q5',mode:'clean',source:original,blob:original,scan:{blob:original,baseUrl:'data:original',corners,method:'page',autoScore:.98,cornersReliable:false,paperStatus:'aspect_mismatch',a4WarpApplied:false,quality:{ok:true}}};
   const scanner={MARKER_INSET:{left:.045},async reprocess(...args){calls.push(args);return{blob:corrected};},async encodeUpload(blob,options){encoded.push({blob,options});return blob;}};
-  const context=vm.createContext({scannerLibrary:async()=>scanner,MAX_IMAGE:1850000,queue:[item],busy:'',tr:(_ko,en)=>en,taskOptions:()=>'',escape:value=>String(value),
+  const context=vm.createContext({scannerLibrary:async()=>scanner,MAX_IMAGE:1850000,queue:[item],busy:'',alive:true,client:{fingerprint:()=> 'owner'},tr:(_ko,en)=>en,taskOptions:()=>'',escape:value=>String(value),
     URL:{revokeObjectURL:url=>revoked.push(url),createObjectURL:()=>`blob:rebuilt-${++urls}`}});
   vm.runInContext(code+'\nglobalThis.queueController={rebuildQueue,queueHTML};',context);const ui=context.queueController;
   assert.match(ui.queueHTML(),/original image is retained/);
@@ -265,4 +265,38 @@ test('a stale KMO payment completion cannot start OCR after account switching or
       assert.equal(JSON.parse(calls.find(call=>call.url.endsWith('/pay')).options.body).provider,'deepseek');
     } finally {controller?.dispose();for(const[key,value]of Object.entries(prior)){if(value===undefined)delete global[key];else global[key]=value;}}
   }
+});
+
+test('KMO corner editing retains the chosen format and cancels private images on account changes or disposal',async()=>{
+  const fs=require('node:fs'),vm=require('node:vm'),source=fs.readFileSync(require.resolve('../sim/contest-review.js'),'utf8');
+  const closeStart=source.indexOf('    function clearQueuedImages('),closeEnd=source.indexOf('    async function rebuildQueue(',closeStart);
+  const bindStart=source.indexOf('    function bindScanQueue('),bindEnd=source.indexOf('    async function prepareFiles(',bindStart);
+  const accountStart=source.indexOf('    function accountChanged('),accountEnd=source.indexOf("\n    if(typeof window",accountStart);
+  for(const leave of ['complete','account','dispose']){
+    let auth='owner-a',finish,received,rebuilt=0;const revoked=[],button={dataset:{crQedit:'0'}},item={url:'blob:private',scan:{baseUrl:'data:private',corners:[],method:'page',outputFormat:'a4'}};
+    const scanner={editCorners:async(_url,_points,options)=>{received=options;return new Promise(resolve=>finish=resolve);}};
+    const context=vm.createContext({queue:[item],queueDialogs:new Set(),cornerAbort:null,alive:true,identity:'owner-a',client:{fingerprint:()=>auth},revisionEpoch:0,
+      dirty:new Map(),thumbs:new Map(),render(){},getToken:()=>'',init(){},host:{querySelectorAll:selector=>selector==='[data-cr-qedit]'?[button]:[]},ko:true,
+      tr:(_ko,en)=>en,act:async(_label,fn)=>fn(),scannerLibrary:async()=>scanner,rebuildQueue:async()=>{rebuilt++;},AbortController,
+      URL:{revokeObjectURL:url=>revoked.push(url)}});
+    vm.runInContext(source.slice(closeStart,closeEnd)+source.slice(bindStart,bindEnd)+source.slice(accountStart,accountEnd),context);
+    context.bindScanQueue();const pending=button.onclick();await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(received.pageFormat,'a4');assert.equal(received.signal.aborted,false);
+    if(leave==='account'){auth='owner-b';context.accountChanged();}
+    if(leave==='dispose'){context.alive=false;context.clearQueuedImages();}
+    if(leave!=='complete'){assert.equal(received.signal.aborted,true);assert.equal(context.queue.length,0);assert.deepEqual(revoked,['blob:private']);}
+    finish({corners:[],marker:false,pageFormat:'a4'});await pending;
+    assert.equal(rebuilt,leave==='complete'?1:0,'a late editor result cannot restore old private work');
+  }
+  assert.match(source,/dispose\(\)\{[^]*?clearQueuedImages\(\)/);
+});
+
+test('a KMO photo preparation finishing after account switching cannot refill the cleared upload queue',async()=>{
+  const fs=require('node:fs'),vm=require('node:vm'),source=fs.readFileSync(require.resolve('../sim/contest-review.js'),'utf8');
+  const start=source.indexOf('    async function prepareFiles('),end=source.indexOf('    function ocrLabel(',start);let auth='owner-a',finish,urls=0;
+  const context=vm.createContext({client:{fingerprint:()=>auth},MAX_PAGES:40,session:{pages:[]},queue:[],alive:true,tasks:['Q1'],
+    filePages:()=>new Promise(resolve=>finish=resolve),URL:{createObjectURL:()=>{urls++;return'blob:old';}}});
+  vm.runInContext(source.slice(start,end),context);const pending=context.prepareFiles([new Blob(['private'])]);
+  auth='owner-b';finish([{blob:new Blob(['private']),source:new Blob(['private'])}]);await pending;
+  assert.equal(context.queue.length,0);assert.equal(urls,0);
 });

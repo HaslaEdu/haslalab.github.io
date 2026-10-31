@@ -835,6 +835,19 @@ export function enhancePixels(data, W, H, mode = 'clean') {
 
   const out = new Uint8ClampedArray(W * H * 4);
 
+  // Document colour mode corrects uneven illumination without the clean mode's
+  // hard paper/ink threshold. Faint grid lines and coloured directional marks
+  // remain distinct; all channels use the same local lighting correction.
+  if (mode === 'color') {
+    const st = localStats(gray, W, H, r, ds, false);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const o = (y * W + x) * 4, gain = 255 / Math.max(70, st.mean(x, y));
+      for (let c = 0; c < 3; c++) out[o + c] = Math.max(0, Math.min(255, Math.round((data[o + c] * gain - 8) * 255 / 247)));
+      out[o + 3] = 255;
+    }
+    return out;
+  }
+
   if (mode === 'mono') {
     const st = localStats(gray, W, H, r, ds, true);
     const k = 0.18, R = 96; // R = 밝기 편차의 최대 기대치
@@ -1006,27 +1019,30 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=d4f342e770a6', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
-  if (options.preview) return { corners: null, score: 0, method: 'frame', engine: 'manual-fallback', scanEligible: false,
-    autoCaptureEligible: false, reason: 'document_model_unavailable' };
-  const proposed = detectQuad(canvas);
+  // A failed browser worker must not hide every outline only in live mode.
+  // Keep classical preview work bounded and retain its corners strictly as an
+  // editable proposal, just like the still-photo fallback.
+  const working = options.preview ? toCanvas(canvas, 384) : canvas;
+  const proposed = detectQuad(working);
+  if (working !== canvas && proposed.corners) proposed.corners = proposed.corners.map(p => ({ x: p.x * canvas.width / working.width, y: p.y * canvas.height / working.height }));
   return { ...proposed, engine: 'manual-fallback', scanEligible: false, autoCaptureEligible: false,
     reason: 'document_model_unavailable' };
 }
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=d4f342e770a6', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=d4f342e770a6', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=7a972b90a395', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1140,8 +1156,10 @@ export async function rotatePhoto(file) {
 }
 
 /** Optional desktop/weekly corner editor. The caller still decides when to upload. */
-export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko', pageFormat = 'auto' } = {}) {
+export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko', pageFormat = 'auto', signal } = {}) {
+  if (signal?.aborted) return null;
   const image = await loadImage(baseUrl), W = image.naturalWidth || image.width, H = image.naturalHeight || image.height;
+  if (signal?.aborted) return null;
   const ko = lang !== 'en', txt = (a, b) => ko ? a : b;
   const points = (corners || [{ x: 0, y: 0 }, { x: W, y: 0 }, { x: 0, y: H }, { x: W, y: H }]).map(p => ({ ...p }));
   const dialog = document.createElement('dialog');
@@ -1177,9 +1195,12 @@ export async function editCorners(baseUrl, corners, { marker = false, lang = 'ko
   dialog.append(title, select, format, hint, wrap, controls); document.body.append(dialog);
   return new Promise(resolve => {
     let done = false;
-    const finish = result => { if (done) return; done = true; dialog.close(); dialog.remove(); resolve(result); };
+    const abort = () => finish(null);
+    const finish = result => { if (done) return; done = true; signal?.removeEventListener('abort', abort); dialog.close(); dialog.remove(); resolve(result); };
     cancel.onclick = () => finish(null); dialog.oncancel = e => { e.preventDefault(); finish(null); }; dialog.onclose = () => finish(null);
     apply.onclick = () => { const ordered = orderCorners(points); if (quadScore(ordered, W, H) < 0.1) { hint.textContent = txt('네 점을 서로 다른 네 귀퉁이에 맞춰 주세요.', 'Place the four points at four different corners.'); return; } finish({ corners: ordered, marker: select.value === 'marker', pageFormat: format.value }); };
+    signal?.addEventListener('abort', abort, { once: true });
+    if (signal?.aborted) return finish(null);
     dialog.showModal(); handles[0].focus();
   });
 }
@@ -1190,6 +1211,19 @@ const blobPreview = blob => new Promise((resolve, reject) => {
   const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error('bad_image')); reader.readAsDataURL(blob);
 });
 
+/** Only a detector result from these exact captured video pixels may bypass a
+ * second detector pass. Native-camera photos can have another field of view and
+ * must be detected independently. Normalised coordinates survive working-size
+ * downscaling without leaking preview coordinates into full-size geometry. */
+export function validatedDetectionHint(hint, width, height) {
+  if (hint?.source !== 'same-video-frame' || hint.scanEligible !== true || !['ml', 'marker', 'page'].includes(hint.method) ||
+      !Number.isFinite(hint.score) || hint.score < .25 || !Array.isArray(hint.corners) || hint.corners.length !== 4 ||
+      hint.corners.some(p => !p || !Number.isFinite(p.x) || !Number.isFinite(p.y) || p.x <= 0 || p.y <= 0 || p.x >= 1 || p.y >= 1)) return null;
+  const corners = orderCorners(hint.corners.map(p => ({ x: p.x * width, y: p.y * height })));
+  if (quadScore(corners, width, height) < .1) return null;
+  return { corners, method: hint.method, score: Math.min(1, hint.score), scanEligible: true, paperStatus: 'document', engine: 'matched-video-frame' };
+}
+
 /**
  * 사진 한 장을 답안지로 다듬습니다.
  *
@@ -1198,7 +1232,7 @@ const blobPreview = blob => new Promise((resolve, reject) => {
  * @returns {{blob, previewUrl, corners, autoScore, method, quality, width, height, baseUrl, baseW, baseH}}
  */
 export async function processShot(file, opts = {}) {
-  const { corners = null, mode = 'original', dpi = DEFAULT_DPI, onProgress, pageFormat = 'auto' } = opts;
+  const { corners = null, mode = 'color', dpi = DEFAULT_DPI, onProgress, pageFormat = 'auto' } = opts;
   const say = (pct, label) => { try { onProgress?.(pct, label); } catch { /* 무시 */ } };
 
   say(5, '사진 읽는 중');
@@ -1210,10 +1244,12 @@ export async function processShot(file, opts = {}) {
   say(25, '모서리 찾는 중');
   let pts = corners ? orderCorners(corners) : null;
   let autoScore = 1, method = 'manual', cornersReliable = true, paperStatus = pageFormat === 'a4' ? 'manual_a4' : 'manual', scanEligible = !!pts;
+  let detectionReason = null;
   if (!pts) {
-    const d = await detectDocumentQuad(base, { signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
+    const d = validatedDetectionHint(opts.detectionHint, base.width, base.height) || await detectDocumentQuad(base, { retry: true, signal: opts.signal, onProgress: stage => say(30, stage === 'download' ? '기기 내 문서 모델 준비 중' : '문서 모서리 찾는 중') });
     pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.scanEligible === true;
     paperStatus = d.paperStatus || 'not_found'; scanEligible = d.scanEligible === true;
+    detectionReason = d.reason || null;
   }
   await breathe();
 
@@ -1246,6 +1282,7 @@ export async function processShot(file, opts = {}) {
     corners: pts,
     cornersReliable,
     paperStatus,
+    detectionReason,
     a4WarpApplied,
     warpApplied,
     outputFormat,
@@ -1262,7 +1299,7 @@ export async function processShot(file, opts = {}) {
 }
 
 /** 이미 잡아둔 원본에서 모서리·모드만 바꿔 다시 만듭니다 */
-export async function reprocess(baseDataUrl, corners, mode = 'original', dpi = DEFAULT_DPI, inset = null, options = {}) {
+export async function reprocess(baseDataUrl, corners, mode = 'color', dpi = DEFAULT_DPI, inset = null, options = {}) {
   const img = await loadImage(baseDataUrl);
   const base = toCanvas(img);
   const warpApplied = options.preserveOriginal !== true, outputFormat = options.pageFormat === 'a4' ? 'a4' : 'auto';

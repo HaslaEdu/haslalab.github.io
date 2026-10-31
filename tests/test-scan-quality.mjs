@@ -237,7 +237,7 @@ test('a newer phone photo survives late progress, correction errors and rotation
   const editingB = context.phone.redo([], 'mono'), takingC = context.phone.take(c);
   rebuilt[0].reject(new Error('older correction failed')); await editingB;
   assert.equal(context.phone.getShot().file, c); assert.equal(context.phone.getShot().busy, true);
-  assert.equal(context.phone.getMode(), 'original');
+  assert.equal(context.phone.getMode(), 'color');
   processed[2].resolve(result('current-c')); await takingC;
 
   const rotatingC = node('rotate').onclick(), takingD = context.phone.take(d);
@@ -262,7 +262,7 @@ test('photo preview warns on ambiguous high-score corners until the user confirm
   context.shot={...context.shot,autoScore:.6,cornersReliable:undefined};context.paintShot();assert.match(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'the old score-only response still retains its warning');
   context.shot={...context.shot,autoScore:.95};context.paintShot();assert.doesNotMatch(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'legacy responses without the new flag remain compatible');
   context.shot={...context.shot,a4WarpApplied:false,paperStatus:'aspect_mismatch'};context.paintShot();
-  assert.match(node('shot').innerHTML,/original was retained/,'an unconfirmed proposal is described as an unchanged original rather than a verified page');
+  assert.match(node('shot').innerHTML,/not been converted to a scan/,'an unconfirmed proposal explicitly requires corner confirmation rather than pretending it is already a scan');
 });
 
 async function liveCameraFixture({ auto = true, capturePhoto } = {}) {
@@ -271,7 +271,7 @@ async function liveCameraFixture({ auto = true, capturePhoto } = {}) {
   const block = script.slice(script.indexOf('const LIVE_OK ='), script.indexOf('/* the deadline, on the server'));
   const timers = new Map(), photos = [], detections = [], calls = { stopped: 0, nativePhotos: 0, overlay: 0 }; let timerId = 0;
   const corners = [{ x: 80, y: 60 }, { x: 450, y: 70 }, { x: 70, y: 650 }, { x: 460, y: 640 }];
-  const state = { detection: { corners, score: .9, method: 'page', edgeSupport: .95, clipped: false, autoCaptureEligible: true }, focus: 40 };
+  const state = { detection: { corners, score: .9, method: 'page', edgeSupport: .95, clipped: false, autoCaptureEligible: true }, focus: 40, now:0 };
   const pixels = new Uint8ClampedArray(540 * 720 * 4), photo = new Blob(['original camera photo'], { type: 'image/jpeg' });
   const drawing = { drawImage() {}, getImageData: () => ({ data: pixels }), clearRect() {}, beginPath() {}, moveTo() {}, lineTo() {}, closePath() {}, fill() { calls.overlay++; }, stroke() {} };
   const canvas = () => ({ width: 0, height: 0, getContext: () => drawing, getBoundingClientRect: () => ({ width: 360, height: 640 }), toBlob: done => done(photo) });
@@ -279,13 +279,14 @@ async function liveCameraFixture({ auto = true, capturePhoto } = {}) {
   const overlay = { innerHTML: '', querySelector: selector => selector === 'video' ? video : selector === 'canvas' ? overlayCanvas : message, remove() {} };
   const track = { stop() { calls.stopped++; } }, stream = { getTracks: () => [track], getVideoTracks: () => [track] };
   const ImageCapture = class { async takePhoto() { calls.nativePhotos++; return capturePhoto ? capturePhoto() : photo; } };
-  const labels = { lvAim: 'aim', lvPage: 'outline found', lvHold: 'hold still', lvTake: 'taking', blurry: 'blurred', lvNoCam: 'no camera', lvAspect: 'not A4', lvPerspective: 'hold parallel' };
+  const labels = { lvAim: 'aim', lvPage: 'outline found', lvCandidate: 'confirm candidate after capture', lvHold: 'hold still', lvTake: 'taking', blurry: 'blurred', lvNoCam: 'no camera', lvAspect: 'not A4', lvPerspective: 'hold parallel' };
   const context = vm.createContext({ navigator: { mediaDevices: { getUserMedia: async () => stream } }, canProcess: () => true,
     localStorage: { getItem: () => auto ? '1' : '0', setItem() {} }, document: { createElement: tag => tag === 'div' ? overlay : canvas(), body: { append() {} } },
-    window: { ImageCapture }, ImageCapture, AbortController, lang:'en', devicePixelRatio: 1, MONTHLY: false, SCAN_ACCENT: '#abc',
+    window: { ImageCapture }, ImageCapture, AbortController, performance:{now:()=>state.now}, lang:'en', devicePixelRatio: 1, MONTHLY: false, SCAN_ACCENT: '#abc',
     t: () => labels, toast() {}, toGray: () => new Uint8Array(1), inspectDocumentPixels: () => ({ focus: state.focus }),
     detectDocumentQuad: async canvas => { detections.push({ width:canvas.width, height:canvas.height }); return state.pending ? await state.pending : state.detection; },
-    take: async (blob, live) => photos.push({ blob, live }),
+    warmDocumentDetector: async () => true,
+    take: async (blob, live, _internal, options) => photos.push({ blob, live, options }),
     setTimeout: fn => { const id = ++timerId; timers.set(id, fn); return id; }, clearTimeout: id => timers.delete(id) });
   vm.runInContext(block + '\nglobalThis.openCamera = liveCamera;', context);
   await context.openCamera();
@@ -300,7 +301,7 @@ test('markerless live preview automatically captures only a sharp validated outl
   assert.ok(live.calls.overlay >= 7); assert.equal(live.message.textContent, 'hold still');
   await live.next(); assert.equal(live.photos.length, 1); assert.equal(live.photos[0].blob, live.photo); assert.equal(live.photos[0].live, true);
   assert.equal(live.calls.nativePhotos, 1); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
-  assert.ok(live.detections.every(size => size.width === 540 && size.height === 720), 'live detection stays bounded instead of processing full-resolution video');
+  assert.ok(live.detections.every(size => size.width === 768 && size.height === 1024), 'live detection uses a bounded sharper preview rather than losing weak paper edges at 720 pixels');
 });
 
 test('high-confidence learned perspective uses three stable observations without an A4 frontality gate', async () => {
@@ -322,13 +323,13 @@ test('uncertain or clipped paper outlines remain manual-shutter candidates rathe
   for (const method of ['page', 'marker', 'frame']) {
     const live = await liveCameraFixture(); live.state.detection = { ...live.state.detection, method, score: .99, edgeSupport: .2, clipped: true, autoCaptureEligible: false };
     await live.next(12); assert.equal(live.photos.length, 0, 'a high geometry score alone cannot allow ' + method + ' capture');
-    if (method !== 'frame') assert.equal(live.message.textContent, 'outline found');
+    if (method !== 'frame') assert.equal(live.message.textContent, 'confirm candidate after capture');
     await live.click('shoot'); assert.equal(live.photos.length, 1, 'the shutter remains usable for manual review and corner correction');
   }
 });
 
 test('unconfirmed model proposals stay manual independently of a projected A4 classification', async () => {
-  for (const [paperStatus, expected] of [['aspect_mismatch','outline found'],['perspective_uncertain','outline found']]) {
+  for (const [paperStatus, expected] of [['aspect_mismatch','confirm candidate after capture'],['perspective_uncertain','confirm candidate after capture']]) {
     const live=await liveCameraFixture();
     live.state.detection={...live.state.detection,paperStatus,autoCaptureEligible:false};
     await live.next(12);assert.equal(live.photos.length,0);assert.equal(live.message.textContent,expected);
@@ -358,4 +359,36 @@ test('closing a camera while a native photo is pending stops tracks and ignores 
   let resolve; const pending = new Promise(done => resolve = done), live = await liveCameraFixture({ auto: false, capturePhoto: () => pending });
   await live.click('shoot'); assert.equal(live.calls.nativePhotos, 1); await live.click('close'); assert.equal(live.calls.stopped, 1);
   resolve(live.photo); await new Promise(done => setImmediate(done)); assert.equal(live.photos.length, 0); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
+});
+
+test('a manual shutter retains any fresh accepted video frame without requiring the automatic hold',async()=>{
+  const live=await liveCameraFixture({auto:false});
+  live.state.detection={...live.state.detection,method:'ml',scanEligible:true,autoCaptureEligible:false};
+  await live.next();await live.click('shoot');
+  const options=live.photos[0].options;
+  assert.equal(options.detectionHint,undefined,'native still photo always earns its own detection first');
+  assert.equal(options.fallback.detectionHint.source,'same-video-frame');
+  assert.equal(options.fallback.detectionHint.scanEligible,true);
+  assert.ok(options.fallback.detectionHint.corners.every(p=>p.x>=0&&p.x<=1&&p.y>=0&&p.y<=1));
+});
+
+test('expired or delayed live detections never transfer stale corners to a new still photo',async()=>{
+  const live=await liveCameraFixture({auto:false});let resolve;
+  live.state.detection={...live.state.detection,method:'ml',scanEligible:true,autoCaptureEligible:false};
+  live.state.pending=new Promise(done=>resolve=done);
+  const next=live.next();await new Promise(done=>setImmediate(done));
+  live.state.now=2000;resolve(live.state.detection);await next;
+  await live.click('shoot');
+  assert.equal(live.photos.length,1);assert.deepEqual(Object.keys(live.photos[0].options),[],'manual capture remains available but a 2-second-old sampled frame is not reused');
+});
+
+test('native camera failure may reuse the matching video frame but a CV proposal cannot supply a hint',async()=>{
+  const live=await liveCameraFixture({auto:false,capturePhoto:async()=>{throw Error('native camera fixture');}});
+  live.state.detection={...live.state.detection,method:'ml',scanEligible:true,autoCaptureEligible:false};
+  await live.next();await live.click('shoot');
+  assert.equal(live.photos[0].options.detectionHint.source,'same-video-frame');
+  assert.equal(live.photos[0].options.fallback,undefined);
+  const proposal=await liveCameraFixture({auto:false});proposal.state.detection={...proposal.state.detection,scanEligible:false,autoCaptureEligible:false};
+  await proposal.next();await proposal.click('shoot');
+  assert.deepEqual(Object.keys(proposal.photos[0].options),[],'a visible but unconfirmed rectangle never silently becomes an accepted scan');
 });

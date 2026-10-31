@@ -59,6 +59,28 @@ test('native-pixel edge refinement corrects a shifted learned proposal without r
   refined.corners.forEach((point, i) => assert.ok(Math.hypot(point.x - truth[i].x, point.y - truth[i].y) < 3));
 });
 
+test('a retained video hint maps only validated same-frame corners into the working image', () => {
+  const hint={source:'same-video-frame',scanEligible:true,method:'ml',score:.9,corners:[{x:.15,y:.1},{x:.8,y:.15},{x:.1,y:.9},{x:.85,y:.85}]};
+  const detected=scanner.validatedDetectionHint(hint,1800,2400);
+  assert.equal(detected.scanEligible,true);assert.equal(detected.method,'ml');
+  assert.deepEqual(detected.corners,hint.corners.map(p=>({x:p.x*1800,y:p.y*2400})));
+  for(const invalid of [{...hint,source:'native-camera-photo'},{...hint,scanEligible:false},{...hint,score:.1},{...hint,corners:hint.corners.map(()=>({x:.5,y:.5}))},
+    {...hint,corners:[...hint.corners.slice(0,3),{x:2,y:1}]}])assert.equal(scanner.validatedDetectionHint(invalid,1800,2400),null);
+});
+
+test('colour document correction whitens uneven paper while preserving faint grids and red/blue marks', () => {
+  const width=160,height=100,data=new Uint8ClampedArray(width*height*4);
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){const o=(y*width+x)*4,bg=140+Math.round(x/width*85);data[o]=data[o+1]=data[o+2]=bg;data[o+3]=255;}
+  const dot=(x,y,rgb)=>{const o=(y*width+x)*4;data.set([...rgb,255],o);return o;};
+  const red=dot(40,50,[160,30,40]),blue=dot(120,50,[25,60,170]),faint=dot(80,50,[160,160,160]);
+  const result=scanner.enhancePixels(data,width,height,'color');
+  assert.ok(result[red]>result[red+1]*3&&result[red]>result[red+2]*2);
+  assert.ok(result[blue+2]>result[blue]*3&&result[blue+2]>result[blue+1]*2);
+  assert.ok(result[faint]<245,'faint grey marks stay distinguishable from white paper');
+  assert.ok(result[(20*width+20)*4]>240&&result[(20*width+140)*4]>240,'both shadowed and bright paper approach white');
+  assert.equal(scanner.enhancePixels(data,width,height,'original'),data,'original comparison is byte preserving');
+});
+
 function fixture(timeoutMs = 1000) {
   const calls = [], workers = [];
   const detector = createDocumentDetector({ timeoutMs, workerFactory(url) {
@@ -107,4 +129,13 @@ test('queued frames are bounded and a stuck worker is terminated instead of accu
     assert.ok((await settled).every(row => row.status === 'rejected'));
     assert.equal(f.workers[0].terminated, true);
   } finally { f.detector.dispose(); globalThis.createImageBitmap = old; }
+});
+
+test('failed worker creation does not retry on every preview frame but a new explicit photo can recover',async()=>{
+  const old=globalThis.createImageBitmap;globalThis.createImageBitmap=async()=>({close(){}});const f=fixture();
+  try{
+    const first=f.detector.detect({});await tick();f.workers[0].onerror();await assert.rejects(first,/document_worker_unavailable/);
+    await assert.rejects(f.detector.detect({}),/document_worker_unavailable/);assert.equal(f.workers.length,1);
+    const photo=f.detector.detect({},{retry:true});await tick();assert.equal(f.workers.length,2);f.reply(1,{recovered:true});assert.deepEqual(await photo,{recovered:true});
+  }finally{f.detector.dispose();globalThis.createImageBitmap=old;}
 });

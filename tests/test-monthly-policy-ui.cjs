@@ -255,11 +255,37 @@ test('a late scanner grant is hidden and revoked with original credentials after
 function scannerForm() {
   const capture=new Blob(['capture'],{type:'image/jpeg'}),clean=new Blob(['clean'],{type:'image/png'});
   const file={files:[capture],value:'',click(){}},info={hidden:true},destination={value:'',maxLength:16000,dataset:{sheetWorking:'a'},focus(){}},buttons={};
-  for(const key of ['original','clean','new','cancel','read'])buttons[key]={dataset:{photo:key}};
-  const box={hidden:true,innerHTML:'',querySelector:selector=>({'[data-new-photo]':buttons.new,'[data-cancel-photo]':buttons.cancel,'[data-read-photo]':buttons.read}[selector]),querySelectorAll:()=>[buttons.original,buttons.clean]};
+  for(const key of ['original','clean','new','cancel','read','fix'])buttons[key]={dataset:{photo:key}};
+  const box={hidden:true,innerHTML:'',querySelector:selector=>({'[data-new-photo]':buttons.new,'[data-cancel-photo]':buttons.cancel,'[data-read-photo]':buttons.read,'[data-fix-photo]':buttons.fix}[selector]),querySelectorAll:()=>[buttons.original,buttons.clean]};
   const form={math:{checked:true},querySelector:selector=>({'input[type=file]':file,'.arinfo':info,'.arshot':box,'textarea':destination}[selector])};
-  return {form,file,info,destination,buttons,capture,clean};
+  return {form,file,info,destination,buttons,capture,clean,box};
 }
+
+test('an uncorrected camera photo is not called a scan; corner confirmation makes and uploads a corrected color image',async()=>{
+  const {context}=app(),fixture=scannerForm(),corners=[{x:20,y:10},{x:80,y:10},{x:20,y:110},{x:80,y:110}];let rendered=0,uploaded;
+  context.testScanner={canProcess:()=>true,MARKER_INSET:.02,processShot:async(_file,options)=>{
+    assert.equal(options.mode,'color');return{blob:fixture.capture,baseUrl:'data:original',corners,warpApplied:false,outputFormat:'auto'};
+  },editCorners:async()=>({corners,marker:false,pageFormat:'auto'}),reprocess:async(base,points,mode,_dpi,inset,options)=>{
+    rendered++;assert.equal(base,'data:original');assert.deepEqual(clone(points),corners);assert.equal(mode,'color');assert.equal(inset,null);assert.equal(options.preserveOriginal,false);
+    return{blob:fixture.clean,warpApplied:true,outputFormat:'auto'};
+  },encodeUpload:async blob=>blob};vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.fetch=async(_url,options)=>{uploaded=await options.body.get('image').text();return{ok:true,json:async()=>({text:'recognized working'})};};
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),text=>fixture.destination.value=text);
+  await fixture.file.onchange();assert.doesNotMatch(fixture.box.innerHTML,/data-photo="clean"/);assert.match(fixture.box.innerHTML,/스캔 만들기/);
+  await fixture.buttons.fix.onclick();assert.equal(rendered,1);assert.match(fixture.box.innerHTML,/data-photo="clean"/);
+  await fixture.buttons.read.onclick();assert.equal(uploaded,'clean');
+});
+
+test('cancelling a camera photo aborts its corner editor and prevents a late crop from reappearing',async()=>{
+  const {context}=app(),fixture=scannerForm();let finish,signal,crops=0;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.capture,baseUrl:'data:original',corners:[],warpApplied:false}),
+    editCorners:async(_base,_corners,options)=>{signal=options.signal;return new Promise(resolve=>finish=resolve);},reprocess:async()=>{crops++;}};
+  vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),()=>{});
+  await fixture.file.onchange();const pending=fixture.buttons.fix.onclick();await new Promise(resolve=>setImmediate(resolve));
+  fixture.buttons.cancel.onclick();assert.equal(signal.aborted,true);finish({corners:[],marker:false});await pending;
+  assert.equal(crops,0);assert.equal(fixture.box.innerHTML,'');
+});
 
 test('monthly OCR sends the selected scan and a separately preserved capture with bearer authorization',async()=>{
   const {context}=app(),fixture=scannerForm(),encoded=[];let request,result;
@@ -275,6 +301,17 @@ test('monthly OCR sends the selected scan and a separately preserved capture wit
   assert.equal(await request.options.body.get('original_image').text(),'capture');
   assert.equal(request.options.body.get('part_id'),'a');assert.equal(encoded.length,2);
   assert.equal(result.response.photo_id,'photo-1');assert.equal(result.destination,fixture.destination);
+});
+
+test('another-tab account change aborts the open photo corner editor and removes its private preview',async()=>{
+  const {context,setAuth,emit}=app(),fixture=scannerForm();let finish,signal,crops=0;
+  context.testScanner={canProcess:()=>true,processShot:async()=>({blob:fixture.capture,baseUrl:'data:original',corners:[],warpApplied:false}),
+    editCorners:async(_base,_corners,options)=>{signal=options.signal;return new Promise(resolve=>finish=resolve);},reprocess:async()=>{crops++;}};
+  vm.runInContext('arScanner=Promise.resolve(testScanner)',context);
+  context.arBindAnswerPhoto(fixture.form,()=>true,vm.runInContext('arT()',context),()=>{});
+  await fixture.file.onchange();const pending=fixture.buttons.fix.onclick();await new Promise(resolve=>setImmediate(resolve));
+  setAuth('other-account');emit('storage');assert.equal(signal.aborted,true);finish({corners:[],marker:false});await pending;
+  assert.equal(crops,0);assert.equal(fixture.box.innerHTML,'');assert.equal(fixture.box.hidden,true);
 });
 
 test('photo reading does not attach a response to a different signed-in account',async()=>{

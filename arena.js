@@ -390,7 +390,7 @@ function arVisionProvider(root, fallback = "gemini") {
   const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
 }
 function arVisionAvailable(source, provider) { return arVisionCapabilities(source).some(row=>row.id===provider&&row.available); }
-const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=d4f342e770a6").catch(error => { arScanner = null; throw error; }));
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=7a972b90a395").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
@@ -401,7 +401,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
   const imageUrl = blob => { const url = URL.createObjectURL(blob); urls.add(url); return url; };
   const note = (text, bad = false) => { info.hidden = false; info.textContent = text; info.className = "arinfo" + (bad ? " bad" : ""); };
   const clear = () => {
-    generation++; controller?.abort(); controller = null; photo = null;
+    generation++; controller?.abort(); controller = null; photo?.abort?.abort(); photo = null;
     for (const url of urls) URL.revokeObjectURL(url);
     urls.clear(); box.innerHTML = ""; box.hidden = true;
     options.onBusy?.(false);
@@ -410,10 +410,13 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     if (disposed) return;
     clear(); disposed = true;
     window.removeEventListener("hashchange", dispose); window.removeEventListener("pagehide", dispose);
+    window.removeEventListener("storage", identityChanged);window.removeEventListener("focus", identityChanged);
     if (ar.photoCleanup === dispose) ar.photoCleanup = null;
   };
+  const identityChanged=()=>{if(!alive()||cmBase()!==authBase||cmTok()!==authToken)dispose();};
   ar.photoCleanup = dispose;
   window.addEventListener("hashchange", dispose); window.addEventListener("pagehide", dispose);
+  window.addEventListener("storage", identityChanged);window.addEventListener("focus", identityChanged);
   const paint = () => {
     if (!photo || disposed || !alive()) return;
     const selected = photo.clean && photo.selected === "clean" ? "clean" : "original", busy = photo.preparing || photo.reading;
@@ -431,6 +434,7 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
       <p class="arnote" aria-live="polite">${esc(photo.preparing ? T.scanPreparing : photo.reading ? T.reading : T.scanCheck)}</p>
       ${warnings.map(text => `<p class="arinfo bad">${esc(text)}</p>`).join("")}
       <div class="arq" style="gap:8px;flex-wrap:wrap;margin:8px 0 14px">
+        ${photo.result?.baseUrl ? `<button type="button" class="cmbtn sm" data-fix-photo ${busy ? "disabled" : ""}>${lang==="en"?"Confirm corners and create scan":"모서리 확인·스캔 만들기"}</button>` : ""}
         <button type="button" class="cmbtn sm pri" data-read-photo ${busy || photo.done ? "disabled" : ""}>${T.scanRead}</button>
         <button type="button" class="cmbtn sm" data-new-photo>${T.scanRetake}</button>
         <button type="button" class="cmbtn sm" data-cancel-photo>${T.scanCancel}</button></div>`;
@@ -438,7 +442,23 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     box.querySelector("[data-new-photo]").onclick = () => fi.click();
     box.querySelector("[data-cancel-photo]").onclick = () => { clear(); info.hidden = true; };
     box.querySelector("[data-read-photo]").onclick = read;
+    const fix=box.querySelector("[data-fix-photo]");if(fix)fix.onclick=fixPhoto;
   };
+  async function fixPhoto() {
+    if(!photo?.result?.baseUrl||photo.preparing||photo.reading)return;
+    const token=generation,keep=photo;keep.preparing=true;paint();
+    try {
+      const scanner=await arLoadScanner();if(!current(token))return;
+      const edit=await scanner.editCorners(keep.result.baseUrl,keep.result.corners,{marker:keep.result.method==="marker",lang,pageFormat:keep.result.outputFormat||"auto",signal:keep.abort.signal});
+      if(!current(token)||!edit)return;
+      const result=await scanner.reprocess(keep.result.baseUrl,edit.corners,"color",undefined,edit.marker?scanner.MARKER_INSET:null,{preserveOriginal:false,pageFormat:edit.pageFormat||"auto",signal:keep.abort.signal});
+      if(!current(token))return;
+      if(keep.cleanUrl){URL.revokeObjectURL(keep.cleanUrl);urls.delete(keep.cleanUrl);}
+      keep.result={...keep.result,...result,corners:edit.corners,cornersReliable:true,method:edit.marker?"marker":"manual",autoScore:1};
+      keep.clean=result.blob;keep.cleanUrl=imageUrl(result.blob);keep.selected="clean";keep.warning=null;keep.done=false;
+    } catch(error) { if(current(token))note(T.scanFailed,true); }
+    finally{if(current(token)){keep.preparing=false;paint();}}
+  }
   async function read() {
     if (!photo || photo.preparing || photo.reading || photo.done || options.blocked?.()) return;
     const token = generation, selected = photo.clean && photo.selected === "clean" ? photo.clean : photo.file, destination = options.target?.(), provider=options.provider?.()||arVisionProvider(f);
@@ -494,13 +514,15 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     clear(); info.hidden = true;
     if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { note(T.err.bad_image, true); return; }
     const token = generation;
-    photo = { file, originalUrl: imageUrl(file), selected: "original", preparing: true }; paint();
+    photo = { file, originalUrl: imageUrl(file), selected: "original", preparing: true,abort:new AbortController() }; paint();
     try {
       const scanner = await arLoadScanner(); if (!current(token)) return;
       if (!scanner.canProcess()) { photo.warning = T.scanUnavailable; return; }
-      const result = await scanner.processShot(file, { mode: "original" });
+      const result = await scanner.processShot(file, { mode: "color",signal:photo.abort.signal });
       if (!current(token)) return;
-      photo.result = result; photo.clean = result.blob; photo.cleanUrl = imageUrl(result.blob); photo.selected = "clean";
+      photo.result = result;
+      if((result.warpApplied??result.a4WarpApplied)!==false){photo.clean=result.blob;photo.cleanUrl=imageUrl(result.blob);photo.selected="clean";}
+      else photo.warning=lang==="en"?"The edges need confirmation. Use Confirm corners and create scan to convert the photo.":"모서리를 확인해야 합니다. ‘모서리 확인·스캔 만들기’를 누르면 사진을 스캔 이미지로 변환합니다.";
     } catch (error) {
       if (current(token)) photo.warning = T.scanFailed;
     } finally {
