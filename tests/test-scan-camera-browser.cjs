@@ -50,6 +50,12 @@ test('actual live camera keeps accepted video geometry separate from native stil
    window.ImageCapture=class{async takePhoto(){
     if(window.__nativeMode==='original')return window.__camera.file;
     if(window.__nativeMode==='throw')throw Error('Camera hardware fixture');
+    if(window.__nativeMode==='weak'){
+     // a native still in which a page-like quad is found but not verified (Samsung's different crop and exposure)
+     const canvas=document.createElement('canvas');canvas.width=1600;canvas.height=1200;const g=canvas.getContext('2d');
+     g.fillStyle='#8a8580';g.fillRect(0,0,1600,1200);g.filter='blur(14px)';g.fillStyle='#a19c96';g.fillRect(420,160,760,980);g.filter='none';
+     return new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.95));
+    }
     // A native still can change field of view/exposure. In this fixture it no
     // longer contains a document; live coordinates MUST NOT be applied to it.
     const canvas=document.createElement('canvas');canvas.width=1600;canvas.height=900;
@@ -92,6 +98,13 @@ test('actual live camera keeps accepted video geometry separate from native stil
   assert.equal(native.warp,true);assert.equal(native.fallback,false,'a valid native high-resolution photo remains preferred');
   assert.equal(native.calls.length,1);assert.equal(native.calls[0].hint,null,'live coordinates never leak into native photo detection');
   assert.equal(native.captureMatchesFile,true);
+  await page.evaluate(()=>{window.__nativeMode='weak';window.__scanCalls=[];});
+  await page.locator('#again').click();
+  await page.waitForFunction(()=>document.querySelector('.lv .msg')?.textContent==='Hold still…',{timeout:45000});
+  await page.waitForTimeout(1800);
+  const weak=await shoot();
+  assert.equal(weak.fallback,true,'an uncertain quad in the native still gives way to the live frame whose page was verified');
+  assert.equal(weak.warp,true);assert.deepEqual([weak.baseW,weak.baseH],[900,1200]);assert.equal(weak.calls.length,2);
   await page.evaluate(()=>{window.__scanCalls=[];});
   await page.locator('#cam').setInputFiles({name:'phone-camera.jpg',mimeType:'image/jpeg',buffer:fs.readFileSync(path.join(root,'tests/fixtures/scanner-graph-photo.jpg'))});
   await page.waitForFunction(()=>window.__scan.getShot()?.file.name==='phone-camera.jpg'&&!window.__scan.getShot().busy,{timeout:45000});
