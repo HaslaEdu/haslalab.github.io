@@ -1,0 +1,2091 @@
+{
+  "passed": true,
+  "output_sha256": "600214b12a334152882e89a4b33417de2b166893427594fa7cfcc3972e2d33ff",
+  "pages": [
+    {
+      "year": 2013,
+      "language": "ko",
+      "page": 1,
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page01.pdf",
+      "output_sha256": "3138aaa2d02ea5fb58f141b9db4ade62b2e18ee92081882e175966c4cde0ccbc",
+      "immutable_input": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+      "immutable_input_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "old_text_outline_uses": 1092,
+      "new_text_outline_uses": 1089,
+      "outside_bbox": null,
+      "original_physical_native_ink": {
+        "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page01.pdf",
+        "final_page": 1,
+        "source_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+        "output_sha256": "3138aaa2d02ea5fb58f141b9db4ade62b2e18ee92081882e175966c4cde0ccbc",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 126,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 126,
+          "expected_signature_count": 126,
+          "matched_outline_uses": 134,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 11577,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "native_graphics_motion_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              285.7599999856949,
+              135.8499780130386,
+              288.3000000143051,
+              137.78997804164885
+            ],
+            "operator_indices": [
+              466,
+              467,
+              468
+            ],
+            "dx": -18.823902244567876
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              287.0799999856949,
+              135.8499780130386,
+              291.5600000143051,
+              143.78997804164885
+            ],
+            "operator_indices": [
+              469,
+              470,
+              471
+            ],
+            "dx": -18.823902244567876
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              290.3399999856949,
+              130.56997801303862,
+              293.6000000143051,
+              143.78997804164885
+            ],
+            "operator_indices": [
+              472,
+              473,
+              474
+            ],
+            "dx": -18.823902244567876
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              292.3799999856949,
+              130.56997801303862,
+              309.3200000143051,
+              131.78997804164885
+            ],
+            "operator_indices": [
+              475,
+              476,
+              477
+            ],
+            "dx": -18.823902244567876
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              137.2899999856949,
+              168.9699780130386,
+              149.07000001430512,
+              170.18997804164883
+            ],
+            "operator_indices": [
+              580,
+              581,
+              582
+            ],
+            "dx": -25.81999769210816
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              190.23999998569488,
+              207.7299780130386,
+              196.6200000143051,
+              208.94997804164882
+            ],
+            "operator_indices": [
+              710,
+              711,
+              712
+            ],
+            "dx": -9.889995574951172
+          }
+        ],
+        "changed_actual_inline_math_graphical_pixels": 1669,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 834,
+        "new_native_math_actual_graphics_pixels": 835,
+        "selected_original_path_stroke_witnesses": [
+          {
+            "operator_indices": [
+              466,
+              467,
+              468
+            ],
+            "original_centerline_rect": [
+              286.37,
+              136.4599780273437,
+              287.69,
+              137.17997802734374
+            ],
+            "actual_source_stroke_width_pt": 0.7200000286102295,
+            "source_linecap": [
+              0,
+              0,
+              0
+            ],
+            "source_linejoin": 1.0,
+            "source_stroke_opacity": 1.0,
+            "source_stroke_color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "original_source_paint_operator": "S",
+            "dx": -18.823902244567876,
+            "native_stroke_footprint": [
+              285.7599999856949,
+              135.8499780130386,
+              288.3000000143051,
+              137.78997804164885
+            ],
+            "AA_support_pixels": 1,
+            "original_program_bytes_and_CTM_unchanged": true
+          },
+          {
+            "operator_indices": [
+              469,
+              470,
+              471
+            ],
+            "original_centerline_rect": [
+              287.69,
+              136.4599780273437,
+              290.95,
+              143.17997802734374
+            ],
+            "actual_source_stroke_width_pt": 0.7200000286102295,
+            "source_linecap": [
+              0,
+              0,
+              0
+            ],
+            "source_linejoin": 1.0,
+            "source_stroke_opacity": 1.0,
+            "source_stroke_color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "original_source_paint_operator": "S",
+            "dx": -18.823902244567876,
+            "native_stroke_footprint": [
+              287.0799999856949,
+              135.8499780130386,
+              291.5600000143051,
+              143.78997804164885
+            ],
+            "AA_support_pixels": 1,
+            "original_program_bytes_and_CTM_unchanged": true
+          },
+          {
+            "operator_indices": [
+              472,
+              473,
+              474
+            ],
+            "original_centerline_rect": [
+              290.95,
+              131.17997802734374,
+              292.99,
+              143.17997802734374
+            ],
+            "actual_source_stroke_width_pt": 0.7200000286102295,
+            "source_linecap": [
+              0,
+              0,
+              0
+            ],
+            "source_linejoin": 1.0,
+            "source_stroke_opacity": 1.0,
+            "source_stroke_color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "original_source_paint_operator": "S",
+            "dx": -18.823902244567876,
+            "native_stroke_footprint": [
+              290.3399999856949,
+              130.56997801303862,
+              293.6000000143051,
+              143.78997804164885
+            ],
+            "AA_support_pixels": 1,
+            "original_program_bytes_and_CTM_unchanged": true
+          },
+          {
+            "operator_indices": [
+              475,
+              476,
+              477
+            ],
+            "original_centerline_rect": [
+              292.99,
+              131.17997802734374,
+              308.71,
+              131.17997802734374
+            ],
+            "actual_source_stroke_width_pt": 0.7200000286102295,
+            "source_linecap": [
+              0,
+              0,
+              0
+            ],
+            "source_linejoin": 1.0,
+            "source_stroke_opacity": 1.0,
+            "source_stroke_color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "original_source_paint_operator": "S",
+            "dx": -18.823902244567876,
+            "native_stroke_footprint": [
+              292.3799999856949,
+              130.56997801303862,
+              309.3200000143051,
+              131.78997804164885
+            ],
+            "AA_support_pixels": 1,
+            "original_program_bytes_and_CTM_unchanged": true
+          },
+          {
+            "operator_indices": [
+              580,
+              581,
+              582
+            ],
+            "original_centerline_rect": [
+              137.9,
+              169.5799780273437,
+              148.46,
+              169.5799780273437
+            ],
+            "actual_source_stroke_width_pt": 0.7200000286102295,
+            "source_linecap": [
+              0,
+              0,
+              0
+            ],
+            "source_linejoin": 1.0,
+            "source_stroke_opacity": 1.0,
+            "source_stroke_color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "original_source_paint_operator": "S",
+            "dx": -25.81999769210816,
+            "native_stroke_footprint": [
+              137.2899999856949,
+              168.9699780130386,
+              149.07000001430512,
+              170.18997804164883
+            ],
+            "AA_support_pixels": 1,
+            "original_program_bytes_and_CTM_unchanged": true
+          },
+          {
+            "operator_indices": [
+              710,
+              711,
+              712
+            ],
+            "original_centerline_rect": [
+              190.85,
+              208.3399780273437,
+              196.01,
+              208.3399780273437
+            ],
+            "actual_source_stroke_width_pt": 0.7200000286102295,
+            "source_linecap": [
+              0,
+              0,
+              0
+            ],
+            "source_linejoin": 1.0,
+            "source_stroke_opacity": 1.0,
+            "source_stroke_color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "original_source_paint_operator": "S",
+            "dx": -9.889995574951172,
+            "native_stroke_footprint": [
+              190.23999998569488,
+              207.7299780130386,
+              196.6200000143051,
+              208.94997804164882
+            ],
+            "AA_support_pixels": 1,
+            "original_program_bytes_and_CTM_unchanged": true
+          }
+        ],
+        "stroke_footprint_policy": "Unique original operator path + original page-space drawing width/2 + one raster pixel, symmetric; actual control ink only. All nonselected graphics retain the unchanged strict pixel test."
+      },
+      "original_native_expression_relative_geometry": {
+        "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+        "source_page": 1,
+        "source_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page01.pdf",
+        "final_page": 1,
+        "final_sha256": "3138aaa2d02ea5fb58f141b9db4ade62b2e18ee92081882e175966c4cde0ccbc",
+        "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+        "tolerance_pt": 0.001,
+        "source_physical_glyphs": 126,
+        "matched_physical_glyphs": 126,
+        "glyph_signature_or_position_errors": [],
+        "script_base_pairs": [
+          {
+            "script": {
+              "c": "2",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                156.3800048828125,
+                170.77996826171875
+              ]
+            },
+            "base": {
+              "c": "h",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                151.10000610351562,
+                174.25994873046875
+              ]
+            },
+            "script_dx": -25.819992065429688,
+            "base_dx": -25.81999969482422,
+            "relative_x_change_pt": 7.62939453125e-06,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                326.7099914550781,
+                457.5099792480469
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                320.2300109863281,
+                456.54998779296875
+              ]
+            },
+            "script_dx": -22.6300048828125,
+            "base_dx": -22.6300048828125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                113.05999755859375,
+                471.0699768066406
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                106.58000183105469,
+                470.1099853515625
+              ]
+            },
+            "script_dx": -1.6068801879882812,
+            "base_dx": -1.6068801879882812,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "m",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                251.69000244140625,
+                471.0699768066406
+              ]
+            },
+            "base": {
+              "c": "α",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                246.1699981689453,
+                470.1099853515625
+              ]
+            },
+            "script_dx": -5.538482666015625,
+            "base_dx": -5.538482666015625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "m",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                249.41000366210938,
+                490.989990234375
+              ]
+            },
+            "base": {
+              "c": "α",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                243.88999938964844,
+                490.02996826171875
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                296.1099853515625,
+                483.78997802734375
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                287.33001708984375,
+                482.8299865722656
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                283.25,
+                496.3899841308594
+              ]
+            },
+            "base": {
+              "c": "ω",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                275.80999755859375,
+                495.42999267578125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "2",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                286.3699951171875,
+                491.9499816894531
+              ]
+            },
+            "base": {
+              "c": "G",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                279.6499938964844,
+                482.8299865722656
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                296.3500061035156,
+                496.3899841308594
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                289.8699951171875,
+                495.42999267578125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "3",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                299.4700012207031,
+                491.9499816894531
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                289.8699951171875,
+                495.42999267578125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                316.0299987792969,
+                486.54998779296875
+              ]
+            },
+            "base": {
+              "c": "）",
+              "font": "SimSun",
+              "size": 10.5600004196167,
+              "origin": [
+                305.4700012207031,
+                490.02996826171875
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                62.784000396728516,
+                509.9499816894531
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                54.0,
+                508.989990234375
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                87.86399841308594,
+                509.9499816894531
+              ]
+            },
+            "base": {
+              "c": "ω",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                80.54399871826172,
+                508.989990234375
+              ]
+            },
+            "script_dx": -1.4708251953125,
+            "base_dx": -1.4708251953125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "p",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                169.33999633789062,
+                523.510009765625
+              ]
+            },
+            "base": {
+              "c": "m",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                161.66000366210938,
+                522.5499877929688
+              ]
+            },
+            "script_dx": -1.24688720703125,
+            "base_dx": -1.24688720703125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                204.41000366210938,
+                605.260009765625
+              ]
+            },
+            "base": {
+              "c": "L",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                198.52999877929688,
+                604.2999877929688
+              ]
+            },
+            "script_dx": -30.196868896484375,
+            "base_dx": -30.196868896484375,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                263.57000732421875,
+                646.0599975585938
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                257.0899963378906,
+                645.0999755859375
+              ]
+            },
+            "script_dx": -40.636871337890625,
+            "base_dx": -40.636871337890625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "m",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                298.75,
+                646.0599975585938
+              ]
+            },
+            "base": {
+              "c": "α",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                293.2300109863281,
+                645.0999755859375
+              ]
+            },
+            "script_dx": -40.636871337890625,
+            "base_dx": -40.636871337890625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                59.90399932861328,
+                659.739990234375
+              ]
+            },
+            "base": {
+              "c": "L",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                54.0,
+                658.7799682617188
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                96.14399719238281,
+                659.739990234375
+              ]
+            },
+            "base": {
+              "c": "L",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                90.26399993896484,
+                658.7799682617188
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "m",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                115.69999694824219,
+                659.739990234375
+              ]
+            },
+            "base": {
+              "c": "α",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                110.18000030517578,
+                658.7799682617188
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                127.58000183105469,
+                659.739990234375
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                121.0999984741211,
+                658.7799682617188
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                163.33999633789062,
+                659.739990234375
+              ]
+            },
+            "base": {
+              "c": "L",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                157.4600067138672,
+                658.7799682617188
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "E",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                147.13999938964844,
+                710.0199584960938
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                140.66000366210938,
+                709.0599975585938
+              ]
+            },
+            "script_dx": -18.020004272460938,
+            "base_dx": -18.020004272460938,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                58.104000091552734,
+                737.260009765625
+              ]
+            },
+            "base": {
+              "c": "r",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                54.0,
+                736.2999877929688
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "relative_geometry_failures": [],
+        "reviewed_expression_groups": [
+          {
+            "label": "sqrt(2gh): complete native radical",
+            "physical_glyphs": 3,
+            "matched_glyphs": 3,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "(8/21)h^2: complete native area fraction and exponent",
+            "physical_glyphs": 5,
+            "matched_glyphs": 5,
+            "relative_x_spread_pt": 7.62939453125e-06,
+            "passed": true
+          },
+          {
+            "label": "2/3: complete native trajectory-area fraction",
+            "physical_glyphs": 2,
+            "matched_glyphs": 2,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "reviewed_script_exclusions": [],
+        "passed": true
+      },
+      "verified_original_native_ink_passed": true,
+      "exact_native_CID_raster_phase_witness": null,
+      "original_font_programs_and_names_retained": true,
+      "original_image_programs_retained": true,
+      "image_palette_icc_mask_and_motion_audits": [
+        {
+          "image": 0,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        }
+      ],
+      "page_group_preserved": true,
+      "colorspace_resources_preserved": true,
+      "native_move_stages_passed": true,
+      "hangul_visibility": {
+        "file": "page01.pdf",
+        "sha256": "3138aaa2d02ea5fb58f141b9db4ade62b2e18ee92081882e175966c4cde0ccbc",
+        "method": "independent original glyph outlines without clipping or overlays",
+        "scale": 4,
+        "pixel_tolerance": 2,
+        "flagged_components": 0,
+        "pages": [
+          {
+            "page": 1,
+            "hangul_characters": 864,
+            "missing_pixels": 0,
+            "clusters": []
+          }
+        ]
+      },
+      "new_prose_over_native_graphics": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 836,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 836,
+          "expected_signature_count": 836,
+          "matched_outline_uses": 836,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "inherited_original_footer_overlay": null,
+      "unexpected_Hangul_visibility_components": 0,
+      "remaining_regular_NotoSerif_Hangul": [],
+      "NUL_glyphs": 0,
+      "fresh_process_RGB_render": true,
+      "visual_review_required": true,
+      "passed": true,
+      "prose_native_text_overlap": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page01.prose-native-text-overlap.json",
+        "sha256": "f940f8e4bee61369ca9000254e6406345e8da3274fd6cf5f1a87a5601b3b0805",
+        "dark_pixels": 0,
+        "passed": true
+      },
+      "source_numerical_prose_and_whole_heading_alignment": {
+        "passed": true,
+        "actual_source_numeric_programs_retained": true,
+        "source_numeric_font_resources": 6,
+        "digits": [
+          {
+            "digit": "3",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 22,
+            "size": 10.5600004196167,
+            "baseline": 45.9599609375,
+            "expected_dx": -1.295039176940918,
+            "position_error_pt": 4.76837158203125e-06
+          },
+          {
+            "digit": "0",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 19,
+            "size": 10.5600004196167,
+            "baseline": 45.9599609375,
+            "expected_dx": -1.295039176940918,
+            "position_error_pt": 4.76837158203125e-06
+          },
+          {
+            "digit": "3",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 22,
+            "size": 15.960000038146973,
+            "baseline": 97.0999755859375,
+            "expected_dx": -0.5294989347457886,
+            "position_error_pt": 3.6954879760742188e-06
+          },
+          {
+            "digit": "0",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 19,
+            "size": 15.960000038146973,
+            "baseline": 97.0999755859375,
+            "expected_dx": -0.5294989347457886,
+            "position_error_pt": 3.6954879760742188e-06
+          },
+          {
+            "digit": "1",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 20,
+            "size": 10.5600004196167,
+            "baseline": 791.5199584960938,
+            "expected_dx": -0.41039812564849854,
+            "position_error_pt": 2.2649765014648438e-06
+          },
+          {
+            "digit": "2",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 21,
+            "size": 10.5600004196167,
+            "baseline": 791.5199584960938,
+            "expected_dx": 0.4238229990005493,
+            "position_error_pt": 5.125999450683594e-06
+          }
+        ],
+        "complete_heading_footer_lines": [
+          {
+            "id": "1-0-0",
+            "text": "제30회 결선 문제 및 해설",
+            "alignment": "original right edge",
+            "error_pt": 0.0,
+            "baseline": 45.9599609375
+          },
+          {
+            "id": "1-1-0",
+            "text": "제30회 전국 중등학생 물리 경시대회 결선 시험 문제",
+            "alignment": "whole line centered on original page",
+            "error_pt": 7.62939453125e-06,
+            "baseline": 97.0999755859375
+          },
+          {
+            "id": "1-34-0",
+            "text": "1쪽 / 총 2쪽",
+            "alignment": "whole line centered on original page",
+            "error_pt": 0.0,
+            "baseline": 791.5199584960938
+          }
+        ],
+        "no_added_edition_title_or_note": true,
+        "original_printed_footer_total_retained": "2 pages, including on page 3; original printed total is preserved without an added PDF erratum."
+      },
+      "independent_new_prose_style": {
+        "passed": true,
+        "translation_style_violations": [],
+        "translation_size_max_delta_pt": 0.0,
+        "translation_baseline_max_delta_pt": 0.0,
+        "checked_new_Batang_glyphs": 836,
+        "native_style_preserved_by_exact_encoded_CID_mover": true
+      },
+      "validation_engine": {
+        "frozen_build_manifest": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\engine-manifest.json",
+        "frozen_build_manifest_sha256": "a6da662804c0cf81527d48bc1e7a5c95c6643972a2c1a543823954501e22c153",
+        "driver": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\tools\\cpho_early_validation.py",
+        "driver_sha256": "239d507ab097f261e1dfd6eeca6b770f39c817fec1f463ab3106e42c5b849c36",
+        "source_stroke_QA_adapter": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\tools\\pdf_native_geometry_stroke_motion.py",
+        "source_stroke_QA_adapter_sha256": "2f431e2a7210d2c95fa56d7eb8afd889a31ce8802d0c49cbd8f92ecfeb5893d8",
+        "PDF_mutations": false
+      },
+      "combined_vs_proof_MuPDF_4x_changed_pixels": 0,
+      "combined_vs_proof_Poppler_144dpi_changed_pixels": 0
+    },
+    {
+      "year": 2013,
+      "language": "ko",
+      "page": 2,
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\ko\\page02.pdf",
+      "output_sha256": "9e8c6e5c23e504de3b6087ab862b2e5ab657b3f772a86cef16c0a4cad72cdf51",
+      "immutable_input": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+      "immutable_input_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "old_text_outline_uses": 793,
+      "new_text_outline_uses": 790,
+      "outside_bbox": null,
+      "original_physical_native_ink": {
+        "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+        "source_page": 2,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\ko\\page02.pdf",
+        "final_page": 1,
+        "source_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+        "output_sha256": "9e8c6e5c23e504de3b6087ab862b2e5ab657b3f772a86cef16c0a4cad72cdf51",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 110,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 110,
+          "expected_signature_count": 110,
+          "matched_outline_uses": 116,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 11500,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "native_graphics_motion_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [],
+        "changed_actual_inline_math_graphical_pixels": 0,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 0,
+        "new_native_math_actual_graphics_pixels": 0,
+        "selected_original_path_stroke_witnesses": [],
+        "stroke_footprint_policy": "Unique original operator path + original page-space drawing width/2 + one raster pixel, symmetric; actual control ink only. All nonselected graphics retain the unchanged strict pixel test."
+      },
+      "original_native_expression_relative_geometry": {
+        "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+        "source_page": 2,
+        "source_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\ko\\page02.pdf",
+        "final_page": 1,
+        "final_sha256": "9e8c6e5c23e504de3b6087ab862b2e5ab657b3f772a86cef16c0a4cad72cdf51",
+        "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+        "tolerance_pt": 0.001,
+        "source_physical_glyphs": 110,
+        "matched_physical_glyphs": 110,
+        "glyph_signature_or_position_errors": [],
+        "script_base_pairs": [
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                186.88999938964844,
+                322.72998046875
+              ]
+            },
+            "base": {
+              "c": "r",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                182.80999755859375,
+                321.76995849609375
+              ]
+            },
+            "script_dx": -2.089996337890625,
+            "base_dx": -2.089996337890625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "z",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                305.4700012207031,
+                349.969970703125
+              ]
+            },
+            "base": {
+              "c": "B",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                298.989990234375,
+                349.0099792480469
+              ]
+            },
+            "script_dx": -51.099517822265625,
+            "base_dx": -51.099517822265625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                325.510009765625,
+                349.969970703125
+              ]
+            },
+            "base": {
+              "c": "B",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                319.0299987792969,
+                349.0099792480469
+              ]
+            },
+            "script_dx": -51.099517822265625,
+            "base_dx": -51.099517822265625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "r",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                126.13999938964844,
+                363.52996826171875
+              ]
+            },
+            "base": {
+              "c": "B",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                119.66000366210938,
+                362.5699768066406
+              ]
+            },
+            "script_dx": -7.5800018310546875,
+            "base_dx": -7.5800018310546875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                145.4600067138672,
+                363.52996826171875
+              ]
+            },
+            "base": {
+              "c": "B",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                138.97999572753906,
+                362.5699768066406
+              ]
+            },
+            "script_dx": -7.5800018310546875,
+            "base_dx": -7.5800018310546875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                253.72999572753906,
+                363.52996826171875
+              ]
+            },
+            "base": {
+              "c": "B",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                247.25,
+                362.5699768066406
+              ]
+            },
+            "script_dx": -11.087356567382812,
+            "base_dx": -11.08734130859375,
+            "relative_x_change_pt": -1.52587890625e-05,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                102.26000213623047,
+                390.7699890136719
+              ]
+            },
+            "base": {
+              "c": "I",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                98.78399658203125,
+                389.8099670410156
+              ]
+            },
+            "script_dx": -10.463996887207031,
+            "base_dx": -10.463996887207031,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                343.8699951171875,
+                598.8999633789062
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPSMT",
+              "size": 10.5600004196167,
+              "origin": [
+                334.510009765625,
+                597.93994140625
+              ]
+            },
+            "script_dx": -49.0152587890625,
+            "base_dx": -49.0152587890625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "2",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                367.1499938964844,
+                598.8999633789062
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPSMT",
+              "size": 10.5600004196167,
+              "origin": [
+                357.7900085449219,
+                597.93994140625
+              ]
+            },
+            "script_dx": -49.015289306640625,
+            "base_dx": -49.015289306640625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "3",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                390.54998779296875,
+                598.8999633789062
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPSMT",
+              "size": 10.5600004196167,
+              "origin": [
+                381.19000244140625,
+                597.93994140625
+              ]
+            },
+            "script_dx": -49.0152587890625,
+            "base_dx": -49.0152587890625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                475.8999938964844,
+                612.5799560546875
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPSMT",
+              "size": 10.5600004196167,
+              "origin": [
+                466.5400085449219,
+                611.6199951171875
+              ]
+            },
+            "script_dx": -5.789886474609375,
+            "base_dx": -5.789886474609375,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "3",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                223.72999572753906,
+                626.1400146484375
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPSMT",
+              "size": 10.5600004196167,
+              "origin": [
+                214.3699951171875,
+                625.1799926757812
+              ]
+            },
+            "script_dx": -24.9168701171875,
+            "base_dx": -24.9168701171875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "2",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                251.08999633789062,
+                626.1400146484375
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "TimesNewRomanPSMT",
+              "size": 10.5600004196167,
+              "origin": [
+                241.72999572753906,
+                625.1799926757812
+              ]
+            },
+            "script_dx": -26.23687744140625,
+            "base_dx": -26.23687744140625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                177.2899932861328,
+                639.8199462890625
+              ]
+            },
+            "base": {
+              "c": "θ",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                172.1300048828125,
+                638.8599853515625
+              ]
+            },
+            "script_dx": -9.076873779296875,
+            "base_dx": -9.076873779296875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "2",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                196.49000549316406,
+                639.8199462890625
+              ]
+            },
+            "base": {
+              "c": "θ",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                191.3300018310547,
+                638.8599853515625
+              ]
+            },
+            "script_dx": -9.076873779296875,
+            "base_dx": -9.076873779296875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "relative_geometry_failures": [],
+        "reviewed_expression_groups": [],
+        "reviewed_script_exclusions": [],
+        "passed": true
+      },
+      "verified_original_native_ink_passed": true,
+      "exact_native_CID_raster_phase_witness": null,
+      "original_font_programs_and_names_retained": true,
+      "original_image_programs_retained": true,
+      "image_palette_icc_mask_and_motion_audits": [
+        {
+          "image": 0,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 1,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        }
+      ],
+      "page_group_preserved": true,
+      "colorspace_resources_preserved": true,
+      "native_move_stages_passed": true,
+      "hangul_visibility": {
+        "file": "page02.pdf",
+        "sha256": "9e8c6e5c23e504de3b6087ab862b2e5ab657b3f772a86cef16c0a4cad72cdf51",
+        "method": "independent original glyph outlines without clipping or overlays",
+        "scale": 4,
+        "pixel_tolerance": 2,
+        "flagged_components": 0,
+        "pages": [
+          {
+            "page": 1,
+            "hangul_characters": 595,
+            "missing_pixels": 0,
+            "clusters": []
+          }
+        ]
+      },
+      "new_prose_over_native_graphics": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 589,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 589,
+          "expected_signature_count": 589,
+          "matched_outline_uses": 589,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "inherited_original_footer_overlay": null,
+      "unexpected_Hangul_visibility_components": 0,
+      "remaining_regular_NotoSerif_Hangul": [],
+      "NUL_glyphs": 0,
+      "fresh_process_RGB_render": true,
+      "visual_review_required": true,
+      "passed": true,
+      "prose_native_text_overlap": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\2013\\ko\\page02.prose-native-text-overlap.json",
+        "sha256": "4caeda4d6695e402c1a1fc2361d3c82763b640d43e772449e35a8dbd26a4f636",
+        "dark_pixels": 0,
+        "passed": true
+      },
+      "source_numerical_prose_and_whole_heading_alignment": {
+        "passed": true,
+        "actual_source_numeric_programs_retained": true,
+        "source_numeric_font_resources": 4,
+        "digits": [
+          {
+            "digit": "3",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 22,
+            "size": 10.5600004196167,
+            "baseline": 45.9599609375,
+            "expected_dx": -1.295039176940918,
+            "position_error_pt": 4.76837158203125e-06
+          },
+          {
+            "digit": "0",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 19,
+            "size": 10.5600004196167,
+            "baseline": 45.9599609375,
+            "expected_dx": -1.295039176940918,
+            "position_error_pt": 4.76837158203125e-06
+          },
+          {
+            "digit": "2",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 21,
+            "size": 10.5600004196167,
+            "baseline": 791.5199584960938,
+            "expected_dx": 0.048952460289001465,
+            "position_error_pt": 2.2649765014648438e-06
+          },
+          {
+            "digit": "2",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 21,
+            "size": 10.5600004196167,
+            "baseline": 791.5199584960938,
+            "expected_dx": -0.035558104515075684,
+            "position_error_pt": 5.125999450683594e-06
+          }
+        ],
+        "complete_heading_footer_lines": [
+          {
+            "id": "2-0-0",
+            "text": "제30회 결선 문제 및 해설",
+            "alignment": "original right edge",
+            "error_pt": 0.0,
+            "baseline": 45.9599609375
+          },
+          {
+            "id": "2-26-0",
+            "text": "2쪽 / 총 2쪽",
+            "alignment": "whole line centered on original page",
+            "error_pt": 0.0,
+            "baseline": 791.5199584960938
+          }
+        ],
+        "no_added_edition_title_or_note": true,
+        "original_printed_footer_total_retained": "2 pages, including on page 3; original printed total is preserved without an added PDF erratum."
+      },
+      "independent_new_prose_style": {
+        "passed": true,
+        "translation_style_violations": [],
+        "translation_size_max_delta_pt": 0.0,
+        "translation_baseline_max_delta_pt": 0.0,
+        "checked_new_Batang_glyphs": 589,
+        "native_style_preserved_by_exact_encoded_CID_mover": true
+      },
+      "validation_engine": {
+        "frozen_build_manifest": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\engine-manifest.json",
+        "frozen_build_manifest_sha256": "a6da662804c0cf81527d48bc1e7a5c95c6643972a2c1a543823954501e22c153",
+        "driver": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\tools\\cpho_early_validation.py",
+        "driver_sha256": "239d507ab097f261e1dfd6eeca6b770f39c817fec1f463ab3106e42c5b849c36",
+        "source_stroke_QA_adapter": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\tools\\pdf_native_geometry_stroke_motion.py",
+        "source_stroke_QA_adapter_sha256": "2f431e2a7210d2c95fa56d7eb8afd889a31ce8802d0c49cbd8f92ecfeb5893d8",
+        "PDF_mutations": false
+      },
+      "source_terminology_revision": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\revision-yttrium-body\\material-terminology.json",
+        "sha256": "b713ef4ffa65b4fc49e43867efcc5178a553326ba6b460e24a4ec8d221b538e6",
+        "driver": "cpho_2013_yttrium_revision.py",
+        "driver_sha256": "7c6a67c0d8a5211b1e6aa098e072a69ca24a79b4e3562f7204deb4ce049333e8"
+      },
+      "combined_vs_proof_MuPDF_4x_changed_pixels": 0,
+      "combined_vs_proof_Poppler_144dpi_changed_pixels": 0
+    },
+    {
+      "year": 2013,
+      "language": "ko",
+      "page": 3,
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page03.pdf",
+      "output_sha256": "cea16cbd88b414ded6e5506e00152f71356bc771b6009b4315922aaf2425a4a1",
+      "immutable_input": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+      "immutable_input_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "old_text_outline_uses": 534,
+      "new_text_outline_uses": 533,
+      "outside_bbox": null,
+      "original_physical_native_ink": {
+        "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+        "source_page": 3,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page03.pdf",
+        "final_page": 1,
+        "source_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+        "output_sha256": "cea16cbd88b414ded6e5506e00152f71356bc771b6009b4315922aaf2425a4a1",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 50,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 50,
+          "expected_signature_count": 50,
+          "matched_outline_uses": 52,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 4117,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "native_graphics_motion_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              92.77399998569489,
+              434.21997801303866,
+              98.67400001430511,
+              435.4399780416489
+            ],
+            "operator_indices": [
+              1116,
+              1117,
+              1118
+            ],
+            "dx": 0.09599947929382324
+          }
+        ],
+        "changed_actual_inline_math_graphical_pixels": 8,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 80,
+        "new_native_math_actual_graphics_pixels": 80,
+        "selected_original_path_stroke_witnesses": [
+          {
+            "operator_indices": [
+              1116,
+              1117,
+              1118
+            ],
+            "original_centerline_rect": [
+              93.384,
+              434.82997802734377,
+              98.064,
+              434.82997802734377
+            ],
+            "actual_source_stroke_width_pt": 0.7200000286102295,
+            "source_linecap": [
+              0,
+              0,
+              0
+            ],
+            "source_linejoin": 1.0,
+            "source_stroke_opacity": 1.0,
+            "source_stroke_color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "original_source_paint_operator": "S",
+            "dx": 0.09599947929382324,
+            "native_stroke_footprint": [
+              92.77399998569489,
+              434.21997801303866,
+              98.67400001430511,
+              435.4399780416489
+            ],
+            "AA_support_pixels": 1,
+            "original_program_bytes_and_CTM_unchanged": true
+          }
+        ],
+        "stroke_footprint_policy": "Unique original operator path + original page-space drawing width/2 + one raster pixel, symmetric; actual control ink only. All nonselected graphics retain the unchanged strict pixel test."
+      },
+      "original_native_expression_relative_geometry": {
+        "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\immutable-inputs\\CPhO_2013_T_KO.pdf",
+        "source_page": 3,
+        "source_sha256": "5b0180c0389953d28dd810567139ec932c8cdf9dcfe2f664bb78954ed970753f",
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page03.pdf",
+        "final_page": 1,
+        "final_sha256": "cea16cbd88b414ded6e5506e00152f71356bc771b6009b4315922aaf2425a4a1",
+        "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+        "tolerance_pt": 0.001,
+        "source_physical_glyphs": 50,
+        "matched_physical_glyphs": 50,
+        "glyph_signature_or_position_errors": [],
+        "script_base_pairs": [
+          {
+            "script": {
+              "c": "r",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                274.6099853515625,
+                413.6899719238281
+              ]
+            },
+            "base": {
+              "c": "v",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                269.92999267578125,
+                412.72998046875
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "2",
+              "font": "TimesNewRomanPSMT",
+              "size": 6.960000038146973,
+              "origin": [
+                308.5899963378906,
+                415.3699645996094
+              ]
+            },
+            "base": {
+              "c": "β",
+              "font": "TimesNewRomanPS-ItalicMT",
+              "size": 10.5600004196167,
+              "origin": [
+                303.30999755859375,
+                418.8699645996094
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "relative_geometry_failures": [],
+        "reviewed_expression_groups": [
+          {
+            "label": "beta=v/c: complete native speed fraction",
+            "physical_glyphs": 4,
+            "matched_glyphs": 4,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "reviewed_script_exclusions": [],
+        "passed": true
+      },
+      "verified_original_native_ink_passed": true,
+      "exact_native_CID_raster_phase_witness": null,
+      "original_font_programs_and_names_retained": true,
+      "original_image_programs_retained": true,
+      "image_palette_icc_mask_and_motion_audits": [
+        {
+          "image": 0,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        }
+      ],
+      "page_group_preserved": true,
+      "colorspace_resources_preserved": true,
+      "native_move_stages_passed": true,
+      "hangul_visibility": {
+        "file": "page03.pdf",
+        "sha256": "cea16cbd88b414ded6e5506e00152f71356bc771b6009b4315922aaf2425a4a1",
+        "method": "independent original glyph outlines without clipping or overlays",
+        "scale": 4,
+        "pixel_tolerance": 2,
+        "flagged_components": 0,
+        "pages": [
+          {
+            "page": 1,
+            "hangul_characters": 444,
+            "missing_pixels": 0,
+            "clusters": []
+          }
+        ]
+      },
+      "new_prose_over_native_graphics": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 438,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 438,
+          "expected_signature_count": 438,
+          "matched_outline_uses": 438,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "inherited_original_footer_overlay": null,
+      "unexpected_Hangul_visibility_components": 0,
+      "remaining_regular_NotoSerif_Hangul": [],
+      "NUL_glyphs": 0,
+      "fresh_process_RGB_render": true,
+      "visual_review_required": true,
+      "passed": true,
+      "prose_native_text_overlap": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\output\\2013\\ko\\page03.prose-native-text-overlap.json",
+        "sha256": "f8c6958f330bb707474816f259cde13ae62be778085c08ab5f4690e35ea41a07",
+        "dark_pixels": 0,
+        "passed": true
+      },
+      "source_numerical_prose_and_whole_heading_alignment": {
+        "passed": true,
+        "actual_source_numeric_programs_retained": true,
+        "source_numeric_font_resources": 4,
+        "digits": [
+          {
+            "digit": "3",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 22,
+            "size": 10.5600004196167,
+            "baseline": 45.9599609375,
+            "expected_dx": -1.295039176940918,
+            "position_error_pt": 4.76837158203125e-06
+          },
+          {
+            "digit": "0",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 19,
+            "size": 10.5600004196167,
+            "baseline": 45.9599609375,
+            "expected_dx": -1.295039176940918,
+            "position_error_pt": 4.76837158203125e-06
+          },
+          {
+            "digit": "3",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 22,
+            "size": 10.5600004196167,
+            "baseline": 791.5199584960938,
+            "expected_dx": 0.043672919273376465,
+            "position_error_pt": 2.2649765014648438e-06
+          },
+          {
+            "digit": "2",
+            "source_font": "TimesNewRomanPSMT",
+            "original_gid": 21,
+            "size": 10.5600004196167,
+            "baseline": 791.5199584960938,
+            "expected_dx": -0.030278563499450684,
+            "position_error_pt": 5.125999450683594e-06
+          }
+        ],
+        "complete_heading_footer_lines": [
+          {
+            "id": "3-0-0",
+            "text": "제30회 결선 문제 및 해설",
+            "alignment": "original right edge",
+            "error_pt": 0.0,
+            "baseline": 45.9599609375
+          },
+          {
+            "id": "3-16-0",
+            "text": "3쪽 / 총 2쪽",
+            "alignment": "whole line centered on original page",
+            "error_pt": 0.0,
+            "baseline": 791.5199584960938
+          }
+        ],
+        "no_added_edition_title_or_note": true,
+        "original_printed_footer_total_retained": "2 pages, including on page 3; original printed total is preserved without an added PDF erratum."
+      },
+      "independent_new_prose_style": {
+        "passed": true,
+        "translation_style_violations": [],
+        "translation_size_max_delta_pt": 0.0,
+        "translation_baseline_max_delta_pt": 0.0,
+        "checked_new_Batang_glyphs": 438,
+        "native_style_preserved_by_exact_encoded_CID_mover": true
+      },
+      "validation_engine": {
+        "frozen_build_manifest": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\final-v1\\engine-manifest.json",
+        "frozen_build_manifest_sha256": "a6da662804c0cf81527d48bc1e7a5c95c6643972a2c1a543823954501e22c153",
+        "driver": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\tools\\cpho_early_validation.py",
+        "driver_sha256": "239d507ab097f261e1dfd6eeca6b770f39c817fec1f463ab3106e42c5b849c36",
+        "source_stroke_QA_adapter": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-early-natural\\tools\\pdf_native_geometry_stroke_motion.py",
+        "source_stroke_QA_adapter_sha256": "2f431e2a7210d2c95fa56d7eb8afd889a31ce8802d0c49cbd8f92ecfeb5893d8",
+        "PDF_mutations": false
+      },
+      "combined_vs_proof_MuPDF_4x_changed_pixels": 0,
+      "combined_vs_proof_Poppler_144dpi_changed_pixels": 0
+    }
+  ],
+  "visual_review": "Each final page individually inspected; original figures, formula geometry, native faces, complete centered title/header/footer and ordinary prose spacing."
+}

@@ -658,6 +658,13 @@ def reposition_inline(source, page_number, erased_glyphs=None, shifts=None,
             candidates=[v for v in root['vector_paths'] if v['indices']==list(indices)]
             if len(candidates)!=1:raise ValueError('Reviewed native path is not one exact, pure top-level path+paint group')
             vector=candidates[0]
+            owners=[item for item in atomic_clips if any(
+                item['group']['start']<=index<=item['group']['end'] for index in indices)]
+            if owners:
+                raise ValueError('A complete atomic native clip already owns this reviewed vector path; '
+                    'omit the duplicated vector_paths entry: '+repr(dict(
+                        operator_indices=list(indices),atomic_clip_ranges=[
+                            [item['group']['start'],item['group']['end'],item['dx']] for item in owners])))
             if path_indices.intersection(indices):raise ValueError('Reviewed native vector groups overlap')
             if stationary_indices.intersection(indices):raise ValueError('A native path cannot be both stationary and moved')
             path_indices.update(indices)

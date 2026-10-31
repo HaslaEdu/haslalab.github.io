@@ -305,10 +305,27 @@ def _page_build(plan,body_only=False):
             bounds=fitz.Rect()
             for g in glyphs:
                 if g['gid']>=0:bounds|=fitz.Rect(g['bbox'])
-            for path in paths:bounds|=fitz.Rect(path['rect'])
+            for path in paths:
+                r=fitz.Rect(path['rect'])
+                if rule.get('use_complete_original_clip'):
+                    # A stroked horizontal rule has zero geometric height.
+                    # Rect union treats it as empty, but its endpoints still
+                    # determine the real native mathematical widget width.
+                    bounds=fitz.Rect(min(bounds.x0,r.x0),min(bounds.y0,r.y0),max(bounds.x1,r.x1),max(bounds.y1,r.y1))
+                else:bounds|=r
+            carried_paths=[];complete_clip=None;move_paths=paths
+            if rule.get('use_complete_original_clip'):
+                wanted={glyph_key(g)for g in glyphs if g['c'].strip()}
+                matches=[c for c in inv['clip_groups']if c.get('known_rectangular_clips')and
+                    {glyph_key(g)for g in c['glyphs']if g['c'].strip()}==wanted and
+                    all(c['operator_indices'][0]<=min(v['operator_indices'])<=max(v['operator_indices'])<=c['operator_indices'][-1]for v in paths)]
+                if len(matches)!=1:raise ValueError('Reviewed native fraction must identify one complete original clip containing all its original rules')
+                complete_clip={k:matches[0][k]for k in ['operator_indices','clip_rects','known_rectangular_clips']}
+                carried_paths=paths;move_paths=[]
             explicit.append(dict(kind='native',text=''.join(g['c']for g in sorted(glyphs,key=lambda g:(g['origin'][0],g['origin'][1]))),
                 glyphs=glyphs,x0=bounds.x0,x1=bounds.x1,y=rule['baseline'],size=12.,fonts=sorted({g['font']for g in glyphs}),
-                bbox=list(bounds),shift_kwargs=dict(vector_paths=paths),reviewed_reason=rule['reason']))
+                bbox=list(bounds),shift_kwargs=dict(vector_paths=move_paths),reviewed_reason=rule['reason'],
+                complete_original_clip=complete_clip,preserved_vector_paths_in_complete_clip=carried_paths))
     if not body_only:
         from izho_native_atomic_tokens import _inventory
         stat=source.stat();inv=_inventory(str(source.resolve()),d['page'],stat.st_mtime_ns,stat.st_size)

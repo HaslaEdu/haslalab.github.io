@@ -313,18 +313,52 @@ def _page_build(plan,body_only=False):
         from izho_native_atomic_tokens import _inventory
         stat=source.stat();inv=_inventory(str(source.resolve()),d['page'],stat.st_mtime_ns,stat.st_size)
         underline=[v for v in inv['vector_paths']if v['rect'][1]<60 and v['rect'][2]-v['rect'][0]>400 and v['rect'][3]-v['rect'][1]<2]
-        if underline:move_options['reviewed_stationary_vector_paths']=underline
+        if underline:
+            values=move_options.get('reviewed_stationary_vector_paths',[])+underline
+            move_options['reviewed_stationary_vector_paths']=list({tuple(v['operator_indices']):v for v in values}.values())
+    image_bindings=d.get('reviewed_sibling_math_image_bindings',[]);compiled_image_bindings=[]
+    original_move=composer.reposition_inline
+    def move_with_reviewed_sibling_images(input_source,input_page,*,erased_glyphs,shifts,**options):
+        from pdf_native_inline_reposition import _traces
+        from izho_native_atomic_tokens import _inventory
+        stat=source.stat();inventory=_inventory(str(source.resolve()),d['page'],stat.st_mtime_ns,stat.st_size)
+        with fitz.open(source)as native_doc:source_glyphs=_traces(native_doc[d['page']-1])
+        for rule in image_bindings:
+            if rule.get('reviewed')is not True or not rule.get('reason'):raise ValueError('A sibling math image binding requires an explicit reviewed reason')
+            path=rule['image_path'];matches=[v for v in inventory['images']if v['path']==path]
+            if len(matches)!=1:raise ValueError('The exact original sibling Image Do is missing')
+            image=matches[0]
+            if image['original_raw_sha256']!=rule['original_color_stream_sha256']:raise ValueError('Original sibling math bitmap bytes changed')
+            if max(abs(a-b)for a,b in zip(image['bbox'],rule['original_image_bbox']))>.002:raise ValueError('Original sibling math bitmap CTM changed')
+            box=fitz.Rect(rule['native_glyph_rect']);glyphs=[g for g in source_glyphs if g['c'].strip()and box.contains(fitz.Point(g['origin']))and re.search(rule['native_font_regex'],g['font'])]
+            if not glyphs:raise ValueError('No original native mathematical reference glyphs')
+            moves={glyph_key(g):s['dx']for s in shifts for g in s['glyphs']}
+            values=[moves.get(glyph_key(g),0.)for g in glyphs]
+            if max(values)-min(values)>.001:raise ValueError('A reviewed CID/bitmap expression has split mathematical glyph motions')
+            dx=values[0];existing=[s for s in shifts if s.get('image_path')==path]
+            if existing and any(abs(s['dx']-dx)>.001 for s in existing):raise ValueError('Sibling math image has a conflicting movement')
+            if not existing and abs(dx)>1e-4:shifts.append(dict(glyphs=[],image_path=path,dx=dx))
+            compiled_image_bindings.append(dict(**rule,native_glyphs=glyphs,dx=dx))
+        return original_move(input_source,input_page,erased_glyphs=erased_glyphs,shifts=shifts,**options)
     composer._units=reviewed_units
     composer.boundary_gap=paragraph_gap
+    if image_bindings:composer.reposition_inline=move_with_reviewed_sibling_images
     locked=[g for region in d.get('stationary_table_math',[])for g in region['native_glyphs']]
-    try:raw,qa=compose_page(source,d['page'],native_control_output=out.with_suffix('.native-control.pdf'),native_move_options=move_options,native_atomic_tokens=explicit or None,stationary_native_glyphs=locked,include_image_only_native_math=d.get('include_image_only_native_math',False),baseline_tolerance_pt=d.get('baseline_tolerance_pt',.12),**{k:d[k]for k in['allowed_line_rects','prose_placements','excluded_figure_rects','centered_lines','right_aligned_lines']})
-    finally:composer._units=original_units;composer.boundary_gap=original_gap
+    compose_args={k:d[k]for k in['allowed_line_rects','prose_placements','excluded_figure_rects','centered_lines','right_aligned_lines']}
+    if d.get('reviewed_layout_figure_rects'):
+        # Only explicitly reviewed white bitmap padding may differ from the
+        # layout exclusion. Independent figure QA still uses the FULL source
+        # rectangle in excluded_figure_rects, not this layout-only boundary.
+        compose_args['excluded_figure_rects']=d['reviewed_layout_figure_rects']
+    try:raw,qa=compose_page(source,d['page'],native_control_output=out.with_suffix('.native-control.pdf'),native_move_options=move_options,native_atomic_tokens=explicit or None,stationary_native_glyphs=locked,include_image_only_native_math=d.get('include_image_only_native_math',False),baseline_tolerance_pt=d.get('baseline_tolerance_pt',.12),**compose_args)
+    finally:composer._units=original_units;composer.boundary_gap=original_gap;composer.reposition_inline=original_move
     if len(applied)!=len(revisions):raise ValueError(('Reviewed word revision was not applied exactly once',revisions,applied))
     if len(baseline_applied)!=len(baseline_revisions):raise ValueError('A reviewed Korean baseline correction was not applied')
     qa['reviewed_hangul_word_revisions']=applied
     qa['reviewed_hangul_baseline_revisions']=baseline_revisions
     qa['section_number_prefix_gaps']=paragraph_gaps
     qa['native_move_options']=move_options
+    qa['reviewed_sibling_math_image_bindings']=compiled_image_bindings
     qa['reviewed_explicit_native_math_atoms']=explicit
     qa['body_font_coverage']=coverage(d,qa)
     out.write_bytes(raw)

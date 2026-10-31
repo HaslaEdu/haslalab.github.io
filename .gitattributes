@@ -5,3 +5,5 @@ vendor/pyodide/* -text
 # QA evidence and immutable source snapshots carry exact byte hashes.
 tools/ko/izho/**/natural-spacing/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 tools/ko/cpho/**/natural-spacing/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tools/ko/quality/native-atomic-guard/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tools/pdf_native_inline_reposition.py -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol

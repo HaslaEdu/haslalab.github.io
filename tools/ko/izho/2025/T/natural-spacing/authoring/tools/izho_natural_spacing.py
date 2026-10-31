@@ -11,6 +11,7 @@ from pathlib import Path
 import pymupdf as fitz
 
 ROOT=Path(__file__).resolve().parents[1]
+if not(ROOT/'tools'/'pdf_original_text_ops.py').exists():ROOT=Path.cwd()
 BUILD=Path('D:/CodexBuilds/Hasla-original-style-20261031/izho-natural-spacing')
 HANGUL=re.compile('[가-힣]')
 JOSA=re.compile(r'^(?:(?:[은는이가을를의와과도에로면며인]|라|일|임을|임에|와의|과의)(?=\s|$|[,.!?;:，。；：)\]）])|(?:으로|이고|이며|이다|이면|이라|이므로|에서|에는|까지|부터|보다|처럼|만큼)|[,.!?;:，。；：)\]）])')
@@ -148,6 +149,9 @@ def baseline_lines(page, bounds=None, *, allowed_line_rects=None, excluded_figur
                 journal=(prose_placements or[])[item['placement']]
                 authored=journal.get('korean',journal.get('text',''))
                 if ''.join(authored.split())==''.join(item['text'].split()):item['text']=authored
+                else:
+                    restored=authored_fragment(authored,item['text'])
+                    if restored is not None:item['text']=restored
         result.append(dict(baseline=y,tokens=merged))
     return result
 
@@ -163,20 +167,43 @@ def boundary_gap(left,right,word_space_pt=None):
     if left['kind']=='native'and right['kind']=='korean'and JOSA.match(head):return 0
     if left['kind']=='native'and re.search('[0-9]$',tail)and re.match(r'^(?:년|월|일|점|회|번|쪽|차)(?=\s|$|[,.!?;:)）])',head):return 0
     if left['kind']=='native'and re.search('[0-9]$',tail)and re.match(r'^(?:st|nd|rd|th)\b',head):return 0
+    if left['kind']=='native'and re.match(r"^['’]s(?:\b|$)",head):return 0
     # The source math layout inside a native token has already been retained.
     return .25*size if word_space_pt is None else float(word_space_pt)
+
+def authored_fragment(authored, fragment):
+    """Recover reviewed word spaces for one uniquely located visible fragment."""
+    positions=[i for i,c in enumerate(authored)if not c.isspace()]
+    plain=''.join(authored[i]for i in positions)
+    visible_text=''.join(fragment.split())
+    if not visible_text:return None
+    start=plain.find(visible_text)
+    if start<0 or plain.find(visible_text,start+1)>=0:return None
+    stop=start+len(visible_text)
+    left=0 if start==0 else positions[start]
+    right=len(authored)if stop==len(plain)else positions[stop-1]+1
+    return authored[left:right]
+
 
 def inject_atomic_tokens(lines,atoms):
     """Replace ordinary fragments by complete source Form/clip expressions."""
     from pdf_original_text_ops import glyph_key
+    for atom in atoms:
+        matches=[line for line in lines if abs(atom['y']-line['baseline'])<.02]
+        if len(matches)!=1:raise ValueError(('A native atom must match exactly one reviewed prose baseline',atom['y'],[line['baseline']for line in lines]))
     claimed={glyph_key(r)for atom in atoms for r in atom['glyphs']}
     for line in lines:
         kept=[]
         for item in line['tokens']:
             remaining=[r for r in item['glyphs']if glyph_key(r)not in claimed]
             if visible(remaining):
-                revised=token(remaining,item['kind'])
-                if 'placement'in item:revised['placement']=item['placement']
+                if len(remaining)==len(item['glyphs']):revised=dict(item)
+                else:
+                    revised=token(remaining,item['kind'])
+                    if 'placement'in item:
+                        revised['placement']=item['placement']
+                        restored=authored_fragment(item['text'],revised['text'])
+                        if restored is not None:revised['text']=restored
                 kept.append(revised)
         kept.extend(atom for atom in atoms if abs(atom['y']-line['baseline'])<.02)
         line['tokens']=sorted(kept,key=lambda t:t['x0'])

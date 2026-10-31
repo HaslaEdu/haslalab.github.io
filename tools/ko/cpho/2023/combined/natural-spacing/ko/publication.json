@@ -5,8 +5,8 @@
   "kind": "Combined",
   "language": "ko",
   "pages": 36,
-  "bytes": 64788804,
-  "sha256": "361e0c87728eb847cf837c393f81ae3bc4be7b6444853365e4d69e582e54981f",
+  "bytes": 64764592,
+  "sha256": "348c4d91fef326c941b1ea1c1e3afc1ed7a75213e9bf4975a056e2f0dfc2aa39",
   "validation": {
     "native_ink_missing_pixels": 0,
     "new_batang_empty_outlines": 0,
@@ -401,7 +401,7 @@
     },
     {
       "page": 11,
-      "proof_sha256": "1abb4658b3be1b3a8db05d21b7a6a78954a906f9b463af4d79aa7fc5d7a80a17",
+      "proof_sha256": "159ccd0846615222b3e78d1659a692ac939e53b2f4c51c4638d45f29f6a9615d",
       "source_pdf_sha256": "4ad410a5ba2dfd2c3e27d6ad19ea7940429a83558147712192f5c43b29234c4c",
       "final_vs_reviewed_proof_changed_pixels": 0,
       "native_move_qa": {
@@ -661,9 +661,9 @@
         "passed": true
       },
       "qa": "tools/ko/cpho/2023/combined/natural-spacing/ko/page11.qa.json",
-      "qa_sha256": "d562e7c4096deec8387e704d52e8d1353387e3da64494bb0a2732895be393eb2",
+      "qa_sha256": "8be78502fcce697f055e850a7b292bff82834b5ed0ac72d61931643c7cce5b2e",
       "original_native_ink": "tools/ko/cpho/2023/combined/natural-spacing/ko/page11-native-ink.json",
-      "original_native_ink_sha256": "2dc0649a80459f9565d5acf28224ff535c2ae5f62e07b6a615a308e61c97a7ba"
+      "original_native_ink_sha256": "d54434ecca2b18ab1add0c21a9b72cb77500e87b04e3f853d67009c04050e9b3"
     },
     {
       "page": 12,
@@ -1660,246 +1660,265 @@
     }
   ],
   "source_ready": "tools/ko/cpho/2023/combined/natural-spacing/ko/source-ready.json",
-  "source_ready_sha256": "8516628d9215366eba9db501ef6d8d13fe25836c41d266af7905400882d08392",
+  "source_ready_sha256": "07f8bc63e4b6d43830b2beae6610af3ad12bc6c855fcf03882f6f2b6923d9cc7",
   "visual_review": "tools/ko/cpho/2023/combined/natural-spacing/ko/visual-review.json",
-  "visual_review_sha256": "5a199bad86bb0d27b2f04d21e401ad416d87592a322fa1bb8f0bf281890ec4dd",
+  "visual_review_sha256": "9b581ce3a96c8db6fccbe7bcc193341696880383bd74cb0613a66aaa795c8c9c",
   "authoring_snapshotroot": "tools/ko/cpho/2023/combined/natural-spacing/ko/authoring",
   "authoring_snapshot_sha256": {
+    "tools/izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+    "tools/pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+    "tools/pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+    "tools/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+    "tools/pdf_original_image_ink.py": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+    "tools/pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools/pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools/pdf_native_inline_reposition.py": "8628ab690034727f8ae0dc87a615b8c70160afcd2715cb88db3f4446b592d12e",
+    "tools/pdf_original_graphics_ink.py": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
+    "tools/pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+    "tools/natural_spacing_form_groups.py": "744391403c453d1bc1a5d7229a42b9d1594bd247bd2ca403d53b859e667ab0cb",
+    "tools/izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+    "tools/izho_natural_spacing.py": "86ccebf9ec468d02b3ff0e853fcd866f2b727b6acaa13789a1a52159cfb099ec",
+    "tools/pdf_korean_natural_composer.py": "f731f35754efde2142054a598ecf87a8167859161b43be9a760a27c7fe0b6b36",
+    "tools/cpho_2023_natural_ready.py": "9dc582b037714543058f88cc7fd243a60a72b808cf085a53fc885450e9bec4b0",
     "tools/cpho_2023_natural_spacing.py": "c024dfeec9213f663c38adf9de8c7e3dac9e81004cf77af036559fe4757df7d7",
     "tools/cpho_2023_natural_heading.py": "4d0e945e009d8553a5878b510b02ae177e08cc9d06b3bbc3cd185aa212b028bb",
+    "tools/cpho_2023_original_style.py": "bdbbb1c0218bbe6d28c1ed92f1bafd7db770164d4365ce19a224195d916cd968",
+    "tools/cpho_official_hans_fonts.py": "a6bec718cd09d9c06b1842bb4a65e5a77489ec7891e17719c7889e538aff5258",
+    "tools/cpho_2023_original_labels_qa.py": "9e93056683305b5db16994365315bcb44548e660ba6755490497b2220391e36d",
+    "tools/cpho_2023_original_labels.py": "993e4fb09daf73434f97e62b8a85c4b79ce95a220fe6df8690963c10adb09b37",
+    "tools/cpho_cjk_translate.py": "55a9d2bf4a2d0a41f7437a340155ef74b40a83943e486822869b824b6737db78",
+    "tools/pdf_layout_translate.py": "257c68b0a1538d05f88a1a93323889ec6f2ebfed901c8bbe9ba9dd98d4ba487a",
     "tools/cpho_2023_natural_qa.py": "dbccf06bdddabad1684f3732914deb8bd526d45a75397294dfce44dc33c287d0",
-    "tools/cpho_2023_natural_ready.py": "9dc582b037714543058f88cc7fd243a60a72b808cf085a53fc885450e9bec4b0",
-    "tools/pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
-    "tools/pdf_korean_natural_composer.py": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb",
-    "tools/izho_natural_spacing.py": "46d5123b66bc15083868687fbb5abe8b60b36c02d6fb8e7e3726efc6e9bdb773",
-    "tools/izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
-    "tools/natural_spacing_form_groups.py": "744391403c453d1bc1a5d7229a42b9d1594bd247bd2ca403d53b859e667ab0cb",
-    "tools/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
-    "tools/pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
-    "tools/pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
-    "tools/pdf_original_graphics_ink.py": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
-    "tools/pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
-    "tools/pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
-    "tools/pdf_original_image_ink.py": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
-    "tools/izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
-    "tools/ko/cpho/2023/natural-inline-groups.json": "6e8dc4a4d052ec1733d7553e2426279d291cdeca700804d38e9554a781f0b9ae"
+    "build_page11.py": "2b3c209f02f577355aa4748bfc18353ba7d672efe7eeb2da355aa80b3c75ea5d",
+    "qa_page11.py": "76d655396b7fbbaca335dcd41b895000856c4844b921358de53f8714f10dc549",
+    "project_authored_cids.py": "bb35241cfa394fd1ee6208ad389d2289636c1a2fcaba7d1bede8e2173af194e6",
+    "assemble_private.py": "0c1d9e902dc1752fa60a00876ac2dd5d22203ec4365f886977ce400174d92fef",
+    "finalize_manifest.py": "e85829b5c2e07e6fb523ffe2da68ae67b4957bd8f88028049472b0dd3bcc1145",
+    "tools/ko/cpho/2023/natural-inline-groups.json": "6e8dc4a4d052ec1733d7553e2426279d291cdeca700804d38e9554a781f0b9ae",
+    "tools/ko/cpho/2023/original-labels/source-survey.json": "dcceec8077df9a55cedc5f190e5f24bd857472ca4d9d64afcd8680225d8d37ed",
+    "tools/ko/cpho/2023/original-labels/label-plan.json": "7ce0f98e62639fbd47279a8b280962f6e08eff082868abe0254c9280201a86d1",
+    "tmp/original-style-repair/2023/slots.json": "9dd41044b4f68910aa6fcbd6076706aa93448180a0e470d6caa7368aa109eede",
+    "tmp/original-style-repair/2023/CPhO_2023_p11_KO_proof.qa.json": "68968bab67efe2f8946777af21b4788864e8fc1f3099bb3a47a73e887d77a5c3",
+    "audit-inventory.json": "e032eee877d32f61bd59e2e4448081a8c6db769358183a5a8433d1621176c231",
+    "audit-page11.json": "13ea601772cfff5607b1828a21c8119f0794b5c699787b45cfc320587f179681",
+    "engine-manifest.json": "5f9ab39b6207f9cd3e8a1279ad67458c6370190204cbd1b2b938d73941f83fd7"
   },
   "extra_evidence": [
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page01-script-relative-geometry.json",
-      "sha256": "31df358ff371739143422664302ab4ee745587f1f56846c108411a41e6f956b2",
       "kind": "native-script-relative-geometry",
-      "page": 1
+      "page": 1,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page01-native-script-relative-geometry.json",
+      "sha256": "31df358ff371739143422664302ab4ee745587f1f56846c108411a41e6f956b2"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page02-script-relative-geometry.json",
-      "sha256": "21b68bc9212da3084a9c28dd586ce9d1bc2cbfcaa7a08cd35a4d1ab0a2e6b3e2",
       "kind": "native-script-relative-geometry",
-      "page": 2
+      "page": 2,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page02-native-script-relative-geometry.json",
+      "sha256": "21b68bc9212da3084a9c28dd586ce9d1bc2cbfcaa7a08cd35a4d1ab0a2e6b3e2"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page03-script-relative-geometry.json",
-      "sha256": "b0110cf97ee0143ec522cebdebc2164fed116dfc93bb336579b200e6fa294d4d",
       "kind": "native-script-relative-geometry",
-      "page": 3
+      "page": 3,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page03-native-script-relative-geometry.json",
+      "sha256": "b0110cf97ee0143ec522cebdebc2164fed116dfc93bb336579b200e6fa294d4d"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page04-script-relative-geometry.json",
-      "sha256": "54453b051b3192e93b317e18b1196428ab1a98b8be86fd9393713c86992bb70c",
       "kind": "native-script-relative-geometry",
-      "page": 4
+      "page": 4,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page04-native-script-relative-geometry.json",
+      "sha256": "54453b051b3192e93b317e18b1196428ab1a98b8be86fd9393713c86992bb70c"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page05-script-relative-geometry.json",
-      "sha256": "3d1443cd2e2e108d6b0347efd94d56172e6cb34282b332cac833f2e141059edc",
       "kind": "native-script-relative-geometry",
-      "page": 5
+      "page": 5,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page05-native-script-relative-geometry.json",
+      "sha256": "3d1443cd2e2e108d6b0347efd94d56172e6cb34282b332cac833f2e141059edc"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page06-script-relative-geometry.json",
-      "sha256": "a308fbcdd2f7c47717d8585d8c83af3f7c6a32989f95e372a110666d01c4572e",
       "kind": "native-script-relative-geometry",
-      "page": 6
+      "page": 6,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page06-native-script-relative-geometry.json",
+      "sha256": "a308fbcdd2f7c47717d8585d8c83af3f7c6a32989f95e372a110666d01c4572e"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page07-script-relative-geometry.json",
-      "sha256": "7cec36e68c3862956522e5beab611da0e153b89dc870410701baddabe18df4a0",
       "kind": "native-script-relative-geometry",
-      "page": 7
+      "page": 7,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page07-native-script-relative-geometry.json",
+      "sha256": "7cec36e68c3862956522e5beab611da0e153b89dc870410701baddabe18df4a0"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page08-script-relative-geometry.json",
-      "sha256": "a86d0051a2169f90f064b40270b1951b1d82a04d2a62ee0c4cf780876ab6181d",
       "kind": "native-script-relative-geometry",
-      "page": 8
+      "page": 8,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page08-native-script-relative-geometry.json",
+      "sha256": "a86d0051a2169f90f064b40270b1951b1d82a04d2a62ee0c4cf780876ab6181d"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page09-script-relative-geometry.json",
-      "sha256": "6d8492b38b979ed1acd72e1077a61c78f7a743ea85a6ecccd853adde4fe5acc7",
       "kind": "native-script-relative-geometry",
-      "page": 9
+      "page": 9,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page09-native-script-relative-geometry.json",
+      "sha256": "6d8492b38b979ed1acd72e1077a61c78f7a743ea85a6ecccd853adde4fe5acc7"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page10-script-relative-geometry.json",
-      "sha256": "6aef2d60149784159ef8ab178582de4f51e341cd5e1be9ada6f11f94029ff796",
       "kind": "native-script-relative-geometry",
-      "page": 10
+      "page": 10,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page10-native-script-relative-geometry.json",
+      "sha256": "6aef2d60149784159ef8ab178582de4f51e341cd5e1be9ada6f11f94029ff796"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page11-script-relative-geometry.json",
-      "sha256": "12195eba484deafd4e34288cce1100ed96a6b96ad3a8e7fcd7ab197c5b0c8378",
       "kind": "native-script-relative-geometry",
-      "page": 11
+      "page": 11,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page11-native-script-relative-geometry.json",
+      "sha256": "0ac67f27bdae1b530c0bbf0d92d391bc6f696fda059821128ee412cd1d86f6b5"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page12-script-relative-geometry.json",
-      "sha256": "f6c960842753d6b00649dfd7fab62cfd371bc4e64a3ad1815744abd5d8945628",
       "kind": "native-script-relative-geometry",
-      "page": 12
+      "page": 12,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page12-native-script-relative-geometry.json",
+      "sha256": "f6c960842753d6b00649dfd7fab62cfd371bc4e64a3ad1815744abd5d8945628"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page13-script-relative-geometry.json",
-      "sha256": "3a01d12e5af90100f28d4be57b4627aee8853586390725edc03a22fa988e9fc5",
       "kind": "native-script-relative-geometry",
-      "page": 13
+      "page": 13,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page13-native-script-relative-geometry.json",
+      "sha256": "3a01d12e5af90100f28d4be57b4627aee8853586390725edc03a22fa988e9fc5"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page14-script-relative-geometry.json",
-      "sha256": "620aa6319b62f0660aa7c7501c71e34b50d129a87c7445ebe6cd6e86a768f7ad",
       "kind": "native-script-relative-geometry",
-      "page": 14
+      "page": 14,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page14-native-script-relative-geometry.json",
+      "sha256": "620aa6319b62f0660aa7c7501c71e34b50d129a87c7445ebe6cd6e86a768f7ad"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page15-script-relative-geometry.json",
-      "sha256": "f4bc1a9bedf36d497f651dd098d8973ab800e97b635a423fb1975a033b607d73",
       "kind": "native-script-relative-geometry",
-      "page": 15
+      "page": 15,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page15-native-script-relative-geometry.json",
+      "sha256": "f4bc1a9bedf36d497f651dd098d8973ab800e97b635a423fb1975a033b607d73"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page16-script-relative-geometry.json",
-      "sha256": "81b233252f13c4c30dedfe49633b1af017f3b97625e7ee86caf3cd78d9a39520",
       "kind": "native-script-relative-geometry",
-      "page": 16
+      "page": 16,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page16-native-script-relative-geometry.json",
+      "sha256": "81b233252f13c4c30dedfe49633b1af017f3b97625e7ee86caf3cd78d9a39520"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page17-script-relative-geometry.json",
-      "sha256": "c758089a4e4af256ee0edba3ed875a4b812356a5c411cc4b6df8e23e4b1d69c1",
       "kind": "native-script-relative-geometry",
-      "page": 17
+      "page": 17,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page17-native-script-relative-geometry.json",
+      "sha256": "c758089a4e4af256ee0edba3ed875a4b812356a5c411cc4b6df8e23e4b1d69c1"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page18-script-relative-geometry.json",
-      "sha256": "83fdb479612ff7120def5d4f2bc32ea6034c8facb0e0f01da83f063a51a5f47e",
       "kind": "native-script-relative-geometry",
-      "page": 18
+      "page": 18,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page18-native-script-relative-geometry.json",
+      "sha256": "83fdb479612ff7120def5d4f2bc32ea6034c8facb0e0f01da83f063a51a5f47e"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page19-script-relative-geometry.json",
-      "sha256": "93660239cd9ce4f4967c45b0e569b7ca4ea9d6a0203e3b30afaf46740627d27c",
       "kind": "native-script-relative-geometry",
-      "page": 19
+      "page": 19,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page19-native-script-relative-geometry.json",
+      "sha256": "93660239cd9ce4f4967c45b0e569b7ca4ea9d6a0203e3b30afaf46740627d27c"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page20-script-relative-geometry.json",
-      "sha256": "81a3347f93de2f1173658acc5a05d15b58a328c7f4f21c215a1dd30a1edea8bb",
       "kind": "native-script-relative-geometry",
-      "page": 20
+      "page": 20,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page20-native-script-relative-geometry.json",
+      "sha256": "81a3347f93de2f1173658acc5a05d15b58a328c7f4f21c215a1dd30a1edea8bb"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page21-script-relative-geometry.json",
-      "sha256": "4ef9f813170ad4135ce7dddb66418a49b24e78a8a777fa66789dd37b5d0f3d8d",
       "kind": "native-script-relative-geometry",
-      "page": 21
+      "page": 21,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page21-native-script-relative-geometry.json",
+      "sha256": "4ef9f813170ad4135ce7dddb66418a49b24e78a8a777fa66789dd37b5d0f3d8d"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page22-script-relative-geometry.json",
-      "sha256": "f06bca52eda5bd288dde43d3ca32e9baf964e815c699286ae4d8f86f0d01f2da",
       "kind": "native-script-relative-geometry",
-      "page": 22
+      "page": 22,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page22-native-script-relative-geometry.json",
+      "sha256": "f06bca52eda5bd288dde43d3ca32e9baf964e815c699286ae4d8f86f0d01f2da"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page23-script-relative-geometry.json",
-      "sha256": "143d91fa66f9db1232860b9a7d43377e4d719f3dee12ca0767736ab780c171e8",
       "kind": "native-script-relative-geometry",
-      "page": 23
+      "page": 23,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page23-native-script-relative-geometry.json",
+      "sha256": "143d91fa66f9db1232860b9a7d43377e4d719f3dee12ca0767736ab780c171e8"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page24-script-relative-geometry.json",
-      "sha256": "4bcd4c1e6c17b337dd10875d0b35bb7531c4fbb2774ae795965c5c26b0ed5665",
       "kind": "native-script-relative-geometry",
-      "page": 24
+      "page": 24,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page24-native-script-relative-geometry.json",
+      "sha256": "4bcd4c1e6c17b337dd10875d0b35bb7531c4fbb2774ae795965c5c26b0ed5665"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page25-script-relative-geometry.json",
-      "sha256": "73943ed4ee1571ad3852dad96fb5eabb8007446af4e288ea924d70aa970ac1b7",
       "kind": "native-script-relative-geometry",
-      "page": 25
+      "page": 25,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page25-native-script-relative-geometry.json",
+      "sha256": "73943ed4ee1571ad3852dad96fb5eabb8007446af4e288ea924d70aa970ac1b7"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page26-script-relative-geometry.json",
-      "sha256": "ced31015c713f8d8386e7bdadaf22c33e2c2201b23353fb575b12ab0af191778",
       "kind": "native-script-relative-geometry",
-      "page": 26
+      "page": 26,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page26-native-script-relative-geometry.json",
+      "sha256": "ced31015c713f8d8386e7bdadaf22c33e2c2201b23353fb575b12ab0af191778"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page27-script-relative-geometry.json",
-      "sha256": "8ecf6615e82738f3cde97216e2875e9a3ab40a54e8a83260e044a66290679003",
       "kind": "native-script-relative-geometry",
-      "page": 27
+      "page": 27,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page27-native-script-relative-geometry.json",
+      "sha256": "8ecf6615e82738f3cde97216e2875e9a3ab40a54e8a83260e044a66290679003"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page28-script-relative-geometry.json",
-      "sha256": "3a0cae89d47ab8b3e1fcda17b49418949ac4cd8c147e050cc80369b09ff6aef8",
       "kind": "native-script-relative-geometry",
-      "page": 28
+      "page": 28,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page28-native-script-relative-geometry.json",
+      "sha256": "3a0cae89d47ab8b3e1fcda17b49418949ac4cd8c147e050cc80369b09ff6aef8"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page29-script-relative-geometry.json",
-      "sha256": "9be6874cf976f00309e6bae3dae917dad4c42fde678b9d2433f74cb8c5212db3",
       "kind": "native-script-relative-geometry",
-      "page": 29
+      "page": 29,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page29-native-script-relative-geometry.json",
+      "sha256": "9be6874cf976f00309e6bae3dae917dad4c42fde678b9d2433f74cb8c5212db3"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page30-script-relative-geometry.json",
-      "sha256": "edb7a46e09836705c5842d892c2616395c73194f089f5bfebcf40dcc21f9b24e",
       "kind": "native-script-relative-geometry",
-      "page": 30
+      "page": 30,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page30-native-script-relative-geometry.json",
+      "sha256": "edb7a46e09836705c5842d892c2616395c73194f089f5bfebcf40dcc21f9b24e"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page31-script-relative-geometry.json",
-      "sha256": "0c38cd7a2ec65b971b91c430f415dbaaf9c515472dfebcda28f0a6282bc9d55d",
       "kind": "native-script-relative-geometry",
-      "page": 31
+      "page": 31,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page31-native-script-relative-geometry.json",
+      "sha256": "0c38cd7a2ec65b971b91c430f415dbaaf9c515472dfebcda28f0a6282bc9d55d"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page32-script-relative-geometry.json",
-      "sha256": "198c84cef0ffe6c490a2e805aa9cb114a7771ec7f7b341c41f8ca61f5bb52f89",
       "kind": "native-script-relative-geometry",
-      "page": 32
+      "page": 32,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page32-native-script-relative-geometry.json",
+      "sha256": "198c84cef0ffe6c490a2e805aa9cb114a7771ec7f7b341c41f8ca61f5bb52f89"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page33-script-relative-geometry.json",
-      "sha256": "45c90bb374fb68ea2650c01ca71adf5de1e64d6db1fe4bc3693fca1669ca13e8",
       "kind": "native-script-relative-geometry",
-      "page": 33
+      "page": 33,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page33-native-script-relative-geometry.json",
+      "sha256": "45c90bb374fb68ea2650c01ca71adf5de1e64d6db1fe4bc3693fca1669ca13e8"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page34-script-relative-geometry.json",
-      "sha256": "69392a0a486a8d3797670ecfa52011fa5dcad802396bba9169db2e9d953fcdfd",
       "kind": "native-script-relative-geometry",
-      "page": 34
+      "page": 34,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page34-native-script-relative-geometry.json",
+      "sha256": "69392a0a486a8d3797670ecfa52011fa5dcad802396bba9169db2e9d953fcdfd"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page35-script-relative-geometry.json",
-      "sha256": "88ebc087211bd3df39641fa54e105c7e6e3ae65388d6514b28456d19007f5c52",
       "kind": "native-script-relative-geometry",
-      "page": 35
+      "page": 35,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page35-native-script-relative-geometry.json",
+      "sha256": "88ebc087211bd3df39641fa54e105c7e6e3ae65388d6514b28456d19007f5c52"
     },
     {
-      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page36-script-relative-geometry.json",
-      "sha256": "07aa652fb20fc85b0fd36beffda8c68ff4140aa65544ce2253d29e6476272062",
       "kind": "native-script-relative-geometry",
-      "page": 36
+      "page": 36,
+      "path": "tools/ko/cpho/2023/combined/natural-spacing/ko/page36-native-script-relative-geometry.json",
+      "sha256": "07aa652fb20fc85b0fd36beffda8c68ff4140aa65544ce2253d29e6476272062"
     }
   ]
 }

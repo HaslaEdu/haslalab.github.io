@@ -1,0 +1,104 @@
+{
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "review_method": "All original non-header vector math paths inventoried; only inline equations with reviewed prose baselines move. Original display fractions remain stationary.",
+  "atoms": [
+    {
+      "page": 1,
+      "label": "sqrt(2gh): complete native radical",
+      "rect": [
+        285,
+        129,
+        311,
+        144
+      ],
+      "baseline": 140.89996337890625,
+      "expected_physical_glyphs": 3,
+      "vector_rects": [
+        [
+          286.37,
+          136.4599780273437,
+          287.69,
+          137.17997802734374
+        ],
+        [
+          287.69,
+          136.4599780273437,
+          290.95,
+          143.17997802734374
+        ],
+        [
+          290.95,
+          131.17997802734374,
+          292.99,
+          143.17997802734374
+        ],
+        [
+          292.99,
+          131.17997802734374,
+          308.71,
+          131.17997802734374
+        ]
+      ]
+    },
+    {
+      "page": 1,
+      "label": "(8/21)h^2: complete native area fraction and exponent",
+      "rect": [
+        137,
+        160,
+        159.3,
+        181
+      ],
+      "baseline": 174.25994873046875,
+      "expected_physical_glyphs": 5,
+      "vector_rects": [
+        [
+          137.9,
+          169.5799780273437,
+          148.46,
+          169.5799780273437
+        ]
+      ]
+    },
+    {
+      "page": 1,
+      "label": "2/3: complete native trajectory-area fraction",
+      "rect": [
+        189.9,
+        200,
+        197,
+        220
+      ],
+      "baseline": 213.01995849609375,
+      "expected_physical_glyphs": 2,
+      "vector_rects": [
+        [
+          190.85,
+          208.3399780273437,
+          196.01,
+          208.3399780273437
+        ]
+      ]
+    },
+    {
+      "page": 3,
+      "label": "beta=v/c: complete native speed fraction",
+      "rect": [
+        77,
+        427,
+        99,
+        447
+      ],
+      "baseline": 439.5099792480469,
+      "expected_physical_glyphs": 4,
+      "vector_rects": [
+        [
+          93.384,
+          434.82997802734377,
+          98.064,
+          434.82997802734377
+        ]
+      ]
+    }
+  ]
+}
