@@ -24,7 +24,13 @@ names, countries, or personal information are needed by the comparison UI.
 contestants' totals are published. It permits an exact hypothetical rank only
 above that boundary, even when lower totals are private. Set
 `participantCountUncertain` to suppress population percentages when published
-participant counts conflict. Neither inference applies to component scores.
+participant counts conflict. A theory/experiment score cannot exceed its own
+total, so the client derives an exact full-field **round** rank from the same
+edition's total floor, only when the round's published scores come from exactly
+the same published contestants (equal counts and population) and the round score
+is at or above that floor. Below it the round stays a published-only comparison.
+A round-reference band is labelled full-field only when that rank is exact or the
+band's own cut is at or above the floor; unpublished scores can only raise a cut.
 
 `medalCutoffs` is allowed only with `awardScope: true`: these scores determine
 that competition's overall awards. `cutoffKind: published` means the organiser
@@ -38,7 +44,7 @@ theory or experimental paper it records the actual edition's gold/silver/bronze
 counts, their sources, and the same-round score at each cumulative award count.
 The client labels this a **theory/experiment reference medal range**. Ties share
 the highest matching band. A winner-only component distribution stays marked
-`published`; it never acquires a full-field rank or percentile. No honourable
+`published`; it gains a full-field rank only through the total-floor bound above. No honourable
 mention is inferred from rank counts. Both the builder and client recompute the
 reference boundaries and reject inconsistent counts, cuts, or coverage.
 
