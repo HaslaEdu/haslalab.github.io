@@ -39,14 +39,14 @@ await call("DELETE", `/lab/sessions/${sid}/pages/${j.id}`, null, G);
 [s, j] = await call("GET", `/lab/up/${sid}`, null, null, { "X-Lab-Token": key });
 ok(j.pages.map(p => p.legible).join() === "good,good,poor", "the phone sees how each page was read");
 [s, j] = await call("GET", `/lab/sessions/${sid}`, null, G);
-ok(j.session.pages[0].read && j.session.pages[0].read.items.length === 4 && j.session.regulation.rules.length === 11, "the computer sees what was read on each page and the regulation");
+ok(j.session.pages[0].read && j.session.pages[0].read.items.length === 4 && j.session.regulation.family === "ipho" && j.session.regulation.rules.some(r => r.id === "IP1") && !j.session.regulation.rules.some(r => r.id === "R5"), "the computer sees what was read on each page and the IPhO family's regulation");
 [s, j] = await call("PATCH", `/lab/sessions/${sid}/pages/${j.session.pages[0].id}`, { text: "A.3 h = 11 W/(m2 K)" }, G);
 ok(s === 400 && j.error === "read_only", "the candidate cannot type answers in after the exam");
 
 /* submit: E1 from the scheme of the official solution; E2's solution does not exist */
 [s, j] = await call("POST", `/lab/sessions/${sid}/submit`, {}, G);
 const e1 = j.session.detail.tasks.E1, e2 = j.session.detail.tasks.E2, it = id => e1.items.find(x => x.id === id);
-ok(e1.status === "graded" && e1.points === 3.5 && e1.regulation === "2026-10-29", "E1 graded against the 3.5-point scheme, regulation version recorded");
+ok(e1.status === "graded" && e1.points === 3.5 && /^\d{4}-\d\d-\d\d\/ipho\/experiment$/.test(e1.regulation), "E1 graded against the 3.5-point scheme, regulation (version, family, kind) recorded");
 ok(it("A.1").got === 0.4 && it("A.1").by === "code" && it("A.1").value === 108.2, "A.1: 108.2 in [105, 111] → full 0.4, decided by the code (the model said half)");
 ok(it("A.2").got === 0.6, "A.2: 395 in [380, 410] → full 0.6");
 ok(it("A.3").got === 0 && it("A.3").rules.includes("R9"), "A.3: the model claims 11, which was read on no page → 0 (R9)");

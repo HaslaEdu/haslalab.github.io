@@ -42,10 +42,10 @@ test('server timestamps alone do not reset backoff and OCR queue statuses stay u
   assert.equal(Network.reading({ocr_status:'reading'}),true);assert.equal(Network.reading({ocr_status:'done'}),false);assert.equal(Network.reading({source:'typed',ocr_status:'queued'}),false);
 });
 
-function examSyncContext(api,identity=()=> 'test-account'){
+function examSyncContext(api,identity=()=> 'test-account',extra={}){
   const source=fs.readFileSync(require.resolve('../sim/exam.html'),'utf8'),part=source.slice(source.indexOf('let syncPromise=null'),source.indexOf('\nasync function introView()'));
   const context=vm.createContext({transport:{fingerprint:identity},requestEpoch:0,SES:null,ME:null,SKEW:0,LABOK:null,REG:null,shown:'',pagesSeen:'',imgCache:new Map(),imgPending:new Map(),URL:{revokeObjectURL(){}},stopTimers(){},OK_EXAM:true,REVIEW:false,KEY:'ipho2024',EX:{tasks:['E1']},tok:()=>identity(),api,document:{hidden:false,addEventListener(){}},addEventListener(){},poller:null,render(){context.renders=(context.renders||0)+1;},setSession(s){context.SES=s;},Date,encodeURIComponent});
-  vm.runInContext(part,context);return context;
+  Object.assign(context,{REG_EXAM:null,REG_ASKED:true},extra);vm.runInContext(part,context);return context;
 }
 
 test('the real exam sync hydrates identity, balance, health and active clock in one deduplicated request',async()=>{
@@ -53,6 +53,16 @@ test('the real exam sync hydrates identity, balance, health and active clock in 
   const a=context.sync(),b=context.sync();assert.equal(a,b);assert.equal(calls.length,1);assert.match(calls[0].path,/^\/lab\/bootstrap\?include=health,pages$/);
   gate.resolve({user:{nickname:'Candidate'},tokens:4,parts:0,active:{id:2,exam_key:'ipho2024',tasks:['E1'],status:'running',started_at:100},health:{lab:true,lab_reg:{version:'test'}},now:Math.floor(Date.now()/1000)+30});await a;
   assert.equal(context.ME.nickname,'Candidate');assert.equal(context.ME.tokens,4);assert.equal(context.SES.id,2);assert.equal(context.LABOK,true);assert.ok(context.SKEW>=29&&context.SKEW<=31);assert.equal(context.renders,1);
+});
+
+test('the exam page asks once for the regulation of its own competition and papers',async()=>{
+  const calls=[],context=examSyncContext((method,path)=>{calls.push(path);return Promise.resolve(path.startsWith('/lab/regulation')
+    ?{regulation:{version:'v',family:'ioaa',title:{ko:'IOAA',en:'IOAA'},rules:[{id:'OB1',ko:'관측',en:'observation'}]}}
+    :{user:{nickname:'Candidate'},tokens:1,health:{lab:true,lab_reg:{version:'general',rules:[]}},now:Math.floor(Date.now()/1000)});},
+    undefined,{REG_ASKED:false,EX:{c:'ioaa',tasks:['D1','O1']},isThy:()=>false});
+  await context.sync();await flush();await context.sync();await flush();
+  assert.deepEqual(calls.filter(p=>p.startsWith('/lab/regulation')),['/lab/regulation?c=ioaa&e=D1%2CO1&t=0,0']);
+  assert.equal(context.REG.family,'ioaa','the competition rules replace the general ones and survive the next sync');
 });
 
 test('the real exam sync ignores an old account response after sign-out',async()=>{

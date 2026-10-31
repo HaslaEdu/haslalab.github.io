@@ -466,7 +466,7 @@ const errMsg = e => (t().err[e && e.code]) || (e && e.code) || "error";
 
 /* ── the session, as the server has it.  The server keeps the clock; this page only shows it.
       SES: the session; SKEW: server time minus this computer's time, so a wrong local clock does not matter. ── */
-let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null, REG = null;
+let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null, REG = null, REG_EXAM = null, REG_ASKED = false;
 const srvNow = () => Math.floor(Date.now() / 1000) + SKEW;
 function setSession(s) { SES = s; if (s && s.now) SKEW = s.now - Math.floor(Date.now() / 1000); }
 /* the phone's upload token is shown once by the server; this computer keeps it per session.  Another computer
@@ -543,7 +543,7 @@ function sync(){
       if(oldId)a.session=(await api('GET','/lab/sessions/'+oldId)).session;
     }
     if(identity!==transport.fingerprint()||epoch!==requestEpoch)return;
-    if(a.health){LABOK=!!a.health.lab;REG=a.health.lab_reg||REG;}if(Number.isFinite(a.now))SKEW=a.now-Math.floor(Date.now()/1000);
+    if(a.health){LABOK=!!a.health.lab;REG=REG_EXAM||a.health.lab_reg||REG;}if(LABOK&&!REG_ASKED&&OK_EXAM){REG_ASKED=true;loadRegulation();}if(Number.isFinite(a.now))SKEW=a.now-Math.floor(Date.now()/1000);
     ME=a.user?{...a.user,tokens:a.tokens,other:null}:null;
     if(!ME||LABOK===false){SES=null;return render();}
     if(a.session)setSession(a.session);
@@ -553,6 +553,9 @@ function sync(){
   }catch(e){if(identity!==transport.fingerprint()||epoch!==requestEpoch)return;if(e.status===401){ME=null;SES=null;}LABOK=LABOK===true?true:null;render();}})();
   syncPromise=promise;promise.finally(()=>{if(syncPromise===promise)syncPromise=null;});return promise;
 }
+/* the rules of this competition and these papers (theory, experiment, data analysis, observation) */
+function loadRegulation(){api('GET','/lab/regulation?c='+encodeURIComponent(EX.c)+'&e='+encodeURIComponent(EX.tasks.join(','))+'&t='+EX.tasks.map((x,i)=>isThy(i)?1:0).join(','))
+  .then(r=>{if(r&&r.regulation&&Array.isArray(r.regulation.rules)){REG_EXAM=REG=r.regulation;render();}}).catch(()=>{});}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&OK_EXAM&&!poller)void sync();});
 addEventListener('storage',e=>{if(e.key==='hlCmTok'||e.key==='hlCmApi'){clearAccount();void sync();}});
 
@@ -588,7 +591,7 @@ async function introView() {
     <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
     <ol>${(MIX ? [lang === "ko" ? `이 시험은 대회 당일처럼 <b>실험과 이론을 함께</b> 풉니다. 이론 문제는 책자 그대로이며, 책상 위 문제지(왼쪽 아래)를 누르면 열립니다. 이론 답안도 같은 방식으로 스캔해 «${EX.tasks.find((x, i) => isThy(i))}»로 보냅니다.`
       : `As on the day, this exam holds <b>the experiments and the theory together</b>. The theory is the booklet itself: click the problems lying on the desk (bottom left) to open it. Scan the theory answers the same way, as «${EX.tasks.find((x, i) => isThy(i))}».`] : []).concat(t().rules).map(r => `<li>${r}</li>`).join("")}</ol>
-    ${REG ? `<details class="reg"><summary>${t().regH} <span>(${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
+    ${REG ? `<details class="reg"><summary>${t().regH} <span>(${REG.title ? esc(lang === "en" ? REG.title.en : REG.title.ko) + " · " : ""}${t().regV(REG.version)})</span></summary><ol>${REG.rules.map(r => `<li><b>${r.id}</b> ${esc(lang === "en" ? r.en : r.ko)}</li>`).join("")}</ol></details>` : ""}
     ${paperLanguageHtml()}${gate}
     <div class="row"><a href="${back}">${t().back}</a></div>
   </div></div>`;

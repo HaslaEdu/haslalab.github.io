@@ -7,6 +7,7 @@ import http from "node:http";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import worker from "./src/index.js";
+import { stablePrefix, familyOf, REG_VERSION } from "./src/grading-rules.js";
 
 const sqlite = new DatabaseSync(":memory:");
 for (const name of readdirSync(new URL("./migrations/", import.meta.url)).filter(name => /^00(?:0[1-9]|1[01])_.*\.sql$/.test(name)).sort()) {
@@ -270,10 +271,11 @@ test("real grading input retains unabridged original equations and existing nume
   assert.equal(result.data.session.score, 1, "existing range/unit/answer-sheet checks still determine the mark");
 });
 
-test("actual Gemini grading bodies share the regulation/output/evidence prefix across exams and students", async () => {
+test("actual Gemini grading bodies share the cacheable rules prefix of their family and paper kind across exams and students", async () => {
   const runs = [];
   for (const scope of [{ comp: "ipho", year: 2024, task: "E1", lang: "ko" },
-    { comp: "apho", year: 2025, task: "E2", lang: "en" }, { comp: "ipho", year: 2026, task: "T2", theory: true, lang: "ko" }]) {
+    { comp: "apho", year: 2025, task: "E2", lang: "en" }, { comp: "ipho", year: 2026, task: "T2", theory: true, lang: "ko" },
+    { comp: "eupho", year: 2024, task: "E1", lang: "ko" }]) {
     const s = await session(scope), marker = `PRIVATE_STUDENT_${s.id}_FINAL_ANSWER`, original = FORMULA + "\n" + marker;
     const image = Buffer.concat([png, Buffer.from(marker)]), reading = readFixture(); reading.header.task = scope.task;
     reset({ upstage: { content: { markdown: original }, confidence: 0.94 }, read: reading,
@@ -287,6 +289,8 @@ test("actual Gemini grading bodies share the regulation/output/evidence prefix a
     const head = grading.parts[0].text, boundary = head.indexOf("\n[Exam context]\n"); assert.ok(boundary > 0);
     const prefix = head.slice(0, boundary), tail = head.slice(boundary);
     for (const policy of ["Grading regulation", "R1.", "R10.", "For every scheme item", "primary text evidence", "never changes a mark"]) assert.ok(prefix.includes(policy), policy);
+    assert.equal(prefix, stablePrefix(familyOf(scope.comp), scope.theory ? "theory" : "experiment") + "\n", "the fixed rules of this family and paper kind, nothing else");
+    assert.equal(result.data.session.detail.tasks[scope.task].regulation, `${REG_VERSION}/${familyOf(scope.comp)}/${scope.theory ? "theory" : "experiment"}`);
     assert.ok(!prefix.includes(marker)); assert.ok(!prefix.includes(s.token)); assert.ok(!prefix.includes(original)); assert.ok(!prefix.includes("<<SCHEME>>"));
     assert.ok(tail.includes(scope.comp.toUpperCase() + " " + scope.year)); assert.ok(tail.includes(scope.task)); assert.ok(tail.includes(scope.lang === "en" ? "English" : "Korean"));
     assert.ok(grading.prompt.includes(original), "the complete original remains in the student tail");
@@ -296,7 +300,12 @@ test("actual Gemini grading bodies share the regulation/output/evidence prefix a
     assert.equal(metered.model, "gemini-2.5-flash"); assert.equal(metered.in_tok, 1000); assert.equal(metered.out_tok, 100); assert.equal(metered.cached_tok, 400); assert.ok(metered.usd > 0);
     runs.push({ prefix, original, prompt: grading.prompt });
   }
-  assert.equal(runs[0].prefix, runs[1].prefix); assert.equal(runs[1].prefix, runs[2].prefix);
+  const shared = (a, b) => { let i = 0; while (i < a.length && a[i] === b[i]) i++; return i; };
+  assert.equal(runs[0].prefix, runs[1].prefix, "IPhO and APhO experiments: one family, one kind, one cached prefix");
+  assert.notEqual(runs[1].prefix, runs[2].prefix, "a theory paper has its own paper rules");
+  assert.ok(shared(runs[1].prefix, runs[2].prefix) > runs[1].prefix.indexOf("handwriting:"), "theory and experiment still share the common block");
+  assert.notEqual(runs[0].prefix, runs[3].prefix, "EuPhO marks by its own family's rules");
+  assert.ok(shared(runs[0].prefix, runs[3].prefix) >= runs[0].prefix.indexOf("[Competition rules"), "two families of one kind share the common and kind blocks");
   assert.ok(runs[0].prefix.length > 1000, "compare the substantive common policy, not only a task tag");
   for (let i = 0; i < runs.length; i++) for (let j = 0; j < runs.length; j++) if (i !== j) assert.ok(!runs[i].prompt.includes(runs[j].original), "another student's tail never leaks into a reused prefix");
 });

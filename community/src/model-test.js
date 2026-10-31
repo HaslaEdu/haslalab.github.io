@@ -3,6 +3,7 @@
  * https://api-docs.deepseek.com/guides/json_mode/ (verified 2026-10-30).
  */
 import { priceModelTestStage, summarizeModelTestPricing } from './model-test-pricing.js';
+import { familyOf, paperKind, rulesText } from './grading-rules.js';
 import { modelTestExamConfig, modelTestExamList, resolveModelTestExam, prepareModelTestReference, ModelTestReferenceError } from './model-test-reference.js';
 export const MODEL_TEST_LIMITS = Object.freeze({
   maxImages: 3, maxImageBytes: 1900000, maxTotalImageBytes: 5700000,
@@ -300,10 +301,11 @@ export async function runModelTest(env, body, options = {}) {
   if (!pipeline.available) fail(pipeline.reason, 503);
   const settings = { fetchImpl: options.fetchImpl || globalThis.fetch, timeoutMs: Number.isFinite(options.timeoutMs) ?
     Math.max(1, Math.min(110000, options.timeoutMs)) : TIMEOUT_MS };
-  const stages = []; let ocr, reference;
+  const stages = []; let ocr, reference, exam;
   try {
     if (input.mode === 'exam') {
-      const prepared = await prepareModelTestReference(env, resolveModelTestExam(input.entryId), providerSettings(env).gemini,
+      exam = resolveModelTestExam(input.entryId);
+      const prepared = await prepareModelTestReference(env, exam, providerSettings(env).gemini,
         { ...settings, lang: input.lang, pdfTimeoutMs: options.pdfTimeoutMs, referenceCache: options.referenceCache, providerCall: modelTestProviderCall });
       if (prepared.usageStage) stages.push(prepared.usageStage);
       reference = prepared.reference;
@@ -322,7 +324,9 @@ export async function runModelTest(env, body, options = {}) {
     const unresolved = /\[(?:illegible|unreadable|판독\s*불가)\]/i.test(text);
     ocr = { provider: pipeline.ocr.provider, model: pipeline.ocr.model, text, uncertainties: read.raw.uncertainties.slice(0, 30).map(value => value.slice(0, 600)),
       legible: read.raw.legible && !unresolved, ms: read.ms };
+    // the competition's own rules, as production grades it, sit right after the fixed policy so both are one cached prefix
     const policy = reference ? GRADE_POLICY.replace('developer rubric', 'server-selected published reference') +
+      '\n\n' + rulesText(familyOf(exam.comp), paperKind(exam.comp, exam.task, exam.kind !== 'experiment')) +
       (reference.scoring === 'qualitative' ? '\nNo verified official point scheme is available. Give qualitative feedback only; status must be needs_review and score must be null. Never invent weights or a numeric maximum.' : '') : GRADE_POLICY;
     const graded = await modelTestProviderCall(env, pipeline.grading, 'grading', policy,
       { task: 'grading', problem: input.problem, rubric: input.rubric, points: input.points,
