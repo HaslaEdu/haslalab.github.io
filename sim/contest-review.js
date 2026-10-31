@@ -63,7 +63,7 @@
     return qrPromise||(qrPromise=new Promise(resolve=>{const s=document.createElement('script');s.src='../vendor/qrcode/qrcode.js';s.onload=()=>resolve(window.qrcode||null);s.onerror=()=>{qrPromise=null;resolve(null);};document.head.append(s);}));
   }
   let scannerPromise;
-  const scannerLibrary=()=>scannerPromise||(scannerPromise=import('./labscan/scanner.js?v=20261030-ocr').catch(error=>{scannerPromise=null;throw error;}));
+  const scannerLibrary=()=>scannerPromise||(scannerPromise=import('./labscan/scanner.js?v=ddfd9c8cdd0f').catch(error=>{scannerPromise=null;throw error;}));
   async function imageBlob(file){return(await scannerLibrary()).encodeUpload(file,{maxBytes:MAX_IMAGE});}
   async function filePages(file,remaining){
     if(!file||file.size>30*1024*1024)throw{code:'file_too_big'};

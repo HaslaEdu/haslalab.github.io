@@ -75,6 +75,20 @@ test('monthly camera grants survive reloads in a separate namespace and never en
   assert.equal(ipho.hooks.SCAN_STORAGE,'hlScan');assert.equal(ipho.hooks.copy.task,'Experiment','existing IPhO language and labels remain unchanged');
 });
 
+test('exam and monthly camera guidance accept unmarked paper in both languages',()=>{
+  for(const monthly of [false,true]) for(const language of ['ko','en']) {
+    const view=scannerContext({monthly,hash:'#'+new URLSearchParams({c:monthly?code:'existing-exam-code',l:language})});
+    if(language==='ko') {
+      assert.match(view.hooks.copy.help,/종이의 네 모서리와 테두리/);assert.match(view.hooks.copy.help,/검은 표식이 없어도/);
+      assert.match(view.hooks.copy.lvAim,/선택 사항/);
+    } else {
+      assert.match(view.hooks.copy.help,/four paper corners and edges/);assert.match(view.hooks.copy.help,/Black markers are optional/);
+      assert.match(view.hooks.copy.lvAim,/Black markers are optional/);
+    }
+    assert.ok(view.hooks.copy.weak.includes(language==='en'?'Fix corners':'모서리 맞추기'),'manual corner correction remains the uncertain-detection fallback');
+  }
+});
+
 test('monthly upload changes only its payload/endpoint while retaining actual IPhO capture and correction controls',()=>{
   const html=fs.readFileSync(path.join(root,'sim/scan.html'),'utf8');
   assert.match(html,/MONTHLY \? await monthlyScanPayload\(sending,encodeUpload\) : await encodeUpload\(sending.blob, \{ maxBytes: MAX_BYTES \}\)/);

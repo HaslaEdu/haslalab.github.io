@@ -73,7 +73,7 @@ function pixelFixture() {
       drawImage(image, _x, _y, width = image.width, height = image.height) {
         c.ensure(); const source = image.data;
         for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
-          const s = (Math.min(image.height - 1, Math.floor(y / height * image.height)) * image.width + Math.min(image.width - 1, Math.floor(x / width * image.width))) * 4;
+          const s = (Math.min(image.height - 1, Math.floor(y * image.height / height)) * image.width + Math.min(image.width - 1, Math.floor(x * image.width / width))) * 4;
           c.data.set(source.slice(s, s + 4), (y * c.width + x) * 4);
         }
       },
@@ -120,6 +120,34 @@ test('manual marker coordinates preserve the paper margins outside the printed s
     const a = JSON.parse(await marker.blob.text()), b = JSON.parse(await page.blob.text()), at = 49 * 4;
     assert.ok(a.data[at + 1] < 100, 'red top margin survives the marker inset');
     assert.ok(b.data[at + 1] > 240, 'the same points treated as paper edges would crop that margin');
+  } finally { fixture.restore(); }
+});
+
+test('a complete unmarked photo flows through processShot as paper corners and preserves coloured page detail', async () => {
+  const fixture = pixelFixture(), W = 320, H = 450, pixels = new Uint8ClampedArray(W * H * 4);
+  const rect = (x0,y0,x1,y1,color) => { for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)pixels.set([...color,255],(y*W+x)*4); };
+  rect(0,0,W,H,[42,48,54]); rect(45,40,275,366,[246,244,240]);
+  rect(60,46,260,55,[195,45,55]); // coloured heading close to the real paper margin
+  rect(130,90,137,320,[35,65,190]); // original coloured pencil stroke
+  for(let y=125;y<300;y+=25)rect(75,y,230,y+3,[40,40,40]);
+  const original = new Blob([JSON.stringify({width:W,height:H,data:[...pixels]})],{type:'image/png'});
+  try {
+    const result=await scanner.processShot(original,{mode:'original',dpi:12});
+    assert.equal(result.method,'page'); assert.ok(result.autoScore>.5);
+    const expected=[{x:45,y:40},{x:275,y:40},{x:45,y:366},{x:275,y:366}];
+    result.corners.forEach((corner,index)=>assert.ok(Math.hypot(corner.x-expected[index].x,corner.y-expected[index].y)<9,'each detected point follows the outer paper edge'));
+    assert.equal(result.width,99); assert.equal(result.height,140); assert.ok(Math.abs(result.sourceShortSide-230)<12);
+    const base=fixture.decode(result.baseUrl); assert.equal(base.width,W); assert.equal(base.height,H); assert.ok(Buffer.from(base.data).equals(Buffer.from(pixels)),'the editable baseline retains every original pixel');
+    const output=JSON.parse(await result.blob.text()), rows=[]; let blue=0,darkBorder=0;
+    for(let y=0;y<output.height;y++)for(let x=0;x<output.width;x++) {
+      const i=(y*output.width+x)*4,[r,g,b]=output.data.slice(i,i+3);
+      if(r>140&&g<100&&b<110)rows.push(y);
+      if(b>130&&r<110&&g<130)blue++;
+      if((x===0||y===0||x===output.width-1||y===output.height-1)&&r<90&&g<90&&b<100)darkBorder++;
+    }
+    assert.ok(rows.length>20&&Math.min(...rows)<10,'the coloured top margin remains near the output edge without invented marker inset');
+    assert.ok(blue>40,'colour and pencil detail are preserved in original mode');
+    assert.ok(darkBorder<30,'the wrapper does not invent an expanded desk border by treating paper corners as marker centres');
   } finally { fixture.restore(); }
 });
 
@@ -194,4 +222,88 @@ test('a newer phone photo survives late progress, correction errors and rotation
   assert.equal(context.phone.getShot().previewUrl, 'current-d');
   assert.ok(revoked.includes(urlA)); assert.ok(revoked.includes(urlB));
   context.phone.releaseShot(); assert.equal(context.phone.getShot(), null);
+});
+
+test('photo preview warns on ambiguous high-score corners until the user confirms them', async () => {
+  const html=await fs.readFile(new URL('../sim/scan.html',import.meta.url),'utf8'), script=html.match(/<script type="module">([\s\S]*?)<\/script>/)[1];
+  const block=script.slice(script.indexOf('function paintShot()'),script.indexOf('async function redo('));
+  const nodes=new Map(), node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',querySelectorAll:()=>[]});return nodes.get(id);};
+  const labels={weak:'UNCERTAIN_CORNERS',processFailed:'PROCESS_FAILED',detail:'detail',answer:'answer',working:'working'};
+  const context=vm.createContext({shot:{task:'E1',kind:'answer',previewUrl:'data:fixture',autoScore:.95,cornersReliable:false},$:node,t:()=>labels,
+    esc:String,canProcess:()=>false,MONTHLY:false,send(){}});
+  vm.runInContext(block,context);context.paintShot();assert.match(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'a balanced quadrilateral is not sufficient evidence for a correct crop');
+  context.shot={...context.shot,autoScore:1,cornersReliable:true,method:'manual'};context.paintShot();assert.doesNotMatch(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'confirmed manual paper corners clear the detector warning');
+  context.shot={...context.shot,autoScore:.6,cornersReliable:undefined};context.paintShot();assert.match(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'the old score-only response still retains its warning');
+  context.shot={...context.shot,autoScore:.95};context.paintShot();assert.doesNotMatch(node('shot').innerHTML,/UNCERTAIN_CORNERS/,'legacy responses without the new flag remain compatible');
+});
+
+async function liveCameraFixture({ auto = true, capturePhoto } = {}) {
+  const html = await fs.readFile(new URL('../sim/scan.html', import.meta.url), 'utf8');
+  const script = html.match(/<script type="module">([\s\S]*?)<\/script>/)[1];
+  const block = script.slice(script.indexOf('const LIVE_OK ='), script.indexOf('/* the deadline, on the server'));
+  const timers = new Map(), photos = [], detections = [], calls = { stopped: 0, nativePhotos: 0, overlay: 0 }; let timerId = 0;
+  const corners = [{ x: 80, y: 60 }, { x: 450, y: 70 }, { x: 70, y: 650 }, { x: 460, y: 640 }];
+  const state = { detection: { corners, score: .9, method: 'page', edgeSupport: .95, clipped: false, autoCaptureEligible: true }, focus: 40 };
+  const pixels = new Uint8ClampedArray(540 * 720 * 4), photo = new Blob(['original camera photo'], { type: 'image/jpeg' });
+  const drawing = { drawImage() {}, getImageData: () => ({ data: pixels }), clearRect() {}, beginPath() {}, moveTo() {}, lineTo() {}, closePath() {}, fill() { calls.overlay++; }, stroke() {} };
+  const canvas = () => ({ width: 0, height: 0, getContext: () => drawing, getBoundingClientRect: () => ({ width: 360, height: 640 }), toBlob: done => done(photo) });
+  const overlayCanvas = canvas(), message = { textContent: '', classList: { toggle() {} } }, video = { videoWidth: 960, videoHeight: 1280, async play() {} };
+  const overlay = { innerHTML: '', querySelector: selector => selector === 'video' ? video : selector === 'canvas' ? overlayCanvas : message, remove() {} };
+  const track = { stop() { calls.stopped++; } }, stream = { getTracks: () => [track], getVideoTracks: () => [track] };
+  const ImageCapture = class { async takePhoto() { calls.nativePhotos++; return capturePhoto ? capturePhoto() : photo; } };
+  const labels = { lvAim: 'aim', lvPage: 'outline found', lvHold: 'hold still', lvTake: 'taking', blurry: 'blurred', lvNoCam: 'no camera' };
+  const context = vm.createContext({ navigator: { mediaDevices: { getUserMedia: async () => stream } }, canProcess: () => true,
+    localStorage: { getItem: () => auto ? '1' : '0', setItem() {} }, document: { createElement: tag => tag === 'div' ? overlay : canvas(), body: { append() {} } },
+    window: { ImageCapture }, ImageCapture, devicePixelRatio: 1, MONTHLY: false, SCAN_ACCENT: '#abc',
+    t: () => labels, toast() {}, toGray: () => new Uint8Array(1), inspectDocumentPixels: () => ({ focus: state.focus }),
+    detectDocumentQuadGray: (_gray, width, height) => { detections.push({ width, height }); return state.detection; },
+    take: async (blob, live) => photos.push({ blob, live }),
+    setTimeout: fn => { const id = ++timerId; timers.set(id, fn); return id; }, clearTimeout: id => timers.delete(id) });
+  vm.runInContext(block + '\nglobalThis.openCamera = liveCamera;', context);
+  await context.openCamera();
+  const next = async (count = 1) => { for (let i = 0; i < count; i++) { const [id, fn] = timers.entries().next().value || []; if (!fn) break; timers.delete(id); await fn(); } };
+  const click = async name => { overlay.onclick({ target: { closest: () => ({ dataset: { x: name }, classList: { toggle() {} } }) } }); await new Promise(done => setImmediate(done)); };
+  return { state, photos, calls, timers, detections, next, click, message, photo };
+}
+
+test('markerless live preview automatically captures only a sharp validated outline held for eight frames', async () => {
+  const live = await liveCameraFixture(); await live.next(6);
+  assert.equal(live.photos.length, 0, 'seven frames are not yet enough for paper-edge capture');
+  assert.ok(live.calls.overlay >= 7); assert.equal(live.message.textContent, 'hold still');
+  await live.next(); assert.equal(live.photos.length, 1); assert.equal(live.photos[0].blob, live.photo); assert.equal(live.photos[0].live, true);
+  assert.equal(live.calls.nativePhotos, 1); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
+  assert.ok(live.detections.every(size => size.width === 540 && size.height === 720), 'live detection stays bounded instead of processing full-resolution video');
+});
+
+test('uncertain or clipped paper outlines remain manual-shutter candidates rather than triggering automatic photos', async () => {
+  for (const method of ['page', 'marker', 'frame']) {
+    const live = await liveCameraFixture(); live.state.detection = { ...live.state.detection, method, score: .99, edgeSupport: .2, clipped: true, autoCaptureEligible: false };
+    await live.next(12); assert.equal(live.photos.length, 0, 'a high geometry score alone cannot allow ' + method + ' capture');
+    if (method !== 'frame') assert.equal(live.message.textContent, 'outline found');
+    await live.click('shoot'); assert.equal(live.photos.length, 1, 'the shutter remains usable for manual review and corner correction');
+  }
+});
+
+test('blur, moving corners and detector-method changes reset the live hold instead of accumulating old frames', async () => {
+  const blurred = await liveCameraFixture(); blurred.state.focus = 10; await blurred.next(12);
+  assert.equal(blurred.photos.length, 0); assert.equal(blurred.message.textContent, 'blurred');
+  blurred.state.focus = 40; await blurred.next(7); assert.equal(blurred.photos.length, 0); await blurred.next(); assert.equal(blurred.photos.length, 1);
+  const moving = await liveCameraFixture(), points = moving.state.detection.corners;
+  for (let frame = 0; frame < 12; frame++) { const shift = frame % 2 ? 20 : -20; for (const point of points) point.x += shift; await moving.next(); }
+  assert.equal(moving.photos.length, 0, 'history retains copies even when a detector reuses its corner objects'); await moving.click('close');
+  const switched = await liveCameraFixture(); await switched.next(4); switched.state.detection = { ...switched.state.detection, method: 'marker' };
+  await switched.next(5); assert.equal(switched.photos.length, 0, 'paper-edge frames cannot complete the marker hold'); await switched.next(); assert.equal(switched.photos.length, 1);
+});
+
+test('turning automatic capture off retains the shutter and toggling it back starts a fresh hold', async () => {
+  const manual = await liveCameraFixture({ auto: false }); await manual.next(12); assert.equal(manual.photos.length, 0);
+  await manual.click('shoot'); assert.equal(manual.photos.length, 1);
+  const toggled = await liveCameraFixture(); await toggled.next(4); await toggled.click('auto'); await toggled.next(5); assert.equal(toggled.photos.length, 0);
+  await toggled.click('auto'); await toggled.next(7); assert.equal(toggled.photos.length, 0); await toggled.next(); assert.equal(toggled.photos.length, 1);
+});
+
+test('closing a camera while a native photo is pending stops tracks and ignores its late result', async () => {
+  let resolve; const pending = new Promise(done => resolve = done), live = await liveCameraFixture({ auto: false, capturePhoto: () => pending });
+  await live.click('shoot'); assert.equal(live.calls.nativePhotos, 1); await live.click('close'); assert.equal(live.calls.stopped, 1);
+  resolve(live.photo); await new Promise(done => setImmediate(done)); assert.equal(live.photos.length, 0); assert.equal(live.calls.stopped, 1); assert.equal(live.timers.size, 0);
 });

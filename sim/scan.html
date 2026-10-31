@@ -112,7 +112,7 @@
 
 <script src="exam-network.js"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, toGray, findSheetMarkersGray, findPageQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=20261030-ocr";
+import { processShot, reprocess, canProcess, toGray, detectDocumentQuadGray, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=ddfd9c8cdd0f";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -140,8 +140,8 @@ let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.
 const T = {
   ko: {
     title: "답안 스캔", task: "실험", kind: "종류", answer: "답안지", working: "Working sheet",
-    shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 어두운 바탕에 놓고, 네 귀퉁이의 검은 사각형이 다 보이게 위에서 찍으세요. 한 번에 한 쪽씩 찍습니다.",
-    live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이 네 귀퉁이의 검은 사각형이 모두 화면에 들어오게 하세요.", lvPage: "종이를 찾았습니다. 귀퉁이 사각형이 보이면 더 정확합니다.",
+    shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 바탕과 구분되는 곳에 놓고, 종이의 네 모서리와 테두리가 모두 보이게 위에서 찍으세요. 검은 표식이 없어도 됩니다. 한 번에 한 쪽씩 찍습니다.",
+    live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이의 네 모서리와 테두리가 모두 화면에 들어오게 하세요. 검은 표식은 선택 사항입니다.", lvPage: "종이를 찾았습니다. 테두리를 확인하고 촬영하거나, 더 선명하게 맞춰 주세요.",
     lvHold: "그대로 멈추세요…", lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
     working0: "다듬는 중…", corners: "모서리 맞추기", modes: { clean: "또렷하게", mono: "흑백", original: "원본" },
     weak: "종이 모서리를 확실히 찾지 못했습니다. «모서리 맞추기»로 네 점을 종이 귀퉁이에 맞춰 주세요.",
@@ -165,8 +165,8 @@ const T = {
   },
   en: {
     title: "Answer scan", task: "Experiment", kind: "Sheet", answer: "Answer sheet", working: "Working sheet",
-    shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a darker surface and shoot from above with the four black corner squares in view. One page per photo.",
-    live: "📷 Scan", camApp: "Camera app", lvAim: "Get all four black corner squares of the page into the picture.", lvPage: "Page found. It is more exact with the corner squares in view.",
+    shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a contrasting surface and shoot from above with all four paper corners and edges visible. Black markers are optional. One page per photo.",
+    live: "📷 Scan", camApp: "Camera app", lvAim: "Keep all four paper corners and edges in view. Black markers are optional.", lvPage: "Page found. Check the outline and take a photo, or adjust for a clearer view.",
     lvHold: "Hold still…", lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
     working0: "Straightening…", corners: "Fix corners", modes: { clean: "Clean", mono: "B&W", original: "Original" },
     weak: "The page corners were not found for certain. Use «Fix corners» to put the four points on the corners of the paper.",
@@ -191,7 +191,7 @@ const T = {
 };
 const MONTHLY_COPY = {
   ko: {task:"답안지 쪽",title:"월별 문제 답안 스캔",left:"촬영 링크 만료까지",working:"추가 풀이 용지",
-    help:"인쇄한 답안지의 쪽 번호를 선택하고 한 번에 한 쪽씩 찍으세요. 네 모서리의 검은 사각형이 모두 보이게 촬영합니다. 추가 풀이 용지는 해당 소문항이 있는 쪽을 선택해 주세요.",
+    help:"인쇄한 답안지의 쪽 번호를 선택하고 한 번에 한 쪽씩 찍으세요. 종이의 네 모서리와 테두리가 모두 보이게 촬영합니다. 검은 표식이 없어도 됩니다. 추가 풀이 용지는 해당 소문항이 있는 쪽을 선택해 주세요.",
     closed:"촬영 링크가 만료되었거나 답안이 제출되었습니다. 컴퓨터의 월별 문제 화면에서 새 촬영 링크를 열어 주세요.",
     over:"촬영 링크가 만료되었습니다. 컴퓨터의 월별 문제 화면에서 새 QR 코드를 열어 주세요.",
     badLink:"이 월별 문제 촬영 링크를 사용할 수 없습니다. 월별 문제 화면에서 새 QR 코드를 열어 주세요.",
@@ -199,7 +199,7 @@ const MONTHLY_COPY = {
     legS:{good:"잘 읽힘",partial:"소문항 확인 필요",poor:"다시 촬영 권장"},
     ocrFailed:"사진을 보관했지만 소문항별 답과 풀이를 정확히 읽지 못했습니다. 이 사진을 빼고 더 선명하게 다시 촬영해 주세요."},
   en: {task:"Answer-sheet page",title:"Monthly answer scan",left:"Scan link expires in",
-    help:"Select the printed page number and photograph one page at a time, with all four black corner squares visible. For extra working paper, select the page containing its subquestion.",
+    help:"Select the printed page number and photograph one page at a time, with all four paper corners and edges visible. Black markers are optional. For extra working paper, select the page containing its subquestion.",
     closed:"This scan link expired or the answer was submitted. Open a new link from the monthly problem on your computer.",
     over:"This scan link expired. Open a new QR code from the monthly problem on your computer.",
     badLink:"This monthly scan link is unavailable. Open a new QR code from the monthly problem.",
@@ -298,7 +298,7 @@ function paintShot() {
   if (shot.busy) { box.innerHTML = `<div class="card"><h2>${t().working0}</h2><div class="bar"><i style="width:${shot.pct || 3}%"></i></div></div>`; return; }
   const q = shot.quality || {}, warn = [];
   if (shot.processFailed) warn.push(t().processFailed);
-  else if (shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
+  else if (shot.cornersReliable === false || shot.autoScore != null && shot.autoScore < 0.75) warn.push(t().weak);
   if (q.focus != null && q.focus < 22) warn.push(t().blurry);          // (the cleaned page is white on purpose, so glare is not judged on it)
   if (shot.sourceShortSide != null && shot.sourceShortSide < 1200) warn.push(t().lowRes);
   box.innerHTML = `<div class="card prev"><h2>${esc(shot.task)} · ${shot.kind === "answer" ? t().answer : t().working}</h2>
@@ -403,13 +403,12 @@ async function cornerEditor() {
     if (revision !== shotRevision || !shot) return close();
     const ordered = orderCorners(pts);
     if (quadScore(ordered, img.width, img.height) < 0.1) return toast(t().badCorners);
-    close(); shot.autoScore = 1; shot.method = pointMode === "marker" ? "marker" : "manual"; redo(ordered, mode);
+    close(); shot.autoScore = 1; shot.cornersReliable = true; shot.method = pointMode === "marker" ? "marker" : "manual"; redo(ordered, mode);
   };
 }
 
-/* ── live camera, as scanning apps do it: the page is looked for in the moving picture a few times a second and
-      outlined (green: the four printed corner squares, yellow: only the paper's edge); once the squares hold still
-      for about a second the photo is taken by itself.  The photo then goes through the same straightening. ── */
+/* ── The live preview uses the still-photo detector. Complete markers or a validated paper outline can trigger
+      a photo only after a sharp, steady view. Uncertain outlines remain available for the manual shutter. ── */
 const LIVE_OK = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) && canProcess();
 let AUTO = true;
 try { AUTO = localStorage.getItem("hlScanAuto") !== "0"; } catch (e) {}
@@ -425,31 +424,34 @@ async function liveCamera() {
   v.srcObject = stream; await v.play().catch(() => {});
   const small = document.createElement("canvas"), sg = small.getContext("2d", { willReadFrequently: true });
   let alive = true, busy = false, hist = [], last = null, timer = null;
-  const close = () => { alive = false; clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
+  const close = () => { if (!alive) return; alive = false; clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
   const say = (m, ok) => { msg.textContent = m; msg.classList.toggle("ok", !!ok); };
   say(t().lvAim);
   async function capture() {
     if (busy || !alive) return; busy = true; say(t().lvTake, true);
     let blob = null;
     try { if (window.ImageCapture) blob = await new ImageCapture(stream.getVideoTracks()[0]).takePhoto(); } catch (e) { blob = null; }
+    if (!alive) return;
     if (!blob) {
       const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext("2d").drawImage(v, 0, 0);
       blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.95));
     }
+    if (!alive) return;
     close(); if (blob) take(blob, true);
   }
   function frame() {
     if (!alive) return;
     if (v.videoWidth) {
       const k = Math.min(1, 720 / Math.max(v.videoWidth, v.videoHeight)), w = Math.round(v.videoWidth * k), h = Math.round(v.videoHeight * k);
-      if (small.width !== w) { small.width = w; small.height = h; }
+      if (small.width !== w || small.height !== h) { small.width = w; small.height = h; }
       sg.drawImage(v, 0, 0, w, h);
       const pixels = sg.getImageData(0, 0, w, h).data, gray = toGray(pixels, w, h);
-      let d = findSheetMarkersGray(gray, w, h), how = "marker";
-      if (!d || d.score < 0.5) { const p = findPageQuadGray(gray, w, h); d = p && p.corners && p.score > 0.45 ? p : null; how = "page"; }
+      const candidate = detectDocumentQuadGray(gray, w, h);
+      const d = candidate?.corners && (candidate.method === "marker" && candidate.score >= 0.5 || candidate.method === "page" && candidate.score > 0.45) ? candidate : null;
+      const how = d?.method;
       /* the overlay, where the video is drawn (object-fit: contain) */
       const r = cv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
-      if (cv.width !== Math.round(r.width * dpr)) { cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); }
+      if (cv.width !== Math.round(r.width * dpr) || cv.height !== Math.round(r.height * dpr)) { cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); }
       g.clearRect(0, 0, cv.width, cv.height);
       if (d) {
         const s = Math.min(cv.width / w, cv.height / h), ox = (cv.width - w * s) / 2, oy = (cv.height - h * s) / 2;
@@ -457,14 +459,16 @@ async function liveCamera() {
         g.fillStyle = how === "marker" ? "rgba(87,171,90,.22)" : MONTHLY ? "rgba(197,163,245,.18)" : "rgba(242,193,78,.18)"; g.strokeStyle = how === "marker" ? "#57ab5a" : SCAN_ACCENT; g.lineWidth = 3 * dpr;
         g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.fill(); g.stroke();
       }
-      /* steady: the four squares moved less than 1.2 % of the picture over the last six looks */
+      /* Paper edges need a longer, tighter hold than printed markers. Geometry alone never enables capture. */
       const focused = inspectDocumentPixels(pixels, w, h).focus >= 22;
-      if (d && how === "marker" && d.score >= 0.75 && focused) {
-        hist.push(d.corners); if (hist.length > 6) hist.shift();
-        const span = Math.max(w, h), still = hist.length === 6 && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * 0.012));
+      if (d?.autoCaptureEligible === true && focused) {
+        if (last !== how) hist = []; last = how;
+        const count = how === "page" ? 8 : 6, tolerance = how === "page" ? 0.008 : 0.012;
+        hist.push(d.corners.map(p => ({...p}))); if (hist.length > count) hist.shift();
+        const span = Math.max(w, h), still = hist.length === count && hist.every(c => c.every((p, i) => Math.hypot(p.x - d.corners[i].x, p.y - d.corners[i].y) < span * tolerance));
         say(t().lvHold, true);
         if (still && AUTO) return capture();
-      } else { hist = []; say(!focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
+      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? t().lvPage : t().lvAim); }
     }
     timer = setTimeout(frame, 140);
   }

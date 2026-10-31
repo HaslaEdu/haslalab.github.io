@@ -298,11 +298,11 @@ export function findMarkersGray(gray, W, H) {
     else corners.push({ x: q.ox ? W * 0.94 : W * 0.06, y: q.oy ? H * 0.94 : H * 0.06 });
   }
 
-  if (found < 4) return { corners, score: found / 4 * 0.5, method: 'marker' };
+  if (found < 4) return { corners, score: found / 4 * 0.5, method: 'marker', found };
 
   const ordered = orderCorners(corners);
   const s = quadScore(ordered, W, H);
-  return { corners: ordered, score: s, method: 'marker' };
+  return { corners: ordered, score: s, method: 'marker', found };
 }
 
 /* ---------- ①′ 인쇄 마커 찾기 v3: 조명에 따라 바뀌는 문턱 + 네 마커의 기하 검증 ---------- */
@@ -404,82 +404,217 @@ export function findSheetMarkersGray(gray, W, H) {
 
 /* ---------- ② 종이 테두리 찾기 (마커 없는 사진) ---------- */
 
-/**
- * 배경보다 밝은 종이 덩어리를 찾아 그 극점 네 개를 꼭짓점으로 씁니다.
- *
- * 가로 240px 정도로 줄여서 계산합니다. 원본 해상도로 하면 느리기만 하고
- * 정확도는 오히려 떨어집니다 — 글씨와 격자선이 덩어리를 갈라놓기 때문입니다.
- * 줄이면 그런 잔무늬가 뭉개져서 종이 전체가 하나로 붙습니다.
- */
-export function findPageQuadGray(gray, W, H) {
-  const target = 240;
-  const step = Math.max(1, Math.floor(Math.max(W, H) / target));
-  const w = Math.floor(W / step), h = Math.floor(H / step);
-  if (w < 24 || h < 24) return { corners: null, score: 0, method: 'page' };
-
-  const small = new Uint8Array(w * h);
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) small[y * w + x] = gray[y * step * W + x * step];
+const pageCross = (a, b, c) => (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+function pageHull(points) {
+  points.sort((a, b) => a.x - b.x || a.y - b.y);
+  const lower = [], upper = [];
+  for (const p of points) { while (lower.length > 1 && pageCross(lower.at(-2), lower.at(-1), p) <= 0) lower.pop(); lower.push(p); }
+  for (let i = points.length - 1; i >= 0; i--) { const p = points[i]; while (upper.length > 1 && pageCross(upper.at(-2), upper.at(-1), p) <= 0) upper.pop(); upper.push(p); }
+  lower.pop(); upper.pop(); return lower.concat(upper);
+}
+function pageFour(hull) {
+  if (hull.length < 4) return null;
+  hull = [...hull];
+  while (hull.length > 4) {
+    let at = 0, least = Infinity;
+    for (let i = 0; i < hull.length; i++) { const area = Math.abs(pageCross(hull[(i + hull.length - 1) % hull.length], hull[i], hull[(i + 1) % hull.length])); if (area < least) { least = area; at = i; } }
+    hull.splice(at, 1);
   }
-
-  const blurred = boxMean(small, w, h, 2);
-  const bytes = new Uint8Array(w * h);
-  for (let i = 0; i < bytes.length; i++) bytes[i] = blurred[i];
-  const t = otsu(bytes);
-
-  /* 가운데에서 시작해 밝은 영역을 채웁니다. 종이가 화면 중앙에 있다는
-     가정인데, 문서 촬영에서는 사실상 항상 맞습니다. */
-  const seen = new Uint8Array(w * h);
-  const stack = new Int32Array(w * h);
-  let bestSet = null, bestN = 0;
-
-  const seeds = [];
-  for (let sy = 0.35; sy <= 0.66; sy += 0.15) {
-    for (let sx = 0.35; sx <= 0.66; sx += 0.15) {
-      seeds.push(((h * sy) | 0) * w + ((w * sx) | 0));
-    }
+  return orderCorners(hull);
+}
+function pagePixel(g, w, h, x, y) {
+  x = Math.max(0, Math.min(w - 1, x)); y = Math.max(0, Math.min(h - 1, y));
+  const ix = Math.floor(x), iy = Math.floor(y), fx = x - ix, fy = y - iy;
+  const j = iy * w + ix, right = Math.min(ix + 1, w - 1), down = Math.min(iy + 1, h - 1) * w;
+  return (g[j] * (1 - fx) + g[iy * w + right] * fx) * (1 - fy) + (g[down + ix] * (1 - fx) + g[down + right] * fx) * fy;
+}
+function pageIntersection(a, b) {
+  const det = a.nx * b.ny - a.ny * b.nx;
+  return Math.abs(det) < .12 ? null : { x: (a.r * b.ny - a.ny * b.r) / det, y: (a.nx * b.r - a.r * b.nx) / det };
+}
+function pageEvidence(corners, g, w, h, refine = false) {
+  if (!corners || corners.some(p => !p || !Number.isFinite(p.x + p.y))) return null;
+  const q = orderCorners(corners), poly = [q[0], q[1], q[3], q[2]], margin = Math.max(1.5, Math.min(w, h) * .007);
+  if (quadScore(q, w, h) < .18 || q.some(p => p.x < margin || p.y < margin || p.x > w - 1 - margin || p.y > h - 1 - margin)) return null;
+  let area = 0; for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
+  area = Math.abs(area) / 2; const cover = area / (w * h);
+  if (cover < .095 || cover > .94) return null;
+  const lengths = poly.map((p, i) => Math.hypot(p.x - poly[(i + 1) % 4].x, p.y - poly[(i + 1) % 4].y));
+  if (Math.min(...lengths) < Math.min(w, h) * .14 || Math.max(...lengths) / Math.min(...lengths) > 5) return null;
+  const cx = q.reduce((s, p) => s + p.x, 0) / 4, cy = q.reduce((s, p) => s + p.y, 0) / 4;
+  const interior = [];
+  for (const u of [.25, .5, .75]) for (const v of [.25, .5, .75]) {
+    const x = (q[0].x * (1 - u) + q[1].x * u) * (1 - v) + (q[2].x * (1 - u) + q[3].x * u) * v;
+    const y = (q[0].y * (1 - u) + q[1].y * u) * (1 - v) + (q[2].y * (1 - u) + q[3].y * u) * v;
+    interior.push(pagePixel(g, w, h, x, y));
   }
-
-  for (const seed of seeds) {
-    if (seen[seed] || bytes[seed] <= t) continue;
-    let sp = 0, n = 0;
-    const members = [];
-    stack[sp++] = seed; seen[seed] = 1;
-    while (sp > 0) {
-      const cur = stack[--sp];
-      members.push(cur); n++;
-      const cy = (cur / w) | 0, cx = cur - cy * w;
-      for (let k = 0; k < 4; k++) {
-        const nx = cx + (k === 0 ? 1 : k === 1 ? -1 : 0);
-        const ny = cy + (k === 2 ? 1 : k === 3 ? -1 : 0);
-        if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
-        const np = ny * w + nx;
-        if (seen[np] || bytes[np] <= t) continue;
-        seen[np] = 1; stack[sp++] = np;
+  interior.sort((a, b) => a - b);
+  if (interior[4] < 55) return null; // a solid black diagram is not white paper
+  const supports = [], contrasts = [], lines = [];
+  for (let side = 0; side < 4; side++) {
+    const a = poly[side], b = poly[(side + 1) % 4], len = lengths[side];
+    let nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;
+    if ((cx - (a.x + b.x) / 2) * nx + (cy - (a.y + b.y) / 2) * ny < 0) { nx = -nx; ny = -ny; }
+    const far = Math.max(3, Math.min(8, len * .028)), count = refine ? 36 : 18, offsets = [];
+    let supported = 0, contrast = 0;
+    for (let i = 0; i < count; i++) {
+      const t = .06 + .88 * (i + .5) / count, x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
+      let best = -1, bestOffset = 0;
+      const range = refine ? 5 : 2;
+      for (let offset = -range; offset <= range; offset++) {
+        const px = x + nx * offset, py = y + ny * offset;
+        const gradient = Math.abs(pagePixel(g, w, h, px + nx * 1.3, py + ny * 1.3) - pagePixel(g, w, h, px - nx * 1.3, py - ny * 1.3));
+        const value = gradient - Math.abs(offset) * .3;
+        if (value > best) { best = value; bestOffset = offset; }
       }
+      const px = x + nx * bestOffset, py = y + ny * bestOffset;
+      const inside = (pagePixel(g, w, h, px + nx * far, py + ny * far) + pagePixel(g, w, h, px + nx * far * 1.5, py + ny * far * 1.5)) / 2;
+      const outside = (pagePixel(g, w, h, px - nx * far, py - ny * far) + pagePixel(g, w, h, px - nx * far * 1.5, py - ny * far * 1.5)) / 2;
+      const difference = Math.abs(inside - outside);
+      const innerSlope = Math.abs(pagePixel(g, w, h, px + nx * (far + 1.3), py + ny * (far + 1.3)) - pagePixel(g, w, h, px + nx * (far - 1.3), py + ny * (far - 1.3)));
+      const outerSlope = Math.abs(pagePixel(g, w, h, px - nx * (far + 1.3), py - ny * (far + 1.3)) - pagePixel(g, w, h, px - nx * (far - 1.3), py - ny * (far - 1.3)));
+      // A broad illumination ramp is not a paper boundary: the transition must
+      // be sharper than the normal gradient on either side of it.
+      if (best >= Math.max(2.2, Math.max(innerSlope, outerSlope) * 1.35 + .8) && difference >= 4) { supported++; contrast += difference; offsets.push(bestOffset); }
     }
-    if (n > bestN) { bestN = n; bestSet = members; }
+    supports.push(supported / count); contrasts.push(supported ? contrast / supported : 0);
+    offsets.sort((a, b) => a - b); const shift = offsets.length ? offsets[offsets.length >> 1] : 0;
+    lines.push({ nx, ny, r: nx * a.x + ny * a.y + shift });
   }
-
-  if (!bestSet || bestN < w * h * 0.15) return { corners: null, score: 0, method: 'page' };
-
-  /* 네 극점: x+y 최소=좌상, 최대=우하, x-y 최대=우상, 최소=좌하 */
-  let tl = null, br = null, tr = null, bl = null;
-  let minSum = Infinity, maxSum = -Infinity, minDif = Infinity, maxDif = -Infinity;
-  for (const p of bestSet) {
-    const y = (p / w) | 0, x = p - y * w;
-    const s = x + y, d = x - y;
-    if (s < minSum) { minSum = s; tl = { x, y }; }
-    if (s > maxSum) { maxSum = s; br = { x, y }; }
-    if (d > maxDif) { maxDif = d; tr = { x, y }; }
-    if (d < minDif) { minDif = d; bl = { x, y }; }
+  const support = supports.reduce((s, v) => s + v, 0) / 4, weakest = Math.min(...supports);
+  if (weakest < .44 || support < .64 || Math.min(...contrasts) < 4) return null;
+  if (refine) {
+    const fitted = lines.map((line, i) => pageIntersection(lines[(i + 3) % 4], line));
+    const improved = pageEvidence(fitted, g, w, h, false);
+    if (improved) return improved;
   }
+  const strength = Math.min(1, Math.min(...contrasts) / 18);
+  const score = Math.min(.96, .34 + .32 * support + .16 * weakest + .12 * strength + .02 * Math.min(1, cover / .3));
+  return { corners: q, score, edgeSupport: support, weakestEdge: weakest, clipped: false, cover,
+    autoCaptureEligible: score >= .78 && support >= .83 && weakest >= .72 };
+}
 
-  const up = (p) => ({ x: (p.x + 0.5) * step, y: (p.y + 0.5) * step });
-  const corners = [up(tl), up(tr), up(bl), up(br)];
-  const score = quadScore(corners, W, H) * 0.85; // 마커보다는 덜 믿습니다
-  if (score < 0.3) return { corners: null, score: 0, method: 'page' };
-  return { corners, score, method: 'page' };
+/** A bounded, markerless detector: both intensity polarities, closed edge regions,
+ * and gradient-directed lines propose quads. Only four supported OUTER paper
+ * transitions may win; an inner printed frame or the image boundary is not a page. */
+export function findPageQuadGray(gray, W, H) {
+  const none = { corners: null, score: 0, method: 'page', edgeSupport: 0, clipped: false, autoCaptureEligible: false };
+  if (W < 32 || H < 32 || gray.length < W * H) return none;
+  const scale = Math.min(1, 320 / Math.max(W, H)), w = Math.round(W * scale), h = Math.round(H * scale), n = w * h;
+  const g = new Uint8Array(n), sx = W / w, sy = H / h;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let sum = 0, count = 0;
+    for (let j = Math.floor(y * sy); j < Math.floor((y + 1) * sy); j++) for (let i = Math.floor(x * sx); i < Math.floor((x + 1) * sx); i++) { sum += gray[j * W + i]; count++; }
+    g[y * w + x] = sum / count;
+  }
+  const smooth = boxMean(g, w, h, 1), bytes = Uint8Array.from(smooth), gx = new Float32Array(n), gy = new Float32Array(n), mag = new Float32Array(n);
+  let strong = 0, low = 255, high = 0;
+  for (let i = 0; i < n; i++) { if (g[i] < low) low = g[i]; if (g[i] > high) high = g[i]; }
+  if (high - low < 5) return none;
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+    const i = y * w + x;
+    gx[i] = (smooth[i - w + 1] + 2 * smooth[i + 1] + smooth[i + w + 1] - smooth[i - w - 1] - 2 * smooth[i - 1] - smooth[i + w - 1]) / 4;
+    gy[i] = (smooth[i + w - 1] + 2 * smooth[i + w] + smooth[i + w + 1] - smooth[i - w - 1] - 2 * smooth[i - w] - smooth[i - w + 1]) / 4;
+    mag[i] = Math.abs(gx[i]) + Math.abs(gy[i]); if (mag[i] >= 4) strong++;
+  }
+  const candidates = [], stack = new Int32Array(n), seen = new Uint8Array(n), mask = new Uint8Array(n);
+  const regions = () => {
+    seen.fill(0);
+    for (let seed = 0; seed < n; seed++) {
+      if (!mask[seed] || seen[seed]) continue;
+      let sp = 0, size = 0, x0 = w, x1 = 0, y0 = h, y1 = 0; const boundary = [];
+      stack[sp++] = seed; seen[seed] = 1;
+      while (sp) {
+        const i = stack[--sp], y = (i / w) | 0, x = i - y * w; size++;
+        x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+        let edge = false;
+        if (!x || !mask[i - 1]) edge = true; else if (!seen[i - 1]) { seen[i - 1] = 1; stack[sp++] = i - 1; }
+        if (x === w - 1 || !mask[i + 1]) edge = true; else if (!seen[i + 1]) { seen[i + 1] = 1; stack[sp++] = i + 1; }
+        if (!y || !mask[i - w]) edge = true; else if (!seen[i - w]) { seen[i - w] = 1; stack[sp++] = i - w; }
+        if (y === h - 1 || !mask[i + w]) edge = true; else if (!seen[i + w]) { seen[i + w] = 1; stack[sp++] = i + w; }
+        if (edge) boundary.push(i);
+      }
+      if (size < n * .015 || (x1 - x0) * (y1 - y0) < n * .095 || x0 <= 1 || y0 <= 1 || x1 >= w - 2 || y1 >= h - 2 || boundary.length < 4) continue;
+      const quad = pageFour(pageHull(boundary.map(i => ({ x: i % w, y: (i / w) | 0 })))); if (quad) candidates.push(quad);
+    }
+  };
+  const border = [];
+  for (let y = 0; y < h; y += 3) for (let x = 0; x < w; x += 3) if (x < w * .06 || x > w * .94 || y < h * .06 || y > h * .94) border.push(g[y * w + x]);
+  border.sort((a, b) => a - b); const background = border[border.length >> 1];
+  const thresholds = [...new Set([otsu(bytes), background - 6, background + 6].map(v => Math.max(1, Math.min(254, Math.round(v)))))];
+  for (const threshold of thresholds) for (const polarity of [1, -1]) { for (let i = 0; i < n; i++) mask[i] = polarity > 0 ? smooth[i] > threshold : smooth[i] < threshold; regions(); }
+  for (const threshold of [5, 16]) {
+    mask.fill(1);
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) if (mag[y * w + x] >= threshold) {
+      const i = y * w + x; mask[i] = mask[i - 1] = mask[i + 1] = mask[i - w] = mask[i + w] = 0;
+    }
+    regions();
+  }
+  const finish = best => {
+    const fitted = pageEvidence(best.corners, smooth, w, h, true) || best;
+    return { ...fitted, corners: fitted.corners.map(p => ({ x: (p.x + .5) * sx, y: (p.y + .5) * sy })), method: 'page' };
+  };
+  let regionBest = null;
+  for (const candidate of candidates) {
+    const result = pageEvidence(candidate, smooth, w, h);
+    if (result && (!regionBest || result.cover > regionBest.cover * 1.04 || result.cover >= regionBest.cover * .96 && result.score > regionBest.score)) regionBest = result;
+  }
+  // A closed region with four measured boundaries already supplies the outer
+  // page. Avoid letting noisier Hough intersections move its corners outward.
+  if (regionBest && regionBest.score >= .85 && regionBest.weakestEdge >= .72) return finish(regionBest);
+  // At most 10k points, 60 normal directions, 24 lines and 24 opposite-line
+  // pairs: dense handwriting/noise cannot create an unbounded combinatorial pass.
+  const regionCount = candidates.length;
+  const points = [], stride = Math.max(1, Math.ceil(strong / 10000)); let at = 0;
+  for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const i = y * w + x; if (mag[i] >= 4 && at++ % stride === 0) points.push({ x, y, nx: gx[i] / Math.hypot(gx[i], gy[i]), ny: gy[i] / Math.hypot(gx[i], gy[i]) }); }
+  const bins = 60, diag = Math.ceil(Math.hypot(w, h)), width = 2 * diag + 1, votes = new Uint16Array(bins * width);
+  const cos = Array.from({ length: bins }, (_, i) => Math.cos(i * Math.PI / bins)), sin = cos.map((_, i) => Math.sin(i * Math.PI / bins));
+  for (const p of points) { let angle = Math.atan2(p.ny, p.nx); if (angle < 0) angle += Math.PI; const center = Math.round(angle * bins / Math.PI) % bins;
+    for (let d = -1; d <= 1; d++) { const t = (center + d + bins) % bins, r = Math.round(p.x * cos[t] + p.y * sin[t]) + diag; votes[t * width + r]++; } }
+  const peaks = [];
+  for (let t = 0; t < bins; t++) for (let r = 0; r < width; r++) if (votes[t * width + r] >= Math.max(10, Math.min(w, h) * .08)) peaks.push({ nx: cos[t], ny: sin[t], r: r - diag, votes: votes[t * width + r] });
+  peaks.sort((a, b) => b.votes - a.votes); const lines = [];
+  for (const p of peaks) {
+    if (lines.some(q => Math.abs(p.nx * q.nx + p.ny * q.ny) > .99 && Math.abs(p.r - (p.nx * q.nx + p.ny * q.ny > 0 ? q.r : -q.r)) < 7)) continue;
+    lines.push(p); if (lines.length === 24) break;
+  }
+  const pairs = [];
+  for (let i = 0; i < lines.length; i++) for (let j = i + 1; j < lines.length; j++) {
+    const a = lines[i], b = lines[j], dot = a.nx * b.nx + a.ny * b.ny, sign = dot > 0 ? 1 : -1;
+    const distance = Math.abs(a.r - a.nx * w / 2 - a.ny * h / 2 - sign * (b.r - b.nx * w / 2 - b.ny * h / 2));
+    if (Math.abs(dot) > .80 && distance > Math.min(w, h) * .18) pairs.push({ a, b, score: (a.votes + b.votes) * distance });
+  }
+  pairs.sort((a, b) => b.score - a.score); pairs.length = Math.min(pairs.length, 24);
+  for (let i = 0; i < pairs.length; i++) for (let j = i + 1; j < pairs.length; j++) {
+    const a = pairs[i], b = pairs[j]; if (Math.abs(a.a.nx * b.a.nx + a.a.ny * b.a.ny) > .82) continue;
+    const quad = [pageIntersection(a.a, b.a), pageIntersection(a.a, b.b), pageIntersection(a.b, b.a), pageIntersection(a.b, b.b)];
+    if (quad.every(p => p && p.x > 0 && p.x < w && p.y > 0 && p.y < h)) candidates.push(quad);
+  }
+  // Rank and merge cheap geometric hypotheses before sampling any pixels.
+  // Large enclosing boundaries precede strong printed rectangles inside a page.
+  const unique = new Map();
+  for (let index = 0; index < candidates.length; index++) {
+    const candidate = candidates[index];
+    if (candidate.some(p => !p)) continue;
+    const q = orderCorners(candidate);
+    if (quadScore(q, w, h) < .18) continue;
+    const poly = [q[0], q[1], q[3], q[2]]; let area = 0;
+    for (let i = 0; i < 4; i++) area += poly[i].x * poly[(i + 1) % 4].y - poly[(i + 1) % 4].x * poly[i].y;
+    const cover = Math.abs(area) / (2 * n);
+    if (cover < .095 || cover > .94) continue;
+    const key = q.map(p => Math.round(p.x / 5) + ',' + Math.round(p.y / 5)).join('|');
+    if (!unique.has(key)) unique.set(key, { q, cover, region: index < regionCount });
+  }
+  const shortlist = [...unique.values()].sort((a, b) => b.cover - a.cover).slice(0, 40);
+  let best = null;
+  for (const { q: candidate, region } of shortlist) {
+    const result = pageEvidence(candidate, smooth, w, h);
+    if (result && (!best || region && result.score >= .90 && !best.region && result.cover >= best.cover * .75 ||
+        result.cover > best.cover * 1.06 && !(best.region && best.score >= .90 && result.cover < best.cover * 1.14) ||
+        result.cover >= best.cover * .94 && result.score > best.score)) best = { ...result, region };
+  }
+  if (!best) return none;
+  return finish(best);
 }
 
 /* ---------- 원근 보정 ---------- */
@@ -801,21 +936,16 @@ export function findMarkers(canvas) {
   return findMarkersGray(g, canvas.width, canvas.height);
 }
 
-/** 마커 → 종이 테두리 → 전체 화면 순으로 시도합니다. */
-export function detectQuad(canvas) {
-  const img = imgData(canvas);
-  const W = canvas.width, H = canvas.height;
-  const g = toGray(img.data, W, H);
-
-  const v3 = findSheetMarkersGray(g, W, H);
-  if (v3 && v3.score >= 0.5) return v3;
-  const m = findMarkersGray(g, W, H);
-  if (m.score >= 0.62) return m;
-
-  const p = findPageQuadGray(g, W, H);
-  if (p.corners && p.score > m.score) return p;
-  if (m.score > 0) return m;
-
+/** Shared by live camera and full-resolution capture. Partial dark blobs never
+ * acquire marker insets, and automatic capture requires measured edge evidence. */
+export function detectDocumentQuadGray(g, W, H) {
+  const marker = findSheetMarkersGray(g, W, H);
+  if (marker && marker.score >= .75) return { ...marker, clipped: false, autoCaptureEligible: true };
+  const page = findPageQuadGray(g, W, H);
+  if (page.corners) return page;
+  if (marker && marker.score >= .5) return { ...marker, clipped: false, autoCaptureEligible: false };
+  const legacy = findMarkersGray(g, W, H);
+  if (legacy.found === 4 && legacy.score >= .82) return { ...legacy, clipped: false, autoCaptureEligible: false };
   return {
     corners: [
       { x: W * 0.05, y: H * 0.05 }, { x: W * 0.95, y: H * 0.05 },
@@ -823,7 +953,14 @@ export function detectQuad(canvas) {
     ],
     score: 0,
     method: 'frame',
+    autoCaptureEligible: false,
+    clipped: false,
   };
+}
+
+export function detectQuad(canvas) {
+  const img = imgData(canvas), W = canvas.width, H = canvas.height;
+  return detectDocumentQuadGray(toGray(img.data, W, H), W, H);
 }
 
 /**
@@ -986,10 +1123,10 @@ export async function processShot(file, opts = {}) {
 
   say(25, '모서리 찾는 중');
   let pts = corners ? orderCorners(corners) : null;
-  let autoScore = 1, method = 'manual';
+  let autoScore = 1, method = 'manual', cornersReliable = true;
   if (!pts) {
     const d = detectQuad(base);
-    pts = d.corners; autoScore = d.score; method = d.method;
+    pts = d.corners; autoScore = d.score; method = d.method; cornersReliable = d.autoCaptureEligible === true;
   }
   await breathe();
 
@@ -1016,6 +1153,7 @@ export async function processShot(file, opts = {}) {
     blob,
     previewUrl: out.toDataURL('image/jpeg', 0.92),
     corners: pts,
+    cornersReliable,
     autoScore,
     method,
     quality,
