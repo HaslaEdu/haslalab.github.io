@@ -11,6 +11,7 @@ function intervals(row) {
   const out = { ...row }, lo = out.full_min, hi = out.full_max;
   if (!(Number.isFinite(lo) && Number.isFinite(hi))) { delete out.full_min; delete out.full_max; }
   if (Array.isArray(out.partial)) out.partial = out.partial.filter(p => p && Number.isFinite(p.min) && Number.isFinite(p.max) && +p.points > 0);
+  if (out.role !== "result" && out.role !== "step") delete out.role;                 // R13: what the answer alone earns
   return out;
 }
 

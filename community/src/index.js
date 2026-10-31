@@ -1614,6 +1614,7 @@ const SCHEME_SCHEMA = { type: "object", properties: {
     partial: { type: "array", items: { type: "object", properties: { min: { type: "number" }, max: { type: "number" }, points: { type: "number" } }, required: ["min", "max", "points"] } },
     checks: { type: "array", items: { type: "object", properties: { check: { type: "string", enum: LAB_CHECKS }, n: N({ type: "integer" }), points: { type: "number" } }, required: ["check", "points"] } },
     n_min: N({ type: "integer" }), n_class: N({ type: "string", enum: ["few", "medium", "many"] }),
+    role: { type: "string", enum: ["result", "step"] },
   }, required: ["id", "points", "type", "sheet", "what"] } } }, required: ["points", "items"] };
 const PAGE_SCHEMA = { type: "object", properties: {
   text: { type: "string" }, confidence: { type: "number" },
@@ -1836,6 +1837,7 @@ async function labScheme(env, s, task, m) {
       ONE_ITEM_ONE_ID,
       "When no separate marking scheme exists and the solution gives only the points of each part, make one item per part with those points and describe the expected answer.",
       "type: value (a numerical final answer, with its unit), derivation (a formula, an expression or reasoning; also a symbolic final answer), graph (a sketch or plot the scheme marks), or other (a multiple-choice answer, a statement, a diagram).",
+      "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»).",
       "sheet: answer for a final answer that must be written in the answer-sheet box, any for intermediate steps and method marks.",
       "For a numerical value give the full-mark interval (full_min, full_max; turn ± or «within 5 %» into an interval) and every partial-credit interval with its points, as printed; otherwise leave them null and say in `what` exactly what is required (the expected expression or result, and what earns partial marks).",
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
@@ -1852,6 +1854,7 @@ async function labScheme(env, s, task, m) {
       "List every marked item of the marking scheme exactly as printed: its id (e.g. A.1), its points, and what earns them. Do not invent, merge or drop items; `points` is their sum.",
       ONE_ITEM_ONE_ID,
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
+      "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»).",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
       "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
       "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
