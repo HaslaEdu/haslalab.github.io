@@ -171,3 +171,17 @@ test('an OCR finishing after account deletion cannot recreate private legacy pho
   const result=await ocrPhoto(pid,'gemini');assert.equal(result.status,401);assert.equal(result.data.error,'login_required');
   assert.equal(sql.prepare('SELECT count(*) n FROM vision_photo_evidence').get().n,0);assert.equal(sql.prepare('SELECT count(*) n FROM vision_photo_chunks').get().n,0);
 }));
+
+test('the language chosen when grading is requested is the report language, whatever the start or later site language',async()=>fixture(async({api,start,upload,drain,calls,seedScheme,sql})=>{
+  const a=(await start('gemini')).data,sid=a.session.id;seedScheme(sid,'gemini');await upload(a.token);
+  sql.prepare("UPDATE lab_sessions SET lang='en' WHERE id=?").run(sid);
+  await api(`/lab/sessions/${sid}/pay?lang=ko`,{body:{provider:'gemini',lang:'ko'}});await drain();
+  await api(`/lab/sessions/${sid}/submit?lang=en`,{body:{provider:'gemini',lang:'en'}});await drain();
+  const done=(await api(`/lab/sessions/${sid}`)).data.session;
+  assert.equal(done.status,'graded');
+  const grade=calls.find(call=>call.text.includes('[TASK: grade]'));
+  assert.ok(grade.text.includes('Write every note in English.'),'the language at 채점하기 (submit) wins over the one at payment');
+  assert.equal(sql.prepare('SELECT lang FROM lab_sessions WHERE id=?').get(sid).lang,'en');
+  await api(`/lab/sessions/${sid}/submit?lang=ko`,{body:{provider:'gemini',lang:'ko'}});
+  assert.equal(sql.prepare('SELECT lang FROM lab_sessions WHERE id=?').get(sid).lang,'en','a graded sitting keeps its report language');
+}));
