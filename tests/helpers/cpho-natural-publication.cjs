@@ -93,6 +93,26 @@ module.exports = (root, record, item) => {
       assert.deepEqual(move.native_glyph_mismatches, []);
     }
   }
+  if (source.year === 2022) {
+    const date = source.whole_English_date_review;
+    assert.equal(date.passed, true);
+    assert.equal(date.visible_sequence, '29October2022,9:00a.m.-12:00noon');
+    assert.equal(date.source_numeric_face, 'Calibri');
+    assert.equal(date.translated_prose_face, 'SimHei5.03');
+    assert.equal(date.source_point_size, 12);
+    assert.equal(date.full_line_center_error_pt, 0);
+    assert.equal(record.extra_evidence.length, item.pages);
+  }
+  for (const row of record.extra_evidence || []) {
+    const overlap = pinned(row.path, row.sha256);
+    assert.equal(overlap.passed, true);
+    assert.equal(overlap.sha256, record.page_proofs.find(p => p.page === row.page).proof_sha256);
+    assert.equal(overlap.dark_prose_pixels_over_native_text, 0);
+    assert.equal(overlap.prose_outline_match.passed, true);
+    assert.deepEqual(overlap.prose_outline_match.missing_source_outline_signatures, []);
+    assert.equal(overlap.native_control_erasure_qa.passed, true);
+    assert.deepEqual(overlap.native_control_erasure_qa.native_glyph_mismatches, []);
+  }
   for (const [file, hash] of Object.entries(record.authoring_snapshot_sha256)) {
     const bytes = fs.readFileSync(path.join(root, record.authoring_snapshotroot, file.replaceAll('\\', '/')));
     assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'), hash, file);

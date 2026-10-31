@@ -5,8 +5,8 @@
   "kind": "T",
   "language": "ko",
   "pages": 6,
-  "bytes": 16485146,
-  "sha256": "c53adc0d8508907cb2aa62f599bf0830850d73db1049b0f1f10332ebfc5098bf",
+  "bytes": 16485919,
+  "sha256": "98db11b17e2932d4e4573249f1795846911b862a4b1798605271e29e420b5ca8",
   "validation": {
     "native_ink_missing_pixels": 0,
     "new_batang_empty_outlines": 0,
@@ -201,7 +201,7 @@
     },
     {
       "page": 3,
-      "proof_sha256": "b052d8729c60442cbe9d39a6abeba134309a4c38dbbdfa285c8acb592ccafa51",
+      "proof_sha256": "f86955c94a74039c55f3485c385475463d264b3a112028dff9b877b0b9511cc2",
       "source_pdf_sha256": "f70b8ea60d432120db4f7ed28a00aa55e1e4e2050e6b53dc0c2d9fc7cde33646",
       "final_vs_reviewed_proof_changed_pixels": 0,
       "native_move_qa": {
@@ -209,7 +209,7 @@
         "page_number": 3,
         "text_shift_mode": "tj",
         "erased_glyphs": 608,
-        "shifted_top_level_glyphs": 122,
+        "shifted_top_level_glyphs": 123,
         "shifted_form_instances": 0,
         "shifted_direct_image_instances": 0,
         "shifted_atomic_clip_groups": 26,
@@ -227,7 +227,7 @@
         "original_image_streams_unchanged": true,
         "native_vector_path_bytes_preserved": true,
         "native_atomic_clip_bytes_preserved": true,
-        "output_sha256": "de7b8926f2751e596737b3e3873dc0dbc09d954fe893b77dfb7298e95add74d2",
+        "output_sha256": "c12a58b531113c00b9cc20802086f69c253d7c7019f5de660daffb669495ed46",
         "atomic_nonpainting_space_occurrence_shifts": [
           {
             "source_trace_index": 123,
@@ -282,9 +282,9 @@
         "passed": true
       },
       "qa": "tools/ko/izho/2023/T/natural-spacing/page03.qa.json",
-      "qa_sha256": "6c38a3add0bf3aa27b206ab4cc12bb8fc689a204529ea5ff82740d51aba4cef8",
+      "qa_sha256": "756fd7eca56eb5823ad3bd8237676442f2799c6f814d5c98d1cd1df6a0ad27ca",
       "original_native_ink": "tools/ko/izho/2023/T/natural-spacing/page03-native-ink.json",
-      "original_native_ink_sha256": "72993a0c79688ec25def309fcc0d499bb18cc6b4bb964a5f26d033c70e0e30aa"
+      "original_native_ink_sha256": "a5c829108bdb21babd3064f62c5817a088f7f2556d294fb7af842c82dc25082e"
     },
     {
       "page": 4,
@@ -451,13 +451,13 @@
     }
   ],
   "source_ready": "tools/ko/izho/2023/T/natural-spacing/source-ready.json",
-  "source_ready_sha256": "d003cd308df54ee1b50bd1fce106681fc7c9aad42ae525e6053e129eb9ffe292",
+  "source_ready_sha256": "b474c74b07fe781ec34df728fa9c9c8addee7436051b5a5478ef49ce0e3166c4",
   "visual_review": "tools/ko/izho/2023/T/natural-spacing/visual-review.json",
-  "visual_review_sha256": "b637a35a7bd8bbff8c4e98e8fc15875da7f316886c196ab9b1749af4ff0613e5",
+  "visual_review_sha256": "db2a575592190639d0b324bd25c0eb9bb6da4efce695e0fb7198a50da161bc6c",
   "authoring_snapshotroot": "tools/ko/izho/2023/T/natural-spacing/authoring",
   "authoring_snapshot_sha256": {
-    "tools\\izho_natural_spacing.py": "407f1c4f3674c83b4ff8083591c84ab24e676c0b4d4e4264af03eb4ead22521b",
-    "tools\\pdf_korean_natural_composer.py": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb",
+    "tools\\izho_natural_spacing.py": "86ccebf9ec468d02b3ff0e853fcd866f2b727b6acaa13789a1a52159cfb099ec",
+    "tools\\pdf_korean_natural_composer.py": "f731f35754efde2142054a598ecf87a8167859161b43be9a760a27c7fe0b6b36",
     "tools\\izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
     "tools\\pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
     "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
@@ -465,15 +465,18 @@
     "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
     "tools\\pdf_text_motion_ink.py": "cc523d4d00cd3785259975d6b8bc5dcbfb1e9a2685969fcf12453c5be053d5e0",
     "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
-    "tools\\izho_natural_spacing_rebuild.py": "2e7672b9e46a793bb86aa4e5c26c66925edf0462acee5321e1d939848de488e1",
-    "tools\\izho_natural_spacing_qa.py": "23bba4eaa4754666934cb0d1d7fd2dca89d359fd49163cfd9f6e10c1c0f8cf1a",
+    "tools\\izho_natural_spacing_rebuild.py": "5b6ab1f29cbe402da13f374df04c7fb0fea7bb98f6d0af187f68922114beda01",
+    "tools\\izho_natural_spacing_qa.py": "b66e980bdf281951647564661eb872330b57cd9d494cf3a9598cb283ddbfe9dc",
     "tools\\izho_native_ink_witness.py": "0b256b4e72271bf77adac53c7623468262307e54d8d5d46fe783e640f4dd9387",
-    "tools\\izho_natural_spacing_ready.py": "7694c21e7aabb10fd5fd89d2a9d6829ca8279c3c273ade367f3e8312640b88c1",
+    "tools\\izho_natural_spacing_ready.py": "7f1df1351e68d0abbc0d7e732233dcb69f7b399f611c75a38ef58d6e53c1b468",
     "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
     "tools\\pdf_native_script_motion_audit.py": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
     "tools\\test_pdf_text_motion_ink_origins.py": "f4be2879ffcf0904777a1a67ccf82254aac6f55f9fca49693677fbe73290b270",
     "tools\\test_izho_natural_spacing.py": "9980fa2aed2c5e0d112e654d7c417c67a962553befb64a1143d9075669164a6a",
-    "tools\\test_pdf_korean_natural_composer.py": "b76df335fcbaa5af259fe7c4a4f5963abed0d93cfc660d8c070d1eb09e26a0d2"
+    "tools\\test_pdf_korean_natural_composer.py": "b76df335fcbaa5af259fe7c4a4f5963abed0d93cfc660d8c070d1eb09e26a0d2",
+    "tools/pdf_display_equation_numbers.py": "893c4a4a72e8bde0b045973e4cfac9fa4f59827e0db29b2f5d7e9323c29656df",
+    "tools/pdf_partial_authored_spacing_audit.py": "c75b2843d284db6f9cd06f48c72236489ac65df885671619b8819031fbb73fb5",
+    "tools/test_partial_authored_spacing.py": "7814ba2f4670647037f0cd2114a19fbdcd30611cfe2d4721980bd5a3e20e8389"
   },
   "extra_evidence": [
     {

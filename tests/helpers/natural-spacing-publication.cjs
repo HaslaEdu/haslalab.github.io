@@ -36,6 +36,10 @@ module.exports = function validate(root, record, item) {
       assert.deepEqual(geometry.relative_geometry_failures, []);
       for (const pair of geometry.script_base_pairs) assert.equal(pair.passed, true);
     }
+    if (full.display_equation_number_audit) {
+      assert.equal(full.display_equation_number_audit.passed, true);
+      assert.deepEqual(full.display_equation_number_audit.changed_marker_glyphs, []);
+    }
     for (const key of ['source_math_internal_geometry', 'reviewed_inline_expression_geometry']) {
       if (!full[key]) continue;
       assert.equal(full[key].passed, true);
@@ -117,6 +121,12 @@ module.exports = function validate(root, record, item) {
   }
   for (const row of record.extra_evidence) {
     const evidence = pinned(row.path, row.sha256);
+    if (row.kind === 'stationary-display-equation-numbers') {
+      assert.equal(evidence.passed, true);
+      assert.equal(evidence.proof_sha256, record.page_proofs.find(p => p.page === row.page).proof_sha256);
+      assert.deepEqual(evidence.changed_marker_glyphs, []);
+      assert.match(evidence.original_english_source_sha256, /^[a-f0-9]{64}$/);
+    }
     if (row.kind === 'native-script-relative-geometry') {
       assert.equal(evidence.passed, true);
       assert.equal(evidence.final_sha256, record.page_proofs.find(p => p.page === row.page).proof_sha256);

@@ -1,0 +1,119 @@
+{
+  "status": "READY",
+  "file": "CPhO_2022_T_EN.pdf",
+  "year": 2022,
+  "kind": "T",
+  "language": "en",
+  "pages": 4,
+  "bytes": 2778531,
+  "sha256": "13677acd153678bbf840aae804d903dfc483756d117e6b72dce9f908556aa599",
+  "source_inventory": "tools/ko/cpho/2022/T/natural-spacing/en/source-inventory.json",
+  "source_inventory_sha256": "6744b970789d555cd60a56ce608109c62ca70f0b89bbbff4d4a787653482f475",
+  "combined_qa": "tools/ko/cpho/2022/T/natural-spacing/en/combined.qa.json",
+  "combined_qa_sha256": "204c2c42a5e5940c173c9993ce978d0a546089dc7cc2f039770e9a5d46e9c51c",
+  "page_proofs": [
+    {
+      "page": 1,
+      "proof_sha256": "71c63287891e9eae364febb223c5f62c603ce31fdd7fc9fdde6272705b667e44",
+      "composition": "tools/ko/cpho/2022/T/natural-spacing/en/page01-composition.json",
+      "composition_sha256": "2b7c6f669568db8ff74a6db29cbf92346611bba7e460ee7d060049d82f4e5d17"
+    },
+    {
+      "page": 2,
+      "proof_sha256": "0c422a83761c5c8049003ca80d75278cc76f47883daeb7a0f7f7ef27d2a21a63",
+      "composition": "tools/ko/cpho/2022/T/natural-spacing/en/page02-composition.json",
+      "composition_sha256": "1b30b5c66d8671e958a1be718d03f4c293811212aa392998e295382d9e7cce12"
+    },
+    {
+      "page": 3,
+      "proof_sha256": "653ab3eb7ae0a9b8c7bba649e58bfc47ca6b6738dd9c7a14670d31332d915497",
+      "composition": "tools/ko/cpho/2022/T/natural-spacing/en/page03-composition.json",
+      "composition_sha256": "83f67e5cfca5bbee10b92cab8de3f74ecb573135b1d0439b61c332133ccdea48"
+    },
+    {
+      "page": 4,
+      "proof_sha256": "0d0e94495bb35dc61cf02c48d6b1e855c03efa48bfb0918e9f4b3a4aed2d65db",
+      "composition": "tools/ko/cpho/2022/T/natural-spacing/en/page04-composition.json",
+      "composition_sha256": "93a281c981948335df0cb7bff90cb6c8691caff9a1c09096def4e5fd1b48c092"
+    }
+  ],
+  "authoring_snapshotroot": "tools/ko/cpho/2022/T/natural-spacing/en/authoring",
+  "authoring_snapshot_sha256": {
+    "tools/cpho_natural_spacing.py": "1d51a1cf55022647f61ddb16adf041b3e2b5ee01e652eabda6d549504eca0b75",
+    "tools/cpho_natural_spacing_qa.py": "4d0307faf55ff1a99b09bef2651afcc16c61305db913140393dc9cc4d09fdd6b",
+    "tools/cpho_natural_full_qa.py": "4bc4858bb868f319027916242ffe0b5eb694c810ab6a8ff13cddeb895e13968e",
+    "tools/cpho_natural_inventory.py": "cdcca3d9fab790d135f7eecf2f40d9341f8113406bd523f7fef61f7dd311e121",
+    "tools/cpho_natural_atoms.py": "870c7e161ecca3281bf55d7a72b0628349d50dc83e3f4122eeed9fd7789adb35",
+    "tools/cpho_natural_english_fonts.py": "597bafebb1984e52da37ab08cd69ae267651efaa7a9f5c4013c730ad8e2c7435",
+    "tools/cpho_natural_prose_edits.py": "07024e5aaed75ba2b9250ee008fbc79cbb4edb27c0c569197d8e93bcd9a665ca",
+    "tools/cpho_natural_rotated_labels.py": "ead27cdda4415053bd7b43e037e3806d099c04f5a1eff9b567644a1719a95429",
+    "tools/pdf_native_glyph_raster_witness.py": "8c7d6fc1856d1161e710beb66c69e8bd38dfebd33ab5ae88b6e61994620e139e",
+    "tools/pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools/pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
+    "tools/pdf_native_inline_reposition_regression.py": "430a9e7f39f73358aa3b346b2df61ea812bc4ed0df43ccef897db19850cb75c0",
+    "tools/pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools/test_pdf_native_image_motion.py": "d9cd33cb8b941f0cfbdf2e354a74eabbf04858b34b6bc45331e6c37a40df582b",
+    "tools/pdf_new_hangul_graphics_overlap.py": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620",
+    "tools/pdf_native_script_motion_audit.py": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+    "tools/pdf_korean_natural_composer.py": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb",
+    "tools/izho_natural_spacing.py": "86a53ff3052324c20c32cca0e7afcb5e4d5f24b604219e5975ef8d7fbc8d358e",
+    "tools/izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+    "tools/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+    "tools/pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+    "tools/pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+    "tools/pdf_text_motion_ink.py": "cc523d4d00cd3785259975d6b8bc5dcbfb1e9a2685969fcf12453c5be053d5e0",
+    "tools/pdf_original_graphics_ink.py": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
+    "tools/pdf_original_image_ink.py": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+    "tools/pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools/pdf_hangul_visibility.py": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+    "tools/izho_natural_spacing_qa.py": "4f14f08c77a693c384d8179edd84d5f8245bdbe1beb5e3c5d34b7daf4b74f943",
+    "tools/izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+    "tools/izho_new_prose_outline_qa.py": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+    "tools/cpho_original_latin_fonts.py": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2",
+    "tools/ko/cpho/2022/original/page01.tsv": "35296e5ceabd3fc2911caf2c6fc656716a3a573cb75806f2f74946663c6b44b8",
+    "tools/ko/cpho/2022/original/page02.tsv": "72a2ead665d14cc9a2ff8e52b504522f765a748907e616e836b41372666e5c84",
+    "tools/ko/cpho/2022/original/page03.tsv": "efb93d586107735b3fcc22711b65f99fc0ab0fc9090ac2caa23f4d7c124834a6",
+    "tools/ko/cpho/2022/original/page04.tsv": "d9614f5867a1670a4edaa00689c4480d668f6d44cf712409bc9792414a3aca52",
+    "tools/ko/cpho/2022/natural/atomic-inline.json": "818213edb04587d1509544a56d3c5d1a6317410436487100a8d32a07e42f237e",
+    "tools/ko/cpho/2022/natural/atomic-forms.json": "443e2d4c46a223f4153a042480aec6c9bce86ddc9b2a42cc373d307c0eb3ae6e",
+    "tools/ko/cpho/2022/natural/atomic-images.json": "452103f30274a28357392cb3bab22b348bf8ba3bbb28a7def04519e6b24be2e6",
+    "tools/cpho_2022_natural_date.py": "929ba10c0cfc423ec44a03fceb44d40992b5a3a98cb65c15fafb15a1ed600510",
+    "tools/pdf_new_prose_native_text_overlap.py": "2ef62c1b79d38e455a95e85de0812a8b2096443362d62dd0689818531acffb3c",
+    "tools/pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+    "tools/pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+    "tools/izho_natural_spacing_rebuild.py": "b916e1810476db5343bd539149494d958cd87c5de711bbbbef0e11675619630e",
+    "tools/izho_native_math_audit.py": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8",
+    "tools/izho_extract_word.py": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e",
+    "tools/izho_translate.py": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e",
+    "tools/izho_math_clean.py": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65",
+    "tmp/original-style-repair/2022/slots.json": "6160e4a80f9db39eebe7693d4f6b22a1a80582a56b4bedfddd3de311f6886059",
+    "immutable-input-journals/CPhO_2022_T_EN.build.json": "68b4a493fd3b4d033516afc4043528e5de4c292b255c4c4c678c6027e4ff26f2",
+    "immutable-input-journals/CPhO_2022_T_KO.build.json": "ac699d80385c04371c771f980f0334e7af4da2b664027fa9f9ed5f09b872cad2"
+  },
+  "extra_evidence": [
+    {
+      "path": "tools/ko/cpho/2022/T/natural-spacing/en/page01-prose-native-text-overlap.json",
+      "sha256": "723632d385b8acab1a890a7a62cc9caaad2bcffd15521cd6c5db8e1f195a8951",
+      "page": 1,
+      "kind": "prose-native-text-overlap"
+    },
+    {
+      "path": "tools/ko/cpho/2022/T/natural-spacing/en/page02-prose-native-text-overlap.json",
+      "sha256": "20e819ce76121de9301124c56a31f18505894cd0660c55f2731668fd19c043a2",
+      "page": 2,
+      "kind": "prose-native-text-overlap"
+    },
+    {
+      "path": "tools/ko/cpho/2022/T/natural-spacing/en/page03-prose-native-text-overlap.json",
+      "sha256": "db9a2ff688e9fd1b109684a1ff744c20d866c2ea6fd02fa848031f4cd0e527de",
+      "page": 3,
+      "kind": "prose-native-text-overlap"
+    },
+    {
+      "path": "tools/ko/cpho/2022/T/natural-spacing/en/page04-prose-native-text-overlap.json",
+      "sha256": "7902311d36d6779834732a66161f21e4d81d6f2fe92c209a1a97e0fac070ffd5",
+      "page": 4,
+      "kind": "prose-native-text-overlap"
+    }
+  ]
+}
