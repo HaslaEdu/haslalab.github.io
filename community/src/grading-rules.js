@@ -71,7 +71,7 @@ const ECF = r("IP1", "Propagating errors are penalised once, where the mistake i
 const FAMILIES = {
   general: { name: { ko: "기본", en: "General" }, all: [R5] },
   ipho: { name: { ko: "IPhO · APhO · EuPhO · ISPhO 기본", en: "IPhO · APhO · EuPhO · ISPhO base" },
-    comps: ["ipho", "apho", "eupho", "ispho", "nbpho", "physcup", "gpho", "rmph", "izho", "wopho", "usapho", "baupc", "plancks", "ortvay", "eotvos"],
+    comps: ["ipho", "apho", "eupho", "ispho", "nbpho", "physcup", "gpho", "rmph", "izho", "wopho", "plancks", "ortvay", "eotvos"],
     all: [ECF,
       r("IP2", "A simple slip in an otherwise correct equation (a typo, a copying error, a dropped factor) costs the small deduction the scheme gives for it (usually 0.1–0.2 pt), not the whole item. A dimensionally wrong equation or result earns nothing, even as a propagated error.", "그 밖에는 올바른 식의 단순 실수(오타, 옮겨 적기 실수, 빠뜨린 계수)는 항목 전체가 아니라 기준표가 정한 작은 감점(보통 0.1–0.2점)만 받습니다. 차원이 틀린 식이나 결과는 전파된 오류라도 점수가 없습니다."),
       r("IP3", "A numerical value earns its marks only when the formula it is computed from is correct, or is a propagated error under IP1.", "수치 값은 그것을 계산한 식이 맞거나 IP1에 따른 전파된 오류일 때만 점수를 받습니다."),
@@ -79,6 +79,13 @@ const FAMILIES = {
       r("IP5", "Where the problem fixes no sign convention, any convention used consistently earns full marks; the signs that follow from it are not errors.", "문제가 부호 규약을 정하지 않았으면 일관되게 쓴 어떤 규약도 만점이며, 그 규약에서 나온 부호는 오류가 아닙니다.")],
     theory: [r("IP6", "Intermediate results on working sheets earn the method marks the scheme lists for them. A final expression earns its marks only in terms of the quantities the problem gives (and constants), or as a number with its unit.", "연습지의 중간 결과는 기준표가 정한 풀이 점수를 받습니다. 최종 식은 문제에서 준 양(과 상수)으로 나타냈거나 단위가 있는 수일 때만 점수를 받습니다.")],
     lab: [r("IP7", "Every measured or final value needs the uncertainty the scheme asks for, and its significant figures must match that uncertainty.", "측정값과 최종값에는 기준표가 요구하는 불확도가 있어야 하고, 유효숫자는 그 불확도에 맞아야 합니다.")] },
+  /* the USAPhO instructions and solutions (2022–2025): official answer sheets only, partial credit for reasoning,
+     either sign convention where none is given. BAUPC publishes no rules of its own and is marked the same way. */
+  usapho: { name: { ko: "USAPhO · BAUPC", en: "USAPhO · BAUPC" }, comps: ["usapho", "baupc"],
+    all: [r("US1", "Only work written on the official answer pages is marked; anything outside them, and scratch work the candidate did not hand in as a solution, earns nothing. The boxed answer of a subpart is its final answer.", "공식 답안지 안에 쓴 풀이만 채점하며, 그 밖이나 풀이로 내지 않은 계산 낙서는 점수가 없습니다. 소문항에서 상자로 표시한 답이 그 소문항의 최종 답입니다."),
+      r("US2", "Partial credit follows the rubric for well-reasoned work even when the final answer is wrong: a subpart that correctly uses a wrong earlier result is well-reasoned and keeps the rubric's marks for its own steps; the earlier mistake is marked down where it was made.", "최종 답이 틀려도 논리가 타당한 풀이는 채점 기준의 부분 점수를 받습니다. 틀린 앞 결과를 올바르게 이어 쓴 소문항도 타당한 풀이로 보아 자기 단계 점수를 받고, 앞의 실수는 실수한 곳에서만 감점합니다."),
+      r("US3", "A correct derivation other than the official one earns full credit. Where the problem fixes no sign convention, either convention used consistently earns full credit.", "공식 풀이와 다른 올바른 유도도 만점입니다. 문제가 부호 규약을 정하지 않았으면 일관되게 쓴 어느 규약도 만점입니다."),
+      r("US4", "A final answer earns its marks in terms of the quantities the problem gives, with a unit and sensible significant figures when it is numerical; a dimensionally wrong answer earns nothing for that result.", "최종 답은 문제에서 준 양으로 나타내야 하고, 수치이면 단위와 알맞은 유효숫자가 있어야 점수를 받습니다. 차원이 틀린 답은 그 결과의 점수가 없습니다.")] },
   derivation: { name: { ko: "CPhO · RuPhO", en: "CPhO · RuPhO" }, comps: ["cpho", "rupho"],
     all: [R5,
       r("CR1", "Marks are attached to the numbered equations and steps of the official derivation (each ①, ②, … carries its own points): a step earns its points when the candidate writes that equation or an equivalent one. A final result earns only the points of its own equation, never the steps that are not shown.", "점수는 공식 유도의 번호 붙은 식과 단계(①, ② … 각각의 배점)에 붙어 있습니다. 응시자가 그 식이나 동등한 식을 쓰면 그 단계 점수를 받습니다. 최종 결과는 그 식의 점수만 받으며, 쓰지 않은 단계의 점수는 받지 못합니다."),

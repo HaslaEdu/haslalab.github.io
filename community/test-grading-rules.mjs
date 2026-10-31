@@ -7,7 +7,8 @@ import { REG_VERSION, familyOf, paperKind, rulesFor, regulationOf, regulationId,
 const KINDS = ["theory", "experiment", "data", "observation"];
 
 test("competitions that mark alike share a family; everything else is general", () => {
-  for (const c of ["ipho", "apho", "eupho", "ispho", "nbpho", "physcup", "gpho", "rmph", "izho", "usapho"]) assert.equal(familyOf(c), "ipho", c);
+  for (const c of ["ipho", "apho", "eupho", "ispho", "nbpho", "physcup", "gpho", "rmph", "izho"]) assert.equal(familyOf(c), "ipho", c);
+  for (const c of ["usapho", "baupc"]) assert.equal(familyOf(c), "usapho", c);
   for (const c of ["cpho", "rupho"]) assert.equal(familyOf(c), "derivation", c);
   assert.equal(familyOf("opho"), "answer"); assert.equal(familyOf("kphe"), "kphe");
   for (const c of ["ioaa", "ioaajr", "usaaao"]) assert.equal(familyOf(c), "ioaa", c);
