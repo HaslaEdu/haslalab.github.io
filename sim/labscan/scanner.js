@@ -1275,7 +1275,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=08420579ed34', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=438b55d2189a', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1296,14 +1296,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=08420579ed34', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=438b55d2189a', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=08420579ed34', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=438b55d2189a', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1482,7 +1482,7 @@ export function validatedDetectionHint(hint, width, height) {
       hint.corners.some(p => !p || !Number.isFinite(p.x) || !Number.isFinite(p.y) || p.x <= 0 || p.y <= 0 || p.x >= 1 || p.y >= 1)) return null;
   const corners = orderCorners(hint.corners.map(p => ({ x: p.x * width, y: p.y * height })));
   if (quadScore(corners, width, height) < .1) return null;
-  return { corners, method: hint.method, score: Math.min(1, hint.score), scanEligible: true, paperStatus: 'document', engine: 'matched-video-frame' };
+  return { corners, method: hint.method, score: Math.min(1, hint.score), scanEligible: true, verified: hint.verified !== false, paperStatus: 'document', engine: 'matched-video-frame' };
 }
 
 /* the page cut out of the decoded photo for the worker: the quad's bounding box, scaled down only when the page's

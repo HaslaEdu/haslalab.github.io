@@ -9,7 +9,7 @@ export function createDocumentDetector({ workerFactory = url => new Worker(url, 
     if (disposed) throw new Error('document_detector_disposed');
     if (worker) return worker;
     if (!retry && Date.now() < workerRetryAt) throw new Error('document_worker_unavailable');
-    worker = workerFactory(new URL('./document-worker.mjs?v=08420579ed34', import.meta.url));
+    worker = workerFactory(new URL('./document-worker.mjs?v=438b55d2189a', import.meta.url));
     worker.onmessage = event => {
       const value = event.data;
       if (value.type === 'progress') { for (const subscriber of subscribers) subscriber(value.stage); return; }
