@@ -68,6 +68,31 @@ def reviewed_stop(locator, start, natural_stop, profile):
     return override
 
 
+def reviewed_regions(locator, selected, profile):
+    override = profile.get('question_region_overrides',{}).get(locator)
+    if override is None:
+        return selected
+    if override.get('source_image_checked') is not True or not override.get('review_note'):
+        raise ValueError('Primary region override requires source-image review')
+    originals = {(r['page'],r['column']):r for r in selected}
+    replacement, used = override['regions'], set()
+    if not replacement:
+        raise ValueError('Primary region override cannot remove the entire question')
+    for region in replacement:
+        cell = (region['page'],region['column'])
+        original = originals.get(cell)
+        if original is None or cell in used:
+            raise ValueError('Primary region override must retain unique original source cells')
+        used.add(cell)
+        old, new = original['bbox_points'], region['bbox_points']
+        if (len(new) != 4 or not old[0] <= new[0] < new[2] <= old[2]
+                or not old[1] <= new[1] < new[3] <= old[3]):
+            raise ValueError('Primary region override escapes its original source bounds')
+    if [(r['page'],r['column']) for r in replacement] != sorted(used):
+        raise ValueError('Primary region overrides must preserve source reading order')
+    return replacement
+
+
 def regions(start, stop, section, profile):
     result = []
     for page in range(start['page'], stop['page'] + 1):
@@ -158,7 +183,7 @@ def extract(args):
                      'y':headers[index+1]['bbox'][1]-4} if index+1<len(headers) else
                     section_stop(section,profile))
             stop = reviewed_stop(locator,start,stop,profile)
-            selected = regions(start,stop,section,profile)
+            selected = reviewed_regions(locator,regions(start,stop,section,profile),profile)
             if not selected:
                 raise ValueError('Source question has no canonical regions')
             assets, spans, texts = [], [], []
@@ -200,8 +225,10 @@ def extract(args):
             original_number = str(start.get('original_number',start['number']))
             context = {'source_author':profile['source_author'],
                     'source_primary_regions':spans,'number_origin':start['origin'],
-                    'quality_flags':['local_ocr_math_unverified','source_reference_context_requires_review'],
+                    'quality_flags':[text_method+'_math_unverified','source_reference_context_requires_review'],
                     'unresolved_source':False,'source_image_checked':False}
+            if locator in profile.get('question_region_overrides',{}):
+                context['primary_region_review_note'] = profile['question_region_overrides'][locator]['review_note']
             for key in ['title_ko','title_en']:
                 if section.get(key):
                     context['chapter_'+key] = section[key]

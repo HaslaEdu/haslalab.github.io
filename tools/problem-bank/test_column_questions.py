@@ -11,6 +11,21 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ColumnTests(unittest.TestCase):
+    def test_unrelated_figure_can_be_removed_without_losing_next_page_continuation(self):
+        original=[{'page':1,'column':0,'bbox_points':[20,300,300,750]},
+                  {'page':2,'column':0,'bbox_points':[20,60,300,120]}]
+        trimmed=copy.deepcopy(original)
+        trimmed[0]['bbox_points'][3]=600
+        override={'source_image_checked':True,'review_note':'Remove another exercise figure below the prose.',
+                  'regions':trimmed}
+        result=MODULE.reviewed_regions('synthetic',original,{'question_region_overrides':{'synthetic':override}})
+        self.assertEqual(result[1],original[1])
+        self.assertEqual(result[0]['bbox_points'][3],600)
+        bad=copy.deepcopy(override)
+        bad['regions'][0]['bbox_points'][3]=751
+        with self.assertRaisesRegex(ValueError,'escapes'):
+            MODULE.reviewed_regions('synthetic',original,{'question_region_overrides':{'synthetic':bad}})
+
     def test_section_heading_between_questions_can_only_shorten_reviewed_interval(self):
         start={'page':1,'column':0,'bbox':[20,400,40,410]}
         natural={'page':1,'column':0,'y':600}
