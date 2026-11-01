@@ -11,6 +11,23 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ColumnTests(unittest.TestCase):
+    def test_mixed_physical_page_sizes_keep_each_continuation_below_its_own_header(self):
+        profile={'body_top':40,'body_bottom':4000,'page_body_top':{'2':260},
+                 'page_body_bottom':{'1':610,'2':3700},
+                 'page_statement_columns':{'1':[[20,450]],'2':[[100,2800]]}}
+        result=MODULE.regions({'page':1,'column':0,'bbox':[25,570,45,580]},
+                              {'page':2,'column':0,'y':500},
+                              {'first_page':1,'first_body_top':400},profile)
+        self.assertEqual(result[1]['bbox_points'],[100,260,2800,500])
+
+    def test_oversized_scan_crop_caps_pixels_without_upscaling_small_regions(self):
+        huge=pymupdf.Rect(0,0,3000,4000)
+        self.assertEqual(MODULE.crop_scale(huge,144,3000),.75)
+        self.assertEqual(MODULE.crop_scale(pymupdf.Rect(0,0,100,200),144,3000),2)
+        self.assertEqual(MODULE.crop_scale(huge,144,0),2)
+        with self.assertRaises(ValueError):
+            MODULE.crop_scale(huge,144,100)
+
     def test_unrelated_figure_can_be_removed_without_losing_next_page_continuation(self):
         original=[{'page':1,'column':0,'bbox_points':[20,300,300,750]},
                   {'page':2,'column':0,'bbox_points':[20,60,300,120]}]

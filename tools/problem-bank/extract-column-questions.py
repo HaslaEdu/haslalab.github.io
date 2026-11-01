@@ -47,6 +47,13 @@ def native_words(page):
             for word in page.get_text('words')]
 
 
+def crop_scale(rect, dpi, maximum_side):
+    if maximum_side != 0 and not 512 <= maximum_side <= 6000:
+        raise ValueError('Crop render cap must be zero or between 512 and 6000 pixels')
+    scale = dpi/72
+    return min(scale,maximum_side/max(rect.width,rect.height)) if maximum_side else scale
+
+
 def section_stop(section, profile):
     page = section['last_page']
     columns = profile['page_statement_columns'][str(page)]
@@ -100,8 +107,9 @@ def regions(start, stop, section, profile):
             cell = (page, column)
             if cell < point(start)[:2] or cell > (stop['page'], stop['column']):
                 continue
+            page_top = profile.get('page_body_top',{}).get(str(page),profile['body_top'])
             top = (start['bbox'][1] - 4 if cell == point(start)[:2] else
-                   section['first_body_top'] if page == section['first_page'] else profile['body_top'])
+                   section['first_body_top'] if page == section['first_page'] else page_top)
             page_bottom = profile.get('page_body_bottom', {}).get(str(page), profile['body_bottom'])
             bottom = min(stop['y'],page_bottom) if cell == (stop['page'], stop['column']) else page_bottom
             if bottom > top + 2:
@@ -158,6 +166,8 @@ def extract(args):
     if source['sha256'] != source_hash:
         raise ValueError('Registered source revision mismatch')
     document = pymupdf.open(args.pdf)
+    maximum_side = getattr(args,'max_render_side',0)
+    crop_scale(document[0].rect,args.dpi,maximum_side)
     if len(document) != profile['page_count'] or not 96 <= args.dpi <= 180:
         raise ValueError('Unexpected page count or crop scale')
     images = output / 'crops'
@@ -165,7 +175,8 @@ def extract(args):
     cache = {}
     if args.reuse_matching_crops and (output/'crop-audit.json').is_file():
         old = read(output/'crop-audit.json')
-        if old['source_sha256'] == source_hash and old['dpi'] == args.dpi:
+        if (old['source_sha256'] == source_hash and old['dpi'] == args.dpi
+                and old.get('max_render_side',0) == maximum_side):
             cache = {entry['path']:entry for entry in old['assets']}
     page_words, audits, questions = {}, [], []
     language = profile['source_language']
@@ -199,7 +210,8 @@ def extract(args):
                 path = images/f"chapter-{key}-problem-{start['number']:02}-{asset_index:02}.webp"
                 prior = cache.get(str(path))
                 if not (prior and prior['region'] == region and path.is_file() and digest(path) == prior['sha256']):
-                    pix = page.get_pixmap(matrix=pymupdf.Matrix(args.dpi/72,args.dpi/72),clip=box,alpha=False)
+                    scale = crop_scale(box,args.dpi,maximum_side)
+                    pix = page.get_pixmap(matrix=pymupdf.Matrix(scale,scale),clip=box,alpha=False)
                     Image.frombytes('RGB',(pix.width,pix.height),pix.samples).save(path,'WEBP',lossless=True,method=4)
                 checksum = digest(path)
                 span = {'page':region['page'],'bbox':[box.x0/page.rect.width,box.y0/page.rect.height,
@@ -250,7 +262,8 @@ def extract(args):
     if len(questions) != profile['expected_question_count']:
         raise ValueError('Profile total disagrees with extracted questions')
     save(output/'questions.raw.json',{'version':1,'source_sha256':source_hash,'questions':questions,'paid_api_calls':0})
-    save(output/'crop-audit.json',{'source_sha256':source_hash,'dpi':args.dpi,'assets':audits})
+    save(output/'crop-audit.json',{'source_sha256':source_hash,'dpi':args.dpi,
+                                 'max_render_side':maximum_side,'assets':audits})
     save(output/'coverage-audit.json',{'source_sha256':source_hash,'found_question_count':len(questions),
          'asset_count':len(audits),'source_geometry_review_complete':False,'publication_ready':False,'paid_api_calls':0})
     print(json.dumps({'questions':len(questions),'assets':len(audits),'publication_ready':False}))
@@ -261,5 +274,7 @@ if __name__ == '__main__':
     for field in ['pdf','manifest','profile','headers','out']:
         parser.add_argument('--'+field,type=Path,required=True)
     parser.add_argument('--dpi',type=int,default=160)
+    parser.add_argument('--max-render-side',type=int,default=0,
+                        help='Cap crop render dimensions for oversized scanned page boxes')
     parser.add_argument('--reuse-matching-crops',action='store_true')
     extract(parser.parse_args())
