@@ -81,6 +81,25 @@
   .ws{position:absolute;inset:0;border:.35mm solid #000;
       background-image:linear-gradient(#bbb .15mm,transparent .15mm),linear-gradient(90deg,#bbb .15mm,transparent .15mm);background-size:5mm 5mm}
   .note{font-size:8pt;color:#333;margin:0 0 2mm}
+  /* theory sheets, laid out as the official IPhO 2025 Answer / Working sheets: «Theory» and the competition at the
+     left, the big sheet code («A1-2», «W») and the language at the right, a rule, then the problem's boxes */
+  .th{position:absolute;left:16mm;right:16mm;top:9mm;height:25mm;border-bottom:.6mm solid #000}
+  .th .s{position:absolute;left:0;top:1mm;font:700 13pt/1.1 Arial,sans-serif}
+  .th .c{position:absolute;left:0;top:8.5mm;font:700 7pt/1.25 Arial,sans-serif;color:#b3261e;letter-spacing:.02em}
+  .th .r{position:absolute;left:0;bottom:1.2mm;font:400 7pt Arial,"Malgun Gothic",sans-serif;color:#333}
+  .th .k{position:absolute;right:0;top:0;font:700 31pt/1 Arial,sans-serif}
+  .th .l{position:absolute;right:0;bottom:1.2mm;font:400 8pt Arial,"Malgun Gothic",sans-serif}
+  .tt{font:700 12.5pt Arial,"Malgun Gothic",sans-serif;color:#1d3f91;margin:0 0 3mm}
+  .tb{border:.35mm solid #888;border-radius:1mm;margin-bottom:2.6mm;display:flex;flex-direction:column}
+  .tb .h{padding:1.2mm 2.5mm;font:700 10pt Arial,sans-serif}.tb .h small{font:400 9pt Arial,sans-serif;margin-left:1.5mm}
+  .tb .h .blank{display:inline-block;border-bottom:.3mm solid #000;width:22mm;margin-left:2mm}
+  .tb .a{flex:1;display:flex;align-items:flex-end;gap:2mm;padding:0 3mm 2mm 2.5mm}.tb .a em{font:400 8pt Arial,"Malgun Gothic",sans-serif;color:#555;font-style:normal}
+  .tb .a i{flex:1;border-bottom:.25mm solid #aaa;margin-bottom:.8mm}
+  .wh{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:.3mm solid #999;padding-bottom:1.5mm;margin-bottom:3mm;font:700 11pt Arial,"Malgun Gothic",sans-serif;color:#1d3f91}
+  .wh span{font:400 9pt Arial,"Malgun Gothic",sans-serif;color:#333}.wh span b{display:inline-block;width:14mm;border-bottom:.3mm solid #333;margin:0 1.5mm}
+  .pg.t .bd{top:38mm}
+  .wb{position:absolute;inset:11mm 0 7mm 0;border:.3mm solid #aaa}.wn{position:absolute;left:0;bottom:0;font:400 7pt Arial,"Malgun Gothic",sans-serif;color:#555}
+  .off .o .st{font-size:11.5px;color:var(--muted);flex-basis:100%}
 
   @page{size:A4;margin:0}
   @media print{
@@ -123,9 +142,11 @@ const T = {
     offA: "공식 Answer sheet", offW: "공식 Working sheet", open: "PDF 열어 인쇄 ↗", offPages: (n, m) => `${n}쪽` + (m ? ` · 스캔 마커 ${m}쪽` : " · 스캔 마커 없음(종이 테두리로 찾음)"),
     ownA: "공식 Answer sheet가 공개되지 않아 HaslaLab 양식으로 인쇄합니다 (아래).", ownW: "공식 Working sheet가 공개되지 않아 HaslaLab 양식으로 인쇄합니다 (아래).",
     offHint: "공식 PDF는 열어서 A4 · 실제 크기로 인쇄하세요. HaslaLab이 네 귀퉁이에 스캔용 검은 사각형만 덧찍었고(빈 귀퉁이에만), 나머지는 대회가 공개한 그대로입니다.",
-    thyItems: "문항 번호(예: 2.B.1)를 각 칸 왼쪽에 쓰고 최종 답을 적으세요. 풀이는 Working sheet에 씁니다.", thyOff: "대회가 공개한 공식 답안지 · 스캔 마커 없음(종이 테두리로 찾음)",
-    koA: "한국어 Answer sheet", koW: "한국어 Working sheet", thyKo: "번역본 · 스캔 마커 없음(종이 테두리로 찾음)",
-    wsNote: "풀이 · 계산. 최종 답은 Answer sheet의 해당 칸에 옮겨 써야 인정됩니다.", cand: "수험번호", page: "쪽", item: "문항", axes: "축", bad: "주소가 올바르지 않습니다. 시험 안내 화면에서 다시 여세요." },
+    thyItems: "각 칸의 «문항» 옆에 문항 번호(예: 2.B.1)를 쓰고 최종 답을 적으세요. 풀이는 Working sheet에 씁니다.", thyOff: "대회가 공개한 공식 답안지 · 원본에는 스캔 마커가 없어 «스캔 마커 넣어 열기»로 인쇄하세요",
+    koA: "한국어 Answer sheet", koW: "한국어 Working sheet", thyKo: "번역본 · 원본에는 스캔 마커가 없어 «스캔 마커 넣어 열기»로 인쇄하세요",
+    wsNote: "풀이 · 계산. 최종 답은 Answer sheet의 해당 칸에 옮겨 써야 인정됩니다.", cand: "수험번호",
+    langName: "Korean", theory: "Theory", wsTitle: "작업 용지 (Working sheet)", wsProb: "문제", wsPage: "쪽", ansL: "답", pts: "점",
+    stamp: "스캔 마커 넣어 열기 ↗", stamping: "마커를 찍는 중…", stamped: (m, n) => `${n}쪽 중 ${m}쪽에 스캔 마커를 찍었습니다.` + (m < n ? " 나머지 쪽은 귀퉁이에 인쇄된 내용이 있어 종이 테두리로 찾습니다." : ""), stampFail: "PDF를 열지 못했습니다. 원본을 열어 인쇄하세요.", page: "쪽", item: "문항", axes: "축", bad: "주소가 올바르지 않습니다. 시험 안내 화면에서 다시 여세요." },
   en: { h: "Print the Answer sheets and Working sheets", ans: "Answer sheets", work: "Working sheets", per: "Working sheets per experiment", pages: "pages", print: "Print / save as PDF",
     hint: "Print on A4 at 100 % («actual size») with no margins. The black squares in the corners let the phone straighten the page: do not cover or fold them. The problem sheet opens only inside the exam, with «Open problem sheet».",
     noItems: "This experiment's item labels are not pre-printed: write the item (e.g. A.1) at the left of each box.",
@@ -134,14 +155,24 @@ const T = {
     offA: "Official Answer sheet", offW: "Official Working sheet", open: "Open the PDF to print ↗", offPages: (n, m) => `${n} pages` + (m ? ` · scan markers on ${m}` : " · no scan markers (found by the paper's edge)"),
     ownA: "No official Answer sheet was published, so HaslaLab's is printed below.", ownW: "No official Working sheet was published, so HaslaLab's is printed below.",
     offHint: "Open the official PDFs and print them on A4 at actual size. HaslaLab only added the black scan squares in the corners (where they were blank); the rest is as the olympiad published it.",
-    thyItems: "Write the item (e.g. 2.B.1) at the left of each box and your final answer in it. The working goes on the Working sheets.", thyOff: "the olympiad's official answer sheets · no scan markers (found by the paper's edge)",
-    koA: "Korean Answer sheet", koW: "Korean Working sheet", thyKo: "translation · no scan markers (found by the paper's edge)",
-    wsNote: "Working. A final answer counts only when it is written in its box on an Answer sheet.", cand: "Candidate no.", page: "Page", item: "Item", axes: "Axes", bad: "This address is not complete. Open it again from the exam instructions." },
+    thyItems: "Write the item (e.g. 2.B.1) beside «Item» in each box and your final answer in it. The working goes on the Working sheets.", thyOff: "the olympiad's official answer sheets · the original has no scan markers: print it with «Open with scan markers»",
+    koA: "Korean Answer sheet", koW: "Korean Working sheet", thyKo: "translation · the original has no scan markers: print it with «Open with scan markers»",
+    wsNote: "Working. A final answer counts only when it is written in its box on an Answer sheet.", cand: "Candidate no.",
+    langName: "English", theory: "Theory", wsTitle: "Working sheet", wsProb: "Problem", wsPage: "Page", ansL: "Answer", pts: "pt",
+    stamp: "Open with scan markers ↗", stamping: "Adding the markers…", stamped: (m, n) => `Scan markers added on ${m} of ${n} pages.` + (m < n ? " The other pages have print in a corner and are found by the paper's edge." : ""), stampFail: "The PDF could not be opened. Open the original to print it.", page: "Page", item: "Item", axes: "Axes", bad: "This address is not complete. Open it again from the exam instructions." },
 }[lang];
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 let ITEMS = {}, OFF = {}, ws = 4, want = { answer: true, working: true };
 
-const head = (task, kind, i, n, title) => `
+/* a theory sheet's header, as the official IPhO 2025 sheets: «A1-2» (answer sheet of problem 1, page 2) or «W» */
+const thyHead = (task, kind, i, n) => {
+  const no = (/\d+/.exec(task) || [""])[0], code = kind === "answer" ? `A${no}-${i}` : "W";
+  return `<div class="mk a"></div><div class="mk b"></div><div class="mk c"></div><div class="mk d"></div>
+  <div class="th"><div class="s">${T.theory}</div><div class="c">${esc(NAME)} ${Y}<br>HaslaLab</div>
+    <div class="r">${esc(task)} · ${kind === "answer" ? "ANSWER SHEET" : "WORKING SHEET"} · ${i}/${n} · ${T.cand} HL-${esc(KEY.toUpperCase())}-____</div>
+    <div class="k">${code}</div><div class="l">${T.langName}</div></div>`;
+};
+const head = (task, kind, i, n, title) => thy(task) ? thyHead(task, kind, i, n) : `
   <div class="mk a"></div><div class="mk b"></div><div class="mk c"></div><div class="mk d"></div>
   <div class="hd"><div class="l">
       <div class="ex">HaslaLab · ${esc(NAME)} ${Y} · ${thy(task) ? "THEORY" : "EXPERIMENT"}</div>
@@ -150,6 +181,22 @@ const head = (task, kind, i, n, title) => `
     <div class="r"><span>${T.cand}</span><i>HL-${esc(KEY.toUpperCase())}-</i>
       <span>${esc(task)}-${kind === "answer" ? "A" : "W"}</span><i class="code">${i} / ${n}</i></div></div>`;
 const foot = (task, kind) => `<div class="ft"><span>${esc(task)} ${kind === "answer" ? "Answer sheet" : "Working sheet"}</span><span>haslalab · ${esc(NAME)} ${Y}</span></div>`;
+
+/* a theory problem's answer boxes, as the official IPhO 2025 answer sheets: «A.1 (0.5pt)» over the space for the
+   answer; with no item list, boxes whose label the candidate writes */
+function thyAnswerPages(task, title) {
+  const tk = ITEMS[task] && ITEMS[task].items && ITEMS[task].items.length ? ITEMS[task] : null;
+  const list = tk ? tk.items.map(([id, p]) => ({ id, p, h: Math.max(22, Math.min(44, 17 + (p || 0) * 13)) })).concat([{ id: "", p: null, h: 30 }])
+    : Array.from({ length: 9 }, () => ({ id: "", p: null, h: 44 }));
+  const total = tk ? (tk.total || tk.points) : null;
+  const top = `<div class="tt">${esc(title || task)}${total ? ` (${total}${lang === "ko" ? "점" : " points"})` : ""}</div>` + (tk ? "" : `<p class="note">${T.thyItems}</p>`);
+  const room = 236, pages = [[]]; let used = tk ? 10 : 17;
+  for (const b of list) { if (used + b.h + 2.6 > room) { pages.push([]); used = 0; } pages[pages.length - 1].push(b); used += b.h + 2.6; }
+  return pages.map((bs, k) => (k === 0 ? top : "") + bs.map(b => `
+    <div class="tb" style="height:${b.h}mm"><div class="h">${b.id ? esc(b.id.replace(/^([A-Z])(\d)/, "$1.$2")) : `${T.item}<span class="blank"></span>`}${b.p != null ? `<small>(${b.p}${lang === "ko" ? "점" : "pt"})</small>` : ""}</div>
+      <div class="a"><em>${T.ansL}:</em><i></i></div></div>`).join(""));
+}
+const thyWorking = () => `<div class="wh">${T.wsTitle}<span>${T.wsProb}<b></b>${T.wsPage}<b></b></span></div><div class="wb"></div><div class="wn">${T.wsNote}</div>`;
 
 /* the answer boxes of one experiment, cut into pages: a box's height follows its points, within limits */
 function answerPages(task) {
@@ -172,11 +219,14 @@ function official() {
   if (THY) {                                                     // theory: the official answer sheets travel with the exam's address
     TASKS.forEach((task, i) => rows.push(ANS[i] && SHEET.test(ANS[i])
       ? `<div class="o"><b>${esc(task)}</b><div>${/_KO\.pdf$/.test(ANS[i]) ? T.koA : T.offA}<small>${esc(/_KO\.pdf$/.test(ANS[i]) ? T.thyKo : T.thyOff)}</small></div>
-         <a href="${esc(sheetUrl(ANS[i]))}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`
+         <button class="pri" type="button" data-stamp="${esc(sheetUrl(ANS[i]))}">${T.stamp}</button>
+         <a href="${esc(sheetUrl(ANS[i]))}" target="_blank" rel="noopener"><button type="button">${T.open}</button></a><span class="st" hidden></span></div>`
       : `<div class="o"><b>${esc(task)}</b><div><small>${T.ownA}</small></div></div>`));
     if (WS) rows.push(`<div class="o"><b>${esc(TASKS.join(" + "))}</b><div>${/_KO\.pdf$/.test(WS) ? T.koW : T.offW}<small>${esc(/_KO\.pdf$/.test(WS) ? T.thyKo : "")}</small></div>
-         <a href="${esc(sheetUrl(WS))}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`);
+         <button class="pri" type="button" data-stamp="${esc(sheetUrl(WS))}">${T.stamp}</button>
+         <a href="${esc(sheetUrl(WS))}" target="_blank" rel="noopener"><button type="button">${T.open}</button></a><span class="st" hidden></span></div>`);
     document.getElementById("off").innerHTML = rows.join("");
+    document.querySelectorAll("[data-stamp]").forEach(b => { b.onclick = () => stampOpen(b); });
     return;
   }
   for (const task of TASKS) for (const kind of ["answer", "working"]) {
@@ -194,13 +244,55 @@ function build() {
   for (const [ti, task] of TASKS.entries()) {
     const title = (ITEMS[task] && ITEMS[task].title) || TITLES[ti] || "";
     if (want.answer && !hasOff(task, "answer")) {
-      const bodies = thy(task) ? answerPages(task) : [...answerPages(task), tablePage(), graphPage(), graphPage()];
-      bodies.forEach((b, i) => out.push(`<div class="pg">${head(task, "answer", i + 1, bodies.length, title)}<div class="bd">${b}</div>${foot(task, "answer")}</div>`));
+      const bodies = thy(task) ? thyAnswerPages(task, title) : [...answerPages(task), tablePage(), graphPage(), graphPage()];
+      bodies.forEach((b, i) => out.push(`<div class="pg${thy(task) ? " t" : ""}">${head(task, "answer", i + 1, bodies.length, title)}<div class="bd">${b}</div>${foot(task, "answer")}</div>`));
     }
     if (want.working && !hasOff(task, "working")) for (let i = 0; i < ws; i++)
-      out.push(`<div class="pg">${head(task, "working", i + 1, ws, title)}<div class="bd"><p class="note">${T.wsNote}</p><div class="ws" style="top:6mm"></div></div>${foot(task, "working")}</div>`);
+      out.push(`<div class="pg${thy(task) ? " t" : ""}">${head(task, "working", i + 1, ws, title)}<div class="bd">${thy(task) ? thyWorking() : `<p class="note">${T.wsNote}</p><div class="ws" style="top:6mm"></div>`}</div>${foot(task, "working")}</div>`);
   }
   document.getElementById("paper").innerHTML = out.join("");
+}
+/* An official or translated sheet, printed with the scanner's corner squares: the PDF is fetched, each page is drawn
+   small with pdf.js to see whether the 13 mm round each marker centre is blank, and on the pages where all four are
+   the 7 mm squares are added as vector rectangles with pdf-lib — nothing else on the sheet changes.  A page with print
+   in a corner keeps it as it is (the scanner then finds the paper's edge). */
+const INSET = { left: 0.045, top: 0.035, right: 0.955, bottom: 0.965 }, MM = 72 / 25.4;
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/", PDFLIB = "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js";
+const script = src => new Promise((ok, no) => { if (document.querySelector(`script[src="${src}"]`)) return ok(); const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+async function cornersBlank(page) {
+  const vp = page.getViewport({ scale: 40 / 72 }), c = document.createElement("canvas");
+  c.width = Math.ceil(vp.width); c.height = Math.ceil(vp.height);
+  const g = c.getContext("2d", { willReadFrequently: true }); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+  await page.render({ canvasContext: g, viewport: vp }).promise;
+  const half = 6.5 / 25.4 * 40;
+  for (const [u, v] of [[INSET.left, INSET.top], [INSET.right, INSET.top], [INSET.left, INSET.bottom], [INSET.right, INSET.bottom]]) {
+    const x0 = Math.max(0, Math.floor(u * c.width - half)), y0 = Math.max(0, Math.floor(v * c.height - half)), w = Math.min(c.width - x0, Math.ceil(2 * half)), h = Math.min(c.height - y0, Math.ceil(2 * half));
+    const d = g.getImageData(x0, y0, w, h).data;
+    for (let i = 0; i < d.length; i += 4) if ((d[i] + d[i + 1] + d[i + 2]) / 3 < 200) return false;
+  }
+  return true;
+}
+async function stampOpen(btn) {
+  const row = btn.closest(".o"), st = row.querySelector(".st"), win = window.open("", "_blank");
+  btn.disabled = true; st.hidden = false; st.textContent = T.stamping;
+  try {
+    await Promise.all([script(PDFJS + "pdf.min.js"), script(PDFLIB)]);
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + "pdf.worker.min.js";
+    const bytes = new Uint8Array(await (await fetch(btn.dataset.stamp)).arrayBuffer());
+    const view = await window.pdfjsLib.getDocument({ data: bytes.slice() }).promise, doc = await PDFLib.PDFDocument.load(bytes);
+    let marked = 0;
+    for (const [i, p] of doc.getPages().entries()) {
+      if (!(await cornersBlank(await view.getPage(i + 1)))) continue;
+      const { width, height } = p.getSize(), side = 7 * MM;
+      for (const [u, v] of [[INSET.left, INSET.top], [INSET.right, INSET.top], [INSET.left, INSET.bottom], [INSET.right, INSET.bottom]])
+        p.drawRectangle({ x: u * width - side / 2, y: height - v * height - side / 2, width: side, height: side, color: PDFLib.rgb(0, 0, 0) });
+      marked++;
+    }
+    const url = URL.createObjectURL(new Blob([await doc.save()], { type: "application/pdf" }));
+    if (win) win.location = url; else window.open(url, "_blank");
+    st.textContent = T.stamped(marked, doc.getPageCount());
+  } catch (e) { if (win) win.close(); st.textContent = T.stampFail; }
+  btn.disabled = false;
 }
 function tools() {
   document.getElementById("tools").innerHTML = `<b>${esc(NAME)} ${Y} · ${esc(TASKS.join(" + "))}</b>
@@ -220,7 +312,9 @@ else {
   document.title = `${NAME} ${Y} · Answer sheet · Working sheet · HaslaLab`;
   tools();
   const get = u => fetch(u).then(r => r.ok ? r.json() : {}).catch(() => ({}));
-  Promise.all([get("labsheets.json"), get("sheets/index.json")]).then(([a, b]) => { ITEMS = (a && a[KEY]) || {}; OFF = (b && b[KEY]) || {}; build(); });
+  /* a theory paper's items (tools/theorysheets.py) beside the experiments' (tools/labsheets.py) */
+  Promise.all([get("labsheets.json"), get("sheets/index.json"), get("theorysheets.json")]).then(([a, b, c]) => {
+    ITEMS = { ...((a && a[KEY]) || {}), ...((c && c[KEY]) || {}) }; OFF = (b && b[KEY]) || {}; build(); });
 }
 </script>
 </body>
