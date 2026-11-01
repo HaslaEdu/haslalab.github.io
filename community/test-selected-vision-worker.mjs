@@ -260,7 +260,7 @@ test('theory pages are read with the paper\'s notation and proofread: only the p
   }finally{for(const k of Object.keys(pageReading))delete pageReading[k];Object.assign(pageReading,saved);}
 }));
 test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what DeepSeek marked down',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
-  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-flash-lite';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
   const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['deepseek',VISION_MODELS.deepseek,REG_VERSION,entry.solution,entry.mark||''].join(':');
@@ -277,7 +277,8 @@ test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what 
   assert.ok(calls.filter(c=>step(c)==='grade').length===1&&calls.filter(c=>step(c)==='grade').every(c=>c.provider==='deepseek'),'DeepSeek grades');
   assert.ok(!calls.filter(c=>step(c)==='grade').some(c=>c.text.includes('[Canonical ')),'the grader works from the scheme and pages, without the problem or solution PDFs');
   const mod=calls.filter(c=>step(c)==='moderate');assert.equal(mod.length,1);assert.equal(mod[0].provider,'gemini');
-  assert.ok([...calls.filter(c=>step(c)==='read'),mod[0]].every(c=>/\/gemini-3\.1-flash-lite:generateContent$/.test(c.url)),'theory reading and moderation use the configured model');
+  assert.ok(calls.filter(c=>step(c)==='read').every(c=>/\/gemini-3\.1-pro-preview:generateContent$/.test(c.url)&&c.body.generationConfig.thinkingConfig?.thinkingLevel==='low'),'theory pages are read by the configured model and thinking level');
+  assert.match(mod[0].url,/\/gemini-3\.1-flash-lite:generateContent$/,'moderation uses its own configured model');
   assert.match(mod[0].text,/visual:\{kind:"value"/,'a misread number is shown from the photo as visual evidence');
   assert.ok(mod[0].text.includes('"id":"R"')&&!mod[0].text.includes('"id":"G"'),'only the item DeepSeek marked down is moderated');
   assert.ok(!JSON.stringify(mod[0].body).includes('application/pdf'),'no problem or solution PDF in moderation');
