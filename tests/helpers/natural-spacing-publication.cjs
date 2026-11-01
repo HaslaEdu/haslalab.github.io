@@ -43,6 +43,22 @@ module.exports = function validate(root, record, item) {
       }
       assert.equal(full.native_graphics_motion_audit.changed_nonselected_native_graphical_pixels, 0);
     }
+    if (full.reviewed_native_figure_language_labels) {
+      const labels = full.reviewed_native_figure_language_labels;
+      assert.equal(labels.actual_source_and_translated_language_glyph_ink_only, true);
+      assert.equal(labels.nonlanguage_picture_geometry_and_variables_protected, true);
+      assert.equal(labels.new_label_over_any_original_nontype_graphic_ink_pixels, 0);
+      assert.ok(labels.labels.length > 0);
+      for (const label of labels.labels) {
+        assert.equal(label.source_point_size, label.target_point_size);
+        assert.ok(Math.abs(label.source_baseline - label.target_baseline) < .001);
+      }
+      for (const figure of full.figure_pixel_audits) {
+        assert.equal(figure.changed_pixels, 0);
+        assert.equal(figure.raw_whole_figure_changed_pixels, figure.intentionally_translated_language_changed_pixels);
+      }
+    }
+    if (Object.hasOwn(full,'original_pattern_programs_and_ctms_retained')) assert.equal(full.original_pattern_programs_and_ctms_retained, true);
     if (full.native_script_motion_audit) {
       const geometry = full.native_script_motion_audit;
       assert.equal(geometry.passed, true);
@@ -73,13 +89,38 @@ module.exports = function validate(root, record, item) {
       const profile = ledger.original_native_cid_profile;
       assert.equal(profile.original_4x_svg_dark_pixel_delta, raw.newly_missing_native_ink_pixels);
       assert.equal(profile.native_original_CID_reference_missing_pixels, 0);
-      assert.equal(profile.svg_8x_missing_pixels, 0);
-      assert.equal(profile.svg_12x_missing_pixels, 0);
+      if (profile.kind !== 'original-native-CID-reference-all') {
+        assert.equal(profile.svg_8x_missing_pixels, 0);
+        assert.equal(profile.svg_12x_missing_pixels, 0);
+      }
       const witness = pinned(profile.path, profile.witness_sha256);
       assert.equal(witness.passed, true);
       assert.equal(witness.proof_sha256, page.proof_sha256);
       assert.equal(witness.proof_unmodified, true);
-      if (witness.native_CID_reference) {
+      if (profile.kind === 'original-native-CID-reference-all') {
+        assert.equal(witness.kind, 'all-original-instruction-native-CIDs-v1');
+        assert.equal(witness.delivered_pdf_modified, false);
+        assert.equal(witness.mathematics_retyped, false);
+        assert.equal(witness.source_native_glyphs, raw.protected_native_glyphs);
+        assert.equal(witness.original_CID_checks.length, raw.protected_native_glyphs);
+        assert.equal(witness.source_CID_promotion.original_font_programs_unchanged, true);
+        assert.equal(witness.source_move_qa.passed, true);
+        assert.equal(witness.reference_other_text_suppression.passed, true);
+        for (const row of witness.original_CID_checks) {
+          assert.equal(row.original_source_CID_gid_Tf_exact, true);
+          const a = row.source, b = row.actual_destination;
+          for (const key of ['c','font','size','trace_gid','render_mode','color','opacity']) assert.deepEqual(a[key],b[key]);
+          assert.ok(Math.abs(a.origin[1]-b.origin[1]) < .001);
+          assert.ok(Math.abs(b.origin[0]-a.origin[0]-row.requested_dx) < .001);
+        }
+        assert.deepEqual(Object.keys(witness.native_reference_scales).sort(), ['12','4','8']);
+        for (const scale of Object.values(witness.native_reference_scales)) {
+          assert.equal(scale.passed, true);
+          assert.ok(scale.native_reference_dark_pixels > 0);
+          assert.equal(scale.missing_original_encoded_CID_pixels, 0);
+          for (const strip of scale.strips) assert.equal(strip.missing_original_encoded_CID_pixels, 0);
+        }
+      } else if (witness.native_CID_reference) {
         const cid = witness.native_CID_reference;
         assert.equal(cid.passed, true);
         assert.equal(cid.proof_sha256, page.proof_sha256);

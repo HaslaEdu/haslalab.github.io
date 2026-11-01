@@ -1,0 +1,53 @@
+{
+  "output_sha256": "9e0ff6da6863726fb1dd3aeece459a8e244e0da6ce09e2988013cb863a66b010",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2017\\T\\page01.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2017\\T\\page01.pdf",
+    "final_page": 1,
+    "source_sha256": "a74b4b6d5e2c9cd45136ca20e6264905804ace6eecc681e407f5013f49ba7551",
+    "output_sha256": "9e0ff6da6863726fb1dd3aeece459a8e244e0da6ce09e2988013cb863a66b010",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 96,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 96,
+      "expected_signature_count": 96,
+      "matched_outline_uses": 96,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 19452,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 3,
+    "passed": false,
+    "missing_bbox": [
+      291.5,
+      383.25,
+      364.0,
+      385.5
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "kind": "original-native-CID-reference-all",
+    "method": "All96 original instruction-page glyphs replayed with their exact original encoded CID/font/Tf/Tm/paint state and grouped x-only motion. Every glyph is independently visible at4x/8x/12x with original font hinting; raw unhinted SVG3-pixel diagnostic retained. Delivered PDF unchanged.",
+    "original_4x_svg_dark_pixel_delta": 3,
+    "native_original_CID_reference_missing_pixels": 0,
+    "native_font_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "original_native_glyphs_checked": 96,
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2017\\T\\all-original-CID-witness\\witness.json",
+    "witness_sha256": "2108318382dc018ea40277fd033f2a28d44096b83d5573e093af3c8293b4987a",
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2017/T/natural-spacing/witnesses/page01-native-cid.json"
+  }
+}
