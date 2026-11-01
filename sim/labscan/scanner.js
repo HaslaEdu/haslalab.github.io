@@ -448,16 +448,40 @@ function pfHull(points) {
   lower.pop(); upper.pop(); return lower.concat(upper);
 }
 
+/* the outline (a convex hull) reduced to four corners. Each step either drops the vertex that costs the least area or,
+   where a corner is missing (a sheet clipped to others with one corner folded or bent away shows a fifth, diagonal
+   side), extends the two sides next to a short edge until they meet and puts the lost corner back there, whichever
+   changes the area least. Dropping a vertex of a folded corner instead cuts a skewed side across the sheet. */
+function pfExtend(a, b, c, d) {
+  const rx = b.x - a.x, ry = b.y - a.y, sx = c.x - d.x, sy = c.y - d.y, det = rx * sy - ry * sx;
+  if (Math.abs(det) < 1e-9) return null;
+  const t = ((d.x - a.x) * sy - (d.y - a.y) * sx) / det, u = ((d.x - a.x) * ry - (d.y - a.y) * rx) / det;
+  return t > 1 && u > 1 ? { x: a.x + rx * t, y: a.y + ry * t } : null;                  // beyond b on a→b and beyond c on d→c
+}
 function fourOf(ring) {
   if (ring.length < 4) return null;
   ring = [...ring];
+  let whole = 0; for (let i = 1; i + 1 < ring.length; i++) whole += Math.abs(pfCross(ring[0], ring[i], ring[i + 1])) / 2;
   while (ring.length > 4) {
-    let at = 0, least = Infinity;
-    for (let i = 0; i < ring.length; i++) {
-      const area = Math.abs(pfCross(ring[(i + ring.length - 1) % ring.length], ring[i], ring[(i + 1) % ring.length]));
+    const n = ring.length;
+    let at = 0, least = Infinity, apex = null, extend = null, added = Infinity;
+    for (let i = 0; i < n; i++) {
+      const area = Math.abs(pfCross(ring[(i + n - 1) % n], ring[i], ring[(i + 1) % n])) / 2;
       if (area < least) { least = area; at = i; }
     }
-    ring.splice(at, 1);
+    for (let i = 0; i < n; i++) {
+      const a = ring[(i + n - 1) % n], b = ring[i], c = ring[(i + 1) % n], d = ring[(i + 2) % n], p = pfExtend(a, b, c, d);
+      if (!p) continue;
+      const area = Math.abs(pfCross(b, p, c)) / 2;
+      if (area < added) { added = area; extend = i; apex = p; }
+    }
+    /* the coarse outline bevels every corner a little and drops vertices fine there; only a real corner loss (putting
+       the corner back adds over 0.4% of the sheet, and costs less than half of what dropping a vertex would cut off)
+       is mended by extending its sides */
+    if (apex && added > whole * .004 && added < least * .5) at = extend; else apex = null;
+    if (!apex) ring.splice(at, 1);
+    else if (at < n - 1) ring.splice(at, 2, apex);                                      // b and c become the corner
+    else { ring[n - 1] = apex; ring.shift(); }                                          // the edge wraps: last and first
   }
   return orderFour(ring);
 }
@@ -667,7 +691,19 @@ function lineThrough(pts, nx, ny) {
   return { nx: lnx, ny: lny, r: lnx * mx + lny * my, n: pts.length };
 }
 function fitLine(points, nx, ny) {
-  let line = lineThrough(points, nx, ny), pts = points;
+  /* the line most samples agree on first (a clip over the edge, a folded corner or a shadow can put many of a side's
+     samples elsewhere, and least squares follows them), then least squares on the samples near it */
+  let pts = points, best = 0;
+  for (let i = 0; i < points.length; i++) for (let j = i + 1; j < points.length; j++) {
+    const a = points[i], b = points[j], len = Math.hypot(b.x - a.x, b.y - a.y);
+    if (len < 8) continue;
+    const lx = -(b.y - a.y) / len, ly = (b.x - a.x) / len, r = lx * a.x + ly * a.y;
+    if (Math.abs(lx * nx + ly * ny) < .9) continue;                                   // not along this side
+    const near = points.filter(p => Math.abs(lx * p.x + ly * p.y - r) <= 1.5);
+    if (near.length > best) { best = near.length; pts = near; }
+  }
+  if (pts.length < 6) pts = points;
+  let line = lineThrough(pts, nx, ny);
   for (let round = 0; round < 2; round++) {
     const res = pts.map(p => Math.abs(line.nx * p.x + line.ny * p.y - line.r)), sorted = [...res].sort((a, b) => a - b);
     const kept = pts.filter((_, i) => res[i] <= Math.max(1.5, 2.5 * sorted[sorted.length >> 1]));

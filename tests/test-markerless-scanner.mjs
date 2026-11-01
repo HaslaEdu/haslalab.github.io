@@ -235,6 +235,34 @@ test('the rectified ratio undoes perspective: a tilted A4 sheet is A4 although i
   assert.equal(scanner.rectifiedRatio(null, 640, 480), null);
 });
 
+/* A4 sheets held together by a binder clip: one corner folded or bent away, the clip over the top edge */
+function clippedSheet(degrees, corner, fraction, { flap = false, clip = true } = {}) {
+  const W = 480, H = 640, quad = rotated(degrees), poly = polygon(quad), k = [0, 1, 3, 2][corner], P = poly[k], A = poly[(k + 3) % 4], B = poly[(k + 1) % 4];
+  const unit = (q) => { const l = Math.hypot(q.x - P.x, q.y - P.y); return { x: (q.x - P.x) / l, y: (q.y - P.y) / l }; };
+  const u = unit(A), v = unit(B), cut = Math.hypot(poly[1].x - poly[0].x, poly[1].y - poly[0].y) * fraction;
+  const top = { x: (poly[0].x + poly[1].x) / 2, y: (poly[0].y + poly[1].y) / 2 };
+  const gray = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    let value = 90;
+    if (inside(x, y, quad)) {
+      const a = (x - P.x) * u.x + (y - P.y) * u.y, b = (x - P.x) * v.x + (y - P.y) * v.y;
+      value = a + b < cut ? 90 : flap && a + b < cut * 2 && a < cut && b < cut ? 215 : 235;   // the corner is gone; its flap lies on the sheet
+      if (value === 235 && y % 20 < 2 && x % 11 < 6 && inside(x, y, inset(quad, .7))) value = 55;
+    }
+    if (clip && Math.abs(x - top.x) < 22 && y > top.y - 14 && y < top.y + 16) value = 30;    // a black binder clip over the top edge
+    gray[y * W + x] = value;
+  }
+  return { gray, W, H, quad };
+}
+test('a sheet with a folded or bent-away corner and a binder clip still gives its four real corners', () => {
+  for (const degrees of [0, 8, -12, 30]) for (const corner of [0, 1, 2, 3]) for (const fraction of [.12, .25]) for (const flap of [false, true]) {
+    const scene = clippedSheet(degrees, corner, fraction, { flap }), result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
+    const name = `${degrees}° corner ${corner} folded ${fraction * 100}%${flap ? ' with its flap on the sheet' : ''}`;
+    assert.ok(result.corners, name);
+    assert.ok(error(result.corners, scene.quad) < 8, `${name}: corner error ${error(result.corners, scene.quad).toFixed(1)} px`);
+  }
+});
+
 test('paper lying on a desk wholly in view is the page, not the desk', () => {
   for (const [name, options] of [
     ['wooden desk, straight on', {}],
