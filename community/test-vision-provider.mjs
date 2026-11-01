@@ -195,6 +195,7 @@ test('math-OCR services: keys found by the admin\'s secret names, MD5 signature 
  const mp=await mathpixRead(env,jpeg,'image/jpeg',{fetchImpl:async(url,init)=>{seen.push({url,init});return Response.json({text:'$v_0 = I_0/M$',confidence:.9,is_handwritten:true});}});
  assert.equal(mp.text,'$v_0 = I_0/M$');assert.equal(seen[0].init.headers.app_id,'mp-id');assert.equal(seen[0].init.headers.app_key,'mp-secret');
  assert.match(JSON.parse(seen[0].init.body).src,/^data:image\/jpeg;base64,/);
+ assert.equal(JSON.parse(seen[0].init.body).metadata.improve_mathpix,false,'Mathpix keeps no page');
  const st=await simpletexRead(env,jpeg,'image/jpeg',{fetchImpl:async(url,init)=>{seen.push({url,init});return Response.json({status:true,res:{info:{markdown:'$x=2$'},conf:.8}});}});
  const h=seen[1].init.headers;assert.equal(seen[1].url,'https://server.simpletex.cn/api/simpletex_ocr');assert.equal(st.text,'$x=2$');
  assert.equal(h.sign,md5(`app-id=st-id&random-str=${h['random-str']}&timestamp=${h.timestamp}&secret=st-secret`));assert.ok(!JSON.stringify(h).includes('st-secret'));
