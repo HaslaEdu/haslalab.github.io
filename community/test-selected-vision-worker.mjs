@@ -44,7 +44,7 @@ async function fixture(run){
   const t=Math.floor(Date.now()/1000),tokens={},queue=[],calls=[];
   for(const id of [1,2,3]){tokens[id]=('vision_test_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(?,?,?,'unused',?,5)").run(id,'vision'+id,'Vision '+id,t);sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]),id,t,t+86400);}
   const env={DB,GEMINI_API_KEY:'local-gemini',DEEPSEEK_API_KEY:'local-deepseek',UPSTAGE_API_KEY:'must-never-be-used',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>renderer(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
-  let failProvider=false,beforeProvider=async()=>{};
+  let failProvider=false,truncateReads=0,beforeProvider=async()=>{};
   const old={fetch:globalThis.fetch,caches:globalThis.caches};globalThis.caches={default:{async match(){},async put(){}}};
   globalThis.fetch=async(input,init={})=>{
     const url=String(input);
@@ -55,6 +55,7 @@ async function fixture(run){
     const hook=beforeProvider;beforeProvider=async()=>{};await hook();
     if(failProvider)return new Response('{}',{status:503});
     let raw;
+    if(text.includes('[TASK: read page]')&&truncateReads>0){truncateReads--;return Response.json({modelVersion:VISION_MODELS.gemini,candidates:[{finishReason:'MAX_TOKENS',content:{parts:[{text:'{"text":"x x x'}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:6144}});}
     if(text.includes('[TASK: read page]'))raw=pageReading;
     else if(text.includes('Review ONLY problem'))raw={problem_no:5,score:7,confidence:.98,verdict:'valid',summary:'Diagram supported argument.',strengths:[],gaps:[],evidence:[{page:1,quote:'',source:'image',box:[100,100,900,900],description:'A labelled geometric construction with direction arrows.',note:'Visible geometry checked.'}]};
     else if(text.includes('"task":"transcribe"'))raw={text:'',legible:true,confidence:.98,uncertainties:[],visuals:[{page:1,kind:'graph',description:'A graph and upward direction arrow.',box:[.1,.1,.9,.9]}]};
@@ -70,7 +71,7 @@ async function fixture(run){
   const seedScheme=(sid,provider)=>{const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=[provider,VISION_MODELS[provider],REG_VERSION,entry.solution,entry.mark||''].join(':');sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[{id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]}]}),'fixture:'+provider,t);};
   const problem=()=>{const r=sql.prepare("INSERT INTO problems(week,no,kind,subject,level,points,title_ko,title_en,body_ko,body_en,model_ko,model_en,rubric,opens_at,closes_at,created_at)VALUES('2098-W01',1,'essay','physics',1,2,'그래프','Graph','Graph task','Graph task','Direction','Direction',?,?,?,?)").run(JSON.stringify([{id:'G',name:'Direction',max:2,requirement:'Inspect actual graph direction.'}]),t-60,t+7200,t);return Number(r.lastInsertRowid);};
   const ocrPhoto=async(pid,provider,id=1)=>{const form=new FormData();form.append('image',new Blob([scan],{type:'image/jpeg'}),'graph.jpg');const response=await worker.fetch(new Request(`https://vision.local/api/ocr?mode=math&problem_id=${pid}${provider?'&provider='+provider:''}`,{method:'POST',headers:{Authorization:'Bearer '+tokens[id]},body:form}),env);return{status:response.status,data:await response.json()};};
-  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;}});}finally{Object.assign(globalThis,old);sql.close();}
+  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},truncate:n=>{truncateReads=n;}});}finally{Object.assign(globalThis,old);sql.close();}
 }
 
 test('grading mode spends its token when the sitting opens: the provider is pinned then, and an unpaid start leaves nothing open',async()=>fixture(async({api,start,sql,calls})=>{
@@ -197,6 +198,15 @@ test('a printed header read by the model never refiles a page: the student\'s ta
   assert.deepEqual([page.task,page.kind],['T1','working']);
 }));
 
+test('a page read caught in a repetition loop is capped and read once more, slightly warmer, instead of failing the page',async()=>fixture(async({api,start,upload,drain,calls,sql,truncate})=>{
+  const a=(await start('gemini')).data,sid=a.session.id;truncate(1);await upload(a.token);
+  await api(`/lab/sessions/${sid}/pay`,{body:{provider:'gemini'}});await drain();
+  const reads=calls.filter(c=>c.text.includes('[TASK: read page]'));
+  assert.equal(reads.length,2);
+  assert.deepEqual(reads.map(c=>c.body.generationConfig.maxOutputTokens),[6144,6144]);
+  assert.deepEqual(reads.map(c=>c.body.generationConfig.temperature),[0,0.4]);
+  assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
+}));
 test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what DeepSeek marked down',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';
   const a=(await start('deepseek')).data,sid=a.session.id;
