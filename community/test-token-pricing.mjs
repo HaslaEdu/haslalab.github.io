@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import worker from './src/index.js';
 import { tokenUnits, tokenBalance } from './src/lab-tokens.js';
-import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE } from './src/lab-pair-catalog.js';
+import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE, LAB_SHORTLIST_CATALOGUE } from './src/lab-pair-catalog.js';
 
 const sql = new DatabaseSync(':memory:');
 for (const file of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^\d{4}_.*\.sql$/.test(n)).sort())
@@ -290,4 +290,23 @@ test('server pack configuration accepts tenths and refuses unrepresentable fract
   assert.equal((await config(0.7)).data.pay.packs[0].tokens, 0.7);
   assert.equal((await config(0.333)).data.pay.packs[0].tokens, 1);
   assert.equal(balance(24), 5, 'existing signup/default grant remains five whole tokens');
+});
+
+test('a shortlist (backup) problem is graded alone for 0.1 token and never joins a pair or the day\'s paper', async () => {
+  const [task] = LAB_SHORTLIST_CATALOGUE.ipho['2025'];
+  assert.equal(task, 'T4');
+  fund(60, 1);
+  const short = seed(60, { tasks: [task], year: 2025, pair: true }), r = await pay(short, 60);
+  assert.equal(r.status, 200, JSON.stringify(r.data)); assert.equal(r.data.session.cost, 0.1); assert.equal(r.data.tokens, 0.9);
+  const note = JSON.parse(paidLedger(short)[0].note);
+  assert.equal(note.units, 1); assert.equal(note.pair_eligible, 0); assert.equal(note.paired_with, null);
+  // the paid shortlist sitting is no partner for the year's experiments: they still cost 0.3
+  const lab25 = LAB_PAIR_CATALOGUE.ipho['2025'][0].lab[0], exp = await pay(seed(60, { tasks: lab25, year: 2025, pair: true }), 60);
+  assert.equal(exp.data.session.cost, 0.3); assert.equal(exp.data.tokens, 0.6);
+  // with the day's paper or other tasks it is refused at the start
+  const mixed = await api('/lab/start', { comp:'ipho', year:2025, tasks:['T1','T4'], sources:{ T1:{ sol:'IPhO_2025_T1S.pdf', kind:'theory' }, T4:{ sol:'IPhO_2025_T4S.pdf', kind:'theory' } } }, 61);
+  assert.equal(mixed.status, 400); assert.equal(mixed.data.error, 'shortlist_alone');
+  // the same task name in another year is an ordinary problem
+  fund(62, 1); const ordinary = await pay(seed(62, { tasks: ['T4'], year: 2024 }), 62);
+  assert.equal(ordinary.data.session.cost, 0.3);
 });

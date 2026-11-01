@@ -48,7 +48,8 @@ const officialTheoryParts=(comp,year)=>{
     const file='tools/theory/'+comp+'.json';
     sourceManifests.set(comp,fs.existsSync(path.join(root,file))?JSON.parse(read(file)):null);
   }
-  return sourceManifests.get(comp)?.years?.find(row=>String(row.y)===String(year))?.problems?.map(problem=>problem.id);
+  // A shortlist (backup) problem is not part of the day's paper, so it never completes a theory round.
+  return sourceManifests.get(comp)?.years?.find(row=>String(row.y)===String(year))?.problems?.filter(problem=>!problem.shortlist).map(problem=>problem.id);
 };
 const pairProfiles=buildPairCatalogue(DATA,{...scope.catalogueGroups,officialTheoryParts});
 const mixedProfiles={};
@@ -63,8 +64,15 @@ for(const [comp,competition]of Object.entries(DATA))for(const year of competitio
   }
   if(sets.size)(mixedProfiles[comp]||(mixedProfiles[comp]={}))[String(year.y)]=[...sets.values()];
 }
+// Shortlist (backup) problems: each sat on its own and graded for 0.1 token. The server prices from this list only.
+const shortlistProfiles={};
+for(const [comp,years]of Object.entries(THEORY))for(const [year,entry]of Object.entries(years)){
+  const parts=(entry.sl||[]).filter(part=>/^T\d+$/.test(part)&&entry.f?.[part]?.sol&&entry.f?.[part]?.paper);
+  if(parts.length)(shortlistProfiles[comp]||(shortlistProfiles[comp]={}))[year]=[...parts].sort();
+}
 outputs.set('community/src/lab-pair-catalog.js',generated+'export const LAB_PAIR_CATALOGUE='+JSON.stringify(pairProfiles)+';\n'+
-  'export const LAB_MIXED_CATALOGUE='+JSON.stringify(mixedProfiles)+';\n');
+  'export const LAB_MIXED_CATALOGUE='+JSON.stringify(mixedProfiles)+';\n'+
+  'export const LAB_SHORTLIST_CATALOGUE='+JSON.stringify(shortlistProfiles)+';\n');
 const {buildModelTestCatalogue}=require('./model-test-catalogue.cjs');
 const modelTestExams=buildModelTestCatalogue(DATA,{...scope.catalogueGroups,contests:window.CONTEST_EXAMS});
 const modelTestVersion=digest(JSON.stringify(modelTestExams)+read('pdf-assets.json'));
