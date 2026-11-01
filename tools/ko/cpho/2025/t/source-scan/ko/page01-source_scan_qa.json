@@ -1,0 +1,110 @@
+{
+  "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\CPhO_2025_T_original-explicit-page-clip.pdf",
+  "source_sha256": "c9562e8f6053b454391083289b179f28ed29f7d9024723a34a2a8b0e663bd306",
+  "source_page": 1,
+  "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\page01-draft\\page01-ko-draft.pdf",
+  "final_sha256": "eb39aab880563ce67ee918b675177e48723926796d59b98d3d6259e72093fb05",
+  "math_control_sha256": "0863e7d5beb7b2c74de9f14e9950f000728d4a4e15ad6ca6b7649b10ae22a0de",
+  "prose_reference_sha256": "344aa2773901bed46f0fec0e1ca306079bac258eebc756653ccd7503517fb6a4",
+  "render_scale": 4,
+  "original_encoded_image_programs_masks_palettes_icc_and_declared_ctms_retained": true,
+  "original_native_font_program_changes": [],
+  "original_pagegroup_unchanged": true,
+  "outside_declared_language_and_math_motion": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "stationary_original_dark_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "independent_protected_source_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_overlap_original_or_replayed_nonlanguage_ink": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "raw_collision_including_reviewed_scan_background": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_expected_dark_pixels_missing": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "reviewed_blank_background_records": [],
+  "thresholds": {
+    "source_deep_dark": 160,
+    "new_prose_and_existing_ink": 180,
+    "actual_missing_white": 240
+  },
+  "note": "Only declared language and inline mathematical motion may change; source display/figure rects remain independently protected. Blank records never white-fill anything and exclude every protected/math region. New-prose final visibility is independently required.",
+  "passed": true,
+  "actual_new_prose_outlines": {
+    "file": "page01-ko-draft.pdf",
+    "sha256": "eb39aab880563ce67ee918b675177e48723926796d59b98d3d6259e72093fb05",
+    "delivered_pdf_modified": false,
+    "pages": [
+      {
+        "page": 1,
+        "new_nonspace_actual_gids_checked": 859,
+        "ascii_actual_gids_checked": 99,
+        "empty_outlines": [],
+        "analysis_only_alias_normalisation": [
+          {
+            "alias": "/DraftBody",
+            "pdf_basefont": "/Batang Regular",
+            "actual_postscript_name": "Batang"
+          },
+          {
+            "alias": "/DraftNote",
+            "pdf_basefont": "/Gungsuh Regular",
+            "actual_postscript_name": "Gungsuh"
+          },
+          {
+            "alias": "/Headersans",
+            "pdf_basefont": "/Noto Sans CJK KR Regular",
+            "actual_postscript_name": "NotoSansCJKkr-Regular"
+          },
+          {
+            "alias": "/Headerserif",
+            "pdf_basefont": "/Batang Regular",
+            "actual_postscript_name": "Batang"
+          }
+        ],
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "actual_new_prose_styles": {
+    "actual_new_prose_glyphs_checked": 859,
+    "actual_embedded_font_programs": {
+      "/DraftBody": "a75ee29b9804f76682ee393fec9e405e41e237c5b6dfc45a61ac9a54a01ac1d9",
+      "/DraftNote": "06cdfe6a7578c422409004ca134ada9ebe821664cf1c849dbcac36710eb76865",
+      "/Headersans": "746f02ff4ad00d231c33809a7d1fd71ee5db59f402f43934e94dfe65ecd54bf4",
+      "/Headerserif": "25fc3e835ff50f6df5e0a3e1810603f43f99e63470ccc786cfddec9c3a4d83c9"
+    },
+    "style_size_baseline_paint_or_sequence_failures": [],
+    "passed": true
+  },
+  "independent_original_replayed_math_visibility": {
+    "method": "QA-only isolated original-image clip replay union with Multiply; final PDF unchanged.",
+    "reference_sha256": "297a843b2975313e38d8b13011495fac95efcae1c1d5ab83e82d0790bf387cc3",
+    "original_math_ink_expected_pixels": 57370,
+    "missing": {
+      "pixels": 0,
+      "bbox": null
+    },
+    "overlap_new_prose": {
+      "pixels": 0,
+      "bbox": null
+    },
+    "passed": true
+  },
+  "new_prose_allowed_bounds_source": "Actual4x blank-page prose-only reference connected ink component bounds, including antialiasing and source-estimated stroke; source math/figures independently protected without change.",
+  "actual_prose_ink_components": 1394,
+  "status": "DRAFT_QA_PASS_REQUIRES_VISUAL_REVIEW"
+}

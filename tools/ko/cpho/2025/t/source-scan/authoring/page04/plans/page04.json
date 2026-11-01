@@ -1,0 +1,3267 @@
+{
+  "status": "MANUAL_SEMANTIC_ROI_DRAFT_NOT_FOR_PUBLICATION",
+  "source_page": 4,
+  "source_sha256": "c9562e8f6053b454391083289b179f28ed29f7d9024723a34a2a8b0e663bd306",
+  "manual_rois_reviewed": true,
+  "publication_ready": false,
+  "rows": [
+    {
+      "id": "reaction-symbols",
+      "hint_id": "4-1",
+      "source": "这里、p、n分别表示光子、质子、中子，Z是核素的原子序数或者质子数，N是中子数，A=Z+N是质量",
+      "ko": "[[gamma]], [[p]], [[n]]은 광자, 양성자, 중성자다. [[Z]]는 원자번호(양성자 수), [[N]]은 중성자 수, [[A]]은 질량수다.",
+      "en": "[[gamma]], [[p]], [[n]]: photon, proton, neutron; [[Z]]: atomic/proton no.; [[N]]: neutron no.; [[A]]: mass no.",
+      "erase_rects": [
+        [
+          61,
+          100,
+          539,
+          116
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 110.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "gamma",
+          "rect": [
+            82.25,
+            104.75,
+            88,
+            113
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "p",
+          "rect": [
+            97.75,
+            104.5,
+            103.5,
+            113.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "n",
+          "rect": [
+            113,
+            104.5,
+            119,
+            111.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "Z",
+          "rect": [
+            250,
+            102.75,
+            256.5,
+            111.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "N",
+          "rect": [
+            398.5,
+            103.25,
+            405.75,
+            111.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "A",
+          "rect": [
+            457,
+            100,
+            501,
+            116
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "gamma",
+        "p",
+        "n",
+        "Z",
+        "N",
+        "A"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "是核素的原子序数或者质子数",
+        "source_rect": [
+          61,
+          100,
+          539,
+          116
+        ],
+        "read_only_measurement_rect": [
+          60,
+          98.5,
+          540,
+          117.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 110.5,
+        "iou": 0.6330440044403076,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "nucleus-density",
+      "hint_id": "4-2",
+      "source": "数。求此时原子核的数密度与质子的数密度、中子的数密度之问的关系。原子核X的质量和总结合能分别为",
+      "ko": "핵의 수밀도와 양성자·중성자 수밀도 사이의 관계를 구하여라. 핵 [[X]]의 질량과 총 결합 에너지는 각각",
+      "en": "Relate nuclear density to proton/neutron number densities. Nucleus [[X]] has mass and binding energy",
+      "erase_rects": [
+        [
+          61,
+          116,
+          539,
+          133
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 126.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "X",
+          "rect": [
+            415,
+            119,
+            421.25,
+            127.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "X"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "求此时原子核的数密度与质子的",
+        "source_rect": [
+          61,
+          116,
+          539,
+          133
+        ],
+        "read_only_measurement_rect": [
+          60,
+          114.5,
+          540,
+          134.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 126.25,
+        "iou": 0.5358847379684448,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "nucleus-mass-binding",
+      "hint_id": "4-3",
+      "source": "mx和Bx·",
+      "ko": "[[m]]와 [[B]]다.",
+      "en": "[[m]] and [[B]], respectively.",
+      "erase_rects": [
+        [
+          61,
+          132,
+          105,
+          148
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 142.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "m",
+          "rect": [
+            62.25,
+            137,
+            76,
+            145.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "B",
+          "rect": [
+            86.25,
+            135,
+            97.25,
+            145.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "m",
+        "B"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "和",
+        "source_rect": [
+          61,
+          132,
+          105,
+          148
+        ],
+        "read_only_measurement_rect": [
+          60,
+          130.5,
+          106,
+          149.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 142.75,
+        "iou": 0.8193146586418152,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "deuteron-equilibrium",
+      "hint_id": "4-4",
+      "source": "（3）温度为T时，氛核H三D的光致分解与合成反应达到动态平衡",
+      "ko": "[[label]] 온도 [[T]]에서 중수소핵 [[D]]의 광분해·합성이 동적 평형을 이룬다.",
+      "en": "[[label]] At [[T]], deuteron [[D]] photodisintegration and synthesis reach dynamic equilibrium:",
+      "erase_rects": [
+        [
+          66,
+          147,
+          362,
+          164
+        ]
+      ],
+      "left": 67,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 158.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            67,
+            148,
+            85,
+            164
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "T",
+          "rect": [
+            118.25,
+            151,
+            124.5,
+            159.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "D",
+          "rect": [
+            165,
+            149.5,
+            196,
+            162
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "T",
+        "D"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "的光致分解与合成反应达到动态",
+        "source_rect": [
+          66,
+          147,
+          362,
+          164
+        ],
+        "read_only_measurement_rect": [
+          65,
+          145.5,
+          363,
+          165.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 158.25,
+        "iou": 0.6722962856292725,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "deuteron-ratio",
+      "hint_id": "4-6",
+      "source": "求此时粒子数密度之比的表达式其中是粒子的数密度氘核的质量和总结合能分别为",
+      "ko": "수밀도 비 [[ratio]]를 구하라. [[na]]는 입자 [[a]]의 수밀도이며 [[tuple]]",
+      "en": "Find density ratio [[ratio]], with [[na]] the number density of species [[a]], [[tuple]] The deuteron has",
+      "erase_rects": [
+        [
+          61,
+          181,
+          539,
+          205
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 194.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "ratio",
+          "rect": [
+            163.25,
+            180.5,
+            187.75,
+            205.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "na",
+          "rect": [
+            258.5,
+            188,
+            267,
+            196.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "a",
+          "rect": [
+            298.5,
+            188,
+            302.75,
+            194.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "tuple",
+          "rect": [
+            345,
+            183,
+            407,
+            200
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "ratio",
+        "na",
+        "a",
+        "tuple"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "求此时粒子数密度之比的表达式",
+        "source_rect": [
+          61,
+          181,
+          539,
+          205
+        ],
+        "read_only_measurement_rect": [
+          60,
+          179.5,
+          540,
+          206.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 194.25,
+        "iou": 0.47223523259162903,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "deuteron-mass",
+      "hint_id": "4-8",
+      "source": "mp和Bp.",
+      "ko": "중수소핵의 질량은 [[m]], 총 결합 에너지는 [[B]]다.",
+      "en": "mass [[m]] and total binding energy [[B]].",
+      "erase_rects": [
+        [
+          61,
+          208,
+          106,
+          225
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 218.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "m",
+          "rect": [
+            62.25,
+            212.75,
+            76.25,
+            221.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "B",
+          "rect": [
+            86.5,
+            211,
+            98.5,
+            221.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "m",
+        "B"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "和",
+        "source_rect": [
+          61,
+          208,
+          106,
+          225
+        ],
+        "read_only_measurement_rect": [
+          60,
+          206.5,
+          107,
+          226.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 218.5,
+        "iou": 0.7896341681480408,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "freeze-intro-a",
+      "hint_id": "4-9",
+      "source": "（4）当宇宙的温度高于0.8MeV/k（相当于9.3×10°K)时，宇宙中的质子和中子能通过热碰撞而相互转化",
+      "ko": "[[label]] 우주 온도가 [[temp]](약 [[kelvin]])보다 높으면 양성자와 중성자는 열적 충돌로 서로 전환된다.",
+      "en": "[[label]] At cosmic temperature above [[temp]] (about [[kelvin]]), protons/neutrons interconvert",
+      "erase_rects": [
+        [
+          61,
+          223,
+          538,
+          239
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 233.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            66,
+            223,
+            85,
+            239
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "temp",
+          "rect": [
+            165.25,
+            226.25,
+            212.75,
+            237
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "kelvin",
+          "rect": [
+            249.5,
+            225.25,
+            297.25,
+            235.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "temp",
+        "kelvin"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "宇宙中的质子和中子能通过热碰",
+        "source_rect": [
+          61,
+          223,
+          538,
+          239
+        ],
+        "read_only_measurement_rect": [
+          60,
+          221.5,
+          539,
+          240.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 233.75,
+        "iou": 0.5063632726669312,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "freeze-intro-b",
+      "hint_id": "4-10",
+      "source": "相应的两个核反应过程为",
+      "ko": "해당하는 두 핵반응은 다음과 같다.",
+      "en": "through thermal collisions, via these two nuclear reactions:",
+      "erase_rects": [
+        [
+          61,
+          240,
+          176,
+          255
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 250.5,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "相应的两个核反应过程为",
+        "source_rect": [
+          61,
+          240,
+          176,
+          255
+        ],
+        "read_only_measurement_rect": [
+          60,
+          238.5,
+          177,
+          256.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 250.5,
+        "iou": 0.7017987966537476,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lepton-symbols",
+      "hint_id": "4-12",
+      "source": "其中e-、e+分别代表电子、正电子，Ve、讠分别代表电子型中微子及其反粒子。高温时，正反中微子对和正",
+      "ko": "[[electron]], [[positron]]는 전자·양전자, [[neutrinos]]는 전자형 중성미자와 그 반입자다. 고온에서는 이 입자와 반입자가",
+      "en": "[[electron]], [[positron]]: electron/positron; [[neutrinos]]: electron neutrino/antineutrino. At high temperature,",
+      "erase_rects": [
+        [
+          61,
+          271,
+          538,
+          287
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 282.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "electron",
+          "rect": [
+            82,
+            275.5,
+            92.5,
+            283.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "positron",
+          "rect": [
+            103.25,
+            273.75,
+            113.5,
+            283.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "neutrinos",
+          "rect": [
+            222.25,
+            274.75,
+            251.5,
+            285.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "electron",
+        "positron",
+        "neutrinos"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "讠分别代表电子型中微子及其反",
+        "source_rect": [
+          61,
+          271,
+          538,
+          287
+        ],
+        "read_only_measurement_rect": [
+          60,
+          269.5,
+          539,
+          288.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 282.25,
+        "iou": 0.5059632062911987,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lepton-equilibrium",
+      "hint_id": "4-13",
+      "source": "反电子对不断大量产生、灭，它们的化学势为零；以上质子和中子的相互转化过程将很快达到动态平衡，",
+      "ko": "많이 생성·소멸하며 화학 퍼텐셜이 영이다. 양성자·중성자는 빠르게 전환되어 동적 평형을 이룬다.",
+      "en": "pairs form/annihilate in bulk; chemical potentials vanish. Fast proton/neutron conversion gives",
+      "erase_rects": [
+        [
+          61,
+          287,
+          538,
+          303
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 298.5,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "以上质子和中子的相互转化过程",
+        "source_rect": [
+          61,
+          287,
+          538,
+          303
+        ],
+        "read_only_measurement_rect": [
+          60,
+          285.5,
+          539,
+          304.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 298.5,
+        "iou": 0.43003445863723755,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "neutron-ratio",
+      "hint_id": "4-14",
+      "source": "求此状态下的中子数密度nn和质子数密度np之比的表达式。当宇宙温度低于0.8MeV/kg时，以上质子和中子",
+      "ko": "이때 중성자 수밀도 [[nn]]와 양성자 수밀도 [[np]]의 비를 구하여라. 우주 온도가 [[temp]]보다 낮아지면",
+      "en": "equilibrium. Find the number-density ratio [[nn]]/[[np]]. Below cosmic temperature [[temp]],",
+      "erase_rects": [
+        [
+          61,
+          303,
+          538,
+          320
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 314.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "nn",
+          "rect": [
+            173.75,
+            308.5,
+            184.25,
+            317
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "np",
+          "rect": [
+            245.5,
+            308.5,
+            255.75,
+            318.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "temp",
+          "rect": [
+            394.75,
+            306.25,
+            442.75,
+            317.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "nn",
+        "np",
+        "temp"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "求此状态下的中子数密度",
+        "source_rect": [
+          61,
+          303,
+          538,
+          320
+        ],
+        "read_only_measurement_rect": [
+          60,
+          301.5,
+          539,
+          321.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 314.25,
+        "iou": 0.6980306506156921,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "freeze-ratio-a",
+      "hint_id": "4-15",
+      "source": "之间的转换很快停止（冻结），它们的数密度之比不再随温度变化，求冻结状态下的中子数密度和质子数密",
+      "ko": "전환이 빠르게 멈춘다(동결). 그 뒤 수밀도 비는 온도에 무관하다. 동결 상태의 중성자·양성자 수밀도",
+      "en": "conversion stops (freezes) rapidly. Density ratio is then temperature-independent. Find the frozen",
+      "erase_rects": [
+        [
+          61,
+          320,
+          538,
+          336
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 330.5,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "求冻结状态下的中子数密度和质",
+        "source_rect": [
+          61,
+          320,
+          538,
+          336
+        ],
+        "read_only_measurement_rect": [
+          60,
+          318.5,
+          539,
+          337.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 330.5,
+        "iou": 0.5432343482971191,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "freeze-ratio-b",
+      "hint_id": "4-16",
+      "source": "度的比值。",
+      "ko": "비를 구하여라.",
+      "en": "neutron/proton number-density ratio.",
+      "erase_rects": [
+        [
+          61,
+          336,
+          110,
+          351
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 346.5,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "度的比值",
+        "source_rect": [
+          61,
+          336,
+          110,
+          351
+        ],
+        "read_only_measurement_rect": [
+          60,
+          334.5,
+          111,
+          352.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 346.5,
+        "iou": 0.7280305624008179,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "helium-abundance-a",
+      "hint_id": "4-17",
+      "source": "（5）当宇宙的温度进一步降低时，中子和质子开始结合，通过一系列核反应最终形成稳定的氢核He，假设",
+      "ko": "[[label]] 우주가 더 식으면 양성자·중성자가 핵반응으로 결합해 안정한 [[He]]를 만든다. 붕괴를 무시하고",
+      "en": "[[label]] Cooling binds protons/neutrons through nuclear reactions into stable [[He]]. Assume all",
+      "erase_rects": [
+        [
+          65,
+          351,
+          539,
+          368
+        ]
+      ],
+      "left": 66,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 362.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            66,
+            352,
+            85,
+            368
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "He",
+          "rect": [
+            486.5,
+            353.25,
+            503.25,
+            365.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "He"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "通过一系列核反应最终形成稳定",
+        "source_rect": [
+          65,
+          351,
+          539,
+          368
+        ],
+        "read_only_measurement_rect": [
+          64,
+          349.5,
+          540,
+          369.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 362.75,
+        "iou": 0.4410243034362793,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "helium-abundance-b",
+      "hint_id": "4-18",
+      "source": "所有的中子都被结合到核中（不计中子的衰变），试估算氢核的质量丰度（氨核占全部原子核质量的比例)。",
+      "ko": "모든 중성자가 헬륨핵에 들어갈 때, 헬륨핵 질량 존재비(전체 핵 질량 중 헬륨핵 비율)를 어림하라.",
+      "en": "neutrons bind into helium, ignoring their decay. Estimate helium mass / total mass of nuclei.",
+      "erase_rects": [
+        [
+          61,
+          367,
+          539,
+          385
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 378.5,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "氨核占全部原子核质量的比例",
+        "source_rect": [
+          61,
+          367,
+          539,
+          385
+        ],
+        "read_only_measurement_rect": [
+          60,
+          365.5,
+          540,
+          386.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 378.5,
+        "iou": 0.636363685131073,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "mass-integral",
+      "hint_id": "4-19",
+      "source": "已知质子和中子的质量分别为mp=938.272MeV/c²,mn=939.565MeV/c²；积分公式",
+      "ko": "양성자·중성자 질량은 [[masses]]이며, 다음 적분식을 쓸 수 있다.",
+      "en": "Proton/neutron masses: [[masses]] Integral identity:",
+      "erase_rects": [
+        [
+          80,
+          383,
+          465,
+          401
+        ]
+      ],
+      "left": 81,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 393.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "masses",
+          "rect": [
+            216,
+            382,
+            416,
+            401
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "masses"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "已知质子和中子的质量分别为",
+        "source_rect": [
+          80,
+          383,
+          465,
+          401
+        ],
+        "read_only_measurement_rect": [
+          79,
+          381.5,
+          466,
+          402.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 393.75,
+        "iou": 0.6903805136680603,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-a",
+      "hint_id": "4-23",
+      "source": "六。（50分）热辐射是电磁波，电磁波具有动量，物体在吸收、反射或者发射热辐射时会受到辐射的作用力。",
+      "ko": "6. ([[score]]점) 열복사는 운동량을 가진 전자기파다. 물체는 열복사의 흡수·반사·방출로 복사력을 받는다.",
+      "en": "6. ([[score]] marks) Thermal EM waves carry momentum. Absorption, reflection or emission exerts force.",
+      "erase_rects": [
+        [
+          60,
+          443,
+          539,
+          459
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 454.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "score",
+          "rect": [
+            85.75,
+            446,
+            96.5,
+            454.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "score"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "反射或者发射热辐射时会受到辐",
+        "source_rect": [
+          60,
+          443,
+          539,
+          459
+        ],
+        "read_only_measurement_rect": [
+          59,
+          441.5,
+          540,
+          460.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 454.25,
+        "iou": 0.4203169345855713,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-b",
+      "hint_id": "4-24",
+      "source": "在讨论小行星运动时，辐射力的作用通常是被忽略的。由于小行星的自转和有限的热传导率，辐射作用力可",
+      "ko": "보통 소행성 운동에서 복사력은 무시하지만, 자전과 유한한 열전도율로 복사력이 궤도를 바꿀 수 있다.",
+      "en": "For asteroids this force is usually ignored. Spin and finite conductivity can change their orbit.",
+      "erase_rects": [
+        [
+          60,
+          459,
+          539,
+          475
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 469.75,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "由于小行星的自转和有限的热传",
+        "source_rect": [
+          60,
+          459,
+          539,
+          475
+        ],
+        "read_only_measurement_rect": [
+          59,
+          457.5,
+          540,
+          476.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 469.75,
+        "iou": 0.3881780505180359,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-c",
+      "hint_id": "4-25",
+      "source": "改变小行星的运行轨道，这称为亚尔科夫斯基效应。下面利用简化模型对此进行讨论：假设太阳和小行星均",
+      "ko": "이를 야르콥스키 효과라 한다. 다음 단순 모형에서 태양과 소행성은 모두 구형 이상 흑체이며,",
+      "en": "This is the Yarkovsky effect. Model Sun and asteroid as spherical ideal blackbodies. Radiative flux",
+      "erase_rects": [
+        [
+          60,
+          475,
+          539,
+          491
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 485.25,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "下面利用简化模型对此进行讨论",
+        "source_rect": [
+          60,
+          475,
+          539,
+          491
+        ],
+        "read_only_measurement_rect": [
+          59,
+          473.5,
+          540,
+          492.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 485.25,
+        "iou": 0.35916760563850403,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-d",
+      "hint_id": "4-26",
+      "source": "为球状理想黑体，辐射能流密度J服从斯特藩-玻尔兹曼定律，J=αT4n，其中T为黑体的表面温度，n是辐",
+      "ko": "복사 에너지 유속 [[J]]는 슈테판–볼츠만 법칙 [[law]]을 따른다. [[T]]는 표면 온도, [[n]]은 표면의",
+      "en": "[[J]] obeys Stefan-Boltzmann law [[law]], with surface temperature [[T]] and outward unit normal [[n]].",
+      "erase_rects": [
+        [
+          60,
+          490,
+          539,
+          508
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 500.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "J",
+          "rect": [
+            203.75,
+            493.5,
+            209.75,
+            503.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "law",
+          "rect": [
+            333,
+            487,
+            382,
+            508
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "T",
+          "rect": [
+            406,
+            493.25,
+            412.25,
+            501.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "n",
+          "rect": [
+            503.5,
+            495.25,
+            510.75,
+            501.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "J",
+        "law",
+        "T",
+        "n"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "为黑体的表面温度",
+        "source_rect": [
+          60,
+          490,
+          539,
+          508
+        ],
+        "read_only_measurement_rect": [
+          59,
+          488.5,
+          540,
+          509.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 500.75,
+        "iou": 0.7192345857620239,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-e",
+      "hint_id": "4-27",
+      "source": "射表面的外法向单位矢量，α=5.67×10-8W/(m²K*)；小行星绕太阳做圆周运动，轨道半径为Ra，小行星",
+      "ko": "바깥 단위 법선이다. [[sigma]]이며, 소행성은 태양 주위의 반지름 [[R]]인 원궤도를 돈다.",
+      "en": "[[sigma]]. Circular orbit about Sun, radius [[R]]; spin/orbit axes parallel.",
+      "erase_rects": [
+        [
+          60,
+          507,
+          539,
+          524
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 516.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "sigma",
+          "rect": [
+            181,
+            503,
+            305,
+            524
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "R",
+          "rect": [
+            480.5,
+            509,
+            491.25,
+            519.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "sigma",
+        "R"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "射表面的外法向单位矢量",
+        "source_rect": [
+          60,
+          507,
+          539,
+          524
+        ],
+        "read_only_measurement_rect": [
+          59,
+          505.5,
+          540,
+          525.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 516.5,
+        "iou": 0.6238824129104614,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-f",
+      "hint_id": "4-28",
+      "source": "自转角速度大小为w，自转轴和公转轴相互平行，公转周期远大于自转周期。设小行星的半径为ra，密度为",
+      "ko": "자전 각속도는 [[omega]], 자전축과 공전축은 평행하다. 공전 주기는 자전보다 훨씬 길다. 소행성 반지름은 [[r]],",
+      "en": "Spin [[omega]]; orbit period far above spin period; radius [[r]]. Density, specific heat, conductivity:",
+      "erase_rects": [
+        [
+          60,
+          523,
+          539,
+          540
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 532.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "omega",
+          "rect": [
+            143.5,
+            526.75,
+            151,
+            533
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "r",
+          "rect": [
+            482.5,
+            526.5,
+            490,
+            534.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "omega",
+        "r"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "自转轴和公转轴相互平行",
+        "source_rect": [
+          60,
+          523,
+          539,
+          540
+        ],
+        "read_only_measurement_rect": [
+          59,
+          521.5,
+          540,
+          541.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 532.25,
+        "iou": 0.6600743532180786,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-g",
+      "hint_id": "4-29",
+      "source": "p，比热容为C，热导率为K。已知太阳的表面温度Ts=6000K、半径rs=7×10°m、质量Ms=2×1030kg，",
+      "ko": "밀도 [[rho]], 비열 [[C]], 열전도율 [[kappa]], 태양 표면온도 [[Ts]], 반지름 [[rs]], 질량 [[Ms]].",
+      "en": "[[rho]], [[C]], [[kappa]]; solar surface temperature, radius, mass: [[Ts]], [[rs]], [[Ms]].",
+      "erase_rects": [
+        [
+          59,
+          539,
+          539,
+          557
+        ]
+      ],
+      "left": 60,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 548.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "rho",
+          "rect": [
+            60.75,
+            542.25,
+            67,
+            551
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "C",
+          "rect": [
+            116.5,
+            540.5,
+            122.75,
+            549
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "kappa",
+          "rect": [
+            172.5,
+            542.25,
+            178.5,
+            548.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "Ts",
+          "rect": [
+            278,
+            537,
+            331,
+            552
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "rs",
+          "rect": [
+            357,
+            537,
+            421,
+            552
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "Ms",
+          "rect": [
+            447,
+            537,
+            525,
+            552
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "rho",
+        "C",
+        "kappa",
+        "Ts",
+        "rs",
+        "Ms"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "已知太阳的表面温度",
+        "source_rect": [
+          59,
+          539,
+          539,
+          557
+        ],
+        "read_only_measurement_rect": [
+          58,
+          537.5,
+          540,
+          558.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 548.25,
+        "iou": 0.5906380414962769,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "radiation-h",
+      "hint_id": "4-30",
+      "source": "ra<rs< Ra；引力常量G = 6.67×10-11m3 /(kg·s2)，真空中的光速c=3.0×108m/s.",
+      "ko": "[[scale]], 중력 상수 [[G]], 진공 중 빛의 속도 [[c]]다.",
+      "en": "[[scale]]; gravity [[G]], vacuum light speed [[c]].",
+      "erase_rects": [
+        [
+          59,
+          555,
+          450,
+          573
+        ]
+      ],
+      "left": 60,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 565.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "scale",
+          "rect": [
+            59,
+            553,
+            123,
+            573
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "G",
+          "rect": [
+            169.25,
+            556.25,
+            297.5,
+            568.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "c",
+          "rect": [
+            367.75,
+            556,
+            443.75,
+            567.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "scale",
+        "G",
+        "c"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "真空中的光速",
+        "source_rect": [
+          59,
+          555,
+          450,
+          573
+        ],
+        "read_only_measurement_rect": [
+          58,
+          553.5,
+          451,
+          574.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 565.0,
+        "iou": 0.5790326595306396,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "absorption-a",
+      "hint_id": "4-31",
+      "source": "（1）假设辐射传播方向垂直于理想黑体表面，证明该黑体表面单位面积",
+      "ko": "[[label]] 흑체 표면에 수직으로 복사가 들어온다. 흡수로 받는 단위면적당",
+      "en": "[[label]] For normal incidence on a blackbody, prove that absorbed",
+      "erase_rects": [
+        [
+          64,
+          571,
+          376,
+          587
+        ]
+      ],
+      "left": 65,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 581.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            65,
+            571,
+            84,
+            587
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "label"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "假设辐射传播方向垂直于理想黑",
+        "source_rect": [
+          64,
+          571,
+          376,
+          587
+        ],
+        "read_only_measurement_rect": [
+          63,
+          569.5,
+          377,
+          588.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 581.25,
+        "iou": 0.7486217021942139,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "absorption-b",
+      "hint_id": "4-32",
+      "source": "因吸收辐射而受到的辐射力F,和辐射能流密度J,的关系为Fr=Jr/c",
+      "ko": "복사력 [[F]]와 복사 에너지 유속 [[J]]가 [[relation]]를 만족함을 보여라.",
+      "en": "force/area [[F]] and radiative energy flux [[J]] obey [[relation]].",
+      "erase_rects": [
+        [
+          60,
+          587,
+          360,
+          604
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 597.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "F",
+          "rect": [
+            184,
+            589.5,
+            194.5,
+            599.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "J",
+          "rect": [
+            264,
+            589.25,
+            273.25,
+            599.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "relation",
+          "rect": [
+            313.5,
+            588.5,
+            355,
+            599.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "F",
+        "J",
+        "relation"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "因吸收辐射而受到的辐射力",
+        "source_rect": [
+          60,
+          587,
+          360,
+          604
+        ],
+        "read_only_measurement_rect": [
+          59,
+          585.5,
+          361,
+          605.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 597.0,
+        "iou": 0.7043142318725586,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "uniform-temp-a",
+      "hint_id": "4-34",
+      "source": "（2）假设小行星表面温度始终保持均匀恒定，求其表面处接收的太阳辐",
+      "ko": "[[label]] 표면 온도가 항상 균일·일정할 때, 표면이 받는 태양 복사",
+      "en": "[[label]] For uniform constant surface temperature, find solar",
+      "erase_rects": [
+        [
+          64,
+          602,
+          376,
+          618
+        ]
+      ],
+      "left": 65,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 612.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            65,
+            602,
+            84,
+            618
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "label"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "假设小行星表面温度始终保持均",
+        "source_rect": [
+          64,
+          602,
+          376,
+          618
+        ],
+        "read_only_measurement_rect": [
+          63,
+          600.5,
+          377,
+          619.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 612.75,
+        "iou": 0.7170721888542175,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "uniform-temp-b",
+      "hint_id": "4-35",
+      "source": "射能流密度大小/o、表面温度T。分别与轨道半径Ra的关系；估算辐射作",
+      "ko": "유속 [[I]], 온도 [[T]]와 궤도 반지름 [[R]]의 관계를 구하고, 복사력에",
+      "en": "flux [[I]] and temperature [[T]] versus orbital radius [[R]]. Estimate",
+      "erase_rects": [
+        [
+          60,
+          618,
+          376,
+          634
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 628.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "I",
+          "rect": [
+            131.75,
+            620.75,
+            140.5,
+            631.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "T",
+          "rect": [
+            192,
+            621,
+            201,
+            631.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "R",
+          "rect": [
+            272,
+            620.75,
+            282.5,
+            631.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "I",
+        "T",
+        "R"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "射能流密度大小",
+        "source_rect": [
+          60,
+          618,
+          376,
+          634
+        ],
+        "read_only_measurement_rect": [
+          59,
+          616.5,
+          377,
+          635.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 628.5,
+        "iou": 0.736350417137146,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "uniform-temp-c",
+      "hint_id": "4-37",
+      "source": "用力对典型小行星的运行轨道半径的相对改变量，假设典型小行星的半",
+      "ko": "따른 궤도 반지름의 상대 변화량을 어림하라. 반지름과 밀도가",
+      "en": "the relative orbit-radius change due to radiation for an asteroid",
+      "erase_rects": [
+        [
+          60,
+          634,
+          376,
+          650
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 644.25,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "用力对典型小行星的运行轨道半",
+        "source_rect": [
+          60,
+          634,
+          376,
+          650
+        ],
+        "read_only_measurement_rect": [
+          59,
+          632.5,
+          377,
+          651.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 644.25,
+        "iou": 0.7298296689987183,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "uniform-temp-d",
+      "hint_id": "4-38",
+      "source": "径为103m、密度为5×103kg/m3.",
+      "ko": "각각 [[radius]], [[density]]인 전형적 소행성으로 계산하라.",
+      "en": "of typical radius [[radius]] and density [[density]].",
+      "erase_rects": [
+        [
+          60,
+          650,
+          214,
+          666
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 660.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "radius",
+          "rect": [
+            82,
+            651.25,
+            106.5,
+            661
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "density",
+          "rect": [
+            147,
+            651,
+            208.25,
+            663
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "radius",
+        "density"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "密度为",
+        "source_rect": [
+          60,
+          650,
+          214,
+          666
+        ],
+        "read_only_measurement_rect": [
+          59,
+          648.5,
+          215,
+          667.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 660.0,
+        "iou": 0.7702386379241943,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lag-temperature-a",
+      "hint_id": "4-40",
+      "source": "（3）由于自转，小行星表面任意给定位置单位面积接收太阳辐射的功率",
+      "ko": "[[label]] 자전으로 표면 각 지점이 단위면적당 받는 태양 전력은",
+      "en": "[[label]] Spin makes the incident solar power/area at each point",
+      "erase_rects": [
+        [
+          65,
+          666,
+          376,
+          682
+        ]
+      ],
+      "left": 66,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 675.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            66,
+            666,
+            85,
+            682
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "label"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "小行星表面任意给定位置单位面",
+        "source_rect": [
+          65,
+          666,
+          376,
+          682
+        ],
+        "read_only_measurement_rect": [
+          64,
+          664.5,
+          377,
+          683.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 675.75,
+        "iou": 0.5710923075675964,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lag-temperature-b",
+      "hint_id": "4-41",
+      "source": "随时间周期性地改变，该位置的温度也会相应地随时间改变，但二者的",
+      "ko": "시간에 따라 주기적으로 변한다. 온도도 변하지만 전력 변화보다",
+      "en": "periodic in time. Temperature varies too, but lags the power,",
+      "erase_rects": [
+        [
+          60,
+          681,
+          376,
+          697
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 691.5,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "该位置的温度也会相应地随时间",
+        "source_rect": [
+          60,
+          681,
+          376,
+          697
+        ],
+        "read_only_measurement_rect": [
+          59,
+          679.5,
+          377,
+          698.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 691.5,
+        "iou": 0.4741048812866211,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lag-temperature-c",
+      "hint_id": "4-42",
+      "source": "改变并不同步，后者会滞后于前者一个相位，这是因有限的比热容和热",
+      "ko": "위상이 늦는다. 이는 유한한 비열과 열전도율 때문이다.",
+      "en": "owing to finite specific heat and thermal conductivity.",
+      "erase_rects": [
+        [
+          60,
+          697,
+          376,
+          713
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 707.0,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "后者会滞后于前者一个相位",
+        "source_rect": [
+          60,
+          697,
+          376,
+          713
+        ],
+        "read_only_measurement_rect": [
+          59,
+          695.5,
+          377,
+          714.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 707.0,
+        "iou": 0.5650935173034668,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lag-temperature-d",
+      "hint_id": "4-44",
+      "source": "导率导致的。对于典型的小行星，热传导主要发生在垂直于小行星表面",
+      "ko": "전형적 소행성에서는 표면에 수직인 열전도가 주로 일어나며,",
+      "en": "In a typical asteroid, heat flows mainly normal to the surface,",
+      "erase_rects": [
+        [
+          60,
+          713,
+          376,
+          729
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 723.0,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "热传导主要发生在垂直于小行星",
+        "source_rect": [
+          60,
+          713,
+          376,
+          729
+        ],
+        "read_only_measurement_rect": [
+          59,
+          711.5,
+          377,
+          730.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 723.0,
+        "iou": 0.5658473372459412,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lag-temperature-e",
+      "hint_id": "4-46",
+      "source": "的方向上，并局限在厚度较小的表面层内，可用一维热传导模型来研究",
+      "ko": "얇은 표면층에 국한된다. 일차원 열전도 모형으로 위상 지연을",
+      "en": "confined to a thin layer. Use one-dimensional heat flow to find",
+      "erase_rects": [
+        [
+          60,
+          729,
+          376,
+          745
+        ]
+      ],
+      "left": 61,
+      "right": 376,
+      "size": 10.24,
+      "baseline": 738.5,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "并局限在厚度较小的表面层内",
+        "source_rect": [
+          60,
+          729,
+          376,
+          745
+        ],
+        "read_only_measurement_rect": [
+          59,
+          727.5,
+          377,
+          746.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 738.5,
+        "iou": 0.5879583358764648,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "lag-temperature-f",
+      "hint_id": "4-47",
+      "source": "这个滞后相位的大小。先考虑小行星赤道上的情况：如图6a所示，赤道上经度为β处单位表面接收的太阳",
+      "ko": "구한다. 우선 적도(그림 [[fig]])를 보자. 적도상 경도 [[phi]]의 단위면적이 받는 태양 복사 전력은",
+      "en": "the phase lag. Start at the equator (Fig. [[fig]]): incident solar power per unit area at longitude [[phi]] is",
+      "erase_rects": [
+        [
+          60,
+          744,
+          539,
+          761
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 754.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            318.5,
+            747,
+            328.75,
+            755.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "phi",
+          "rect": [
+            422.5,
+            748.5,
+            429.25,
+            757.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "fig",
+        "phi"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "先考虑小行星赤道上的情况",
+        "source_rect": [
+          60,
+          744,
+          539,
+          761
+        ],
+        "read_only_measurement_rect": [
+          59,
+          742.5,
+          540,
+          762.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 754.5,
+        "iou": 0.44654354453086853,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "figure-spin",
+      "hint_id": "4-33",
+      "source": "自转方向",
+      "ko": "자전 방향",
+      "en": "Spin",
+      "erase_rects": [
+        [
+          464,
+          588,
+          513,
+          606
+        ]
+      ],
+      "left": 462,
+      "right": 527,
+      "size": 10.24,
+      "baseline": 600.75,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      }
+    },
+    {
+      "id": "figure-orbit",
+      "hint_id": "4-36",
+      "source": "公转速度方向",
+      "ko": "공전 속도 방향",
+      "en": "Orbital vel.",
+      "erase_rects": [
+        [
+          382,
+          618,
+          445,
+          636
+        ]
+      ],
+      "left": 381,
+      "right": 448,
+      "size": 10.24,
+      "baseline": 631,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "translation_note": "Orbital velocity direction: scientific diagram abbreviation vel.; the original arrow supplies direction. Source SimSun 10.24pt unchanged; full word velocity overlapped the original circle, so no font shrink or diagram movement."
+    },
+    {
+      "id": "figure-solar",
+      "hint_id": "4-43",
+      "source": "太阳辐射",
+      "ko": "태양 복사",
+      "en": "Sunlight",
+      "erase_rects": [
+        [
+          464,
+          703.5,
+          509,
+          717.5
+        ]
+      ],
+      "left": 464,
+      "right": 525,
+      "size": 10.24,
+      "baseline": 714.25,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      }
+    },
+    {
+      "id": "figure-caption",
+      "hint_id": "4-45",
+      "source": "图",
+      "ko": "그림 [[fig]]",
+      "en": "Fig. [[fig]]",
+      "erase_rects": [
+        [
+          444,
+          717,
+          473,
+          732
+        ]
+      ],
+      "left": 444,
+      "right": 494,
+      "size": 10.24,
+      "baseline": 728.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            459,
+            719.5,
+            469.25,
+            728
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      }
+    },
+    {
+      "id": "footer",
+      "hint_id": "4-48",
+      "source": "第",
+      "ko": "[[four]] / [[six]]쪽",
+      "en": "Page [[four]] of [[six]]",
+      "erase_rects": [
+        [
+          259,
+          770.5,
+          334,
+          785
+        ]
+      ],
+      "left": 265,
+      "right": 338,
+      "size": 8.4,
+      "baseline": 780.25,
+      "align": "center",
+      "atoms": [
+        {
+          "id": "four",
+          "rect": [
+            274.25,
+            774,
+            279,
+            781.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        },
+        {
+          "id": "six",
+          "rect": [
+            313.5,
+            774,
+            318.5,
+            781.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Whole source bitmap symbol or compound formula, scripts and bars manually verified in original JPEG contact; adjacent Chinese component ink excluded; 1x source scale and original internal geometry retained"
+        }
+      ],
+      "source_atom_ids": [
+        "four",
+        "six"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "source_only": true,
+        "source_font": "SimSun",
+        "point_size": 8.4,
+        "measured_original_CJK": [
+          "第",
+          "页",
+          "页"
+        ],
+        "baselines": [
+          780.25,
+          780.5,
+          780.25
+        ],
+        "ious": [
+          0.7072368264,
+          0.7974413633,
+          0.7840172648
+        ],
+        "evidence_path": "page04-footer-physical-calibration.json"
+      }
+    }
+  ],
+  "protected_source_display_and_figure_rects": [
+    [
+      255,
+      82,
+      340,
+      100
+    ],
+    [
+      264,
+      164,
+      336,
+      180
+    ],
+    [
+      211,
+      252,
+      384,
+      268
+    ],
+    [
+      226,
+      398,
+      367,
+      430
+    ],
+    [
+      383,
+      568,
+      534,
+      588
+    ],
+    [
+      383,
+      606,
+      534,
+      618
+    ],
+    [
+      383,
+      636,
+      534,
+      703.5
+    ],
+    [
+      383,
+      732,
+      534,
+      733
+    ],
+    [
+      383,
+      717.5,
+      444,
+      732
+    ],
+    [
+      473,
+      717.5,
+      534,
+      732
+    ],
+    [
+      383,
+      703.5,
+      464,
+      717
+    ],
+    [
+      383,
+      717,
+      444,
+      717.5
+    ],
+    [
+      509,
+      703.5,
+      534,
+      717.5
+    ],
+    [
+      445,
+      618,
+      534,
+      636
+    ],
+    [
+      383,
+      588,
+      464,
+      606
+    ],
+    [
+      513,
+      588,
+      534,
+      606
+    ]
+  ],
+  "figure_label_review": {
+    "labels": [
+      "自转方向",
+      "公转速度方向",
+      "太阳辐射",
+      "图6a"
+    ],
+    "source_font_evidence": "page04-figure-font-calibration.json",
+    "source_role": "SimSun, approximately same 10.24pt as body; independent face comparison IoU .79/.81"
+  },
+  "manual_source_contact_review": {
+    "sheets": 6,
+    "inside_clip_sheets": 4,
+    "all_math_full_components_and_scripts_checked": true,
+    "source_note": "All 64 original atoms independently checked against source JPEG. Rect corrections include full denominator subscripts and exact exclusion of adjacent CJK strokes; no OCR reconstruction."
+  },
+  "math_padding_review": "Independent Multiply-reference replay exposed 11 original next-line exponent pixels hidden by prior-line JPEG white padding. The prior-line Ts/rs/Ms source clips end at552pt, beyond all their ink but before the next line at556.78pt. Native math scale/coordinates/bytes unchanged."
+}
