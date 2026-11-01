@@ -74,7 +74,8 @@ def with_translation(question, translated):
 
 REVIEWED_COUNTS = {"pns-optics": 160, "puzzling-200": 200, "guide-part1": 139,
                    "guide-part2": 182, "kalda": 555, "pns-thermo": 367,
-                   "schroeder": 486, "puzzling-more": 200, "blundell": 238, "morin-mechanics": 496}
+                   "schroeder": 486, "puzzling-more": 200, "blundell": 238, "morin-mechanics": 496,
+                   "pns-electro": 440}
 
 
 def refresh_reviewed_source_counts(root, sources):
