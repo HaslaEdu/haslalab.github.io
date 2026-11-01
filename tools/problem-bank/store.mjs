@@ -1,6 +1,6 @@
 // Private import preparation only: no network, paid providers, or production bindings.
-import {createHash} from 'node:crypto';
-import {readFile,writeFile,mkdir,realpath,lstat} from 'node:fs/promises';
+import {createHash,randomUUID} from 'node:crypto';
+import {readFile,open,rename,unlink,mkdir,realpath,lstat} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 
@@ -150,7 +150,7 @@ export function readInlineAsset(db,assetId){
 function bindSql({sql,params}){let index=0;const bound=sql.replace(/\?/g,()=>sqlLiteral(params[index++]));if(index!==params.length)fail('SQL parameter mismatch');return bound+';';}
 export async function exportImportSql(normalized,options){return '-- PRIVATE QUESTION-BANK IMPORT. DO NOT COMMIT THIS FILE.\n-- D1 file import supplies its own transaction; no BEGIN/COMMIT here.\n'+await schemaSql()+'\n'+importStatements(normalized,options).map(bindSql).join('\n')+'\n';}
 
-async function privateOutput(target){
+export async function privateOutput(target){
   const absolute=path.resolve(target),parent=path.dirname(absolute);await mkdir(parent,{recursive:true});
   const actual=path.join(await realpath(parent),path.basename(absolute)),root=await realpath(PUBLIC_ROOT),relative=path.relative(root,actual);
   if(!relative||!relative.startsWith('..'+path.sep)&&relative!=='..'&&!path.isAbsolute(relative))fail('Refusing to write private content inside the public Git checkout');
@@ -162,7 +162,11 @@ export async function main(argv=process.argv.slice(2)){
   if(!options['--manifest']||!options['--out'])fail('--manifest and --out are required');
   const manifest=JSON.parse(await readFile(options['--manifest'],'utf8'));
   const questionFile=options['--questions']?JSON.parse(await readFile(options['--questions'],'utf8')):undefined;
-  const normalized=normalizeImport(manifest,questionFile),out=await privateOutput(options['--out']);await writeFile(out,await exportImportSql(normalized),{encoding:'utf8',mode:0o600});
+  const normalized=normalizeImport(manifest,questionFile),out=await privateOutput(options['--out']);
+  const sql=await exportImportSql(normalized),temporary=out+'.'+randomUUID()+'.tmp';
+  const handle=await open(temporary,'wx',0o600);
+  try{await handle.writeFile(sql,'utf8');await handle.close();await rename(temporary,out);}
+  catch(error){await handle.close().catch(()=>{});await unlink(temporary).catch(()=>{});throw error;}
   const supplied=normalized.questions.flatMap(q=>q.versions);console.log(JSON.stringify({sources:normalized.sources.length,questions:normalized.questions.length,language_versions:supplied.length,
     verified_language_versions:supplied.filter(v=>v.review_status==='verified').length,output:out,server_imported:false}));
 }

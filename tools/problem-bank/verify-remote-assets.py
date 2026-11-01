@@ -63,7 +63,7 @@ def verify(database, config, wrangler, output, per_source):
         byte_count += len(image_bytes)
         sources.add(first['source_id'])
         multi_chunk += first['chunk_count'] > 1
-    report = {'checked_at': datetime.now(timezone.utc).isoformat(),
+    report = {'checked_at': datetime.now(timezone.utc).isoformat(), 'database': database,
               'server_readback': True, 'sampling': 'largest assets per source',
               'sample_per_source': per_source, 'sampled_sources': len(sources),
               'sampled_assets': assets, 'multi_chunk_assets': multi_chunk,

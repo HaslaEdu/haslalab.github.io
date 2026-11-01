@@ -95,7 +95,31 @@ wrangler d1 execute haslalab-problem-bank --remote --file C:/private-bank/import
 
 The SQL includes `schema.sql`, fixed identifiers and safely encoded literals; external values cannot become SQL syntax. It omits `BEGIN`/`COMMIT` because [D1 file import supplies its own transaction](https://developers.cloudflare.com/d1/best-practices/import-export-data/). For a Worker-side binding, initialize `schema.sql` separately and call `applyD1Import()`, which uses parameterized prepared statements in one atomic D1 batch. Do not split one logical import into independent nontransactional statements.
 
+The exporter writes a private temporary file, closes it, then atomically replaces the requested SQL file. Always wait for an export's successful process exit before uploading its output. A returned background-session identifier means the export is still running.
+
+When several authors share one machine, serialize memory-heavy extraction, complete image/math audits and SQL exports with the same private resource lock:
+
+```powershell
+python tools/problem-bank/with-resource-lock.py --lock-file D:/private-bank/heavy.lock --label source-audit -- python D:/private-bank/audit.py
+```
+
+Wrap only the outer command; nested wrappers using the same lock would wait on themselves. Lightweight drafting can continue in parallel. The lock propagates the child exit status and does not retry failures. The operating system releases it on process exit; retain the lock file so waiting processes continue to use the same file identity.
+
 After applying an import, `verify-remote-assets.py --database PRIVATE_DB --config PRIVATE_CONFIG --out PRIVATE_REPORT` reads back a bounded sample of the largest inline images from each source using an already authenticated Wrangler CLI. It checks chunk order, chunk hashes, assembled hashes, byte counts, image MIME types and image decoding. The report records that sampling scope; it does not mark statements or translations verified.
+
+## Routing books across private databases
+
+`route-import.mjs` splits a prepared full snapshot using a private version-1 routing file. The file supplies `registry_database`, `databases: [{name,id}]` and `source_routes: [{source_id,database,question_count}]`. Each registered source needs exactly one route and its checked original question count. Database names must use the private question-bank namespace. The tool neither creates databases nor changes plans or billing.
+
+```powershell
+node tools/problem-bank/route-import.mjs --manifest D:/private-bank/import-manifest.json --questions D:/private-bank/import-questions.json --routes D:/private-bank/routes.json --out-dir D:/private-bank/copy-checkpoint
+```
+
+Each selected database receives a SQL import containing only its selected source inventory, an expected fingerprint file and a verification query. Run that verification query against the same remote database after its successful import; save Wrangler's JSON response privately. Verify it with `--verify-expected EXPECTED_JSON --observed REMOTE_JSON --out RECEIPT_JSON`. It checks every current question, context, language hash, asset identity and chunk metadata against the copied snapshot. Partial text-only updates cannot generate copy receipts.
+
+Before activating routes, also run `verify-remote-assets.py` for each new database. Build arrays of the copy receipts and crop-readback reports, then export registry SQL with `--registry-manifest MANIFEST --routes ROUTES --receipts RECEIPTS_ARRAY --samples REPORTS_ARRAY --out REGISTRY_SQL`. A route away from the registry database requires a verified full copy with the declared question count and a successful remote crop readback. Apply this registry SQL only after those checks pass. Existing copies remain available; activation deletes no old questions or history.
+
+The registry's `bank_source_routes` table identifies the canonical database for each source revision. Resolve a question's source route before reading its crops, including `d1-inline/...` keys. Generated `*.progress.sql` queries restrict counts to each database's assigned sources: summing raw database totals would double-count retained legacy copies. Local route plans, receipts, SQL and all book content stay outside Git. Wait for each export process to exit successfully before uploading or replacing its input snapshot.
 
 For local verification, `applyImport(DatabaseSync, normalized)` applies parameterized statements under an explicit SQLite transaction and rolls back all imported changes on failure. Conflicting source revisions and false complete-extraction totals fail rather than accepting a partial import. Schema creation itself is additive and independent of a data import transaction.
 
