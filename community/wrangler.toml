@@ -24,7 +24,7 @@ queue = "haslalab-lab-jobs"
 max_batch_size = 3
 max_batch_timeout = 1
 max_retries = 3
-max_concurrency = 4
+max_concurrency = 10
 dead_letter_queue = "haslalab-lab-jobs-dead"
 
 # Sites allowed to call the API from the browser (comma-separated).
@@ -41,6 +41,8 @@ LAB_PIPELINE = "mixed"
 LAB_READ_MODEL = "gemini-3.1-pro-preview"
 LAB_READ_THINKING = "low"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
+# build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
+LAB_SCHEME_WARM = "on"
 # Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.1 Pro.
 LAB_SCHEME_MODEL = "gemini-3.1-pro-preview"
 LAB_SCHEME_THINKING = "low"

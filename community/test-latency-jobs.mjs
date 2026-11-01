@@ -161,3 +161,17 @@ test('an interruption immediately after the grading transition commit leaves eve
   const recovered=(await api(`/lab/sessions/${sid}`,{id:7})).data.session;assert.equal(recovered.status,'graded');assert.equal(recovered.score,7);
   assert.equal(sql.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);
 });
+
+test('when many wait, page reads go before gradings, each sitting gets a turn, and admin bench runs only while nothing else waits (two at most)',async()=>{
+  sql.exec('PRAGMA foreign_keys=OFF');sql.exec('DELETE FROM lab_jobs');pending.length=0;
+  const add=(kind,session,key)=>sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,lang,status,available_at,created_at,updated_at) VALUES(?,?,?,'ko','pending',0,0,0)").run(key,kind,session);
+  for(let i=0;i<4;i++)add('bench',9001,'b'+i);
+  add('grade',9002,'g1');add('grade',9002,'g2');add('ocr',9003,'o1');add('grade',9004,'g3');add('ocr',9003,'o2');
+  await dispatchLabJobs(env);
+  const order=pending.map(m=>sql.prepare('SELECT job_key FROM lab_jobs WHERE id=?').get(m.body.jobId).job_key);
+  assert.deepEqual(order,['o1','o2','g1','g3','g2'],'reads first; the second grading of one sitting after the first of another; no bench');
+  sql.exec("UPDATE lab_jobs SET status='done' WHERE kind<>'bench'");pending.length=0;
+  await dispatchLabJobs(env);
+  assert.equal(pending.length,2,'only two bench runs at once, and only once the candidates are served');
+  sql.exec('DELETE FROM lab_jobs');sql.exec('PRAGMA foreign_keys=ON');pending.length=0;
+});
