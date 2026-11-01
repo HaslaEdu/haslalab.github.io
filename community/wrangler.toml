@@ -37,7 +37,9 @@ DEEPSEEK_OCR_MODEL = "deepseek-flash"
 # DeepSeek runs every stage while the Gemini account has no credit (LAB_ONLY_PROVIDER pins every sitting to it). When it
 # is topped up, the Gemini choices of the bench were: providers gemini, LAB_READ_MODEL gemini-3.1-pro-preview,
 # LAB_SCHEME_MODEL and LAB_GRADE_MODEL gemini-3.8-flash, LAB_READ_FALLBACK_MODEL gemini-3.8-flash,
-# LAB_SCHEME_FALLBACK_MODEL gemini-3.1-pro-preview, and no LAB_ONLY_PROVIDER. With Gemini:
+# LAB_SCHEME_FALLBACK_MODEL gemini-3.1-pro-preview, and no LAB_ONLY_PROVIDER. DeepSeek bench (36 audited tasks):
+# deepseek-flash builds the schemes (it sees the PDF pages; v4-pro reads no image and its schemes graded 6 points
+# further from the audits). With Gemini:
 # Gemini reads the pages and Gemini 3.8 Flash grades them alone (labRoles). Model bench of 2026-11-01 against 15 audited
 # sittings: 3.8 Flash alone (thinking low) graded closest to the audits at ~$0.02 a task; DeepSeek moderated by Flash-Lite
 # and a moderation of every item scored lower; handing the grader the papers as well (LAB_GRADE_PDFS) gained nothing.
@@ -60,7 +62,7 @@ LAB_SCHEME_WARM = "on"
 LAB_BENCH_SLOTS = "8"
 # Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.8 Flash: graded with one
 # grader, its schemes came 2.2 points closer to the audits than 3.1 Pro's on 32 tasks (Claude and GPT schemes no closer).
-LAB_SCHEME_MODEL = "deepseek-v4-pro"
+LAB_SCHEME_MODEL = "deepseek-flash"
 LAB_SCHEME_THINKING = "low"
 # when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
 LAB_READ_FALLBACK_MODEL = ""
