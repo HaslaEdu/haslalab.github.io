@@ -266,3 +266,11 @@ test('related metadata is bounded to 64 latest unique profiles and unavailable f
   const pending = seed({ status: 'pending' }), qualitative = seed({ score: null, points: null }), legacy = seed({ detail: null });
   for (const id of [pending, qualitative, legacy]) assert.deepEqual((await report(id)).related_results, []);
 });
+
+test('a new account starts with three exam tokens', async () => {
+  const response = await worker.fetch(new Request('https://worker.local/api/signup', { method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.9' },
+    body: JSON.stringify({ username: 'fresh_signup', nickname: 'Fresh signup', password: 'correct horse battery 9' }) }), env);
+  assert.equal(response.status, 200, await response.clone().text());
+  assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE username='fresh_signup'").get().exam_tokens, 3);
+});

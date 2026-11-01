@@ -356,3 +356,29 @@ test('the corner model downloads as fp16 and is rebuilt byte for byte into the p
   assert.throws(() => scanner.decodeCornerModel(packed.subarray(0, packed.length - 1)), /corner_model_size/);
   assert.throws(() => scanner.decodeCornerModel(new Uint8Array(32)), /corner_model_format/);
 });
+
+test('graph paper: the sheet, not its printed grid, is the page (white margin round a blue grid, white or dark desk)', () => {
+  // an A4 sheet (520 × 735 px) whose middle 90% × 87% is a blue millimetre grid, on a near-white desk and on a dark one
+  const W = 768, H = 1024, quad = [{ x: 124, y: 140 }, { x: 644, y: 140 }, { x: 124, y: 875 }, { x: 644, y: 875 }];
+  const grid = { x0: 124 + 25, x1: 644 - 25, y0: 140 + 37, y1: 875 - 58 };
+  for (const desk of [[228, 226, 222], [70, 65, 60]]) {
+    const rgba = new Uint8ClampedArray(W * H * 4), gray = new Uint8Array(W * H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      let c = desk;
+      if (x >= quad[0].x && x < quad[1].x && y >= quad[0].y && y < quad[2].y) {
+        c = [246, 246, 242];
+        if (x >= grid.x0 && x <= grid.x1 && y >= grid.y0 && y <= grid.y1) {
+          const gx = (x - grid.x0) % 3 === 0, gy = (y - grid.y0) % 3 === 0, bold = (x - grid.x0) % 30 < 2 || (y - grid.y0) % 30 < 2;
+          if (gx || gy || bold) c = bold ? [40, 90, 160] : [80, 130, 180];
+        }
+      }
+      const i = y * W + x; rgba[4 * i] = c[0]; rgba[4 * i + 1] = c[1]; rgba[4 * i + 2] = c[2]; rgba[4 * i + 3] = 255;
+      gray[i] = Math.round((c[0] * 299 + c[1] * 587 + c[2] * 114) / 1000);
+    }
+    const result = scanner.findPageQuadGray(gray, W, H, rgba);
+    assert.ok(result.corners, 'the sheet is found');
+    const off = error(result.corners, quad);
+    assert.ok(off < 8, `desk ${desk[0]}: corner error to the sheet ${off.toFixed(1)} px (the grid lies ${25}–${58} px inside)`);
+    assert.equal(result.verified, true, `desk ${desk[0]}: the sheet's four edges are measured`);
+  }
+});
