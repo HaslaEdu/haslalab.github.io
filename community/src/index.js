@@ -36,6 +36,7 @@ import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './l
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages,referenceText} from './reference-images.js';
 import { compareExpr, describeCheck } from './expr-check.js';
+import { pageStrips } from './page-tiles.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
@@ -1453,7 +1454,7 @@ const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI
   ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
-  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined }) };
+  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -2016,7 +2017,12 @@ async function labReadPage(env,s,buf,mime,notation,m) {
   /* A full answer page reads in 0.5-2k output tokens. At temperature 0 a page can fall into a repetition loop that runs to
      the cap (16k tokens, ~30 s, ~$0.04 each, then truncated anyway): cap at 6k and retry once, warmer, to leave the loop.
      Google advises Gemini 3 to stay at its default temperature 1.0, below which it may loop (LAB_READ_TEMPERATURE). */
-  const read=temperature=>labVision(env,s,[{text:prompt},{inline_data:{mime_type:mime,data:b64(buf)},label:'Original submitted page; inspect every graph, diagram, arrow and annotation'}],PAGE_SCHEMA,6144,m,'ocr',temperature);
+  /* image tiling (LAB_READ_TILES, bench read.tiles): overlapping zoomed strips of the page follow it, for small handwriting */
+  const tiles=Number.isInteger(src._tiles)?src._tiles:+env.LAB_READ_TILES||0;
+  const strips=tiles>=2&&mime==='image/jpeg'?pageStrips(buf instanceof Uint8Array?buf:new Uint8Array(buf),tiles):[];
+  const zoom=strips.length?[{text:`The same page follows as ${strips.length} zoomed strips, top to bottom; neighbouring strips overlap. Read small or faint handwriting from them, but transcribe every line of the page once, in page order.`},
+    ...strips.map((strip,i)=>({inline_data:{mime_type:'image/jpeg',data:b64(strip)},label:`Zoomed strip ${i+1} of ${strips.length} of the same page`}))]:[];
+  const read=temperature=>labVision(env,s,[{text:prompt},{inline_data:{mime_type:mime,data:b64(buf)},label:'Original submitted page; inspect every graph, diagram, arrow and annotation'},...zoom],PAGE_SCHEMA,6144,m,'ocr',temperature);
   const warm=Number.isFinite(src._temperature)?src._temperature:Number.isFinite(+env.LAB_READ_TEMPERATURE)&&env.LAB_READ_TEMPERATURE!==undefined&&env.LAB_READ_TEMPERATURE!==''?+env.LAB_READ_TEMPERATURE:0;
   const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated')return read(Math.max(warm,0.8));throw error;});
   const raw=out.raw;
@@ -2643,7 +2649,7 @@ async function labBench(env, s, job) {
     else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature }, readHint: !!spec.read.hint,
+      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles }, readHint: !!spec.read.hint,
         proof: spec.proof?.provider || null, proofBench: spec.proof ? { model: spec.proof.model, thinking: spec.proof.thinking } : undefined };
       const read = await labReadChecked(env, s, roles, page.task, bytes, page.mime, m), text = readText(read);
       const stored = labStoredReading(env, bytes, { ocr: read.ocr?.text ?? text, text, read, legible: read.legible, status: 'done' });
