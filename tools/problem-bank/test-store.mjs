@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
-import {mkdtemp,readFile,writeFile,rm} from 'node:fs/promises';
+import {mkdtemp,readFile,writeFile,rm,readdir} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-import {normalizeImport,sourceId,questionId,applyImport,exportImportSql,sqlLiteral,readInlineAsset} from './store.mjs';
+import {normalizeImport,sourceId,questionId,applyImport,exportImportSql,writeImportSql,sqlLiteral,readInlineAsset} from './store.mjs';
 
 const digest='a'.repeat(64),span={page:2,bbox:[0.1,0.2,0.9,0.8]};
 function fixture(){
@@ -141,4 +141,31 @@ test('optional inline crops round-trip in small verified chunks and reject corru
     asset.byte_length++;assert.throws(()=>normalizeImport(f.manifest,f.questions),/byte_length/);asset.byte_length--;asset.sha256=digest;assert.throws(()=>normalizeImport(f.manifest,f.questions),/hash mismatch/);
     database.prepare("UPDATE bank_asset_chunks SET payload=zeroblob(byte_length) WHERE chunk_index=0").run();assert.throws(()=>readInlineAsset(database,assetId),/integrity/);
   }finally{database.close();}
+});
+
+
+test('streamed SQL matches the compatibility export and preserves chunked images',async()=>{
+  const temp=await mkdtemp(path.join(tmpdir(),'hasla-stream-')),database=db(),f=fixture(),bytes=Buffer.alloc(90000,173);
+  const asset=f.question.assets[0];asset.sha256=createHash('sha256').update(bytes).digest('hex');asset.inline_base64=bytes.toString('base64');asset.byte_length=bytes.length;
+  f.question.versions[0].text="Quoted '?' and 한국어: ' "+'x'.repeat(2000);
+  const plan=normalizeImport(f.manifest,f.questions),options={timestamp:'2026-01-01T00:00:00.000Z'};
+  try{
+    const out=path.join(temp,'private.sql');assert.equal(await writeImportSql(plan,out,options),out);
+    const sql=await readFile(out,'utf8');assert.equal(sql,await exportImportSql(plan,options));
+    database.exec('PRAGMA foreign_keys=ON; BEGIN');database.exec(sql);database.exec('COMMIT');
+    assert.deepEqual(readInlineAsset(database,plan.questions[0].assets[0].id),bytes);
+    assert.equal(row(database,'SELECT text FROM bank_question_versions').text,f.question.versions[0].text);
+    assert.deepEqual(await readdir(temp),['private.sql']);
+  }finally{database.close();await rm(temp,{recursive:true,force:true});}
+});
+
+test('streaming failure preserves the previous artifact and removes incomplete temporary output',async()=>{
+  const temp=await mkdtemp(path.join(tmpdir(),'hasla-stream-fail-')),out=path.join(temp,'private.sql'),plan=normalizeImport(fixture().manifest,fixture().questions);
+  try{
+    await writeFile(out,'previous complete artifact');
+    plan.questions[0].versions[0].text={unsupported:true};
+    await assert.rejects(writeImportSql(plan,out),/Unsupported SQL literal/);
+    assert.equal(await readFile(out,'utf8'),'previous complete artifact');assert.deepEqual(await readdir(temp),['private.sql']);
+    await assert.rejects(writeImportSql(plan,fileURLToPath(new URL('./DO-NOT-CREATE.sql',import.meta.url))),/public Git checkout/);
+  }finally{await rm(temp,{recursive:true,force:true});}
 });

@@ -19,7 +19,8 @@ for(const name of files){
       const pattern=/\$\$([\s\S]*?)\$\$|(?<!\\)\$([^$]*?)(?<!\\)\$|\\\[([\s\S]*?)\\\]|\\\(([\s\S]*?)\\\)/g;
       for(const match of text.matchAll(pattern)){
         expressions++;
-        try{katex.renderToString(match.slice(1).find(value=>value!==undefined),{throwOnError:true,strict:'ignore'});}
+        const displayMode=match[1]!==undefined||match[3]!==undefined;
+        try{katex.renderToString(match.slice(1).find(value=>value!==undefined),{displayMode,throwOnError:true,strict:'ignore'});}
         catch(error){failures.push({file:name,locator:question.locator??question.original_number,language,error:error.message});}
       }
     }

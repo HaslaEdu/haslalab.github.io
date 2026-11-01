@@ -79,59 +79,61 @@ export function normalizeImport(manifest,questionFile={version:1,questions:[]}){
 }
 
 // SQL text has fixed identifiers only; external values are parameters throughout.
-export function importStatements(normalized,{timestamp=new Date().toISOString()}={}){
-  if(!Number.isFinite(Date.parse(timestamp)))fail('Invalid import timestamp');const statements=[],put=(sql,params)=>statements.push({sql,params});
-  for(const s of normalized.sources)put(`INSERT INTO book_sources(id,drive_id,revision,title,mime_type,sha256,page_count,subjects_json,level,source_language,private_object_key,local_path,expected_question_count,extraction_complete,created_at,updated_at)
+export function* importStatementIterator(normalized,{timestamp=new Date().toISOString()}={}){
+  if(!Number.isFinite(Date.parse(timestamp)))fail('Invalid import timestamp');const statement=(sql,params)=>({sql,params});
+  for(const s of normalized.sources)yield statement(`INSERT INTO book_sources(id,drive_id,revision,title,mime_type,sha256,page_count,subjects_json,level,source_language,private_object_key,local_path,expected_question_count,extraction_complete,created_at,updated_at)
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,
     sha256=CASE WHEN book_sources.sha256=excluded.sha256 AND book_sources.page_count=excluded.page_count AND book_sources.source_language=excluded.source_language THEN excluded.sha256 ELSE NULL END,
     subjects_json=excluded.subjects_json,level=excluded.level,private_object_key=COALESCE(excluded.private_object_key,book_sources.private_object_key),local_path=COALESCE(excluded.local_path,book_sources.local_path),
     expected_question_count=COALESCE(excluded.expected_question_count,book_sources.expected_question_count),extraction_complete=MAX(book_sources.extraction_complete,excluded.extraction_complete),updated_at=excluded.updated_at`,
     [s.id,s.drive_id,s.revision,s.title,s.mime_type,s.sha256,s.page_count,JSON.stringify(s.subjects),s.level,s.source_language,s.private_object_key,s.local_path,s.expected_question_count,+s.extraction_complete,timestamp,timestamp]);
   for(const q of normalized.questions){
-    put(`INSERT INTO bank_questions(id,source_id,locator,original_number,chapter,kind,subjects_json,level,spans_json,review_status,metadata_hash,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
+    yield statement(`INSERT INTO bank_questions(id,source_id,locator,original_number,chapter,kind,subjects_json,level,spans_json,review_status,metadata_hash,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET original_number=excluded.original_number,chapter=excluded.chapter,kind=excluded.kind,subjects_json=excluded.subjects_json,level=excluded.level,spans_json=excluded.spans_json,
       review_status=CASE WHEN bank_questions.metadata_hash=excluded.metadata_hash AND bank_questions.review_status='verified' AND excluded.review_status='pending' THEN 'verified' ELSE excluded.review_status END,
       metadata_hash=excluded.metadata_hash,updated_at=excluded.updated_at`,[q.id,q.source_id,q.locator,q.original_number,q.chapter,q.kind,JSON.stringify(q.subjects),q.level,JSON.stringify(q.spans),q.review_status,q.metadata_hash,timestamp,timestamp]);
-    put(`INSERT INTO bank_question_context(question_id,source_language,context_json,updated_at) VALUES(?,?,?,?)
+    yield statement(`INSERT INTO bank_question_context(question_id,source_language,context_json,updated_at) VALUES(?,?,?,?)
       ON CONFLICT(question_id) DO UPDATE SET source_language=excluded.source_language,context_json=excluded.context_json,updated_at=excluded.updated_at`,[q.id,q.source_language,JSON.stringify(q.context),timestamp]);
     for(const v of q.versions){
-      put(`UPDATE bank_question_versions SET active=0 WHERE question_id=? AND language=? AND id!=?`,[q.id,v.language,v.id]);
-      put(`INSERT INTO bank_question_versions(id,question_id,language,role,text,text_sha256,review_status,active,created_at,updated_at) VALUES(?,?,?,?,?,?,?,1,?,?)
+      yield statement(`UPDATE bank_question_versions SET active=0 WHERE question_id=? AND language=? AND id!=?`,[q.id,v.language,v.id]);
+      yield statement(`INSERT INTO bank_question_versions(id,question_id,language,role,text,text_sha256,review_status,active,created_at,updated_at) VALUES(?,?,?,?,?,?,?,1,?,?)
         ON CONFLICT(id) DO UPDATE SET active=1,review_status=CASE WHEN bank_question_versions.review_status='verified' AND excluded.review_status='pending' THEN 'verified' ELSE excluded.review_status END,updated_at=excluded.updated_at`,[v.id,q.id,v.language,v.role,v.text,v.text_sha256,v.review_status,timestamp,timestamp]);
     }
     if(q.assets_complete){
       const remaining=q.assets.length?' AND id NOT IN ('+q.assets.map(()=>'?').join(',')+')':'';
       const obsolete=`SELECT id FROM bank_assets WHERE question_id=?${remaining}`,params=[q.id,...q.assets.map(a=>a.id)];
-      put(`DELETE FROM bank_asset_chunks WHERE asset_id IN (${obsolete})`,params);
-      put(`DELETE FROM bank_asset_payloads WHERE asset_id IN (${obsolete})`,params);
-      put(`DELETE FROM bank_assets WHERE id IN (${obsolete})`,params);
+      yield statement(`DELETE FROM bank_asset_chunks WHERE asset_id IN (${obsolete})`,params);
+      yield statement(`DELETE FROM bank_asset_payloads WHERE asset_id IN (${obsolete})`,params);
+      yield statement(`DELETE FROM bank_assets WHERE id IN (${obsolete})`,params);
     }
-    for(const a of q.assets){put(`INSERT INTO bank_assets(id,question_id,asset_id,role,private_object_key,mime_type,sha256,spans_json,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)
+    for(const a of q.assets){yield statement(`INSERT INTO bank_assets(id,question_id,asset_id,role,private_object_key,mime_type,sha256,spans_json,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET role=excluded.role,private_object_key=excluded.private_object_key,mime_type=excluded.mime_type,sha256=excluded.sha256,spans_json=excluded.spans_json,updated_at=excluded.updated_at`,[a.id,q.id,a.asset_id,a.role,a.private_object_key,a.mime_type,a.sha256,JSON.stringify(a.spans),timestamp,timestamp]);
-      put('DELETE FROM bank_asset_chunks WHERE asset_id=?',[a.id]);put('DELETE FROM bank_asset_payloads WHERE asset_id=?',[a.id]);
-      if(a.inline){put('INSERT INTO bank_asset_payloads(asset_id,byte_length,sha256,chunk_count) VALUES(?,?,?,?)',[a.id,a.inline.byte_length,a.inline.sha256,a.inline.chunks.length]);
-        a.inline.chunks.forEach((chunk,index)=>put('INSERT INTO bank_asset_chunks(asset_id,chunk_index,byte_length,sha256,payload) VALUES(?,?,?,?,?)',[a.id,index,chunk.bytes.length,chunk.sha256,chunk.bytes]));}
+      yield statement('DELETE FROM bank_asset_chunks WHERE asset_id=?',[a.id]);yield statement('DELETE FROM bank_asset_payloads WHERE asset_id=?',[a.id]);
+      if(a.inline){yield statement('INSERT INTO bank_asset_payloads(asset_id,byte_length,sha256,chunk_count) VALUES(?,?,?,?)',[a.id,a.inline.byte_length,a.inline.sha256,a.inline.chunks.length]);
+        for(const [index,chunk] of a.inline.chunks.entries())yield statement('INSERT INTO bank_asset_chunks(asset_id,chunk_index,byte_length,sha256,payload) VALUES(?,?,?,?,?)',[a.id,index,chunk.bytes.length,chunk.sha256,chunk.bytes]);}
     }
   }
-  const job=(source,question,stage,inputHash,status)=>put(`INSERT INTO bank_jobs(id,source_id,question_id,stage,status,input_hash,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)
+  const job=(source,question,stage,inputHash,status)=>statement(`INSERT INTO bank_jobs(id,source_id,question_id,stage,status,input_hash,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?)
     ON CONFLICT(id) DO UPDATE SET status=CASE WHEN excluded.status='done' THEN 'done' ELSE bank_jobs.status END,updated_at=excluded.updated_at`,['j_'+sha(source+'\0'+(question??'')+'\0'+stage+'\0'+inputHash),source,question,stage,status,inputHash,timestamp,timestamp]);
-  for(const s of normalized.sources)job(s.id,null,'extract',s.sha256,s.extraction_complete?'done':'pending');
+  for(const s of normalized.sources)yield job(s.id,null,'extract',s.sha256,s.extraction_complete?'done':'pending');
   for(const q of normalized.questions){
     const original=q.versions.find(v=>v.role==='original');
-    for(const lang of ['ko','en']){const v=q.versions.find(v=>v.language===lang);if(!v||v.role==='translation')job(q.source_id,q.id,'translate_'+lang,sha(q.metadata_hash+(original?.text_sha256??'')),v?'done':'pending');}
+    for(const lang of ['ko','en']){const v=q.versions.find(v=>v.language===lang);if(!v||v.role==='translation')yield job(q.source_id,q.id,'translate_'+lang,sha(q.metadata_hash+(original?.text_sha256??'')),v?'done':'pending');}
     const reviewed=q.review_status==='verified'&&!q.context.unresolved_source&&['ko','en'].every(lang=>q.versions.some(v=>v.language===lang&&v.review_status==='verified'));
-    job(q.source_id,q.id,'review',sha(q.metadata_hash+q.versions.map(v=>v.text_sha256).join('')),reviewed?'done':'pending');
+    yield job(q.source_id,q.id,'review',sha(q.metadata_hash+q.versions.map(v=>v.text_sha256).join('')),reviewed?'done':'pending');
   }
   // A NULL hash violates the table constraint and rolls back the entire transaction
   // if a purported complete extraction omits or overcounts stored questions.
-  for(const s of normalized.sources)put(`UPDATE book_sources SET sha256=CASE WHEN extraction_complete=0 OR expected_question_count=(SELECT COUNT(*) FROM bank_questions WHERE source_id=book_sources.id) THEN sha256 ELSE NULL END WHERE id=?`,[s.id]);
-  return statements;
+  for(const s of normalized.sources)yield statement(`UPDATE book_sources SET sha256=CASE WHEN extraction_complete=0 OR expected_question_count=(SELECT COUNT(*) FROM bank_questions WHERE source_id=book_sources.id) THEN sha256 ELSE NULL END WHERE id=?`,[s.id]);
 }
+
+export function importStatements(normalized,options){return [...importStatementIterator(normalized,options)];}
+
 
 export async function schemaSql(){return readFile(SCHEMA_PATH,'utf8');}
 export async function applyImport(db,normalized,options){
   db.exec(await schemaSql());db.exec('BEGIN IMMEDIATE');
-  try{for(const {sql,params} of importStatements(normalized,options))db.prepare(sql).run(...params);db.exec('COMMIT');}
+  try{for(const {sql,params} of importStatementIterator(normalized,options))db.prepare(sql).run(...params);db.exec('COMMIT');}
   catch(error){db.exec('ROLLBACK');throw error;}
   return db.prepare('SELECT * FROM bank_source_readiness ORDER BY page_count,id').all();
 }
@@ -150,6 +152,24 @@ export function readInlineAsset(db,assetId){
 function bindSql({sql,params}){let index=0;const bound=sql.replace(/\?/g,()=>sqlLiteral(params[index++]));if(index!==params.length)fail('SQL parameter mismatch');return bound+';';}
 export async function exportImportSql(normalized,options){return '-- PRIVATE QUESTION-BANK IMPORT. DO NOT COMMIT THIS FILE.\n-- D1 file import supplies its own transaction; no BEGIN/COMMIT here.\n'+await schemaSql()+'\n'+importStatements(normalized,options).map(bindSql).join('\n')+'\n';}
 
+// Keep only a bounded SQL buffer; image payloads can make a whole-file string exceed
+// V8's maximum string size even when the normalized input fits in available memory.
+export async function writeImportSql(normalized,target,options){
+  const out=await privateOutput(target),temporary=out+'.'+randomUUID()+'.tmp';
+  const handle=await open(temporary,'wx',0o600);
+  try{
+    await handle.writeFile('-- PRIVATE QUESTION-BANK IMPORT. DO NOT COMMIT THIS FILE.\n-- D1 file import supplies its own transaction; no BEGIN/COMMIT here.\n'+await schemaSql()+'\n','utf8');
+    let buffer='';
+    for(const statement of importStatementIterator(normalized,options)){
+      buffer+=bindSql(statement)+'\n';
+      if(buffer.length>=1024*1024){await handle.writeFile(buffer,'utf8');buffer='';}
+    }
+    if(buffer)await handle.writeFile(buffer,'utf8');
+    await handle.sync();await handle.close();await rename(temporary,out);
+  }catch(error){await handle.close().catch(()=>{});await unlink(temporary).catch(()=>{});throw error;}
+  return out;
+}
+
 export async function privateOutput(target){
   const absolute=path.resolve(target),parent=path.dirname(absolute);await mkdir(parent,{recursive:true});
   const actual=path.join(await realpath(parent),path.basename(absolute)),root=await realpath(PUBLIC_ROOT),relative=path.relative(root,actual);
@@ -162,11 +182,7 @@ export async function main(argv=process.argv.slice(2)){
   if(!options['--manifest']||!options['--out'])fail('--manifest and --out are required');
   const manifest=JSON.parse(await readFile(options['--manifest'],'utf8'));
   const questionFile=options['--questions']?JSON.parse(await readFile(options['--questions'],'utf8')):undefined;
-  const normalized=normalizeImport(manifest,questionFile),out=await privateOutput(options['--out']);
-  const sql=await exportImportSql(normalized),temporary=out+'.'+randomUUID()+'.tmp';
-  const handle=await open(temporary,'wx',0o600);
-  try{await handle.writeFile(sql,'utf8');await handle.close();await rename(temporary,out);}
-  catch(error){await handle.close().catch(()=>{});await unlink(temporary).catch(()=>{});throw error;}
+  const normalized=normalizeImport(manifest,questionFile),out=await writeImportSql(normalized,options['--out']);
   const supplied=normalized.questions.flatMap(q=>q.versions);console.log(JSON.stringify({sources:normalized.sources.length,questions:normalized.questions.length,language_versions:supplied.length,
     verified_language_versions:supplied.filter(v=>v.review_status==='verified').length,output:out,server_imported:false}));
 }

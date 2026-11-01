@@ -3,7 +3,7 @@ import {createHash,randomUUID} from 'node:crypto';
 import {readFile,open,rename,unlink} from 'node:fs/promises';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {normalizeImport,exportImportSql,privateOutput,sqlLiteral} from './store.mjs';
+import {normalizeImport,writeImportSql,privateOutput,sqlLiteral} from './store.mjs';
 
 const digest=value=>createHash('sha256').update(value).digest('hex');
 const fail=message=>{throw new Error(message);};
@@ -160,7 +160,7 @@ async function main(argv){
   for(const [name,sql] of canonicalProgressSql(normalized,plan))await atomicWrite(path.join(options['--out-dir'],name+'.progress.sql'),sql);
   for(const [name,group] of groups){
     const base=path.join(options['--out-dir'],name);
-    await atomicWrite(base+'.sql',await exportImportSql(group));
+    await writeImportSql(group,base+'.sql');
     await atomicWrite(base+'.expected.json',JSON.stringify(expectedSnapshot(group,databases.get(name))));
     await atomicWrite(base+'.verify.sql',verificationSql(group.sources.map(s=>s.id)));
     console.log(JSON.stringify({database:name,sources:group.sources.length,questions:group.questions.length,server_imported:false}));
