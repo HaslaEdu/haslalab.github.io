@@ -2439,6 +2439,15 @@ async function labGradeLang(env, s, requested) {
   await env.DB.prepare("UPDATE lab_sessions SET lang=? WHERE id=? AND status IN ('running','scanning','ended')").bind(requested, s.id).run();
   return { ...s, lang: requested };
 }
+/* A paper's marking scheme is built from its solution PDFs the first time it is graded (20–90 s), and again for every
+   paper after a SCHEME_VERSION change; graded at the end of the sitting, the first candidate of each paper waited for it.
+   Built instead as soon as a sitting is paid for, one job per paper and scheme version whoever sits it, while the
+   candidate is still writing and scanning. A failure here only means the grading builds it as before. */
+async function labWarmSchemes(env, s) {
+  if (env.LAB_SCHEME_WARM !== "on" || !hasLabQueue(env) || contestMeta(s)) return;
+  try { await enqueueLabJobs(env, JSON.parse(s.tasks).map(task => ({ key: `scheme:${SCHEME_VERSION}:${s.exam_key}:${task}`, kind: 'scheme', sessionId: s.id, task, lang: s.lang }))); }
+  catch (e) { console.error('lab scheme warm', e?.code || e?.message); }
+}
 async function labCharge(env, s, maxCost) {
   const maxUnits = maxCost === undefined ? null : tokenUnits(maxCost);
   if (maxCost !== undefined && (maxUnits == null || maxUnits < 0)) bad('bad_max_cost');
@@ -2467,6 +2476,7 @@ async function labCharge(env, s, maxCost) {
       WHERE id=? AND charged=0 AND EXISTS(${ledger})`).bind(s.id,s.id,s.id),
   ]);
   const now_ = await labGet(env, s.id);
+  if (now_.charged) await labWarmSchemes(env, now_);
   if (!now_.charged) {
     const tokens = await labTokens(env, s.user_id), cost = maxUnits === null ? null : result[0].results[0].cost_units / 10;
     if (cost !== null && tokenUnits(cost) > maxUnits) throw new HttpError(409, 'price_changed', { cost, tokens });
@@ -2606,6 +2616,11 @@ const LAB_JOB_HANDLERS = {
     const s = await labGet(env, job.session_id);
     if (!s || !s.charged) return { cancelled: true };
     if (job.kind === 'bench') return labBench(env, s, job);
+    if (job.kind === 'scheme') {
+      const m = meter();
+      try { const sc = await labScheme(env, labSchemer(env, s, labRoles(env, s, labTheory(s, job.task))), job.task, m); return { status: sc ? 'done' : 'none' }; }
+      finally { await meterSave(env, s.id, job.task, null, m); }
+    }
     if (job.kind === 'ocr') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(job.page_id, s.id).first();
       if (!page || page.edited || page.ocr_status === 'done' || !['running','scanning','grading'].includes(s.status)) return { cancelled: true };
@@ -2655,7 +2670,7 @@ const LAB_JOB_HANDLERS = {
     return result;
   },
   async statements(env, job, result, failed) {
-    if (result.cancelled || job.kind === 'bench') return [];
+    if (result.cancelled || job.kind === 'bench' || job.kind === 'scheme') return [];
     const guard = labJobGuard(job), at = now();
     if (job.kind === 'ocr') {
       if (failed) return [env.DB.prepare(`UPDATE lab_pages SET ocr_status='failed',read=? WHERE id=? AND session_id=? AND edited=0 AND ${guard.sql}`)

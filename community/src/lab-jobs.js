@@ -11,7 +11,7 @@ export const LAB_JOB_SCHEMA = [
   `CREATE INDEX IF NOT EXISTS lab_jobs_session ON lab_jobs(session_id,id)`,
 ];
 const ready = new WeakMap(), clock = () => Math.floor(Date.now() / 1000);
-const MAX_ATTEMPTS = 4, LEASE_SECONDS = 720;
+const MAX_ATTEMPTS = 4, LEASE_SECONDS = 720, BENCH_SLOTS = 2;
 export class LabJobDeferred extends Error {
   constructor(seconds = 20) { super('job_waiting'); this.seconds = Math.max(1, Math.min(600, seconds)); }
 }
@@ -46,9 +46,17 @@ export async function enqueueLabJobs(env, jobs, { retryFailed = false,leadingSta
 export async function dispatchLabJobs(env, given) {
   if (!hasLabQueue(env)) return 0;
   await ensureLabJobs(env);
-  const at = clock(), rows = given || (await env.DB.prepare(`SELECT * FROM lab_jobs WHERE
-    (status='pending' AND available_at<=?) OR (status='queued' AND dispatched_at<?) OR (status='running' AND lease_until<?)
-    ORDER BY id LIMIT 50`).bind(at, at - 120, at).all()).results;
+  /* Order when many wait (after an exam, everyone submits at once): a page being read for someone scanning now first,
+     then gradings, then scheme builds; within a kind each sitting's first job before anyone's second, so a 40-page
+     sitting does not hold everyone else behind it. Model-bench runs (admin) go only while nothing else waits, two at a
+     time: 650 of them once queued ahead of the candidates. */
+  const at = clock(), rows = given || (await env.DB.prepare(`WITH due AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY session_id, kind ORDER BY id) AS turn, ROW_NUMBER() OVER (PARTITION BY kind ORDER BY id) AS rank
+      FROM lab_jobs WHERE (status='pending' AND available_at<=?) OR (status='queued' AND dispatched_at<?) OR (status='running' AND lease_until<?)),
+    busy AS (SELECT (SELECT COUNT(*) FROM due WHERE kind<>'bench') AS waiting,
+      (SELECT COUNT(*) FROM lab_jobs WHERE kind='bench' AND (status='running' AND lease_until>=? OR status='queued' AND dispatched_at>=?)) AS benching)
+    SELECT due.* FROM due, busy WHERE due.kind<>'bench' OR (busy.waiting=0 AND due.rank<=?-busy.benching)
+    ORDER BY CASE due.kind WHEN 'ocr' THEN 0 WHEN 'grade' THEN 1 WHEN 'scheme' THEN 2 ELSE 3 END, due.turn, due.id LIMIT 50`)
+    .bind(at, at - 120, at, at, at - 120, BENCH_SLOTS).all()).results.map(({ turn, rank, ...row }) => row);
   if(!rows.length)return 0;
   const changed=await env.DB.batch(rows.map(row=>env.DB.prepare(`UPDATE lab_jobs SET status='queued',dispatched_at=?,updated_at=? WHERE id=? AND available_at<=?
       AND (status='pending' OR (status='queued' AND COALESCE(dispatched_at,0)<?) OR (status='running' AND lease_until<?))`)
@@ -78,6 +86,16 @@ async function consumeOne(message, env, handlers) {
   let row = await env.DB.prepare('SELECT * FROM lab_jobs WHERE id=?').bind(id).first();
   if (!row || ['done', 'failed'].includes(row.status)) { if(row&&handlers.after)await handlers.after(env,row);message.ack(); return; }
   const at = clock(), token = crypto.randomUUID();
+  /* a model-bench run already in the queue steps back while a candidate's work waits, or while two others run; the
+     cron sends it again (dispatch keeps the same rule) */
+  if (row.kind === 'bench' && row.status !== 'running') {
+    const busy = await env.DB.prepare(`SELECT (SELECT COUNT(*) FROM lab_jobs WHERE kind<>'bench' AND status IN ('pending','queued') AND available_at<=?) AS waiting,
+      (SELECT COUNT(*) FROM lab_jobs WHERE kind='bench' AND status='running' AND lease_until>=?) AS benching`).bind(at, at).first();
+    if (busy && (busy.waiting > 0 || busy.benching >= BENCH_SLOTS)) {
+      await env.DB.prepare(`UPDATE lab_jobs SET status='pending',available_at=?,updated_at=? WHERE id=? AND status IN ('pending','queued')`).bind(at + 30, at, id).run();
+      message.ack(); return;
+    }
+  }
   const claim = await env.DB.prepare(`UPDATE lab_jobs SET status='running',attempts=attempts+1,lease_token=?,lease_until=?,updated_at=?
     WHERE id=? AND available_at<=? AND (status IN ('pending','queued') OR (status='running' AND lease_until<=?))`)
     .bind(token, at + LEASE_SECONDS, at, id, at, at).run();
