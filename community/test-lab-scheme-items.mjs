@@ -217,3 +217,13 @@ test('a zero-width value window becomes the official value with its tolerance', 
   const [it] = tidySchemeItems([{ id: '1.2b', points: 0.5, type: 'value', full_min: 1.54, full_max: 1.54 }]);
   assert.equal(it.full_min, undefined); assert.equal(it.ref, '1.54');
 });
+
+test("an item with its heading's own id counts under that heading: IPhO 2023 T2 is 10, not 16.6", async () => {
+  const { schemeTotal, cappedSum } = await import("./src/lab-scheme-items.js");
+  const items = [{ id: "A.1", points: 0.9, role: "result" }, { id: "A.1.1", points: 0.2 }, { id: "A.1.2", points: 0.5 },
+    { id: "B.1.a", points: 0.8 }, { id: "B.1.1", points: 0.4 }, { id: "B.1.b", points: 0.7 }];
+  const parts = [{ id: "A.1", points: 0.9 }, { id: "B.1", points: 1.5 }];
+  assert.equal(schemeTotal({ items, parts }), 2.4);
+  const earned = { "A.1": 0.9, "A.1.1": 0.2, "B.1.1": 0.4 };
+  assert.equal(cappedSum(items, parts, null, i => earned[i.id] || 0), 1.3, "the final answer and its steps together earn at most A.1's 0.9");
+});
