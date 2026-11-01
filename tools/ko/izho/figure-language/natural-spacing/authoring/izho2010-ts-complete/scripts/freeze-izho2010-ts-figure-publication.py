@@ -1,6 +1,6 @@
 from pathlib import Path
-import sys,json,hashlib,shutil,subprocess,importlib.metadata
-B=Path('D:/CodexBuilds/Hasla-original-style-20261031/izho2010-complete-solutions');C=B/'figure-language';E=C/'engine';PUB=Path('D:/CodexBuilds/Hasla-publish-20261031');M=B/'master-v1';out=M/'figure-authoring-frozen'
+import sys,json,hashlib,shutil,subprocess,importlib.metadata,os
+B=Path('D:/CodexBuilds/Hasla-original-style-20261031/izho2010-complete-solutions');C=B/'figure-language';E=C/'engine';PUB=Path('D:/CodexBuilds/Hasla-publish-20261031');M=B/os.environ.get('HASLA_MASTER','master-v1');out=M/'figure-authoring-frozen'
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 load=lambda p:json.loads(Path(p).read_text('utf8'))
 def save(p,q):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(q,ensure_ascii=False,indent=2)+'\n','utf8')
@@ -14,7 +14,7 @@ for p in E.glob('*.py'):copy(p,Path('engine')/p.name)
 for p in [B/'2010/source-caption-measurement.json',B/'2010/inspection/source-p04-figure.png',B/'2010/source/IZhO_2010_TS_RU.pdf',B/'source-policy.json']:copy(p,Path('original-source-caption')/p.name)
 for p in (C/'analysis-only-negative').glob('*.json'):copy(p,Path('negative-controls')/p.name)
 for p in [M/'source-word-component-review.json',M/'figure-negative-regression.json',baseline]:copy(p,Path('baseline-and-source-review')/p.name)
-copy(B/'natural/2010/TS/page04.pdf','baseline-and-source-review/page04.pdf');copy(B/'2010/inspection/natural-poppler/page04-caption.png','visual-review/page04-caption.png')
+copy(B/'natural/2010/TS/page04.pdf','baseline-and-source-review/page04.pdf');copy(C/'2010/TS/page04.preview.png','visual-review/page04-caption.png')
 for name in ['measure-izho2010-ts-source-caption.py','build-izho2010-ts-caption.py','negative-izho2010-ts-caption.py','prepare-izho2010-ts-final-assembly.py','freeze-izho2010-ts-figure-publication.py','assemble-scanned-proof-edition.py']:copy(Path('D:/CodexBuilds')/name,Path('scripts')/name)
 contexts={}
 code="""from pathlib import Path

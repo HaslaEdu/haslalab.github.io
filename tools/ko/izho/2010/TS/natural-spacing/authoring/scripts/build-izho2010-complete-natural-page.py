@@ -13,4 +13,6 @@ for code in jobs:subprocess.run([sys.executable,'-u','-c',code],env=env,check=Tr
 if n==9:
  code=prefix+f"from reviewed_native_math_images import audit;q=audit(Path({str(plan)!r}));assert q['passed']"
  subprocess.run([sys.executable,'-u','-c',code],env=env,check=True)
+code=prefix+f"from heading_source_alignment_audit import audit;q=audit(Path({str(plan)!r}));assert q['passed']"
+subprocess.run([sys.executable,'-u','-c',code],env=env,check=True)
 print('COMPLETE_SOURCE_NATIVE_TS_PAGE PASS',n,flush=True)

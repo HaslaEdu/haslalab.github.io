@@ -31,7 +31,47 @@ module.exports = function validateFigureLanguagePublication(root, qa, item) {
   assert.equal(assembly.pages.length, item.pages); assert.equal(visual.pages.length, item.pages);
   assert.equal(qa.page_proofs.length, item.pages);
   const complete2010Solutions = qa.year === 2010 && qa.kind === 'TS';
-  if (complete2010Solutions) assert.equal(qa.pages, 11);
+  if (complete2010Solutions) {
+    assert.equal(qa.pages, 11);
+    const bodyReady = evidence({ path: baseline.source_ready, sha256: baseline.source_ready_sha256 });
+    yes(bodyReady, ['original_source_heading_centers_verified','actual_heading_alignment_negative_rejected']);
+    const bodyEvidence = name => {
+      const file = 'independent-additional-audits/' + name;
+      return evidence({ path: baseline.authoring_snapshotroot + '/' + file, sha256: baseline.authoring_snapshot_sha256[file] });
+    };
+    const alignment = bodyEvidence('final-extra-checks.json'); yes(alignment, ['passed']);
+    assert.equal(alignment.pages.length, 11);
+    let centers = 0;
+    for (const [index, row] of alignment.pages.entries()) {
+      const actual = row.original_source_heading_alignment; yes(actual, ['passed']);
+      assert.equal(actual.source_page, index + 1);
+      assert.equal(actual.proof_sha256, baseline.page_proofs[index].proof_sha256);
+      assert.equal(actual.source_sha256, baseline.page_proofs[index].source_pdf_sha256);
+      assert.equal(actual.headings_and_captions_checked, actual.rows.length);
+      for (const heading of actual.rows) {
+        yes(heading, ['passed','source_center_matches_original_glyphs','original_alignment_frame_resolves_to_active_composer_scope']);
+        assert.ok(heading.glyphs > 0);
+        assert.ok(Math.abs(heading.actual_center - heading.source_center) <= .001);
+        assert.ok(Math.abs(heading.center_error_pt) <= .001);
+        assert.ok(heading.independent_original_source_centers.length > 0);
+        for (const center of heading.independent_original_source_centers) assert.ok(Math.abs(center - heading.source_center) <= .001);
+      }
+      centers += actual.rows.length;
+    }
+    assert.equal(centers, 31); assert.equal(bodyReady.original_source_heading_and_caption_centers_checked, centers);
+    const regression = bodyEvidence('heading-alignment-regression.json');
+    yes(regression, ['passed','publication_pdf_unmodified','all_original_font_glyph_point_and_baseline_metadata_retained','original_encoded_images_and_diagram_geometry_retained','independent_source_center_rejected']);
+    assert.equal(regression.canonical_proof_sha256, baseline.page_proofs[3].proof_sha256);
+    assert.equal(regression.actual_heading_shift_pt, -8);
+    yes(regression.native_move_qa, ['passed','font_programs_unchanged','original_image_streams_unchanged','native_vector_path_bytes_preserved']);
+    empty(regression.native_move_qa, ['native_glyph_mismatches']);
+    const rejected = bodyEvidence('heading-alignment-negative-audit.json');
+    assert.equal(rejected.passed, false);
+    assert.equal(rejected.proof_sha256, regression.native_move_qa.output_sha256);
+    const failed = rejected.rows.filter(row => !row.passed); assert.equal(failed.length, 1);
+    yes(failed[0], ['source_center_matches_original_glyphs','original_alignment_frame_resolves_to_active_composer_scope']);
+    assert.ok(Math.abs(failed[0].center_error_pt + 8) <= .001);
+  }
   const negative = evidence(qa.negative_control); yes(negative, ['passed']); assert.equal(negative.rows.length, complete2010Solutions ? 1 : 2);
   for (const row of negative.rows) {
     yes(row, ['all_original_glyphs_fonts_images_and_caption_positions_retained','real_extra_drawing_rejected','publication_pdf_unmodified','passed']);

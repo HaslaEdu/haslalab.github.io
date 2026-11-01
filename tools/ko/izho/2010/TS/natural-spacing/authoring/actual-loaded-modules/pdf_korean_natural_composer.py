@@ -150,7 +150,18 @@ def compose_page(source,page_number,*,allowed_line_rects,prose_placements=None,e
             centers=[v['center']for v in centered_lines or[]if abs(v['baseline']-line['baseline'])<.02 and ('rect'not in v or v['rect']==rect)]
             rights=[v['right']for v in right_aligned_lines or[]if abs(v['baseline']-line['baseline'])<.02 and ('rect'not in v or v['rect']==rect)]
             if len(centers)+len(rights)>1:raise ValueError('Ambiguous line alignment')
-            if centers:adjust=centers[0]-(start+cursor)/2
+            if centers:
+                # Center the same visible nonspace glyph envelope used by the
+                # original-source center measurement. This retains original
+                # italic shear/overhang and excludes authored trailing blanks.
+                lefts=[];rights_of_ink=[]
+                for unit in local:
+                    lefts.append(unit['x']);rights_of_ink.append(unit['x']+unit['width'])
+                    if unit['kind']=='native':
+                        dx=unit['x']-unit['old_x']
+                        lefts.extend(g['bbox'][0]+dx for g in unit['glyphs'])
+                        rights_of_ink.extend(g['bbox'][2]+dx for g in unit['glyphs'])
+                adjust=centers[0]-(min(lefts)+max(rights_of_ink))/2
             if rights:adjust=rights[0]-cursor
             if cursor+adjust>rect[2]+.1 or start+adjust<rect[0]-.1:raise ValueError(('Natural fixed-size line overflows reviewed rectangle',line['baseline'],start+adjust,cursor+adjust,rect))
             for unit in local:

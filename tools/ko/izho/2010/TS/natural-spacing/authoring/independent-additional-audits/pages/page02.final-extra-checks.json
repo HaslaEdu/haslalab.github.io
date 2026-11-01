@@ -2,8 +2,8 @@
   "page": 2,
   "font_source_style": {
     "page": 2,
-    "proof_sha256": "21b44554b4cc9b62297b98290186ace26d6518ae898e3f6999f3130ee24cb358",
-    "plan_sha256": "e20359fc5a552b9da25915508a8156adf010d6dbbb698bf98474a28ae2b45fc2",
+    "proof_sha256": "f66a9409b49f9e4ac8b1653e1787ff5955153ee15286b5df05bd7e90ffaa82de",
+    "plan_sha256": "9d71a1c14fa0e95e3dfc1468fb30d4b0ad54edf70cecf3285f95c7e55463301f",
     "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
     "source_role_point_baseline_counter_matched": true,
     "hangul_glyphs_checked": 276,
@@ -2512,7 +2512,7 @@
   "all_new_prose": {
     "source_page": 2,
     "source_sha256": "6a27f3814d4e20592046ef70b5874fa12998ac7cacba4229d1f9ce9d2ffff271",
-    "proof_sha256": "21b44554b4cc9b62297b98290186ace26d6518ae898e3f6999f3130ee24cb358",
+    "proof_sha256": "f66a9409b49f9e4ac8b1653e1787ff5955153ee15286b5df05bd7e90ffaa82de",
     "source_native_paint_prefix_glyphs_excluded": 555,
     "new_prose_nonspace_glyphs_checked": 314,
     "new_native_ascii_prose_glyphs_checked": 38,
@@ -2536,6 +2536,32 @@
     "original_display_equation_markers": 10,
     "original_display_equation_marker_glyphs": 31,
     "changed_marker_glyphs": [],
+    "passed": true
+  },
+  "original_source_heading_alignment": {
+    "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+    "source_page": 2,
+    "proof_sha256": "f66a9409b49f9e4ac8b1653e1787ff5955153ee15286b5df05bd7e90ffaa82de",
+    "plan_sha256": "9d71a1c14fa0e95e3dfc1468fb30d4b0ad54edf70cecf3285f95c7e55463301f",
+    "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+    "headings_and_captions_checked": 1,
+    "rows": [
+      {
+        "baseline": 96.719970703125,
+        "source_center": 308.2379913330078,
+        "independent_original_source_centers": [
+          308.2379913330078
+        ],
+        "source_center_matches_original_glyphs": true,
+        "actual_nonspace_glyph_left": 286.9439392089844,
+        "actual_nonspace_glyph_right": 329.53204345703125,
+        "actual_center": 308.2379913330078,
+        "center_error_pt": 0.0,
+        "original_alignment_frame_resolves_to_active_composer_scope": true,
+        "glyphs": 6,
+        "passed": true
+      }
+    ],
     "passed": true
   },
   "passed": true

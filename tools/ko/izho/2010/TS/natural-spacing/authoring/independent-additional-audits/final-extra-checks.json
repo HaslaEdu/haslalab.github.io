@@ -4,8 +4,8 @@
       "page": 1,
       "font_source_style": {
         "page": 1,
-        "proof_sha256": "0ed0a0828dac287316c3f46c6d8ea96977898e8f78402895f174f67d2599ed40",
-        "plan_sha256": "f7498915851f46cce9c9dad6ffa8ee1fe28644ae18cff0a29fba9a2822c722d8",
+        "proof_sha256": "72cb240d5675222d84eb5f18181d12cebb6dee364957ef1ede7bb9f5b548b481",
+        "plan_sha256": "30d97617aefa66678c13fe92f6d3796b3113dd1b4a12a90ceaa08a999b6ca0b7",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
         "hangul_glyphs_checked": 345,
@@ -3135,7 +3135,7 @@
       "all_new_prose": {
         "source_page": 1,
         "source_sha256": "e50138ef9f27b8589bc8fdd47a2c01a49c4bb0ead5631ece497d516357bdf034",
-        "proof_sha256": "0ed0a0828dac287316c3f46c6d8ea96977898e8f78402895f174f67d2599ed40",
+        "proof_sha256": "72cb240d5675222d84eb5f18181d12cebb6dee364957ef1ede7bb9f5b548b481",
         "source_native_paint_prefix_glyphs_excluded": 278,
         "new_prose_nonspace_glyphs_checked": 360,
         "new_native_ascii_prose_glyphs_checked": 15,
@@ -3192,14 +3192,130 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 1,
+        "proof_sha256": "72cb240d5675222d84eb5f18181d12cebb6dee364957ef1ede7bb9f5b548b481",
+        "plan_sha256": "30d97617aefa66678c13fe92f6d3796b3113dd1b4a12a90ceaa08a999b6ca0b7",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 7,
+        "rows": [
+          {
+            "baseline": 84.9599609375,
+            "source_center": 308.24510955810547,
+            "independent_original_source_centers": [
+              308.24510955810547
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 265.8021545410156,
+            "actual_nonspace_glyph_right": 350.68804931640625,
+            "actual_center": 308.24510192871094,
+            "center_error_pt": -7.62939453125e-06,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 6,
+            "passed": true
+          },
+          {
+            "baseline": 114.719970703125,
+            "source_center": 308.37083435058594,
+            "independent_original_source_centers": [
+              308.37083435058594
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 289.5431823730469,
+            "actual_nonspace_glyph_right": 327.198486328125,
+            "actual_center": 308.37083435058594,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 3,
+            "passed": true
+          },
+          {
+            "baseline": 128.8800048828125,
+            "source_center": 308.2980041503906,
+            "independent_original_source_centers": [
+              308.2980041503906
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 286.7039489746094,
+            "actual_nonspace_glyph_right": 329.8920593261719,
+            "actual_center": 308.2980041503906,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 6,
+            "passed": true
+          },
+          {
+            "baseline": 658.5599975585938,
+            "source_center": 308.3460235595703,
+            "independent_original_source_centers": [
+              308.3460235595703
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 283.6620178222656,
+            "actual_nonspace_glyph_right": 333.030029296875,
+            "actual_center": 308.3460235595703,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 4,
+            "passed": true
+          },
+          {
+            "baseline": 679.5599975585938,
+            "source_center": 115.76399993896484,
+            "independent_original_source_centers": [
+              115.76399993896484
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 103.76399993896484,
+            "actual_nonspace_glyph_right": 127.76399993896484,
+            "actual_center": 115.76399993896484,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 679.7999877929688,
+            "source_center": 293.3040008544922,
+            "independent_original_source_centers": [
+              293.3040008544922
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 281.71197509765625,
+            "actual_nonspace_glyph_right": 304.89599609375,
+            "actual_center": 293.3039855957031,
+            "center_error_pt": -1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 679.7999877929688,
+            "source_center": 486.60601806640625,
+            "independent_original_source_centers": [
+              486.60601806640625
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 475.0140075683594,
+            "actual_nonspace_glyph_right": 498.1980285644531,
+            "actual_center": 486.60601806640625,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 2,
       "font_source_style": {
         "page": 2,
-        "proof_sha256": "21b44554b4cc9b62297b98290186ace26d6518ae898e3f6999f3130ee24cb358",
-        "plan_sha256": "e20359fc5a552b9da25915508a8156adf010d6dbbb698bf98474a28ae2b45fc2",
+        "proof_sha256": "f66a9409b49f9e4ac8b1653e1787ff5955153ee15286b5df05bd7e90ffaa82de",
+        "plan_sha256": "9d71a1c14fa0e95e3dfc1468fb30d4b0ad54edf70cecf3285f95c7e55463301f",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
         "hangul_glyphs_checked": 276,
@@ -5708,7 +5824,7 @@
       "all_new_prose": {
         "source_page": 2,
         "source_sha256": "6a27f3814d4e20592046ef70b5874fa12998ac7cacba4229d1f9ce9d2ffff271",
-        "proof_sha256": "21b44554b4cc9b62297b98290186ace26d6518ae898e3f6999f3130ee24cb358",
+        "proof_sha256": "f66a9409b49f9e4ac8b1653e1787ff5955153ee15286b5df05bd7e90ffaa82de",
         "source_native_paint_prefix_glyphs_excluded": 555,
         "new_prose_nonspace_glyphs_checked": 314,
         "new_native_ascii_prose_glyphs_checked": 38,
@@ -5734,14 +5850,40 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 2,
+        "proof_sha256": "f66a9409b49f9e4ac8b1653e1787ff5955153ee15286b5df05bd7e90ffaa82de",
+        "plan_sha256": "9d71a1c14fa0e95e3dfc1468fb30d4b0ad54edf70cecf3285f95c7e55463301f",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 1,
+        "rows": [
+          {
+            "baseline": 96.719970703125,
+            "source_center": 308.2379913330078,
+            "independent_original_source_centers": [
+              308.2379913330078
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 286.9439392089844,
+            "actual_nonspace_glyph_right": 329.53204345703125,
+            "actual_center": 308.2379913330078,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 6,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 3,
       "font_source_style": {
         "page": 3,
-        "proof_sha256": "438d372a1b5e3424876c19f4134810ff24ff0862fbb78a83ec347cd5d3cc6422",
-        "plan_sha256": "1e82ae367c4998811e24fa87bbd8effb826b381065d7fa341ff97952a0985a50",
+        "proof_sha256": "0725dd5d99d10fb4089459da9bb810aa6b0f6a34c4c86d4b9be45eb8bc7c0d9d",
+        "plan_sha256": "e209bc1d08ae2d71f04d2f1b525e7f180bac8383d6e4f167118b671d6b446192",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
         "hangul_glyphs_checked": 348,
@@ -8898,7 +9040,7 @@
       "all_new_prose": {
         "source_page": 3,
         "source_sha256": "e50138ef9f27b8589bc8fdd47a2c01a49c4bb0ead5631ece497d516357bdf034",
-        "proof_sha256": "438d372a1b5e3424876c19f4134810ff24ff0862fbb78a83ec347cd5d3cc6422",
+        "proof_sha256": "0725dd5d99d10fb4089459da9bb810aa6b0f6a34c4c86d4b9be45eb8bc7c0d9d",
         "source_native_paint_prefix_glyphs_excluded": 302,
         "new_prose_nonspace_glyphs_checked": 391,
         "new_native_ascii_prose_glyphs_checked": 43,
@@ -8924,14 +9066,145 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 3,
+        "proof_sha256": "0725dd5d99d10fb4089459da9bb810aa6b0f6a34c4c86d4b9be45eb8bc7c0d9d",
+        "plan_sha256": "e209bc1d08ae2d71f04d2f1b525e7f180bac8383d6e4f167118b671d6b446192",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 8,
+        "rows": [
+          {
+            "baseline": 259.67999267578125,
+            "source_center": 184.9800033569336,
+            "independent_original_source_centers": [
+              184.9800033569336
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 168.48001098632812,
+            "actual_nonspace_glyph_right": 201.48001098632812,
+            "actual_center": 184.98001098632812,
+            "center_error_pt": 7.62939453125e-06,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 3,
+            "passed": true
+          },
+          {
+            "baseline": 260.27996826171875,
+            "source_center": 433.62001037597656,
+            "independent_original_source_centers": [
+              433.62001037597656
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 417.1199951171875,
+            "actual_nonspace_glyph_right": 450.1199951171875,
+            "actual_center": 433.6199951171875,
+            "center_error_pt": -1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 3,
+            "passed": true
+          },
+          {
+            "baseline": 409.79998779296875,
+            "source_center": 184.9800033569336,
+            "independent_original_source_centers": [
+              184.9800033569336
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 168.48001098632812,
+            "actual_nonspace_glyph_right": 201.48001098632812,
+            "actual_center": 184.98001098632812,
+            "center_error_pt": 7.62939453125e-06,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 3,
+            "passed": true
+          },
+          {
+            "baseline": 409.0799865722656,
+            "source_center": 433.62001037597656,
+            "independent_original_source_centers": [
+              433.62001037597656
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 417.1199951171875,
+            "actual_nonspace_glyph_right": 450.1199951171875,
+            "actual_center": 433.6199951171875,
+            "center_error_pt": -1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 3,
+            "passed": true
+          },
+          {
+            "baseline": 557.8800048828125,
+            "source_center": 308.3460235595703,
+            "independent_original_source_centers": [
+              308.3460235595703
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 283.6620178222656,
+            "actual_nonspace_glyph_right": 333.030029296875,
+            "actual_center": 308.3460235595703,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 4,
+            "passed": true
+          },
+          {
+            "baseline": 578.8800048828125,
+            "source_center": 115.76399993896484,
+            "independent_original_source_centers": [
+              115.76399993896484
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 103.76399993896484,
+            "actual_nonspace_glyph_right": 127.76399993896484,
+            "actual_center": 115.76399993896484,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 579.1199951171875,
+            "source_center": 293.3040008544922,
+            "independent_original_source_centers": [
+              293.3040008544922
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 281.71197509765625,
+            "actual_nonspace_glyph_right": 304.89599609375,
+            "actual_center": 293.3039855957031,
+            "center_error_pt": -1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 579.1199951171875,
+            "source_center": 486.60601806640625,
+            "independent_original_source_centers": [
+              486.60601806640625
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 475.0140075683594,
+            "actual_nonspace_glyph_right": 498.1980285644531,
+            "actual_center": 486.60601806640625,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 4,
       "font_source_style": {
         "page": 4,
-        "proof_sha256": "1d222e90148d4dca799c6805e00ddd327c41a79eb34772a352d66d5cb45ea676",
-        "plan_sha256": "e91a6d614ce253f87cc708feb2f26c398410cc2fbad5da204c8224e7ffcad1bd",
+        "proof_sha256": "5a2922224026b09123854e4e99a6901b0e757fb9238a4a62b28a0a4829f73def",
+        "plan_sha256": "bef455cfba5dc589472ab3d0ed6ed8f1f7f9c65e02cb1bf76fa846a0d03533cb",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
         "hangul_glyphs_checked": 437,
@@ -12889,7 +13162,7 @@
       "all_new_prose": {
         "source_page": 4,
         "source_sha256": "e50138ef9f27b8589bc8fdd47a2c01a49c4bb0ead5631ece497d516357bdf034",
-        "proof_sha256": "1d222e90148d4dca799c6805e00ddd327c41a79eb34772a352d66d5cb45ea676",
+        "proof_sha256": "5a2922224026b09123854e4e99a6901b0e757fb9238a4a62b28a0a4829f73def",
         "source_native_paint_prefix_glyphs_excluded": 366,
         "new_prose_nonspace_glyphs_checked": 476,
         "new_native_ascii_prose_glyphs_checked": 38,
@@ -12915,13 +13188,129 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 4,
+        "proof_sha256": "5a2922224026b09123854e4e99a6901b0e757fb9238a4a62b28a0a4829f73def",
+        "plan_sha256": "bef455cfba5dc589472ab3d0ed6ed8f1f7f9c65e02cb1bf76fa846a0d03533cb",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 7,
+        "rows": [
+          {
+            "baseline": 82.91998291015625,
+            "source_center": 308.2980041503906,
+            "independent_original_source_centers": [
+              308.2980041503906
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 286.7039489746094,
+            "actual_nonspace_glyph_right": 329.8920593261719,
+            "actual_center": 308.2980041503906,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 6,
+            "passed": true
+          },
+          {
+            "baseline": 499.67999267578125,
+            "source_center": 308.3459930419922,
+            "independent_original_source_centers": [
+              308.3459930419922
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 283.6619873046875,
+            "actual_nonspace_glyph_right": 333.030029296875,
+            "actual_center": 308.34600830078125,
+            "center_error_pt": 1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 4,
+            "passed": true
+          },
+          {
+            "baseline": 519.9599609375,
+            "source_center": 75.2699966430664,
+            "independent_original_source_centers": [
+              75.2699966430664
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 69.47399139404297,
+            "actual_nonspace_glyph_right": 81.06599426269531,
+            "actual_center": 75.26999282836914,
+            "center_error_pt": -3.814697265625e-06,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 1,
+            "passed": true
+          },
+          {
+            "baseline": 519.9599609375,
+            "source_center": 283.46398162841797,
+            "independent_original_source_centers": [
+              283.46398162841797
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 271.8719787597656,
+            "actual_nonspace_glyph_right": 295.0559997558594,
+            "actual_center": 283.4639892578125,
+            "center_error_pt": 7.62939453125e-06,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 519.9599609375,
+            "source_center": 505.9859924316406,
+            "independent_original_source_centers": [
+              505.9859924316406
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 494.39398193359375,
+            "actual_nonspace_glyph_right": 517.5780029296875,
+            "actual_center": 505.9859924316406,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 662.8800048828125,
+            "source_center": 308.3319625854492,
+            "independent_original_source_centers": [
+              308.3319625854492
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 269.2880554199219,
+            "actual_nonspace_glyph_right": 347.3758544921875,
+            "actual_center": 308.3319549560547,
+            "center_error_pt": -7.62939453125e-06,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 8,
+            "passed": true
+          },
+          {
+            "baseline": 678.955810546875,
+            "source_center": 308.38108825683594,
+            "independent_original_source_centers": [
+              308.38108825683594
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 248.865478515625,
+            "actual_nonspace_glyph_right": 367.8966979980469,
+            "actual_center": 308.38108825683594,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 9,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 5,
       "font_source_style": {
         "page": 5,
-        "proof_sha256": "12096f8d6972326553539a4037193a714866cefc0dcdcd1d0eee9ce36f4738f4",
+        "proof_sha256": "cb9331fd9ca64d8631f94812b2f5d14ee5c7f5446d391c90edebee73ea2dd95d",
         "plan_sha256": "d4a596d61ae1fd71644212222b7938444cae54d4eba3ca75f1f3c8fd60fbc45b",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
@@ -16313,7 +16702,7 @@
       "all_new_prose": {
         "source_page": 5,
         "source_sha256": "e50138ef9f27b8589bc8fdd47a2c01a49c4bb0ead5631ece497d516357bdf034",
-        "proof_sha256": "12096f8d6972326553539a4037193a714866cefc0dcdcd1d0eee9ce36f4738f4",
+        "proof_sha256": "cb9331fd9ca64d8631f94812b2f5d14ee5c7f5446d391c90edebee73ea2dd95d",
         "source_native_paint_prefix_glyphs_excluded": 547,
         "new_prose_nonspace_glyphs_checked": 400,
         "new_native_ascii_prose_glyphs_checked": 26,
@@ -16339,13 +16728,23 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 5,
+        "proof_sha256": "cb9331fd9ca64d8631f94812b2f5d14ee5c7f5446d391c90edebee73ea2dd95d",
+        "plan_sha256": "d4a596d61ae1fd71644212222b7938444cae54d4eba3ca75f1f3c8fd60fbc45b",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 0,
+        "rows": [],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 6,
       "font_source_style": {
         "page": 6,
-        "proof_sha256": "330ef6a2f5254cb0dd6b5caaf2d415b97fdc080499a130bd30e3d4e1a7108133",
+        "proof_sha256": "3267920b8d16d00d22c0f9b194bb6fcaa99c0b19d9948f75ce18c7480c936057",
         "plan_sha256": "6441bad38ed19b6d31db634fd1b5cf4ec9acdf0ba59e1fe723032a7a3be9c9e5",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
@@ -19125,7 +19524,7 @@
       "all_new_prose": {
         "source_page": 6,
         "source_sha256": "6a27f3814d4e20592046ef70b5874fa12998ac7cacba4229d1f9ce9d2ffff271",
-        "proof_sha256": "330ef6a2f5254cb0dd6b5caaf2d415b97fdc080499a130bd30e3d4e1a7108133",
+        "proof_sha256": "3267920b8d16d00d22c0f9b194bb6fcaa99c0b19d9948f75ce18c7480c936057",
         "source_native_paint_prefix_glyphs_excluded": 443,
         "new_prose_nonspace_glyphs_checked": 337,
         "new_native_ascii_prose_glyphs_checked": 31,
@@ -19151,14 +19550,24 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 6,
+        "proof_sha256": "3267920b8d16d00d22c0f9b194bb6fcaa99c0b19d9948f75ce18c7480c936057",
+        "plan_sha256": "6441bad38ed19b6d31db634fd1b5cf4ec9acdf0ba59e1fe723032a7a3be9c9e5",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 0,
+        "rows": [],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 7,
       "font_source_style": {
         "page": 7,
-        "proof_sha256": "2a2c6b0fe11e5b62ec07c85bf18278714727d9bde2385b059432c29b84ad4037",
-        "plan_sha256": "07cbd1763d7e647229388252cbfaabc50cff9b202ae31feecd0c077457b51389",
+        "proof_sha256": "bedbb58bbb8315d654c30f86b8a4e5dab24ee62bbd430b43941ec18da8e5e7c1",
+        "plan_sha256": "c443ceb7653e57235a997e192f0b08af9b91f9f11bd849fb7027473ccdd6cb9a",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
         "hangul_glyphs_checked": 501,
@@ -23692,7 +24101,7 @@
       "all_new_prose": {
         "source_page": 7,
         "source_sha256": "6a27f3814d4e20592046ef70b5874fa12998ac7cacba4229d1f9ce9d2ffff271",
-        "proof_sha256": "2a2c6b0fe11e5b62ec07c85bf18278714727d9bde2385b059432c29b84ad4037",
+        "proof_sha256": "bedbb58bbb8315d654c30f86b8a4e5dab24ee62bbd430b43941ec18da8e5e7c1",
         "source_native_paint_prefix_glyphs_excluded": 534,
         "new_prose_nonspace_glyphs_checked": 592,
         "new_native_ascii_prose_glyphs_checked": 91,
@@ -23718,13 +24127,99 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 7,
+        "proof_sha256": "bedbb58bbb8315d654c30f86b8a4e5dab24ee62bbd430b43941ec18da8e5e7c1",
+        "plan_sha256": "c443ceb7653e57235a997e192f0b08af9b91f9f11bd849fb7027473ccdd6cb9a",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 5,
+        "rows": [
+          {
+            "baseline": 82.91998291015625,
+            "source_center": 308.3459930419922,
+            "independent_original_source_centers": [
+              308.3459930419922
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 283.6619873046875,
+            "actual_nonspace_glyph_right": 333.030029296875,
+            "actual_center": 308.34600830078125,
+            "center_error_pt": 1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 4,
+            "passed": true
+          },
+          {
+            "baseline": 112.0799560546875,
+            "source_center": 293.3040008544922,
+            "independent_original_source_centers": [
+              293.3040008544922
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 281.71197509765625,
+            "actual_nonspace_glyph_right": 304.89599609375,
+            "actual_center": 293.3039855957031,
+            "center_error_pt": -1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 112.0799560546875,
+            "source_center": 486.60601806640625,
+            "independent_original_source_centers": [
+              486.60601806640625
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 475.0140075683594,
+            "actual_nonspace_glyph_right": 498.1980285644531,
+            "actual_center": 486.60601806640625,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 428.5199890136719,
+            "source_center": 308.3319625854492,
+            "independent_original_source_centers": [
+              308.3319625854492
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 269.2880554199219,
+            "actual_nonspace_glyph_right": 347.3758544921875,
+            "actual_center": 308.3319549560547,
+            "center_error_pt": -7.62939453125e-06,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 8,
+            "passed": true
+          },
+          {
+            "baseline": 444.5957946777344,
+            "source_center": 308.3943862915039,
+            "independent_original_source_centers": [
+              308.3943862915039
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 235.31619262695312,
+            "actual_nonspace_glyph_right": 381.4726257324219,
+            "actual_center": 308.3944091796875,
+            "center_error_pt": 2.288818359375e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 10,
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 8,
       "font_source_style": {
         "page": 8,
-        "proof_sha256": "2465a378bce1b5f393733c3be1686411f729348a78cca54a9455a77e389a628a",
+        "proof_sha256": "a9a038235de94de158e3cce6db09bcfa9975fd702fc58481f212cf9208bf348e",
         "plan_sha256": "1a18d552b92b1c3a5e06e8259c667c49a9319f5d8888e2db55e838d43a4eb229",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
@@ -27494,7 +27989,7 @@
       "all_new_prose": {
         "source_page": 8,
         "source_sha256": "6a27f3814d4e20592046ef70b5874fa12998ac7cacba4229d1f9ce9d2ffff271",
-        "proof_sha256": "2465a378bce1b5f393733c3be1686411f729348a78cca54a9455a77e389a628a",
+        "proof_sha256": "a9a038235de94de158e3cce6db09bcfa9975fd702fc58481f212cf9208bf348e",
         "source_native_paint_prefix_glyphs_excluded": 676,
         "new_prose_nonspace_glyphs_checked": 453,
         "new_native_ascii_prose_glyphs_checked": 37,
@@ -27520,13 +28015,23 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 8,
+        "proof_sha256": "a9a038235de94de158e3cce6db09bcfa9975fd702fc58481f212cf9208bf348e",
+        "plan_sha256": "1a18d552b92b1c3a5e06e8259c667c49a9319f5d8888e2db55e838d43a4eb229",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 0,
+        "rows": [],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 9,
       "font_source_style": {
         "page": 9,
-        "proof_sha256": "1c8cc98001941c268431751657854b13248437595e2db75cd1467bde116c9ca2",
+        "proof_sha256": "7a1383bebaa0318eba5a27d894dc6c01990bdfa10f7a52d75ed551be9db081a6",
         "plan_sha256": "dc1e76903c11d979c2184d7a2dc80694de2fdbaad1513119481972fbbcdef3f9",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
@@ -30549,7 +31054,7 @@
       "all_new_prose": {
         "source_page": 9,
         "source_sha256": "6a27f3814d4e20592046ef70b5874fa12998ac7cacba4229d1f9ce9d2ffff271",
-        "proof_sha256": "1c8cc98001941c268431751657854b13248437595e2db75cd1467bde116c9ca2",
+        "proof_sha256": "7a1383bebaa0318eba5a27d894dc6c01990bdfa10f7a52d75ed551be9db081a6",
         "source_native_paint_prefix_glyphs_excluded": 631,
         "new_prose_nonspace_glyphs_checked": 396,
         "new_native_ascii_prose_glyphs_checked": 63,
@@ -30575,13 +31080,23 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 9,
+        "proof_sha256": "7a1383bebaa0318eba5a27d894dc6c01990bdfa10f7a52d75ed551be9db081a6",
+        "plan_sha256": "dc1e76903c11d979c2184d7a2dc80694de2fdbaad1513119481972fbbcdef3f9",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 0,
+        "rows": [],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 10,
       "font_source_style": {
         "page": 10,
-        "proof_sha256": "c663d1e67f79feddc11ea8415dd1b712468dfa5cf9381e451cbf6c7b3bf2cf43",
+        "proof_sha256": "601ec17dfbbdf056730fd028d54e7196b1e749de3dc2beef71424d94f502bf23",
         "plan_sha256": "46fc8e68062e09a9d1997f914bacd3ea3d67ce5d25f4a05dacb8e2ba1dc26363",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
@@ -35377,7 +35892,7 @@
       "all_new_prose": {
         "source_page": 10,
         "source_sha256": "e50138ef9f27b8589bc8fdd47a2c01a49c4bb0ead5631ece497d516357bdf034",
-        "proof_sha256": "c663d1e67f79feddc11ea8415dd1b712468dfa5cf9381e451cbf6c7b3bf2cf43",
+        "proof_sha256": "601ec17dfbbdf056730fd028d54e7196b1e749de3dc2beef71424d94f502bf23",
         "source_native_paint_prefix_glyphs_excluded": 639,
         "new_prose_nonspace_glyphs_checked": 598,
         "new_native_ascii_prose_glyphs_checked": 68,
@@ -35403,14 +35918,24 @@
         "changed_marker_glyphs": [],
         "passed": true
       },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 10,
+        "proof_sha256": "601ec17dfbbdf056730fd028d54e7196b1e749de3dc2beef71424d94f502bf23",
+        "plan_sha256": "46fc8e68062e09a9d1997f914bacd3ea3d67ce5d25f4a05dacb8e2ba1dc26363",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 0,
+        "rows": [],
+        "passed": true
+      },
       "passed": true
     },
     {
       "page": 11,
       "font_source_style": {
         "page": 11,
-        "proof_sha256": "d74598d47ba7e3bca949adccc0b6cd63821b6f4843f8f0febf1feb27c70b22d6",
-        "plan_sha256": "a187be00fc0183963fcb6fc8fa8d1323debe52a4c91a3fb681bbf34ab46c691a",
+        "proof_sha256": "a0a45a0ca1d0cf542cd75f2d04865276471ab58eaf00d5eaffb0bfcc19576893",
+        "plan_sha256": "b06f3ece8d4ec95cb134f63f66d16c66b208d25d25bb1ce736a32a5831c1cfa0",
         "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
         "source_role_point_baseline_counter_matched": true,
         "hangul_glyphs_checked": 405,
@@ -39080,7 +39605,7 @@
       "all_new_prose": {
         "source_page": 11,
         "source_sha256": "6a27f3814d4e20592046ef70b5874fa12998ac7cacba4229d1f9ce9d2ffff271",
-        "proof_sha256": "d74598d47ba7e3bca949adccc0b6cd63821b6f4843f8f0febf1feb27c70b22d6",
+        "proof_sha256": "a0a45a0ca1d0cf542cd75f2d04865276471ab58eaf00d5eaffb0bfcc19576893",
         "source_native_paint_prefix_glyphs_excluded": 423,
         "new_prose_nonspace_glyphs_checked": 502,
         "new_native_ascii_prose_glyphs_checked": 96,
@@ -39104,6 +39629,62 @@
         "original_display_equation_markers": 0,
         "original_display_equation_marker_glyphs": 0,
         "changed_marker_glyphs": [],
+        "passed": true
+      },
+      "original_source_heading_alignment": {
+        "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+        "source_page": 11,
+        "proof_sha256": "a0a45a0ca1d0cf542cd75f2d04865276471ab58eaf00d5eaffb0bfcc19576893",
+        "plan_sha256": "b06f3ece8d4ec95cb134f63f66d16c66b208d25d25bb1ce736a32a5831c1cfa0",
+        "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+        "headings_and_captions_checked": 3,
+        "rows": [
+          {
+            "baseline": 338.3999938964844,
+            "source_center": 308.34596252441406,
+            "independent_original_source_centers": [
+              308.34596252441406
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 283.6619567871094,
+            "actual_nonspace_glyph_right": 333.02996826171875,
+            "actual_center": 308.34596252441406,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 4,
+            "passed": true
+          },
+          {
+            "baseline": 353.7599792480469,
+            "source_center": 293.3040008544922,
+            "independent_original_source_centers": [
+              293.3040008544922
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 281.71197509765625,
+            "actual_nonspace_glyph_right": 304.89599609375,
+            "actual_center": 293.3039855957031,
+            "center_error_pt": -1.52587890625e-05,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          },
+          {
+            "baseline": 353.7599792480469,
+            "source_center": 486.60601806640625,
+            "independent_original_source_centers": [
+              486.60601806640625
+            ],
+            "source_center_matches_original_glyphs": true,
+            "actual_nonspace_glyph_left": 475.0140075683594,
+            "actual_nonspace_glyph_right": 498.1980285644531,
+            "actual_center": 486.60601806640625,
+            "center_error_pt": 0.0,
+            "original_alignment_frame_resolves_to_active_composer_scope": true,
+            "glyphs": 2,
+            "passed": true
+          }
+        ],
         "passed": true
       },
       "passed": true

@@ -1,5 +1,5 @@
 from pathlib import Path
-import sys,json,hashlib,shutil
+import sys,json,hashlib,shutil,subprocess
 import pymupdf as fitz,pikepdf
 B=Path('D:/CodexBuilds/Hasla-original-style-20261031/izho2010-complete-solutions');C=B/'figure-language';sys.path[:0]=[str(B/'engine'),'D:/CodexBuilds/Hasla-publish-20261031/tools']
 from pdf_original_style_fonts import subset_font,FONTS
@@ -26,3 +26,4 @@ row.update(font_resource=alias,embedded_font=str(subset),embedded_font_sha256=sh
 with pikepdf.open(erased)as doc,pikepdf.open(overlay)as text:doc.pages[0].add_overlay(text.pages[0]);doc.save(target,compress_streams=False)
 q=dict(year=2010,kind='TS',page=4,body=str(body),body_sha256=sha(body),proof_sha256=sha(target),native_control=str(control),native_control_sha256=sha(control),erased_only=str(erased),erased_only_sha256=sha(erased),text_overlay=str(overlay),text_overlay_sha256=sha(overlay),placements=[row],erased_native_word_glyphs=[],original_caption_digit_shifts=[],reviewed_stationary_caption_frames=[],native_move_qa=dict(passed=True,no_native_text_changed=True),body_and_equation_fonts_not_changed=True,original_encoded_images_not_modified=True,no_new_diagram_geometry=True,point_sizes_not_fitted=True)
 save(target.with_suffix('.labels.json'),q);print('CAPTION_READY',sha(target),row['point_size'],row['origin'])
+subprocess.run([shutil.which('pdftoppm'),'-r','93.6','-singlefile','-png',str(target),str(folder/'page04.preview')],check=True,capture_output=True)

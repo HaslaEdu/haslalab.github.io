@@ -1,0 +1,56 @@
+{
+  "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+  "source_page": 11,
+  "proof_sha256": "a0a45a0ca1d0cf542cd75f2d04865276471ab58eaf00d5eaffb0bfcc19576893",
+  "plan_sha256": "b06f3ece8d4ec95cb134f63f66d16c66b208d25d25bb1ce736a32a5831c1cfa0",
+  "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+  "headings_and_captions_checked": 3,
+  "rows": [
+    {
+      "baseline": 338.3999938964844,
+      "source_center": 308.34596252441406,
+      "independent_original_source_centers": [
+        308.34596252441406
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 283.6619567871094,
+      "actual_nonspace_glyph_right": 333.02996826171875,
+      "actual_center": 308.34596252441406,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "baseline": 353.7599792480469,
+      "source_center": 293.3040008544922,
+      "independent_original_source_centers": [
+        293.3040008544922
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 281.71197509765625,
+      "actual_nonspace_glyph_right": 304.89599609375,
+      "actual_center": 293.3039855957031,
+      "center_error_pt": -1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "baseline": 353.7599792480469,
+      "source_center": 486.60601806640625,
+      "independent_original_source_centers": [
+        486.60601806640625
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 475.0140075683594,
+      "actual_nonspace_glyph_right": 498.1980285644531,
+      "actual_center": 486.60601806640625,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

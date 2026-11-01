@@ -2,7 +2,7 @@
   "page": 10,
   "font_source_style": {
     "page": 10,
-    "proof_sha256": "c663d1e67f79feddc11ea8415dd1b712468dfa5cf9381e451cbf6c7b3bf2cf43",
+    "proof_sha256": "601ec17dfbbdf056730fd028d54e7196b1e749de3dc2beef71424d94f502bf23",
     "plan_sha256": "46fc8e68062e09a9d1997f914bacd3ea3d67ce5d25f4a05dacb8e2ba1dc26363",
     "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
     "source_role_point_baseline_counter_matched": true,
@@ -4798,7 +4798,7 @@
   "all_new_prose": {
     "source_page": 10,
     "source_sha256": "e50138ef9f27b8589bc8fdd47a2c01a49c4bb0ead5631ece497d516357bdf034",
-    "proof_sha256": "c663d1e67f79feddc11ea8415dd1b712468dfa5cf9381e451cbf6c7b3bf2cf43",
+    "proof_sha256": "601ec17dfbbdf056730fd028d54e7196b1e749de3dc2beef71424d94f502bf23",
     "source_native_paint_prefix_glyphs_excluded": 639,
     "new_prose_nonspace_glyphs_checked": 598,
     "new_native_ascii_prose_glyphs_checked": 68,
@@ -4822,6 +4822,16 @@
     "original_display_equation_markers": 2,
     "original_display_equation_marker_glyphs": 8,
     "changed_marker_glyphs": [],
+    "passed": true
+  },
+  "original_source_heading_alignment": {
+    "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+    "source_page": 10,
+    "proof_sha256": "601ec17dfbbdf056730fd028d54e7196b1e749de3dc2beef71424d94f502bf23",
+    "plan_sha256": "46fc8e68062e09a9d1997f914bacd3ea3d67ce5d25f4a05dacb8e2ba1dc26363",
+    "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+    "headings_and_captions_checked": 0,
+    "rows": [],
     "passed": true
   },
   "passed": true

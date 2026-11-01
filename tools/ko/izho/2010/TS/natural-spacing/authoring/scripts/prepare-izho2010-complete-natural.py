@@ -29,7 +29,11 @@ else:record.write_text(json.dumps(components,ensure_ascii=False,indent=2)+'\n','
 for n,pp in enumerate(prepare(2010,'TS'),1):
  d=json.loads(pp.read_text('utf8'));d.update(source_language='Russian',reviewed_initial_prose_reading_order=True,baseline_tolerance_pt=.75,include_image_only_native_math=True)
  for r in d['allowed_line_rects']:
+  old_rect=r[:]
   if r[1]>60:r[0]=max(63.59,r[0]);r[2]=min(558.,r[2])
+  if r!=old_rect:
+   for a in d['centered_lines']+d['right_aligned_lines']+d['source_line_scopes']:
+    if a.get('rect')==old_rect:a['rect']=r[:]
  if n==1:
   inv=inspect_inline_groups(output,n)
   atoms=[dict(reviewed=True,rect=rect,font_regex='TimesNewRoman',baseline=y,reason='Complete original source formula retains its original glyph offsets, font/point/paint and the unchanged normal-font trigonometric function.')for rect,y in[([282.5,143.,347.5,153.],148.43994140625),([378.5,246.,408.1,256.],251.63995361328125),([433.8,246.,502.7,256.],251.63995361328125)]]
