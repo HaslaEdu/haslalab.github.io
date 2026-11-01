@@ -1392,7 +1392,7 @@ async function arLabOne(root, alive, id,preloaded) {
         ${!s.sample_standing && !reviewOnly && arLabHasScore(s) && s.standing && !s.standing.first ? `<p class="arempty" style="margin:8px 0 0">${L.retryNote}</p>` : ""}` : ""}
       ${comparison?'<div id="arLabComparison"></div>':''}</div>
     ${s.status === "ended" && !isContest ? `<div class="arpanel"><h3>${L.payH}</h3><p class="arempty" style="margin-top:0">${L.payNote}</p>
-      ${(s.vision||ar.health?.vision)?.pipeline==="mixed"?`<p class="arnote">${english?"Reading and moderation: Gemini · grading: DeepSeek (theory) · experiments: Gemini":"판독·검토 Gemini · 채점 DeepSeek (이론) · 실험은 Gemini"}</p>`:arVisionHtml(s,s.provider||"gemini",!!s.provider_locked)}<button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
+      ${(s.vision||ar.health?.vision)?.pipeline==="mixed"?`<p class="arnote">${english?"Reading and moderation: Gemini · grading: DeepSeek (theory and experiments)":"판독·검토 Gemini · 채점 DeepSeek (이론·실험 공통)"}</p>`:arVisionHtml(s,s.provider||"gemini",!!s.provider_locked)}<button class="cmbtn pri" id="arLabPay">${L.payBtn}</button><p class="arinfo" id="arLabPayMsg"></p></div>` : ""}
     ${retryOcr?`<div class="arpanel"><p>${english?"Read the failed pages again from the saved answer photos with the same provider.":"보관된 답안 사진에서 실패한 쪽을 같은 제공자로 다시 판독합니다."}</p><button class="cmbtn pri" id="arLabRetryOcr">${english?"Retry failed reading · no additional exam token":"실패한 판독 다시 시도 · 추가 토큰 없음"}</button><p class="arinfo" id="arLabRetryOcrMsg" role="status"></p></div>`:""}
     ${s.tasks.map((t) => { const x = per[t] || {}, sol = arLabSol(s, t);
       const body = x.status === "graded" && arQualitative(x) ? arLabQualitative(x)

@@ -8,7 +8,7 @@ import {VISION_MODELS} from './src/vision-provider.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './src/ocr-errors.js';
 import {pdfiumVisualFixture} from './fixtures/pdfium-visual-fixture.mjs';
 import {MODEL_TEST_EXAMS} from './src/model-test-catalog.js';
-import {REG_VERSION} from './src/grading-rules.js';
+import { SCHEME_VERSION as REG_VERSION } from './src/grading-rules.js';
 const image=Uint8Array.from([255,216,255,224,0,16,74,70,73,70,1,4,7,9,29,83]);
 async function fixture(providerResponse,run){
   const sql=new DatabaseSync(':memory:');

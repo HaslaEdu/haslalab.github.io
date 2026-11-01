@@ -5,7 +5,7 @@ import { DatabaseSync } from 'node:sqlite';
 import test from 'node:test';
 import worker from './src/index.js';
 import {VISION_MODELS} from './src/vision-provider.js';
-import {REG_VERSION} from './src/grading-rules.js';
+import { SCHEME_VERSION as REG_VERSION } from './src/grading-rules.js';
 
 const sqlite = new DatabaseSync(':memory:');
 for (const file of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^00(?:0[1-9]|1[01])_.*\.sql$/.test(n)).sort()) sqlite.exec(readFileSync(new URL('./migrations/' + file, import.meta.url), 'utf8'));

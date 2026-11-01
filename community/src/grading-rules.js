@@ -16,7 +16,9 @@
  * leading prefix at the cached rate, so nothing that varies may appear before the end of block 3. No cache objects
  * are created and nothing is padded.
  */
-export const REG_VERSION = "2026-11-01e";
+export const REG_VERSION = "2026-11-01f";
+/* the marking schemes read from the solutions: a regulation change that does not touch how a scheme is read keeps them */
+export const SCHEME_VERSION = "2026-11-01e";
 
 const r = (id, en, ko) => ({ id, en, ko });
 
@@ -29,6 +31,7 @@ const CORE = [
   r("R6", "Crossed-out work is ignored. Two different answers to one item earn no marks for that item.", "줄을 그어 지운 내용은 채점하지 않으며, 한 문항에 서로 다른 답이 둘이면 그 문항은 0점입니다."),
   r("R9", "Every mark must point to the page and the answer it comes from. A mark without that evidence is 0.", "모든 점수는 그 근거가 되는 쪽과 답을 가리켜야 하며, 근거가 없는 점수는 0점입니다."),
   r("R10", "Whatever cannot be read — illegible writing, a blurred, cut-off or missing page — is the candidate's responsibility and earns no marks. There is no benefit of the doubt and no re-reading.", "알아볼 수 없는 글씨, 흐리거나 잘리거나 빠진 쪽처럼 읽을 수 없는 것은 응시자 책임이며 점수를 받지 못합니다. 유리하게 해석하거나 다시 읽어 주지 않습니다."),
+  r("R14", "Marks in red ink are a human marker's, never the candidate's work: scores, ticks, crosses, circled or underlined points, «x/0.5» and comments written in red on the sheet are ignored entirely. They neither earn nor cost marks, and they never stand in for the grading of the written answer.", "빨간 펜 표시는 사람 채점자의 것이며 응시자의 답이 아닙니다. 답안지에 빨간색으로 쓴 점수, 체크, 가위표, 동그라미나 밑줄 친 점수, «x/0.5», 메모는 모두 무시합니다. 점수를 주지도 깎지도 않으며, 쓰인 답을 채점하는 일을 대신하지 않습니다."),
 ];
 const R5 = r("R5", "An error carried forward is accepted only where the marking scheme allows it.", "앞 문항의 오류를 이어받은 답은 기준표가 허용할 때만 인정합니다.");
 const R7 = r("R7", "A graph earns only the checks the scheme lists (axes and units, scale, plotted points, fitted line, slope read off) that can be seen on it.", "그래프는 기준표의 확인 항목(축과 단위, 눈금, 찍은 점, 맞춤선, 기울기 읽기) 가운데 그래프에서 보이는 것만 점수를 받습니다.");

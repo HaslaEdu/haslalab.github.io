@@ -35,7 +35,7 @@ test("every rule has a unique id the grader may cite, and both languages", () =>
     for (const r of rules) { assert.match(r.id, RULE_ID); assert.ok(r.en.length > 20 && r.ko.length > 10, r.id); }
   }
   // the general regulation is the one every exam had before families: R1–R11
-  assert.deepEqual(rulesFor("general", "experiment").map(r => r.id).sort(), ["R1", "R10", "R11", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"].sort());
+  assert.deepEqual(rulesFor("general", "experiment").map(r => r.id).sort(), ["R1", "R10", "R11", "R14", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"].sort());
   // the IPhO family carries forward errors instead of R5; OPhO marks answers only
   assert.ok(!rulesFor("ipho", "theory").some(r => r.id === "R5") && rulesFor("ipho", "theory").some(r => r.id === "IP1"));
   assert.ok(rulesFor("answer", "theory").some(r => r.id === "OP1"));
@@ -81,7 +81,7 @@ test("a session shows the union of its papers' rules under one family title", ()
   assert.ok(reg.title.ko && reg.title.en);
   const ids = reg.rules.map(r => r.id); assert.equal(new Set(ids).size, ids.length);
   assert.ok(ids.includes("R11") && ids.includes("IP6") && ids.includes("IP7"), "NBPhO's booklet: experiment and theory rules together");
-  assert.equal(regulationOf("icho", []).rules.length, 11, "an unknown kind list falls back to the general experiment rules");
+  assert.equal(regulationOf("icho", []).rules.length, 12, "an unknown kind list falls back to the general experiment rules");
   assert.equal(regulationId("ipho", "theory"), REG_VERSION + "/ipho/theory");
 });
 

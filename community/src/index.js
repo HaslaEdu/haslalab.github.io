@@ -36,7 +36,7 @@ import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls } from './lab-call-prici
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels } from './vision-provider.js';
 import {referenceImages} from './reference-images.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
-import { REG_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
+import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -1428,10 +1428,11 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
 function labRoles(env, s, theory) {
   const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
   if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
-    return theory ? { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING), moderateBench: pick(env.LAB_MODERATE_MODEL),
-        readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
-        proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined }
-      : { read: "gemini", grade: "gemini", moderate: null };
+    /* theory and experiments alike (data analysis and observation papers too): Gemini reads, DeepSeek grades from the
+       scheme, the readings and the photos, Gemini moderates what DeepSeek marked down */
+    return { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING), moderateBench: pick(env.LAB_MODERATE_MODEL),
+      readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
+      proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
 }
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
@@ -1852,7 +1853,7 @@ async function labScheme(env, s, task, m) {
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = [labProvider(s),VISION_MODELS[labProvider(s)],REG_VERSION,src,sx.mark||''].join(':');   // a new REG_VERSION builds every scheme again
+  const key = [labProvider(s),VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');   // a new SCHEME_VERSION builds every scheme again
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
     const sc = JSON.parse(kept.scheme);
@@ -1936,6 +1937,7 @@ async function labReadPage(env,s,buf,mime,notation,m) {
   const tasks=JSON.parse(s.tasks), src=labSrc(s);
   const prompt=[`[TASK: read page] Transcribe and index this original photographed answer/working page from ${s.comp.toUpperCase()} ${s.year}, tasks ${tasks.join(', ')}.`,
     'Read the complete text verbatim into text, preserving labels, mathematical symbols, signs, fractions, superscripts, subscripts, units and crossings-out. Do not solve, correct, complete or grade anything. Do not drop handwritten notes next to graphs or diagrams.',
+    'Leave out everything written in red ink: scores, ticks, crosses, circled points and comments in red are a human marker\'s, not the candidate\'s work; never transcribe or index them (R14).',
     'Printed headers identify task, answer/working sheet and page; absent or unreadable headers are null. A1-3 is experiment E1 answer page 3; W2-1 is E2 working page 1. Problem 2 / T2 / Q2 maps to the matching task only, never guess another task.',
     `Booklet task mapping: ${JSON.stringify(Object.fromEntries(Object.entries(src).filter(([key])=>!key.startsWith('_')).map(([key,value])=>[key,value.no||key])))}`,
     'Index every explicit answer with its label; an item\'s text is only that answer as written (one line), never the working again, which text already holds. value: exact number, unit and uncertainty. table: actual filled rows and column headings. graph: visible axes, units, scale, points, fit, slope construction, error bars and title; never infer these from claims in prose. For diagrams and vector/direction arrows use kind text and describe only visible labels, arrow directions and relationships; the full image will also be supplied to the grader.',
@@ -1990,7 +1992,7 @@ async function labProofread(env, s, buf, mime, read, notation, m) {
   if (typeof text !== "string" || !text.trim()) return read;
   const out = await labVision(env, s, [{ text: ["[TASK: proofread page] A machine transcribed the handwritten answer page in the photo. Check the transcript against the photo.",
       "Compare every answer with what is written: digits and decimal points, exponents and their signs, units and prefixes (μ or m), letters and symbols (Greek, subscripts, superscripts, stars), fractions, roots and what they cover, table cells, chosen options.",
-      "Return only the passages of the transcript that differ from the photo, each as from (copied exactly from the transcript, long enough to occur once) and to (as written in the photo). Return no fixes when it is right. Transcribe what the student wrote: never correct the student's physics or arithmetic.",
+      "Return only the passages of the transcript that differ from the photo, each as from (copied exactly from the transcript, long enough to occur once) and to (as written in the photo). Return no fixes when it is right. Transcribe what the student wrote: never correct the student's physics or arithmetic. Red ink is a human marker's (R14): never add it.",
       ...(notation ? [`Symbols this paper uses (to tell look-alike handwriting apart, never to change what is written): ${notation}`] : []),
       "<<TRANSCRIPT>>\n" + text + "\n<<END>>"].join("\n") }, { inline_data: { mime_type: mime, data: b64(buf) }, label: "Original submitted page" }], PROOF_SCHEMA, 4096, m, "proof");
   let fixed = text, applied = 0;
