@@ -1436,7 +1436,10 @@ function labRoles(env, s, theory) {
     /* theory and experiments alike (data analysis and observation papers too): Gemini reads, DeepSeek grades from the
        scheme, the readings and the photos, Gemini moderates what DeepSeek marked down */
     return { read: stage(env.LAB_READ_PROVIDER, "gemini"), grade: stage(env.LAB_GRADE_PROVIDER, "deepseek"), gradeBench: pick(env.LAB_GRADE_MODEL, env.LAB_GRADE_THINKING),
-      moderate: stage(env.LAB_MODERATE_PROVIDER, "gemini"), readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
+      /* LAB_MODERATE_PROVIDER "none": the grader's marks stand (the 2026-11-01 bench: Gemini 3.8 Flash alone graded closer to
+         the audits than DeepSeek moderated by Flash Lite); LAB_GRADE_PDFS "on" hands the grader the papers too (no gain measured) */
+      moderate: env.LAB_MODERATE_PROVIDER === "none" ? null : stage(env.LAB_MODERATE_PROVIDER, "gemini"), gradePdfs: env.LAB_GRADE_PDFS === "on",
+      readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
       moderateBench: pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING), moderateScope: env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
       readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
@@ -2299,7 +2302,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const references=[];
   /* the moderated pipeline grades from the scheme (official values, tolerances, item roles) and the pages alone: the problem
      and solution PDFs, rendered page by page for DeepSeek, were most of its input, time and memory */
-  const canonical=roles?.moderate||roles?.bench&&!roles?.pdfs?null:labCanonicalSource(s,task);   // bench pdfs:true hands over the papers as a chat would
+  const canonical=roles?.moderate||(roles?.bench?!roles.pdfs:roles?.gradePdfs===false)?null:labCanonicalSource(s,task);   // bench pdfs:true hands over the papers as a chat would
   if(canonical) for(const [name,source] of [['problem',canonical.paper],['solution',canonical.sol],['marking scheme',canonical.mark]]) {
     if(!source)continue;
     const bytes=await labCanonicalPdf(env,source);
