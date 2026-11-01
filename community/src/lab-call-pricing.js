@@ -130,3 +130,23 @@ export function summarizeLabCalls(calls = []) {
   total.cost_incomplete = total.unknown_cost_calls > 0;
   return total;
 }
+
+/* A sitting where only some of its papers were handed in (T1 of T1-T3, E1 of E1-E2) is reckoned, for the cost
+   statistics, as the whole sitting it stands for. Per paper handed in it spent `read` (page reading) on `pages` pages
+   and `work` (grading, moderation); the marking schemes, read once per paper for every candidate, are left out.
+     min: the same per paper for every paper of the sitting                      (work + read) · n / k
+     max: as min, with WORKING_PAGES more working pages read for every paper     min + n · WORKING_PAGES · read / pages
+   and the sitting counts (min + max) · 3/4. A complete sitting counts as it was. Tokens are reckoned the same way. */
+export const WORKING_PAGES = 4;
+export function fullSitting({ papers, handed, pages, read = {}, work = {} }) {
+  const n = Math.max(1, papers | 0), k = Math.max(0, Math.min(n, handed | 0));
+  const keys = ["usd", "in_tok", "out_tok"], sum = key => (+read[key] || 0) + (+work[key] || 0);
+  if (!k || k >= n) return { partial: false, ...Object.fromEntries(keys.map(key => [key, read[key] == null && work[key] == null ? null : +sum(key).toFixed(key === "usd" ? 6 : 0)])) };
+  const out = { partial: true, papers: n, handed: k };
+  for (const key of keys) {
+    const min = sum(key) * n / k, perPage = pages > 0 ? (+read[key] || 0) / pages : 0, max = min + n * WORKING_PAGES * perPage;
+    out[key] = +((min + max) * .75).toFixed(key === "usd" ? 6 : 0);
+    out[key + "_min"] = +min.toFixed(key === "usd" ? 6 : 0); out[key + "_max"] = +max.toFixed(key === "usd" ? 6 : 0);
+  }
+  return out;
+}
