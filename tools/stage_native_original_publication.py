@@ -35,9 +35,11 @@ def stage(manifest,root,release):
    row={k:page[k]for k in['page','source_page','body_sha256']};row['proof_sha256']=page['sha256']
    for key in ['body_qa','actual_style_qa','figure_language_qa','body_composition','figure_composition']:
     row[key]=pinned(page[key],f"page{page['page']:02}-{key}.json")
+   if 'label_reference_pdf'in page:row['label_reference_pdf']=pinned(page['label_reference_pdf'],f"page{page['page']:02}-label-actual-font-reference.pdf")
    pages.append(row)
   wrapper=dict(status='READY',file=pdf.name,year=q['year'],kind=q['kind'],language=language,pages=edition['pages'],bytes=edition['bytes'],sha256=edition['sha256'],source_original_sha256=q['source_original_sha256'],page_proofs=pages,source_ready=ref(manifest,'source-ready.json'),visual_review=pinned(edition['visual_review'],'visual-review.json'),assembly_qa=pinned(edition['assembly_qa'],'assembly-qa.json'),source_word_component_review=pinned(q['source_word_component_review'],'source-word-component-review.json'),caption_background_negative_control=pinned(q['caption_background_negative_control'],'caption-background-negative-control.json'),authoring_snapshotroot=base.relative_to(root).as_posix(),authoring_snapshot_sha256=frozen)
   for key in ['original_math_retyped','original_math_resampled','original_math_y_changed','translated_point_sizes_fitted','added_editorial_notes']:wrapper[key]=q[key]
+  wrapper['label_mask_negative_control']=pinned(q['label_mask_negative_control'],'label-mask-negative-control.json')
   save(dest/'publication.json',wrapper)
   old=next((r for r in registry if r['file']==pdf.name),{})
   aliases=old.get('aliases',[])

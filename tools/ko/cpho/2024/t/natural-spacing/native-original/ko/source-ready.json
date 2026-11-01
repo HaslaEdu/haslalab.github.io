@@ -94,7 +94,7 @@
         "engine/cpho2024_body_qa.py": "4cf7787c8c61288f63c0796e8b3b14a51b8028457359bec1fed9f84d3de77dcb",
         "engine/cpho2024_events.py": "31065b61fa99dd25ca1ed53a135e25c280683261a49e0960b9422cd911cd107c",
         "engine/cpho2024_figure_label_plan.py": "14380e386deb2a8228c8d51d548ab72bbd87eb9017bde220d017c67a41ad76ca",
-        "engine/cpho2024_figure_label_qa.py": "498af0a01d7c3e5edccd4cb26e9a0bc041b320b050b23d3ca05121309282f2a2",
+        "engine/cpho2024_figure_label_qa.py": "67706468bbfdb09ed4b4892dd5488b9953ec12d21188cb6b213755d0c5b0fb05",
         "engine/cpho2024_figure_labels.py": "5dde74c3586ca7ae3bc6d3d79b1a3427bcd221b5de9d21841bb2f95f579e952a",
         "engine/cpho2024_font_style_qa.py": "e0cf8faef37bd6ae8b13b10e6a960195f0772defdf0e8fa100439d9c67b1148e",
         "engine/cpho2024_native_ink_bounds.py": "256caa582a97175c6c7c877584129fb7cda67a1c96477cf05e69ec2dd4521d8c",
@@ -142,6 +142,7 @@
         "engine/qa_page11.py": "76d655396b7fbbaca335dcd41b895000856c4844b921358de53f8714f10dc549",
         "engine/revise_translation.py": "0ea598056f2ce7b2639d831677b15fb5191b0706771b7c1b97a009b49a34054d",
         "engine/test_caption_background_profile.py": "5901a7b455633785371efce4d1dd85b52be09b33d9fbc0f89e6ebe47cc7f8a5d",
+        "engine/test_figure_reference_mask.py": "7901884e2c4aa72cdffc8369a3271be97ee25cd7fee13827a274ee9c17bb7be0",
         "font-and-design-policy.json": "22b7e24496cfaf1d3544b57b75e2ba02a966ecb8d606761ee928be96e4e2d7be",
         "fonts/label-source-msyhbd-face0.provenance.json": "26771f35581080181d6eac6c8688634df49080631461d02b037c840b6441f896",
         "inspection/body-build-status.json": "3dc29449075706124f49db92ad4c2fd93e31cac064bef2d9d296b1bd159db2ff",
@@ -250,7 +251,7 @@
         "loaded-modules/cpho2024_events/cpho2024_events.py": "31065b61fa99dd25ca1ed53a135e25c280683261a49e0960b9422cd911cd107c",
         "loaded-modules/cpho2024_figure_label_qa/cpho2024_body_qa.py": "4cf7787c8c61288f63c0796e8b3b14a51b8028457359bec1fed9f84d3de77dcb",
         "loaded-modules/cpho2024_figure_label_qa/cpho2024_events.py": "31065b61fa99dd25ca1ed53a135e25c280683261a49e0960b9422cd911cd107c",
-        "loaded-modules/cpho2024_figure_label_qa/cpho2024_figure_label_qa.py": "498af0a01d7c3e5edccd4cb26e9a0bc041b320b050b23d3ca05121309282f2a2",
+        "loaded-modules/cpho2024_figure_label_qa/cpho2024_figure_label_qa.py": "67706468bbfdb09ed4b4892dd5488b9953ec12d21188cb6b213755d0c5b0fb05",
         "loaded-modules/cpho2024_figure_label_qa/cpho2024_font_style_qa.py": "e0cf8faef37bd6ae8b13b10e6a960195f0772defdf0e8fa100439d9c67b1148e",
         "loaded-modules/cpho2024_figure_label_qa/cpho2024_natural.py": "398715735ae4ce908d4549c997c34e66f1407968b5bf833df4074196749ee379",
         "loaded-modules/cpho2024_figure_label_qa/izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
@@ -293,12 +294,14 @@
         "loaded-modules/cpho2024_natural/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
         "provenance-notes.json": "d9af8463ce15407fd8ec1387659d1b5826544123cf132a6cdfde0732b1069864",
         "regression/caption-background.json": "fe1d06d25a22a290871073c95592e1ddce0dd2a6a0448d7988a4a80f25bef229",
+        "regression/final-label-mask-negative-audit.json": "7ef5f9ab2aaf72d2fe5abea5347762fe35d02a75e4cdeb4bb70f93ef08d1e187",
+        "regression/final-label-mask.json": "7fa14de182f51fdd9aea74098a4a295ac5d9c339d0d49e86b3f95c7ffadbc5b6",
         "regression/negative-audit.json": "06b090041d63737594016cdfdfddbaeda737b143a30ad56cc514d431d2182792",
-        "runtime-import-resolution.json": "c9c23ac8e076f6cc949795d19695a8a2f52c902c80e26bf79d522fdf7a78f562",
+        "runtime-import-resolution.json": "e3623e2ce87d7ad30c3e932a5fe5ae87c00ade7e7e4aaf3830c4e9b53d955d08",
         "runtime-versions.json": "67399d26a6cbc2e0058ffeec04fd10f10f41273197ca6b2b8e2a31b4e9170801",
         "scripts/assemble-scanned-proof-edition.py": "20800bde0c8eb548074a669bce5cba898273c2e851b2002e6d41e24cc93655b9",
         "scripts/check-cpho2024-label-components.py": "4ca4744e4e016cc4c1ebac5868c01c9731280e4601a793df515c6efa246b8341",
-        "scripts/freeze-cpho2024-native-publication.py": "4b77efcd5263476910470777d8f32ea01686189ca5a0ebea0ad64a2a29002f66",
+        "scripts/freeze-cpho2024-native-publication.py": "461c2777a55339d4fd4977e9514e029cfbd226f713a630659456951907d600da",
         "scripts/inspect-cpho2024-shared-label-components.py": "fdb2cca8ca7d30c945121a10f9765212c4c5d90a2a22e1e9b03f9ff4b5bd0179",
         "scripts/prepare-cpho2024-final-assembly.py": "ea41cb9a83d66a015d69b5de6562661af043daf3a99f12085cf29210398549bc",
         "scripts/render-cpho2024-final-pages.py": "d7f35f8f7adea35130cae62f0452c2b83ab3077e71147b641ccc0241a9705846",
@@ -318,6 +321,10 @@
   "caption_background_negative_control": {
     "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\source-caption-background-regression\\regression.json",
     "sha256": "fe1d06d25a22a290871073c95592e1ddce0dd2a6a0448d7988a4a80f25bef229"
+  },
+  "label_mask_negative_control": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\final-label-mask-regression\\regression.json",
+    "sha256": "7fa14de182f51fdd9aea74098a4a295ac5d9c339d0d49e86b3f95c7ffadbc5b6"
   },
   "editions": [
     {
@@ -343,7 +350,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page01-KO.audit.json",
-            "sha256": "e3b7063b9e80a1f737b110c0e62fa4612f80076a45c0830ef3d0d58a0da88add"
+            "sha256": "9914850b6b97c34021b748fe9db9d7c4724336df52fddf59bd37d4b0df80a552"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page01-KO.json",
@@ -352,6 +359,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page01-KO.labels.json",
             "sha256": "185b7bbb8ee1576b5a9d608399df0d0ce4942feaf98039bf1d832e44254277e8"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page01-KO.text-overlay.pdf",
+            "sha256": "e8e89fc4793c31a3324aa731dcae0e6882f7d395ce0fb1aa9af88ab518792093"
           }
         },
         {
@@ -370,7 +381,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page02-KO.audit.json",
-            "sha256": "2ed16e58ea3c1c9077ec1333cfe08218283980bc71e2015e67912ce3ee89634e"
+            "sha256": "af43cbf99445f1deae89ec4952f3e647ceb0d834d720631a282de7b987ba3264"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page02-KO.json",
@@ -379,6 +390,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page02-KO.labels.json",
             "sha256": "5942165d989058037c07ba3cdc974444121afe873d4fc41dfcd2b9abeedff5ab"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page02-KO.text-overlay.pdf",
+            "sha256": "0768a3844bacde4c600cf6da4220d3b6c1152cc61d0bec67caecac965ab4137f"
           }
         },
         {
@@ -397,7 +412,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page03-KO.audit.json",
-            "sha256": "84ff69ac557b0c56dd60437664fedd33e1865e9edca2a18b908f2f9f68ecf88f"
+            "sha256": "bb7768923fc332184c65ddeaa1c863cbb476bb353fddffc9d2a8d53db7f403b7"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page03-KO.json",
@@ -406,6 +421,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page03-KO.labels.json",
             "sha256": "9eb345e7b201366d5aa9b9a3b5dc4e9f8a96e15c0e448d9cd6b59c8d9def2c7c"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page03-KO.text-overlay.pdf",
+            "sha256": "6941f998a717b2e8bf8639c42eee58d8976b0e9507bdbd0d1f58de88e03bd257"
           }
         },
         {
@@ -424,7 +443,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page04-KO.audit.json",
-            "sha256": "f6ea90757d49934abc234cadabe9e040c7a3c8e90feba28d4953daa4e1b29305"
+            "sha256": "daa25415bb52c591d214aa9329c854b1954726f37b27f48a82b68f5439c4a2c1"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page04-KO.json",
@@ -433,6 +452,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page04-KO.labels.json",
             "sha256": "ac490adbe18f01d88abadb9812d6c9f21c7f5bebede8647e46ece2c8725ad4d2"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page04-KO.text-overlay.pdf",
+            "sha256": "7b9c6e53d68e3097fc17bd43c82e76f08713041360d9cdacd45a1113bc908691"
           }
         },
         {
@@ -451,7 +474,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page05-KO.audit.json",
-            "sha256": "f3d8252aca53163a3cf3eca65f8545f737e05bcf710ccddf96370ad5e915fab6"
+            "sha256": "e9c957a150738121bbf9867767fc8145a3454464562215b6b65577bac7d9a2b3"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page05-KO.json",
@@ -495,7 +518,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page01-EN.audit.json",
-            "sha256": "8663b393d453343d83db88f2f4f72ce685813ce645d922e17a2926c4c9cfbcf8"
+            "sha256": "c398045d78c4a46ce04de9ff012c14827eb26832e1dfc2d5f97cdc22023272a3"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page01-EN.json",
@@ -504,6 +527,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page01-EN.labels.json",
             "sha256": "ac7d64d17154e04897073ea42a107f1cb920ce6f73e2909a5a5e82d91da655fd"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page01-EN.text-overlay.pdf",
+            "sha256": "fb8818b0b3d622b2ef4a7268886aad3ee1be366737e155e0a73deb0ea829d1ca"
           }
         },
         {
@@ -522,7 +549,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page02-EN.audit.json",
-            "sha256": "233e5619143482cc6449a90aa13431b30b17dd9b4ef4dadb6a9ef4fd74b05aec"
+            "sha256": "e107ca8dbeb0869733c5e106b06c82730bf3fb89a45b9fe95970280aca87aab6"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page02-EN.json",
@@ -531,6 +558,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page02-EN.labels.json",
             "sha256": "9cac4b3e92e0d1598cda21a937f30c8815a33080180b44c6051e5a3d20844480"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page02-EN.text-overlay.pdf",
+            "sha256": "0d0e314e4850155cbf891065dade519b189e21bea69d3fdd41ba9691c9275558"
           }
         },
         {
@@ -549,7 +580,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page03-EN.audit.json",
-            "sha256": "7d270782e968cda3f4d1441cbce0682191cb5535f39f2926deb37d69302bb612"
+            "sha256": "8d706049ed1ae30851053a069c419d47a53098e6ee057bd80f059b28f6a0f71f"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page03-EN.json",
@@ -558,6 +589,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page03-EN.labels.json",
             "sha256": "2ac845b14c20fab98ae6fed1a1bda09cf42ba6f53382b9311666820fb442cb5b"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page03-EN.text-overlay.pdf",
+            "sha256": "da9325b21a8ca8f4ed91003dd1912e095f86d0d1334377ebab665538cc8354cc"
           }
         },
         {
@@ -576,7 +611,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page04-EN.audit.json",
-            "sha256": "afafabaefccb6f493b87dcc7c3ad840d8e3d6ba6258911660b4dc29acb7c4ede"
+            "sha256": "c36e149f7844f31512dda866e38403871111f64f79df72fd47f8a4669c439b66"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page04-EN.json",
@@ -585,6 +620,10 @@
           "figure_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page04-EN.labels.json",
             "sha256": "3dde7bc7fbc068115fd8d2ac1ee64c81f7a7945fe8012b8c19b222e8e6cdeea4"
+          },
+          "label_reference_pdf": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\page04-EN.text-overlay.pdf",
+            "sha256": "ab05507429c4fb1a3c22fbca980f3a589c9e2b2a19303bdf57d01c3d426a33b5"
           }
         },
         {
@@ -603,7 +642,7 @@
           },
           "figure_language_qa": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\figure-language\\qa\\page05-EN.audit.json",
-            "sha256": "66cc5bb8c7f9bd055da5ec1c12be085bc782e06c7ef9fc5df336c666b545d341"
+            "sha256": "f8da99191b37c134313d1ddb7069af49b5ac65e395a15dd719aed176e838cef9"
           },
           "body_composition": {
             "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\T\\pages\\page05-EN.json",

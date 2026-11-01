@@ -4,14 +4,15 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 
 module.exports = function validateNativeOriginalPublication(root, qa, item) {
-  const evidence = ref => {
+  const rawEvidence = ref => {
     assert.ok(ref && typeof ref.path === 'string');
     const absolute = path.resolve(root, ref.path);
     assert.ok(absolute.startsWith(root + path.sep));
     const raw = fs.readFileSync(absolute);
     assert.equal(crypto.createHash('sha256').update(raw).digest('hex'), ref.sha256, ref.path);
-    return JSON.parse(raw);
+    return raw;
   };
+  const evidence = ref => JSON.parse(rawEvidence(ref));
   const yes = (obj, keys) => { for (const key of keys) assert.equal(obj[key], true, key); };
   const zero = (obj, keys) => { for (const key of keys) assert.equal(obj[key], 0, key); };
   const empty = (obj, keys) => { for (const key of keys) assert.deepEqual(obj[key], [], key); };
@@ -32,6 +33,11 @@ module.exports = function validateNativeOriginalPublication(root, qa, item) {
   assert.equal(assembly.pages.length, item.pages);
   assert.equal(visual.pages.length, item.pages);
   assert.equal(qa.page_proofs.length, item.pages);
+  const labelNegative = evidence(qa.label_mask_negative_control);
+  yes(labelNegative, ['passed','publication_pdf_unmodified','negative_preserves_all_original_glyphs_fonts_images_and_ctms','negative_unrelated_actual_new_drawing_rejected']);
+  assert.equal(labelNegative.source_canonical_proof_sha256, ready.editions.find(e => e.language === 'ko').proofs[0].sha256);
+  assert.ok(labelNegative.negative_added_ink_outside_reference > 0);
+  assert.ok(labelNegative.negative_changed_pixels_outside_reviewed_language > 0);
   let totalLabels = 0;
   for (const [index, page] of qa.page_proofs.entries()) {
     assert.equal(page.page, index + 1);
@@ -123,6 +129,8 @@ module.exports = function validateNativeOriginalPublication(root, qa, item) {
 
     assert.equal(labels.body_sha256, page.body_sha256);
     assert.equal(labels.proof_sha256, page.proof_sha256);
+    assert.equal(labels.qa_mode, 'publication');
+    assert.equal(labels.unmodified_canonical_proof_sha256, page.proof_sha256);
     assert.equal(labels.language.toLowerCase(), item.language);
     yes(labels, ['passed','original_body_glyph_metadata_unchanged','all_original_font_programs_unchanged','all_original_image_palette_ICC_mask_graphs_unchanged','all_original_image_CTMs_unchanged','original_page_group_and_colorspace_unchanged','source_font_measurement_is_estimate','no_original_mathematical_text_retyped']);
     assert.equal(labels.translation_font_sizes_fitted, false);
@@ -142,6 +150,10 @@ module.exports = function validateNativeOriginalPublication(root, qa, item) {
       yes(labels.pixel_audit, ['byte_identical_no_label_page']);
     } else {
       yes(labels.pixel_audit, ['actual_source_word_regions_only']);
+      yes(labels.pixel_audit, ['independent_reference_contains_only_verified_actual_label_glyphs']);
+      zero(labels.pixel_audit, ['added_ink_outside_independent_actual_font_reference','native_symbol_motion_outside_reviewed_source_and_destination_clips']);
+      assert.equal(page.label_reference_pdf.sha256, labels.pixel_audit.reference_sha256);
+      assert.equal(rawEvidence(page.label_reference_pdf).subarray(0, 4).toString(), '%PDF');
       yes(labels.pixel_audit.source_outline_metadata_match, ['passed']);
       empty(labels.pixel_audit.source_outline_metadata_match, ['missing_source_outline_signatures']);
     }

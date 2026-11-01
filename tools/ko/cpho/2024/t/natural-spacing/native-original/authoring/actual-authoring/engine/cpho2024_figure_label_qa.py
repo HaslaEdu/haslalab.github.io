@@ -18,8 +18,8 @@ def fresh(path,out):
  subprocess.run([sys.executable,'-X','utf8','-c',code,str(path),str(out)],check=True,creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt'else 0)
  with Image.open(out)as im:return np.asarray(im.convert('RGB')).copy()
 
-def audit(number,language):
- folder=BASE/'T/figure-language';target=folder/f'page{number:02}-{language}.pdf';q=json.loads(target.with_suffix('.labels.json').read_text('utf8'));body=Path(q['source_body']);assert sha(body)==q['source_body_sha256']and sha(target)==q['output_sha256']
+def audit(number,language,*,analysis_target=None,analysis_report=None):
+ folder=BASE/'T/figure-language';canonical=folder/f'page{number:02}-{language}.pdf';q=json.loads(canonical.with_suffix('.labels.json').read_text('utf8'));target=Path(analysis_target)if analysis_target else canonical;body=Path(q['source_body']);assert sha(body)==q['source_body_sha256']and sha(canonical)==q['output_sha256']
  report_folder=folder/'qa';report_folder.mkdir(exist_ok=True);render=report_folder/f'page{number:02}-{language}';render.mkdir(exist_ok=True)
  with fitz.open(body)as before,fitz.open(target)as final,pikepdf.open(body)as old_pdf,pikepdf.open(target)as new_pdf:
   a=_traces(before[0]);b=_traces(final[0]);assert len(b)>=len(a)
@@ -104,14 +104,33 @@ def audit(number,language):
   collision=int((shape&(control.min(axis=2)<80)).sum())
   # The saved text-only overlay is an independent exact native-font/CID
   # reference, avoiding unhinted-SVG versus TrueType-hint phase assumptions.
-  reference=fresh(folder/f'page{number:02}-{language}.text-overlay.pdf',render/'actual-font-label-reference.png')
+  reference_pdf=folder/f'page{number:02}-{language}.text-overlay.pdf'
+  # Independently tie the allowable final added-ink mask to only the actual
+  # reviewed label glyphs. Observed final/control differences are diagnostic,
+  # never an allow-list: that would also accept an unrelated new drawing.
+  with fitz.open(reference_pdf)as ref_doc,pikepdf.open(reference_pdf)as ref_pdf:
+   ref_glyphs,ref_programs=trace_font_resources(ref_pdf,ref_doc[0]);ref_glyphs=[g for g in ref_glyphs if g['c'].strip()and g['gid']>=0]
+   assert len(ref_glyphs)==len(new)
+   for g,h in zip(new,ref_glyphs):
+    for key in ['c','gid','font_program_sha256','render_type']:assert g[key]==h[key]
+    assert abs(g['size']-h['size'])<1e-6 and max(abs(x-y)for x,y in zip(g['origin'],h['origin']))<=.001
+   assert not ref_doc[0].get_images(full=True)and not ref_doc[0].get_drawings()
+  reference=fresh(reference_pdf,render/'actual-font-label-reference.png')
   expected_ink=reference.min(axis=2)<160;missing=int((expected_ink&(actual.min(axis=2)>=220)).sum())
-  outside=int((changed&~(old_mask|motion|new_mask)).sum())
-  pixel=dict(changed_pixels_outside_source_words_new_labels_and_reviewed_symbol_motion=outside,new_label_over_preserved_original_dark_ink=collision,new_actual_font_label_ink_missing=missing,old_source_word_ink_changed_pixels=int(old_mask.sum()),new_label_actual_ink_pixels=int(new_mask.sum()),original_native_symbol_motion_pixels=int(motion.sum()),exact_actual_font_reference_ink_pixels=int(expected_ink.sum()),source_outline_metadata_match=shape_match,nonlanguage_pixels_preserved=outside==0,actual_source_word_regions_only=True)
+  permitted_motion=np.zeros(old_mask.shape,bool)
+  for patch in patches:
+   r=fitz.Rect(patch['source_clip_rect_pt'])
+   for rect in [r,r+(patch['dx'],0,patch['dx'],0)]:
+    x0,y0,x1,y1=[int(np.floor(v*4))for v in rect];permitted_motion[max(0,y0-1):y1+2,max(0,x0-1):x1+2]=True
+  motion_outside=int((motion&~permitted_motion).sum())
+  expected_new_mask=np.any(reference<255,axis=2)
+  outside_added=int((new_mask&~expected_new_mask).sum())
+  outside=int((changed&~(old_mask|permitted_motion|expected_new_mask)).sum())
+  pixel=dict(changed_pixels_outside_source_words_new_labels_and_reviewed_symbol_motion=outside,new_label_over_preserved_original_dark_ink=collision,new_actual_font_label_ink_missing=missing,added_ink_outside_independent_actual_font_reference=outside_added,native_symbol_motion_outside_reviewed_source_and_destination_clips=motion_outside,independent_reference_contains_only_verified_actual_label_glyphs=True,reference_sha256=sha(reference_pdf),old_source_word_ink_changed_pixels=int(old_mask.sum()),new_label_actual_ink_pixels=int(new_mask.sum()),original_native_symbol_motion_pixels=int(motion.sum()),exact_actual_font_reference_ink_pixels=int(expected_ink.sum()),source_outline_metadata_match=shape_match,nonlanguage_pixels_preserved=outside==0 and outside_added==0 and motion_outside==0,actual_source_word_regions_only=True)
   if collision:
    yy,xx=np.nonzero(shape&(control.min(axis=2)<80));pixel['collision_bbox']=[float(xx.min()/4),float(yy.min()/4),float((xx.max()+1)/4),float((yy.max()+1)/4)]
- result=dict(page=number,language=language,proof_sha256=sha(target),body_sha256=sha(body),labels=len(q['label_records']),original_body_glyphs_and_font_point_paint_positions_checked=len(a),original_body_glyph_metadata_unchanged=True,all_original_font_programs_unchanged=True,all_original_image_palette_ICC_mask_graphs_unchanged=True,all_original_image_CTMs_unchanged=True,original_page_group_and_colorspace_unchanged=True,new_label_actual_nonspace_glyphs_checked=len(new),new_label_actual_empty_outlines=empty,new_label_glyph_style_checks=glyph_checks,reviewed_original_native_bitmap_symbol_reuse=patch_checks,pixel_audit=pixel,source_font_measurement_is_estimate=True,translation_font_sizes_fitted=False,no_original_mathematical_text_retyped=True,passed=not pixel['changed_pixels_outside_source_words_new_labels_and_reviewed_symbol_motion']and not pixel['new_label_over_preserved_original_dark_ink']and not pixel['new_actual_font_label_ink_missing'])
- out=report_folder/f'page{number:02}-{language}.audit.json';out.write_text(json.dumps(result,ensure_ascii=False,indent=1)+'\n','utf8');print('FIGURE_LABEL_QA',number,language,result['passed'],pixel,flush=True)
+ result=dict(page=number,language=language,proof_sha256=sha(target),body_sha256=sha(body),qa_mode='analysis-only-negative-clone'if analysis_target else'publication',unmodified_canonical_proof_sha256=sha(canonical),labels=len(q['label_records']),original_body_glyphs_and_font_point_paint_positions_checked=len(a),original_body_glyph_metadata_unchanged=True,all_original_font_programs_unchanged=True,all_original_image_palette_ICC_mask_graphs_unchanged=True,all_original_image_CTMs_unchanged=True,original_page_group_and_colorspace_unchanged=True,new_label_actual_nonspace_glyphs_checked=len(new),new_label_actual_empty_outlines=empty,new_label_glyph_style_checks=glyph_checks,reviewed_original_native_bitmap_symbol_reuse=patch_checks,pixel_audit=pixel,source_font_measurement_is_estimate=True,translation_font_sizes_fitted=False,no_original_mathematical_text_retyped=True,passed=not pixel['changed_pixels_outside_source_words_new_labels_and_reviewed_symbol_motion']and not pixel.get('added_ink_outside_independent_actual_font_reference',0)and not pixel.get('native_symbol_motion_outside_reviewed_source_and_destination_clips',0)and not pixel['new_label_over_preserved_original_dark_ink']and not pixel['new_actual_font_label_ink_missing'])
+ out=Path(analysis_report)if analysis_report else report_folder/f'page{number:02}-{language}.audit.json';out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(result,ensure_ascii=False,indent=1)+'\n','utf8');print('FIGURE_LABEL_QA',number,language,result['passed'],pixel,flush=True)
  if not result['passed']:raise ValueError(('Original figure label audit failed',number,language))
  return result
 
