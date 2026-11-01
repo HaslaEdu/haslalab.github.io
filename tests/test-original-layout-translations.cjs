@@ -52,6 +52,14 @@ for (const item of published) {
     require('./helpers/source-scan-publication.cjs')(root, qa, item);
     continue;
   }
+  if (item.audit_schema === 'latex-native-joined-v1') {
+    require('./helpers/latex-native-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'official-korean-original-v1') {
+    require('./helpers/official-korean-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'native-original-preserved-v1') {
     require('./helpers/native-original-publication.cjs')(root, qa, item);
     continue;
