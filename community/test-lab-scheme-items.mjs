@@ -106,6 +106,9 @@ test("a value is found on its page in scientific notation, not only in the reade
   assert.ok(has("c = 3e8 m/s", 3e8));
   assert.ok(!has(String.raw`r_1 = 5.31 \cdot 10^{-11} m`, 5.31e-10), "a different exponent is a different number");
   assert.ok(!has("W = 20 mJ", 2), "no number is invented");
+  assert.ok(has("W^*/W_pr^* = 1/2", 0.5), "a fraction written as the answer (IPhO 2025 T2 C.5.h) is its value");
+  assert.ok(has(String.raw`\frac{W^*}{W_{pr}^*} = \frac{1}{2}`, 0.5));
+  assert.ok(!has("a_c = 2σ / (p_0(c_1/c_0 - 1))", 0.5), "symbols divided are no fraction");
 });
 
 test("LaTeX the reader left unescaped in its JSON is restored, ordinary line breaks are kept", async () => {
