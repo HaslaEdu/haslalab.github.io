@@ -40,6 +40,7 @@
   .shoot input{display:none}
   .note{background:var(--deep);border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13.5px;margin-top:12px}
   .note.w{border-color:#6b3b37;color:#ffcfc9}
+  .rules summary{font-weight:700;cursor:pointer;color:var(--accent)}.rules ul{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:1.5}.rules li+li{margin-top:5px}
   .prev{margin-top:12px}
   .prev img{width:100%;border-radius:8px;background:#fff;display:block}
   .image-check{position:fixed;inset:0;z-index:45;background:#111;overflow:auto;touch-action:pan-x pan-y}
@@ -141,6 +142,7 @@ let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.
 const T = {
   ko: {
     title: "답안 스캔", task: "실험", kind: "종류", answer: "답안지", working: "Working sheet",
+    rulesH: "촬영 전에 꼭 확인하세요", rules: ["테두리가 초록색이 아니라 주황색으로 보여도, 네 모서리 점이 종이 귀퉁이와 맞으면 제대로 찍힙니다. 걱정하지 마세요.", "한 장에 한 쪽씩, 종이 네 모서리가 모두 화면 안에 들어오게 찍습니다. 접힌 모서리나 클립은 괜찮지만 글씨를 가리면 안 됩니다.", "빨간 펜으로 쓴 것은 읽지 않습니다(채점 표시로 봅니다). 답과 풀이는 검정·파랑 펜이나 연필로 쓰세요.", "답칸이 비어 있으면 Working sheet에 상자·밑줄로 표시한 결과를 그 문항의 답으로 봅니다.", "한 문항을 여러 방법으로 풀어도 점수는 가장 높은 한 가지만 들어가고 더해지지 않습니다.", "읽지 못한(실패한) 쪽 다시 읽기는 5분에 2번까지입니다. 그래도 안 되면 빼고 다시 찍으세요.", "읽을 수 없는 부분(흐림·잘림·그림자)은 0점입니다. 보낸 뒤 컴퓨터에서 읽힌 내용을 꼭 확인하세요."], 
     shoot: "📷 찍기", gallery: "사진 고르기", help: "종이를 바탕과 구분되는 곳에 놓고, 종이의 네 모서리와 테두리가 모두 보이게 위에서 찍으세요. 검은 표식이 없어도 됩니다. 한 번에 한 쪽씩 찍습니다.",
     live: "📷 스캔하기", camApp: "기본 카메라", lvAim: "종이의 네 모서리와 테두리가 모두 화면에 들어오게 하세요. 검은 표식은 선택 사항입니다.", lvPage: "종이를 찾았습니다. 테두리를 확인하고 촬영하거나, 더 선명하게 맞춰 주세요.", lvCandidate: "테두리 후보입니다. 촬영 후 네 모서리를 확인해 스캔하세요.",
     lvHold: "그대로 멈추세요…", lvWhy: { tilt: "종이가 비스듬히 보여 먼 쪽 글씨가 흐려집니다. 휴대폰을 종이와 평행하게, 바로 위에서 들어 주세요.", clipped: "종이 네 모서리가 모두 화면 안에 들어오게 조금 멀리서 찍으세요.", small: "종이가 작게 보입니다. 조금 더 가까이 대 주세요.", edges: "종이 테두리가 바닥과 잘 구분되지 않습니다. 셔터를 눌러 찍거나 어두운 바탕에 놓아 주세요.", shape: "A4 종이 모양이 아닙니다. 맞다면 셔터를 눌러 찍으세요." }, lvTake: "찍는 중…", lvAuto: "자동 촬영", lvClose: "닫기", lvNoCam: "카메라를 열 수 없습니다. «기본 카메라»로 찍어 주세요.",
@@ -154,7 +156,7 @@ const T = {
     compare: "원본 보기", processed: "보정본 보기", zoom: "크게 보기", rotate: "90° 회전", detail: "작은 글씨와 수식이 보이는지 확대해서 확인해 주세요.",
     pointMarker: "검은 표식 중심", pointPaper: "종이 귀퉁이", ceMarker: "네 점을 검은 사각형 표식의 중심에 맞추세요. 표식 밖의 여백도 보존됩니다.", badCorners: "네 점을 서로 다른 네 귀퉁이에 맞춰 주세요.",
     send: "보내기", retake: "다시 찍기", sending: "보내고 읽는 중…", sentOk: n => `${n}번째 쪽을 보냈습니다. 컴퓨터 화면에서 읽힌 내용을 확인하세요.`,
-    moved: (k, w) => `답안지 머리글을 보고 ${k} · ${w}(으)로 분류했습니다.`, legH: { good: "잘 읽혔습니다.", partial: "일부만 읽혔습니다. 다시 찍는 것이 좋습니다.", poor: "거의 읽히지 않았습니다. 이대로면 0점입니다 — 빼고 다시 찍으세요." },
+    moved: (k, w) => `답안지 머리글을 보고 ${k} · ${w}(으)로 분류했습니다.`, legH: { good: "잘 읽혔습니다.", partial: "일부를 읽지 못했을 수 있습니다. 컴퓨터에서 읽힌 내용을 확인하고, 빠진 곳이 있으면 다시 찍으세요.", poor: "거의 읽히지 않았습니다. 이대로면 0점입니다 — 빼고 다시 찍으세요." },
     sentH: "보낸 쪽", none: "아직 보낸 쪽이 없습니다.", del: "빼기",
     ocrStorage: "사진은 보관했습니다. 사진과 읽은 원문의 합계 용량이 큽니다. 파일 용량을 줄여 다시 올려 주세요.",
     ocrFailed: "사진은 보관했지만 글자를 읽지 못했습니다. 원본을 확인하고 필요하면 다시 촬영해 주세요.",
@@ -168,6 +170,7 @@ const T = {
   },
   en: {
     title: "Answer scan", task: "Experiment", kind: "Sheet", answer: "Answer sheet", working: "Working sheet",
+    rulesH: "Before you shoot", rules: ["An orange outline instead of a green one is fine: if the four corner points sit on the paper corners, the page is captured correctly.", "One page per photo, with all four paper corners on screen. A folded corner or a clip is fine as long as it covers no writing.", "Anything in red pen is not read (it counts as a marker's marks). Write answers and working in black or blue pen or pencil.", "If an answer box is empty, the result you boxed or underlined on a working sheet counts as that part's answer.", "Solving one part by several methods never adds up: only the best method counts.", "A page that could not be read can be re-read twice per 5 minutes. If it still fails, remove it and photograph it again.", "Whatever cannot be read (blurred, cut off, in shadow) scores 0. Check what was read on the computer after sending."], 
     shoot: "📷 Take photo", gallery: "Choose photo", help: "Lay the page on a contrasting surface and shoot from above with all four paper corners and edges visible. Black markers are optional. One page per photo.",
     live: "📷 Scan", camApp: "Camera app", lvAim: "Keep all four paper corners and edges in view. Black markers are optional.", lvPage: "Page found. Check the outline and take a photo, or adjust for a clearer view.", lvCandidate: "Possible page outline. Take a photo, then confirm its four corners to create a scan.",
     lvHold: "Hold still…", lvWhy: { tilt: "The sheet is seen at a slant, so its far end blurs. Hold the phone parallel to the paper, straight above it.", clipped: "Keep all four corners of the sheet on screen; step back a little.", small: "The sheet looks small. Move a little closer.", edges: "The sheet's edges are hard to tell from the surface. Take the photo with the shutter, or use a darker background.", shape: "This does not look like an A4 sheet. If it is, take the photo with the shutter." }, lvTake: "Taking…", lvAuto: "Auto", lvClose: "Close", lvNoCam: "The camera could not be opened. Use «Camera app».",
@@ -181,7 +184,7 @@ const T = {
     compare: "View original", processed: "View corrected", zoom: "Enlarge", rotate: "Rotate 90°", detail: "Enlarge the image and check small writing and equations before sending.",
     pointMarker: "Black marker centres", pointPaper: "Paper corners", ceMarker: "Put the four points at the centres of the black squares. The margins outside the markers are preserved.", badCorners: "Place the four points at four different corners.",
     send: "Send", retake: "Retake", sending: "Sending and reading…", sentOk: n => `Page ${n} sent. Check what was read on the computer.`,
-    moved: (k, w) => `Filed under ${k} · ${w} from the sheet's printed header.`, legH: { good: "Read well.", partial: "Only partly read. Better photograph it again.", poor: "Mostly unreadable — it scores 0 as it is. Remove it and photograph it again." },
+    moved: (k, w) => `Filed under ${k} · ${w} from the sheet's printed header.`, legH: { good: "Read well.", partial: "Part of it may not have been read. Check what was read on the computer and retake it if something is missing.", poor: "Mostly unreadable — it scores 0 as it is. Remove it and photograph it again." },
     sentH: "Pages sent", none: "No pages sent yet.", del: "Remove",
     ocrStorage: "The photo was saved. The photo and full recognized text exceed the storage limit. Reduce the file size and upload again.",
     ocrFailed: "The photo was saved, but its text could not be read. Check the original and retake it if needed.",
@@ -248,7 +251,7 @@ function paint() {
   if (MONTHLY) $("clock").title = lang === "ko" ? "촬영 링크 만료까지 · 제출 기회는 사용하지 않습니다." : "Scan-link expiry · reading photos does not use an attempt.";
   if (INFO.status === "running") { $("app").innerHTML = `<div class="note">${t().notYet}</div>`; return; }
   if (!INFO.open) { $("app").innerHTML = `<div class="note w">${t().closed}</div>${sentList()}`; return; }
-  $("app").innerHTML = `
+  $("app").innerHTML = `${MONTHLY ? "" : `<details class="card rules"${(INFO.pages || []).length ? "" : " open"}><summary>${t().rulesH}</summary><ul>${t().rules.map(x => `<li>${x}</li>`).join("")}</ul></details>`}
     <div class="card"><h2>${t().task}</h2><div class="chips" id="tasks">${INFO.tasks.map(x => `<button data-t="${x}" class="${x === task ? "on" : ""}">${x}</button>`).join("")}</div>
       <h2 style="margin-top:12px">${t().kind}</h2><div class="chips" id="kinds">${["answer", "working"].map(x => `<button data-k="${x}" class="${x === kind ? "on" : ""}">${t()[x]}</button>`).join("")}</div>
       <div class="shoot">${LIVE_OK ? `<button class="live" id="live">${t().live}</button>` : ""}
