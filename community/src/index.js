@@ -2708,7 +2708,7 @@ async function labBench(env, s, job) {
       /* raw_score: the model's own marks, each capped at its item and bounded by the paper's headings, with no rule in code */
       const rawBy = new Map((res.raw_items || []).map(x => [x.id, x.score])), rv = it => Math.max(0, Math.min(+it.points || 0, rawBy.get(String(it.id)) ?? 0));
       out = { expr_checks: res.expr_checks, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
-        items: res.items.map(i => ({ id: i.id, got: i.got, raw: rawBy.get(String(i.id)) ?? null, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, note: i.note || '' })) };
+        items: res.items.map(i => ({ id: i.id, got: i.got, raw: rawBy.get(String(i.id)) ?? null, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, rules: i.rules || [], note: i.note || '' })) };
     } else throw new Error('bench_stage');
   } catch (e) { failed = true; out = { error: String(e?.code || e?.message || 'bench_failed').slice(0, 200), ...(e?.provider_message ? { detail: String(e.provider_message).slice(0, 240) } : {}) }; }
   const calls = m.calls.map(c => ({ step: c.step, model: c.model, in: c.in, cached: c.cached, out: c.out, usd: c.usd, ms: c.ms, ok: c.ok, error: c.error || null }));
