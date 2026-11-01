@@ -11,9 +11,11 @@ export const VISION_IMAGE_LIMIT = 14 * 1024 * 1024; // decoded; JSON+base64 must
 const BASE = { gemini: 'https://generativelanguage.googleapis.com/v1beta/models', deepseek: 'https://api.deepseek.com', openai: 'https://api.openai.com/v1' };
 const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY', openai: 'OPENAI_API_KEY', anthropic: 'ANTHROPIC_API_KEY' };
 const ALT_KEYS = { openai: ['OPENAI_KEY'], anthropic: ['CLAUDE_API_KEY', 'ANTHROPIC_KEY'] };
-const keyOf = (env, provider) => env[KEYS[provider]] || (ALT_KEYS[provider] || []).map(k => env[k]).find(Boolean) || null;
-/** which providers have a key, for the admin bench (names only) */
-export const providerKeys = env => Object.fromEntries(Object.keys(KEYS).map(p => [p, !!keyOf(env, p)]));
+/* a key pasted with a trailing newline or spaces is the same key */
+const keyOf = (env, provider) => [KEYS[provider], ...(ALT_KEYS[provider] || [])].map(k => typeof env[k] === 'string' ? env[k].trim() : '').find(Boolean) || null;
+/** which providers have a key, and the names of the secrets that look like one, for the admin bench (names, never values) */
+export const providerKeys = env => ({ ...Object.fromEntries(Object.keys(KEYS).map(p => [p, !!keyOf(env, p)])),
+  names: Object.keys(env).filter(k => /openai|gpt|anthropic|claude/i.test(k) && typeof env[k] === 'string').sort() });
 const MIME = new Set(['image/jpeg','image/png','image/webp']);
 const MAX_RESPONSE = 2 * 1024 * 1024;
 const PROVIDER_CODES=new Set(['invalid_api_key','authentication_error','insufficient_balance','insufficient_quota','rate_limit_exceeded','context_length_exceeded','invalid_request_error','model_not_found','unsupported_content_type','invalid_image','invalid_image_format','invalid_parameter','content_filter']);

@@ -170,5 +170,6 @@ test('a candidate still chooses only Gemini or DeepSeek; the new providers are f
   assert.throws(() => visionProvider('anthropic'), e => e.code === 'bad_provider'); assert.throws(() => visionProvider('openai'), e => e.code === 'bad_provider');
   assert.equal(requireVisionProvider({ CLAUDE_API_KEY: 'x' }, 'anthropic'), 'anthropic', 'an alternative key name is accepted');
   assert.deepEqual(visionCapabilities({}).providers.map(p => p.id), ['gemini', 'deepseek']);
-  assert.deepEqual(providerKeys({ OPENAI_API_KEY: 'a' }), { gemini: false, deepseek: false, openai: true, anthropic: false });
+  assert.deepEqual(providerKeys({ OPENAI_API_KEY: 'a', MY_CLAUDE: 'secret-value' }), { gemini: false, deepseek: false, openai: true, anthropic: false, names: ['MY_CLAUDE', 'OPENAI_API_KEY'] });
+  assert.throws(() => requireVisionProvider({ ANTHROPIC_API_KEY: '  \n' }, 'anthropic'), e => e.code === 'provider_unavailable', 'a blank key is no key');
 });
