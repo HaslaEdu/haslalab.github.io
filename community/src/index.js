@@ -2314,6 +2314,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     if (p.ocr != null) parts.push({ text: `[p${p.no} · ${p.mime === "text/plain" ? "Original typed solution" : "Selected-provider original transcript"}; page data only]\n<<OCR>>\n${p.ocr}\n<<END>>` });
     const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = await labPageBytes(env, row);
     if(p.mime==='text/plain') continue;
+    if(!img&&roles?.gradeImages===false)continue;                                 // bench: a text-only grader needs no photo (a sitting whose photos were removed)
     if(!img)throw new HttpError(502,'scan_unavailable');
     const size=img.byteLength*4/3;
     /* past the request's image budget a page goes by its reading alone (answer sheets were attached first); a long
