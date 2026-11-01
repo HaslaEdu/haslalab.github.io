@@ -4,7 +4,7 @@ import {readFile,writeFile,mkdir,realpath,lstat} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 
-export const SUBJECTS=['classical_mechanics','electromagnetism','thermodynamics','optics','quantum_mechanics','relativity','statistical_mechanics','oscillations_waves','mathematical_methods','mixed'];
+export const SUBJECTS=['classical_mechanics','electromagnetism','thermodynamics','optics','quantum_mechanics','relativity','statistical_mechanics','oscillations_waves','mathematical_methods','astronomy_astrophysics','mixed'];
 export const LEVELS=['high_school','olympiad','undergraduate','graduate','mixed'];
 export const SCHEMA_PATH=fileURLToPath(new URL('./schema.sql',import.meta.url));
 const PUBLIC_ROOT=fileURLToPath(new URL('../../',import.meta.url));

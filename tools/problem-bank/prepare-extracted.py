@@ -29,6 +29,7 @@ def payload(path, expected):
 def normalized_subjects(values):
     aliases = {"quantum_atomic_particle_physics": ["quantum_mechanics"],
                "mathematics": ["mathematical_methods"],
+               "special_relativity": ["relativity"],
                "thermodynamics_statistical_physics": ["thermodynamics", "statistical_mechanics"]}
     return sorted({subject for value in values for subject in aliases.get(value, [value])})
 
