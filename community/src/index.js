@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1431,7 +1431,9 @@ function labRoles(env, s, theory) {
   if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
     /* theory and experiments alike (data analysis and observation papers too): Gemini reads, DeepSeek grades from the
        scheme, the readings and the photos, Gemini moderates what DeepSeek marked down */
-    return { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING), moderateBench: pick(env.LAB_MODERATE_MODEL),
+    return { read: "gemini", grade: env.LAB_GRADE_PROVIDER === "gemini" ? "gemini" : "deepseek", gradeBench: pick(env.LAB_GRADE_MODEL, env.LAB_GRADE_THINKING),
+      moderate: env.LAB_MODERATE_PROVIDER === "deepseek" ? "deepseek" : "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
+      moderateBench: pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING), moderateScope: env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
       readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
@@ -1633,7 +1635,7 @@ const N = (o) => ({ ...o, nullable: true });
 const SCHEME_SCHEMA = { type: "object", properties: {
   points: { type: "number" }, unit_rule: { type: "string" }, notes: { type: "string" },
   total: N({ type: "number" }),
-  parts: { type: "array", items: { type: "object", properties: { id: { type: "string" }, points: { type: "number" } }, required: ["id", "points"] } },
+  parts: { type: "array", items: { type: "object", properties: { id: { type: "string" }, points: { type: "number" }, final_full: { type: "boolean" } }, required: ["id", "points"] } },
   items: { type: "array", items: { type: "object", properties: {
     id: { type: "string" }, points: { type: "number" }, type: { type: "string", enum: ["value", "graph", "table", "derivation", "other"] },
     sheet: { type: "string", enum: ["answer", "any"] }, what: { type: "string" }, unit: N({ type: "string" }), alt: N({ type: "string" }),
@@ -1902,7 +1904,8 @@ async function labSchemeBuild(env, s, task, m) {
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
       "A numerical answer whose interval is not printed still names the official value with its unit in `what` (e.g. «correct numerical value of H_c = 7.7 m»), and any alternative value the solution says to accept.",
       "For every numerical value item also give ref, the official value exactly as printed in the item's unit (digits only, as «-13.6», «7.7» or «2.2e9»), and tol: interval when the scheme prints an interval (give full_min and full_max too), order when it accepts the nearest power of ten, default otherwise.",
-      "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
+      "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else. final_full: true on a part when the solution says a correct final answer of that part earns its full points without the working (or «full marks for the correct answer»); otherwise leave it out.",
+      "Keep the scheme's partial-credit and special rules inside the item's `what`, as printed: the points for a partly correct answer (a missing factor, a wrong sign, a correct expression without the number, «0.7 if A = 2a_s/a_c appears»), «max 0.2 without justification», special cases and accepted alternative forms. Keep the official answer exact as printed (factors, signs, π and units); never add or drop a factor.",
       "notes: the solution's own general marking rules in a few words, above all whether a correct final answer without working earns its marks (e.g. «Rule 2: a formula written without derivation earns no marks unless it can be done in one's head», or a problem's note «writing the correct answer without showing work also receives full marks»), and which questions ask to derive, show or prove.",
       "unit_rule: what the scheme says about units and significant figures, if anything."].join("\n") },
     { inline_data: { mime_type: "application/pdf", data: b64(res) } },
@@ -1916,9 +1919,11 @@ async function labSchemeBuild(env, s, task, m) {
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
       "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»). Where the solution says a correct final answer earns an item anyway, that item is a result.",
       "alt: where the solution gives alternative methods for one question or part (Method 1 / Method 2, «Alternatively», «Another approach»), every item belonging to only one of them carries alt «<part id>/<method number>» (B.2/1, B.2/2); items shared by all methods, and every item of a question with one method, have none. The methods are alternatives: their points are never added up.",
+      "A value that depends on the candidate's own apparatus or measurements (a length, an angle, a reading or a fitted slope of the sample data shown in the solution) has no answer key: leave full_min, full_max and ref null and write in `what` the official criterion (consistent with the candidate's own data, within a stated range of the physical constant, correct method). Give an interval only where the scheme prints one for every candidate, and never an interval of zero width.",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
       "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
-      "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
+      "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else. final_full: true on a part when the solution says a correct final answer of that part earns its full points without the working (or «full marks for the correct answer»); otherwise leave it out.",
+      "Keep the scheme's partial-credit and special rules inside the item's `what`, as printed: the points for a partly correct answer (a missing factor, a wrong sign, a correct expression without the number, «0.7 if A = 2a_s/a_c appears»), «max 0.2 without justification», special cases and accepted alternative forms. Keep the official answer exact as printed (factors, signs, π and units); never add or drop a factor.",
       "unit_rule: what the scheme says about units, if anything."].join("\n") },
     { inline_data: { mime_type: "application/pdf", data: b64(res) } },
     ...(mark ? [{ text: "The official marking scheme:" }, { inline_data: { mime_type: "application/pdf", data: b64(mark) } }] : []),
@@ -2103,15 +2108,21 @@ function labScore(scheme, raw, pages, opts = {}) {
       res.evidence={source:'image',page:pg.no,box:visual.box,description:String(visual.description).slice(0,600)};
     }
     /* the table or graph of this item as read (by its label, else the first of its kind), and how many measurements it needs (R11) */
-    const pick = kind => live.find(i => i.kind === kind && (kind !== "graph" || i.graph) && i.label === it.id) || live.find(i => i.kind === kind && (kind !== "graph" || i.graph));
+    /* the rest of the task's pages, for evidence the grader cited on the wrong page (a graph on p9 cited as p8, a value
+       written on a working sheet beside the answer sheet): its own label anywhere, else the first of its kind on the cited page */
+    const others = pages.filter(p => p !== pg).flatMap(p => { try { return (p.read ? JSON.parse(p.read).items || [] : []).filter(i => !i.crossed_out); } catch { return []; } });
+    const pick = kind => { const ok = i => i.kind === kind && (kind !== "graph" || i.graph);
+      return live.find(i => ok(i) && i.label === it.id) || others.find(i => ok(i) && i.label === it.id) || live.find(ok); };
     const nmin = it.n_min > 0 ? it.n_min : N_MIN[it.n_class] || null;
     /* R1: a final answer off the answer sheet counts only where the task's answer sheets give none for its question (an
        empty box or no answer sheet at all, as IPhO, APhO and EuPhO mark); the answer sheet governs where it has one */
-    if (it.sheet === "answer" && pg.kind !== "answer" && answeredOnSheet(it.id, pages)) return zero("R1");
+    if (it.sheet === "answer" && it.type === "value" && pg.kind !== "answer" && answeredOnSheet(it.id, pages)) return zero("R1");
     const interval = it.full_min != null && it.full_max != null, byRef = !!opts.theory && !interval && !!refTolerance(it.ref);
     if (it.type === "value" && (interval || byRef)) {
       const v = Number(g.value);
-      if (g.value == null || !isFinite(v) || !live.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(x => samePrefixed(x, v)))) return zero("R9");   // a value that was not read there
+      const seenAs = x => samePrefixed(x, v) || Math.abs(x - v) <= .005 * Math.max(Math.abs(x), Math.abs(v));   // 0.667 for a written 2/3
+      const readThere = list => list.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(seenAs));
+      if (g.value == null || !isFinite(v) || !(readThere(live) || readThere(others) || numbersIn([pg.ocr, ...pages.map(p => p.ocr)].join("\n")).some(seenAs))) return zero("R9");   // a value that was not read on the task's pages
       res.value = v;
       if (it.unit && g.unit_ok === false) return zero("R3");
       const w = g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
@@ -2140,7 +2151,8 @@ function labScore(scheme, raw, pages, opts = {}) {
       res.by = "model";
       res.got = Math.max(0, Math.min(it.points, Math.round((Number(g.score) || 0) * 10) / 10));
       /* R13: a step earns marks only where it is written; the grader's quote of it must be on the page it cites */
-      if (it.role === "step" && it.sheet !== "answer" && res.got > 0 && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))) return zero("R13");
+      if (it.role === "step" && it.sheet !== "answer" && res.got > 0 && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))
+        && !quoteOnPage(g.quote, pages.map(p => [p.ocr, p.text].join("\n")).join("\n"))) return zero("R13");
     }
     /* a table or graph with fewer measurements than it needs, where the scheme has no count check to take marks from: half (R11) */
     if (nmin && (it.type === "graph" || it.type === "table") && !(it.checks || []).some(c => c.check === "points_min" || c.check === "rows_min")) {
@@ -2159,6 +2171,7 @@ function labScore(scheme, raw, pages, opts = {}) {
     res.rules = [...rules];
     return res;
   });
+  finalAnswerFull(items, scheme);                                                     // a part whose correct final answer earns its marks
   /* R15: of alternative methods for one question only the one that earns most counts */
   { const alt = new Map(scheme.items.map(it => [it.id, it.alt])), { dropped } = oneMethod(items.map(i => ({ ...i, alt: alt.get(i.id) })), i => i.got);
     for (const i of items) if (dropped.has(i.id) && i.got > 0) { i.got = 0; i.decision = "not_met"; i.rules = [...new Set([...(i.rules || []), "R15"])]; } }
@@ -2207,14 +2220,15 @@ async function labPurge(env) {
    and transcripts of that task (no problem or solution PDFs, so it is small and quick). Its results replace the first
    grader's for those items and go through the same code checks (quotes, values on the page, official values). */
 const MOD_SCHEMA = { type: "object", properties: { items: GRADE_SCHEMA.properties.items }, required: ["items"] };
-async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory) {
+async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, all = false) {
   const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
   const items = flagged.map(f => { const it = scheme.items.find(x => x.id === f.id) || {}, g = first.get(f.id) || {};
     return { id: it.id, points: it.points, type: it.type, role: it.role, sheet: it.sheet, unit: it.unit, ref: it.ref, tol: it.tol, full_min: it.full_min, full_max: it.full_max,
       what: it.what, first: { score: f.got, page: g.page, value: g.value, note: g.note } }; });
   const parts = [{ text: [stablePrefix(family, kind), "", "[TASK: moderate]",
-    `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader marked the items below short of full marks, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
-    "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading. Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Where the photo shows a number the transcript misread (0.31 read as 9.31), give the number as written in the photo as value and add visual:{kind:\"value\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it,description,value}. Give no feedback or review.",
+    `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader ${all ? "graded the items below" : "marked the items below short of full marks"}, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
+    (all ? "Check every item, those given full marks too, in the page photos themselves and grade it again under the same regulation: take marks off a wrong answer, a missing factor, an inverted relation or a wrong sign however close it looks, and off a step that is not written; give full marks to an answer equivalent to the official one in another form (rearranged, other notation, another correct method) and to a step written anywhere in the task's pages; keep a deduction the photos confirm, correct one that came from a misreading." :
+    "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading.") + " Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Where the photo shows a number the transcript misread (0.31 read as 9.31), give the number as written in the photo as value and add visual:{kind:\"value\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it,description,value}. Give no feedback or review.",
     `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
     "<<ITEMS>>" + JSON.stringify(lean(items)) + "<<END>>"].join("\n") }];
   for (const { p, photo } of photos) {
@@ -2283,10 +2297,12 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   let raw = out.raw, moderator = null;
   const specOf = new Map(scheme.items.map(it => [it.id, it]));
   const flagged = roles?.moderate ? labScore(scheme, raw, mine, { theory }).items.filter(i => { const it = specOf.get(i.id) || {};
-    return i.got < i.points && (it.role === "result" || it.sheet === "answer" || ["value", "graph", "table", "other"].includes(it.type)); }).slice(0, 30) : [];
+    /* «all»: every item, full marks too (a first grader that gives full marks to a wrong answer, a missing factor or an
+       inverted relation is never checked otherwise: the largest error in an audit of 15 sittings); «down»: what it marked down */
+    return roles.moderateScope === "all" || i.got < i.points && (it.role === "result" || it.sheet === "answer" || ["value", "graph", "table", "other"].includes(it.type)); }).slice(0, roles.moderateScope === "all" ? 90 : 30) : [];
   if (flagged.length) {
     try {
-      const mod = await labModerate(env, labAs(s, roles.moderate, roles.moderateBench), task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory);
+      const mod = await labModerate(env, labAs(s, roles.moderate, roles.moderateBench), task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles.moderateScope === "all");
       const ids = new Set(flagged.map(f => f.id)), byId = new Map((mod.raw.items || []).filter(x => x && ids.has(String(x.id))).map(x => [String(x.id), x]));
       const kept = (raw.items || []).filter(x => !byId.has(String(x?.id)));
       raw = { ...raw, items: [...kept, ...byId.values()] };                    // an item the first grader left out is added
@@ -2310,7 +2326,7 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
   const mine = pages.filter(p => p.task === task);
   if (contestMeta(s)) return contestGradeTask(env, s, task, mine, rb, lang, m, { labVision, b64, labPageBytes });
   requireVisionProvider(env,labProvider(s));
-  const roles = labRoles(env, s, labTheory(s, task)), grader = labAs(s, roles.grade);
+  const roles = labRoles(env, s, labTheory(s, task)), grader = labAs(s, roles.grade, roles.gradeBench);
   {
     let scheme;
     try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, labSchemer(env, s, roles), task, m); }
@@ -2565,7 +2581,8 @@ async function labBench(env, s, job) {
       }
       const prod = labRoles(env, s, true), scheme = await labScheme(env, labSchemer(env, s, prod), spec.task, null);
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
-        moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, gradeImages: spec.grade.images !== false };
+        moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
+        gradeImages: spec.grade.images !== false };
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
       out = { score: res.score, points: res.points, grader: res.grader,
         items: res.items.map(i => ({ id: i.id, got: i.got, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, note: i.note || '' })) };

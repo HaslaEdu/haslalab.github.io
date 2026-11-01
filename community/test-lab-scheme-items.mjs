@@ -192,3 +192,28 @@ test("headings that hold every item and add up to the paper are always caps (IPh
   assert.equal(cappedSum(items, parts, null, i => i.id.startsWith("E") ? i.points : 0), 1.5, "a candidate's E is capped too");
   assert.equal(cappedSum(items, [{ id: "C.3", points: 0.2 }], null), 13.5, "a lone heading far below its items is still taken for a misread");
 });
+
+test('R13 quotes match a transcript written in the other notation (LaTeX against Unicode)', async () => {
+  const { quoteOnPage } = await import('./src/lab-scheme-items.js');
+  assert.ok(quoteOnPage('f_{GW} = 2\\frac{\\Omega}{2\\pi}', 'f_GW = 2(Ω/2π)'));
+  assert.ok(quoteOnPage('f(x)=\\frac{\\sin(\\sqrt{2\\pi}x)}{\\sqrt{2\\pi}}', 'f(x)=sin(√(2π)x)/√(2π)'));
+  assert.ok(quoteOnPage('a^2 \\gamma^4 = e^2B^2E^2/(m^4c^{10})', 'a²γ⁴ = e²B²E²/(m⁴c¹⁰)'));
+  assert.ok(!quoteOnPage('E = mc^2 from the rest energy', 'f_GW = 2(Ω/2π)'));
+});
+
+test('a part whose correct final answer earns full points fills its steps; a wrong final answer leaves them', async () => {
+  const { finalAnswerFull } = await import('./src/lab-scheme-items.js');
+  const scheme = { parts: [{ id: 'A.1', points: 2, final_full: true }, { id: 'B.1', points: 1 }],
+    items: [{ id: 'A.1.1', role: 'step', points: 0.7 }, { id: 'A.1.2', role: 'step', points: 0.7 }, { id: 'A.1.3', role: 'result', points: 0.6 },
+      { id: 'B.1.1', role: 'step', points: 0.5 }, { id: 'B.1.2', role: 'result', points: 0.5 }] };
+  const got = (a) => finalAnswerFull([{ id: 'A.1.1', got: 0, points: 0.7 }, { id: 'A.1.2', got: 0.2, points: 0.7 }, { id: 'A.1.3', got: a, points: 0.6 },
+    { id: 'B.1.1', got: 0, points: 0.5 }, { id: 'B.1.2', got: 0.5, points: 0.5 }], scheme).map(i => i.got);
+  assert.deepEqual(got(0.6), [0.7, 0.7, 0.6, 0, 0.5], 'A.1 is full: correct final 0.23 m/s; B.1 has no such rule');
+  assert.deepEqual(got(0), [0, 0.2, 0, 0, 0.5]);
+});
+
+test('a zero-width value window becomes the official value with its tolerance', async () => {
+  const { tidySchemeItems } = await import('./src/lab-scheme-items.js');
+  const [it] = tidySchemeItems([{ id: '1.2b', points: 0.5, type: 'value', full_min: 1.54, full_max: 1.54 }]);
+  assert.equal(it.full_min, undefined); assert.equal(it.ref, '1.54');
+});
