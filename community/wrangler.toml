@@ -34,8 +34,14 @@ ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaed
 GEMINI_MODEL = "gemini-3.5-flash-lite"
 DEEPSEEK_MODEL = "deepseek-flash"
 DEEPSEEK_OCR_MODEL = "deepseek-flash"
-# Theory papers: Gemini reads the pages, DeepSeek grades, Gemini moderates the items DeepSeek marked down (labRoles).
+# Gemini reads the pages and Gemini 3.8 Flash grades them alone (labRoles). Model bench of 2026-11-01 against 15 audited
+# sittings: 3.8 Flash alone (thinking low) graded closest to the audits at ~$0.02 a task; DeepSeek moderated by Flash-Lite
+# and a moderation of every item scored lower; handing the grader the papers as well (LAB_GRADE_PDFS) gained nothing.
 LAB_PIPELINE = "mixed"
+LAB_GRADE_PROVIDER = "gemini"
+LAB_GRADE_MODEL = "gemini-3.8-flash"
+LAB_GRADE_THINKING = "low"
+LAB_MODERATE_PROVIDER = "none"
 # Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
 # every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
 LAB_READ_MODEL = "gemini-3.1-pro-preview"
@@ -45,12 +51,13 @@ LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 LAB_SCHEME_WARM = "on"
 # admin model-bench runs at once, only while no candidate's job waits
 LAB_BENCH_SLOTS = "8"
-# Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.1 Pro.
-LAB_SCHEME_MODEL = "gemini-3.1-pro-preview"
+# Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.8 Flash: graded with one
+# grader, its schemes came 2.2 points closer to the audits than 3.1 Pro's on 32 tasks (Claude and GPT schemes no closer).
+LAB_SCHEME_MODEL = "gemini-3.8-flash"
 LAB_SCHEME_THINKING = "low"
 # when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
 LAB_READ_FALLBACK_MODEL = "gemini-3.8-flash"
-LAB_SCHEME_FALLBACK_MODEL = "gemini-3.8-flash"
+LAB_SCHEME_FALLBACK_MODEL = "gemini-3.1-pro-preview"
 
 [[d1_databases]]
 binding = "DB"
