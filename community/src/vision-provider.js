@@ -135,7 +135,9 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     {model,messages:[{role:'system',content:jsonRules},
       {role:'user',content}],response_format:{type:'json_object'},
       /* DeepSeek thinks by default; only a stage's own level asks for it (low, medium/high, max), never GEMINI_THINKING_LEVEL */
-      ...(['low','medium','high','max'].includes(thinking)?{thinking:{type:'enabled'},reasoning_effort:thinking==='medium'?'high':thinking}:{thinking:{type:'disabled'},temperature:Number(temperature)||0}),max_tokens:count};
+      ...(['low','medium','high','max'].includes(thinking)?{thinking:{type:'enabled'},reasoning_effort:thinking==='medium'?'high':thinking,
+        // the reasoning counts against max_tokens: room for it beside the answer (only what is written is billed)
+        max_tokens:Math.max(count,65536)}:{thinking:{type:'disabled'},temperature:Number(temperature)||0,max_tokens:count})};
   /* Claude's request is built by the SDK: its size is the images' base64, bounded by the 32 MB request limit */
   let encoded=body?JSON.stringify(body):'x'.repeat(0);
   if(!body&&content.reduce((a,p)=>a+(p.data?.length||p.text?.length||0),0)>30e6)fail(413,'vision_images_too_large');
