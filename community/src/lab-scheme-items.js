@@ -83,6 +83,9 @@ export function numbersIn(text) {
     const base = +m[1].replace(",", "."), exp = m[2] ?? m[3];
     if (Number.isFinite(base)) out.push(exp != null ? base * 10 ** +exp : base);   // never the mantissa alone: 1.04·10⁻⁹ is not 1.04
   }
+  // a simple fraction written as an answer is also its value: W*/W_pr* = 1/2 is 0.5 (\frac{1}{2}, 1/2, 3 / 4)
+  const frac = /\\[dt]?frac\s*\{\s*(-?\d+)\s*\}\s*\{\s*(\d+)\s*\}|(?<![\d.])(-?\d+)\s*\/\s*(\d+)(?![\d.])/g;
+  for (let m; (m = frac.exec(String(text || "")));) { const a = +(m[1] ?? m[3]), b = +(m[2] ?? m[4]); if (b) out.push(a / b); }
   return out;
 }
 export const sameNumber = (a, b) => Math.abs(a - b) <= Math.max(1e-12, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
