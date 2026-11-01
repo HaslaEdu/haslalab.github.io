@@ -1848,7 +1848,22 @@ function settleScheme(sc) {
   sc.points = schemeTotal(sc);
   return sc;
 }
+/* Building a scheme reads the solution PDFs (rendered page by page for DeepSeek): one at a time in an isolate. A new
+   SCHEME_VERSION builds every scheme again, and a sitting's tasks are graded side by side in one queue batch; three
+   PDF builds at once could run the isolate out of memory, as three PDF-carrying gradings once did. */
+let labSchemeBuilds = Promise.resolve();
 async function labScheme(env, s, task, m) {
+  const sx = labCanonicalSource(s,task)||{}, src=sx.sol;
+  if(!src)return null;
+  if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
+  const key = [labProvider(s),VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');
+  const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
+  if (await cached()) return labSchemeBuild(env, s, task, m);
+  const turn = labSchemeBuilds.then(() => labSchemeBuild(env, s, task, m));
+  labSchemeBuilds = turn.catch(() => {});
+  return turn;
+}
+async function labSchemeBuild(env, s, task, m) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol, theory=sx.kind==="theory";
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
   if(!src)return null;
