@@ -1449,7 +1449,7 @@ const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI
   ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
-  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined }) };
+  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -1996,9 +1996,11 @@ async function labReadPage(env,s,buf,mime,notation,m) {
     ...(notation?[`Symbols this paper uses, only to tell look-alike handwriting apart (σ from 6 or γ, ξ from z or τ, μ from m or u, ρ from p, C from ρ); transcribe what is written, even where it differs from these: ${notation}`]:[]),
     'JSON output format example (the example is not student work; replace it entirely with observed content): {"text":"x = 2 m","confidence":0.9,"header":{"task":null,"sheet":null,"page":null},"legible":"good","items":[{"label":"1","kind":"value","text":"x = 2 m","crossed_out":false,"value":2,"unit":"m","uncertainty":null,"box":[100,100,200,800]}]}. For a blank page use text:"", items:[], legible:"poor".'].join('\n');
   /* A full answer page reads in 0.5-2k output tokens. At temperature 0 a page can fall into a repetition loop that runs to
-     the cap (16k tokens, ~30 s, ~$0.04 each, then truncated anyway): cap at 6k and retry once, slightly warmer, to leave the loop. */
+     the cap (16k tokens, ~30 s, ~$0.04 each, then truncated anyway): cap at 6k and retry once, warmer, to leave the loop.
+     Google advises Gemini 3 to stay at its default temperature 1.0, below which it may loop (LAB_READ_TEMPERATURE). */
   const read=temperature=>labVision(env,s,[{text:prompt},{inline_data:{mime_type:mime,data:b64(buf)},label:'Original submitted page; inspect every graph, diagram, arrow and annotation'}],PAGE_SCHEMA,6144,m,'ocr',temperature);
-  const out=await read(0).catch(error=>{if(error?.code==='vision_response_truncated')return read(0.4);throw error;});
+  const warm=Number.isFinite(src._temperature)?src._temperature:Number.isFinite(+env.LAB_READ_TEMPERATURE)&&env.LAB_READ_TEMPERATURE!==undefined&&env.LAB_READ_TEMPERATURE!==''?+env.LAB_READ_TEMPERATURE:0;
+  const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated')return read(Math.max(warm,0.8));throw error;});
   const raw=out.raw;
   if(typeof raw?.text!=='string'||raw.text.length>160000||!Array.isArray(raw.items)||!LEG.includes(raw.legible)) {
     const call=m?.calls?.at(-1);if(call?.step==='ocr'){call.ok=0;call.error='vision_response_schema';}
@@ -2611,7 +2613,7 @@ async function labBench(env, s, job) {
     else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking }, readHint: !!spec.read.hint,
+      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature }, readHint: !!spec.read.hint,
         proof: spec.proof?.provider || null, proofBench: spec.proof ? { model: spec.proof.model, thinking: spec.proof.thinking } : undefined };
       const read = await labReadChecked(env, s, roles, page.task, bytes, page.mime, m), text = readText(read);
       const stored = labStoredReading(env, bytes, { ocr: read.ocr?.text ?? text, text, read, legible: read.legible, status: 'done' });
