@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { inflateSync } from 'node:zlib';
 import { init } from './src/vendor/pdfium/engine.js';
-import { referenceImages } from './src/reference-images.js';
+import { referenceImages, referenceText } from './src/reference-images.js';
 // Public in-memory vector-arrow fixture, no student data or network access.
 function fixture(pages=2){
  const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Count '+pages+' /Kids ['+Array.from({length:pages},(_,i)=>(3+i*2)+' 0 R').join(' ')+'] >>'];
@@ -48,4 +48,18 @@ test('malformed input fails and renderer recovers for the next request',async()=
  await assert.rejects(referenceImages(env,{bytes:new Uint8Array([1,2,3])}),e=>e.code==='reference_invalid');
  await assert.rejects(referenceImages(env,{bytes:new TextEncoder().encode('%PDF-1.4 invalid')}),e=>e.code==='reference_unavailable');
  assert.equal((await referenceImages(env,{bytes:fixture(1)})).length,1);
+});
+
+test('the text layer of a canonical PDF is read by PDFium for the scheme builder; a page with no text gives none',async()=>{
+ const line='BT /F1 12 Tf 10 80 Td (A.1 \\(total 0.9 pt\\)) Tj 0 -20 Td (\\(0.2 pt\\) A = 50) Tj ET';
+ const objects=['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Count 1 /Kids [3 0 R] >>',
+  '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 100] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>',
+  '<< /Length '+line.length+' >>\nstream\n'+line+'\nendstream','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'];
+ let pdf='%PDF-1.4\n',offsets=[];
+ for(let i=0;i<objects.length;i++){offsets.push(Buffer.byteLength(pdf));pdf+=(i+1)+' 0 obj\n'+objects[i]+'\nendobj\n';}
+ const start=Buffer.byteLength(pdf);pdf+='xref\n0 '+(objects.length+1)+'\n0000000000 65535 f \n'+offsets.map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size '+(objects.length+1)+' /Root 1 0 R >>\nstartxref\n'+start+'\n%%EOF\n';
+ const text=await referenceText(env,{bytes:new Uint8Array(Buffer.from(pdf))});
+ assert.match(text,/^\[PDF page 1\]/);assert.match(text,/A\.1 \(total 0\.9 pt\)/);assert.match(text,/\(0\.2 pt\) A = 50/);
+ assert.equal(await referenceText(env,{bytes:fixture(1)}),'','a drawing alone has no text layer');
+ assert.equal(await referenceText(env,{bytes:new Uint8Array(Buffer.from('not a pdf'))}),'');
 });
