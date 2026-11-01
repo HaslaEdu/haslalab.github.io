@@ -26,7 +26,74 @@ def line_text(line):
     return ''.join(span['text'] for span in line['spans']).strip()
 
 
-def extract(source, output, manifest, dpi=170):
+def apply_overrides(document, raw, output, override_path, dpi):
+    """Recover only explicitly selected source regions; editorial content stays private."""
+    if override_path is None:
+        return
+    overrides = json.loads(override_path.read_text(encoding='utf-8'))
+    if overrides.get('source_sha256') != SOURCE_SHA:
+        raise ValueError('Overrides must bind to the exact source hash')
+    by_locator = {question['locator']: question for question in raw['questions']}
+    images = output / 'images'
+    for locator, entry in overrides.get('questions', {}).items():
+        if locator not in by_locator:
+            raise ValueError(f'Unknown override locator: {locator}')
+        question = by_locator[locator]
+        if entry.get('statement_regions') is not None:
+            question['assets'] = []
+            question['spans'] = []
+            text = []
+            for index, region in enumerate(entry['statement_regions'], 1):
+                asset, body = render_override_region(document, images, locator, region, index, 'question_crop', dpi)
+                question['assets'].append(asset)
+                question['spans'].extend(asset['spans'])
+                text.append(body)
+            question['versions'][0]['text'] = '\n\n'.join(text)
+            body = question['versions'][0]['text']
+            question['context']['source_figure_references'] = sorted(set(re.findall(
+                r'(?:Fig(?:ure)?\.?\s+)([\dA-C]+\.\d+)', body)))
+            question['context']['source_formula_references'] = sorted(set(re.findall(
+                r'(?:eqns?\s+)([\dA-C]+\.\d+)', body)))
+        question['assets'] = [asset for asset in question['assets'] if asset['role'] != 'source_context']
+        recovery = []
+        for index, region in enumerate(entry.get('context_regions', []), 1):
+            asset, body = render_override_region(document, images, locator, region, index, 'source_context', dpi)
+            question['assets'].append(asset)
+            recovery.append({'reference': region.get('reference'), 'spans': asset['spans'],
+                             'local_path': asset['local_path'], 'text_unreviewed': body,
+                             'review_notes': region.get('review_notes', [])})
+        question['context']['recovered_source_context'] = recovery
+        if 'context_recovery_complete' in entry:
+            complete = bool(entry['context_recovery_complete'])
+            question['context']['source_context_recovery_pending'] = not complete
+            question['context']['unresolved_source'] = not complete
+        question['context']['recovery_review_notes'] = entry.get('review_notes', [])
+        question['context']['private_override_sha256'] = hashlib.sha256(override_path.read_bytes()).hexdigest()
+
+
+def render_override_region(document, images, locator, region, index, role, dpi):
+    page_number = region['page']
+    if not isinstance(page_number, int) or not 1 <= page_number <= len(document):
+        raise ValueError('Invalid override page')
+    page = document[page_number - 1]
+    coordinates = region['bbox']
+    if len(coordinates) != 4 or not all(isinstance(value, (int, float)) for value in coordinates):
+        raise ValueError('Override bbox must have four numeric point coordinates')
+    box = fitz.Rect(coordinates)
+    if box.is_empty or box.is_infinite or not page.rect.contains(box):
+        raise ValueError('Override bbox escapes page bounds')
+    stem = re.sub(r'[^A-Za-z0-9.-]+', '-', locator)
+    path = images / f'{stem}-{role}-{index:02}-pdf{page_number:03}.webp'
+    pixmap = page.get_pixmap(matrix=fitz.Matrix(dpi / 72, dpi / 72), clip=box, alpha=False)
+    Image.frombytes('RGB', (pixmap.width, pixmap.height), pixmap.samples).save(path, 'WEBP', lossless=True, method=4)
+    span = {'page': page_number, 'bbox': [round(box.x0 / page.rect.width, 8),
+            round(box.y0 / page.rect.height, 8), round(box.x1 / page.rect.width, 8),
+            round(box.y1 / page.rect.height, 8)]}
+    return {'role': role, 'local_path': str(path), 'mime_type': 'image/webp',
+            'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'spans': [span]}, page.get_text('text', clip=box).strip()
+
+
+def extract(source, output, manifest, dpi=170, overrides=None, context_only=False):
     if hashlib.sha256(source.read_bytes()).hexdigest() != SOURCE_SHA:
         raise ValueError('Unexpected PDF edition')
     output = private_directory(output)
@@ -36,6 +103,20 @@ def extract(source, output, manifest, dpi=170):
     document = fitz.open(source)
     if len(document) != 512:
         raise ValueError('Unexpected page count')
+    if context_only:
+        if overrides is None:
+            raise ValueError('--context-only requires private --overrides')
+        raw_path = output / 'questions.raw.json'
+        raw = json.loads(raw_path.read_text(encoding='utf-8'))
+        if raw['source_sha256'] != SOURCE_SHA or len(raw['questions']) != 238:
+            raise ValueError('Unexpected existing private extraction')
+        apply_overrides(document, raw, output, overrides, dpi)
+        staged = raw_path.with_suffix('.tmp')
+        staged.write_text(json.dumps(raw, ensure_ascii=False, indent=2), encoding='utf-8')
+        staged.replace(raw_path)
+        print(json.dumps({'question_count': len(raw['questions']), 'context_overrides_applied': True}))
+        document.close()
+        return
     sources = json.loads(manifest.read_text(encoding='utf-8'))['sources']
     matches = [item for item in sources if item['sha256'] == SOURCE_SHA]
     if len(matches) != 1:
@@ -179,7 +260,10 @@ def extract(source, output, manifest, dpi=170):
                 quick.append(index + 1)
     if quick != [493, 496]:
         raise ValueError('The two appendix exercises must be identified explicitly')
+    if len(questions) - len(quick) != 236:
+        raise ValueError('Expected exactly 236 numbered and two unnumbered exercises')
     raw = {'version': 1, 'source_sha256': SOURCE_SHA, 'questions': questions}
+    apply_overrides(document, raw, output, overrides, dpi)
     (output / 'questions.raw.json').write_text(json.dumps(raw, ensure_ascii=False, indent=2), encoding='utf-8')
     audit = {'source_sha256': SOURCE_SHA, 'chapter_counts': audits, 'unnumbered_exercise_pdf_pages': quick,
              'question_count': len(questions), 'asset_references': sum(len(question['assets']) for question in questions),
@@ -199,5 +283,7 @@ if __name__ == '__main__':
     parser.add_argument('output', type=Path)
     parser.add_argument('--manifest', type=Path, required=True)
     parser.add_argument('--dpi', type=int, default=170)
+    parser.add_argument('--overrides', type=Path, help='Private source-hash-bound region/context JSON')
+    parser.add_argument('--context-only', action='store_true', help='Apply private overrides to existing raw without regenerating unaffected crops')
     args = parser.parse_args()
-    extract(args.source, args.output, args.manifest, args.dpi)
+    extract(args.source, args.output, args.manifest, args.dpi, args.overrides, args.context_only)

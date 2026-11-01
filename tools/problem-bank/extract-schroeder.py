@@ -83,7 +83,10 @@ def bold_label(line):
 def lecture_boundary(line):
     if line["bbox"][1] < 48:
         return False
-    large_heading = any(s["size"] >= 9.5 and "CMBX" in s["font"] for s in line["spans"])
+    # Chapter openers use large sans-serif faces rather than CMBX.
+    large_heading = any((s["size"] >= 9.5 and "CMBX" in s["font"])
+                        or (s["size"] >= 16 and s["font"].startswith("CMSS"))
+                        for s in line["spans"])
     body = sum(len(s["text"]) for s in line["spans"]
                if re.match(r"CM(?:R|SL|TI|TT|SS)10", s["font"]) and s["size"] >= 9.5) >= 35
     return large_heading or body
@@ -281,10 +284,12 @@ def main():
         next_point = position(starts[index + 1]) if index + 1 < len(starts) else (len(document) + 1, 0)
         possible = [s for s in stops if position(start) < position(s) < next_point]
         stop = min(possible, key=position) if possible else None
-        limit = position(stop) if stop else ((starts[index + 1]["page"], starts[index + 1]["header_bbox"][1])
-                                            if index + 1 < len(starts) else next_point)
+        # The following label's first line can contain a tall inline integral.
+        # Its expanded top belongs to that following question, not this crop.
+        limit = position(stop) if stop else next_point
         regions = []
         statement = []
+        actual_footnote_markers = {}
         for number in range(start["page"], min(limit[0], len(document)) + 1):
             if number == limit[0] and limit[1] < 49:
                 continue
@@ -302,6 +307,13 @@ def main():
             if not relevant:
                 continue
             statement.extend(l["text"] for l in relevant)
+            # The PDF maps ordinary math symbols (including equivalence) to
+            # the same fallback character as an asterisk. Real note markers
+            # are separate superscript spans, smaller than the 9pt problem.
+            markers = sorted({s["text"].strip() for line in relevant for s in line["spans"]
+                              if s["size"] <= 7.1 and re.fullmatch(r"[⇤*†‡]", s["text"].strip())})
+            if markers:
+                actual_footnote_markers[number] = markers
             regions.append((number, box))
         text = "\n".join(statement)
         label_prefix = f"{start['kind'].title()} {start['number']}."
@@ -320,8 +332,8 @@ def main():
                 assets.append(figure_assets[ref])
         linked_footnotes = []
         excluded_footnote_pages = manual_context.get("footnote_exclusions", {}).get(start["number"], [])
-        if re.search(r"[⇤*†‡]", text):
-            for number, _ in regions:
+        if actual_footnote_markers:
+            for number in actual_footnote_markers:
                 if number in footnote_assets and number not in excluded_footnote_pages:
                     assets.append(footnote_assets[number])
                     linked_footnotes.append({"page": number, "text": footnote_text[number], "review_status": "pending"})
@@ -352,6 +364,7 @@ def main():
                                       "unresolved_source": bool(missing_figures) or start["header_bbox"][1] - start["bbox"][1] > 4,
                                       "missing_figure_references": missing_figures,
                                       "source_footnotes": linked_footnotes,
+                                      "source_footnote_markers": actual_footnote_markers,
                                       "excluded_source_footnote_pages": excluded_footnote_pages,
                                       "source_inline_answer_present": printed_answer,
                                       "shared_source_regions": shared_regions,

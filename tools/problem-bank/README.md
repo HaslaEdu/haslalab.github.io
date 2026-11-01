@@ -54,6 +54,8 @@ The edition-specific `extract-pns.py`, `extract-puzzling.py` and other extractor
 
 `extract-pns-native.py` uses a private edition profile for the printed numbering and reviewed OCR corrections. `extract-schroeder.py` follows the actual standalone problem-label font and preserves externally referenced figures, footnotes and private context overrides. A caption near a statement is not automatically a supplied figure: requested answer sketches must stay outside the statement.
 
+A PNS profile can supply hash-bound local Tesseract checkpoints for pages whose native text layer is empty. Word coordinates use each checkpoint's actual render size; an existing native layer cannot be overwritten. Printed numbering errors retain the observed `original_number`, while the sequence position remains a separate locator. Duplicate scan labels require an explicit, image-checked private exclusion with matching coordinates and a review note. These exceptions never silently repair the source or mark it verified.
+
 `prepare-extracted.py --private-root PRIVATE` merges schema-aligned extractor output and statement-segment adapters with numbered translation batches. It verifies crop hashes before generating private import JSON, ignores temporary draft files, preserves non-English originals and leaves every version pending independent review. Use `--text-only` only after the corresponding source crops have already been imported.
 
 Directly authored bilingual batches use numbered JSON filenames and an `items` or `questions` array with `original_number`, `text_en`, `text_ko`, `source_image_checked`, `review_notes` and `unresolved_source`. Include `locator` whenever printed numbers repeat in a compilation or for unnumbered exercises. Authors must compare equations, units and figures with the source image; parsing the PDF text alone does not complete that check. `audit-translation-math.mjs PRIVATE_TRANSLATIONS_DIR` checks LaTeX syntax with the repository's KaTeX without contacting a service. Syntax success does not establish scientific correctness.
@@ -111,3 +113,5 @@ node --test tools/problem-bank/test-store.mjs
 ```
 
 Tests cover stable identities, replay, missing translations, bilingual readiness, text-version review isolation, page/box validation, rollback, hostile SQL text, private output boundaries and crop integrity.
+
+`python -m unittest discover -s tools/problem-bank -p 'test_*.py'` also checks adapters, repeated-number translation identity, local OCR geometry, printed-number preservation, reviewed duplicate exclusions and the optional runner's mocked failure handling. These tests contain synthetic content and do not run OCR, models or remote imports.

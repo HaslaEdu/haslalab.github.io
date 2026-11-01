@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+import csv
 from difflib import SequenceMatcher
 import hashlib
+import io
 import json
 from pathlib import Path
 import re
@@ -51,6 +53,41 @@ def point(line):
     return line["page"], line["bbox"][1]
 
 
+def local_ocr_lines(record, source_hash, page_number, page_size):
+    """Map a checked local OCR cache to source points; never replace native text."""
+    if (record.get("engine") != "tesseract-local" or record.get("source_sha256") != source_hash
+            or record.get("page") != page_number):
+        raise ValueError("Local OCR cache source/page mismatch")
+    size, pixels = record.get("page_size_pt", []), record.get("render_size_px", [])
+    if (len(size) != 2 or any(abs(a - b) > .01 for a, b in zip(size, page_size))
+            or len(pixels) != 2 or not all(isinstance(value, int) and value > 0 for value in pixels)):
+        raise ValueError("Local OCR cache render geometry mismatch")
+    groups = {}
+    fields = ['level', 'page_num', 'block_num', 'par_num', 'line_num', 'word_num',
+              'left', 'top', 'width', 'height', 'conf', 'text']
+    # TessBaseAPI.GetTSVText returns rows without a header in some bindings.
+    fieldnames = None if record["tsv"].startswith("level\t") else fields
+    for row in csv.DictReader(io.StringIO(record["tsv"]), fieldnames=fieldnames,
+                              delimiter="\t", quoting=csv.QUOTE_NONE):
+        if row.get("level") != "5" or not row.get("text", "").strip():
+            continue
+        x, y, width, height = (int(row[key]) for key in ("left", "top", "width", "height"))
+        if not (0 <= x < x + width <= pixels[0] and 0 <= y < y + height <= pixels[1]):
+            raise ValueError("Local OCR word lies outside its rendered page")
+        key = tuple(int(row[name]) for name in ("block_num", "par_num", "line_num"))
+        word = {"text": row["text"], "bbox": [x * size[0] / pixels[0], y * size[1] / pixels[1],
+                (x + width) * size[0] / pixels[0], (y + height) * size[1] / pixels[1]]}
+        groups.setdefault(key, []).append(word)
+    lines = []
+    for words in groups.values():
+        box = [min(word["bbox"][0] for word in words), min(word["bbox"][1] for word in words),
+               max(word["bbox"][2] for word in words), max(word["bbox"][3] for word in words)]
+        lines.append({"page": page_number, "bbox": box, "text": " ".join(word["text"] for word in words),
+                      "max_size": box[3] - box[1], "fonts": ["local-tesseract-unreviewed"],
+                      "origin": "local_ocr_fallback"})
+    return sorted(lines, key=point)
+
+
 def layout(document, profile):
     pages = []
     settings = profile["layout"]
@@ -64,6 +101,12 @@ def layout(document, profile):
                     lines.append({"page": page_number, "bbox": list(line["bbox"]),
                                   "text": text, "max_size": max(s["size"] for s in line["spans"]),
                                   "fonts": sorted({s["font"] for s in line["spans"]})})
+        fallback = profile.get("local_ocr_pages", {}).get(str(page_number))
+        if fallback:
+            if lines:
+                raise ValueError("Local OCR fallback cannot replace a nonempty native text layer")
+            lines = local_ocr_lines(read_json(private_input(fallback)), profile["source_sha256"],
+                                    page_number, [page.rect.width, page.rect.height])
         top = settings["body_top"]
         for line in lines:
             if line["bbox"][1] >= 100:
@@ -102,22 +145,44 @@ def expected_numbers(profile):
 
 def number_headers(pages, profile, overrides):
     expected = expected_numbers(profile)
-    expected_set = set(expected)
     corrections = {(item["page"], item["raw_label"]): item for item in overrides.get("number_labels", [])}
+    exclusions = {(item["page"], item["raw_label"]): item
+                  for item in overrides.get("number_label_exclusions", [])}
+    used_exclusions = set()
     candidates = []
     first = min(part["first_page"] for part in profile["parts"])
     last = max(part["last_page"] for part in profile["parts"])
     for page in pages[first - 1:last]:
+        part = next((part for part in profile["parts"]
+                     if part["first_page"] <= page["page"] <= part["last_page"]), None)
+        if part is None:
+            continue
+        part_expected = {str(number) for number in range(part["first_number"], part["last_number"] + 1)}
         for line in page["lines"]:
+            key = (page["page"], line["text"])
+            if key in exclusions:
+                exclusion = exclusions[key]
+                if (exclusion.get("source_image_checked") is not True
+                        or not exclusion.get("review_note")
+                        or len(exclusion.get("bbox", [])) != 4
+                        or any(abs(a - b) > .5 for a, b in zip(exclusion["bbox"], line["bbox"]))):
+                    raise ValueError("A number-label exclusion requires a reviewed source region")
+                used_exclusions.add(key)
+                continue
             label = re.sub(r"\s+", "", line["text"])
             box = line["bbox"]
             # Confusable glyphs permit candidacy, never an unreviewed correction.
             normalized = label.translate(str.maketrans({"I": "1", "l": "1", "O": "0", "S": "5", "s": "3"}))
-            if (re.fullmatch(r"[1-9][0-9IlOSs]{3}", label) and normalized in expected_set
-                    and box[0] > page["width"] * .42 and box[2] < page["width"] * .60
+            correction = corrections.get((page["page"], line["text"]))
+            proposed = correction["number"] if correction else normalized
+            if ((re.fullmatch(r"[1-9IlOSs][0-9IlOSs]{3}", label) or correction) and proposed in part_expected
+                    and box[0] > page["width"] * profile["layout"].get("label_left_ratio", .42)
+                    and box[2] < page["width"] * profile["layout"].get("label_right_ratio", .60)
                     and 50 < box[1] < page["height"] - 35):
                 candidates.append(dict(line, raw_label=line["text"]))
     candidates.sort(key=point)
+    if used_exclusions != set(exclusions):
+        raise ValueError("A number-label exclusion no longer matches this source layout")
     if len(candidates) != len(expected):
         raise ValueError(f"Expected {len(expected)} number labels; found {len(candidates)}. Source review required")
     for candidate, number in zip(candidates, expected):
@@ -130,8 +195,20 @@ def number_headers(pages, profile, overrides):
                 raise ValueError(f"Unreviewed number discrepancy p{candidate['page']}: OCR {raw}, expected {number}")
             candidate["number_origin"] = "private_visually_verified_source_label"
         else:
-            candidate["number_origin"] = "native_ocr_label_matches_toc_sequence"
+            candidate["number_origin"] = ("local_ocr_label_matches_source_sequence"
+                                          if candidate.get("origin") == "local_ocr_fallback"
+                                          else "native_ocr_label_matches_toc_sequence")
         candidate["number"] = number
+        correction = corrections.get((candidate["page"], candidate["raw_label"]))
+        printed = correction.get("printed_number", number) if correction else number
+        if not re.fullmatch(r"\d{4}", printed):
+            raise ValueError("Printed problem number must preserve four observed source digits")
+        if printed != number:
+            if correction.get("printed_label_typo") is not True:
+                raise ValueError("Printed-number difference requires an explicit source-typo record")
+            candidate["number_origin"] = "private_verified_printed_number_differs_from_sequence"
+            candidate["printed_number_review_note"] = correction.get("review_note", "")
+        candidate["printed_number"] = printed
         part = next(part for part in profile["parts"]
                     if part["first_number"] <= int(number) <= part["last_number"])
         if not part["first_page"] <= candidate["page"] <= part["last_page"]:
@@ -140,15 +217,17 @@ def number_headers(pages, profile, overrides):
     return candidates
 
 
-def solution_headers(pages, overrides):
+def solution_headers(pages, overrides, min_top=55):
     found = []
     for page in pages:
         for line in page["lines"]:
             text = line["text"]
             clean = re.sub(r"[^a-z]", "", text.lower())
             if (len(text) < 30 and clean.startswith("so") and line["bbox"][0] < 120
-                    and line["bbox"][1] > 55 and SequenceMatcher(None, clean, "solution").ratio() > .65):
-                found.append(dict(line, origin="native_ocr_solution_heading"))
+                    and line["bbox"][1] > min_top and SequenceMatcher(None, clean, "solution").ratio() > .65):
+                found.append(dict(line, origin=("local_ocr_solution_heading"
+                                  if line.get("origin") == "local_ocr_fallback"
+                                  else "native_ocr_solution_heading")))
     for marker in overrides.get("solution_markers", []):
         if marker.get("source_image_checked") is not True:
             raise ValueError("A missing OCR solution marker requires visual source review")
@@ -211,7 +290,7 @@ def extract(args):
         raise ValueError("Page count disagrees with reviewed profile")
     pages = layout(document, profile)
     headers = number_headers(pages, profile, overrides)
-    solutions = solution_headers(pages, overrides)
+    solutions = solution_headers(pages, overrides, profile["layout"].get("solution_min_top", 55))
     images = output / "crops"
     images.mkdir(exist_ok=True)
     cache = {}
@@ -288,7 +367,9 @@ def extract(args):
         section = next(section for section in profile["sections"]
                        if section["first_number"] <= int(number) <= section["last_number"])
         flags = ["embedded_ocr_math_unverified", "canonical_source_crops_pending_review"]
-        if start["number_origin"].startswith("private"):
+        if start["printed_number"] != number:
+            flags.append("source_printed_number_typo_preserved")
+        elif start["number_origin"].startswith("private"):
             flags.append("number_ocr_corrected_from_verified_printed_label")
         if manual_text:
             flags.append("private_source_transcription_supplied")
@@ -296,19 +377,37 @@ def extract(args):
                    "canonical_representation": "lossless_source_question_crops", "quality_flags": flags,
                    "number_origin": start["number_origin"], "number_raw_ocr": start["raw_label"],
                    "solution_boundary_origin": boundary["origin"], "unresolved_source": False,
-                   "provenance_notes": "User-supplied PNS volume; original embedded OCR is unverified, with university credits retained in source crops."}
+                   "provenance_notes": "User-supplied PNS volume; OCR mathematical text is unverified, with university credits retained in source crops."}
+        excluded_labels = [{"page": item["page"], "raw_label": item["raw_label"],
+                             "review_note": item["review_note"]}
+                            for item in overrides.get("number_label_exclusions", [])
+                            if re.sub(r"\s+", "", item["raw_label"]) == start["printed_number"]]
+        if excluded_labels:
+            context["source_number_label_exclusions"] = excluded_labels
+        if start["printed_number"] != number:
+            context.update(source_sequence_number=number, printed_number=start["printed_number"],
+                           printed_number_review_note=start["printed_number_review_note"], unresolved_source=True)
         if number in no_solution:
             context["no_solution_printed"] = True
+        if explicit and explicit.get("review_note"):
+            context["source_question_end_review_note"] = explicit["review_note"]
         if number in overrides.get("question_regions", {}):
             context["source_region_override_review_note"] = overrides["question_regions"][number].get("review_note", "")
+        fallback_pages = sorted({span["page"] for span in spans
+                                 if str(span["page"]) in profile.get("local_ocr_pages", {})})
+        if fallback_pages:
+            context["local_ocr_fallback_pages"] = fallback_pages
+            context["quality_flags"].append("local_ocr_math_unverified")
         if blank_regions:
             context["white_continuation_regions_omitted"] = blank_regions
         questions.append({"source": {"drive_id": source["drive_id"], "revision": source["revision"]},
-                          "source_language": "en", "locator": locator, "original_number": number,
+                          "source_language": "en", "locator": locator, "original_number": start["printed_number"],
                           "chapter": section["chapter"], "kind": "problem", "subjects": section["subjects"],
                           "level": profile["level"], "review_status": "pending", "spans": spans,
                           "versions": [{"language": "en", "role": "original", "text": text,
-                                        "review_status": "pending", "extraction_method": "native_ocr_with_canonical_source_crops"}],
+                                        "review_status": "pending", "extraction_method": (
+                                            "local_ocr_with_canonical_source_crops" if fallback_pages
+                                            else "native_ocr_with_canonical_source_crops")}],
                           "assets": assets, "context": context})
         audits.append({"locator": locator, "number": number, "number_region": start,
                        "solution_boundary": boundary, "assets": image_audits, "review_status": "pending"})
@@ -318,10 +417,15 @@ def extract(args):
     audit = {"version": 1, "profile": profile["profile"], "source_sha256": source_hash,
              "page_count": len(document), "expected_question_count": len(expected_numbers(profile)),
              "found_question_count": len(questions), "found_numbers": [question["original_number"] for question in questions],
+             "found_sequence_numbers": [header["number"] for header in headers],
+             "printed_number_discrepancies": [{"sequence": header["number"], "printed": header["printed_number"],
+                                               "pdf_page": header["page"]} for header in headers
+                                              if header["printed_number"] != header["number"]],
              "gaps": [], "duplicates": [], "number_coverage_complete": True,
              "toc_evidence": profile["toc_evidence"], "preface_evidence": profile["preface_evidence"],
              "subject_counts": dict(counts), "solution_boundary_count": len(solutions),
              "no_solution_printed": no_solution, "private_number_corrections": len(overrides.get("number_labels", [])),
+             "private_number_label_exclusions": len(overrides.get("number_label_exclusions", [])),
              "private_solution_markers": len(overrides.get("solution_markers", [])),
              "asset_count": sum(len(question["assets"]) for question in questions), "crop_dpi": args.dpi,
              "paid_api_calls": 0, "statement_boundary_review_complete": False, "publication_ready": False,

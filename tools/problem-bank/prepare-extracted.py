@@ -71,14 +71,40 @@ def with_translation(question, translated):
     return question
 
 
+REVIEWED_COUNTS = {"pns-optics": 160, "puzzling-200": 200, "guide-part1": 139,
+                   "guide-part2": 182, "kalda": 555, "pns-thermo": 367,
+                   "schroeder": 486, "puzzling-more": 200, "blundell": 238, "morin-mechanics": 496}
+
+
+def refresh_reviewed_source_counts(root, sources):
+    # Every import includes the source inventory. Its progress must not depend on
+    # which question payloads were selected for this particular update.
+    for pattern in ("*/questions.raw.json", "*/questions-raw.json"):
+        for path in sorted(root.glob(pattern)):
+            expected = REVIEWED_COUNTS.get(path.parent.name)
+            if expected is None:
+                continue
+            raw = read_json(path)
+            if path.name == "questions.raw.json":
+                ids = {question["source"]["drive_id"] for question in raw["questions"]}
+                if len(ids) != 1:
+                    raise ValueError("A reviewed extractor must identify exactly one registered source")
+                source = sources[next(iter(ids))]
+            else:
+                matches = [source for source in sources.values() if source["sha256"] == raw["source_sha256"]]
+                if len(matches) != 1:
+                    raise ValueError("Reviewed source SHA must identify exactly one registered source")
+                source = matches[0]
+            source.update(expected_question_count=expected,
+                          extraction_complete=len(raw["questions"]) == expected)
+
+
 def prepare(root, text_only=False, profiles=None):
     root = private_directory(root)
     manifest = read_json(root / "manifest.json")
     sources = {item["drive_id"]: item for item in manifest["sources"]}
+    refresh_reviewed_source_counts(root, sources)
     questions = []
-    reviewed_counts = {"pns-optics": 160, "puzzling-200": 200, "guide-part1": 139,
-                       "guide-part2": 182, "kalda": 555, "pns-thermo": 367,
-                       "schroeder": 486, "puzzling-more": 200, "blundell": 238}
     for raw_file in sorted(root.glob("*/questions.raw.json")):
         if profiles and raw_file.parent.name not in profiles:
             continue
@@ -90,28 +116,25 @@ def prepare(root, text_only=False, profiles=None):
             question["subjects"] = normalized_subjects(question["subjects"])
             question["assets_complete"] = not text_only
             question.setdefault("context", {}).setdefault("quality_flags", original.get("quality_flags", []))
-            if text_only:
-                question["assets"] = []
             for index, asset in enumerate(question.get("assets", [])):
                 asset["asset_id"] = f"crop-{index + 1}"
-                if asset["role"] in ("source_figure", "source_footnote"):
+                if asset["role"] in ("source_figure", "source_footnote", "source_context"):
                     question["context"].setdefault("source_asset_details", []).append({
                         "asset_id": asset["asset_id"], "source_role": asset["role"],
                         "figure_label": asset.get("figure_label"),
                         "quality_flags": asset.get("quality_flags", [])})
                     asset["role"] = "figure" if asset["role"] == "source_figure" else "question_crop"
-                path = Path(asset["local_path"])
-                if not path.is_absolute():
-                    path = folder / path
-                asset.update(payload(path, asset["sha256"]))
+                if not text_only:
+                    path = Path(asset["local_path"])
+                    if not path.is_absolute():
+                        path = folder / path
+                    asset.update(payload(path, asset["sha256"]))
+            if text_only:
+                question["assets"] = []
             translated_item = translated.get(question["locator"])
             if translated_item is None and unique_numbers:
                 translated_item = translated.get(str(question["original_number"]))
             questions.append(with_translation(question, translated_item))
-        source = sources[raw["questions"][0]["source"]["drive_id"]]
-        expected = reviewed_counts.get(folder.name)
-        if expected is not None:
-            source.update(expected_question_count=expected, extraction_complete=len(raw["questions"]) == expected)
     for raw_file in sorted(root.glob("*/questions-raw.json")):
         if profiles and raw_file.parent.name not in profiles:
             continue
@@ -154,9 +177,6 @@ def prepare(root, text_only=False, profiles=None):
                     "text": original["text_en_ocr_raw"], "review_status": "pending"}]}
             questions.append(with_translation(question, translated.get(question["original_number"])))
         document.close()
-        expected = reviewed_counts.get(folder.name)
-        if expected is not None:
-            source.update(expected_question_count=expected, extraction_complete=len(raw["questions"]) == expected)
     out_manifest, out_questions = root / "import-manifest.json", root / "import-questions.json"
     out_manifest.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
     out_questions.write_text(json.dumps({"version": 1, "questions": questions}, ensure_ascii=False), encoding="utf-8")

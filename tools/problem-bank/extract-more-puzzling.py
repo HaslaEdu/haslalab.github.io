@@ -67,11 +67,13 @@ def extract(source, output, dpi=170):
     if len(document) != 498:
         raise ValueError('Unexpected page count')
     mapping, stars = topic_index(document)
-    labels, all_spans, footnotes = [], {}, {}
+    labels, all_spans, all_lines, footnotes = [], {}, {}, {}
     for index in range(FIRST - 1, LAST):
         page = document[index]
-        spans = [span for block in page.get_text('dict')['blocks'] if 'lines' in block
-                 for line in block['lines'] for span in line['spans']]
+        lines = [line for block in page.get_text('dict')['blocks'] if 'lines' in block
+                 for line in block['lines']]
+        all_lines[index] = lines
+        spans = [span for line in lines for span in line['spans']]
         all_spans[index] = spans
         for word in page.get_text('words'):
             match = LABEL.fullmatch(word[4])
@@ -148,10 +150,18 @@ def extract(source, output, dpi=170):
                               and span['bbox'][1] < footnotes[index][0]['bbox'][1] - 6]
                 if len(references) != 1:
                     raise ValueError('Footnote must have one unambiguous source reference')
-                reference_y = references[0]['bbox'][1]
+                reference_line = next(line for line in all_lines[index] if references[0] in line['spans'])
+                main_baselines = [span['origin'][1] for span in reference_line['spans']
+                                  if span['size'] > 9 and span['text'].strip()]
+                if not main_baselines:
+                    raise ValueError('Footnote reference must belong to a normal-size statement line')
+                # A raised reference on the first statement line can sit above
+                # its printed problem label. Its enclosing baseline identifies
+                # the correct question without assigning it to the prior one.
+                reference_y = max(main_baselines)
                 owner = next((candidate for candidate in reversed(labels)
                               if candidate['page_index'] < index or
-                              candidate['page_index'] == index and candidate['bbox'][1] <= reference_y + 1), None)
+                              candidate['page_index'] == index and candidate['bbox'][1] <= reference_y), None)
                 if owner == label:
                     segment = save_segment(label['number'], index, note['bbox'], 'footnote',
                                            note['number'], note['next_marker_top'])
