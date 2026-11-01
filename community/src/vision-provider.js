@@ -24,7 +24,9 @@ async function providerErrorCode(response){
   const chunks=[];let size=0;
   try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>8192){await reader.cancel();return null;}chunks.push(value);}
     const bytes=new Uint8Array(size);let offset=0;for(const part of chunks){bytes.set(part,offset);offset+=part.length;}
-    const parsed=JSON.parse(new TextDecoder().decode(bytes)),code=parsed?.error?.code||parsed?.error?.type||parsed?.code;
+    const parsed=JSON.parse(new TextDecoder().decode(bytes)),code=parsed?.error?.code||parsed?.error?.type||parsed?.code,message=parsed?.error?.message;
+    /* the provider's own words on a refused request (kept for the admin model bench, never shown to a candidate) */
+    if(typeof message==='string')response.providerMessage=message.replace(/[^\x20-\x7e]/g,' ').slice(0,240);
     return typeof code==='string'&&PROVIDER_CODES.has(code)?code:null;
   }catch{return null;}finally{try{reader.releaseLock();}catch{}}
 }
@@ -111,7 +113,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
-  let usage=null,timer,aborted=false,providerStatus,providerCode;
+  let usage=null,timer,aborted=false,providerStatus,providerCode,providerMessage;
   let rejectAbort;
   const controller=new AbortController(),abort=()=>{controller.abort();rejectAbort?.(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));};
   if(signal?.aborted)fail(504,'vision_provider_timeout',{provider,stage});
@@ -170,7 +172,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     let response=await send(encoded);
     if(response.status===400){const retry=plain();if(retry){try{await response.body?.cancel();}catch{}encoded=retry;response=await send(encoded);}}
     providerStatus=response.status;
-    if(!response.ok){providerCode=await providerErrorCode(response);fail(502,response.status===401||response.status===403?'vision_provider_auth':
+    if(!response.ok){providerCode=await providerErrorCode(response);providerMessage=response.providerMessage;fail(502,response.status===401||response.status===403?'vision_provider_auth':
       response.status===402?'vision_provider_credits':response.status===429?'vision_provider_rate_limited':response.status===404?'vision_model_unavailable':
       [400,413,422].includes(response.status)?'vision_request_rejected':'vision_provider_failed');}
     const parsed=await boundedJSON(response),meter=provider==='gemini'?geminiLabUsage(parsed,started):deepseekLabUsage(parsed,started);
@@ -196,7 +198,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   catch(error){const failure=error instanceof VisionProviderError?error:new VisionProviderError(aborted||controller.signal.aborted?504:502,
     aborted||controller.signal.aborted?'vision_provider_timeout':'vision_provider_failed');
     failure.provider=provider;failure.stage=stage;failure.ms=Math.max(0,Date.now()-started);
-    if(Number.isInteger(providerStatus))failure.provider_status=providerStatus;if(providerCode)failure.provider_code=providerCode;
+    if(Number.isInteger(providerStatus))failure.provider_status=providerStatus;if(providerCode)failure.provider_code=providerCode;if(providerMessage)Object.defineProperty(failure,'provider_message',{value:providerMessage,enumerable:false});   // never serialised: the admin bench reads it by name
     if(usage)failure.usage={...usage,ok:false};throw failure;}
   finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
 }
