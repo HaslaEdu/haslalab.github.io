@@ -317,6 +317,13 @@ test('Math-Verify in code: a final expression that is not the official one yet h
   const items=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
   assert.match(items,/"id":"F"[^}]*"got":0/);assert.match(items,/"id":"S"[^}]*"got":1\.4/);
 }));
+test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
+  env.LAB_ONLY_PROVIDER='deepseek';
+  const a=(await start('gemini')).data,sid=a.session.id;
+  assert.equal(JSON.parse(sql.prepare('SELECT sources FROM lab_sessions WHERE id=?').get(sid).sources)._provider,'deepseek');
+  const {visionCapabilities}=await import('./src/vision-provider.js'),caps=visionCapabilities(env);
+  assert.equal(caps.default,'deepseek');assert.deepEqual(caps.providers.map(p=>[p.id,p.available]),[['gemini',false],['deepseek',true]]);
+}));
 test('a paid sitting\'s pages are read whatever the account has read that day',async()=>fixture(async({api,start,upload,drain,sql})=>{
   const a=(await start('gemini')).data,sid=a.session.id;
   sql.prepare("INSERT OR REPLACE INTO ratelimits(k,start,n) VALUES('labocr:1',?,10000)").run(Math.floor(Date.now()/1000));

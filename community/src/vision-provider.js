@@ -49,8 +49,10 @@ export function requireVisionProvider(env,value) {
   return provider;
 }
 export function visionCapabilities(env) {
-  return {default:'gemini',pipeline:env.LAB_PIPELINE==='mixed'&&env.GEMINI_API_KEY&&env.DEEPSEEK_API_KEY?'mixed':'single',providers:['gemini','deepseek'].map(id=>({id,label:id,model:VISION_MODELS[id],
-    available:!!env[KEYS[id]],...(!env[KEYS[id]]?{reason:'provider_unavailable'}:{})}))};
+  /* LAB_ONLY_PROVIDER: every sitting runs on that provider (a provider without credit offered to no one) */
+  const only=['gemini','deepseek'].includes(env.LAB_ONLY_PROVIDER)?env.LAB_ONLY_PROVIDER:null;
+  return {default:only||'gemini',pipeline:env.LAB_PIPELINE==='mixed'&&env.GEMINI_API_KEY&&env.DEEPSEEK_API_KEY?'mixed':'single',providers:['gemini','deepseek'].map(id=>({id,label:id,model:VISION_MODELS[id],
+    available:!!env[KEYS[id]]&&(!only||id===only),...(!env[KEYS[id]]||only&&id!==only?{reason:'provider_unavailable'}:{})}))};
 }
 /* a model other than the provider's default, only for the admin model bench: the provider's own id pattern, never a URL part */
 const MODEL_ID = { openai: /^(?:gpt|o\d|chatgpt)[a-z0-9._-]{0,80}$/, anthropic: /^claude-[a-z0-9][a-z0-9._-]{0,80}$/ };

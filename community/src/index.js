@@ -1552,7 +1552,8 @@ const labProviderLocked = s => !!(s.charged || labSrc(s)._provider_locked);
 // pins it before charging or queueing, so concurrent choices cannot change the
 // provider of work the account has already authorised.
 async function labSelectProvider(env, s, requested, pin = false) {
-  const selected = requested == null ? labProvider(s) : visionProvider(requested);
+  const only = ['gemini', 'deepseek'].includes(env.LAB_ONLY_PROVIDER) ? env.LAB_ONLY_PROVIDER : null;   // see visionCapabilities
+  const selected = only && (requested != null || labProvider(s) == null || !labProviderLocked(s)) ? only : requested == null ? labProvider(s) : visionProvider(requested);
   if (!selected) throw new HttpError(409, 'provider_required');
   requireVisionProvider(env, selected);
   const saved = "CASE WHEN json_valid(sources) THEN sources ELSE '{}' END";
@@ -1731,7 +1732,10 @@ async function labVision(env, s, parts, schema, max, m, step, temperature = 0) {
     if(!media)continue;
     if(media.mime_type==='application/pdf'&&provider==='deepseek'){
       const bytes=Uint8Array.from(atob(media.data),char=>char.charCodeAt(0));
-      sequence.push(...await referenceImages(env,{provider,bytes,source:part.source||part.label||'canonical source',label:part.label||'Canonical public reference',firstPage:part.firstPage||1,lastPage:part.lastPage}));
+      /* a PDF too long to render (past 20 pages) or one PDFium cannot render goes by its text layer, where the caller sent one */
+      const pages=await referenceImages(env,{provider,bytes,source:part.source||part.label||'canonical source',label:part.label||'Canonical public reference',firstPage:part.firstPage||1,lastPage:part.lastPage})
+        .catch(error=>{if(!parts.some(p=>typeof p.text==='string'&&p.text.includes('<<PDF_TEXT>>')))throw error;console.error('lab pdf pages',error?.code||error?.message);return null;});
+      if(pages)sequence.push(...pages);else sequence.push({text:'(The PDF pages above could not be rendered as images; use its text layer below.)'});
       continue;
     }
     sequence.push({mime:media.mime_type,data:media.data,label:part.label||'Server-owned reference or submitted page'});
