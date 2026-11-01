@@ -2586,7 +2586,11 @@ const LAB_JOB_HANDLERS = {
       await env.DB.prepare(`UPDATE lab_pages SET ocr_status='reading' WHERE id=? AND edited=0`).bind(page.id).run();
       const mt = meter();
       try {
-        await limit(env, 'labocr:' + s.user_id, LAB.ocrPerDay, 86400);
+        /* the daily reading limit guards against abuse, not admins; a page over it waits for the window instead of
+           failing for good (IPhO 2015 T3: an account's 151st page of the day stayed «rate_limited») */
+        const owner = await env.DB.prepare('SELECT role FROM users WHERE id=?').bind(s.user_id).first();
+        if (owner?.role !== 'admin') await limit(env, 'labocr:' + s.user_id, LAB.ocrPerDay, 86400)
+          .catch(e => { if (e?.status === 429) throw new LabJobDeferred(600); throw e; });
         const bytes = await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
         const read = await labReadChecked(env, s, labRoles(env, s, labTheory(s, page.task)), page.task, bytes, page.mime, mt), text = readText(read), up=read.ocr;
         const stored = labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: 'done' });
@@ -2608,6 +2612,9 @@ const LAB_JOB_HANDLERS = {
     if (ahead) throw new LabJobDeferred(20);
     const pages = await labPagesOf(env, s.id), mine = pages.filter(p => p.task === job.task);
     if (!contestMeta(s)) {
+      /* a page that failed only on the daily reading limit is read again (it waits for the window if still over) */
+      const limited=mine.filter(p=>p.mime!=='text/plain'&&p.ocr_status==='failed'&&p.read&&JSON.parse(p.read).ocr?.error==='rate_limited');
+      if(limited.length){await labQueueOcr(env,s,limited.map(p=>p.id),true);throw new LabJobDeferred(20);}
       const failedPages=mine.filter(p=>p.mime!=='text/plain'&&p.ocr_status==='failed');
       if(failedPages.length)return{status:'pending',why:failedPages.some(p=>p.read&&JSON.parse(p.read).ocr?.error==='ocr_storage_limit')?'ocr_storage_limit':'ocr_failed',score:null,pages:mine.length};
       const failedStructure=mine.filter(p=>p.read&&JSON.parse(p.read).structure_status==='failed');

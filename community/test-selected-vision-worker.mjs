@@ -277,6 +277,20 @@ test('experiments go through the same pipeline: Gemini reads (red ink left out),
   assert.match(grades[0].text,/R14\. Marks in red ink/,'the regulation tells the grader to ignore red marks');
   assert.equal((await api(`/lab/sessions/${sid}`)).data.session.status,'graded');
 }));
+test('the daily reading limit makes a page wait instead of failing it, and never holds an admin back',async()=>fixture(async({api,start,upload,sql,calls,env})=>{
+  const a=(await start('gemini')).data,sid=a.session.id;
+  sql.prepare("INSERT OR REPLACE INTO ratelimits(k,start,n) VALUES('labocr:1',?,150)").run(Math.floor(Date.now()/1000));
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'gemini'}});
+  const job=sql.prepare("SELECT id FROM lab_jobs WHERE session_id=? AND kind='ocr'").get(sid);
+  const run=async()=>{sql.prepare("UPDATE lab_jobs SET available_at=0,status='pending' WHERE id=?").run(job.id);await worker.queue({messages:[{body:{v:1,jobId:job.id},ack(){},retry(){}}]},env);};
+  await run();
+  assert.notEqual(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'failed','over the limit the page waits for the window');
+  assert.equal(sql.prepare('SELECT status FROM lab_jobs WHERE id=?').get(job.id).status,'pending');
+  assert.equal(calls.filter(c=>c.text.includes('[TASK: read page]')).length,0);
+  sql.prepare("UPDATE users SET role='admin' WHERE id=1").run();
+  await run();
+  assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done','an admin is not held back');
+}));
 test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what DeepSeek marked down',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';
   const a=(await start('deepseek')).data,sid=a.session.id;
