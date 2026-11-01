@@ -1301,7 +1301,7 @@ async function arena(p, m, body, me, req, env, url) {
  * the same session and spends nothing; a user has at most one exam open
  * (a unique index), so two starts at once cannot spend twice.
  */
-const LAB = { testSec: 0, scanSec: 1800, graceSec: 120, maxPage: 1900000, maxPages: 40, ocrPerDay: 150, staleSec: 300, retrySec: 120 };
+const LAB = { testSec: 0, scanSec: 1800, graceSec: 120, maxPage: 1900000, maxPages: 40, staleSec: 300, retrySec: 120 };
 const LAB_SCHEMA = JSON.parse(JSON.stringify(SCORE_SCHEMA));
 LAB_SCHEMA.properties.scores.items.properties.got = { type: "number" };          // olympiad marks come in tenths
 const LAB_TASK_RE = /^[A-Z][A-Za-z0-9]{0,3}$/;
@@ -2586,11 +2586,8 @@ const LAB_JOB_HANDLERS = {
       await env.DB.prepare(`UPDATE lab_pages SET ocr_status='reading' WHERE id=? AND edited=0`).bind(page.id).run();
       const mt = meter();
       try {
-        /* the daily reading limit guards against abuse, not admins; a page over it waits for the window instead of
-           failing for good (IPhO 2015 T3: an account's 151st page of the day stayed «rate_limited») */
-        const owner = await env.DB.prepare('SELECT role FROM users WHERE id=?').bind(s.user_id).first();
-        if (owner?.role !== 'admin') await limit(env, 'labocr:' + s.user_id, LAB.ocrPerDay, 86400)
-          .catch(e => { if (e?.status === 429) throw new LabJobDeferred(600); throw e; });
+        /* no daily page limit: every page of a sitting is paid for with the token spent when it opened (an account's
+           151st page of a day once failed «rate_limited» in the middle of IPhO 2015 T3) */
         const bytes = await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
         const read = await labReadChecked(env, s, labRoles(env, s, labTheory(s, page.task)), page.task, bytes, page.mime, mt), text = readText(read), up=read.ocr;
         const stored = labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: 'done' });
