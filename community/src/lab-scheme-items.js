@@ -10,6 +10,9 @@ const NUMERIC = ["full_min", "full_max", "partial", "checks", "unit", "n_min", "
 function intervals(row) {
   const out = { ...row }, lo = out.full_min, hi = out.full_max;
   if (!(Number.isFinite(lo) && Number.isFinite(hi))) { delete out.full_min; delete out.full_max; }
+  /* an interval of zero width is the solution's own number copied as a window (IPhO 2013 E1: n = 1.54 exactly, the sample
+     apparatus's readings): the official value with its default tolerance instead */
+  else if (lo === hi) { delete out.full_min; delete out.full_max; if (out.ref == null) out.ref = String(lo); }
   if (Array.isArray(out.partial)) out.partial = out.partial.filter(p => p && Number.isFinite(p.min) && Number.isFinite(p.max) && +p.points > 0);
   if (out.role !== "result" && out.role !== "step") delete out.role;                 // R13: what the answer alone earns
   return out;
@@ -51,8 +54,23 @@ const startsWith = (a, b) => b.length < a.length && b.every((t, i) => t === a[i]
 export function cleanParts(raw) {
   const seen = new Set();
   return (Array.isArray(raw) ? raw : []).filter(p => p && p.id != null && +p.points > 0 && tokens(p.id).length)
-    .map(p => ({ id: String(p.id).trim().slice(0, 20), points: +p.points }))
+    .map(p => ({ id: String(p.id).trim().slice(0, 20), points: +p.points, ...(p.final_full === true ? { final_full: true } : {}) }))
     .filter(p => { const k = tokens(p.id).join("."); if (seen.has(k)) return false; seen.add(k); return true; });
+}
+
+/* Where the official solution says a correct final answer earns a part's marks without the working (IPhO 2023 T3 «a
+   correct final answer gets full points», IPhO 2018 T1 A.1–A.3), the scheme marks that part final_full: once every result
+   item of the part is fully met, its step items are full too (the part's printed points still cap it). The scheme listed
+   the steps as items that add up, so a correct final 0.23 m/s earned 0.6 of 2.0. */
+export function finalAnswerFull(items, scheme) {
+  const spec = new Map((scheme?.items || []).map(i => [i.id, i]));
+  for (const part of cleanParts(scheme?.parts).filter(p => p.final_full)) {
+    const t = tokens(part.id), mine = (items || []).filter(i => { const it = tokens(i.id); return it.length >= t.length && t.every((x, k) => x === it[k]); });
+    const results = mine.filter(i => spec.get(i.id)?.role === "result");
+    if (!results.length || !results.every(i => +i.got >= +i.points)) continue;
+    for (const i of mine) if (+i.got < +i.points) { i.got = +i.points; i.decision = "met"; i.final = true; }
+  }
+  return items;
 }
 
 export function cappedSum(items, parts, total, value = i => i.points) {
@@ -148,7 +166,16 @@ export function restoreLatex(text) {
    on the page it cites (its transcript), allowing for how differently a formula can be typed: both are reduced to
    letters, digits and Hangul, and at least 75 % of the quote's character pairs must occur on the page. Gemini had given
    every step of IPhO 2025 T2 C.1–C.5 its marks from final answers alone. */
-const flat = t => String(t || "").toLowerCase().replace(/\\(?:mathrm|text|left|right|cdot|times|frac|sqrt)\b/g, "").replace(/[^a-z0-9\u3131-\uD79D\u0370-\u03FF]/g, "");
+/* a grader quotes in LaTeX (\\Omega, \\sqrt{2\\pi}, a^{2}) what the transcript holds in Unicode (Ω, √(2π), a²) or the other way
+   round: both go to one spelling first. Without this the steps of 13 items of IPhO 2024 T3 and 18 of IPhO 2018, plainly
+   written, were zeroed. */
+const GREEK = { alpha: "α", beta: "β", gamma: "γ", delta: "δ", epsilon: "ε", varepsilon: "ε", zeta: "ζ", eta: "η", theta: "θ", vartheta: "θ",
+  iota: "ι", kappa: "κ", lambda: "λ", mu: "μ", nu: "ν", xi: "ξ", pi: "π", varpi: "π", rho: "ρ", varrho: "ρ", sigma: "σ", varsigma: "σ", tau: "τ",
+  upsilon: "υ", phi: "φ", varphi: "φ", chi: "χ", psi: "ψ", omega: "ω", hbar: "ħ", ell: "l", infty: "∞", partial: "∂", nabla: "∇" };
+const SCRIPT = { "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9", "⁻": "", "⁺": "",
+  "₀": "0", "₁": "1", "₂": "2", "₃": "3", "₄": "4", "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9", "µ": "μ", "ϵ": "ε", "ϑ": "θ", "ϕ": "φ", "ℓ": "l" };
+const flat = t => String(t || "").normalize("NFKC").replace(/\\([A-Za-z]+)/g, (m, w) => GREEK[w.toLowerCase()] ?? (/^(mathrm|text|textrm|mathbf|mathit|operatorname|left|right|cdot|times|frac|dfrac|tfrac|sqrt|quad|qquad|displaystyle)$/.test(w) ? "" : w))
+  .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺₀₁₂₃₄₅₆₇₈₉µϵϑϕℓ]/g, c => SCRIPT[c]).toLowerCase().replace(/[^a-z0-9\u3131-\uD79D\u0370-\u03FF\u0127\u2202\u2207\u221E]/g, "");
 export function quoteOnPage(quote, page) {
   const q = flat(quote), p = flat(page);
   if (q.length < 3) return false;
