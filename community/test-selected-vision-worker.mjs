@@ -201,13 +201,13 @@ test('a printed header read by the model never refiles a page: the student\'s ta
   assert.deepEqual([page.task,page.kind],['T1','working']);
 }));
 
-test('a page read caught in a repetition loop is capped and read once more, slightly warmer, instead of failing the page',async()=>fixture(async({api,start,upload,drain,calls,sql,truncate})=>{
+test('a page read caught in a repetition loop is capped and read once more, warmer (0.8), instead of failing the page',async()=>fixture(async({api,start,upload,drain,calls,sql,truncate})=>{
   const a=(await start('gemini')).data,sid=a.session.id;truncate(1);await upload(a.token);
   await api(`/lab/sessions/${sid}/pay`,{body:{provider:'gemini'}});await drain();
   const reads=calls.filter(c=>c.text.includes('[TASK: read page]'));
   assert.equal(reads.length,2);
   assert.deepEqual(reads.map(c=>c.body.generationConfig.maxOutputTokens),[6144,6144]);
-  assert.deepEqual(reads.map(c=>c.body.generationConfig.temperature),[0,0.4]);
+  assert.deepEqual(reads.map(c=>c.body.generationConfig.temperature),[0,0.8]);
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
 test('the admin model bench runs a stage with other models and keeps the result apart from the sitting',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
