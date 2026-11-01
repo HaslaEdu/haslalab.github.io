@@ -62,7 +62,7 @@ async function fixture(run){
     else if(text.includes('[TASK: moderate]'))raw={items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
     else if(text.includes('[TASK: grade]'))raw=visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
-    return provider==='gemini'?Response.json({modelVersion:VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
+    return provider==='gemini'?Response.json({modelVersion:url.match(/\/models\/([^/:]+):/)?.[1]||VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:body.model||VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
   };
   const api=async(path,{id=1,body,method=body===undefined?'GET':'POST',settings=env}={})=>{const response=await worker.fetch(new Request('https://vision.local/api'+path,{method,headers:{Authorization:'Bearer '+tokens[id],'Cache-Control':'no-cache',...(body===undefined?{}:{'Content-Type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)})}),settings);return{status:response.status,data:await response.json()};};
   const start=async(provider,id=1,review=true)=>api('/lab/start',{id,body:{comp:'ipho',year:2025,tasks:['T1'],review,...(provider?{provider}:{})}});
@@ -206,6 +206,38 @@ test('a page read caught in a repetition loop is capped and read once more, slig
   assert.deepEqual(reads.map(c=>c.body.generationConfig.maxOutputTokens),[6144,6144]);
   assert.deepEqual(reads.map(c=>c.body.generationConfig.temperature),[0,0.4]);
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
+}));
+test('the admin model bench runs a stage with other models and keeps the result apart from the sitting',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_PIPELINE='mixed';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['deepseek',VISION_MODELS.deepseek,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
+    {id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]},
+    {id:'R',points:1,type:'derivation',role:'result',sheet:'answer',what:'Expression of the velocity'}]}),'fixture',Math.floor(Date.now()/1000));
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  const page=sql.prepare('SELECT id,read FROM lab_pages WHERE session_id=?').get(sid),metered=sql.prepare('SELECT count(*) n FROM lab_calls').get().n;
+  sql.exec(`CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`);
+  const bench=async spec=>{const b=sql.prepare('INSERT INTO lab_bench(session_id,spec)VALUES(?,?)').run(sid,JSON.stringify(spec)).lastInsertRowid;
+    const j=sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,page_id,status,available_at,created_at,updated_at)VALUES(?,'bench',?,?,'pending',0,0,0)").run('bench:'+b,sid,b).lastInsertRowid;
+    await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:Number(j)}}]);await drain();return sql.prepare('SELECT * FROM lab_bench WHERE id=?').get(b);};
+  calls.length=0;
+  const read=await bench({stage:'read',page_id:page.id,read:{provider:'gemini',model:'gemini-3.6-flash',thinking:'low'}});
+  assert.equal(read.status,'done');assert.equal(calls.length,1);
+  assert.match(calls[0].url,/\/gemini-3\.6-flash:generateContent$/);assert.deepEqual(calls[0].body.generationConfig.thinkingConfig,{thinkingLevel:'low'});
+  assert.equal(JSON.parse(read.output).calls[0].model,'gemini-3.6-flash');
+  calls.length=0;
+  const graded=await bench({stage:'grade',task:'T1',grade:{provider:'deepseek',model:'deepseek-v4-pro',images:false},moderate:{provider:'gemini',model:'gemini-2.5-flash'},reads:{[page.id]:Number(read.id)}});
+  assert.equal(graded.status,'done',graded.output);
+  const grade=calls.find(c=>c.text.includes('[TASK: grade]')),mod=calls.find(c=>c.text.includes('[TASK: moderate]'));
+  assert.equal(grade.body.model,'deepseek-v4-pro');assert.ok(!grade.parts.some(part=>part.type==='image_url'),'a text-only grader is sent no photo');
+  assert.match(mod.url,/\/gemini-2\.5-flash:generateContent$/);assert.deepEqual(mod.body.generationConfig.thinkingConfig,{thinkingBudget:0});
+  assert.ok(JSON.stringify(mod.body).includes('inline_data')||JSON.stringify(mod.body).includes('inlineData'),'the moderator still sees the photo');
+  const out=JSON.parse(graded.output);assert.equal(out.points,3);assert.ok(out.items.some(i=>i.id==='R'&&i.moderated));
+  assert.equal(sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail,null,'the sitting is untouched');
+  assert.equal(sql.prepare('SELECT read FROM lab_pages WHERE id=?').get(page.id).read,page.read,'its pages too');
+  assert.equal(sql.prepare('SELECT count(*) n FROM lab_calls').get().n,metered,'and its metering');
 }));
 test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what DeepSeek marked down',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';

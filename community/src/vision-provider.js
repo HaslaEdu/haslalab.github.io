@@ -42,12 +42,14 @@ export function visionCapabilities(env) {
   return {default:'gemini',pipeline:env.LAB_PIPELINE==='mixed'&&env.GEMINI_API_KEY&&env.DEEPSEEK_API_KEY?'mixed':'single',providers:['gemini','deepseek'].map(id=>({id,label:id,model:VISION_MODELS[id],
     available:!!env[KEYS[id]],...(!env[KEYS[id]]?{reason:'provider_unavailable'}:{})}))};
 }
-function endpoint(env,provider) {
+/* a model other than the provider's default, only for the admin model bench: the provider's own id pattern, never a URL part */
+export const benchModel=(provider,value)=>typeof value==='string'&&new RegExp('^'+provider+'-[a-z0-9][a-z0-9._-]{0,80}$').test(value)?value:null;
+function endpoint(env,provider,model=VISION_MODELS[provider]) {
   const value=env[provider==='gemini'?'GEMINI_BASE':'DEEPSEEK_BASE'] || BASE[provider];
   let url;try{url=new URL(value);}catch{fail(503,'provider_configuration');}
   const local=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
   if (url.username||url.password||url.search||url.hash||url.protocol!=='https:'&&!(local&&url.protocol==='http:')) fail(503,'provider_configuration');
-  return url.href.replace(/\/+$/,'')+(provider==='gemini'?'/'+VISION_MODELS.gemini+':generateContent':'/chat/completions');
+  return url.href.replace(/\/+$/,'')+(provider==='gemini'?'/'+model+':generateContent':'/chat/completions');
 }
 function imageParts(images,provider) {
   if (!Array.isArray(images)||images.length>40) fail(413,'vision_images_too_large');
@@ -90,9 +92,10 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  timeoutMs=110000,signal,fetchImpl=globalThis.fetch}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch}={}) {
   provider=requireVisionProvider(env,provider);
-  const model=VISION_MODELS[provider],url=endpoint(env,provider),started=Date.now();
+  const model=benchModel(provider,chosen)||VISION_MODELS[provider],url=endpoint(env,provider,model),started=Date.now();
+  const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
   let usage=null,timer,aborted=false,providerStatus,providerCode;
   let rejectAbort;
   const controller=new AbortController(),abort=()=>{controller.abort();rejectAbort?.(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));};
@@ -108,7 +111,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const body=provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
     generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:Number(temperature)||0,maxOutputTokens:count,
       // thinking is billed as output: a page read with the model's own default once spent 5.5k thought tokens on 263 characters
-      ...(env.GEMINI_THINKING_LEVEL!=='off'?{thinkingConfig:{thinkingLevel:env.GEMINI_THINKING_LEVEL||'minimal'}}:{})}}:
+      ...(level==='off'?{}:/^gemini-2\.5-flash/.test(model)?{thinkingConfig:{thinkingBudget:level==='minimal'?0:-1}}:{thinkingConfig:{thinkingLevel:level}})}}:
     {model,messages:[{role:'system',content:rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{})},
       {role:'user',content}],response_format:{type:'json_object'},thinking:{type:'disabled'},temperature:Number(temperature)||0,max_tokens:count};
   let encoded=JSON.stringify(body);
@@ -158,6 +161,17 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   finally{clearTimeout(timer);signal?.removeEventListener('abort',abort);}
 }
 
+/* the model ids each configured provider serves, for the admin model bench */
+export async function listProviderModels(env,provider,fetchImpl=globalThis.fetch) {
+  provider=requireVisionProvider(env,provider);
+  const base=endpoint(env,provider).replace(/\/(?:[^/]+:generateContent|chat\/completions)$/,'');
+  const url=provider==='gemini'?base+'?pageSize=1000':base.replace(/\/models$/,'')+'/models';
+  const response=await fetchImpl(url,{headers:provider==='gemini'?{'x-goog-api-key':env[KEYS[provider]]}:{Authorization:'Bearer '+env[KEYS[provider]]},redirect:'manual',signal:AbortSignal.timeout(20000)});
+  if(!response.ok)fail(502,'vision_provider_failed');
+  const body=await boundedJSON(response);
+  return provider==='gemini'?(body.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>String(m.name).replace(/^models\//,''))
+    :(body.data||[]).map(m=>String(m.id));
+}
 export async function visionTranscript(env,provider,images,options={}) {
   const result=await visionJSON(env,{...options,provider,stage:'ocr',policy:TRANSCRIPT_POLICY,input:{task:'transcribe',pages:images.length},images,schema:TRANSCRIPT_SCHEMA});
   const raw=result.raw;
