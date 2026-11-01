@@ -1,0 +1,4643 @@
+{
+  "source_page": 10,
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_rois_reviewed": true,
+  "publication_ready": false,
+  "rows": [
+    {
+      "id": "phase-result",
+      "hints": [
+        2
+      ],
+      "source": "因此",
+      "ko": "따라서",
+      "en": "Therefore",
+      "size": 10.286,
+      "baseline": 97.5,
+      "left": 76.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          75.4,
+          86.3,
+          104.3,
+          101.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 2,
+      "source_anchor_count": 2,
+      "source_image_path": [
+        312
+      ],
+      "baseline_evidence": {
+        "character_run": "因此",
+        "source_rect": [
+          76.0,
+          86.5,
+          103.5,
+          101.0
+        ],
+        "read_only_measurement_rect": [
+          75.0,
+          85.0,
+          104.5,
+          102.5
+        ],
+        "size_fixed_before_translation": 10.286,
+        "baseline": 97.5,
+        "iou": 0.782784104347229,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4733,
+      "printed_bold_stroke": 0.631,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4733,
+          "bold": 0.631
+        },
+        "ko": {
+          "regular": 0.3155,
+          "bold": 0.4207,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "motion-result",
+      "hints": [
+        5
+      ],
+      "source": "于是",
+      "ko": "그러므로",
+      "en": "Hence",
+      "size": 10.286,
+      "baseline": 125.75,
+      "left": 75.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          74.4,
+          113.8,
+          103.8,
+          130.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 2,
+      "source_anchor_count": 2,
+      "source_image_path": [
+        312
+      ],
+      "baseline_evidence": {
+        "character_run": "于是",
+        "source_rect": [
+          75.0,
+          114.0,
+          103.0,
+          130.0
+        ],
+        "read_only_measurement_rect": [
+          74.0,
+          112.5,
+          104.0,
+          131.5
+        ],
+        "size_fixed_before_translation": 10.286,
+        "baseline": 125.75,
+        "iou": 0.759358286857605,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4733,
+      "printed_bold_stroke": 0.631,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4733,
+          "bold": 0.631
+        },
+        "ko": {
+          "regular": 0.3155,
+          "bold": 0.4207,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "ring-current-result",
+      "hints": [
+        13
+      ],
+      "source": "2.把(13)式代入(4)式，得t时刻圆环中电流的表达式",
+      "ko": "[[part2]] 식 [[eq13-current]]을 [[eq4-current]]에 대입하면 시간 [[time-t-current]]에서 고리의 전류는",
+      "en": "[[part2]] Substituting [[eq13-current]] into [[eq4-current]] gives the ring current at [[time-t-current]]:",
+      "size": 10.052,
+      "baseline": 205.25,
+      "left": 85.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          84.9,
+          193.8,
+          316.3,
+          208.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part2",
+          "expected_original": "2.",
+          "rect": [
+            85.5,
+            193.8,
+            99.5,
+            208.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "eq13-current",
+          "expected_original": "(13)",
+          "rect": [
+            109.0,
+            193.8,
+            126.0,
+            208.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "eq4-current",
+          "expected_original": "(4)",
+          "rect": [
+            155.0,
+            193.8,
+            167.5,
+            208.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "time-t-current",
+          "expected_original": "t",
+          "rect": [
+            197.5,
+            193.8,
+            204.5,
+            208.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part2",
+        "eq13-current",
+        "eq4-current",
+        "time-t-current"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 18,
+      "source_anchor_count": 18,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "时刻圆环中电流的表达式",
+        "source_rect": [
+          85.5,
+          194.0,
+          315.5,
+          208.0
+        ],
+        "read_only_measurement_rect": [
+          84.5,
+          192.5,
+          316.5,
+          209.5
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 205.25,
+        "iou": 0.6616647243499756,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-problem5-total",
+      "hints": [
+        26
+      ],
+      "source": "评分标准：本题20分。",
+      "role": "mixed-bold",
+      "ko": "채점 기준: 총 [[total20]]점.",
+      "en": "Marking scheme: [[total20]] points in total.",
+      "size": 10.052,
+      "baseline": 294.0,
+      "left": 86.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          85.4,
+          283.3,
+          180.3,
+          296.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "total20",
+          "expected_original": "20",
+          "rect": [
+            152.5,
+            283.3,
+            167.5,
+            296.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "total20"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 9,
+      "source_anchor_count": 9,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "评分标准",
+        "source_rect": [
+          86.0,
+          283.5,
+          179.5,
+          296.5
+        ],
+        "read_only_measurement_rect": [
+          85.0,
+          282.0,
+          180.5,
+          298.0
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 294.0,
+        "iou": 0.49939247965812683,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-part1",
+      "hints": [
+        27
+      ],
+      "source": "第1问18分，",
+      "ko": "[[part1-grade]]번: [[score18]]점.",
+      "en": "Part [[part1-grade]]: [[score18]] points.",
+      "size": 10.052,
+      "baseline": 306.25,
+      "left": 104.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          103.9,
+          297.3,
+          163.8,
+          309.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part1-grade",
+          "expected_original": "1",
+          "rect": [
+            114.5,
+            297.3,
+            124.5,
+            309.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "score18",
+          "expected_original": "18",
+          "rect": [
+            133.0,
+            297.3,
+            148.0,
+            309.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part1-grade",
+        "score18"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 4,
+      "source_anchor_count": 4,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "第",
+        "source_rect": [
+          104.5,
+          297.5,
+          163.0,
+          309.0
+        ],
+        "read_only_measurement_rect": [
+          103.5,
+          296.0,
+          164.0,
+          310.5
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 306.25,
+        "iou": 0.6853657364845276,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-part1-a",
+      "hints": [
+        28
+      ],
+      "source": "(1)式2分，(2)至(4)式各1分，",
+      "ko": "[[g1]] [[p2-1]]점, [[g2]]~[[g4]] 각 [[p1-24]]점.",
+      "en": "[[g1]]: [[p2-1]]; [[g2]]–[[g4]]: [[p1-24]] point each.",
+      "size": 10.052,
+      "baseline": 319.25,
+      "left": 104.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          103.9,
+          309.8,
+          228.8,
+          321.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "g1",
+          "expected_original": "(1)",
+          "rect": [
+            104.5,
+            309.8,
+            116.5,
+            321.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p2-1",
+          "expected_original": "2",
+          "rect": [
+            125.5,
+            309.8,
+            135.0,
+            321.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g2",
+          "expected_original": "(2)",
+          "rect": [
+            151.5,
+            309.8,
+            165.5,
+            321.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g4",
+          "expected_original": "(4)",
+          "rect": [
+            174.5,
+            309.8,
+            186.0,
+            321.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p1-24",
+          "expected_original": "1",
+          "rect": [
+            205.0,
+            309.8,
+            215.0,
+            321.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "g1",
+        "p2-1",
+        "g2",
+        "g4",
+        "p1-24"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 8,
+      "source_anchor_count": 8,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "式各",
+        "source_rect": [
+          104.5,
+          310.0,
+          228.0,
+          321.5
+        ],
+        "read_only_measurement_rect": [
+          103.5,
+          308.5,
+          229.0,
+          323.0
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 319.25,
+        "iou": 0.7235636711120605,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-part1-b",
+      "hints": [
+        29
+      ],
+      "source": "(5)式2分，(6)、(7)、(8)式各1分，",
+      "ko": "[[g5]] [[p2-5]]점, [[g6]], [[g7]], [[g8]] 각 [[p1-68]]점.",
+      "en": "[[g5]]: [[p2-5]]; [[g6]], [[g7]], [[g8]]: [[p1-68]] point each.",
+      "size": 10.052,
+      "baseline": 331.75,
+      "left": 104.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          103.9,
+          321.3,
+          251.8,
+          335.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "g5",
+          "expected_original": "(5)",
+          "rect": [
+            104.5,
+            321.3,
+            116.5,
+            335.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p2-5",
+          "expected_original": "2",
+          "rect": [
+            125.5,
+            321.3,
+            135.0,
+            335.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g6",
+          "expected_original": "(6)",
+          "rect": [
+            151.0,
+            321.3,
+            169.0,
+            335.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g7",
+          "expected_original": "(7)",
+          "rect": [
+            171.5,
+            321.3,
+            186.5,
+            335.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g8",
+          "expected_original": "(8)",
+          "rect": [
+            194.0,
+            321.3,
+            207.0,
+            335.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p1-68",
+          "expected_original": "1",
+          "rect": [
+            226.0,
+            321.3,
+            236.0,
+            335.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "g5",
+        "p2-5",
+        "g6",
+        "g7",
+        "g8",
+        "p1-68"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 9,
+      "source_anchor_count": 9,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "式各",
+        "source_rect": [
+          104.5,
+          321.5,
+          251.0,
+          335.0
+        ],
+        "read_only_measurement_rect": [
+          103.5,
+          320.0,
+          252.0,
+          336.5
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 331.75,
+        "iou": 0.7293172478675842,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-part1-c",
+      "hints": [
+        30
+      ],
+      "source": "(9)、(10)式各2分，(11)式1分，",
+      "ko": "[[g9]], [[g10]] 각 [[p2-910]]점, [[g11]] [[p1-11]]점.",
+      "en": "[[g9]], [[g10]]: [[p2-910]] each; [[g11]]: [[p1-11]] point.",
+      "size": 10.052,
+      "baseline": 344.0,
+      "left": 105.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          104.4,
+          334.8,
+          239.8,
+          346.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "g9",
+          "expected_original": "(9)",
+          "rect": [
+            105.0,
+            334.8,
+            117.0,
+            346.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g10",
+          "expected_original": "(10)",
+          "rect": [
+            123.5,
+            334.8,
+            141.5,
+            346.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p2-910",
+          "expected_original": "2",
+          "rect": [
+            160.0,
+            334.8,
+            169.5,
+            346.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g11",
+          "expected_original": "(11)",
+          "rect": [
+            188.0,
+            334.8,
+            205.5,
+            346.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p1-11",
+          "expected_original": "1",
+          "rect": [
+            215.0,
+            334.8,
+            224.5,
+            346.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "g9",
+        "g10",
+        "p2-910",
+        "g11",
+        "p1-11"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 8,
+      "source_anchor_count": 8,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "式各",
+        "source_rect": [
+          105.0,
+          335.0,
+          239.0,
+          346.0
+        ],
+        "read_only_measurement_rect": [
+          104.0,
+          333.5,
+          240.0,
+          347.5
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 344.0,
+        "iou": 0.6963140964508057,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-part1-d",
+      "hints": [
+        31
+      ],
+      "source": "(12)式2分，(13)式1分。",
+      "ko": "[[g12]] [[p2-12]]점, [[g13]] [[p1-13]]점.",
+      "en": "[[g12]]: [[p2-12]]; [[g13]]: [[p1-13]] point.",
+      "size": 10.052,
+      "baseline": 356.75,
+      "left": 104.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          103.9,
+          347.3,
+          207.8,
+          359.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "g12",
+          "expected_original": "(12)",
+          "rect": [
+            104.5,
+            347.3,
+            121.0,
+            359.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p2-12",
+          "expected_original": "2",
+          "rect": [
+            130.0,
+            347.3,
+            140.0,
+            359.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g13",
+          "expected_original": "(13)",
+          "rect": [
+            157.5,
+            347.3,
+            174.5,
+            359.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p1-13",
+          "expected_original": "1",
+          "rect": [
+            184.0,
+            347.3,
+            194.0,
+            359.1
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "g12",
+        "p2-12",
+        "g13",
+        "p1-13"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 6,
+      "source_anchor_count": 6,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "式",
+        "source_rect": [
+          104.5,
+          347.5,
+          207.0,
+          359.0
+        ],
+        "read_only_measurement_rect": [
+          103.5,
+          346.0,
+          208.0,
+          360.5
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 356.75,
+        "iou": 0.7774030566215515,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-part2",
+      "hints": [
+        32
+      ],
+      "source": "第2问2分，",
+      "ko": "[[part2-grade]]번: [[score2]]점.",
+      "en": "Part [[part2-grade]]: [[score2]] points.",
+      "size": 10.052,
+      "baseline": 368.5,
+      "left": 103.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          102.9,
+          357.8,
+          159.3,
+          372.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part2-grade",
+          "expected_original": "2",
+          "rect": [
+            114.0,
+            357.8,
+            124.5,
+            372.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "score2",
+          "expected_original": "2",
+          "rect": [
+            133.0,
+            357.8,
+            143.0,
+            372.6
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part2-grade",
+        "score2"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 4,
+      "source_anchor_count": 4,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "第",
+        "source_rect": [
+          103.5,
+          358.0,
+          158.5,
+          372.5
+        ],
+        "read_only_measurement_rect": [
+          102.5,
+          356.5,
+          159.5,
+          374.0
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 368.5,
+        "iou": 0.7142857313156128,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-part2-detail",
+      "hints": [
+        33
+      ],
+      "source": "(14)式2分。",
+      "ko": "[[g14]] [[p2-14]]점.",
+      "en": "[[g14]]: [[p2-14]] points.",
+      "size": 10.052,
+      "baseline": 381.5,
+      "left": 103.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          102.9,
+          370.3,
+          156.8,
+          383.24997802734373
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "g14",
+          "expected_original": "(14)",
+          "rect": [
+            103.5,
+            370.3,
+            121.0,
+            383.24997802734373
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p2-14",
+          "expected_original": "2",
+          "rect": [
+            130.5,
+            370.3,
+            138.5,
+            383.24997802734373
+          ],
+          "image_path": [
+            321
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "g14",
+        "p2-14"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 2,
+      "source_anchor_count": 3,
+      "source_image_path": [
+        321
+      ],
+      "baseline_evidence": {
+        "character_run": "式",
+        "source_rect": [
+          103.5,
+          370.5,
+          156.0,
+          385.0
+        ],
+        "read_only_measurement_rect": [
+          102.5,
+          369.0,
+          157.0,
+          386.5
+        ],
+        "size_fixed_before_translation": 10.052,
+        "baseline": 381.5,
+        "iou": 0.7281879186630249,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4625,
+      "printed_bold_stroke": 0.6167,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4625,
+          "bold": 0.6167
+        },
+        "ko": {
+          "regular": 0.3083,
+          "bold": 0.4111,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "disk-temperature-definition",
+      "hints": [
+        35
+      ],
+      "source": "参考解答：设金属盘上、下表面的温度分别为T_t、T_b，空气的温度为T_0。根据题意，金属盘上、下表面",
+      "role": "mixed-bold",
+      "ko": "참고 해설: 금속 원판 위·아래 면의 온도를 [[T-top]], [[T-bottom]], 기온을 [[T-air]]로 두자. 두 면이",
+      "en": "Solution: The metal disk's top and bottom are at [[T-top]], [[T-bottom]], and air at [[T-air]].",
+      "size": 9.814,
+      "baseline": 418.25,
+      "left": 77.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          76.4,
+          407.3,
+          519.8,
+          422.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "T-top",
+          "expected_original": "T_t",
+          "rect": [
+            272.5,
+            407.3,
+            282.0,
+            422.6
+          ],
+          "image_path": [
+            330
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "T-bottom",
+          "expected_original": "T_b",
+          "rect": [
+            292.0,
+            407.3,
+            303.5,
+            422.6
+          ],
+          "image_path": [
+            330
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "T-air",
+          "expected_original": "T_0",
+          "rect": [
+            373.0,
+            407.3,
+            385.0,
+            422.6
+          ],
+          "image_path": [
+            330
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "T-top",
+        "T-bottom",
+        "T-air"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 41,
+      "source_anchor_count": 42,
+      "source_image_path": [
+        330
+      ],
+      "baseline_evidence": {
+        "character_run": "下表面的温度分别为",
+        "source_rect": [
+          77.0,
+          407.5,
+          519.0,
+          422.5
+        ],
+        "read_only_measurement_rect": [
+          76.0,
+          406.0,
+          520.0,
+          424.0
+        ],
+        "size_fixed_before_translation": 9.814,
+        "baseline": 418.25,
+        "iou": 0.6139426827430725,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4516,
+      "printed_bold_stroke": 0.6021,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4516,
+          "bold": 0.6021
+        },
+        "ko": {
+          "regular": 0.301,
+          "bold": 0.4014,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "disk-heat-loss",
+      "hints": [
+        36
+      ],
+      "source": "单位时间内向空气散失的能量分别为",
+      "ko": "조건에 따라 단위시간에 공기로 잃는 열량은 각각",
+      "en": "By the stated conditions, their respective rates of heat loss to air are",
+      "size": 9.814,
+      "baseline": 433.0,
+      "left": 76.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          75.4,
+          421.8,
+          236.3,
+          435.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 16,
+      "source_anchor_count": 16,
+      "source_image_path": [
+        330
+      ],
+      "baseline_evidence": {
+        "character_run": "单位时间内向空气散失的能量分",
+        "source_rect": [
+          76.0,
+          422.0,
+          235.5,
+          435.0
+        ],
+        "read_only_measurement_rect": [
+          75.0,
+          420.5,
+          236.5,
+          436.5
+        ],
+        "size_fixed_before_translation": 9.814,
+        "baseline": 433.0,
+        "iou": 0.5950462222099304,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4516,
+      "printed_bold_stroke": 0.6021,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4516,
+          "bold": 0.6021
+        },
+        "ko": {
+          "regular": 0.301,
+          "bold": 0.4014,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "disk-energy-balance",
+      "hints": [
+        39
+      ],
+      "source": "其中c为常量，A为金属盘表面的面积。设上表面单位时间内吸收的太阳光的能量为P_a。根据能量守恒有",
+      "ko": "상수 [[loss-c]], 표면적 [[area-A]]와 윗면의 태양광 흡수 전력 [[P-absorbed]]에 대해 에너지 보존은",
+      "en": "[[loss-c]] is constant, [[area-A]] the area, and [[P-absorbed]] the solar power absorbed at the top. Energy balance:",
+      "size": 9.814,
+      "baseline": 463.5,
+      "left": 75.5,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          74.9,
+          453.5,
+          518.8,
+          467.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "loss-c",
+          "expected_original": "c",
+          "rect": [
+            96.5,
+            453.5,
+            105.5,
+            467.6
+          ],
+          "image_path": [
+            330
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "area-A",
+          "expected_original": "A",
+          "rect": [
+            140.0,
+            453.5,
+            148.5,
+            467.6
+          ],
+          "image_path": [
+            330
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "P-absorbed",
+          "expected_original": "P_a",
+          "rect": [
+            432.0,
+            453.5,
+            445.0,
+            467.6
+          ],
+          "image_path": [
+            330
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "loss-c",
+        "area-A",
+        "P-absorbed"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 41,
+      "source_anchor_count": 43,
+      "source_image_path": [
+        330
+      ],
+      "baseline_evidence": {
+        "character_run": "设上表面单位时间内吸收的太阳",
+        "source_rect": [
+          75.5,
+          452.0,
+          518.0,
+          467.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          450.5,
+          519.0,
+          469.0
+        ],
+        "size_fixed_before_translation": 9.814,
+        "baseline": 463.5,
+        "iou": 0.6877833008766174,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4516,
+      "printed_bold_stroke": 0.6021,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4516,
+          "bold": 0.6021
+        },
+        "ko": {
+          "regular": 0.301,
+          "bold": 0.4014,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "temperature-sum",
+      "hints": [
+        42
+      ],
+      "source": "因此",
+      "ko": "따라서",
+      "en": "Therefore",
+      "size": 9.814,
+      "baseline": 493.5,
+      "left": 75.5,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          74.9,
+          482.3,
+          102.3,
+          496.86997802734373
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 2,
+      "source_anchor_count": 2,
+      "source_image_path": [
+        330
+      ],
+      "baseline_evidence": {
+        "character_run": "因此",
+        "source_rect": [
+          75.5,
+          482.5,
+          101.5,
+          497.0
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          481.0,
+          102.5,
+          498.5
+        ],
+        "size_fixed_before_translation": 9.814,
+        "baseline": 493.5,
+        "iou": 0.7883880734443665,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4516,
+      "printed_bold_stroke": 0.6021,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4516,
+          "bold": 0.6021
+        },
+        "ko": {
+          "regular": 0.301,
+          "bold": 0.4014,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "constant-sum-data",
+      "hints": [
+        47
+      ],
+      "source": "可见金属盘上、下表面温度的和为常量。由题给数据，有",
+      "ko": "위·아래 면의 온도 합은 일정하다. 주어진 수치에서",
+      "en": "The two face temperatures have a constant sum. The given data yield",
+      "size": 10.48,
+      "baseline": 533.75,
+      "left": 77.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          76.4,
+          521.8,
+          336.8,
+          537.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 25,
+      "source_anchor_count": 25,
+      "source_image_path": [
+        339
+      ],
+      "font_size_measurement": "p10-tight-prose.json: ten original known CJK glyphs best fixed-source SimSun10.48pt, IoU.7521 versus KaiTi.451/FangSong.545. Measurement before translation; no fitting.",
+      "baseline_evidence": {
+        "character_run": "下表面温度的和为常量",
+        "source_rect": [
+          77.0,
+          522.0,
+          336.0,
+          537.0
+        ],
+        "read_only_measurement_rect": [
+          76.0,
+          520.5,
+          337.0,
+          538.5
+        ],
+        "size_fixed_before_translation": 10.48,
+        "baseline": 533.75,
+        "iou": 0.7369841933250427,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4822,
+      "printed_bold_stroke": 0.6429,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4822,
+          "bold": 0.6429
+        },
+        "ko": {
+          "regular": 0.3215,
+          "bold": 0.4286,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "conduction-law",
+      "hints": [
+        50
+      ],
+      "source": "当金属盘的厚度为t时，根据热传导定律，单位时间内从金属盘的上表面传导到下表面的热量为",
+      "ko": "두께가 [[thickness-t]]일 때 열전도 법칙에 따른 위에서 아래로의 열전달률은",
+      "en": "The conduction law, at thickness [[thickness-t]], gives heat flow from top to bottom per unit time:",
+      "size": 10.48,
+      "baseline": 563.25,
+      "left": 77.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          76.9,
+          551.3,
+          511.3,
+          566.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "thickness-t",
+          "expected_original": "t",
+          "rect": [
+            159.5,
+            551.3,
+            167.0,
+            566.6
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "thickness-t"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 41,
+      "source_anchor_count": 41,
+      "source_image_path": [
+        339
+      ],
+      "font_size_measurement": "p10-tight-prose.json: ten original known CJK glyphs best fixed-source SimSun10.48pt, IoU.7521 versus KaiTi.451/FangSong.545. Measurement before translation; no fitting.",
+      "baseline_evidence": {
+        "character_run": "单位时间内从金属盘的上表面传",
+        "source_rect": [
+          77.5,
+          551.5,
+          510.5,
+          566.5
+        ],
+        "read_only_measurement_rect": [
+          76.5,
+          550.0,
+          511.5,
+          568.0
+        ],
+        "size_fixed_before_translation": 10.48,
+        "baseline": 563.25,
+        "iou": 0.5478793382644653,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4822,
+      "printed_bold_stroke": 0.6429,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4822,
+          "bold": 0.6429
+        },
+        "ko": {
+          "regular": 0.3215,
+          "bold": 0.4286,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "conductivity-and-bottom-loss",
+      "hints": [
+        53
+      ],
+      "source": "其中k为热传导系数。从金属盘的上表面传导到下表面的热量通过下表面散失到空气中，故",
+      "ko": "[[conductivity-k]]는 열전도율이다. 전도된 열은 아랫면에서 공기로 빠져나가므로",
+      "en": "[[conductivity-k]] is thermal conductivity. Heat conducted to the bottom is lost to air there, so",
+      "size": 10.48,
+      "baseline": 603.25,
+      "left": 77.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          76.4,
+          593.0,
+          491.3,
+          607.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "conductivity-k",
+          "expected_original": "k",
+          "rect": [
+            98.5,
+            593.0,
+            107.5,
+            607.1
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "conductivity-k"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 39,
+      "source_anchor_count": 39,
+      "source_image_path": [
+        339
+      ],
+      "font_size_measurement": "p10-tight-prose.json: ten original known CJK glyphs best fixed-source SimSun10.48pt, IoU.7521 versus KaiTi.451/FangSong.545. Measurement before translation; no fitting.",
+      "baseline_evidence": {
+        "character_run": "从金属盘的上表面传导到下表面",
+        "source_rect": [
+          77.0,
+          591.5,
+          490.5,
+          607.0
+        ],
+        "read_only_measurement_rect": [
+          76.0,
+          590.0,
+          491.5,
+          608.5
+        ],
+        "size_fixed_before_translation": 10.48,
+        "baseline": 603.25,
+        "iou": 0.6458852887153625,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4822,
+      "printed_bold_stroke": 0.6429,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4822,
+          "bold": 0.6429
+        },
+        "ko": {
+          "regular": 0.3215,
+          "bold": 0.4286,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "double-thickness",
+      "hints": [
+        56
+      ],
+      "source": "当金属盘的厚度为2t时，设其上、下表面的温度分别为T_t′、T_b′，同理有",
+      "ko": "두께가 [[twice-t]]이면 위·아래 온도를 [[T-top-prime]], [[T-bottom-prime]]라 하자. 같은 방법으로",
+      "en": "At thickness [[twice-t]], let top and bottom be [[T-top-prime]], [[T-bottom-prime]]. Similarly,",
+      "size": 10.48,
+      "baseline": 643.75,
+      "left": 97.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          96.9,
+          632.3,
+          429.3,
+          647.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "twice-t",
+          "expected_original": "2t",
+          "rect": [
+            180.5,
+            632.3,
+            193.5,
+            647.1
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "T-top-prime",
+          "expected_original": "T_t′",
+          "rect": [
+            350.5,
+            632.3,
+            360.5,
+            647.1
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "T-bottom-prime",
+          "expected_original": "T_b′",
+          "rect": [
+            373.0,
+            632.3,
+            386.5,
+            647.1
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "twice-t",
+        "T-top-prime",
+        "T-bottom-prime"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 28,
+      "source_anchor_count": 28,
+      "source_image_path": [
+        339
+      ],
+      "font_size_measurement": "p10-tight-prose.json: ten original known CJK glyphs best fixed-source SimSun10.48pt, IoU.7521 versus KaiTi.451/FangSong.545. Measurement before translation; no fitting.",
+      "baseline_evidence": {
+        "character_run": "下表面的温度分别为",
+        "source_rect": [
+          97.5,
+          632.5,
+          428.5,
+          647.0
+        ],
+        "read_only_measurement_rect": [
+          96.5,
+          631.0,
+          429.5,
+          648.5
+        ],
+        "size_fixed_before_translation": 10.48,
+        "baseline": 643.75,
+        "iou": 0.6390733122825623,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4822,
+      "printed_bold_stroke": 0.6429,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4822,
+          "bold": 0.6429
+        },
+        "ko": {
+          "regular": 0.3215,
+          "bold": 0.4286,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "divide-conduction-equations",
+      "hints": [
+        60
+      ],
+      "source": "用(6)式去除(7)式，并利用(4)式以及",
+      "ko": "식 [[eq7-dividend]]을 [[eq6-divisor]]으로 나누고 [[eq4-sum]]와 다음 식을 이용하면",
+      "en": "Dividing [[eq7-dividend]] by [[eq6-divisor]] and using [[eq4-sum]] together with",
+      "size": 10.48,
+      "baseline": 685.0,
+      "left": 77.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          76.4,
+          673.8,
+          238.8,
+          688.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "eq6-divisor",
+          "expected_original": "(6)",
+          "rect": [
+            87.5,
+            673.8,
+            99.5,
+            688.6
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "eq7-dividend",
+          "expected_original": "(7)",
+          "rect": [
+            129.5,
+            673.8,
+            142.5,
+            688.6
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "eq4-sum",
+          "expected_original": "(4)",
+          "rect": [
+            194.0,
+            673.8,
+            206.5,
+            688.6
+          ],
+          "image_path": [
+            339
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "eq6-divisor",
+        "eq7-dividend",
+        "eq4-sum"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 12,
+      "source_anchor_count": 12,
+      "source_image_path": [
+        339
+      ],
+      "font_size_measurement": "p10-tight-prose.json: ten original known CJK glyphs best fixed-source SimSun10.48pt, IoU.7521 versus KaiTi.451/FangSong.545. Measurement before translation; no fitting.",
+      "baseline_evidence": {
+        "character_run": "式去除",
+        "source_rect": [
+          77.0,
+          674.0,
+          238.0,
+          688.5
+        ],
+        "read_only_measurement_rect": [
+          76.0,
+          672.5,
+          239.0,
+          690.0
+        ],
+        "size_fixed_before_translation": 10.48,
+        "baseline": 685.0,
+        "iou": 0.6905952095985413,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4822,
+      "printed_bold_stroke": 0.6429,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4822,
+          "bold": 0.6429
+        },
+        "ko": {
+          "regular": 0.3215,
+          "bold": 0.4286,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "ratio-result",
+      "hints": [],
+      "manually_found_ocr_omission": true,
+      "source": "有",
+      "ko": "다음 식을 얻는다.",
+      "en": "gives",
+      "size": 10.48,
+      "baseline": 713.75,
+      "left": 75,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.4,
+          702.8,
+          88.8,
+          717.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 1,
+      "source_anchor_count": 1,
+      "source_image_path": [
+        339
+      ],
+      "font_size_measurement": "p10-tight-prose.json: ten original known CJK glyphs best fixed-source SimSun10.48pt, IoU.7521 versus KaiTi.451/FangSong.545. Measurement before translation; no fitting.",
+      "baseline_evidence": {
+        "character_run": "有",
+        "source_rect": [
+          75,
+          703,
+          88,
+          717
+        ],
+        "read_only_measurement_rect": [
+          74,
+          701.5,
+          89,
+          718.5
+        ],
+        "size_fixed_before_translation": 10.48,
+        "baseline": 713.75,
+        "iou": 0.7920489311218262,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4822,
+      "printed_bold_stroke": 0.6429,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4822,
+          "bold": 0.6429
+        },
+        "ko": {
+          "regular": 0.3215,
+          "bold": 0.4286,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    }
+  ],
+  "source_page_reviewed": true,
+  "source_contact_sheet": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\row-hints\\page10-candidate-contact.png",
+  "source_nonlanguage_and_final_visual_audit_required": true,
+  "protected_source_display_and_figure_rects": [
+    [
+      195,
+      72,
+      329,
+      88
+    ],
+    [
+      195,
+      103,
+      280,
+      116
+    ],
+    [
+      454,
+      104,
+      478,
+      116
+    ],
+    [
+      195,
+      131,
+      420,
+      192
+    ],
+    [
+      459,
+      150,
+      478,
+      163
+    ],
+    [
+      196,
+      209,
+      429,
+      271
+    ],
+    [
+      460,
+      234,
+      479,
+      248
+    ],
+    [
+      239,
+      438,
+      361,
+      453
+    ],
+    [
+      465,
+      439,
+      481,
+      453
+    ],
+    [
+      228,
+      468,
+      375,
+      486
+    ],
+    [
+      464,
+      469,
+      482,
+      484
+    ],
+    [
+      236,
+      494,
+      373,
+      521
+    ],
+    [
+      464,
+      501,
+      482,
+      515
+    ],
+    [
+      221,
+      538,
+      388,
+      551
+    ],
+    [
+      465,
+      536,
+      482,
+      551
+    ],
+    [
+      269,
+      570,
+      340,
+      593
+    ],
+    [
+      464,
+      574,
+      482,
+      588
+    ],
+    [
+      250,
+      608,
+      365,
+      632
+    ],
+    [
+      464,
+      611,
+      483,
+      626
+    ],
+    [
+      250,
+      649,
+      374,
+      673
+    ],
+    [
+      464,
+      652,
+      483,
+      667
+    ],
+    [
+      263,
+      690,
+      344,
+      705
+    ],
+    [
+      464,
+      691,
+      483,
+      705
+    ],
+    [
+      238,
+      717,
+      366,
+      747
+    ],
+    [
+      464,
+      725,
+      483,
+      739
+    ]
+  ],
+  "reviewed_blank_background_rects": [
+    {
+      "rect": [
+        238.8,
+        673.8,
+        522.75,
+        688.6
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed continuation of the original Chinese prose row. After subtracting all listed original display/figure and source-inline math rectangles, only pre-existing scan dust/faint prose scan rule is classified as background. No mathematical object, numeral, physical figure or diagram line is part of this classification. Every replayed mathematical atom is an independent target obstacle.",
+      "source_page": 10,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "divide-conduction-equations",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-divide-conduction-equations-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-divide-conduction-equations-classification.png",
+      "source_crop_gray_sha256": "49356a4715570ec62d3e10787da1b84db771e2c6b28c4c439ca7730abb5d5184",
+      "render_scale": 4,
+      "source_background_ink_pixels": 40,
+      "source_background_ink_bbox_pt": [
+        266.0,
+        673.75,
+        280.5,
+        686.25
+      ],
+      "source_protected_ink_pixels": 0,
+      "excluded_protected_rects": [
+        [
+          195,
+          72,
+          329,
+          88
+        ],
+        [
+          195,
+          103,
+          280,
+          116
+        ],
+        [
+          454,
+          104,
+          478,
+          116
+        ],
+        [
+          195,
+          131,
+          420,
+          192
+        ],
+        [
+          459,
+          150,
+          478,
+          163
+        ],
+        [
+          196,
+          209,
+          429,
+          271
+        ],
+        [
+          460,
+          234,
+          479,
+          248
+        ],
+        [
+          239,
+          438,
+          361,
+          453
+        ],
+        [
+          465,
+          439,
+          481,
+          453
+        ],
+        [
+          228,
+          468,
+          375,
+          486
+        ],
+        [
+          464,
+          469,
+          482,
+          484
+        ],
+        [
+          236,
+          494,
+          373,
+          521
+        ],
+        [
+          464,
+          501,
+          482,
+          515
+        ],
+        [
+          221,
+          538,
+          388,
+          551
+        ],
+        [
+          465,
+          536,
+          482,
+          551
+        ],
+        [
+          269,
+          570,
+          340,
+          593
+        ],
+        [
+          464,
+          574,
+          482,
+          588
+        ],
+        [
+          250,
+          608,
+          365,
+          632
+        ],
+        [
+          464,
+          611,
+          483,
+          626
+        ],
+        [
+          250,
+          649,
+          374,
+          673
+        ],
+        [
+          464,
+          652,
+          483,
+          667
+        ],
+        [
+          263,
+          690,
+          344,
+          705
+        ],
+        [
+          464,
+          691,
+          483,
+          705
+        ],
+        [
+          238,
+          717,
+          366,
+          747
+        ],
+        [
+          464,
+          725,
+          483,
+          739
+        ],
+        [
+          85.5,
+          193.8,
+          99.5,
+          208.1
+        ],
+        [
+          109.0,
+          193.8,
+          126.0,
+          208.1
+        ],
+        [
+          155.0,
+          193.8,
+          167.5,
+          208.1
+        ],
+        [
+          197.5,
+          193.8,
+          204.5,
+          208.1
+        ],
+        [
+          152.5,
+          283.3,
+          167.5,
+          296.6
+        ],
+        [
+          114.5,
+          297.3,
+          124.5,
+          309.1
+        ],
+        [
+          133.0,
+          297.3,
+          148.0,
+          309.1
+        ],
+        [
+          104.5,
+          309.8,
+          116.5,
+          321.6
+        ],
+        [
+          125.5,
+          309.8,
+          135.0,
+          321.6
+        ],
+        [
+          151.5,
+          309.8,
+          165.5,
+          321.6
+        ],
+        [
+          174.5,
+          309.8,
+          186.0,
+          321.6
+        ],
+        [
+          205.0,
+          309.8,
+          215.0,
+          321.6
+        ],
+        [
+          104.5,
+          321.3,
+          116.5,
+          335.1
+        ],
+        [
+          125.5,
+          321.3,
+          135.0,
+          335.1
+        ],
+        [
+          151.0,
+          321.3,
+          169.0,
+          335.1
+        ],
+        [
+          171.5,
+          321.3,
+          186.5,
+          335.1
+        ],
+        [
+          194.0,
+          321.3,
+          207.0,
+          335.1
+        ],
+        [
+          226.0,
+          321.3,
+          236.0,
+          335.1
+        ],
+        [
+          105.0,
+          334.8,
+          117.0,
+          346.1
+        ],
+        [
+          123.5,
+          334.8,
+          141.5,
+          346.1
+        ],
+        [
+          160.0,
+          334.8,
+          169.5,
+          346.1
+        ],
+        [
+          188.0,
+          334.8,
+          205.5,
+          346.1
+        ],
+        [
+          215.0,
+          334.8,
+          224.5,
+          346.1
+        ],
+        [
+          104.5,
+          347.3,
+          121.0,
+          359.1
+        ],
+        [
+          130.0,
+          347.3,
+          140.0,
+          359.1
+        ],
+        [
+          157.5,
+          347.3,
+          174.5,
+          359.1
+        ],
+        [
+          184.0,
+          347.3,
+          194.0,
+          359.1
+        ],
+        [
+          114.0,
+          357.8,
+          124.5,
+          372.6
+        ],
+        [
+          133.0,
+          357.8,
+          143.0,
+          372.6
+        ],
+        [
+          103.5,
+          370.3,
+          121.0,
+          383.24997802734373
+        ],
+        [
+          130.5,
+          370.3,
+          138.5,
+          383.24997802734373
+        ],
+        [
+          272.5,
+          407.3,
+          282.0,
+          422.6
+        ],
+        [
+          292.0,
+          407.3,
+          303.5,
+          422.6
+        ],
+        [
+          373.0,
+          407.3,
+          385.0,
+          422.6
+        ],
+        [
+          96.5,
+          453.5,
+          105.5,
+          467.6
+        ],
+        [
+          140.0,
+          453.5,
+          148.5,
+          467.6
+        ],
+        [
+          432.0,
+          453.5,
+          445.0,
+          467.6
+        ],
+        [
+          159.5,
+          551.3,
+          167.0,
+          566.6
+        ],
+        [
+          98.5,
+          593.0,
+          107.5,
+          607.1
+        ],
+        [
+          180.5,
+          632.3,
+          193.5,
+          647.1
+        ],
+        [
+          350.5,
+          632.3,
+          360.5,
+          647.1
+        ],
+        [
+          373.0,
+          632.3,
+          386.5,
+          647.1
+        ],
+        [
+          87.5,
+          673.8,
+          99.5,
+          688.6
+        ],
+        [
+          129.5,
+          673.8,
+          142.5,
+          688.6
+        ],
+        [
+          194.0,
+          673.8,
+          206.5,
+          688.6
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    },
+    {
+      "rect": [
+        88.8,
+        702.8,
+        522.75,
+        717.1
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed continuation of the original Chinese prose row. After subtracting all listed original display/figure and source-inline math rectangles, only pre-existing scan dust/faint prose scan rule is classified as background. No mathematical object, numeral, physical figure or diagram line is part of this classification. Every replayed mathematical atom is an independent target obstacle.",
+      "source_page": 10,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "ratio-result",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-ratio-result-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-ratio-result-classification.png",
+      "source_crop_gray_sha256": "da52b9c8b6434a3d9599b2ba43f5e4afb065d9acffa4b8bf0ad0af36feecc771",
+      "render_scale": 4,
+      "source_background_ink_pixels": 14,
+      "source_background_ink_bbox_pt": [
+        112.75,
+        705.75,
+        433.75,
+        715.25
+      ],
+      "source_protected_ink_pixels": 0,
+      "excluded_protected_rects": [
+        [
+          195,
+          72,
+          329,
+          88
+        ],
+        [
+          195,
+          103,
+          280,
+          116
+        ],
+        [
+          454,
+          104,
+          478,
+          116
+        ],
+        [
+          195,
+          131,
+          420,
+          192
+        ],
+        [
+          459,
+          150,
+          478,
+          163
+        ],
+        [
+          196,
+          209,
+          429,
+          271
+        ],
+        [
+          460,
+          234,
+          479,
+          248
+        ],
+        [
+          239,
+          438,
+          361,
+          453
+        ],
+        [
+          465,
+          439,
+          481,
+          453
+        ],
+        [
+          228,
+          468,
+          375,
+          486
+        ],
+        [
+          464,
+          469,
+          482,
+          484
+        ],
+        [
+          236,
+          494,
+          373,
+          521
+        ],
+        [
+          464,
+          501,
+          482,
+          515
+        ],
+        [
+          221,
+          538,
+          388,
+          551
+        ],
+        [
+          465,
+          536,
+          482,
+          551
+        ],
+        [
+          269,
+          570,
+          340,
+          593
+        ],
+        [
+          464,
+          574,
+          482,
+          588
+        ],
+        [
+          250,
+          608,
+          365,
+          632
+        ],
+        [
+          464,
+          611,
+          483,
+          626
+        ],
+        [
+          250,
+          649,
+          374,
+          673
+        ],
+        [
+          464,
+          652,
+          483,
+          667
+        ],
+        [
+          263,
+          690,
+          344,
+          705
+        ],
+        [
+          464,
+          691,
+          483,
+          705
+        ],
+        [
+          238,
+          717,
+          366,
+          747
+        ],
+        [
+          464,
+          725,
+          483,
+          739
+        ],
+        [
+          85.5,
+          193.8,
+          99.5,
+          208.1
+        ],
+        [
+          109.0,
+          193.8,
+          126.0,
+          208.1
+        ],
+        [
+          155.0,
+          193.8,
+          167.5,
+          208.1
+        ],
+        [
+          197.5,
+          193.8,
+          204.5,
+          208.1
+        ],
+        [
+          152.5,
+          283.3,
+          167.5,
+          296.6
+        ],
+        [
+          114.5,
+          297.3,
+          124.5,
+          309.1
+        ],
+        [
+          133.0,
+          297.3,
+          148.0,
+          309.1
+        ],
+        [
+          104.5,
+          309.8,
+          116.5,
+          321.6
+        ],
+        [
+          125.5,
+          309.8,
+          135.0,
+          321.6
+        ],
+        [
+          151.5,
+          309.8,
+          165.5,
+          321.6
+        ],
+        [
+          174.5,
+          309.8,
+          186.0,
+          321.6
+        ],
+        [
+          205.0,
+          309.8,
+          215.0,
+          321.6
+        ],
+        [
+          104.5,
+          321.3,
+          116.5,
+          335.1
+        ],
+        [
+          125.5,
+          321.3,
+          135.0,
+          335.1
+        ],
+        [
+          151.0,
+          321.3,
+          169.0,
+          335.1
+        ],
+        [
+          171.5,
+          321.3,
+          186.5,
+          335.1
+        ],
+        [
+          194.0,
+          321.3,
+          207.0,
+          335.1
+        ],
+        [
+          226.0,
+          321.3,
+          236.0,
+          335.1
+        ],
+        [
+          105.0,
+          334.8,
+          117.0,
+          346.1
+        ],
+        [
+          123.5,
+          334.8,
+          141.5,
+          346.1
+        ],
+        [
+          160.0,
+          334.8,
+          169.5,
+          346.1
+        ],
+        [
+          188.0,
+          334.8,
+          205.5,
+          346.1
+        ],
+        [
+          215.0,
+          334.8,
+          224.5,
+          346.1
+        ],
+        [
+          104.5,
+          347.3,
+          121.0,
+          359.1
+        ],
+        [
+          130.0,
+          347.3,
+          140.0,
+          359.1
+        ],
+        [
+          157.5,
+          347.3,
+          174.5,
+          359.1
+        ],
+        [
+          184.0,
+          347.3,
+          194.0,
+          359.1
+        ],
+        [
+          114.0,
+          357.8,
+          124.5,
+          372.6
+        ],
+        [
+          133.0,
+          357.8,
+          143.0,
+          372.6
+        ],
+        [
+          103.5,
+          370.3,
+          121.0,
+          383.24997802734373
+        ],
+        [
+          130.5,
+          370.3,
+          138.5,
+          383.24997802734373
+        ],
+        [
+          272.5,
+          407.3,
+          282.0,
+          422.6
+        ],
+        [
+          292.0,
+          407.3,
+          303.5,
+          422.6
+        ],
+        [
+          373.0,
+          407.3,
+          385.0,
+          422.6
+        ],
+        [
+          96.5,
+          453.5,
+          105.5,
+          467.6
+        ],
+        [
+          140.0,
+          453.5,
+          148.5,
+          467.6
+        ],
+        [
+          432.0,
+          453.5,
+          445.0,
+          467.6
+        ],
+        [
+          159.5,
+          551.3,
+          167.0,
+          566.6
+        ],
+        [
+          98.5,
+          593.0,
+          107.5,
+          607.1
+        ],
+        [
+          180.5,
+          632.3,
+          193.5,
+          647.1
+        ],
+        [
+          350.5,
+          632.3,
+          360.5,
+          647.1
+        ],
+        [
+          373.0,
+          632.3,
+          386.5,
+          647.1
+        ],
+        [
+          87.5,
+          673.8,
+          99.5,
+          688.6
+        ],
+        [
+          129.5,
+          673.8,
+          142.5,
+          688.6
+        ],
+        [
+          194.0,
+          673.8,
+          206.5,
+          688.6
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    },
+    {
+      "rect": [
+        207.8,
+        347.3,
+        522.75,
+        359.1
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed continuation of the original Chinese prose row. After subtracting all listed original display/figure and source-inline math rectangles, only pre-existing scan dust/faint prose scan rule is classified as background. No mathematical object, numeral, physical figure or diagram line is part of this classification. Every replayed mathematical atom is an independent target obstacle.",
+      "source_page": 10,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "marking-part1-d",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-marking-part1-d-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-marking-part1-d-classification.png",
+      "source_crop_gray_sha256": "1817f2396ad13854414be48c5e6c8f07791995e9744e8671a6cf3f317aa1ccef",
+      "render_scale": 4,
+      "source_background_ink_pixels": 27,
+      "source_background_ink_bbox_pt": [
+        208.0,
+        348.5,
+        459.25,
+        359.25
+      ],
+      "source_protected_ink_pixels": 0,
+      "excluded_protected_rects": [
+        [
+          195,
+          72,
+          329,
+          88
+        ],
+        [
+          195,
+          103,
+          280,
+          116
+        ],
+        [
+          454,
+          104,
+          478,
+          116
+        ],
+        [
+          195,
+          131,
+          420,
+          192
+        ],
+        [
+          459,
+          150,
+          478,
+          163
+        ],
+        [
+          196,
+          209,
+          429,
+          271
+        ],
+        [
+          460,
+          234,
+          479,
+          248
+        ],
+        [
+          239,
+          438,
+          361,
+          453
+        ],
+        [
+          465,
+          439,
+          481,
+          453
+        ],
+        [
+          228,
+          468,
+          375,
+          486
+        ],
+        [
+          464,
+          469,
+          482,
+          484
+        ],
+        [
+          236,
+          494,
+          373,
+          521
+        ],
+        [
+          464,
+          501,
+          482,
+          515
+        ],
+        [
+          221,
+          538,
+          388,
+          551
+        ],
+        [
+          465,
+          536,
+          482,
+          551
+        ],
+        [
+          269,
+          570,
+          340,
+          593
+        ],
+        [
+          464,
+          574,
+          482,
+          588
+        ],
+        [
+          250,
+          608,
+          365,
+          632
+        ],
+        [
+          464,
+          611,
+          483,
+          626
+        ],
+        [
+          250,
+          649,
+          374,
+          673
+        ],
+        [
+          464,
+          652,
+          483,
+          667
+        ],
+        [
+          263,
+          690,
+          344,
+          705
+        ],
+        [
+          464,
+          691,
+          483,
+          705
+        ],
+        [
+          238,
+          717,
+          366,
+          747
+        ],
+        [
+          464,
+          725,
+          483,
+          739
+        ],
+        [
+          85.5,
+          193.8,
+          99.5,
+          208.1
+        ],
+        [
+          109.0,
+          193.8,
+          126.0,
+          208.1
+        ],
+        [
+          155.0,
+          193.8,
+          167.5,
+          208.1
+        ],
+        [
+          197.5,
+          193.8,
+          204.5,
+          208.1
+        ],
+        [
+          152.5,
+          283.3,
+          167.5,
+          296.6
+        ],
+        [
+          114.5,
+          297.3,
+          124.5,
+          309.1
+        ],
+        [
+          133.0,
+          297.3,
+          148.0,
+          309.1
+        ],
+        [
+          104.5,
+          309.8,
+          116.5,
+          321.6
+        ],
+        [
+          125.5,
+          309.8,
+          135.0,
+          321.6
+        ],
+        [
+          151.5,
+          309.8,
+          165.5,
+          321.6
+        ],
+        [
+          174.5,
+          309.8,
+          186.0,
+          321.6
+        ],
+        [
+          205.0,
+          309.8,
+          215.0,
+          321.6
+        ],
+        [
+          104.5,
+          321.3,
+          116.5,
+          335.1
+        ],
+        [
+          125.5,
+          321.3,
+          135.0,
+          335.1
+        ],
+        [
+          151.0,
+          321.3,
+          169.0,
+          335.1
+        ],
+        [
+          171.5,
+          321.3,
+          186.5,
+          335.1
+        ],
+        [
+          194.0,
+          321.3,
+          207.0,
+          335.1
+        ],
+        [
+          226.0,
+          321.3,
+          236.0,
+          335.1
+        ],
+        [
+          105.0,
+          334.8,
+          117.0,
+          346.1
+        ],
+        [
+          123.5,
+          334.8,
+          141.5,
+          346.1
+        ],
+        [
+          160.0,
+          334.8,
+          169.5,
+          346.1
+        ],
+        [
+          188.0,
+          334.8,
+          205.5,
+          346.1
+        ],
+        [
+          215.0,
+          334.8,
+          224.5,
+          346.1
+        ],
+        [
+          104.5,
+          347.3,
+          121.0,
+          359.1
+        ],
+        [
+          130.0,
+          347.3,
+          140.0,
+          359.1
+        ],
+        [
+          157.5,
+          347.3,
+          174.5,
+          359.1
+        ],
+        [
+          184.0,
+          347.3,
+          194.0,
+          359.1
+        ],
+        [
+          114.0,
+          357.8,
+          124.5,
+          372.6
+        ],
+        [
+          133.0,
+          357.8,
+          143.0,
+          372.6
+        ],
+        [
+          103.5,
+          370.3,
+          121.0,
+          383.24997802734373
+        ],
+        [
+          130.5,
+          370.3,
+          138.5,
+          383.24997802734373
+        ],
+        [
+          272.5,
+          407.3,
+          282.0,
+          422.6
+        ],
+        [
+          292.0,
+          407.3,
+          303.5,
+          422.6
+        ],
+        [
+          373.0,
+          407.3,
+          385.0,
+          422.6
+        ],
+        [
+          96.5,
+          453.5,
+          105.5,
+          467.6
+        ],
+        [
+          140.0,
+          453.5,
+          148.5,
+          467.6
+        ],
+        [
+          432.0,
+          453.5,
+          445.0,
+          467.6
+        ],
+        [
+          159.5,
+          551.3,
+          167.0,
+          566.6
+        ],
+        [
+          98.5,
+          593.0,
+          107.5,
+          607.1
+        ],
+        [
+          180.5,
+          632.3,
+          193.5,
+          647.1
+        ],
+        [
+          350.5,
+          632.3,
+          360.5,
+          647.1
+        ],
+        [
+          373.0,
+          632.3,
+          386.5,
+          647.1
+        ],
+        [
+          87.5,
+          673.8,
+          99.5,
+          688.6
+        ],
+        [
+          129.5,
+          673.8,
+          142.5,
+          688.6
+        ],
+        [
+          194.0,
+          673.8,
+          206.5,
+          688.6
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    },
+    {
+      "rect": [
+        236.3,
+        421.8,
+        522.75,
+        435.1
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed continuation of the original Chinese prose row. After subtracting all listed original display/figure and source-inline math rectangles, only pre-existing scan dust/faint prose scan rule is classified as background. No mathematical object, numeral, physical figure or diagram line is part of this classification. Every replayed mathematical atom is an independent target obstacle.",
+      "source_page": 10,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "disk-heat-loss",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-disk-heat-loss-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-disk-heat-loss-classification.png",
+      "source_crop_gray_sha256": "93ad294ac5b9dc29cd0aeae2d4384c8228695fecf67ad11c1817affba01a117b",
+      "render_scale": 4,
+      "source_background_ink_pixels": 136,
+      "source_background_ink_bbox_pt": [
+        236.25,
+        421.75,
+        443.25,
+        435.0
+      ],
+      "source_protected_ink_pixels": 0,
+      "excluded_protected_rects": [
+        [
+          195,
+          72,
+          329,
+          88
+        ],
+        [
+          195,
+          103,
+          280,
+          116
+        ],
+        [
+          454,
+          104,
+          478,
+          116
+        ],
+        [
+          195,
+          131,
+          420,
+          192
+        ],
+        [
+          459,
+          150,
+          478,
+          163
+        ],
+        [
+          196,
+          209,
+          429,
+          271
+        ],
+        [
+          460,
+          234,
+          479,
+          248
+        ],
+        [
+          239,
+          438,
+          361,
+          453
+        ],
+        [
+          465,
+          439,
+          481,
+          453
+        ],
+        [
+          228,
+          468,
+          375,
+          486
+        ],
+        [
+          464,
+          469,
+          482,
+          484
+        ],
+        [
+          236,
+          494,
+          373,
+          521
+        ],
+        [
+          464,
+          501,
+          482,
+          515
+        ],
+        [
+          221,
+          538,
+          388,
+          551
+        ],
+        [
+          465,
+          536,
+          482,
+          551
+        ],
+        [
+          269,
+          570,
+          340,
+          593
+        ],
+        [
+          464,
+          574,
+          482,
+          588
+        ],
+        [
+          250,
+          608,
+          365,
+          632
+        ],
+        [
+          464,
+          611,
+          483,
+          626
+        ],
+        [
+          250,
+          649,
+          374,
+          673
+        ],
+        [
+          464,
+          652,
+          483,
+          667
+        ],
+        [
+          263,
+          690,
+          344,
+          705
+        ],
+        [
+          464,
+          691,
+          483,
+          705
+        ],
+        [
+          238,
+          717,
+          366,
+          747
+        ],
+        [
+          464,
+          725,
+          483,
+          739
+        ],
+        [
+          85.5,
+          193.8,
+          99.5,
+          208.1
+        ],
+        [
+          109.0,
+          193.8,
+          126.0,
+          208.1
+        ],
+        [
+          155.0,
+          193.8,
+          167.5,
+          208.1
+        ],
+        [
+          197.5,
+          193.8,
+          204.5,
+          208.1
+        ],
+        [
+          152.5,
+          283.3,
+          167.5,
+          296.6
+        ],
+        [
+          114.5,
+          297.3,
+          124.5,
+          309.1
+        ],
+        [
+          133.0,
+          297.3,
+          148.0,
+          309.1
+        ],
+        [
+          104.5,
+          309.8,
+          116.5,
+          321.6
+        ],
+        [
+          125.5,
+          309.8,
+          135.0,
+          321.6
+        ],
+        [
+          151.5,
+          309.8,
+          165.5,
+          321.6
+        ],
+        [
+          174.5,
+          309.8,
+          186.0,
+          321.6
+        ],
+        [
+          205.0,
+          309.8,
+          215.0,
+          321.6
+        ],
+        [
+          104.5,
+          321.3,
+          116.5,
+          335.1
+        ],
+        [
+          125.5,
+          321.3,
+          135.0,
+          335.1
+        ],
+        [
+          151.0,
+          321.3,
+          169.0,
+          335.1
+        ],
+        [
+          171.5,
+          321.3,
+          186.5,
+          335.1
+        ],
+        [
+          194.0,
+          321.3,
+          207.0,
+          335.1
+        ],
+        [
+          226.0,
+          321.3,
+          236.0,
+          335.1
+        ],
+        [
+          105.0,
+          334.8,
+          117.0,
+          346.1
+        ],
+        [
+          123.5,
+          334.8,
+          141.5,
+          346.1
+        ],
+        [
+          160.0,
+          334.8,
+          169.5,
+          346.1
+        ],
+        [
+          188.0,
+          334.8,
+          205.5,
+          346.1
+        ],
+        [
+          215.0,
+          334.8,
+          224.5,
+          346.1
+        ],
+        [
+          104.5,
+          347.3,
+          121.0,
+          359.1
+        ],
+        [
+          130.0,
+          347.3,
+          140.0,
+          359.1
+        ],
+        [
+          157.5,
+          347.3,
+          174.5,
+          359.1
+        ],
+        [
+          184.0,
+          347.3,
+          194.0,
+          359.1
+        ],
+        [
+          114.0,
+          357.8,
+          124.5,
+          372.6
+        ],
+        [
+          133.0,
+          357.8,
+          143.0,
+          372.6
+        ],
+        [
+          103.5,
+          370.3,
+          121.0,
+          383.24997802734373
+        ],
+        [
+          130.5,
+          370.3,
+          138.5,
+          383.24997802734373
+        ],
+        [
+          272.5,
+          407.3,
+          282.0,
+          422.6
+        ],
+        [
+          292.0,
+          407.3,
+          303.5,
+          422.6
+        ],
+        [
+          373.0,
+          407.3,
+          385.0,
+          422.6
+        ],
+        [
+          96.5,
+          453.5,
+          105.5,
+          467.6
+        ],
+        [
+          140.0,
+          453.5,
+          148.5,
+          467.6
+        ],
+        [
+          432.0,
+          453.5,
+          445.0,
+          467.6
+        ],
+        [
+          159.5,
+          551.3,
+          167.0,
+          566.6
+        ],
+        [
+          98.5,
+          593.0,
+          107.5,
+          607.1
+        ],
+        [
+          180.5,
+          632.3,
+          193.5,
+          647.1
+        ],
+        [
+          350.5,
+          632.3,
+          360.5,
+          647.1
+        ],
+        [
+          373.0,
+          632.3,
+          386.5,
+          647.1
+        ],
+        [
+          87.5,
+          673.8,
+          99.5,
+          688.6
+        ],
+        [
+          129.5,
+          673.8,
+          142.5,
+          688.6
+        ],
+        [
+          194.0,
+          673.8,
+          206.5,
+          688.6
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    },
+    {
+      "rect": [
+        102.3,
+        482.3,
+        522.75,
+        496.86997802734373
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed continuation of the original Chinese prose row. After subtracting all listed original display/figure and source-inline math rectangles, only pre-existing scan dust/faint prose scan rule is classified as background. No mathematical object, numeral, physical figure or diagram line is part of this classification. Every replayed mathematical atom is an independent target obstacle.",
+      "source_page": 10,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "temperature-sum",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-temperature-sum-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page10-temperature-sum-classification.png",
+      "source_crop_gray_sha256": "b2844626b6399eeeb70a7633355cf52f72c74105686407994901c0e8774dcc12",
+      "render_scale": 4,
+      "source_background_ink_pixels": 9,
+      "source_background_ink_bbox_pt": [
+        117.0,
+        483.0,
+        293.0,
+        491.5
+      ],
+      "source_protected_ink_pixels": 31,
+      "excluded_protected_rects": [
+        [
+          195,
+          72,
+          329,
+          88
+        ],
+        [
+          195,
+          103,
+          280,
+          116
+        ],
+        [
+          454,
+          104,
+          478,
+          116
+        ],
+        [
+          195,
+          131,
+          420,
+          192
+        ],
+        [
+          459,
+          150,
+          478,
+          163
+        ],
+        [
+          196,
+          209,
+          429,
+          271
+        ],
+        [
+          460,
+          234,
+          479,
+          248
+        ],
+        [
+          239,
+          438,
+          361,
+          453
+        ],
+        [
+          465,
+          439,
+          481,
+          453
+        ],
+        [
+          228,
+          468,
+          375,
+          486
+        ],
+        [
+          464,
+          469,
+          482,
+          484
+        ],
+        [
+          236,
+          494,
+          373,
+          521
+        ],
+        [
+          464,
+          501,
+          482,
+          515
+        ],
+        [
+          221,
+          538,
+          388,
+          551
+        ],
+        [
+          465,
+          536,
+          482,
+          551
+        ],
+        [
+          269,
+          570,
+          340,
+          593
+        ],
+        [
+          464,
+          574,
+          482,
+          588
+        ],
+        [
+          250,
+          608,
+          365,
+          632
+        ],
+        [
+          464,
+          611,
+          483,
+          626
+        ],
+        [
+          250,
+          649,
+          374,
+          673
+        ],
+        [
+          464,
+          652,
+          483,
+          667
+        ],
+        [
+          263,
+          690,
+          344,
+          705
+        ],
+        [
+          464,
+          691,
+          483,
+          705
+        ],
+        [
+          238,
+          717,
+          366,
+          747
+        ],
+        [
+          464,
+          725,
+          483,
+          739
+        ],
+        [
+          85.5,
+          193.8,
+          99.5,
+          208.1
+        ],
+        [
+          109.0,
+          193.8,
+          126.0,
+          208.1
+        ],
+        [
+          155.0,
+          193.8,
+          167.5,
+          208.1
+        ],
+        [
+          197.5,
+          193.8,
+          204.5,
+          208.1
+        ],
+        [
+          152.5,
+          283.3,
+          167.5,
+          296.6
+        ],
+        [
+          114.5,
+          297.3,
+          124.5,
+          309.1
+        ],
+        [
+          133.0,
+          297.3,
+          148.0,
+          309.1
+        ],
+        [
+          104.5,
+          309.8,
+          116.5,
+          321.6
+        ],
+        [
+          125.5,
+          309.8,
+          135.0,
+          321.6
+        ],
+        [
+          151.5,
+          309.8,
+          165.5,
+          321.6
+        ],
+        [
+          174.5,
+          309.8,
+          186.0,
+          321.6
+        ],
+        [
+          205.0,
+          309.8,
+          215.0,
+          321.6
+        ],
+        [
+          104.5,
+          321.3,
+          116.5,
+          335.1
+        ],
+        [
+          125.5,
+          321.3,
+          135.0,
+          335.1
+        ],
+        [
+          151.0,
+          321.3,
+          169.0,
+          335.1
+        ],
+        [
+          171.5,
+          321.3,
+          186.5,
+          335.1
+        ],
+        [
+          194.0,
+          321.3,
+          207.0,
+          335.1
+        ],
+        [
+          226.0,
+          321.3,
+          236.0,
+          335.1
+        ],
+        [
+          105.0,
+          334.8,
+          117.0,
+          346.1
+        ],
+        [
+          123.5,
+          334.8,
+          141.5,
+          346.1
+        ],
+        [
+          160.0,
+          334.8,
+          169.5,
+          346.1
+        ],
+        [
+          188.0,
+          334.8,
+          205.5,
+          346.1
+        ],
+        [
+          215.0,
+          334.8,
+          224.5,
+          346.1
+        ],
+        [
+          104.5,
+          347.3,
+          121.0,
+          359.1
+        ],
+        [
+          130.0,
+          347.3,
+          140.0,
+          359.1
+        ],
+        [
+          157.5,
+          347.3,
+          174.5,
+          359.1
+        ],
+        [
+          184.0,
+          347.3,
+          194.0,
+          359.1
+        ],
+        [
+          114.0,
+          357.8,
+          124.5,
+          372.6
+        ],
+        [
+          133.0,
+          357.8,
+          143.0,
+          372.6
+        ],
+        [
+          103.5,
+          370.3,
+          121.0,
+          383.24997802734373
+        ],
+        [
+          130.5,
+          370.3,
+          138.5,
+          383.24997802734373
+        ],
+        [
+          272.5,
+          407.3,
+          282.0,
+          422.6
+        ],
+        [
+          292.0,
+          407.3,
+          303.5,
+          422.6
+        ],
+        [
+          373.0,
+          407.3,
+          385.0,
+          422.6
+        ],
+        [
+          96.5,
+          453.5,
+          105.5,
+          467.6
+        ],
+        [
+          140.0,
+          453.5,
+          148.5,
+          467.6
+        ],
+        [
+          432.0,
+          453.5,
+          445.0,
+          467.6
+        ],
+        [
+          159.5,
+          551.3,
+          167.0,
+          566.6
+        ],
+        [
+          98.5,
+          593.0,
+          107.5,
+          607.1
+        ],
+        [
+          180.5,
+          632.3,
+          193.5,
+          647.1
+        ],
+        [
+          350.5,
+          632.3,
+          360.5,
+          647.1
+        ],
+        [
+          373.0,
+          632.3,
+          386.5,
+          647.1
+        ],
+        [
+          87.5,
+          673.8,
+          99.5,
+          688.6
+        ],
+        [
+          129.5,
+          673.8,
+          142.5,
+          688.6
+        ],
+        [
+          194.0,
+          673.8,
+          206.5,
+          688.6
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    }
+  ]
+}

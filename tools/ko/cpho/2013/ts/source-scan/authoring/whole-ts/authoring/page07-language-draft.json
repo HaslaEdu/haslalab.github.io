@@ -1,0 +1,27 @@
+{
+  "source_page":7,
+  "source_sha256":"612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_text_reviewed":true,
+  "pixel_rois_reviewed":false,
+  "scope_complete":false,
+  "rows":[
+    {"id":"use-five-again","hints":[2],"source":"这里，利用了(5)式。再将(5)式代入上式得","ko":"여기서 식 [[eq5-used]]를 썼다. [[eq5-sub]]를 위 식에 대입하면","en":"Eq. [[eq5-used]] was used. Substituting [[eq5-sub]] into the preceding expression gives"},
+    {"id":"zero-total-work","hints":[7],"source":"3.令(3)式和(4)式之和等于零，则有","ko":"[[part3]]. 식 [[eq3-sum]]과 [[eq4-sum]]의 합을 영으로 놓으면","en":"[[part3]]. Setting the sum of [[eq3-sum]] and [[eq4-sum]] to zero gives"},
+    {"id":"equivalent-quadratic","hints":[],"manually_found_ocr_omission":true,"source":"即","ko":"즉","en":"i.e."},
+    {"id":"quadratic-roots","hints":[14],"source":"其解为","ko":"그 해는","en":"The roots are"},
+    {"id":"discard-negative-root","hints":[17],"source":"舍去α的负根并令","ko":"[[alpha-root]]의 음의 근을 버리고 다음과 같이 두면","en":"Discard the negative [[alpha-root]] root and define"},
+    {"id":"spacecraft-height","hints":[20],"source":"则飞行器到地面的距离为","ko":"우주선의 지상 높이는","en":"The spacecraft's height above ground is"},
+    {"id":"tube-force-a","hints":[23],"source":"4.为求供应站对输送管的作用力，先计算在输送管向下运动无限小距离Δl过程中，地球引力、惯性离","ko":"[[part4]]. 보급기지가 수송관에 가하는 힘을 구하자. 관이 아래로 미소거리 [[dl-virtual]]만큼 움직일 때","en":"[[part4]]. For the station's force, shift the tube down [[dl-virtual]] and find work by gravity and"},
+    {"id":"tube-force-b","hints":[24],"source":"心力、地面供应站对输送管作用力所做的功。由于输送管处于平衡状态，因此这三个力对任何无限小位","ko":"중력·관성 원심력·기지의 힘이 한 일을 계산한다. 수송관은 평형이므로 세 힘의 일의 합은","en":"centrifugal force and the ground station. The tube is in equilibrium, so their total work for"},
+    {"id":"tube-force-c","hints":[25],"source":"移所做功的和为零。为计算地球引力、惯性离心力所做的功，可以把输送管向下运动无限小距离Δl想象","ko":"어떤 미소변위에서나 영이다. 중력·원심력의 일은 관을 아래로 [[dl-model]]만큼 옮기는 대신","en":"any virtual shift is zero. For gravity and centrifugal work, replace shift [[dl-model]] by"},
+    {"id":"tube-force-d","hints":[26],"source":"成输送管最上面无限小的一段Δl（质量为Δm=m_pΔl/L）无限缓慢地移动到最下面。在此过程中地球引","ko":"맨 위의 미소부분 [[dl-segment]](질량 [[dm-definition]])을 준정적으로 맨 아래로 옮긴다고 생각하자.","en":"moving the top segment [[dl-segment]] (mass [[dm-definition]]) quasistatically to the bottom."},
+    {"id":"tube-force-e","hints":[27],"source":"力和惯性离心力所做的功可从类似于上面(3)式和(4)式中的结果求出。这一无限小的一段Δl在距地心r","ko":"일은 식 [[eq3-model]], [[eq4-model]]와 같이 구한다. 미소부분 [[dl-local]]이 지심거리 [[radius-local]]에 있으면","en":"Find the works as in [[eq3-model]] and [[eq4-model]]. At radius [[radius-local]], the segment [[dl-local]] has"},
+    {"id":"tube-force-f","hints":[28],"source":"处时，地球引力势能和惯性离心力分别为","ko":"중력 위치에너지와 관성 원심력은 각각 다음과 같다.","en":"the following gravitational potential energy and centrifugal force, respectively:"},
+    {"id":"top-segment-gravity-work","hints":[34],"source":"在输送管最上面无限小的一段Δl无限缓慢地移动到最下面的过程中，地球引力所做的功为","ko":"맨 위 미소부분 [[dl-gravity]]을 준정적으로 맨 아래로 옮길 때 중력이 한 일은","en":"When the top segment [[dl-gravity]] moves quasistatically to the bottom, gravity's work is"},
+    {"id":"top-segment-centrifugal-work","hints":[41],"source":"惯性离心力所做的功为","ko":"관성 원심력이 한 일은","en":"The work done by centrifugal force is"},
+    {"id":"station-force-work","hints":[44],"source":"取供应站对输送管的作用力F_base向下为正向。在输送管向下运动无限小距离Δl过程中，F_base所做的功为","ko":"기지의 힘 [[Fbase-first]]는 아래가 양이다. 관이 [[dl-station-work]]만큼 내려갈 때 [[Fbase-second]]가 한 일은","en":"Station force [[Fbase-first]] is positive downward. In downward shift [[dl-station-work]], [[Fbase-second]] does work"},
+    {"id":"zero-virtual-work","hints":[47],"source":"由ΔW_G+ΔW_L+ΔW_base=0，有","ko":"[[zero-work-sum]]에서","en":"From [[zero-work-sum]],"},
+    {"id":"station-force-result","hints":[52],"source":"于是","ko":"따라서","en":"Hence"}
+  ],
+  "not_language":[{"hint":5,"reason":"OCR 三m is part of the original displayed mathematical coefficient3m in Eq.(8). Preserve the original complete formula bitmap; do not translate it as Chinese."}]
+}

@@ -1,0 +1,29 @@
+{
+  "source_page":5,
+  "source_sha256":"612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_text_reviewed":true,
+  "pixel_rois_reviewed":false,
+  "scope_complete":false,
+  "notation":"All [[id]] tokens retain the particular original scanned mathematical/numeral pixels. Equation order and original equation-reference errors are preserved.",
+  "rows":[
+    {"id":"wall-contact-intro","hints":[1],"source":"参考解答：如图，在小球1未离开竖直墙面之前，杆与竖直墙面之间夹角为θ时，小球1的坐标为","role":"mixed-bold","ko":"참고 해설: 그림처럼 공 [[ball1-contact]]이 수직 벽에 닿아 있고 막대와 벽의 각이 [[theta-contact]]일 때 공 [[ball1-coordinates]]의 좌표는","en":"Solution: While ball [[ball1-contact]] contacts the vertical wall at rod–wall angle [[theta-contact]], ball [[ball1-coordinates]] is at"},
+    {"id":"ball2-coordinates","hints":[4],"source":"小球2的坐标为","ko":"공 [[ball2-coordinates]]의 좌표는","en":"Ball [[ball2-coordinates]] has coordinates"},
+    {"id":"ball1-velocity","hints":[7],"source":"小球1的速度为","ko":"공 [[ball1-velocity]]의 속도는","en":"Ball [[ball1-velocity]] has velocity"},
+    {"id":"cm-x-acceleration","hints":[8],"source":"质心加速度的x分量为","ko":"질량중심 가속도의 [[x-acceleration]]성분은","en":"The centre-of-mass acceleration has [[x-acceleration]] component"},
+    {"id":"from-six","hints":[15],"source":"由(6)式得","ko":"식 [[eq6-first]]에서","en":"From Eq. [[eq6-first]],"},
+    {"id":"substitute-six-ten-nine","hints":[22],"source":"在得到上述结果时又利用了(6)式。把(6)、(10)式代入(9)式，得","ko":"이 결과에도 식 [[eq6-again]]을 썼다. [[eq6-sub]], [[eq10-sub]]을 [[eq9-sub]]에 대입하면","en":"Eq. [[eq6-again]] was used again. Substituting [[eq6-sub]] and [[eq10-sub]] into [[eq9-sub]] gives"},
+    {"id":"wall-normal-force","hints":[25],"source":"设竖直墙面对小球1的正压力为T，质心c在x方向的运动满足","ko":"벽이 공 [[ball1-normal]]에 주는 수직항력을 [[normal-T]]라 하면 질량중심 [[cm-c]]의 [[x-motion]]방향 운동은","en":"Let [[normal-T]] be the wall's normal force on ball [[ball1-normal]]. Centre [[cm-c]] obeys, along [[x-motion]],"},
+    {"id":"zero-cm-acceleration","hints":[28],"source":"由(12)式可知，当a_cx=0时，","ko":"식 [[eq12-zero]]에 따라 [[a-cx-zero]]일 때","en":"By [[eq12-zero]], when [[a-cx-zero]],"},
+    {"id":"angular-speed-definition","hints":[36],"source":"式中ω=dθ/dt是杆的转动角速度。小球2的速度为","ko":"[[omega-definition]]는 막대의 회전 각속도이다. 공 [[ball2-velocity]]의 속도는","en":"[[omega-definition]] is the rod's angular speed; ball [[ball2-velocity]] has velocity"},
+    {"id":"mechanical-energy","hints":[41],"source":"由机械能守恒，有","ko":"역학적 에너지 보존에 따라","en":"Conservation of mechanical energy gives"},
+    {"id":"solve-angular-speed","hints":[46],"source":"由上式得","ko":"위 식에서","en":"Hence"},
+    {"id":"positive-root","hints":[49],"source":"这里考虑到随着时间t的增加，θ变大，因此ω>0，从而舍去负根。","ko":"시간 [[time-t]]가 지날수록 [[theta-increasing]]가 커져 [[omega-positive]]이므로 음의 근은 버렸다.","en":"As [[time-t]] increases, [[theta-increasing]] grows; thus [[omega-positive]], so the negative root is rejected."},
+    {"id":"cm-x-coordinate","hints":[50],"source":"系统质心c的x坐标为","ko":"질량중심 [[cm-c-coordinate]]의 [[x-coordinate]]좌표는","en":"Centre [[cm-c-coordinate]] has [[x-coordinate]] coordinate"},
+    {"id":"cm-x-velocity","hints":[55],"source":"质心速度的x分量为","ko":"질량중심 속도의 [[x-velocity]]성분은","en":"The centre-of-mass velocity has [[x-velocity]] component"},
+    {"id":"leaving-wall","hints":[59],"source":"小球1开始离开竖直墙面。由(11)式得，小球1开始离开竖直墙面时，夹角θ满足方程","ko":"공 [[ball1-leave-a]]이 벽을 떠나기 시작한다. [[eq11-leave]]에서, 공 [[ball1-leave-b]]이 떠날 때의 각 [[theta-leave]]는","en":"Ball [[ball1-leave-a]] starts to leave the wall. By [[eq11-leave]], the angle [[theta-leave]] as ball [[ball1-leave-b]] leaves obeys"},
+    {"id":"roots-original-reference13","hints":[],"manually_found_ocr_omission":true,"source":"方程(13)的一个解满足sinθ=0，故θ=0，此角度对应初始位置；方程(13)的另一个解满足(3/2)cosθ−1=0，","ko":"[[eq13-root-a]]의 한 해는 [[sin-zero]]을 만족해 [[theta-zero]], 즉 초기위치이다. [[eq13-root-b]]의 다른 해는 [[other-root]]이다.","en":"[[sin-zero]] in [[eq13-root-a]] gives [[theta-zero]], the initial state. The other root has [[other-root]] in [[eq13-root-b]].","provenance_only":"Both original scanned prose references say(13), even though the preceding displayed equation is tagged(14). Preserve both actual original numeral bitmaps and add no editorial PDF note."},
+    {"id":"root-conclusion-intro","hints":[],"manually_found_ocr_omission":true,"source":"故","ko":"따라서","en":"Hence"},
+    {"id":"separation-angle","hints":[65],"source":"此即小球1开始离开竖直墙面时杆与竖直墙面之间的夹角。","ko":"이는 공 [[ball1-final]]이 수직 벽을 떠나기 시작할 때 막대와 벽 사이의 각이다.","en":"This is the rod–wall angle when ball [[ball1-final]] starts to leave the vertical wall."},
+    {"id":"marking","hints":[66],"source":"评分标准：本题15分。(1)至(15)式各1分。","role":"mixed-bold","ko":"채점 기준: 총 [[total15]]점. 식 [[mark1]]~[[mark15]]는 각 [[point1]]점.","en":"Marking scheme: [[total15]] points. Eqs. [[mark1]]–[[mark15]] earn [[point1]] point each."}
+  ]
+}

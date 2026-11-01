@@ -1,0 +1,3417 @@
+{
+  "source_page": 13,
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_rois_reviewed": true,
+  "publication_ready": false,
+  "rows": [
+    {
+      "id": "double-slit-model-a",
+      "hints": [
+        1,
+        2
+      ],
+      "source": "2.本问题可视为由上、下两侧的反射光束分别形成的虚光源所发出的光线之间的干涉，相当于双缝位置",
+      "ko": "[[part2]] 위·아래 반사광의 가상 광원에서 나온 빛의 간섭으로, 이중슬릿 간섭과 같다. 두 슬릿의 위치는",
+      "en": "[[part2]] Virtual sources from upper and lower reflected beams interfere like two slits located at",
+      "size": 9.681,
+      "baseline": 83.25,
+      "left": 78.5,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          77.9,
+          71.8,
+          514.3,
+          89.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part2",
+          "expected_original": "2.",
+          "rect": [
+            78.5,
+            71.99997802734379,
+            90.0,
+            89.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part2"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 44,
+      "source_anchor_count": 44,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "下两侧的反射光束分别形成的虚",
+        "source_rect": [
+          78.5,
+          72.0,
+          513.5,
+          89.0
+        ],
+        "read_only_measurement_rect": [
+          77.5,
+          70.5,
+          514.5,
+          90.5
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 83.25,
+        "iou": 0.634446918964386,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "double-slit-model-b",
+      "hints": [
+        5,
+        6
+      ],
+      "source": "分别在y_+=(√2/4)d,z_+=(√2/8)d和y_-=−(√2/4)d,z_-=(√2/8)d的双缝干涉。双缝屏与观察屏之间的距离为",
+      "ko": "[[upper-slit]], [[lower-slit]]이다. 슬릿면과 스크린 사이 거리는",
+      "en": "[[upper-slit]] and [[lower-slit]]. The slit–screen distance is",
+      "size": 9.681,
+      "baseline": 105.0,
+      "left": 78.5,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          77.9,
+          93.8,
+          513.3,
+          109.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "upper-slit",
+          "expected_original": "y_+=(√2/4)d,z_+=(√2/8)d",
+          "rect": [
+            111.0,
+            87.5,
+            199.5,
+            112.5
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "lower-slit",
+          "expected_original": "y_-=−(√2/4)d,z_-=(√2/8)d",
+          "rect": [
+            214.0,
+            87.5,
+            308.0,
+            112.5
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "upper-slit",
+        "lower-slit"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 23,
+      "source_anchor_count": 23,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "双缝屏与观察屏之间的距离为",
+        "source_rect": [
+          78.5,
+          94.0,
+          512.5,
+          109.0
+        ],
+        "read_only_measurement_rect": [
+          77.5,
+          92.5,
+          513.5,
+          110.5
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 105.0,
+        "iou": 0.30857351422309875,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "fringe-spacing",
+      "hints": [
+        8,
+        9
+      ],
+      "source": "D−(√2/8)d≈D，双缝间距为(√2/2)d。故条纹间距",
+      "ko": "[[screen-distance]]이고 슬릿 간격은 [[slit-gap]]이다. 따라서 무늬 간격은",
+      "en": "[[screen-distance]]; slit spacing is [[slit-gap]]. Hence the fringe spacing is",
+      "size": 9.681,
+      "baseline": 130.5,
+      "left": 79.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          140.4,
+          120.8,
+          274.3,
+          133.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "screen-distance",
+          "expected_original": "D−(√2/8)d≈D",
+          "rect": [
+            79.0,
+            113.0,
+            132.75,
+            139.5
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "slit-gap",
+          "expected_original": "(√2/2)d",
+          "rect": [
+            192.0,
+            113.0,
+            216.0,
+            139.5
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "screen-distance",
+        "slit-gap"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 10,
+      "source_anchor_count": 12,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "双缝间距为",
+        "source_rect": [
+          141.0,
+          121.0,
+          273.5,
+          133.5
+        ],
+        "read_only_measurement_rect": [
+          140.0,
+          119.5,
+          274.5,
+          135.0
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 130.5,
+        "iou": 0.7352430820465088,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "filament-diameter",
+      "hints": [
+        13
+      ],
+      "source": "由此得，细丝的直径d为",
+      "ko": "따라서 실의 지름 [[diameter-d]]는",
+      "en": "Thus the filament diameter [[diameter-d]] is",
+      "size": 9.681,
+      "baseline": 190.5,
+      "left": 78.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          77.4,
+          179.8,
+          185.8,
+          194.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "diameter-d",
+          "expected_original": "d",
+          "rect": [
+            163.5,
+            179.8,
+            173.5,
+            194.6
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "diameter-d"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 10,
+      "source_anchor_count": 10,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "细丝的直径",
+        "source_rect": [
+          78.0,
+          180.0,
+          185.0,
+          194.5
+        ],
+        "read_only_measurement_rect": [
+          77.0,
+          178.5,
+          186.0,
+          196.0
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 190.5,
+        "iou": 0.6725866794586182,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-problem7-title",
+      "hints": [
+        16
+      ],
+      "source": "评分标准：本题15分。",
+      "role": "mixed-bold",
+      "ko": "채점 기준: 총 [[total15]]점.",
+      "en": "Marking scheme: [[total15]] points in total.",
+      "size": 9.681,
+      "baseline": 244.0,
+      "left": 77.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          76.4,
+          233.3,
+          168.3,
+          247.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "total15",
+          "expected_original": "15",
+          "rect": [
+            141.0,
+            233.3,
+            155.0,
+            247.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "total15"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 9,
+      "source_anchor_count": 9,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "评分标准",
+        "source_rect": [
+          77.0,
+          233.5,
+          167.5,
+          247.0
+        ],
+        "read_only_measurement_rect": [
+          76.0,
+          232.0,
+          168.5,
+          248.5
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 244.0,
+        "iou": 0.50748211145401,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-problem7-part1",
+      "hints": [
+        17
+      ],
+      "source": "第1问10分，",
+      "ko": "[[part1-grade]]번: [[score10]]점.",
+      "en": "Part [[part1-grade]]: [[score10]] points.",
+      "size": 9.681,
+      "baseline": 256.0,
+      "left": 95.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          94.4,
+          247.3,
+          150.8,
+          259.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part1-grade",
+          "expected_original": "1",
+          "rect": [
+            107.0,
+            247.3,
+            111.5,
+            259.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "score10",
+          "expected_original": "10",
+          "rect": [
+            125.0,
+            247.3,
+            135.0,
+            259.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part1-grade",
+        "score10"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 3,
+      "source_anchor_count": 4,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "第",
+        "source_rect": [
+          95.0,
+          247.5,
+          150.0,
+          259.0
+        ],
+        "read_only_measurement_rect": [
+          94.0,
+          246.0,
+          151.0,
+          260.5
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 256.0,
+        "iou": 0.7187079191207886,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-problem7-part1-detail",
+      "hints": [
+        18
+      ],
+      "source": "(1)、(2)式各1分，(3)式2分，(4)至(9)式各1分。",
+      "ko": "[[g1]], [[g2]] 각 [[p1-12]]점, [[g3]] [[p2-3]]점, [[g4]]~[[g9]] 각 [[p1-49]]점.",
+      "en": "[[g1]], [[g2]]: [[p1-12]] each; [[g3]]: [[p2-3]]; [[g4]]–[[g9]]: [[p1-49]] point each.",
+      "size": 9.681,
+      "baseline": 269.5,
+      "left": 94.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          93.4,
+          258.8,
+          291.8,
+          272.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "g1",
+          "expected_original": "(1)",
+          "rect": [
+            94.0,
+            258.8,
+            106.5,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g2",
+          "expected_original": "(2)",
+          "rect": [
+            112.5,
+            258.8,
+            125.5,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p1-12",
+          "expected_original": "1",
+          "rect": [
+            143.5,
+            258.8,
+            153.5,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g3",
+          "expected_original": "(3)",
+          "rect": [
+            169.0,
+            258.8,
+            182.5,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p2-3",
+          "expected_original": "2",
+          "rect": [
+            191.5,
+            258.8,
+            201.0,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g4",
+          "expected_original": "(4)",
+          "rect": [
+            216.5,
+            258.8,
+            230.0,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g9",
+          "expected_original": "(9)",
+          "rect": [
+            239.5,
+            258.8,
+            250.5,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p1-49",
+          "expected_original": "1",
+          "rect": [
+            268.5,
+            258.8,
+            277.0,
+            272.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "g1",
+        "g2",
+        "p1-12",
+        "g3",
+        "p2-3",
+        "g4",
+        "g9",
+        "p1-49"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 13,
+      "source_anchor_count": 13,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "式各",
+        "source_rect": [
+          94.0,
+          259.0,
+          291.0,
+          272.0
+        ],
+        "read_only_measurement_rect": [
+          93.0,
+          257.5,
+          292.0,
+          273.5
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 269.5,
+        "iou": 0.6678231358528137,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-problem7-part2",
+      "hints": [
+        19
+      ],
+      "source": "第2问5分，",
+      "ko": "[[part2-grade]]번: [[score5]]점.",
+      "en": "Part [[part2-grade]]: [[score5]] points.",
+      "size": 9.681,
+      "baseline": 280.0,
+      "left": 95.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          94.4,
+          270.8,
+          145.8,
+          283.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part2-grade",
+          "expected_original": "2",
+          "rect": [
+            104.0,
+            270.8,
+            114.0,
+            283.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "score5",
+          "expected_original": "5",
+          "rect": [
+            122.0,
+            270.8,
+            131.5,
+            283.1
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part2-grade",
+        "score5"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 4,
+      "source_anchor_count": 4,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "第",
+        "source_rect": [
+          95.0,
+          271.0,
+          145.0,
+          283.0
+        ],
+        "read_only_measurement_rect": [
+          94.0,
+          269.5,
+          146.0,
+          284.5
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 280.0,
+        "iou": 0.7150537371635437,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "marking-problem7-part2-detail",
+      "hints": [
+        20
+      ],
+      "source": "(10)式3分，(11)式2分。",
+      "ko": "[[g10]] [[p3-10]]점, [[g11]] [[p2-11]]점.",
+      "en": "[[g10]]: [[p3-10]]; [[g11]]: [[p2-11]] points.",
+      "size": 9.681,
+      "baseline": 292.75,
+      "left": 94.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          93.4,
+          282.8,
+          193.8,
+          295.4999780273438
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "g10",
+          "expected_original": "(10)",
+          "rect": [
+            94.0,
+            282.8,
+            110.5,
+            295.4999780273438
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p3-10",
+          "expected_original": "3",
+          "rect": [
+            119.0,
+            282.8,
+            128.5,
+            295.4999780273438
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "g11",
+          "expected_original": "(11)",
+          "rect": [
+            146.0,
+            282.8,
+            162.0,
+            295.4999780273438
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": true,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "p2-11",
+          "expected_original": "2",
+          "rect": [
+            171.0,
+            282.8,
+            181.0,
+            295.4999780273438
+          ],
+          "image_path": [
+            313
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "g10",
+        "p3-10",
+        "g11",
+        "p2-11"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 5,
+      "source_anchor_count": 6,
+      "source_image_path": [
+        313
+      ],
+      "baseline_evidence": {
+        "character_run": "式",
+        "source_rect": [
+          94.0,
+          283.0,
+          193.0,
+          295.5
+        ],
+        "read_only_measurement_rect": [
+          93.0,
+          281.5,
+          194.0,
+          297.0
+        ],
+        "size_fixed_before_translation": 9.681,
+        "baseline": 292.75,
+        "iou": 0.7203539609909058,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4454,
+      "printed_bold_stroke": 0.5939,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4454,
+          "bold": 0.5939
+        },
+        "ko": {
+          "regular": 0.297,
+          "bold": 0.396,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "problem8-reference",
+      "hints": [
+        22
+      ],
+      "source": "参考解答：",
+      "role": "serif-bold",
+      "ko": "참고 해설:",
+      "en": "Reference solution:",
+      "size": 9.776,
+      "baseline": 329.5,
+      "left": 75.5,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          74.9,
+          318.8,
+          119.3,
+          332.6
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 5,
+      "source_anchor_count": 5,
+      "source_image_path": [
+        322
+      ],
+      "baseline_evidence": {
+        "character_run": "参考解答",
+        "source_rect": [
+          75.5,
+          319.0,
+          118.5,
+          332.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          317.5,
+          119.5,
+          334.0
+        ],
+        "size_fixed_before_translation": 9.776,
+        "baseline": 329.5,
+        "iou": 0.7449044585227966,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4498,
+      "printed_bold_stroke": 0.5998,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4498,
+          "bold": 0.5998
+        },
+        "ko": {
+          "regular": 0.2999,
+          "bold": 0.3998,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "ground-time",
+      "hints": [
+        23
+      ],
+      "source": "1.在地面参考系S中，从张同学和王同学相遇，到他们之间的距离为L时，时间间隔为",
+      "ko": "[[part1]] 지면계 [[S-ground]]에서 장·왕 학생이 만나 거리 [[L-separation]]만큼 떨어질 때까지 걸린 시간은",
+      "en": "[[part1]] In ground frame [[S-ground]], time from Zhang and Wang's meeting to separation [[L-separation]] is",
+      "size": 9.776,
+      "baseline": 343.25,
+      "left": 75.5,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          74.9,
+          332.8,
+          449.3,
+          347.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part1",
+          "expected_original": "1.",
+          "rect": [
+            75.5,
+            332.8,
+            88.0,
+            347.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "S-ground",
+          "expected_original": "S",
+          "rect": [
+            146.5,
+            332.8,
+            155.0,
+            347.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "L-separation",
+          "expected_original": "L",
+          "rect": [
+            369.0,
+            332.8,
+            379.5,
+            347.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part1",
+        "S-ground",
+        "L-separation"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 35,
+      "source_anchor_count": 35,
+      "source_image_path": [
+        322
+      ],
+      "baseline_evidence": {
+        "character_run": "从张同学和王同学相遇",
+        "source_rect": [
+          75.5,
+          333.0,
+          448.5,
+          347.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          331.5,
+          449.5,
+          349.0
+        ],
+        "size_fixed_before_translation": 9.776,
+        "baseline": 343.25,
+        "iou": 0.6921493411064148,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4498,
+      "printed_bold_stroke": 0.5998,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4498,
+          "bold": 0.5998
+        },
+        "ko": {
+          "regular": 0.2999,
+          "bold": 0.3998,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "proper-time-a",
+      "hints": [
+        27
+      ],
+      "source": "在张同学自身静止的参考系S′中，张同学开始两次读其随身携带的时钟的两个事件发生在同一地点，因此",
+      "ko": "장 학생의 정지계 [[S-Zhang-proper]]에서 처음 두 시계 판독 사건은 같은 곳에서 일어난다. 따라서",
+      "en": "In Zhang's rest frame [[S-Zhang-proper]], his first two clock readings occur at the same place. Thus",
+      "size": 9.776,
+      "baseline": 383.0,
+      "left": 76.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          75.4,
+          371.3,
+          515.8,
+          387.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "S-Zhang-proper",
+          "expected_original": "S′",
+          "rect": [
+            192.5,
+            371.3,
+            202.0,
+            387.1
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "S-Zhang-proper"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 44,
+      "source_anchor_count": 45,
+      "source_image_path": [
+        322
+      ],
+      "baseline_evidence": {
+        "character_run": "张同学开始两次读其随身携带的",
+        "source_rect": [
+          76.0,
+          371.5,
+          515.0,
+          387.0
+        ],
+        "read_only_measurement_rect": [
+          75.0,
+          370.0,
+          516.0,
+          388.5
+        ],
+        "size_fixed_before_translation": 9.776,
+        "baseline": 383.0,
+        "iou": 0.6120306849479675,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4498,
+      "printed_bold_stroke": 0.5998,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4498,
+          "bold": 0.5998
+        },
+        "ko": {
+          "regular": 0.2999,
+          "bold": 0.3998,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "proper-time-b",
+      "hints": [
+        28
+      ],
+      "source": "张同学拍手时其随身携带的时钟的读数T为固有时间或原时。利用时间的相对论效应得",
+      "ko": "손뼉칠 때 그의 시계값 [[proper-T]]는 고유시간(원시간)이다. 시간지연에 따라",
+      "en": "His clock reading [[proper-T]] at the clap is proper time. Time dilation gives",
+      "size": 9.776,
+      "baseline": 394.75,
+      "left": 75.5,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          74.9,
+          384.3,
+          455.3,
+          399.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "proper-T",
+          "expected_original": "T",
+          "rect": [
+            251.5,
+            384.3,
+            261.0,
+            399.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "proper-T"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 37,
+      "source_anchor_count": 37,
+      "source_image_path": [
+        322
+      ],
+      "baseline_evidence": {
+        "character_run": "张同学拍手时其随身携带的时钟",
+        "source_rect": [
+          75.5,
+          384.5,
+          454.5,
+          399.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          383.0,
+          455.5,
+          401.0
+        ],
+        "size_fixed_before_translation": 9.776,
+        "baseline": 394.75,
+        "iou": 0.5916879773139954,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4498,
+      "printed_bold_stroke": 0.5998,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4498,
+          "bold": 0.5998
+        },
+        "ko": {
+          "regular": 0.2999,
+          "bold": 0.3998,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "event1-definition-a",
+      "hints": [
+        30
+      ],
+      "source": "2.在参考系S′中，张同学第一次拍手这一事件1发生的时刻和位置分别是t′_1=T和x′_1=0。已设张、王同",
+      "ko": "[[part2]] [[S-Zhang-event1]]에서 장의 첫 손뼉(사건 [[event1-first]])은 [[tprime1-T]], [[xprime1-zero]]에서 일어난다. 장·왕은",
+      "en": "[[part2]] In [[S-Zhang-event1]], Zhang's first clap (event [[event1-first]]) has [[tprime1-T]], [[xprime1-zero]]. Place each student",
+      "size": 9.776,
+      "baseline": 439.25,
+      "left": 73.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          72.4,
+          427.3,
+          515.3,
+          444.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "part2",
+          "expected_original": "2.",
+          "rect": [
+            73.0,
+            427.3,
+            87.0,
+            444.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "S-Zhang-event1",
+          "expected_original": "S′",
+          "rect": [
+            125.0,
+            427.3,
+            135.5,
+            444.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "event1-first",
+          "expected_original": "1",
+          "rect": [
+            271.5,
+            427.3,
+            281.5,
+            444.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "tprime1-T",
+          "expected_original": "t′_1=T",
+          "rect": [
+            388.0,
+            427.3,
+            412.5,
+            444.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "xprime1-zero",
+          "expected_original": "x′_1=0",
+          "rect": [
+            422.5,
+            427.3,
+            448.5,
+            444.6
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "part2",
+        "S-Zhang-event1",
+        "event1-first",
+        "tprime1-T",
+        "xprime1-zero"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 36,
+      "source_anchor_count": 37,
+      "source_image_path": [
+        322
+      ],
+      "baseline_evidence": {
+        "character_run": "张同学第一次拍手这一事件",
+        "source_rect": [
+          73.0,
+          427.5,
+          514.5,
+          444.5
+        ],
+        "read_only_measurement_rect": [
+          72.0,
+          426.0,
+          515.5,
+          446.0
+        ],
+        "size_fixed_before_translation": 9.776,
+        "baseline": 439.25,
+        "iou": 0.6245288252830505,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4498,
+      "printed_bold_stroke": 0.5998,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4498,
+          "bold": 0.5998
+        },
+        "ko": {
+          "regular": 0.2999,
+          "bold": 0.3998,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "frame-origins",
+      "hints": [
+        31
+      ],
+      "source": "学分别位于各自参考系中直角坐标系的坐标原点，两参考系中直角坐标系的原点在t′=t″=0时重合，x′",
+      "ko": "각자의 좌표원점에 놓인다. 두 원점은 [[zero-both-times]]일 때 겹치고 [[x-prime-axis]]와",
+      "en": "at his own frame origin. The origins coincide at [[zero-both-times]], while [[x-prime-axis]]",
+      "size": 9.776,
+      "baseline": 452.25,
+      "left": 75.0,
+      "right": 522.0,
+      "erase_rects": [
+        [
+          74.4,
+          441.8,
+          513.3,
+          457.86997802734373
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "zero-both-times",
+          "expected_original": "t′=t″=0",
+          "rect": [
+            423.5,
+            441.8,
+            466.0,
+            457.86997802734373
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "x-prime-axis",
+          "expected_original": "x′",
+          "rect": [
+            504.0,
+            441.8,
+            512.5,
+            457.86997802734373
+          ],
+          "image_path": [
+            322
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "zero-both-times",
+        "x-prime-axis"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 40,
+      "source_anchor_count": 40,
+      "source_image_path": [
+        322
+      ],
+      "baseline_evidence": {
+        "character_run": "学分别位于各自参考系中直角坐",
+        "source_rect": [
+          75.0,
+          442.0,
+          512.5,
+          458.0
+        ],
+        "read_only_measurement_rect": [
+          74.0,
+          440.5,
+          513.5,
+          459.5
+        ],
+        "size_fixed_before_translation": 9.776,
+        "baseline": 452.25,
+        "iou": 0.5497404932975769,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4498,
+      "printed_bold_stroke": 0.5998,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4498,
+          "bold": 0.5998
+        },
+        "ko": {
+          "regular": 0.2999,
+          "bold": 0.3998,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "axes-and-clock-slowing",
+      "hints": [
+        32
+      ],
+      "source": "和x″轴重合且同向；而在王同学自身静止的参考系S″中，张同学的时钟慢了。利用时间的相对论效应，",
+      "ko": "[[x-doubleprime-axis]]축은 겹쳐 같은 방향이다. 왕의 정지계 [[S-Wang-time]]에선 장의 시계가 느리다.",
+      "en": "and [[x-doubleprime-axis]] coincide and point the same way. In Wang's rest frame [[S-Wang-time]], Zhang's clock runs slow.",
+      "size": 9.647,
+      "baseline": 468.75,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          458.3,
+          503.8,
+          472.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "x-doubleprime-axis",
+          "expected_original": "x″",
+          "rect": [
+            85.5,
+            458.3,
+            97.5,
+            472.6
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "S-Wang-time",
+          "expected_original": "S″",
+          "rect": [
+            287.5,
+            458.3,
+            299.0,
+            472.6
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "x-doubleprime-axis",
+        "S-Wang-time"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 41,
+      "source_anchor_count": 43,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "而在王同学自身静止的参考系",
+        "source_rect": [
+          75.5,
+          458.5,
+          503.0,
+          472.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          457.0,
+          504.0,
+          474.0
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 468.75,
+        "iou": 0.5776005983352661,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "event1-Wang-time",
+      "hints": [
+        33
+      ],
+      "source": "在参考系S″中事件1发生的时刻t″_1（此即王同学随身携带的时钟的读数）为",
+      "ko": "시간지연에 따라 [[S-Wang-event1]]에서 사건 [[event1-time]]의 시각 [[t-doubleprime1]](왕의 시계값)은",
+      "en": "Time dilation gives event [[event1-time]] in [[S-Wang-event1]] at [[t-doubleprime1]], Wang's own clock reading:",
+      "size": 9.647,
+      "baseline": 482.25,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          471.8,
+          397.8,
+          485.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "S-Wang-event1",
+          "expected_original": "S″",
+          "rect": [
+            113.5,
+            471.8,
+            126.5,
+            485.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "event1-time",
+          "expected_original": "1",
+          "rect": [
+            154.5,
+            471.8,
+            164.5,
+            485.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "t-doubleprime1",
+          "expected_original": "t″_1",
+          "rect": [
+            213.0,
+            471.8,
+            226.5,
+            485.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "S-Wang-event1",
+        "event1-time",
+        "t-doubleprime1"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 30,
+      "source_anchor_count": 30,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "此即王同学随身携带的时钟的读",
+        "source_rect": [
+          75.5,
+          472.0,
+          397.0,
+          485.0
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          470.5,
+          398.0,
+          486.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 482.25,
+        "iou": 0.5892875790596008,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "relative-gamma-definition",
+      "hints": [
+        36
+      ],
+      "source": "式中",
+      "ko": "여기서",
+      "en": "where",
+      "size": 9.647,
+      "baseline": 508.25,
+      "left": 74.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          73.4,
+          497.8,
+          97.8,
+          511.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 2,
+      "source_anchor_count": 2,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "式中",
+        "source_rect": [
+          74.0,
+          498.0,
+          97.0,
+          511.0
+        ],
+        "read_only_measurement_rect": [
+          73.0,
+          496.5,
+          98.0,
+          512.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 508.25,
+        "iou": 0.7338792085647583,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "relative-speed-note-a",
+      "hints": [
+        39
+      ],
+      "source": "推导中已应用了张同学相对于王同学做匀速直线运动的速率v_r的表达式。注意：在参考系S″中事件1发",
+      "ko": "유도에는 장과 왕의 상대 등속직선운동 속력 [[relative-vr]]를 썼다. 주의: [[S-Wang-location]]에서 사건 [[event1-location]]의",
+      "en": "Zhang's uniform speed [[relative-vr]] relative to Wang was used. In [[S-Wang-location]], note that event [[event1-location]] occurs",
+      "size": 9.647,
+      "baseline": 552.25,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          541.8,
+          510.3,
+          556.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "relative-vr",
+          "expected_original": "v_r",
+          "rect": [
+            326.0,
+            541.8,
+            336.0,
+            556.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "S-Wang-location",
+          "expected_original": "S″",
+          "rect": [
+            449.5,
+            541.8,
+            461.5,
+            556.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "event1-location",
+          "expected_original": "1",
+          "rect": [
+            489.0,
+            541.8,
+            499.5,
+            556.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "relative-vr",
+        "S-Wang-location",
+        "event1-location"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 41,
+      "source_anchor_count": 42,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "推导中已应用了张同学相对于王",
+        "source_rect": [
+          75.5,
+          542.0,
+          509.5,
+          556.0
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          540.5,
+          510.5,
+          557.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 552.25,
+        "iou": 0.6263642907142639,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "relative-speed-note-b",
+      "hints": [
+        40
+      ],
+      "source": "生的位置并不在王同学自身所在处或原点，而在x″_2≠0。",
+      "ko": "위치는 왕 자신이나 원점이 아니라 [[remote-position-nonzero]]이다.",
+      "en": "not at Wang or the origin, but at [[remote-position-nonzero]].",
+      "provenance_only": "Actual original scan prints subscript2 in x_doubleprime_2!=0, even though the prose discusses event1. Preserve the original bitmap, do not silently replace it by1, and add no translator note to the PDF. Verified source crop p13-remote-position-8x.png.",
+      "size": 9.647,
+      "baseline": 566.0,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          555.8,
+          308.3,
+          568.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "remote-position-nonzero",
+          "expected_original": "x″_2≠0",
+          "rect": [
+            277.5,
+            555.8,
+            304.0,
+            568.6
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "remote-position-nonzero"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 22,
+      "source_anchor_count": 22,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "生的位置并不在王同学自身所在",
+        "source_rect": [
+          75.5,
+          556.0,
+          307.5,
+          568.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          554.5,
+          308.5,
+          570.0
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 566.0,
+        "iou": 0.6156384944915771,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "Wang-first-clap-intro",
+      "hints": [
+        41
+      ],
+      "source": "依题意，王同学在时刻",
+      "ko": "문제에 따라 왕 학생은 다음 시각에",
+      "en": "As specified, Wang at time",
+      "size": 9.647,
+      "baseline": 579.25,
+      "left": 94.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          93.4,
+          568.8,
+          192.8,
+          582.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 10,
+      "source_anchor_count": 10,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "王同学在时刻",
+        "source_rect": [
+          94.0,
+          569.0,
+          192.0,
+          582.0
+        ],
+        "read_only_measurement_rect": [
+          93.0,
+          567.5,
+          193.0,
+          583.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 579.25,
+        "iou": 0.7162960767745972,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "event2-definition-a",
+      "hints": [
+        44
+      ],
+      "source": "拍手，这一事件在参考系S″中发生的时刻和位置分别是t″_2=t″_1和原点x″_2=0，是和事件1不同的另一事",
+      "ko": "손뼉친다. [[S-Wang-event2]]에서 시각·위치는 [[tdouble2-equal]], 원점 [[xdouble2-zero]]이며 사건 [[event1-other]]과 다른",
+      "en": "claps. In [[S-Wang-event2]], this has [[tdouble2-equal]] and origin [[xdouble2-zero]], distinct from event [[event1-other]].",
+      "size": 9.647,
+      "baseline": 606.5,
+      "left": 75.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.4,
+          596.0,
+          510.3,
+          610.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "S-Wang-event2",
+          "expected_original": "S″",
+          "rect": [
+            180.5,
+            596.0,
+            194.0,
+            610.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "tdouble2-equal",
+          "expected_original": "t″_2=t″_1",
+          "rect": [
+            308.5,
+            596.0,
+            334.5,
+            610.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "xdouble2-zero",
+          "expected_original": "x″_2=0",
+          "rect": [
+            363.0,
+            596.0,
+            389.5,
+            610.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "event1-other",
+          "expected_original": "1",
+          "rect": [
+            442.5,
+            598.0,
+            448.5,
+            608.5
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "S-Wang-event2",
+        "tdouble2-equal",
+        "xdouble2-zero",
+        "event1-other"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 37,
+      "source_anchor_count": 37,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "中发生的时刻和位置分别是",
+        "source_rect": [
+          75.0,
+          595.0,
+          509.5,
+          610.0
+        ],
+        "read_only_measurement_rect": [
+          74.0,
+          593.5,
+          510.5,
+          611.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 606.5,
+        "iou": 0.6417536735534668,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "event2-definition-b",
+      "hints": [
+        45
+      ],
+      "source": "件，记为事件2。而在张同学自身静止的参考系S′中，王同学的时钟慢了。利用时间的相对论效应，在参",
+      "ko": "별개 사건 [[event2-label]]라 하자. 장의 정지계 [[S-Zhang-event2]]에서는 왕의 시계가 느리다.",
+      "en": "Call it event [[event2-label]]. In Zhang's rest frame [[S-Zhang-event2]], Wang's clock is slow.",
+      "size": 9.647,
+      "baseline": 619.5,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          609.3,
+          509.8,
+          623.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "event2-label",
+          "expected_original": "2",
+          "rect": [
+            131.5,
+            609.3,
+            139.5,
+            623.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "S-Zhang-event2",
+          "expected_original": "S′",
+          "rect": [
+            272.0,
+            609.3,
+            281.5,
+            623.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "event2-label",
+        "S-Zhang-event2"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 43,
+      "source_anchor_count": 44,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "而在张同学自身静止的参考系",
+        "source_rect": [
+          75.5,
+          609.5,
+          509.0,
+          623.0
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          608.0,
+          510.0,
+          624.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 619.5,
+        "iou": 0.595694363117218,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "event2-Zhang-time",
+      "hints": [
+        46
+      ],
+      "source": "考系S′中事件2发生的时刻t′_2为",
+      "ko": "시간지연으로 [[S-Zhang-time2]]에서 사건 [[event2-time]]의 시각 [[tprime2]]는",
+      "en": "Time dilation gives event [[event2-time]] in [[S-Zhang-time2]] at [[tprime2]]:",
+      "size": 9.647,
+      "baseline": 632.5,
+      "left": 74.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          73.4,
+          622.3,
+          211.8,
+          635.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "S-Zhang-time2",
+          "expected_original": "S′",
+          "rect": [
+            94.0,
+            622.3,
+            104.0,
+            635.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "event2-time",
+          "expected_original": "2",
+          "rect": [
+            132.5,
+            622.3,
+            143.0,
+            635.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "tprime2",
+          "expected_original": "t′_2",
+          "rect": [
+            191.5,
+            622.3,
+            199.5,
+            635.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "S-Zhang-time2",
+        "event2-time",
+        "tprime2"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 11,
+      "source_anchor_count": 11,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "发生的时刻",
+        "source_rect": [
+          74.0,
+          622.5,
+          211.0,
+          635.0
+        ],
+        "read_only_measurement_rect": [
+          73.0,
+          621.0,
+          212.0,
+          636.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 632.5,
+        "iou": 0.7712731957435608,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "Zhang-second-clap-intro",
+      "hints": [
+        49
+      ],
+      "source": "依题意，张同学在时刻",
+      "ko": "문제에 따라 장 학생은 다음 시각에",
+      "en": "As specified, Zhang at time",
+      "size": 9.647,
+      "baseline": 661.25,
+      "left": 75.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.4,
+          650.3,
+          173.8,
+          663.6
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 10,
+      "source_anchor_count": 10,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "张同学在时刻",
+        "source_rect": [
+          75.0,
+          650.5,
+          173.0,
+          663.5
+        ],
+        "read_only_measurement_rect": [
+          74.0,
+          649.0,
+          174.0,
+          665.0
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 661.25,
+        "iou": 0.7423136830329895,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "Zhang-second-clap-clock",
+      "hints": [
+        51
+      ],
+      "source": "第二次拍手（事件3），t′_3即为其随身携带的时钟的读数。",
+      "ko": "두 번째 손뼉(사건 [[event3-label]])을 친다. [[tprime3-clock]]는 자신의 시계값이다.",
+      "en": "claps a second time (event [[event3-label]]). [[tprime3-clock]] is his own clock reading.",
+      "size": 9.647,
+      "baseline": 693.25,
+      "left": 75.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.4,
+          682.3,
+          303.8,
+          696.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "event3-label",
+          "expected_original": "3",
+          "rect": [
+            147.0,
+            682.3,
+            152.3,
+            696.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "tprime3-clock",
+          "expected_original": "t′_3",
+          "rect": [
+            161.0,
+            682.3,
+            175.5,
+            696.1
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "event3-label",
+        "tprime3-clock"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 21,
+      "source_anchor_count": 24,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "即为其随身携带的时钟的读数",
+        "source_rect": [
+          75.0,
+          682.5,
+          303.0,
+          696.0
+        ],
+        "read_only_measurement_rect": [
+          74.0,
+          681.0,
+          304.0,
+          697.5
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 693.25,
+        "iou": 0.6666666865348816,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "nth-clap-time-a",
+      "hints": [
+        52
+      ],
+      "source": "照此继续下去。当张同学第n次拍手时，第2n−1个事件在参考系S′中发生的时刻t′_(2n−1)（或张同学随",
+      "ko": "반복하여 장이 [[nth-clap]]번째 손뼉칠 때 사건 [[event-2n-minus1]]의 [[S-Zhang-nth]]계 시각 [[tprime-nth]](또는 자신의",
+      "en": "Continuing, Zhang's [[nth-clap]]th clap is event [[event-2n-minus1]], at [[tprime-nth]] in [[S-Zhang-nth]] (or his own",
+      "size": 9.647,
+      "baseline": 710.5,
+      "left": 92.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          91.9,
+          699.3,
+          510.3,
+          714.3699780273438
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "nth-clap",
+          "expected_original": "n",
+          "rect": [
+            208.0,
+            699.3,
+            216.5,
+            714.3599780273437
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "event-2n-minus1",
+          "expected_original": "2n−1",
+          "rect": [
+            273.0,
+            699.3,
+            299.5,
+            714.3599780273437
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "S-Zhang-nth",
+          "expected_original": "S′",
+          "rect": [
+            366.0,
+            699.3,
+            377.0,
+            714.3599780273437
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "tprime-nth",
+          "expected_original": "t′_(2n−1)",
+          "rect": [
+            435.0,
+            699.3,
+            452.5,
+            714.3599780273437
+          ],
+          "image_path": [
+            331
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "nth-clap",
+        "event-2n-minus1",
+        "S-Zhang-nth",
+        "tprime-nth"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 36,
+      "source_anchor_count": 37,
+      "source_image_path": [
+        331
+      ],
+      "baseline_evidence": {
+        "character_run": "个事件在参考系",
+        "source_rect": [
+          92.5,
+          699.5,
+          509.5,
+          714.5
+        ],
+        "read_only_measurement_rect": [
+          91.5,
+          698.0,
+          510.5,
+          716.0
+        ],
+        "size_fixed_before_translation": 9.647,
+        "baseline": 710.5,
+        "iou": 0.724875271320343,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4439,
+      "printed_bold_stroke": 0.5918,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4439,
+          "bold": 0.5918
+        },
+        "ko": {
+          "regular": 0.2959,
+          "bold": 0.3946,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "nth-clap-time-b",
+      "hints": [
+        53
+      ],
+      "source": "身携带的时钟的读数）为",
+      "ko": "시계값)은",
+      "en": "clock reading) given by",
+      "size": 9.899,
+      "baseline": 725.5,
+      "left": 75.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.4,
+          714.8,
+          185.8,
+          729.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 11,
+      "source_anchor_count": 11,
+      "source_image_path": [
+        340
+      ],
+      "baseline_evidence": {
+        "character_run": "身携带的时钟的读数",
+        "source_rect": [
+          75.0,
+          715.0,
+          185.0,
+          729.0
+        ],
+        "read_only_measurement_rect": [
+          74.0,
+          713.5,
+          186.0,
+          730.5
+        ],
+        "size_fixed_before_translation": 9.899,
+        "baseline": 725.5,
+        "iou": 0.6825281977653503,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4555,
+      "printed_bold_stroke": 0.6073,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4555,
+          "bold": 0.6073
+        },
+        "ko": {
+          "regular": 0.3037,
+          "bold": 0.4049,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    },
+    {
+      "id": "separation-growth",
+      "hints": [
+        56
+      ],
+      "source": "由于在张同学每次观察到的时间间隔T内，张、王同学之间在地面参考系中的距离增加L。于是，张同",
+      "ko": "장에게 시간 [[T-interval]]가 지날 때마다 지면계의 장·왕 거리는 [[L-increment]]씩 늘어난다. 따라서 장이",
+      "en": "Each interval [[T-interval]] on Zhang's clock adds [[L-increment]] to their ground separation. Thus, Zhang's",
+      "size": 9.899,
+      "baseline": 756.75,
+      "left": 76.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          75.4,
+          745.3,
+          521.3,
+          758.6169780273437
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "T-interval",
+          "expected_original": "T",
+          "rect": [
+            234.0,
+            745.3,
+            245.5,
+            758.6169780273437
+          ],
+          "image_path": [
+            340
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        },
+        {
+          "id": "L-increment",
+          "expected_original": "L",
+          "rect": [
+            452.5,
+            745.3,
+            462.0,
+            758.6169780273437
+          ],
+          "image_path": [
+            340
+          ],
+          "reviewed": true,
+          "location_only": false,
+          "exact_reference_ctc_endpoint_hint": false,
+          "reason": "Entire source mathematical object manually checked in the original bitmap contact sheet; neighbouring Chinese/punctuation excluded by explicit coordinate review. Original1x bitmap/q/clip/cm/Do tokens retained."
+        }
+      ],
+      "source_atom_ids": [
+        "T-interval",
+        "L-increment"
+      ],
+      "reviewed": true,
+      "location_only": false,
+      "source_anchor_match_count": 42,
+      "source_anchor_count": 43,
+      "source_image_path": [
+        340
+      ],
+      "baseline_evidence": {
+        "character_run": "王同学之间在地面参考系中的距",
+        "source_rect": [
+          76.0,
+          745.5,
+          520.5,
+          760.5
+        ],
+        "read_only_measurement_rect": [
+          75.0,
+          744.0,
+          521.5,
+          762.0
+        ],
+        "size_fixed_before_translation": 9.899,
+        "baseline": 756.75,
+        "iou": 0.6693453192710876,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_visual_review": "Original full page and original bitmap contact sheet; later final whole-page and actual-ink audits remain required.",
+      "printed_regular_stroke": 0.4555,
+      "printed_bold_stroke": 0.6073,
+      "scan_weight_evidence": "Original known-CJK actual PDF Tr2 raster comparisons: p4-first-ten, p4-speed-clause and p6-tight-prose-actual-stroke.json. Same-print scanned chunks use the physical image scale; no translation or glyph width fitting.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4555,
+          "bold": 0.6073
+        },
+        "ko": {
+          "regular": 0.3037,
+          "bold": 0.4049,
+          "evidence": "source-vs-Batang-stems.json/.png: actual source primary vertical/horizontal stem medians and contrast, not whole ink density. Regular.30 and modest bold.40 at9.78pt, proportionally scaled for independently measured sourcepointsize; no font width/size fitting."
+        }
+      }
+    }
+  ],
+  "source_page_reviewed": true,
+  "source_contact_sheet": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\row-hints\\page13-candidate-contact.png",
+  "source_nonlanguage_and_final_visual_audit_required": true,
+  "protected_source_display_and_figure_rects": [
+    [
+      154,
+      141,
+      272,
+      180
+    ],
+    [
+      435,
+      154,
+      458,
+      168
+    ],
+    [
+      154,
+      194,
+      208,
+      223
+    ],
+    [
+      435,
+      207,
+      458,
+      221
+    ],
+    [
+      172,
+      348,
+      211,
+      374
+    ],
+    [
+      442,
+      358,
+      461,
+      371
+    ],
+    [
+      171,
+      400,
+      339,
+      427.25
+    ],
+    [
+      442,
+      409,
+      461,
+      423
+    ],
+    [
+      180,
+      484.75,
+      241,
+      499
+    ],
+    [
+      442,
+      487,
+      461,
+      501
+    ],
+    [
+      181,
+      510,
+      285,
+      540
+    ],
+    [
+      442,
+      521,
+      461,
+      535
+    ],
+    [
+      180,
+      582,
+      250,
+      595.5
+    ],
+    [
+      438,
+      582,
+      458,
+      595
+    ],
+    [
+      180,
+      637,
+      288,
+      655
+    ],
+    [
+      438,
+      640,
+      458,
+      653
+    ],
+    [
+      189,
+      665,
+      247,
+      682
+    ],
+    [
+      438,
+      670,
+      458,
+      683
+    ],
+    [
+      183,
+      726,
+      249,
+      744
+    ],
+    [
+      438,
+      734,
+      458,
+      747
+    ],
+    [
+      95.5,
+      91.0,
+      96.25,
+      91.75
+    ]
+  ],
+  "reviewed_blank_background_rects": [],
+  "source_background_restore_atoms": [
+    {
+      "id": "source-background-speck-page13",
+      "rect": [
+        95.5,
+        91.0,
+        96.25,
+        91.75
+      ],
+      "image_path": [
+        313
+      ],
+      "dx": 0,
+      "reviewed": true,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "reason": "Restore the original isolated scan-background pixel at its exact original coordinate after opaque inline bitmap padding; source-only4x contact witness, no prose/math/figure ink in this tiny region. Exact original image/clip program at1x, no generated pixel or erasure waiver.",
+      "evidence": "root-paint-order-completion/loss-review/ and inline-review/reviewed-candidates.png"
+    }
+  ],
+  "root_source_contact_corrections": {
+    "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+    "source_shape_review": "root-paint-order-completion/inline-review/reviewed-candidates.png",
+    "source_scope_review": "root-paint-order-completion/loss-review",
+    "changes": [
+      {
+        "kind": "source-display-scope",
+        "before": [
+          171,
+          400,
+          339,
+          432
+        ],
+        "after": [
+          171,
+          400,
+          339,
+          427.25
+        ],
+        "reason": "Actual original math protected in full; adjacent translated Chinese / intentionally moving next-line inline numerator excluded after exact source contact review."
+      },
+      {
+        "kind": "source-display-scope",
+        "before": [
+          180,
+          483,
+          241,
+          499
+        ],
+        "after": [
+          180,
+          484.75,
+          241,
+          499
+        ],
+        "reason": "Actual original math protected in full; adjacent translated Chinese / intentionally moving next-line inline numerator excluded after exact source contact review."
+      },
+      {
+        "kind": "source-display-scope",
+        "before": [
+          180,
+          577,
+          250,
+          594
+        ],
+        "after": [
+          180,
+          582,
+          250,
+          595.5
+        ],
+        "reason": "Actual original math protected in full; adjacent translated Chinese / intentionally moving next-line inline numerator excluded after exact source contact review."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "screen-distance",
+        "before": [
+          79.0,
+          113.0,
+          134.0,
+          139.5
+        ],
+        "after": [
+          79.0,
+          113.0,
+          132.75,
+          139.5
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "slit-gap",
+        "before": [
+          192.0,
+          113.0,
+          217.0,
+          139.5
+        ],
+        "after": [
+          192.0,
+          113.0,
+          216.0,
+          139.5
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "tprime1-T",
+        "before": [
+          388.0,
+          425.0,
+          412.5,
+          444.6
+        ],
+        "after": [
+          388.0,
+          427.3,
+          412.5,
+          444.6
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "xprime1-zero",
+        "before": [
+          422.5,
+          425.0,
+          448.5,
+          444.6
+        ],
+        "after": [
+          422.5,
+          427.3,
+          448.5,
+          444.6
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "S-Wang-event2",
+        "before": [
+          180.5,
+          594.8,
+          194.0,
+          610.1
+        ],
+        "after": [
+          180.5,
+          596.0,
+          194.0,
+          610.1
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "tdouble2-equal",
+        "before": [
+          308.5,
+          594.8,
+          334.5,
+          610.1
+        ],
+        "after": [
+          308.5,
+          596.0,
+          334.5,
+          610.1
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "xdouble2-zero",
+        "before": [
+          363.0,
+          594.8,
+          389.5,
+          610.1
+        ],
+        "after": [
+          363.0,
+          596.0,
+          389.5,
+          610.1
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      },
+      {
+        "kind": "complete-source-inline-atom",
+        "id": "event1-other",
+        "before": [
+          438.0,
+          594.8,
+          451.5,
+          610.1
+        ],
+        "after": [
+          442.5,
+          598.0,
+          448.5,
+          608.5
+        ],
+        "reason": "Complete original shape/prime at1x; source punctuation/CJK and opaque padding outside the notation excluded by reviewed source contact sheet."
+      }
+    ],
+    "original_y_and_scale_unchanged": true
+  }
+}

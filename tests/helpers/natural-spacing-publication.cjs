@@ -28,6 +28,21 @@ module.exports = function validate(root, record, item) {
     assert.deepEqual(move.native_glyph_mismatches, []);
     const full = pinned(page.qa, page.qa_sha256);
     assert.equal(full.passed, true);
+    if (full.reviewed_bitmap_language_labels) {
+      const labels = full.reviewed_bitmap_language_labels;
+      assert.ok(labels.labels > 0);
+      assert.equal(labels.actual_ink_only_masks, true);
+      assert.equal(labels.source_background_restored_exactly, true);
+      assert.equal(labels.source_nonlanguage_geometry_within_and_outside_language_regions_protected, true);
+      assert.equal(labels.new_label_over_original_nonlanguage_foreground_pixels, 0);
+      assert.equal(labels.source_background_rgb_samples.length, labels.labels);
+      assert.ok(full.figure_pixel_audits.some(figure => figure.intentionally_translated_language_changed_pixels > 0));
+      for (const figure of full.figure_pixel_audits) {
+        assert.equal(figure.changed_pixels, 0, 'Translated labels must retain every original nonlanguage figure pixel');
+        assert.equal(figure.raw_whole_figure_changed_pixels, figure.intentionally_translated_language_changed_pixels);
+      }
+      assert.equal(full.native_graphics_motion_audit.changed_nonselected_native_graphical_pixels, 0);
+    }
     if (full.native_script_motion_audit) {
       const geometry = full.native_script_motion_audit;
       assert.equal(geometry.passed, true);

@@ -1,0 +1,28 @@
+{
+  "source_page": 4,
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_text_reviewed": true,
+  "pixel_rois_reviewed": false,
+  "scope_complete": false,
+  "notation": "Every [[id]] is an original scanned mathematical/numeral atom, never a Unicode formula to be typeset.",
+  "rows": [
+    {"id":"reference","hints":[2],"source":"参考解答：","role":"serif-bold","ko":"참고 해설:","en":"Reference solution:"},
+    {"id":"first-impact","hints":[3],"source":"设小球每次落地反弹时，反弹后的竖直速度大小是反弹前的λ倍。第一次落地时竖直速度为","ko":"매번 공이 튄 직후의 수직 속력은 직전의 [[lambda]]배이다. 첫 충돌 때의 수직 속력은","en":"After each bounce the vertical speed is [[lambda]] times its impact speed. At the first impact,"},
+    {"id":"first-rebound-speed","hints":[6],"source":"第一次反弹竖直速度大小为","ko":"처음 튄 직후의 수직 속력은","en":"The vertical speed just after the first bounce is"},
+    {"id":"first-rebound-height","hints":[9],"source":"第一次反弹高度为","ko":"처음 튀어 오른 높이는","en":"The height of the first rebound is"},
+    {"id":"first-flight-time","hints":[13],"source":"第一次反弹后飞行时间为","ko":"처음 튄 뒤의 비행시간은","en":"The flight time after the first bounce is"},
+    {"id":"first-range","hints":[16],"source":"第一次反弹至第二次反弹时水平方向的位移为","ko":"첫 반발부터 다음 반발까지의 수평변위는","en":"The horizontal displacement between the first and second bounces is"},
+    {"id":"first-area","hints":[19],"source":"小球在第一次反弹至第二次反弹之间的运动轨迹与其在地面的投影之间所包围的面积为","ko":"처음 튄 뒤 다음 충돌까지 공의 궤적과 그 지면 투영이 둘러싼 넓이는","en":"The area between the path from the first bounce to the next impact and its ground projection is"},
+    {"id":"nth-bounce","hints":[21],"source":"设第n次反弹后至n+1次反弹前的最大竖直速度大小和上升的最大高度分别为v_n和h_n。由题意和","ko":"[[n]]번째와 [[n-plus-one]]번째 반발 사이 최대 수직 속력·높이를 각각 [[v-n]], [[h-n]]이라 하자.","en":"Between bounces [[n]] and [[n-plus-one]], denote the peak vertical speed and height by [[v-n]] and [[h-n]]."},
+    {"id":"recurrences-intro","hints":[22],"source":"上述论证知","ko":"조건과 앞의 논의로부터","en":"From the stated conditions and the preceding argument,"},
+    {"id":"geometric-series","hints":[32],"source":"S_1,S_2,…构成一无穷递缩等比数列，其总和为","ko":"[[series-terms]]는 감소하는 무한 등비수열을 이룬다. 그 합은","en":"[[series-terms]] form a decreasing infinite geometric sequence with sum"},
+    {"id":"from-six-twelve","hints":[37],"source":"由(6)、(12)式有","ko":"식 [[eq6]], [[eq12]]에서","en":"From Eqs. [[eq6]] and [[eq12]],"},
+    {"id":"impulse-definition","hints":[39],"source":"设I_n表示小球在第n（n≥1）次碰撞过程中小球受到的作用力的冲量，由动量定理有","ko":"공의 [[collision-n]]번째 [[n-condition]] 충돌 충격량을 [[impulse-n]]이라 하자. 충격량·운동량 정리로부터","en":"Let [[impulse-n]] be the impulse in collision [[collision-n]] [[n-condition]]. The momentum theorem gives"},
+    {"id":"zero-horizontal-impulse","hints":[42],"source":"由于小球每次反弹前后速度的水平分量不变，小球每次碰撞过程中受到的沿水平方向的冲量为零。小球","ko":"충돌 전후 공의 수평 속도 성분은 같으므로 각 충돌의 수평 충격량은 없다.","en":"Each collision leaves the horizontal velocity unchanged, so its horizontal impulse is zero."},
+    {"id":"total-impulse-intro","hints":[43],"source":"在各次与地面碰撞过程中所受到的总冲量为","ko":"지면과의 모든 충돌에서 공이 받은 총충격량은","en":"The total impulse delivered by the ground over all collisions is"},
+    {"id":"upward-substitute","hints":[47],"source":"方向向上。将(13)式代入(15)式得","ko":"방향은 위쪽이다. 식 [[eq13]]을 [[eq15]]에 대입하면","en":"The direction is upward. Substituting [[eq13]] into [[eq15]] gives"},
+    {"id":"marking-title","hints":[50],"source":"评分标准：本题15分。","role":"mixed-bold","ko":"채점 기준: 총 [[total15]]점.","en":"Marking scheme: [[total15]] points in total."},
+    {"id":"marking-detail","hints":[51],"source":"(1)至(6)式各1分，(11)式4分，(12)至(16)式各1分。","ko":"식 [[mark1]]~[[mark6]]은 각 [[point1a]]점, [[mark11]]은 [[point4]]점, [[mark12]]~[[mark16]]은 각 [[point1b]]점.","en":"Eqs. [[mark1]]–[[mark6]]: [[point1a]] point each; [[mark11]]: [[point4]] points; [[mark12]]–[[mark16]]: [[point1b]] point each."}
+  ],
+  "not_language": [{"hint":44,"reason":"OCR 1+元 is the original mathematical 1+lambda numerator, not Chinese prose. Preserve the complete displayed formula bitmap."}]
+}

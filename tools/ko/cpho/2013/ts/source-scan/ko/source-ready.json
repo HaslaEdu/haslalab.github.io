@@ -1,0 +1,842 @@
+{
+  "status": "READY",
+  "year": 2013,
+  "kind": "TS",
+  "source_original_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "source_audited_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "editions": [
+    {
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\editions\\CPhO_2013_TS_KO.pdf",
+      "sha256": "294c6bf4ea113934ad9fe304d093972dd3ebd07a14cd09251e432cf6e9d55e03",
+      "bytes": 18800461,
+      "pages": 11,
+      "language": "ko",
+      "proofs": [
+        {
+          "page": 1,
+          "source_page": 4,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page04.pdf",
+          "sha256": "e81234859de54420442b7a7081d559f2ce4f7ef501f9c5e984f8eedde3e44eac",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page04-generic_qa.json",
+            "sha256": "cc27d1b0100bce3b882b2b4569eb86266a30e88b21bb0dbe0158678d7e19f915"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page04-source_qa.json",
+            "sha256": "5c90281f889e9ad6b83c66a31bb97f80f252b425bf2c9d2cf3827c7af05ce821",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page04-source_qa.json",
+            "sha256": "5c90281f889e9ad6b83c66a31bb97f80f252b425bf2c9d2cf3827c7af05ce821",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page04-math_union.json",
+            "sha256": "f9e5b4eff5e09160a082dae702cd4f8111d8125f8c4eb3da0e5e2ed133759cc6"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page04-source_qa.json",
+            "sha256": "5c90281f889e9ad6b83c66a31bb97f80f252b425bf2c9d2cf3827c7af05ce821",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 2,
+          "source_page": 5,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page05.pdf",
+          "sha256": "7283f2d01232467b0413b0d4e03c3c111cb24dab258dc1a510cb506dd82ce1bf",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page05-generic_qa.json",
+            "sha256": "1e2acf21c1361ec4cccb9b3b3c59a0e5d635e25a66892d4a61cb2e4308a8547d"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page05-source_qa.json",
+            "sha256": "664f6eb5608ed8c240faa9473c5c7b41e0b9ea9db653c168ccd9fe10a6e09258",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page05-source_qa.json",
+            "sha256": "664f6eb5608ed8c240faa9473c5c7b41e0b9ea9db653c168ccd9fe10a6e09258",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page05-math_union.json",
+            "sha256": "b6c14b8003dbf3201133228f0aa1a530e34a8acf76c0df01b6b3a0e32321b4dc"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page05-source_qa.json",
+            "sha256": "664f6eb5608ed8c240faa9473c5c7b41e0b9ea9db653c168ccd9fe10a6e09258",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 3,
+          "source_page": 6,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page06.pdf",
+          "sha256": "96f148e818cf45f6f6abd04db4d5ef0e0561051388e77d2fcba2195558d5c848",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page06-generic_qa.json",
+            "sha256": "747fa9af9ef37bfc0f260e29573dfe278d47442601d85e0756a12caf6583e691"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page06-source_qa.json",
+            "sha256": "dca1517527466392baf3a38bf31fd8655687a73dd6293f85579c3489c63ee30c",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page06-source_qa.json",
+            "sha256": "dca1517527466392baf3a38bf31fd8655687a73dd6293f85579c3489c63ee30c",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page06-math_union.json",
+            "sha256": "cae07b4bf2d3ff4099597a94c41f5a91bb74e81bbe0e2945cfde7734e8277b3f"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page06-source_qa.json",
+            "sha256": "dca1517527466392baf3a38bf31fd8655687a73dd6293f85579c3489c63ee30c",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 4,
+          "source_page": 7,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page07.pdf",
+          "sha256": "7edb10a0d109f9462aa24222e2feae0f17be14839eed1207be49abf1d316b761",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page07-generic_qa.json",
+            "sha256": "ce926de5c151e8d4d1f7f3c46dd95f5d226f040a59f0c6008d583833971c2eff"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page07-source_qa.json",
+            "sha256": "a8cc1363ac4a66200ae3a25d96218e7760a37e249c5b085089fa322cb4dcf3e3",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page07-source_qa.json",
+            "sha256": "a8cc1363ac4a66200ae3a25d96218e7760a37e249c5b085089fa322cb4dcf3e3",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page07-math_union.json",
+            "sha256": "e362d83c30d1552c47877dc00ee9a56097f3241bb3fbc6abf088ff2a871bb31e"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page07-source_qa.json",
+            "sha256": "a8cc1363ac4a66200ae3a25d96218e7760a37e249c5b085089fa322cb4dcf3e3",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 5,
+          "source_page": 8,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page08.pdf",
+          "sha256": "9a6a06510846bf8b3decade2869d8284553e36f68a38c987161eb1cd61fbac4d",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page08-generic_qa.json",
+            "sha256": "66655b7f785c16c97c3a1ca48af6f75b7d23b113d4392493cd3ce22888351d81"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page08-source_qa.json",
+            "sha256": "a2dc583dee83b2c0367e4687811a380a31a0341a1a25660b47b6b1fb7a10a42d",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page08-source_qa.json",
+            "sha256": "a2dc583dee83b2c0367e4687811a380a31a0341a1a25660b47b6b1fb7a10a42d",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page08-math_union.json",
+            "sha256": "987725c30b31b0a3ee751668c7ccbf68f55d03f60945152d4abc17074175deab"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page08-source_qa.json",
+            "sha256": "a2dc583dee83b2c0367e4687811a380a31a0341a1a25660b47b6b1fb7a10a42d",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 6,
+          "source_page": 9,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page09.pdf",
+          "sha256": "95a1d3c92337a92ee0cdd71d19e6e3e927ce497eacb37a97531d164606bdb4c0",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page09-generic_qa.json",
+            "sha256": "ccf5786adcc7eb7f9fc4d2e92dbb8706c09dbc41fc93103a2f2644329117eb49"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page09-source_qa.json",
+            "sha256": "ed9605d7cda0656a5a14978b2d7fca9448957d57469ee1c2c3fbd6c228d0b767",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page09-source_qa.json",
+            "sha256": "ed9605d7cda0656a5a14978b2d7fca9448957d57469ee1c2c3fbd6c228d0b767",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page09-math_union.json",
+            "sha256": "686a400e8a8f919f8a1968cc3598abde505b72602010482ee2ec175eaf1196cb"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page09-source_qa.json",
+            "sha256": "ed9605d7cda0656a5a14978b2d7fca9448957d57469ee1c2c3fbd6c228d0b767",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 7,
+          "source_page": 10,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page10.pdf",
+          "sha256": "63135e644060b8a1714aaeb914a93c834103f7cad31014f4f229e1b87e12a097",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page10-generic_qa.json",
+            "sha256": "9fb93b961ccc6991345060d22d4211a54cee64a43d41cc806c11859f58dd73c2"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page10-source_qa.json",
+            "sha256": "73e3c464a3924241f230204187a363992dc8d23e5755c70596606dd8f39fd4d0",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page10-source_qa.json",
+            "sha256": "73e3c464a3924241f230204187a363992dc8d23e5755c70596606dd8f39fd4d0",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page10-math_union.json",
+            "sha256": "e0ea52178c3b6c4629512aa484e016128bbbb4502b9a04a46bf4618408e151d0"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page10-source_qa.json",
+            "sha256": "73e3c464a3924241f230204187a363992dc8d23e5755c70596606dd8f39fd4d0",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 8,
+          "source_page": 11,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page11.pdf",
+          "sha256": "48997ddebc4746cd282bdef029f4d52289cd6d889d7f7ad5065f8cb87efea49b",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page11-generic_qa.json",
+            "sha256": "237e7c613e3db9362ee4efb0d266e2c50ca96c6cbfb64e2118cb604abac1c7fa"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page11-source_qa.json",
+            "sha256": "667ea03b058bbd32e8fc9d37b6c977f00bb65d0bfddc63cb3a96f988ce316295",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page11-source_qa.json",
+            "sha256": "667ea03b058bbd32e8fc9d37b6c977f00bb65d0bfddc63cb3a96f988ce316295",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page11-math_union.json",
+            "sha256": "cf622666663347b68cca18f1ed6bee3ceab463744b1e5f5e153fd50d6c7fcdd5"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page11-source_qa.json",
+            "sha256": "667ea03b058bbd32e8fc9d37b6c977f00bb65d0bfddc63cb3a96f988ce316295",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 9,
+          "source_page": 12,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page12.pdf",
+          "sha256": "c6a1090bf8216e7b9ea4f97b067aee59017bc872158d4c84bc584f1f920d734f",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page12-generic_qa.json",
+            "sha256": "0595d4ec4257a77a96f33bb814f57806b49178cc807cda8ea0ac33585d5a5e95"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page12-source_qa.json",
+            "sha256": "7db7fe99835bc350954316894579bfa90d4ba335365c54287e1af1d212e2b43f",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page12-source_qa.json",
+            "sha256": "7db7fe99835bc350954316894579bfa90d4ba335365c54287e1af1d212e2b43f",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page12-math_union.json",
+            "sha256": "49710ef688895fd3d4a35cbd33d486c5c63da848bb3d012c91eed3f924bbb00b"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page12-source_qa.json",
+            "sha256": "7db7fe99835bc350954316894579bfa90d4ba335365c54287e1af1d212e2b43f",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 10,
+          "source_page": 13,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page13.pdf",
+          "sha256": "59e889f013c4b17ce24123924ce2745bb54f6f2f85840faccf8938b200566358",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page13-generic_qa.json",
+            "sha256": "c19260850bb83522656a4e15c7eff26499e8e47a83b79b2e906cc0cc1961a784"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page13-source_qa.json",
+            "sha256": "de4aa63eae3a34aa2cab10e07751d5b91c3a4acbd88519bf10969c6e7b7b4e16",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page13-source_qa.json",
+            "sha256": "de4aa63eae3a34aa2cab10e07751d5b91c3a4acbd88519bf10969c6e7b7b4e16",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page13-math_union.json",
+            "sha256": "5ad8b9ca0899a5619498205a89196f92aba4f807d88af20c4322004f92125555"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page13-source_qa.json",
+            "sha256": "de4aa63eae3a34aa2cab10e07751d5b91c3a4acbd88519bf10969c6e7b7b4e16",
+            "selector": "independent_hangul_visibility"
+          }
+        },
+        {
+          "page": 11,
+          "source_page": 14,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\ko\\page14.pdf",
+          "sha256": "5d887a34034e9de90333b356549f5d2d86f8d204fe8caa34ffeaf345db398042",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page14-generic_qa.json",
+            "sha256": "29a040c0181620dc1fefb6c8d403c05b411caba8599d03d23500ddf8c0f63725"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page14-source_qa.json",
+            "sha256": "a7d2d489f38f79ccc38a4105e613de6a713f46db02f0ca52efeba34b69d77df8",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page14-source_qa.json",
+            "sha256": "a7d2d489f38f79ccc38a4105e613de6a713f46db02f0ca52efeba34b69d77df8",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page14-math_union.json",
+            "sha256": "78a0877e835dba4fc1945aa76e5e0fb33e9de36f402ebd57b949356ec9b5255a"
+          },
+          "hangul_visibility_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\ko\\page14-source_qa.json",
+            "sha256": "a7d2d489f38f79ccc38a4105e613de6a713f46db02f0ca52efeba34b69d77df8",
+            "selector": "independent_hangul_visibility"
+          }
+        }
+      ],
+      "assembly_qa": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\editions\\CPhO_2013_TS_KO.assembly-qa.json",
+      "visual_review": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\visual-review-ko.json"
+    },
+    {
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\editions\\CPhO_2013_TS_EN.pdf",
+      "sha256": "a59d60c0655137713a33d85a0aa340d7fb0fe93b8c8f5786d2d97f34e5a94327",
+      "bytes": 10029603,
+      "pages": 11,
+      "language": "en",
+      "proofs": [
+        {
+          "page": 1,
+          "source_page": 4,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page04.pdf",
+          "sha256": "2e4a8de853fed4e5612906fb2e8db27788ee195ad37cae74bbb1f10178b65c8c",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page04-generic_qa.json",
+            "sha256": "a0513bf467b61a541126680d5c8fdbdc845e125e366f49a6fca097d06b4f532c"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page04-source_qa.json",
+            "sha256": "a537622baff742a0fdc30f3494b30c812e4f9158a2422a32fae383cb62155dbb",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page04-source_qa.json",
+            "sha256": "a537622baff742a0fdc30f3494b30c812e4f9158a2422a32fae383cb62155dbb",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page04-math_union.json",
+            "sha256": "ee4d06606176d1651869ac44202331056fd94026f25c337c7d9905e5690ef12b"
+          }
+        },
+        {
+          "page": 2,
+          "source_page": 5,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page05.pdf",
+          "sha256": "e8c5c627a8064ccbf47b835e88fc68d334de4b5b6b5270878b7741876cb8a205",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page05-generic_qa.json",
+            "sha256": "e6974ae5ebb2b547318dc543816deb89ebbc3f0db2af61ddf71248be235034a3"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page05-source_qa.json",
+            "sha256": "0cf0018cb87f4ce1ee78e6e3a1b091c32933ab32d222dbf28d6d56b2ad494a7e",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page05-source_qa.json",
+            "sha256": "0cf0018cb87f4ce1ee78e6e3a1b091c32933ab32d222dbf28d6d56b2ad494a7e",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page05-math_union.json",
+            "sha256": "0f48999eb50f7e106cbb8c7a6f46514d7f53daa115681d0da8a872f46ac25bb1"
+          }
+        },
+        {
+          "page": 3,
+          "source_page": 6,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page06.pdf",
+          "sha256": "2efef7280ddfca8b7806d4170bff737a1b580ff0a34f0d6d00fc226ccdaf15fd",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page06-generic_qa.json",
+            "sha256": "e222818f87581756f310c859b727833692007f129309b0839b76edadf130462c"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page06-source_qa.json",
+            "sha256": "a3f034764915399df660f3b96008d5c197a9959a051ab7a5443b7f32f9350249",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page06-source_qa.json",
+            "sha256": "a3f034764915399df660f3b96008d5c197a9959a051ab7a5443b7f32f9350249",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page06-math_union.json",
+            "sha256": "e745ae4927ae3327c2dd4065a923dfb98892bea754594d4cc65285e1ffbd4f42"
+          }
+        },
+        {
+          "page": 4,
+          "source_page": 7,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page07.pdf",
+          "sha256": "547eef11ca7d930fc663867bb48dc85b05d431b69bd2bb171b80cfd97118b0e2",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page07-generic_qa.json",
+            "sha256": "6347d9789a4ffd120de57f57b5f721a95b6db6679b902106877bf49cf67ecb0f"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page07-source_qa.json",
+            "sha256": "5645261dd3d7aad60a6c517b366c70eb18dabca6ae5db5d0d8603748bcb3e700",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page07-source_qa.json",
+            "sha256": "5645261dd3d7aad60a6c517b366c70eb18dabca6ae5db5d0d8603748bcb3e700",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page07-math_union.json",
+            "sha256": "30e6386c0a633bed46ca6312068a82ecc203bbea9ecc2cc14cc314d91f49eddc"
+          }
+        },
+        {
+          "page": 5,
+          "source_page": 8,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page08.pdf",
+          "sha256": "b82c224ef7d6d6ccaf1ea6aa0920d2d1a363984df256d298959c363ae89b4c43",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page08-generic_qa.json",
+            "sha256": "cffb532d73db58b2e1cf62e67ed2c99a1fc81e8fd6715b43edc84719c8c2ed47"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page08-source_qa.json",
+            "sha256": "a0a1eef180fe87700dfd887f66d347d12c440ac9ecdaade078567d4c52eac07b",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page08-source_qa.json",
+            "sha256": "a0a1eef180fe87700dfd887f66d347d12c440ac9ecdaade078567d4c52eac07b",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page08-math_union.json",
+            "sha256": "0f8aacf32d4ab765830bdc5ed0620fd5e17af0199c25d3bdb724e1d7bcba7f5d"
+          }
+        },
+        {
+          "page": 6,
+          "source_page": 9,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page09.pdf",
+          "sha256": "3045c959b62590a0cd05ec5382ac1c96ac01ae62f0a5b620d8ea2f90b5c983de",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page09-generic_qa.json",
+            "sha256": "bf0cd5c2e0ad969550ffbd13b7f63ab6cb9ab888f2b5a6a604223a5b188c2472"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page09-source_qa.json",
+            "sha256": "52c88b5b64f8cfd52a7038e472a8afa92b2cf4c6e35b2016c4fc7fdd89ac9d55",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page09-source_qa.json",
+            "sha256": "52c88b5b64f8cfd52a7038e472a8afa92b2cf4c6e35b2016c4fc7fdd89ac9d55",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page09-math_union.json",
+            "sha256": "53be98be2fd27d94b0cba4ba23c307fbbbfa12fa4de420cc8e28dc8dd9bc5a1c"
+          }
+        },
+        {
+          "page": 7,
+          "source_page": 10,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page10.pdf",
+          "sha256": "03cd50060c4802eafc5f76d7adba7987164c4b0fe20180dde61c5931890819e3",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page10-generic_qa.json",
+            "sha256": "55369f0e2eb4050fa4d882cf5ffa86e12d67e9408c62e719ecf3a53cf97e2722"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page10-source_qa.json",
+            "sha256": "bc299285cfbaf0c755077679c93eb870fa06f5e070a85b544f1317a4341e985f",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page10-source_qa.json",
+            "sha256": "bc299285cfbaf0c755077679c93eb870fa06f5e070a85b544f1317a4341e985f",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page10-math_union.json",
+            "sha256": "0a8ed62f64b10fa7d0a498baea7dfbc357f4d7f3d6a2a3570c5accc65ec18414"
+          }
+        },
+        {
+          "page": 8,
+          "source_page": 11,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page11.pdf",
+          "sha256": "571ebdd5790e57aed32e2b0e2078bb0b572de98ba0b2707c60791b240888fffb",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page11-generic_qa.json",
+            "sha256": "dbac16db572ca5eb590f5ba6fe587b274b1e954822943f8de0a70d8317d2f7e6"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page11-source_qa.json",
+            "sha256": "504e366901f14856ea3f8d1156edf06d4e010de18c8b33941f54ee1cb7bb2e8d",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page11-source_qa.json",
+            "sha256": "504e366901f14856ea3f8d1156edf06d4e010de18c8b33941f54ee1cb7bb2e8d",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page11-math_union.json",
+            "sha256": "722ba357775a0f42e5f341d9a944a4d7eeedbca7af28ff41186903eb8d102653"
+          }
+        },
+        {
+          "page": 9,
+          "source_page": 12,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page12.pdf",
+          "sha256": "abfb2472cd022e0f02409903153c29c0b20702a0bf3b601ecc13a29461e7a775",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page12-generic_qa.json",
+            "sha256": "1e8de100c8b4c5608881404f42783eb00dfc49969711906cb6df4201f429e4b8"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page12-source_qa.json",
+            "sha256": "bd09e0d34646b51ee1e01c814045627918ed56888f51ba7eb5f4251617a29bc4",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page12-source_qa.json",
+            "sha256": "bd09e0d34646b51ee1e01c814045627918ed56888f51ba7eb5f4251617a29bc4",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page12-math_union.json",
+            "sha256": "e88603ba71f98948caeefa12a4dedff2db9a771a851bf5bd0b81973dd0b61949"
+          }
+        },
+        {
+          "page": 10,
+          "source_page": 13,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page13.pdf",
+          "sha256": "7a03876c399491d1085e9ac1536d8aad1e04d25f49e5beb2b2b9c662f124a584",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page13-generic_qa.json",
+            "sha256": "64e42aab7021d8ce1fca588c6589346f021a47fc49f2edb3550a19be5be8e51b"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page13-source_qa.json",
+            "sha256": "97e72c69630ecb298ce2a3251c6a017c075e0c1b6421bfe07e9c625ecc7b2591",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page13-source_qa.json",
+            "sha256": "97e72c69630ecb298ce2a3251c6a017c075e0c1b6421bfe07e9c625ecc7b2591",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page13-math_union.json",
+            "sha256": "27d9136ab8f27bb3ac9f5e9adadf7981bc58f954295403d719450ca783b9235e"
+          }
+        },
+        {
+          "page": 11,
+          "source_page": 14,
+          "pdf": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\proofs\\en\\page14.pdf",
+          "sha256": "5523db09ef826757280ef0fb11828c2c0492bfe824626d276c3e7533ae9c4b6b",
+          "source_scan_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page14-generic_qa.json",
+            "sha256": "a51e247fb827d8efa8be15b72b56c19745b04a5053f8288516c921074d484c23"
+          },
+          "actual_style_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page14-source_qa.json",
+            "sha256": "0af9e71deb4998fe200e473777bfa53556e237539a82af66361a7b0351f08011",
+            "selector": "actual_new_prose_style_audit"
+          },
+          "actual_outline_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page14-source_qa.json",
+            "sha256": "0af9e71deb4998fe200e473777bfa53556e237539a82af66361a7b0351f08011",
+            "selector": "new_actual_outline_audit"
+          },
+          "independent_math_union_qa": {
+            "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\evidence\\en\\page14-math_union.json",
+            "sha256": "c2780688fd6d5aca68acc05565a5ae6aee00a2cd9ba2b8bed5c89ed31d123a43"
+          }
+        }
+      ],
+      "assembly_qa": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\editions\\CPhO_2013_TS_EN.assembly-qa.json",
+      "visual_review": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\visual-review-en.json"
+    }
+  ],
+  "authoring_snapshots": [
+    {
+      "name": "whole-ts",
+      "root": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\master-v1\\authoring-whole-ts",
+      "files": {
+        "authoring/page04.json": "30453ed288afb63a67fbe08a87a0d7889b2d4cbe5cac0c55c49dc2802f1c9900",
+        "authoring/page05.json": "dd87f1de0cfa7e19dd4daabef4453d7f46374562d9a9055d53499dbee72ebe14",
+        "authoring/page06.json": "613ebb6f6d6d4019300ed800e738d0a6621152c504b79c5834fe0acd036f55dd",
+        "authoring/page07.json": "6fca63186a7be8af2f6cffb27a2b116e2955eaed01d33ec82cb00b78a1ddd2f4",
+        "authoring/page08.json": "e5a5d347ff8e29947582a57e3baea8557a3bd91f5c507033ca3ec20c3ac14f28",
+        "authoring/page09.json": "82e0b0eb7503628d5b1e2c5ceb597a87da7ac095b3dc1c275fb826739dd114ed",
+        "authoring/page10.json": "4a74be36d67d763f243da645072d0171f861bcf2e84f1619af6820ff3ec10d53",
+        "authoring/page11.json": "85cd1d2c5889635027fc343bafee3e5cfef0c7825861a166baee933d3b78c0ed",
+        "authoring/page12.json": "6bc1a6ae194735253daf255d2eb61892f15582b14f603e723597311095887b4a",
+        "authoring/page13.json": "89b15d9f7c1830f490fec369c94a4f6848399cfbcef67bd633e8e4f1b3de284b",
+        "authoring/page14.json": "a547cbd9713c499d115dc8cc1d44dff429fcc34a0dcc44b5a367bdbf7ca49a47",
+        "authoring/source-inventory.json": "a687d632782978a1f92313cb2295f7085c24fbee4f19b4766c48e3425f8a3742",
+        "authoring/page04-language-draft.json": "3263fbda1283a52e341123b69fb48c44b83c6c0e1deec9ea18a2531bff4c92c0",
+        "authoring/page05-language-draft.json": "cee1f1dca9e4dc7b4d80915a5315748d9bc3fd1b9affd9c89d986e6d47e5e11a",
+        "authoring/page06-language-draft.json": "0feae88b50661c7758222033bf8d5eebd52677e5052ecdb8694923d6949579e4",
+        "authoring/page07-language-draft.json": "6487e0accd513cc5f585bdd7fdd250f12185c0d64c9051f823e718f3d3f36e08",
+        "authoring/page08-language-draft.json": "cf57b1734a6bd5b0abbaffb909db8892dd83cb929dd05d487a2c723dfedfdb6f",
+        "authoring/page09-language-draft.json": "3571552539922785bc2f90208c304279a451c56414a6f37f6ef104d85a1ccd0b",
+        "authoring/page10-language-draft.json": "2090a53e701dc6524bec3581a620ab56764b9175aabbef3ef3725d968d7cdc12",
+        "authoring/page11-language-draft.json": "9b94b4dd77eca023e50bc39ed56d0188f47ba5790ed6717f8aa980fa5cd4656f",
+        "authoring/page12-language-draft.json": "76d7575ba75b29190845585e96041276584cc4b351550222c4fc4d108a53e182",
+        "authoring/page13-language-draft.json": "40b02ef759d9247252d71aa2ca72d3a9f7599ea261fccbd40c206f90624f50c6",
+        "authoring/page14-language-draft.json": "d4b89029488e7a31d8421e44dbc4baefc351e8afc00818645df166c14f5f0d58",
+        "authoring/page04-layout.json": "f217608e79182c48bbf495a39c6b74f38cd53cab4d4602478646d80192ae5448",
+        "authoring/page05-layout.json": "5b096ccba648a5fa7f7f2665b60aac4a4431cad5d6a1a54a3121efaa03a7795a",
+        "authoring/page06-layout.json": "f561e70dc06383dc723e923e778d6fbc95107b62fb054dc7393821cc08fdec46",
+        "authoring/official-doc-precise-body-style.json": "2fad7f8de57f4ee59efb32d105603c4169fb1a5cc601218d4be9ec0da57bec9f",
+        "authoring/page07-layout.json": "5fb8ae5ccf6f61071a81dfc6c7856990dc0d016e9509b9eca27a654255bade18",
+        "authoring/page14-layout.json": "1ac545493d59182efd656c811197056dca66f990a94b02272f26dafe72e12bd3",
+        "authoring/page08-layout.json": "99b114c1db2cc957a0195b734066d8588b42977b21fdd24e272295cd548f31a3",
+        "authoring/page09-layout.json": "6938b7af26c4b817e8e10edf6eeb3f87bfbf20f810e61e73594d3501b1fe387d",
+        "authoring/manual-extra-rois.json": "a09d92e183387e956daa78f35bdd173940f79cd575d7d7872187322692540d3c",
+        "authoring/page10-layout.json": "f2e0c2aa1bb2ced10dcdce7a9ade532ef944f425995dc11b11ba0be94c2166d1",
+        "authoring/page11-layout.json": "3a89f6b8e3302006320df8c91f9f89378ed1f46c5a8a79a95fcaa208f5f37274",
+        "authoring/page12-layout.json": "e53366bd57b7c51f612e393add2bbffff91cea71788243ffc0e818a068802bc0",
+        "authoring/page13-layout.json": "3f837dc3c1b351bc24c0aeb55a8189c052b70b907bce3b7125a1c6f62c3f3024",
+        "background-evidence/page04-first-rebound-speed-source.png": "54d72a49672031509e7fd492f0ed3bbe2bb8c543282d9397db81a755ef20f188",
+        "background-evidence/page04-first-rebound-speed-classification.png": "397fd7e529eeebcb5be928d68c569366c154dcff3559653bb8e5fcec1bcc0292",
+        "background-evidence/page04-first-flight-time-source.png": "0793a5e56b1b364f11579c1dc572c869646cb98d762bbfc7a2c6834dafaf6320",
+        "background-evidence/page04-first-flight-time-classification.png": "3ba43420d2f9767fe96a9162438013b132a58c9fec6f7199550b998aa8f5ee71",
+        "background-evidence/page04-recurrences-intro-source.png": "009a6416d194439c41522cd56335b16b46c2d0605c1aa3fdd4bcd20b4b00cba0",
+        "background-evidence/page04-recurrences-intro-classification.png": "199f5181d0e31fdd7dac3709ec261f3544f8e5515ec30de4873bfce7a39e07ff",
+        "background-evidence/page04.json": "b2024a4ee30adc0531807b6793a69497a39b8245fa88ecbe0bf7f2020b28a0d7",
+        "background-evidence/page05-marking-source.png": "2237bff6b5063b10f79d2cfe2eb5307df359020b4dd6613809462ee2e214ecc5",
+        "background-evidence/page05-marking-classification.png": "112a9a1945642779ecc82a11a8919de9e1024f4f68d507652adae16500bded8c",
+        "background-evidence/page05.json": "6add3476631583c1ce0425a7f3816e0ae9c69d5987f5c7f20f8a3500b6c46d18",
+        "background-evidence/page06-gravity-centrifugal-definitions-b-source.png": "d4f33036f50beed15295aea5d08e9b354e904b72589b89a77d9d181c13ee9881",
+        "background-evidence/page06-gravity-centrifugal-definitions-b-classification.png": "27b1b5631e58cd8faae054994e0bdf985b48ad6dba3103a7043025aa8706de1e",
+        "background-evidence/page06-gravity-at-r0-source.png": "9b514909de5dee29752e05ac33203b76e9526ec65e52d2f43e0d1afd5840c77b",
+        "background-evidence/page06-gravity-at-r0-classification.png": "6a6b8b90d4ad843533bf328ed38f120afec059f19ab67103fc30c5efdb287953",
+        "background-evidence/page06.json": "95b1535700b08f4c398167df3f8f0ed756b36ab9ad70c9154a168bb6af7d9906",
+        "background-evidence/page07-tube-force-f-classification.png": "1bbea283d64a8210a970a1ad42c07a808d1d5627151dfd3b587abcdd0c66cb0f",
+        "background-evidence/page07.json": "ceaa94754600c798eb5c7d9aee5f89771eb16fdadc15be81df3a07496936fbc3",
+        "background-evidence/page07-tube-force-f-source.png": "96604d83f84e61320ed21b1e3edc542ccc553cf60ffddedfa7ab1032fbee9788",
+        "background-evidence/page08-below-critical-length-b-classification.png": "aa2bc5162b0608075f67eaaf9993a9abc3db3ecc20b8315e2f14fcc43086a4c9",
+        "background-evidence/page08-sum-sphere-potentials-classification.png": "f1ea908586ab2734d819768503a5d743c943e39ac98614bc1b75467efb8f2824",
+        "background-evidence/page08-ith-sphere-potential-classification.png": "c8aedf9ae61ced93369dcd6dd33be4c98508b1cc675419a766872fb4ced40551",
+        "background-evidence/page08.json": "f6a424b2866d00cb309ec030d1cf2cc7d6304117b2c925786f0ebe4df9a6ad44",
+        "background-evidence/page08-below-critical-length-b-source.png": "68039c1473b638c68b841004ccb2fdb7342569486f3e4d59136ac969ebddbde4",
+        "background-evidence/page08-sum-sphere-potentials-source.png": "7f51c39933d7c5db8a6d01abf5ad92c4fd2d3696df39beca953ac8c7e9bd423f",
+        "background-evidence/page08-ith-sphere-potential-source.png": "a23479cc1aa5ee8b185af3a64a321d62ada9ef51ee615d9d63317320eb82dc85",
+        "background-evidence/page09-equilibrium-position-classification.png": "0e1702383347aa359b315e4ba7f723fe9d1c3791021b6c0e6aa1400c90efb6e1",
+        "background-evidence/page09.json": "6bb4680a1421e4d1f5101557669ad9638ada4e848d3c0dbf83d215e090043551",
+        "background-evidence/page09-equilibrium-position-source.png": "aba0b748d84f44cda93fabe4cf0340c5fd3c92b43ce725924c416ee8fa395575",
+        "background-evidence/page09-problem5-reference-source.png": "b5b33c4de218676c7ee0ba00ffbf3998bc9c8db499cb8012f10cd838d2bca740",
+        "background-evidence/page09-problem5-reference-classification.png": "5e8fd585cf083ce88e1b0431cdf74fac67c848bded70c93f07728e2fb1734952",
+        "background-evidence/page09-magnetic-force-b-source.png": "0a808a8e3b2258ed54e3e12a0abb080ccf7d02118e2db23174c0d809c8b884f8",
+        "background-evidence/page09-magnetic-force-b-classification.png": "6414d7e3a07cc1e2ffe538b49404fdfd21ff9f6431569cf352013ebaf6c25cd9",
+        "background-evidence/page10-divide-conduction-equations-source.png": "062b4ce316d44ef7bac3e757b82d508b8cabd1b1feedb7117275de9c5f4716ed",
+        "background-evidence/page10-divide-conduction-equations-classification.png": "308f51bc6d5ff1066bb4ac54b8b57f4646218c82309fcf9da4c27fd5d780cd5a",
+        "background-evidence/page10-ratio-result-source.png": "e6a9789bfb9bd02044d56d6edae8201349176c712fefa290ec75b415b4c12564",
+        "background-evidence/page10-ratio-result-classification.png": "5a1053c5f76ae400060182367ea07608e7f2c90272a13c14d878e0e9f9a3054b",
+        "background-evidence/page10-marking-part1-d-source.png": "f238a26b6fe0e4276092d07aa0de2e40e1361cbbda19ec4e8d8b539007397428",
+        "background-evidence/page10-marking-part1-d-classification.png": "5bd0f595820e632faab40bf09eee705c9acd5615e0dc83bc346c27c206786264",
+        "background-evidence/page10-disk-heat-loss-source.png": "282cbebb5859f508ae86a9f07f4bc8062651342b9308c571de290f986890bf54",
+        "background-evidence/page10-disk-heat-loss-classification.png": "5ac2963251873f0b51c0942a693d64bc6fdcbaf541cdfb8a55ca7daf54d0816a",
+        "background-evidence/page10-temperature-sum-source.png": "f7e2361d4625bee66addcefb5832a8abbabd10fa0bd9dcf8d3d33215e452aa75",
+        "background-evidence/page10-temperature-sum-classification.png": "a496291f8883a4b60ed90443f520562c820a1a58c993374e2e96d5b9941711a9",
+        "background-evidence/page10.json": "1f4b60b87f50505fe94b1fbed0aa91cdc70188eb37e647f87686ed5c812dbed2",
+        "background-evidence/page11-bottom-temperature-result-source.png": "425864c96c86fac9342138909a65fdf004987dc1be807744dd5543d33dfdaaed",
+        "background-evidence/page11-bottom-temperature-result-classification.png": "6fb34be8c7a70d57b11325f5b32b262d06f7f2ac3c9594dd25e3827a3ff57c73",
+        "background-evidence/page11-marking-problem6-title-source.png": "9f3a12e58d4796f633908787b6ebd86bb154e7d4d3f6444f46ace5b9d4ffde48",
+        "background-evidence/page11-marking-problem6-title-classification.png": "973f5a7ac29f28a3c86c9f860dc900184abda52adbe43667503ae304f26e6dcf",
+        "background-evidence/page11-marking-problem6-b-source.png": "637f8689593b3239cc098ce5d62f9e933e7c85bdacbd77a865cff0c31b7ff4d4",
+        "background-evidence/page11-marking-problem6-b-classification.png": "ad6a3b3a2c7699c559e0473f4326291f2e3d3f72b82ed54eb608b02a48ae24cc",
+        "background-evidence/page11.json": "b9c4851bb8985d9c84c7f497faa2cd75f7f3b93cf2e14c99c50bc667785ebb4e",
+        "residual-contact-review/page12-ko.png": "93f0c5b413ebbf74b3ae2a6af780951d2b2b5942ec75bc4ba6f3fe0573ff4e7d",
+        "residual-contact-review/page12-en.png": "2e64f653b49a52107aa39c48f3a42e14d2131e6cb27b974c21845436cab1bd65",
+        "residual-contact-review/page13-ko.png": "0576879404b3cb430f8b5fc1a1cbfbfde26fd924029f4e33a7e434a371085565",
+        "residual-contact-review/page13-en.png": "9061e2b9999ecf13e4575ddf9b9c5923097623cd961116c21ea28fafe2ab2c05",
+        "residual-contact-review/components.json": "76ff490096e212638c8c26ded9dc2b02975ff75186718a068933e447447d63c0",
+        "residual-contact-review/page12-before-residual-revision.json": "ee2e6bcd8bdce40d0ea0351811df3abd8eb96967a9e661e0ebf69bba36a80772",
+        "residual-contact-review/page13-before-residual-revision.json": "53808f224038e88e5050901c916141f2e7e9d382a7207afc5f60e83157cdabfe",
+        "residual-contact-review/page05-eq13-left-source.png": "bc4565b336bb26fbb07ad13411d858917ed0390e7a809e838153e92a7575dc97",
+        "math-union-contact-review/page07-en.png": "8223aa2a7761cb126d6607624859b04c7b5a5e8dacfbc24b09aae8af104e0ff5",
+        "math-union-contact-review/page08-ko.png": "2ee750eabe8bef52fb57ebf7651cdcedcd11d105619827f39a1a5bdcc1ef0e2d",
+        "math-union-contact-review/page08-en.png": "5bd0e5ac01e45f15d614482b9cbead8b61f3cff6a928b14d2f965eae548205aa",
+        "math-union-contact-review/page10-ko.png": "d2a32c41df63548fdb62a5d02fd122a9dd4ab42d3554290c557bc0bb6635400e",
+        "math-union-contact-review/page10-en.png": "0bb0a7f04f44ed78e626d79cf0a2f1613c42a93eac6202f74f038ee782b6756d",
+        "math-union-contact-review/components.json": "e9b21bea64bc79d7501d603adef6533c70c33a0505728677f4a138da8ca60aa6",
+        "math-union-contact-review/page13-ko.png": "ee9b63d7be604ad1efaec389546b83d6c0814553ff52fdd27dc84d64a814e0c3",
+        "math-union-contact-review/page13-en.png": "f1110d6c120830b0802ccfb068087158499c2130d30eb7046514ada150cbd15f",
+        "math-union-contact-review/page14-ko.png": "f116599aa5c1ca6074295c18098671e80cc9b6cd576bcd1c9ca0ea5d72c68915",
+        "math-union-contact-review/page14-en.png": "e49639db311b76fa67df6314efc82dee6eb26b5e9f2f904cfb34b93b61e14c0d",
+        "math-union-contact-review/page05-before-padding-revision.json": "478f25368c6adab41cc467a1cc0f6f74722faeb0d925629dbd0dbb3e36303987",
+        "math-union-contact-review/page07-before-padding-revision.json": "0f85ce78bd301f96a45c220e42dea8c274ed4f3679d2ff1fa1e9db026c28863e",
+        "math-union-contact-review/page08-before-padding-revision.json": "b75a07611353374e166e2b0df296f512c457fefc8496b3e38e0a17d1ef54dc9e",
+        "math-union-contact-review/page10-before-padding-revision.json": "7ab0dcd813f4be15a2db1309038de3e5578a6a71b959122a418a33bfeee7f312",
+        "math-union-contact-review/page13-before-padding-revision.json": "598a0b99988f5736fbf036dc8dbba00b2082dbc09dc89aa3049ab6a1cca32455",
+        "math-union-contact-review/page14-before-padding-revision.json": "7dc65c6ac175f98d35b4db034b5a19457363edf137038a66a0951ad90e12f7cb",
+        "source-atom-final-review/page07-01.png": "3a5186d388fda80f5991e456fba1c1a1df8a2bd61d33163cf3dba28a1253759b",
+        "source-atom-final-review/page07-02.png": "4b29634125c013b4dd3d314227e97e3bd740b5686d69bc6067454dc2fb837b77",
+        "font-calibration/p4-first-ten-source.png": "3c6a3c3dfdb16f93810ad99891e0a3813857029a91d2b1dae09aadf2088cecb2",
+        "font-calibration/p4-first-ten.json": "09893e78f3aeeeb2c6aec8f57cfdcc48fd7664a499a0ced08ba1b2435c2ee2bd",
+        "font-calibration/p4-speed-clause-source.png": "f93da027de127f2338fbf249f15d77d6ab378b2f5b98fdbd396ff22109ae9068",
+        "font-calibration/p4-speed-clause.json": "87bb0a5fe0819f8ecb6c3a1bd3ab53d381caf0f8c9a4757e9d5cf0b97506ad77",
+        "font-calibration/p6-centrifugal-clause-source.png": "abe22c9caabf1806336af6fe143b68e11fa909f2f792b938a583264f9dc82bdd",
+        "font-calibration/p6-centrifugal-clause.json": "a9f564eedd873caa3f5b6b61e8530d2490fc74688f4f5ceaf1440f4068904ffa",
+        "font-calibration/p10-temperature-clause-source.png": "6e427652691ad18ca1d7837a23e0f4c4ba83c00e70d1c3391cac74655ee2fae6",
+        "font-calibration/p10-temperature-clause.json": "eb850e2b131357cc39d2c1079b721192855d60f1441f7a2e9bc931a107151bc0",
+        "font-calibration/p6-tight-prose-source.png": "f48b14db533a1d3041a3b556fb39c38fb09d80cf51b8afe8ff3845144250bcba",
+        "font-calibration/p6-tight-prose.json": "d8f3aaa263dd5d8d3c3cd3875369621a5a77cc6a3fe0236cc94ea1b461874165",
+        "font-calibration/p10-tilted-prose-source.png": "6e427652691ad18ca1d7837a23e0f4c4ba83c00e70d1c3391cac74655ee2fae6",
+        "font-calibration/p10-tilted-prose.json": "80eb7d931881041e0a4cd420df49d89510a99d84a2957fbd7b0f1c7c17f56265",
+        "font-calibration/p10-tight-CJK-source.png": "e3a2af18494c7357ca6d2749298349b04455c249335760044dc05171b543cd9a",
+        "font-calibration/p10-tight-CJK.json": "cdb60c669d3ba7f71e9a1a0be613866ab4c919d69e6d8074f8ca2f5820550363",
+        "font-calibration/p4-first-ten-actual-stroke.json": "74f3cf43e4619b13f9643d16b3c405344726dc87b5f6a53b548f72e88993e565",
+        "font-calibration/p4-speed-clause-actual-stroke.json": "cb55a4080a946f8e1d0bd88a3b27bb1a8d377e246a23f5c953dfba7336edffea",
+        "font-calibration/p6-tight-prose-actual-stroke.json": "03c5a63a742ac6ac4b606ba2c4af8c79ce097056b6983a85025209f70889ca4b",
+        "font-calibration/p4-reference-bold-actual-stroke.json": "6b0f0f36f1172e1a57fd3abab19f40493643102598aa69cf190929ebc0bf0a8f",
+        "font-calibration/p4-marking-bold-actual-stroke.json": "4c00f319713dd1b5c58e7df41fa7c259f0232a5909118b3f2ad3ca2fc327255c",
+        "font-calibration/p4-marking-prefix-joint.json": "da7060fec3cc89db96415886dfc29b88cd9b754f1e9c532b9c9621f2bc257150",
+        "font-calibration/source-vs-Batang-stems.png": "4309ea2bb7abdf9069a334475b02bf7dfc46d175b3aecb5563aea790c52d8af3",
+        "font-calibration/source-vs-Batang-stems.json": "2a3a07c65358ab198ced18c6534ef4b553641069339c844c24e2dc5633647a85",
+        "font-calibration/page07-paragraph4-source-baselines.json": "2da341e668dd90d5c9407587d6caa9d272e8207a9186e367a510ec60e8c392b0",
+        "english-punctuation-revision/page04-layout.json": "546043f544acca328e8f8ebb11f1af28454e5716a0f7aefa4d767af6b0bfcd10",
+        "english-punctuation-revision/page05-layout.json": "25eb3723852ec0edffb7feda0bea561afd1b00d3948f712f5238e2c3a6578648",
+        "english-punctuation-revision/page06-layout.json": "a61af102480fe3f68753999ba6009c4aad2d86d112bc0775c1e860e2c36c41b9",
+        "english-punctuation-revision/page08-layout.json": "5e71be6a7e8e156768bf47d0b9f3cf75c7d888278dc18d52874ae416ebb34c8b",
+        "english-punctuation-revision/page10-layout.json": "8164d06c2814d56f9c80201f5f9c892b3268765ae657ed13214d2fa20d120e87",
+        "english-punctuation-revision/page11-layout.json": "95fdddf987b321d3e98943cf040f46139d8ba66300558a716542cb3707e736d5",
+        "english-punctuation-revision/page13-layout.json": "fd1d1ac59d1aea9952df8a7b545b7928c1444d8769279f9e456bf56e8f2ad8eb",
+        "english-punctuation-revision/page14-layout.json": "a2a1b2e9b2875137a7ff64a1fb90545cbb473ef0c48e47ebbff851546d1fb58a",
+        "english-punctuation-revision/revision.json": "75e5658bb2ce54bbb11f82aa00363b4dca36f49c0a50df95d7d9e72428613be8",
+        "font-provenance/SimSun-original-Latin-first.font-provenance.json": "5cc971267b51bb5d2a1963de299b08bfb8f419beeb12d563a69e5012fee00a39",
+        "font-provenance/SimHei-original-Latin-first.font-provenance.json": "67351b2846e9c49dde8a7d4af9c7b8e797a8110dee151d4a9344f5cb286c0536",
+        "font-provenance/SimHei-actual-face-Latin-first.font-provenance.json": "2b88c1db5c03073178ab76270373778fdf7bbea73a3ee1f03195e8feacdc0b14",
+        "font-provenance/SimSun-retained6-exact-donor-witness.json": "00100952aef6618176b83dad85c21d6f2699de7fde89dc3b44762136717f2b5d",
+        "font-provenance/fonts-provenance.json": "6a1a7e0039af543d5944e6dbacec4d44dec3143ba0467e0616c28e7bab8d1bcc",
+        "page-tools/pdf_original_raster_math.py": "421b01946012ea6bea3706f872be030c315cc36b6e2602a5e9893c31c2524594",
+        "page-tools/test_pdf_original_raster_math.py": "0b020386ac817c1d3c055c1ba08a99636b7046a182cb5ff6eed7315db12e3184",
+        "page-tools/cpho_2013_ts_firstline_proof.py": "f7c8f0ccfc1ca75be754720717de1e1f2655927e2e629e8228b370da7be1aa37",
+        "page-tools/cpho_2013_ts_inventory.py": "7b7741d7e64eec37baea769249b39afdbee796450693378d4173987384e97ce1",
+        "page-tools/cpho_2013_ts_font_calibration.py": "afeec137a6cff1ec9febe2160982a00cd346b5dc3b5764dbc5c342148eb89934",
+        "page-tools/cpho_2013_ts_row_hints.py": "836dd87bf2becd657a75fe76be116e8cc6506c6e228ac60eb8216dc189fdc56a",
+        "page-tools/cpho_2013_ts_compose.py": "0955be9dd77f51983a42a381f8a2891c0ddf3b0a058b77854f706464c2c6ab5a",
+        "page-tools/cpho_2013_ts_manual_page04.py": "72d20f095fd82d4c6cb3503619ae4c01dc33eec6fe2aeb03d6dbb342cddb359c",
+        "page-tools/cpho_2013_ts_geometry_candidates.py": "d48c1ef3dabcf228885665d12d32d59561b58e7fff35b784343018c12f16eb9d",
+        "page-tools/cpho_2013_ts_qa.py": "1de48b82f51e10f34e2491767b3edc162fa546634d49140af705f4e004378164",
+        "page-tools/cpho_2013_ts_reviewed_layouts.py": "21b6752f3587cba3c8528a5e266abc79aceba57629c8690fc78d1f8d6b53d2e2",
+        "page-tools/cpho_2013_ts_weight_calibration.py": "be8faf4adcf19c0878b5044f57f6d3cdf024e3c8d026bc9c2e15cb7a14d1473c",
+        "page-tools/cpho_2013_ts_small_style_grid.py": "fe54321c7da68902d39c54310dc34efadf06f859a32cc92dc6b465003603c962",
+        "page-tools/cpho_2013_ts_background_evidence.py": "97642dc4d2a079778fa9c02d3583ba47b673c1f1e7b990b4c1e7992071feb6b9",
+        "page-tools/cpho_2013_ts_korean_stems.py": "29ee8af51287fe66cc1bcf6ec8a0debed6d3268a408c529e43abad32ea92d4cf",
+        "page-tools/pdf_scanned_translation_ink_qa.py": "c63550511796b21b586bbabee5e2b776e86f076df6dd3ab8c228db53a423b41d",
+        "page-tools/test_pdf_scanned_translation_ink_qa.py": "9a5edfb030e65cea7af1c7536785cf534ce92ed96d3bc9d38f9ded1464545a2f",
+        "page-tools/cpho_2013_ts_generic_qa_adapter.py": "4f91d46dd6fd43c99b21c12caf73c8c50807820302b09925c6f8e6cfb1516589",
+        "page-tools/cpho_2013_ts_fonts.py": "48ca1740783872b798d2f75e0da2094abc332813da9a91e8194419f239634b1a",
+        "page-tools/cpho_2013_ts_header_style_qa.py": "8a413f0a912eda1d90652c96cd967c612be2ca685a92ec58534c88c06f58a5a1",
+        "authoring-tools/rebuild-and-final-audit-cpho2013-ts.py": "6c5766fc94cc4c0fb697819373510eb125328020d73fcd1482253036d2f07235",
+        "authoring-tools/rebuild-cpho2013-ts-page10-only.py": "d5b4ed903d7453ce34022b6cb553d5e3390178f619b74d55c63524507511cd1f",
+        "authoring-tools/refine-cpho2013-ts-math-padding.py": "ee2ec2b67e4e4b1d7af8ce5f346470f92a2c5bbb1c55be85f675b99325c4d32c",
+        "authoring-tools/refine-cpho2013-ts-residuals.py": "c0e430e9df6d83e7571827161b76cb1e63c3898ef2a0e156c69124f4a330b8ea",
+        "authoring-tools/review-cpho2013-source-atoms.py": "0a25e65c37f58c1de08de33c0f23503dd4eedcaa0fe6199d8d39f8bf3f5f7e38",
+        "authoring-tools/final-audit-cpho2013-ts.py": "b3747e6a555f4ece37b674dddf1192677ef831201af8176dbe6d6fca61838b94",
+        "authoring-tools/complete-cpho2013-ts-paint-order.py": "0eca67764f2dec4e95b83543117b01edb5bc3e89999ed71147132a438e1b0e2d",
+        "authoring-tools/correct-cpho2013-ts-final-pages.py": "4b15fddee5f0222ad6a9de03de5f35edb5cc0601c7b1626539874c08627c812e",
+        "authoring-tools/finish-cpho2013-ts-final-pages.py": "a5fa1a2715e17423e95fcdfded60c033935f0927adb0abe073a7da1458614325",
+        "authoring-tools/normalize-cpho2013-ts-english-punctuation.py": "ba03b551f502077ea5211a85466f4afde1f46d6c01bdfda7cc3f89868dcd70ba",
+        "authoring-tools/rebuild-cpho2013-ts-english-punctuation.py": "19dcfdb4d0980f30115f0262dbe7bbcdaa78c2bdcd2794b1432d8eff54bd494d",
+        "authoring-tools/prepare-cpho2013-ts-assembly.py": "a70327193af6ec189b743ea7ad37847a11c8c1bcbfec002db6af96209e1d1135",
+        "authoring-tools/finalize-cpho2013-ts-ready.py": "34a0539116c16532aa45e157609c6901653ce2c4a1474979aa7d4e8d921886fd",
+        "authoring-tools/assemble-scanned-proof-edition.py": "20800bde0c8eb548074a669bce5cba898273c2e851b2002e6d41e24cc93655b9",
+        "resolved-engine/pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+        "resolved-engine/qa_pages.py": "93a072f982038b35972f30907e09800d8ee1a1b8fed0c92416b830c0864be376",
+        "resolved-engine/pdf_hangul_visibility.py": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+        "resolved-engine/izho_native_math_audit.py": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8",
+        "resolved-engine/izho_extract_word.py": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e",
+        "resolved-engine/izho_translate.py": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e",
+        "resolved-engine/izho_math_clean.py": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65",
+        "resolved-engine/pdf_new_prose_outlines.py": "5b64e4d427aee21cf07350d6bb0c6886d32e125f00925a78a91d1991cf03e90f",
+        "resolved-engine/izho_new_prose_outline_qa.py": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+        "resolved-engine/pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+        "resolved-engine/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+        "resolved-engine/compose_pages.py": "f90097fc97db5fc5460626c5c2e993d43a8e1b4d9673305959f14a1cd7585c85",
+        "resolved-engine/pdf_original_raster_partition.py": "28d75ef96e7b9bc70dc9cdbdc9b408aaddb383a861bb215cd76456bb81c48362",
+        "resolved-engine/pdf_original_raster_math.py": "421b01946012ea6bea3706f872be030c315cc36b6e2602a5e9893c31c2524594",
+        "resolved-engine/pdf_native_inline_reposition.py": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+        "resolved-engine/cpho_2013_ts_compose.py": "0955be9dd77f51983a42a381f8a2891c0ddf3b0a058b77854f706464c2c6ab5a",
+        "resolved-engine/cpho_2013_ts_fonts.py": "48ca1740783872b798d2f75e0da2094abc332813da9a91e8194419f239634b1a",
+        "resolved-engine/cpho_2013_original_fonts.py": "859bd8edd9392a6d70c9b505a84271110f49d1362b41513fce75438ad93ecd2b",
+        "resolved-engine/cpho_2024_original_fonts.py": "559612a27af12669864c61e6c109032d114cb3ed9266b62a8b58d1ba47bc5b38",
+        "resolved-engine/cpho_2013_original_extract.py": "0502e0622c3572d99a4b8d906d7cda075bf0d61318d0a98444dc1d15c9ea7e3e",
+        "resolved-engine/cpho_2022_original_build.py": "3bc8b0224df7cc65b185c38d77504d8a84578239c05b2337986acee89c5c4eeb",
+        "resolved-engine/pdf_original_image_ink.py": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+        "resolved-engine/cpho_2022_original_labels.py": "ee4ad0fdb786909c324533dd7ea87a3280b18ff35b54672841b433723c1cdad6",
+        "resolved-engine/cpho_original_latin_fonts.py": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2",
+        "resolved-engine/pdf_original_style_fonts.py": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+        "resolved-engine/cpho_original_style.py": "df7fc81dfb538b33d3906c01edfc0d3253a246e7a79d8a5e334aa705de8db603",
+        "resolved-engine/cpho_cjk_translate.py": "55a9d2bf4a2d0a41f7437a340155ef74b40a83943e486822869b824b6737db78",
+        "resolved-engine/pdf_layout_translate.py": "257c68b0a1538d05f88a1a93323889ec6f2ebfed901c8bbe9ba9dd98d4ba487a",
+        "resolved-engine/pdf_scanned_translation_ink_qa.py": "c63550511796b21b586bbabee5e2b776e86f076df6dd3ab8c228db53a423b41d",
+        "resolved-engine/cpho_2013_ts_generic_qa_adapter.py": "4f91d46dd6fd43c99b21c12caf73c8c50807820302b09925c6f8e6cfb1516589",
+        "resolved-engine/cpho_2013_ts_qa.py": "1de48b82f51e10f34e2491767b3edc162fa546634d49140af705f4e004378164",
+        "tools/ko/cpho/2013/original/native-slots.json": "37d5efb4a4c6d50db06d23b08c151006eb49422c813415456b2552b0d5f35135"
+      }
+    }
+  ],
+  "original_math_retyped": false,
+  "original_math_resampled": false,
+  "original_math_y_changed": false,
+  "translated_point_sizes_fitted": false,
+  "added_editorial_notes": 0
+}

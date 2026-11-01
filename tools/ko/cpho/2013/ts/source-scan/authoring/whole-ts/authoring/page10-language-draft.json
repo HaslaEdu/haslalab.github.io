@@ -1,0 +1,32 @@
+{
+  "source_page":10,
+  "source_sha256":"612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_text_reviewed":true,
+  "pixel_rois_reviewed":false,
+  "scope_complete":false,
+  "rows":[
+    {"id":"phase-result","hints":[2],"source":"因此","ko":"따라서","en":"Therefore"},
+    {"id":"motion-result","hints":[5],"source":"于是","ko":"그러므로","en":"Hence"},
+    {"id":"ring-current-result","hints":[13],"source":"2.把(13)式代入(4)式，得t时刻圆环中电流的表达式","ko":"[[part2]]. 식 [[eq13-current]]을 [[eq4-current]]에 대입하면 시간 [[time-t-current]]에서 고리의 전류는","en":"[[part2]]. Substituting [[eq13-current]] into [[eq4-current]] gives the ring current at [[time-t-current]]:"},
+    {"id":"marking-problem5-total","hints":[26],"source":"评分标准：本题20分。","role":"mixed-bold","ko":"채점 기준: 총 [[total20]]점.","en":"Marking scheme: [[total20]] points in total."},
+    {"id":"marking-part1","hints":[27],"source":"第1问18分，","ko":"[[part1-grade]]번: [[score18]]점.","en":"Part [[part1-grade]]: [[score18]] points."},
+    {"id":"marking-part1-a","hints":[28],"source":"(1)式2分，(2)至(4)式各1分，","ko":"[[g1]] [[p2-1]]점, [[g2]]~[[g4]] 각 [[p1-24]]점.","en":"[[g1]]: [[p2-1]]; [[g2]]–[[g4]]: [[p1-24]] point each."},
+    {"id":"marking-part1-b","hints":[29],"source":"(5)式2分，(6)、(7)、(8)式各1分，","ko":"[[g5]] [[p2-5]]점, [[g6]], [[g7]], [[g8]] 각 [[p1-68]]점.","en":"[[g5]]: [[p2-5]]; [[g6]], [[g7]], [[g8]]: [[p1-68]] point each."},
+    {"id":"marking-part1-c","hints":[30],"source":"(9)、(10)式各2分，(11)式1分，","ko":"[[g9]], [[g10]] 각 [[p2-910]]점, [[g11]] [[p1-11]]점.","en":"[[g9]], [[g10]]: [[p2-910]] each; [[g11]]: [[p1-11]] point."},
+    {"id":"marking-part1-d","hints":[31],"source":"(12)式2分，(13)式1分。","ko":"[[g12]] [[p2-12]]점, [[g13]] [[p1-13]]점.","en":"[[g12]]: [[p2-12]]; [[g13]]: [[p1-13]] point."},
+    {"id":"marking-part2","hints":[32],"source":"第2问2分，","ko":"[[part2-grade]]번: [[score2]]점.","en":"Part [[part2-grade]]: [[score2]] points."},
+    {"id":"marking-part2-detail","hints":[33],"source":"(14)式2分。","ko":"[[g14]] [[p2-14]]점.","en":"[[g14]]: [[p2-14]] points."},
+    {"id":"disk-temperature-definition","hints":[35],"source":"参考解答：设金属盘上、下表面的温度分别为T_t、T_b，空气的温度为T_0。根据题意，金属盘上、下表面","role":"mixed-bold","ko":"참고 해설: 금속 원판 위·아래 면의 온도를 [[T-top]], [[T-bottom]], 기온을 [[T-air]]로 두자. 두 면이","en":"Solution: The metal disk's top and bottom are at [[T-top]], [[T-bottom]], and air at [[T-air]]."},
+    {"id":"disk-heat-loss","hints":[36],"source":"单位时间内向空气散失的能量分别为","ko":"조건에 따라 단위시간에 공기로 잃는 열량은 각각","en":"By the stated conditions, their respective rates of heat loss to air are"},
+    {"id":"disk-energy-balance","hints":[39],"source":"其中c为常量，A为金属盘表面的面积。设上表面单位时间内吸收的太阳光的能量为P_a。根据能量守恒有","ko":"상수 [[loss-c]], 표면적 [[area-A]]와 윗면의 태양광 흡수 전력 [[P-absorbed]]에 대해 에너지 보존은","en":"[[loss-c]] is constant, [[area-A]] the area, and [[P-absorbed]] the solar power absorbed at the top. Energy balance:"},
+    {"id":"temperature-sum","hints":[42],"source":"因此","ko":"따라서","en":"Therefore"},
+    {"id":"constant-sum-data","hints":[47],"source":"可见金属盘上、下表面温度的和为常量。由题给数据，有","ko":"위·아래 면의 온도 합은 일정하다. 주어진 수치에서","en":"The two face temperatures have a constant sum. The given data yield"},
+    {"id":"conduction-law","hints":[50],"source":"当金属盘的厚度为t时，根据热传导定律，单位时间内从金属盘的上表面传导到下表面的热量为","ko":"두께가 [[thickness-t]]일 때 열전도 법칙에 따른 위에서 아래로의 열전달률은","en":"The conduction law, at thickness [[thickness-t]], gives heat flow from top to bottom per unit time:"},
+    {"id":"conductivity-and-bottom-loss","hints":[53],"source":"其中k为热传导系数。从金属盘的上表面传导到下表面的热量通过下表面散失到空气中，故","ko":"[[conductivity-k]]는 열전도율이다. 전도된 열은 아랫면에서 공기로 빠져나가므로","en":"[[conductivity-k]] is thermal conductivity. Heat conducted to the bottom is lost to air there, so"},
+    {"id":"double-thickness","hints":[56],"source":"当金属盘的厚度为2t时，设其上、下表面的温度分别为T_t′、T_b′，同理有","ko":"두께가 [[twice-t]]이면 위·아래 온도를 [[T-top-prime]], [[T-bottom-prime]]라 하자. 같은 방법으로","en":"At thickness [[twice-t]], let top and bottom be [[T-top-prime]], [[T-bottom-prime]]. Similarly,"},
+    {"id":"divide-conduction-equations","hints":[60],"source":"用(6)式去除(7)式，并利用(4)式以及","ko":"식 [[eq7-dividend]]을 [[eq6-divisor]]으로 나누고 [[eq4-sum]]와 다음 식을 이용하면","en":"Dividing [[eq7-dividend]] by [[eq6-divisor]] and using [[eq4-sum]] together with"},
+    {"id":"ratio-result","hints":[],"manually_found_ocr_omission":true,"source":"有","ko":"다음 식을 얻는다.","en":"gives"}
+  ],
+  "not_language":[{"hint":10,"reason":"元 is OCR pi in the unchanged displayed z(t) formula."},{"hint":19,"reason":"Pi-containing part of the unchanged current formula."},{"hint":21,"reason":"Pi-containing continuation of the unchanged current formula."}],
+  "review_notes":["The original thickness is italic t; temperatures are top/bottom T_t,T_b and their primed versions. Preserve each original printed bitmap symbol and prime.","Use (7)/(6) for 用(6)式去除(7)式. Keep all original displayed equations, constants and tags in their exact source locations."]
+}

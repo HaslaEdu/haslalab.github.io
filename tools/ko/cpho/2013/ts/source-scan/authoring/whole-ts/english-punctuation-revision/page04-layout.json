@@ -1,0 +1,1769 @@
+{
+  "source_page": 4,
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_rois_reviewed": true,
+  "publication_ready": false,
+  "rows": [
+    {
+      "id": "reference",
+      "hints": [
+        2
+      ],
+      "source": "参考解答：",
+      "role": "serif-bold",
+      "ko": "참고 해설:",
+      "en": "Reference solution:",
+      "size": 9.78,
+      "baseline": 132.5,
+      "left": 76.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          75.4,
+          122.8,
+          120.3,
+          135.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "参考解答",
+        "source_rect": [
+          76.0,
+          123.0,
+          119.5,
+          135.0
+        ],
+        "read_only_measurement_rect": [
+          75.0,
+          121.5,
+          120.5,
+          136.5
+        ],
+        "size_fixed_before_translation": 9.78,
+        "baseline": 132.5,
+        "iou": 0.7883527278900146,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.45,
+      "printed_bold_stroke": 0.6,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "render_mode": 2,
+      "line_width": 0.15,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.45,
+          "bold": 0.6
+        },
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "first-impact",
+      "hints": [
+        3
+      ],
+      "source": "设小球每次落地反弹时，反弹后的竖直速度大小是反弹前的λ倍。第一次落地时竖直速度为",
+      "ko": "매번 공이 튄 직후의 수직 속력은 직전의 [[lambda]]배이다. 첫 충돌 때의 수직 속력은",
+      "en": "After each bounce the vertical speed is [[lambda]] times its impact speed. At the first impact,",
+      "size": 9.78,
+      "baseline": 145.75,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          134.3,
+          466.8,
+          149.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "lambda",
+          "rect": [
+            332,
+            136,
+            339,
+            149
+          ],
+          "image_path": [
+            369
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "lambda"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "反弹后的竖直速度大小是反弹前",
+        "source_rect": [
+          75.5,
+          134.5,
+          466.0,
+          149.0
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          133.0,
+          467.0,
+          150.5
+        ],
+        "size_fixed_before_translation": 9.78,
+        "baseline": 145.75,
+        "iou": 0.6989051103591919,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.45,
+      "printed_bold_stroke": 0.6,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.45,
+          "bold": 0.6
+        },
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "first-rebound-speed",
+      "hints": [
+        6
+      ],
+      "source": "第一次反弹竖直速度大小为",
+      "ko": "처음 튄 직후의 수직 속력은",
+      "en": "The vertical speed just after the first bounce is",
+      "size": 9.78,
+      "baseline": 176.0,
+      "left": 76.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          75.4,
+          166.3,
+          194.8,
+          178.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "第一次反弹竖直速度大小",
+        "source_rect": [
+          76.0,
+          166.5,
+          194.0,
+          178.0
+        ],
+        "read_only_measurement_rect": [
+          75.0,
+          165.0,
+          195.0,
+          179.5
+        ],
+        "size_fixed_before_translation": 9.78,
+        "baseline": 176.0,
+        "iou": 0.6522113680839539,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.45,
+      "printed_bold_stroke": 0.6,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.45,
+          "bold": 0.6
+        },
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "first-rebound-height",
+      "hints": [
+        9
+      ],
+      "source": "第一次反弹高度为",
+      "ko": "처음 튀어 오른 높이는",
+      "en": "The height of the first rebound is",
+      "size": 9.78,
+      "baseline": 205.75,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          195.3,
+          155.8,
+          208.6
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "第一次反弹高度为",
+        "source_rect": [
+          75.5,
+          195.5,
+          155.0,
+          208.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          194.0,
+          156.0,
+          210.0
+        ],
+        "size_fixed_before_translation": 9.78,
+        "baseline": 205.75,
+        "iou": 0.6774129867553711,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.45,
+      "printed_bold_stroke": 0.6,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.45,
+          "bold": 0.6
+        },
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "first-flight-time",
+      "hints": [
+        13
+      ],
+      "source": "第一次反弹后飞行时间为",
+      "ko": "처음 튄 뒤의 비행시간은",
+      "en": "The flight time after the first bounce is",
+      "size": 9.78,
+      "baseline": 248.5,
+      "left": 75.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.4,
+          237.8,
+          184.3,
+          251.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "第一次反弹后飞行时间",
+        "source_rect": [
+          75.0,
+          238.0,
+          183.5,
+          251.0
+        ],
+        "read_only_measurement_rect": [
+          74.0,
+          236.5,
+          184.5,
+          252.5
+        ],
+        "size_fixed_before_translation": 9.78,
+        "baseline": 248.5,
+        "iou": 0.6870503425598145,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.45,
+      "printed_bold_stroke": 0.6,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.45,
+          "bold": 0.6
+        },
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "first-range",
+      "hints": [
+        16
+      ],
+      "source": "第一次反弹至第二次反弹时水平方向的位移为",
+      "ko": "첫 반발부터 다음 반발까지의 수평변위는",
+      "en": "The horizontal displacement between the first and second bounces is",
+      "size": 9.78,
+      "baseline": 292.5,
+      "left": 76.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          75.4,
+          281.8,
+          273.3,
+          295.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "第一次反弹至第二次反弹时水平",
+        "source_rect": [
+          76.0,
+          282.0,
+          272.5,
+          295.0
+        ],
+        "read_only_measurement_rect": [
+          75.0,
+          280.5,
+          273.5,
+          296.5
+        ],
+        "size_fixed_before_translation": 9.78,
+        "baseline": 292.5,
+        "iou": 0.664665699005127,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.45,
+      "printed_bold_stroke": 0.6,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.45,
+          "bold": 0.6
+        },
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "first-area",
+      "hints": [
+        19
+      ],
+      "source": "小球在第一次反弹至第二次反弹之间的运动轨迹与其在地面的投影之间所包围的面积为",
+      "ko": "처음 튄 뒤 다음 충돌까지 공의 궤적과 그 지면 투영이 둘러싼 넓이는",
+      "en": "The area between the path from the first bounce to the next impact and its ground projection is",
+      "size": 9.78,
+      "baseline": 322.5,
+      "left": 72.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          71.9,
+          312.8,
+          449.3,
+          325.6
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "小球在第一次反弹至第二次反弹",
+        "source_rect": [
+          72.5,
+          313.0,
+          448.5,
+          325.5
+        ],
+        "read_only_measurement_rect": [
+          71.5,
+          311.5,
+          449.5,
+          327.0
+        ],
+        "size_fixed_before_translation": 9.78,
+        "baseline": 322.5,
+        "iou": 0.6142811179161072,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.45,
+      "printed_bold_stroke": 0.6,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.45,
+          "bold": 0.6
+        },
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "nth-bounce",
+      "hints": [
+        21
+      ],
+      "source": "设第n次反弹后至n+1次反弹前的最大竖直速度大小和上升的最大高度分别为v_n和h_n。由题意和",
+      "ko": "[[n]]번째와 [[n-plus-one]]번째 반발 사이 최대 수직 속력·높이를 각각 [[v-n]], [[h-n]]이라 하자.",
+      "en": "Between bounces [[n]] and [[n-plus-one]], denote the peak vertical speed and height by [[v-n]] and [[h-n]].",
+      "size": 9.715,
+      "baseline": 361.75,
+      "left": 95.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          94.9,
+          350.8,
+          515.3,
+          365.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "n",
+          "rect": [
+            117,
+            351,
+            125,
+            365
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "n-plus-one",
+          "rect": [
+            174,
+            351,
+            196,
+            365
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "v-n",
+          "rect": [
+            433.5,
+            351,
+            447,
+            365
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "h-n",
+          "rect": [
+            456,
+            351,
+            468,
+            365
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "n",
+        "n-plus-one",
+        "v-n",
+        "h-n"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "次反弹前的最大竖直速度大小和",
+        "source_rect": [
+          95.5,
+          351.0,
+          514.5,
+          365.0
+        ],
+        "read_only_measurement_rect": [
+          94.5,
+          349.5,
+          515.5,
+          366.5
+        ],
+        "size_fixed_before_translation": 9.715,
+        "baseline": 361.75,
+        "iou": 0.4263072907924652,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.447,
+      "printed_bold_stroke": 0.596,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.447,
+          "bold": 0.596
+        },
+        "ko": {
+          "regular": 0.298,
+          "bold": 0.3973,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "recurrences-intro",
+      "hints": [
+        22
+      ],
+      "source": "上述论证知",
+      "ko": "조건과 앞의 논의로부터",
+      "en": "From the stated conditions and the preceding argument,",
+      "size": 9.715,
+      "baseline": 376.0,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          365.3,
+          127.8,
+          379.1
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "上述论证知",
+        "source_rect": [
+          75.5,
+          365.5,
+          127.0,
+          379.0
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          364.0,
+          128.0,
+          380.5
+        ],
+        "size_fixed_before_translation": 9.715,
+        "baseline": 376.0,
+        "iou": 0.7357512712478638,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.447,
+      "printed_bold_stroke": 0.596,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.447,
+          "bold": 0.596
+        },
+        "ko": {
+          "regular": 0.298,
+          "bold": 0.3973,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "geometric-series",
+      "hints": [
+        32
+      ],
+      "source": "S_1,S_2,…构成一无穷递缩等比数列，其总和为",
+      "ko": "[[series-terms]]는 감소하는 무한 등비수열을 이룬다. 그 합은",
+      "en": "[[series-terms]] form a decreasing infinite geometric sequence with sum",
+      "size": 9.715,
+      "baseline": 465.0,
+      "left": 78.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          77.4,
+          454.3,
+          269.8,
+          469.1
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "series-terms",
+          "rect": [
+            77,
+            455,
+            112,
+            469
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "series-terms"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "构成一无穷递缩等比数列",
+        "source_rect": [
+          78.0,
+          454.5,
+          269.0,
+          469.0
+        ],
+        "read_only_measurement_rect": [
+          77.0,
+          453.0,
+          270.0,
+          470.5
+        ],
+        "size_fixed_before_translation": 9.715,
+        "baseline": 465.0,
+        "iou": 0.6706705093383789,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.447,
+      "printed_bold_stroke": 0.596,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.447,
+          "bold": 0.596
+        },
+        "ko": {
+          "regular": 0.298,
+          "bold": 0.3973,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "from-six-twelve",
+      "hints": [
+        37
+      ],
+      "source": "由(6)、(12)式有",
+      "ko": "식 [[eq6]], [[eq12]]에서",
+      "en": "From Eqs. [[eq6]] and [[eq12]],",
+      "size": 9.715,
+      "baseline": 510.0,
+      "left": 76.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          75.9,
+          500.3,
+          143.3,
+          512.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "eq6",
+          "rect": [
+            86,
+            500.5,
+            99.2,
+            512.5
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "eq12",
+          "rect": [
+            105.5,
+            500.5,
+            123,
+            512.5
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "eq6",
+        "eq12"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "式有",
+        "source_rect": [
+          76.5,
+          500.5,
+          142.5,
+          512.5
+        ],
+        "read_only_measurement_rect": [
+          75.5,
+          499.0,
+          143.5,
+          514.0
+        ],
+        "size_fixed_before_translation": 9.715,
+        "baseline": 510.0,
+        "iou": 0.7310996651649475,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.447,
+      "printed_bold_stroke": 0.596,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.447,
+          "bold": 0.596
+        },
+        "ko": {
+          "regular": 0.298,
+          "bold": 0.3973,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "impulse-definition",
+      "hints": [
+        39
+      ],
+      "source": "设I_n表示小球在第n（n≥1）次碰撞过程中小球受到的作用力的冲量，由动量定理有",
+      "ko": "공의 [[collision-n]]번째 [[n-condition]] 충돌 충격량을 [[impulse-n]]이라 하자. 충격량·운동량 정리로부터",
+      "en": "Let [[impulse-n]] be the impulse in collision [[collision-n]] [[n-condition]]. The momentum theorem gives",
+      "size": 9.715,
+      "baseline": 549.0,
+      "left": 95.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          94.9,
+          539.3,
+          459.8,
+          552.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "impulse-n",
+          "rect": [
+            105.5,
+            539.5,
+            115.5,
+            552.5
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "collision-n",
+          "rect": [
+            173.5,
+            539.5,
+            184.2,
+            552.5
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "n-condition",
+          "rect": [
+            185.5,
+            539.5,
+            223.5,
+            552.5
+          ],
+          "image_path": [
+            378
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "impulse-n",
+        "collision-n",
+        "n-condition"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "次碰撞过程中小球受到的作用力",
+        "source_rect": [
+          95.5,
+          539.5,
+          459.0,
+          552.5
+        ],
+        "read_only_measurement_rect": [
+          94.5,
+          538.0,
+          460.0,
+          554.0
+        ],
+        "size_fixed_before_translation": 9.715,
+        "baseline": 549.0,
+        "iou": 0.6749078035354614,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.447,
+      "printed_bold_stroke": 0.596,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.447,
+          "bold": 0.596
+        },
+        "ko": {
+          "regular": 0.298,
+          "bold": 0.3973,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "zero-horizontal-impulse",
+      "hints": [
+        42
+      ],
+      "source": "由于小球每次反弹前后速度的水平分量不变，小球每次碰撞过程中受到的沿水平方向的冲量为零。小球",
+      "ko": "충돌 전후 공의 수평 속도 성분은 같으므로 각 충돌의 수평 충격량은 없다.",
+      "en": "Each collision leaves the horizontal velocity unchanged, so its horizontal impulse is zero.",
+      "size": 9.715,
+      "baseline": 578.75,
+      "left": 76.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          75.9,
+          568.8,
+          514.8,
+          581.6
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "小球每次碰撞过程中受到的沿水",
+        "source_rect": [
+          76.5,
+          569.0,
+          514.0,
+          581.5
+        ],
+        "read_only_measurement_rect": [
+          75.5,
+          567.5,
+          515.0,
+          583.0
+        ],
+        "size_fixed_before_translation": 9.715,
+        "baseline": 578.75,
+        "iou": 0.6695781946182251,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.447,
+      "printed_bold_stroke": 0.596,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.447,
+          "bold": 0.596
+        },
+        "ko": {
+          "regular": 0.298,
+          "bold": 0.3973,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "total-impulse-intro",
+      "hints": [
+        43
+      ],
+      "source": "在各次与地面碰撞过程中所受到的总冲量为",
+      "ko": "지면과의 모든 충돌에서 공이 받은 총충격량은",
+      "en": "The total impulse delivered by the ground over all collisions is",
+      "size": 9.715,
+      "baseline": 591.25,
+      "left": 75.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          74.9,
+          581.3,
+          262.8,
+          593.6
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "在各次与地面碰撞过程中所受到",
+        "source_rect": [
+          75.5,
+          581.5,
+          262.0,
+          593.5
+        ],
+        "read_only_measurement_rect": [
+          74.5,
+          580.0,
+          263.0,
+          595.0
+        ],
+        "size_fixed_before_translation": 9.715,
+        "baseline": 591.25,
+        "iou": 0.6201741099357605,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.447,
+      "printed_bold_stroke": 0.596,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.447,
+          "bold": 0.596
+        },
+        "ko": {
+          "regular": 0.298,
+          "bold": 0.3973,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "upward-substitute",
+      "hints": [
+        47
+      ],
+      "source": "方向向上。将(13)式代入(15)式得",
+      "ko": "방향은 위쪽이다. 식 [[eq13]]을 [[eq15]]에 대입하면",
+      "en": "The direction is upward. Substituting [[eq13]] into [[eq15]] gives",
+      "size": 10.215,
+      "baseline": 639.0,
+      "left": 79.0,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          78.4,
+          628.3,
+          225.8,
+          642.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "eq13",
+          "rect": [
+            139.3,
+            628.5,
+            156.5,
+            642.5
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "eq15",
+          "rect": [
+            185.5,
+            628.5,
+            204.5,
+            642.5
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "eq13",
+        "eq15"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "方向向上",
+        "source_rect": [
+          79.0,
+          628.5,
+          225.0,
+          642.5
+        ],
+        "read_only_measurement_rect": [
+          78.0,
+          627.0,
+          226.0,
+          644.0
+        ],
+        "size_fixed_before_translation": 10.215,
+        "baseline": 639.0,
+        "iou": 0.695268988609314,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.47,
+      "printed_bold_stroke": 0.6267,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.47,
+          "bold": 0.6267
+        },
+        "ko": {
+          "regular": 0.3133,
+          "bold": 0.4178,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "marking-title",
+      "hints": [
+        50
+      ],
+      "source": "评分标准：本题15分。",
+      "role": "mixed-bold",
+      "ko": "채점 기준: 총 [[total15]]점.",
+      "en": "Marking scheme: [[total15]] points in total.",
+      "size": 9.58,
+      "baseline": 669.25,
+      "left": 80.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          79.9,
+          659.8,
+          177.8,
+          671.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "total15",
+          "rect": [
+            148.5,
+            660,
+            163.5,
+            671.5
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "total15"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "评分标准",
+        "source_rect": [
+          80.5,
+          660.0,
+          177.0,
+          671.5
+        ],
+        "read_only_measurement_rect": [
+          79.5,
+          658.5,
+          178.0,
+          673.0
+        ],
+        "size_fixed_before_translation": 9.58,
+        "baseline": 669.25,
+        "iou": 0.805269181728363,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.4408,
+      "printed_bold_stroke": 0.55,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "render_mode": 2,
+      "line_width": 0.1,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4408,
+          "bold": 0.55
+        },
+        "ko": {
+          "regular": 0.2939,
+          "bold": 0.3918,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    },
+    {
+      "id": "marking-detail",
+      "hints": [
+        51
+      ],
+      "source": "(1)至(6)式各1分，(11)式4分，(12)至(16)式各1分。",
+      "ko": "식 [[mark1]]~[[mark6]]은 각 [[point1a]]점, [[mark11]]은 [[point4]]점, [[mark12]]~[[mark16]]은 각 [[point1b]]점.",
+      "en": "Eqs. [[mark1]]–[[mark6]]: [[point1a]] point each; [[mark11]]: [[point4]] points; [[mark12]]–[[mark16]]: [[point1b]] point each.",
+      "size": 9.58,
+      "baseline": 682.0,
+      "left": 97.5,
+      "right": 522.75,
+      "erase_rects": [
+        [
+          96.9,
+          671.8,
+          320.3,
+          685.32
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "mark1",
+          "rect": [
+            98,
+            672,
+            111.5,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "mark6",
+          "rect": [
+            119.6,
+            672,
+            131,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "point1a",
+          "rect": [
+            150.5,
+            672,
+            158.5,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "mark11",
+          "rect": [
+            177.2,
+            672,
+            195.2,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "point4",
+          "rect": [
+            206.5,
+            672,
+            214.8,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "mark12",
+          "rect": [
+            233.2,
+            672,
+            251.5,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "mark16",
+          "rect": [
+            261.5,
+            672,
+            276,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        },
+        {
+          "id": "point1b",
+          "rect": [
+            298,
+            672,
+            306.3,
+            685.32
+          ],
+          "image_path": [
+            387
+          ],
+          "reason": "Entire original inline notation, manually checked against the source page and CTC location hints; no OCR reconstruction."
+        }
+      ],
+      "source_atom_ids": [
+        "mark1",
+        "mark6",
+        "point1a",
+        "mark11",
+        "point4",
+        "mark12",
+        "mark16",
+        "point1b"
+      ],
+      "reviewed": true,
+      "baseline_evidence": {
+        "character_run": "式各",
+        "source_rect": [
+          97.5,
+          672.0,
+          319.5,
+          685.5
+        ],
+        "read_only_measurement_rect": [
+          96.5,
+          670.5,
+          320.5,
+          687.0
+        ],
+        "size_fixed_before_translation": 9.58,
+        "baseline": 682.0,
+        "iou": 0.8027272820472717,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "printed_regular_stroke": 0.4408,
+      "printed_bold_stroke": 0.55,
+      "scan_weight_evidence": "font-calibration/p4-first-ten-actual-stroke.json, p4-speed-clause-actual-stroke.json, p4-reference-bold-actual-stroke.json; marking role independently p4-marking-prefix-joint.json. Source pointsize/stroke estimates only, no translated text or character-width adjustment.",
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.4408,
+          "bold": 0.55
+        },
+        "ko": {
+          "regular": 0.2939,
+          "bold": 0.3918,
+          "evidence": "source-vs-Batang-stems.json/.png: original two regular CJK runs V/H medians .875/.50pt; Batang9.78 stroke.30 is the thinnest candidate matching both medians and contrast1.75. Fontpoint/advances fixed. Bold role modest.40, separately visually reviewed."
+        }
+      }
+    }
+  ],
+  "protected_source_display_and_figure_rects": [
+    [
+      200,
+      149.8,
+      255,
+      165
+    ],
+    [
+      185,
+      180,
+      289,
+      195
+    ],
+    [
+      184,
+      209,
+      254,
+      237
+    ],
+    [
+      194,
+      249,
+      271,
+      278
+    ],
+    [
+      191,
+      298,
+      275,
+      312
+    ],
+    [
+      190,
+      326,
+      275,
+      350
+    ],
+    [
+      187,
+      379,
+      246,
+      454
+    ],
+    [
+      191,
+      469.2,
+      370,
+      498
+    ],
+    [
+      190,
+      513,
+      218,
+      535
+    ],
+    [
+      193,
+      554,
+      331,
+      569
+    ],
+    [
+      198,
+      593.12,
+      417,
+      627.5
+    ],
+    [
+      202,
+      643,
+      291,
+      659
+    ],
+    [
+      430,
+      657,
+      453,
+      685.32
+    ]
+  ],
+  "font_profiles": [
+    {
+      "source_image": 0,
+      "size": 9.78,
+      "face": "SimSun",
+      "basis": "p4-first-ten/p4-speed-clause original-run calibration9.78pt; other chunks use original image physical-scale ratio, checked against original row pitch.",
+      "is_estimate": true
+    },
+    {
+      "source_image": 1,
+      "size": 9.715,
+      "face": "SimSun",
+      "basis": "p4-first-ten/p4-speed-clause original-run calibration9.78pt; other chunks use original image physical-scale ratio, checked against original row pitch.",
+      "is_estimate": true
+    },
+    {
+      "source_image": 2,
+      "size": 10.215,
+      "face": "SimSun",
+      "basis": "p4-first-ten/p4-speed-clause original-run calibration9.78pt; other chunks use original image physical-scale ratio, checked against original row pitch.",
+      "is_estimate": true
+    }
+  ],
+  "language_scope": "Original Chinese prose only; entire original display formulae, equation numbers, existing partial figure and all other source ink remain stationary. Source raster dust inside manually reviewed language row background is classified separately from meaningful nonlanguage ink.",
+  "full_page_visual_review_required": true,
+  "reviewed_blank_background_rects": [
+    {
+      "rect": [
+        194.8,
+        166.3,
+        522.75,
+        178.1
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed blank continuation of the original Chinese prose row. Pre-existing scan dust/faint scan rule only; no source mathematical object, numeral, physical figure or diagram line. Original protected display/figure areas and every replayed mathematical atom remain independent obstacles.",
+      "source_page": 4,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "first-rebound-speed",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page04-first-rebound-speed-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page04-first-rebound-speed-classification.png",
+      "source_crop_gray_sha256": "02d7bb792ae4814fba226fd78ab6f8fe0db00d70e335742121a8ed7495775cd4",
+      "render_scale": 4,
+      "source_background_ink_pixels": 5,
+      "source_background_ink_bbox_pt": [
+        274.75,
+        166.5,
+        408.0,
+        173.75
+      ],
+      "source_protected_ink_pixels": 0,
+      "excluded_protected_rects": [
+        [
+          200,
+          149.8,
+          255,
+          165
+        ],
+        [
+          185,
+          180,
+          289,
+          195
+        ],
+        [
+          184,
+          209,
+          254,
+          237
+        ],
+        [
+          194,
+          249,
+          271,
+          278
+        ],
+        [
+          191,
+          298,
+          275,
+          312
+        ],
+        [
+          190,
+          326,
+          275,
+          350
+        ],
+        [
+          187,
+          379,
+          246,
+          454
+        ],
+        [
+          191,
+          469.2,
+          370,
+          498
+        ],
+        [
+          190,
+          513,
+          218,
+          535
+        ],
+        [
+          193,
+          554,
+          331,
+          569
+        ],
+        [
+          198,
+          593.12,
+          417,
+          627.5
+        ],
+        [
+          202,
+          643,
+          291,
+          659
+        ],
+        [
+          430,
+          657,
+          453,
+          685.32
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    },
+    {
+      "rect": [
+        184.3,
+        237.8,
+        522.75,
+        251.1
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed blank continuation of the original Chinese prose row. Pre-existing scan dust/faint scan rule only; no source mathematical object, numeral, physical figure or diagram line. Original protected display/figure areas and every replayed mathematical atom remain independent obstacles.",
+      "source_page": 4,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "first-flight-time",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page04-first-flight-time-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page04-first-flight-time-classification.png",
+      "source_crop_gray_sha256": "b0d3e6acc859aa54440c79f63ccea133357305e86fc93be8058e4b2f7831bd24",
+      "render_scale": 4,
+      "source_background_ink_pixels": 21,
+      "source_background_ink_bbox_pt": [
+        219.0,
+        238.25,
+        362.5,
+        250.0
+      ],
+      "source_protected_ink_pixels": 0,
+      "excluded_protected_rects": [
+        [
+          200,
+          149.8,
+          255,
+          165
+        ],
+        [
+          185,
+          180,
+          289,
+          195
+        ],
+        [
+          184,
+          209,
+          254,
+          237
+        ],
+        [
+          194,
+          249,
+          271,
+          278
+        ],
+        [
+          191,
+          298,
+          275,
+          312
+        ],
+        [
+          190,
+          326,
+          275,
+          350
+        ],
+        [
+          187,
+          379,
+          246,
+          454
+        ],
+        [
+          191,
+          469.2,
+          370,
+          498
+        ],
+        [
+          190,
+          513,
+          218,
+          535
+        ],
+        [
+          193,
+          554,
+          331,
+          569
+        ],
+        [
+          198,
+          593.12,
+          417,
+          627.5
+        ],
+        [
+          202,
+          643,
+          291,
+          659
+        ],
+        [
+          430,
+          657,
+          453,
+          685.32
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    },
+    {
+      "rect": [
+        127.8,
+        365.3,
+        522.75,
+        379.1
+      ],
+      "reviewed": true,
+      "reason": "Manually reviewed blank continuation of the original Chinese prose row. Pre-existing scan dust/faint scan rule only; no source mathematical object, numeral, physical figure or diagram line. Original protected display/figure areas and every replayed mathematical atom remain independent obstacles.",
+      "source_page": 4,
+      "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+      "source_row": "recurrences-intro",
+      "evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page04-recurrences-intro-source.png",
+      "classification_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\background-evidence\\page04-recurrences-intro-classification.png",
+      "source_crop_gray_sha256": "7d7395114cadbf350e0c2eb1e635041b9d9e825cb0d094849508358be6e1b814",
+      "render_scale": 4,
+      "source_background_ink_pixels": 18,
+      "source_background_ink_bbox_pt": [
+        143.5,
+        368.5,
+        400.75,
+        377.25
+      ],
+      "source_protected_ink_pixels": 0,
+      "excluded_protected_rects": [
+        [
+          200,
+          149.8,
+          255,
+          165
+        ],
+        [
+          185,
+          180,
+          289,
+          195
+        ],
+        [
+          184,
+          209,
+          254,
+          237
+        ],
+        [
+          194,
+          249,
+          271,
+          278
+        ],
+        [
+          191,
+          298,
+          275,
+          312
+        ],
+        [
+          190,
+          326,
+          275,
+          350
+        ],
+        [
+          187,
+          379,
+          246,
+          454
+        ],
+        [
+          191,
+          469.2,
+          370,
+          498
+        ],
+        [
+          190,
+          513,
+          218,
+          535
+        ],
+        [
+          193,
+          554,
+          331,
+          569
+        ],
+        [
+          198,
+          593.12,
+          417,
+          627.5
+        ],
+        [
+          202,
+          643,
+          291,
+          659
+        ],
+        [
+          430,
+          657,
+          453,
+          685.32
+        ]
+      ],
+      "white_fill_applied": false,
+      "original_image_changed": false
+    }
+  ]
+}

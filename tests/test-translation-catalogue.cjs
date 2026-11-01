@@ -69,7 +69,7 @@ for (const year of ['2021', '2022', '2023', '2024', '2025', '2026']) {
     assert.ok(assets[window.THEORY.izho[year].f.T.ko[kind]] > 0);
   }
 }
-for (const year of ['2010', '2011', '2013', '2014', '2015', '2016', '2020']) {
+for (const year of ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2020']) {
   assert.ok(assets[window.THEORY.izho[year].f.T.ko.paper] > 0);
 }
 let usapho = 0;
