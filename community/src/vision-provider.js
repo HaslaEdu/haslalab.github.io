@@ -140,7 +140,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   if(encoded.length>cap||encoded.length*3>cap&&new TextEncoder().encode(encoded).length>cap)fail(413,'vision_images_too_large');
   const cancelled=new Promise((_,reject)=>{rejectAbort=reject;});
   signal?.addEventListener('abort',abort,{once:true});
-  const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{aborted=true;controller.abort();reject(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));},Math.max(1,Math.min(110000,timeoutMs)));});
+  const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{aborted=true;controller.abort();reject(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));},Math.max(1,Math.min(300000,timeoutMs)));});
   const send=payload=>fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json',
       ...(provider==='gemini'?{'x-goog-api-key':keyOf(env,provider)}:{Authorization:'Bearer '+keyOf(env,provider)})},
       // workerd rejects redirect:'error' before sending any request. Manual
