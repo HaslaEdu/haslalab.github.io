@@ -61,9 +61,14 @@ export function cappedSum(items, parts, total, value = i => i.points) {
   for (const p of list) { p.parent = owner(p.t); if (p.parent) p.parent.kids.push(p); }
   let loose = 0;
   for (const it of items || []) { const v = +value(it) || 0, p = owner(tokens(it.id)); if (p) { p.sum += v; p.max += +it.points || 0; } else loose += v; }
-  /* a heading far below its own items (under half) is a misread id, not a cap: it is ignored */
+  /* Headings that hold every item and add up to the printed total (or stand for it where none was read) are the paper's
+     own outline and always cap: IPhO 2023 T1 prints A 1.6, B 1.8, C 2.7, D 2.4, E 1.5 = 10, but its scheme listed E's
+     partial-credit breakdown as items (4.2) and the paper came out at 12.7. Otherwise a heading far below its own items
+     (under half) is taken for a misread id, not a cap, and ignored. */
+  const tops = list.filter(p => !p.parent), topSum = tops.reduce((a, p) => a + p.points, 0);
+  const trusted = tops.length > 0 && (items || []).every(it => owner(tokens(it.id))) && (!(+total > 0) || Math.abs(topSum - +total) <= .02 * +total);
   const full = p => p.max + p.kids.reduce((a, k) => a + full(k), 0);
-  const capped = p => { const sum = p.sum + p.kids.reduce((a, k) => a + capped(k), 0); return p.points >= .5 * full(p) ? Math.min(p.points, sum) : sum; };
+  const capped = p => { const sum = p.sum + p.kids.reduce((a, k) => a + capped(k), 0); return trusted || p.points >= .5 * full(p) ? Math.min(p.points, sum) : sum; };
   const sum = loose + list.filter(p => !p.parent).reduce((a, p) => a + capped(p), 0);
   return +Math.min(+total > 0 ? +total : Infinity, sum).toFixed(2);
 }

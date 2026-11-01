@@ -18,7 +18,7 @@
  */
 export const REG_VERSION = "2026-11-01g";
 /* the marking schemes read from the solutions: a regulation change that does not touch how a scheme is read keeps them */
-export const SCHEME_VERSION = "2026-11-01f";
+export const SCHEME_VERSION = "2026-11-01g";
 
 const r = (id, en, ko) => ({ id, en, ko });
 
