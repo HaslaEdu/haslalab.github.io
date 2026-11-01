@@ -1435,6 +1435,11 @@ function labRoles(env, s, theory) {
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
 }
+/* who reads the marking scheme from the solution PDFs. In the mixed pipeline Gemini (LAB_SCHEME_MODEL): it reads a PDF
+   as it is, where DeepSeek needs every page rendered to an image, which with a long experiment's photos beside it ran
+   an isolate out of memory; and the scheme decides every total (IPhO 2023 T1 read by DeepSeek came out at 12.7 of 10) */
+const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY
+  ? labAs(s, "gemini", { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
   : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined }) };
@@ -1856,7 +1861,7 @@ async function labScheme(env, s, task, m) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol;
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = [labProvider(s),VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');
+  const key = [labProvider(s),benchModel(labProvider(s),labSrc(s)._model)||VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');
   const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (await cached()) return labSchemeBuild(env, s, task, m);
   const turn = labSchemeBuilds.then(() => labSchemeBuild(env, s, task, m));
@@ -1868,7 +1873,7 @@ async function labSchemeBuild(env, s, task, m) {
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = [labProvider(s),VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');   // a new SCHEME_VERSION builds every scheme again
+  const key = [labProvider(s),benchModel(labProvider(s),labSrc(s)._model)||VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');   // a new SCHEME_VERSION builds every scheme again
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
     const sc = JSON.parse(kept.scheme);
@@ -2307,7 +2312,7 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
   const roles = labRoles(env, s, labTheory(s, task)), grader = labAs(s, roles.grade);
   {
     let scheme;
-    try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, grader, task, m); }
+    try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, labSchemer(env, s, roles), task, m); }
     catch (e) { console.error("lab scheme", e && e.message); return { status: "error", why: "scheme_failed", points: null, pages: mine.length }; }
     if (!mine.length) return { status: "empty", score: 0, points: scheme ? scheme.points : null, comparison_rubric: labComparisonRubric(scheme?.items), pages: 0 };
     if (scheme?.unscored) {
@@ -2557,7 +2562,7 @@ async function labBench(env, s, job) {
         if (!b) throw new Error('bench_read_missing');
         const o = JSON.parse(b.output); Object.assign(p, { read: o.read, ocr: o.ocr, legible: o.legible });
       }
-      const prod = labRoles(env, s, true), scheme = await labScheme(env, labAs(s, prod.grade, {}), spec.task, null);
+      const prod = labRoles(env, s, true), scheme = await labScheme(env, labSchemer(env, s, prod), spec.task, null);
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, gradeImages: spec.grade.images !== false };
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
