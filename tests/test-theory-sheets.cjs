@@ -50,3 +50,19 @@ test('every exam and grading row offers its answer and working sheets to print b
   const row = html.slice(html.indexOf('const row=(y,tasks,label,sub,sec,href)'), html.indexOf('const thyT='));
   assert.match(row, /href="\$\{sheetsHref\(href\)\}"/);
 });
+
+test('every problem card offers its answer and working sheets beside the problem and the solution', () => {
+  const html = read('index.html'), sheets = read('sim/sheets.html');
+  // the sheets page keeps one kind when a card asks for it
+  assert.match(sheets, /const KIND = Q\.get\("k"\)/);
+  assert.match(sheets, /want = \{ answer: KIND !== "working", working: KIND !== "answer" \}/);
+  // theory cards: the official / Korean answer sheet and the Korean working sheet where the site has them, else the page
+  const thy = html.slice(html.indexOf('const sheetDocs='), html.indexOf('const card=(code,probs,f,k,head,docs)'));
+  assert.match(thy, /A\[0\]\?a\(A\[0\],ko\?"답안지":"Answer sheet"/);
+  assert.match(thy, /ko&&t\.wk\?a\(t\.wk,"워킹시트"\)/);
+  assert.match(html, /concat\(sheetDocs\(code,A,!omr\)\)/);
+  // experiment cards: both, before the Python source
+  assert.match(html, /if\(live&&!c\.open&&\/\^E\\d\*\$\/\.test\(p\.id\)\)\{ const h=expSheetsHref\(key,yr,p\);/);
+  const sheetKind = new Function('return ' + html.match(/const sheetKind=([^;]+);/)[1])();
+  assert.equal(sheetKind('sim/sheets.html?c=ipho', 'working'), 'sim/sheets.html?c=ipho&k=working');
+});

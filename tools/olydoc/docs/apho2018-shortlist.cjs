@@ -211,7 +211,7 @@ function solution(P, lang) {
 
 const docs = [];
 for (const P of PROBLEMS) for (const lang of ['en', 'ko']) {
-  const K = lang === 'ko', base = { css: CSS, lang, langLabel: K ? 'Korean (Korea (Republic of))' : 'English', section: 'Theory' };
+  const K = lang === 'ko', base = { css: CSS, lang, langLabel: K ? 'Korean (Korea (Republic of))' : 'English', section: 'Theory-Backup' };
   docs.push({ ...base, out: `pdfx/apho/APhO_2018_${P.code}_${K ? 'KO' : 'EN'}.pdf`, style: 'apho2018', kind: 'paper', code: P.q, html: paper(P, lang) },
     { ...base, out: `pdfx/apho/APhO_2018_${P.code}${K ? '_A_KO' : 'A'}.pdf`, style: 'apho2018', kind: 'answer', code: P.a, html: answerSheet(P, lang) },
     { ...base, out: `pdfx/apho/APhO_2018_${P.code}${K ? '_S_KO' : 'S'}.pdf`, style: 'apho2018sol', kind: 'solution', code: P.q, html: solution(P, lang) });

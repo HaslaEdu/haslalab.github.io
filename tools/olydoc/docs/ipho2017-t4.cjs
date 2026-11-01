@@ -208,7 +208,7 @@ function solution(lang) {
   return out.join('\n');
 }
 
-const base = { css: CSS };
+const base = { css: CSS, section: 'Theory-Backup' };   // a shortlist (backup) problem, headed as IPhO 2025's T4
 module.exports = {
   docs: [
     { ...base, out: 'pdfx/ipho/IPhO_2017_T4_EN.pdf', style: 'ipho2017', kind: 'paper', lang: 'en', code: 'T4', langLabel: 'English', html: paper('en') },
