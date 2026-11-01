@@ -50,6 +50,7 @@ async function fixture(run){
     const url=String(input);
     if(url.startsWith('https://github.com/')||url.startsWith('https://haslalab.org/pdfx/')||/https:\/\/www\.(kms|kmo)\.or\.kr\//.test(url))return new Response('%PDF-1.4\nSelected vision local reference fixture '+url);
     assert.ok(!url.includes('upstage'),'no production OCR request may reach Upstage');
+    if(url.startsWith('https://api.mathpix.com/')){calls.push({provider:'mathpix',url,body:JSON.parse(init.body),parts:[],text:''});return Response.json({text:'$v_0 = I_0 / M$ (mathpix)',confidence:.9});}
     const body=JSON.parse(init.body),provider=url.includes('deepseek')?'deepseek':'gemini',parts=provider==='gemini'?body.contents[0].parts:body.messages[1].content;
     const text=parts.map(part=>part.text||'').join('\n');calls.push({provider,url,body,parts,text});
     const hook=beforeProvider;beforeProvider=async()=>{};await hook();
@@ -323,6 +324,16 @@ test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the st
   assert.equal(JSON.parse(sql.prepare('SELECT sources FROM lab_sessions WHERE id=?').get(sid).sources)._provider,'deepseek');
   const {visionCapabilities}=await import('./src/vision-provider.js'),caps=visionCapabilities(env);
   assert.equal(caps.default,'deepseek');assert.deepEqual(caps.providers.map(p=>[p.id,p.available]),[['gemini',false],['deepseek',true]]);
+}));
+test('LAB_READ_MATHPIX answer: an answer page carries Mathpix\'s transcript after the reader\'s; a failed call leaves the reading',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MATHPIX='answer';env['mathpix_client-ID']='mp-id';env['mathpix_client-secret']='mp-secret';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  const page=sql.prepare('SELECT ocr,kind,ocr_status FROM lab_pages WHERE session_id=?').get(sid);
+  assert.equal(page.kind,'answer');assert.equal(page.ocr_status,'done');
+  assert.match(page.ocr,/<<SECOND TRANSCRIPT: Mathpix[\s\S]*\(mathpix\)[\s\S]*<<END SECOND TRANSCRIPT>>/);
+  const mp=calls.filter(c=>c.provider==='mathpix');assert.equal(mp.length,1);assert.equal(mp[0].body.metadata.improve_mathpix,false);
+  assert.equal(sql.prepare("SELECT count(*) n FROM lab_calls WHERE session_id=? AND step='ocr2' AND provider='mathpix'").get(sid).n,1,'metered');
 }));
 test('a paid sitting\'s pages are read whatever the account has read that day',async()=>fixture(async({api,start,upload,drain,sql})=>{
   const a=(await start('gemini')).data,sid=a.session.id;

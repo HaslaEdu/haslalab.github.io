@@ -2098,7 +2098,7 @@ async function labProofread(env, s, buf, mime, read, notation, m) {
   return applied ? { ...read, items, ocr: { ...read.ocr, text: fixed, proofread: applied } } : read;
 }
 /* a page as the theory pipeline reads it: the reader with the paper's notation, then the proofreader where configured */
-async function labReadChecked(env, s, roles, task, buf, mime, m) {
+async function labReadChecked(env, s, roles, task, buf, mime, m, kind = null) {
   const notation = roles?.readHint ? await labNotation(env, s, task, m).catch(e => { console.error("lab notation", e?.code || e?.message); return null; }) : null;
   /* the reading model's quota runs out under load (3.1 Pro preview refused 71 of 72 bench reads in an hour): a page
      it refuses, or loops on, is read by the fallback model (LAB_READ_FALLBACK_MODEL) at once rather than failing or
@@ -2109,8 +2109,25 @@ async function labReadChecked(env, s, roles, task, buf, mime, m) {
     console.error('lab read fallback', error.code, fb);
     return labReadPage(env, labAs(s, 'gemini', { model: fb, thinking: env.LAB_READ_FALLBACK_THINKING || 'low' }), buf, mime, notation, m);
   });
+  await labSecondTranscript(env, roles, kind, buf, mime, read, m);
   if (!roles?.proof) return read;
   return labProofread(env, labAs(s, roles.proof, roles.proofBench), buf, mime, read, notation, m).catch(e => { console.error("lab proofread", e?.code || e?.message); return read; });
+}
+/* a second, independent transcript of an answer page by Mathpix (LAB_READ_MATHPIX answer|all; bench read.mathpix): it
+   misreads other characters than the LLM reader (bench: 14 and 10 of 102 checked numbers missed alone, 4 together), so
+   the grader gets both and settles a difference from the photo. A failed or keyless call leaves the reading as it is. */
+async function labSecondTranscript(env, roles, kind, buf, mime, read, m) {
+  const scope = roles?.mathpix ?? env.LAB_READ_MATHPIX;
+  if (!(scope === 'all' || scope === 'answer' && kind === 'answer') || typeof read?.ocr?.text !== 'string' || !ocrEngineKeys(env).mathpix) return;
+  const t0 = Date.now();
+  try {
+    const second = await mathpixRead(env, buf instanceof Uint8Array ? buf : new Uint8Array(buf), mime, { signal: labProviderSignal(env, 60000) });
+    if (second.text.trim()) read.ocr.text += `\n\n<<SECOND TRANSCRIPT: Mathpix, an independent math-OCR engine. Where it differs from the transcript above on a number, sign, exponent or symbol, trust what the photo and the candidate's own working show.>>\n${second.text.slice(0, 20000)}\n<<END SECOND TRANSCRIPT>>`;
+    m?.calls?.push({ step: 'ocr2', provider: 'mathpix', model: 'mathpix-v3-text', in: null, out: null, cached: null, usd: +(env.LAB_MATHPIX_USD || 0.005), ms: Date.now() - t0, ok: 1 });
+  } catch (e) {
+    console.error('lab mathpix', e?.code || e?.message);
+    m?.calls?.push({ step: 'ocr2', provider: 'mathpix', model: 'mathpix-v3-text', in: null, out: null, cached: null, usd: 0, ms: Date.now() - t0, ok: 0, error: e?.code || 'ocr_engine_failed' });
+  }
 }
 const readText = read => typeof read.ocr?.text === "string" ? read.ocr.text
   : (read.items || []).filter(i => !i.crossed_out).map(i => `${i.label}: ${i.kind === "value" && i.value != null ? i.value + (i.unit ? " " + i.unit : "") : i.text}`).join("\n").slice(0, AR.maxAnswer);
@@ -2316,7 +2333,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   for (const p of mine) if (!p.read || JSON.parse(p.read).structure_status === "failed") {
     try { const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = await labPageBytes(env, row);
       if (!img) continue;
-      const rd = await labReadChecked(env, s, roles, p.task, img, row.mime, m);
+      const rd = await labReadChecked(env, s, roles, p.task, img, row.mime, m, row.kind);
       const stored = labStoredReading(env, img, { read: rd, legible: rd.legible, text: readText(rd), ocr: rd.ocr?.text ?? p.ocr ?? null, status: "done" });
       if (stored.error) throw new HttpError(502, stored.error);
       p.read = stored.read; p.legible = stored.legible; p.ocr = stored.ocr; p.ocr_conf = rd.ocr?.confidence ?? p.ocr_conf;
@@ -2668,9 +2685,9 @@ async function labBench(env, s, job) {
     } else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles }, readHint: !!spec.read.hint,
+      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
         proof: spec.proof?.provider || null, proofBench: spec.proof ? { model: spec.proof.model, thinking: spec.proof.thinking } : undefined };
-      const read = await labReadChecked(env, s, roles, page.task, bytes, page.mime, m), text = readText(read);
+      const read = await labReadChecked(env, s, roles, page.task, bytes, page.mime, m, page.kind), text = readText(read);
       const stored = labStoredReading(env, bytes, { ocr: read.ocr?.text ?? text, text, read, legible: read.legible, status: 'done' });
       out = { page_id: page.id, read: stored.read, ocr: stored.ocr, legible: stored.legible };
     } else if (spec.stage === 'grade') {
@@ -2718,7 +2735,7 @@ const LAB_JOB_HANDLERS = {
         /* no daily page limit: every page of a sitting is paid for with the token spent when it opened (an account's
            151st page of a day once failed «rate_limited» in the middle of IPhO 2015 T3) */
         const bytes = await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-        const read = await labReadChecked(env, s, labRoles(env, s, labTheory(s, page.task)), page.task, bytes, page.mime, mt), text = readText(read), up=read.ocr;
+        const read = await labReadChecked(env, s, labRoles(env, s, labTheory(s, page.task)), page.task, bytes, page.mime, mt, page.kind), text = readText(read), up=read.ocr;
         const stored = labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: 'done' });
         /* the task and sheet the student filed the page under stand: a printed header read by the model only goes into
            the reading for reference. Moving pages by it filed IPhO 2025 T3 pages under T1 (DeepSeek read «T1») and a T2
