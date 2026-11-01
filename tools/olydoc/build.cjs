@@ -58,7 +58,7 @@ const STYLES = {
   },
   /* IPhO 2017 solutions: «Solutions/ Marking Scheme» and the problem at the right over a double rule */
   ipho2017sol: {
-    margin: { top: '34mm', bottom: '22mm', left: '20mm', right: '20mm' },
+    margin: { top: '42mm', bottom: '22mm', left: '20mm', right: '20mm' },
     header: d => `<div style="position:absolute;left:20mm;right:20mm;top:11mm;height:19mm;font-family:Calibri,Carlito,'DejaVu Sans','Noto Sans KR',sans-serif">
       <div style="position:absolute;left:0;right:0;bottom:-1.6mm;height:0.5mm;background:#555"></div><div style="position:absolute;left:0;right:0;bottom:-0.6mm;height:0.3mm;background:#555"></div>
       <div style="position:absolute;left:0;top:2mm;font-size:13pt;font-weight:700;line-height:1.15">${d.section || 'Solutions/<br>Marking Scheme'}</div>
@@ -94,6 +94,7 @@ p{margin:0 0 2.2mm}
 h1{font-size:15pt;margin:0 0 3mm;color:#0b3d91}
 h2{font-size:11.5pt;margin:5mm 0 2mm;color:#0b3d91}
 h3{font-size:10pt;margin:3mm 0 1.5mm}
+h1,h2,h3,.qh{break-after:avoid}
 figure{margin:3mm 0;text-align:center}
 figure img{max-width:100%}
 figcaption{font-size:8.5pt;text-align:left;margin:1.5mm 8mm 0}
