@@ -49,6 +49,7 @@ test('exam fee copy uses the server quote and permits a complementary round with
   a.SES={cost:0.2};assert.equal(vm.runInContext('COST()',a),0.2);
   assert.equal(vm.runInContext('costify("one exam token / 1 token / 토큰 1개")',a),'0.2 token / 0.2 token / 토큰 0.2개');
   a.SES=null;a.MIX=true;assert.equal(vm.runInContext('COST()',a),0.5);
+  a.MIX=false;a.Q=new URLSearchParams('sl=1');assert.equal(vm.runInContext('COST()',a),0.1,'a shortlist problem is quoted at 0.1 before the server answers');
   assert.match(source,/EX\.pair && !MIX \? 0\.2 : COST\(\)/);
   assert.doesNotMatch(source,/\$\{n - COST\(\)\}/);
 });

@@ -59,6 +59,15 @@ test('generated backend pairs preserve complete IPhO sittings and omit known par
   }
 });
 
+test('shortlist (backup) problems are listed for their own 0.1-token price and stay out of every pair',async()=>{
+  const {LAB_PAIR_CATALOGUE:pairs,LAB_SHORTLIST_CATALOGUE:shortlist}=await import('../community/src/lab-pair-catalog.js');
+  assert.deepEqual(shortlist.ipho['2025'],['T4']);
+  for(const [comp,years] of Object.entries(shortlist))for(const [year,tasks] of Object.entries(years)){
+    for(const profile of pairs[comp]?.[year]||[])for(const set of profile.theory)
+      assert.ok(!set.some(task=>tasks.includes(task)),`${comp} ${year}: a shortlist problem cannot complete a theory round`);
+  }
+});
+
 test('canonical mixed catalogue distinguishes complete NBPhO editions from partial or separately paired rounds',async()=>{
   const {LAB_MIXED_CATALOGUE:mixed,LAB_PAIR_CATALOGUE:pairs}=await import('../community/src/lab-pair-catalog.js');
   assert.deepEqual(mixed.nbpho['2026'],[['E1','E2','T']]);

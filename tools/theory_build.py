@@ -122,6 +122,10 @@ def load():
             probs = [[str(p.get('id', ''))[:8], str(p.get('title', '')).strip()[:160]] for p in y.get('problems', [])
                      if p.get('title') and not GENERIC.match(str(p['title']).strip())]
             out.setdefault(comp, {})[year] = {'p': probs, 'f': files}
+            # shortlist / backup problems (sl): not part of the competition's paper — sat and graded one at a time
+            shortlist = [str(p['id']) for p in y.get('problems', []) if p.get('shortlist') and str(p.get('id')) in files]
+            if shortlist:
+                out[comp][year]['sl'] = shortlist
             # where it was held, for a year the site knows only from its theory papers (h: {ko, en}, cc: flag code)
             if y.get('host'):
                 out[comp][year]['h'] = y['host']
@@ -196,6 +200,10 @@ def korean(out, bad):
                     continue
                 ko = dict(ko)
                 title, en = ko.pop('title', None), ko.pop('en', None)
+                if en and en.get('shortlist'):
+                    en = {k: v for k, v in en.items() if k != 'shortlist'}
+                    if part not in t.get('sl', []):
+                        t.setdefault('sl', []).append(part)
                 # NBPhO: a booklet number that is an experiment — its Korean problem goes to the experiment card (xk)
                 if re.match(r'^T\d+$', part) and int(part[1:]) in t.get('x', []):
                     if ko.get('paper'):

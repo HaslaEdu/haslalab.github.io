@@ -246,6 +246,7 @@ const T = {
     tokens: n => `남은 실전 토큰 <b>${n}</b>개`, start: `시작하기 (${DC})`, startQ: "시험을 시작합니다",
     startBody: (n, pay) => `시작하면 ${DK} 타이머가 서버에서 돌기 시작하고, 멈추거나 되돌릴 수 없습니다.` + (pay ? ` 채점 · 첨삭을 신청합니다. 확정 비용은 최대 토큰 1개이며 한 번만 차감합니다.` : " 토큰은 쓰지 않습니다."),
     noTokens: "실전 토큰이 없습니다. 실전 모드 페이지(#/lab)에서 충전할 수 있습니다.",
+    shortNote: "Shortlist(예비) 문제는 본 시험과 따로, 한 문제씩 채점하며 0.1토큰입니다.",
     halfNote: "한 시험 채점은 0.3토큰입니다. 같은 연도의 이론·실험을 세트로 채점하면 첫 라운드 0.3토큰, 다른 라운드 0.2토큰으로 합계 0.5토큰입니다. 이론·실험이 합쳐진 시험은 0.5토큰입니다.",
     payAsk: n => `채점 · 첨삭도 신청 (토큰 1개 · 보유 ${n}개) — 신청하면 보낸 답안을 바로 읽어 확인할 수 있습니다`,
     payBtn: "채점 · 첨삭 받기 (토큰 1개)", payNote: "아직 채점을 신청하지 않았습니다. 신청 전에는 보낸 쪽을 읽지 않고, 신청하지 않고 끝내면 채점 없이 저장됩니다(나중에 성적표에서 신청 가능).",
@@ -304,6 +305,7 @@ const T = {
     tokens: n => `Exam tokens left: <b>${n}</b>`, start: `Start (${DC})`, startQ: "Start the exam",
     startBody: (n, pay) => `The ${DE} timer starts on the server and cannot be paused or undone.` + (pay ? ` Grading and feedback will use up to one token, charged once.` : " No token is used."),
     noTokens: "You have no exam tokens. Get some on the exam mode page (#/lab).",
+    shortNote: "A shortlist (backup) problem is graded on its own, apart from the day's paper, for 0.1 token.",
     halfNote: "Grading one exam costs 0.3 token. A same-year theory + experiment set costs 0.3 for the first round and 0.2 for its complementary round, totaling 0.5 token. A combined sitting costs 0.5 token.",
     payAsk: n => `Also ask for grading and the review (1 token · you have ${n}) — your pages are then read as they arrive, so you can check them`,
     payBtn: "Get it graded and reviewed (1 token)", payNote: "Grading has not been asked for yet. Until then your pages are not read; finishing without it keeps them ungraded (you can still ask from the score report).",
@@ -383,7 +385,7 @@ const TH = {
 const Q = new URLSearchParams(location.search);
 let lang = (Q.get("lang") || (navigator.language || "").slice(0, 2)) === "en" ? "en" : "ko";
 /* The server quotes the current fee, including a complementary-round discount. */
-const COST = () => { let s = null; try { s = SES; } catch (e) {} return s && Number.isFinite(s.cost) ? s.cost : MIX ? 0.5 : 0.3; };
+const COST = () => { let s = null; try { s = SES; } catch (e) {} return s && Number.isFinite(s.cost) ? s.cost : Q.get("sl") === "1" ? 0.1 : MIX ? 0.5 : 0.3; };
 const costify = v => typeof v === "string" ? v.replace(/토큰 1개/g, `토큰 ${COST()}개`).replace(/\b(one exam token|1 exam token|one token|1 token)\b/g, `${COST()} token`)
   : typeof v === "function" ? (...a) => costify(v(...a)) : Array.isArray(v) ? v.map(costify) : v;
 const R = {
@@ -419,7 +421,8 @@ const EX = {
   tasks: split("e", ",").filter(Boolean), files: split("f", ","), titles: split("t", "|"), pdfs: split("p", "|"), sols: split("s", "|"),
   marks: split("k", "|"), answers: split("a", "|"), nos: split("o", "|"), skip: Q.get("x") || "",
   working: Q.get("w") || "",                                                     // a theory exam's working sheet, where there is one
-  pair: Q.get("h") === "1",                                                      // eligible for the complementary-round set discount
+  pair: Q.get("h") === "1" && Q.get("sl") !== "1",                            // eligible for the complementary-round set discount
+  shortlist: Q.get("sl") === "1",                                              // a shortlist (backup) problem on its own: 0.1 token
 };
 let paperOptions = {};
 try { paperOptions = window.PaperLanguages?.normalize(JSON.parse(Q.get("papers") || "{}"), EX.tasks.length) || {}; } catch (e) {}
@@ -599,7 +602,7 @@ async function introView() {
   else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}
       <label style="margin-top:6px;border-top:1px dashed var(--line);padding-top:8px"><input type="checkbox" id="payNow"${ME.tokens >= (EX.pair && !MIX ? 0.2 : COST()) ? "" : " disabled"}> ${t().payAsk(ME.tokens)}</label>
       ${ME.tokens >= (EX.pair && !MIX ? 0.2 : COST()) ? "" : `<div style="font-size:12px;color:var(--muted);margin-left:22px">${t().noTokens}</div>`}
-      <div style="font-size:12px;color:var(--muted);margin-left:22px">${t().halfNote}</div></div>
+      <div style="font-size:12px;color:var(--muted);margin-left:22px">${EX.shortlist ? t().shortNote : t().halfNote}</div></div>
       <div class="row"><button class="pri" id="go" disabled>${t().start}</button><span id="agHint" style="font-size:12.5px;color:var(--muted)">${t().agreeAll}</span></div>`;
   const tasks = EX.tasks.map((id, i) => `<div><b>${esc(id)}</b> ${esc(EX.titles[i] || "")}</div>`).join("");
   $("main").innerHTML = `<div class="page"><div class="card doc">

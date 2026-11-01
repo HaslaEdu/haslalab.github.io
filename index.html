@@ -1102,10 +1102,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=c4d4a75a5c45"></script>
+<script src="site-catalogue.js?v=09b421738c1f"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=cd4ce07f5176"></script>
+<script src="site-design.js?v=92ab6d658402"></script>
 <script>
 "use strict";
 
@@ -4569,7 +4569,10 @@ function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
   const sim=simThy(key,yr);
   if(key==="nbpho"&&yr.problems.some(p=>/^E\d+$/.test(p.id)&&p.files&&p.files.sim)) return [];   // sat with the experiments (examGroups)
-  const parts=Object.keys(t.f).filter(x=>/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!t.f[x].containsSolutions&&!sim.has(x)&&(key!=="eotvos"||EOTVOS_TIMED.has(+yr.y))&&(!/^https?:/.test(t.f[x].paper)||key==="eotvos"&&t.f[x].paper===`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${yr.y}.pdf`)), by={};
+  /* shortlist / backup problems (sl) are not part of the day's paper: each is its own exam, graded for 0.1 token */
+  const sl=new Set(t.sl||[]);
+  const ready=x=>t.f[x]&&t.f[x].sol&&t.f[x].paper&&!t.f[x].kx&&!t.f[x].containsSolutions;
+  const parts=Object.keys(t.f).filter(x=>!sl.has(x)&&/^(T|MC)\d*[a-z]?$/.test(x)&&t.f[x].sol&&!t.f[x].kx&&!t.f[x].containsSolutions&&!sim.has(x)&&(key!=="eotvos"||EOTVOS_TIMED.has(+yr.y))&&(!/^https?:/.test(t.f[x].paper)||key==="eotvos"&&t.f[x].paper===`https://eik.bme.hu/~vanko/fizika/eotvos/Eotvos_${yr.y}.pdf`)), by={};
   /* a competition of rounds (USNCO's local exam and national parts, RuPhO's three grades …): each part its own exam */
   if(key==="ioi"||(compOf(key)&&compOf(key).omr)) return [];   /* IOI: programs; KPhE: graded on the screen (sim/omr.html) */                       /* IOI's tasks are programs, not written answers: no exam */
   if(compOf(key)&&compOf(key).rounds) return parts.sort((a,b)=>a.localeCompare(b,"en",{numeric:true})).map(x=>[x]);
@@ -4581,8 +4584,11 @@ function theoryGroups(key,yr){
     const pick=whole&&(THY_WHOLE.has(key)&&!sim.size||!num.length||num.length>4)?[whole]:num;
     for(let i=0;i<pick.length;i+=4) out.push(pick.slice(i,i+4).map(q=>q.x));
   }
+  for(const x of [...sl].sort((a,b)=>a.localeCompare(b,"en",{numeric:true}))) if(/^T\d+$/.test(x)&&ready(x)) out.push([x]);
   return out;
 }
+/* a shortlist (backup) problem sat on its own */
+const isShortlist=(key,yr,g)=>{ const t=thyOf(key,yr.y); return !!t&&g.length===1&&(t.sl||[]).includes(g[0]); };
 const thyTitle=(t,x)=>{ const p=(t.p||[]).find(q=>q[0]===x); return p?p[1]:""; };
 /* experiment | theory: which of a competition's two collections its pages show (kept in this browser) */
 let track=(()=>{ try{ return localStorage.getItem("hlTrack")==="thy"?"thy":"exp"; }catch(e){ return "exp"; } })();
@@ -5155,7 +5161,8 @@ function xmPortalHtml(key,x,mode="exam",year=""){
     const t=thyOf(key,y.y);
     if(thyT) for(const g of (review?reviewTheoryGroups(key,y):theoryGroups(key,y))){
       const qualitative=review&&g.some(x=>!t.f[x].sol);
-      row(y,g,review?(ko?"문제지":"paper"):d.xmTheoryLabel,g.map(x=>`${x} ${esc(thyTitle(t,x)||(x==="T"?d.thyWhole:""))}`).join(" · ")+(yearPair(key,y)?` · ${d.xmHalf}`:"")+(qualitative?` · ${ko?"공식 해설 미공개 · 점수 없는 학습 첨삭":"No published solution · qualitative learning feedback"}`:""),HLexam.sec(key,y.y,g.length,true),theoryHref(key,y,g));
+      const short=isShortlist(key,y,g);
+      row(y,g,short?(ko?"Shortlist (예비 문제)":"shortlist (backup problem)"):review?(ko?"문제지":"paper"):d.xmTheoryLabel,g.map(x=>`${x} ${esc(thyTitle(t,x)||(x==="T"?d.thyWhole:""))}`).join(" · ")+(short?` · ${ko?"본 시험과 따로 · 채점 0.1토큰":"sat on its own · grading 0.1 token"}`:yearPair(key,y)?` · ${d.xmHalf}`:"")+(qualitative?` · ${ko?"공식 해설 미공개 · 점수 없는 학습 첨삭":"No published solution · qualitative learning feedback"}`:""),HLexam.sec(key,y.y,g.length,true),theoryHref(key,y,g));
     }
   }
   const me=x&&x.me, act=x&&x.active;
@@ -5226,7 +5233,8 @@ function theoryHref(key,yr,parts){
     q.set("papers",JSON.stringify(bundle.papers)); q.set("pl",bundle.language);
     q.set("p",bundle.papers[bundle.language].join("|"));
   }
-  if(yearPair(key,yr)) q.set("h","1");              /* the year has experiments too: the complementary experiment round can complete the 0.5-token set */
+  if(parts.length===1&&(t.sl||[]).includes(parts[0])) q.set("sl","1");   /* a shortlist problem: on its own, 0.1 token (the server decides the price) */
+  else if(yearPair(key,yr)) q.set("h","1");         /* the year has experiments too: the complementary experiment round can complete the 0.5-token set */
   return "sim/exam.html?"+q.toString();
 }
 /* a problem card on a year page — the experiments and the theory problems both: code, status, title, text, tags,
