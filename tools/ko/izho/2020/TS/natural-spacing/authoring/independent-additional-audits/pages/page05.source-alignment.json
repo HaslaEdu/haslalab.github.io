@@ -1,0 +1,123 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 5,
+  "proof_sha256": "dee9b782d4d46bbbf0c5fc84fdac01c17b1efe78bc003765bef1fc13d15a39de",
+  "plan_sha256": "67f8d10db95379181322ceed5e78f2229a06dc63efab2aee4d31b52c7ea4c541",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 4,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          2,
+          2
+        ]
+      ],
+      "baseline": 276.719970703125,
+      "source_center": 282.4980010986328,
+      "independent_original_source_centers": [
+        282.4980010986328
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 270.906005859375,
+      "actual_nonspace_glyph_right": 294.09002685546875,
+      "actual_center": 282.4980163574219,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          3
+        ]
+      ],
+      "baseline": 276.719970703125,
+      "source_center": 514.7940216064453,
+      "independent_original_source_centers": [
+        514.7940216064453
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 503.2020263671875,
+      "actual_nonspace_glyph_right": 526.385986328125,
+      "actual_center": 514.7940063476562,
+      "center_error_pt": -1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          12,
+          15
+        ]
+      ],
+      "baseline": 629.8821411132812,
+      "source_center": 308.3993377685547,
+      "independent_original_source_centers": [
+        308.3993377685547
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 218.10595703125,
+      "actual_nonspace_glyph_right": 398.6927185058594,
+      "actual_center": 308.3993377685547,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 17,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          13,
+          0
+        ]
+      ],
+      "baseline": 645.9579467773438,
+      "source_center": 308.34458923339844,
+      "independent_original_source_centers": [
+        308.34458923339844
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 265.9016418457031,
+      "actual_nonspace_glyph_right": 350.78753662109375,
+      "actual_center": 308.34458923339844,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          12,
+          15
+        ],
+        "source_text": "Problem 2. Phase states and phase transitions (10,0 points) ",
+        "original_center": 308.3993377685547,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          13,
+          0
+        ],
+        "source_text": "Specific heat of phase transition ",
+        "original_center": 308.34458923339844,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

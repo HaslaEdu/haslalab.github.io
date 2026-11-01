@@ -31,6 +31,7 @@ module.exports = function validateFigureLanguagePublication(root, qa, item) {
   assert.equal(assembly.pages.length, item.pages); assert.equal(visual.pages.length, item.pages);
   assert.equal(qa.page_proofs.length, item.pages);
   const complete2010Solutions = qa.year === 2010 && qa.kind === 'TS';
+  const complete2020Solutions = qa.year === 2020 && qa.kind === 'TS';
   if (complete2010Solutions) {
     assert.equal(qa.pages, 11);
     const bodyReady = evidence({ path: baseline.source_ready, sha256: baseline.source_ready_sha256 });
@@ -72,7 +73,51 @@ module.exports = function validateFigureLanguagePublication(root, qa, item) {
     yes(failed[0], ['source_center_matches_original_glyphs','original_alignment_frame_resolves_to_active_composer_scope']);
     assert.ok(Math.abs(failed[0].center_error_pt + 8) <= .001);
   }
-  const negative = evidence(qa.negative_control); yes(negative, ['passed']); assert.equal(negative.rows.length, complete2010Solutions ? 1 : 2);
+  if (complete2020Solutions) {
+    assert.equal(qa.pages, 13);
+    const bodyReady = evidence({ path: baseline.source_ready, sha256: baseline.source_ready_sha256 });
+    yes(bodyReady, ['all_new_hangul_source_font_role_point_baseline_and_actual_donor_outlines_verified','original_source_heading_centers_verified','all_original_bold_prose_headings_inventoried_and_centered','actual_heading_alignment_negative_rejected','missing_subtitle_intent_negative_rejected','actual_fraction_piece_motion_negative_rejected','partial_native_math_clip_motion_rejected']);
+    const bodyEvidence = file => evidence({ path: baseline.authoring_snapshotroot + '/' + file, sha256: baseline.authoring_snapshot_sha256[file] });
+    const extra = bodyEvidence('independent-additional-audits/final-extra-checks.json'); yes(extra, ['passed']); assert.equal(extra.pages.length, 13);
+    let centers = 0, headings = 0, glyphs = 0;
+    for (const [index, row] of extra.pages.entries()) {
+      yes(row, ['passed']);
+      const proof = baseline.page_proofs[index].proof_sha256, font = row.font_source_style, prose = row.all_new_prose, alignment = row.original_source_heading_alignment;
+      for (const audit of [font,prose,alignment]) { yes(audit, ['passed']); assert.equal(audit.proof_sha256, proof); }
+      yes(font, ['source_role_point_baseline_counter_matched']); assert.equal(font.actual_glyph_checks.length, font.hangul_glyphs_checked);
+      for (const glyph of font.actual_glyph_checks) { yes(glyph, ['source_role_point_and_baseline_matched','actual_outline_matches_complete_role_donor']); assert.ok(glyph.actual_gid >= 0 && glyph.point_size > 0); }
+      yes(prose, ['translated_prose_character_multiset_matches_authored_text']); empty(prose, ['actual_embedded_gid_empty_outlines']);
+      yes(row.source_language, ['passed']); empty(row.source_language, ['unselected_language_words']); yes(row.equation_numbers, ['passed']);
+      assert.equal(alignment.source_sha256, baseline.page_proofs[index].source_pdf_sha256); assert.equal(alignment.source_page, index + 1);
+      for (const center of alignment.rows) {
+        yes(center, ['passed','source_center_matches_original_glyphs','original_alignment_frame_resolves_to_active_composer_scope']);
+        assert.ok(center.glyphs > 0 && Math.abs(center.actual_center-center.source_center) <= .001 && Math.abs(center.center_error_pt) <= .001);
+      }
+      const coverage = alignment.original_bold_prose_heading_coverage; yes(coverage, ['passed']); assert.equal(coverage.headings_checked, coverage.rows.length);
+      for (const heading of coverage.rows) yes(heading, ['passed','alignment_intent_present','actual_center_preserved']);
+      centers += alignment.rows.length; headings += coverage.rows.length; glyphs += font.hangul_glyphs_checked;
+    }
+    assert.equal(centers, 25); assert.equal(headings, 15); assert.equal(glyphs, 4362);
+    assert.equal(bodyReady.original_source_heading_and_caption_centers_checked, centers); assert.equal(bodyReady.original_bold_prose_headings_checked, headings); assert.equal(bodyReady.all_new_hangul_glyphs_checked, glyphs);
+    const headingNegative = bodyEvidence('independent-additional-audits/negative-controls/heading/regression.json');
+    yes(headingNegative, ['passed','publication_pdf_unmodified','all_original_font_glyph_point_and_baseline_metadata_retained','original_encoded_images_and_diagram_geometry_retained','independent_source_center_rejected']);
+    assert.equal(headingNegative.canonical_proof_sha256, baseline.page_proofs[4].proof_sha256); assert.equal(headingNegative.actual_heading_shift_pt, -8);
+    const actualNegative = bodyEvidence('independent-additional-audits/negative-controls/heading/page05-heading-left8pt.audit.json');
+    assert.equal(actualNegative.passed, false); assert.equal(actualNegative.proof_sha256, headingNegative.native_move_qa.output_sha256);
+    const moved = actualNegative.rows.filter(row => !row.passed); assert.equal(moved.length, 1); assert.ok(Math.abs(moved[0].center_error_pt+8) <= .001);
+    const missing = bodyEvidence('independent-additional-audits/negative-controls/heading/coverage-regression.json');
+    yes(missing, ['passed','publication_pdf_unmodified','only_one_subtitle_alignment_intent_omitted','all_remaining_actual_centers_correct','original_source_heading_inventory_rejected_missing_intent']);
+    assert.equal(missing.canonical_proof_sha256, baseline.page_proofs[5].proof_sha256); assert.deepEqual(missing.missing_source_at, [20,0]);
+    const mathNegative = bodyEvidence('independent-additional-audits/negative-controls/expression/regression.json'); yes(mathNegative, ['passed']); assert.equal(mathNegative.rows.length, 2);
+    const fraction = mathNegative.rows[0]; yes(fraction, ['passed','publication_pdf_unmodified','all_original_fonts_gids_points_baselines_and_graphics_retained','all_changed_glyphs_honestly_reported_in_negative_journal','independent_complete_expression_geometry_rejected']);
+    assert.equal(fraction.canonical_proof_sha256, baseline.page_proofs[7].proof_sha256); assert.equal(fraction.actual_one_source_math_glyph_shift_pt, .5);
+    const rejectedFraction = bodyEvidence('independent-additional-audits/negative-controls/expression/page08-math-piece.audit.json');
+    assert.equal(rejectedFraction.passed, false); assert.deepEqual(rejectedFraction.glyph_signature_or_position_errors, []);
+    assert.ok(rejectedFraction.reviewed_expression_groups.some(group => !group.passed && Math.abs(group.relative_x_spread_pt-.5) <= .001));
+    const clipped = mathNegative.rows[1]; yes(clipped, ['passed','publication_pdf_unmodified','native_encoder_rejected_partial_clip_motion']);
+    assert.equal(clipped.canonical_proof_sha256, baseline.page_proofs[8].proof_sha256); assert.equal(clipped.analysis_clone_created, false);
+  }
+  const negative = evidence(qa.negative_control); yes(negative, ['passed']); assert.equal(negative.rows.length, complete2010Solutions || complete2020Solutions ? 1 : 2);
   for (const row of negative.rows) {
     yes(row, ['all_original_glyphs_fonts_images_and_caption_positions_retained','real_extra_drawing_rejected','publication_pdf_unmodified','passed']);
     assert.ok(row.negative_added_ink_outside_reference > 0);
@@ -143,9 +188,9 @@ module.exports = function validateFigureLanguagePublication(root, qa, item) {
     zero(joined, ['mupdf_4x_changed_pixels','poppler_144dpi_changed_pixels']);
     totalLabels += audit.labels;
   }
-  assert.equal(totalLabels, complete2010Solutions ? 1 : qa.year === 2010 ? 7 : 4);
+  assert.equal(totalLabels, complete2020Solutions ? 6 : complete2010Solutions ? 1 : qa.year === 2010 ? 7 : 4);
   const words = evidence(qa.source_word_component_review); yes(words, ['passed','source_only']);
-  assert.equal(words.labels.length, complete2010Solutions ? 1 : 7);
+  assert.equal(words.labels.length, complete2020Solutions ? 6 : complete2010Solutions ? 1 : 7);
   for (const word of words.labels) { yes(word, ['passed','source_only']); empty(word, ['intersecting_nonword_components']); }
   assert.ok(Object.keys(qa.authoring_snapshot_sha256).length > 0);
   for (const [file, hash] of Object.entries(qa.authoring_snapshot_sha256)) {

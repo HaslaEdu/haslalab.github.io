@@ -1,0 +1,4463 @@
+{
+  "page": 10,
+  "font_source_style": {
+    "page": 10,
+    "proof_sha256": "bfc3f233163d4de550c4e0604fc95281795e90d8b626c2b9e7f1c43a563a2bba",
+    "plan_sha256": "70e42d7762cc462aa80b02177bada7a390d8c7f7d38c92a336623415c00dbe43",
+    "method": "Every final Hangul occurrence must match the authored original source role, exact point size and original prose baseline. Every actual embedded font/GID outline must match the complete role-donor Unicode glyph; no family name or nonempty-outline shortcut.",
+    "source_role_point_baseline_counter_matched": true,
+    "hangul_glyphs_checked": 484,
+    "donors": {
+      "NotoSansCJKkr-Bold": {
+        "path": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tools\\ko\\fonts\\NotoSansCJKkr-Bold.otf",
+        "sha256": "26d0c6748500a0444844280b308f5b62c7ae92ac6c6ac88148e502dd211eb52a"
+      },
+      "NotoSerifCJKkr-Bold": {
+        "path": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf",
+        "sha256": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f"
+      },
+      "Batang": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2024-original-natural\\fonts\\Batang-Regular.ttf",
+        "sha256": "7c79c8fea75ca58612b8548f779cd438b5a28a5b113eb9cd3cf00cc1570df405"
+      }
+    },
+    "actual_glyph_checks": [
+      {
+        "c": "국",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 47976,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "제",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 54807,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "자",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 54667,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "우",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 54443,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "티",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 57579,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "코",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 56655,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "프",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 58111,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "올",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 54311,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "림",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 51127,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "피",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 58167,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "아",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 54079,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "드",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 49879,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 54639,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "론",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 50779,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "시",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 53463,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "험",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 58323,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "쪽",
+        "font_family": "NotoSansCJKkr-Bold",
+        "actual_gid": 55480,
+        "point_size": 9.960000038146973,
+        "baseline": 47.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "전",
+        "font_family": "NotoSerifCJKkr-Bold",
+        "actual_gid": 54718,
+        "point_size": 14.039999961853027,
+        "baseline": 610.6799926757812,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "도",
+        "font_family": "NotoSerifCJKkr-Bold",
+        "actual_gid": 49534,
+        "point_size": 14.039999961853027,
+        "baseline": 610.6799926757812,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "성",
+        "font_family": "NotoSerifCJKkr-Bold",
+        "actual_gid": 52971,
+        "point_size": 14.039999961853027,
+        "baseline": 610.6799926757812,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "NotoSerifCJKkr-Bold",
+        "actual_gid": 47770,
+        "point_size": 14.039999961853027,
+        "baseline": 610.6799926757812,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "NotoSerifCJKkr-Bold",
+        "actual_gid": 51046,
+        "point_size": 14.039999961853027,
+        "baseline": 610.6799926757812,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "회",
+        "font_family": "Batang",
+        "actual_gid": 18658,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "전",
+        "font_family": "Batang",
+        "actual_gid": 14938,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "운",
+        "font_family": "Batang",
+        "actual_gid": 14602,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "동",
+        "font_family": "Batang",
+        "actual_gid": 9775,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "방",
+        "font_family": "Batang",
+        "actual_gid": 11903,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "정",
+        "font_family": "Batang",
+        "actual_gid": 14955,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 103.43994140625,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "여",
+        "font_family": "Batang",
+        "actual_gid": 14402,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "서",
+        "font_family": "Batang",
+        "actual_gid": 13170,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "런",
+        "font_family": "Batang",
+        "actual_gid": 10822,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "츠",
+        "font_family": "Batang",
+        "actual_gid": 16502,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "힘",
+        "font_family": "Batang",
+        "actual_gid": 18926,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "토",
+        "font_family": "Batang",
+        "actual_gid": 17398,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "크",
+        "font_family": "Batang",
+        "actual_gid": 17090,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "으",
+        "font_family": "Batang",
+        "actual_gid": 14738,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "정",
+        "font_family": "Batang",
+        "actual_gid": 14955,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "해",
+        "font_family": "Batang",
+        "actual_gid": 18378,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "진",
+        "font_family": "Batang",
+        "actual_gid": 15386,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 138.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "또",
+        "font_family": "Batang",
+        "actual_gid": 10342,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "한",
+        "font_family": "Batang",
+        "actual_gid": 18354,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "관",
+        "font_family": "Batang",
+        "actual_gid": 8022,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "성",
+        "font_family": "Batang",
+        "actual_gid": 13191,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "모",
+        "font_family": "Batang",
+        "actual_gid": 11518,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "멘",
+        "font_family": "Batang",
+        "actual_gid": 11438,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "트",
+        "font_family": "Batang",
+        "actual_gid": 17678,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 165.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "수",
+        "font_family": "Batang",
+        "actual_gid": 13422,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "직",
+        "font_family": "Batang",
+        "actual_gid": 15383,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "변",
+        "font_family": "Batang",
+        "actual_gid": 12054,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "위",
+        "font_family": "Batang",
+        "actual_gid": 14682,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "를",
+        "font_family": "Batang",
+        "actual_gid": 11218,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "라",
+        "font_family": "Batang",
+        "actual_gid": 10706,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "면",
+        "font_family": "Batang",
+        "actual_gid": 11466,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "그",
+        "font_family": "Batang",
+        "actual_gid": 8270,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "속",
+        "font_family": "Batang",
+        "actual_gid": 13283,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 194.15997314453125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "결",
+        "font_family": "Batang",
+        "actual_gid": 7942,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "합",
+        "font_family": "Batang",
+        "actual_gid": 18367,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "여",
+        "font_family": "Batang",
+        "actual_gid": 14402,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "시",
+        "font_family": "Batang",
+        "actual_gid": 13618,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "간",
+        "font_family": "Batang",
+        "actual_gid": 7770,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "해",
+        "font_family": "Batang",
+        "actual_gid": 18378,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "적",
+        "font_family": "Batang",
+        "actual_gid": 14935,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "분",
+        "font_family": "Batang",
+        "actual_gid": 12250,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "한",
+        "font_family": "Batang",
+        "actual_gid": 18354,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "때",
+        "font_family": "Batang",
+        "actual_gid": 10146,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "초",
+        "font_family": "Batang",
+        "actual_gid": 16222,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "조",
+        "font_family": "Batang",
+        "actual_gid": 15046,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "건",
+        "font_family": "Batang",
+        "actual_gid": 7882,
+        "point_size": 12.0,
+        "baseline": 228.5999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "즉",
+        "font_family": "Batang",
+        "actual_gid": 15327,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "일",
+        "font_family": "Batang",
+        "actual_gid": 14802,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "때",
+        "font_family": "Batang",
+        "actual_gid": 10146,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "임",
+        "font_family": "Batang",
+        "actual_gid": 14810,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "용",
+        "font_family": "Batang",
+        "actual_gid": 14591,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "면",
+        "font_family": "Batang",
+        "actual_gid": 11466,
+        "point_size": 12.0,
+        "baseline": 242.63995361328125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "속",
+        "font_family": "Batang",
+        "actual_gid": 13283,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "최",
+        "font_family": "Batang",
+        "actual_gid": 16306,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "일",
+        "font_family": "Batang",
+        "actual_gid": 14802,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "때",
+        "font_family": "Batang",
+        "actual_gid": 10146,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "오",
+        "font_family": "Batang",
+        "actual_gid": 14458,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "른",
+        "font_family": "Batang",
+        "actual_gid": 11214,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "쪽",
+        "font_family": "Batang",
+        "actual_gid": 15635,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "있",
+        "font_family": "Batang",
+        "actual_gid": 14814,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 270.59991455078125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "합",
+        "font_family": "Batang",
+        "actual_gid": 18367,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "되",
+        "font_family": "Batang",
+        "actual_gid": 9838,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "므",
+        "font_family": "Batang",
+        "actual_gid": 11798,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "얻",
+        "font_family": "Batang",
+        "actual_gid": 14353,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 284.39990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "바",
+        "font_family": "Batang",
+        "actual_gid": 11882,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "시",
+        "font_family": "Batang",
+        "actual_gid": 13618,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "각",
+        "font_family": "Batang",
+        "actual_gid": 7767,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "해",
+        "font_family": "Batang",
+        "actual_gid": 18378,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "를",
+        "font_family": "Batang",
+        "actual_gid": 11218,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "적",
+        "font_family": "Batang",
+        "actual_gid": 14935,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "용",
+        "font_family": "Batang",
+        "actual_gid": 14591,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "면",
+        "font_family": "Batang",
+        "actual_gid": 11466,
+        "point_size": 12.0,
+        "baseline": 312.239990234375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "너",
+        "font_family": "Batang",
+        "actual_gid": 9054,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "지",
+        "font_family": "Batang",
+        "actual_gid": 15382,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "보",
+        "font_family": "Batang",
+        "actual_gid": 12106,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "존",
+        "font_family": "Batang",
+        "actual_gid": 15050,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "법",
+        "font_family": "Batang",
+        "actual_gid": 12011,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "칙",
+        "font_family": "Batang",
+        "actual_gid": 16559,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "과",
+        "font_family": "Batang",
+        "actual_gid": 8018,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "같",
+        "font_family": "Batang",
+        "actual_gid": 7791,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "쓸",
+        "font_family": "Batang",
+        "actual_gid": 14158,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "수",
+        "font_family": "Batang",
+        "actual_gid": 13422,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "있",
+        "font_family": "Batang",
+        "actual_gid": 14814,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 340.0799560546875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "와",
+        "font_family": "Batang",
+        "actual_gid": 14486,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "관",
+        "font_family": "Batang",
+        "actual_gid": 8022,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "성",
+        "font_family": "Batang",
+        "actual_gid": 13191,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "모",
+        "font_family": "Batang",
+        "actual_gid": 11518,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "멘",
+        "font_family": "Batang",
+        "actual_gid": 11438,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "트",
+        "font_family": "Batang",
+        "actual_gid": 17678,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "연",
+        "font_family": "Batang",
+        "actual_gid": 14406,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "립",
+        "font_family": "Batang",
+        "actual_gid": 11283,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "여",
+        "font_family": "Batang",
+        "actual_gid": 14402,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "풀",
+        "font_family": "Batang",
+        "actual_gid": 18134,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "면",
+        "font_family": "Batang",
+        "actual_gid": 11466,
+        "point_size": 12.0,
+        "baseline": 376.3199768066406,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "최",
+        "font_family": "Batang",
+        "actual_gid": 16306,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "속",
+        "font_family": "Batang",
+        "actual_gid": 13283,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "과",
+        "font_family": "Batang",
+        "actual_gid": 8018,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "같",
+        "font_family": "Batang",
+        "actual_gid": 7791,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "얻",
+        "font_family": "Batang",
+        "actual_gid": 14353,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 390.1199645996094,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "운",
+        "font_family": "Batang",
+        "actual_gid": 14602,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "동",
+        "font_family": "Batang",
+        "actual_gid": 9775,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "방",
+        "font_family": "Batang",
+        "actual_gid": 11903,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "정",
+        "font_family": "Batang",
+        "actual_gid": 14955,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "를",
+        "font_family": "Batang",
+        "actual_gid": 11218,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "입",
+        "font_family": "Batang",
+        "actual_gid": 14811,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "용",
+        "font_family": "Batang",
+        "actual_gid": 14591,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "면",
+        "font_family": "Batang",
+        "actual_gid": 11466,
+        "point_size": 12.0,
+        "baseline": 424.67999267578125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "조",
+        "font_family": "Batang",
+        "actual_gid": 15046,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "화",
+        "font_family": "Batang",
+        "actual_gid": 18602,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "진",
+        "font_family": "Batang",
+        "actual_gid": 15386,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "동",
+        "font_family": "Batang",
+        "actual_gid": 9775,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "방",
+        "font_family": "Batang",
+        "actual_gid": 11903,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "정",
+        "font_family": "Batang",
+        "actual_gid": 14955,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "을",
+        "font_family": "Batang",
+        "actual_gid": 14746,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "얻",
+        "font_family": "Batang",
+        "actual_gid": 14353,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 438.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "각",
+        "font_family": "Batang",
+        "actual_gid": 7767,
+        "point_size": 12.0,
+        "baseline": 474.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "진",
+        "font_family": "Batang",
+        "actual_gid": 15386,
+        "point_size": 12.0,
+        "baseline": 474.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "동",
+        "font_family": "Batang",
+        "actual_gid": 9775,
+        "point_size": 12.0,
+        "baseline": 474.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "수",
+        "font_family": "Batang",
+        "actual_gid": 13422,
+        "point_size": 12.0,
+        "baseline": 474.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 474.47998046875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "구",
+        "font_family": "Batang",
+        "actual_gid": 8130,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "하",
+        "font_family": "Batang",
+        "actual_gid": 18350,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "시",
+        "font_family": "Batang",
+        "actual_gid": 13618,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "간",
+        "font_family": "Batang",
+        "actual_gid": 7770,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "진",
+        "font_family": "Batang",
+        "actual_gid": 15386,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "동",
+        "font_family": "Batang",
+        "actual_gid": 9775,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "주",
+        "font_family": "Batang",
+        "actual_gid": 15186,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "즉",
+        "font_family": "Batang",
+        "actual_gid": 15327,
+        "point_size": 12.0,
+        "baseline": 508.55999755859375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "초",
+        "font_family": "Batang",
+        "actual_gid": 16222,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "속",
+        "font_family": "Batang",
+        "actual_gid": 13283,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "평",
+        "font_family": "Batang",
+        "actual_gid": 17951,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "형",
+        "font_family": "Batang",
+        "actual_gid": 18539,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "위",
+        "font_family": "Batang",
+        "actual_gid": 14682,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "치",
+        "font_family": "Batang",
+        "actual_gid": 16558,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "를",
+        "font_family": "Batang",
+        "actual_gid": 11218,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "지",
+        "font_family": "Batang",
+        "actual_gid": 15382,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "날",
+        "font_family": "Batang",
+        "actual_gid": 8950,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "때",
+        "font_family": "Batang",
+        "actual_gid": 10146,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "최",
+        "font_family": "Batang",
+        "actual_gid": 16306,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "가",
+        "font_family": "Batang",
+        "actual_gid": 7766,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "된",
+        "font_family": "Batang",
+        "actual_gid": 9842,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 543.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "따",
+        "font_family": "Batang",
+        "actual_gid": 10118,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "라",
+        "font_family": "Batang",
+        "actual_gid": 10706,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "서",
+        "font_family": "Batang",
+        "actual_gid": 13170,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "내",
+        "font_family": "Batang",
+        "actual_gid": 8970,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "려",
+        "font_family": "Batang",
+        "actual_gid": 10874,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "간",
+        "font_family": "Batang",
+        "actual_gid": 7770,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "최",
+        "font_family": "Batang",
+        "actual_gid": 16306,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "높",
+        "font_family": "Batang",
+        "actual_gid": 9192,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 557.1600341796875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 557.1599731445312,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 570.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 570.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "과",
+        "font_family": "Batang",
+        "actual_gid": 8018,
+        "point_size": 12.0,
+        "baseline": 570.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "같",
+        "font_family": "Batang",
+        "actual_gid": 7791,
+        "point_size": 12.0,
+        "baseline": 570.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 570.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "해",
+        "font_family": "Batang",
+        "actual_gid": 18378,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "속",
+        "font_family": "Batang",
+        "actual_gid": 13283,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "도",
+        "font_family": "Batang",
+        "actual_gid": 9754,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "수",
+        "font_family": "Batang",
+        "actual_gid": 13422,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "직",
+        "font_family": "Batang",
+        "actual_gid": 15383,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "아",
+        "font_family": "Batang",
+        "actual_gid": 14234,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "래",
+        "font_family": "Batang",
+        "actual_gid": 10734,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "쪽",
+        "font_family": "Batang",
+        "actual_gid": 15635,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "으",
+        "font_family": "Batang",
+        "actual_gid": 14738,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 624.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "움",
+        "font_family": "Batang",
+        "actual_gid": 14614,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "직",
+        "font_family": "Batang",
+        "actual_gid": 15383,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "인",
+        "font_family": "Batang",
+        "actual_gid": 14798,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "때",
+        "font_family": "Batang",
+        "actual_gid": 10146,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "자",
+        "font_family": "Batang",
+        "actual_gid": 14822,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "장",
+        "font_family": "Batang",
+        "actual_gid": 14843,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "작",
+        "font_family": "Batang",
+        "actual_gid": 14823,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "용",
+        "font_family": "Batang",
+        "actual_gid": 14591,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "으",
+        "font_family": "Batang",
+        "actual_gid": 14738,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "유",
+        "font_family": "Batang",
+        "actual_gid": 14710,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "도",
+        "font_family": "Batang",
+        "actual_gid": 9754,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "전",
+        "font_family": "Batang",
+        "actual_gid": 14938,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "류",
+        "font_family": "Batang",
+        "actual_gid": 11182,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "가",
+        "font_family": "Batang",
+        "actual_gid": 7766,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "생",
+        "font_family": "Batang",
+        "actual_gid": 13107,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "긴",
+        "font_family": "Batang",
+        "actual_gid": 8330,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 639.0,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "그",
+        "font_family": "Batang",
+        "actual_gid": 8270,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "결",
+        "font_family": "Batang",
+        "actual_gid": 7942,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "과",
+        "font_family": "Batang",
+        "actual_gid": 8018,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "수",
+        "font_family": "Batang",
+        "actual_gid": 13422,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "직",
+        "font_family": "Batang",
+        "actual_gid": 15383,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "방",
+        "font_family": "Batang",
+        "actual_gid": 11903,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "향",
+        "font_family": "Batang",
+        "actual_gid": 18427,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "런",
+        "font_family": "Batang",
+        "actual_gid": 10822,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "츠",
+        "font_family": "Batang",
+        "actual_gid": 16502,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "힘",
+        "font_family": "Batang",
+        "actual_gid": 18926,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "가",
+        "font_family": "Batang",
+        "actual_gid": 7766,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "과",
+        "font_family": "Batang",
+        "actual_gid": 8018,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "반",
+        "font_family": "Batang",
+        "actual_gid": 11886,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "방",
+        "font_family": "Batang",
+        "actual_gid": 11903,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "향",
+        "font_family": "Batang",
+        "actual_gid": 18427,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "으",
+        "font_family": "Batang",
+        "actual_gid": 14738,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "작",
+        "font_family": "Batang",
+        "actual_gid": 14823,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "용",
+        "font_family": "Batang",
+        "actual_gid": 14591,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "한",
+        "font_family": "Batang",
+        "actual_gid": 18354,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 653.0399780273438,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "질",
+        "font_family": "Batang",
+        "actual_gid": 15390,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "량",
+        "font_family": "Batang",
+        "actual_gid": 10783,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "중",
+        "font_family": "Batang",
+        "actual_gid": 15207,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "심",
+        "font_family": "Batang",
+        "actual_gid": 13634,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "대",
+        "font_family": "Batang",
+        "actual_gid": 9558,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "한",
+        "font_family": "Batang",
+        "actual_gid": 18354,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "운",
+        "font_family": "Batang",
+        "actual_gid": 14602,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "동",
+        "font_family": "Batang",
+        "actual_gid": 9775,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "방",
+        "font_family": "Batang",
+        "actual_gid": 11903,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "정",
+        "font_family": "Batang",
+        "actual_gid": 14955,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 666.8399658203125,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "여",
+        "font_family": "Batang",
+        "actual_gid": 14402,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "서",
+        "font_family": "Batang",
+        "actual_gid": 13170,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "런",
+        "font_family": "Batang",
+        "actual_gid": 10822,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "츠",
+        "font_family": "Batang",
+        "actual_gid": 16502,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "힘",
+        "font_family": "Batang",
+        "actual_gid": 18926,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "은",
+        "font_family": "Batang",
+        "actual_gid": 14742,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "식",
+        "font_family": "Batang",
+        "actual_gid": 13619,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "으",
+        "font_family": "Batang",
+        "actual_gid": 14738,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "정",
+        "font_family": "Batang",
+        "actual_gid": 14955,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "해",
+        "font_family": "Batang",
+        "actual_gid": 18378,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "진",
+        "font_family": "Batang",
+        "actual_gid": 15386,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 701.2799682617188,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 729.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 729.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 729.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "길",
+        "font_family": "Batang",
+        "actual_gid": 8334,
+        "point_size": 12.0,
+        "baseline": 729.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 729.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 729.1199951171875,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "자",
+        "font_family": "Batang",
+        "actual_gid": 14822,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "장",
+        "font_family": "Batang",
+        "actual_gid": 14843,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "속",
+        "font_family": "Batang",
+        "actual_gid": 13283,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "서",
+        "font_family": "Batang",
+        "actual_gid": 13170,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "움",
+        "font_family": "Batang",
+        "actual_gid": 14614,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "직",
+        "font_family": "Batang",
+        "actual_gid": 15383,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "일",
+        "font_family": "Batang",
+        "actual_gid": 14802,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "때",
+        "font_family": "Batang",
+        "actual_gid": 10146,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "고",
+        "font_family": "Batang",
+        "actual_gid": 7990,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "리",
+        "font_family": "Batang",
+        "actual_gid": 11266,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "는",
+        "font_family": "Batang",
+        "actual_gid": 9450,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "전",
+        "font_family": "Batang",
+        "actual_gid": 14938,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "력",
+        "font_family": "Batang",
+        "actual_gid": 10875,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "생",
+        "font_family": "Batang",
+        "actual_gid": 13107,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "긴",
+        "font_family": "Batang",
+        "actual_gid": 8330,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 756.9599609375,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "이",
+        "font_family": "Batang",
+        "actual_gid": 14794,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "로",
+        "font_family": "Batang",
+        "actual_gid": 10930,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "인",
+        "font_family": "Batang",
+        "actual_gid": 14798,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "해",
+        "font_family": "Batang",
+        "actual_gid": 18378,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "옴",
+        "font_family": "Batang",
+        "actual_gid": 14474,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "법",
+        "font_family": "Batang",
+        "actual_gid": 12011,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "칙",
+        "font_family": "Batang",
+        "actual_gid": 16559,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "에",
+        "font_family": "Batang",
+        "actual_gid": 14374,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "따",
+        "font_family": "Batang",
+        "actual_gid": 10118,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "라",
+        "font_family": "Batang",
+        "actual_gid": 10706,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "음",
+        "font_family": "Batang",
+        "actual_gid": 14754,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "세",
+        "font_family": "Batang",
+        "actual_gid": 13198,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "기",
+        "font_family": "Batang",
+        "actual_gid": 8326,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "의",
+        "font_family": "Batang",
+        "actual_gid": 14766,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "유",
+        "font_family": "Batang",
+        "actual_gid": 14710,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "도",
+        "font_family": "Batang",
+        "actual_gid": 9754,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "전",
+        "font_family": "Batang",
+        "actual_gid": 14938,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "류",
+        "font_family": "Batang",
+        "actual_gid": 11182,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "가",
+        "font_family": "Batang",
+        "actual_gid": 7766,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "흐",
+        "font_family": "Batang",
+        "actual_gid": 18854,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "른",
+        "font_family": "Batang",
+        "actual_gid": 11214,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      },
+      {
+        "c": "다",
+        "font_family": "Batang",
+        "actual_gid": 9530,
+        "point_size": 12.0,
+        "baseline": 791.3999633789062,
+        "source_role_point_and_baseline_matched": true,
+        "actual_outline_matches_complete_role_donor": true
+      }
+    ],
+    "passed": true
+  },
+  "all_new_prose": {
+    "source_page": 10,
+    "source_sha256": "3164cac5a79ce287399da4ea38701360e12863f41fbfda54ca2b492771bf1f39",
+    "proof_sha256": "bfc3f233163d4de550c4e0604fc95281795e90d8b626c2b9e7f1c43a563a2bba",
+    "source_native_paint_prefix_glyphs_excluded": 966,
+    "new_prose_nonspace_glyphs_checked": 544,
+    "new_native_ascii_prose_glyphs_checked": 60,
+    "actual_embedded_gid_empty_outlines": [],
+    "translated_prose_character_multiset_matches_authored_text": true,
+    "method": "Exact authored-prose suffix journal identifies original native paint prefix; final translated prose is checked by actual PDF resource/GID embedded outlines, without counting moved original mathematical glyphs as new prose.",
+    "passed": true
+  },
+  "source_language": {
+    "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+    "source_page": 10,
+    "plan_sha256": "73d9fde6f0ebc07e1a3264e0f0a1d4340d48328c2131a397875ac32e07193314",
+    "selected_source_glyphs": 1980,
+    "explicitly_protected_original_field_or_formula_glyphs": 3,
+    "retained_original_words": [],
+    "unselected_language_words": [],
+    "passed": true,
+    "method": "Exact selected source glyphs, including through/substring slots; source math fonts and explicit physical field labels protected; remaining narrative words must be original unit symbols or specifically reviewed native math labels."
+  },
+  "equation_numbers": {
+    "original_display_equation_markers": 18,
+    "original_display_equation_marker_glyphs": 66,
+    "changed_marker_glyphs": [],
+    "passed": true
+  },
+  "original_source_heading_alignment": {
+    "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+    "source_page": 10,
+    "proof_sha256": "bfc3f233163d4de550c4e0604fc95281795e90d8b626c2b9e7f1c43a563a2bba",
+    "plan_sha256": "70e42d7762cc462aa80b02177bada7a390d8c7f7d38c92a336623415c00dbe43",
+    "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+    "headings_and_captions_checked": 1,
+    "rows": [
+      {
+        "source_line_ats": [
+          [
+            37,
+            9
+          ]
+        ],
+        "baseline": 610.6799926757812,
+        "source_center": 308.36854553222656,
+        "independent_original_source_centers": [
+          308.36854553222656
+        ],
+        "source_center_matches_original_glyphs": true,
+        "actual_nonspace_glyph_left": 272.7069091796875,
+        "actual_nonspace_glyph_right": 344.0301818847656,
+        "actual_center": 308.36854553222656,
+        "center_error_pt": 0.0,
+        "original_alignment_frame_resolves_to_active_composer_scope": true,
+        "glyphs": 5,
+        "passed": true
+      }
+    ],
+    "original_bold_prose_heading_coverage": {
+      "headings_checked": 1,
+      "rows": [
+        {
+          "source_at": [
+            37,
+            9
+          ],
+          "source_text": "Conductive ring ",
+          "original_center": 308.36854553222656,
+          "alignment_intent_present": true,
+          "actual_center_preserved": true,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    "passed": true
+  },
+  "passed": true
+}

@@ -1,0 +1,92 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "page": 8,
+      "canonical_proof_sha256": "30dbe9b9a4b9ad3ffc40abd3d676a7f6e9f142ce95eca8b739b3322935af0e3c",
+      "publication_pdf_unmodified": true,
+      "actual_one_source_math_glyph_shift_pt": 0.5,
+      "all_original_fonts_gids_points_baselines_and_graphics_retained": true,
+      "all_changed_glyphs_honestly_reported_in_negative_journal": true,
+      "native_glyph_signature_position_errors": 0,
+      "independent_complete_expression_geometry_rejected": true,
+      "raw_negative_audit": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2020-complete-solutions\\2020\\expression-negative\\page08-math-piece.audit.json",
+      "raw_negative_audit_sha256": "d0330088dc37785e0f5dc7cee863c20a3b76837e3b73b97ba22eb953eb2c6ca5",
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 0,
+        "shifted_top_level_glyphs": 0,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 1,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "f464bc9d235c0b4ae8676da15375bfd1986c909f6cf2357affe8924ef2a33963",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 1534,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 0.0,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 0.0,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "page": 9,
+      "canonical_proof_sha256": "706a2755230436617762d223476bf7d2362f8637fc118ddf2668331f8f3f9c07",
+      "publication_pdf_unmodified": true,
+      "attempted_source_math_glyph": {
+        "c": "1",
+        "font": "CambriaMath",
+        "size": 12.0,
+        "origin": [
+          303.3599853515625,
+          105.719970703125
+        ],
+        "bbox": [
+          303.3599853515625,
+          99.0179443359375,
+          310.0045166015625,
+          111.0179443359375
+        ],
+        "render_mode": 0,
+        "trace_gid": 883,
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 1.0,
+        "linewidth": null,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "stroke_color": null,
+        "stroke_opacity": null,
+        "wmode": 0,
+        "colorspace": 3,
+        "gid": 883
+      },
+      "attempted_partial_glyph_shift_pt": 0.5,
+      "native_encoder_rejected_partial_clip_motion": true,
+      "rejection": "Native shift would leave an unchanged clip; select its complete clip group",
+      "analysis_clone_created": false,
+      "passed": true
+    }
+  ]
+}

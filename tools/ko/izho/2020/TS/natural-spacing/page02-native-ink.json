@@ -1,0 +1,53 @@
+{
+  "output_sha256": "8c132ba57aa63e232d28bd3e6825517e96956f6d6c6d359c13b8acc106279d64",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2020-complete-solutions\\natural\\2020\\TS\\page02.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2020-complete-solutions\\natural\\2020\\TS\\page02.pdf",
+    "final_page": 1,
+    "source_sha256": "00d40fe466b4a815838873c1e4d04495ec93aabacf912e225c405d1aebb3874b",
+    "output_sha256": "8c132ba57aa63e232d28bd3e6825517e96956f6d6c6d359c13b8acc106279d64",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 418,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 418,
+      "expected_signature_count": 418,
+      "matched_outline_uses": 418,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 49581,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      95.75,
+      426.25,
+      96.0,
+      426.5
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "method": "One original12pt TNR right parenthesis. Exact original encoded CID at actual x has zero missing ink, and independent8x/12x SVG checks have zero missing ink. Raw4x SVG diagnostic retained; delivered proof unchanged.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "native_original_CID_reference_missing_pixels": 0,
+    "svg_8x_missing_pixels": 0,
+    "svg_12x_missing_pixels": 0,
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2020-complete-solutions\\natural\\2020\\TS\\parenthesis-native-reference\\witness.json",
+    "witness_sha256": "3a59036ace4374d8dcac1791f247cbf316516263c3be88ad7f40508dcdb4123a",
+    "original_font_resource": "/TT2",
+    "original_encoded_CID": "29",
+    "original_gid": 10,
+    "original_font": "TimesNewRomanPSMT",
+    "original_point_size": 12,
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2020/TS/natural-spacing/witnesses/page02-native-cid.json"
+  }
+}

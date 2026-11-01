@@ -1,0 +1,49 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 11,
+  "proof_sha256": "f24b09c00ceef5ba06b7e64bf538f47ec3d16d1560e058c1413b009edd943e18",
+  "plan_sha256": "fd303406557d0d3b755c53d74333b2226232b8de75aa577658fa28c32882036b",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 1,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          26,
+          10
+        ]
+      ],
+      "baseline": 369.9599914550781,
+      "source_center": 308.3928680419922,
+      "independent_original_source_centers": [
+        308.3928680419922
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 228.53329467773438,
+      "actual_nonspace_glyph_right": 388.25244140625,
+      "actual_center": 308.3928680419922,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 11,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          26,
+          10
+        ],
+        "source_text": "Conductive ring with a cut ",
+        "original_center": 308.3928680419922,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

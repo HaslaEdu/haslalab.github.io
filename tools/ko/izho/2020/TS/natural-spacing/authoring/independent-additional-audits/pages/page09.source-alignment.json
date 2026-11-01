@@ -1,0 +1,81 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 9,
+  "proof_sha256": "706a2755230436617762d223476bf7d2362f8637fc118ddf2668331f8f3f9c07",
+  "plan_sha256": "957e72201ecc4747ab8d76921ee5c398ecd0dc766fdd4fb91d882089d1f23460",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          62,
+          9
+        ]
+      ],
+      "baseline": 610.5557861328125,
+      "source_center": 308.3993453979492,
+      "independent_original_source_centers": [
+        308.3993453979492
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 209.62579345703125,
+      "actual_nonspace_glyph_right": 407.1728820800781,
+      "actual_center": 308.3993377685547,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 18,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          63,
+          0
+        ]
+      ],
+      "baseline": 626.631591796875,
+      "source_center": 308.3326416015625,
+      "independent_original_source_centers": [
+        308.3326416015625
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 243.7907257080078,
+      "actual_nonspace_glyph_right": 372.87457275390625,
+      "actual_center": 308.33264923095703,
+      "center_error_pt": 7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 9,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          62,
+          9
+        ],
+        "source_text": "Problem 3. Ring in a magnetic field (10.0 points) ",
+        "original_center": 308.3993453979492,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          63,
+          0
+        ],
+        "source_text": "Uniformly charged ring ",
+        "original_center": 308.3326416015625,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

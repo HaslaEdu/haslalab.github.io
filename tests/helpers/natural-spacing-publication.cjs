@@ -120,6 +120,36 @@ module.exports = function validate(root, record, item) {
           assert.equal(scale.missing_original_encoded_CID_pixels, 0);
           for (const strip of scale.strips) assert.equal(strip.missing_original_encoded_CID_pixels, 0);
         }
+      } else if (profile.kind === 'multiple-original-native-CID-references') {
+        assert.equal(item.file, 'IZhO_2020_TS_KO.pdf'); assert.equal(page.page, 3);
+        assert.equal(page.source_pdf_sha256, '2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9');
+        assert.equal(raw.protected_native_glyphs, 422); assert.equal(raw.newly_missing_native_ink_pixels, 2);
+        assert.deepEqual(raw.missing_bbox, [95.75,498,102,738.25]);
+        assert.equal(witness.kind, 'multiple-original-native-CID-references-v1');
+        assert.equal(witness.source_page, 3); assert.equal(witness.original_language_source_sha256, page.source_pdf_sha256);
+        assert.equal(witness.rows.length, 2); assert.equal(profile.original_glyphs_independently_checked, 2);
+        for (const [index, row] of witness.rows.entries()) {
+          assert.equal(row.passed, true);
+          const cid = row.native_CID_reference, original = row.source_glyph, actual = row.actual_target_glyph;
+          assert.equal(cid.passed, true); assert.equal(cid.proof_sha256, page.proof_sha256);
+          assert.equal(cid.source_sha256, raw.source_sha256); assert.equal(cid.publication_PDF_modified, false);
+          assert.equal(cid.original_font_programs_unchanged, true); assert.equal(cid.missing_native_CID_reference_pixels, 0);
+          assert.equal(cid.native_reference_dark_pixels, 87); assert.equal(cid.source_font_resource, '/TT2');
+          assert.equal(cid.source_encoded_cid_hex, '29'); assert.equal(cid.gid, 10);
+          assert.equal(cid.font, 'TimesNewRomanPSMT'); assert.equal(cid.size, 12);
+          for (const key of ['c','font','size','trace_gid','render_mode','color','opacity']) assert.deepEqual(actual[key], original[key]);
+          assert.equal(original.c, ')'); assert.equal(original.font, cid.font); assert.equal(original.size, cid.size); assert.equal(original.trace_gid, cid.gid);
+          const [sx,tx,y] = [[121.68,93.12,503.64],[127.68,99.12,743.64]][index];
+          assert.ok(Math.abs(original.origin[0]-sx) < .001); assert.ok(Math.abs(actual.origin[0]-tx) < .001);
+          assert.ok(Math.abs(original.origin[1]-y) < .001); assert.ok(Math.abs(actual.origin[1]-y) < .001);
+          assert.ok(Math.abs(actual.origin[0]-original.origin[0]-row.requested_dx) < .001);
+          for (const scale of ['8','12']) {
+            assert.equal(row.svg_reference_scales[scale].passed, true);
+            assert.equal(row.svg_reference_scales[scale].newly_missing_native_ink_pixels, 0);
+            assert.deepEqual(row.svg_reference_scales[scale].missing_requested_source_glyphs, []);
+            assert.deepEqual(row.svg_reference_scales[scale].missing_final_native_glyphs, []);
+          }
+        }
       } else if (witness.native_CID_reference) {
         const cid = witness.native_CID_reference;
         assert.equal(cid.passed, true);
