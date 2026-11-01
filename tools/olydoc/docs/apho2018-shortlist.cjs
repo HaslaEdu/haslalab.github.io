@@ -189,9 +189,9 @@ function paper(P, lang) {
   return out.join('\n');
 }
 function answerSheet(P, lang) {
-  const out = [`<h1>${P.title[lang]} (${P.points} ${lang === 'ko' ? '점' : 'points'})</h1>`];
+  // the official answer sheets are the item boxes only, one after another under the head
+  const out = [];
   for (const part of P.parts) {
-    out.push(`<h2>${part.title[lang].replace(/\s*\([^)]*\)\s*$/, '')}</h2>`);
     for (const [label, pts, , prompts] of part.items) {
       const lines = prompts.map(p => p.startsWith('(') ? `<p style="color:#555;margin:2mm 0">${lang === 'ko' ? (p.includes('sketch') ? '(그래프는 풀이 용지에 그림)' : '(풀이 용지에 보임)') : p}</p>`
         : `<div class="ln"><span>${p}</span><i></i></div>`).join('');
@@ -209,11 +209,9 @@ function solution(P, lang) {
   return out.join('\n');
 }
 
-const credit = (P, lang) => lang === 'ko' ? `APhO 2018 shortlist 문제 HaslaLab 판 · 문제·풀이·채점 기준은 ${P.src}를 HaslaLab이 번역` :
-  `HaslaLab edition of the APhO 2018 shortlist problem · statement, solution and marking scheme after ${P.src}, translated by HaslaLab`;
 const docs = [];
 for (const P of PROBLEMS) for (const lang of ['en', 'ko']) {
-  const K = lang === 'ko', base = { css: CSS, lang, credit: credit(P, lang), langLabel: K ? 'Korean (HaslaLab)' : 'English (HaslaLab)', section: K ? 'Theory · Shortlist' : 'Theory · Shortlist' };
+  const K = lang === 'ko', base = { css: CSS, lang, langLabel: K ? 'Korean (Korea (Republic of))' : 'English', section: 'Theory' };
   docs.push({ ...base, out: `pdfx/apho/APhO_2018_${P.code}_${K ? 'KO' : 'EN'}.pdf`, style: 'apho2018', kind: 'paper', code: P.q, html: paper(P, lang) },
     { ...base, out: `pdfx/apho/APhO_2018_${P.code}${K ? '_A_KO' : 'A'}.pdf`, style: 'apho2018', kind: 'answer', code: P.a, html: answerSheet(P, lang) },
     { ...base, out: `pdfx/apho/APhO_2018_${P.code}${K ? '_S_KO' : 'S'}.pdf`, style: 'apho2018sol', kind: 'solution', code: P.q, html: solution(P, lang) });

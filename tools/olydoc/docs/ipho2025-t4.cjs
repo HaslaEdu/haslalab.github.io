@@ -112,14 +112,12 @@ function body(lang) {
   return out.join('\n');
 }
 
-const credit = { en: 'HaslaLab edition · worked solution by HaslaLab (unofficial) · problem: IPhO 2025 Theory-Backup Q4',
-  ko: 'HaslaLab 판 · HaslaLab이 작성한 비공식 풀이 · 문제: IPhO 2025 이론 예비 문제 Q4' };
 module.exports = {
   docs: [
     { out: 'pdfx/ipho/IPhO_2025_T4S.pdf', style: 'ipho2025', kind: 'solution', lang: 'en', code: 'Q4', section: 'Theory-Backup · Solution',
-      langLabel: 'English (HaslaLab, unofficial)', credit: credit.en, html: body('en') },
+      langLabel: 'English', html: body('en') },
     { out: 'pdfx/ipho/IPhO_2025_T4_S_KO.pdf', style: 'ipho2025', kind: 'solution', lang: 'ko', code: 'Q4', section: 'Theory-Backup · 풀이',
-      langLabel: 'Korean (HaslaLab, 비공식)', credit: credit.ko, html: body('ko') },
+      langLabel: 'Korean (Korea (Republic of))', html: body('ko') },
   ],
   ITEMS,
 };
