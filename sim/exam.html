@@ -130,6 +130,7 @@
   .qrbox .big.warn{color:#ffb4a9}
   .qr{background:#fff;border-radius:10px;padding:12px;display:inline-block;margin:12px 0 8px;line-height:0}
   .qr svg,.qr img{width:240px;height:240px;display:block}
+  .scanRules{text-align:left;margin-top:14px;font-size:12.5px;line-height:1.5}.scanRules summary{font-weight:700;cursor:pointer;color:var(--accent,#f2c14e)}.scanRules ul{margin:6px 0 0;padding-left:18px}
   .qrbox .url{font:11px/1.4 ui-monospace,monospace;color:var(--muted);word-break:break-all;margin:4px 0 10px}
   .qrbox ol{text-align:left;font-size:13px;line-height:1.7;margin:8px 0 0 18px;padding:0}
   .pages{display:flex;flex-direction:column;gap:12px}
@@ -263,7 +264,7 @@ const T = {
     steps: ["휴대폰 카메라로 QR 코드를 찍습니다.", "실험(E1/E2)과 종류(답안지/working sheet)를 고르고 한 장씩 찍습니다. 모서리를 찾아 반듯하게 펴 줍니다.", "보낸 쪽이 오른쪽에 나타납니다. 읽힌 값을 확인하고, 잘못 읽혔으면 «빼기» 후 다시 찍습니다.", "«제출하고 채점받기»를 누릅니다."],
     openHere: "이 기기에서 열기", newQr: "QR 새로 만들기", pagesH: "받은 쪽", none: "아직 받은 쪽이 없습니다. 휴대폰에서 첫 쪽을 보내면 여기에 나타납니다.",
     answer: "답안지", working: "Working sheet", ocrFailed: "읽지 못함 — 다시 찍으세요", ocrOff: "자동 읽기 꺼짐",
-    leg: { good: "잘 읽힘", partial: "일부만 읽힘 — 다시 찍기 권장", poor: "거의 못 읽음 — 이대로면 0점, 다시 찍으세요" }, remove: "빼기", removeQ: "이 쪽을 뺄까요? 휴대폰으로 다시 찍어 보낼 수 있습니다.",
+    leg: { good: "잘 읽힘", partial: "일부 확인 필요 — 읽힌 내용을 보고 빠졌으면 다시 찍기", poor: "거의 못 읽음 — 이대로면 0점, 다시 찍으세요" }, remove: "빼기", removeQ: "이 쪽을 뺄까요? 휴대폰으로 다시 찍어 보낼 수 있습니다.",
     readH: "읽힌 내용", nothing: "읽힌 답이 없습니다.", crossed: "지운 것", noEdit: "읽힌 내용은 고칠 수 없습니다. 잘못 읽혔으면 빼고 다시 찍어 보내세요. 읽을 수 없는 부분은 0점입니다.",
     regH: "채점 규정", regV: v => `규정 ${v}`, graph: (n, f) => `그래프 · 점 ${n}개${f ? " · 맞춤선" : ""}`, table: (c, r) => `표 · ${c}열 × ${r}행`,
     submit: "제출하고 채점받기", submitting: "채점하는 중… (실험마다 30초~1분)", submitQ: "제출할까요? 제출하면 더 보낼 수 없습니다.",
@@ -321,7 +322,7 @@ const T = {
     steps: ["Point your phone's camera at the QR code.", "Choose the experiment (E1/E2) and the kind of sheet, then photograph each page. It finds the corners and straightens the page.", "Each page appears on the right. Check what was read; if it is wrong, «Remove» it and photograph it again.", "Press «Submit and grade»."],
     openHere: "Open on this device", newQr: "New QR code", pagesH: "Pages received", none: "No pages yet. They appear here as soon as your phone sends them.",
     answer: "Answer sheet", working: "Working sheet", ocrFailed: "not read — photograph it again", ocrOff: "reading is off",
-    leg: { good: "read well", partial: "partly read — better photograph it again", poor: "mostly unreadable — scores 0 as it is, photograph it again" }, remove: "Remove", removeQ: "Take this page out? You can photograph it again with your phone.",
+    leg: { good: "read well", partial: "check it — retake if something was missed", poor: "mostly unreadable — scores 0 as it is, photograph it again" }, remove: "Remove", removeQ: "Take this page out? You can photograph it again with your phone.",
     readH: "What was read", nothing: "No answers were read.", crossed: "crossed out", noEdit: "What was read cannot be edited. If it is wrong, take the page out and photograph it again. Whatever cannot be read scores 0.",
     regH: "Grading regulation", regV: v => `regulation ${v}`, graph: (n, f) => `graph · ${n} points${f ? " · fitted line" : ""}`, table: (c, r) => `table · ${c} columns × ${r} rows`,
     submit: "Submit and grade", submitting: "Grading… (30 s to a minute per experiment)", submitQ: "Submit now? No more pages can be sent afterwards.",
@@ -880,6 +881,23 @@ async function saveTypedAnswers() {
   setSession(r.session); typedDirty = false; pagesSeen = ""; paintPages(SES);
   $("typedSaved").textContent = lang === "ko" ? " 저장됨" : " Saved";
 }
+/* the rules a candidate should know before photographing pages, shown beside the QR code (the phone shows them too) */
+const SCAN_RULES = {
+  ko: { h: "촬영 전에 꼭 확인하세요", rules: [
+    "휴대폰 화면의 테두리가 초록색이 아니라 주황색이어도, 네 모서리 점이 종이 귀퉁이와 맞으면 제대로 찍힙니다.",
+    "빨간 펜으로 쓴 것은 읽지 않습니다(채점 표시로 봅니다). 답과 풀이는 검정·파랑 펜이나 연필로.",
+    "답칸이 비어 있으면 Working sheet에 상자·밑줄로 표시한 결과를 답으로 봅니다.",
+    "여러 방법으로 풀어도 점수는 가장 높은 한 가지만 들어갑니다.",
+    "읽지 못한(실패한) 쪽 다시 읽기는 5분에 2번까지입니다.",
+    "읽을 수 없는 부분은 0점입니다. 보낸 쪽의 읽힌 내용을 꼭 확인하세요."] },
+  en: { h: "Before you photograph your pages", rules: [
+    "An orange outline on the phone instead of a green one is fine: if the four corner points sit on the paper corners, the page is captured correctly.",
+    "Anything in red pen is not read (it counts as a marker's marks). Write in black or blue pen or pencil.",
+    "If an answer box is empty, the result boxed or underlined on a working sheet counts as the answer.",
+    "Several methods for one part never add up: only the best one counts.",
+    "A page that could not be read can be re-read twice per 5 minutes.",
+    "Whatever cannot be read scores 0. Check what was read for each page you send."] },
+};
 async function scanView() {
   const sessionId=SES.id,identity=transport.fingerprint();
   if(REVIEW&&!Array.isArray(SES.pages)){try{const response=await api("GET", `/lab/sessions/${sessionId}`);if(identity!==transport.fingerprint()||SES?.id!==sessionId)return;setSession(response.session);}catch(e){}}
@@ -927,7 +945,8 @@ function paintQr(k) {
   area.innerHTML = `<div class="qr" id="qr">${svg}</div><div class="url">${esc(url.replace(/#.*/, "#…"))}</div>
     <a href="${esc(url)}" target="_blank" rel="noopener" style="font-size:12.5px">${t().openHere} ↗</a> ·
     <a href="#" id="newQr" style="font-size:12.5px">${t().newQr}</a>
-    <ol>${t().steps.map(x => `<li>${x}</li>`).join("")}</ol>`;
+    <ol>${t().steps.map(x => `<li>${x}</li>`).join("")}</ol>
+    <details class="scanRules" open><summary>${SCAN_RULES[lang === "en" ? "en" : "ko"].h}</summary><ul>${SCAN_RULES[lang === "en" ? "en" : "ko"].rules.map(x => `<li>${x}</li>`).join("")}</ul></details>`;
   $("newQr").onclick=async e=>{e.preventDefault();const identity=transport.fingerprint(),id=SES?.id;if(!id)return;
     try{const response=await api("POST",`/lab/sessions/${id}/qr`);if(identity!==transport.fingerprint()||SES?.id!==id)return;paintQr(upTok(id,response.token));}
     catch(error){if(identity===transport.fingerprint()&&SES?.id===id)toast(errMsg(error));}};
