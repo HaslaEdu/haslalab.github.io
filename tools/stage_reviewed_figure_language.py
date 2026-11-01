@@ -1,15 +1,16 @@
 """Layer audited figure translations over immutable reviewed natural editions."""
 from pathlib import Path
-import sys,json,hashlib,shutil
+import sys,json,hashlib,shutil,re
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def save(p,d):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n','utf8')
 def copy(src,dst):dst.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,dst);assert sha(src)==sha(dst)
 def stage(manifest,root,release):
  q=json.loads(manifest.read_text('utf8'));assert q['status']=='READY'and q['schema']=='reviewed-figure-language-v1'
  assert q['body_fonts_and_word_spacing_unchanged']and not q['original_equations_retyped']and not q['new_diagram_geometry']and not q['point_sizes_fitted']and q['added_editorial_notes']==0
- snapshot=q['authoring_snapshot'];common=root/'tools/ko/izho';shared={}
+ snapshot=q['authoring_snapshot'];common=root/'tools/ko/izho';shared={};namespace=q.get('authoring_namespace','')
+ assert not namespace or re.fullmatch('[a-z0-9-]+',namespace)
  for rel,digest in snapshot['files'].items():
-  source=Path(snapshot['root'])/rel;assert sha(source)==digest;target=common/'figure-language/natural-spacing/authoring'/rel;copy(source,target);shared[target.relative_to(common).as_posix()]=digest
+  source=Path(snapshot['root'])/rel;assert sha(source)==digest;target=common/'figure-language/natural-spacing/authoring'/namespace/rel;copy(source,target);shared[target.relative_to(common).as_posix()]=digest
  registry=json.loads((root/'tools/original_style_publication.json').read_text('utf8'));fonts=json.loads((root/'tools/translation_font_validation.json').read_text('utf8'))
  for edition in q['editions']:
   pdf=Path(edition['output']);assert sha(pdf)==edition['sha256']and pdf.stat().st_size==edition['bytes']

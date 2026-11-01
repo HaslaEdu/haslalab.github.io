@@ -30,7 +30,9 @@ module.exports = function validateFigureLanguagePublication(root, qa, item) {
   assert.equal(assembly.sha256, item.sha256); assert.equal(assembly.bytes, item.bytes); yes(assembly, ['passed']);
   assert.equal(assembly.pages.length, item.pages); assert.equal(visual.pages.length, item.pages);
   assert.equal(qa.page_proofs.length, item.pages);
-  const negative = evidence(qa.negative_control); yes(negative, ['passed']); assert.equal(negative.rows.length, 2);
+  const complete2010Solutions = qa.year === 2010 && qa.kind === 'TS';
+  if (complete2010Solutions) assert.equal(qa.pages, 11);
+  const negative = evidence(qa.negative_control); yes(negative, ['passed']); assert.equal(negative.rows.length, complete2010Solutions ? 1 : 2);
   for (const row of negative.rows) {
     yes(row, ['all_original_glyphs_fonts_images_and_caption_positions_retained','real_extra_drawing_rejected','publication_pdf_unmodified','passed']);
     assert.ok(row.negative_added_ink_outside_reference > 0);
@@ -101,9 +103,9 @@ module.exports = function validateFigureLanguagePublication(root, qa, item) {
     zero(joined, ['mupdf_4x_changed_pixels','poppler_144dpi_changed_pixels']);
     totalLabels += audit.labels;
   }
-  assert.equal(totalLabels, qa.year === 2010 ? 7 : 4);
+  assert.equal(totalLabels, complete2010Solutions ? 1 : qa.year === 2010 ? 7 : 4);
   const words = evidence(qa.source_word_component_review); yes(words, ['passed','source_only']);
-  assert.equal(words.labels.length, 7);
+  assert.equal(words.labels.length, complete2010Solutions ? 1 : 7);
   for (const word of words.labels) { yes(word, ['passed','source_only']); empty(word, ['intersecting_nonword_components']); }
   assert.ok(Object.keys(qa.authoring_snapshot_sha256).length > 0);
   for (const [file, hash] of Object.entries(qa.authoring_snapshot_sha256)) {
