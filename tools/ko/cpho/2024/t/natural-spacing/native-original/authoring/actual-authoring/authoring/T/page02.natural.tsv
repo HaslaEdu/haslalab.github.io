@@ -1,0 +1,42 @@
+0	상태의 에너지는 {m0}으로 둔다.)	equilibrium energy as {m0}.)
+1	{m1}) {m2}번 구슬을 고정하되 나머지는 마찰 없이 미끄러진다. 이때 계 {m3}의 미소진동의 고유진동수를 모두	{m1}) Fix bead {m2}; others slide frictionlessly. Find all eigenfrequencies of {m3} for small
+2	{m4}로 구하고, 진동수 {m5}인 모드의 {m6}{m7})를 유도하라(결과에 {m8}를 쓰지 말라).	oscillations, {m4}; for modes of frequency {m5}, derive {m6}{m7}) (no {m8} in either result).
+3	{m9}) {m10}번 구슬의 고정을 풀고 질량을 {m11}로 바꾸자. 이 경우에도 계의 고유진동수 {m12} 중 일부는	{m9}) Free bead {m10} and set its mass to {m11}. Some eigenfrequencies {m12} are wholly
+4	{m13}와 전혀 무관하다. 계 {m14}의 미소진동에서 {m15}와 무관한 고유진동수 {m16}를 모두 구하고, 진동수 {m17}인 모드의	independent of {m13}. For small oscillations of {m14}, find all {m15}-independent {m16}; for {m17} modes, give
+5	{m18}{m19})를 유도하라(결과에 {m20}를 쓰지 말라).	{m18}{m19}) (no {m20} in either result).
+6	3. ({m21}점) 일부 물리량을 복소수로 나타낸다. 예를 들어 전기장 성분이 전파거리 {m22}와 시간 {m23}에 따라 변하면	3. ({m21} points) Use complex form; e.g. write a field component at propagation distance {m22} and time {m23}
+7	복소수로 {m24}{m25}라 쓴다. {m26}[2-7-2|와] {m27}는 각진동수와 파수, {m28}는 초기 위상이다. {m29}{m30}	as {m24}{m25}; {m26}[2-7-2| and] {m27}: angular frequency and wave number; {m28}: initial phase. {m29}{m30}
+8	는 복소수이고, 이에 대응하는 {m31}는 {m32}{m33}의 절댓값 {m34}{m35}이다. 다른 양도 같다.	is complex; {m31} is the modulus of {m32}{m33}, i.e. {m34}{m35}. Similarly for other quantities.
+9	제1부: 광학 소자의 행렬 표현.	Part I: Optical elements in matrix form.
+10	{m36}) 마흐{m37}첸더({m38}, 줄여 {m39}	{m36}) The {m38} (or {m39}
+11	그림 {m40}처럼 입사광은 반투과·반사 분할기에서	interferometer is in Fig. {m40}. Light passes a
+12	나뉘어 위·아래 두 전반사 거울을 거친다.	half-reflecting, half-transmitting splitter and
+13	위 경로는 {m41}, 아래는 {m42}로 향한다. 다시 같은	two full mirrors: upper path to {m41}, lower to {m42}.
+14	반투과·반사 분할기를 거쳐 간섭한다. 광로를	They interfere at an identical second splitter.
+15	조절해 두 번째 분할기 밑 검출 강도를 0으로 하자.	Null its lower detector by tuning the paths.
+16	입사 에너지는 어디로 가나? 그려 간단히 설명하라.	Where is input energy? Sketch; explain briefly.
+17	{m43}) 그림 {m44}의 장치로 분할기의 반사·투과계수	{m43}) Fig. {m44} relates the reflection and
+18	그림 {m45}: 마흐{m46}첸더 간섭계 모식도(일부)	Fig. {m45}: Mach{m46}Zehnder interferometer (part)
+19	관계를 연구한다. 모든 편광에 대해 이 분할기는	transmission coefficients. For all polarizations,
+20	{m47} 반투과·반사 소자이며 반사계수 {m48}와 투과계수 {m49}{m50}의 크기는 다음을 만족한다.	it is a {m47} beam splitter; reflection {m48} and transmission {m49}{m50} have magnitudes satisfying
+21	반사와 투과는 모두 위상차를 만들며, 그 관계는	Both reflection and transmission introduce phase shifts:
+22	{m51}는 얼마인가?	Find {m51}.
+23	{m52}) 그림 {m53}은 {m54} 편광의 양의 방향이다. {m55}에서 {m56}는 전파방향, {m57}는 오른손 직교계이다.	{m52}) Fig. {m53}: positive {m54} pol. directions. In {m55}, {m56}: propagation; {m57}: right-handed,
+24	{m58}를 수평 {m59}를 수직 {m60} 방향이라고도 한다. 그림 {m61}에는 빔분할기의	orthogonal. {m58} is horizontal {m59} vertical {m60}. Fig. {m61} shows
+25	입사·반사·투과광의 {m62} 방향이 있다. 반사광을 예로 들면 {m63}	incident/reflected/transmitted {m62}. For reflection: {m63}
+26	{m64}는 전파방향 및 {m65} 편광의 양의 방향이다. 분할기를 지난 뒤	{m64} are propagation and positive {m65} directions. Reflected
+27	반사광의 {m66} 성분을 입사광의 {m67} 성분으로 다음과 같이 쓴다.	{m66} components use incident {m67} components as follows:
+28	행렬로 나타내면	Equivalently, in matrix form:
+29	그림 {m77}	Fig. {m77}
+30	{m78} 행렬을 분할기의 반사행렬이라	This {m78} is the reflection
+31	한다. 다른 경우도 같다. {m79} 및 {m80}의	matrix; likewise elsewhere. {m79}, {m80}
+32	반사계수가 각각 {m81}{m82}와	reflect with {m81}{m82} and
+33	{m83}{m84}일 때 빔분할기의 반사행렬	{m83}{m84}. Find matrices
+34	{m85}{m86}와 투과행렬 {m87}{m88}의 구체적 형태를	{m85}{m86} and {m87}{m88} explicitly, using
+35	이 문항의 기지량과 상수로 써라.	given quantities and constants.
+36	{m89} 전반사거울||{m90}파장판 {m91}빠른축 {m125}{m92}||{m93} 선편광판	{m89} Full mirror||{m90} WP {m91}fast axis {m125}{m92}||{m93} Linear polarizer
+37	{m94}) 그림 {m95} 전반사 거울의	{m94}) Fig. {m95}: a full mirror. Find
+38	그림 {m96}	Fig. {m96}
+39	반사행렬 {m97}{m98}를 써라{m126}	its reflection matrix {m97}{m98}{m126}
+40	{m99}) {m100} 파장판에서는 빠른 축 편광이 느린 축 편광보다 위상이 {m101} 앞선다. 그림 {m102}는 빠른 축이	{m99}) For a {m100} waveplate, fast-axis phase leads slow by {m101}. In Fig. {m102}, its fast axis lies
+41	{m103} / {m104}쪽	Page {m103} of {m104}

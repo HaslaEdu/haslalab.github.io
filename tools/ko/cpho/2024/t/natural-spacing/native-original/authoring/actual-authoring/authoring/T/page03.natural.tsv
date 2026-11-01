@@ -1,0 +1,45 @@
+0	{m0}인 {m1} 파장판이고 {m2}는 판에 수직이다. 행렬 {m3}{m4}를 구해 표준형으로 써라: {m5}{m6}{m7}{m8}{m9}{m10}{m11}{m12}{m13}	at {m0} for the {m1} waveplate; {m2} is normal to it. Give {m3}{m4} in standard form {m5}{m6}{m7}{m8}{m9}{m10}{m11}{m12}{m13}
+1	{m14}) 그림 {m18}의 선편광판은 수평({m15}), 수직({m16}), {m17} 방향으로 투과한다. 각각의 행렬을 써라:	{m14}) Fig. {m18}: linear polarizers along {m15}, {m16}, and {m17}. Give their matrices:
+2	{m19}	{m19}
+3	제2부: 4사분면 간섭.	Part II: Four-quadrant interference.
+4	간섭계는 광강도 변화로 위상 변화를 측정하는	An interferometer reads phase changes from
+5	장치이다. 보통의 간섭계(예: 마이컬슨 간섭계)는	intensity changes. Usual ones, e.g. Michelson,
+6	광강도만 재어 위상 {m20}의 크기를 알지만 부호는	give only the magnitude of {m20}, not its sign.
+7	알 수 없다. 간섭무늬의 생성·소멸도 보아야 {m21}의	For {m21}'s sign, watch fringes appear/disappear.
+8	부호를 안다. 이는 때로 불편하다. 그림 {m22}는	This may be inconvenient. In Fig. {m22}, a four-
+9	4사분면 간섭계로, {m23} 검출기의 간섭	quadrant interferometer, detectors {m23}
+10	광강도만 재어 {m24}의 확정값을 얻는다({m25}	fix {m24} from only interference intensity ({m25}
+11	레이저는 종이에 수직인 투과축의 선편광판을	Laser passes a linear polarizer normal to
+12	{m26} 지나 거울 {m27}에서 전반사한 뒤 빔분할기	the page {m26}, then full mirror {m27}, splitter
+13	그림 {m28} 4사분면 간섭계 모식도	Fig. {m28} Four-quadrant interferometer
+14	{m29}에서 광로 {m30}, {m31}로 나뉜다. {m32}의 빛은 거울 {m33}에서	{m29} splits into paths {m30},{m31}; {m32} hits mirror {m33}.
+15	전반사한 뒤 빠른 축이 {m34}인 {m35} 파장판을 거쳐 분할기	reflects fully, then crosses the {m35} waveplate with fast axis {m34}, to splitter
+16	{m36}에서 다시 나뉘어 편광판 {m37}를 거쳐 검출기 {m38}, 편광판 {m39}를 거쳐 검출기 {m40}로 간다. 광로 {m41}는	{m36}. It splits into beams through polarizer {m37} to detector {m38}, and polarizer {m39} to detector {m40}. Path {m41}
+17	거울 {m42}, {m43}에서 전반사한 뒤 투과축이 {m44}인 선편광판을 지나 분할기 {m45}에서 다시 나뉘어 검출기	reflects at mirrors {m42}, {m43}, passes a {m44} linear polarizer, then splitter {m45}, to detectors
+18	{m46}로 각각 간다.	{m46}, respectively.
+19	{m47}) 분할기 {m48} 앞 레이저 진폭은 {m49}이다. 뒤의 세 양은 각각 분할기 {m50}에서 광로 {m51}를 따라	{m47}) Before splitter {m48}: amplitude {m49}. Last 3: optical paths from splitter {m50} via {m51} to
+20	분할기 {m52}에 이르는 광로 길이와 진공 파수이다. 검출기 {m53}, 검출기 {m54}의 광강도에서 간섭항을 각각 써라:	splitter {m52}, and the vacuum wave number. Give interference terms in intensities at detectors {m53}, {m54}:
+21	{m55}(간섭항: 두 광로가 함께 있을 때 강도에서 각 광로만의 강도의 합을 뺀 값).	{m55} (interference = both-path intensity minus the sum of the separate-path intensities).
+22	이때 {m56} 식의 전체 위상을 {m57}라 하고, {m58}을 {m59}로 다시 나타내라.	Let the total phase in {m56} be {m57}; express {m58} in terms of {m59}.
+23	{m60}) {m61} 값으로 {m62}를 구하는 방법을 간단히 설명하라.	{m60}) Briefly explain how to obtain {m62} from the values of {m61}.
+24	광전파 중의 모든 손실은 무시한다.	Neglect all losses during light propagation.
+25	4. ({m63}점) 강체인 거친 수평면에서 사람이 탄 2륜 평형차의 단순 모형을 생각하자.	4. ({m63} points) Model a ridden two-wheel balancer on rigid, rough level ground.
+26	그림 {m64}처럼 두 개의 같은 강체 원형 바퀴(두께는 무시)의 각 반지름은	Fig. {m64} has two identical rigid round wheels (negligible thickness), radius
+27	{m65}, 질량은 {m66}이며 가장자리에 균일하게 분포한다. 길이 {m67}, 질량을 무시할	{m65}, mass {m66} uniform on the rim. An axle of length {m67}, negligible mass,
+28	수 있는 가늘고 곧은 강체 차축이 두 중심을 잇고 두 바퀴 평면에 늘 수직이다.	joins the centers; it is thin, straight, rigid and normal to both wheel planes.
+29	바퀴·차축 외 차체와 서 있는 사람은 질량 {m68}, 길이 {m69}의 균일한 강체 가는	Rest of body and standing rider: rigid uniform thin rod, mass {m68}, length {m69}.
+30	막대로 모형화한다. 막대 밑은 차축 중심 {m70}에 이어져 {m71} 주위로 마찰 없이	Its foot joins the axle center {m70}, rotating frictionlessly about {m71}. A torque
+31	돈다. 차축 방향의 돌림힘(막대의 엔진이 주는 힘쌍)이 막대·차축 사이에 작용할	may act between them, along the axle, from the rod's engine. The wheels always
+32	그림 {m72}	Fig. {m72}
+33	수 있다. 바퀴는 늘 순수 구름한다. 계 내부 마찰·공기저항·변형에 따른 에너지	roll without slip. Ignore internal friction, air drag and deformation losses.
+34	손실은 무시한다. {m73}축은 위로, {m74}축은 차축과, {m75}축은 진행 방향과 평행하다.	Take positive {m73} upward, {m74} along the axle, and {m75} along the vehicle's motion.
+35	중력가속도 크기는 {m76}이다.	Gravitational acceleration has known magnitude {m76}.
+36	{m77}) 엔진 돌림힘이 없고 막대·차축 접촉은 점접촉이다. 두 바퀴는 차축과	{m77}) No engine torque; take rod-axle contact as a point. The two wheels are
+37	강체로 연결되지 않아 독립적으로 돌 수 있으며 그 질량은 무시한다.	free to turn independently about the axle; their masses are negligible.
+38	회전할 때 {m78}는 수평면에서 각속도 {m79}로 등속 원운동한다. 막대는 늘	When turning, {m78} circles horizontally at constant angular speed {m79}. The rod
+39	차축의 수직면 안에서 일정한 안쪽 기울기 {m80}를 유지한다. 뒷모습은 그림 {m81}과	stays in the axle's vertical plane at fixed inward tilt {m80}. Rear view: Fig. {m81}.
+40	같다. 다음을 구하라.	Find:
+41	{m82}점 궤도의 반지름 {m83};	{m82}'s trajectory radius {m83};
+42	{m84}) 지면이 왼쪽·오른쪽 바퀴에 주는 수직항력 크기 {m85}({m86} 없이).	{m84}) ground normal forces on left/right wheels {m85} (no {m86}).
+43	그림 {m87}	Fig. {m87}
+44	{m88} / {m89}쪽	Page {m88} of {m89}

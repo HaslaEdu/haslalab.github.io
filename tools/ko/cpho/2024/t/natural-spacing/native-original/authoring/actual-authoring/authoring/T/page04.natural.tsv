@@ -1,0 +1,37 @@
+0	아래 ({m0})에서 막대는 차축에 수직인 평면에서 움직이고, 두 바퀴는 차축과	In ({m0}), the rod moves in an axle-normal plane; the wheels are rigidly
+1	강체로 연결되어 있고 바퀴 질량을 무시할 수 없다.	fixed to the axle and their masses cannot be neglected.
+2	{m1}) 평형차가 직선으로 전진하며 가속할 때를 보자. 옆모습은 그림 {m2}이다. 막대의	{m1}) Consider straight forward acceleration (side view, Fig. {m2}). Let the rod
+3	전방 기울기가 {m3}일 때, {m4}를 고정할 엔진의 차축 돌림힘을 {m5}라 하자{m91}	tilt forward by {m3}; to keep {m4} fixed, the engine must apply axle torque {m5}{m91}
+4	{m6}와 평형차 질량중심의 가속도 {m7}를 구하라. {m8}축의 양의 방향은 전진 방향,	Find {m6} and the center-of-mass acceleration {m7}. Positive {m8} is forward;
+5	돌림힘의 양의 방향은 그림 {m9}의 반시계 방향이다.	positive torque is counterclockwise in Fig. {m9}.
+6	{m10}) 평형차의 미소진동을 보자. 엔진 돌림힘 {m11}는 ({m12})에서 구한 함수	{m10}) For small oscillations, engine torque {m11} follows the function in ({m12}),
+7	관계를 만족하며{m13} 모든 매개변수는 ({m14})와 같다. 다만 막대 질량을	with all parameters as in ({m14}){m13} but change the rod's mass to
+8	{m15}로 바꾼다. 적절한 {m16}에 대해 기울기 {m17}({m18} 근방)와 점 {m19}가 같은	{m15}. For suitable {m16}, tilt {m17} (near {m18}) and {m19} can oscillate at the same
+9	진동수로 미소진동한다. {m20}의 조건과 이 진동의 각진동수 {m21}를 구하라.	frequency. Find the condition on {m20} and angular frequency {m21}.
+10	그림 {m22}	Fig. {m22}
+11	5. ({m23}점) 구대칭 별의 물질이 반지름 {m24}의 구에 분포하고 총질량은 {m25}, 중심은 {m26}이다{m92} 별의 물질은	5. ({m23} points) A spherically symmetric star has radius {m24}, total mass {m25}, center {m26}{m92}
+12	중성 또는 이온화 원자인 원자 물질과 복사인 광자 기체, 두 성분만 가진다. 중력상수는	It contains only neutral or ionized atoms (atomic matter) and radiation (photon gas).
+13	{m27}이다{m93}	The gravitational constant is {m27}{m93}
+14	별의 총에너지는 주로 원자 물질에서 온다. 아래 ({m28})에서는 복사를 무시한다.	The total stellar energy is chiefly atomic matter's. Neglect radiation in ({m28}).
+15	{m29}) 정적 평형을 먼저 보자. 별의 물질은 유체로 간주한다. 별 안 한 점에서 중심 {m31}까지 거리를 {m30}라 하고,	{m29}) First study hydrostatic equilibrium, treating matter as a fluid. At distance {m30} from center {m31},
+16	압력을 {m32}, 질량밀도를 {m33}, 반지름 {m34}인 구 안의 질량을 {m35}라 하자. 평형에서 {m36}와	pressure {m32}, density {m33}, mass inside radius {m34}: {m35}. In equilibrium, {m36} and
+17	{m37}가 만족하는 미분방정식을 써라.	{m37} obey which differential equations?
+18	{m38}) ({m39})의 결과로 {m40}, {m41}가 다음 부등식을 만족함을 보여라.	{m38}) Use ({m39}) to prove that {m40}, {m41} obey the inequality
+19	이로부터 중심 {m42}의 압력 하한을 {m43}로 추정하라.	Hence estimate a lower bound on central pressure at {m42}, in terms of {m43}.
+20	{m44}) 별 자체의 중력 퍼텐셜에너지를 {m45}의 적분으로 나타내라. 모든 물질을 구대칭으로 무한히 멀리	{m44}) Find the star's own gravitational potential energy as an integral of {m45}.
+21	옮겼을 때 퍼텐셜에너지를 0으로 잡는다.	Set zero potential when all matter is pulled spherically symmetrically to infinity.
+22	{m46}) 별 물질의 열역학을 보자. 내부에너지 밀도 {m47}와 압력 {m48}가 다음 관계를 만족한다.	{m46}) For stellar thermodynamics, internal energy density {m47} and pressure {m48} satisfy
+23	{m49}는 단열지수이다. {m50}이고 {m51}가 {m52}와 무관할 때만 보자. 별이 해체되지 않으려면 {m53}의 조건은 무엇인가?	{m49}: adiabatic index; take {m50}, {m51} independent of {m52}. What must {m53} obey to prevent breakup?
+24	이제 복사를 고려한다. 별 안의 광자도 진공 광속 {m54}로 전파한다고 가정한다.	Now include radiation. Assume photons within the star still travel at vacuum light speed {m54}.
+25	{m55}) 광자 기체는 어디서나 국소 열평형이라 하자. 광자의 에너지에서 내부에너지가, 복사압에서 압력이	{m55}) The photon gas is everywhere in local thermal equilibrium. Its internal energy comes
+26	생긴다. 이 광자 기체의 단열지수 {m56}를 구하라{m94}	from photon energy; its pressure is photon radiation pressure. Find its adiabatic index {m56}{m94}
+27	{m57}) 원자 물질은 광자를 흡수한다. 복사가 두께 {m58}, 밀도 {m59}인 얇은 층을 지나면 광자 일부가 흡수되며 그	{m57}) Atomic matter absorbs photons. A thin layer of thickness {m58}, density {m59}, absorbs the fraction
+28	비율은 {m60}이고 나머지는 통과한다. {m61}는 불투명도이며, {m62}는 빛의 진동수와 무관하다.	{m60}; the rest pass through. {m61} is the opacity; assume {m62} independent of light frequency.
+29	흡수로 원자 물질이 복사압을 받아 광자 기체에 압력차가 생긴다. 중심이 {m63}, 반지름이 {m64}인 구면 전체에서	Absorption pushes matter, so photon pressures differ. Over the whole sphere about {m63}, radius {m64},
+30	바깥으로 복사되는 일률(광도)을 {m65}라 하자. 온도 {m66}의 미분방정식을 {m67} 및	outward power (luminosity): {m65}. For {m66}, with {m67} and
+31	관련 상수로 나타내라.	relevant constants, give the differential equation for temperature.
+32	{m68}) 원자 물질의 분압이 반지름 {m69}가 커질수록 감소한다고 하자. 별 표면의 광도 {m70}의 상한을	{m68}) Atomic partial pressure falls with {m69}. Bound the surface luminosity {m70} from above using
+33	{m71} 및 관련 상수로 추정하라.	{m71} and relevant constants.
+34	힌트: {m72}의 흑체복사 스펙트럼 {m73}{m74}{m75}	Hint: use {m72}'s blackbody spectrum {m73}{m74}{m75}
+35	및 적분식 {m76}{m77}{m78}{m79}를 이용해도 된다.	and integral {m76}{m77}{m78}{m79}.
+36	{m80} / {m81}쪽	Page {m80} of {m81}

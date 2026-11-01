@@ -1,0 +1,40 @@
+{
+  "source_page": 3,
+  "source_caption_baseline": 300.2587585449219,
+  "source_next_paragraph_baseline": 303.8399963378906,
+  "source_wrapped_column_right": 289.4,
+  "original_native_math_rows_and_baselines_unchanged": true,
+  "revisions": [
+    {
+      "row": 11,
+      "language": "EN",
+      "before": "Laser passes a linear polarizer with axis",
+      "after": "Laser passes a linear polarizer normal to"
+    },
+    {
+      "row": 12,
+      "language": "EN",
+      "before": "normal to the page {m26}, then full mirror {m27},",
+      "after": "the page {m26}, then full mirror {m27}, splitter"
+    },
+    {
+      "row": 14,
+      "language": "KO",
+      "before": "{m29}로 들어가 광로 {m30}, {m31}로 갈라진다. 광로 {m32}의 빛은 거울 {m33}에서",
+      "after": "{m29}에서 광로 {m30}, {m31}로 나뉜다. {m32}의 빛은 거울 {m33}에서"
+    },
+    {
+      "row": 14,
+      "language": "EN",
+      "before": "splitter {m29} splits into paths {m30},{m31}; path {m32}: full mirror {m33}.",
+      "after": "{m29} splits into paths {m30},{m31}; {m32} hits mirror {m33}."
+    },
+    {
+      "row": 15,
+      "language": "EN",
+      "before": "then traverses a {m35} waveplate with fast axis {m34} to splitter",
+      "after": "reflects fully, then crosses the {m35} waveplate with fast axis {m34}, to splitter"
+    }
+  ],
+  "reason": "The original Word layout keeps the paragraph beside the optical figure caption, which extends below the bitmap. Preserve this original column on row14; complete equivalent clauses are distributed over the same original prose rows without changing native math rows or font sizes."
+}

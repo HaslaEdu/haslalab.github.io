@@ -1,0 +1,661 @@
+{
+  "source_sha256": "894111e1298dc785e9447252219e1f72fe0bb3fdf35b7573affec64f844ff6f6",
+  "labels": [
+    {
+      "id": "spectrum-energy",
+      "page": 1,
+      "image_index": 0,
+      "source_text": "电子动能",
+      "source_word_roi_px": [
+        152,
+        369,
+        263,
+        398
+      ],
+      "ko": "전자 운동 에너지",
+      "en": "Electron kinetic energy",
+      "source_font_measurement_group": "spectrum-x",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "spectrum-count",
+      "page": 1,
+      "image_index": 0,
+      "source_text": "电子的相对数目",
+      "source_word_roi_px": [
+        0,
+        77,
+        32,
+        266
+      ],
+      "ko": "상대 전자 수",
+      "en": "Relative electron count",
+      "source_font_measurement_group": "spectrum-y",
+      "alignment": "center",
+      "rotation": 90,
+      "reviewed": true
+    },
+    {
+      "id": "single-splitter",
+      "page": 2,
+      "image_index": 2,
+      "source_text": "分束器",
+      "source_word_roi_px": [
+        279,
+        198,
+        413,
+        240
+      ],
+      "ko": "분할기",
+      "en": "BS",
+      "source_font_measurement_group": "beam-splitter",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "mz-incident",
+      "page": 2,
+      "image_index": 4,
+      "source_text": "入射光",
+      "source_word_roi_px": [
+        45,
+        33,
+        153,
+        70
+      ],
+      "ko": "입사광",
+      "en": "Input light",
+      "source_font_measurement_group": "mz-incident",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "mz-mirror1",
+      "page": 2,
+      "image_index": 4,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        277,
+        5,
+        376,
+        39
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "mz-mirror",
+      "alignment": "left",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "mz-mirror2",
+      "page": 2,
+      "image_index": 4,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        280,
+        306,
+        378,
+        339
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "mz-mirror",
+      "alignment": "left",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "mz-splitter-left",
+      "page": 2,
+      "image_index": 4,
+      "source_text": "分束器",
+      "source_word_roi_px": [
+        7,
+        159,
+        114,
+        197
+      ],
+      "ko": "분할기",
+      "en": "BS",
+      "source_font_measurement_group": "mz-incident",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true,
+      "source_named_glyph_measurement": {
+        "char": "束",
+        "rect": [
+          45,
+          159,
+          79,
+          197
+        ]
+      }
+    },
+    {
+      "id": "mz-splitter-right",
+      "page": 2,
+      "image_index": 4,
+      "source_text": "分束器",
+      "source_word_roi_px": [
+        485,
+        156,
+        594,
+        194
+      ],
+      "ko": "분할기",
+      "en": "BS",
+      "source_font_measurement_group": "mz-incident",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true,
+      "source_named_glyph_measurement": {
+        "char": "束",
+        "rect": [
+          520,
+          156,
+          558,
+          194
+        ]
+      }
+    },
+    {
+      "id": "mz-detector",
+      "page": 2,
+      "image_index": 4,
+      "source_text": "探测器",
+      "source_word_roi_px": [
+        540,
+        290,
+        627,
+        332
+      ],
+      "ko": "검출기",
+      "en": "Det.",
+      "source_font_measurement_group": "mz-incident",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "optics-mirror",
+      "page": 2,
+      "image_index": 7,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        136,
+        27,
+        262,
+        73
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "optics-slow",
+      "alignment": "left",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "optics-slow",
+      "page": 2,
+      "image_index": 7,
+      "source_text": "慢轴",
+      "source_word_roi_px": [
+        465,
+        49,
+        560,
+        101
+      ],
+      "ko": "느린 축",
+      "en": "Slow",
+      "source_font_measurement_group": "optics-slow",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "optics-fast",
+      "page": 2,
+      "image_index": 7,
+      "source_text": "快轴",
+      "source_word_roi_px": [
+        496,
+        258,
+        582,
+        307
+      ],
+      "ko": "빠른 축",
+      "en": "Fast",
+      "source_font_measurement_group": "optics-slow",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "optics-linear",
+      "page": 2,
+      "image_index": 7,
+      "source_text": "线偏振",
+      "source_word_roi_px": [
+        983,
+        65,
+        1106,
+        116
+      ],
+      "ko": "선편광",
+      "en": "linear pol.",
+      "source_font_measurement_group": "optics-slow",
+      "alignment": "left",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "quad-mirror1",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        1,
+        6,
+        42,
+        25
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "quad-splitter1",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "分束器",
+      "source_word_roi_px": [
+        56,
+        12,
+        95,
+        29
+      ],
+      "ko": "분할기",
+      "en": "BS",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "quad-path2",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "光路",
+      "source_word_roi_px": [
+        166,
+        12,
+        194,
+        29
+      ],
+      "ko": "광로",
+      "en": "arm",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "english_terminology_note": "An interferometer optical path is labelled as an arm; the original1/2 indices are retained."
+    },
+    {
+      "id": "quad-mirror2",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        251,
+        9,
+        292,
+        26
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "quad-vertical-polarizer",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "线偏振片",
+      "source_word_roi_px": [
+        34,
+        44,
+        49,
+        113
+      ],
+      "ko": "선편광판",
+      "en": "LP",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "center",
+      "rotation": "stack",
+      "reviewed": true
+    },
+    {
+      "id": "quad-path1",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "光路",
+      "source_word_roi_px": [
+        86,
+        75,
+        111,
+        92
+      ],
+      "ko": "광로",
+      "en": "arm",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "english_terminology_note": "An interferometer optical path is labelled as an arm; the original1/2 indices are retained.",
+      "reviewed_shared_source_bitmap_component_partition": {
+        "reviewed": true,
+        "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+        "native_component_ids": [
+          31
+        ]
+      }
+    },
+    {
+      "id": "quad-mirror4",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        91,
+        49,
+        132,
+        65
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "quad-polarizer45",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "线偏振片",
+      "source_word_roi_px": [
+        157,
+        82,
+        209,
+        102
+      ],
+      "ko": "선편광판",
+      "en": "LP",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "quad-degree-unit",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "度",
+      "source_word_roi_px": [
+        227,
+        83,
+        240,
+        102
+      ],
+      "ko": "도",
+      "en": "°",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "left",
+      "rotation": 0,
+      "reviewed": true,
+      "english_original_closing_parenthesis_reuse": {
+        "source_image_index": 1,
+        "source_clip_rect_px": [
+          240,
+          83,
+          248,
+          103
+        ],
+        "original_character": ")",
+        "reason": "The Chinese degree unit becomes the narrower English degree symbol. Move the exact original bitmap closing parenthesis horizontally with the translated unit, retaining its source pixels, size, original CTM scale and y; do not retype it."
+      }
+    },
+    {
+      "id": "quad-polarizer-h",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "线偏振片",
+      "source_word_roi_px": [
+        178,
+        102,
+        227,
+        120
+      ],
+      "ko": "선편광판",
+      "en": "LP",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "reviewed_shared_source_bitmap_component_partition": {
+        "reviewed": true,
+        "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+        "native_component_ids": [
+          20
+        ]
+      }
+    },
+    {
+      "id": "quad-mirror3",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        256,
+        81,
+        296,
+        98
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "quad-mirror5",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "全反镜",
+      "source_word_roi_px": [
+        39,
+        139,
+        80,
+        154
+      ],
+      "ko": "반사경",
+      "en": "Mirror",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "terminology_note": "Conventional compact diagram noun, mirror; total reflection is explicitly retained in the surrounding original translated body and native mirror matrices."
+    },
+    {
+      "id": "quad-splitter2",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "分束器",
+      "source_word_roi_px": [
+        149,
+        137,
+        188,
+        153
+      ],
+      "ko": "분할기",
+      "en": "BS",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "reviewed_shared_source_bitmap_component_partition": {
+        "reviewed": true,
+        "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+        "native_component_ids": [
+          20
+        ]
+      }
+    },
+    {
+      "id": "quad-detector-b",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "探测器",
+      "source_word_roi_px": [
+        241,
+        145,
+        281,
+        164
+      ],
+      "ko": "검출기",
+      "en": "Det.",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "quad-laser",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "激光器",
+      "source_word_roi_px": [
+        0,
+        183,
+        46,
+        199
+      ],
+      "ko": "레이저",
+      "en": "Laser",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "quad-polarizer-v",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "线偏振片",
+      "source_word_roi_px": [
+        157,
+        177,
+        209,
+        198
+      ],
+      "ko": "선편광판",
+      "en": "LP",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true
+    },
+    {
+      "id": "quad-detector-a",
+      "page": 3,
+      "image_index": 1,
+      "source_text": "探测器",
+      "source_word_roi_px": [
+        158,
+        202,
+        196,
+        221
+      ],
+      "ko": "검출기",
+      "en": "Det.",
+      "source_font_measurement_group": "quadrature-mirror",
+      "alignment": "right",
+      "rotation": 0,
+      "reviewed": true,
+      "reviewed_shared_source_bitmap_component_partition": {
+        "reviewed": true,
+        "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+        "native_component_ids": [
+          20
+        ]
+      }
+    },
+    {
+      "id": "wheel-torque",
+      "page": 4,
+      "image_index": 1,
+      "source_text": "扭矩",
+      "source_word_roi_px": [
+        137,
+        424,
+        231,
+        478
+      ],
+      "ko": "토크",
+      "en": "Torque",
+      "source_font_measurement_group": "wheel-torque",
+      "alignment": "center",
+      "rotation": 0,
+      "reviewed": true,
+      "source_word_regions_px": [
+        [
+          137,
+          424,
+          183,
+          478
+        ],
+        [
+          183,
+          426,
+          231,
+          478
+        ]
+      ],
+      "source_named_glyph_measurement": {
+        "char": "扭",
+        "rect": [
+          137,
+          424,
+          183,
+          478
+        ]
+      }
+    }
+  ],
+  "font_sizes_are_source_only_measured_estimates": true,
+  "no_target_font_fitting": true,
+  "native_indices_units_and_geometry_are_not_retyped": true,
+  "english_standard_figure_abbreviations": {
+    "BS": "beam splitter",
+    "LP": "linear polarizer",
+    "Det.": "detector"
+  }
+}
