@@ -54,6 +54,9 @@ LAB_MODERATE_PROVIDER = "none"
 # Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
 # every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
 LAB_READ_MODEL = "deepseek-flash"
+# DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
+# numbers it missed from 21 to 14 of 102 for $0.0002 more a page
+LAB_READ_TILES = "3"
 LAB_READ_THINKING = "low"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
