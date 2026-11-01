@@ -44,7 +44,7 @@ async function fixture(run){
   const t=Math.floor(Date.now()/1000),tokens={},queue=[],calls=[];
   for(const id of [1,2,3]){tokens[id]=('vision_test_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(?,?,?,'unused',?,5)").run(id,'vision'+id,'Vision '+id,t);sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]),id,t,t+86400);}
   const env={DB,GEMINI_API_KEY:'local-gemini',DEEPSEEK_API_KEY:'local-deepseek',UPSTAGE_API_KEY:'must-never-be-used',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>renderer(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
-  let failProvider=false,truncateReads=0,beforeProvider=async()=>{};
+  let failProvider=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null;
   const old={fetch:globalThis.fetch,caches:globalThis.caches};globalThis.caches={default:{async match(){},async put(){}}};
   globalThis.fetch=async(input,init={})=>{
     const url=String(input);
@@ -54,6 +54,7 @@ async function fixture(run){
     const text=parts.map(part=>part.text||'').join('\n');calls.push({provider,url,body,parts,text});
     const hook=beforeProvider;beforeProvider=async()=>{};await hook();
     if(failProvider)return new Response('{}',{status:503});
+    if(limitModel&&url.includes('/'+limitModel+':'))return new Response('{}',{status:429});
     let raw;
     if(text.includes('[TASK: read page]')&&truncateReads>0){truncateReads--;return Response.json({modelVersion:VISION_MODELS.gemini,candidates:[{finishReason:'MAX_TOKENS',content:{parts:[{text:'{"text":"x x x'}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:6144}});}
     if(text.includes('[TASK: notation]'))raw={symbols:[{symbol:'\\sigma',meaning:'surface tension',unit:'N/m'},{symbol:'\\xi^*',meaning:'optimal ratio'}]};
@@ -73,7 +74,7 @@ async function fixture(run){
   const seedScheme=(sid,provider)=>{const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=[provider,VISION_MODELS[provider],REG_VERSION,entry.solution,entry.mark||''].join(':');sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[{id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]}]}),'fixture:'+provider,t);};
   const problem=()=>{const r=sql.prepare("INSERT INTO problems(week,no,kind,subject,level,points,title_ko,title_en,body_ko,body_en,model_ko,model_en,rubric,opens_at,closes_at,created_at)VALUES('2098-W01',1,'essay','physics',1,2,'그래프','Graph','Graph task','Graph task','Direction','Direction',?,?,?,?)").run(JSON.stringify([{id:'G',name:'Direction',max:2,requirement:'Inspect actual graph direction.'}]),t-60,t+7200,t);return Number(r.lastInsertRowid);};
   const ocrPhoto=async(pid,provider,id=1)=>{const form=new FormData();form.append('image',new Blob([scan],{type:'image/jpeg'}),'graph.jpg');const response=await worker.fetch(new Request(`https://vision.local/api/ocr?mode=math&problem_id=${pid}${provider?'&provider='+provider:''}`,{method:'POST',headers:{Authorization:'Bearer '+tokens[id]},body:form}),env);return{status:response.status,data:await response.json()};};
-  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},truncate:n=>{truncateReads=n;}});}finally{Object.assign(globalThis,old);sql.close();}
+  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;}});}finally{Object.assign(globalThis,old);sql.close();}
 }
 
 test('grading mode spends its token when the sitting opens: the provider is pinned then, and an unpaid start leaves nothing open',async()=>fixture(async({api,start,sql,calls})=>{
@@ -308,4 +309,15 @@ test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what 
   assert.ok(!JSON.stringify(mod[0].body).includes('application/pdf'),'no problem or solution PDF in moderation');
   assert.equal(result.items.find(i=>i.id==='R').moderated,true);assert.match(result.grader,/moderated by/);
   const health=(await api('/health')).data,vision=health.vision||health.arena?.vision;assert.equal(vision?.pipeline,'mixed','the exam page shows the fixed pipeline');
+}));
+
+test('a page the reading model refuses for its quota is read by the fallback model at once',async()=>fixture(async({api,start,upload,drain,calls,sql,env,limit})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';env.LAB_READ_FALLBACK_MODEL='gemini-3.8-flash';
+  limit('gemini-3.1-pro-preview');
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  const reads=calls.filter(c=>c.text.includes('[TASK: read page]'));
+  assert.match(reads[0].url,/gemini-3\.1-pro-preview/);assert.match(reads[1].url,/gemini-3\.8-flash/,'the refused page goes straight to the fallback');
+  assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
