@@ -59,6 +59,21 @@ test('PLANCKS archive contains every international final from 2014 through 2026 
   for (const year of manifest.years) {
     assert.ok(year.files.some(file => file.kind === 'paper' && file.lang === 'EN'), `${year.y}: English final paper`);
     for (const file of year.files) {
+      if (file.lang === 'KO' && file.source_type === 'unofficial_translation') {
+        assert.equal(file.kind, 'paper');
+        assert.equal(file.file, `PLANCKS_${year.y}_T_KO.pdf`);
+        assert.equal(file.local, undefined, 'Released translations use their versioned download URL');
+        assert.equal(file.url, `https://github.com/HaslaEdu/haslalab.github.io/releases/download/pdf-plancks/${file.file}`);
+        assert.equal(file.source_page, year.source_page);
+        const reviewed = json('tools/original_style_publication.json').find(item => item.file === file.file);
+        assert.ok(reviewed, `${file.file}: reviewed source-layout publication`);
+        for (const key of ['sha256', 'bytes', 'pages']) assert.equal(file[key], reviewed[key], `${file.file}: ${key}`);
+        assert.equal(json('pdf-assets.json')[file.file], file.bytes);
+        const slot = catalogue.plancks[year.y].f[file.part];
+        assert.equal(slot.papers.ko, file.file);
+        assert.equal(Boolean(slot.paperContainsSolutions?.ko), false);
+        continue;
+      }
       assert.match(file.local, /^pdfx\/plancks\/PLANCKS_\d{4}_(?:T_EN|TS)\.pdf$/);
       assert.match(file.url, /^https:\/\//);
       assert.ok(evidence.some(record => record.file === file.file && record.sha256 === file.sha256), `${file.file}: inspected source or extraction receipt`);
@@ -78,7 +93,7 @@ test('PLANCKS archive contains every international final from 2014 through 2026 
 test('PLANCKS local PDFs match inspection receipts and extracted problem pages retain their source provenance', () => {
   const manifest = json('tools/theory/plancks.json'), report = json('tools/plancks_archive_report.json');
   const checked = new Set();
-  for (const file of manifest.years.flatMap(year => year.files)) {
+  for (const file of manifest.years.flatMap(year => year.files).filter(file => file.local)) {
     if (checked.has(file.local)) continue;
     const content = fs.readFileSync(path.join(root, file.local));
     assert.ok(content.subarray(0, 1024).includes(Buffer.from('%PDF-')), file.local);
