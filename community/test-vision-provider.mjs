@@ -183,4 +183,5 @@ test('DeepSeek thinks only when the stage asks for a level; otherwise thinking i
  await visionJSON(env,{provider:'deepseek',thinking:'low',fetchImpl,parts:[{text:'x'}]});
  await visionJSON(env,{provider:'deepseek',thinking:'medium',fetchImpl,parts:[{text:'x'}]});
  assert.deepEqual(seen.map(b=>[b.thinking.type,b.reasoning_effort,b.temperature]),[['disabled',undefined,0],['disabled',undefined,0],['enabled','low',undefined],['enabled','high',undefined]]);
+ assert.deepEqual(seen.map(b=>b.max_tokens),[8192,8192,65536,65536],'room for the reasoning beside the answer');
 });
