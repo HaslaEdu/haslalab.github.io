@@ -393,3 +393,14 @@ test('the outlined video frame carries its corners, while a rectangle that is no
   await proposal.next();await proposal.click('shoot');
   assert.deepEqual(Object.keys(proposal.photos[0].options),[],'a visible but unconfirmed rectangle never silently becomes an accepted scan');
 });
+
+test('a green outline is taken automatically after three frames over 0.7 s, though the detector\'s stricter edge test says wait; a strong tilt is not', async () => {
+  const green = { method: 'page', scanEligible: true, verified: true, shapeOk: true, autoCaptureEligible: false, autoBlock: 'edges' };
+  const live = await liveCameraFixture(); live.state.detection = { ...live.state.detection, ...green };
+  live.state.now = 0; await live.next(); live.state.now = 350; await live.next();
+  assert.equal(live.photos.length, 0, 'two frames are not a steady hold'); assert.equal(live.message.textContent, 'hold still');
+  live.state.now = 700; await live.next(); assert.equal(live.photos.length, 1, 'green, sharp and still for 0.7 s: taken');
+  const tilted = await liveCameraFixture(); tilted.state.detection = { ...tilted.state.detection, ...green, autoBlock: 'tilt' };
+  for (let frame = 0; frame < 12; frame++) { tilted.state.now = frame * 350; await tilted.next(); }
+  assert.equal(tilted.photos.length, 0, 'a strongly tilted sheet waits for a flatter view'); await tilted.click('shoot'); assert.equal(tilted.photos.length, 1);
+});
