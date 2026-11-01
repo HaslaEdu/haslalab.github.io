@@ -64,6 +64,21 @@ function parse(tokens) {
   try { const e = expr(); return i === tokens.length ? e : null; } catch { return null; }
 }
 
+function rename(node, map) {
+  if (node[0] === "var") return map.has(node[1]) ? ["var", map.get(node[1])] : node;
+  return node.map(child => Array.isArray(child) ? rename(child, map) : child);
+}
+/* a candidate's name for an official variable written another way (R_s for R_sun, P for p, mu_0 for mu, I0 for I_0):
+   the same letters ignoring case and underscores, or one a prefix of the other, when only one official name fits */
+const plain = name => name.replace(/[_']/g, "").toLowerCase();
+function aliases(official, candidate) {
+  const map = new Map(), free = [...official].filter(v => !candidate.has(v));
+  for (const name of [...candidate].filter(v => !official.has(v))) {
+    const p = plain(name), fits = free.filter(o => { const q = plain(o); return q === p || q.startsWith(p) || p.startsWith(q); });
+    if (fits.length === 1) { map.set(name, fits[0]); free.splice(free.indexOf(fits[0]), 1); }
+  }
+  return map;
+}
 function vars(node, out = new Set()) {
   if (node[0] === "var") out.add(node[1]);
   else if (node[0] !== "num") for (const child of node.slice(1)) if (Array.isArray(child)) vars(child, out);
@@ -94,10 +109,14 @@ function points(names, n, seed) {
 
 /** {verdict:'equal'|'differs'|'factor', ratio?, missing?, extra?} or null when either side cannot be parsed or evaluated */
 export function compareExpr(official, candidate) {
-  const a = parseExpr(official), b = parseExpr(candidate);
+  const a = parseExpr(official); let b = parseExpr(candidate);
   if (!a || !b) return null;
-  const va = vars(a), vb = vars(b), names = [...new Set([...va, ...vb])].sort();
+  const va = vars(a); b = rename(b, aliases(va, vars(b)));
+  const vb = vars(b), names = [...new Set([...va, ...vb])].sort();
   const missing = [...va].filter(v => !vb.has(v)), extra = [...vb].filter(v => !va.has(v));
+  /* a name of the candidate's own that matches no official one, or more than one official name gone, is most likely a
+     different notation (or a misreading), not a different answer: no verdict */
+  if (extra.length || missing.length > 1) return null;
   const ratios = [];
   for (const at of points(names, 24, names.join(",").length * 7919 + 17)) {
     const x = evaluate(a, at), y = evaluate(b, at);
