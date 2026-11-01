@@ -11,7 +11,7 @@ import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
 import { tokenUnits, tokenBalance, tokenSql, tokenSet } from './lab-tokens.js';
-import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE } from './lab-pair-catalog.js';
+import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE, LAB_SHORTLIST_CATALOGUE } from './lab-pair-catalog.js';
 import { createOmrRouter, ensureOmrSchema } from './omr.js';
 import { hasLabQueue, requireLabQueue, enqueueLabJobs, dispatchLabJobs, consumeLabJobs, LabJobDeferred, labJobGuard } from './lab-jobs.js';
 import { DB_SCOPE, READ_METRICS, publicRead, invalidatePublicReads, wantsFresh } from './public-read-cache.js';
@@ -1484,10 +1484,14 @@ const labTokens = async (env, userId) => {
   const u = await env.DB.prepare(`SELECT exam_tokens${half ? ",exam_half" : ""} FROM users WHERE id=?`).bind(userId).first() || {};
   return tokenBalance(u);
 };
+/* a shortlist (backup) problem: published with a competition but not part of its paper, sat and graded on its own */
+const labShortlistSet = (comp, year) => new Set(LAB_SHORTLIST_CATALOGUE[comp]?.[String(year)] || []);
+const labShortlist = s => { const sl = labShortlistSet(s.comp, s.year), tasks = JSON.parse(s.tasks); return tasks.length > 0 && tasks.every(k => sl.has(k)) && !contestMeta(s); };
 // One exam costs 0.3; a mixed theory/experiment sitting costs 0.5. A later full paid counterpart costs 0.2.
-const labCost = s => labKind(s) === 'mixed' ? 5 : 3;
+// A shortlist problem costs 0.1.
+const labCost = s => labShortlist(s) ? 1 : labKind(s) === 'mixed' ? 5 : 3;
 function labPairProfile(s) {
-  if (contestMeta(s) || !labSrc(s)._half || labKind(s) === 'mixed') return null;
+  if (contestMeta(s) || !labSrc(s)._half || labKind(s) === 'mixed' || labShortlist(s)) return null;
   const scope = labKind(s), tasks = JSON.parse(s.tasks), key = [...tasks].sort().join('+');
   const raw = LAB_PAIR_CATALOGUE[s.comp]?.[String(s.year)], groups = Array.isArray(raw) ? raw : raw ? [{ id:'default',...raw }] : [];
   const hit = groups.find(group => (group[scope] || []).some(set => [...set].sort().join('+') === key));
@@ -1519,7 +1523,7 @@ async function labQuote(env, s) {
 }
 function labPrice(s) {
   const saved = labSrc(s)._pricing;
-  if (s.charged && saved?.pricing_version === 2 && [2,3,5].includes(saved.units))
+  if (s.charged && saved?.pricing_version === 2 && [1,2,3,5].includes(saved.units))
     return { cost:saved.units/10,pricing_version:2,paired_with:saved.paired_with||null,discount:saved.discount||0,pair_mixed_mode:!!saved.pair_mixed_mode,price_estimate:false };
   if (s.charged) return { cost:!contestMeta(s)&&labSrc(s)._half&&labSourceKind(s)!=='mixed'?0.5:1,pricing_version:1,paired_with:null,discount:0,pair_mixed_mode:false,price_estimate:false };
   return { cost:labCost(s)/10,pricing_version:2,paired_with:null,discount:0,pair_mixed_mode:false,...s._price_quote,price_estimate:true };
@@ -3167,6 +3171,8 @@ async function lab(p, m, body, me, req, env, url) {
     const comp = String(body.comp || ""), year = parseInt(body.year), tasks = Array.isArray(body.tasks) ? body.tasks.map(String) : [];
     if (!/^[a-z]{3,8}$/.test(comp) || !(year >= 1960 && year <= 2100)) bad("bad_exam");
     if (!tasks.length || tasks.length > 4 || tasks.some(x => !LAB_TASK_RE.test(x)) || new Set(tasks).size !== tasks.length) bad("bad_task");
+    /* a shortlist problem is sat alone: never together with the day's paper or another shortlist problem */
+    { const sl = labShortlistSet(comp, year); if (tasks.some(x => sl.has(x)) && tasks.length !== 1) bad("shortlist_alone"); }
     const key = comp + year, reviewOnly = body.review === true || LAB_REVIEW_ONLY.has(comp);
     const entry = typeof body.entry === "string" && /^\?[\w=&%.,|+~\-]{1,12000}$/.test(body.entry) ? body.entry : null;
     const srcIn = body.sources && typeof body.sources === "object" ? body.sources : {}, sources = {};
