@@ -67,6 +67,8 @@ python tools/problem-bank/ocr_scanned.py --pdf PRIVATE/source.pdf --output-dir P
 
 Supply English `eng.traineddata` from [Tesseract's official fast-model repository](https://github.com/tesseract-ocr/tessdata_fast). On Windows, some Tesseract builds require an ASCII trained-data directory. Pages are rendered in memory; only atomic text/coordinate checkpoints are saved. Restarting checks the source hash, scale and training hash before skipping a completed page. OCR equations remain unverified until compared with the original image. The OCR script does not download models or contact a provider.
 
+For scans with oversized PDF page boxes, `--max-render-side 3000` caps the longest rendered side in pixels. Each page records its actual render dimensions and scale, and resuming with a different cap is rejected. Use those per-page coordinates rather than assuming the requested DPI. The default zero cap preserves existing OCR settings; another language such as `--language kor` requires its own local trained-data file.
+
 `run-subscription-batches.py` is an optional bounded draft translator using an existing ChatGPT-authenticated Codex CLI. It previews by default; `--run` explicitly consumes that subscription's usage allowance. It refuses API-key environment variables, does not select a different model, and stops on errors without automatic retry loops. It is not an unattended, already-running translation service merely because the script is present.
 
 ## Prepare and apply

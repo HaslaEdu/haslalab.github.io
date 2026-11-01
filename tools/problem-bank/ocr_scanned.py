@@ -25,6 +25,8 @@ def process(args):
     last = args.last_page or len(document)
     if not 1 <= args.first_page <= last <= len(document):
         raise ValueError("Invalid source page range")
+    if args.max_render_side and not 1000 <= args.max_render_side <= 10000:
+        raise ValueError("Maximum rendered side must be 1000–10000 pixels, or zero")
     with tesserocr.PyTessBaseAPI(path=str(args.tessdata_dir.resolve()), lang=args.language) as engine:
         for number in range(args.first_page, last + 1):
             target = output / f"page-{number:05d}.json"
@@ -32,16 +34,22 @@ def process(args):
                 previous = json.loads(target.read_text(encoding="utf-8"))
                 if (previous["source_sha256"], previous["page"], previous["dpi"], previous["training_sha256"]) != (source_hash, number, args.dpi, training_hash):
                     raise ValueError("OCR checkpoint source/scale/training mismatch")
+                if previous.get("max_render_side", 0) != args.max_render_side:
+                    raise ValueError("OCR checkpoint rendering-cap mismatch")
                 continue
             started, page = time.monotonic(), document[number - 1]
-            pixmap = page.get_pixmap(matrix=pymupdf.Matrix(args.dpi / 72, args.dpi / 72),
+            scale = args.dpi / 72
+            if args.max_render_side:
+                scale = min(scale, args.max_render_side / max(page.rect.width, page.rect.height))
+            pixmap = page.get_pixmap(matrix=pymupdf.Matrix(scale, scale),
                                      colorspace=pymupdf.csGRAY, alpha=False)
             image = Image.frombytes("L", [pixmap.width, pixmap.height], pixmap.samples)
             engine.SetImage(image)
             text, confidence, tsv = engine.GetUTF8Text(), engine.MeanTextConf(), engine.GetTSVText(number - 1)
             record = {"page": number, "source_pages": len(document), "source_sha256": source_hash,
                 "page_size_pt": list(page.rect)[2:], "render_size_px": [pixmap.width, pixmap.height],
-                "dpi": args.dpi, "engine": "tesseract-local", "language": args.language,
+                "dpi": args.dpi, "max_render_side": args.max_render_side,
+                "render_scale": scale, "engine": "tesseract-local", "language": args.language,
                 "training_sha256": training_hash, "confidence": confidence, "text": text,
                 "tsv": tsv, "review_status": "pending", "paid_api_calls": 0}
             temporary = target.with_suffix(".tmp")
@@ -61,5 +69,7 @@ if __name__ == "__main__":
     parser.add_argument("--first-page", type=int, default=1)
     parser.add_argument("--last-page", type=int, default=0)
     parser.add_argument("--dpi", type=int, default=180)
+    parser.add_argument("--max-render-side", type=int, default=0,
+                        help="Optional pixel cap for scans with oversized PDF page boxes; zero preserves the requested DPI")
     parser.add_argument("--language", default="eng")
     process(parser.parse_args())

@@ -319,9 +319,10 @@ def main():
             if ref in figure_assets:
                 assets.append(figure_assets[ref])
         linked_footnotes = []
+        excluded_footnote_pages = manual_context.get("footnote_exclusions", {}).get(start["number"], [])
         if re.search(r"[⇤*†‡]", text):
             for number, _ in regions:
-                if number in footnote_assets:
+                if number in footnote_assets and number not in excluded_footnote_pages:
                     assets.append(footnote_assets[number])
                     linked_footnotes.append({"page": number, "text": footnote_text[number], "review_status": "pending"})
         shared_regions = manual_context.get("questions", {}).get(start["number"], [])
@@ -338,6 +339,7 @@ def main():
         subjects = ["thermodynamics"] if chapter not in ["A", "B"] else (["quantum_mechanics"] if chapter == "A" else ["mathematics"])
         if chapter == "7":
             subjects.append("quantum_mechanics")
+        printed_answer = bool(re.search(r"\bAnswer\s*:", text))
         questions.append({"source": {"drive_id": args.drive_id, "revision": source["revision"]},
                           "source_language": "en", "locator": f"chapter-{chapter}/problem-{start['number']}",
                           "original_number": start["number"], "chapter": chapter_titles[chapter],
@@ -350,9 +352,12 @@ def main():
                                       "unresolved_source": bool(missing_figures) or start["header_bbox"][1] - start["bbox"][1] > 4,
                                       "missing_figure_references": missing_figures,
                                       "source_footnotes": linked_footnotes,
+                                      "excluded_source_footnote_pages": excluded_footnote_pages,
+                                      "source_inline_answer_present": printed_answer,
                                       "shared_source_regions": shared_regions,
                                       "inline_math_boundary_overlap": start["header_bbox"][1] - start["bbox"][1] > 4,
-                                      "quality_flags": ["native_pdf_math_symbols_unverified", "source_regions_pending_visual_review"],
+                                      "quality_flags": ["native_pdf_math_symbols_unverified", "source_regions_pending_visual_review"]
+                                      + (["source_crop_contains_printed_answer"] if printed_answer else []),
                                       "boundary_method": "bold_problem_label_until_next_label_or_lecture_font"}})
     audit = {"source_page_count": len(document), "standalone_problem_count": len(questions),
              "expected_count_basis": "Consecutive standalone printed labels from 1 to the observed final label in each TOC chapter; not a publisher-declared total.",
