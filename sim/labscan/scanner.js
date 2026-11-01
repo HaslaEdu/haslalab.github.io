@@ -916,9 +916,11 @@ export function findPageQuadGray(gray, W, H, rgba = null, seed = null) {
      is undone; front-on squares, screens and cards are not taken by themselves). autoBlock says what is missing. */
   const paperAssessment = assessA4Candidate(corners, W, H), clipped = found.sidesOnFrame > 0;
   const shapeOk = paperAssessment.status === 'a4_candidate' || paperAssessment.status === 'perspective_uncertain' && a4RatioMiss(corners, W, H) < .07;   // Letter misses A4 by .085
-  /* a strongly tilted sheet: its far end has far fewer photo pixels and comes out soft, so wait for a flatter view */
+  /* a strongly tilted sheet: its far end has far fewer photo pixels and comes out soft, so wait for a flatter view. Only
+     a strong tilt (the far side under 0.62 of the near one, some 40°): at 0.77 a phone held the ordinary way, some 25°
+     off the vertical, showed a green outline that was never taken automatically. */
   const lengths = [[0, 1], [2, 3], [0, 2], [1, 3]].map(([i, j]) => Math.hypot(corners[j].x - corners[i].x, corners[j].y - corners[i].y));
-  const tilted = Math.min(lengths[0], lengths[1]) / Math.max(lengths[0], lengths[1]) < .77 || Math.min(lengths[2], lengths[3]) / Math.max(lengths[2], lengths[3]) < .77;
+  const tilted = Math.min(lengths[0], lengths[1]) / Math.max(lengths[0], lengths[1]) < .62 || Math.min(lengths[2], lengths[3]) / Math.max(lengths[2], lengths[3]) < .62;
   const autoBlock = clipped ? 'clipped' : found.cover < .1 ? 'small' : !found.verified || found.weakestEdge < .55 || found.edgeSupport < .7 ? 'edges' : tilted ? 'tilt' : !shapeOk ? 'shape' : null;
   return { corners, score: found.score, method: 'page', edgeSupport: found.edgeSupport, weakestEdge: found.weakestEdge,
     verified: found.verified, clipped, cover: found.cover, paperStatus: paperAssessment.status, paperAssessment, shapeOk,
@@ -1381,7 +1383,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4eaaf7ef1ae4', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8858050dad4a', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1402,14 +1404,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4eaaf7ef1ae4', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8858050dad4a', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4eaaf7ef1ae4', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8858050dad4a', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }

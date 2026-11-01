@@ -114,7 +114,7 @@
 
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=4eaaf7ef1ae4";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=8858050dad4a";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
@@ -444,7 +444,7 @@ async function liveCamera() {
   const v = ov.querySelector("video"), cv = ov.querySelector("canvas"), g = cv.getContext("2d"), msg = ov.querySelector(".msg");
   v.srcObject = stream; await v.play().catch(() => {});
   const small = document.createElement("canvas"), sg = small.getContext("2d", { willReadFrequently: true });
-  let alive = true, busy = false, hist = [], last = null, timer = null, verifiedFrame = null, spareFrame = null, lastReady = null;
+  let alive = true, busy = false, steady = null, timer = null, verifiedFrame = null, spareFrame = null, lastReady = null;
   const detectorAbort = new AbortController();
   const close = () => { if (!alive) return; alive = false; detectorAbort.abort(); clearTimeout(timer); stream.getTracks().forEach(k => k.stop()); ov.remove(); };
   const say = (m, ok) => { msg.textContent = m; msg.classList.toggle("ok", !!ok); };
@@ -518,26 +518,27 @@ async function liveCamera() {
         g.setLineDash?.(ready ? [] : [8 * dpr, 6 * dpr]);
         g.beginPath(); q.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.fill(); g.stroke();
       }
-      /* Paper edges need a longer, tighter hold than printed markers. Geometry alone never enables capture. */
+      /* Automatic capture follows the green outline: green (all four edges measured, a sheet's shape) or the detector's
+         own go-ahead, the picture sharp, the sheet filling a fair part of the frame and not strongly tilted, and the
+         outline held in one place: five frames (six for printed markers), or at least three over 0.7 s, whichever comes
+         first. One wavering frame does not restart the wait. It once asked for the detector's stricter edges and five or
+         six frames in a row only: on a phone, with a slow detector, a green sheet was seldom taken at all. */
       const focused = inspectDocumentPixels(pixels, w, h).focus >= 22;
-      /* a steady run of frames in one place, nearly all of them eligible: one frame that misses (the measurement wavers,
-         a frame is soft) no longer starts the count again, so a well-placed sheet is taken in about a second */
-      const eligible = d?.autoCaptureEligible === true && focused;
-      if (d && (eligible || ((strict || held) && focused && hist.length && hist.filter(f => !f.ok).length < 1))) {
-        if (last !== how || (hist.length && !near(d.corners, hist.at(-1).corners, .015))) hist = []; last = how;
-        const count = how === "page" ? 5 : 6, tolerance = 0.015;
-        hist.push({ corners: d.corners.map(p => ({...p})), ok: eligible }); if (hist.length > count) hist.shift();
-        const still = hist.length === count && hist.filter(f => f.ok).length >= count - 1 && hist.at(-1).ok && hist.every(f => near(f.corners, d.corners, tolerance));
+      const autoOk = !!d && focused && (d.autoCaptureEligible === true || ((strict || held) && !["small", "clipped", "tilt"].includes(d.autoBlock)));
+      if (autoOk || (steady && d && steady.misses < 1 && near(d.corners, steady.corners, .015))) {
+        if (!autoOk) steady.misses++;
+        else if (!steady || steady.method !== how || !near(d.corners, steady.corners, .015)) steady = { corners: d.corners.map(p => ({ ...p })), method: how, since: frameCapturedAt, frames: 1, misses: 0 };
+        else { steady.frames++; steady.misses = 0; }
         say(t().lvHold, true);
-        if (still && AUTO) return capture();
-      } else { hist = []; last = null; say(!focused && d ? t().blurry : d ? d.scanEligible === true ? (AUTO && t().lvWhy[d.autoBlock]) || t().lvPage : t().lvCandidate : t().lvAim); }
+        if (autoOk && AUTO && (steady.frames >= (how === "marker" ? 6 : 5) || (steady.frames >= 3 && frameCapturedAt - steady.since >= 700))) return capture();
+      } else { steady = null; say(!focused && d ? t().blurry : d ? d.scanEligible === true ? (strict || held ? t().lvPage : (AUTO && t().lvWhy[d.autoBlock]) || t().lvPage) : t().lvCandidate : t().lvAim); }
     }
     timer = setTimeout(frame, 140);
   }
   ov.onclick = e => { const b = e.target.closest("button"); if (!b) return;
     if (b.dataset.x === "close") close();
     else if (b.dataset.x === "shoot") capture();
-    else if (b.dataset.x === "auto") { AUTO = !AUTO; b.classList.toggle("on", AUTO); hist = []; try { localStorage.setItem("hlScanAuto", AUTO ? "1" : "0"); } catch (e) {} } };
+    else if (b.dataset.x === "auto") { AUTO = !AUTO; b.classList.toggle("on", AUTO); steady = null; try { localStorage.setItem("hlScanAuto", AUTO ? "1" : "0"); } catch (e) {} } };
   await frame();
 }
 
