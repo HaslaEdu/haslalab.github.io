@@ -69,7 +69,7 @@ for (const year of ['2021', '2022', '2023', '2024', '2025', '2026']) {
     assert.ok(assets[window.THEORY.izho[year].f.T.ko[kind]] > 0);
   }
 }
-for (const year of ['2010', '2011', '2013', '2015', '2016', '2020']) {
+for (const year of ['2010', '2011', '2013', '2014', '2015', '2016', '2020']) {
   assert.ok(assets[window.THEORY.izho[year].f.T.ko.paper] > 0);
 }
 let usapho = 0;
@@ -108,4 +108,17 @@ for (const file of JSON.parse(read('tools/translation_font_validation.json')).fi
   assert.equal(assets[file.file], file.bytes, `Published PDF size differs from audited version: ${file.file}`);
   assert.equal(file.missing_glyph_spans.length, 0, file.file);
 }
-console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions: 18, usapho, cphoBilingualYears: 8}));
+const catalogueFiles = new Set();
+function collectFiles(value) {
+  if (typeof value === 'string') catalogueFiles.add(value);
+  else if (value && typeof value === 'object') Object.values(value).forEach(collectFiles);
+}
+collectFiles(window.THEORY);
+for (const item of JSON.parse(read('tools/original_style_publication.json'))) {
+  assert.ok([item.file, ...(item.aliases || [])].some(file => catalogueFiles.has(file)),
+    `Audited translation is not linked in the catalogue: ${item.file}`);
+}
+const izhoKoreanEditions = new Set(Object.values(window.THEORY.izho)
+  .flatMap(year => Object.values(year.f || {}).flatMap(part => Object.values(part.ko || {})))
+  .filter(file => typeof file === 'string' && /_KO\.pdf$/.test(file))).size;
+console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions, usapho, cphoBilingualYears: 8}));

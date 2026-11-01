@@ -1,0 +1,3629 @@
+{
+  "status": "DRAFT_MANUAL_MAPPING_IN_PROGRESS_NOT_FOR_PUBLICATION",
+  "source_page": 1,
+  "source_sha256": "c9562e8f6053b454391083289b179f28ed29f7d9024723a34a2a8b0e663bd306",
+  "manual_rois_reviewed": false,
+  "publication_ready": false,
+  "rows": [
+    {
+      "id": "p1-intro-a",
+      "baseline": 188.5,
+      "left": 65.5,
+      "right": 401.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "1. ([[score]]점) 여러 생체 분자의 자기 조립에서 극성 분자 사이의",
+      "en": "1. ([[score]] marks) In biomolecular self-assembly, electric dipole",
+      "erase_rects": [
+        [
+          63,
+          176,
+          402,
+          192
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "score",
+          "rect": [
+            90.5,
+            179,
+            102,
+            190.8
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            87,
+            179,
+            102,
+            190.8
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "score"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "在许多生物分子的自组装过程中",
+        "source_rect": [
+          66.0,
+          177.5,
+          401.5,
+          191.0
+        ],
+        "read_only_measurement_rect": [
+          65.0,
+          176.0,
+          402.5,
+          192.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 188.5,
+        "iou": 0.6626469492912292,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-intro-b",
+      "baseline": 204.75,
+      "left": 64.2,
+      "right": 401.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "쌍극자 상호작용은 분자 배열에 중요하다. 단백질 조각에서는",
+      "en": "interactions help determine molecular arrangements. In protein",
+      "erase_rects": [
+        [
+          63,
+          193,
+          402,
+          208
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "用在决定分子排布中扮演着重要",
+        "source_rect": [
+          64.5,
+          195.0,
+          401.0,
+          206.5
+        ],
+        "read_only_measurement_rect": [
+          63.5,
+          193.5,
+          402.0,
+          208.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 204.75,
+        "iou": 0.7155052423477173,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-intro-c",
+      "baseline": 220.75,
+      "left": 64.2,
+      "right": 401.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "일부 극성 분자가 막이나 지지대에 고정되고, 다른 분자는",
+      "en": "fragments, some polar molecules are fixed to a membrane or",
+      "erase_rects": [
+        [
+          62.5,
+          209,
+          402,
+          225
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "一部分极性分子固定在膜或支架",
+        "source_rect": [
+          64.0,
+          210.5,
+          400.0,
+          223.0
+        ],
+        "read_only_measurement_rect": [
+          63.0,
+          209.0,
+          401.0,
+          224.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 220.75,
+        "iou": 0.621268630027771,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-intro-d",
+      "baseline": 237.0,
+      "left": 64.2,
+      "right": 401.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "궤도에서 이동·회전한다. 공간 제약과 쌍극자 작용의",
+      "en": "support; others slide or rotate on a track. Dipoles and constraints",
+      "erase_rects": [
+        [
+          62.5,
+          225.3,
+          402,
+          241
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "这种空间几何限制与偶极作用的",
+        "source_rect": [
+          64.0,
+          227.5,
+          400.5,
+          239.0
+        ],
+        "read_only_measurement_rect": [
+          63.0,
+          226.0,
+          401.5,
+          240.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 237.0,
+        "iou": 0.657809853553772,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-intro-e",
+      "baseline": 253.25,
+      "left": 64.2,
+      "right": 401.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "결합이 방향성이 강한 퍼텐셜을 만들고 안정 구조를 정한다. 그림 [[figure]]의 [[xy]]",
+      "en": "couple: a very anisotropic potential sets stable forms. Fig. [[figure]]'s [[xy]]",
+      "erase_rects": [
+        [
+          62.5,
+          241.4,
+          402,
+          257.5
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "figure",
+          "rect": [
+            251.1,
+            243.4,
+            261.3,
+            255.8
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "xy",
+          "rect": [
+            282.5,
+            244,
+            298.5,
+            257
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "figure",
+        "xy"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "决定了生物分子的稳定构型",
+        "source_rect": [
+          64.0,
+          243.5,
+          401.0,
+          256.0
+        ],
+        "read_only_measurement_rect": [
+          63.0,
+          242.0,
+          402.0,
+          257.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 253.25,
+        "iou": 0.7222222089767456,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-fixed-dipole",
+      "baseline": 269.75,
+      "left": 64.2,
+      "right": 401.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "평면에 모형화한다. 원점 [[O]]에 고정된 분자 [[A]]의 영구 모멘트는 [[p1]], 크기는",
+      "en": "plane models this. Molecule [[A]], centred at [[O]], has permanent dipole [[p1]],",
+      "erase_rects": [
+        [
+          62.0,
+          257.6,
+          402,
+          275.0
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "O",
+          "rect": [
+            179.5,
+            261.5,
+            187.75,
+            270.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            181,
+            259,
+            190,
+            272
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "A",
+          "rect": [
+            256.25,
+            261.75,
+            264.0,
+            270.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            255,
+            259,
+            264,
+            272
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "p1",
+          "rect": [
+            348.5,
+            257.6,
+            360.7,
+            273.2
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "O",
+        "A",
+        "p1"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "中心固定在坐标原点",
+        "source_rect": [
+          62.5,
+          258.0,
+          401.0,
+          273.0
+        ],
+        "read_only_measurement_rect": [
+          61.5,
+          256.5,
+          402.0,
+          274.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 269.75,
+        "iou": 0.7792143225669861,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-direction",
+      "baseline": 288.25,
+      "left": 63.5,
+      "right": 401.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "[[p]]이고 [[y]]축 양의 방향이다. 분자 [[B]]의 영구 모멘트 [[p2]]도 크기가 [[p2mag]]이며,",
+      "en": "of magnitude [[p]] in positive [[y]]. For [[B]], dipole [[p2]] has magnitude [[p2mag]],",
+      "erase_rects": [
+        [
+          62,
+          276,
+          402,
+          293.6
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "p",
+          "rect": [
+            62.75,
+            282.25,
+            69.75,
+            290.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            62.7,
+            277.1,
+            70.9,
+            291.8
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            62.7,
+            277.1,
+            69.6,
+            291.8
+          ]
+        },
+        {
+          "id": "y",
+          "rect": [
+            111.5,
+            282.0,
+            119.0,
+            291.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            111.1,
+            277,
+            120.5,
+            291.7
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            111.1,
+            277,
+            119.6,
+            291.7
+          ]
+        },
+        {
+          "id": "B",
+          "rect": [
+            215.0,
+            280.25,
+            222.75,
+            289.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            213.1,
+            277.1,
+            222.9,
+            291.8
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "p2",
+          "rect": [
+            308,
+            276.8,
+            321.0,
+            293.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            308.0,
+            276.8,
+            322.8,
+            293.5
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "p2mag",
+          "rect": [
+            372.5,
+            282.0,
+            379.75,
+            291.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            372.3,
+            277,
+            380.5,
+            292
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            372.3,
+            277,
+            379.4,
+            292
+          ]
+        }
+      ],
+      "source_atom_ids": [
+        "p",
+        "y",
+        "B",
+        "p2",
+        "p2mag"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "具有永久电偶极矩",
+        "source_rect": [
+          63.0,
+          278.0,
+          400.5,
+          291.0
+        ],
+        "read_only_measurement_rect": [
+          62.0,
+          276.5,
+          401.5,
+          292.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 288.25,
+        "iou": 0.621814489364624,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-angle-guide",
+      "baseline": 306.25,
+      "left": 63.8,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "[[y]]축과 [[theta]] [[range]]의 각을 이룬다. 질량 중심은 [[xyb]]에 있고 [[positive]], [[x]]는 변한다. [[yb]]에는",
+      "en": "at angle [[theta]] [[range]] to [[y]]. Its centre is at [[xyb]], with [[positive]] and variable [[x]]. Through [[yb]],",
+      "erase_rects": [
+        [
+          62.3,
+          293.6,
+          538,
+          311
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "y",
+          "rect": [
+            85.75,
+            300.5,
+            93.25,
+            309.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            87,
+            295,
+            96,
+            310
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            87,
+            295,
+            95.2,
+            310
+          ]
+        },
+        {
+          "id": "theta",
+          "rect": [
+            146.75,
+            297.5,
+            153.75,
+            307.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            145,
+            295,
+            156,
+            310
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "range",
+          "rect": [
+            157.2,
+            294.5,
+            218.5,
+            311
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "xyb",
+          "rect": [
+            269.5,
+            294.8,
+            310.5,
+            311
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            269.5,
+            294.8,
+            312,
+            311
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "positive",
+          "rect": [
+            349,
+            295,
+            370.5,
+            310
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            349,
+            295,
+            371,
+            310
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "x",
+          "rect": [
+            382.5,
+            300.0,
+            389.25,
+            307.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            382,
+            295,
+            390,
+            310
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            382,
+            295,
+            389.3,
+            310
+          ]
+        },
+        {
+          "id": "yb",
+          "rect": [
+            443,
+            295,
+            465.7,
+            310
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            443,
+            295,
+            466.5,
+            310
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "y",
+        "theta",
+        "range",
+        "xyb",
+        "positive",
+        "x",
+        "yb"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "质心位于",
+        "source_rect": [
+          63.5,
+          295.5,
+          536.5,
+          309.0
+        ],
+        "read_only_measurement_rect": [
+          62.5,
+          294.0,
+          537.5,
+          310.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 306.25,
+        "iou": 0.7015437483787537,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-axle",
+      "baseline": 324.25,
+      "left": 64.0,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "[[x]]축과 나란한 매끄러운 가는 레일이 있다. 분자 [[B]]의 질량 중심은 질량·길이를 무시하는 [[xy]] 평면에",
+      "en": "a thin smooth track parallels [[x]]; a smooth insulating axle through [[B]] is normal to [[xy]],",
+      "erase_rects": [
+        [
+          62.5,
+          311.2,
+          538,
+          328
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "x",
+          "rect": [
+            65.0,
+            318.25,
+            72.0,
+            324.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            65,
+            313,
+            73.5,
+            328
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            65,
+            313,
+            72.7,
+            328
+          ]
+        },
+        {
+          "id": "B",
+          "rect": [
+            175.75,
+            316.25,
+            183.25,
+            325.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            176.8,
+            313,
+            185.7,
+            328
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            176.8,
+            313,
+            184.8,
+            328
+          ]
+        },
+        {
+          "id": "xy",
+          "rect": [
+            459.5,
+            313,
+            475.1,
+            328
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            459.5,
+            313,
+            476.1,
+            328
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "x",
+        "B",
+        "xy"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "光滑绝缘轴",
+        "source_rect": [
+          64.5,
+          313.5,
+          537.0,
+          326.5
+        ],
+        "read_only_measurement_rect": [
+          63.5,
+          312.0,
+          538.0,
+          328.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 324.25,
+        "iou": 0.6655651926994324,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-mass",
+      "baseline": 340.0,
+      "left": 64.0,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "수직인 매끄러운 절연 축으로 레일과 연결되어 움직인다. 분자 [[B]]의 질량은 [[m]], 질량 중심은 축에 있다.",
+      "en": "of negligible mass and length, sliding on the track. For [[B]], mass [[m]], its mass centre is on the axle.",
+      "erase_rects": [
+        [
+          62.5,
+          328.2,
+          538,
+          345
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "B",
+          "rect": [
+            231.75,
+            332.25,
+            239.0,
+            341.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            231.5,
+            329,
+            241,
+            344
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "m",
+          "rect": [
+            285.5,
+            334.5,
+            293.5,
+            341.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            284.5,
+            329,
+            297,
+            344
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            284.5,
+            329,
+            293.7,
+            344
+          ]
+        }
+      ],
+      "source_atom_ids": [
+        "B",
+        "m"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "为计算方便起见取其绕绝缘轴的",
+        "source_rect": [
+          63.5,
+          329.0,
+          537.0,
+          342.5
+        ],
+        "read_only_measurement_rect": [
+          62.5,
+          327.5,
+          538.0,
+          344.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 340.0,
+        "iou": 0.6830130815505981,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-inertia",
+      "baseline": 362.75,
+      "left": 64.0,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "편의상 축 관성 모멘트는 [[inertia]], [[x]], [[y]] 방향 단위벡터는 [[ex]], [[ey]], 진공 유전율은 [[eps]]이다.",
+      "en": "Use [[inertia]]. Unit vectors along [[x]], [[y]]: [[ex]], [[ey]]; vacuum permittivity: [[eps]]. Ignore gravity.",
+      "erase_rects": [
+        [
+          62.5,
+          345.2,
+          538,
+          374
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "inertia",
+          "rect": [
+            118.6,
+            346.2,
+            162,
+            372.7
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            119.5,
+            346.2,
+            162.5,
+            372.7
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "x",
+          "rect": [
+            166.75,
+            356.75,
+            173.0,
+            363.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            167.0,
+            351.4,
+            176.0,
+            367
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            167,
+            351.4,
+            174.7,
+            367
+          ]
+        },
+        {
+          "id": "y",
+          "rect": [
+            217.25,
+            356.75,
+            224.5,
+            366.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            218.5,
+            351.4,
+            227.2,
+            367
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            218.5,
+            351.4,
+            226.1,
+            367
+          ]
+        },
+        {
+          "id": "ex",
+          "rect": [
+            347.1,
+            356.8,
+            355.1,
+            366.3
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            343,
+            351,
+            358,
+            368.5
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "ey",
+          "rect": [
+            368.6,
+            356.7,
+            377.4,
+            367.2
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            376,
+            351,
+            391.1,
+            368.5
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "eps",
+          "rect": [
+            462.1,
+            355.9,
+            470.9,
+            365.7
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            465,
+            351,
+            480,
+            368.5
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "inertia",
+        "x",
+        "y",
+        "ex",
+        "ey",
+        "eps"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "单位矢量",
+        "source_rect": [
+          226,
+          349,
+          347,
+          369
+        ],
+        "read_only_measurement_rect": [
+          225,
+          347.5,
+          348,
+          370.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 362.75,
+        "iou": 0.6639866232872009,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-question-1",
+      "baseline": 386.75,
+      "left": 69,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "중력은 무시한다. (1) 분자 [[A]]가 분자 [[B]]의 위치에 만드는 전기장 [[E]]을 구하여라.",
+      "en": "(1) Find the electric field [[E]] produced by molecule [[A]] at molecule [[B]].",
+      "erase_rects": [
+        [
+          67,
+          374.5,
+          318,
+          391.5
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "A",
+          "rect": [
+            144.5,
+            378.75,
+            153.0,
+            387.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            145,
+            376,
+            154,
+            391
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "B",
+          "rect": [
+            208.25,
+            379.0,
+            215.5,
+            387.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            207,
+            376,
+            216.5,
+            391
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "E",
+          "rect": [
+            298.3,
+            376,
+            311.3,
+            392
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            298.3,
+            376,
+            312.8,
+            392
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "A",
+        "B",
+        "E"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "电场强度",
+        "source_rect": [
+          68.5,
+          376.0,
+          315.5,
+          390.0
+        ],
+        "read_only_measurement_rect": [
+          67.5,
+          374.5,
+          316.5,
+          391.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 386.75,
+        "iou": 0.6332326531410217,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-question-2",
+      "baseline": 404.75,
+      "left": 69,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "(2) 분자 [[B]]가 받는 전기력의 [[x]] 성분 [[F]]와 절연 축에 대한 토크 [[M]]을 구하고, 정지 조건을 유도하여라.",
+      "en": "(2) Find force component [[F]] along [[x]] and torque [[M]] on [[B]] about its axle. Derive conditions",
+      "erase_rects": [
+        [
+          67,
+          392,
+          538,
+          409.5
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "B",
+          "rect": [
+            145.25,
+            397.25,
+            153.0,
+            405.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            144,
+            394,
+            153,
+            409
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "x",
+          "rect": [
+            228.75,
+            399.5,
+            235.0,
+            405.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            228,
+            394,
+            237,
+            409
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "F",
+          "rect": [
+            287,
+            394,
+            299.4,
+            410
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            287,
+            394,
+            301,
+            410
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "M",
+          "rect": [
+            430,
+            394,
+            443,
+            409
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "B",
+        "x",
+        "F",
+        "M"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "电场力沿",
+        "source_rect": [
+          69.0,
+          394.5,
+          536.5,
+          407.5
+        ],
+        "read_only_measurement_rect": [
+          68.0,
+          393.0,
+          537.5,
+          409.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 404.75,
+        "iou": 0.7347629070281982,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-question-2-end",
+      "baseline": 422.75,
+      "left": 64.5,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "",
+      "en": "for it to remain at rest.",
+      "erase_rects": [
+        [
+          63,
+          409.8,
+          94,
+          427
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "条件",
+        "source_rect": [
+          64.5,
+          412.5,
+          91.0,
+          425.5
+        ],
+        "read_only_measurement_rect": [
+          63.5,
+          411.0,
+          92.0,
+          427.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 422.75,
+        "iou": 0.7847272753715515,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-question-3",
+      "baseline": 438.5,
+      "left": 69,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "(3) [[theta]]가 작은 평형에서 분자 [[B]]의 안정성을 분석하여라. 분자 [[B2]]의 평형 이탈이 작을 때",
+      "en": "(3) Study [[B]] near the equilibrium of smaller [[theta]]. For small deviations of [[B2]],",
+      "erase_rects": [
+        [
+          67,
+          427,
+          538,
+          442.5
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "B",
+          "rect": [
+            155.0,
+            431.0,
+            162.25,
+            439.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            153.5,
+            429,
+            163,
+            443
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "theta",
+          "rect": [
+            305.75,
+            430.25,
+            312.5,
+            439.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            304.5,
+            428,
+            314.0,
+            443
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            304.5,
+            428,
+            313.2,
+            443
+          ]
+        },
+        {
+          "id": "B2",
+          "rect": [
+            528.25,
+            430.25,
+            535.75,
+            439.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            526.5,
+            428,
+            536.5,
+            443
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        }
+      ],
+      "source_atom_ids": [
+        "B",
+        "theta",
+        "B2"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "平衡位置",
+        "source_rect": [
+          69.0,
+          428.5,
+          536.0,
+          441.0
+        ],
+        "read_only_measurement_rect": [
+          68.0,
+          427.0,
+          537.0,
+          442.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 438.5,
+        "iou": 0.7148386836051941,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-question-3-end",
+      "baseline": 454.0,
+      "left": 64.5,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "[[xt]]와 [[thetat]]의 일반식을 구하여라. 초기 조건은 주어지지 않았으므로 미정의 적분 상수를 포함해도 된다.",
+      "en": "find general [[xt]], [[thetat]], with arbitrary integration constants (no initial conditions yet).",
+      "erase_rects": [
+        [
+          63,
+          443,
+          532,
+          459.5
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "xt",
+          "rect": [
+            168,
+            444,
+            187.7,
+            460
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "thetat",
+          "rect": [
+            197.5,
+            444,
+            217.7,
+            460
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "xt",
+        "thetat"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "结果中可包含待定积分常量",
+        "source_rect": [
+          64.5,
+          444.0,
+          529.0,
+          457.5
+        ],
+        "read_only_measurement_rect": [
+          63.5,
+          442.5,
+          530.0,
+          459.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 454.0,
+        "iou": 0.7577785849571228,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p1-question-4",
+      "baseline": 472.0,
+      "left": 69,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "(4) [[xa]], [[small]], [[zero]]에서 분자 [[B]]를 정지 상태로 놓는다. 시각 [[t]]의 [[xt]], [[thetat]]를 구하여라.",
+      "en": "(4) Release [[B]] from rest at [[xa]], [[small]], [[zero]]. Find explicit [[xt]] and [[thetat]] at time [[t]].",
+      "erase_rects": [
+        [
+          67,
+          460,
+          532,
+          477
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "B",
+          "rect": [
+            142.0,
+            464.75,
+            149.5,
+            473.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            140.5,
+            462,
+            150,
+            477
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "xa",
+          "rect": [
+            201.6,
+            461.7,
+            226,
+            477
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "small",
+          "rect": [
+            227,
+            461.7,
+            283.0,
+            477
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "zero",
+          "rect": [
+            287,
+            462,
+            313.5,
+            477
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "t",
+          "rect": [
+            389.75,
+            465.0,
+            394.5,
+            472.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            387,
+            462,
+            396,
+            477
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            389.5,
+            462,
+            393.8,
+            477
+          ]
+        },
+        {
+          "id": "xt",
+          "rect": [
+            414,
+            461.7,
+            432.2,
+            477
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            414,
+            461.7,
+            433,
+            477
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "thetat",
+          "rect": [
+            444,
+            461.7,
+            463.5,
+            477
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            442.0,
+            461.7,
+            465,
+            477
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "B",
+        "xa",
+        "small",
+        "zero",
+        "t",
+        "xt",
+        "thetat"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "静止释放",
+        "source_rect": [
+          69.5,
+          462.0,
+          529.0,
+          474.5
+        ],
+        "read_only_measurement_rect": [
+          68.5,
+          460.5,
+          530.0,
+          476.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 472.0,
+        "iou": 0.6320152878761292,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-convention",
+      "baseline": 504.04129091157034,
+      "left": 65.5,
+      "right": 538,
+      "size": 10.0,
+      "role": "serif",
+      "ko": "2. ([[score]]점) [약속: [[x]]축의 양의 방향으로 진행하는 일차원 조화 횡파를 다음과 같이 나타낸다.",
+      "en": "2. ([[score]] marks) [Convention: a harmonic transverse wave travelling in positive [[x]] is written as",
+      "erase_rects": [
+        [
+          64,
+          492,
+          350,
+          508.5
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "score",
+          "rect": [
+            88.1,
+            495,
+            100.2,
+            508
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            87,
+            495,
+            102,
+            508
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "x",
+          "rect": [
+            168.0,
+            499.0,
+            174.5,
+            505.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            168.7,
+            495,
+            176.8,
+            508
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            168.7,
+            495,
+            176.0,
+            508
+          ]
+        }
+      ],
+      "source_atom_ids": [
+        "score",
+        "x"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.15,
+          "bold": 0.25
+        },
+        "en": {
+          "regular": 0.275,
+          "bold": 0.375
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "轴正方向传播的一维简谐横波可",
+        "source_rect": [
+          65.5,
+          494.5,
+          346.5,
+          507.0
+        ],
+        "read_only_measurement_rect": [
+          64.5,
+          493.0,
+          347.5,
+          508.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 504.5,
+        "iou": 0.3234306275844574,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "KaiTi",
+      "font_role": "note",
+      "source_font_evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\convention-font-calibration.json",
+      "prefix_font_role": "body",
+      "prefix_size": 9.72,
+      "prefix_baseline": 504.04129091157034,
+      "prefix_source_evidence": "convention_score-font-calibration.json: actual SimSun score label; following bracketed note independently KaiTi."
+    },
+    {
+      "id": "p2-wave-symbols",
+      "baseline": 539.9379851264464,
+      "left": 65,
+      "right": 538,
+      "size": 10.04,
+      "role": "serif",
+      "ko": "[[A]], [[omega]], [[k]], [[phi]]는 진폭, 각진동수, 파수([[omega2]]와 매질 상수로 표현), 초기 위상이며, [[complexA]]는",
+      "en": "[[A]], [[omega]], [[k]], [[phi]]: amplitude, angular frequency, wavenumber (via [[omega2]]), initial phase. [[complexA]]:",
+      "erase_rects": [
+        [
+          63.5,
+          528,
+          537,
+          545
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "A",
+          "rect": [
+            87.5,
+            533.0,
+            95.25,
+            541.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            87,
+            530,
+            97,
+            544
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            87,
+            530,
+            96.3,
+            544
+          ]
+        },
+        {
+          "id": "omega",
+          "rect": [
+            106.5,
+            534.5,
+            114.5,
+            541.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            104,
+            530,
+            115,
+            544
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "k",
+          "rect": [
+            126.0,
+            532.5,
+            132.0,
+            541.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            124,
+            530,
+            133,
+            544
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "phi",
+          "rect": [
+            145,
+            530,
+            157,
+            546
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "omega2",
+          "rect": [
+            307.75,
+            534.0,
+            315.75,
+            540.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            306,
+            530,
+            317,
+            544
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            306,
+            530,
+            316.3,
+            544
+          ]
+        },
+        {
+          "id": "complexA",
+          "rect": [
+            446.5,
+            526,
+            515.6,
+            546
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "A",
+        "omega",
+        "k",
+        "phi",
+        "omega2",
+        "complexA"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.15,
+          "bold": 0.25
+        },
+        "en": {
+          "regular": 0.275,
+          "bold": 0.375
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "和介质参量表示",
+        "source_rect": [
+          65.0,
+          529.0,
+          535.0,
+          543.5
+        ],
+        "read_only_measurement_rect": [
+          64.0,
+          527.5,
+          536.0,
+          545.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 540.25,
+        "iou": 0.38124001026153564,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "KaiTi",
+      "font_role": "note",
+      "source_font_evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\convention_def-font-calibration.json"
+    },
+    {
+      "id": "p2-complex-amplitude",
+      "baseline": 557.6404644652894,
+      "left": 65,
+      "right": 538,
+      "size": 10.28,
+      "role": "serif",
+      "ko": "위치 [[x]]에서의 복소 진폭이다.]",
+      "en": "the complex amplitude at [[x]]. Wavenumber depends on frequency and medium parameters.]",
+      "erase_rects": [
+        [
+          63.5,
+          545.2,
+          165,
+          562
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "x",
+          "rect": [
+            87.5,
+            552.5,
+            94.5,
+            558.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            87,
+            547,
+            96,
+            561
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        }
+      ],
+      "source_atom_ids": [
+        "x"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.15,
+          "bold": 0.25
+        },
+        "en": {
+          "regular": 0.275,
+          "bold": 0.375
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "处的复振幅",
+        "source_rect": [
+          65.0,
+          547.5,
+          162.5,
+          560.5
+        ],
+        "read_only_measurement_rect": [
+          64.0,
+          546.0,
+          163.5,
+          562.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 557.75,
+        "iou": 0.4209587574005127,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "KaiTi",
+      "font_role": "note",
+      "source_font_evidence": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\convention_amplitude-font-calibration.json"
+    },
+    {
+      "id": "p2-phononic-crystal",
+      "baseline": 573.75,
+      "left": 85.5,
+      "right": 385,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "공간 주기적인 탄성 매질을 ‘포노닉 결정’이라 한다. 각진동수 [[omega]]인",
+      "en": "Periodic elastic media are phononic crystals. Consider, at [[omega]],",
+      "erase_rects": [
+        [
+          84,
+          562,
+          385,
+          578
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "omega",
+          "rect": [
+            374.75,
+            568.0,
+            383.0,
+            574.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            373.5,
+            564,
+            384,
+            579
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        }
+      ],
+      "source_atom_ids": [
+        "omega"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "具有空间周期性的弹性介质称为",
+        "source_rect": [
+          86.0,
+          564.5,
+          383.5,
+          576.0
+        ],
+        "read_only_measurement_rect": [
+          85.0,
+          563.0,
+          384.5,
+          577.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 573.75,
+        "iou": 0.6337564587593079,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-small-wave",
+      "baseline": 589.5,
+      "left": 65,
+      "right": 385,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "일차원 줄의 소진폭 횡파 전파를 살펴보자. 중력은 무시한다.",
+      "en": "small transverse waves on a 1D string. Neglect gravity.",
+      "erase_rects": [
+        [
+          63.5,
+          578.4,
+          288,
+          594.5
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "的小幅横波在一维弦线上的传播",
+        "source_rect": [
+          65.5,
+          580.5,
+          285.5,
+          592.0
+        ],
+        "read_only_measurement_rect": [
+          64.5,
+          579.0,
+          286.5,
+          593.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 589.5,
+        "iou": 0.7175850868225098,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-question-1",
+      "baseline": 605.25,
+      "left": 69.5,
+      "right": 385,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "(1) 선밀도 [[rho]], 장력 [[tau]]인 무한한 균일 줄을 생각하자. [[x]]축은 줄을",
+      "en": "(1) Infinite uniform string: line density [[rho]], tension [[tau]], axis [[x]],",
+      "erase_rects": [
+        [
+          67.5,
+          593.8,
+          386,
+          610.5
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "rho",
+          "rect": [
+            281.75,
+            599.25,
+            289.5,
+            607.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            281,
+            595.5,
+            290.5,
+            610
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "tau",
+          "rect": [
+            331.25,
+            599.25,
+            337.0,
+            605.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            329,
+            595.5,
+            339,
+            610
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            330,
+            595.5,
+            337.8,
+            610
+          ]
+        },
+        {
+          "id": "x",
+          "rect": [
+            346.0,
+            599.0,
+            352.25,
+            605.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            345,
+            595.5,
+            354.5,
+            610
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            345,
+            595.5,
+            353.6,
+            610
+          ]
+        }
+      ],
+      "source_atom_ids": [
+        "rho",
+        "tau",
+        "x"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "考虑一根无限长均匀弦线",
+        "source_rect": [
+          69.5,
+          595.5,
+          385.0,
+          607.5
+        ],
+        "read_only_measurement_rect": [
+          68.5,
+          594.0,
+          386.0,
+          609.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 605.25,
+        "iou": 0.7451817393302917,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-question-1-b",
+      "baseline": 623.0,
+      "left": 65,
+      "right": 385,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "따른다(그림 [[figure]]). 진폭 [[A]], 초기 위상 [[zero]]인 파동이 [[x]]축 양의 방향으로",
+      "en": "(Fig. [[figure]]). A wave of amplitude [[A]], phase [[zero]], travels in positive [[x]].",
+      "erase_rects": [
+        [
+          63.5,
+          611,
+          386,
+          628
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "figure",
+          "rect": [
+            129,
+            612,
+            141.4,
+            626
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "A",
+          "rect": [
+            225.0,
+            615.25,
+            232.75,
+            624.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            225,
+            612,
+            234,
+            626
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            225,
+            612,
+            233.2,
+            626
+          ]
+        },
+        {
+          "id": "zero",
+          "rect": [
+            285.25,
+            614.75,
+            291.0,
+            623.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            284,
+            612,
+            293,
+            626
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        },
+        {
+          "id": "x",
+          "rect": [
+            345.75,
+            616.75,
+            352.0,
+            623.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            345,
+            612,
+            354.5,
+            626
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            345,
+            612,
+            353.6,
+            626
+          ]
+        }
+      ],
+      "source_atom_ids": [
+        "figure",
+        "A",
+        "zero",
+        "x"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "一列振幅为",
+        "source_rect": [
+          64.5,
+          612.0,
+          385.0,
+          626.0
+        ],
+        "read_only_measurement_rect": [
+          63.5,
+          610.5,
+          386.0,
+          627.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 623.0,
+        "iou": 0.7167077660560608,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-question-1-c",
+      "baseline": 639.25,
+      "left": 65,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "진행한다. 시각 [[t]], 위치 [[x]]의 [[x2]] 방향 원래 단위 길이당 운동 에너지 [[Ek]]와 퍼텐셜 에너지 [[Ep]],",
+      "en": "At [[t]], [[x]], find kinetic [[Ek]] and potential [[Ep]] energies per original unit length along [[x2]]",
+      "erase_rects": [
+        [
+          63.5,
+          627.8,
+          538,
+          645
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "t",
+          "rect": [
+            127.5,
+            633.0,
+            132.0,
+            640.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            126.3,
+            629,
+            134,
+            643
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            126.3,
+            629,
+            132.2,
+            643
+          ]
+        },
+        {
+          "id": "x",
+          "rect": [
+            161.5,
+            633.75,
+            168.0,
+            640.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            161.5,
+            629,
+            170.5,
+            643
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            161.5,
+            629,
+            169.5,
+            643
+          ]
+        },
+        {
+          "id": "x2",
+          "rect": [
+            191.25,
+            634.0,
+            198.0,
+            640.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            192,
+            629,
+            201,
+            643
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            191.5,
+            629,
+            199.2,
+            643
+          ]
+        },
+        {
+          "id": "Ek",
+          "rect": [
+            311,
+            628,
+            342.5,
+            645
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "Ep",
+          "rect": [
+            374.8,
+            628,
+            405,
+            645
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "t",
+        "x",
+        "x2",
+        "Ek",
+        "Ep"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "原长弦线",
+        "source_rect": [
+          64.5,
+          628.5,
+          535.5,
+          642.5
+        ],
+        "read_only_measurement_rect": [
+          63.5,
+          627.0,
+          536.5,
+          644.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 639.25,
+        "iou": 0.6874587535858154,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-question-1-d",
+      "baseline": 660.25,
+      "left": 65,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "순간 에너지 흐름 [[I]]와 평균 [[Ibar]]를 구하여라. 파동이 없을 때의 퍼텐셜 에너지는 0이다.",
+      "en": "(zero potential energy without waves), and the instantaneous energy flux [[I]] and mean [[Ibar]].",
+      "erase_rects": [
+        [
+          63.5,
+          646.6,
+          256,
+          665
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "I",
+          "rect": [
+            163.5,
+            649,
+            190,
+            665
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "Ibar",
+          "rect": [
+            240,
+            648.5,
+            250.6,
+            664
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "I",
+        "Ibar"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "以及瞬时能流",
+        "source_rect": [
+          64.5,
+          649.5,
+          253.5,
+          663.0
+        ],
+        "read_only_measurement_rect": [
+          63.5,
+          648.0,
+          254.5,
+          664.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 660.25,
+        "iou": 0.7756152153015137,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-question-2",
+      "baseline": 679.25,
+      "left": 69,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "(2) [[x]]축의 양·음 방향으로 진행하는 조화파가 동시에 있을 때, [[x1]]에서 두 복소 진폭을 각각 [[A1]]과",
+      "en": "(2) For harmonic waves travelling both ways along [[x]], take complex amplitudes at [[x1]] as [[A1]] and",
+      "erase_rects": [
+        [
+          67,
+          666,
+          532,
+          684
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "x",
+          "rect": [
+            170.0,
+            673.5,
+            176.5,
+            680.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            169.7,
+            668,
+            178.7,
+            682
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            169.7,
+            668,
+            177.8,
+            682
+          ]
+        },
+        {
+          "id": "x1",
+          "rect": [
+            397,
+            668,
+            423.2,
+            684
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            397,
+            668,
+            424,
+            684
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "A1",
+          "rect": [
+            513,
+            667,
+            525.4,
+            685
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            513,
+            667,
+            527,
+            685
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "x",
+        "x1",
+        "A1"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "正方向和负",
+        "source_rect": [
+          69.0,
+          667.5,
+          528.0,
+          682.0
+        ],
+        "read_only_measurement_rect": [
+          68.0,
+          666.0,
+          529.0,
+          683.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 679.25,
+        "iou": 0.7000330090522766,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-question-2-b",
+      "baseline": 707.0,
+      "left": 66,
+      "right": 378.5,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "[[B1]], [[x2]]에서 [[A2]], [[B2]]로 두자. [[A2b]], [[B2b]]를 [[A1]], [[B1b]]로 나타내면:",
+      "en": "[[B1]], and at [[x2]] be [[A2]], [[B2]]. Express [[A2b]], [[B2b]] via [[A1]], [[B1b]] as shown.",
+      "erase_rects": [
+        [
+          64.5,
+          693,
+          377.5,
+          713
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "B1",
+          "rect": [
+            66.5,
+            695,
+            77.6,
+            711
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        },
+        {
+          "id": "x2",
+          "rect": [
+            97,
+            695,
+            123.4,
+            711
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            97,
+            695,
+            124.2,
+            711
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "A2",
+          "rect": [
+            215.6,
+            693.9,
+            228.3,
+            712
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            215.6,
+            693.9,
+            230,
+            712
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "B2",
+          "rect": [
+            236,
+            694,
+            249.2,
+            712
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            236.0,
+            694,
+            250.7,
+            712
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "A2b",
+          "rect": [
+            257,
+            694,
+            270.8,
+            712
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            257,
+            694,
+            272.5,
+            712
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "B2b",
+          "rect": [
+            280.5,
+            694,
+            293.1,
+            712
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            280.5,
+            694,
+            294.4,
+            712
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "A1",
+          "rect": [
+            315.5,
+            694,
+            325.2,
+            712
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            315.5,
+            694,
+            327,
+            712
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        },
+        {
+          "id": "B1b",
+          "rect": [
+            335.5,
+            694,
+            346.5,
+            712
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            335.5,
+            694,
+            349,
+            712
+          ],
+          "source_crop_review": "atom-review/page01-atoms-01.png through page01-atoms-08.png; explicit manually reviewed corrected ROI."
+        }
+      ],
+      "source_atom_ids": [
+        "B1",
+        "x2",
+        "A2",
+        "B2",
+        "A2b",
+        "B2b",
+        "A1",
+        "B1b"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "处的复振幅分别记为",
+        "source_rect": [
+          66.5,
+          696.0,
+          380.0,
+          710.5
+        ],
+        "read_only_measurement_rect": [
+          65.5,
+          694.5,
+          381.0,
+          712.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 707.0,
+        "iou": 0.722256064414978,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "p2-matrix-caption",
+      "baseline": 705.75,
+      "left": 470.0,
+      "right": 538,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "행렬로는",
+      "en": "Matrix form:",
+      "erase_rects": [
+        [
+          468.5,
+          694,
+          538,
+          713
+        ]
+      ],
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "矩阵表示",
+        "source_rect": [
+          469,
+          692,
+          538,
+          713
+        ],
+        "read_only_measurement_rect": [
+          468,
+          690.5,
+          539,
+          714.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 705.75,
+        "iou": 0.6582897901535034,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "figure-1-caption",
+      "baseline": 277.0,
+      "left": 455,
+      "right": 480,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "그림 [[fig]]",
+      "en": "Fig. [[fig]]",
+      "erase_rects": [
+        [
+          452,
+          264.5,
+          481,
+          281
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            465.5,
+            267,
+            480,
+            281
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "图",
+        "source_rect": [
+          454.0,
+          267.0,
+          479.5,
+          280.0
+        ],
+        "read_only_measurement_rect": [
+          453.0,
+          265.5,
+          480.5,
+          281.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 277.0,
+        "iou": 0.7775378227233887,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "figure-2-caption",
+      "baseline": 605.75,
+      "left": 454,
+      "right": 480,
+      "size": 10.24,
+      "role": "serif",
+      "ko": "그림 [[fig]]",
+      "en": "Fig. [[fig]]",
+      "erase_rects": [
+        [
+          451,
+          593.6,
+          482,
+          611
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            465.2,
+            595,
+            481,
+            610
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained."
+        }
+      ],
+      "source_atom_ids": [
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "图",
+        "source_rect": [
+          452.5,
+          593.5,
+          479.5,
+          609.5
+        ],
+        "read_only_measurement_rect": [
+          451.5,
+          592.0,
+          480.5,
+          611.0
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 605.75,
+        "iou": 0.784424364566803,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    },
+    {
+      "id": "footer",
+      "baseline": 789.5,
+      "left": 265,
+      "right": 337,
+      "size": 8.5,
+      "role": "serif",
+      "ko": "[[one]] / [[six]]쪽",
+      "en": "Page [[one]] of [[six]]",
+      "erase_rects": [
+        [
+          263,
+          778.5,
+          339,
+          795
+        ]
+      ],
+      "atoms": [
+        {
+          "id": "one",
+          "rect": [
+            279.25,
+            783.0,
+            282.75,
+            790.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "initial_rect": [
+            280,
+            780,
+            287,
+            794
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged.",
+          "previous_rect_before_source_ink_review": [
+            279,
+            780,
+            287,
+            794
+          ]
+        },
+        {
+          "id": "six",
+          "rect": [
+            317.5,
+            782.5,
+            322.5,
+            789.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reason": "Manually selected original source-image notation; original scale, baseline, shape and encoded image retained.",
+          "previous_rect_before_source_ink_review": [
+            315.3,
+            780,
+            322.5,
+            794
+          ],
+          "source_crop_review": "All8 atom-review-proposed contact sheets manually reviewed. Whole original notation remains inside the clip; neighbouring Chinese ink is excluded. Original image scale/y unchanged."
+        }
+      ],
+      "source_atom_ids": [
+        "one",
+        "six"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "页",
+        "source_rect": [
+          324,
+          778,
+          337,
+          793
+        ],
+        "read_only_measurement_rect": [
+          323,
+          776.5,
+          338,
+          794.5
+        ],
+        "size_fixed_before_translation": 8.5,
+        "baseline": 789.25,
+        "iou": 0.651063859462738,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1,
+        "source_first_last_CJK_midpoint_used": true
+      },
+      "source_face": "SimSun",
+      "font_role": "body"
+    }
+  ],
+  "note": "Complete page semantic/ROI draft for review only. All selected notation must be checked against the coordinate source; point size is calibrated from the source, not fitted to translations. No READY until source scan glyph/paint, full math ink, outside graphics, new prose visibility, native overlap and visual comparison all pass."
+}

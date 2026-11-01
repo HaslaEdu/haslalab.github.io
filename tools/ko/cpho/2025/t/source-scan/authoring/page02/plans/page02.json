@@ -1,0 +1,4140 @@
+{
+  "status": "SOURCE_CONTACT_REVIEWED_PROOF_PENDING",
+  "source_page": 2,
+  "source_sha256": "c9562e8f6053b454391083289b179f28ed29f7d9024723a34a2a8b0e663bd306",
+  "manual_rois_reviewed": true,
+  "publication_ready": false,
+  "rows": [
+    {
+      "id": "matrix-definition",
+      "hint_id": "2-0",
+      "source": "矩阵M称为从x=到x=x,的传输矩阵。",
+      "ko": "[[M]]은 [[x1]]에서 [[x2]]까지의 전달 행렬이다.",
+      "en": "[[M]] is the transfer matrix from [[x1]] to [[x2]].",
+      "erase_rects": [
+        [
+          61,
+          84,
+          247,
+          99
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 94.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "M",
+          "rect": [
+            83,
+            83.5,
+            94,
+            98.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "x1",
+          "rect": [
+            128,
+            85,
+            152,
+            99
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "x2",
+          "rect": [
+            165,
+            85,
+            191,
+            99
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "M",
+        "x1",
+        "x2"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "的传输矩阵",
+        "source_rect": [
+          61,
+          84,
+          247,
+          99
+        ],
+        "read_only_measurement_rect": [
+          60,
+          82.5,
+          248,
+          100.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 94.5,
+        "iou": 0.7463225722312927,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "interface-a",
+      "hint_id": "2-1",
+      "source": "考虑两根半无限长弦线在x=0处相连，分界面存在某种约束使其两",
+      "ko": "두 반무한 줄을 [[zero]]에서 잇는다. 경계면의 구속 때문에",
+      "en": "Join two semi-infinite strings at [[zero]]. Interface constraints",
+      "erase_rects": [
+        [
+          81,
+          102,
+          386,
+          117
+        ]
+      ],
+      "left": 82,
+      "right": 386,
+      "size": 10.24,
+      "baseline": 112.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "zero",
+          "rect": [
+            194,
+            103,
+            217,
+            117
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "zero"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "分界面存在某种约束使其两",
+        "source_rect": [
+          81,
+          102,
+          386,
+          117
+        ],
+        "read_only_measurement_rect": [
+          80,
+          100.5,
+          387,
+          118.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 112.75,
+        "iou": 0.5359735488891602,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "interface-b",
+      "hint_id": "2-5",
+      "source": "侧的张力大小可以不等（下同），x<0部分的弦线丨的线密度为p、张力",
+      "ko": "양쪽 장력은 다를 수 있다(이하 동일). [[negative]]의 줄 [[one]]은 선밀도 [[rho1]],",
+      "en": "allow unequal tensions (throughout). At [[negative]]: [[one]], density [[rho1]],",
+      "erase_rects": [
+        [
+          61,
+          118,
+          386,
+          134
+        ]
+      ],
+      "left": 62,
+      "right": 386,
+      "size": 10.24,
+      "baseline": 129.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "negative",
+          "rect": [
+            206,
+            119,
+            231,
+            133
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "one",
+          "rect": [
+            285.0,
+            121.0,
+            288.25,
+            129.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            282,
+            119,
+            290,
+            133
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "rho1",
+          "rect": [
+            343,
+            118.5,
+            355,
+            134
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "negative",
+        "one",
+        "rho1"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "部分的弦线丨的线密度为",
+        "source_rect": [
+          61,
+          118,
+          386,
+          134
+        ],
+        "read_only_measurement_rect": [
+          60,
+          116.5,
+          387,
+          135.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 129.0,
+        "iou": 0.7054917216300964,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "interface-c",
+      "hint_id": "2-8",
+      "source": "为t，x>0部分的弦线2的线密度为P2、张力为t，，如图2b所示。",
+      "ko": "장력 [[tau1]]이다. [[positive]]의 줄 [[two]]는 선밀도 [[rho2]], 장력 [[tau2]]이다(그림 [[fig]]).",
+      "en": "tension [[tau1]]. For [[positive]]: string [[two]], density [[rho2]], tension [[tau2]] (Fig. [[fig]]).",
+      "erase_rects": [
+        [
+          61,
+          136,
+          366,
+          153
+        ]
+      ],
+      "left": 62,
+      "right": 386,
+      "size": 10.24,
+      "baseline": 148.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "tau1",
+          "rect": [
+            74,
+            137,
+            83,
+            152
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "positive",
+          "rect": [
+            93,
+            137,
+            114,
+            152
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "two",
+          "rect": [
+            168.25,
+            139.75,
+            173.75,
+            148.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            168,
+            137,
+            176,
+            152
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "rho2",
+          "rect": [
+            229,
+            137,
+            241,
+            152
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "tau2",
+          "rect": [
+            282,
+            137,
+            294,
+            153
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "fig",
+          "rect": [
+            326,
+            137,
+            338,
+            152
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "tau1",
+        "positive",
+        "two",
+        "rho2",
+        "tau2",
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "部分的弦线",
+        "source_rect": [
+          61,
+          136,
+          366,
+          153
+        ],
+        "read_only_measurement_rect": [
+          60,
+          134.5,
+          367,
+          154.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 148.0,
+        "iou": 0.624243974685669,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "interface-matrix",
+      "hint_id": "2-9",
+      "source": "（2.1）求系统从x=0到×=0*的传输矩阵M,z",
+      "ko": "[[label]] [[minus]]에서 [[plus]]까지의 전달 행렬 [[M]]를 구하여라.",
+      "en": "[[label]] Find transfer matrix [[M]] from [[minus]] to [[plus]].",
+      "erase_rects": [
+        [
+          86,
+          156,
+          298,
+          174
+        ]
+      ],
+      "left": 87,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 168.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            87,
+            157,
+            113,
+            173
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "minus",
+          "rect": [
+            155,
+            156.5,
+            182,
+            174
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "plus",
+          "rect": [
+            193,
+            156.5,
+            221,
+            174
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "M",
+          "rect": [
+            273,
+            155.5,
+            290.5,
+            174
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "minus",
+        "plus",
+        "M"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "的传输矩阵",
+        "source_rect": [
+          86,
+          156,
+          298,
+          174
+        ],
+        "read_only_measurement_rect": [
+          85,
+          154.5,
+          299,
+          175.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 168.5,
+        "iou": 0.7262556552886963,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "transmission-a",
+      "hint_id": "2-10",
+      "source": "（2.2）一列简谐波从左侧远处沿x轴正方向传播，在分界面x=0处入射并发生反射和透射，求透射率",
+      "ko": "[[label]] 왼쪽 먼 곳의 조화파가 [[x]]축 양의 방향으로 와 [[zero]]의 경계면에서 반사·투과된다.",
+      "en": "[[label]] A harmonic wave from far left along positive [[x]] reflects and transmits at [[zero]].",
+      "erase_rects": [
+        [
+          86,
+          175,
+          537,
+          191
+        ]
+      ],
+      "left": 87,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 187.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            87,
+            176,
+            113,
+            191
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "x",
+          "rect": [
+            227.5,
+            181.0,
+            233.5,
+            188.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            226,
+            176,
+            237,
+            191
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "zero",
+          "rect": [
+            349,
+            175.5,
+            371,
+            191
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "x",
+        "zero"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "一列简谐波从左侧远处沿",
+        "source_rect": [
+          86,
+          175,
+          537,
+          191
+        ],
+        "read_only_measurement_rect": [
+          85,
+          173.5,
+          538,
+          192.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 187.0,
+        "iou": 0.584683358669281,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "transmission-b",
+      "hint_id": "2-11",
+      "source": "T（透射波的平均能流7与入射波的平均能流7之比)。",
+      "ko": "투과율 [[T]], 곧 투과파 평균 에너지 흐름 [[It]]와 입사파 평균 흐름 [[Ii]]의 비를 구하여라.",
+      "en": "Find transmittance [[T]], the ratio of mean transmitted flux [[It]] to mean incident flux [[Ii]].",
+      "erase_rects": [
+        [
+          61,
+          193,
+          306,
+          210
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 205.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "T",
+          "rect": [
+            63,
+            194,
+            73,
+            209
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "It",
+          "rect": [
+            162,
+            192.5,
+            174,
+            210
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "Ii",
+          "rect": [
+            264,
+            192.5,
+            276,
+            210
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "T",
+        "It",
+        "Ii"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "与入射波的平均能流",
+        "source_rect": [
+          61,
+          193,
+          306,
+          210
+        ],
+        "read_only_measurement_rect": [
+          60,
+          191.5,
+          307,
+          211.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 205.0,
+        "iou": 0.7143555283546448,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "sandwich-a",
+      "hint_id": "2-12",
+      "source": "（3）进一步考虑由弦线1（p、,）和弦线2（P,、t,）组成的有多个",
+      "ko": "[[label]] 줄 [[one]], [[two]]로 다중 경계면 계를 만든다.",
+      "en": "[[label]] Multiple interfaces between [[one]] and [[two]]:",
+      "erase_rects": [
+        [
+          65,
+          212,
+          385,
+          229
+        ]
+      ],
+      "left": 66,
+      "right": 386,
+      "size": 10.24,
+      "baseline": 224.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            66,
+            213,
+            85,
+            228
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "one",
+          "rect": [
+            169,
+            212,
+            225,
+            229
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "two",
+          "rect": [
+            262,
+            212,
+            320,
+            229
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "one",
+        "two"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "进一步考虑由弦线",
+        "source_rect": [
+          65,
+          212,
+          385,
+          229
+        ],
+        "read_only_measurement_rect": [
+          64,
+          210.5,
+          386,
+          230.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 224.0,
+        "iou": 0.5989314317703247,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "sandwich-b",
+      "hint_id": "2-15",
+      "source": "分界面的弦线系统：x<0部分为半无限长的弦线2，x>0部分从左到右",
+      "ko": "[[negative]]에는 반무한 줄 [[two]]가 있고 [[positive]]에는 왼쪽부터",
+      "en": "For [[negative]]: semi-infinite string [[two]]. For [[positive]], from left to right:",
+      "erase_rects": [
+        [
+          61,
+          231,
+          385,
+          247
+        ]
+      ],
+      "left": 62,
+      "right": 386,
+      "size": 10.24,
+      "baseline": 241.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "negative",
+          "rect": [
+            154,
+            232,
+            178,
+            247
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "two",
+          "rect": [
+            282.0,
+            233.5,
+            287.75,
+            242.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            280,
+            232,
+            289,
+            247
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "positive",
+          "rect": [
+            299,
+            232,
+            319,
+            247
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "negative",
+        "two",
+        "positive"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "部分为半无限长的弦线",
+        "source_rect": [
+          61,
+          231,
+          385,
+          247
+        ],
+        "read_only_measurement_rect": [
+          60,
+          229.5,
+          386,
+          248.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 241.75,
+        "iou": 0.6591101288795471,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "sandwich-c",
+      "hint_id": "2-18",
+      "source": "依次为长度为α的弦线1、长度为b的弦线2、长度为α的弦线1、半无",
+      "ko": "길이 [[a]]의 줄 [[one]], 길이 [[b]]의 줄 [[two]], 길이 [[a2]]의 줄 [[one2]],",
+      "en": "string [[one]] of length [[a]], string [[two]] of length [[b]], string [[one2]] of length [[a2]],",
+      "erase_rects": [
+        [
+          62,
+          247,
+          386,
+          262
+        ]
+      ],
+      "left": 63,
+      "right": 386,
+      "size": 10.24,
+      "baseline": 258.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            125.5,
+            252.5,
+            131.75,
+            259.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            125,
+            248,
+            134,
+            262
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "one",
+          "rect": [
+            168.0,
+            250.25,
+            171.5,
+            259.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            167,
+            248,
+            172.5,
+            262
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "b",
+          "rect": [
+            215.5,
+            250.25,
+            221.25,
+            259.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            216,
+            248,
+            225,
+            262
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "two",
+          "rect": [
+            257.0,
+            250.25,
+            262.75,
+            258.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            258,
+            248,
+            264,
+            262
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "a2",
+          "rect": [
+            305.5,
+            252.5,
+            312.0,
+            259.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            306,
+            248,
+            316,
+            262
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "one2",
+          "rect": [
+            349.0,
+            250.25,
+            351.5,
+            259.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            347,
+            248,
+            354,
+            262
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "a",
+        "one",
+        "b",
+        "two",
+        "a2",
+        "one2"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "依次为长度为",
+        "source_rect": [
+          62,
+          247,
+          386,
+          262
+        ],
+        "read_only_measurement_rect": [
+          61,
+          245.5,
+          387,
+          263.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 258.0,
+        "iou": 0.6736292243003845,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "sandwich-d",
+      "hint_id": "2-20",
+      "source": "限长的弦线2，如图2c所示。",
+      "ko": "반무한 줄 [[two]]가 차례로 놓인다(그림 [[fig]]).",
+      "en": "then semi-infinite string [[two]] (Fig. [[fig]]).",
+      "erase_rects": [
+        [
+          61,
+          263,
+          193,
+          279
+        ]
+      ],
+      "left": 62,
+      "right": 386,
+      "size": 10.24,
+      "baseline": 274.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "two",
+          "rect": [
+            115.0,
+            266.75,
+            121.0,
+            275.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            114,
+            264,
+            121,
+            279
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "fig",
+          "rect": [
+            153,
+            264,
+            167,
+            279
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "two",
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "限长的弦线",
+        "source_rect": [
+          61,
+          263,
+          193,
+          279
+        ],
+        "read_only_measurement_rect": [
+          60,
+          261.5,
+          194,
+          280.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 274.25,
+        "iou": 0.625281572341919,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "sandwich-matrix",
+      "hint_id": "2-21",
+      "source": "(3.1）求系统从x=0-到x=a*的传输矩阵M212（将矩阵元复数≥都表示为\"Re(2)+ilm(2)\"的形式);",
+      "ko": "[[label]] [[minus]]→[[plus]]의 [[M]]를 구하고, 각 복소 원소 [[z]]를 [[form]]로 써라.",
+      "en": "[[label]] Find [[M]] from [[minus]] to [[plus]], writing each complex entry [[z]] as [[form]].",
+      "erase_rects": [
+        [
+          85,
+          280,
+          536,
+          299
+        ]
+      ],
+      "left": 86,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 293.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            86,
+            281,
+            113,
+            298
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "minus",
+          "rect": [
+            156,
+            280.5,
+            185,
+            298
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "plus",
+          "rect": [
+            196,
+            280.5,
+            223,
+            298
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "M",
+          "rect": [
+            276,
+            279.5,
+            302,
+            298
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "z",
+          "rect": [
+            372,
+            280.5,
+            380,
+            297
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "form",
+          "rect": [
+            423,
+            280.5,
+            494,
+            298
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "minus",
+        "plus",
+        "M",
+        "z",
+        "form"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "将矩阵元复数",
+        "source_rect": [
+          85,
+          280,
+          536,
+          299
+        ],
+        "read_only_measurement_rect": [
+          84,
+          278.5,
+          537,
+          300.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 293.25,
+        "iou": 0.6832460761070251,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "sandwich-transmission-a",
+      "hint_id": "2-22",
+      "source": "（3.2）一列简谐波从左侧远处沿×轴正方向传播，在各分界面发生反射和透射，求系统的透射系数i",
+      "ko": "[[label]] 왼쪽 먼 조화파가 [[x]]축 양의 방향으로 가며 경계마다 반사·투과된다. [[t]]를 구하여라.",
+      "en": "[[label]] From far left a harmonic wave along positive [[x]] reflects/transmits at each join; find [[t]],",
+      "erase_rects": [
+        [
+          85,
+          298,
+          536,
+          317
+        ]
+      ],
+      "left": 86,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 311.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            86,
+            299,
+            113,
+            316
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "x",
+          "rect": [
+            231.0,
+            306.0,
+            237.25,
+            312.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            230,
+            299,
+            241,
+            316
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "t",
+          "rect": [
+            527.5,
+            298.5,
+            535,
+            317
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "x",
+        "t"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "在各分界面发生反射和透射",
+        "source_rect": [
+          85,
+          298,
+          536,
+          317
+        ],
+        "read_only_measurement_rect": [
+          84,
+          296.5,
+          537,
+          318.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 311.25,
+        "iou": 0.5707442164421082,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "sandwich-transmission-b",
+      "hint_id": "2-23",
+      "source": "（x=(2a+b)*处透射波的复振幅A与x=0~处入射波的复振幅A之比)。",
+      "ko": "곧 [[xt]]의 투과파 복소 진폭 [[At]]와 [[xi]]의 입사파 복소 진폭 [[Ai]]의 비이다.",
+      "en": "the ratio of transmitted complex amplitude [[At]] at [[xt]] to incident [[Ai]] at [[xi]].",
+      "erase_rects": [
+        [
+          64,
+          316,
+          383,
+          335
+        ]
+      ],
+      "left": 65,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 329.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "xt",
+          "rect": [
+            73,
+            316.5,
+            128,
+            335
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "At",
+          "rect": [
+            209,
+            316,
+            220,
+            335
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "xi",
+          "rect": [
+            230,
+            316.5,
+            259,
+            335
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "Ai",
+          "rect": [
+            342,
+            316,
+            351.5,
+            335
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "xt",
+        "At",
+        "xi",
+        "Ai"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "处透射波的复振幅",
+        "source_rect": [
+          64,
+          316,
+          383,
+          335
+        ],
+        "read_only_measurement_rect": [
+          63,
+          314.5,
+          384,
+          336.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 329.5,
+        "iou": 0.7218604683876038,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "crystal-a",
+      "hint_id": "2-24",
+      "source": "（4）考虑长度为α的弦线1（p、t）和长度为b的弦线2（pz、",
+      "ko": "[[label]] 길이 [[a]]인 줄 [[one]]과 길이 [[b]]인 줄 [[two]]를",
+      "en": "[[label]] Alternate [[a]]-long string [[one]] with [[b]]-long [[two]]",
+      "erase_rects": [
+        [
+          64,
+          335,
+          364,
+          354
+        ]
+      ],
+      "left": 65,
+      "right": 370,
+      "size": 10.24,
+      "baseline": 347.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            65,
+            336,
+            84,
+            353
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "a",
+          "rect": [
+            141.75,
+            342.25,
+            148.25,
+            348.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            141,
+            336,
+            151,
+            353
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "one",
+          "rect": [
+            183,
+            335,
+            239,
+            354
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "b",
+          "rect": [
+            286.0,
+            340.0,
+            291.75,
+            349.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            284,
+            336,
+            295,
+            353
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "two",
+          "rect": [
+            329,
+            335,
+            360,
+            354
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "a",
+        "one",
+        "b",
+        "two"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "考虑长度为",
+        "source_rect": [
+          64,
+          335,
+          364,
+          354
+        ],
+        "read_only_measurement_rect": [
+          63,
+          333.5,
+          365,
+          355.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 347.5,
+        "iou": 0.7262804508209229,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "crystal-b",
+      "hint_id": "2-25",
+      "source": "t,）交替排列，构成空间周期为d=a+b的周期性结构，即一维声子",
+      "ko": "[[tau]] 번갈아 놓아 공간 주기 [[period]]인 일차원 포노닉 결정을 만든다.",
+      "en": "[[tau]] in a 1D phononic crystal of period [[period]].",
+      "erase_rects": [
+        [
+          62,
+          354,
+          370,
+          371
+        ]
+      ],
+      "left": 63,
+      "right": 370,
+      "size": 10.24,
+      "baseline": 365.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "tau",
+          "rect": [
+            63.5,
+            354,
+            79,
+            371
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "period",
+          "rect": [
+            209,
+            354,
+            247,
+            371
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "tau",
+        "period"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "构成空间周期为",
+        "source_rect": [
+          62,
+          354,
+          370,
+          371
+        ],
+        "read_only_measurement_rect": [
+          61,
+          352.5,
+          371,
+          372.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 365.75,
+        "iou": 0.7426843047142029,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "native_punctuation_note": "Original second-string parameter tuple closes in the source bitmap tau2) on this continuation line; keep the complete original parenthesis and add no second typed one."
+    },
+    {
+      "id": "crystal-c",
+      "hint_id": "2-28",
+      "source": "晶体，如图2d所示。根据布洛赫定理，在周期性介质中传播的一维波",
+      "ko": "그림 [[fig]]에서처럼, 블로흐 정리에 따라 주기 매질의 일차원 파동",
+      "en": "By Bloch's theorem, waves in this periodic medium (Fig. [[fig]])",
+      "erase_rects": [
+        [
+          61,
+          373,
+          369,
+          388
+        ]
+      ],
+      "left": 62,
+      "right": 370,
+      "size": 10.24,
+      "baseline": 383.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            113,
+            373,
+            127,
+            388
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "在周期性介质中传播的一维波",
+        "source_rect": [
+          61,
+          373,
+          369,
+          388
+        ],
+        "read_only_measurement_rect": [
+          60,
+          371.5,
+          370,
+          389.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 383.75,
+        "iou": 0.6047822833061218,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "crystal-d",
+      "hint_id": "2-30",
+      "source": "j(x,t)，可表示为复振幅周期调制的平面波形式，即",
+      "ko": "[[wave]]는 복소 진폭이 주기적으로 변조된 평면파로 쓸 수 있다. 즉",
+      "en": "has form [[wave]], a plane wave with periodically modulated complex amplitude:",
+      "erase_rects": [
+        [
+          62,
+          388,
+          299,
+          405
+        ]
+      ],
+      "left": 63,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 399.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "wave",
+          "rect": [
+            63,
+            388,
+            92,
+            405
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "wave"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "可表示为复振幅周期调制的平面",
+        "source_rect": [
+          62,
+          388,
+          299,
+          405
+        ],
+        "read_only_measurement_rect": [
+          61,
+          386.5,
+          300,
+          406.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 399.25,
+        "iou": 0.7089614868164062,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "bloch-definitions",
+      "hint_id": "2-32",
+      "source": "其中调幅因子üx(x)是周期为d的函数，满足ik(x+d)=ix(x)，K为布洛赫波矢。",
+      "ko": "변조 인자 [[u]]는 주기 [[d]]를 가져 [[periodic]]를 만족한다. [[K]]는 블로흐 파수다.",
+      "en": "Modulation [[u]] has period [[d]], with [[periodic]]; [[K]] is the Bloch wavevector.",
+      "erase_rects": [
+        [
+          60,
+          425,
+          426,
+          444
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 436.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "u",
+          "rect": [
+            124,
+            425,
+            152,
+            443
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "d",
+          "rect": [
+            193.75,
+            429.0,
+            201.0,
+            437.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            193,
+            426,
+            204,
+            442
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "periodic",
+          "rect": [
+            263,
+            424.5,
+            338,
+            443.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "K",
+          "rect": [
+            347.75,
+            429.5,
+            356.5,
+            438.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            348,
+            426,
+            359,
+            442
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "u",
+        "d",
+        "periodic",
+        "K"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "其中调幅因子",
+        "source_rect": [
+          60,
+          425,
+          426,
+          444
+        ],
+        "read_only_measurement_rect": [
+          59,
+          423.5,
+          427,
+          445.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 436.5,
+        "iou": 0.7706959843635559,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "band-relation",
+      "hint_id": "2-33",
+      "source": "（4.1）对于此一维声子晶体允许传播的波，求角频率の与波矢K满足的关系式。波允许传播时の的一",
+      "ko": "[[label]] 허용 파동의 각진동수 [[omega]]와 파수 [[K]]의 관계를 구하여라. 전파가 허용되는 [[omega2]]의",
+      "en": "[[label]] Find the relation between allowed [[omega]] and [[K]]. A continuous allowed range of [[omega2]] is a",
+      "erase_rects": [
+        [
+          85,
+          443,
+          535,
+          460
+        ]
+      ],
+      "left": 86,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 454.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            86,
+            444,
+            113,
+            459
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "omega",
+          "rect": [
+            319.75,
+            449.25,
+            327.75,
+            456.0
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            318,
+            444,
+            330,
+            459
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "K",
+          "rect": [
+            361.25,
+            447.0,
+            370.0,
+            455.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            360,
+            444,
+            370.5,
+            459
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "omega2",
+          "rect": [
+            503.25,
+            448.0,
+            511.5,
+            454.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            502,
+            444,
+            514,
+            459
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "omega",
+        "K",
+        "omega2"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "对于此一维声子晶体允许传播的",
+        "source_rect": [
+          85,
+          443,
+          535,
+          460
+        ],
+        "read_only_measurement_rect": [
+          84,
+          441.5,
+          536,
+          461.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 454.75,
+        "iou": 0.6860503554344177,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "band-definition",
+      "hint_id": "2-34",
+      "source": "个连续范围为声子晶体能带中的一个“通带”，不允许传播时的一个连续范围为一个“禁带”。对于此一维声子",
+      "ko": "연속 범위를 ‘통과대’, 허용되지 않는 연속 범위를 ‘금지대’라 한다. 최저 각진동수를 포함하는 통과대에서",
+      "en": "passband; a forbidden continuous range is a band gap. In the lowest-frequency passband,",
+      "erase_rects": [
+        [
+          60,
+          458,
+          535,
+          475
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 470.0,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "个连续范围为声子晶体能带中的",
+        "source_rect": [
+          60,
+          458,
+          535,
+          475
+        ],
+        "read_only_measurement_rect": [
+          59,
+          456.5,
+          536,
+          476.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 470.0,
+        "iou": 0.6270238161087036,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "long-wave",
+      "hint_id": "2-35",
+      "source": "晶体含有最低角频率的通带，求长波极限（即K→0）下波的相速度U。",
+      "ko": "장파장 극한 [[limit]]의 위상 속도 [[v]]를 구하여라.",
+      "en": "find phase velocity [[v]] in the long-wave limit [[limit]].",
+      "erase_rects": [
+        [
+          60,
+          474,
+          382,
+          493
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 486.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "limit",
+          "rect": [
+            269,
+            474.5,
+            293,
+            492
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "v",
+          "rect": [
+            364,
+            476,
+            375.75,
+            492
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "limit",
+        "v"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "晶体含有最低角频率的通带",
+        "source_rect": [
+          60,
+          474,
+          382,
+          493
+        ],
+        "read_only_measurement_rect": [
+          59,
+          472.5,
+          383,
+          494.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 486.5,
+        "iou": 0.6636658906936646,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "band-gaps-a",
+      "hint_id": "2-36",
+      "source": "（4.2）若p=2p2、,=2t、α=2b，求此一维声子晶体各禁带对应的范围，以及各禁带的角频率",
+      "ko": "[[label]] [[given]]일 때 각 금지대의 [[omega]] 범위를 구하고,",
+      "en": "[[label]] For [[given]], find every band-gap range of [[omega]] and its width",
+      "erase_rects": [
+        [
+          84,
+          494,
+          537,
+          515
+        ]
+      ],
+      "left": 85,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 506.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            85,
+            495,
+            113,
+            513
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "given",
+          "rect": [
+            125,
+            494.5,
+            249,
+            514
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "omega",
+          "rect": [
+            391.5,
+            500.75,
+            399.75,
+            507.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            392,
+            495,
+            405,
+            513
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "given",
+        "omega"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "求此一维声子晶体各禁带对应的",
+        "source_rect": [
+          84,
+          494,
+          537,
+          515
+        ],
+        "read_only_measurement_rect": [
+          83,
+          492.5,
+          538,
+          516.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 506.75,
+        "iou": 0.5010678172111511,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "band-gaps-b",
+      "hint_id": "2-37",
+      "source": "宽度w，结果用 z、、b表示。",
+      "ko": "각진동수 폭 [[width]]를 [[rho]], [[tau]], [[b]]로 나타내어라.",
+      "en": "[[width]], in terms of [[rho]], [[tau]], [[b]].",
+      "erase_rects": [
+        [
+          60,
+          513,
+          223,
+          530
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 524.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "width",
+          "rect": [
+            83,
+            514,
+            101,
+            530
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "rho",
+          "rect": [
+            144,
+            513.5,
+            157,
+            530
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "tau",
+          "rect": [
+            164,
+            514,
+            177,
+            530
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "b",
+          "rect": [
+            187.5,
+            516.5,
+            193.5,
+            525.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            185,
+            514,
+            195,
+            530
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "width",
+        "rho",
+        "tau",
+        "b"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "结果用",
+        "source_rect": [
+          60,
+          513,
+          223,
+          530
+        ],
+        "read_only_measurement_rect": [
+          59,
+          511.5,
+          224,
+          531.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 524.75,
+        "iou": 0.7975092530250549,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "phonon-intro",
+      "hint_id": "2-38",
+      "source": "（4.3）晶体中机械波的传播模式对应的准粒子称为\"声子”。一维声子晶体中，声子的能量ε、动量p与",
+      "ko": "[[label]] 결정의 역학적 파동 모드에 해당하는 준입자는 ‘포논’이다. 포논의 에너지 [[energy]], 운동량 [[p]]와",
+      "en": "[[label]] A phonon is a mechanical-wave quasiparticle. Energy [[energy]] and momentum [[p]] obey",
+      "erase_rects": [
+        [
+          85,
+          530,
+          536,
+          547
+        ]
+      ],
+      "left": 86,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 542.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "label",
+          "rect": [
+            86,
+            531,
+            113,
+            546
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "energy",
+          "rect": [
+            476.25,
+            536.25,
+            483.0,
+            542.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            476,
+            531,
+            486,
+            546
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "p",
+          "rect": [
+            514.5,
+            536.5,
+            521.75,
+            545.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            514,
+            531,
+            525,
+            546
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "label",
+        "energy",
+        "p"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "晶体中机械波的传播模式对应的",
+        "source_rect": [
+          85,
+          530,
+          536,
+          547
+        ],
+        "read_only_measurement_rect": [
+          84,
+          528.5,
+          537,
+          548.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 542.5,
+        "iou": 0.7585299611091614,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "phonon-dispersion",
+      "hint_id": "2-39",
+      "source": "角频率の、波矢K之间满足德布罗意关系。若波矢K在K。=附近，即K=K。+8K（8K<<K。），声子能",
+      "ko": "[[omega]], [[K]]는 드브로이 관계를 따른다. [[K2]]가 [[K0]] 근처일 때 [[nearby]]이면 에너지는",
+      "en": "de Broglie relations with [[omega]], [[K]]. Near [[K0]], take [[K2]] as [[nearby]]. The energy is",
+      "erase_rects": [
+        [
+          60,
+          551,
+          537,
+          572
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 564.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "omega",
+          "rect": [
+            93.25,
+            559.0,
+            102.0,
+            565.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            93,
+            552,
+            104,
+            570
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "K",
+          "rect": [
+            135.0,
+            557.0,
+            144.25,
+            565.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            135,
+            552,
+            146,
+            570
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "K2",
+          "rect": [
+            288.75,
+            556.75,
+            297.5,
+            565.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            289,
+            552,
+            301,
+            570
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "K0",
+          "rect": [
+            309.75,
+            552.75,
+            340.75,
+            573.25
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "nearby",
+          "rect": [
+            385,
+            551,
+            497,
+            571
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "omega",
+        "K",
+        "K2",
+        "K0",
+        "nearby"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "之间满足德布罗意关系",
+        "source_rect": [
+          60,
+          551,
+          537,
+          572
+        ],
+        "read_only_measurement_rect": [
+          59,
+          549.5,
+          538,
+          573.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 564.5,
+        "iou": 0.7677199244499207,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "effective-mass-a",
+      "hint_id": "2-40",
+      "source": "为约化普朗克常量，m称为声子的有效质量。对于第（4.2）问中的",
+      "ko": "[[hbar]]는 환산 플랑크 상수이고 [[mstar]]는 포논 유효질량이다. [[ref]]의",
+      "en": "[[hbar]]: reduced Planck constant; [[mstar]]: effective mass. For [[ref]],",
+      "erase_rects": [
+        [
+          220,
+          578,
+          536,
+          601
+        ],
+        [
+          61,
+          578,
+          112,
+          603
+        ]
+      ],
+      "left": 222,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 595.0,
+      "align": null,
+      "atoms": [
+        {
+          "id": "hbar",
+          "rect": [
+            222,
+            579,
+            232,
+            598
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "mstar",
+          "rect": [
+            325,
+            580,
+            338,
+            599
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "ref",
+          "rect": [
+            473,
+            580,
+            500,
+            599
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "hbar",
+        "mstar",
+        "ref"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "称为声子的有效质量",
+        "source_rect": [
+          220,
+          578,
+          536,
+          601
+        ],
+        "read_only_measurement_rect": [
+          219,
+          576.5,
+          537,
+          602.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 595.0,
+        "iou": 0.6340368390083313,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "shifted_source_language": {
+        "text": "量可表示为",
+        "translation_completed_in_previous_row": "phonon-dispersion",
+        "reason": "The original energy noun splits across printed rows; its full Korean/English phrase precedes the unchanged original energy-expression bitmap. No original Chinese fragment remains."
+      }
+    },
+    {
+      "id": "effective-mass-b",
+      "hint_id": "2-42",
+      "source": "一维声子晶体的含有最低角频率的通带，求波矢为K。的声子的有效质量m，结果用h、P,、T，、b表示。",
+      "ko": "최저 통과대에서 [[K0]]의 [[mstar]]를 [[hbar]] [[rho]] [[tau]] [[b]]로 나타내어라.",
+      "en": "find [[mstar]] at [[K0]] in the lowest passband, in terms of [[hbar]] [[rho]] [[tau]] [[b]].",
+      "erase_rects": [
+        [
+          61,
+          608,
+          536,
+          626
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 620.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "K0",
+          "rect": [
+            288,
+            608.5,
+            303,
+            625
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "mstar",
+          "rect": [
+            382,
+            608,
+            396,
+            626
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "hbar",
+          "rect": [
+            438,
+            608.5,
+            449.25,
+            625
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "rho",
+          "rect": [
+            456,
+            608.5,
+            472,
+            625
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "tau",
+          "rect": [
+            477,
+            608.5,
+            493.75,
+            625
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "b",
+          "rect": [
+            501.0,
+            611.5,
+            507.0,
+            620.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            500,
+            608.5,
+            510,
+            625
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "K0",
+        "mstar",
+        "hbar",
+        "rho",
+        "tau",
+        "b"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "一维声子晶体的含有最低角频率",
+        "source_rect": [
+          61,
+          608,
+          536,
+          626
+        ],
+        "read_only_measurement_rect": [
+          60,
+          606.5,
+          537,
+          627.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 620.75,
+        "iou": 0.6925069689750671,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "native_punctuation_note": "Original notation and attached parameter-list separators retained as complete bitmap groups; translations do not duplicate their comma-like separators."
+    },
+    {
+      "id": "bubble-intro-a",
+      "hint_id": "2-43",
+      "source": "三．（45分）在液氢中有一个游离电子。由于泡利不相容原理，距离游离电子很近的氢原子会受到电子的强",
+      "ko": "3. ([[score]]점) 액체 헬륨 속 자유 전자는 파울리 배타 원리에 따라 가까운 헬륨 원자를 강하게 밀어낸다.",
+      "en": "3. ([[score]] marks) Pauli exclusion near an unbound electron in liquid helium strongly expels atoms,",
+      "erase_rects": [
+        [
+          60,
+          640,
+          537,
+          657
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 651.75,
+      "align": null,
+      "atoms": [
+        {
+          "id": "score",
+          "rect": [
+            87,
+            641,
+            103,
+            657
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "score"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "距离游离电子很近的氢原子会受",
+        "source_rect": [
+          60,
+          640,
+          537,
+          657
+        ],
+        "read_only_measurement_rect": [
+          59,
+          638.5,
+          538,
+          658.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 651.75,
+        "iou": 0.611734926700592,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "bubble-intro-b",
+      "hint_id": "2-44",
+      "source": "烈排斥，从而在电子周围形成一个没有氢原子的球形小空洞，这个空洞被称为“电子气泡”；此外氢原子还",
+      "ko": "그 결과 헬륨 원자가 없는 작은 구형 공동, ‘전자 기포’가 생긴다. 바깥 헬륨 원자는 전자의 전기장에",
+      "en": "forming a small spherical atom-free electron bubble. Its field polarizes and attracts outer atoms,",
+      "erase_rects": [
+        [
+          61,
+          657,
+          536,
+          673
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 668.25,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "从而在电子周围形成一个没有氢",
+        "source_rect": [
+          61,
+          657,
+          536,
+          673
+        ],
+        "read_only_measurement_rect": [
+          60,
+          655.5,
+          537,
+          674.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 668.25,
+        "iou": 0.6941214799880981,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "bubble-intro-c",
+      "hint_id": "2-45",
+      "source": "会被电子产生的电场极化从而被电子吸引，导致在电子气泡之外的氢原子密度升高。电子加速时会带着气",
+      "ko": "의해 분극되어 끌려오므로 기포 바깥의 밀도가 커진다. 전자가 가속하면 기포와 끌려온 원자도",
+      "en": "raising density. Acceleration carries the bubble and atoms; its effective mass far exceeds free mass",
+      "erase_rects": [
+        [
+          60,
+          672,
+          536,
+          689
+        ]
+      ],
+      "left": 61,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 683.75,
+      "align": null,
+      "atoms": [],
+      "source_atom_ids": [],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "会被电子产生的电场极化从而被",
+        "source_rect": [
+          60,
+          672,
+          536,
+          689
+        ],
+        "read_only_measurement_rect": [
+          59,
+          670.5,
+          537,
+          690.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 683.75,
+        "iou": 0.5746462345123291,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "bubble-intro-d",
+      "hint_id": "2-46",
+      "source": "泡和被吸引的氨原子一起加速，因此液氢里游离电子的“有效质量”远大于自由电子质量me。己知在一个",
+      "ko": "함께 가속한다. 따라서 액체 헬륨 속 전자의 유효질량은 자유 전자 질량 [[me]]보다 훨씬 크다.",
+      "en": "[[me]]. Given: density, surface tension; vacuum permittivity, Planck constant and elementary charge.",
+      "erase_rects": [
+        [
+          61,
+          689,
+          535,
+          705
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 699.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "me",
+          "rect": [
+            460,
+            689.5,
+            473,
+            705
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "me"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "泡和被吸引的氨原子一起加速",
+        "source_rect": [
+          61,
+          689,
+          535,
+          705
+        ],
+        "read_only_measurement_rect": [
+          60,
+          687.5,
+          536,
+          706.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 699.5,
+        "iou": 0.6289941668510437,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "helium-data-a",
+      "hint_id": "2-47",
+      "source": "标准大气压po=1.0×105Pa下，液氢的密度po=125kg/m3，表面张力系数g=3.7×10-4N/m，相对介电",
+      "ko": "표준압 [[pressure]]의 밀도 [[density]], 표면장력 [[sigma]], 상대 유전율",
+      "en": "[[pressure]]: [[density]], [[sigma]]; relative permittivity and bulk modulus:",
+      "erase_rects": [
+        [
+          61,
+          704,
+          537,
+          722
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 715.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "pressure",
+          "rect": [
+            115,
+            704.5,
+            192,
+            722
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "density",
+          "rect": [
+            260,
+            704.5,
+            326,
+            722
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "sigma",
+          "rect": [
+            397,
+            704.5,
+            484,
+            722
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "pressure",
+        "density",
+        "sigma"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "表面张力系数",
+        "source_rect": [
+          61,
+          704,
+          537,
+          722
+        ],
+        "read_only_measurement_rect": [
+          60,
+          702.5,
+          538,
+          723.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 715.5,
+        "iou": 0.7541899681091309,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "helium-data-b",
+      "hint_id": null,
+      "source": "体模量",
+      "ko": "[[epsilon]], 체적탄성률 [[bulk]][[V]]: 부피, [[p]]: 압력), [[mass]],",
+      "en": "[[epsilon]], [[bulk]][[V]]: volume, [[p]]: pressure); [[mass]],",
+      "erase_rects": [
+        [
+          61,
+          721,
+          537,
+          742
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 735.25,
+      "align": null,
+      "atoms": [
+        {
+          "id": "epsilon",
+          "rect": [
+            82.25,
+            722,
+            136.25,
+            740
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "bulk",
+          "rect": [
+            172,
+            722.75,
+            326.0,
+            743
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "V",
+          "rect": [
+            347,
+            722,
+            354.25,
+            741
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "p",
+          "rect": [
+            389.25,
+            729.5,
+            395.75,
+            738.5
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            389.25,
+            722,
+            395.75,
+            741
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "mass",
+          "rect": [
+            436.25,
+            722,
+            530.25,
+            741
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "epsilon",
+        "bulk",
+        "V",
+        "p",
+        "mass"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "体模量",
+        "source_rect": [
+          61,
+          721,
+          537,
+          742
+        ],
+        "read_only_measurement_rect": [
+          60,
+          719.5,
+          538,
+          743.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 735.25,
+        "iou": 0.7370910048484802,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "native_punctuation_note": "The original full unit expression ends with the opening parenthesis for the following variable definition. Retain it once, with no second newly typed opening parenthesis."
+    },
+    {
+      "id": "helium-data-c",
+      "hint_id": "2-48",
+      "source": "真空介电常量e=8.854×10-12F/m，普朗克常量h=6.626×10-34m²kg/s，元电荷量e=1.602×10-19C，",
+      "ko": "진공유전율 [[eps0]], 플랑크 상수 [[h]], 기본전하 [[e]],",
+      "en": "[[eps0]], [[h]], [[e]],",
+      "erase_rects": [
+        [
+          61,
+          742,
+          540,
+          759
+        ]
+      ],
+      "left": 62,
+      "right": 538,
+      "size": 10.24,
+      "baseline": 753.5,
+      "align": null,
+      "atoms": [
+        {
+          "id": "eps0",
+          "rect": [
+            124.25,
+            741.5,
+            227.25,
+            759
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "h",
+          "rect": [
+            284.5,
+            741.5,
+            398.25,
+            759
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        },
+        {
+          "id": "e",
+          "rect": [
+            444.75,
+            741.5,
+            534.75,
+            759
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "eps0",
+        "h",
+        "e"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "真空介电常量",
+        "source_rect": [
+          61,
+          742,
+          540,
+          759
+        ],
+        "read_only_measurement_rect": [
+          60,
+          740.5,
+          541,
+          760.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 753.5,
+        "iou": 0.6221931576728821,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "figure-2b",
+      "hint_id": null,
+      "source": "图2b",
+      "ko": "그림 [[fig]]",
+      "en": "Fig. [[fig]]",
+      "erase_rects": [
+        [
+          444,
+          134,
+          475,
+          149
+        ]
+      ],
+      "left": 445,
+      "right": 535,
+      "size": 10.24,
+      "baseline": 143.0,
+      "align": "center",
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            457.75,
+            134,
+            469.25,
+            149
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "图",
+        "source_rect": [
+          444,
+          134,
+          475,
+          149
+        ],
+        "read_only_measurement_rect": [
+          443,
+          132.5,
+          476,
+          150.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 143.0,
+        "iou": 0.8247190713882446,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "figure-2c",
+      "hint_id": null,
+      "source": "图2c",
+      "ko": "그림 [[fig]]",
+      "en": "Fig. [[fig]]",
+      "erase_rects": [
+        [
+          443,
+          252,
+          475,
+          266
+        ]
+      ],
+      "left": 445,
+      "right": 535,
+      "size": 10.24,
+      "baseline": 262.75,
+      "align": "center",
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            459.75,
+            253,
+            471.25,
+            267
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "图",
+        "source_rect": [
+          443,
+          252,
+          475,
+          266
+        ],
+        "read_only_measurement_rect": [
+          442,
+          250.5,
+          476,
+          267.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 262.75,
+        "iou": 0.7451193332672119,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "figure-2d",
+      "hint_id": null,
+      "source": "图2d",
+      "ko": "그림 [[fig]]",
+      "en": "Fig. [[fig]]",
+      "erase_rects": [
+        [
+          443,
+          376,
+          475,
+          390
+        ]
+      ],
+      "left": 445,
+      "right": 535,
+      "size": 10.24,
+      "baseline": 388.5,
+      "align": "center",
+      "atoms": [
+        {
+          "id": "fig",
+          "rect": [
+            460.25,
+            377,
+            471.25,
+            391
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory."
+        }
+      ],
+      "source_atom_ids": [
+        "fig"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "图",
+        "source_rect": [
+          443,
+          376,
+          475,
+          390
+        ],
+        "read_only_measurement_rect": [
+          442,
+          374.5,
+          476,
+          391.5
+        ],
+        "size_fixed_before_translation": 10.24,
+        "baseline": 388.5,
+        "iou": 0.8033573031425476,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      }
+    },
+    {
+      "id": "footer",
+      "hint_id": "2-49",
+      "source": "第",
+      "ko": "[[two]] / [[six]]쪽",
+      "en": "Page [[two]] of [[six]]",
+      "erase_rects": [
+        [
+          263.5,
+          774.75,
+          334,
+          786.5
+        ]
+      ],
+      "left": 265,
+      "right": 338,
+      "size": 8.4,
+      "baseline": 783.75,
+      "align": "center",
+      "atoms": [
+        {
+          "id": "two",
+          "rect": [
+            276.25,
+            777.0,
+            281.5,
+            784.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            276.25,
+            775.25,
+            281.75,
+            784.75
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        },
+        {
+          "id": "six",
+          "rect": [
+            315.75,
+            776.75,
+            321.0,
+            784.75
+          ],
+          "image_path": [
+            10
+          ],
+          "reviewed": true,
+          "reason": "Original page2 contact sheets01–10 and data/footer coordinate review manually compared. Complete original notation is replayed once, keeping original encoded image, clipping program, physical1x scale and y; adjacent Chinese/punctuation removed only by explicit ROI review. Final whole-page image-ink/prose-visibility QA remains mandatory.",
+          "previous_rect": [
+            315.75,
+            775.25,
+            321.25,
+            784.75
+          ],
+          "source_scalar_review": "Source CC proposals sheets01–03 visually reviewed; all original scalar strokes inside rectangle and neighbouring CJK/punctuation outside. ħ candidates explicitly rejected because potential detached crossbar."
+        }
+      ],
+      "source_atom_ids": [
+        "two",
+        "six"
+      ],
+      "reviewed": true,
+      "printed_stroke_by_language": {
+        "ko": {
+          "regular": 0.3,
+          "bold": 0.4
+        },
+        "en": {
+          "regular": 0.5,
+          "bold": 0.6
+        }
+      },
+      "baseline_evidence": {
+        "character_run": "第",
+        "source_rect": [
+          263.5,
+          774.75,
+          334,
+          786.5
+        ],
+        "read_only_measurement_rect": [
+          262.5,
+          773.25,
+          335,
+          788.0
+        ],
+        "size_fixed_before_translation": 9.0,
+        "baseline": 784.0,
+        "iou": 0.6840441823005676,
+        "source_threshold": 160,
+        "reference_threshold": 128,
+        "scan_spread_px_at4x": 1
+      },
+      "font_size_measurement": "Independent original source 第8.30/页8.44 SimSun run estimates, source-only mean8.37 rounded8.4pt; exact source baseline783.75. page02-footer-calibration.json"
+    }
+  ],
+  "protected_source_display_and_figure_rects": [
+    [
+      392,
+      94,
+      535,
+      133
+    ],
+    [
+      392,
+      213,
+      535,
+      251
+    ],
+    [
+      374,
+      338,
+      536,
+      375
+    ],
+    [
+      252,
+      407,
+      360,
+      425
+    ],
+    [
+      112,
+      572,
+      219,
+      605
+    ]
+  ],
+  "source_contact_sheets": [
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-01.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-02.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-03.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-04.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-05.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-06.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-07.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-08.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-09.png",
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review\\page02-atoms-10.png"
+  ],
+  "final_visual_review_required": true,
+  "source_scalar_clip_review": {
+    "accepted": 30,
+    "rejected": [
+      [
+        "effective-mass-b",
+        "hbar"
+      ],
+      [
+        "effective-mass-a",
+        "hbar"
+      ]
+    ],
+    "contact_sheets": [
+      "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review-proposed\\page02-proposals-01.png",
+      "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review-proposed\\page02-proposals-02.png",
+      "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\atom-review-proposed\\page02-proposals-03.png"
+    ]
+  }
+}
