@@ -103,6 +103,12 @@ def refresh_reviewed_source_counts(root, sources):
 
 def prepare(root, text_only=False, profiles=None):
     root = private_directory(root)
+    if profiles:
+        available = {path.parent.name for pattern in ("*/questions.raw.json", "*/questions-raw.json")
+                     for path in root.glob(pattern)}
+        missing = sorted(set(profiles) - available)
+        if missing:
+            raise ValueError("Selected extractor folders have no question inventory: " + ", ".join(missing))
     manifest = read_json(root / "manifest.json")
     sources = {item["drive_id"]: item for item in manifest["sources"]}
     refresh_reviewed_source_counts(root, sources)
@@ -179,6 +185,8 @@ def prepare(root, text_only=False, profiles=None):
                     "text": original["text_en_ocr_raw"], "review_status": "pending"}]}
             questions.append(with_translation(question, translated.get(question["original_number"])))
         document.close()
+    if profiles and not questions:
+        raise ValueError("Selected extractor folders contain no questions; import snapshot was not replaced")
     out_manifest, out_questions = root / "import-manifest.json", root / "import-questions.json"
     out_manifest.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
     out_questions.write_text(json.dumps({"version": 1, "questions": questions}, ensure_ascii=False), encoding="utf-8")

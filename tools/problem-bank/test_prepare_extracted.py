@@ -103,6 +103,31 @@ class AdapterTests(unittest.TestCase):
             other = next(s for s in prepared_manifest['sources'] if s['drive_id'] == other_source['drive_id'])
             self.assertFalse(other['extraction_complete'])
 
+    def test_unknown_scoped_folder_keeps_the_previous_snapshot(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder, question = self.fixture(root)
+            self.save(folder, [question])
+            MODULE.prepare(root)
+            before = {name: (root / name).read_bytes() for name in
+                      ('import-manifest.json', 'import-questions.json')}
+            with self.assertRaisesRegex(ValueError, 'no question inventory'):
+                MODULE.prepare(root, profiles=['synthetic-book', 'misspelled-book'])
+            for name, content in before.items():
+                self.assertEqual((root / name).read_bytes(), content)
+
+    def test_empty_scoped_inventory_keeps_the_previous_snapshot(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder, question = self.fixture(root)
+            self.save(folder, [question])
+            MODULE.prepare(root)
+            before = (root / 'import-questions.json').read_bytes()
+            self.save(folder, [])
+            with self.assertRaisesRegex(ValueError, 'contain no questions'):
+                MODULE.prepare(root, profiles=['synthetic-book'])
+            self.assertEqual((root / 'import-questions.json').read_bytes(), before)
+
 
 if __name__ == '__main__':
     unittest.main()
