@@ -56,6 +56,10 @@ for (const item of published) {
     require('./helpers/native-original-publication.cjs')(root, qa, item);
     continue;
   }
+  if (item.audit_schema === 'reviewed-figure-language-v1') {
+    require('./helpers/reviewed-figure-language-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'natural-spacing-v2') {
     require('./helpers/natural-spacing-publication.cjs')(root, qa, item);
     continue;

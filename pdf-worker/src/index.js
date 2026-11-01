@@ -14,7 +14,7 @@ const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 35;         // 35: CPhO2024 theory original fonts, centered headings, natural spacing and translated figure labels (2026-11-01)
+const CACHE_V = 36;         // 36: translate remaining IZhO2010/2011 figure words while preserving native body and equations (2026-11-01)
 
 export default {
   async fetch(req, env, ctx) {
