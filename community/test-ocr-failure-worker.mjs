@@ -102,13 +102,13 @@ test('admin regrade recovers failed OCR through the same committed queue before 
   assert.equal(sql.prepare("SELECT count(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);
 }));
 
-test('owner OCR recovery is bounded to three requests per hour and refuses missing or unpaid scans',async()=>fixture(()=>new Response('{}',{status:503}),async({sql,api,sid,calls,drain})=>{
+test('owner OCR recovery is bounded to two requests per five minutes and refuses missing or unpaid scans',async()=>fixture(()=>new Response('{}',{status:503}),async({sql,api,sid,calls,drain})=>{
   const failure=sql.prepare('SELECT read FROM lab_pages WHERE session_id=?').get(sid).read;
   const failAgain=()=>{
     sql.prepare("UPDATE lab_sessions SET status='pending',detail=? WHERE id=?").run(JSON.stringify({tasks:{T1:{status:'pending',why:'ocr_failed',score:null}}}),sid);
     sql.prepare("UPDATE lab_pages SET ocr_status='failed',read=? WHERE session_id=?").run(failure,sid);
   };
-  for(let attempt=0;attempt<3;attempt++){
+  for(let attempt=0;attempt<2;attempt++){
     failAgain();const response=await api('/lab/sessions/'+sid+'/retry-ocr',{provider:'deepseek'});assert.equal(response.status,200);await drain();
   }
   failAgain();const before=calls.length,blocked=await api('/lab/sessions/'+sid+'/retry-ocr',{provider:'deepseek'});

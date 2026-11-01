@@ -696,7 +696,7 @@ const worker = {
  * Provider keys and test endpoint overrides exist only in Worker configuration.
  */
 const AR = {
-  maxAnswer: 12000, maxImage: 8 * 1024 * 1024, subsPerDay: 20, ocrPerDay: 30,
+  maxAnswer: 12000, maxImage: 8 * 1024 * 1024, subsPerDay: 20,
   gemini: "https://generativelanguage.googleapis.com/v1beta/models",
 };
 /* Levels and rating, after solved.ac.  A problem's level runs 1–30: Bronze V … I, Silver, Gold, Platinum,
@@ -1171,7 +1171,6 @@ async function arena(p, m, body, me, req, env, url) {
   }
   if (p === "/api/ocr" && m === "POST") {
     needUser(me);
-    await limit(env, "ocr:" + me.id, AR.ocrPerDay, 86400);
     let f, provider;
     try { const form=await boundedForm(req,HttpError); f=form.get('image'); provider=url.searchParams.get('provider')||form.get('provider'); } catch(e) { if(e instanceof HttpError)throw e;bad('bad_image'); }
     if (!provider) throw new HttpError(409,'provider_required');
@@ -3361,7 +3360,7 @@ async function lab(p, m, body, me, req, env, url) {
       if(!['pending','error'].includes(s.status)||contestMeta(s))throw new HttpError(409,'closed');
       const pages=(await env.DB.prepare(`SELECT * FROM lab_pages WHERE session_id=? AND mime<>'text/plain' AND edited=0 AND ocr_status='failed' ORDER BY no`).bind(s.id).all()).results;
       if(!pages.length)throw new HttpError(409,'no_failed_pages');
-      await limit(env,'labocrretry:'+s.id,3,3600);
+      await limit(env,'labocrretry:'+s.id,2,300);                                 // two re-reads of failed pages per five minutes
       for(const page of pages)if(!await labPageBytes(env,page))throw new HttpError(410,'scan_unavailable');
       s=await labQueueGrade(env,s,s.lang,null,[...new Set(pages.map(page=>page.task))],true);
     }
