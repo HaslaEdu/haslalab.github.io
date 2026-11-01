@@ -24,3 +24,13 @@ test("no strips for what is not a JPEG page, or a count out of range", () => {
   assert.deepEqual(pageStrips(page(50, 50), 1), []);
   assert.deepEqual(pageStrips(page(50, 50), 9), []);
 });
+
+test("strips are made where there is no Buffer global (a Worker), and none is left behind", () => {
+  const saved = globalThis.Buffer, bytes = page(120, 160);
+  delete globalThis.Buffer;
+  try {
+    const strips = pageStrips(bytes, 2);
+    assert.equal(strips.length, 2); assert.ok(strips[0] instanceof Uint8Array); assert.equal(strips[0][0], 0xff);
+    assert.equal(typeof globalThis.Buffer, "undefined");
+  } finally { globalThis.Buffer = saved; }
+});
