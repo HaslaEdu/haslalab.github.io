@@ -94,3 +94,15 @@ test('DeepSeek OCR receives an explicit JSON example with required fields and no
   return response('deepseek',{text:'visible handwritten answer',legible:true,uncertainties:[],visuals:[]});
  }});
 });
+test('gemini: thinking is asked at its lowest level, and a request refused for it is sent once more without it',async()=>{
+ const bodies=[];
+ const result=await visionJSON(env,{provider:'gemini',policy:'p',images:[image],input:'x',schema:{type:'object'},
+  fetchImpl:async(_url,request)=>{const body=JSON.parse(request.body);bodies.push(body);
+   if(body.generationConfig.thinkingConfig)return new Response(JSON.stringify({error:{code:400,status:'INVALID_ARGUMENT'}}),{status:400});
+   return response('gemini');}});
+ assert.equal(bodies.length,2);assert.deepEqual(bodies[0].generationConfig.thinkingConfig,{thinkingLevel:'minimal'});
+ assert.equal(bodies[1].generationConfig.thinkingConfig,undefined);assert.deepEqual(result.raw,{ok:true});
+ const off=[];await visionJSON({...env,GEMINI_THINKING_LEVEL:'off'},{provider:'gemini',policy:'p',images:[image],input:'x',schema:{type:'object'},
+  fetchImpl:async(_url,request)=>{off.push(JSON.parse(request.body));return response('gemini');}});
+ assert.equal(off.length,1);assert.equal(off[0].generationConfig.thinkingConfig,undefined);
+});

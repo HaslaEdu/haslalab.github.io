@@ -106,20 +106,26 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     else {content.push(picture[imageIndex++],picture[imageIndex++]);}}
   const count=Math.max(256,Math.min(32768,Number(maxTokens)||8192));
   const body=provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
-    generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:0,maxOutputTokens:count}}:
+    generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:0,maxOutputTokens:count,
+      // thinking is billed as output: a page read with the model's own default once spent 5.5k thought tokens on 263 characters
+      ...(env.GEMINI_THINKING_LEVEL!=='off'?{thinkingConfig:{thinkingLevel:env.GEMINI_THINKING_LEVEL||'minimal'}}:{})}}:
     {model,messages:[{role:'system',content:rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{})},
       {role:'user',content}],response_format:{type:'json_object'},thinking:{type:'disabled'},temperature:0,max_tokens:count};
-  const encoded=JSON.stringify(body);
+  let encoded=JSON.stringify(body);
+  /* an API version that does not know thinkingLevel rejects the request: send it once more without, never fail on it */
+  const plain=()=>{if(provider!=='gemini'||!body.generationConfig.thinkingConfig)return null;const {thinkingConfig,...config}=body.generationConfig;return JSON.stringify({...body,generationConfig:config});};
   if(new TextEncoder().encode(encoded).length>(provider==='gemini'?20000000:48*1024*1024))fail(413,'vision_images_too_large');
   const cancelled=new Promise((_,reject)=>{rejectAbort=reject;});
   signal?.addEventListener('abort',abort,{once:true});
   const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{aborted=true;controller.abort();reject(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));},Math.max(1,Math.min(110000,timeoutMs)));});
-  const request=async()=>{
-    const response=await fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json',
+  const send=payload=>fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json',
       ...(provider==='gemini'?{'x-goog-api-key':env[KEYS[provider]]}:{Authorization:'Bearer '+env[KEYS[provider]]})},
       // workerd rejects redirect:'error' before sending any request. Manual
       // keeps credentials on this origin; every non-2xx response fails below.
-      body:encoded,signal:controller.signal,redirect:'manual'});
+      body:payload,signal:controller.signal,redirect:'manual'});
+  const request=async()=>{
+    let response=await send(encoded);
+    if(response.status===400){const retry=plain();if(retry){try{await response.body?.cancel();}catch{}encoded=retry;response=await send(encoded);}}
     providerStatus=response.status;
     if(!response.ok){providerCode=await providerErrorCode(response);fail(502,response.status===401||response.status===403?'vision_provider_auth':
       response.status===402?'vision_provider_credits':response.status===429?'vision_provider_rate_limited':response.status===404?'vision_model_unavailable':
