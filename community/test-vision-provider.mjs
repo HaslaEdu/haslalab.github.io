@@ -76,7 +76,7 @@ test('HTTP causes remain distinguishable without exposing upstream error text',a
  for(const [status,code]of [[400,'vision_request_rejected'],[401,'vision_provider_auth'],[402,'vision_provider_credits'],[403,'vision_provider_auth'],[404,'vision_model_unavailable'],[413,'vision_request_rejected'],[422,'vision_request_rejected'],[429,'vision_provider_rate_limited'],[503,'vision_provider_failed']]){
   await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:async()=>Response.json({error:{code:'invalid_request_error',message:'private fixture-d user data'}},{status})}),error=>{
    assert.equal(error.code,code);assert.equal(error.provider_status,status);assert.equal(error.provider_code,'invalid_request_error');assert.ok(error.ms>=0);
-   assert.ok(!JSON.stringify(error).includes('private fixture-d'));return true;
+   assert.ok(!JSON.stringify(error).includes('private fixture-d'));assert.equal(error.provider_message,'private fixture-d user data','kept apart for the admin bench only');return true;
   });
  }
  await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:async()=>Response.json({error:{code:'sk-private-token',message:'sensitive'}},{status:400})}),error=>error.provider_code===undefined&&!JSON.stringify(error).includes('sk-private'));

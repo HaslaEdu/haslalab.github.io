@@ -2682,7 +2682,7 @@ async function labBench(env, s, job) {
       out = { expr_checks: res.expr_checks, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
         items: res.items.map(i => ({ id: i.id, got: i.got, raw: rawBy.get(String(i.id)) ?? null, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, note: i.note || '' })) };
     } else throw new Error('bench_stage');
-  } catch (e) { failed = true; out = { error: String(e?.code || e?.message || 'bench_failed').slice(0, 200) }; }
+  } catch (e) { failed = true; out = { error: String(e?.code || e?.message || 'bench_failed').slice(0, 200), ...(e?.provider_message ? { detail: String(e.provider_message).slice(0, 240) } : {}) }; }
   const calls = m.calls.map(c => ({ step: c.step, model: c.model, in: c.in, cached: c.cached, out: c.out, usd: c.usd, ms: c.ms, ok: c.ok, error: c.error || null }));
   await env.DB.prepare("UPDATE lab_bench SET status=?,output=?,finished_at=? WHERE id=? AND status='pending'")
     .bind(failed ? 'failed' : 'done', JSON.stringify({ ...out, calls, wall_ms: Date.now() - t0 }), now(), row.id).run();
