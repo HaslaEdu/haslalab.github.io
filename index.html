@@ -1102,10 +1102,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=39b62689caea"></script>
+<script src="site-catalogue.js?v=6dcf507bae0d"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=90c22f527887"></script>
+<script src="site-design.js?v=e378ec06baeb"></script>
 <script>
 "use strict";
 
@@ -1578,7 +1578,7 @@ const DATA={
         sim:"sim/ipho2017_E1_web.html",
         exe:{ko:REL+"v1.0/IPhO2017_E1_sim_KO.exe", en:REL+"v1.0/IPhO2017_E1_sim_EN.exe"},
         src:{ko:"src/ipho2017_E1_diffusion_sim_KO.py", en:"src/ipho2017_E1_diffusion_sim_EN.py"},
-        pdf:{ko:"pdf/IPhO_2017_E1_KO.pdf", en:"pdf/IPhO_2017_E1_EN.pdf"},
+        pdf:{ko:"pdfx/ipho/IPhO_2017_E1_KO.pdf", en:"pdf/IPhO_2017_E1_EN.pdf"},
         sol:{ko:"pdf/IPhO_2017_S1_KO.pdf", en:"pdf/IPhO_2017_S1.pdf"}
       }},
      {id:"E2",
@@ -1591,7 +1591,7 @@ const DATA={
         sim:"sim/ipho2017_E2_web.html",
         exe:{ko:REL+"v1.0/IPhO2017_E2_Sim_KO.exe", en:REL+"v1.0/IPhO2017_E2_Sim_EN.exe"},
         src:{ko:"src/ipho2017_E2_pdl_sim_KO.py", en:"src/ipho2017_E2_pdl_sim_EN.py"},
-        pdf:{ko:"pdf/IPhO_2017_E2_KO.pdf", en:"pdf/IPhO_2017_E2_EN.pdf"},
+        pdf:{ko:"pdfx/ipho/IPhO_2017_E2_KO.pdf", en:"pdf/IPhO_2017_E2_EN.pdf"},
         sol:{ko:"pdf/IPhO_2017_S2_KO.pdf", en:"pdf/IPhO_2017_S2.pdf"}
       }}]},
    {y:2016,host:{ko:"스위스 · 취리히",en:"Zurich, Switzerland"},cc:"ch",
@@ -5143,7 +5143,7 @@ function xmPortalHtml(key,x,mode="exam",year=""){
       <td>${my?`<span class="st ${my.status}">${d.xmSt[my.status]||my.status}${my.status==="graded"&&my.points?` · ${my.score}/${my.points}`:""}</span>`:""}</td>
       <td><div class="acts3">${open?`<a class="go" href="${href}">${d.xmResume}</a>`
         :my?`<a class="go sec" href="#/lab/${my.id}">${d.xmReport}</a><a class="go" href="${href}">${d.xmRetry}</a>`
-        :`<a class="go" href="${href}">${review?(ko?"답안 제출":"Submit answers"):d.xmGo}</a>`}</div></td></tr>`);
+        :`<a class="go" href="${href}">${review?(ko?"답안 제출":"Submit answers"):d.xmGo}</a>`}<a class="go sec" target="_blank" rel="noopener" href="${sheetsHref(href)}" title="${ko?"시작·채점 전에 인쇄해 풀이를 쓰는 답안지와 워킹시트 (스캔 마커 포함)":"The answer and working sheets to print and write on before the exam or grading (with scan markers)"}">${ko?"답안지·워킹시트":"Answer & working sheets"}</a></div></td></tr>`);
   };
   const thyT=trackOf(key)==="thy";
   const setRow=(y,profile)=>{
@@ -5236,6 +5236,15 @@ function theoryHref(key,yr,parts){
   if(parts.length===1&&(t.sl||[]).includes(parts[0])) q.set("sl","1");   /* a shortlist problem: on its own, 0.1 token (the server decides the price) */
   else if(yearPair(key,yr)) q.set("h","1");         /* the year has experiments too: the complementary experiment round can complete the 0.5-token set */
   return "sim/exam.html?"+q.toString();
+}
+/* the answer and working sheets of an exam (sim/sheets.html), from its exam.html address: printed before the exam starts,
+   or before answers already written are photographed for grading — the problem sheet is not among them */
+function sheetsHref(exam){
+  const q=new URLSearchParams(exam.split("?")[1]||""), e=(q.get("e")||"").split(","), f=(q.get("f")||"").split(",");
+  const o=new URLSearchParams({c:q.get("c")||"",y:q.get("y")||"",n:q.get("n")||"",e:q.get("e")||"",t:q.get("t")||"",lang});
+  if(q.get("m")==="t"){ o.set("m","t"); o.set("a",q.get("a")||""); if(q.get("w")) o.set("w",q.get("w")); }
+  else if(f.includes("-")) o.set("tt",e.filter((x,i)=>f[i]==="-").join(","));   /* a combined exam (NBPhO): its theory part */
+  return "sim/sheets.html?"+o.toString();
 }
 /* a problem card on a year page — the experiments and the theory problems both: code, status, title, text, tags,
    then a row of two main buttons and a row of documents; a button with no file stays, greyed */

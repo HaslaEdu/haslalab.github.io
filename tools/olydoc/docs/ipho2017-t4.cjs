@@ -165,7 +165,7 @@ const INTRO2 = L(
   '<p>거울 M1에서 반사된 광선 1은 빔 분할기 HM에 닿는데, HM은 빛의 세기의 50%를 반사하고 나머지 50%를 투과시킨다. 반사된 광선은 거울 M3으로 가서 반사된 뒤 HM을 지나 스크린에 떨어진다. 한편 광선 2는 거울 M2에서 반사되고, HM에서 반사되어 역시 스크린에 닿는다. 거울 M1, M2, M3은 받은 빛을 모두 반사하며 위상에 $\\pi$ 라디안을 더한다. 빛의 파장은 $\\lambda$이다.</p>');
 
 const CSS = `.ztab{border-collapse:collapse;margin:2mm 0 0;font-size:9pt}.ztab td,.ztab th{border:0.25mm solid #555;padding:0.6mm 3mm;text-align:center}
-h1{color:#000;font-size:14pt;text-align:center;margin-bottom:4mm}h2{color:#000;font-size:11pt}
+h1{color:#000;font-size:12pt;text-align:left;margin-bottom:4mm}h2{color:#000;font-size:11pt}
 .q{grid-template-columns:11mm 1fr 15mm;border:0.35mm solid #000;padding:0;gap:0}.q>div{padding:2mm 2.5mm}.q>.l{border-right:0.35mm solid #000}.q>.p{border-left:0.35mm solid #000;text-align:center}
 .code{display:grid;grid-template-columns:40mm repeat(6,1fr);border:0.4mm double #000;margin:2mm 0 6mm}.code>div{border-right:0.35mm solid #000;height:12mm;display:flex;align-items:center;justify-content:center;font-weight:700}.code>div:last-child{border-right:0}
 table.at{width:100%;border-collapse:collapse;margin:0 0 4mm}table.at th{border:0.35mm solid #000;padding:1.2mm;font-size:8.5pt}table.at td{border:0.35mm solid #000;vertical-align:top;padding:2mm}
@@ -184,9 +184,9 @@ function paper(lang) {
 
 function answerSheet(lang) {
   const shown = lang === 'ko' ? '(풀이 용지에 보임)' : '(shown on the working sheets)';
-  const out = [`<div class="code"><div>${lang === 'ko' ? '학생 코드' : 'Student Code'}</div><div></div><div></div><div></div><div></div><div></div><div></div></div>`];
+  const out = [`<div class="code"><div>${lang === 'ko' ? '수험번호' : 'Student Code'}</div><div></div><div></div><div></div><div></div><div></div><div></div></div>`];
   for (const part of PARTS) {
-    out.push(`<h3>${part.title[lang].replace(/\s*\([^)]*\)\s*$/, '')}</h3><table class="at"><tr><th>${lang === 'ko' ? '문항' : 'Question'}</th><th>${lang === 'ko' ? '답' : 'Answer'}</th><th>${lang === 'ko' ? '점수' : 'Marks'}</th></tr>`);
+    out.push(`<h3>${part.title[lang].replace(/\s*\([^)]*\)\s*$/, '')}</h3><table class="at"><tr><th>${lang === 'ko' ? '문항' : 'Question'}</th><th>${lang === 'ko' ? '답' : 'Answer'}</th><th>${lang === 'ko' ? '배점' : 'Marks'}</th></tr>`);
     for (const [label, pts, , prompts] of part.items) {
       const lines = prompts.map(p => p.startsWith('(') ? `<p style="color:#555">${shown}</p>` : `<p style="margin:0 0 ${Math.max(9, 20 - prompts.length * 5)}mm">${p}</p>`).join('');
       out.push(`<tr><td class="qn">${label.replace(/^(\w)(\d)$/, '$1.$2')}<br><br>(<b>${pts.toFixed(1)} pt.</b>)</td><td style="height:${prompts.length > 1 ? 42 : 30}mm">${lines}</td><td class="mk"></td></tr>`);
@@ -200,7 +200,7 @@ function solution(lang) {
   const out = [`<h1 style="margin-top:0">${TITLE[lang].replace(/\s*\(.*\)$/, '')}</h1>`];
   for (const part of PARTS) for (const [label, pts, , , sol, scheme] of part.items) {
     const lab = label.replace(/^(\w)(\d)$/, '$1.$2');
-    out.push(`<div class="qh">${lang === 'ko' ? '문항' : 'Question'} ${lab}</div><table class="ms17"><tr><th>${lang === 'ko' ? '풀이' : 'Answer'}</th><th>${lang === 'ko' ? '점수' : 'Marks'}</th></tr>
+    out.push(`<div class="qh">${lang === 'ko' ? '문제' : 'Question'} ${lab}</div><table class="ms17"><tr><th>${lang === 'ko' ? '답' : 'Answer'}</th><th>${lang === 'ko' ? '배점' : 'Marks'}</th></tr>
       <tr><td colspan="2">${sol[lang]}</td></tr>
       ${scheme.map(([t, p]) => `<tr><td>${t[lang]}</td><td class="m">${p.toFixed(1)} pts</td></tr>`).join('')}
       <tr class="tot"><td>${lang === 'ko' ? '합계' : 'Total'}</td><td class="m">${pts.toFixed(1)} pts</td></tr></table>`);
@@ -208,19 +208,15 @@ function solution(lang) {
   return out.join('\n');
 }
 
-const credit = {
-  en: 'HaslaLab edition of the IPhO 2017 shortlist problem · statement, solution and marking scheme after pho.rs/p/3485 (source Y23), translated by HaslaLab',
-  ko: 'IPhO 2017 shortlist 문제 HaslaLab 판 · 문제·풀이·채점 기준은 pho.rs/p/3485(출처 Y23)를 HaslaLab이 번역',
-};
 const base = { css: CSS };
 module.exports = {
   docs: [
-    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_EN.pdf', style: 'ipho2017', kind: 'paper', lang: 'en', code: 'T4', section: 'Theory · Shortlist', langLabel: 'English (HaslaLab)', credit: credit.en, html: paper('en') },
-    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_KO.pdf', style: 'ipho2017', kind: 'paper', lang: 'ko', code: 'T4', section: 'Theory · Shortlist', langLabel: 'Korean (HaslaLab)', credit: credit.ko, html: paper('ko') },
-    { ...base, out: 'pdfx/ipho/IPhO_2017_T4A.pdf', style: 'ipho2017', kind: 'answer', lang: 'en', code: 'AT4', section: 'Theory · Shortlist', langLabel: 'English (HaslaLab)', credit: credit.en, html: answerSheet('en') },
-    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_A_KO.pdf', style: 'ipho2017', kind: 'answer', lang: 'ko', code: 'AT4', section: 'Theory · Shortlist', langLabel: 'Korean (HaslaLab)', credit: credit.ko, html: answerSheet('ko') },
-    { ...base, out: 'pdfx/ipho/IPhO_2017_T4S.pdf', style: 'ipho2017sol', kind: 'solution', lang: 'en', code: 'T4', credit: credit.en, html: solution('en') },
-    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_S_KO.pdf', style: 'ipho2017sol', kind: 'solution', lang: 'ko', code: 'T4', section: '풀이/<br>채점 기준', credit: credit.ko, html: solution('ko') },
+    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_EN.pdf', style: 'ipho2017', kind: 'paper', lang: 'en', code: 'T4', langLabel: 'English', html: paper('en') },
+    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_KO.pdf', style: 'ipho2017', kind: 'paper', lang: 'ko', code: 'T4', langLabel: 'Korean (Korea (Republic of))', html: paper('ko') },
+    { ...base, out: 'pdfx/ipho/IPhO_2017_T4A.pdf', style: 'ipho2017', kind: 'answer', lang: 'en', code: 'AT4', langLabel: 'English', html: answerSheet('en') },
+    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_A_KO.pdf', style: 'ipho2017', kind: 'answer', lang: 'ko', code: 'AT4', langLabel: 'Korean (Korea (Republic of))', html: answerSheet('ko') },
+    { ...base, out: 'pdfx/ipho/IPhO_2017_T4S.pdf', style: 'ipho2017sol', kind: 'solution', lang: 'en', code: 'T4', langLabel: 'English', html: solution('en') },
+    { ...base, out: 'pdfx/ipho/IPhO_2017_T4_S_KO.pdf', style: 'ipho2017sol', kind: 'solution', lang: 'ko', code: 'T4', langLabel: 'Korean (Korea (Republic of))', html: solution('ko') },
   ],
   PARTS,
 };

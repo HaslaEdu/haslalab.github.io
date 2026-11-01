@@ -36,3 +36,17 @@ test('every printed theory sheet and every stamped official sheet carries the sc
   assert.match(html, /data-stamp="\$\{esc\(sheetUrl\(WS\)\)\}"/);
   assert.match(html, /pdf-lib\/1\.17\.1\/pdf-lib\.min\.js/);
 });
+
+test('every exam and grading row offers its answer and working sheets to print before it starts', () => {
+  const html = read('index.html');
+  const src = html.slice(html.indexOf('function sheetsHref'), html.indexOf('/* a problem card on a year page'));
+  const sheetsHref = new Function('lang', src + 'return sheetsHref;')('ko');
+  const thy = new URLSearchParams(sheetsHref('sim/exam.html?m=t&c=ipho&y=2017&n=IPhO&e=T1%2CT2&t=a%7Cb&p=x&s=y&k=&a=pdfx%2Fipho%2FA1.pdf%7CA2.pdf&w=W.pdf&lang=ko&h=1&review=1').split('?')[1]);
+  assert.deepEqual(Object.fromEntries(thy), { c: 'ipho', y: '2017', n: 'IPhO', e: 'T1,T2', t: 'a|b', lang: 'ko', m: 't', a: 'pdfx/ipho/A1.pdf|A2.pdf', w: 'W.pdf' });
+  const mix = new URLSearchParams(sheetsHref('sim/exam.html?c=nbpho&y=2020&n=NBPhO&e=E1%2CT&f=a_web.html%2C-&t=x%7Cy&lang=ko').split('?')[1]);
+  assert.equal(mix.get('tt'), 'T'); assert.equal(mix.get('m'), null);
+  const exp = new URLSearchParams(sheetsHref('sim/exam.html?c=ipho&y=2017&n=IPhO&e=E1%2CE2&f=a_web.html%2Cb_web.html&t=x%7Cy&lang=ko').split('?')[1]);
+  assert.equal(exp.get('tt'), null); assert.equal(exp.get('e'), 'E1,E2');
+  const row = html.slice(html.indexOf('const row=(y,tasks,label,sub,sec,href)'), html.indexOf('const thyT='));
+  assert.match(row, /href="\$\{sheetsHref\(href\)\}"/);
+});
