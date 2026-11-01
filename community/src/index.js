@@ -2212,8 +2212,12 @@ async function labPurge(env) {
   if (!(h >= 0)) return 0;
   /* an ungraded sitting keeps its photos for a week (LAB_KEEP_ENDED_HOURS), so grading can still be asked for */
   const he = Number(env.LAB_KEEP_ENDED_HOURS) >= 0 && env.LAB_KEEP_ENDED_HOURS !== "" ? Number(env.LAB_KEEP_ENDED_HOURS) : 168;
+  /* a sitting the admin model bench is still grading keeps its photos until those runs finish (an audit of 15 sittings
+     lost its first three sittings' photos to this purge before their models could be compared) */
+  await env.DB.prepare(LAB_BENCH_SQL).run();
   const rows = (await env.DB.prepare(`SELECT p.id, p.r2_key FROM lab_pages p JOIN lab_sessions s ON s.id=p.session_id
-    WHERE p.purged_at IS NULL AND ((s.status='graded' AND s.graded_at<?) OR (s.status='ended' AND s.submitted_at<?)) LIMIT 400`).bind(now() - h * 3600, now() - he * 3600).all()).results;
+    WHERE p.purged_at IS NULL AND ((s.status='graded' AND s.graded_at<?) OR (s.status='ended' AND s.submitted_at<?))
+      AND NOT EXISTS (SELECT 1 FROM lab_bench b WHERE b.session_id=s.id AND b.status='pending') LIMIT 400`).bind(now() - h * 3600, now() - he * 3600).all()).results;
   if (!rows.length) return 0;
   const keys = rows.map(r => r.r2_key).filter(Boolean);
   if (keys.length && env.LAB_PAGES) await env.LAB_PAGES.delete(keys);
