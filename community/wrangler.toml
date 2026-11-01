@@ -44,7 +44,7 @@ LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
 LAB_SCHEME_WARM = "on"
 # admin model-bench runs at once, only while no candidate's job waits
-LAB_BENCH_SLOTS = "4"
+LAB_BENCH_SLOTS = "8"
 # Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.1 Pro.
 LAB_SCHEME_MODEL = "gemini-3.1-pro-preview"
 LAB_SCHEME_THINKING = "low"
