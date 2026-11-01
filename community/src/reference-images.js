@@ -67,3 +67,33 @@ export async function referenceImages(env,options){
   // One WASM renderer at a time bounds memory even while the Worker consumes jobs.
   const job=queue.then(()=>render(env,options));queue=job.catch(()=>{});return job;
 }
+
+/* The text layer of a canonical PDF (olmOCR's "document anchoring"): handed to the scheme builder beside the PDF so that
+   ids, point values and formulas are copied from the printed characters, not re-read from the page image. A scanned PDF
+   has no text layer and gives ''. Bounded per page and in total. */
+async function textOf(env,{bytes,maxChars=60000,maxPages=40}){
+  if(bytes instanceof ArrayBuffer)bytes=new Uint8Array(bytes);
+  if(!(bytes instanceof Uint8Array)||bytes.length<8||bytes.length>16*1024*1024||new TextDecoder().decode(bytes.subarray(0,5))!=='%PDF-')return '';
+  const lib=await library(env),memory=lib.pdfium,ptr=memory.wasmExports.malloc(bytes.length);let doc;
+  try{
+    memory.HEAPU8.set(bytes,ptr);doc=lib.FPDF_LoadMemDocument(ptr,bytes.length,null);if(!doc)return '';
+    const count=Math.min(lib.FPDF_GetPageCount(doc),maxPages),out=[];let total=0;
+    for(let index=0;index<count&&total<maxChars;index++){
+      let page,text,buf;
+      try{
+        page=lib.FPDF_LoadPage(doc,index);if(!page)continue;
+        text=lib.FPDFText_LoadPage(page);if(!text)continue;
+        const n=Math.min(lib.FPDFText_CountChars(text),20000);if(n<=0)continue;
+        buf=memory.wasmExports.malloc((n+1)*2);
+        const got=lib.FPDFText_GetText(text,0,n,buf);
+        const s=new TextDecoder('utf-16le').decode(memory.HEAPU8.slice(buf,buf+Math.max(0,got-1)*2)).replace(/\r\n?/g,'\n').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+        if(s){const piece=`[PDF page ${index+1}]\n${s}`.slice(0,maxChars-total);out.push(piece);total+=piece.length;}
+      }finally{if(buf)memory.wasmExports.free(buf);if(text)lib.FPDFText_ClosePage(text);if(page)lib.FPDF_ClosePage(page);}
+    }
+    return out.join('\n\n');
+  }catch(error){return '';}
+  finally{if(doc)lib.FPDF_CloseDocument(doc);memory.wasmExports.free(ptr);}
+}
+export async function referenceText(env,options){
+  const job=queue.then(()=>textOf(env,options));queue=job.catch(()=>{});return job;
+}
