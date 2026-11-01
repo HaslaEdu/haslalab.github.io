@@ -17,6 +17,13 @@ test("an equivalent form is equal, however it is written", () => {
   assert.equal(compareExpr("x^(-1)", "x⁻¹").verdict, "equal");
   assert.equal(compareExpr("omega*sqrt(L*C)", "ω √(L C)").verdict, "equal", "Greek letters spelled out");
 });
+test("the candidate's own names for official variables are matched; an unmatched name leaves no verdict", () => {
+  assert.equal(compareExpr("sigma*T_s^4*R_sun^2/d_sun^2", "sigma*T^4*R_s^2/d_s^2").verdict, "equal", "IPhO 2015 T1: R_s for R_sun");
+  assert.equal(compareExpr("mu*I0/(2*pi*r)", "mu_0*I_0/(2*pi*r)").verdict, "equal");
+  assert.equal(compareExpr("p_c*V", "P_c*V").verdict, "equal");
+  assert.equal(compareExpr("a*b", "a*b*q"), null, "a name of the candidate's own");
+  assert.equal(compareExpr("K*gamma*x", "x"), null, "two official names gone");
+});
 test("anything outside the grammar is not judged", () => {
   assert.equal(parseExpr('import("fs")'), null);
   assert.equal(parseExpr("constructor.constructor('x')()"), null);
