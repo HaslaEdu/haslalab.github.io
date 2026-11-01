@@ -185,3 +185,18 @@ test('DeepSeek thinks only when the stage asks for a level; otherwise thinking i
  assert.deepEqual(seen.map(b=>[b.thinking.type,b.reasoning_effort,b.temperature]),[['disabled',undefined,0],['disabled',undefined,0],['enabled','low',undefined],['enabled','high',undefined]]);
  assert.deepEqual(seen.map(b=>b.max_tokens),[8192,8192,65536,65536],'room for the reasoning beside the answer');
 });
+
+test('math-OCR services: keys found by the admin\'s secret names, MD5 signature for SimpleTex, nothing secret in errors',async()=>{
+ const { ocrEngineKeys, md5, mathpixRead, simpletexRead } = await import('./src/ocr-engines.js');
+ const env={'mathpix_client-ID':'mp-id','mathpix_client-secret':'mp-secret','simpletex_client-ID':'st-id','simpletex_client-secret':'st-secret'};
+ assert.deepEqual(ocrEngineKeys(env),{mathpix:true,simpletex:true});assert.deepEqual(ocrEngineKeys({}),{mathpix:false,simpletex:false});
+ assert.equal(md5('abc'),'900150983cd24fb0d6963f7d28e17f72');
+ const seen=[];const jpeg=new Uint8Array([255,216,255,224,1,2,3]);
+ const mp=await mathpixRead(env,jpeg,'image/jpeg',{fetchImpl:async(url,init)=>{seen.push({url,init});return Response.json({text:'$v_0 = I_0/M$',confidence:.9,is_handwritten:true});}});
+ assert.equal(mp.text,'$v_0 = I_0/M$');assert.equal(seen[0].init.headers.app_id,'mp-id');assert.equal(seen[0].init.headers.app_key,'mp-secret');
+ assert.match(JSON.parse(seen[0].init.body).src,/^data:image\/jpeg;base64,/);
+ const st=await simpletexRead(env,jpeg,'image/jpeg',{fetchImpl:async(url,init)=>{seen.push({url,init});return Response.json({status:true,res:{info:{markdown:'$x=2$'},conf:.8}});}});
+ const h=seen[1].init.headers;assert.equal(seen[1].url,'https://server.simpletex.cn/api/simpletex_ocr');assert.equal(st.text,'$x=2$');
+ assert.equal(h.sign,md5(`app-id=st-id&random-str=${h['random-str']}&timestamp=${h.timestamp}&secret=st-secret`));assert.ok(!JSON.stringify(h).includes('st-secret'));
+ await assert.rejects(mathpixRead(env,jpeg,'image/jpeg',{fetchImpl:async()=>Response.json({error:'bad key mp-secret'},{status:401})}),e=>e.code==='ocr_engine_failed'&&!JSON.stringify(e).includes('mp-secret'));
+});

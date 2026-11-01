@@ -37,6 +37,7 @@ import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvide
 import {referenceImages,referenceText} from './reference-images.js';
 import { compareExpr, describeCheck } from './expr-check.js';
 import { pageStrips } from './page-tiles.js';
+import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
@@ -2656,8 +2657,15 @@ async function labBench(env, s, job) {
   const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking });
   let out, failed = false;
   try {
-    if (spec.stage === 'models') out = { keys: providerKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
-    else if (spec.stage === 'read') {
+    if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
+    /* a dedicated math-OCR service reads a page: {stage:'ocr', engine:'mathpix'|'simpletex', page_id} */
+    else if (spec.stage === 'ocr') {
+      const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
+      const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
+      const read = { mathpix: mathpixRead, simpletex: simpletexRead }[spec.engine]; if (!read) throw new Error('bench_engine');
+      const r = await read(env, bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), page.mime, { signal: AbortSignal.timeout(90000) });
+      out = { page_id: page.id, engine: spec.engine, ocr: r.text, confidence: r.confidence, handwritten: r.handwritten ?? null };
+    } else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
       const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles }, readHint: !!spec.read.hint,
