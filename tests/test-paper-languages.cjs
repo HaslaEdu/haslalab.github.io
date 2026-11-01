@@ -58,9 +58,11 @@ Object.assign(context, {UI:{en:{thyPaper:'Problem paper',thySol:'Solutions',thyO
   contestEntries:()=>[],theoryGroups:()=>[],reviewTheoryGroups:()=>[],examGroups:()=>[],TL:()=>'',thyCount:()=>1});
 vm.runInContext(html.slice(cardStart,cardEnd),context);
 const cards = context.theoryHtml('cpho',{y:2023});
-assert.ok(cards.includes('Problem paper · 中文'));
-assert.ok(cards.includes(cpho.papers.zh));
-assert.ok(cards.includes('Problem paper · 한국어'));
+// In English a card offers the English paper alone, untagged: «Problems», not «Problems English» beside «Problems · 中文»
+// and «Problems · 한국어» (the exam still offers every language)
+assert.ok(!cards.includes('Problem paper · 中文'));
+assert.ok(!cards.includes('Problem paper · 한국어'));
+assert.ok(cards.includes(cpho.papers.en));
 const nativeCard = context.theoryHtml('eotvos',{y:2026});
 assert.ok(nativeCard.includes('Magyar'));
 

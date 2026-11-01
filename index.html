@@ -1102,10 +1102,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=fd7e30d1aafa"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=6dcf507bae0d"></script>
+<script src="site-catalogue.js?v=5eab93e342f0"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=e378ec06baeb"></script>
+<script src="site-design.js?v=4c8cfab4dccb"></script>
 <script>
 "use strict";
 
@@ -1159,8 +1159,8 @@ ko:{
       {y:"2025", n:"ESF",   sub:"동아시아 고교생 지구과학 페스티벌", medal:"bronze", label:"동메달"}
     ]},
   tComps:"대회", tYears:"수록 연도", tProbs:"실험 문제", tLive:"공개됨", tThy:"이론 문제지",
-  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 답안지와 워킹시트는 실전 모드에 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyData:"데이터 (엑셀)", thySim:x=>`${x}은 대회가 준 프로그램(시뮬레이터)으로 푸는 문제라 실험 탭에 있습니다. 시뮬레이터로 연습하고 실전 모드로 볼 수 있습니다.`, thyAns:"답안지",
-  thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 답안지와 워킹시트는 실전 모드에 있습니다.", thyOrig:"원문", thyKo:"한국어",
+  thyH:"이론 문제", thyNote:"대회가 공개한 원문 그대로입니다 (번역하지 않았습니다). 각 문제의 답안지와 워킹시트도 여기서 받을 수 있습니다.", thyPaper:"문제지", thySol:"해설", thyMark:"채점 기준", thyData:"데이터 (엑셀)", thySim:x=>`${x}은 대회가 준 프로그램(시뮬레이터)으로 푸는 문제라 실험 탭에 있습니다. 시뮬레이터로 연습하고 실전 모드로 볼 수 있습니다.`, thyAns:"답안지",
+  thyNoteKo:"한국어 번역이 있으면 한국어판이, 없으면 대회가 공개한 원문이 열립니다. 각 문제의 답안지와 워킹시트도 여기서 받을 수 있습니다.", thyOrig:"원문", thyKo:"한국어",
   thyGuide:"일반 지침", thyRev:"문제 2 개정판", thyWholeKo:"문제지 전체 (한국어)",
   thyInv:"초청 라운드", thyPick:"이론 문제를 고르세요", thyPickPlain:"문제를 고르세요", thyPapersPlain:"문제지", thyCntPlain:n=>`${n}문제`, trkThyPlain:"문제지", thyPaperO:"문제지 원문", thySolO:"해설 원문", thyKoChip:"한국어판", thyOrigChip:"원문만", thyAll:"전체",
   thyWhole:"이론 전체", thyExam:"이 해의 이론을 실전 모드로 응시하기 →", thyExamPlain:"이 해를 실전 모드로 응시하기 →", omrGo:"실전 모의 · 모니터 채점", omrKey:"정답", tThyPlain:"문제지", thyN:"이론", xmTheoryLabel:"이론 시험", xmMixLabel:"실험 + 이론 시험",
@@ -1228,8 +1228,8 @@ en:{
       {y:"2025", n:"ESF",   sub:"East Asia High School Earth Science Festival", medal:"bronze", label:"Bronze"}
     ]},
   tComps:"Competitions", tYears:"Years", tProbs:"Experimental problems", tLive:"Published", tThy:"Theory papers",
-  thyH:"Theory", thyNote:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyData:"Data (Excel)", thySim:x=>`${x} is solved with the organisers’ program (a simulator), so it is in the experiment track, where you can practise it and sit it in exam mode.`, thyAns:"Answer sheets",
-  thyNoteKo:"As the olympiad published them, in the original language. The answer and working sheets are in exam mode.", thyOrig:"Original", thyKo:"Korean",
+  thyH:"Theory", thyNote:"As the olympiad published them, in the original language. Each problem's answer and working sheets are here too.", thyPaper:"Problems", thySol:"Solutions", thyMark:"Marking scheme", thyData:"Data (Excel)", thySim:x=>`${x} is solved with the organisers’ program (a simulator), so it is in the experiment track, where you can practise it and sit it in exam mode.`, thyAns:"Answer sheets",
+  thyNoteKo:"As the olympiad published them, in the original language. Each problem's answer and working sheets are here too.", thyOrig:"Original", thyKo:"Korean",
   thyGuide:"General instructions", thyRev:"Problem 2, revised", thyWholeKo:"Whole paper in Korean",
   thyInv:"Invitational", thyPick:"Choose a theory problem", thyPickPlain:"Choose a paper", thyPapersPlain:"papers", thyCntPlain:n=>`${n} paper${n>1?"s":""}`, trkThyPlain:"Paper", thyPaperO:"Problems in Korean", thySolO:"Solutions in Korean", thyKoChip:"Korean too", thyOrigChip:"Original", thyAll:"Whole paper",
   thyWhole:"Whole paper", thyExam:"Sit this year's theory in exam mode →", thyExamPlain:"Sit this year's paper in exam mode →", omrGo:"On-screen mock exam", omrKey:"Answer key", tThyPlain:"Papers", thyN:"theory", xmTheoryLabel:"theory exam", xmMixLabel:"experiments + theory exam",
@@ -1579,7 +1579,7 @@ const DATA={
         exe:{ko:REL+"v1.0/IPhO2017_E1_sim_KO.exe", en:REL+"v1.0/IPhO2017_E1_sim_EN.exe"},
         src:{ko:"src/ipho2017_E1_diffusion_sim_KO.py", en:"src/ipho2017_E1_diffusion_sim_EN.py"},
         pdf:{ko:"pdfx/ipho/IPhO_2017_E1_KO.pdf", en:"pdf/IPhO_2017_E1_EN.pdf"},
-        sol:{ko:"pdf/IPhO_2017_S1_KO.pdf", en:"pdf/IPhO_2017_S1.pdf"}
+        sol:{ko:"pdfx/ipho/IPhO_2017_S1_KO.pdf", en:"pdf/IPhO_2017_S1.pdf"}
       }},
      {id:"E2",
       title:{ko:"지진·화산 감지를 위한 평행 쌍극자선 자기 트랩",
@@ -1592,7 +1592,7 @@ const DATA={
         exe:{ko:REL+"v1.0/IPhO2017_E2_Sim_KO.exe", en:REL+"v1.0/IPhO2017_E2_Sim_EN.exe"},
         src:{ko:"src/ipho2017_E2_pdl_sim_KO.py", en:"src/ipho2017_E2_pdl_sim_EN.py"},
         pdf:{ko:"pdfx/ipho/IPhO_2017_E2_KO.pdf", en:"pdf/IPhO_2017_E2_EN.pdf"},
-        sol:{ko:"pdf/IPhO_2017_S2_KO.pdf", en:"pdf/IPhO_2017_S2.pdf"}
+        sol:{ko:"pdfx/ipho/IPhO_2017_S2_KO.pdf", en:"pdf/IPhO_2017_S2.pdf"}
       }}]},
    {y:2016,host:{ko:"스위스 · 취리히",en:"Zurich, Switzerland"},cc:"ch",
     problems:[
@@ -5246,6 +5246,11 @@ function sheetsHref(exam){
   else if(f.includes("-")) o.set("tt",e.filter((x,i)=>f[i]==="-").join(","));   /* a combined exam (NBPhO): its theory part */
   return "sim/sheets.html?"+o.toString();
 }
+/* the «Answer sheet» / «Working sheet» button of a problem's card: the sheets page with that kind only — the official sheet
+   (with the scan squares) where the olympiad published one, else HaslaLab's, ready to print */
+const sheetKind=(href,kind)=>href+"&k="+kind;
+const expSheetsHref=(key,yr,p)=>"sim/sheets.html?"+new URLSearchParams({c:key,y:yr.y,n:compOf(key).abbr,e:examTask(p),t:p.title?p.title[lang]:"",lang}).toString();
+const sheetBtn=(href,lbl)=>`<a class="btn ghost" href="${esc(href)}" target="_blank" rel="noopener">${lbl}</a>`;
 /* a problem card on a year page — the experiments and the theory problems both: code, status, title, text, tags,
    then a row of two main buttons and a row of documents; a button with no file stays, greyed */
 function probCard(o){
@@ -5282,17 +5287,29 @@ function theoryHtml(key,yr){
      sheets are the exam mode's */
   const clip=ts=>{ const s=ts.join(" · "); return esc(s.length>280?s.slice(0,277).replace(/ · [^·]*$/,"")+" …":s); };
   const omr=!!(compOf(key)&&compOf(key).omr);
+  /* a problem's answer sheet (the official or Korean one where the site has it, else the sheets page) and working sheet
+     (the Korean one in Korean, else the sheets page) — next to its problem and solution */
+  const sheetDocs=(code,A,on)=>{
+    if(!on||!t.f[code]||key==="kmo"||key==="kmchc") return [];
+    const h=sheetsHref(theoryHref(key,yr,[code]));
+    return [A[0]?a(A[0],ko?"답안지":"Answer sheet",false,A[1]):sheetBtn(sheetKind(h,"answer"),ko?"답안지":"Answer sheet"),
+      ko&&t.wk?a(t.wk,"워킹시트"):sheetBtn(sheetKind(h,"working"),ko?"워킹시트":"Working sheet")];
+  };
   const card=(code,probs,f,k,head,docs)=>{
     const archive=f.archive, archiveLabels={restored:ko?"비공식 복구본":"Restored copy",translation:ko?"영문 재수록":"English reprint",publisher:ko?"출판사 부분 재수록":"Publisher excerpt",reprint:ko?"전신 대회 재수록":"Predecessor reprint"};
     const paperLabel=t.sourceType==="historical_reprint"?(ko?"문제 재수록 보고서":"Report with reprinted problems"):f.containsSolutions?(ko?"문제·해설 합본":"Problems & solutions"):archive?.type==="publisher"?(ko?"문제·풀이 (부분)":"Problems and solutions (excerpt)"):d.thyPaper;
     const has=ko&&!!(k.paper||k.sol);
     const o=(kv,fv)=>ko?(kv?[kv,""]:[fv,fv&&has?d.thyOrig:""]):(fv?[fv,""]:[kv,kv?d.thyKo:""]);
      const P=o(k.paper,f.paper), S=o(k.sol,f.sol), M=o(k.mark,f.mark);
-     const paperLanguages=PaperLanguages.files({...f,ko:k}), selectedLanguage=Object.keys(paperLanguages).find(language=>paperLanguages[language]===P[0]);
+     const paperLanguages=PaperLanguages.files({...f,ko:k});
+     /* in English, the English paper only, untagged, where there is one (no «Problems · 한국어» beside it) */
+     if(!ko&&paperLanguages.en&&P[0]!==paperLanguages.en){ P[0]=paperLanguages.en; P[1]=""; }
+     const selectedLanguage=Object.keys(paperLanguages).find(language=>paperLanguages[language]===P[0]);
      const paperSourceType=f.paperSourceTypes?.[selectedLanguage];
      const paperDisplay=P[0]===f.paper&&f.sourcePages?.length?P[0]+"#page="+f.sourcePages[0]:P[0];
-     const languageDocs=ko?[]:Object.entries(paperLanguages).filter(([,file])=>file!==P[0]).map(([language,file])=>a(file,key==="kphe"?d.thyPaper:`${f.paperContainsSolutions?.[language]?"Problems & solutions":d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
-     if(selectedLanguage) P[1]=ko&&selectedLanguage==="ko"?"":PaperLanguages.label(selectedLanguage,lang);
+     /* (an original that also holds the solutions, e.g. a Hungarian report beside an English translation, stays) */
+     const languageDocs=ko?[]:Object.entries(paperLanguages).filter(([language,file])=>file!==P[0]&&(!paperLanguages.en||f.paperContainsSolutions?.[language])).map(([language,file])=>a(file,key==="kphe"?d.thyPaper:`${f.paperContainsSolutions?.[language]?"Problems & solutions":d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
+     if(selectedLanguage) P[1]=ko&&selectedLanguage==="ko"||!ko&&selectedLanguage==="en"?"":PaperLanguages.label(selectedLanguage,lang);
      const K=o(k.key,f.key), A=o(k.answer,f.answer);
     const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
@@ -5305,7 +5322,7 @@ function theoryHtml(key,yr){
          (K[0]?[a(K[0],key==="kphe"?(ko?"답안":"Answers"):t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
-       docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+       docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(sheetDocs(code,A,!omr)).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const sim=simThy(key,yr);
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)&&!sim.has(x)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
@@ -5421,6 +5438,9 @@ function viewYear(key,year,mode=""){
         const docsOnly = !!c.soon && !f.sim;
         if(docsOnly) docs.pop();
         if(c.open) docs.splice(1,1);                      /* IYPT: no solution exists, so no greyed solution button */
+        /* an experiment: its answer and working sheets next to the problem and the solution */
+        if(live&&!c.open&&/^E\d*$/.test(p.id)){ const h=expSheetsHref(key,yr,p);
+          docs.splice(docs.length-(docsOnly?0:1),0,sheetBtn(sheetKind(h,"answer"),lang==="ko"?"답안지":"Answer sheet"),sheetBtn(sheetKind(h,"working"),lang==="ko"?"워킹시트":"Working sheet")); }
         const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
         const grp = grpOf(c,p);
         return probCard({soon:mode==="wip"&&!c.chip, grp, code:grp?p.id.replace(/[αβγ]+$/,""):p.id, tr:grp?grpTag(d,grp):"", mode, chip,

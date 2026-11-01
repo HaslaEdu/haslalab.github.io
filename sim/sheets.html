@@ -18,7 +18,8 @@
      URL: sheets.html?c=ipho&y=2024&n=IPhO&e=E1,E2&t=title|title&lang=ko
      A theory exam (m=t, a=official answer-sheet PDFs per task): the official answer sheets where they were published,
      else HaslaLab's own (blank answer boxes, no data table or graph paper) — headed «THEORY».
-     URL: sheets.html?m=t&c=ipho&y=2024&n=IPhO&e=T1,T2,T3&t=…&a=IPhO_2024_T1A.pdf|…&lang=ko -->
+     URL: sheets.html?m=t&c=ipho&y=2024&n=IPhO&e=T1,T2,T3&t=…&a=IPhO_2024_T1A.pdf|…&lang=ko
+     k=answer or k=working (a problem card's own button on the year page) keeps that kind only. -->
 <style>
   :root{--bg:#1c2027;--panel:#22262d;--ink:#e8eef2;--muted:#9aa3ab;--line:#33373e;--accent:#f2c14e}
   *{box-sizing:border-box}
@@ -162,7 +163,9 @@ const T = {
     stamp: "Open with scan markers ↗", stamping: "Adding the markers…", stamped: (m, n) => `Scan markers added on ${m} of ${n} pages.` + (m < n ? " The other pages have print in a corner and are found by the paper's edge." : ""), stampFail: "The PDF could not be opened. Open the original to print it.", page: "Page", item: "Item", axes: "Axes", bad: "This address is not complete. Open it again from the exam instructions." },
 }[lang];
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-let ITEMS = {}, OFF = {}, ws = 4, want = { answer: true, working: true };
+/* k=answer / k=working (a card's own «Answer sheet» or «Working sheet» button): that kind only */
+const KIND = Q.get("k");
+let ITEMS = {}, OFF = {}, ws = 4, want = { answer: KIND !== "working", working: KIND !== "answer" };
 
 /* a theory sheet's header, as the official IPhO 2025 sheets: «A1-2» (answer sheet of problem 1, page 2) or «W» */
 const thyHead = (task, kind, i, n) => {
@@ -217,19 +220,19 @@ const graphPage = () => `<p class="note">${T.graph}</p><div class="gq"><span>${T
 function official() {
   const rows = [];
   if (THY) {                                                     // theory: the official answer sheets travel with the exam's address
-    TASKS.forEach((task, i) => rows.push(ANS[i] && SHEET.test(ANS[i])
+    if (want.answer) TASKS.forEach((task, i) => rows.push(ANS[i] && SHEET.test(ANS[i])
       ? `<div class="o"><b>${esc(task)}</b><div>${/_KO\.pdf$/.test(ANS[i]) ? T.koA : T.offA}<small>${esc(/_KO\.pdf$/.test(ANS[i]) ? T.thyKo : T.thyOff)}</small></div>
          <button class="pri" type="button" data-stamp="${esc(sheetUrl(ANS[i]))}">${T.stamp}</button>
          <a href="${esc(sheetUrl(ANS[i]))}" target="_blank" rel="noopener"><button type="button">${T.open}</button></a><span class="st" hidden></span></div>`
       : `<div class="o"><b>${esc(task)}</b><div><small>${T.ownA}</small></div></div>`));
-    if (WS) rows.push(`<div class="o"><b>${esc(TASKS.join(" + "))}</b><div>${/_KO\.pdf$/.test(WS) ? T.koW : T.offW}<small>${esc(/_KO\.pdf$/.test(WS) ? T.thyKo : "")}</small></div>
+    if (WS && want.working) rows.push(`<div class="o"><b>${esc(TASKS.join(" + "))}</b><div>${/_KO\.pdf$/.test(WS) ? T.koW : T.offW}<small>${esc(/_KO\.pdf$/.test(WS) ? T.thyKo : "")}</small></div>
          <button class="pri" type="button" data-stamp="${esc(sheetUrl(WS))}">${T.stamp}</button>
          <a href="${esc(sheetUrl(WS))}" target="_blank" rel="noopener"><button type="button">${T.open}</button></a><span class="st" hidden></span></div>`);
     document.getElementById("off").innerHTML = rows.join("");
     document.querySelectorAll("[data-stamp]").forEach(b => { b.onclick = () => stampOpen(b); });
     return;
   }
-  for (const task of TASKS) for (const kind of ["answer", "working"]) {
+  for (const task of TASKS) for (const kind of ["answer", "working"].filter(k => want[k])) {
     const list = (OFF[task] || {})[kind] || [];
     if (list.length) list.forEach(f => rows.push(`<div class="o"><b>${esc(task)}</b><div>${kind === "answer" ? T.offA : T.offW}<small>${esc(f.lang || "")} · ${esc(T.offPages(f.pages, f.marked))}</small></div>
       <a href="sheets/${esc(f.file)}" target="_blank" rel="noopener"><button class="pri" type="button">${T.open}</button></a></div>`));
