@@ -213,7 +213,7 @@ test('the admin model bench runs a stage with other models and keeps the result 
   env.LAB_PIPELINE='mixed';
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
-  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['deepseek',VISION_MODELS.deepseek,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
   sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
     {id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]},
     {id:'R',points:1,type:'derivation',role:'result',sheet:'answer',what:'Expression of the velocity'}]}),'fixture',Math.floor(Date.now()/1000));
@@ -263,7 +263,7 @@ test('experiments go through the same pipeline: Gemini reads (red ink left out),
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','experiment') WHERE id=?").run(sid);
-  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['deepseek',VISION_MODELS.deepseek,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
   sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
     {id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]},
     {id:'R',points:1,type:'derivation',role:'result',sheet:'answer',what:'Expression of the velocity'}]}),'fixture',Math.floor(Date.now()/1000));
@@ -281,7 +281,7 @@ test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what 
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
-  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['deepseek',VISION_MODELS.deepseek,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
   sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
     {id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]},
     {id:'R',points:1,type:'derivation',role:'result',sheet:'answer',what:'Expression of the velocity'}]}),'fixture',Math.floor(Date.now()/1000));
