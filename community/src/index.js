@@ -35,6 +35,7 @@ import { prepareMonthlyExperimentVisuals } from './monthly-experiment-visuals.js
 import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './lab-call-pricing.js';
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages,referenceText} from './reference-images.js';
+import { compareExpr, describeCheck } from './expr-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
@@ -1655,7 +1656,7 @@ const SCHEME_SCHEMA = { type: "object", properties: {
     checks: { type: "array", items: { type: "object", properties: { check: { type: "string", enum: LAB_CHECKS }, n: N({ type: "integer" }), points: { type: "number" } }, required: ["check", "points"] } },
     n_min: N({ type: "integer" }), n_class: N({ type: "string", enum: ["few", "medium", "many"] }),
     role: { type: "string", enum: ["result", "step"] },
-    ref: N({ type: "string" }), tol: N({ type: "string", enum: ["interval", "order", "default"] }),
+    ref: N({ type: "string" }), tol: N({ type: "string", enum: ["interval", "order", "default"] }), expr: N({ type: "string" }),
   }, required: ["id", "points", "type", "sheet", "what"] } } }, required: ["points", "items"] };
 const PAGE_SCHEMA = { type: "object", properties: {
   text: { type: "string" }, confidence: { type: "number" },
@@ -1686,7 +1687,7 @@ const GRADE_SCHEMA = { type: "object", properties: {
   items: { type: "array", items: { type: "object", properties: {
     id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), value_in_unit: N({ type: "number" }), unit_ok: { type: "boolean" },
     visual: N({type:'object',properties:{kind:{type:'string',enum:['value','graph','table','diagram']},box:{type:'array',items:{type:'number'}},description:{type:'string'},value:N({type:'number'}),rows:N({type:'integer'}),columns:{type:'array',items:{type:'string'}},graph:PAGE_SCHEMA.properties.items.items.properties.graph},required:['kind','box','description']}),
-    checks_met: { type: "array", items: { type: "string" } }, score: { type: "number" },
+    checks_met: { type: "array", items: { type: "string" } }, score: { type: "number" }, expr: N({ type: "string" }),
     rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: { type: "string" },
   }, required: ["id", "found", "page", "score", "rules", "note", "quote"] } },
   feedback: { type: "array", items: { type: "object", properties: { page: N({ type: "integer" }), label: N({ type: "string" }), note: { type: "string" }, kind: { type: "string", enum: ["good", "fix"] } }, required: ["note", "kind"] } },
@@ -1858,6 +1859,9 @@ async function labCanonicalPdf(env,source) {
   if(source?.startsWith('https://'))return labTrustedPdf(source,value=>value===source);
   return labPdf(env,source);
 }
+/* the official final formula in a form code can evaluate (expr-check.js compares the candidate's with it at random points) */
+const SCHEME_EXPR = "expr: for a result item whose answer is a formula (a symbolic final expression), the official right-hand side as plain ASCII math: operators + - * / ^ and parentheses, functions sqrt exp ln sin cos tan asin acos atan sinh cosh tanh abs, pi; variables named as printed with subscripts after an underscore and Greek letters spelled out (rho_1, theta_b, omega_0, M_WD, Delta_phi). Example: 2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1). Every other item: null.";
+const GRADE_EXPR = "expr: for an item whose scheme entry has expr, the candidate's own final expression for it exactly as written in the answer box (else the last one in the working), right-hand side only, in the same plain ASCII syntax and with the same variable names as the official expr; never corrected, completed or simplified. null when the candidate wrote none.";
 const ONE_ITEM_ONE_ID = "Every item has its own id, used once (when a part repeats the same mark for several cases, e.g. one per concentration, write A1.a, A1.b, …), and its own points only — never the total of its part repeated on each row. The items' points add up to the task's printed total. A breakdown of how one mark may be earned in part (half marks for a partly right answer, «0.2 if only the sign is wrong») belongs to that item as its partial intervals or checks, never as further items added beside it; the items of a question never add up to more than its printed heading.";
 /* a scheme as it is used: its items tidied, its printed headings kept, its points bounded by them */
 function settleScheme(sc) {
@@ -1927,6 +1931,7 @@ async function labSchemeBuild(env, s, task, m) {
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
       "A numerical answer whose interval is not printed still names the official value with its unit in `what` (e.g. «correct numerical value of H_c = 7.7 m»), and any alternative value the solution says to accept.",
       "For every numerical value item also give ref, the official value exactly as printed in the item's unit (digits only, as «-13.6», «7.7» or «2.2e9»), and tol: interval when the scheme prints an interval (give full_min and full_max too), order when it accepts the nearest power of ten, default otherwise.",
+      SCHEME_EXPR,
       "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else. final_full: true on a part when the solution says a correct final answer of that part earns its full points without the working (or «full marks for the correct answer»); otherwise leave it out.",
       "Keep the scheme's partial-credit and special rules inside the item's `what`, as printed: the points for a partly correct answer (a missing factor, a wrong sign, a correct expression without the number, «0.7 if A = 2a_s/a_c appears»), «max 0.2 without justification», special cases and accepted alternative forms. Keep the official answer exact as printed (factors, signs, π and units); never add or drop a factor.",
       "notes: the solution's own general marking rules in a few words, above all whether a correct final answer without working earns its marks (e.g. «Rule 2: a formula written without derivation earns no marks unless it can be done in one's head», or a problem's note «writing the correct answer without showing work also receives full marks»), and which questions ask to derive, show or prove.",
@@ -2264,11 +2269,12 @@ async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lan
   const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
   const items = flagged.map(f => { const it = scheme.items.find(x => x.id === f.id) || {}, g = first.get(f.id) || {};
     return { id: it.id, points: it.points, type: it.type, role: it.role, sheet: it.sheet, unit: it.unit, ref: it.ref, tol: it.tol, full_min: it.full_min, full_max: it.full_max,
-      what: it.what, first: { score: f.got, page: g.page, value: g.value, note: g.note } }; });
+      what: it.what, expr: it.expr, first: { score: f.got, page: g.page, value: g.value, expr: g.expr, note: g.note }, check: f.check }; });
   const parts = [{ text: [stablePrefix(family, kind), "", "[TASK: moderate]",
     `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader ${all ? "graded the items below" : "marked the items below short of full marks"}, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
     (all ? "Check every item, those given full marks too, in the page photos themselves and grade it again under the same regulation: take marks off a wrong answer, a missing factor, an inverted relation or a wrong sign however close it looks, and off a step that is not written; give full marks to an answer equivalent to the official one in another form (rearranged, other notation, another correct method) and to a step written anywhere in the task's pages; keep a deduction the photos confirm, correct one that came from a misreading." :
     "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading.") + " Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Where the photo shows a number the transcript misread (0.31 read as 9.31), give the number as written in the photo as value and add visual:{kind:\"value\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it,description,value}. Give no feedback or review.",
+    ...(items.some(it => it.check) ? ["An item's check is a computed fact: code evaluated the candidate's final expression (first.expr) and the official expr at random values of their variables. Confirm in the photo that first.expr is what the candidate wrote; if it is, trust the check on equivalence (an equivalent form earns the result's marks, a non-equivalent one does not) and apply the scheme's own partial rules (a wrong sign or factor earns only the partial marks the scheme prints for it, else none)."] : []),
     `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
     "<<ITEMS>>" + JSON.stringify(lean(items)) + "<<END>>"].join("\n") }];
   for (const { p, photo } of photos) {
@@ -2303,6 +2309,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     "", "[Marking scheme — from the official solution]", "<<SCHEME>>" + JSON.stringify(compactScheme(scheme)) + "<<END>>",
     /* after the scheme: everything above is one paper's prefix for every candidate, Korean or English, which the
        provider's prompt cache bills at a fraction of the input price */
+    ...(scheme.items.some(it => it.expr) ? [GRADE_EXPR] : []),
     `Write every note in ${lang === "en" ? "English" : "Korean"}.`].join("\n") };
   const pagesNote = { text: "<<PAGES>>" + JSON.stringify(mine.map(p => ({ no: p.no, task: p.task, kind: p.kind, legible: p.legible || null }))) + "<<END>>" };
   const references=[];
@@ -2341,13 +2348,23 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const out = await labVision(env, s, parts, GRADE_SCHEMA, 16384, m, "grade");
   let raw = out.raw, moderator = null;
   const specOf = new Map(scheme.items.map(it => [it.id, it]));
-  const flagged = roles?.moderate ? labScore(scheme, raw, mine, { theory }).items.filter(i => { const it = specOf.get(i.id) || {};
+  /* Math-Verify's check in code: a result whose final expression is not the official one at random points yet has full
+     marks, or is the official one in another form yet has under half, is looked at once more with that fact */
+  const checks = env.LAB_EXPR_CHECK === "off" ? [] : (raw.items || []).flatMap(x => {
+    const it = specOf.get(String(x?.id)); if (!it?.expr || !x?.expr || it.role !== "result") return [];
+    const c = compareExpr(it.expr, x.expr), score = +x.score || 0; if (!c) return [];
+    const doubt = c.verdict === "equal" ? score < .5 * it.points : score >= .99 * it.points;
+    return doubt ? [{ id: it.id, got: score, check: describeCheck(c) }] : [];
+  }).slice(0, 30);
+  const moderated = roles?.moderate ? labScore(scheme, raw, mine, { theory }).items.filter(i => { const it = specOf.get(i.id) || {};
     /* «all»: every item, full marks too (a first grader that gives full marks to a wrong answer, a missing factor or an
        inverted relation is never checked otherwise: the largest error in an audit of 15 sittings); «down»: what it marked down */
     return roles.moderateScope === "all" || i.got < i.points && (it.role === "result" || it.sheet === "answer" || ["value", "graph", "table", "other"].includes(it.type)); }).slice(0, roles.moderateScope === "all" ? 90 : 30) : [];
+  const flagged = [...moderated.map(f => ({ ...f, check: checks.find(c => c.id === f.id)?.check })), ...checks.filter(c => !moderated.some(f => f.id === c.id))];
   if (flagged.length) {
     try {
-      const mod = await labModerate(env, labAs(s, roles.moderate, roles.moderateBench), task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles.moderateScope === "all");
+      /* without a moderator the grader's own model looks at the items the expression check doubts */
+      const mod = await labModerate(env, roles?.moderate ? labAs(s, roles.moderate, roles.moderateBench) : s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles?.moderateScope === "all" || checks.length > 0);
       const ids = new Set(flagged.map(f => f.id)), byId = new Map((mod.raw.items || []).filter(x => x && ids.has(String(x.id))).map(x => [String(x.id), x]));
       const kept = (raw.items || []).filter(x => !byId.has(String(x?.id)));
       raw = { ...raw, items: [...kept, ...byId.values()] };                    // an item the first grader left out is added

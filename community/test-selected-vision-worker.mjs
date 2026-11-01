@@ -44,7 +44,7 @@ async function fixture(run){
   const t=Math.floor(Date.now()/1000),tokens={},queue=[],calls=[];
   for(const id of [1,2,3]){tokens[id]=('vision_test_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(?,?,?,'unused',?,5)").run(id,'vision'+id,'Vision '+id,t);sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]),id,t,t+86400);}
   const env={DB,GEMINI_API_KEY:'local-gemini',DEEPSEEK_API_KEY:'local-deepseek',UPSTAGE_API_KEY:'must-never-be-used',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>renderer(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
-  let failProvider=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null;
+  let failProvider=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null,gradeReply=null,moderateReply=null;
   const old={fetch:globalThis.fetch,caches:globalThis.caches};globalThis.caches={default:{async match(){},async put(){}}};
   globalThis.fetch=async(input,init={})=>{
     const url=String(input);
@@ -62,8 +62,8 @@ async function fixture(run){
     else if(text.includes('[TASK: read page]'))raw=pageReading;
     else if(text.includes('Review ONLY problem'))raw={problem_no:5,score:7,confidence:.98,verdict:'valid',summary:'Diagram supported argument.',strengths:[],gaps:[],evidence:[{page:1,quote:'',source:'image',box:[100,100,900,900],description:'A labelled geometric construction with direction arrows.',note:'Visible geometry checked.'}]};
     else if(text.includes('"task":"transcribe"'))raw={text:'',legible:true,confidence:.98,uncertainties:[],visuals:[{page:1,kind:'graph',description:'A graph and upward direction arrow.',box:[.1,.1,.9,.9]}]};
-    else if(text.includes('[TASK: moderate]'))raw={items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
-    else if(text.includes('[TASK: grade]'))raw=visualGrade;
+    else if(text.includes('[TASK: moderate]'))raw=moderateReply||{items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
+    else if(text.includes('[TASK: grade]'))raw=gradeReply||visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
     return provider==='gemini'?Response.json({modelVersion:url.match(/\/models\/([^/:]+):/)?.[1]||VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:body.model||VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
   };
@@ -74,7 +74,7 @@ async function fixture(run){
   const seedScheme=(sid,provider)=>{const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=[provider,VISION_MODELS[provider],REG_VERSION,entry.solution,entry.mark||''].join(':');sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[{id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]}]}),'fixture:'+provider,t);};
   const problem=()=>{const r=sql.prepare("INSERT INTO problems(week,no,kind,subject,level,points,title_ko,title_en,body_ko,body_en,model_ko,model_en,rubric,opens_at,closes_at,created_at)VALUES('2098-W01',1,'essay','physics',1,2,'그래프','Graph','Graph task','Graph task','Direction','Direction',?,?,?,?)").run(JSON.stringify([{id:'G',name:'Direction',max:2,requirement:'Inspect actual graph direction.'}]),t-60,t+7200,t);return Number(r.lastInsertRowid);};
   const ocrPhoto=async(pid,provider,id=1)=>{const form=new FormData();form.append('image',new Blob([scan],{type:'image/jpeg'}),'graph.jpg');const response=await worker.fetch(new Request(`https://vision.local/api/ocr?mode=math&problem_id=${pid}${provider?'&provider='+provider:''}`,{method:'POST',headers:{Authorization:'Bearer '+tokens[id]},body:form}),env);return{status:response.status,data:await response.json()};};
-  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;}});}finally{Object.assign(globalThis,old);sql.close();}
+  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;},replies:(g,mod)=>{gradeReply=g;moderateReply=mod;}});}finally{Object.assign(globalThis,old);sql.close();}
 }
 
 test('grading mode spends its token when the sitting opens: the provider is pinned then, and an unpaid start leaves nothing open',async()=>fixture(async({api,start,sql,calls})=>{
@@ -295,6 +295,27 @@ test('Gemini 3.8 Flash grades alone: no moderation, and no papers beside the rea
   assert.equal(mods.length,0,'nothing moderates');
   assert.ok(!JSON.stringify(grades[0].body).includes('application/pdf'),'the grader works from the scheme, the readings and the photos');
   assert.equal((await api(`/lab/sessions/${sid}`)).data.session.status,'graded');
+}));
+test('Math-Verify in code: a final expression that is not the official one yet has full marks is looked at once more, with that fact',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
+    {id:'F',points:1.6,type:'derivation',role:'result',sheet:'answer',what:'F = 2gLh^2(rho_1-rho_0)^2/(k^2 rho_1)',expr:'2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1)'},
+    {id:'S',points:1.4,type:'derivation',role:'result',sheet:'answer',what:'S = rho_1 g h',expr:'rho_1*g*h'}]}),'fixture',Math.floor(Date.now()/1000));
+  const item=(id,score,expr)=>({id,found:true,page:1,label:id,score,rules:[],note:'',quote:'',expr});
+  replies({items:[item('F',1.6,'2*rho_1*g*h^2/k^2*(1-rho_0/rho_1)^2'),item('S',1.4,'g*h*rho_1')],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}},
+    {items:[{id:'F',found:true,page:1,score:0,rules:[],note:'L is missing',quote:''}]});
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const grade=calls.find(c=>c.text.includes('[TASK: grade]')),mods=calls.filter(c=>c.text.includes('[TASK: moderate]'));
+  assert.match(grade.text,/expr: for an item whose scheme entry has expr/,'the grader is asked for the candidate\'s expression');
+  assert.equal(mods.length,1,'one look at the doubted item');assert.match(mods[0].url,/gemini-3\.8-flash/,'by the grader\'s own model');
+  assert.match(mods[0].text,/missing L/);assert.ok(!mods[0].text.includes('"id":"S"'),'an equivalent expression with its marks is not doubted');
+  const items=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(items,/"id":"F"[^}]*"got":0/);assert.match(items,/"id":"S"[^}]*"got":1\.4/);
 }));
 test('a paid sitting\'s pages are read whatever the account has read that day',async()=>fixture(async({api,start,upload,drain,sql})=>{
   const a=(await start('gemini')).data,sid=a.session.id;

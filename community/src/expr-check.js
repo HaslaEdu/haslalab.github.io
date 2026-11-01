@@ -1,0 +1,121 @@
+// Numeric equivalence of two final expressions, as Math-Verify does it for answers (extract, normalise, compare), with
+// the comparison done by evaluation at random points: the official expression from the marking scheme and the
+// candidate's, both written by a model in plain ASCII math (2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1)). The parser is
+// small and closed: numbers, variables, + - * / ^, parentheses and a fixed list of functions; nothing is executed.
+const FUNCS = { sqrt: Math.sqrt, exp: Math.exp, ln: Math.log, log: Math.log, log10: Math.log10, sin: Math.sin, cos: Math.cos, tan: Math.tan,
+  asin: Math.asin, acos: Math.acos, atan: Math.atan, arcsin: Math.asin, arccos: Math.acos, arctan: Math.atan, sinh: Math.sinh, cosh: Math.cosh,
+  tanh: Math.tanh, abs: Math.abs, cot: x => 1 / Math.tan(x), sec: x => 1 / Math.cos(x), csc: x => 1 / Math.sin(x) };
+const CONSTS = { pi: Math.PI };
+const GREEK = { "α": "alpha", "β": "beta", "γ": "gamma", "δ": "delta", "ε": "epsilon", "ζ": "zeta", "η": "eta", "θ": "theta", "κ": "kappa", "λ": "lambda",
+  "μ": "mu", "ν": "nu", "ξ": "xi", "π": "pi", "ρ": "rho", "σ": "sigma", "τ": "tau", "φ": "phi", "χ": "chi", "ψ": "psi", "ω": "omega",
+  "Γ": "Gamma", "Δ": "Delta", "Θ": "Theta", "Λ": "Lambda", "Σ": "Sigma", "Φ": "Phi", "Ψ": "Psi", "Ω": "Omega" };
+
+/* the right-hand side of «x = …», Unicode tidied: × · → *, − → -, ², ³ → ^2, ^3, Greek letters spelled out */
+function normalise(text) {
+  let s = String(text ?? "").slice(0, 600);
+  if (/[<>≤≥≈∝]/.test(s)) s = s.split(/[<>≤≥≈∝]/).pop();
+  if (s.includes("=")) s = s.slice(s.lastIndexOf("=") + 1);
+  s = s.replace(/[×·⋅]/g, "*").replace(/[−–]/g, "-").replace(/÷/g, "/").replace(/\*\*/g, "^")
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, d => "^" + [...d].map(c => "⁰¹²³⁴⁵⁶⁷⁸⁹".indexOf(c)).join("")).replace(/⁻\^/g, "^-").replace(/√/g, " sqrt").replace(/[{\[]/g, "(").replace(/[}\]]/g, ")");
+  return s.replace(/[Ͱ-Ͽ]/g, ch => GREEK[ch] ? " " + GREEK[ch] + " " : ch).trim();
+}
+
+function tokenize(s) {
+  const out = [], re = /\s*(?:(\d+(?:\.\d*)?(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?)|([A-Za-z][A-Za-z0-9_']*)|([-+*/^(),]))/y;
+  let at = 0;
+  while (at < s.length) {
+    if (/^\s*$/.test(s.slice(at))) break;
+    re.lastIndex = at; const m = re.exec(s);
+    if (!m) return null;                                                   // a character outside the grammar
+    out.push(m[1] != null ? { t: "num", v: +m[1] } : m[2] != null ? { t: "id", v: m[2] } : { t: m[3] });
+    at = re.lastIndex;
+  }
+  /* implicit products: 2g, g L, 2(…), )(…), x(… when x is not a function */
+  const full = [];
+  for (const tok of out) {
+    const prev = full.at(-1);
+    const ends = prev && (prev.t === "num" || prev.t === ")" || (prev.t === "id" && !FUNCS[prev.v]));
+    const starts = tok.t === "num" || tok.t === "id" || tok.t === "(";
+    if (ends && starts) full.push({ t: "*" });
+    full.push(tok);
+  }
+  return full.length && full.length <= 400 ? full : null;
+}
+
+/* recursive descent: expr := term (± term)*, term := unary ((*|/) unary)*, unary := -unary | power, power := atom (^ unary)? */
+function parse(tokens) {
+  let i = 0;
+  const peek = () => tokens[i], take = t => tokens[i]?.t === t ? tokens[i++] : null;
+  const expr = () => { let a = term(); for (;;) { if (take("+")) { const b = term(); a = ["+", a, b]; } else if (take("-")) { const b = term(); a = ["-", a, b]; } else return a; } };
+  const term = () => { let a = unary(); for (;;) { if (take("*")) { const b = unary(); a = ["*", a, b]; } else if (take("/")) { const b = unary(); a = ["/", a, b]; } else return a; } };
+  const unary = () => take("-") ? ["neg", unary()] : take("+") ? unary() : power();
+  const power = () => { const a = atom(); return take("^") ? ["^", a, unary()] : a; };
+  const atom = () => {
+    const tok = peek(); if (!tok) throw 0;
+    if (tok.t === "num") { i++; return ["num", tok.v]; }
+    if (tok.t === "(") { i++; const e = expr(); if (!take(")")) throw 0; return e; }
+    if (tok.t === "id") {
+      i++;
+      if (FUNCS[tok.v]) { const open = take("("); const arg = open ? expr() : power(); if (open && !take(")")) throw 0; return ["fn", tok.v, arg]; }
+      return CONSTS[tok.v] != null ? ["num", CONSTS[tok.v]] : ["var", tok.v];
+    }
+    throw 0;
+  };
+  try { const e = expr(); return i === tokens.length ? e : null; } catch { return null; }
+}
+
+function vars(node, out = new Set()) {
+  if (node[0] === "var") out.add(node[1]);
+  else if (node[0] !== "num") for (const child of node.slice(1)) if (Array.isArray(child)) vars(child, out);
+  return out;
+}
+function evaluate(node, at) {
+  switch (node[0]) {
+    case "num": return node[1];
+    case "var": return at[node[1]];
+    case "neg": return -evaluate(node[1], at);
+    case "fn": return FUNCS[node[1]](evaluate(node[2], at));
+    case "+": return evaluate(node[1], at) + evaluate(node[2], at);
+    case "-": return evaluate(node[1], at) - evaluate(node[2], at);
+    case "*": return evaluate(node[1], at) * evaluate(node[2], at);
+    case "/": return evaluate(node[1], at) / evaluate(node[2], at);
+    case "^": return Math.pow(evaluate(node[1], at), evaluate(node[2], at));
+  }
+  return NaN;
+}
+export function parseExpr(text) { const tokens = tokenize(normalise(text)); return tokens ? parse(tokens) : null; }
+
+/* deterministic pseudo-random points (the same verdict every time for the same pair) */
+function points(names, n, seed) {
+  let x = seed >>> 0 || 1;
+  const rnd = () => { x ^= x << 13; x >>>= 0; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; };
+  return Array.from({ length: n }, () => Object.fromEntries(names.map(v => [v, 0.3 + 0.9 * rnd() + (rnd() < .5 ? 0 : 0.7 * rnd())])));
+}
+
+/** {verdict:'equal'|'differs'|'factor', ratio?, missing?, extra?} or null when either side cannot be parsed or evaluated */
+export function compareExpr(official, candidate) {
+  const a = parseExpr(official), b = parseExpr(candidate);
+  if (!a || !b) return null;
+  const va = vars(a), vb = vars(b), names = [...new Set([...va, ...vb])].sort();
+  const missing = [...va].filter(v => !vb.has(v)), extra = [...vb].filter(v => !va.has(v));
+  const ratios = [];
+  for (const at of points(names, 24, names.join(",").length * 7919 + 17)) {
+    const x = evaluate(a, at), y = evaluate(b, at);
+    if (!Number.isFinite(x) || !Number.isFinite(y) || Math.abs(x) < 1e-300) continue;
+    ratios.push(y / x);
+  }
+  if (ratios.length < 4) return null;
+  const close = (p, q) => Math.abs(p - q) <= 1e-6 * Math.max(1, Math.abs(p), Math.abs(q));
+  if (ratios.every(r => close(r, 1))) return { verdict: "equal" };
+  if (ratios.every(r => close(r, ratios[0]))) return { verdict: "factor", ratio: +ratios[0].toPrecision(4), missing, extra };
+  return { verdict: "differs", missing, extra };
+}
+
+/* a short English statement for the re-check prompt */
+export function describeCheck(c) {
+  if (!c) return null;
+  if (c.verdict === "equal") return "the candidate's final expression equals the official one at random values of its variables (an equivalent form)";
+  const vars = [c.missing?.length ? `missing ${c.missing.join(", ")}` : "", c.extra?.length ? `extra ${c.extra.join(", ")}` : ""].filter(Boolean).join("; ");
+  if (c.verdict === "factor") return `the candidate's final expression is ${c.ratio} times the official one at every random point (a wrong constant factor or sign)${vars ? "; " + vars : ""}`;
+  return `the candidate's final expression differs from the official one at random values of its variables (not equivalent)${vars ? "; " + vars : ""}`;
+}
