@@ -20,6 +20,10 @@ export async function anthropicMessage({ apiKey, model, system, sequence, maxTok
       ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: part.data } }
       : { type: 'image', source: { type: 'base64', media_type: part.mime, data: part.data } });
   }
+  /* the papers (problem, solution, marking scheme) come before a candidate's pages and are the same for everyone who sat
+     that paper: the prompt cache bills the prefix up to the last of them at a tenth of the input price on later calls */
+  const lastDoc = content.findLastIndex(block => block.type === 'document');
+  if (lastDoc >= 0) content[lastDoc] = { ...content[lastDoc], cache_control: { type: 'ephemeral' } };
   const params = { model, max_tokens: maxTokens, system, messages: [{ role: 'user', content }],
     output_config: { effort: EFFORT[thinking] || 'low' } };
   const stream = FALLBACK.test(model)
