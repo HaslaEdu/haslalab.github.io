@@ -32,7 +32,7 @@ import { createMonthlyCaptureRouter, prepareMonthlyCaptureSubmission, ensureMont
 import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js';
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
 import { prepareMonthlyExperimentVisuals } from './monthly-experiment-visuals.js';
-import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls } from './lab-call-pricing.js';
+import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './lab-call-pricing.js';
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels } from './vision-provider.js';
 import {referenceImages} from './reference-images.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
@@ -3412,7 +3412,10 @@ async function lab(p, m, body, me, req, env, url) {
           (SELECT SUM(usd) FROM lab_calls c WHERE c.session_id=s.id) known_usd,
           (SELECT COUNT(*) FROM lab_calls c WHERE c.session_id=s.id AND usd IS NULL) unknown_cost_calls,
           (SELECT SUM(in_tok) FROM lab_calls c WHERE c.session_id=s.id) in_tok,
-          (SELECT SUM(out_tok) FROM lab_calls c WHERE c.session_id=s.id) out_tok, (SELECT COUNT(*) FROM lab_calls c WHERE c.session_id=s.id) calls
+          (SELECT SUM(out_tok) FROM lab_calls c WHERE c.session_id=s.id) out_tok, (SELECT COUNT(*) FROM lab_calls c WHERE c.session_id=s.id) calls,
+          (SELECT COUNT(DISTINCT task) FROM lab_pages p WHERE p.session_id=s.id) handed,
+          (SELECT json_object('usd',SUM(usd),'in_tok',SUM(in_tok),'out_tok',SUM(out_tok)) FROM lab_calls c WHERE c.session_id=s.id AND c.step IN ('ocr','proof')) read_cost,
+          (SELECT json_object('usd',SUM(usd),'in_tok',SUM(in_tok),'out_tok',SUM(out_tok)) FROM lab_calls c WHERE c.session_id=s.id AND c.step NOT IN ('ocr','proof','scheme','notation')) work_cost
           FROM lab_sessions s WHERE s.submitted_at>? ORDER BY s.id DESC LIMIT 100`).bind(since).all().then(r => r.results),
         env.DB.prepare("SELECT * FROM lab_reviews WHERE created_at>? ORDER BY session_id, task").bind(since).all().then(r => r.results),
         env.DB.prepare("SELECT COUNT(*) pages, SUM(length(data)) d1_bytes, SUM(r2_key IS NOT NULL) in_r2, SUM(purged_at IS NOT NULL) purged FROM lab_pages").first(),
@@ -3421,8 +3424,12 @@ async function lab(p, m, body, me, req, env, url) {
         return { id: x.id, exam_key: x.exam_key, provider: x.provider || null, tasks: JSON.parse(x.tasks), status: x.status, score: x.score, points: x.points, pages: x.n_pages, calls: x.calls,
           in_tok: x.in_tok, out_tok: x.out_tok, usd: x.usd != null ? +x.usd.toFixed(5) : null,
           known_usd: x.known_usd, unknown_cost_calls: x.unknown_cost_calls, grade_ms: d.grade_ms ?? null,
-          wait_s: x.graded_at && x.submitted_at ? x.graded_at - x.submitted_at : null }; });
-      const graded = sessions.filter(x => x.status === "graded" && x.calls);
+          wait_s: x.graded_at && x.submitted_at ? x.graded_at - x.submitted_at : null,
+          /* a sitting handed in only in part counts as the whole sitting it stands for (lab-call-pricing fullSitting) */
+          full: fullSitting({ papers: JSON.parse(x.tasks).length, handed: x.handed, pages: x.n_pages,
+            read: x.read_cost ? JSON.parse(x.read_cost) : {}, work: x.work_cost ? JSON.parse(x.work_cost) : {} }) }; });
+      const graded = sessions.filter(x => x.status === "graded" && x.calls)
+        .map(x => x.full.partial ? { ...x, usd: x.full.usd, in_tok: x.full.in_tok, out_tok: x.full.out_tok } : x);
       const avg = k => { const v = graded.map(x => x[k]).filter(x => x != null); return v.length ? +(v.reduce((a, b) => a + b, 0) / v.length).toFixed(5) : null; };
       /* accuracy: per item |AI − reference|, and per experiment the totals */
       const items = revs.filter(r => r.ai_points != null), diff = items.map(r => Math.abs(r.ai_points - r.ref_points));
@@ -3431,7 +3438,7 @@ async function lab(p, m, body, me, req, env, url) {
       return { days, prices: PRICES, keep_hours: keepHours(env), r2: !!env.LAB_PAGES, purged_now: purged, storage: store,
         per_exam: { n: graded.length, avg_usd: graded.some(x => x.usd == null) ? null : avg("usd"), known_avg_usd: avg("usd"),
           priced_exams: graded.filter(x => x.usd != null).length, unknown_cost_exams: graded.filter(x => x.usd == null).length,
-          avg_in_tok: avg("in_tok"), avg_out_tok: avg("out_tok"), avg_calls: avg("calls"), avg_grade_ms: avg("grade_ms"), avg_wait_s: avg("wait_s"), avg_pages: avg("pages") },
+          avg_in_tok: avg("in_tok"), avg_out_tok: avg("out_tok"), avg_calls: avg("calls"), partial: graded.filter(x => x.full.partial).length, avg_grade_ms: avg("grade_ms"), avg_wait_s: avg("wait_s"), avg_pages: avg("pages") },
         steps, sessions, providers: labProviderStats(graded),
         accuracy: { items: items.length, mae: diff.length ? +(diff.reduce((a, b) => a + b, 0) / diff.length).toFixed(3) : null,
           exact: diff.length ? +(100 * diff.filter(x => x < 0.05).length / diff.length).toFixed(1) : null,

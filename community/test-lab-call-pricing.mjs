@@ -133,3 +133,15 @@ test('known zero totals stay zero and page-only calls do not create unknown toke
   const page = summarizeLabCalls([{ provider: 'upstage', pages: 1, usd: 0.0015, ok: true, ms: 1 }]);
   assert.equal(page.in, 0); assert.equal(page.out, 0); assert.equal(page.cached, 0); assert.equal(page.usd, 0.0015);
 });
+
+test("a sitting handed in only in part is reckoned as the whole sitting: (min + max) x 3/4", async () => {
+  const { fullSitting, WORKING_PAGES } = await import("./src/lab-call-pricing.js");
+  // T1 of T1-T3: 4 pages read for $0.056 (3.1 Pro), grading and moderation $0.006
+  const r = fullSitting({ papers: 3, handed: 1, pages: 4, read: { usd: 0.056, in_tok: 7200, out_tok: 3600 }, work: { usd: 0.006, in_tok: 20000, out_tok: 5000 } });
+  const min = 0.062 * 3, max = min + 3 * WORKING_PAGES * 0.014;
+  assert.equal(r.partial, true); assert.equal(r.usd_min, +min.toFixed(6)); assert.equal(r.usd_max, +max.toFixed(6));
+  assert.equal(r.usd, +((min + max) * .75).toFixed(6));
+  assert.equal(r.in_tok, Math.round(((27200 * 3) + (27200 * 3 + 3 * WORKING_PAGES * 1800)) * .75));
+  const whole = fullSitting({ papers: 3, handed: 3, pages: 10, read: { usd: 0.1 }, work: { usd: 0.02 } });
+  assert.deepEqual([whole.partial, whole.usd], [false, 0.12], "a complete sitting counts as it was");
+});
