@@ -2354,7 +2354,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const specOf = new Map(scheme.items.map(it => [it.id, it]));
   /* Math-Verify's check in code: a result whose final expression is not the official one at random points yet has full
      marks, or is the official one in another form yet has under half, is looked at once more with that fact */
-  const checks = env.LAB_EXPR_CHECK === "off" ? [] : (raw.items || []).flatMap(x => {
+  const checks = env.LAB_EXPR_CHECK === "off" || roles?.exprCheck === false ? [] : (raw.items || []).flatMap(x => {
     const it = specOf.get(String(x?.id)); if (!it?.expr || !x?.expr || it.role !== "result") return [];
     const c = compareExpr(it.expr, x.expr), score = +x.score || 0; if (!c) return [];
     const doubt = c.verdict === "equal" ? score < .5 * it.points : score >= .99 * it.points;
@@ -2378,7 +2378,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const sc = labScore(scheme, raw, mine, { theory });
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
   if (roles?.bench) sc.raw_items = (raw.items || []).map(x => ({ id: String(x?.id), score: +x?.score || 0 }));   // the model's own marks, before the rules in code
-  return { status: "graded", raw_items: sc.raw_items, score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
+  return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
@@ -2661,11 +2661,11 @@ async function labBench(env, s, job) {
       if (spec.scheme && (!scheme || scheme.unscored)) throw new Error('bench_no_scheme');
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
-        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false };
+        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false };
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
       /* raw_score: the model's own marks, each capped at its item and bounded by the paper's headings, with no rule in code */
       const rawBy = new Map((res.raw_items || []).map(x => [x.id, x.score])), rv = it => Math.max(0, Math.min(+it.points || 0, rawBy.get(String(it.id)) ?? 0));
-      out = { score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
+      out = { expr_checks: res.expr_checks, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
         items: res.items.map(i => ({ id: i.id, got: i.got, raw: rawBy.get(String(i.id)) ?? null, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, note: i.note || '' })) };
     } else throw new Error('bench_stage');
   } catch (e) { failed = true; out = { error: String(e?.code || e?.message || 'bench_failed').slice(0, 200) }; }
