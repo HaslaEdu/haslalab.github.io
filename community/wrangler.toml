@@ -36,9 +36,10 @@ DEEPSEEK_MODEL = "deepseek-flash"
 DEEPSEEK_OCR_MODEL = "deepseek-flash"
 # Theory papers: Gemini reads the pages, DeepSeek grades, Gemini moderates the items DeepSeek marked down (labRoles).
 LAB_PIPELINE = "mixed"
-# Theory page reading and moderation models (model bench, 2026-11-01): 3.1-flash-lite read IPhO 2025 pages with about half the
-# misreadings of 3.5-flash-lite at half the cost; DeepSeek grades.
-LAB_READ_MODEL = "gemini-3.1-flash-lite"
+# Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
+# every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
+LAB_READ_MODEL = "gemini-3.1-pro-preview"
+LAB_READ_THINKING = "low"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 
 [[d1_databases]]

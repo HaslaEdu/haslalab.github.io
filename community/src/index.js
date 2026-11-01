@@ -1421,12 +1421,14 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
    grades theory papers (cheap, follows the rules) and Gemini moderates the items DeepSeek marked down, against the page
    photos (a misread transcript is the usual cause: IPhO 2025 T1 A.1.2 read «e²» as «e³»). Experiments, whose graphs and
    tables need the images, stay with Gemini. Otherwise the sitting's own provider does everything, as before. */
-/* LAB_READ_MODEL / LAB_MODERATE_MODEL pick the Gemini model of those theory roles (the model bench of 2026-11-01 on
-   IPhO 2025 theory pages: gemini-3.1-flash-lite read with about half the misreadings of 3.5-flash-lite at half the cost) */
+/* LAB_READ_MODEL (+ LAB_READ_THINKING) / LAB_MODERATE_MODEL pick the Gemini model of those theory roles. Model bench of
+   2026-11-01 on 18 handwritten IPhO 2023 and 2025 theory pages against a hand transcription: gemini-3.1-pro-preview
+   (thinking low) misread none of 102 checked numbers and symbols and finished every page; 3.1-flash-lite misread 6,
+   3.5-flash-lite about twice that; the 3.x Flash models looped to the output cap on 10-30% of pages. */
 function labRoles(env, s, theory) {
-  const pick = model => model ? { model } : undefined;
+  const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
   if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
-    return theory ? { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL), moderateBench: pick(env.LAB_MODERATE_MODEL),
+    return theory ? { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING), moderateBench: pick(env.LAB_MODERATE_MODEL),
         readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
         proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined }
       : { read: "gemini", grade: "gemini", moderate: null };
