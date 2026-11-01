@@ -145,6 +145,7 @@ test('Claude reads through the SDK: images as image blocks, PDFs as documents, t
     assert.match(req.headers.get('anthropic-beta') || '', /server-side-fallback-2026-07-01/); assert.equal(req.body.output_config.effort, 'low');
     const content = req.body.messages[0].content;
     assert.deepEqual(content.map(b => b.type), ['text', 'text', 'image', 'text', 'document']); assert.equal(content[2].source.media_type, 'image/jpeg');
+    assert.deepEqual(content[4].cache_control, { type: 'ephemeral' }, 'the papers are the cached prefix'); assert.equal(content[2].cache_control, undefined);
     assert.match(req.body.system, /Return exactly one JSON object/); assert.equal(req.body.temperature, undefined, 'no sampling parameters on 5.5 models');
     await assert.rejects(visionJSON(env, { provider: 'anthropic', model: 'claude-haiku-5-5', parts: [{ text: 'x' }] }), e => e.code === 'vision_provider_rate_limited' && e.provider_status === 429);
     assert.equal(seen[1].body.fallbacks, undefined, 'Haiku has no server-side fallback');
