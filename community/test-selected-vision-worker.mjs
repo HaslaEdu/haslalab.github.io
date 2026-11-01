@@ -56,7 +56,9 @@ async function fixture(run){
     if(failProvider)return new Response('{}',{status:503});
     let raw;
     if(text.includes('[TASK: read page]')&&truncateReads>0){truncateReads--;return Response.json({modelVersion:VISION_MODELS.gemini,candidates:[{finishReason:'MAX_TOKENS',content:{parts:[{text:'{"text":"x x x'}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:6144}});}
-    if(text.includes('[TASK: read page]'))raw=pageReading;
+    if(text.includes('[TASK: notation]'))raw={symbols:[{symbol:'\\sigma',meaning:'surface tension',unit:'N/m'},{symbol:'\\xi^*',meaning:'optimal ratio'}]};
+    else if(text.includes('[TASK: proofread page]'))raw={fixes:[{from:'9.31 mm',to:'0.31 \\mu m'},{from:'not in the transcript',to:'x'}]};
+    else if(text.includes('[TASK: read page]'))raw=pageReading;
     else if(text.includes('Review ONLY problem'))raw={problem_no:5,score:7,confidence:.98,verdict:'valid',summary:'Diagram supported argument.',strengths:[],gaps:[],evidence:[{page:1,quote:'',source:'image',box:[100,100,900,900],description:'A labelled geometric construction with direction arrows.',note:'Visible geometry checked.'}]};
     else if(text.includes('"task":"transcribe"'))raw={text:'',legible:true,confidence:.98,uncertainties:[],visuals:[{page:1,kind:'graph',description:'A graph and upward direction arrow.',box:[.1,.1,.9,.9]}]};
     else if(text.includes('[TASK: moderate]'))raw={items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
@@ -238,6 +240,24 @@ test('the admin model bench runs a stage with other models and keeps the result 
   assert.equal(sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail,null,'the sitting is untouched');
   assert.equal(sql.prepare('SELECT read FROM lab_pages WHERE id=?').get(page.id).read,page.read,'its pages too');
   assert.equal(sql.prepare('SELECT count(*) n FROM lab_calls').get().n,metered,'and its metering');
+}));
+test('theory pages are read with the paper\'s notation and proofread: only the passages the proofreader corrects change',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-flash-lite';env.LAB_READ_NOTATION='on';env.LAB_PROOF_MODEL='gemini-3.1-pro-preview';env.LAB_PROOF_THINKING='low';
+  const saved={...pageReading};Object.assign(pageReading,{text:'A.2 a_c = 9.31 mm\nA.3 K = 1.04 \\cdot 10^{-4}',items:[{label:'A.2',kind:'value',text:'a_c = 9.31 mm',crossed_out:false,value:9.31,unit:'mm'}]});
+  try{
+    const a=(await start('deepseek')).data,sid=a.session.id;
+    sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    const step=c=>['notation','proofread page','read page'].find(k=>c.text.includes('[TASK: '+k+']'));
+    const notation=calls.filter(c=>step(c)==='notation'),read=calls.find(c=>step(c)==='read page'),proof=calls.find(c=>step(c)==='proofread page');
+    assert.equal(notation.length,1);assert.match(notation[0].url,/gemini-3\.1-pro-preview/);assert.ok(JSON.stringify(notation[0].body).includes('application/pdf'),'built from the problem paper');
+    assert.match(read.url,/gemini-3\.1-flash-lite/);assert.match(read.text,/\\sigma \(surface tension, N\/m\)/,'the reader sees the paper\'s symbols');
+    assert.match(proof.url,/gemini-3\.1-pro-preview/);assert.deepEqual(proof.body.generationConfig.thinkingConfig,{thinkingLevel:'low'});assert.match(proof.text,/a_c = 9\.31 mm/);
+    const page=sql.prepare('SELECT ocr,read FROM lab_pages WHERE session_id=?').get(sid),r=JSON.parse(page.read);
+    assert.equal(page.ocr,'A.2 a_c = 0.31 \\mu m\nA.3 K = 1.04 \\cdot 10^{-4}','the misread passage is corrected, the rest kept');
+    assert.equal(r.items[0].text,'a_c = 0.31 \\mu m');assert.equal(r.items[0].value,0.31);
+    assert.equal(sql.prepare("SELECT count(*) n FROM lab_schemes WHERE source LIKE 'notation:%'").get().n,1,'the notation is kept for the next page and sitting');
+  }finally{for(const k of Object.keys(pageReading))delete pageReading[k];Object.assign(pageReading,saved);}
 }));
 test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what DeepSeek marked down',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-flash-lite';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';
