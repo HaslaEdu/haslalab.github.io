@@ -22,7 +22,9 @@ export async function mathpixRead(env, bytes, mime, { signal, fetchImpl = fetch 
   if (!id || !key) throw new OcrEngineError('ocr_engine_unavailable');
   const res = await fetchImpl('https://api.mathpix.com/v3/text', { method: 'POST', signal,
     headers: { app_id: id, app_key: key, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ src: `data:${mime};base64,${b64(bytes)}`, formats: ['text'], math_inline_delimiters: ['$', '$'], rm_spaces: true }) });
+    body: JSON.stringify({ src: `data:${mime};base64,${b64(bytes)}`, formats: ['text'], math_inline_delimiters: ['$', '$'], rm_spaces: true,
+      // candidates' pages are not kept by Mathpix to improve its models
+      metadata: { improve_mathpix: false } }) });
   const body = await res.json().catch(() => null);
   if (!res.ok || !body || body.error) throw new OcrEngineError('ocr_engine_failed', res.status, String(body?.error || body?.error_info?.message || '').slice(0, 240));
   return { text: String(body.text || ''), confidence: Number.isFinite(body.confidence) ? body.confidence : null, handwritten: !!body.is_handwritten };
