@@ -182,3 +182,13 @@ test("R1: a final answer on a working sheet counts only where the answer sheet g
   assert.equal(answeredOnSheet("A.2.3", [{ kind: "working", read: JSON.stringify({ items: [{ label: "A.2", text: "x" }] }) }]), false, "no answer sheet at all");
   assert.equal(answeredOnSheet("A2.1", [sheet([{ label: "A.2 (0.5pt)", text: "1.2 m" }])]), true, "A2.1 and A.2 are one question");
 });
+
+test("headings that hold every item and add up to the paper are always caps (IPhO 2023 T1 came out at 12.7 of 10)", async () => {
+  const { cappedSum, schemeTotal, tidySchemeItems } = await import("./src/lab-scheme-items.js");
+  const ids = "A.1.a=0.4 A.1.b=0.4 A.2.a=0.6 A.2.b=0.2 B.1.a=0.5 B.1.b=0.5 B.2.a=0.4 B.2.b=0.4 C.1=0.5 C.2.a=0.4 C.2.b=0.1 C.2.c=0.2 C.3=0.5 C.4.a=0.3 C.4.b=0.2 C.5=0.5 D.1.a=1 D.1.b=0.5 D.1.c=0.3 D.2.a=0.2 D.2.b=0.2 D.2.c=0.2 D.2.d=0.2 D.3=0.6 E.1.a=1.5 E.1.b=0.5 E.1.c=0.2 E.1.d=0.2 E.1.e=0.2 E.1.f=0.3 E.1.g=0.5 E.1.h=0.2 E.1.i=0.5 E.1.j=0.1";
+  const items = tidySchemeItems(ids.split(" ").map(x => { const [id, p] = x.split("="); return { id, points: +p }; }));
+  const parts = [{ id: "A", points: 1.6 }, { id: "B", points: 1.8 }, { id: "C", points: 2.7 }, { id: "D", points: 2.4 }, { id: "E", points: 1.5 }];
+  assert.equal(schemeTotal({ items, parts }), 10, "E counts at most its 1.5 although its listed items add up to 4.2");
+  assert.equal(cappedSum(items, parts, null, i => i.id.startsWith("E") ? i.points : 0), 1.5, "a candidate's E is capped too");
+  assert.equal(cappedSum(items, [{ id: "C.3", points: 0.2 }], null), 13.5, "a lone heading far below its items is still taken for a misread");
+});

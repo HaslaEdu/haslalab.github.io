@@ -1838,7 +1838,7 @@ async function labCanonicalPdf(env,source) {
   if(source?.startsWith('https://'))return labTrustedPdf(source,value=>value===source);
   return labPdf(env,source);
 }
-const ONE_ITEM_ONE_ID = "Every item has its own id, used once (when a part repeats the same mark for several cases, e.g. one per concentration, write A1.a, A1.b, …), and its own points only — never the total of its part repeated on each row. The items' points add up to the task's printed total.";
+const ONE_ITEM_ONE_ID = "Every item has its own id, used once (when a part repeats the same mark for several cases, e.g. one per concentration, write A1.a, A1.b, …), and its own points only — never the total of its part repeated on each row. The items' points add up to the task's printed total. A breakdown of how one mark may be earned in part (half marks for a partly right answer, «0.2 if only the sign is wrong») belongs to that item as its partial intervals or checks, never as further items added beside it; the items of a question never add up to more than its printed heading.";
 /* a scheme as it is used: its items tidied, its printed headings kept, its points bounded by them */
 function settleScheme(sc) {
   sc.items = tidySchemeItems(sc.items);
@@ -1919,6 +1919,12 @@ async function labSchemeBuild(env, s, task, m) {
   ], schema, 32768, m, "scheme");
   const sc = out.raw;
   if (eotvos && (!sc || sc.points_verified !== true || !Array.isArray(sc.items) || !sc.items.length)) return { unscored: true, points: null, items: [], notes: "no_official_points" };
+  /* a solution that prints no marks (IPhO 2011's experiments): read as such and kept, not tried again on every grading */
+  if (sc && Array.isArray(sc.items) && !sc.items.length) {
+    const none = { unscored: true, points: null, items: [], notes: "no_official_points" };
+    await env.DB.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)").bind(s.exam_key, task, key, JSON.stringify(none), out.model || null, now()).run();
+    return none;
+  }
   if (!sc || !Array.isArray(sc.items) || !sc.items.length) throw new Error("empty scheme");
   settleScheme(sc);
   if (!sc.items.length) throw new Error("empty scheme");
@@ -2259,7 +2265,9 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     if(p.mime==='text/plain') continue;
     if(!img)throw new HttpError(502,'scan_unavailable');
     const size=img.byteLength*4/3;
-    if(size>budget)throw new HttpError(413,'scan_too_large');
+    /* past the request's image budget a page goes by its reading alone (answer sheets were attached first); a long
+       experiment (IPhO 2017 E1, 17 pages) once failed outright here */
+    if(size>budget)continue;
     const photo={inline_data:{mime_type:row.mime,data:b64(img)},label:`Original submitted page ${p.no}, ${p.kind}, task ${p.task}`};photos.push({p,photo});
     if(roles?.gradeImages===false)continue;                                       // bench: a text-only grader works from the readings; the moderator still sees the photos
     parts.push(photo);budget-=size;p._visionSupplied=true;
