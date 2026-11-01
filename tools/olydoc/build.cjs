@@ -10,8 +10,8 @@
  * scan squares where labscan/scanner.js looks for them (7 mm, centred 9.45 / 200.55 mm across, 10.4 / 286.6 mm
  * down — the same as sim/sheets.html), so a phone photograph is straightened from them.
  *
- * None of these documents carries an organiser's logo: each says in its footer that it is a HaslaLab edition and
- * where its content comes from. */
+ * Styles flagged `stamp` (IPhO 2017, APhO 2018) are printed body-only and then given the edition's own head and foot
+ * by stamp.py (PyMuPDF), so they match the official documents exactly. */
 const fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
 const ROOT = path.resolve(__dirname, '../..');
@@ -44,46 +44,15 @@ const STYLES = {
       <div style="position:absolute;left:0;top:9mm;font-size:6.5pt;line-height:1.25;color:#e8505b;font-weight:700">International<br>Physics Olympiad<br>FRANCE 2025</div>
       <div style="position:absolute;right:0;top:3mm;font-size:34pt;font-weight:700;line-height:1">${d.code}${d.paged === false ? '' : '-<span class="pageNumber"></span>'}</div>
       <div style="position:absolute;right:0;bottom:1mm;font-size:8pt">${d.langLabel}</div></div>`,
-    footer: d => `<div style="position:absolute;left:18mm;right:18mm;bottom:6mm;font-family:'Noto Sans','Noto Sans KR',sans-serif;font-size:6.5pt;color:#666;text-align:center">${d.credit}</div>`,
+    footer: d => `<div style="position:absolute;left:18mm;right:18mm;bottom:6mm;font-family:'Noto Sans','Noto Sans KR',sans-serif;font-size:6.5pt;color:#666;text-align:center">${d.credit || ''}</div>`,
   },
-  /* IPhO 2017 (Indonesia): «Theory» and the language at the left, «T4» / «AT4» at the right, «page n of N» below */
-  ipho2017: {
-    margin: { top: '30mm', bottom: '22mm', left: '20mm', right: '20mm' },
-    header: d => `<div style="position:absolute;left:20mm;right:20mm;top:9mm;height:18mm;font-family:'DejaVu Sans','Noto Sans KR',sans-serif">
-      <div style="position:absolute;left:0;top:0;font-size:12.5pt;font-weight:700">${d.section || 'Theory'}</div>
-      <div style="position:absolute;left:0;top:6.5mm;font-size:8pt">${d.langLabel}</div>
-      <div style="position:absolute;right:0;top:0;font-size:20pt">${d.code}</div></div>`,
-    footer: d => `<div style="position:absolute;left:20mm;right:20mm;bottom:8mm;font-family:'DejaVu Sans','Noto Sans KR',sans-serif;font-size:7pt;text-align:center">
-      <i>page <b class="pageNumber"></b> of <b class="totalPages"></b></i><div style="margin-top:1.5mm;font-size:6pt;color:#777">${d.credit}</div></div>`,
-  },
-  /* IPhO 2017 solutions: «Solutions/ Marking Scheme» and the problem at the right over a double rule */
-  ipho2017sol: {
-    margin: { top: '42mm', bottom: '22mm', left: '20mm', right: '20mm' },
-    header: d => `<div style="position:absolute;left:20mm;right:20mm;top:11mm;height:19mm;font-family:Calibri,Carlito,'DejaVu Sans','Noto Sans KR',sans-serif">
-      <div style="position:absolute;left:0;right:0;bottom:-1.6mm;height:0.5mm;background:#555"></div><div style="position:absolute;left:0;right:0;bottom:-0.6mm;height:0.3mm;background:#555"></div>
-      <div style="position:absolute;left:0;top:2mm;font-size:13pt;font-weight:700;line-height:1.15">${d.section || 'Solutions/<br>Marking Scheme'}</div>
-      <div style="position:absolute;right:0;top:1mm;font-size:22pt">${d.code}</div></div>`,
-    footer: d => `<div style="position:absolute;left:20mm;right:20mm;bottom:8mm;border-top:0.3mm solid #999;padding-top:1.5mm;font-family:Calibri,Carlito,'DejaVu Sans','Noto Sans KR',sans-serif;font-size:7.5pt;text-align:center">
-      <i>Page <span class="pageNumber"></span> of <span class="totalPages"></span></i><div style="margin-top:1mm;font-size:6pt;color:#777">${d.credit}</div></div>`,
-  },
-  /* APhO 2018 (Viet Nam): IPhO-2018-like oxygen layout — «Theory» and the competition at the left, «Q4-n» right */
-  apho2018: {
-    margin: { top: '44mm', bottom: '16mm', left: '18mm', right: '18mm' },
-    header: d => `<div style="position:absolute;left:18mm;right:18mm;top:8mm;height:28mm;font-family:'Noto Sans','Noto Sans KR',sans-serif">
-      <div style="position:absolute;left:0;right:0;bottom:-0.5mm;height:0.5mm;background:#000"></div>
-      <div style="position:absolute;left:0;top:1mm;font-size:12pt;font-weight:700">${d.section || 'Theory'}</div>
-      <div style="position:absolute;left:0;top:8mm;font-size:7pt;line-height:1.3"><b style="color:#b0302a">19<sup>th</sup> APhO</b><br>Asian Physics Olympiad<br>HANOI · VIET NAM 2018</div>
-      <div style="position:absolute;right:0;top:4mm;font-size:32pt;font-weight:700;line-height:1">${d.code}${d.paged === false ? '' : '-<span class="pageNumber"></span>'}</div>
-      <div style="position:absolute;right:0;bottom:1mm;font-size:8pt">${d.langLabel}</div></div>`,
-    footer: d => `<div style="position:absolute;left:18mm;right:18mm;bottom:6mm;font-family:'Noto Sans','Noto Sans KR',sans-serif;font-size:6.5pt;color:#666;text-align:center">${d.credit}</div>`,
-  },
-  /* APhO 2018 solutions: a centred serif title block on the first page, «Page n» at the bottom */
-  apho2018sol: {
-    margin: { top: '16mm', bottom: '20mm', left: '18mm', right: '18mm' },
-    header: () => '<div></div>',
-    footer: d => `<div style="position:absolute;left:18mm;right:18mm;bottom:8mm;font-family:'Times New Roman','Liberation Serif','DejaVu Serif','Noto Serif KR',serif;font-size:9pt;text-align:center">
-      Page <span class="pageNumber"></span><div style="font-family:'Noto Sans','Noto Sans KR',sans-serif;font-size:6pt;color:#777;margin-top:1mm">${d.credit}</div></div>`,
-  },
+  /* IPhO 2017 (Indonesia), APhO 2018 (Viet Nam): only the body is printed here; the running head and foot (and the
+     scan squares) are drawn by stamp.py at the positions, sizes and fonts measured on that edition's own PDFs, with
+     its logos (tools/olydoc/img) */
+  ipho2017: { stamp: true, margin: { top: '42mm', bottom: '30mm', left: '16.9mm', right: '17.6mm' } },
+  ipho2017sol: { stamp: true, margin: { top: '53mm', bottom: '35mm', left: '31mm', right: '31mm' } },
+  apho2018: { stamp: true, margin: { top: '51mm', bottom: '25mm', left: '20mm', right: '20mm' } },
+  apho2018sol: { stamp: true, margin: { top: '13mm', bottom: '25mm', left: '11mm', right: '14mm' } },
 };
 
 const BASE_CSS = `
@@ -137,7 +106,7 @@ function page(doc) {
 }
 
 async function build(docs) {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch(), stamped = [];
   try {
     for (const doc of docs) {
       if (!STYLES[doc.style]) throw new Error('unknown style ' + doc.style);
@@ -154,13 +123,24 @@ async function build(docs) {
       const out = path.join(ROOT, doc.out);
       fs.mkdirSync(path.dirname(out), { recursive: true });
       const sheet = doc.kind === 'answer' || doc.kind === 'working';
-      await p.pdf({ path: out, format: 'A4', printBackground: true, displayHeaderFooter: true,
-        headerTemplate: `<div style="width:100%;height:100%;position:relative;margin:0;-webkit-print-color-adjust:exact">${sheet ? TOP_MARKS : ''}${s.header(doc)}</div>`,
-        footerTemplate: `<div style="width:100%;height:100%;position:relative;margin:0;-webkit-print-color-adjust:exact">${sheet ? BOTTOM_MARKS : ''}${s.footer(doc)}</div>`, margin: doc.margin || s.margin });
+      if (s.stamp) {
+        await p.pdf({ path: out, format: 'A4', printBackground: true, displayHeaderFooter: false, margin: doc.margin || s.margin });
+        stamped.push({ pdf: out, style: doc.style, kind: doc.kind, lang: doc.lang, code: doc.code, langLabel: doc.langLabel, section: doc.section || 'Theory' });
+      } else {
+        await p.pdf({ path: out, format: 'A4', printBackground: true, displayHeaderFooter: true,
+          headerTemplate: `<div style="width:100%;height:100%;position:relative;margin:0;-webkit-print-color-adjust:exact">${sheet ? TOP_MARKS : ''}${s.header(doc)}</div>`,
+          footerTemplate: `<div style="width:100%;height:100%;position:relative;margin:0;-webkit-print-color-adjust:exact">${sheet ? BOTTOM_MARKS : ''}${s.footer(doc)}</div>`, margin: doc.margin || s.margin });
+      }
       await ctx.close();
       console.log('built', doc.out);
     }
   } finally { await browser.close(); }
+  if (stamped.length) {
+    const jobs = path.join(require('os').tmpdir(), 'olydoc-stamp-' + process.pid + '.json');
+    fs.writeFileSync(jobs, JSON.stringify(stamped));
+    require('child_process').execFileSync('python3', ['-I', path.join(__dirname, 'stamp.py'), jobs], { stdio: 'inherit' });
+    fs.unlinkSync(jobs);
+  }
 }
 
 if (require.main === module) {
