@@ -10,4 +10,12 @@ const ms = (rows, lang) => `<table class="ms"><caption>${lang === 'ko' ? '채점
 const ans = (label, pts, lines, unit = 'pt') => `<div class="ans"><div class="t"><span>${label}</span><span>${pts}${unit}</span></div><div class="b">${
   lines.map(l => `<div class="line"><span>${l}</span><i></i></div>`).join('')}<div style="height:${Math.max(8, 30 - lines.length * 7)}mm"></div></div></div>`;
 
-module.exports = { esc, q, sol, ms, ans };
+/* a figure from tools/olydoc/img; `relabel` covers words printed in the image (e.g. Russian labels) with new text:
+   [{x, y, w, h, text}] in percent of the image */
+const path = require('path');
+const fig = (file, caption, width = 100, relabel = []) => `<figure><div style="position:relative;display:inline-block;width:${width}%">
+  <img src="file://${path.join(__dirname, 'img', file)}" style="width:100%;display:block">${relabel.map(r =>
+    `<span style="position:absolute;left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%;background:#fff;display:flex;align-items:center;justify-content:${r.align || 'center'};font-size:${r.size || 9}pt;font-family:'HL Sans','HL Sans KR',sans-serif;white-space:nowrap">${r.text}</span>`).join('')}
+</div>${caption ? `<figcaption>${caption}</figcaption>` : ''}</figure>`;
+
+module.exports = { esc, q, sol, ms, ans, fig };
