@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1630,7 +1630,7 @@ const SCHEME_SCHEMA = { type: "object", properties: {
   parts: { type: "array", items: { type: "object", properties: { id: { type: "string" }, points: { type: "number" } }, required: ["id", "points"] } },
   items: { type: "array", items: { type: "object", properties: {
     id: { type: "string" }, points: { type: "number" }, type: { type: "string", enum: ["value", "graph", "table", "derivation", "other"] },
-    sheet: { type: "string", enum: ["answer", "any"] }, what: { type: "string" }, unit: N({ type: "string" }),
+    sheet: { type: "string", enum: ["answer", "any"] }, what: { type: "string" }, unit: N({ type: "string" }), alt: N({ type: "string" }),
     full_min: N({ type: "number" }), full_max: N({ type: "number" }),
     partial: { type: "array", items: { type: "object", properties: { min: { type: "number" }, max: { type: "number" }, points: { type: "number" } }, required: ["min", "max", "points"] } },
     checks: { type: "array", items: { type: "object", properties: { check: { type: "string", enum: LAB_CHECKS }, n: N({ type: "integer" }), points: { type: "number" } }, required: ["check", "points"] } },
@@ -1844,7 +1844,7 @@ function settleScheme(sc) {
   sc.items = tidySchemeItems(sc.items);
   sc.parts = cleanParts(sc.parts);
   /* a printed total only trims a small excess (10.1 → 10); one far below the items is a misread heading, not the total */
-  { const listed = cappedSum(sc.items, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
+  { const listed = cappedSum(oneMethod(sc.items).kept, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
   sc.points = schemeTotal(sc);
   return sc;
 }
@@ -1875,6 +1875,7 @@ async function labScheme(env, s, task, m) {
       "When no separate marking scheme exists and the solution gives only the points of each part, make one item per part with those points and describe the expected answer.",
       "type: value (a numerical final answer, with its unit), derivation (a formula, an expression or reasoning; also a symbolic final answer), graph (a sketch or plot the scheme marks), or other (a multiple-choice answer, a statement, a diagram).",
       "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»). Where the solution says a correct final answer earns an item anyway, that item is a result.",
+      "alt: where the solution gives alternative methods for one question or part (Method 1 / Method 2, «Alternatively», «Another approach»), every item belonging to only one of them carries alt «<part id>/<method number>» (B.2/1, B.2/2); items shared by all methods, and every item of a question with one method, have none. The methods are alternatives: their points are never added up.",
       "sheet: answer for a final answer that must be written in the answer-sheet box, any for intermediate steps and method marks.",
       "For a numerical value give the full-mark interval (full_min, full_max; turn ± or «within 5 %» into an interval) and every partial-credit interval with its points, as printed; otherwise leave them null and say in `what` exactly what is required (the expected expression or result, and what earns partial marks).",
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
@@ -1893,6 +1894,7 @@ async function labScheme(env, s, task, m) {
       ONE_ITEM_ONE_ID,
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
       "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»). Where the solution says a correct final answer earns an item anyway, that item is a result.",
+      "alt: where the solution gives alternative methods for one question or part (Method 1 / Method 2, «Alternatively», «Another approach»), every item belonging to only one of them carries alt «<part id>/<method number>» (B.2/1, B.2/2); items shared by all methods, and every item of a question with one method, have none. The methods are alternatives: their points are never added up.",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
       "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
       "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
@@ -2076,7 +2078,9 @@ function labScore(scheme, raw, pages, opts = {}) {
     /* the table or graph of this item as read (by its label, else the first of its kind), and how many measurements it needs (R11) */
     const pick = kind => live.find(i => i.kind === kind && (kind !== "graph" || i.graph) && i.label === it.id) || live.find(i => i.kind === kind && (kind !== "graph" || i.graph));
     const nmin = it.n_min > 0 ? it.n_min : N_MIN[it.n_class] || null;
-    if (it.sheet === "answer" && pg.kind !== "answer") return zero("R1");          // a final answer off the answer sheet
+    /* R1: a final answer off the answer sheet counts only where the task's answer sheets give none for its question (an
+       empty box or no answer sheet at all, as IPhO, APhO and EuPhO mark); the answer sheet governs where it has one */
+    if (it.sheet === "answer" && pg.kind !== "answer" && answeredOnSheet(it.id, pages)) return zero("R1");
     const interval = it.full_min != null && it.full_max != null, byRef = !!opts.theory && !interval && !!refTolerance(it.ref);
     if (it.type === "value" && (interval || byRef)) {
       const v = Number(g.value);
@@ -2128,6 +2132,9 @@ function labScore(scheme, raw, pages, opts = {}) {
     res.rules = [...rules];
     return res;
   });
+  /* R15: of alternative methods for one question only the one that earns most counts */
+  { const alt = new Map(scheme.items.map(it => [it.id, it.alt])), { dropped } = oneMethod(items.map(i => ({ ...i, alt: alt.get(i.id) })), i => i.got);
+    for (const i of items) if (dropped.has(i.id) && i.got > 0) { i.got = 0; i.decision = "not_met"; i.rules = [...new Set([...(i.rules || []), "R15"])]; } }
   const feedback = (Array.isArray(raw && raw.feedback) ? raw.feedback : []).filter(f => f && f.note && (f.page == null || byNo.has(f.page))).slice(0, 8)
     .map(f => ({ page: f.page ?? null, label: f.label ? String(f.label).slice(0, 20) : null, note: String(f.note).slice(0, 600), kind: f.kind === "good" ? "good" : "fix" }));
   /* the coach's review, as written: trimmed and bounded, page references kept only to pages that exist */

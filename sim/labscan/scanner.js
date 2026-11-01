@@ -666,6 +666,10 @@ function pfRegion(small, w, h) {
       let onBand = 0; for (const i of piece.cells) onBand += band[i];
       if (onBand > piece.cells.length * .02) continue;                                     // a brighter half of the same sheet reaches its border
       if (!pfSharp(small, w, h, sheet.four)) continue;                                      // glare fades out; paper ends in a step
+      /* an A4 outline keeps its sheet against a part of it that is not A4: the plain margin below a printed graph grid
+         is a little brighter than the grid and the grid's border is a sharp step, which once passed for a sheet lying
+         on a desk (the page then came out as the strip under the graph) */
+      if (a4RatioMiss(chosen.four, w, h) < .07 && a4RatioMiss(sheet.four, w, h) >= .07) continue;
       let rest = 0, restN = 0; for (let i = 0; i < w * h; i++) if (chosen.inPiece[i] && !sheet.inPiece[i]) { rest += small[i]; restN++; }
       if (restN && sheet.mean - rest / restN >= 6) { chosen = { ...sheet, polarity: 1 }; break search; }
     }
@@ -892,7 +896,7 @@ export function findPageQuadGray(gray, W, H, rgba = null, seed = null) {
   const tilted = Math.min(lengths[0], lengths[1]) / Math.max(lengths[0], lengths[1]) < .77 || Math.min(lengths[2], lengths[3]) / Math.max(lengths[2], lengths[3]) < .77;
   const autoBlock = clipped ? 'clipped' : found.cover < .1 ? 'small' : !found.verified || found.weakestEdge < .55 || found.edgeSupport < .7 ? 'edges' : tilted ? 'tilt' : !shapeOk ? 'shape' : null;
   return { corners, score: found.score, method: 'page', edgeSupport: found.edgeSupport, weakestEdge: found.weakestEdge,
-    verified: found.verified, clipped, cover: found.cover, paperStatus: paperAssessment.status, paperAssessment,
+    verified: found.verified, clipped, cover: found.cover, paperStatus: paperAssessment.status, paperAssessment, shapeOk,
     autoCaptureEligible: autoBlock === null, autoBlock };
 }
 
@@ -1271,6 +1275,11 @@ export function chooseDocument(page, learned, score) {
   const span = Math.hypot(Math.max(...a.map(p => p.x)) - Math.min(...a.map(p => p.x)), Math.max(...a.map(p => p.y)) - Math.min(...a.map(p => p.y)));
   const apart = Math.max(...a.map((p, i) => Math.hypot(p.x - b[i].x, p.y - b[i].y)));
   if (apart < span * .03) return page.verified || !learned.verified ? page : tagged;     // the same sheet
+  /* a part of the sheet (the margin under a graph grid, one ruled box) found as the page: the model's A4 outline
+     around it is the sheet */
+  if (page.shapeOk === false && learned.shapeOk !== false && score >= .7 && b.every(p => p) &&
+      a.every(p => p.x >= Math.min(...b.map(q => q.x)) - span * .03 && p.x <= Math.max(...b.map(q => q.x)) + span * .03 &&
+        p.y >= Math.min(...b.map(q => q.y)) - span * .03 && p.y <= Math.max(...b.map(q => q.y)) + span * .03)) return tagged;
   if (learned.verified && (!page.verified || (learned.weakestEdge ?? 0) > (page.weakestEdge ?? 0) + .1)) return tagged;
   if (page.verified) return page;
   return score >= .8 ? tagged : page;
@@ -1310,9 +1319,14 @@ export function decodeCornerModel(buffer) {
 /** Shared by live camera and full-resolution capture. Partial dark blobs never
  * acquire marker insets, and automatic capture requires measured edge evidence. */
 export function detectDocumentQuadGray(g, W, H, rgba = null) {
-  const marker = findSheetMarkersGray(g, W, H);
-  if (marker && marker.score >= .75) return assessedDocument({ ...marker, clipped: false, autoCaptureEligible: true }, W, H);
-  const page = findPageQuadGray(g, W, H, rgba);
+  const marker = findSheetMarkersGray(g, W, H), page = findPageQuadGray(g, W, H, rgba);
+  /* printed markers sit just inside the sheet's corners; four dark blobs elsewhere (a logo, a bold header, ruled boxes)
+     that a verified sheet does not frame that way are not markers */
+  const framed = m => !page.corners || !page.verified || (() => {
+    const a = orderCorners(page.corners), b = orderCorners(m.corners), span = Math.hypot(a[3].x - a[0].x, a[3].y - a[0].y);
+    return b.every((p, i) => Math.hypot(p.x - a[i].x, p.y - a[i].y) < span * .12);
+  })();
+  if (marker && marker.score >= .75 && framed(marker)) return assessedDocument({ ...marker, clipped: false, autoCaptureEligible: true, shapeOk: true }, W, H);
   if (page.corners) return page;
   if (marker && marker.score >= .5) return assessedDocument({ ...marker, clipped: false, autoCaptureEligible: false }, W, H);
   const legacy = findMarkersGray(g, W, H);
@@ -1342,7 +1356,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=b444c7b8a1e2', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4aab8a5a4591', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1363,14 +1377,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=b444c7b8a1e2', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4aab8a5a4591', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=b444c7b8a1e2', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4aab8a5a4591', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }

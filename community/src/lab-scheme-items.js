@@ -17,7 +17,8 @@ function intervals(row) {
 
 export function tidySchemeItems(raw) {
   const rows = (Array.isArray(raw) ? raw : []).filter(i => i && i.id != null && String(i.id).trim() && +i.points > 0)
-    .map(i => intervals({ ...i, id: String(i.id).trim().slice(0, 20), points: +i.points }));
+    .map(i => intervals({ ...i, id: String(i.id).trim().slice(0, 20), points: +i.points }))
+    .map(i => { const alt = String(i.alt ?? "").trim(); if (/^[A-Za-z0-9.]{1,20}\/\d{1,2}$/.test(alt)) return { ...i, alt }; const { alt: _, ...rest } = i; return rest; });
   const groups = new Map();
   for (const row of rows) { const g = groups.get(row.id); if (g) g.push(row); else groups.set(row.id, [row]); }
   const out = [];
@@ -70,7 +71,43 @@ export function cappedSum(items, parts, total, value = i => i.points) {
 /* the paper's points: its items, bounded by the printed headings and total */
 /* the paper's points: its items bounded by the printed headings and total; a printed total is the paper's maximum even
    when the scheme missed an item under it (IPhO 2025 T3 came out at 9.9 when one 0.1-pt item was not listed) */
-export const schemeTotal = scheme => +scheme.total > 0 ? +(+scheme.total).toFixed(2) : cappedSum(scheme.items, scheme.parts, null);
+export const schemeTotal = scheme => +scheme.total > 0 ? +(+scheme.total).toFixed(2) : cappedSum(oneMethod(scheme.items).kept, scheme.parts, null);
+
+/* Alternative methods for one question (Method 1 / Method 2, as EuPhO and IPhO solutions give them) are alternatives:
+   a candidate who writes several earns the marks of one, the one worth most, never their sum. Items carry
+   alt «<part>/<method>»; for each part with more than one method, only the best method's items are kept (by value:
+   the marks earned, or the points when the paper's maximum is reckoned; a tie keeps the lower method number). */
+const ALT = /^(.+)\/(\d+)$/;
+export function oneMethod(items, value = i => i.points) {
+  const parts = new Map();
+  for (const it of items || []) {
+    const m = ALT.exec(String(it.alt || "")); if (!m) continue;
+    const g = parts.get(m[1]) || new Map(); g.set(+m[2], (g.get(+m[2]) || 0) + (+value(it) || 0)); parts.set(m[1], g);
+  }
+  const best = new Map();
+  for (const [part, g] of parts) if (g.size > 1) best.set(part, [...g].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0][0]);
+  const dropped = new Set();
+  for (const it of items || []) { const m = ALT.exec(String(it.alt || "")); if (m && best.has(m[1]) && best.get(m[1]) !== +m[2]) dropped.add(it.id); }
+  return { kept: (items || []).filter(it => !dropped.has(it.id)), dropped };
+}
+
+/* R1: whether a task's answer sheets give an answer to an item's question (its first two id parts: A.2 for A.2.3,
+   A.2.b or A2.1), as the page reader indexed them. Where they do not (an empty box, no answer sheet at all), a final
+   answer marked on a working sheet counts in its place. */
+export function answeredOnSheet(id, pages) {
+  const q = tokens(id).slice(0, 2);
+  if (!q.length) return false;
+  for (const p of pages || []) {
+    if (p.kind !== "answer" || !p.read) continue;
+    let read; try { read = typeof p.read === "string" ? JSON.parse(p.read) : p.read; } catch { continue; }
+    for (const i of read?.items || []) {
+      if (!i || i.crossed_out) continue;
+      const l = tokens(i.label);
+      if (l.length >= q.length && q.every((t, k) => t === l[k]) && (String(i.text || "").trim() || i.value != null)) return true;
+    }
+  }
+  return false;
+}
 
 /* Every number written in a transcribed answer, scientific notation included: «5.31 \\cdot 10^{-11} m», «2.2 × 10^9»,
    «1.0 * 10^-10», «3e8», «−4.5». A value the grader reports must be one of the numbers on its page; the reader's own

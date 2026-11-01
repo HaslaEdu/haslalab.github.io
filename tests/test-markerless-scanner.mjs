@@ -263,6 +263,31 @@ test('a sheet with a folded or bent-away corner and a binder clip still gives it
   }
 });
 
+test('a part of the sheet found as the page (the margin under a graph grid) is never shown as ready, and the model\'s A4 outline around it wins', () => {
+  // a sheet whose upper two thirds are a printed graph grid, on a light desk at an angle: only the plain margin below the grid stands out
+  const W = 480, H = 640, a = 25 * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), gray = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const px = (x - 240) * c + (y - 320) * s, py = -(x - 240) * s + (y - 320) * c, u = px / 300 + .5, v = py / 424 + .5;
+    let value = 218 + 6 * Math.sin(x / 9 + y / 31);
+    if (u >= 0 && u <= 1 && v >= 0 && v <= 1) {
+      value = 238;
+      if (u >= .03 && u <= .97 && v >= .04 && v <= .7) {
+        const edge = Math.min((u - .03) * 300, (.97 - u) * 300, (v - .04) * 424, (.7 - v) * 424);
+        value = edge < 1.6 ? 60 : ((u - .03) / .03) % 1 < .12 || ((v - .04) / .03) % 1 < .12 ? 150 : 238;
+      }
+    }
+    gray[y * W + x] = Math.round(value);
+  }
+  const sheet = [{ x: 194, y: 64 }, { x: 466, y: 191 }, { x: 14, y: 449 }, { x: 286, y: 576 }];
+  const page = scanner.findPageQuadGray(gray, W, H);
+  if (page.corners && error(page.corners, sheet) > 16) {
+    assert.equal(page.shapeOk, false, 'a strip of the sheet is not shown as a ready A4 page');
+    assert.equal(page.autoCaptureEligible, false);
+    const learned = { corners: sheet, method: 'page', verified: true, weakestEdge: .7, shapeOk: true };
+    assert.equal(scanner.chooseDocument(page, learned, .8).engine, 'doccornernet', 'the model\'s A4 outline around it is the sheet');
+  }
+});
+
 test('paper lying on a desk wholly in view is the page, not the desk', () => {
   for (const [name, options] of [
     ['wooden desk, straight on', {}],
