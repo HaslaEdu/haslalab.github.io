@@ -236,7 +236,7 @@ const T = {
     sheetsH: "답안지 인쇄", sheetsB: "Answer sheet · Working sheet 인쇄 ↗", sheetsNote: "시작하기 전에 인쇄해 두세요. 문제지는 시험 화면에서만 열립니다.",
     paper: "문제지 열기", paperClose: "문제지 닫기", paperDesk: "책상 위 문제지 — 눌러서 보기", paperLoading: "문제지를 불러오는 중…", paperFail: "문제지를 불러오지 못했습니다. 다시 열어 보세요.", paperNone: "이 실험은 문제지 파일이 없습니다.",
     docBadge: "HaslaLab 실전 모의고사", docH: "수험 안내", infoName: "시험명", infoTasks: "문항", infoTime: "시험 시간", infoTimeV: `실험 ${DK} + 답안 스캔 30분`,
-    infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `무료 · 채점 · 첨삭은 실전 토큰 1개 (보유 ${n}개)`,
+    infoBring: "준비물", infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 볼펜(검정·파랑), 계산기, 스캔할 휴대폰", infoFee: "응시료", infoFeeV: n => `무료 · 채점 · 첨삭은 실전 토큰 1개 (보유 ${n}개)`,
     infoWho: "응시자", rulesH: "유의사항", agreeH: "응시 동의",
     agrees: ["위 유의사항을 모두 읽었습니다.", "시험 시간은 시작하면 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
     agreeAll: "응시 동의에 모두 체크해야 시작할 수 있습니다.", examNo: "수험번호", applicant: "응시자",
@@ -294,7 +294,7 @@ const T = {
     sheetsH: "Answer sheets", sheetsB: "Print the Answer and Working sheets ↗", sheetsNote: "Print them before you start. The problem sheet opens only on the exam screen.",
     paper: "Open problem sheet", paperClose: "Close problem sheet", paperDesk: "The problems on the desk — click to read", paperLoading: "Loading the problem sheet…", paperFail: "The problem sheet could not be loaded. Try opening it again.", paperNone: "This experiment has no problem sheet file.",
     docBadge: "HaslaLab mock exam", docH: "Instructions for candidates", infoName: "Exam", infoTasks: "Problems", infoTime: "Duration", infoTimeV: `${DE} of experiments + 30 minutes to scan`,
-    infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `free · grading and review: 1 exam token (you have ${n})`,
+    infoBring: "Bring", infoBringV: "printed Answer sheets and Working sheets (or blank paper), ballpoint pens (black or blue), a calculator, a phone to scan with", infoFee: "Entry", infoFeeV: n => `free · grading and review: 1 exam token (you have ${n})`,
     infoWho: "Candidate", rulesH: "Rules", agreeH: "Declaration",
     agrees: ["I have read the rules above.", "Once started, the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
     agreeAll: "Tick every line of the declaration to start.", examNo: "Candidate no.", applicant: "Candidate",
@@ -350,7 +350,7 @@ const TH = {
       "<b>엄격 채점</b>: 알아볼 수 없는 글씨, 흐리거나 잘린 쪽처럼 읽을 수 없는 것은 응시자 책임이며 0점입니다.",
       "<b>응시는 무료</b>이고, <b>채점 · 첨삭을 받을 때만 실전 토큰 1개</b>를 씁니다(시작할 때, 스캔할 때, 끝난 뒤 성적표에서 신청). 채점을 신청하기 전에는 보낸 답안을 읽지 않습니다. 창을 닫거나 다른 컴퓨터에서 다시 들어와도 같은 시험이 이어지고, 타이머는 서버 시계로 계속 흐릅니다.",
     ],
-    infoTimeV: `이론 ${DK} + 답안 스캔 30분`, infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 필기구, 계산기, 스캔할 휴대폰",
+    infoTimeV: `이론 ${DK} + 답안 스캔 30분`, infoBringV: "인쇄한 Answer sheet · Working sheet(또는 빈 종이), 볼펜(검정·파랑), 계산기, 스캔할 휴대폰",
     sheetsNote: "시작하기 전에 인쇄해 두세요. 문제지는 시험 화면에서만 열립니다.", kind: "이론 시험",
     agrees: ["위 유의사항을 모두 읽었습니다.", "시험 시간은 시작하면 멈추거나 되돌릴 수 없습니다.", "답안은 종이에 쓰고, 시험이 끝난 뒤 30분 안에 휴대폰으로 스캔해 제출합니다."],
     endBody: "끝내면 문제지가 닫히고 다시 열 수 없습니다. 바로 30분 스캔 시간이 시작됩니다.", warn5: "5분 남았습니다. 답을 답안지 칸에 옮겨 쓰세요.",
@@ -369,7 +369,7 @@ const TH = {
       "<b>Strict marking</b>: whatever cannot be read — illegible writing, a blurred or cut-off page — is your responsibility and scores nothing.",
       "<b>Sitting is free</b>; <b>grading and the review cost one exam token</b>, asked for at the start, while scanning or later from the score report. Your pages are read only once grading has been asked for. If you close the window or come back on another computer, the same exam carries on and the timer keeps running on the server's clock.",
     ],
-    infoTimeV: `${DE} of theory + 30 minutes to scan`, infoBringV: "printed Answer sheets and Working sheets (or blank paper), pens, a calculator, a phone to scan with",
+    infoTimeV: `${DE} of theory + 30 minutes to scan`, infoBringV: "printed Answer sheets and Working sheets (or blank paper), ballpoint pens (black or blue), a calculator, a phone to scan with",
     sheetsNote: "Print them before you start. The paper opens only on the exam screen.", kind: "theory exam",
     agrees: ["I have read the rules above.", "Once started, the exam clock cannot be paused or undone.", "I write my answers on paper and scan them with my phone within 30 minutes after the exam."],
     endBody: "The paper will close and cannot be opened again. The 30 minutes for scanning start at once.", warn5: "5 minutes left. Copy your answers into their boxes.",
@@ -579,6 +579,13 @@ function sync(){
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&OK_EXAM&&!poller)void sync();});
 addEventListener('storage',e=>{if(e.key==='hlCmTok'||e.key==='hlCmApi'){clearAccount();void sync();}});
 
+/* how to write so a photographed page reads: shown before an exam starts, and as a warning before grading submitted work */
+const PEN_NOTE = {
+  ko: { exam: "<b>답은 볼펜(검정·파랑)으로 쓰세요.</b> 그래프의 점은 크고 진하게 찍고, 그래프 선은 굵게 그리세요. 연필, 얇은 선, 작은 점은 사진에서 잘 보이지 않아 판독·채점이 정확하지 않을 수 있습니다.",
+        review: "<b>주의:</b> 볼펜이 아닌 연필로 썼거나 그래프 선이 얇고 점이 작으면 사진에서 잘 읽히지 않아 채점이 제대로 되지 않을 수 있습니다. 가능하면 볼펜으로 쓰고, 그래프 점과 선은 진하고 굵게 다시 표시한 뒤 찍어 주세요." },
+  en: { exam: "<b>Write your answers in ballpoint pen (black or blue).</b> Plot graph points large and dark, and draw graph lines thick. Pencil, thin lines and small points barely show in a photo, so reading and grading may be inaccurate.",
+        review: "<b>Note:</b> work written in pencil rather than ballpoint pen, thin graph lines or small points may not read clearly from a photo, and grading may then be inaccurate. Where you can, write in ballpoint pen and go over graph points and lines dark and thick before photographing." },
+};
 async function introView() {
   if (REVIEW) return reviewIntroView();
   const back = `../#/${esc(EX.c)}/exam`;
@@ -608,6 +615,7 @@ async function introView() {
       <tr><th>${t().infoFee}</th><td>${ME && ME.tokens != null ? t().infoFeeV(ME.tokens) : t().infoFeeV("–")}</td></tr>
       <tr><th>${t().infoWho}</th><td>${ME && ME.nickname ? esc(ME.nickname) : "—"}</td></tr>
     </tbody></table>
+    <div class="note w" style="margin-top:16px">${PEN_NOTE[lang === "en" ? "en" : "ko"].exam}</div>
     <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
     <ol>${(MIX ? [lang === "ko" ? `이 시험은 대회 당일처럼 <b>실험과 이론을 함께</b> 풉니다. 이론 문제는 책자 그대로이며, 책상 위 문제지(왼쪽 아래)를 누르면 열립니다. 이론 답안도 같은 방식으로 스캔해 «${EX.tasks.find((x, i) => isThy(i))}»로 보냅니다.`
       : `As on the day, this exam holds <b>the experiments and the theory together</b>. The theory is the booklet itself: click the problems lying on the desk (bottom left) to open it. Scan the theory answers the same way, as «${EX.tasks.find((x, i) => isThy(i))}».`] : []).concat(t().rules).map(r => `<li>${r}</li>`).join("")}</ol>
@@ -634,6 +642,7 @@ function reviewIntroView() {
   else gate = `<p>${t().tokens(ME.tokens)}</p><button class="pri" id="go">${t().start}</button>`;
   $("main").innerHTML = `<div class="page"><section class="card"><span class="badge">${t().exam}</span><h1>${esc(label())} · ${esc(EX.tasks.join(" + "))}</h1>
     <p class="lead">${ko ? "이미 푼 답안을 제출하고 채점 · 첨삭만 받으세요." : "Submit completed work directly for grading and feedback."}</p>
+    <div class="note w">${PEN_NOTE[ko ? "ko" : "en"].review}</div>
     <p>${ko ? "시험을 시작하거나 타이머를 기다릴 필요 없이 종이 답안 사진 또는 화면에 입력한 풀이를 제출할 수 있습니다. 답안을 준비하는 동안에는 시간 제한이 없습니다." : "Upload your written answers or type your solutions without starting an exam. There is no time limit while preparing your submission."}</p>
     <p>${ko ? `채점하기를 누르는 순간 실전 토큰 ${COST()}개를 사용합니다. 그 뒤 답안 판독과 채점 · 첨삭에는 토큰이 더 들지 않습니다.` : `Pressing Grade my work spends ${COST()} exam token at once. Reading your pages, grading and feedback then cost nothing more.`}</p>
     ${EX.tasks.some((_, i) => !EX.sols[i]) ? `<p class="note">${ko ? "공식 해설·배점이 없는 문제는 문제 원문과 제출한 풀이를 바탕으로 학습용 첨삭을 제공합니다. 공식 점수나 임의의 수치 점수를 만들지 않습니다." : "For problems without official solutions or point schemes, feedback is qualitative and based on the published problem and your work. No official or invented numeric score is assigned."}</p>` : ""}
@@ -885,14 +894,14 @@ async function saveTypedAnswers() {
 const SCAN_RULES = {
   ko: { h: "촬영 전에 꼭 확인하세요", rules: [
     "휴대폰 화면의 테두리가 초록색이 아니라 주황색이어도, 네 모서리 점이 종이 귀퉁이와 맞으면 제대로 찍힙니다.",
-    "빨간 펜으로 쓴 것은 읽지 않습니다(채점 표시로 봅니다). 답과 풀이는 검정·파랑 펜이나 연필로.",
+    "빨간 펜으로 쓴 것은 읽지 않습니다(채점 표시로 봅니다). 답과 풀이는 검정·파랑 볼펜으로, 그래프 점은 크고 진하게, 선은 굵게.",
     "답칸이 비어 있으면 Working sheet에 상자·밑줄로 표시한 결과를 답으로 봅니다.",
     "여러 방법으로 풀어도 점수는 가장 높은 한 가지만 들어갑니다.",
     "읽지 못한(실패한) 쪽 다시 읽기는 5분에 2번까지입니다.",
     "읽을 수 없는 부분은 0점입니다. 보낸 쪽의 읽힌 내용을 꼭 확인하세요."] },
   en: { h: "Before you photograph your pages", rules: [
     "An orange outline on the phone instead of a green one is fine: if the four corner points sit on the paper corners, the page is captured correctly.",
-    "Anything in red pen is not read (it counts as a marker's marks). Write in black or blue pen or pencil.",
+    "Anything in red pen is not read (it counts as a marker's marks). Write in black or blue ballpoint; plot graph points large and dark, lines thick.",
     "If an answer box is empty, the result boxed or underlined on a working sheet counts as the answer.",
     "Several methods for one part never add up: only the best one counts.",
     "A page that could not be read can be re-read twice per 5 minutes.",

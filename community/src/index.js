@@ -134,6 +134,8 @@ async function limit(env, key, max, windowSec) {
 const clientIp = req => req.headers.get("CF-Connecting-IP") || "local";
 
 /* ── input validation ───────────────────────────────────────── */
+/* a new account starts with three exam tokens (the column default of 5 was for accounts that existed when tokens came in) */
+const SIGNUP_TOKENS = 3;
 const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 // letters (any script), digits, _ . -  and inner spaces; 2–16 chars
 const NICK_RE = /^[\p{L}\p{N}_.\-](?:[\p{L}\p{N}_.\- ]{0,14}[\p{L}\p{N}_.\-])?$/u;
@@ -216,8 +218,8 @@ async function handle(req, env, url) {
     await limit(env, "signup:" + clientIp(req), 20, 3600);
     let res;
     try {
-      res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,?,?)")
-        .bind(username, nickname, await hashPw(body.password), now()).run();
+      res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,?,?,?)")
+        .bind(username, nickname, await hashPw(body.password), now(), SIGNUP_TOKENS).run();
     } catch (e) {                                       // someone took the name between the check and here
       if (!isUnique(e)) throw e;
       throw new HttpError(409, /nickname/.test(String(e.message)) || await nickTaken(env, nickname) ? "nickname_taken" : "username_taken");
@@ -3625,7 +3627,7 @@ async function oauthRoute(req, env, url) {
   else {
     await limit(env, "signup:" + clientIp(req), 20, 3600);
     const uname = prov[0] + "_" + b64u(crypto.getRandomValues(new Uint8Array(9))).replace(/[^A-Za-z0-9]/g, "").slice(0, 10);
-    const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,NULL,?)").bind(uname, await freeNick(env, name), now()).run();
+    const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), now(), SIGNUP_TOKENS).run();
     userId = res.meta.last_row_id; fresh = 1;
     await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, userId, now()).run();
   }

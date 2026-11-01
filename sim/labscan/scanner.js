@@ -571,9 +571,19 @@ function pfPieces(mask, w, h, allowed = null) {
       for (const next of [x + 1 < w ? cur + 1 : -1, x > 0 ? cur - 1 : -1, y + 1 < h ? cur + w : -1, y > 0 ? cur - w : -1])
         if (next >= 0 && mask[next] && label[next] < 0 && (!allowed || allowed[next])) { label[next] = id; stack[sp++] = next; }
     }
-    pieces.push({ cells, sides: [1, 2, 4, 8].filter(bit => sides & bit).length });
+    pieces.push({ cells, sides: [1, 2, 4, 8].filter(bit => sides & bit).length, border: sides !== 0 });
   }
   return pieces;
+}
+/* a piece with its holes filled: a sheet whose middle is a printed grey area (a graph grid, a shaded table) is bright
+   only round its margin, a ring that is no four-sided shape until what it encloses is counted in. What touches the
+   photo's border is not enclosed. */
+function pfFilled(piece, w, h) {
+  const inPiece = new Uint8Array(w * h); for (const i of piece.cells) inPiece[i] = 1;
+  const outside = new Uint8Array(w * h); for (let i = 0; i < w * h; i++) outside[i] = 1 - inPiece[i];
+  const holes = pfPieces(outside, w, h).filter(p => !p.border);
+  if (!holes.length) return piece;
+  return { cells: piece.cells.concat(...holes.map(p => p.cells)), sides: piece.sides };
 }
 /* how sheet-like a piece is: its four-sided outline, how fully (and not more than fully) the piece fills it, how
    smooth it is inside, how large and central */
@@ -636,7 +646,7 @@ function pfRegion(small, w, h) {
     const mask = new Uint8Array(w * h);
     for (let i = 0; i < mask.length; i++) mask[i] = polarity > 0 ? +(small[i] > level) : +(small[i] <= level);
     for (const piece of pfPieces(pfClose(mask, w, h, r), w, h)) {
-      const sheet = pfSheet(piece, small, w, h);
+      const sheet = pfSheet(polarity > 0 ? pfFilled(piece, w, h) : piece, small, w, h);
       if (!sheet) continue;
       if (polarity < 0) {                                                                  // grey paper on a brighter surface:
         if (sheet.mean < 80 || sheet.spread > 22) continue;                                // ink, diagrams and writing are not paper
@@ -753,8 +763,11 @@ function pfRefine(gray, w, h, quad, polarity = 1) {
       let at = -1;
       for (let i = 0; i < steps.length; i++) {
         if (steps[i] < 8) continue;
+        /* onto the paper: not much darker than its own level; lighter than it is fine (the white margin round a grey
+           printed graph grid, the side nearer a warm lamp: rejecting those left the sheet's edges unmeasured, so the
+           outline stayed orange or moved in onto the grid) */
         const o = -search + i * .5, inside = pfPixel(gray, w, h, x + nx * (o + 4), y + ny * (o + 4));
-        if (Math.abs(inside - level) <= tolerance) { at = i; break; }
+        if (polarity * (inside - level) >= -tolerance) { at = i; break; }
       }
       if (at < 0) continue;
       while (at + 1 < steps.length && steps[at + 1] >= steps[at]) at++;               // up to that step's peak
@@ -796,7 +809,19 @@ export function findPage(gray, W, H, rgba = null, seed = null) {
     start = found.four.map(p => ({ x: p.x < 1 ? 0 : p.x > w - 1 ? fine.w - 1 : p.x * fs, y: p.y < 1 ? 0 : p.y > h - 1 ? fine.h - 1 : p.y * fs }));
     polarity = found.polarity;
   }
-  const r = pfRefine(fine.data, fine.w, fine.h, start, polarity);
+  let r = pfRefine(fine.data, fine.w, fine.h, start, polarity);
+  if (!seed && polarity < 0 && r.refined) {
+    /* a grey area on something brighter is grey paper on a white desk, or printed matter (a graph grid, a shaded box) on
+       a white sheet whose own edge lies further out, a little brighter than the desk: look outwards for that edge, a
+       step up onto the sheet all round. Grey paper on a white desk has none (its edge steps down). */
+    const c = { x: r.corners.reduce((s, p) => s + p.x, 0) / 4, y: r.corners.reduce((s, p) => s + p.y, 0) / 4 };
+    for (const grow of [1.1, 1.18, 1.28]) {
+      const wide = r.corners.map(p => ({ x: c.x + (p.x - c.x) * grow, y: c.y + (p.y - c.y) * grow }));
+      if (wide.some(p => p.x < 1 || p.y < 1 || p.x > fine.w - 2 || p.y > fine.h - 2)) break;
+      const outer = pfRefine(fine.data, fine.w, fine.h, wide, 1);
+      if (outer.refined && !outer.onFrame.some(Boolean) && Math.min(...outer.support) >= .6 && pfArea(outer.corners) > pfArea(r.corners) * 1.08) { r = outer; break; }
+    }
+  }
   const corners = r.corners.map(p => ({ x: (p.x + .5) * fine.k, y: (p.y + .5) * fine.k }));
   const inner = r.support.filter((_, i) => !r.onFrame[i]), cover = pfArea(corners) / (W * H);
   const edgeSupport = inner.length ? inner.reduce((a, b) => a + b, 0) / inner.length : 1, weakestEdge = inner.length ? Math.min(...inner) : 1;
@@ -1356,7 +1381,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4aab8a5a4591', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4eaaf7ef1ae4', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1377,14 +1402,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4aab8a5a4591', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4eaaf7ef1ae4', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4aab8a5a4591', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=4eaaf7ef1ae4', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
