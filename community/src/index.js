@@ -33,7 +33,7 @@ import { settleMonthlyRewards, monthlyRewardSummary } from './monthly-rewards.js
 import { createMonthlyExperimentRouter, attachMonthlyExperimentEvidence, ensureMonthlyExperimentSchema, monthlyExperimentDeletion, getMonthlyExperimentReference } from './monthly-experiment.js';
 import { prepareMonthlyExperimentVisuals } from './monthly-experiment-visuals.js';
 import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './lab-call-pricing.js';
-import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels } from './vision-provider.js';
+import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages} from './reference-images.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
@@ -1426,13 +1426,17 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
    2026-11-01 on 18 handwritten IPhO 2023 and 2025 theory pages against a hand transcription: gemini-3.1-pro-preview
    (thinking low) misread none of 102 checked numbers and symbols and finished every page; 3.1-flash-lite misread 6,
    3.5-flash-lite about twice that; the 3.x Flash models looped to the output cap on 10-30% of pages. */
+/* each stage's provider (LAB_READ_PROVIDER, LAB_GRADE_PROVIDER, LAB_MODERATE_PROVIDER, LAB_SCHEME_PROVIDER): Gemini, DeepSeek,
+   OpenAI or Anthropic, whichever the model bench picks for it */
+const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic"];
+const stage = (value, fallback) => STAGE_PROVIDERS.includes(value) ? value : fallback;
 function labRoles(env, s, theory) {
   const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
   if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
     /* theory and experiments alike (data analysis and observation papers too): Gemini reads, DeepSeek grades from the
        scheme, the readings and the photos, Gemini moderates what DeepSeek marked down */
-    return { read: "gemini", grade: env.LAB_GRADE_PROVIDER === "gemini" ? "gemini" : "deepseek", gradeBench: pick(env.LAB_GRADE_MODEL, env.LAB_GRADE_THINKING),
-      moderate: env.LAB_MODERATE_PROVIDER === "deepseek" ? "deepseek" : "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
+    return { read: stage(env.LAB_READ_PROVIDER, "gemini"), grade: stage(env.LAB_GRADE_PROVIDER, "deepseek"), gradeBench: pick(env.LAB_GRADE_MODEL, env.LAB_GRADE_THINKING),
+      moderate: stage(env.LAB_MODERATE_PROVIDER, "gemini"), readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
       moderateBench: pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING), moderateScope: env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
       readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
@@ -1442,7 +1446,7 @@ function labRoles(env, s, theory) {
    as it is, where DeepSeek needs every page rendered to an image, which with a long experiment's photos beside it ran
    an isolate out of memory; and the scheme decides every total (IPhO 2023 T1 read by DeepSeek came out at 12.7 of 10) */
 const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY
-  ? labAs(s, "gemini", { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
+  ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
   : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined }) };
@@ -2597,7 +2601,7 @@ async function labBench(env, s, job) {
   const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking });
   let out, failed = false;
   try {
-    if (spec.stage === 'models') out = Object.fromEntries(await Promise.all(['gemini', 'deepseek'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))])));
+    if (spec.stage === 'models') out = { keys: providerKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
     else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');

@@ -2,11 +2,18 @@
 // service, provider fallback, remote image URLs or paid cache objects are used.
 import { geminiLabUsage, deepseekLabUsage } from './lab-call-pricing.js';
 import { priceModelTestStage } from './model-test-pricing.js';
+import { anthropicMessage, anthropicUsage, anthropicFailure, anthropicModels } from './anthropic-provider.js';
 
 export const VISION_MODELS = Object.freeze({ gemini: 'gemini-3.5-flash-lite', deepseek: 'deepseek-flash' });
+/* providers the lab pipeline's stages can be given (LAB_*_PROVIDER, the admin bench) beside the two a candidate can choose */
+const STAGE_MODELS = Object.freeze({ ...VISION_MODELS, openai: 'gpt-5-mini', anthropic: 'claude-sonnet-5-5' });
 export const VISION_IMAGE_LIMIT = 14 * 1024 * 1024; // decoded; JSON+base64 must also fit Gemini's 20 MB request limit
-const BASE = { gemini: 'https://generativelanguage.googleapis.com/v1beta/models', deepseek: 'https://api.deepseek.com' };
-const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY' };
+const BASE = { gemini: 'https://generativelanguage.googleapis.com/v1beta/models', deepseek: 'https://api.deepseek.com', openai: 'https://api.openai.com/v1' };
+const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY', openai: 'OPENAI_API_KEY', anthropic: 'ANTHROPIC_API_KEY' };
+const ALT_KEYS = { openai: ['OPENAI_KEY'], anthropic: ['CLAUDE_API_KEY', 'ANTHROPIC_KEY'] };
+const keyOf = (env, provider) => env[KEYS[provider]] || (ALT_KEYS[provider] || []).map(k => env[k]).find(Boolean) || null;
+/** which providers have a key, for the admin bench (names only) */
+export const providerKeys = env => Object.fromEntries(Object.keys(KEYS).map(p => [p, !!keyOf(env, p)]));
 const MIME = new Set(['image/jpeg','image/png','image/webp']);
 const MAX_RESPONSE = 2 * 1024 * 1024;
 const PROVIDER_CODES=new Set(['invalid_api_key','authentication_error','insufficient_balance','insufficient_quota','rate_limit_exceeded','context_length_exceeded','invalid_request_error','model_not_found','unsupported_content_type','invalid_image','invalid_image_format','invalid_parameter','content_filter']);
@@ -34,8 +41,9 @@ export function visionProvider(value) {
   return value;
 }
 export function requireVisionProvider(env,value) {
-  const provider=visionProvider(value);
-  if (!env[KEYS[provider]]) fail(503,'provider_unavailable',{provider});
+  if (!Object.hasOwn(STAGE_MODELS,value)) fail(400,'bad_provider');
+  const provider=value;
+  if (!keyOf(env,provider)) fail(503,'provider_unavailable',{provider});
   return provider;
 }
 export function visionCapabilities(env) {
@@ -43,9 +51,10 @@ export function visionCapabilities(env) {
     available:!!env[KEYS[id]],...(!env[KEYS[id]]?{reason:'provider_unavailable'}:{})}))};
 }
 /* a model other than the provider's default, only for the admin model bench: the provider's own id pattern, never a URL part */
-export const benchModel=(provider,value)=>typeof value==='string'&&new RegExp('^'+provider+'-[a-z0-9][a-z0-9._-]{0,80}$').test(value)?value:null;
-function endpoint(env,provider,model=VISION_MODELS[provider]) {
-  const value=env[provider==='gemini'?'GEMINI_BASE':'DEEPSEEK_BASE'] || BASE[provider];
+const MODEL_ID = { openai: /^(?:gpt|o\d|chatgpt)[a-z0-9._-]{0,80}$/, anthropic: /^claude-[a-z0-9][a-z0-9._-]{0,80}$/ };
+export const benchModel=(provider,value)=>typeof value==='string'&&(MODEL_ID[provider]||new RegExp('^'+provider+'-[a-z0-9][a-z0-9._-]{0,80}$')).test(value)?value:null;
+function endpoint(env,provider,model=STAGE_MODELS[provider]) {
+  const value=env[provider==='gemini'?'GEMINI_BASE':provider==='openai'?'OPENAI_BASE':'DEEPSEEK_BASE'] || BASE[provider];
   let url;try{url=new URL(value);}catch{fail(503,'provider_configuration');}
   const local=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
   if (url.username||url.password||url.search||url.hash||url.protocol!=='https:'&&!(local&&url.protocol==='http:')) fail(503,'provider_configuration');
@@ -56,11 +65,13 @@ function imageParts(images,provider) {
   let total=0;
   return images.flatMap((image,index)=>{
     const mime=image?.mime||image?.mime_type, data=image?.data;
-    if ((!MIME.has(mime)&&!(provider==='gemini'&&mime==='application/pdf')) || typeof data!=='string'||!data.length||
+    if ((!MIME.has(mime)&&!(provider!=='deepseek'&&mime==='application/pdf')) || typeof data!=='string'||!data.length||
         data.length%4!==0||!/^[A-Za-z0-9+/]*={0,2}$/.test(data)) fail(400,'vision_bad_image');
     total+=data.length*3/4-(data.endsWith('==')?2:data.endsWith('=')?1:0);
     if(total>VISION_IMAGE_LIMIT) fail(413,'vision_images_too_large');
     const label=String(image.label||`[Page ${index+1}: image evidence]`).slice(0,500);
+    if(provider==='anthropic')return [{text:label},{mime,data}];
+    if(provider==='openai'&&mime==='application/pdf')return [{type:'text',text:label},{type:'file',file:{filename:'reference.pdf',file_data:'data:application/pdf;base64,'+data}}];
     return provider==='gemini'?[{text:label},{inline_data:{mime_type:mime,data}}]:
       [{type:'text',text:label},{type:'image_url',image_url:{url:'data:'+mime+';base64,'+data,detail:'high'}}];
   });
@@ -94,7 +105,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
   model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch}={}) {
   provider=requireVisionProvider(env,provider);
-  const model=benchModel(provider,chosen)||VISION_MODELS[provider],url=endpoint(env,provider,model),started=Date.now();
+  const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
   let usage=null,timer,aborted=false,providerStatus,providerCode;
   let rejectAbort;
@@ -105,18 +116,23 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   if(!Array.isArray(sequence)||sequence.length>160)fail(400,'vision_bad_image');
   const media=sequence.filter(part=>typeof part?.text!=='string').map(part=>part?.inline_data||part);
   const picture=imageParts(media,provider),content=[];let imageIndex=0;
-  for(const part of sequence){if(typeof part?.text==='string')content.push(provider==='gemini'?{text:part.text}:{type:'text',text:part.text});
+  for(const part of sequence){if(typeof part?.text==='string')content.push(provider==='gemini'||provider==='anthropic'?{text:part.text}:{type:'text',text:part.text});
     else {content.push(picture[imageIndex++],picture[imageIndex++]);}}
   const count=Math.max(256,Math.min(32768,Number(maxTokens)||8192));
-  const body=provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
+  const jsonRules=rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{});
+  const body=provider==='anthropic'?null:provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],response_format:{type:'json_object'},max_completion_tokens:count,
+      ...(['minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
+    provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
     generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:Number(temperature)||0,maxOutputTokens:count,
       // thinking is billed as output: a page read with the model's own default once spent 5.5k thought tokens on 263 characters
       ...(level==='off'?{}:/^gemini-2\.5-flash/.test(model)?{thinkingConfig:{thinkingBudget:level==='minimal'?0:-1}}:{thinkingConfig:{thinkingLevel:level}})}}:
-    {model,messages:[{role:'system',content:rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{})},
+    {model,messages:[{role:'system',content:jsonRules},
       {role:'user',content}],response_format:{type:'json_object'},thinking:{type:'disabled'},temperature:Number(temperature)||0,max_tokens:count};
-  let encoded=JSON.stringify(body);
+  /* Claude's request is built by the SDK: its size is the images' base64, bounded by the 32 MB request limit */
+  let encoded=body?JSON.stringify(body):'x'.repeat(0);
+  if(!body&&content.reduce((a,p)=>a+(p.data?.length||p.text?.length||0),0)>30e6)fail(413,'vision_images_too_large');
   /* an API version that does not know thinkingLevel rejects the request: send it once more without, never fail on it */
-  const plain=()=>{if(provider!=='gemini'||!body.generationConfig.thinkingConfig)return null;const {thinkingConfig,...config}=body.generationConfig;return JSON.stringify({...body,generationConfig:config});};
+  const plain=()=>{if(provider!=='gemini'||!body?.generationConfig?.thinkingConfig)return null;const {thinkingConfig,...config}=body.generationConfig;return JSON.stringify({...body,generationConfig:config});};
   /* a UTF-8 byte is at most 3 per UTF-16 unit: encode (one more copy of a body of several MB) only when that bound is over the limit */
   const cap=provider==='gemini'?20000000:48*1024*1024;
   if(encoded.length>cap||encoded.length*3>cap&&new TextEncoder().encode(encoded).length>cap)fail(413,'vision_images_too_large');
@@ -124,11 +140,29 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   signal?.addEventListener('abort',abort,{once:true});
   const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{aborted=true;controller.abort();reject(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));},Math.max(1,Math.min(110000,timeoutMs)));});
   const send=payload=>fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json',
-      ...(provider==='gemini'?{'x-goog-api-key':env[KEYS[provider]]}:{Authorization:'Bearer '+env[KEYS[provider]]})},
+      ...(provider==='gemini'?{'x-goog-api-key':keyOf(env,provider)}:{Authorization:'Bearer '+keyOf(env,provider)})},
       // workerd rejects redirect:'error' before sending any request. Manual
       // keeps credentials on this origin; every non-2xx response fails below.
       body:payload,signal:controller.signal,redirect:'manual'});
+  const claude=async()=>{
+    let message;
+    try{message=await anthropicMessage({apiKey:keyOf(env,'anthropic'),model,system:jsonRules,sequence:content,maxTokens:count,thinking:level,signal:controller.signal,timeoutMs});}
+    catch(error){const failure=anthropicFailure(error);providerStatus=failure.status??undefined;fail(502,failure.code);}
+    providerStatus=200;
+    const meter=anthropicUsage(message,started),ended=Date.now();
+    usage={...meter,provider,model,stage,ms:Math.max(0,ended-started),calls:1,input_tokens:meter.in,cached_tokens:meter.cached,uncached_input_tokens:meter.in-meter.cached,
+      output_tokens:meter.out,started_at:new Date(started).toISOString(),finished_at:new Date(ended).toISOString(),ok:true};
+    usage.pricing=priceModelTestStage(usage);
+    if(message.stop_reason==='max_tokens')fail(502,'vision_response_truncated');
+    if(message.stop_reason==='refusal')fail(502,'vision_response_blocked');
+    return (message.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+  };
   const request=async()=>{
+    if(provider==='anthropic'){const text=await claude();
+      if(!text.trim())fail(502,'vision_response_empty');
+      let raw;try{raw=JSON.parse(text.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));}catch{fail(502,'vision_invalid_response');}
+      if(!raw||typeof raw!=='object'||Array.isArray(raw))fail(502,'vision_invalid_response');
+      return{raw,provider,model:provider+':'+model,usage};}
     let response=await send(encoded);
     if(response.status===400){const retry=plain();if(retry){try{await response.body?.cancel();}catch{}encoded=retry;response=await send(encoded);}}
     providerStatus=response.status;
@@ -166,9 +200,10 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
 /* the model ids each configured provider serves, for the admin model bench */
 export async function listProviderModels(env,provider,fetchImpl=globalThis.fetch) {
   provider=requireVisionProvider(env,provider);
+  if(provider==='anthropic')return anthropicModels(keyOf(env,provider));
   const base=endpoint(env,provider).replace(/\/(?:[^/]+:generateContent|chat\/completions)$/,'');
   const url=provider==='gemini'?base+'?pageSize=1000':base.replace(/\/models$/,'')+'/models';
-  const response=await fetchImpl(url,{headers:provider==='gemini'?{'x-goog-api-key':env[KEYS[provider]]}:{Authorization:'Bearer '+env[KEYS[provider]]},redirect:'manual',signal:AbortSignal.timeout(20000)});
+  const response=await fetchImpl(url,{headers:provider==='gemini'?{'x-goog-api-key':keyOf(env,provider)}:{Authorization:'Bearer '+keyOf(env,provider)},redirect:'manual',signal:AbortSignal.timeout(20000)});
   if(!response.ok)fail(502,'vision_provider_failed');
   const body=await boundedJSON(response);
   return provider==='gemini'?(body.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent')).map(m=>String(m.name).replace(/^models\//,''))

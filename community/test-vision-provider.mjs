@@ -120,3 +120,55 @@ test('a bench model replaces the default only when it is that provider\'s own id
  assert.deepEqual(listed,['gemini-3.6-flash']);
  assert.deepEqual(await listProviderModels(env,'deepseek',async url=>{assert.equal(url,'https://api.deepseek.com/models');return Response.json({data:[{id:'deepseek-flash'},{id:'deepseek-v4-pro'}]});}),['deepseek-flash','deepseek-v4-pro']);
 });
+
+test('Claude reads through the SDK: images as image blocks, PDFs as documents, the server-side fallback on 5.5 models, a 429 as rate-limited', async () => {
+  const { visionJSON } = await import('./src/vision-provider.js');
+  const sse = text => ['message_start', { type: 'message_start', message: { id: 'm', type: 'message', role: 'assistant', model: 'claude-sonnet-5-5', content: [], stop_reason: null, usage: { input_tokens: 120, output_tokens: 1, cache_read_input_tokens: 30 } } },
+    'content_block_start', { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+    'content_block_delta', { type: 'content_block_delta', index: 0, delta: { type: 'text_delta', text } },
+    'content_block_stop', { type: 'content_block_stop', index: 0 },
+    'message_delta', { type: 'message_delta', delta: { stop_reason: 'end_turn' }, usage: { output_tokens: 9 } },
+    'message_stop', { type: 'message_stop' }].reduce((out, v, i, a) => i % 2 ? out : out + `event: ${v}\ndata: ${JSON.stringify(a[i + 1])}\n\n`, '');
+  const seen = [], original = globalThis.fetch;
+  globalThis.fetch = async (url, init) => {
+    seen.push({ url: String(url), headers: new Headers(init.headers), body: JSON.parse(init.body) });
+    if (seen.length === 2) return new Response(JSON.stringify({ type: 'error', error: { type: 'rate_limit_error', message: 'slow down' } }), { status: 429, headers: { 'content-type': 'application/json' } });
+    return new Response(sse('{"text":"x = 2 m","items":[]}'), { headers: { 'content-type': 'text/event-stream' } });
+  };
+  try {
+    const env = { ANTHROPIC_API_KEY: 'test-key' }, jpeg = Buffer.from([255, 216, 255, 224, 0, 16]).toString('base64'), pdf = Buffer.from('%PDF-1.4 x').toString('base64');
+    const out = await visionJSON(env, { provider: 'anthropic', model: 'claude-sonnet-5-5', thinking: 'low', schema: { type: 'object', properties: { text: { type: 'string' } } },
+      parts: [{ text: '[TASK: read page]' }, { inline_data: { mime_type: 'image/jpeg', data: jpeg }, label: 'page 1' }, { inline_data: { mime_type: 'application/pdf', data: pdf }, label: 'solution' }] });
+    assert.equal(out.raw.text, 'x = 2 m'); assert.equal(out.usage.input_tokens, 150); assert.equal(out.usage.cached_tokens, 30); assert.equal(out.usage.output_tokens, 9);
+    const req = seen[0];
+    assert.match(req.url, /api\.anthropic\.com\/v1\/messages/); assert.equal(req.body.model, 'claude-sonnet-5-5'); assert.equal(req.body.fallbacks, 'default');
+    assert.match(req.headers.get('anthropic-beta') || '', /server-side-fallback-2026-07-01/); assert.equal(req.body.output_config.effort, 'low');
+    const content = req.body.messages[0].content;
+    assert.deepEqual(content.map(b => b.type), ['text', 'text', 'image', 'text', 'document']); assert.equal(content[2].source.media_type, 'image/jpeg');
+    assert.match(req.body.system, /Return exactly one JSON object/); assert.equal(req.body.temperature, undefined, 'no sampling parameters on 5.5 models');
+    await assert.rejects(visionJSON(env, { provider: 'anthropic', model: 'claude-haiku-5-5', parts: [{ text: 'x' }] }), e => e.code === 'vision_provider_rate_limited' && e.provider_status === 429);
+    assert.equal(seen[1].body.fallbacks, undefined, 'Haiku has no server-side fallback');
+  } finally { globalThis.fetch = original; }
+});
+
+test('OpenAI models are called on chat completions with images, PDFs as files and their reasoning effort', async () => {
+  const { visionJSON } = await import('./src/vision-provider.js');
+  let sent;
+  const fetchImpl = async (url, init) => { sent = { url: String(url), headers: init.headers, body: JSON.parse(init.body) };
+    return Response.json({ model: 'gpt-5-mini', choices: [{ finish_reason: 'stop', message: { content: '{"ok":true}' } }], usage: { prompt_tokens: 50, completion_tokens: 7, prompt_tokens_details: { cached_tokens: 10 } } }); };
+  const out = await visionJSON({ OPENAI_API_KEY: 'k' }, { provider: 'openai', model: 'gpt-5-mini', thinking: 'low', fetchImpl, schema: { type: 'object' },
+    parts: [{ text: 'grade' }, { inline_data: { mime_type: 'image/png', data: 'iVBORw0KGgo=' } }, { inline_data: { mime_type: 'application/pdf', data: 'JVBERi0=' } }] });
+  assert.equal(out.raw.ok, true); assert.match(sent.url, /api\.openai\.com\/v1\/chat\/completions$/); assert.equal(sent.headers.Authorization, 'Bearer k');
+  assert.equal(sent.body.reasoning_effort, 'low'); assert.equal(sent.body.response_format.type, 'json_object'); assert.ok(sent.body.max_completion_tokens > 0);
+  const user = sent.body.messages[1].content;
+  assert.ok(user.some(p => p.type === 'image_url' && p.image_url.url.startsWith('data:image/png;base64,'))); assert.ok(user.some(p => p.type === 'file' && p.file.file_data.startsWith('data:application/pdf;base64,')));
+  assert.equal(out.usage.cached_tokens, 10);
+});
+
+test('a candidate still chooses only Gemini or DeepSeek; the new providers are for the pipeline\'s stages', async () => {
+  const { visionProvider, requireVisionProvider, visionCapabilities, providerKeys } = await import('./src/vision-provider.js');
+  assert.throws(() => visionProvider('anthropic'), e => e.code === 'bad_provider'); assert.throws(() => visionProvider('openai'), e => e.code === 'bad_provider');
+  assert.equal(requireVisionProvider({ CLAUDE_API_KEY: 'x' }, 'anthropic'), 'anthropic', 'an alternative key name is accepted');
+  assert.deepEqual(visionCapabilities({}).providers.map(p => p.id), ['gemini', 'deepseek']);
+  assert.deepEqual(providerKeys({ OPENAI_API_KEY: 'a' }), { gemini: false, deepseek: false, openai: true, anthropic: false });
+});
