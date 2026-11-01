@@ -39,7 +39,7 @@ export function requireVisionProvider(env,value) {
   return provider;
 }
 export function visionCapabilities(env) {
-  return {default:'gemini',providers:['gemini','deepseek'].map(id=>({id,label:id,model:VISION_MODELS[id],
+  return {default:'gemini',pipeline:env.LAB_PIPELINE==='mixed'&&env.GEMINI_API_KEY&&env.DEEPSEEK_API_KEY?'mixed':'single',providers:['gemini','deepseek'].map(id=>({id,label:id,model:VISION_MODELS[id],
     available:!!env[KEYS[id]],...(!env[KEYS[id]]?{reason:'provider_unavailable'}:{})}))};
 }
 function endpoint(env,provider) {
