@@ -2268,8 +2268,10 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const family=familyOf(s.comp), kind=paperKind(s.comp,task,theory);
   const head = { text: [stablePrefix(family,kind), "", "[Exam context]",
     `Grade task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam.`,
-    `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
-    "", "[Marking scheme — from the official solution]", "<<SCHEME>>" + JSON.stringify(compactScheme(scheme)) + "<<END>>"].join("\n") };
+    "", "[Marking scheme — from the official solution]", "<<SCHEME>>" + JSON.stringify(compactScheme(scheme)) + "<<END>>",
+    /* after the scheme: everything above is one paper's prefix for every candidate, Korean or English, which the
+       provider's prompt cache bills at a fraction of the input price */
+    `Write every note in ${lang === "en" ? "English" : "Korean"}.`].join("\n") };
   const pagesNote = { text: "<<PAGES>>" + JSON.stringify(mine.map(p => ({ no: p.no, task: p.task, kind: p.kind, legible: p.legible || null }))) + "<<END>>" };
   const references=[];
   /* the moderated pipeline grades from the scheme (official values, tolerances, item roles) and the pages alone: the problem
@@ -2727,9 +2729,26 @@ async function labBootstrap(env,me,url){
       labRelatedResults(env,selected),
     ]);
     out.session={...pubLab(selected,selectedPages||activePages),nickname:owner?.nickname,...standings,related_results:related,...(reviews?{reviews}:{})};
+    if(selected.status==='grading'){const queue=await labQueueInfo(env,selected.id).catch(()=>null);if(queue)out.session.queue=queue;}
   }
   if(listIndex>=0)out.sessions=results[listIndex].results.map(s=>({...pubLab(s,null),detail:undefined,n_pages:s.n_pages}));
   return out;
+}
+
+/* where a sitting's grading stands in the line: the sittings whose gradings wait ahead of its first unfinished one, and
+   a rough wait from how long the last 30 gradings took (dispatched → done) and how many run at once (LAB_JOB_SLOTS,
+   10 consumers × 3 = 30). Shown while it grades, so a candidate after a crowded exam knows how long, not only «grading». */
+async function labQueueInfo(env, id) {
+  const row = await env.DB.prepare(`WITH mine AS (SELECT MIN(id) AS first, COUNT(*) AS remaining FROM lab_jobs WHERE session_id=? AND kind='grade' AND status IN ('pending','queued','running'))
+    SELECT mine.remaining,
+      (SELECT COUNT(DISTINCT session_id) FROM lab_jobs WHERE kind='grade' AND status IN ('pending','queued') AND id<mine.first AND session_id<>?) AS ahead,
+      (SELECT COUNT(*) FROM lab_jobs WHERE kind IN ('grade','ocr') AND status IN ('pending','queued') AND id<mine.first AND session_id<>?) AS jobs_ahead,
+      (SELECT COUNT(*) FROM lab_jobs WHERE kind IN ('grade','ocr') AND status='running' AND session_id<>?) AS running,
+      (SELECT AVG(updated_at-dispatched_at) FROM (SELECT updated_at,dispatched_at FROM lab_jobs WHERE kind='grade' AND status='done' AND dispatched_at IS NOT NULL ORDER BY id DESC LIMIT 30)) AS each_s
+    FROM mine`).bind(id, id, id, id).first();
+  if (!row || !row.remaining) return null;
+  const slots = Math.max(1, +env.LAB_JOB_SLOTS || 30), each = Math.min(300, Math.max(20, Math.round(row.each_s || 45)));
+  return { ahead: row.ahead || 0, eta_s: each * Math.ceil(((row.jobs_ahead || 0) + (row.running || 0) + row.remaining) / slots) };
 }
 
 /* how everyone did on an exam: each person's first graded sitting counts (as on the day), as a percentage of full marks */
@@ -3289,7 +3308,8 @@ async function lab(p, m, body, me, req, env, url) {
       isAdmin(me)?env.DB.prepare('SELECT task,item_id,ref_points,note FROM lab_reviews WHERE session_id=?').bind(s.id).all().then(x=>x.results).catch(()=>[]):undefined,
       labPagesOf(env,s.id),labStandings(env,s),contestMeta(s)?labTokens(env,s.user_id):undefined,labRelatedResults(env,s)
     ]);
-    return { session: { ...pubLab(s,pages),nickname:owner?.nickname,...standings,related_results:related,...(reviews?{reviews}:{}) },health:arenaHealth(env),...(tokens!==undefined?{tokens}:{}) };
+    const queue=s.status==='grading'?await labQueueInfo(env,s.id).catch(()=>null):null;
+    return { session: { ...pubLab(s,pages),nickname:owner?.nickname,...standings,related_results:related,...(reviews?{reviews}:{}),...(queue?{queue}:{}) },health:arenaHealth(env),...(tokens!==undefined?{tokens}:{}) };
   }
   if ((r = /^\/api\/lab\/sessions\/(\d+)$/.exec(p)) && m === "DELETE") {
     const s = await labOwned(env, +r[1], me);

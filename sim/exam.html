@@ -971,7 +971,7 @@ function poll(){
   const promise=(async()=>{try{const before=EXAM_NETWORK.sessionSignature(SES),r=await api('GET','/lab/sessions/'+id);
     if(identity!==transport.fingerprint()||epoch!==requestEpoch||SES?.id!==id)return false;
     setSession(r.session);const changed=before!==EXAM_NETWORK.sessionSignature(SES);
-    if(SES.status!=='scanning'){if(changed){shown='';render();}}else paintPages(SES);return changed;
+    if(SES.status!=='scanning'){if(changed){shown='';render();}else{const q=document.querySelector('.queueInfo');if(q&&SES.queue)q.textContent=queueText(SES.queue);}}else paintPages(SES);return changed;
   }catch(e){return false;}})();pagePoll=promise;promise.finally(()=>{if(pagePoll===promise)pagePoll=null;});return promise;
 }
 
@@ -1074,6 +1074,10 @@ function bindOcrRetry(s){
     catch(error){if(!current())return;if(info)info.textContent=errMsg(error);pending=false;button.disabled=false;}
   };
 }
+/* the line while it grades: sittings ahead and a rough wait (the server's estimate, refreshed with every poll) */
+const queueText = q => { const m = Math.max(1, Math.round((+q.eta_s || 0) / 60));
+  return lang === "en" ? (q.ahead > 0 ? `${q.ahead} ${q.ahead === 1 ? "sitting" : "sittings"} ahead of yours · about ${m} min` : `Being graded now · about ${m} min`)
+    : (q.ahead > 0 ? `내 앞에 ${q.ahead}명 대기 · 약 ${m}분 남음` : `지금 채점하는 중 · 약 ${m}분 남음`); };
 function doneView() {
   const s = SES, per = (s.detail && s.detail.tasks) || {}, pg = s.pages || [];
   const retryOcr=!!s.paid&&["pending","error"].includes(s.status)&&["deepseek","gemini"].includes(s.provider)&&pg.some(p=>p.ocr_status==="failed");
@@ -1094,7 +1098,7 @@ function doneView() {
       <tr><th>${t().rcEnd}</th><td>${REVIEW ? t().scanLeft : when(s.ended_at)}</td></tr>
       <tr><th>${t().rcSubmit}</th><td>${s.submitted_at ? when(s.submitted_at) : "—"}</td></tr>
       <tr><th>${t().rcPages}</th><td>${EX.tasks.map(id => `<b>${esc(id)}</b> ${pagesOf(id)}`).join("<br>")}</td></tr>
-      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${!comparison && s.status === "graded" && s.score != null && s.points != null ? ` · <b>${s.score} / ${s.points}</b>` : ""}</td></tr>
+      <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${!comparison && s.status === "graded" && s.score != null && s.points != null ? ` · <b>${s.score} / ${s.points}</b>` : ""}${s.status === "grading" && s.queue ? `<div class="queueInfo" style="font-size:12.5px;color:var(--muted);margin-top:3px">${queueText(s.queue)}</div>` : ""}</td></tr>
     </tbody></table>
     ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div>${providerHtml()}<div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
       : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
