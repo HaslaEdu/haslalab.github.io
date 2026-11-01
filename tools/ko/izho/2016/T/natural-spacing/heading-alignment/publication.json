@@ -1,0 +1,144 @@
+{
+  "status": "READY",
+  "file": "IZhO_2016_T_KO.pdf",
+  "year": 2016,
+  "kind": "T",
+  "language": "ko",
+  "pages": 6,
+  "sha256": "63bf4f31f94f6a55228fd27b2aee3823c718e765fff63e91ff54bbf0da0405e2",
+  "bytes": 4944728,
+  "aligned_headings": 13,
+  "baseline_item": {
+    "file": "IZhO_2016_T_KO.pdf",
+    "language": "ko",
+    "pages": 6,
+    "bytes": 5017049,
+    "sha256": "69c06c267b0becbb6ee32bb46b4e38fa64b4fd49b52d9cbf4946ed10b1828512",
+    "qa": "tools/ko/izho/2016/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2016_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
+  },
+  "baseline_publication": {
+    "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/baseline-publication.json",
+    "sha256": "57012334231e676e3e3837769c4fcf2fbba981301f57fd63bc56fdb83379d2c5"
+  },
+  "source_ready": {
+    "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/source-ready.json",
+    "sha256": "d24772d0d1920f988100a4a27af33aafe50ec24646bd87c8ca95d5a235002f4c"
+  },
+  "assembly_qa": {
+    "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/assembly-qa.json",
+    "sha256": "0edbd50dbc7edcf9370753ab17ece6814bc5f84eaaa515d9bc01492172128e02"
+  },
+  "visual_review": {
+    "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/visual-review.json",
+    "sha256": "2f0ef0cf556c3799863edcb2dd1d1e3bd2c0c4b93dcc2924ae25d9da5e8a40cd"
+  },
+  "negative_control": {
+    "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/negative-control.json",
+    "sha256": "e67b671f401613bcaecad158465f47e2d06ba9cc6d5052f81091b6f04661a5bb"
+  },
+  "page_proofs": [
+    {
+      "page": 1,
+      "proof_sha256": "4106489e4640111b55c852352f094b19e184c9277275495a8a3b09e38438e30d",
+      "proof_index": 1,
+      "alignment_qa": {
+        "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/page01-alignment.json",
+        "sha256": "138601d5d7b293deaa0bb9a25bbf76bfa328592e1743ce8a34d5c3fa09f2a155"
+      }
+    },
+    {
+      "page": 2,
+      "proof_sha256": "3dcd423c0b5f2ccad3fa36b6b97052caa292eb7fd0fa2757f9a4c1175097fd5d",
+      "proof_index": 1,
+      "alignment_qa": {
+        "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/page02-alignment.json",
+        "sha256": "e05e33a8ccb421db94fc5d72f3c45410dcd590a6a736d7abda503d0462ced358"
+      }
+    },
+    {
+      "page": 3,
+      "proof_sha256": "61f543fdd27bdb27e15f4c105f179dedfcb8da7bfab360e49a828ee35cb5a80a",
+      "proof_index": 1,
+      "alignment_qa": {
+        "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/page03-alignment.json",
+        "sha256": "cce6893269fb93ec390e40b4ac80b6dfe8c03036534712eb9f55494aa60d3d80"
+      }
+    },
+    {
+      "page": 4,
+      "proof_sha256": "5270f276511c51d5e36b2e3c3da2682446068eebdefc1ca8131ebdb3a8a2d873",
+      "proof_index": 1,
+      "alignment_qa": {
+        "path": "tools/ko/izho/2016/T/natural-spacing/heading-alignment/page04-alignment.json",
+        "sha256": "214000080ea85c6d0f6b605c0c8a45d81ce393208723ca0c16d4e2762092b5a9"
+      }
+    },
+    {
+      "page": 5,
+      "proof_sha256": "69c06c267b0becbb6ee32bb46b4e38fa64b4fd49b52d9cbf4946ed10b1828512",
+      "proof_index": 5
+    },
+    {
+      "page": 6,
+      "proof_sha256": "69c06c267b0becbb6ee32bb46b4e38fa64b4fd49b52d9cbf4946ed10b1828512",
+      "proof_index": 6
+    }
+  ],
+  "authoring_snapshotroot": "tools/ko/izho",
+  "authoring_snapshot_sha256": {
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/assembly/pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/assembly/pdf_native_inline_reposition.py": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/assembly/pdf_original_raster_math.py": "421b01946012ea6bea3706f872be030c315cc36b6e2602a5e9893c31c2524594",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/assembly/pdf_original_style_audit.py": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/assembly/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/producer/pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/producer/pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/producer/pdf_native_inline_reposition.py": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+    "heading-alignment/natural-spacing/authoring/actual-loaded-modules/producer/pdf_original_text_ops.py": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+    "heading-alignment/natural-spacing/authoring/original-language/88f5f2c904884d0a4f41f74b6fa54428f95aaa18ae15d33731687d42777db94c.pdf": "88f5f2c904884d0a4f41f74b6fa54428f95aaa18ae15d33731687d42777db94c",
+    "heading-alignment/natural-spacing/authoring/original-plans/IZhO_2016_T_KO.pdf/page01.json": "3d76ddf2e87433c4e35aa724408847c982024b8e7ba27ba705674c3a84f2d57d",
+    "heading-alignment/natural-spacing/authoring/original-plans/IZhO_2016_T_KO.pdf/page02.json": "871e68e1d7b16396788a8426c5fca0a1ffe0a17f891e6a0e5b1c6eedfe4bd63f",
+    "heading-alignment/natural-spacing/authoring/original-plans/IZhO_2016_T_KO.pdf/page03.json": "daca7e85c5d7dc24aa30c9c7619fa4cf93ada83e97d433f127e8c8a7e8dd178d",
+    "heading-alignment/natural-spacing/authoring/original-plans/IZhO_2016_T_KO.pdf/page04.json": "2c471a870f24c469a7f24eaf56493133969ea4cc64a4ccee0b1ce13137312b0e",
+    "heading-alignment/natural-spacing/authoring/runtime-import-resolution.json": "cd91a73aa1fa920577fa30cdce2dcb9322e0ac60c3bb9feccf2c7bdf4b161e37",
+    "heading-alignment/natural-spacing/authoring/runtime-versions.json": "5e105d2aa02f6ee746cb7fbc8973c590a8f2187353e7bec96106bf3d508f1183",
+    "heading-alignment/natural-spacing/authoring/scripts/assemble-heading-alignment-edition.py": "82069f93c727e0b14137a31d556e491e4967dcc6d3f0dd58a7dd21d35d25ec10",
+    "heading-alignment/natural-spacing/authoring/scripts/assemble-izho-heading-alignment.py": "3828d9df6445bad63c1c3dbf2a0346126b3ae68867cb90a14d28f62f08460ab3",
+    "heading-alignment/natural-spacing/authoring/scripts/freeze-izho-heading-alignment.py": "6231d4adc576338cd5eebba31f9a36e8d222e6233ffafea349a4d23c3ab2412a",
+    "heading-alignment/natural-spacing/authoring/scripts/negative-izho-historical-heading.py": "b89c81129bf50cd1ef24dfe8d983047af4562a51cf3ca1b6b30a1678ef131778",
+    "heading-alignment/natural-spacing/authoring/scripts/producer-versions/535cf09e260e2875c7fab044564e50c909408dc77b97af6c6dbe979d5ab27f39.py": "535cf09e260e2875c7fab044564e50c909408dc77b97af6c6dbe979d5ab27f39",
+    "heading-alignment/natural-spacing/authoring/scripts/producer-versions/82b02741b8a7f1648d19a7d67b4a810c9a0b39e1f9800a1576440312d31a696d.py": "82b02741b8a7f1648d19a7d67b4a810c9a0b39e1f9800a1576440312d31a696d",
+    "heading-alignment/natural-spacing/authoring/scripts/producer-versions/ab0a11ac4cddd48ed6bbb2282ceba0a9bfc5d44238fc111dcc5a2888b29cb925.py": "ab0a11ac4cddd48ed6bbb2282ceba0a9bfc5d44238fc111dcc5a2888b29cb925",
+    "heading-alignment/natural-spacing/authoring/scripts/refresh-izho-heading-review-sheet9.py": "69e1713c8f7e401492813448ca0629e5dad462f3c43793f5869ad0bad05fe872",
+    "heading-alignment/natural-spacing/authoring/scripts/render-izho-heading-review.py": "357c289cdced611ea342e02a1fe53c6af8ca5fd90f429840ab3795110616cb24",
+    "heading-alignment/natural-spacing/authoring/scripts/review-izho-heading-alignment.py": "535cf09e260e2875c7fab044564e50c909408dc77b97af6c6dbe979d5ab27f39",
+    "heading-alignment/natural-spacing/authoring/scripts/run-izho-heading-pages.py": "077b9ebee2269f50c84b26137beaa2b3cebefe4d90c530d0f0295782c8378c26",
+    "heading-alignment/natural-spacing/authoring/scripts/stage_reviewed_heading_alignment.py": "0023996be6aa09ce84a553c077dc372724ad87f75a56df33b88444158f8403d4",
+    "heading-alignment/natural-spacing/authoring/source-heading-inventory.json": "e0ca07e61c04c924fe39ad1eda4a23c398ca440ceb367f4e4924ff8d9c42428d",
+    "heading-alignment/natural-spacing/authoring/visual-review/contact-sheet-inventory.json": "ed83605c25263d870ccf6621586640db58507c77562292a6d9abd712e3f351bc",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-01.png": "b161d9d0cf911dcf60cd789df9d329b46eda5cfce3683cac5b536ee426707e8d",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-02.png": "204afcbc8e05ba9637c234e32e18613fa5f10e29a710c184a72e9a0b444ab48b",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-03.png": "7d1dd5234d72a53f4378f373420912ebae79422b369eeaebb5a3d54d5aca7474",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-04.png": "e76205cc7e5f6b9246212b34701031abf02ce1329580ef7aebb2ca698a666a1a",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-05.png": "3fb5e479dc2935b85cf03a03dfa45f1924f1f1e54a9ff71685888fa3a2f64b11",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-06.png": "a9b19f1c7b45799938c7efe7ef9fd424267df09ad8dd3623da08a614db9b2fe0",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-07.png": "bda800b1a9425913632f68ee4a2d7a1882dcef62fe5bc017c24bcf124ec9acc7",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-08.png": "2f159803723498746e102251b43aec4ba8ad005338c27ae7b2b750d7d1ea813d",
+    "heading-alignment/natural-spacing/authoring/visual-review/headings-09.png": "e6688344737f0ba116f0d6e5a65fadf06fcd43a51e9c8a1efb5ffc2a943b2649",
+    "heading-alignment/natural-spacing/authoring/visual-review/manual-review.json": "39650c8cb643255493b917de44dd54ac6bef21dc323f82e8527aaabb7a1453c1",
+    "heading-alignment/natural-spacing/authoring/immutable-inputs/IZhO_2016_T_KO.pdf": "69c06c267b0becbb6ee32bb46b4e38fa64b4fd49b52d9cbf4946ed10b1828512",
+    "2016/T/natural-spacing/heading-alignment/page01-alignment.json": "138601d5d7b293deaa0bb9a25bbf76bfa328592e1743ce8a34d5c3fa09f2a155",
+    "2016/T/natural-spacing/heading-alignment/page02-alignment.json": "e05e33a8ccb421db94fc5d72f3c45410dcd590a6a736d7abda503d0462ced358",
+    "2016/T/natural-spacing/heading-alignment/page03-alignment.json": "cce6893269fb93ec390e40b4ac80b6dfe8c03036534712eb9f55494aa60d3d80",
+    "2016/T/natural-spacing/heading-alignment/page04-alignment.json": "214000080ea85c6d0f6b605c0c8a45d81ce393208723ca0c16d4e2762092b5a9",
+    "2016/T/natural-spacing/heading-alignment/baseline-publication.json": "57012334231e676e3e3837769c4fcf2fbba981301f57fd63bc56fdb83379d2c5",
+    "2016/T/natural-spacing/heading-alignment/source-ready.json": "d24772d0d1920f988100a4a27af33aafe50ec24646bd87c8ca95d5a235002f4c",
+    "2016/T/natural-spacing/heading-alignment/assembly-qa.json": "0edbd50dbc7edcf9370753ab17ece6814bc5f84eaaa515d9bc01492172128e02",
+    "2016/T/natural-spacing/heading-alignment/visual-review.json": "2f0ef0cf556c3799863edcb2dd1d1e3bd2c0c4b93dcc2924ae25d9da5e8a40cd",
+    "2016/T/natural-spacing/heading-alignment/negative-control.json": "e67b671f401613bcaecad158465f47e2d06ba9cc6d5052f81091b6f04661a5bb"
+  },
+  "complete_existing_headings_moved_horizontally_only": true,
+  "fonts_points_paint_baselines_math_images_and_other_page_content_retained": true
+}

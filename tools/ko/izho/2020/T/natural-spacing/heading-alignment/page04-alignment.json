@@ -1,0 +1,588 @@
+{
+  "passed": true,
+  "file": "IZhO_2020_T_KO.pdf",
+  "page": 4,
+  "baseline_item": {
+    "file": "IZhO_2020_T_KO.pdf",
+    "language": "ko",
+    "pages": 5,
+    "bytes": 4815647,
+    "sha256": "db07de4c679656b32d116b3ee1715b79f70929c171f7ea08334940e802faeb8c",
+    "qa": "tools/ko/izho/2020/T/natural-spacing/publication.json",
+    "generated_file": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2020-T-authored-space-revision\\editions\\IZhO_2020_T_KO.pdf",
+    "audit_schema": "natural-spacing-v2"
+  },
+  "source_pdf_sha256": "db07de4c679656b32d116b3ee1715b79f70929c171f7ea08334940e802faeb8c",
+  "proof_sha256": "f761d0482301250d3721ccb60c50ad48c9987d137ff5a336ad1d5d2de6f344c0",
+  "producer_sha256": "ab0a11ac4cddd48ed6bbb2282ceba0a9bfc5d44238fc111dcc5a2888b29cb925",
+  "headings": [
+    {
+      "source_at": [
+        2,
+        0
+      ],
+      "source_text": "Border boiling ",
+      "source_path": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\source-audit\\IZhO_2020_T_EN.pdf",
+      "source_sha256": "97754809daa7dc2ba95679ac93d8192db0357624777801bb563342dd86bb3e20",
+      "source_page": 4,
+      "source_nonspace_center": 297.6939163208008,
+      "previous_center": 299.4208526611328,
+      "requested_dx": -1.7269363403320312,
+      "baseline": 264.1199951171875,
+      "scope": [
+        35.749969482421875,
+        252.18599514961244,
+        563.0499877929688,
+        270.85919509887697
+      ],
+      "glyphs": 7,
+      "actual_center": 297.6939239501953,
+      "center_error_pt": 7.62939453125e-06,
+      "passed": true
+    }
+  ],
+  "native_move_qa": {
+    "api": "native-inline-reposition-v1",
+    "page_number": 4,
+    "text_shift_mode": "ctm",
+    "erased_glyphs": 0,
+    "shifted_top_level_glyphs": 7,
+    "shifted_form_instances": 0,
+    "shifted_direct_image_instances": 0,
+    "shifted_atomic_clip_groups": 0,
+    "shifted_reviewed_vector_paths": 0,
+    "unchanged_white_background_panels_ignored": 0,
+    "reviewed_stationary_vector_paths_unchanged": [],
+    "private_form_ancestor_copies": 0,
+    "font_programs_unchanged": true,
+    "original_form_streams_unchanged": true,
+    "original_image_streams_unchanged": true,
+    "native_vector_path_bytes_preserved": true,
+    "native_atomic_clip_bytes_preserved": true,
+    "output_sha256": "f761d0482301250d3721ccb60c50ad48c9987d137ff5a336ad1d5d2de6f344c0",
+    "atomic_nonpainting_space_occurrence_shifts": [],
+    "expected_native_glyphs": 1995,
+    "unexpected_glyphs": 0,
+    "native_glyph_mismatches": [],
+    "position_tolerance_pt": 0.001,
+    "max_position_error_x_pt": 7.62939453125e-06,
+    "max_position_error_y_pt": 0.0,
+    "max_visible_position_error_x_pt": 7.62939453125e-06,
+    "max_visible_position_error_y_pt": 0.0,
+    "nonpainting_ascii_space_rounding": [],
+    "passed": true
+  },
+  "pixel_audit": {
+    "scale": 4,
+    "independent_actual_original_encoded_CID_references": true,
+    "mask_derived_from_observed_difference": false,
+    "source_reference": {
+      "passed": true,
+      "original_encoded_CIDs_and_native_font_programs_retained": true,
+      "no_unicode_retyping": true,
+      "original_text_show_bytes_and_all_original_advances_and_clips_replayed": true,
+      "reference_sha256": "5a548032511b51aed510cc099272ffa2121e4cb1b9f6e22a4d8748d896ba478a",
+      "glyphs": [
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            296.7588195800781,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 1.0,
+          "source_Tm_linear": [
+            14.04,
+            0.0,
+            0.0,
+            14.04
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            341.41168212890625,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 1.0,
+          "source_Tm_linear": [
+            14.04,
+            0.0,
+            0.0,
+            14.04
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "계",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 47742,
+          "size": 14.039999961853027,
+          "origin": [
+            270.5405578613281,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "ba7e",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "면",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 51246,
+          "size": 14.039999961853027,
+          "origin": [
+            284.10321044921875,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "c82e",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            297.66583251953125,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 14.039999962,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "비",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 52222,
+          "size": 14.039999961853027,
+          "origin": [
+            301.17584228515625,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "cbfe",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "등",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 49835,
+          "size": 14.039999961853027,
+          "origin": [
+            314.7384948730469,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "c2ab",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        }
+      ],
+      "selected_original_text_shows": [
+        629,
+        636,
+        3737,
+        3748,
+        3757
+      ],
+      "metadata_audit": {
+        "passed": true,
+        "painted_heading_glyphs": 7,
+        "native_glyph_mismatches": []
+      }
+    },
+    "target_reference": {
+      "passed": true,
+      "original_encoded_CIDs_and_native_font_programs_retained": true,
+      "no_unicode_retyping": true,
+      "original_text_show_bytes_and_all_original_advances_and_clips_replayed": true,
+      "reference_sha256": "7663e4a346e56ffa01cc0cf9b1ba0ac33fce8191e944f4fba6efda7f682d55ae",
+      "glyphs": [
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            295.0318908691406,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 1.0,
+          "source_Tm_linear": [
+            14.04,
+            0.0,
+            0.0,
+            14.04
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            339.68475341796875,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 1.0,
+          "source_Tm_linear": [
+            14.04,
+            0.0,
+            0.0,
+            14.04
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "계",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 47742,
+          "size": 14.039999961853027,
+          "origin": [
+            268.8136291503906,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "ba7e",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "면",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 51246,
+          "size": 14.039999961853027,
+          "origin": [
+            282.37628173828125,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "c82e",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            295.93890380859375,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 14.039999962,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "비",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 52222,
+          "size": 14.039999961853027,
+          "origin": [
+            299.44891357421875,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "cbfe",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "등",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 49835,
+          "size": 14.039999961853027,
+          "origin": [
+            313.0115661621094,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "c2ab",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        }
+      ],
+      "selected_original_text_shows": [
+        632,
+        642,
+        3746,
+        3760,
+        3772
+      ],
+      "metadata_audit": {
+        "passed": true,
+        "painted_heading_glyphs": 7,
+        "native_glyph_mismatches": []
+      }
+    },
+    "stationary_background_reference": {
+      "passed": true,
+      "original_encoded_CIDs_and_native_font_programs_retained": true,
+      "no_unicode_retyping": true,
+      "original_text_show_bytes_and_all_original_advances_and_clips_replayed": true,
+      "reference_sha256": "c6836b9786165baa3b2e7bbc8171c68aaca5f6bbab86f8b7180c4b0bd3addd8b",
+      "glyphs": [
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            296.7588195800781,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 1.0,
+          "source_Tm_linear": [
+            14.04,
+            0.0,
+            0.0,
+            14.04
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            341.41168212890625,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 1.0,
+          "source_Tm_linear": [
+            14.04,
+            0.0,
+            0.0,
+            14.04
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "계",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 47742,
+          "size": 14.039999961853027,
+          "origin": [
+            270.5405578613281,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "ba7e",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "면",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 51246,
+          "size": 14.039999961853027,
+          "origin": [
+            284.10321044921875,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "c82e",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": " ",
+          "font": "TimesNewRomanPS-BoldMT",
+          "gid": 1,
+          "size": 14.039999961853027,
+          "origin": [
+            297.66583251953125,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "20",
+          "source_font_resource": "/TT1",
+          "source_Tf": 14.039999962,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "비",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 52222,
+          "size": 14.039999961853027,
+          "origin": [
+            301.17584228515625,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "cbfe",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        },
+        {
+          "c": "등",
+          "font": "NotoSerifCJKkr-Bold",
+          "gid": 49835,
+          "size": 14.039999961853027,
+          "origin": [
+            314.7384948730469,
+            264.1199951171875
+          ],
+          "source_encoded_CID": "c2ab",
+          "source_font_resource": "/KO_serif_bold",
+          "source_Tf": 14.04,
+          "source_Tm_linear": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "render_mode": 0
+        }
+      ],
+      "selected_original_text_shows": [
+        629,
+        636,
+        3737,
+        3748,
+        3757
+      ],
+      "metadata_audit": {
+        "passed": true,
+        "painted_heading_glyphs": 1920,
+        "native_glyph_mismatches": []
+      }
+    },
+    "independent_full_native_control": {
+      "passed": true,
+      "original_source_entire_native_text_shows_replayed": true,
+      "not_the_publication_producer": true,
+      "source_text_show_bytes_retained": true,
+      "only_declared_complete_heading_shows_shifted": true,
+      "reference_sha256": "ff30d9c55679b39e201d7f951db960c10cb1df95ef92c501626a094d2935e530",
+      "metadata_audit": {
+        "expected_native_glyphs": 1995,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 7.62939453125e-06,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 7.62939453125e-06,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": []
+      }
+    },
+    "changed_pixels_outside_source_and_target_heading_ink": 0,
+    "missing_target_native_heading_ink_pixels": 0,
+    "missing_source_reference_ink_pixels": 0,
+    "unexpected_pixels_inside_independent_heading_reference": 0,
+    "passed": true
+  },
+  "reviewed_stationary_opaque_white_rectangles": []
+}
