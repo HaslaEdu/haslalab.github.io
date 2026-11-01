@@ -66,54 +66,59 @@ const leaseCheck = `EXISTS(SELECT 1 FROM lab_jobs WHERE id=? AND status='running
 export function labJobGuard(job) { return { sql: leaseCheck, args: [job.id, job.lease_token] }; }
 export async function consumeLabJobs(batch, env, handlers) {
   await requireLabQueue(env);
-  for (const message of batch.messages) {
-    const id = message.body?.v === 1 ? Number(message.body.jobId) : NaN;
-    if (!Number.isSafeInteger(id) || id <= 0) { message.ack(); continue; }
-    let row = await env.DB.prepare('SELECT * FROM lab_jobs WHERE id=?').bind(id).first();
-    if (!row || ['done', 'failed'].includes(row.status)) { if(row&&handlers.after)await handlers.after(env,row);message.ack(); continue; }
-    const at = clock(), token = crypto.randomUUID();
-    const claim = await env.DB.prepare(`UPDATE lab_jobs SET status='running',attempts=attempts+1,lease_token=?,lease_until=?,updated_at=?
-      WHERE id=? AND available_at<=? AND (status IN ('pending','queued') OR (status='running' AND lease_until<=?))`)
-      .bind(token, at + LEASE_SECONDS, at, id, at, at).run();
-    if (!claim.meta.changes) {
-      row = await env.DB.prepare('SELECT * FROM lab_jobs WHERE id=?').bind(id).first();
-      if (!row || ['done', 'failed'].includes(row.status)) message.ack();
-      else message.retry({ delaySeconds: Math.max(1, Math.min(600, (row.status === 'running' ? row.lease_until : row.available_at) - at || 20)) });
-      continue;
+  /* a batch's messages run side by side: a sitting's three theory tasks are sent together and land in one batch, and
+     one after another the queue only widened its concurrency step by step (IPhO 2025 theory: 25 s for one task,
+     65 s for three). Sittings that must not overlap defer themselves (LabJobDeferred) as before. */
+  const settled = await Promise.allSettled(batch.messages.map(message => consumeOne(message, env, handlers)));
+  const broken = settled.find(r => r.status === 'rejected'); if (broken) throw broken.reason;   // unacked messages are delivered again
+}
+async function consumeOne(message, env, handlers) {
+  const id = message.body?.v === 1 ? Number(message.body.jobId) : NaN;
+  if (!Number.isSafeInteger(id) || id <= 0) { message.ack(); return; }
+  let row = await env.DB.prepare('SELECT * FROM lab_jobs WHERE id=?').bind(id).first();
+  if (!row || ['done', 'failed'].includes(row.status)) { if(row&&handlers.after)await handlers.after(env,row);message.ack(); return; }
+  const at = clock(), token = crypto.randomUUID();
+  const claim = await env.DB.prepare(`UPDATE lab_jobs SET status='running',attempts=attempts+1,lease_token=?,lease_until=?,updated_at=?
+    WHERE id=? AND available_at<=? AND (status IN ('pending','queued') OR (status='running' AND lease_until<=?))`)
+    .bind(token, at + LEASE_SECONDS, at, id, at, at).run();
+  if (!claim.meta.changes) {
+    row = await env.DB.prepare('SELECT * FROM lab_jobs WHERE id=?').bind(id).first();
+    if (!row || ['done', 'failed'].includes(row.status)) message.ack();
+    else message.retry({ delaySeconds: Math.max(1, Math.min(600, (row.status === 'running' ? row.lease_until : row.available_at) - at || 20)) });
+    return;
+  }
+  row = { ...row, status: 'running', attempts: row.attempts + 1, lease_token: token };
+  const finish = async (result, failed = false) => {
+    const statements = await handlers.statements(env, row, result, failed);
+    // The domain row is the checkpoint. Do not duplicate long transcripts, images or feedback in the outbox.
+    const summary=Object.fromEntries(['status','why','cancelled','score','points'].filter(k=>result?.[k]!==undefined).map(k=>[k,result[k]]));
+    await env.DB.batch([...statements, env.DB.prepare(`UPDATE lab_jobs SET status=?,result=?,error=?,lease_until=NULL,lease_token=NULL,updated_at=?
+      WHERE id=? AND status='running' AND lease_token=?`).bind(failed ? 'failed' : 'done', JSON.stringify(summary), failed ? String(result?.why || 'job_failed').slice(0, 100) : null, clock(), row.id, token)]);
+    if (handlers.after) await handlers.after(env, row);
+  };
+  try {
+    const result = await handlers.run({...env,LAB_JOB_DEADLINE:Date.now()+660000}, row);
+    await finish(result);
+    message.ack();
+  } catch (e) {
+    if (e instanceof LabJobDeferred) {
+      await env.DB.prepare(`UPDATE lab_jobs SET status='pending',attempts=MAX(0,attempts-1),available_at=?,lease_until=NULL,lease_token=NULL,updated_at=? WHERE id=? AND lease_token=?`)
+        .bind(clock() + e.seconds, clock(), id, token).run();
+      // A dependency wait is not a failed attempt. A fresh delayed delivery preserves the broker retry budget.
+      try { await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:id},delaySeconds:e.seconds}]);message.ack(); }
+      catch { message.retry({delaySeconds:e.seconds}); }
+      return;
     }
-    row = { ...row, status: 'running', attempts: row.attempts + 1, lease_token: token };
-    const finish = async (result, failed = false) => {
-      const statements = await handlers.statements(env, row, result, failed);
-      // The domain row is the checkpoint. Do not duplicate long transcripts, images or feedback in the outbox.
-      const summary=Object.fromEntries(['status','why','cancelled','score','points'].filter(k=>result?.[k]!==undefined).map(k=>[k,result[k]]));
-      await env.DB.batch([...statements, env.DB.prepare(`UPDATE lab_jobs SET status=?,result=?,error=?,lease_until=NULL,lease_token=NULL,updated_at=?
-        WHERE id=? AND status='running' AND lease_token=?`).bind(failed ? 'failed' : 'done', JSON.stringify(summary), failed ? String(result?.why || 'job_failed').slice(0, 100) : null, clock(), row.id, token)]);
-      if (handlers.after) await handlers.after(env, row);
-    };
-    try {
-      const result = await handlers.run({...env,LAB_JOB_DEADLINE:Date.now()+660000}, row);
-      await finish(result);
+    const why = String(e?.code || e?.message || 'job_failed').slice(0, 100);
+    console.error('lab job', row.kind, row.id, why);
+    if (e?.retryable === false || row.attempts >= MAX_ATTEMPTS) {
+      await finish(await handlers.failure(env, row, why, e), true);
       message.ack();
-    } catch (e) {
-      if (e instanceof LabJobDeferred) {
-        await env.DB.prepare(`UPDATE lab_jobs SET status='pending',attempts=MAX(0,attempts-1),available_at=?,lease_until=NULL,lease_token=NULL,updated_at=? WHERE id=? AND lease_token=?`)
-          .bind(clock() + e.seconds, clock(), id, token).run();
-        // A dependency wait is not a failed attempt. A fresh delayed delivery preserves the broker retry budget.
-        try { await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:id},delaySeconds:e.seconds}]);message.ack(); }
-        catch { message.retry({delaySeconds:e.seconds}); }
-        continue;
-      }
-      const why = String(e?.code || e?.message || 'job_failed').slice(0, 100);
-      console.error('lab job', row.kind, row.id, why);
-      if (e?.retryable === false || row.attempts >= MAX_ATTEMPTS) {
-        await finish(await handlers.failure(env, row, why, e), true);
-        message.ack();
-      } else {
-        const delaySeconds = Math.min(300, 15 * 2 ** (row.attempts - 1));
-        await env.DB.prepare(`UPDATE lab_jobs SET status='pending',available_at=?,error=?,lease_until=NULL,lease_token=NULL,updated_at=? WHERE id=? AND lease_token=?`)
-          .bind(clock() + delaySeconds, why, clock(), id, token).run();
-        message.retry({ delaySeconds });
-      }
+    } else {
+      const delaySeconds = Math.min(300, 15 * 2 ** (row.attempts - 1));
+      await env.DB.prepare(`UPDATE lab_jobs SET status='pending',available_at=?,error=?,lease_until=NULL,lease_token=NULL,updated_at=? WHERE id=? AND lease_token=?`)
+        .bind(clock() + delaySeconds, why, clock(), id, token).run();
+      message.retry({ delaySeconds });
     }
   }
 }

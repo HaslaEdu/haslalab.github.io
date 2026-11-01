@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { visionJSON, visionTranscript, visionCapabilities, VISION_MODELS, VISION_IMAGE_LIMIT } from './src/vision-provider.js';
+import { visionJSON, visionTranscript, visionCapabilities, VISION_MODELS, VISION_IMAGE_LIMIT, listProviderModels } from './src/vision-provider.js';
 const env={GEMINI_API_KEY:'fixture-g',DEEPSEEK_API_KEY:'fixture-d'};
 const image={mime:'image/png',data:'iVBORw0KGgo=',label:'student page 1'};
 const response=(provider,raw={ok:true},extra={})=>Response.json(provider==='gemini'?{
@@ -105,4 +105,18 @@ test('gemini: thinking is asked at its lowest level, and a request refused for i
  const off=[];await visionJSON({...env,GEMINI_THINKING_LEVEL:'off'},{provider:'gemini',policy:'p',images:[image],input:'x',schema:{type:'object'},
   fetchImpl:async(_url,request)=>{off.push(JSON.parse(request.body));return response('gemini');}});
  assert.equal(off.length,1);assert.equal(off[0].generationConfig.thinkingConfig,undefined);
+});
+
+test('a bench model replaces the default only when it is that provider\'s own id; the listing names what each key serves',async()=>{
+ const urls=[],models=[];const fetchImpl=async(url,request)=>{urls.push(url);models.push(JSON.parse(request.body).model);return response(url.includes('deepseek')?'deepseek':'gemini');};
+ for(const model of ['gemini-3.6-flash','deepseek-v4-pro','../evil','gemini-x/../../y'])
+  await visionJSON(env,{provider:'gemini',policy:'p',images:[image],input:'x',schema:{type:'object'},model,fetchImpl});
+ await visionJSON(env,{provider:'deepseek',policy:'p',images:[image],input:'x',schema:{type:'object'},model:'deepseek-v4-pro',fetchImpl});
+ assert.match(urls[0],/\/models\/gemini-3\.6-flash:generateContent$/);
+ for(const url of urls.slice(1,4))assert.match(url,/\/models\/gemini-3\.5-flash-lite:generateContent$/);
+ assert.equal(models[4],'deepseek-v4-pro');
+ const listed=await listProviderModels(env,'gemini',async url=>{assert.match(url,/\/v1beta\/models\?pageSize=1000$/);return Response.json({models:[
+  {name:'models/gemini-3.6-flash',supportedGenerationMethods:['generateContent']},{name:'models/text-embedding-004',supportedGenerationMethods:['embedContent']}]});});
+ assert.deepEqual(listed,['gemini-3.6-flash']);
+ assert.deepEqual(await listProviderModels(env,'deepseek',async url=>{assert.equal(url,'https://api.deepseek.com/models');return Response.json({data:[{id:'deepseek-flash'},{id:'deepseek-v4-pro'}]});}),['deepseek-flash','deepseek-v4-pro']);
 });

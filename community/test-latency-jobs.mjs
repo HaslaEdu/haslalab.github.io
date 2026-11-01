@@ -107,6 +107,16 @@ test('dependency waits re-enqueue a delayed ID without spending the broker or pr
   assert.equal(acked,true);assert.equal(retried,false);assert.equal(sql.prepare('SELECT attempts FROM lab_jobs WHERE id=?').get(rows[0].id).attempts,0);assert.equal(pending[0].delaySeconds,20);assert.deepEqual(pending[0].body,{v:1,jobId:rows[0].id});pending.splice(0);
 });
 
+test('the messages of one batch run side by side, and each is acknowledged on its own',async()=>{
+  const s=(await api('/lab/bootstrap',{id:5})).data.active;
+  const rows=await enqueueLabJobs(env,['side-a','side-b','side-c'].map(key=>({key,kind:'fixture',sessionId:s.id})));pending.splice(0);
+  let running=0,most=0,release;const gate=new Promise(r=>{release=r;});const acks=[];
+  const handlers={async run(env,job){running++;most=Math.max(most,running);if(running===rows.length)release();await gate;running--;return{ok:true};},async statements(){return[];},async failure(){throw Error('unexpected');}};
+  const done=consumeLabJobs({messages:rows.map(row=>({body:{v:1,jobId:row.id},ack(){acks.push(row.id);},retry(){throw Error('no retry');}}))},env,handlers);
+  await Promise.race([done,new Promise((_,reject)=>setTimeout(()=>reject(Error('the batch ran one message at a time')),2000))]);
+  assert.equal(most,3);assert.deepEqual(acks.sort(),rows.map(r=>r.id).sort());
+});
+
 test('a stale worker lease can be recovered once and a duplicate completed delivery never repeats the provider step',async()=>{
   const s=(await api('/lab/bootstrap',{id:5})).data.active;
   const [job]=await enqueueLabJobs(env,[{key:'abandoned-worker-fixture',kind:'fixture',sessionId:s.id}]);pending.splice(0);
