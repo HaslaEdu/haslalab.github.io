@@ -11,7 +11,9 @@ export const LAB_JOB_SCHEMA = [
   `CREATE INDEX IF NOT EXISTS lab_jobs_session ON lab_jobs(session_id,id)`,
 ];
 const ready = new WeakMap(), clock = () => Math.floor(Date.now() / 1000);
-const MAX_ATTEMPTS = 4, LEASE_SECONDS = 720, BENCH_SLOTS = 2;
+const MAX_ATTEMPTS = 4, LEASE_SECONDS = 720;
+/* admin model-bench runs at once (LAB_BENCH_SLOTS, 2 unless set), only while no candidate's job waits */
+const benchSlots = env => Math.max(0, Math.min(10, env.LAB_BENCH_SLOTS != null && env.LAB_BENCH_SLOTS !== '' && Number.isFinite(+env.LAB_BENCH_SLOTS) ? +env.LAB_BENCH_SLOTS : 2));
 export class LabJobDeferred extends Error {
   constructor(seconds = 20) { super('job_waiting'); this.seconds = Math.max(1, Math.min(600, seconds)); }
 }
@@ -56,7 +58,7 @@ export async function dispatchLabJobs(env, given) {
       (SELECT COUNT(*) FROM lab_jobs WHERE kind='bench' AND (status='running' AND lease_until>=? OR status='queued' AND dispatched_at>=?)) AS benching)
     SELECT due.* FROM due, busy WHERE due.kind<>'bench' OR (busy.waiting=0 AND due.rank<=?-busy.benching)
     ORDER BY CASE due.kind WHEN 'ocr' THEN 0 WHEN 'grade' THEN 1 WHEN 'scheme' THEN 2 ELSE 3 END, due.turn, due.id LIMIT 50`)
-    .bind(at, at - 120, at, at, at - 120, BENCH_SLOTS).all()).results.map(({ turn, rank, ...row }) => row);
+    .bind(at, at - 120, at, at, at - 120, benchSlots(env)).all()).results.map(({ turn, rank, ...row }) => row);
   if(!rows.length)return 0;
   const changed=await env.DB.batch(rows.map(row=>env.DB.prepare(`UPDATE lab_jobs SET status='queued',dispatched_at=?,updated_at=? WHERE id=? AND available_at<=?
       AND (status='pending' OR (status='queued' AND COALESCE(dispatched_at,0)<?) OR (status='running' AND lease_until<?))`)
@@ -91,7 +93,7 @@ async function consumeOne(message, env, handlers) {
   if (row.kind === 'bench' && row.status !== 'running') {
     const busy = await env.DB.prepare(`SELECT (SELECT COUNT(*) FROM lab_jobs WHERE kind<>'bench' AND status IN ('pending','queued') AND available_at<=?) AS waiting,
       (SELECT COUNT(*) FROM lab_jobs WHERE kind='bench' AND status='running' AND lease_until>=?) AS benching`).bind(at, at).first();
-    if (busy && (busy.waiting > 0 || busy.benching >= BENCH_SLOTS)) {
+    if (busy && (busy.waiting > 0 || busy.benching >= benchSlots(env))) {
       await env.DB.prepare(`UPDATE lab_jobs SET status='pending',available_at=?,updated_at=? WHERE id=? AND status IN ('pending','queued')`).bind(at + 30, at, id).run();
       message.ack(); return;
     }

@@ -2686,7 +2686,11 @@ const LAB_JOB_HANDLERS = {
       .bind('$.tasks.' + job.task, JSON.stringify(result), at, job.session_id, ...guard.args)];
   },
   async failure(env, job, why, error) { return job.kind === 'ocr' ? { status:'failed',why:safeOcrFailureCode(why),diagnostics:safeOcrFailureDetails(error) } : { status: 'error', why: /^[a-z_]{1,60}$/.test(why)?why:'job_failed', score: null }; },
-  async after(env, job) { if (job.kind === 'grade') await labRefreshQueuedTotal(env, job.session_id); },
+  async after(env, job) {
+    if (job.kind === 'grade') await labRefreshQueuedTotal(env, job.session_id);
+    /* a finished bench run hands its slot on at once, not at the next minute's cron (2 a minute would have taken 4 h) */
+    if (job.kind === 'bench') await dispatchLabJobs(env).catch(() => {});
+  },
 };
 async function labSweepJobs(env) {
   if (!hasLabQueue(env) || !await labReady(env)) return;
