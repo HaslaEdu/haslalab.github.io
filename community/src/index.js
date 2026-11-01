@@ -1881,11 +1881,14 @@ function settleScheme(sc) {
    SCHEME_VERSION builds every scheme again, and a sitting's tasks are graded side by side in one queue batch; three
    PDF builds at once could run the isolate out of memory, as three PDF-carrying gradings once did. */
 let labSchemeBuilds = Promise.resolve();
+/* a scheme is kept per provider, model (and DeepSeek thinking level: a thinking DeepSeek reads the solution otherwise), version and source */
+const labSchemeKey = (s, src, sx) => { const p = labProvider(s), th = labSrc(s)._thinking;
+  return [p, (benchModel(p, labSrc(s)._model) || VISION_MODELS[p]) + (p === 'deepseek' && ['low', 'medium', 'high', 'max'].includes(th) ? '@' + th : ''), SCHEME_VERSION, src, sx.mark || ''].join(':'); };
 async function labScheme(env, s, task, m, strict = false) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol;
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = [labProvider(s),benchModel(labProvider(s),labSrc(s)._model)||VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');
+  const key = labSchemeKey(s,src,sx);
   const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   /* the scheme model refused (its quota) or failed: the fallback model reads the solution, kept under its own key */
   const build = () => labSchemeBuild(env, s, task, m).catch(error => {
@@ -1904,7 +1907,7 @@ async function labSchemeBuild(env, s, task, m) {
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = [labProvider(s),benchModel(labProvider(s),labSrc(s)._model)||VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');   // a new SCHEME_VERSION builds every scheme again
+  const key = labSchemeKey(s,src,sx);   // a new SCHEME_VERSION builds every scheme again
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
     const sc = JSON.parse(kept.scheme);
