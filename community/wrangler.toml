@@ -34,6 +34,8 @@ ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaed
 GEMINI_MODEL = "gemini-3.5-flash-lite"
 DEEPSEEK_MODEL = "deepseek-flash"
 DEEPSEEK_OCR_MODEL = "deepseek-flash"
+# Theory papers: Gemini reads the pages, DeepSeek grades, Gemini moderates the items DeepSeek marked down (labRoles).
+LAB_PIPELINE = "mixed"
 
 [[d1_databases]]
 binding = "DB"

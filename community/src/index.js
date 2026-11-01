@@ -1417,6 +1417,16 @@ const labSrc = s => { try { return s.sources ? JSON.parse(s.sources) : {}; } cat
 const LAB_REVIEW_ONLY = new Set(["physcup", "ortvay", "opho", "wopho"]);
 const labReview = s => labSrc(s)._review === 1;
 const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[task] && src[task].kind === "theory") : Object.values(src).some(v => v && v.kind === "theory"); };
+/* who does what. With LAB_PIPELINE=mixed and both keys, Gemini reads every page (it reads handwriting best), DeepSeek
+   grades theory papers (cheap, follows the rules) and Gemini moderates the items DeepSeek marked down, against the page
+   photos (a misread transcript is the usual cause: IPhO 2025 T1 A.1.2 read «e²» as «e³»). Experiments, whose graphs and
+   tables need the images, stay with Gemini. Otherwise the sitting's own provider does everything, as before. */
+function labRoles(env, s, theory) {
+  if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
+    return theory ? { read: "gemini", grade: "deepseek", moderate: "gemini" } : { read: "gemini", grade: "gemini", moderate: null };
+  const p = labProvider(s); return { read: p, grade: p, moderate: null };
+}
+const labAs = (s, provider) => !provider || provider === labProvider(s) ? s : { ...s, sources: JSON.stringify({ ...labSrc(s), _provider: provider }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -2086,7 +2096,28 @@ async function labPurge(env) {
   await env.DB.batch(rows.map(r => env.DB.prepare("UPDATE lab_pages SET data=X'',purged_at=? WHERE id=?").bind(now(), r.id)));
   return rows.length;
 }
-async function labGradeVision(env, s, task, mine, scheme, lang, m) {
+/* Moderation: a second, image-reading model re-grades only the items the first grader marked down, from the page photos
+   and transcripts of that task (no problem or solution PDFs, so it is small and quick). Its results replace the first
+   grader's for those items and go through the same code checks (quotes, values on the page, official values). */
+const MOD_SCHEMA = { type: "object", properties: { items: GRADE_SCHEMA.properties.items }, required: ["items"] };
+async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory) {
+  const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
+  const items = flagged.map(f => { const it = scheme.items.find(x => x.id === f.id) || {}, g = first.get(f.id) || {};
+    return { id: it.id, points: it.points, type: it.type, role: it.role, sheet: it.sheet, unit: it.unit, ref: it.ref, tol: it.tol, full_min: it.full_min, full_max: it.full_max,
+      what: it.what, first: { score: f.got, page: g.page, value: g.value, note: g.note } }; });
+  const parts = [{ text: [stablePrefix(family, kind), "", "[TASK: moderate]",
+    `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader marked the items below short of full marks, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
+    "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading. Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Give no feedback or review.",
+    `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
+    "<<ITEMS>>" + JSON.stringify(lean(items)) + "<<END>>"].join("\n") }];
+  for (const { p, photo } of photos) {
+    parts.push({ text: `[p${p.no} · ${p.kind === "answer" ? "Answer sheet" : "Working sheet"} · ${p.task}] transcript (may misread):\n<<OCR>>\n${p.ocr ?? ""}\n<<END>>` }, photo);
+  }
+  const out = await labVision(env, s, parts, MOD_SCHEMA, 6144, m, "moderate");
+  if (!Array.isArray(out.raw?.items)) throw new Error("moderation_schema");
+  return out;
+}
+async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null) {
   // Typed solutions need their own structured evidence before the numeric/graph/table checks in labScore.
   for (const p of mine) if (p.mime === "text/plain" && (!p.read || JSON.parse(p.read).structure_status !== "done")) {
     const read = await labReadTyped(env, s, p, m); p.read = JSON.stringify(read); p.legible = "good";
@@ -2096,7 +2127,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
   for (const p of mine) if (!p.read || JSON.parse(p.read).structure_status === "failed") {
     try { const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = await labPageBytes(env, row);
       if (!img) continue;
-      const rd = await labReadPage(env, s, img, row.mime, null, m);
+      const rd = await labReadPage(env, roles ? labAs(s, roles.read) : s, img, row.mime, null, m);
       const stored = labStoredReading(env, img, { read: rd, legible: rd.legible, text: readText(rd), ocr: rd.ocr?.text ?? p.ocr ?? null, status: "done" });
       if (stored.error) throw new HttpError(502, stored.error);
       p.read = stored.read; p.legible = stored.legible; p.ocr = stored.ocr; p.ocr_conf = rd.ocr?.confidence ?? p.ocr_conf;
@@ -2112,7 +2143,9 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
     "", "[Marking scheme — from the official solution]", "<<SCHEME>>" + JSON.stringify(compactScheme(scheme)) + "<<END>>"].join("\n") };
   const pagesNote = { text: "<<PAGES>>" + JSON.stringify(mine.map(p => ({ no: p.no, task: p.task, kind: p.kind, legible: p.legible || null }))) + "<<END>>" };
   const references=[];
-  const canonical=labCanonicalSource(s,task);
+  /* the moderated pipeline grades from the scheme (official values, tolerances, item roles) and the pages alone: the problem
+     and solution PDFs, rendered page by page for DeepSeek, were most of its input, time and memory */
+  const canonical=roles?.moderate?null:labCanonicalSource(s,task);
   if(canonical) for(const [name,source] of [['problem',canonical.paper],['solution',canonical.sol],['marking scheme',canonical.mark]]) {
     if(!source)continue;
     const bytes=await labCanonicalPdf(env,source);
@@ -2122,6 +2155,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
   }
   const parts = [head,...references,pagesNote];
   let budget = 14e6;                                                               // inline images, answer sheets first
+  const photos = [];
   const order = [...mine].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || a.no - b.no);
   for (const p of order) {
     parts.push({ text: `[p${p.no} · ${p.kind === "answer" ? "Answer sheet" : "Working sheet"} · ${p.task}${p.legible ? " · legible: " + p.legible : ""}] read: ${compactRead(p.read) || "(could not be read)"}` });
@@ -2131,12 +2165,26 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m) {
     if(!img)throw new HttpError(502,'scan_unavailable');
     const size=img.byteLength*4/3;
     if(size>budget)throw new HttpError(413,'scan_too_large');
-    parts.push({inline_data:{mime_type:row.mime,data:b64(img)},label:`Original submitted page ${p.no}, ${p.kind}, task ${p.task}`});budget-=size;p._visionSupplied=true;
+    const photo={inline_data:{mime_type:row.mime,data:b64(img)},label:`Original submitted page ${p.no}, ${p.kind}, task ${p.task}`};parts.push(photo);photos.push({p,photo});budget-=size;p._visionSupplied=true;
   }
   parts.push({text:'For evidence you can directly see in a supplied original student image, including a graph or handwritten arrow missing from OCR/items, provide visual:{kind,box:[ymin,xmin,ymax,xmax] in 0..1000,description,value,graph,rows,columns}. Graph fields describe observed checks and counts, not an inferred correct answer. Give the actual page and label. This allows visual evidence to be checked without treating an empty transcription as a blank graphical answer. Never claim visual evidence on a typed-only page.'});
   const out = await labVision(env, s, parts, GRADE_SCHEMA, 16384, m, "grade");
-  const sc = labScore(scheme, out.raw, mine, { theory });
-  return { status: "graded", score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model, regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
+  let raw = out.raw, moderator = null;
+  const specOf = new Map(scheme.items.map(it => [it.id, it]));
+  const flagged = roles?.moderate ? labScore(scheme, raw, mine, { theory }).items.filter(i => { const it = specOf.get(i.id) || {};
+    return i.got < i.points && (it.role === "result" || it.sheet === "answer" || ["value", "graph", "table", "other"].includes(it.type)); }).slice(0, 30) : [];
+  if (flagged.length) {
+    try {
+      const mod = await labModerate(env, labAs(s, roles.moderate), task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory);
+      const ids = new Set(flagged.map(f => f.id)), byId = new Map((mod.raw.items || []).filter(x => x && ids.has(String(x.id))).map(x => [String(x.id), x]));
+      const kept = (raw.items || []).filter(x => !byId.has(String(x?.id)));
+      raw = { ...raw, items: [...kept, ...byId.values()] };                    // an item the first grader left out is added
+      moderator = { model: mod.model, ids: [...byId.keys()] };
+    } catch (e) { console.error("lab moderate", e?.code || e?.message); }               // a failed moderation keeps the first grading
+  }
+  const sc = labScore(scheme, raw, mine, { theory });
+  if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
+  return { status: "graded", score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
@@ -2151,9 +2199,10 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
   const mine = pages.filter(p => p.task === task);
   if (contestMeta(s)) return contestGradeTask(env, s, task, mine, rb, lang, m, { labVision, b64, labPageBytes });
   requireVisionProvider(env,labProvider(s));
+  const roles = labRoles(env, s, labTheory(s, task)), grader = labAs(s, roles.grade);
   {
     let scheme;
-    try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, s, task, m); }
+    try { scheme = rb ? schemeFromRubric(rb) : await labScheme(env, grader, task, m); }
     catch (e) { console.error("lab scheme", e && e.message); return { status: "error", why: "scheme_failed", points: null, pages: mine.length }; }
     if (!mine.length) return { status: "empty", score: 0, points: scheme ? scheme.points : null, comparison_rubric: labComparisonRubric(scheme?.items), pages: 0 };
     if (scheme?.unscored) {
@@ -2166,7 +2215,7 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
       if (labReview(s) && paper) { try { return await labQualitative(env, s, task, mine, paper, lang, m); } catch (error) { console.error("lab qualitative", error?.message); return { status: "error", why: "review_failed", points: null, score: null, pages: mine.length }; } }
       return { status: "pending", why: "no_solution", points: null, pages: mine.length };
     }
-    try { return await labLocalize(env, s, task, scheme, await labGradeVision(env, s, task, mine, scheme, lang, m), lang, m); }
+    try { return await labLocalize(env, grader, task, scheme, await labGradeVision(env, grader, task, mine, scheme, lang, m, roles), lang, m); }
     catch (e) { console.error("lab grade", e && e.message); return { status: "error", ...(e?.code ? { why: e.code } : {}), points: scheme.points, pages: mine.length }; }
   }
   return {status:'pending',why:'provider_required',score:null,pages:mine.length};
@@ -2383,7 +2432,7 @@ const LAB_JOB_HANDLERS = {
       try {
         await limit(env, 'labocr:' + s.user_id, LAB.ocrPerDay, 86400);
         const bytes = await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-        const read = await labReadPage(env, s, bytes, page.mime, null, mt), text = readText(read), up=read.ocr;
+        const read = await labReadPage(env, labAs(s, labRoles(env, s, labTheory(s, page.task)).read), bytes, page.mime, null, mt), text = readText(read), up=read.ocr;
         const stored = labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: 'done' });
         /* the task and sheet the student filed the page under stand: a printed header read by the model only goes into
            the reading for reference. Moving pages by it filed IPhO 2025 T3 pages under T1 (DeepSeek read «T1») and a T2
@@ -2398,7 +2447,7 @@ const LAB_JOB_HANDLERS = {
     /* one sitting's tasks are graded one after another: each Gemini request carries the problem and solution PDFs and the
        page photos, and three at once in one isolate ran out of memory and died without a trace (IPhO 2025 theory:
        every task of the sitting stuck until its lease ran out; the same tasks staggered finished in ~30 s each) */
-    const ahead = await env.DB.prepare(`SELECT 1 FROM lab_jobs WHERE session_id=? AND kind='grade' AND id<? AND (status IN ('queued','running')
+    const ahead = labRoles(env, s, labTheory(s, job.task)).moderate ? null : await env.DB.prepare(`SELECT 1 FROM lab_jobs WHERE session_id=? AND kind='grade' AND id<? AND (status IN ('queued','running')
       OR (status='pending' AND available_at<=?)) LIMIT 1`).bind(s.id, job.id, now() + 5).first();
     if (ahead) throw new LabJobDeferred(20);
     const pages = await labPagesOf(env, s.id), mine = pages.filter(p => p.task === job.task);

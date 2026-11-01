@@ -58,6 +58,7 @@ async function fixture(run){
     if(text.includes('[TASK: read page]'))raw=pageReading;
     else if(text.includes('Review ONLY problem'))raw={problem_no:5,score:7,confidence:.98,verdict:'valid',summary:'Diagram supported argument.',strengths:[],gaps:[],evidence:[{page:1,quote:'',source:'image',box:[100,100,900,900],description:'A labelled geometric construction with direction arrows.',note:'Visible geometry checked.'}]};
     else if(text.includes('"task":"transcribe"'))raw={text:'',legible:true,confidence:.98,uncertainties:[],visuals:[{page:1,kind:'graph',description:'A graph and upward direction arrow.',box:[.1,.1,.9,.9]}]};
+    else if(text.includes('[TASK: moderate]'))raw={items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
     else if(text.includes('[TASK: grade]'))raw=visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
     return provider==='gemini'?Response.json({modelVersion:VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
@@ -194,4 +195,28 @@ test('a printed header read by the model never refiles a page: the student\'s ta
   assert.equal(page.ocr_status,'done');
   assert.equal(JSON.parse(page.read).header.sheet,'answer','the header is kept for reference');
   assert.deepEqual([page.task,page.kind],['T1','working']);
+}));
+
+test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what DeepSeek marked down',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_PIPELINE='mixed';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['deepseek',VISION_MODELS.deepseek,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
+    {id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]},
+    {id:'R',points:1,type:'derivation',role:'result',sheet:'answer',what:'Expression of the velocity'}]}),'fixture',Math.floor(Date.now()/1000));
+  await upload(a.token);
+  await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const done=(await api(`/lab/sessions/${sid}`)).data.session,result=done.detail.tasks.T1;
+  assert.equal(done.status,'graded');assert.equal(done.score,3,'DeepSeek missed R; Gemini found it in the photo');
+  const step=c=>c.text.includes('[TASK: read page]')?'read':c.text.includes('[TASK: moderate]')?'moderate':c.text.includes('[TASK: grade]')?'grade':'other';
+  assert.ok(calls.filter(c=>step(c)==='read').length>=1&&calls.filter(c=>step(c)==='read').every(c=>c.provider==='gemini'),'Gemini reads every page');
+  assert.ok(calls.filter(c=>step(c)==='grade').length===1&&calls.filter(c=>step(c)==='grade').every(c=>c.provider==='deepseek'),'DeepSeek grades');
+  assert.ok(!calls.filter(c=>step(c)==='grade').some(c=>c.text.includes('[Canonical ')),'the grader works from the scheme and pages, without the problem or solution PDFs');
+  const mod=calls.filter(c=>step(c)==='moderate');assert.equal(mod.length,1);assert.equal(mod[0].provider,'gemini');
+  assert.ok(mod[0].text.includes('"id":"R"')&&!mod[0].text.includes('"id":"G"'),'only the item DeepSeek marked down is moderated');
+  assert.ok(!JSON.stringify(mod[0].body).includes('application/pdf'),'no problem or solution PDF in moderation');
+  assert.equal(result.items.find(i=>i.id==='R').moderated,true);assert.match(result.grader,/moderated by/);
+  const health=(await api('/health')).data,vision=health.vision||health.arena?.vision;assert.equal(vision?.pipeline,'mixed','the exam page shows the fixed pipeline');
 }));

@@ -472,6 +472,7 @@ let VISION = null, selectedProvider = "gemini";
 function providerAvailable(id) { return VISION?.providers?.some(p=>p.id===id&&p.available===true) ?? id==="gemini"; }
 function gradingProvider() { return SES?.provider_locked ? SES.provider : $("gradingProvider")?.value || SES?.provider || selectedProvider; }
 function providerHtml(session = SES) {
+  if (VISION?.pipeline === "mixed") return `<p class="note" id="gradingPipeline" style="margin:14px 0">${lang==="ko"?"판독·검토 Gemini · 채점 DeepSeek (이론) · 실험은 Gemini":"Reading and moderation: Gemini · grading: DeepSeek (theory) · experiments: Gemini"}</p>`;
   const chosen = session?.provider || selectedProvider;
   return `<label style="display:block;margin:14px 0">${lang==="ko"?"OCR·채점·첨삭":"OCR, grading and feedback"} <select id="gradingProvider" aria-label="${lang==="ko"?"채점 제공자":"Grading provider"}" ${session?.provider_locked?"disabled":""} style="font:inherit;padding:8px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px">${["deepseek","gemini"].map(id=>`<option value="${id}" ${chosen===id?"selected":""} ${providerAvailable(id)?"":"disabled"}>${id}</option>`).join("")}</select></label>`;
 }
