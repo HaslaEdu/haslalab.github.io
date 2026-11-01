@@ -49,7 +49,8 @@ LAB_READ_PROVIDER = "deepseek"
 LAB_ONLY_PROVIDER = "deepseek"
 LAB_GRADE_PROVIDER = "deepseek"
 LAB_GRADE_MODEL = "deepseek-flash"
-LAB_GRADE_THINKING = "low"
+# DeepSeek thinking (low, high, max) stays off until the bench has measured it
+LAB_GRADE_THINKING = "off"
 LAB_MODERATE_PROVIDER = "none"
 # Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
 # every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
@@ -57,7 +58,7 @@ LAB_READ_MODEL = "deepseek-flash"
 # DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
 # numbers it missed from 21 to 14 of 102 for $0.0002 more a page
 LAB_READ_TILES = "3"
-LAB_READ_THINKING = "low"
+LAB_READ_THINKING = "off"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
 LAB_SCHEME_WARM = "on"
@@ -66,7 +67,7 @@ LAB_BENCH_SLOTS = "8"
 # Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.8 Flash: graded with one
 # grader, its schemes came 2.2 points closer to the audits than 3.1 Pro's on 32 tasks (Claude and GPT schemes no closer).
 LAB_SCHEME_MODEL = "deepseek-flash"
-LAB_SCHEME_THINKING = "low"
+LAB_SCHEME_THINKING = "off"
 # when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
 LAB_READ_FALLBACK_MODEL = ""
 LAB_SCHEME_FALLBACK_MODEL = ""

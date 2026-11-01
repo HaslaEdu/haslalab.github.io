@@ -174,3 +174,13 @@ test('a candidate still chooses only Gemini or DeepSeek; the new providers are f
   assert.deepEqual(providerKeys({ OPENAI_API_KEY: 'a', MY_CLAUDE: 'secret-value' }), { gemini: false, deepseek: false, openai: true, anthropic: false, names: ['MY_CLAUDE', 'OPENAI_API_KEY'] });
   assert.throws(() => requireVisionProvider({ ANTHROPIC_API_KEY: '  \n' }, 'anthropic'), e => e.code === 'provider_unavailable', 'a blank key is no key');
 });
+
+test('DeepSeek thinks only when the stage asks for a level; otherwise thinking is off at temperature 0',async()=>{
+ const seen=[];const fetchImpl=async(url,init)=>{seen.push(JSON.parse(init.body));return Response.json({model:'deepseek-flash',choices:[{finish_reason:'stop',message:{content:'{"text":"x"}'}}],usage:{prompt_tokens:10,completion_tokens:5,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:10}});};
+ const env={DEEPSEEK_API_KEY:'k',GEMINI_THINKING_LEVEL:'high'};
+ await visionJSON(env,{provider:'deepseek',fetchImpl,parts:[{text:'x'}]});
+ await visionJSON(env,{provider:'deepseek',thinking:'off',fetchImpl,parts:[{text:'x'}]});
+ await visionJSON(env,{provider:'deepseek',thinking:'low',fetchImpl,parts:[{text:'x'}]});
+ await visionJSON(env,{provider:'deepseek',thinking:'medium',fetchImpl,parts:[{text:'x'}]});
+ assert.deepEqual(seen.map(b=>[b.thinking.type,b.reasoning_effort,b.temperature]),[['disabled',undefined,0],['disabled',undefined,0],['enabled','low',undefined],['enabled','high',undefined]]);
+});
