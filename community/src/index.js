@@ -1421,9 +1421,13 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
    grades theory papers (cheap, follows the rules) and Gemini moderates the items DeepSeek marked down, against the page
    photos (a misread transcript is the usual cause: IPhO 2025 T1 A.1.2 read «e²» as «e³»). Experiments, whose graphs and
    tables need the images, stay with Gemini. Otherwise the sitting's own provider does everything, as before. */
+/* LAB_READ_MODEL / LAB_MODERATE_MODEL pick the Gemini model of those theory roles (the model bench of 2026-11-01 on
+   IPhO 2025 theory pages: gemini-3.1-flash-lite read with about half the misreadings of 3.5-flash-lite at half the cost) */
 function labRoles(env, s, theory) {
+  const pick = model => model ? { model } : undefined;
   if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
-    return theory ? { read: "gemini", grade: "deepseek", moderate: "gemini" } : { read: "gemini", grade: "gemini", moderate: null };
+    return theory ? { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL), moderateBench: pick(env.LAB_MODERATE_MODEL) }
+      : { read: "gemini", grade: "gemini", moderate: null };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
 }
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
@@ -2114,7 +2118,7 @@ async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lan
       what: it.what, first: { score: f.got, page: g.page, value: g.value, note: g.note } }; });
   const parts = [{ text: [stablePrefix(family, kind), "", "[TASK: moderate]",
     `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader marked the items below short of full marks, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
-    "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading. Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Give no feedback or review.",
+    "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading. Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Where the photo shows a number the transcript misread (0.31 read as 9.31), give the number as written in the photo as value and add visual:{kind:\"value\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it,description,value}. Give no feedback or review.",
     `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
     "<<ITEMS>>" + JSON.stringify(lean(items)) + "<<END>>"].join("\n") }];
   for (const { p, photo } of photos) {
@@ -2134,7 +2138,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   for (const p of mine) if (!p.read || JSON.parse(p.read).structure_status === "failed") {
     try { const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = await labPageBytes(env, row);
       if (!img) continue;
-      const rd = await labReadPage(env, roles ? labAs(s, roles.read) : s, img, row.mime, null, m);
+      const rd = await labReadPage(env, roles ? labAs(s, roles.read, roles.readBench) : s, img, row.mime, null, m);
       const stored = labStoredReading(env, img, { read: rd, legible: rd.legible, text: readText(rd), ocr: rd.ocr?.text ?? p.ocr ?? null, status: "done" });
       if (stored.error) throw new HttpError(502, stored.error);
       p.read = stored.read; p.legible = stored.legible; p.ocr = stored.ocr; p.ocr_conf = rd.ocr?.confidence ?? p.ocr_conf;
@@ -2460,7 +2464,7 @@ async function labBench(env, s, job) {
         const o = JSON.parse(b.output); Object.assign(p, { read: o.read, ocr: o.ocr, legible: o.legible });
       }
       const prod = labRoles(env, s, true), scheme = await labScheme(env, labAs(s, prod.grade, {}), spec.task, null);
-      const roles = { read: prod.read, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
+      const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, gradeImages: spec.grade.images !== false };
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
       out = { score: res.score, points: res.points, grader: res.grader,
@@ -2485,7 +2489,7 @@ const LAB_JOB_HANDLERS = {
       try {
         await limit(env, 'labocr:' + s.user_id, LAB.ocrPerDay, 86400);
         const bytes = await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-        const read = await labReadPage(env, labAs(s, labRoles(env, s, labTheory(s, page.task)).read), bytes, page.mime, null, mt), text = readText(read), up=read.ocr;
+        const roles = labRoles(env, s, labTheory(s, page.task)), read = await labReadPage(env, labAs(s, roles.read, roles.readBench), bytes, page.mime, null, mt), text = readText(read), up=read.ocr;
         const stored = labStoredReading(env, bytes, { ocr: up?.text ?? text, text, read, legible: read.legible, status: 'done' });
         /* the task and sheet the student filed the page under stand: a printed header read by the model only goes into
            the reading for reference. Moving pages by it filed IPhO 2025 T3 pages under T1 (DeepSeek read «T1») and a T2

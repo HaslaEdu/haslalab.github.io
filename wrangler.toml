@@ -19,7 +19,7 @@ queue = "haslalab-lab-jobs"
 
 [[queues.consumers]]
 queue = "haslalab-lab-jobs"
-max_batch_size = 4
+max_batch_size = 3
 max_batch_timeout = 1
 max_retries = 3
 max_concurrency = 4

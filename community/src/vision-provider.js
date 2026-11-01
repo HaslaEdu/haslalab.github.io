@@ -117,7 +117,9 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   let encoded=JSON.stringify(body);
   /* an API version that does not know thinkingLevel rejects the request: send it once more without, never fail on it */
   const plain=()=>{if(provider!=='gemini'||!body.generationConfig.thinkingConfig)return null;const {thinkingConfig,...config}=body.generationConfig;return JSON.stringify({...body,generationConfig:config});};
-  if(new TextEncoder().encode(encoded).length>(provider==='gemini'?20000000:48*1024*1024))fail(413,'vision_images_too_large');
+  /* a UTF-8 byte is at most 3 per UTF-16 unit: encode (one more copy of a body of several MB) only when that bound is over the limit */
+  const cap=provider==='gemini'?20000000:48*1024*1024;
+  if(encoded.length>cap||encoded.length*3>cap&&new TextEncoder().encode(encoded).length>cap)fail(413,'vision_images_too_large');
   const cancelled=new Promise((_,reject)=>{rejectAbort=reject;});
   signal?.addEventListener('abort',abort,{once:true});
   const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{aborted=true;controller.abort();reject(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));},Math.max(1,Math.min(110000,timeoutMs)));});
