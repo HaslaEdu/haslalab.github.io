@@ -235,6 +235,59 @@ test('the rectified ratio undoes perspective: a tilted A4 sheet is A4 although i
   assert.equal(scanner.rectifiedRatio(null, 640, 480), null);
 });
 
+/* A4 sheets held together by a binder clip: one corner folded or bent away, the clip over the top edge */
+function clippedSheet(degrees, corner, fraction, { flap = false, clip = true } = {}) {
+  const W = 480, H = 640, quad = rotated(degrees), poly = polygon(quad), k = [0, 1, 3, 2][corner], P = poly[k], A = poly[(k + 3) % 4], B = poly[(k + 1) % 4];
+  const unit = (q) => { const l = Math.hypot(q.x - P.x, q.y - P.y); return { x: (q.x - P.x) / l, y: (q.y - P.y) / l }; };
+  const u = unit(A), v = unit(B), cut = Math.hypot(poly[1].x - poly[0].x, poly[1].y - poly[0].y) * fraction;
+  const top = { x: (poly[0].x + poly[1].x) / 2, y: (poly[0].y + poly[1].y) / 2 };
+  const gray = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    let value = 90;
+    if (inside(x, y, quad)) {
+      const a = (x - P.x) * u.x + (y - P.y) * u.y, b = (x - P.x) * v.x + (y - P.y) * v.y;
+      value = a + b < cut ? 90 : flap && a + b < cut * 2 && a < cut && b < cut ? 215 : 235;   // the corner is gone; its flap lies on the sheet
+      if (value === 235 && y % 20 < 2 && x % 11 < 6 && inside(x, y, inset(quad, .7))) value = 55;
+    }
+    if (clip && Math.abs(x - top.x) < 22 && y > top.y - 14 && y < top.y + 16) value = 30;    // a black binder clip over the top edge
+    gray[y * W + x] = value;
+  }
+  return { gray, W, H, quad };
+}
+test('a sheet with a folded or bent-away corner and a binder clip still gives its four real corners', () => {
+  for (const degrees of [0, 8, -12, 30]) for (const corner of [0, 1, 2, 3]) for (const fraction of [.12, .25]) for (const flap of [false, true]) {
+    const scene = clippedSheet(degrees, corner, fraction, { flap }), result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
+    const name = `${degrees}° corner ${corner} folded ${fraction * 100}%${flap ? ' with its flap on the sheet' : ''}`;
+    assert.ok(result.corners, name);
+    assert.ok(error(result.corners, scene.quad) < 8, `${name}: corner error ${error(result.corners, scene.quad).toFixed(1)} px`);
+  }
+});
+
+test('a part of the sheet found as the page (the margin under a graph grid) is never shown as ready, and the model\'s A4 outline around it wins', () => {
+  // a sheet whose upper two thirds are a printed graph grid, on a light desk at an angle: only the plain margin below the grid stands out
+  const W = 480, H = 640, a = 25 * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), gray = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const px = (x - 240) * c + (y - 320) * s, py = -(x - 240) * s + (y - 320) * c, u = px / 300 + .5, v = py / 424 + .5;
+    let value = 218 + 6 * Math.sin(x / 9 + y / 31);
+    if (u >= 0 && u <= 1 && v >= 0 && v <= 1) {
+      value = 238;
+      if (u >= .03 && u <= .97 && v >= .04 && v <= .7) {
+        const edge = Math.min((u - .03) * 300, (.97 - u) * 300, (v - .04) * 424, (.7 - v) * 424);
+        value = edge < 1.6 ? 60 : ((u - .03) / .03) % 1 < .12 || ((v - .04) / .03) % 1 < .12 ? 150 : 238;
+      }
+    }
+    gray[y * W + x] = Math.round(value);
+  }
+  const sheet = [{ x: 194, y: 64 }, { x: 466, y: 191 }, { x: 14, y: 449 }, { x: 286, y: 576 }];
+  const page = scanner.findPageQuadGray(gray, W, H);
+  if (page.corners && error(page.corners, sheet) > 16) {
+    assert.equal(page.shapeOk, false, 'a strip of the sheet is not shown as a ready A4 page');
+    assert.equal(page.autoCaptureEligible, false);
+    const learned = { corners: sheet, method: 'page', verified: true, weakestEdge: .7, shapeOk: true };
+    assert.equal(scanner.chooseDocument(page, learned, .8).engine, 'doccornernet', 'the model\'s A4 outline around it is the sheet');
+  }
+});
+
 test('paper lying on a desk wholly in view is the page, not the desk', () => {
   for (const [name, options] of [
     ['wooden desk, straight on', {}],

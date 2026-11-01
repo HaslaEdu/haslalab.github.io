@@ -157,3 +157,28 @@ test("a printed total is the paper's maximum even when an item under it was miss
   assert.equal(schemeTotal({ items, parts: [], total: 10 }), 10);
   assert.equal(schemeTotal({ items, parts: [] }), 9.9, "no printed total: the items as listed");
 });
+
+test("alternative methods of one question never add up: the best one counts, and the paper's maximum counts one method", async () => {
+  const { oneMethod, tidySchemeItems, schemeTotal } = await import("./src/lab-scheme-items.js");
+  const items = tidySchemeItems([
+    { id: "B.2.1", points: 0.3, alt: "B.2/1" }, { id: "B.2.2", points: 0.2, alt: "B.2/1" },
+    { id: "B.2.3", points: 0.4, alt: "B.2/2" }, { id: "B.2.4", points: 0.1, alt: "B.2/2" },
+    { id: "B.2.5", points: 0.2 }, { id: "C.1", points: 1, alt: "nonsense" }]);
+  assert.equal(items.find(i => i.id === "C.1").alt, undefined, "a malformed alt is dropped");
+  assert.equal(schemeTotal({ items }), 1.7, "B.2 counts one method's 0.5, plus 0.2 shared and C.1");
+  const got = { "B.2.1": 0.3, "B.2.2": 0, "B.2.3": 0.4, "B.2.4": 0.1, "B.2.5": 0.2, "C.1": 1 };
+  const { dropped } = oneMethod(items, i => got[i.id]);
+  assert.deepEqual([...dropped].sort(), ["B.2.1", "B.2.2"], "method 2 earned more (0.5 against 0.3)");
+  assert.deepEqual([...oneMethod(items, () => 0).dropped].sort(), ["B.2.3", "B.2.4"], "a tie keeps the first method");
+});
+
+test("R1: a final answer on a working sheet counts only where the answer sheet gives none for that question", async () => {
+  const { answeredOnSheet } = await import("./src/lab-scheme-items.js");
+  const sheet = items => ({ kind: "answer", read: JSON.stringify({ items }) });
+  assert.equal(answeredOnSheet("A.2.3", [sheet([{ label: "A.2", text: "r_1 = 5.31e-11 m" }])]), true);
+  assert.equal(answeredOnSheet("A.2.3", [sheet([{ label: "A.3", text: "E_1 = -13.5 eV" }])]), false, "another question's box");
+  assert.equal(answeredOnSheet("A.2.3", [sheet([{ label: "A.2", text: "", value: null }])]), false, "an empty box");
+  assert.equal(answeredOnSheet("A.2.3", [sheet([{ label: "A.2", text: "x", crossed_out: true }])]), false, "a crossed-out answer");
+  assert.equal(answeredOnSheet("A.2.3", [{ kind: "working", read: JSON.stringify({ items: [{ label: "A.2", text: "x" }] }) }]), false, "no answer sheet at all");
+  assert.equal(answeredOnSheet("A2.1", [sheet([{ label: "A.2 (0.5pt)", text: "1.2 m" }])]), true, "A2.1 and A.2 are one question");
+});

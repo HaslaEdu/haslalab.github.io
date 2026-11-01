@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -36,7 +36,7 @@ import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls } from './lab-call-prici
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels } from './vision-provider.js';
 import {referenceImages} from './reference-images.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
-import { REG_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
+import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -1428,10 +1428,11 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
 function labRoles(env, s, theory) {
   const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
   if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
-    return theory ? { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING), moderateBench: pick(env.LAB_MODERATE_MODEL),
-        readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
-        proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined }
-      : { read: "gemini", grade: "gemini", moderate: null };
+    /* theory and experiments alike (data analysis and observation papers too): Gemini reads, DeepSeek grades from the
+       scheme, the readings and the photos, Gemini moderates what DeepSeek marked down */
+    return { read: "gemini", grade: "deepseek", moderate: "gemini", readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING), moderateBench: pick(env.LAB_MODERATE_MODEL),
+      readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
+      proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
 }
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
@@ -1629,7 +1630,7 @@ const SCHEME_SCHEMA = { type: "object", properties: {
   parts: { type: "array", items: { type: "object", properties: { id: { type: "string" }, points: { type: "number" } }, required: ["id", "points"] } },
   items: { type: "array", items: { type: "object", properties: {
     id: { type: "string" }, points: { type: "number" }, type: { type: "string", enum: ["value", "graph", "table", "derivation", "other"] },
-    sheet: { type: "string", enum: ["answer", "any"] }, what: { type: "string" }, unit: N({ type: "string" }),
+    sheet: { type: "string", enum: ["answer", "any"] }, what: { type: "string" }, unit: N({ type: "string" }), alt: N({ type: "string" }),
     full_min: N({ type: "number" }), full_max: N({ type: "number" }),
     partial: { type: "array", items: { type: "object", properties: { min: { type: "number" }, max: { type: "number" }, points: { type: "number" } }, required: ["min", "max", "points"] } },
     checks: { type: "array", items: { type: "object", properties: { check: { type: "string", enum: LAB_CHECKS }, n: N({ type: "integer" }), points: { type: "number" } }, required: ["check", "points"] } },
@@ -1843,16 +1844,31 @@ function settleScheme(sc) {
   sc.items = tidySchemeItems(sc.items);
   sc.parts = cleanParts(sc.parts);
   /* a printed total only trims a small excess (10.1 → 10); one far below the items is a misread heading, not the total */
-  { const listed = cappedSum(sc.items, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
+  { const listed = cappedSum(oneMethod(sc.items).kept, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
   sc.points = schemeTotal(sc);
   return sc;
 }
+/* Building a scheme reads the solution PDFs (rendered page by page for DeepSeek): one at a time in an isolate. A new
+   SCHEME_VERSION builds every scheme again, and a sitting's tasks are graded side by side in one queue batch; three
+   PDF builds at once could run the isolate out of memory, as three PDF-carrying gradings once did. */
+let labSchemeBuilds = Promise.resolve();
 async function labScheme(env, s, task, m) {
+  const sx = labCanonicalSource(s,task)||{}, src=sx.sol;
+  if(!src)return null;
+  if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
+  const key = [labProvider(s),VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');
+  const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
+  if (await cached()) return labSchemeBuild(env, s, task, m);
+  const turn = labSchemeBuilds.then(() => labSchemeBuild(env, s, task, m));
+  labSchemeBuilds = turn.catch(() => {});
+  return turn;
+}
+async function labSchemeBuild(env, s, task, m) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol, theory=sx.kind==="theory";
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = [labProvider(s),VISION_MODELS[labProvider(s)],REG_VERSION,src,sx.mark||''].join(':');   // a new REG_VERSION builds every scheme again
+  const key = [labProvider(s),VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');   // a new SCHEME_VERSION builds every scheme again
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
     const sc = JSON.parse(kept.scheme);
@@ -1874,6 +1890,7 @@ async function labScheme(env, s, task, m) {
       "When no separate marking scheme exists and the solution gives only the points of each part, make one item per part with those points and describe the expected answer.",
       "type: value (a numerical final answer, with its unit), derivation (a formula, an expression or reasoning; also a symbolic final answer), graph (a sketch or plot the scheme marks), or other (a multiple-choice answer, a statement, a diagram).",
       "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»). Where the solution says a correct final answer earns an item anyway, that item is a result.",
+      "alt: where the solution gives alternative methods for one question or part (Method 1 / Method 2, «Alternatively», «Another approach»), every item belonging to only one of them carries alt «<part id>/<method number>» (B.2/1, B.2/2); items shared by all methods, and every item of a question with one method, have none. The methods are alternatives: their points are never added up.",
       "sheet: answer for a final answer that must be written in the answer-sheet box, any for intermediate steps and method marks.",
       "For a numerical value give the full-mark interval (full_min, full_max; turn ± or «within 5 %» into an interval) and every partial-credit interval with its points, as printed; otherwise leave them null and say in `what` exactly what is required (the expected expression or result, and what earns partial marks).",
       "For a multiple-choice paper give one item per question: what = the correct option(s), type other.",
@@ -1892,6 +1909,7 @@ async function labScheme(env, s, task, m) {
       ONE_ITEM_ONE_ID,
       "type: value (a number with a unit), graph, table, derivation (a formula or reasoning) or other. sheet: answer for a final answer written in an answer-sheet box, any for method marks.",
       "role: result for what the question asks for (the value, expression, choice or sketch written as its answer), step for a part of the working that the scheme marks on its own (a law applied, an equation set up, an intermediate result, an approximation or argument, e.g. «using Newton's second law»). Where the solution says a correct final answer earns an item anyway, that item is a result.",
+      "alt: where the solution gives alternative methods for one question or part (Method 1 / Method 2, «Alternatively», «Another approach»), every item belonging to only one of them carries alt «<part id>/<method number>» (B.2/1, B.2/2); items shared by all methods, and every item of a question with one method, have none. The methods are alternatives: their points are never added up.",
       "For a value give the full-mark interval (full_min, full_max; turn ± into an interval) and every partial-credit interval with its points, as printed. For a graph or table list the checks the scheme marks, with points (points_min for a graph, rows_min for a table: n = the number of measurements required; columns_units: the columns and units asked for).",
       "For every table and graph of measurements also give n_min, the number of measurements the scheme or the answer-sheet table requires (null if neither says), and n_class: few (a measurement where 3–4 points are enough), medium (5–6) or many (7 or more), judged from the experiment.",
       "parts: every question or part heading that prints its own points, as printed (e.g. C.3 → 1.3 for «C.3 … 1.3pt»; a problem «C» with 3.4 pt as well when printed), with the id written as in the items. total: the paper's total as printed, else null. Copy these numbers as printed even where the items add up to something else.",
@@ -1936,6 +1954,7 @@ async function labReadPage(env,s,buf,mime,notation,m) {
   const tasks=JSON.parse(s.tasks), src=labSrc(s);
   const prompt=[`[TASK: read page] Transcribe and index this original photographed answer/working page from ${s.comp.toUpperCase()} ${s.year}, tasks ${tasks.join(', ')}.`,
     'Read the complete text verbatim into text, preserving labels, mathematical symbols, signs, fractions, superscripts, subscripts, units and crossings-out. Do not solve, correct, complete or grade anything. Do not drop handwritten notes next to graphs or diagrams.',
+    'Leave out everything written in red ink: scores, ticks, crosses, circled points and comments in red are a human marker\'s, not the candidate\'s work; never transcribe or index them (R14).',
     'Printed headers identify task, answer/working sheet and page; absent or unreadable headers are null. A1-3 is experiment E1 answer page 3; W2-1 is E2 working page 1. Problem 2 / T2 / Q2 maps to the matching task only, never guess another task.',
     `Booklet task mapping: ${JSON.stringify(Object.fromEntries(Object.entries(src).filter(([key])=>!key.startsWith('_')).map(([key,value])=>[key,value.no||key])))}`,
     'Index every explicit answer with its label; an item\'s text is only that answer as written (one line), never the working again, which text already holds. value: exact number, unit and uncertainty. table: actual filled rows and column headings. graph: visible axes, units, scale, points, fit, slope construction, error bars and title; never infer these from claims in prose. For diagrams and vector/direction arrows use kind text and describe only visible labels, arrow directions and relationships; the full image will also be supplied to the grader.',
@@ -1990,7 +2009,7 @@ async function labProofread(env, s, buf, mime, read, notation, m) {
   if (typeof text !== "string" || !text.trim()) return read;
   const out = await labVision(env, s, [{ text: ["[TASK: proofread page] A machine transcribed the handwritten answer page in the photo. Check the transcript against the photo.",
       "Compare every answer with what is written: digits and decimal points, exponents and their signs, units and prefixes (μ or m), letters and symbols (Greek, subscripts, superscripts, stars), fractions, roots and what they cover, table cells, chosen options.",
-      "Return only the passages of the transcript that differ from the photo, each as from (copied exactly from the transcript, long enough to occur once) and to (as written in the photo). Return no fixes when it is right. Transcribe what the student wrote: never correct the student's physics or arithmetic.",
+      "Return only the passages of the transcript that differ from the photo, each as from (copied exactly from the transcript, long enough to occur once) and to (as written in the photo). Return no fixes when it is right. Transcribe what the student wrote: never correct the student's physics or arithmetic. Red ink is a human marker's (R14): never add it.",
       ...(notation ? [`Symbols this paper uses (to tell look-alike handwriting apart, never to change what is written): ${notation}`] : []),
       "<<TRANSCRIPT>>\n" + text + "\n<<END>>"].join("\n") }, { inline_data: { mime_type: mime, data: b64(buf) }, label: "Original submitted page" }], PROOF_SCHEMA, 4096, m, "proof");
   let fixed = text, applied = 0;
@@ -2074,7 +2093,9 @@ function labScore(scheme, raw, pages, opts = {}) {
     /* the table or graph of this item as read (by its label, else the first of its kind), and how many measurements it needs (R11) */
     const pick = kind => live.find(i => i.kind === kind && (kind !== "graph" || i.graph) && i.label === it.id) || live.find(i => i.kind === kind && (kind !== "graph" || i.graph));
     const nmin = it.n_min > 0 ? it.n_min : N_MIN[it.n_class] || null;
-    if (it.sheet === "answer" && pg.kind !== "answer") return zero("R1");          // a final answer off the answer sheet
+    /* R1: a final answer off the answer sheet counts only where the task's answer sheets give none for its question (an
+       empty box or no answer sheet at all, as IPhO, APhO and EuPhO mark); the answer sheet governs where it has one */
+    if (it.sheet === "answer" && pg.kind !== "answer" && answeredOnSheet(it.id, pages)) return zero("R1");
     const interval = it.full_min != null && it.full_max != null, byRef = !!opts.theory && !interval && !!refTolerance(it.ref);
     if (it.type === "value" && (interval || byRef)) {
       const v = Number(g.value);
@@ -2126,6 +2147,9 @@ function labScore(scheme, raw, pages, opts = {}) {
     res.rules = [...rules];
     return res;
   });
+  /* R15: of alternative methods for one question only the one that earns most counts */
+  { const alt = new Map(scheme.items.map(it => [it.id, it.alt])), { dropped } = oneMethod(items.map(i => ({ ...i, alt: alt.get(i.id) })), i => i.got);
+    for (const i of items) if (dropped.has(i.id) && i.got > 0) { i.got = 0; i.decision = "not_met"; i.rules = [...new Set([...(i.rules || []), "R15"])]; } }
   const feedback = (Array.isArray(raw && raw.feedback) ? raw.feedback : []).filter(f => f && f.note && (f.page == null || byNo.has(f.page))).slice(0, 8)
     .map(f => ({ page: f.page ?? null, label: f.label ? String(f.label).slice(0, 20) : null, note: String(f.note).slice(0, 600), kind: f.kind === "good" ? "good" : "fix" }));
   /* the coach's review, as written: trimmed and bounded, page references kept only to pages that exist */

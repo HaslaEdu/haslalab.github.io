@@ -16,19 +16,23 @@
  * leading prefix at the cached rate, so nothing that varies may appear before the end of block 3. No cache objects
  * are created and nothing is padded.
  */
-export const REG_VERSION = "2026-11-01e";
+export const REG_VERSION = "2026-11-01g";
+/* the marking schemes read from the solutions: a regulation change that does not touch how a scheme is read keeps them */
+export const SCHEME_VERSION = "2026-11-01f";
 
 const r = (id, en, ko) => ({ id, en, ko });
 
 /* the core: every exam, every competition */
 const CORE = [
-  r("R1", "A final answer counts only if it is written in its box on an official answer sheet. A value that appears only on a working sheet earns at most the method marks the scheme gives for it.", "최종 답은 공식 답안지의 해당 칸에 쓴 것만 인정합니다. 연습지에만 있는 값은 기준표가 정한 풀이 점수까지만 받습니다."),
+  r("R1", "A final answer counts where it is written in its box on an answer sheet. Where that box is empty, or no answer sheet of the task was submitted, a final answer written on a working sheet and clearly given as the answer to its question (labelled with the question, boxed or underlined, stated as the result) counts in its place, as IPhO, APhO and EuPhO mark. Where the answer sheet gives an answer, it governs.", "최종 답은 답안지의 해당 칸에 쓴 것을 인정합니다. 그 칸이 비었거나 그 문제의 답안지를 내지 않았다면, 연습지에 그 문항의 답으로 분명히 쓴 답(문항 표시, 상자나 밑줄, 결과로 명시)을 대신 인정합니다(IPhO·APhO·EuPhO 채점 방식). 답안지에 답이 있으면 답안지를 따릅니다."),
   r("R2", "When the answer sheet and a working sheet disagree, the answer sheet governs.", "답안지와 연습지가 다르면 답안지를 따릅니다."),
   r("R3", "Units follow the marking scheme. Where it says nothing, a value with a missing or wrong unit earns no marks.", "단위는 기준표를 따르고, 기준표에 말이 없으면 단위가 없거나 틀린 값은 점수를 받지 못합니다."),
   r("R4", "Significant figures and uncertainties follow the marking scheme; a mark the scheme gives for precision is not awarded when the precision is unreasonable.", "유효숫자와 불확도는 기준표를 따르며, 정밀도에 대한 점수는 터무니없는 자릿수에는 주지 않습니다."),
   r("R6", "Crossed-out work is ignored. Two different answers to one item earn no marks for that item.", "줄을 그어 지운 내용은 채점하지 않으며, 한 문항에 서로 다른 답이 둘이면 그 문항은 0점입니다."),
   r("R9", "Every mark must point to the page and the answer it comes from. A mark without that evidence is 0.", "모든 점수는 그 근거가 되는 쪽과 답을 가리켜야 하며, 근거가 없는 점수는 0점입니다."),
   r("R10", "Whatever cannot be read — illegible writing, a blurred, cut-off or missing page — is the candidate's responsibility and earns no marks. There is no benefit of the doubt and no re-reading.", "알아볼 수 없는 글씨, 흐리거나 잘리거나 빠진 쪽처럼 읽을 수 없는 것은 응시자 책임이며 점수를 받지 못합니다. 유리하게 해석하거나 다시 읽어 주지 않습니다."),
+  r("R14", "Marks in red ink are a human marker's, never the candidate's work: scores, ticks, crosses, circled or underlined points, «x/0.5» and comments written in red on the sheet are ignored entirely. They neither earn nor cost marks, and they never stand in for the grading of the written answer.", "빨간 펜 표시는 사람 채점자의 것이며 응시자의 답이 아닙니다. 답안지에 빨간색으로 쓴 점수, 체크, 가위표, 동그라미나 밑줄 친 점수, «x/0.5», 메모는 모두 무시합니다. 점수를 주지도 깎지도 않으며, 쓰인 답을 채점하는 일을 대신하지 않습니다."),
+  r("R15", "Where the official solution gives alternative methods for one question (Method 1 / Method 2), the candidate earns the marks of one method only, the one that earns most; marks from different methods are never added up. Grade every method the candidate wrote; the code keeps the best.", "공식 풀이가 한 문항에 여러 풀이 방법(방법 1 / 방법 2)을 제시하면, 응시자는 그중 가장 높은 점수를 받는 한 방법의 점수만 받습니다. 서로 다른 방법의 점수를 더하지 않습니다. 응시자가 쓴 방법을 모두 채점하면 가장 좋은 것만 남깁니다."),
 ];
 const R5 = r("R5", "An error carried forward is accepted only where the marking scheme allows it.", "앞 문항의 오류를 이어받은 답은 기준표가 허용할 때만 인정합니다.");
 const R7 = r("R7", "A graph earns only the checks the scheme lists (axes and units, scale, plotted points, fitted line, slope read off) that can be seen on it.", "그래프는 기준표의 확인 항목(축과 단위, 눈금, 찍은 점, 맞춤선, 기울기 읽기) 가운데 그래프에서 보이는 것만 점수를 받습니다.");

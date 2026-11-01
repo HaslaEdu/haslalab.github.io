@@ -8,7 +8,7 @@ import {MODEL_TEST_EXAMS} from './src/model-test-catalog.js';
 import {VISION_MODELS} from './src/vision-provider.js';
 import {ensureWeeklyContent} from './src/weekly-content.js';
 import {normalizeMonthlyParts,guardMonthlyGrade} from './src/monthly-answers.js';
-import {REG_VERSION} from './src/grading-rules.js';
+import { SCHEME_VERSION as REG_VERSION } from './src/grading-rules.js';
 
 const scan=Uint8Array.from([255,216,255,224,0,16,74,70,73,70,1,4,7,9,29,83]);
 const digest=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value))).toString('base64url');
@@ -258,6 +258,24 @@ test('theory pages are read with the paper\'s notation and proofread: only the p
     assert.equal(r.items[0].text,'a_c = 0.31 \\mu m');assert.equal(r.items[0].value,0.31);
     assert.equal(sql.prepare("SELECT count(*) n FROM lab_schemes WHERE source LIKE 'notation:%'").get().n,1,'the notation is kept for the next page and sitting');
   }finally{for(const k of Object.keys(pageReading))delete pageReading[k];Object.assign(pageReading,saved);}
+}));
+test('experiments go through the same pipeline: Gemini reads (red ink left out), DeepSeek grades, Gemini moderates',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','experiment') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['deepseek',VISION_MODELS.deepseek,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
+    {id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]},
+    {id:'R',points:1,type:'derivation',role:'result',sheet:'answer',what:'Expression of the velocity'}]}),'fixture',Math.floor(Date.now()/1000));
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const step=c=>c.text.includes('[TASK: read page]')?'read':c.text.includes('[TASK: moderate]')?'moderate':c.text.includes('[TASK: grade]')?'grade':'other';
+  const reads=calls.filter(c=>step(c)==='read'),grades=calls.filter(c=>step(c)==='grade'),mods=calls.filter(c=>step(c)==='moderate');
+  assert.ok(reads.length&&reads.every(c=>/gemini-3\.1-pro-preview/.test(c.url)&&/red ink/.test(c.text)),'Gemini Pro reads and leaves red ink out');
+  assert.ok(grades.length===1&&grades[0].provider==='deepseek','DeepSeek grades the experiment');
+  assert.ok(mods.length===1&&/gemini-3\.1-flash-lite/.test(mods[0].url),'Gemini moderates what DeepSeek marked down');
+  assert.match(grades[0].text,/R14\. Marks in red ink/,'the regulation tells the grader to ignore red marks');
+  assert.equal((await api(`/lab/sessions/${sid}`)).data.session.status,'graded');
 }));
 test('mixed pipeline: Gemini reads, DeepSeek grades, Gemini moderates only what DeepSeek marked down',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';env.LAB_MODERATE_MODEL='gemini-3.1-flash-lite';

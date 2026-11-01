@@ -7,7 +7,7 @@ import http from "node:http";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import worker from "./src/index.js";
-import { REG_VERSION } from "./src/grading-rules.js";
+import { SCHEME_VERSION as REG_VERSION } from "./src/grading-rules.js";
 import { MODEL_TEST_EXAMS } from "./src/model-test-catalog.js";
 import { ensureWeeklyContent } from "./src/weekly-content.js";
 
