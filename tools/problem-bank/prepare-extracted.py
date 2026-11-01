@@ -8,13 +8,34 @@ import base64
 import copy
 import hashlib
 import json
+import os
 import re
+import uuid
 from pathlib import Path
 from private_paths import private_directory
 
 
 def read_json(path):
     return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def write_json_atomic(path, value):
+    """Stream private snapshots without retaining a second whole-file string."""
+    path = Path(path)
+    target = private_directory(path.parent) / path.name
+    temporary = target.with_name(f".{target.name}.{uuid.uuid4().hex}.tmp")
+    created = False
+    try:
+        with temporary.open("x", encoding="utf-8", newline="\n") as output:
+            created = True
+            json.dump(value, output, ensure_ascii=False)
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temporary, target)
+    except BaseException:
+        if created:
+            temporary.unlink(missing_ok=True)
+        raise
 
 
 def payload(path, expected):
@@ -189,8 +210,10 @@ def prepare(root, text_only=False, profiles=None):
     if profiles and not questions:
         raise ValueError("Selected extractor folders contain no questions; import snapshot was not replaced")
     out_manifest, out_questions = root / "import-manifest.json", root / "import-questions.json"
-    out_manifest.write_text(json.dumps(manifest, ensure_ascii=False), encoding="utf-8")
-    out_questions.write_text(json.dumps({"version": 1, "questions": questions}, ensure_ascii=False), encoding="utf-8")
+    # Serialize the larger file first; if its encoding fails, both previous
+    # outputs remain intact. Consumers run only after this command succeeds.
+    write_json_atomic(out_questions, {"version": 1, "questions": questions})
+    write_json_atomic(out_manifest, manifest)
     return {"sources": len(sources), "questions": len(questions),
             "ko_versions": sum(any(v["language"] == "ko" for v in q["versions"]) for q in questions),
             "crop_images": sum(len(q["assets"]) for q in questions),
