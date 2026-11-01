@@ -1870,8 +1870,15 @@ async function labScheme(env, s, task, m) {
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
   const key = [labProvider(s),benchModel(labProvider(s),labSrc(s)._model)||VISION_MODELS[labProvider(s)],SCHEME_VERSION,src,sx.mark||''].join(':');
   const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
-  if (await cached()) return labSchemeBuild(env, s, task, m);
-  const turn = labSchemeBuilds.then(() => labSchemeBuild(env, s, task, m));
+  /* the scheme model refused (its quota) or failed: the fallback model reads the solution, kept under its own key */
+  const build = () => labSchemeBuild(env, s, task, m).catch(error => {
+    const fb = env.LAB_SCHEME_FALLBACK_MODEL;
+    if (!fb || labSrc(s)._model === fb || !['vision_provider_rate_limited', 'vision_provider_failed', 'vision_model_unavailable'].includes(error?.code)) throw error;
+    console.error('lab scheme fallback', error.code, fb);
+    return labSchemeBuild(env, labAs(s, 'gemini', { model: fb, thinking: env.LAB_SCHEME_FALLBACK_THINKING || 'low' }), task, m);
+  });
+  if (await cached()) return build();
+  const turn = labSchemeBuilds.then(build);
   labSchemeBuilds = turn.catch(() => {});
   return turn;
 }
@@ -2050,7 +2057,15 @@ async function labProofread(env, s, buf, mime, read, notation, m) {
 /* a page as the theory pipeline reads it: the reader with the paper's notation, then the proofreader where configured */
 async function labReadChecked(env, s, roles, task, buf, mime, m) {
   const notation = roles?.readHint ? await labNotation(env, s, task, m).catch(e => { console.error("lab notation", e?.code || e?.message); return null; }) : null;
-  const read = await labReadPage(env, roles ? labAs(s, roles.read, roles.readBench) : s, buf, mime, notation, m);
+  /* the reading model's quota runs out under load (3.1 Pro preview refused 71 of 72 bench reads in an hour): a page
+     it refuses, or loops on, is read by the fallback model (LAB_READ_FALLBACK_MODEL) at once rather than failing or
+     waiting minutes for the retries */
+  const read = await labReadPage(env, roles ? labAs(s, roles.read, roles.readBench) : s, buf, mime, notation, m).catch(error => {
+    const fb = env.LAB_READ_FALLBACK_MODEL;
+    if (!roles || !fb || fb === roles.readBench?.model || !['vision_provider_rate_limited', 'vision_provider_failed', 'vision_model_unavailable', 'vision_response_truncated'].includes(error?.code)) throw error;
+    console.error('lab read fallback', error.code, fb);
+    return labReadPage(env, labAs(s, 'gemini', { model: fb, thinking: env.LAB_READ_FALLBACK_THINKING || 'low' }), buf, mime, notation, m);
+  });
   if (!roles?.proof) return read;
   return labProofread(env, labAs(s, roles.proof, roles.proofBench), buf, mime, read, notation, m).catch(e => { console.error("lab proofread", e?.code || e?.message); return read; });
 }

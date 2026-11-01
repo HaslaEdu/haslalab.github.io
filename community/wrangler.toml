@@ -48,6 +48,9 @@ LAB_BENCH_SLOTS = "4"
 # Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.1 Pro.
 LAB_SCHEME_MODEL = "gemini-3.1-pro-preview"
 LAB_SCHEME_THINKING = "low"
+# when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
+LAB_READ_FALLBACK_MODEL = "gemini-3.8-flash"
+LAB_SCHEME_FALLBACK_MODEL = "gemini-3.8-flash"
 
 [[d1_databases]]
 binding = "DB"
