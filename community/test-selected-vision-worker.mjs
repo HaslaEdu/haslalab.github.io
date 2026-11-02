@@ -304,8 +304,8 @@ test('Math-Verify in code: a final expression that is not the official one yet h
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
   const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
   sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
-    {id:'F',points:1.6,type:'derivation',role:'result',sheet:'answer',what:'F = 2gLh^2(rho_1-rho_0)^2/(k^2 rho_1)',expr:'2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1)'},
-    {id:'S',points:1.4,type:'derivation',role:'result',sheet:'answer',what:'S = rho_1 g h',expr:'rho_1*g*h'}]}),'fixture',Math.floor(Date.now()/1000));
+    {id:'F',points:1.6,type:'derivation',sheet:'answer',what:'F = 2gLh^2(rho_1-rho_0)^2/(k^2 rho_1)',expr:'2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1)'},
+    {id:'S',points:1.4,type:'derivation',sheet:'answer',what:'S = rho_1 g h',expr:'rho_1*g*h'}]}),'fixture',Math.floor(Date.now()/1000));   // S without a role, as DeepSeek writes them
   const item=(id,score,expr)=>({id,found:true,page:1,label:id,score,rules:[],note:'',quote:'',expr});
   replies({items:[item('F',1.6,'2*rho_1*g*h^2/k^2*(1-rho_0/rho_1)^2'),item('S',1.4,'g*h*rho_1')],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}},
     {items:[{id:'F',found:true,page:1,score:0,rules:[],note:'L is missing',quote:''}]});
