@@ -1,0 +1,77 @@
+{
+  "status": "READY",
+  "competition": "icho",
+  "year": 2024,
+  "pages": 62,
+  "proof_dir": "C:/Users/andre/CodexWork/HaslaLab/translation-proof-work/proofs/icho/2024-final",
+  "engine_dir": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024",
+  "auditor": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\verify_native_vectors_icho2024.py",
+  "helper_dir": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\engine",
+  "composer_sha256": "1beeff463624b77e77d3dbb86e0a3790c42b00d1cd16e066136145a3e8f1b3f4",
+  "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+  "frozen_manifest": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\final-engine-manifest.json",
+  "frozen_manifest_sha256": "9209c6985fa6b960898b6021f5b84d425cceb3f7f8c347766915c4be961c838a",
+  "engine_manifest": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\engine\\manifest.json",
+  "engine_manifest_sha256": "bf39f4bc38e6079532751ae77dabad7608f544048825c48e64f21f6b42a431f5",
+  "initial_provenance_manifest": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\freeze-manifest.json",
+  "initial_provenance_manifest_sha256": "22be0096c8e9a0bd66f5b5e561524da8849b9eaee4128650f24f2426c194fb06",
+  "inventory": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\final-inventory.json",
+  "inventory_sha256": "a480ec90b1333740b3da743444c99ece663827559616cb9759b0d96d0d9db72e",
+  "reviewed_pages": 62,
+  "new_korean_glyphs": 11447,
+  "max_new_korean_position_error_pt": 4.1735444568757885e-05,
+  "new_korean_geometry_tolerance_pt": 0.001,
+  "source_prose_underlines_reviewed": 68,
+  "source_prose_underlines_misplaced": 0,
+  "source_prose_underline_report": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\all-prose-underline-review.json",
+  "source_prose_underline_report_sha256": "ae8bafccbd61b5802f4c81b6f3b73e1a0fc1db1c80bd93894fbd21d7ab1b1982",
+  "source_printed_discrepancies": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2024\\source-printed-discrepancies.json",
+  "source_printed_discrepancies_sha256": "b253ebee45b5301a53cc50b1d1327257fb8e14a1ca78e9aefa8804a88133928a",
+  "published": false,
+  "publication_owner": "root",
+  "note": "All62 pages use one frozen compositor. Original native math fonts/programs, image encoded bytes, chemical Forms, native vectors and source point sizes/baselines pass per-page audits. Original printed page-count and wavelength terminology discrepancies are retained and documented outside the paper.",
+  "language_correction_20261103": {
+    "changed_pdf_pages": [
+      39,
+      50
+    ],
+    "other60_pdf_layout_effective_unchanged": true,
+    "shared_panel_metadata_pins_passed": 62,
+    "paired_neighbor_pixels_unchanged": [
+      40,
+      49
+    ],
+    "review_manifest": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\language-review-2024-20261103\\correction-review-manifest.json",
+    "review_manifest_sha256": "f6c1fbda6897a4304082ff12d8ec0f0ad1bac49d4df6017afed1cfc8aa2f61d1",
+    "read_only_integrity_report": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\language-review-2024-20261103\\read-only-C-integrity-pins.json",
+    "read_only_integrity_report_sha256": "b72694643cb7307443a68911249ed26159221051de7bd185d2a2bb62ae139422",
+    "row_ink_audits": [
+      {
+        "page": 39,
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\language-review-2024-20261103\\page39.inter-row-audit.json",
+        "sha256": "1b6315b0a86232e171dd6016117f6a6e44148a7c533a1860d338e8b45add9437"
+      },
+      {
+        "page": 50,
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\language-review-2024-20261103\\page50.inter-row-audit.json",
+        "sha256": "6b804e0469f33892349101704821ea705cdf473f5ab9b166b2f9616d6089fbd3"
+      }
+    ],
+    "tested_actual_row_pairs": 26,
+    "actual_row_contact_pixels": 0,
+    "actual_selected_and_rawdict_char_baseline_delta_pt": 0.0,
+    "expanded_visual_artifacts": [
+      {
+        "page": 39,
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\language-review-2024-20261103\\page39.visual-artifacts.json",
+        "sha256": "12ad202d6dc12cb97e4245f5318983df06e6cf290826c88920c5737b1a22f46d"
+      },
+      {
+        "page": 50,
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\language-review-2024-20261103\\page50.visual-artifacts.json",
+        "sha256": "751e3b570579c2c42a52c538901caee4fa0a63c8a4223149d875aa5ab8e36f31"
+      }
+    ],
+    "source_font_programs_images_vectors_and_point_sizes_preserved": true
+  }
+}
