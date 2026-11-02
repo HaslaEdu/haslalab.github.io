@@ -2263,6 +2263,15 @@ function labStoredReading(env, image, reading) {
 
 /* 3. one experiment, graded */
 const near = (a, b) => Math.abs(a - b) <= Math.max(1e-9, 1e-6 * Math.max(Math.abs(a), Math.abs(b)));
+/* the checks of a graph or table item with their points: a scheme that lists the checks but leaves every one at 0 points
+   (DeepSeek's IPhO 2013 E1 1.2a, 1.8 pt, axes / units / 8 points / line all 0) shares the item's points among them;
+   otherwise a fully drawn graph earned 0 of 1.8. */
+function weighChecks(it) {
+  const list = (it.checks || []).filter(c => c && c.check), sum = list.reduce((a, c) => a + (+c.points > 0 ? +c.points : 0), 0), pts = +it.points || 0;
+  if (!list.length) return [];
+  if (!(sum > 0)) return list.map(c => ({ ...c, points: pts / list.length }));
+  return list.map(c => ({ ...c, points: +c.points > 0 ? +c.points : 0 }));
+}
 function labScore(scheme, raw, pages, opts = {}) {
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
@@ -2323,9 +2332,14 @@ function labScore(scheme, raw, pages, opts = {}) {
       const saw = !!pg._visionSupplied;
       /* the number of plotted points as read decides (R11), unless the grader, looking at the photo, counted them met: a
          reader that misses faint points on a hand-drawn graph zeroed graphs that hold enough of them (bench, 2026-11-02) */
-      res.got = it.checks.reduce((a, c) => a + (c.check === "points_min" ? ((seen.n_points || 0) >= (c.n || nmin || 1) || saw && met.has("points_min") ? c.points : 0)
+      const checks = weighChecks(it), countOk = c => (seen.n_points || 0) >= (c.n || nmin || 1) || saw && met.has("points_min");
+      /* a grader that saw the photo and marked the graph without naming the checks it saw (checks_met empty) is taken at
+         its mark, less a point count the reading finds short: IPhO 2013 E2 2.1b and 2.2b, drawn and given full marks, came
+         out at 0 under R7 */
+      if (saw && !met.size && +g.score > 0) { res.by = "model"; res.got = Math.max(0, Math.min(it.points, +g.score) - checks.filter(c => c.check === "points_min" && !countOk(c)).reduce((a, c) => a + c.points, 0)); }
+      else res.got = checks.reduce((a, c) => a + (c.check === "points_min" ? (countOk(c) ? c.points : 0)
         : met.has(c.check) && (saw || !!seen[c.check]) ? c.points : 0), 0);
-      if (res.got < it.checks.reduce((a, c) => a + c.points, 0)) rules.add("R7");
+      if (res.got < Math.min(it.points, checks.reduce((a, c) => a + c.points, 0)) - 1e-9) rules.add("R7");
     } else if (it.type === "table" && Array.isArray(it.checks) && it.checks.length) {
       const tb = pick("table");
       if (!tb) return zero("R9");
@@ -2334,9 +2348,13 @@ function labScore(scheme, raw, pages, opts = {}) {
       const parts = tb.label ? [...live, ...others].filter(i => i.kind === "table" && i.label === tb.label) : [tb];
       const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), rows = Math.max(tb.rows || 0, parts.reduce((a, i) => a + (+i.rows || 0), 0));
       const sawTable = !!pg._visionSupplied;
-      res.got = it.checks.reduce((a, c) => a + (c.check === "rows_min" ? (rows >= (c.n || nmin || 1) || sawTable && met.has("rows_min") ? c.points : 0)
+      const checks = weighChecks(it), rowsOk = c => rows >= (c.n || nmin || 1) || sawTable && met.has("rows_min");
+      /* as for graphs: a table marked from the photo with no checks named keeps the grader's mark, less a short row count
+         (IPhO 2013 E2 2.1a and 2.2a, 11-row tables with units, came out at 0 under R8) */
+      if (sawTable && !met.size && +g.score > 0) { res.by = "model"; res.got = Math.max(0, Math.min(it.points, +g.score) - checks.filter(c => c.check === "rows_min" && !rowsOk(c)).reduce((a, c) => a + c.points, 0)); }
+      else res.got = checks.reduce((a, c) => a + (c.check === "rows_min" ? (rowsOk(c) ? c.points : 0)
         : c.check === "columns_units" ? (met.has(c.check) && (tb.columns || []).length ? c.points : 0) : met.has(c.check) ? c.points : 0), 0);
-      if (res.got < it.checks.reduce((a, c) => a + c.points, 0)) rules.add("R8");
+      if (res.got < Math.min(it.points, checks.reduce((a, c) => a + c.points, 0)) - 1e-9) rules.add("R8");
     } else {
       res.by = "model";
       res.got = Math.max(0, Math.min(it.points, Math.round((Number(g.score) || 0) * 10) / 10));
