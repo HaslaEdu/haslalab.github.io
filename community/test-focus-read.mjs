@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { misreadOf, mathpixRereads, labelSection } from "./src/focus-read.js";
+import { misreadOf, mathpixRereads, labelSection, sameDigitCount } from "./src/focus-read.js";
 
 test("a re-read replaces a reading only one character off: a digit or a power of ten", () => {
   assert.ok(misreadOf(1.59e12, 1.59e18), "IPhO 2021 T3 C.3: 10^12 for 10^18");
@@ -29,4 +29,9 @@ test("two candidates on the page: the one under the item's own label", () => {
   assert.equal(labelSection(page, "D.6"), null);
   assert.deepEqual(mathpixRereads([{ id: "D.5", value: 25 }], page, "D.5 (1.1 pt) n ≈ 25").map(r => r.value), [85], "IPhO 2021 T3: 23 elsewhere, 85 under D. 5");
   assert.deepEqual(mathpixRereads([{ id: "1.1.e", value: 25 }], "n = 85 and m = 35", "n = 25"), [], "no label to go by: no choice");
+});
+
+test('a zoomed reading must keep the number of written digits: a crop that cut one off is no fix', () => {
+  for (const [a, b] of [[3.3, 3.8], [1.84e-4, 1.04e-4], [2.45e-2, 2.45e2], [54.3, 54.9], [20, 20], [1.59e13, 1.59e18]]) assert.equal(sameDigitCount(a, b), true, `${a} ${b}`);
+  for (const [a, b] of [[3.3, 3], [9.31, 0.31], [1.6e-4, 1.65e-4], [5, NaN]]) assert.equal(sameDigitCount(a, b), false, `${a} ${b}`);
 });

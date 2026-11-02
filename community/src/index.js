@@ -39,7 +39,7 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips, cropJpeg } from './page-tiles.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
-import { mathpixRereads, focusCandidates, misreadOf } from './focus-read.js';
+import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './focus-read.js';
 import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
@@ -2547,7 +2547,7 @@ async function labFocusRead(env, s, sc, raw, photos, mine, m, log = null, engine
 const ZOOM_FIND_SCHEMA = { type: "object", properties: { found: { type: "array", items: { type: "object", properties: {
   id: { type: "string" }, box: { type: "array", items: { type: "integer" } } }, required: ["id", "box"] } } }, required: ["found"] };
 const ZOOM_READ_SCHEMA = { type: "object", properties: { reads: { type: "array", items: { type: "object", properties: {
-  id: { type: "string" }, written: { type: "string" }, value: N({ type: "number" }), unit: N({ type: "string" }),
+  crop: N({ type: "integer" }), id: { type: "string" }, written: { type: "string" }, value: N({ type: "number" }), unit: N({ type: "string" }),
   sure: { type: "boolean" }, alternatives: { type: "array", items: { type: "string" } } }, required: ["id", "written", "sure"] } } }, required: ["reads"] };
 const ZOOM_READ_RULES = "Read the final numerical value written for the named item, character by character, exactly as written: every digit, the decimal point or comma, the power of ten with its sign, and the unit. Do not compute, round, complete or correct anything: you are not told the problem or the right answer, and you must not guess one. Look hard at what handwriting confuses: a 0 with a tail or slash and 9 or 6, 1 and 7, 3 and 8, 4 and 9, 5 and 6, a minus sign in an exponent and a stray stroke, a decimal point and a speck, μ and m and n. sure is false when any character could be read two ways; then give the other full readings in alternatives. value is the number as written, in scientific form (e.g. 2.45e2), without the unit.";
 async function labZoomRead(env, s, bytes, mime, ids, m, opt = {}) {
@@ -2564,18 +2564,24 @@ async function labZoomRead(env, s, bytes, mime, ids, m, opt = {}) {
   const crops = [];
   for (const f of find.raw.found || []) {
     const id = String(f?.id); if (!list.includes(id) || crops.some(c => c.id === id)) continue;
-    const cut = cropJpeg(raw, f.box, 25, 60); if (cut) crops.push({ id, box: f.box, bytes: cut });
+    /* the whole width of the page, 4% above and below: a box that is off by a little (bench: most were) still holds the
+       line, its label and every digit, and the label tells the reader which value is meant */
+    const box = Array.isArray(f.box) && f.box.length === 4 ? [f.box[0], 0, f.box[2], 1000] : f.box;
+    const cut = cropJpeg(raw, box, 40, 0); if (cut) crops.push({ id, box: f.box, bytes: cut });
   }
   if (!crops.length) return { found: [], reads: [] };
   const parts = crops.flatMap((c, i) => [{ text: `Crop ${i + 1}: item ${c.id}` }, { inline_data: { mime_type: "image/jpeg", data: b64(c.bytes) }, label: `Crop ${i + 1}, item ${c.id}` }]);
-  const out = await labVision(env, who, [...parts, { text: `[TASK: read values] Each crop above is cut from a photographed handwritten answer sheet. ${ZOOM_READ_RULES}` }],
+  const out = await labVision(env, who, [...parts, { text: `[TASK: read values] Each crop above is a band cut from a photographed handwritten answer sheet; it may hold more than one line. In each, find the named item by its label or symbol and read the final value written for it. Give one reading per crop, with crop as its number (1, 2, …) and id as given. ${ZOOM_READ_RULES}` }],
     ZOOM_READ_SCHEMA, 4096, m, "focus", 0, { mediaResolution: "MEDIA_RESOLUTION_HIGH" });
-  return { found: crops.map(c => ({ id: c.id, box: c.box })), reads: (out.raw.reads || []).filter(r => crops.some(c => c.id === String(r?.id))) };
+  /* a reading belongs to its crop by number (the model rewrites ids: «A.3 K» came back «K»), else by id */
+  const reads = (out.raw.reads || []).map(r => { const c = crops[Number(r?.crop) - 1] || crops.find(x => x.id === String(r?.id)); return c ? { ...r, id: c.id } : null; }).filter(Boolean);
+  return { found: crops.map(c => ({ id: c.id, box: c.box })), reads: reads.filter((r, i) => reads.findIndex(x => x.id === r.id) === i) };
 }
-/* a zoomed reading replaces the first only when it is sure of every character and is one misread apart (focus-read.js) */
+/* a zoomed reading replaces the first only when it is sure of every character, is one misread apart (focus-read.js)
+   and has as many digits (bench: a crop read «3 nm» for 3.3, a digit cut off, and was taken) */
 function zoomTakes(first, read) {
   const again = Number(read?.value);
-  return read?.sure === true && Number.isFinite(again) && misreadOf(first, again) ? again : null;
+  return read?.sure === true && Number.isFinite(again) && misreadOf(first, again) && sameDigitCount(first, again) ? again : null;
 }
 async function labZoomFocus(env, s, disputed, photos, m, log) {
   const out = [];
