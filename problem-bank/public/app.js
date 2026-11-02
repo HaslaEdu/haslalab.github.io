@@ -119,7 +119,12 @@ function difficultyBadge(item){
   return `<span class="difficulty" title="${esc(reasons)}" aria-label="${esc(tr('difficulty'))} ${n}/5${provisional?' · '+esc(tr('provisional')):''}">${'★'.repeat(n)}${'☆'.repeat(5-n)}${provisional?` <small>${esc(tr('provisional'))}</small>`:''}</span>`;
 }
 function difficultyReasons(item){return (Array.isArray(item.difficulty?.reason_codes)?item.difficulty.reason_codes:[]).map(code=>DIFFICULTY_REASONS[code]?.[state.lang==='ko'?0:1]).filter(Boolean).join(' · ');}
-function previewText(text){let value=String(text||'').split(/\n\s*\n/)[0].replace(/\$\$/g,'$').replace(/\\\[/g,'\\(').replace(/\\\]/g,'\\)').replace(/\s+/g,' ');const dollars=[...value.matchAll(/(?<!\\)\$/g)];if(dollars.length%2)value=value.slice(0,dollars.at(-1).index);return value;}
+function previewText(text){
+  let value=String(text||'').split(/\n\s*\n/)[0].replace(/\$\$/g,'$').replace(/\\\[/g,'\\(').replace(/\\\]/g,'\\)').replace(/\s+/g,' '),cut=value.length;
+  const dollars=[...value.matchAll(/(?<!\\)\$/g)];if(dollars.length%2)cut=Math.min(cut,dollars.at(-1).index);
+  const open=[];for(const match of value.matchAll(/(?<!\\)\\[()]/g)){if(match[0]==='\\(')open.push(match.index);else open.pop();}
+  if(open.length)cut=Math.min(cut,open[0]);return value.slice(0,cut).trim();
+}
 function renderResults(items){
   $('results').innerHTML=items.length?items.map(x=>`<button class="result${state.question===x.id?' active':''}" data-question="${esc(x.id)}"><span class="source">${esc(x.source_title)}</span><strong>${esc(x.original_number)}${x.unresolved_source?' · '+esc(tr('unresolved')):''}</strong>${difficultyBadge(x)}<span class="snippet">${esc(previewText(x.snippet))}</span></button>`).join(''):`<p style="padding:18px" class="muted">${esc(tr('empty'))}</p>`;
   const textSearch=!!$('query').value.trim();$('resultCount').textContent=items.length?`${state.offset+1}–${state.offset+items.length}`:'0';$('previous').disabled=textSearch?state.offset===0:state.cursorHistory.length===0;$('next').disabled=!state.hasMore||(textSearch&&state.offset>=300);$('resultLimit').textContent=state.limitedResults?tr('limitedResults'):'';
@@ -204,7 +209,7 @@ async function showRecommendations(id){
   const current=()=>state.question===id&&view===state.detailRequest&&action===state.relatedRequest&&related.isConnected;
   related.textContent=tr('loading');
   try{const filters=new URLSearchParams({lang:state.lang,limit:'8'});for(const key of ['collection','stars'])if($(key).value)filters.set(key,$(key).value);const data=await api(`/api/problem-bank/questions/${id}/recommendations?${filters}`);if(!current())return;
-    related.innerHTML='<section class="solutions recommendations"><h3>'+esc(tr('recommendations'))+'</h3>'+(data.items.length?data.items.map(x=>`<button data-question="${esc(x.id)}">${esc(x.source_title)} · ${esc(x.original_number)}<br>${difficultyBadge(x)}<br><span class="muted">${esc(x.snippet.slice(0,140))}</span></button>`).join(''):`<p>${esc(tr('noReco'))}</p>` )+'</section>';related.querySelectorAll('[data-question]').forEach(el=>el.addEventListener('click',()=>selectQuestion(el.dataset.question)));math(related);
+    related.innerHTML='<section class="solutions recommendations"><h3>'+esc(tr('recommendations'))+'</h3>'+(data.items.length?data.items.map(x=>`<button data-question="${esc(x.id)}">${esc(x.source_title)} · ${esc(x.original_number)}<br>${difficultyBadge(x)}<br><span class="muted">${esc(previewText(x.snippet.slice(0,140)))}</span></button>`).join(''):`<p>${esc(tr('noReco'))}</p>` )+'</section>';related.querySelectorAll('[data-question]').forEach(el=>el.addEventListener('click',()=>selectQuestion(el.dataset.question)));math(related);
   }catch(e){if(e.name!=='AbortError'&&current())related.textContent=errorText(e);}
 }
 async function showContexts(id){

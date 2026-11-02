@@ -188,7 +188,7 @@ function browserFixture({embedded=false,initialize=true,boot=false,token=TOKEN,u
   const parent={location:{origin:parentOrigin},postMessage:(data,target)=>messages.push({data,target})};
   const sandbox={console,URL:BrowserURL,URLSearchParams,AbortController,DOMException,FormData:BrowserFormData,Blob,Set,Map,Number,String,Object,Promise,localStorage:localStore,sessionStorage:sessionStore,matchMedia:()=>({matches:false}),window:{location:new URL(embedded?pageOrigin+'/problem-bank/public/index.html?embed=1&lang=ko&theme=light':origin+'/'),renderMathInElement:null,parent:embedded?parent:null,addEventListener:(name,fn)=>{events[name]=fn;}},document:{documentElement:{dataset:{}},body:node('body'),getElementById:node,querySelector:()=>node('main'),querySelectorAll:()=>[],createElement:()=>new Element()},fetch:(path,opts)=>new Promise((resolve,reject)=>{const request={path,opts,resolve,reject};pending.push(request);calls.push(request);})};
   vm.createContext(sandbox);let source=readFileSync(new URL('./public/app.js',import.meta.url),'utf8');if(!boot)source=source.replace(/restoreSession\(\);\s*$/,'');
-  vm.runInContext(source+'\nglobalThis.exposed={state,api,signOut,restoreSession,showLibrary,search,changePage,params,identify,selectQuestion,showSolutions,showRecommendations,showContexts,figureGroups,difficultyBadge,feedbackPanel,loadFeedback,saveFeedback,prose};',sandbox);
+  vm.runInContext(source+'\nglobalThis.exposed={state,api,signOut,restoreSession,showLibrary,search,changePage,params,identify,selectQuestion,showSolutions,showRecommendations,showContexts,figureGroups,difficultyBadge,feedbackPanel,loadFeedback,saveFeedback,prose,previewText};',sandbox);
   if(initialize){sandbox.exposed.state.token=token;sandbox.exposed.state.user=user;if(token&&!embedded)sessionStore.setItem('hlBankToken',token);node('bootstrapStatus').hidden=true;}
   return {...sandbox.exposed,node,pending,revoked,created,calls,sessionStore,localStore,events,parent,messages};
 }
@@ -202,6 +202,15 @@ async function finishBootstrap(b,{user=null,ocr=false,sources=[{id:SID,title:'Cu
 const detail=(id,text,extra={})=>({question:{id,original_number:'1',source_id:SID,source:{title:'Synthetic source'},subjects:[],context:{},selected_version:{text},assets:[],...extra}});
 const imageResponse=()=>new Response(PNG,{headers:{'Content-Type':'image/png'}});
 
+test('math previews retain complete formulas and omit only a truncated final expression',()=>{
+  const b=browserFixture();
+  for(const [input,expected] of [
+    ['Given \\(a+b\\), then \\(\\lambda','Given \\(a+b\\), then'],
+    ['Given $a+b$, then $c','Given $a+b$, then'],
+    ['Preview \\[a+b\\] incomplete \\[c','Preview \\(a+b\\) incomplete'],
+    ['cost \\$5 and $x$','cost \\$5 and $x$']
+  ])assert.equal(b.previewText(input),expected);
+});
 test('frontend guest startup browses immediately without a login or auth round trip',async()=>{
   const b=browserFixture({initialize:false,boot:true,token:'',user:null});
   assert.deepEqual(b.pending.map(x=>x.path),['/api/problem-bank/status','/api/problem-bank/sources']);
