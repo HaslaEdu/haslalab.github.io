@@ -2,7 +2,7 @@
 // what code does better than a language model, instead of guessing. Each tool reads only the paper's marking scheme
 // and the candidate's transcribed pages handed in `ctx`; none reaches the network, the database or a secret, and every
 // answer is short text for the model. The model still gives the marks; a tool answer is evidence, not a verdict.
-import { compareExpr, describeCheck } from './expr-check.js';
+import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { refTolerance, valueMatches, quoteOnPage } from './lab-scheme-items.js';
 
 export const GRADE_TOOLS = [
@@ -31,7 +31,7 @@ export function runGradeTool(name, args, ctx) {
     const it = items.get(String(args?.item_id ?? ''));
     if (!it) return 'no such item';
     if (!it.expr) return 'this item has no official expression to compare with';
-    const c = compareExpr(it.expr, String(args?.candidate ?? ''));
+    const c = compareExpr(it.expr, String(args?.candidate ?? ''), { known: schemeSymbols((ctx?.scheme?.items || []).map(x => x.expr)) });
     return c ? describeCheck(c) : 'no verdict: the expressions could not both be evaluated (notation, a misreading or an undefined function); judge from the page';
   }
   if (name === 'check_value') {
