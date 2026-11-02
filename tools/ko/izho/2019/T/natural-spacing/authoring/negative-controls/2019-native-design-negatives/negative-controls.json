@@ -1,0 +1,46 @@
+{
+  "source_sha256": "29daec0cb9f759bed9b755cbae2937e1c4ab068fa804c62d512ea291e42619d1",
+  "rows": [
+    {
+      "id": "unrelated-chart-ink",
+      "page": 2,
+      "proof_sha256": "d83978ed6a59d80a41e433b5ff6d246d006dbd377060538feda5789eadd87e5a",
+      "mutant_sha256": "93e8ff7fadfd5a499e9bb04071e54afd102660e75153148d7f34ed81499a043c",
+      "actual_overlay_rect": [
+        120.0,
+        330.0,
+        121.0,
+        331.0
+      ],
+      "delivered_proof_unmodified": true,
+      "negative_rejected": true,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed",
+      "changed_nonselected_native_graphical_pixels": 16,
+      "changed_actual_inline_math_graphical_pixels": 0,
+      "changed_pixels_outside_old_and_new_text_ink": 16,
+      "figure_changed_pixels": 16,
+      "passed": true
+    },
+    {
+      "id": "missing-original-derivative-fraction-rule",
+      "page": 8,
+      "proof_sha256": "40fe5cc5f2fcaed518b69e30b8f6438624d1c75d3e40e290c2149d93ad30859b",
+      "mutant_sha256": "c1bd6ad376753a6f460e9d76d39a2ca6900e2b32d3db129d02f9828b25dee61c",
+      "actual_overlay_rect": [
+        231.0,
+        153.05,
+        249.0,
+        153.8
+      ],
+      "delivered_proof_unmodified": true,
+      "negative_rejected": true,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed",
+      "changed_nonselected_native_graphical_pixels": 0,
+      "changed_actual_inline_math_graphical_pixels": 657,
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "figure_changed_pixels": 0,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

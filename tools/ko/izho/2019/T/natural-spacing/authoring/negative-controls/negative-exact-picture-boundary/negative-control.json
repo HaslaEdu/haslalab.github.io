@@ -1,0 +1,21 @@
+{
+  "source_sha256": "29daec0cb9f759bed9b755cbae2937e1c4ab068fa804c62d512ea291e42619d1",
+  "proof_sha256": "bdfe232d718e73e610535c3469e3cdc39cc34300c8454e3bd151594fb46e8200",
+  "original_continuous_picture_bbox": [
+    136.75,
+    356.469970703125,
+    458.54998779296875,
+    559.6599731445312
+  ],
+  "original_pixel_center_inside_bbox_changed_pixels": 0,
+  "coarse_floor_sampling_diagnostic_only": 50,
+  "diagnostic_scanline_point_y": 356.25,
+  "diagnostic_scanline_pixel_center_y": 356.375,
+  "original_picture_top_y": 356.469970703125,
+  "explanation": "All50 coarse-only differences are erased English prose descenders on the scanline physically above the exact original picture. The exact picture rectangle includes its genuine bottom-edge scanline that the former floor truncation omitted. Actual native image programs/CTMs and all nonselected graphical ink remain unchanged; zero comparison threshold.",
+  "negative_actual_inside_picture_rectangle_changed_pixels": 16,
+  "negative_rejected": true,
+  "mutant_sha256": "2cc01db591a1fd671425fc10e8e833440c1b8399fc9fc10d86fee735e24dcb18",
+  "proof_unmodified": true,
+  "passed": true
+}
