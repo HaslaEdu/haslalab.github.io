@@ -23,12 +23,13 @@ export function misreadOf(first, again) {
   return editDistance(sig(first), sig(again)) === 1;
 }
 
-/** the question for one page: the items by id and unit, with the first reading to check, never the official value */
+/** the question for one page: the items by id and unit only. Shown the first reading, DeepSeek copied it back in all
+    13 bench re-reads (10^12 for 10^18 again): the re-read is blind, and never sees the official value either */
 export function focusPrompt(items) {
   return ['[TASK: focus read] On this photographed answer page, find the candidate\'s own final answer to each question listed below and transcribe it exactly as written: every digit, the decimal point, the power of ten and its sign, and the unit.',
     'Read the characters, do not work anything out: never compute, correct, round or complete a value. Look closely at look-alike handwriting (0/6/8/9, 1/7, 2/z, 3/8, 4/9, 5/s, the exponent\'s digits). Red ink is a human marker\'s: ignore it. If a value is not written on this page, found is false.',
-    'A first transcript of the page read these values; check each character against the photo, it may be wrong:',
-    JSON.stringify(items.map(i => ({ id: i.id, unit: i.unit || null, first_reading: i.first }))),
+    'The questions (the label printed beside the answer box, and the unit asked for):',
+    JSON.stringify(items.map(i => ({ id: i.id, unit: i.unit || null }))),
     'Return one JSON object: {"items":[{"id":"Q.1","found":true,"written":"2.47 × 10^{-3} s","value":0.00247,"unit":"s"}]}. value is the number as written (in the written unit), null when found is false.'].join('\n');
 }
 

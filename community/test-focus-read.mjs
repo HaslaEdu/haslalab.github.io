@@ -11,9 +11,9 @@ test("a re-read replaces a reading only one character off: a digit or a power of
   assert.ok(!misreadOf(0, 8));
   assert.ok(!misreadOf(3.3, NaN));
 });
-test("the question names the items and the first reading, never the official value", () => {
+test("the question names the items and their units: neither the first reading nor the official value", () => {
   const p = focusPrompt([{ id: "C.3", unit: "m^-3", first: "15900000000000" }]);
-  assert.match(p, /\[TASK: focus read\]/); assert.match(p, /"first_reading":"15900000000000"/);
+  assert.match(p, /\[TASK: focus read\]/); assert.match(p, /"id":"C.3","unit":"m\^-3"/); assert.ok(!p.includes("159"), "a blind re-read");
   assert.match(p, /never compute/);
 });
 test("only found values one character off are accepted", () => {
