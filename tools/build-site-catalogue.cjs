@@ -94,6 +94,10 @@ for(const key of ['kmo','kmchc']){
   outputs.set(name,source);versions['contest:'+key]=name+'?v='+digest(source);
 }
 for(const [key,name]of Object.entries({iypt:'iypt.js',usaco:'usaco.js',rupho:'rupho-selection.js',arena:'arena.js','developer-guide':'developer-server-guide.js'}))versions[key]=name+'?v='+digest(read(name));
+/* every simulator page by the digest of its contents: the run buttons link to sim/<name>_web.html?v=<digest>, so a
+   changed simulator is fetched afresh instead of being served from a browser or CDN cache */
+versions.sims={};
+for(const f of fs.readdirSync(path.join(root,'sim')).filter(f=>/^[A-Za-z0-9_]+_web\.html$/.test(f)).sort())versions.sims[f.slice(0,-9)]=digest(read('sim/'+f));
 const competitions={};let years=0,probs=0,live=0,thy=0;
 for(const [key,c]of Object.entries(DATA)){
   const data={};for(const k of ['abbr','since','full','scope','plain','rounds','omr','open','obs','note','soon','chip','resources','officialWebsite','officialWebsiteArchived'])if(c[k]!==undefined)data[k]=c[k];
