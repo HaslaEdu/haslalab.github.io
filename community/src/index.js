@@ -2392,7 +2392,11 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const useTools = roles?.tools ?? env.LAB_GRADE_TOOLS === "on";
   const toolCtx = { scheme, pages: mine.map(p => ({ no: p.no, kind: p.kind, ocr: p.ocr ?? "", text: compactRead(p.read) })) };
   if (useTools) parts.push({ text: "Tools: before marking an item with an official expr, call compare_expressions with the candidate's final expression; before marking a numerical item, call check_value with the candidate's number in the item's unit; before deciding that something is not written, call find_on_pages. Treat their answers as evidence about the transcript, and still apply the scheme's own partial rules. Call several tools at once where you can; then return the grading JSON." });
-  const out = await labVision(env, s, parts, GRADE_SCHEMA, 16384, m, "grade", 0, useTools ? { tools: GRADE_TOOLS, onTool: (name, args) => runGradeTool(name, args, toolCtx), maxToolRounds: +env.LAB_GRADE_TOOL_ROUNDS || 3 } : {});
+  /* with tools, a long paper can still end without an answer (DeepSeek, 97k tokens): grade it once more without them */
+  const toolNote = useTools ? parts.at(-1) : null;
+  const out = await labVision(env, s, parts, GRADE_SCHEMA, 16384, m, "grade", 0, useTools ? { tools: GRADE_TOOLS, onTool: (name, args) => runGradeTool(name, args, toolCtx), maxToolRounds: +env.LAB_GRADE_TOOL_ROUNDS || 3 } : {})
+    .catch(error => { if (!useTools || !['vision_response_empty', 'vision_invalid_response', 'vision_response_truncated'].includes(error?.code)) throw error;
+      console.error("lab grade tools", error.code); return labVision(env, s, parts.filter(p => p !== toolNote), GRADE_SCHEMA, 16384, m, "grade", 0); });
   await roles?.trace?.('graded');
   let raw = out.raw, moderator = null;
   const specOf = new Map(scheme.items.map(it => [it.id, it]));
