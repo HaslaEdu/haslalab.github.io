@@ -32,6 +32,39 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       assert.equal(document.pages.length, qa.page_audits.length);
       for (const [i, row] of document.pages.entries()) assert.equal(row.proof_sha256, qa.page_audits[i].proof_sha256);
     }
+    if (document.schema === 'ortvay2023-independent-actual-source-title-center-audit-v1') {
+      assert.equal(item.file, 'Ortvay_2023_T_KO.pdf');
+      assert.equal(document.passed, true);
+      assert.equal(document.source_sha256, qa.source_sha256);
+      assert.equal(document.proof_sha256, qa.page_audits[0].proof_sha256);
+      assert.equal(document.layout_sha256, qa.page_audits[0].qa_sha256);
+      assert.equal(document.composer_sha256, qa.page_audits[0].composer_sha256);
+      assert.equal(document.program_sha256, qa.authoring_programs.find(p => p.path.endsWith('/audit_ortvay2023_title_centers.py')).sha256);
+      assert.ok(document.position_tolerance_pt <= .001);
+      assert.equal(document.rows.length, 4);
+      assert.equal(document.nonheader_all_glyph_traces_identical, true);
+      assert.equal(document.nonheader_changed_pixels, 0);
+      for (const row of document.rows) {
+        assert.ok(Math.abs(row.actual_target_center_pt - row.source_center_pt) <= .001);
+        assert.ok(row.center_error_pt <= .001 && row.max_glyph_translation_error_pt <= .001);
+        assert.equal(row.original_source_point_size_pt, row.actual_target_point_size_pt);
+        assert.equal(row.unchanged_glyphs_font_GIDs_size_baseline, true);
+      }
+    }
+    if (document.schema === 'actual-subset-font-korean-inter-row-ink-2x-v1') {
+      assert.equal(document.passed, true);
+      assert.deepEqual(document.stale_pages, []);
+      assert.equal(document.pages.length, qa.pages);
+      assert.deepEqual(document.pages.map(row => row.page), qa.page_audits.map(row => row.page));
+      for (const row of document.pages) {
+        assert.equal(row.passed, true);
+        assert.deepEqual(row.failures, []);
+        assert.equal(row.proof_sha256, qa.page_audits[row.page - 1].proof_sha256);
+        assert.ok(qa.authoring_programs.some(program => program.sha256 === row.measurement_code_sha256));
+        assert.equal(row.pairs.length, row.tested_close_row_pairs);
+        for (const pair of row.pairs) assert.equal(pair.contact_pixels_2x, 0);
+      }
+    }
   }
   if (qa.link_annotation_subset_regression) {
     const pin = qa.link_annotation_subset_regression;
@@ -39,14 +72,35 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     assert.equal(regression.status, 'PASS');
     assert.equal(regression.changed_pixels, 0);
     assert.equal(regression.all_visible_glyph_geometry_identical, true);
-    assert.equal(regression.proof_sha256, qa.page_audits[1].proof_sha256);
     assert.equal(regression.helper_sha256, pin.helper_sha256);
     assert.equal(regression.program_sha256, pin.test_program_sha256);
     assert.equal(hash(fs.readFileSync(path.join(root, pin.test_program_path))), pin.test_program_sha256);
-    assert.equal(qa.authoring_programs.find(p => p.path.endsWith('/ortvay2024_link_annotations.py')).sha256, pin.helper_sha256);
-    assert.equal(regression.links.length, 6);
-    assert.equal(regression.negative_regressions.length, 3);
-    assert.deepEqual(qa.page_audits[1].link_annotation_geometry_audits, regression.links);
+    if (item.file === 'Ortvay_2023_T_KO.pdf') {
+      assert.equal(regression.source_sha256, qa.source_sha256);
+      assert.equal(regression.all_nonrect_annotation_settings_identical_after_save, true);
+      assert.equal(qa.authoring_programs.find(p => p.path.endsWith('/ortvay2023_link_annotations.py')).sha256, pin.helper_sha256);
+      assert.deepEqual(regression.pages.map(row => row.page), [1, 6]);
+      assert.equal(regression.links.length, 3);
+      assert.equal(regression.negative_regressions.length, 6);
+      for (const row of regression.pages) {
+        const page = qa.page_audits[row.page - 1];
+        assert.equal(row.proof_sha256, page.proof_sha256);
+        assert.equal(row.layout_sha256, page.qa_sha256);
+        assert.equal(row.changed_pixels, 0);
+        assert.equal(row.all_visible_glyph_geometry_identical, true);
+        assert.equal(row.all_nonrect_annotation_settings_identical_after_save, true);
+        assert.equal(row.negative_regressions.length, 3);
+        assert.deepEqual(page.link_annotation_geometry_audits, row.links);
+      }
+      assert.deepEqual(regression.links, regression.pages.flatMap(row => row.links));
+    } else {
+      assert.equal(item.file, 'Ortvay_2024_T_KO.pdf');
+      assert.equal(regression.proof_sha256, qa.page_audits[1].proof_sha256);
+      assert.equal(qa.authoring_programs.find(p => p.path.endsWith('/ortvay2024_link_annotations.py')).sha256, pin.helper_sha256);
+      assert.equal(regression.links.length, 6);
+      assert.equal(regression.negative_regressions.length, 3);
+      assert.deepEqual(qa.page_audits[1].link_annotation_geometry_audits, regression.links);
+    }
   }
   if (qa.source_path_resolver_sha256) {
     const resolver = qa.authoring_programs.find(p => /\/source_path_resolver\.py$/.test(p.path));
