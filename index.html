@@ -1105,7 +1105,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=df3325a423a9"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=c75504b05a0e"></script>
+<script src="site-design.js?v=063091500643"></script>
 <script>
 "use strict";
 
@@ -5282,6 +5282,9 @@ function probCard(o){
    w a Korean whole paper where the originals are per problem), else the original, tagged; the row below holds the
    marking scheme where it was published apart */
 const THY_YEARLY=new Set(["baupc","usapho","opho","plancks","eotvos"]);
+/* competitions whose marking scheme is not offered on the problem cards: it stays in the repository and goes to the
+   grader only (exam mode and grading & feedback send it with the sitting) */
+const MARK_HIDDEN=new Set(["ispho"]);
 function kpheSolutionNote(ko){
   return ko?'해설은 자체 작성 자료이며 한국물리학회 공식 솔루션이 아닙니다.':'The solutions are independently written and are not official Korean Physical Society solutions.';
 }
@@ -5335,7 +5338,7 @@ function theoryHtml(key,yr){
          (K[0]?[a(K[0],key==="kphe"?(ko?"답안":"Answers"):t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
-       docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(sheetDocs(code,A,!omr)).concat(simDocs(code)).concat(docs||[]).concat(M[0]?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+       docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(sheetDocs(code,A,!omr)).concat(simDocs(code)).concat(docs||[]).concat(M[0]&&!MARK_HIDDEN.has(key)?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
   /* the problems of a part: its own; for a whole paper T every problem but the invitational round's (Ti1, Ti2, …),
