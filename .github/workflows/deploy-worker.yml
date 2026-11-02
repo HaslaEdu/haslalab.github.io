@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "problem-search.*", "index.html", "arena.js", "tests/test-problem-search-*.cjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
