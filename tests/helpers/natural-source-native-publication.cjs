@@ -60,6 +60,37 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       assert.equal(body.overrides_sha256, page.overrides_sha256);
     }
     for (const scope of page.source_scopes || []) read(scope.path, scope.sha256);
+    if (page.raster_label_manifest) {
+      read(page.raster_label_manifest.path, page.raster_label_manifest.sha256);
+      assert.equal(body.reviewed_raster_label_manifest.sha256, page.raster_label_manifest.sha256);
+    }
+    if (qa.strict_korean_glyph_geometry_audit) {
+      const audit = body.new_korean_glyph_and_geometry_audit;
+      assert.equal(audit.passed, true);
+      assert.deepEqual(audit.missing_or_notdef_glyphs, []);
+      assert.deepEqual(audit.geometry_errors, []);
+      assert.equal(audit.planned_glyphs, audit.actual_glyphs);
+      assert.ok(audit.max_position_error_pt <= 0.001 && audit.position_tolerance_pt <= 0.001);
+      for (const key of ['paragraph_text_conservation_verified', 'inline_native_math_assignment_complete',
+        'native_atom_source_prose_seams_clear', 'new_korean_font_subsets_retain_original_gids']) assert.equal(body[key], true, key);
+      const baseline = page.original_prose_baseline_audit;
+      assert.equal(baseline.passed, true);
+      assert.equal(baseline.placements, body.placements.length);
+      assert.ok(baseline.max_selected_source_prose_baseline_delta_pt <= 0.001);
+      assert.ok(baseline.max_actual_source_char_baseline_delta_pt <= 0.001 && baseline.tolerance_pt <= 0.001);
+      for (const [field, filename] of [['native_motion_engine_sha256', 'latex_native_motion.py'],
+        ['native_ink_bounds_engine_sha256', 'native_ink_bounds.py'], ['native_proof_helper_sha256', 'native_proof.py']]) {
+        assert.equal(body[field], qa.authoring_programs.find(p => p.path.endsWith('/' + filename)).sha256);
+      }
+    }
+    for (const contact of body.intentional_prose_decoration_contacts || []) {
+      assert.equal(contact.x_translation_only, true);
+      assert.equal(contact.source_path_bytes_and_paint_and_y_preserved, true);
+      const decoration = body.prose_vector_decorations.find(d => d.id === contact.id);
+      assert.ok(decoration);
+      assert.equal(contact.source_path_index, decoration.source_path_index);
+      assert.equal(contact.observed_contact_pixels, contact.contact_pixels_pdf_pt.length);
+    }
     for (const key of ['no_reserved_english_widths', 'no_font_shrink', 'source_font_programs_preserved',
       'original_image_encoded_bytes_and_filters_preserved', 'source_image_placements_preserved',
       'source_glyph_moves_restricted_to_authored_prose_line_bounds', 'stationary_display_equations_and_figures',
@@ -75,7 +106,7 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     assert.deepEqual(body.actual_native_vector_coordinate_audit.coordinate_errors, []);
     if (body.actual_native_vector_coordinate_audit.audit_code_sha256) {
       assert.equal(body.actual_native_vector_coordinate_audit.audit_code_sha256,
-        qa.authoring_programs.find(p => p.path.endsWith('/verify_native_vectors.py')).sha256);
+        qa.authoring_programs.find(p => /\/verify_native_vectors(?:_[a-z]+\d+)?\.py$/.test(p.path)).sha256);
     }
     assert.ok(body.actual_native_vector_coordinate_audit.max_coordinate_tolerance_pt <= 0.000001);
     assert.equal(body.new_korean_intrusion_on_native_ink_pixels, 0);
