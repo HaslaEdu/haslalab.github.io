@@ -123,6 +123,13 @@ test('cursor browse reaches every canonical row beyond offset300 without duplica
   assert.equal(seen.size,318);
   const filtered=await (await f.call('/search?lang=en&collection=astronomy&stars=2&subject=general_relativity',{user:null})).json();assert.ok(filtered.items.length);assert.ok(filtered.items.every(i=>i.collection==='astronomy'&&i.stars===2&&i.subjects.includes('general_relativity')));
 });
+test('admitted figure metadata exposes only bounded safe labels and partial-source flags',async t=>{
+  const f=fixture(t);
+  for(const [n,label] of [[1,'Fig. 1.16 · input portion only'],[2,'D:/private/source-proof.pdf']])f.main.prepare('INSERT INTO bank_figure_variants VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run('f_'+sha('figure'+n),Q1,S1,sha('pdf'),A1,sha(PNG),'[]','figures/'+sha(PNG)+'.png','image/png',sha(PNG),PNG.length,1,1,1,JSON.stringify({figure_label:label,partial_source_figure:true,private_path:'D:/private/secret',api_key:'topsecret'}),'now');
+  const detail=await (await f.call('/questions/'+Q1,{user:null})).json();assert.equal(detail.question.figures.length,2);
+  assert.ok(detail.question.figures.some(a=>a.figure_label==='Fig. 1.16 · input portion only'));assert.ok(detail.question.figures.some(a=>a.figure_label===null));assert.ok(detail.question.figures.every(a=>a.partial_source_figure===true));
+  assert.doesNotMatch(JSON.stringify(detail),/D:\/private|topsecret|private_path|proof_json/);
+});
 
 test('member feedback upserts one self-report per question without changing difficulty or ratings',async t=>{
   const f=fixture(t);seedFacet(f,Q1,S1,3);
@@ -208,7 +215,7 @@ test('context links select admitted canonical shards and languages without expos
   const ko=await (await f.call('/questions/'+Q1+'/context?lang=ko')).json();
   assert.ok(ko.contexts.every(x=>x.selected_version.language==='ko'&&x.selected_version.role==='translation'));
   assert.doesNotMatch(JSON.stringify({detail,en,ko}),/WRONG RETAINED COPY|private-secret-key|D:\/private|drive\.google|topsecret|proof_json|metadata_json/);
-  assert.ok(!f.env.BANK_REGISTRY.calls.some(c=>c.sql.includes('proof_json')));
+  assert.ok(!f.env.BANK_REGISTRY.calls.some(c=>c.sql.includes('FROM bank_context_graph_edges')&&c.sql.includes('proof_json')));
 });
 
 test('context traversal includes the root in visited and reports actual cycles at bounded depth',async t=>{
