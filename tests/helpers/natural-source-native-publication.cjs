@@ -24,6 +24,11 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
   for (const program of qa.authoring_programs) {
     assert.equal(hash(fs.readFileSync(path.join(root, program.path))), program.sha256);
   }
+  if (qa.source_path_resolver_sha256) {
+    const resolver = qa.authoring_programs.find(p => /\/source_path_resolver\.py$/.test(p.path));
+    assert.ok(resolver, 'Source path mapping program is frozen with the publication');
+    assert.equal(resolver.sha256, qa.source_path_resolver_sha256);
+  }
   const folder = path.dirname(path.join(root, item.qa));
   const reviews = fs.readdirSync(folder).filter(f => /^visual-review.*\.json$/.test(f)).flatMap(f => {
     const review = JSON.parse(fs.readFileSync(path.join(folder, f), 'utf8'));
@@ -39,6 +44,20 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       'original_font_programs_preserved', 'original_image_encoded_streams_and_filters_preserved',
       'original_image_geometry_preserved']) assert.equal(page[key], true, key);
     const body = read(page.qa_path, page.qa_sha256);
+    for (const link of page.link_annotation_adjustments || []) {
+      assert.equal(link.page, page.page);
+      assert.equal(link.passed, true);
+      assert.equal(link.only_horizontal_rect_translation, true);
+      assert.equal(link.other_annotation_settings_preserved, true);
+      const shift = body.native_shifts[link.native_shift_index];
+      assert.equal(shift.glyphs.map(g => g.c).join(''), link.uri);
+      assert.equal(shift.glyphs.length, link.native_url_glyphs);
+      assert.equal(shift.dx, link.dx);
+      for (let n = 0; n < 4; n++) {
+        const expected = link.source_rect_mupdf[n] + (n % 2 === 0 ? link.dx : 0);
+        assert.ok(Math.abs(link.actual_target_rect_mupdf[n] - expected) < 0.001);
+      }
+    }
     const plan = read(page.plan_path, page.plan_sha256);
     const effective = read(page.effective_plan_path, page.effective_plan_sha256);
     assert.equal(body.schema, 'natural-source-native-v1');
@@ -82,6 +101,11 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
         ['native_ink_bounds_engine_sha256', 'native_ink_bounds.py'], ['native_proof_helper_sha256', 'native_proof.py']]) {
         assert.equal(body[field], qa.authoring_programs.find(p => p.path.endsWith('/' + filename)).sha256);
       }
+    }
+    if (body.native_type3_profile_sha256) {
+      const profile = qa.authoring_programs.find(p => p.path.endsWith('/native_type3_profile.py'));
+      assert.ok(profile);
+      assert.equal(profile.sha256, body.native_type3_profile_sha256);
     }
     for (const contact of body.intentional_prose_decoration_contacts || []) {
       assert.equal(contact.x_translation_only, true);

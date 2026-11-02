@@ -1,0 +1,557 @@
+{
+  "schema": "natural-source-native-joined-v1",
+  "status": "READY",
+  "file": "Ortvay_2025_T_KO.pdf",
+  "language": "ko",
+  "pages": 12,
+  "bytes": 14395626,
+  "sha256": "754b6ecf1d74b178a279476b49ae608988f2507ddff3ffbbcf409545e52454b8",
+  "source": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2025_T_EN.pdf",
+  "source_sha256": "84291fb1a1f4cb47fb4421eff335da153122895da349ce09c1b25f00461c7ab8",
+  "resolved_source_read_path": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2025_T_EN.pdf",
+  "source_path_resolver_sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9",
+  "no_font_shrink": true,
+  "no_math_rasterization": true,
+  "no_reserved_english_widths": true,
+  "inline_native_math_moved_as_whole_expressions": true,
+  "stationary_display_equations_and_figures": true,
+  "original_font_sizes_and_baselines_preserved": true,
+  "hidden_original_prose_has_empty_ActualText": true,
+  "no_added_editorial_notes": true,
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "7367c27e097894ba6a8e54760f24eea42aa7223420df7cbe2895c8c5e205facb",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page01.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page01.qa.json",
+      "qa_sha256": "1a4e7a713553f5e0c7a4b32429592706d5a9747a3ed513f583e3e1c4ce698568",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page01.plan.json",
+      "plan_sha256": "b12200f42b86259f0d126df300454535dd74760e6a45377f39f5c0b90c65be32",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page01.effective-plan.json",
+      "effective_plan_sha256": "76a9914e17ae353b558eeea5b1af9f48c3c5090fa444c0e7f28a355f44170c6f",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page01.overrides.json",
+      "overrides_sha256": "68a36486a23cf5e9e4f8900fb376f8c3f27f39f870c09bd8ee213d8abe6d99e9",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 606,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 49,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 2,
+      "proof_sha256": "0bb1cf600b1e646e3bf5f1b466a461574b9790daf2289051d5f339abc9e43bea",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page02.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page02.qa.json",
+      "qa_sha256": "f03bc813e234f4826bcf97a211bdb0146fb5d7a28a2865056d6ad35aa2d1f3b3",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page02.plan.json",
+      "plan_sha256": "83a623dd1855669b2c7829b83d1da1ea8d10ebb8c92af3fb61233036def62ee2",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page02.effective-plan.json",
+      "effective_plan_sha256": "308890df43b330595cd6b1b35451650f0f468724015976ba9a08b01d0b265cdf",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page02.overrides.json",
+      "overrides_sha256": "edb4b8bf5898892a771578617a28ad13d28e6aa3f7af6de92cbfb1b1916a813a",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 699,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 50,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 3,
+      "proof_sha256": "f487df4c9deb3f7d8bf182364230a6a14a9afeeb8f93d6154aea69bba895e63e",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page03.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page03.qa.json",
+      "qa_sha256": "b3f3a1196d814f177263304d4b46f581a6b305d2b93135cab98b39135cf71c78",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page03.plan.json",
+      "plan_sha256": "2cef2120522a2954d09111ca2f8ece3a1c60289716e73e6d9df5d4aaebf09c17",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page03.effective-plan.json",
+      "effective_plan_sha256": "9d29685f1320b40d8d8bb141e525169a6989e9de19de22a00fde5eeb29c38dbe",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page03.overrides.json",
+      "overrides_sha256": "4d7969b7b2800c412d2b290fcbf063c296c5ae77026c26967c9f447ec5b1fcdf",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 541,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 52,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 4,
+      "proof_sha256": "419fc99cc538083ce5943ffa39f25237d0a9f55cd97d52b7e69628db136cf354",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page04.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page04.qa.json",
+      "qa_sha256": "3ba16ceaad695975ddb24606e630ec8dc4b5c4cdf01833048709d6314dbf647e",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page04.plan.json",
+      "plan_sha256": "345971d36cce1f8837399775e300c07fe4f03d53bbd7150feb1721e36c9c6721",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page04.effective-plan.json",
+      "effective_plan_sha256": "ecb1c1a3263d0210272c40192d8fb8265174ad93707c3f2f9d91487c6d047e3e",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 826,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 62,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 5,
+      "proof_sha256": "5160220f112a5ee5991346705358f7be9540037933d25beb6b2995477997b62d",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page05.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page05.qa.json",
+      "qa_sha256": "73dac9453ffcbdab412e236d9cbf710775506d399dfd2e9fec8b309ba9d92dfe",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page05.plan.json",
+      "plan_sha256": "adcdeac2df9f2e6b4bb876a9a56fd0e9b8a9db5a86cf4cd24a572b152de846bf",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page05.effective-plan.json",
+      "effective_plan_sha256": "c8820163961fcedbf43aa6e6c33b767ff3a898f441db8896fcfa15152168ebeb",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page05.overrides.json",
+      "overrides_sha256": "3eb63526652c69b9058d5bfe69c183b3ff88ead44be26c9123b31ad43c0d8888",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 358,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 23,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 6,
+      "proof_sha256": "f3b366f5f81bbe179be32ab30bff1e7d1d841c3d963b67cd8265150dc754b861",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page06.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page06.qa.json",
+      "qa_sha256": "e4f37291e210eb5e39743039b0cad4b5d99c534d8fb3a3615c59e2c701cc9936",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page06.plan.json",
+      "plan_sha256": "d906e59007145f6596ebaf7cf623f386045d7cb84181eca7505721abda0fb1e8",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page06.effective-plan.json",
+      "effective_plan_sha256": "caac28dd0f77e825a73218839e0fae34ae988379cf5408ee63b4fe56acd05dda",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page06.overrides.json",
+      "overrides_sha256": "7e285115547fa65c15f7a1cdf859a333f527a970680a51771aea8c265ac1b783",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 611,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 62,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 7,
+      "proof_sha256": "fe761332da5b3cac278647da2f75d68cbc67fe3e5f4ea56328331adeb0354dde",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page07.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page07.qa.json",
+      "qa_sha256": "bc2dbfbbc37554d061caf0c1add056911ea62309cf2e63596f957a1fbc720abd",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page07.plan.json",
+      "plan_sha256": "1567bc67d00ce853cc147320b3b29fa0004de31ba3eecdfb60f18edd3aa13e98",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page07.effective-plan.json",
+      "effective_plan_sha256": "a776adc4e7c35a64b10595275f6672b9165e023bb1146f0613690b13945ec897",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page07.overrides.json",
+      "overrides_sha256": "3f982d74583f7abf8d7e6887dc8f385492384b8c1fb46fb53ec6c668c5adc254",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 628,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 36,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 8,
+      "proof_sha256": "ee5d57bf9b821ee64ce780a6244a5716f54b805be81d1b0f0414e4e711e1b9dd",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page08.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page08.qa.json",
+      "qa_sha256": "48be7c07254fb88ec242da88d891d2ee17b733750b721a1a839beec59b2d5502",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page08.plan.json",
+      "plan_sha256": "1993345e81b00c509e5b94f25c12eb4e20cf50535c9608f18edf491c97ee39b8",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page08.effective-plan.json",
+      "effective_plan_sha256": "1521eaaacd0acd316b352b82221b26fd76e62d6cbf69cc37da992edd426fe3a2",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page08.overrides.json",
+      "overrides_sha256": "cf3f01be18089deee2e3e2d2842ad936ec17eb3ed8028d148f4a932f3383b65a",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 620,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 58,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 9,
+      "proof_sha256": "ec8341545f0ea7a5dc712fc6c9ce8919f06fa39e603de67fdbcfa47894ad6e6d",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page09.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page09.qa.json",
+      "qa_sha256": "4c527ace37bf694f0cf479f7c8c85af4a931a46f5f6faba513bef566b38e98f3",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page09.plan.json",
+      "plan_sha256": "d8648a8be6086145f3cad900e52d9de2928e9b8ee45ec82eb8d43243c59d0be1",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page09.effective-plan.json",
+      "effective_plan_sha256": "6137d8491f3c91086e2c51ec2e10b916dedbc5c07fcdf328ac2d97837f8355ec",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page09.overrides.json",
+      "overrides_sha256": "68bf77e0e99f7a1d1a7bc3d95de7aa86a0515e3670a7a3b2761e49013754003c",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 543,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 51,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 10,
+      "proof_sha256": "13ecfc0e5bc9570f6c07148db01cb709579ea410e0897fa0599bc6af8fa35f25",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page10.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page10.qa.json",
+      "qa_sha256": "19aae3901c540e488feab7989d4985fe511e9e77f5e8480530ed8db99fed5856",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page10.plan.json",
+      "plan_sha256": "392707c234fbdb899acceba7de2564e7f7416a0eb549f4e22c44e9117c61a02c",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page10.effective-plan.json",
+      "effective_plan_sha256": "305133d2441ccf0fc92b3339354192756d918b8e80938cb6e386c4b744218ea0",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page10.overrides.json",
+      "overrides_sha256": "73fbda1aff4df47a09f94231883eb756ad8669cbea4ef9501df800b4e2957144",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 768,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 57,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [
+        {
+          "page": 10,
+          "uri": "https://arxiv.org/abs/2412.13580",
+          "native_shift_index": 0,
+          "native_url_glyphs": 32,
+          "dx": 52.97288918495178,
+          "source_rect_pdf": [
+            275.07,
+            740.057,
+            448.515,
+            754.002
+          ],
+          "target_rect_pdf": [
+            328.0428891849518,
+            740.057,
+            501.48788918495177,
+            754.002
+          ],
+          "source_rect_mupdf": [
+            275.07000732421875,
+            37.99798583984375,
+            448.5150146484375,
+            51.9429931640625
+          ],
+          "expected_target_rect_mupdf": [
+            328.04289650917053,
+            37.99798583984375,
+            501.4879038333893,
+            51.9429931640625
+          ],
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            328.0428771972656,
+            37.99798583984375,
+            501.4878845214844,
+            51.9429931640625
+          ],
+          "passed": true
+        }
+      ],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 11,
+      "proof_sha256": "f5858e98e802145319a3a60b788d37152c67fd3098a8dff58f7fdc86d0617e40",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page11.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page11.qa.json",
+      "qa_sha256": "f8d77f67e0a8854594bb52b9e68c0ba66781e6b68860c976e6c0086be6712d90",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page11.plan.json",
+      "plan_sha256": "353073fecaa8cc622a0af254599578427c99dbe542398cbc44d98bc2a6cbafec",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page11.effective-plan.json",
+      "effective_plan_sha256": "7798af592be9aeeb496aa1529348db9eb88849ac139e0c5e52c0144c9df37ef2",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 1337,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 62,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    },
+    {
+      "page": 12,
+      "proof_sha256": "e1fad36ce6785b1d963b6218f27829513505b7a272299c955f2cec198ebd064f",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\ortvay\\2025\\page12.pdf",
+      "qa_path": "tools/ko/ortvay/2025/T/natural-spacing/page12.qa.json",
+      "qa_sha256": "5944c1501d36b88aeca2837e0df193f7f88b6087a83001e2fe7aaef60d049a91",
+      "plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page12.plan.json",
+      "plan_sha256": "7506734aab74493bd1912d8a86027ebddf3763c9cee9990bda40ec402f958179",
+      "effective_plan_path": "tools/ko/ortvay/2025/T/natural-spacing/page12.effective-plan.json",
+      "effective_plan_sha256": "23f4ac275ae22d59f87126a1ee6298d85bf8decf1981cfb1877c82f9f0039072",
+      "overrides_path": "tools/ko/ortvay/2025/T/natural-spacing/page12.overrides.json",
+      "overrides_sha256": "54f70fb4cefc7e644604140ebbbc93596dbadcb349340bc4545d1db5b862d872",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 609,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 30,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/natural_plan_compose_ortvay2025_final.py",
+      "composer_sha256": "148225d3a8f0467c9f7af0417fb3d5edcd672234f3f822e5283ed55575095287",
+      "source_scopes": [],
+      "raster_label_manifest": {
+        "path": "tools/ko/ortvay/2025/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "1d316e29b964c20fce3737583c452460d872359b7d4dcbe49c1229eed3e86e69"
+      }
+    }
+  ],
+  "visual_review_files": [
+    "tools/ko/ortvay/2025/T/natural-spacing/visual-review-natural-01-12.json",
+    "tools/ko/ortvay/2025/T/natural-spacing/visual-review-root-independent.json"
+  ],
+  "all_pages_visually_reviewed": true,
+  "visual_review_required": false,
+  "authoring_programs": [
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/verify_native_vectors_ortvay2025.py",
+      "sha256": "0c555a216e5a6c564efe257f3843e45cf5d0b85014e12d371c061fae5b1e5469"
+    },
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/assemble_natural.py",
+      "sha256": "b3cca5a3683c768dd74aca0da3308e44d05bdde993a79f9a54760d64cc9da7a7"
+    },
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/source_path_resolver.py",
+      "sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9"
+    },
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/manifest.json",
+      "sha256": "d6e13fa8c4a50a4d67d39f1c2af151faa1510e377c6fa77b92469025893e1849"
+    }
+  ],
+  "strict_korean_glyph_geometry_audit": true,
+  "link_annotation_regression": {
+    "path": "tools/ko/ortvay/2025/T/natural-spacing/link-annotation-regression.json",
+    "sha256": "f09702a46bceb57d07fac47790fe96f41d51a29dfdf6a8bf69bdf7eca723ce48",
+    "test_program_path": "tools/ko/ortvay/2025/T/natural-spacing/authoring/test_ortvay2025_link.py",
+    "test_program_sha256": "adc4dd3945c26b45f70a0a69aac4ef149324ed8e8a5a826bf29698a85a1269b7"
+  },
+  "source_url": "https://ortvay.elte.hu/2025/E25.pdf",
+  "source_page_url": "https://ortvay.elte.hu/main.html"
+}
