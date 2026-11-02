@@ -58,6 +58,9 @@ LAB_READ_MODEL = "deepseek-flash"
 # DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
 # numbers it missed from 21 to 14 of 102 for $0.0002 more a page
 LAB_READ_TILES = "3"
+# the paper's own symbols handed to the reader to tell look-alikes apart (I0 from Z0, gamma from Y): bench, DeepSeek Flash,
+# hard misreads fixed 5 -> 8 of 28, checked numbers missed 14 -> 13 of 102, for about $0.0001 a page
+LAB_READ_NOTATION = "on"
 LAB_READ_THINKING = "off"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded

@@ -2393,7 +2393,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   /* Math-Verify's check in code: a result whose final expression is not the official one at random points yet has full
      marks, or is the official one in another form yet has under half, is looked at once more with that fact */
   const checks = env.LAB_EXPR_CHECK === "off" || roles?.exprCheck === false ? [] : (raw.items || []).flatMap(x => {
-    const it = specOf.get(String(x?.id)); if (!it?.expr || !x?.expr || it.role !== "result") return [];
+    const it = specOf.get(String(x?.id)); if (!it?.expr || !x?.expr || it.role === "step") return [];   // a scheme that leaves role out (DeepSeek's) still checks its formula items
     const c = compareExpr(it.expr, x.expr), score = +x.score || 0; if (!c) return [];
     const doubt = c.verdict === "equal" ? score < .5 * it.points : score >= .99 * it.points;
     return doubt ? [{ id: it.id, got: score, check: describeCheck(c) }] : [];
