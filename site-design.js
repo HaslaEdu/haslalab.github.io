@@ -70,19 +70,53 @@ function initSiteDesign(){
   };
 }
 
+const HOME_STUDIO_TEXT = {
+  ko: {
+    title:"문제 제작소",intro:"사진 한 장이나 원하는 주제로 시작해 보세요.",open:"제작소 열기",login:"로그인 후 작업을 시작할 수 있어요. 일일 이용 한도가 적용됩니다.",
+    export:"결과를 확인한 뒤 Markdown · JSON · 그림 파일로 저장하거나 PDF로 인쇄하세요.",
+    features:[
+      {mode:"generate",title:"새 문제 제작",description:"원하는 주제를 적거나 원본 사진을 올려, 난이도와 문제 수를 선택해 새 문제를 만드세요.",detail:"사진 없이도 가능 · 1~3문제",action:"새 문제 만들기"},
+      {mode:"digitize",title:"문제 디지털 전사",description:"문제 사진의 글과 수식을 옮기고 그림을 함께 정리하세요. 원본과 결과를 나란히 확인할 수 있어요.",detail:"원본 사진 필요 · 글·수식·그림",action:"사진으로 시작하기"},
+      {mode:"restore",title:"그림 복원",description:"흐릿한 과학 그림을 복원 후보로 만들고 원본과 비교해 보세요. 필요한 그림만 내려받을 수 있어요.",detail:"원본 사진 필요 · 복원 결과 대조",action:"그림 복원하기"}
+    ]
+  },
+  en: {
+    title:"Problem Studio",intro:"Start with an image or a topic you want to explore.",open:"Open Studio",login:"Sign in to start a task. Daily usage limits apply.",
+    export:"Review your result, then save Markdown, JSON or figure files, or print to PDF.",
+    features:[
+      {mode:"generate",title:"Create new problems",description:"Describe a topic or upload a source image, then choose the difficulty and number of new problems.",detail:"An image is optional · 1–3 problems",action:"Create a problem"},
+      {mode:"digitize",title:"Digitize a problem",description:"Turn a problem photo into text and equations with its figures. Compare the source and result side by side.",detail:"Source image required · Text, math & figures",action:"Start with a photo"},
+      {mode:"restore",title:"Restore a figure",description:"Create a restoration candidate for an unclear scientific figure and compare it with the source before saving.",detail:"Source image required · Compare the restoration",action:"Restore a figure"}
+    ]
+  }
+};
+function viewHomeStudio(){
+  const T=HOME_STUDIO_TEXT[lang],icons=[
+    '<path d="M7 4h12v16H7zM10 9h6M10 12h4M23 9v8M19 13h8"/>',
+    '<path d="M5 5h9M5 5v6M27 5h-9M27 5v6M5 23h9M5 23v-6M27 23h-9M27 23v-6M10 11h12M10 15h9M10 19h7"/>',
+    '<path d="M5 23h22M8 26V6M10 20l6-10 5 7 5-12"/><circle cx="16" cy="10" r="1.5"/>'
+  ];
+  return `<section class="hl-home-studio" aria-labelledby="homeStudioTitle">
+    <div class="hl-studio-heading"><div><p class="hl-studio-kicker">HASLALAB / STUDIO</p><h2 id="homeStudioTitle">${T.title}</h2><p>${T.intro}</p></div><a class="hl-studio-open" href="#/learn/physics/studio">${T.open} →</a></div>
+    <div class="hl-studio-features">${T.features.map((feature,index)=>`<a class="hl-studio-feature" href="#/learn/physics/studio?mode=${feature.mode}">
+      <div class="hl-studio-feature-top"><span class="hl-studio-number">0${index+1}</span><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${icons[index]}</svg></div>
+      <h3>${feature.title}</h3><p>${feature.description}</p><span class="hl-studio-detail">${feature.detail}</span><span class="hl-studio-action">${feature.action}<span aria-hidden="true">↗</span></span>
+    </a>`).join("")}</div>
+    <div class="hl-studio-foot"><p class="hl-studio-login">${T.login}</p><p>${T.export}</p></div>
+  </section>`;
+}
+
 function viewHome(){
-  const T=SITE_DESIGN_TEXT[lang],original=document.createElement("div"),archive=document.createElement("div");
+  const T=SITE_DESIGN_TEXT[lang],original=document.createElement("div");
   original.innerHTML=viewOriginalHome();
-  archive.innerHTML=viewComps(undefined,4);
   const experiment=original.querySelector("figure.screen").outerHTML;
   const homeText=original.querySelector(".hero > div").innerHTML;
-  const subjects=archive.querySelector(".subjs").outerHTML,cards=archive.querySelector(".comps");
   const updateRows=SITE_UPDATES.slice(0,4).map(item=>`<a class="hl-update" href="${item.href}"><span class="hl-update-type">${T.update}</span><b>${esc(item[lang])}</b><time datetime="${item.date}">${item.date.slice(5).replace("-",".")}</time></a>`).join("");
   return `<div class="shell hl-home">
     <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>
     <div class="hl-dashboard"><section class="hl-panel"><div class="hl-panel-head"><h2>${T.recent}</h2><a href="#/community">${T.more} →</a></div><div id="homeLatest" aria-live="polite"><p class="hl-empty">${CMT[lang].loading}</p></div></section>
     <section class="hl-panel"><div class="hl-panel-head"><h2>${T.updates}</h2><div class="hl-panel-actions"><span id="homeNoticeWrite"></span><button type="button" class="hl-more" aria-haspopup="dialog" onclick="openSiteMailbox(this)">${T.more} →</button></div></div><div id="homeNotices"></div>${updateRows}</section></div>
-    <section class="hl-home-archive"><div class="hl-section-head"><h2>${UI[lang].navComps}</h2><a href="#/comps">${T.more} →</a></div>${subjects}${cards.outerHTML}</section>
+    ${viewHomeStudio()}
   </div>${adFitBanner("home")}`;
 }
 

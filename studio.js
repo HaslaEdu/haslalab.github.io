@@ -616,6 +616,7 @@
       if(['light','dark'].includes(event.data.theme))document.documentElement.dataset.theme=event.data.theme;
       if(Number.isFinite(event.data.viewportHeight))document.documentElement.style.setProperty('--studio-viewport-height',Math.max(300,Math.min(3000,event.data.viewportHeight))+'px');
       if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;applyLanguage();}
+      if(modes.includes(event.data.mode)){document.querySelector('input[name="mode"][value="'+event.data.mode+'"]').checked=true;updateMode();}
       reportHeight();
     });
     reportHeight();

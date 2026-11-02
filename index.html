@@ -968,7 +968,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 @media(max-width:700px){.ar #arModelExamFields{grid-template-columns:1fr}}
 .ar .arq{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.ar .arq input{padding:5px 8px;border:1px solid var(--cm-line);border-radius:6px}
 </style>
-<link rel="stylesheet" href="site-design.css?v=0bdd3686f69d">
+<link rel="stylesheet" href="site-design.css?v=c38ecca79202">
 </head>
 <body class="hl-site">
 
@@ -1113,7 +1113,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=4f5ba6887faa"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=bc5308e44f5b"></script>
+<script src="site-design.js?v=09fba3045e8e"></script>
 <script>
 "use strict";
 
@@ -4995,15 +4995,22 @@ function learnStudioHeading(){
   return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p>
     <h1>${label}</h1><p class="learn-tool-copy">${ko?"문제 전사 · 새 문제 제작 · 그림 복원":"Problem transcription · New problems · Figure restoration"}</p>`;
 }
+function learnStudioMode(){
+  const mode=new URLSearchParams(location.hash.split("?")[1]||"").get("mode");
+  return ["generate","digitize","restore"].includes(mode)?mode:"generate";
+}
 function viewLearnStudio(){
   const label=lang==="ko"?"문제 제작소":"Problem Studio";
-  const query=new URLSearchParams({embed:"1",subject:"physics",mode:"generate",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:"20261102-learn"});
+  const mode=learnStudioMode(),query=new URLSearchParams({embed:"1",subject:"physics",mode,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:"20261102-home-studio"});
   return `<div class="shell learn-studio"><div class="phead">${learnStudioHeading()}</div>
-    <iframe id="learnStudioFrame" class="learn-studio-frame" src="studio.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
+    <iframe id="learnStudioFrame" class="learn-studio-frame" src="studio.html?${query}" data-route-mode="${mode}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
 }
 function syncLearnStudio(){
   const frame=document.getElementById("learnStudioFrame");
-  frame?.contentWindow?.postMessage({type:"hl-studio-settings",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",viewportHeight:innerHeight},location.origin);
+  if(!frame?.contentWindow)return;
+  const settings={type:"hl-studio-settings",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",viewportHeight:innerHeight},mode=learnStudioMode();
+  if(frame.dataset.routeMode!==mode){settings.mode=mode;if(frame.dataset.studioReady==="true")frame.dataset.routeMode=mode;}
+  frame.contentWindow.postMessage(settings,location.origin);
 }
 addEventListener("message",event=>{
   const frame=document.getElementById("learnStudioFrame");
@@ -9703,7 +9710,7 @@ function render(){
   buildRails();
   paintSiteTheme();
   const studioFrame=document.getElementById("learnStudioFrame");
-  if(studioFrame)studioFrame.addEventListener("load",syncLearnStudio,{once:true});
+  if(studioFrame)studioFrame.addEventListener("load",()=>{studioFrame.dataset.studioReady="true";syncLearnStudio();},{once:true});
   if(active==="home"){ startHero(); mountHomeActivity(); }
   if(active==="community") cmMount();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
