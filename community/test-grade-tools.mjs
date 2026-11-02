@@ -43,3 +43,22 @@ test("DeepSeek tool calls are answered and sent back; the last round asks for th
   assert.equal(sent[1].tool_choice, "none"); assert.deepEqual(sent[1].response_format, { type: "json_object" });
   assert.equal(out.usage.input_tokens, 200, "both rounds metered"); assert.equal(out.tools.length, 1);
 });
+
+test("an empty answer after tool calls is asked for once more, as JSON only", async () => {
+  const sent = [];
+  const reply = (message, finish) => Response.json({ model: "deepseek-flash", choices: [{ finish_reason: finish, message }], usage: { prompt_tokens: 100, completion_tokens: 10 } });
+  const fetchImpl = async (url, init) => {
+    const body = JSON.parse(init.body); sent.push(body);
+    if (sent.length === 1) return reply({ content: "", tool_calls: [{ id: "c1", type: "function", function: { name: "find_on_pages", arguments: '{"text":"0.5"}' } }] }, "tool_calls");
+    if (sent.length === 2) return reply({ content: "" }, "stop");
+    return reply({ content: '{"items":[]}' }, "stop");
+  };
+  const out = await visionJSON({ DEEPSEEK_API_KEY: "k" }, { provider: "deepseek", fetchImpl, parts: [{ text: "grade" }], tools: GRADE_TOOLS,
+    onTool: (name, args) => runGradeTool(name, args, ctx), maxToolRounds: 3 });
+  assert.deepEqual(out.raw, { items: [] });
+  assert.equal(sent.length, 3);
+  assert.ok(sent[2].tools, "the tools stay declared beside the calls in the history");
+  assert.equal(sent[2].tool_choice, "none"); assert.deepEqual(sent[2].response_format, { type: "json_object" });
+  assert.match(sent[2].messages.at(-1).content, /Return the JSON object now/);
+  assert.equal(out.usage.input_tokens, 300);
+});
