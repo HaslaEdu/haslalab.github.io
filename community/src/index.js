@@ -2659,7 +2659,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   }
   await roles?.trace?.('scored');
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
-  if (roles?.bench) sc.raw_items = (raw.items || []).map(x => ({ id: String(x?.id), score: +x?.score || 0 }));   // the model's own marks, before the rules in code
+  if (roles?.bench) sc.raw_items = (raw.items || []).map(x => ({ id: String(x?.id), score: +x?.score || 0, found: !!x?.found, page: x?.page ?? null }));   // the model's own marks, before the rules in code
   return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && out.tools ? { tool_calls: out.tools } : {}), ...(roles?.bench && focusLog?.length ? { focus_reads: focusLog } : {}), ...(roles?.bench && auditLog ? { audit: auditLog } : {}), ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
@@ -3071,7 +3071,7 @@ async function labBench(env, s, job) {
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
       /* raw_score: the model's own marks, each capped at its item and bounded by the paper's headings, with no rule in code */
       const rawBy = new Map((res.raw_items || []).map(x => [x.id, x.score])), rv = it => Math.max(0, Math.min(+it.points || 0, rawBy.get(String(it.id)) ?? 0));
-      out = { expr_checks: res.expr_checks, tool_calls: res.tool_calls, focus_reads: res.focus_reads, audit: res.audit, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
+      out = { expr_checks: res.expr_checks, tool_calls: res.tool_calls, focus_reads: res.focus_reads, audit: res.audit, raw_items: res.raw_items, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
         items: res.items.map(i => ({ id: i.id, got: i.got, raw: rawBy.get(String(i.id)) ?? null, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, rules: i.rules || [], note: i.note || '' })) };
     } else throw new Error('bench_stage');
   } catch (e) { failed = true; out = { error: String(e?.code || e?.message || 'bench_failed').slice(0, 200), ...(e?.provider_message ? { detail: String(e.provider_message).slice(0, 240) } : {}) }; }
