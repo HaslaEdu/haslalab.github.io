@@ -16,10 +16,16 @@ function editDistance(a, b) {
     d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
   return d[a.length][b.length];
 }
-/** one misread character apart: a digit (8 for 2), a power of ten (13 for 18) or a sign; not the same number */
+/** one misread character apart: a digit (8 for 2), an exponent's digit (10^12 for 10^18) or a sign; not the same number.
+    The same digits at another power of ten only between two powers of ten written out (both at least 10^3 or 10^-3
+    in size): on the bench every other such change was a number Mathpix split or ran together (6.23 from 6.23·10^7,
+    53295 from 5.3295, 12 from 120), never a misread */
 export function misreadOf(first, again) {
   if (!Number.isFinite(first) || !Number.isFinite(again) || first === again || first === 0 || again === 0) return false;
-  return editDistance(sig(first), sig(again)) === 1;
+  const a = sig(first), b = sig(again);
+  if (editDistance(a, b) !== 1) return false;
+  const [ma, ea] = a.split('e'), [mb, eb] = b.split('e');
+  return ma !== mb || Math.abs(+ea) >= 3 && Math.abs(+eb) >= 3;
 }
 
 /* ⁹ -> ^9, so 3,11·10⁹ is one number */

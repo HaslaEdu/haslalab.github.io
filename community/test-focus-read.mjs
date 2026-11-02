@@ -10,6 +10,9 @@ test("a re-read replaces a reading only one character off: a digit or a power of
   assert.ok(!misreadOf(648, 648), "the same reading");
   assert.ok(!misreadOf(0, 8));
   assert.ok(!misreadOf(3.3, NaN));
+  // what Mathpix split or ran together on the bench (IPhO 2016 T2, 2015 T1): the same digits at another power of ten
+  assert.ok(!misreadOf(6.23e7, 6.23)); assert.ok(!misreadOf(5.3295, 53295)); assert.ok(!misreadOf(120, 12)); assert.ok(!misreadOf(6.1e10, 6.101));
+  assert.ok(misreadOf(2.4e-5, 2.4e-6), "an exponent's digit, both written out");
 });
 test("Mathpix's page gives the one number a character off the first reading, absent from the first transcript", () => {
   // IPhO 2021 T3, session 34: what DeepSeek and Mathpix read on the answer pages
