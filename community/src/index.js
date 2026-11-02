@@ -2430,7 +2430,8 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   let sc = labScore(scheme, raw, mine, { theory });
   /* focused re-read (focus-read.js; LAB_FOCUS_READ on, bench grade.focus): a value the code marks wrong is read once more
      from its photo alone; a one-character misread (a digit, a power of ten) is replaced and the task scored again */
-  const focus = (roles?.focusRead ?? env.LAB_FOCUS_READ === "on") ? await labFocusRead(env, s, sc, raw, photos, m).catch(e => { console.error("lab focus read", e?.code || e?.message); return []; }) : [];
+  const focusLog = roles?.bench ? [] : null;
+  const focus = (roles?.focusRead ?? env.LAB_FOCUS_READ === "on") ? await labFocusRead(env, s, sc, raw, photos, m, focusLog).catch(e => { console.error("lab focus read", e?.code || e?.message); return []; }) : [];
   if (focus.length) {
     const byId = new Map(focus.map(f => [f.id, f]));
     raw = { ...raw, items: (raw.items || []).map(x => { const f = byId.get(String(x?.id)); if (!f) return x;
@@ -2442,11 +2443,11 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   await roles?.trace?.('scored');
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
   if (roles?.bench) sc.raw_items = (raw.items || []).map(x => ({ id: String(x?.id), score: +x?.score || 0 }));   // the model's own marks, before the rules in code
-  return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && out.tools ? { tool_calls: out.tools } : {}), ...(roles?.bench && focus.length ? { focus_reads: focus } : {}), ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
+  return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && out.tools ? { tool_calls: out.tools } : {}), ...(roles?.bench && focusLog?.length ? { focus_reads: focusLog } : {}), ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
 /* the items a page's numerical answer was marked wrong for (R12), read once more page by page (focus-read.js) */
-async function labFocusRead(env, s, sc, raw, photos, m) {
+async function labFocusRead(env, s, sc, raw, photos, m, log = null) {
   const given = new Map((raw.items || []).map(x => [String(x?.id), x]));
   const disputed = sc.items.filter(i => i.rules?.includes("R12") && Number.isFinite(i.value) && i.page != null).slice(0, 8);
   const out = [];
@@ -2458,7 +2459,11 @@ async function labFocusRead(env, s, sc, raw, photos, m) {
     const res = await labVision(env, s, [{ text: focusPrompt(here) }, shot.photo,
       ...strips.map((strip, i) => ({ inline_data: { mime_type: "image/jpeg", data: b64(strip) }, label: `Zoomed strip ${i + 1} of ${strips.length} of the same page` }))],
       FOCUS_SCHEMA, 1024, m, "focus", 0);
-    out.push(...acceptedRereads(here, res.raw).map(f => ({ ...f, page: no })));
+    const taken = acceptedRereads(here, res.raw);
+    out.push(...taken.map(f => ({ ...f, page: no })));
+    /* the bench keeps every answer, taken or not, to see why a misread stays */
+    if (log) for (const h of here) { const r = (res.raw?.items || []).find(x => String(x?.id) === h.id);
+      log.push({ id: h.id, page: no, first: h.value, again: r?.value ?? null, written: String(r?.written ?? "").slice(0, 120), taken: taken.some(t => t.id === h.id) }); }
   }
   return out;
 }
