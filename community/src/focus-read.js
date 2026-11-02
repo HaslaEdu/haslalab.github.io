@@ -37,8 +37,20 @@ const sameValue = (a, b) => Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math
     Mathpix's page one character off the first reading and absent from the first transcript (a number the transcript
     already has differs by a unit, not by a misread: 3.11 GPa written 3,11·10⁹ Pa) */
 export function mathpixRereads(disputed, mathpixText, transcript) {
-  return disputed.flatMap(d => { const { fits } = focusCandidates(d.value, mathpixText, transcript);
+  return disputed.flatMap(d => {
+    let { fits } = focusCandidates(d.value, mathpixText, transcript);
+    /* more than one: the one written under the item's own label (D.5: 23 elsewhere on the page, 85 under «D. 5») */
+    if (fits.length > 1) { const own = labelSection(mathpixText, d.id); if (own) fits = focusCandidates(d.value, own, transcript).fits; }
     return fits.length === 1 ? [{ id: d.id, value: fits[0], written: `Mathpix: ${fits[0]}` }] : []; });
+}
+/** the text from an item's label (D.5, written «D. 5» or «D.5») to the next label of that form, or null */
+export function labelSection(text, id) {
+  const parts = String(id || '').match(/^([A-Za-z]{1,2})\.?\s*(\d+)$/);
+  if (!parts) return null;
+  const start = new RegExp(`(^|[^A-Za-z0-9])${parts[1]}\\.\\s*${parts[2]}(?![0-9.])`).exec(text);
+  if (!start) return null;
+  const from = start.index + start[0].length, next = /(^|[^A-Za-z0-9])[A-Za-z]{1,2}\.\s*\d+(?![0-9.])/.exec(text.slice(from));
+  return text.slice(from, next ? from + next.index : undefined);
 }
 /** Mathpix's numbers one character off a reading: fits (absent from the transcript) and in_transcript (left out) */
 export function focusCandidates(value, mathpixText, transcript) {
