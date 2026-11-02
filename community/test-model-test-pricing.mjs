@@ -130,6 +130,19 @@ test('missing, invalid or explicitly unavailable usage is unknown, including fai
   assert.equal(priceModelTestStage(stage({ input_tokens: 0, cached_tokens: 0, output_tokens: 0 })).total_usd, 0);
 });
 
+test('explicit zero usage remains fully priced during a bounded weekday peak tariff', () => {
+  const zero=stage({provider:'deepseek',model:'deepseek-flash',resolved_model:null,
+    started_at:'2026-10-30T02:00:00Z',input_tokens:0,cached_tokens:0,output_tokens:0});
+  const call=priceModelTestStage(zero);
+  assert.equal(call.status,'range');
+  assert.deepEqual(call.range_usd,{min:0,max:0});
+  const sum=summarizeModelTestPricing([zero,zero]);
+  assert.equal(sum.incomplete,false);
+  assert.equal(sum.priced_calls,2);
+  assert.equal(sum.total_calls,2);
+  assert.deepEqual(sum.known_range_usd,{min:0,max:0});
+});
+
 test('aggregates exact, ranged and incomplete totals without pretending unknown calls were free', () => {
   const gemini = stage();
   const ranged = stage({ provider: 'deepseek', model: 'deepseek-flash', resolved_model: null, started_at: '2026-10-30T02:00:00Z' });

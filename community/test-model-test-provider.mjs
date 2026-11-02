@@ -252,7 +252,11 @@ test('absent usage metadata is unknown, while explicitly reported zero tokens re
   ]));
   assert.equal(zero.usage.input_tokens,0);assert.equal(zero.usage.output_tokens,0);assert.equal(zero.usage.reasoning_tokens,0);
   assert.equal(zero.usage.incomplete,undefined);assert.ok(zero.usage.stages.every(stage=>stage.usage_known));
-  assert.equal(zero.usage.pricing.total_usd,0);
+  // A weekday peak tariff retains its rate range even when both cost bounds
+  // are zero. This assertion must not depend on the time the suite runs.
+  assert.deepEqual(zero.usage.pricing.known_range_usd,{min:0,max:0});
+  assert.equal(zero.usage.pricing.incomplete,false);
+  assert.equal(zero.usage.pricing.priced_calls,zero.usage.pricing.total_calls);
 });
 
 test('partial token metadata preserves reported counts and never invents cache or reasoning amounts',async()=>{
