@@ -106,7 +106,8 @@ async function figure(env,id){
   if(!ext||!/^[a-f0-9]{64}$/.test(row.sha256)||row.object_key!==`figures/${row.sha256}.${ext}`||!Number.isSafeInteger(row.byte_length)||row.byte_length<1||row.byte_length>4*1024*1024)return json({error:'figure_integrity_error'},503);
   const object=await env.LIBRARY.get(row.object_key);
   if(!object)return json({error:'figure_not_found'},404);
-  if(object.size!==row.byte_length||object.range||(object.customMetadata?.sha256&&object.customMetadata.sha256!==row.sha256)){await object.body?.cancel?.().catch(()=>{});return json({error:'figure_integrity_error'},503);}
+  const partial=object.range&&(object.range.offset!==0||object.range.length!==row.byte_length);
+  if(object.size!==row.byte_length||partial||(object.customMetadata?.sha256&&object.customMetadata.sha256!==row.sha256)){await object.body?.cancel?.().catch(()=>{});return json({error:'figure_integrity_error'},503);}
   const bytes=await object.arrayBuffer(),hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');
   if(bytes.byteLength!==row.byte_length||hash!==row.sha256)return json({error:'figure_integrity_error'},503);
   return new Response(bytes,{headers:{...PRIVATE,'Content-Type':row.mime_type,'Content-Length':String(bytes.byteLength),'Content-Security-Policy':"default-src 'none'; sandbox",'X-Asset-SHA256':row.sha256}});

@@ -121,6 +121,7 @@ test('guest figure reads use only the exact approved registry ID and hash-addres
     assert.equal(res.headers.get('Cache-Control'),'private, no-store');assert.equal(res.headers.get('X-Content-Type-Options'),'nosniff');assert.match(res.headers.get('Content-Security-Policy'),/sandbox/);assert.equal(res.headers.get('Content-Disposition'),null);
   }
   const noMetadata=fixture({figureRow:figureRecord(),figureObject:{customMetadata:{}}});assert.equal((await noMetadata.call('/api/problem-bank/figures/'+FID,{token:null})).status,200);assert.equal(noMetadata.calls.figureReads,1);
+  const fullRange=fixture({figureRow:figureRecord(),figureObject:{range:{offset:0,length:PNG.length}}}),complete=await fullRange.call('/api/problem-bank/figures/'+FID,{token:null});assert.equal(complete.status,200);assert.deepEqual(Buffer.from(await complete.arrayBuffer()),PNG);assert.equal(fullRange.calls.figureReads,1);
 });
 
 test('unknown or unapproved figure IDs never reach R2 or authenticate the guest',async()=>{
