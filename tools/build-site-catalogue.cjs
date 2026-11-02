@@ -100,7 +100,7 @@ for(const [key,c]of Object.entries(DATA)){
   const exp=c.years.reduce((n,y)=>n+y.problems.length,0),theory=Object.values(THEORY[key]||{}).reduce((n,t)=>n+(t.p?.length||Object.keys(t.f||{}).filter(k=>!t.f[k].kx).length),0);
   competitions[key]={data,counts:{years:c.years.length,hasProblems:c.years.some(y=>y.problems.length),mixed:!!c.theoryCount,problems:c.theoryCount?c.theoryCount+exp:c.years.some(y=>y.problems.length)?exp:theory}};
   years+=c.years.length;
-  for(const y of c.years){if(!c.plain)probs+=y.problems.length;live+=y.problems.filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;}
+  for(const y of c.years){if(!c.plain)probs+=y.problems.length;live+=y.problems.concat(y.sims||[]).filter(p=>!p.hold&&p.files&&(p.files.sim||p.files.exe)).length;}   /* sims: theory problems on a simulator */
 }
 for(const data of Object.values(THEORY))for(const y of Object.values(data))thy+=Object.keys(y.f||{}).filter(k=>!y.f[k].kx).length;
 const metadata={competitions,theoryKeys:dataKeys,versions,pairProfiles,mixedProfiles,totals:{comps:Object.keys(DATA).length,years,probs,live,thy}};
