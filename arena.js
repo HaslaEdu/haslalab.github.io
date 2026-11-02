@@ -255,7 +255,7 @@ async function arMount() {
     primary=await primary;version=primary.api_version||0;
     if(!version){const [,h]=await Promise.all([cmLoadMe(),health]);ar.health=h;}
   }else{const [,h]=await Promise.all([cmLoadMe(),ar.health||cmHealth()]);ar.health=h;}}
-  catch(e){if(routeAlive()&&a==='me'&&e.status===401&&(!cmTok()||cmIdentityScope()===scope)){try{sessionStorage.setItem('hlCmBack','#/me');}catch(_){}location.hash='#/login';return;}if(alive())root.innerHTML=`<div class="cmnote">${esc(arErr(e))}</div>`;return;}
+  catch(e){if(routeAlive()&&e.code==='username_required'){await cmLoadMe();if(routeAlive()&&cm.me?.username_required)return arClaimUsername(root);}if(routeAlive()&&a==='me'&&e.status===401&&(!cmTok()||cmIdentityScope()===scope)){try{sessionStorage.setItem('hlCmBack','#/me');}catch(_){}location.hash='#/login';return;}if(alive())root.innerHTML=`<div class="cmnote">${esc(arErr(e))}</div>`;return;}
   if (!alive()) return;
   try {
     if (a === "login" || a === "signup") return arAuth(root, a);
@@ -274,10 +274,23 @@ async function arMount() {
 
 /* ── sign in / up: the community forms, on the site's own pages ── */
 function arAuth(root, which) {
+  if(cm.me?.username_required)return arClaimUsername(root);
   if (cm.me) { cmBack(); return; }
   (which === "login" ? cmLogin : cmSignup)(root);
   for (const l of root.querySelectorAll("a[href='#/community/signup'],a[href='#/community/login']")) l.setAttribute("href", l.getAttribute("href").replace("/community", ""));
 }
+function arClaimUsername(root){
+  const ko=lang==='ko';
+  root.innerHTML=`<div class="cmauth"><div class="card"><h2>${ko?'아이디 생성':'Choose your username'}</h2><p class="lead">${ko?'외부 계정 인증을 마쳤습니다. 사용할 아이디를 만들어 회원가입을 완료하세요.':'Your external account is verified. Choose a username to complete sign-up.'}</p><form id="arClaimUsername"><label>${ko?'아이디':'Username'}<input name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}"><small>${ko?'영문·숫자·밑줄 3~20자. 한 번 정하면 변경할 수 없습니다.':'3–20 letters, numbers or underscores. This cannot be changed later.'}</small></label><p class="cmerr" role="status"></p><button class="cmbtn pri">${ko?'가입 완료':'Complete sign-up'}</button></form></div></div>`;
+  const form=root.querySelector('form'),submit=form.querySelector('button'),error=form.querySelector('.cmerr');
+  form.onsubmit=async event=>{event.preventDefault();if(submit.disabled||!form.reportValidity())return;submit.disabled=true;error.textContent='';try{const response=await cmApi('POST','/me/username',{username:form.username.value.trim()});cm.me=response.user;cm.meChecked=true;arChip();if(location.hash==='#/me')arMount();else location.hash='#/me';}catch(e){error.textContent=cmErr(e);submit.disabled=false;}};
+}
+if(typeof window!=='undefined'&&typeof window.addEventListener==='function')window.addEventListener('haslaedu:oauth-desktop',async event=>{
+  const detail=event.detail;if(detail?.version!==1)return;
+  if(detail.error){cmToast(lang==='ko'?'외부 로그인을 완료하지 못했습니다. 다시 시도해 주세요.':'External sign-in did not complete. Try again.');return;}
+  if(!/^[A-Za-z0-9_-]{32,128}$/.test(detail.code||'')||!/^[A-Za-z0-9._~-]{43,128}$/.test(detail.code_verifier||'')||!/^[A-Za-z0-9_-]{43,128}$/.test(detail.state||''))return;
+  try{cmAuthDone(await cmApi('POST','/oauth/desktop/exchange',{code:detail.code,code_verifier:detail.code_verifier,state:detail.state}));arChip();}catch(e){cmToast(arErr(e));}
+});
 
 /* ── sign in with Google plus Kakao and NAVER (Korean pages) or GitHub and Discord (English pages) ── */
 const OAUTH_BY_LANG = {ko: ["google", "kakao", "naver"], en: ["google", "github", "discord"]};
@@ -312,6 +325,7 @@ async function arOauthBack(root) {
   try {
     const r = await cmApi("POST", "/oauth/redeem", {code: q.get("c")});
     cmTok(r.token); cm.me = r.user; cm.meChecked = true; arChip();
+    if(r.user?.username_required){location.hash='#/me';return;}
     if (q.get("linked")) { try { sessionStorage.removeItem("hlCmBack"); } catch (e) {} cmToast(T.linked); location.hash = "#/me"; return; }
     if (r.fresh) { try { sessionStorage.setItem("hlArNew", "1"); sessionStorage.removeItem("hlCmBack"); } catch (e) {} location.hash = "#/me"; return; }
     cmBack();
@@ -1014,7 +1028,7 @@ async function arMe(root, alive,overview) {
   const j = overview.stats;
   j.lv = j.lv || 0; j.rating = j.rating || 0;               // a server from before the rating sends neither
   root.innerHTML = `
-    <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}</p></div>
+    <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}${cm.me.username==='g_QFAlJRmIyg'?` · ${lang==='ko'?'고유번호':'Unique identifier'}`:''}</p></div>
       <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/community/account">${T.settings}</a><button class="cmbtn sm" id="arLogout">${T.logout}</button></div></div>
     ${arModelTestLink()}
     <div class="arstats"><div><small>${T.rating}</small><b style="color:${TIER_COL[tierKey(j.lv)]}">${j.rating}</b></div><div><small>${T.myRank}</small><b>${j.rank || "–"}</b></div><div><small>${T.solvedN}</small><b>${j.solved}</b></div><div><small>${T.myTotal}</small><b>${j.total}</b></div></div>

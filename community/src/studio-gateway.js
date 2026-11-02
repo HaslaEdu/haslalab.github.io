@@ -13,6 +13,7 @@ export class StudioError extends Error { constructor(status, code) { super(code)
 export const fail = (status, code) => { throw new StudioError(status, code); };
 const messages = {
   login_required: 'HaslaLab 계정으로 로그인해 주세요.', forbidden_origin: '허용되지 않은 연결입니다.',
+  username_required: '아이디를 생성하여 회원가입을 완료해 주세요.',
   unavailable: '제작실 연결을 준비하고 있습니다.', admin_only: '현재 관리자 계정에서 시험 운영 중입니다.',
   bad_input: '입력 항목을 확인해 주세요.', image_required: '문제 사진을 올려 주세요.',
   bad_image: 'PNG, JPEG 또는 WebP 사진을 사용해 주세요.', image_too_large: '사진은 4MB 이하로 올려 주세요.',
@@ -50,9 +51,10 @@ export async function studioUser(request, env) {
   const token = /^Bearer\s+([A-Za-z0-9_-]{20,})$/.exec(request.headers.get('Authorization') || '');
   if (!token) fail(401, 'login_required');
   const digest = base64url(new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(token[1]))));
-  const user = await env.DB.prepare(`SELECT u.id,u.role FROM sessions s JOIN users u ON u.id=s.user_id
+  const user = await env.DB.prepare(`SELECT u.id,u.role,u.username FROM sessions s JOIN users u ON u.id=s.user_id
     WHERE s.token_hash=? AND s.expires_at>? AND u.deleted=0`).bind(digest, seconds()).first();
   if (!user) fail(401, 'login_required');
+  if(String(user.username||'').startsWith('~pending_'))fail(403,'username_required');
   if (env.STUDIO_ACCESS === 'admin' && user.role !== 'admin') fail(403, 'admin_only');
   return user;
 }

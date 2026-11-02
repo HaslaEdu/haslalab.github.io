@@ -16,16 +16,16 @@
   })();
   </script>
   <link rel="stylesheet" href="vendor/katex/katex.min.css?v=c7c428bc728d">
-  <link rel="stylesheet" href="studio.css?v=e36cf2a3824f">
+  <link rel="stylesheet" href="studio.css?v=1e4b0819404a">
   <script defer src="vendor/katex/katex.min.js?v=dc84b296ec3e"></script>
-  <link rel="stylesheet" href="studio-embed.css?v=20261102-learn">
-  <script defer src="studio.js?v=8d4e0375c576"></script>
+  <link rel="stylesheet" href="studio-embed.css?v=2d667d4abcf4">
+  <script defer src="studio.js?v=c83f5f3f91b3"></script>
 </head>
 <body>
   <script>if(document.documentElement.dataset.embed==='true')document.body.classList.add('studio-embedded');</script>
   <a class="skip-link" href="#workspace" data-i18n="skip">작업 영역으로 건너뛰기</a>
   <header class="site-header">
-    <a class="brand" href="./#/" aria-label="HaslaLab home"><img id="studioBrandMark" class="brand-mark" src="logo/brand/haslalab-light.svg?v=20261103-brands" alt=""><span>HaslaLab<span class="brand-sub">PROBLEM STUDIO</span></span></a>
+    <a class="brand" href="./#/" aria-label="HaslaLab home"><img id="studioBrandMark" class="brand-mark" src="logo/brand/haslalab-light.svg?v=20261103-brands04" alt=""><span>HaslaLab<span class="brand-sub">PROBLEM STUDIO</span></span></a>
     <nav class="header-nav" aria-label="Main navigation"><a href="./#/" data-i18n="library">문제 라이브러리</a><a href="./#/lab" data-i18n="practice">실전 연습</a></nav>
     <div class="header-actions"><button id="uiLanguage" class="text-button" type="button" aria-label="Switch interface language">EN</button><button id="accountButton" class="account-button" type="button" data-i18n="signIn">로그인</button></div>
   </header>
@@ -43,7 +43,8 @@
           <fieldset class="mode-picker"><legend class="sr-only" data-i18n="mode">작업 선택</legend>
             <label><input type="radio" name="mode" value="generate"><span><b data-i18n="generate">문제 제작</b><small data-i18n="generateHint">사진이나 요청을 바탕으로</small></span><i aria-hidden="true">↗</i></label>
             <label><input type="radio" name="mode" value="digitize" checked><span><b data-i18n="digitize">문제 디지털화</b><small data-i18n="digitizeHint">글·수식·그림을 정리해요</small></span><i aria-hidden="true">↗</i></label>
-            <label><input type="radio" name="mode" value="restore"><span><b data-i18n="restore">그림 제작</b><small data-i18n="restoreHint">사진으로 도형·그래프 재구성</small></span><i aria-hidden="true">↗</i></label>
+            <label hidden data-legacy-mode><input type="radio" name="mode" value="restore"><span><b data-i18n="restore">그림 제작</b><small data-i18n="restoreHint">사진으로 도형·그래프 재구성</small></span><i aria-hidden="true">↗</i></label>
+            <a id="problemSearchLink" class="search-mode" href="./#/learn/physics/search" target="_top"><span><b data-i18n="search">문제 검색</b><small data-i18n="searchHint">문제은행에서 글로 찾기</small></span><i aria-hidden="true">↗</i></a>
           </fieldset>
           <label id="sourceImageLabel" class="field-label" for="imageInput" data-i18n="sourceImage">원본 이미지</label>
           <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-controls="imageInput">

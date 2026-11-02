@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src https://haslalab-problem-bank.haslalab.workers.dev; img-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'self'">
+<title>문제 검색 · HaslaLab</title>
+<link id="searchFavicon" rel="icon" href="logo/brand/haslalab-light.svg" type="image/svg+xml">
+<link rel="stylesheet" href="vendor/katex/katex.min.css?v=c7c428bc728d">
+<link rel="stylesheet" href="problem-search.css?v=7701dabde3d8">
+<script defer src="vendor/katex/katex.min.js?v=dc84b296ec3e"></script>
+<script defer src="vendor/katex/contrib/auto-render.min.js?v=9cb8dacfc086"></script>
+<script defer src="problem-search.js?v=98b5595943d0"></script>
+</head>
+<body>
+<main>
+  <header class="search-heading">
+    <div class="heading-copy"><img id="searchBrand" src="logo/brand/haslalab-light.svg" width="36" height="36" alt=""><div><p class="eyebrow">HASLALAB PROBLEM STUDIO</p><h1 data-i18n="title">문제 검색</h1></div></div>
+    <div class="local-controls"><select id="language" aria-label="화면 언어"><option value="ko">한국어</option><option value="en">English</option></select><button id="theme" type="button" aria-label="다크 모드로 변경">◐</button></div>
+  </header>
+  <p class="intro" data-i18n="intro">문제의 문장과 수식으로 찾고, 원문 조건을 비교해 보세요.</p>
+  <div class="service-row"><span class="scope-badge" data-i18n="publicScope">공개 문제 검색</span><span id="counts"></span><a id="siteLogin" href="/#/login" target="_top" data-i18n="login">로그인</a></div>
+  <div id="connectionError" class="notice error" hidden><span id="connectionMessage"></span><button id="retryConnection" type="button" data-i18n="retry">다시 불러오기</button></div>
+  <section class="search-panel" aria-label="문제 검색" data-label="title">
+    <form id="searchForm" role="search">
+      <label class="query-label" for="query" data-i18n="query">문제 문장 · 수식 · 문항 번호</label>
+      <textarea id="query" name="q" rows="3" maxlength="12000" aria-describedby="queryHelp" placeholder="예: 질량 m인 물체, 전기장, angular momentum"></textarea>
+      <p id="queryHelp" class="hint" data-i18n="queryHelp">일반 검색 600자 · 문장·수식 검색 12,000자. 문장 검색은 사진 인식을 호출하지 않습니다.</p>
+      <div class="filters">
+        <label><span data-i18n="collection">문제 모음</span><select id="collection"><option value="" data-i18n="allCollections">물리·천문 전체</option><option value="physics" data-i18n="physics">물리학</option><option value="astronomy" data-i18n="astronomy">천문학</option></select></label>
+        <label><span data-i18n="subject">분야</span><select id="subject"></select></label>
+        <label class="source-filter"><span data-i18n="source">교재·강좌</span><select id="source"></select></label>
+        <label><span data-i18n="difficulty">난이도</span><select id="stars"><option value="" data-i18n="allStars">전체</option><option value="1">★☆☆☆☆</option><option value="2">★★☆☆☆</option><option value="3">★★★☆☆</option><option value="4">★★★★☆</option><option value="5">★★★★★</option></select></label>
+      </div>
+      <div class="search-actions"><button id="searchButton" class="primary" type="submit" data-i18n="search">검색</button><button id="identifyText" type="button" data-i18n="identifyText">문장·수식으로 찾기</button><button id="cancelSearch" class="quiet" type="button" hidden data-i18n="cancel">요청 취소</button></div>
+    </form>
+    <details id="photoSection" class="photo-section">
+      <summary data-i18n="photoTitle">사진으로 찾기</summary>
+      <p id="photoAccess" class="hint" data-i18n="photoAccess">사진 인식은 관리자 계정에서 사용할 수 있습니다. 텍스트 검색은 로그인 없이 이용할 수 있습니다.</p>
+      <form id="photoForm">
+        <fieldset id="photoControls" disabled>
+          <label class="file-label"><span data-i18n="selectPhoto">문제 사진 선택</span><input id="photo" type="file" accept="image/png,image/jpeg,image/webp"></label>
+          <input id="capturePhotoInput" type="file" accept="image/png,image/jpeg,image/webp" capture="environment" hidden>
+          <button id="takePhoto" type="button" hidden data-i18n="takePhoto">사진 촬영</button>
+          <p class="hint" data-i18n="photoHelp">PNG · JPEG · WebP, 최대 8MB. 인식·검색을 누르면 사진이 처리 서버로 전송됩니다.</p>
+          <img id="photoPreview" class="photo-preview" alt="선택한 문제 사진" hidden>
+          <button id="identifyPhoto" class="primary" type="submit" data-i18n="identifyPhoto">사진 인식·검색</button>
+        </fieldset>
+      </form>
+    </details>
+    <section id="recognizedPanel" class="recognized-panel" hidden>
+      <label for="recognized" data-i18n="recognized">인식된 문장·수식</label>
+      <textarea id="recognized" rows="4" maxlength="12000"></textarea>
+      <p class="hint" data-i18n="recognizedHelp">수식·수치를 확인하고 수정해 보세요. 다시 검색은 사진 인식을 재호출하지 않습니다.</p>
+      <button id="searchRecognized" type="button" data-i18n="searchRecognized">수정한 문장으로 다시 검색</button>
+    </section>
+  </section>
+  <p id="status" class="status" role="status" aria-live="polite"></p>
+  <section class="results-layout" aria-label="검색 결과" data-label="results">
+    <div class="results-column"><div class="results-heading"><h2 data-i18n="results">검색 결과</h2><span id="resultCount"></span></div><div id="results" class="result-list"></div><nav id="pagination" class="pagination" aria-label="검색 결과 페이지" data-label="pagination"><button id="previous" type="button" disabled data-i18n="previous">이전</button><span id="pageNumber"></span><button id="next" type="button" disabled data-i18n="next">다음</button></nav></div>
+    <article id="detail" class="detail-panel" tabindex="-1"><p class="empty" data-i18n="chooseQuestion">문제를 선택하면 본문을 확인할 수 있습니다.</p></article>
+  </section>
+  <footer data-i18n="reviewHelp">검색 결과는 후보입니다. 검토 상태와 원문 조건·수식·수치를 확인하세요.</footer>
+</main>
+</body>
+</html>
