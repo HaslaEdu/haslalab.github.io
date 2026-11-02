@@ -137,7 +137,8 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   /* Upstage's Solar speaks OpenAI's chat completions (api.upstage.ai/v1), with max_tokens for the answer's room (bench only) */
   const body=provider==='anthropic'?null:provider==='upstage'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_tokens:count,temperature:0}:
     provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_completion_tokens:count,
-      ...(['minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
+      /* none: GPT-5.4 takes function tools on chat completions only without reasoning */
+      ...(['none','minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
     provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],...(geminiToolList.length?{tools:geminiToolList}:{}),
     /* temperature is ignored by Gemini 3.6 Flash and newer (Google's changelog); it is sent only where it still counts */
     generationConfig:{responseMimeType:'application/json',responseSchema:schema,...(/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(model)?{temperature:Number(temperature)||0}:{}),maxOutputTokens:count,

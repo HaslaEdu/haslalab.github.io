@@ -180,6 +180,12 @@ test('a candidate still chooses only Gemini or DeepSeek; the new providers are f
   assert.throws(() => requireVisionProvider({ ANTHROPIC_API_KEY: '  \n' }, 'anthropic'), e => e.code === 'provider_unavailable', 'a blank key is no key');
 });
 
+test('OpenAI: reasoning none is sent as asked (GPT-5.4 takes function tools only without reasoning), and the tools go with it',async()=>{
+ const seen=[];const fetchImpl=async(url,init)=>{seen.push(JSON.parse(init.body));return Response.json({model:'gpt-5.4-mini',choices:[{finish_reason:'stop',message:{content:'{"text":"x"}'}}],usage:{prompt_tokens:10,completion_tokens:5}});};
+ await visionJSON({OPENAI_API_KEY:'o'},{provider:'openai',model:'gpt-5.4-mini',thinking:'none',fetchImpl,parts:[{text:'x'}],tools:[{type:'function',function:{name:'f',parameters:{type:'object',properties:{}}}}],onTool:()=>'ok'});
+ assert.equal(seen[0].reasoning_effort,'none');assert.equal(seen[0].tools.length,1);
+});
+
 test('Upstage Solar goes through its OpenAI-compatible endpoint with max_tokens, and is a stage provider only',async()=>{
  const { visionProvider } = await import('./src/vision-provider.js');
  const seen=[];const fetchImpl=async(url,init)=>{seen.push({url,body:JSON.parse(init.body),auth:init.headers.Authorization});return Response.json({model:'solar-mini4',choices:[{finish_reason:'stop',message:{content:'{"text":"x"}'}}],usage:{prompt_tokens:10,completion_tokens:5}});};
