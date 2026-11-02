@@ -73,6 +73,10 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     assert.equal(body.motion_qa.text_shift_mode, 'ctm');
     assert.equal(body.motion_qa.erased_glyphs, 0);
     assert.deepEqual(body.actual_native_vector_coordinate_audit.coordinate_errors, []);
+    if (body.actual_native_vector_coordinate_audit.audit_code_sha256) {
+      assert.equal(body.actual_native_vector_coordinate_audit.audit_code_sha256,
+        qa.authoring_programs.find(p => p.path.endsWith('/verify_native_vectors.py')).sha256);
+    }
     assert.ok(body.actual_native_vector_coordinate_audit.max_coordinate_tolerance_pt <= 0.000001);
     assert.equal(body.new_korean_intrusion_on_native_ink_pixels, 0);
     assert.equal(body.new_body_korean_ink_inside_protected_figure_pixels, 0);
