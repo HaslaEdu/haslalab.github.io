@@ -204,7 +204,8 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     for(let round=0;useTools&&parsed?.choices?.[0]?.finish_reason==='tool_calls';round++){
       const message=parsed.choices[0].message||{},calls=Array.isArray(message.tool_calls)?message.tool_calls.slice(0,16):[];
       if(!calls.length)break;
-      body.messages.push({role:'assistant',content:message.content||'',tool_calls:calls});
+      /* in thinking mode DeepSeek wants the turn's reasoning back with its tool calls (a 400 otherwise) */
+      body.messages.push({role:'assistant',content:message.content||'',tool_calls:calls,...(message.reasoning_content?{reasoning_content:message.reasoning_content}:{})});
       for(const call of calls){let args={};try{args=JSON.parse(call.function?.arguments||'{}');}catch{}
         let out;try{out=String(await onTool(call.function?.name,args)).slice(0,2000);}catch{out='tool failed';}
         toolLog.push({name:String(call.function?.name||'').slice(0,40),args,out:out.slice(0,300)});
@@ -245,7 +246,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     /* after tools the model may stop with no text (DeepSeek's JSON mode can answer empty): ask once more, for the JSON only */
     const said=parsed?.choices?.[0];
     if(toolLog.length&&(said?.finish_reason==='tool_calls'||said?.finish_reason==='stop'&&!String(said?.message?.content||'').trim())){
-      if(said.finish_reason==='tool_calls')body.messages.push({role:'assistant',content:said.message?.content||'',tool_calls:said.message?.tool_calls||[]},
+      if(said.finish_reason==='tool_calls')body.messages.push({role:'assistant',content:said.message?.content||'',tool_calls:said.message?.tool_calls||[],...(said.message?.reasoning_content?{reasoning_content:said.message.reasoning_content}:{})},
         ...(said.message?.tool_calls||[]).map(call=>({role:'tool',tool_call_id:call.id,content:'no more tool calls: give the answer'})));
       body.messages.push({role:'user',content:'Return the JSON object now, with every required field.'});
       body.tool_choice='none';body.response_format={type:'json_object'};

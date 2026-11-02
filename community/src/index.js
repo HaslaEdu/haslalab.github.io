@@ -2575,6 +2575,11 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     if(size>budget)continue;
     const photo={inline_data:{mime_type:row.mime,data:b64(img)},label:`Original submitted page ${p.no}, ${p.kind}, task ${p.task}`};photos.push({p,photo});
     if(roles?.gradeImages===false)continue;                                       // bench: a text-only grader works from the readings; the moderator still sees the photos
+    /* bench grade.tiles: DeepSeek scales every image down to about 1024 tokens (~1300 px a side), where exponents, signs
+       and subscripts of a handwritten page blur; an answer page goes as strips, top to bottom, each at that resolution */
+    const strips=roles?.tiles>=2&&roles?.grade==='deepseek'&&p.kind==='answer'&&row.mime==='image/jpeg'?pageStrips(img instanceof Uint8Array?img:new Uint8Array(img),roles.tiles):[];
+    if(strips.length){for(const [k,b] of strips.entries()){parts.push({text:`[p${p.no} · part ${k+1} of ${strips.length}, top to bottom, of the photo of page ${p.no}, split for resolution]`},{inline_data:{mime_type:'image/jpeg',data:b64(b)},label:`Original submitted page ${p.no}, part ${k+1} of ${strips.length}`});}
+      budget-=size;p._visionSupplied=true;continue;}
     parts.push(photo);budget-=size;p._visionSupplied=true;
   }
   parts.push({text:'For evidence you can directly see in a supplied original student image, including a graph or handwritten arrow missing from OCR/items, provide visual:{kind,box:[ymin,xmin,ymax,xmax] in 0..1000,description,value,graph,rows,columns}. Graph fields describe observed checks and counts, not an inferred correct answer. Give the actual page and label. This allows visual evidence to be checked without treating an empty transcription as a blank graphical answer. Never claim visual evidence on a typed-only page.'});
@@ -3083,6 +3088,7 @@ async function labBench(env, s, job) {
         gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, doubleGrade: spec.grade.double === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
         audit: spec.grade.audit === true ? true : undefined,
         lessons: typeof spec.grade.lessons === "string" && spec.grade.lessons.trim() ? spec.grade.lessons.trim().slice(0, 12000) : undefined,
+        tiles: Number.isInteger(spec.grade.tiles) && spec.grade.tiles >= 2 && spec.grade.tiles <= 4 ? spec.grade.tiles : undefined,
         toolRounds: Number.isInteger(spec.grade.toolRounds) && spec.grade.toolRounds > 0 && spec.grade.toolRounds <= 6 ? spec.grade.toolRounds : undefined,
         /* where a bench grading has got to, kept on its row while it runs (a run that never ends shows its last step) */
         trace: step => env.DB.prepare("UPDATE lab_bench SET output=? WHERE id=? AND status='pending'").bind(JSON.stringify({ trace: step, ms: Date.now() - t0 }), row.id).run().catch(() => {}) };
