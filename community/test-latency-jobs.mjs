@@ -21,7 +21,7 @@ globalThis.fetch=async(input,options={})=>{
   if(!url.includes(':generateContent'))throw Error('unexpected external request');
   providerCalls++;if(providerFailure){providerFailure=false;return new Response('{}',{status:503});}
   const req=JSON.parse(options.body),prompt=req.contents[0].parts.filter(p=>p.text).map(p=>p.text).join('\n');let value;
-  if(prompt.startsWith('[TASK: read page]'))value={text:'Let n be an integer. Submitted proof.',header:{task:'Q5',sheet:'answer',page:1},legible:'good',items:[{label:'proof',kind:'text',text:'Let n be an integer. Submitted proof.',crossed_out:false}]};
+  if(prompt.includes('[TASK: read page]'))value={text:'Let n be an integer. Submitted proof.',header:{task:'Q5',sheet:'answer',page:1},legible:'good',items:[{label:'proof',kind:'text',text:'Let n be an integer. Submitted proof.',crossed_out:false}]};
   else if(prompt.startsWith('[TASK: grade]'))value={items:[{id:'A',found:true,page:1,score:1,rules:[],checks_met:[],note:'submitted argument'}],feedback:[],review:null};
   else{const no=+(prompt.match(/Review ONLY problem (\d+)/)?.[1]||0),page=+(prompt.match(/\[Page (\d+);/)?.[1]||1);value={problem_no:no,score:7,confidence:.96,verdict:'valid',summary:'검토한 풀이',strengths:[],gaps:[],evidence:[{page,quote:'Let n be an integer.',note:'제출한 문장'}]};}
   return Response.json({candidates:[{content:{parts:[{text:JSON.stringify(value)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50}});

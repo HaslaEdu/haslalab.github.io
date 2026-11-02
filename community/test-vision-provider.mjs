@@ -81,6 +81,11 @@ test('HTTP causes remain distinguishable without exposing upstream error text',a
  }
  await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:async()=>Response.json({error:{code:'sk-private-token',message:'sensitive'}},{status:400})}),error=>error.provider_code===undefined&&!JSON.stringify(error).includes('sk-private'));
 });
+test('busy retries: a 503 or 429 is tried again only when the caller asks for it',async()=>{
+ const flaky=()=>{let n=0;return{calls:()=>n,fetchImpl:async()=>++n===1?Response.json({error:{message:'high demand'}},{status:503}):n===2?Response.json({error:{message:'slow'}},{status:429}):response('deepseek',{text:'ok'})};};
+ const once=flaky();await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:once.fetchImpl}),e=>e.code==='vision_provider_failed');assert.equal(once.calls(),1,'by default it fails at once');
+ const queued=flaky();const result=await visionJSON(env,{provider:'deepseek',fetchImpl:queued.fetchImpl,busyRetries:[1,1]});assert.equal(queued.calls(),3);assert.equal(result.raw.text,'ok');
+});
 test('blank JSON-mode output and truncated/blocked responses retain paid usage and distinct causes',async()=>{
  for(const [content,finish,code]of [['   ','stop','vision_response_empty'],['{"text":"cut','length','vision_response_truncated'],['','content_filter','vision_response_blocked']]){
   await assert.rejects(visionJSON(env,{provider:'deepseek',fetchImpl:async()=>response('deepseek',{}, {choices:[{finish_reason:finish,message:{content}}]})}),error=>error.code===code&&error.usage.input_tokens===100&&error.usage.ok===false&&error.provider_status===200);

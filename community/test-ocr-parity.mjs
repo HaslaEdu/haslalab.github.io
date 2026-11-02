@@ -75,7 +75,7 @@ const server = http.createServer(async (request, response) => {
       response.setHeader("Content-Type", "application/json");
       if (response.statusCode !== 200) return response.end('{"error":"PRIVATE_UPSTREAM_ERROR"}');
       if (fixture.rawResponse !== undefined) return response.end(fixture.rawResponse);
-      const result = schema.properties?.uncertainties ? fixture.transcript : prompt.startsWith("[TASK: read page]") ? fixture.read : {
+      const result = schema.properties?.uncertainties ? fixture.transcript : prompt.includes("[TASK: read page]") ? fixture.read : {
         items: [{ id: "A.1", found: true, page: 1, value: 108.2, unit_ok: true, score: 1, checks_met: [], rules: [], note: "fixture grounded value" }], feedback: [], review: null,
       };
       if (provider === "deepseek") return response.end(JSON.stringify({model:"deepseek-flash",choices:[{finish_reason:"stop",message:{content:fixture.geminiText ?? JSON.stringify(result)}}],
