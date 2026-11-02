@@ -65,6 +65,7 @@ async function fixture(run){
     else if(text.includes('Review ONLY problem'))raw={problem_no:5,score:7,confidence:.98,verdict:'valid',summary:'Diagram supported argument.',strengths:[],gaps:[],evidence:[{page:1,quote:'',source:'image',box:[100,100,900,900],description:'A labelled geometric construction with direction arrows.',note:'Visible geometry checked.'}]};
     else if(text.includes('"task":"transcribe"'))raw={text:'',legible:true,confidence:.98,uncertainties:[],visuals:[{page:1,kind:'graph',description:'A graph and upward direction arrow.',box:[.1,.1,.9,.9]}]};
     else if(text.includes('[TASK: moderate]'))raw=moderateReply||{items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
+    else if(text.includes('[TASK: focus read]'))raw={items:[{id:'N',found:true,written:'1.59 × 10^{18} m^{-3}',value:1.59e18,unit:'m^-3'}]};
     else if(text.includes('[TASK: grade]'))raw=gradeReply||visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
     return provider==='gemini'?Response.json({modelVersion:url.match(/\/models\/([^/:]+):/)?.[1]||VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:body.model||VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
@@ -335,6 +336,29 @@ test('LAB_GRADE_TOOLS: the DeepSeek grader gets the tools, and a paper it leaves
   assert.ok(grades[0].body.tools&&/call compare_expressions/.test(grades[0].text),'the first call offers the tools');
   assert.ok(!grades[1].body.tools&&!/call compare_expressions/.test(grades[1].text),'the second has neither tools nor their note');
   assert.equal((await api(`/lab/sessions/${sid}`)).data.session.status,'graded');
+}));
+test('LAB_FOCUS_READ: a value the code marks wrong is read once more alone; a misread power of ten is replaced',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_FOCUS_READ='on';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[
+    {id:'N',points:0.6,type:'value',sheet:'answer',what:'n_c',ref:'1.59e18',unit:'m^-3'},
+    {id:'K',points:1.4,type:'value',sheet:'answer',what:'k',ref:'4.2',unit:'m'}]}),'fixture',Math.floor(Date.now()/1000));
+  const item=(id,value)=>({id,found:true,page:1,label:id,score:0,rules:[],note:'',quote:'',value,unit_ok:true});
+  replies({items:[item('N',1.59e13),item('K',7.9)],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  const text=pageReading.text;pageReading.text='N: n_c = 1.59 × 10^{13} m^-3\nK: k = 7.9 m';
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.text=text;}
+  const focus=calls.filter(c=>c.text.includes('[TASK: focus read]'));
+  assert.equal(focus.length,1,'one call for the page');
+  assert.ok(!focus[0].text.includes('1.59e18')&&!/4\.2/.test(focus[0].text),'the official values are never shown');
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"N"[^}]*"got":0\.6/,'10^13 read again as 10^18');
+  assert.match(detail,/"id":"K"[^}]*"got":0[,}]/,'a re-read that is not one character off changes nothing');
 }));
 test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
   env.LAB_ONLY_PROVIDER='deepseek';

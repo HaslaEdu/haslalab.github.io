@@ -39,6 +39,7 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips } from './page-tiles.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
+import { FOCUS_SCHEMA, focusPrompt, acceptedRereads } from './focus-read.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
@@ -2426,11 +2427,40 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     } catch (e) { console.error("lab moderate", e?.code || e?.message); }               // a failed moderation keeps the first grading
   }
   await roles?.trace?.('score');
-  const sc = labScore(scheme, raw, mine, { theory });
+  let sc = labScore(scheme, raw, mine, { theory });
+  /* focused re-read (focus-read.js; LAB_FOCUS_READ on, bench grade.focus): a value the code marks wrong is read once more
+     from its photo alone; a one-character misread (a digit, a power of ten) is replaced and the task scored again */
+  const focus = (roles?.focusRead ?? env.LAB_FOCUS_READ === "on") ? await labFocusRead(env, s, sc, raw, photos, m).catch(e => { console.error("lab focus read", e?.code || e?.message); return []; }) : [];
+  if (focus.length) {
+    const byId = new Map(focus.map(f => [f.id, f]));
+    raw = { ...raw, items: (raw.items || []).map(x => { const f = byId.get(String(x?.id)); if (!f) return x;
+      const scale = Number.isFinite(+x.value_in_unit) && Number.isFinite(+x.value) && +x.value ? +x.value_in_unit / +x.value : null;
+      return { ...x, value: f.value, ...(scale != null ? { value_in_unit: f.value * scale } : {}) }; }) };
+    for (const f of focus) { const pg = mine.find(p => p.no === f.page); if (pg) pg.ocr = `${pg.ocr ?? ""}\n[focused re-read of ${f.id}: ${f.written} = ${f.value}]`; }
+    sc = labScore(scheme, raw, mine, { theory });
+  }
   await roles?.trace?.('scored');
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
   if (roles?.bench) sc.raw_items = (raw.items || []).map(x => ({ id: String(x?.id), score: +x?.score || 0 }));   // the model's own marks, before the rules in code
-  return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && out.tools ? { tool_calls: out.tools } : {}), ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
+  return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && out.tools ? { tool_calls: out.tools } : {}), ...(roles?.bench && focus.length ? { focus_reads: focus } : {}), ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
+}
+
+/* the items a page's numerical answer was marked wrong for (R12), read once more page by page (focus-read.js) */
+async function labFocusRead(env, s, sc, raw, photos, m) {
+  const given = new Map((raw.items || []).map(x => [String(x?.id), x]));
+  const disputed = sc.items.filter(i => i.rules?.includes("R12") && Number.isFinite(i.value) && i.page != null).slice(0, 8);
+  const out = [];
+  for (const no of [...new Set(disputed.map(i => i.page))]) {
+    const shot = photos.find(x => x.p.no === no); if (!shot) continue;
+    const here = disputed.filter(i => i.page === no).map(i => ({ id: i.id, value: i.value, unit: given.get(i.id)?.unit ?? null, first: String(i.value) }));
+    const bytes = Uint8Array.from(atob(shot.photo.inline_data.data), c => c.charCodeAt(0));
+    const strips = shot.photo.inline_data.mime_type === "image/jpeg" ? pageStrips(bytes, 3) : [];
+    const res = await labVision(env, s, [{ text: focusPrompt(here) }, shot.photo,
+      ...strips.map((strip, i) => ({ inline_data: { mime_type: "image/jpeg", data: b64(strip) }, label: `Zoomed strip ${i + 1} of ${strips.length} of the same page` }))],
+      FOCUS_SCHEMA, 1024, m, "focus", 0);
+    out.push(...acceptedRereads(here, res.raw).map(f => ({ ...f, page: no })));
+  }
+  return out;
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
@@ -2720,7 +2750,7 @@ async function labBench(env, s, job) {
       if (spec.scheme && (!scheme || scheme.unscored)) throw new Error('bench_no_scheme');
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
-        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined,
+        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined,
         /* where a bench grading has got to, kept on its row while it runs (a run that never ends shows its last step) */
         trace: step => env.DB.prepare("UPDATE lab_bench SET output=? WHERE id=? AND status='pending'").bind(JSON.stringify({ trace: step, ms: Date.now() - t0 }), row.id).run().catch(() => {}) };
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
