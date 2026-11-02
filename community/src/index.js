@@ -2060,7 +2060,10 @@ async function labReadPage(env,s,buf,mime,notation,m) {
   const zoom=strips.length?[{text:`The same page follows as ${strips.length} zoomed strips, top to bottom; neighbouring strips overlap. Read small or faint handwriting from them, but transcribe every line of the page once, in page order.`},
     ...strips.map((strip,i)=>({inline_data:{mime_type:'image/jpeg',data:b64(strip)},label:`Zoomed strip ${i+1} of ${strips.length} of the same page`}))]:[];
   const media=src._media||env.LAB_READ_MEDIA||'';   // Gemini's image tokens per picture (LAB_READ_MEDIA high, bench read.media)
-  const read=temperature=>labVision(env,s,[{text:prompt},{inline_data:{mime_type:mime,data:b64(buf)},label:'Original submitted page; inspect every graph, diagram, arrow and annotation'},...zoom],PAGE_SCHEMA,6144,m,'ocr',temperature,
+  /* Gemini spends its thinking from the same output budget and transcribes longer (2-3k tokens a page against
+     DeepSeek's 1.1k): 6k cut 11 of 72 Gemini reads of an IPhO 2025 sitting short, so it gets 16k */
+  const cap=labProvider(s)==='gemini'?16384:6144;
+  const read=temperature=>labVision(env,s,[{text:prompt},{inline_data:{mime_type:mime,data:b64(buf)},label:'Original submitted page; inspect every graph, diagram, arrow and annotation'},...zoom],PAGE_SCHEMA,cap,m,'ocr',temperature,
     ['high','medium','low'].includes(media)?{mediaResolution:'MEDIA_RESOLUTION_'+media.toUpperCase()}:{});
   const warm=Number.isFinite(src._temperature)?src._temperature:Number.isFinite(+env.LAB_READ_TEMPERATURE)&&env.LAB_READ_TEMPERATURE!==undefined&&env.LAB_READ_TEMPERATURE!==''?+env.LAB_READ_TEMPERATURE:0;
   const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated')return read(Math.max(warm,0.8));throw error;});
