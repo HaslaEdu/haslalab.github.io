@@ -294,6 +294,19 @@ const PTW = { en: p => ` (${fmt(p)}pt)`, ko: p => ` (${fmt(p)}pt)` };
 const PART = { en: p => ` (${p} points)`, ko: p => ` (${p}점)` };
 const FORM = { en: ['(Formula)', '(Value)'], ko: ['(식)', '(값)'] };
 
+/* graph paper as the IPhO 2025 theory answer sheets have it: a light millimetre-style grid (5 mm cells, every fifth line
+   darker) with the two axes drawn in, arrows on their ends; the candidate writes the quantities and the scale */
+function graph(h, cap) {
+  const C = 18.8976, M = C * 5;                                   /* 5 mm and 25 mm in CSS px */
+  const oy = (Math.floor(h * 4 / 3 / C) - 1) * C;                 /* the x axis on the grid line one cell above the bottom */
+  return `<div class="gp" style="height:${h}pt">${cap ? `<i>${cap}</i>` : ''}<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs><pattern id="gpm" width="${C}" height="${C}" patternUnits="userSpaceOnUse"><path d="M ${C} 0 L 0 0 0 ${C}" fill="none" stroke="#c9c9c9" stroke-width="0.5"/></pattern>
+      <pattern id="gpM" width="${M}" height="${M}" patternUnits="userSpaceOnUse"><rect width="${M}" height="${M}" fill="url(#gpm)"/><path d="M ${M} 0 L 0 0 0 ${M}" fill="none" stroke="#9a9a9a" stroke-width="0.8"/></pattern>
+      <marker id="gpa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#000"/></marker></defs>
+    <rect width="100%" height="100%" fill="url(#gpM)"/>
+    <line x1="${2 * C}" y1="${oy}" x2="98%" y2="${oy}" stroke="#000" stroke-width="1.1" marker-end="url(#gpa)"/>
+    <line x1="${2 * C}" y1="${oy + C * 0.6}" x2="${2 * C}" y2="${C * 0.4}" stroke="#000" stroke-width="1.1" marker-end="url(#gpa)"/></svg></div>`;
+}
 function rows(prompts, lang) {
   return prompts.map(p => {
     if (p.v) return `<div class="r">$${p.v}$</div>`;
@@ -301,8 +314,8 @@ function rows(prompts, lang) {
     if (p.fv) return `<div class="r two"><span>${FORM[lang][0]} $${p.fv}$</span><span>${FORM[lang][1]} $${p.fv}$</span></div>`;
     if (p.txt) return `<div class="r">${tr(p.txt, lang)}</div>`;
     if (p.space) return `<div style="height:${p.space}pt"></div>`;
-    if (p.plot) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div><div style="height:${p.plot}pt"></div>`;
-    if (p.plots) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div><div class="pls">${p.plots.map(c => `<div style="height:${p.h}pt"><i>${tr(c, lang)}</i></div>`).join('')}</div>`;
+    if (p.plot) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div>${graph(p.plot)}`;
+    if (p.plots) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div><div class="pls">${p.plots.map(c => graph(p.h, tr(c, lang))).join('')}</div>`;
     if (p.table) {
       const { cols, rows: n } = p.table, labels = Array.isArray(n) ? n : null, count = labels ? labels.length : n;
       return `<table class="at"><tr>${cols.map(c => `<th>${tr(c, lang)}</th>`).join('')}</tr>${Array.from({ length: count }, (_, i) =>
@@ -341,7 +354,8 @@ h1+h2{margin-top:0}
 .lb{line-height:13.6pt}.lb b{font-weight:700}
 .r{min-height:23.9pt;display:flex;align-items:flex-end}.r.two>span{flex:1}.r svg{vertical-align:middle}
 .pl{line-height:12pt}
-.pls{display:flex;gap:9pt;margin-top:4pt}.pls>div{flex:1;border:0.4pt solid #000;position:relative}.pls i{position:absolute;left:4pt;top:2pt;font-style:normal;font-size:8.5pt}
+.pls{display:flex;gap:9pt;margin-top:4pt}.pls>.gp{flex:1}
+.gp{position:relative;border:0.4pt solid #888;margin-top:3pt;break-inside:avoid}.gp svg{display:block}.gp i{position:absolute;left:10%;top:2pt;font-style:normal;font-size:8.5pt;background:#fff;padding:0 2pt}
 table.at{border-collapse:collapse;margin:7pt auto 0;font-size:9pt}table.at th,table.at td{border:0.4pt solid #000;height:15pt;min-width:62pt;padding:0 5pt;text-align:center;font-weight:400}
 .ws{border:0.4pt solid #000;height:615.4pt;margin-top:6.4pt}
 .katex{font-size:1em}`;

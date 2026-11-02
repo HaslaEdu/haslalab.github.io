@@ -1,13 +1,13 @@
 <style>@page{@top-right{content:"December, 2023"}} table.num{font-size:8.6pt} table.num td,table.num th{padding:.6mm 1.6mm}</style>
-<h1 class="title">T1. 다결정 확산 (Polycrystal diffusion) — 풀이</h1>
+<h1 class="title">풀이</h1>
 
 
 <div class="task">
-<p><b>A1.</b> 열역학으로부터 $v = \sqrt{3kT/m}$임을 안다. 여기서 $m$은 입자의 질량, $k$는 볼츠만 상수이다. 격자간 자리 사이의 특성 도약 시간은 (전이 확률)×(입자 속력)에 반비례하고, 확산 계수는 도약 시간에 반비례하므로</p>
+<p><b>A1</b>. 열역학으로부터 $v = \sqrt{3kT/m}$임을 안다. 여기서 $m$은 입자의 질량, $k$는 볼츠만 상수이다. 격자간 자리 사이의 특성 도약 시간은 (전이 확률)×(입자 속력)에 반비례하고, 확산 계수는 도약 시간에 반비례하므로</p>
 <div class="ans">$$v = \sqrt{\frac{3kT}{m}},\qquad D(T) \propto v\exp(-E_g/kT) \propto \sqrt{T}\exp(-E_g/kT)$$</div></div>
 
 <div class="task">
-<p><b>A2.</b> 먼저 한 축(이를 $x$축이라 하자)을 따른 입자의 제곱평균제곱근 변위를 구하자. 이 축을 따른 운동은 준비 강의에서 다룬 운동과 같으므로, 평균 제곱 변위는</p>
+<p><b>A2</b>. 먼저 한 축(이를 $x$축이라 하자)을 따른 입자의 제곱평균제곱근 변위를 구하자. 이 축을 따른 운동은 준비 강의에서 다룬 운동과 같으므로, 평균 제곱 변위는</p>
 $$\overline{x^2} = na^2,$$
 <p>여기서 $n$은 전체 도약 횟수이다. 도약 횟수는 $n = t/\tau$로 어림할 수 있다. $D = a^2/2\tau$를 쓰면</p>
 $$\overline{x^2} = 2Dt.$$
@@ -15,7 +15,7 @@ $$\overline{x^2} = 2Dt.$$
 <div class="ans">$$\Delta r_{sq} = \sqrt{\overline{x^2} + \overline{y^2} + \overline{z^2}} = \sqrt{6Dt}$$</div></div>
 
 <div class="task">
-<p><b>A3.</b> 앞 문항의 결과로 확산 계수를 구하자. $\Delta r_{{sq}}^2 = 6Dt$이므로 $D = \Delta r_{{sq}}^2/6t$이다. 이를 A1과 결합하면 $\Delta r_{{sq}}^2/(6t\sqrt{{T}}) \propto \exp(-E_g/kT)$이다. 이제 가장 쉬운 방법은 $X = 1/T$에 대한 $Y = \ln\left(\Delta r_{{sq}}^2t^{{-1}}T^{{-1/2}}\right)$의 기울기를 구하는 것이다.</p>
+<p><b>A3</b>. 앞 문항의 결과로 확산 계수를 구하자. $\Delta r_{{sq}}^2 = 6Dt$이므로 $D = \Delta r_{{sq}}^2/6t$이다. 이를 A1과 결합하면 $\Delta r_{{sq}}^2/(6t\sqrt{{T}}) \propto \exp(-E_g/kT)$이다. 이제 가장 쉬운 방법은 $X = 1/T$에 대한 $Y = \ln\left(\Delta r_{{sq}}^2t^{{-1}}T^{{-1/2}}\right)$의 기울기를 구하는 것이다.</p>
 <p><i>정확도를 보장하는 방법.</i> 첫째, $\Delta r_{{sq}} \gg 1$인 것이 좋다. 둘째, $1/T$는 $0.9$만큼 변하고 $E_g$는 기울기에 비례한다. $2\,\%$ 정확도를 보장하려면 최저·최고 온도에서의 오차가 $\sigma_Y(0.1) + \sigma_Y(1.0) \le 0.02\cdot 0.9E_g$를 만족해야 한다. $Y = \ln[\Delta r_{{sq}}^2T^{{-1/2}}]$(상수 차이 제외)이므로 이는 $2\varepsilon_r(0.1) + 2\varepsilon_r(1.0) \le 0.018E_g$, 즉 모든 점에서 $\varepsilon_r = \sigma_r/\Delta r_{{sq}} \le 0.0045E_g$이면 충분하다. 측정한 점들은 다음과 같다.</p>
 <table class="num"><tr><th>$t$</th><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td></tr><tr><th>$T$</th><td>1.000</td><td>1.111</td><td>1.250</td><td>1.429</td><td>1.667</td><td>2.000</td><td>2.500</td><td>3.333</td><td>5.000</td><td>10.00</td></tr><tr><th>$N$</th><td>10000</td><td>10000</td><td>10000</td><td>10000</td><td>10000</td><td>10000</td><td>10000</td><td>10000</td><td>10000</td><td>10000</td></tr><tr><th>$\Delta r_{sq}$</th><td>13.750</td><td>17.009</td><td>20.882</td><td>25.999</td><td>32.154</td><td>40.362</td><td>50.733</td><td>65.932</td><td>86.227</td><td>122.632</td></tr><tr><th>$\sigma_r$</th><td>0.053</td><td>0.066</td><td>0.081</td><td>0.102</td><td>0.127</td><td>0.156</td><td>0.198</td><td>0.257</td><td>0.336</td><td>0.477</td></tr><tr><th>$X$</th><td>1.000</td><td>0.900</td><td>0.800</td><td>0.700</td><td>0.6</td><td>0.5</td><td>0.4</td><td>0.3</td><td>0.2</td><td>0.1</td></tr><tr><th>$Y$</th><td>2.939</td><td>3.312</td><td>3.664</td><td>4.035</td><td>4.383</td><td>4.747</td><td>5.092</td><td>5.473</td><td>5.807</td><td>6.164</td></tr></table>
 <p>요구된 정확도가 실제로 달성됨을 알 수 있다. <code>InteractiveBuffer.nb</code>로 $Y(X)$를 그리고 기울기를 구하면</p>
@@ -25,11 +25,11 @@ $$\overline{x^2} = 2Dt.$$
 
 
 <div class="task">
-<p><b>B1.</b> 문제지로부터, 확산 흐름에 수직인 낟알 경계는 유효 확산 계수에 영향을 주지 않는다고 결론지을 수 있다. 세 방향의 경계(전체 상대 부피 $\delta$) 중 확산 방향에 나란한 두 방향이 $2\delta/3$를 차지하므로</p>
+<p><b>B1</b>. 문제지로부터, 확산 흐름에 수직인 낟알 경계는 유효 확산 계수에 영향을 주지 않는다고 결론지을 수 있다. 세 방향의 경계(전체 상대 부피 $\delta$) 중 확산 방향에 나란한 두 방향이 $2\delta/3$를 차지하므로</p>
 <div class="ans">$$D_{eff} \approx \frac{2\delta D_{gb}}{3}\quad\Rightarrow\quad \alpha = \frac{2}{3}$$</div></div>
 
 <div class="task">
-<p><b>B2.</b> $D_{{gb}}/D$가 크고 $\delta$가 작을수록 시뮬레이션 결과가 좋다. 또한 A형 확산은 큰 시간 규모에서 나타나므로 최대 시뮬레이션 시간을 쓰는 것이 좋다. 따라서 $(t, D_{{gb}}/D, \delta) = (5, 5, 0.005)$를 출발점으로 삼자. <code>B.nb</code>의 그래프는 이상적으로 기울기 $k = -1/(4D_{{eff}}t)$를 가지므로, 프로그램의 단위로</p>
+<p><b>B2</b>. $D_{{gb}}/D$가 크고 $\delta$가 작을수록 시뮬레이션 결과가 좋다. 또한 A형 확산은 큰 시간 규모에서 나타나므로 최대 시뮬레이션 시간을 쓰는 것이 좋다. 따라서 $(t, D_{{gb}}/D, \delta) = (5, 5, 0.005)$를 출발점으로 삼자. <code>B.nb</code>의 그래프는 이상적으로 기울기 $k = -1/(4D_{{eff}}t)$를 가지므로, 프로그램의 단위로</p>
 $$D_{eff} = \frac{1}{4|k|t} = 1 + \alpha\delta(D_{gb}/D - 1).$$
 <p>좌표를 $X = \delta(D_{{gb}}/D - 1)$, $Y = \dfrac{{1}}{{4|k|t}} - 1$로 잡으면 이 의존성은 선형이 된다. $X$를 크게 바꾸는 가장 좋은 방법은 $\delta$를 키우는 것이다. <code>B.nb</code>의 <i>Width</i> 슬라이더를 낮추면 가장자리 효과를 줄이는 데에도 도움이 된다. 측정한 점들($t = 5$, $D_{{gb}}/D = 5$):</p>
 <table class="num"><tr><th>$\delta$</th><th>$X$</th><th colspan="3">$|k|$ (세 번 실행)</th><th colspan="3">$Y$</th></tr><tr><td>0.005</td><td>0.02</td><td>0.049194</td><td>0.049325</td><td>0.049271</td><td>0.01637</td><td>0.01367</td><td>0.01479</td></tr><tr><td>0.010</td><td>0.04</td><td>0.048579</td><td>0.048652</td><td>0.048679</td><td>0.02924</td><td>0.02770</td><td>0.02712</td></tr><tr><td>0.015</td><td>0.06</td><td>0.047854</td><td>0.047978</td><td>0.047974</td><td>0.04484</td><td>0.04212</td><td>0.04222</td></tr><tr><td>0.020</td><td>0.08</td><td>0.047294</td><td>0.047470</td><td>0.047286</td><td>0.05721</td><td>0.05329</td><td>0.05738</td></tr><tr><td>0.025</td><td>0.10</td><td>0.046670</td><td>0.046558</td><td>0.046616</td><td>0.07134</td><td>0.07392</td><td>0.07259</td></tr><tr><td>0.030</td><td>0.12</td><td>0.046159</td><td>0.046208</td><td>0.045863</td><td>0.08321</td><td>0.08206</td><td>0.09020</td></tr><tr><td>0.035</td><td>0.14</td><td>0.045421</td><td>0.045837</td><td>0.044876</td><td>0.10081</td><td>0.09082</td><td>0.11418</td></tr><tr><td>0.040</td><td>0.16</td><td>0.044546</td><td>0.044615</td><td>0.044885</td><td>0.12243</td><td>0.12069</td><td>0.11394</td></tr><tr><td>0.045</td><td>0.18</td><td>0.044445</td><td>0.044355</td><td>0.043995</td><td>0.12499</td><td>0.12725</td><td>0.13648</td></tr><tr><td>0.050</td><td>0.20</td><td>0.043823</td><td>0.043122</td><td>0.043207</td><td>0.14093</td><td>0.15949</td><td>0.15722</td></tr></table>
@@ -39,11 +39,11 @@ $$D_{eff} = \frac{1}{4|k|t} = 1 + \alpha\delta(D_{gb}/D - 1).$$
 
 
 <div class="task">
-<p><b>C1.</b> 여기서 사전에 알 수 있는 유일한 제약은 차원이다. 우변에서 $a$를 제외한 모든 인자는 무차원이므로</p>
+<p><b>C1</b>. 여기서 사전에 알 수 있는 유일한 제약은 차원이다. 우변에서 $a$를 제외한 모든 인자는 무차원이므로</p>
 <div class="ans">$$\psi = -\frac{6}{5}$$</div></div>
 
 <div class="task">
-<p><b>C2.</b> 문제지에서 말했듯이 B형 확산의 규모는 $a$보다 훨씬 작고(즉 $\sqrt{{2[D_{{gb}}/D]t}} \ll 1$) 동시에 $\delta a$보다 훨씬 커야 한다(즉 $\sqrt{{2t}} \gg \delta$). 예를 들어 입력 매개변수를 $(t, D_{{gb}}/D, \delta) = (0.100, 25, 0.10)$으로 잡으면, 어느 매개변수든 넓은 범위에서 바꾸어도 B형 확산을 얻을 수 있다. 시뮬레이션한 확산이 B형인지는 농도 분포를 그려 문제지의 것과 비교하면 언제든 확인할 수 있다. 예를 들어 $(0.100, 25, 0.10)$에서의 농도 지도는 다음과 같다.</p>
+<p><b>C2</b>. 문제지에서 말했듯이 B형 확산의 규모는 $a$보다 훨씬 작고(즉 $\sqrt{{2[D_{{gb}}/D]t}} \ll 1$) 동시에 $\delta a$보다 훨씬 커야 한다(즉 $\sqrt{{2t}} \gg \delta$). 예를 들어 입력 매개변수를 $(t, D_{{gb}}/D, \delta) = (0.100, 25, 0.10)$으로 잡으면, 어느 매개변수든 넓은 범위에서 바꾸어도 B형 확산을 얻을 수 있다. 시뮬레이션한 확산이 B형인지는 농도 분포를 그려 문제지의 것과 비교하면 언제든 확인할 수 있다. 예를 들어 $(0.100, 25, 0.10)$에서의 농도 지도는 다음과 같다.</p>
 <figure><img src="S1_fig3.png" style="width:90mm"><figcaption>$(t, D_{{gb}}/D, \delta) = (0.100, 25, 0.10)$에서의 농도 지도.</figcaption></figure>
 <p>기울기 $k = d\ln\bar c/dz^{{6/5}}$를 구하기 위해 <code>C.nb</code>가 만든 그래프에서 선형 구간을 잘라 낸다. $\xi$는 $\delta$를 바꾸어 확산을 시뮬레이션하고 <code>InteractiveBuffer.nb</code>에서 $\ln|k|(\ln\delta)$를 그려 구한다. $\eta$와 $\zeta$도 같은 방법으로 각각 $D_{{gb}}/D$와 $t$를 바꾸어 구한다. 측정한 점들($Z \equiv \delta^{{-0.39}}[D_{{gb}}/D]^{{-0.68}}t^{{-0.44}}$, C3에서 사용):</p>
 <table class="num"><tr><th>$\delta$</th><td>0.100</td><td>0.080</td><td>0.060</td><td>0.120</td><td>0.150</td></tr><tr><th>$k$</th><td>&minus;1.08567</td><td>-1.11796</td><td>-1.2865</td><td>-0.942494</td><td>-0.903676</td></tr><tr><th>$\ln\delta$</th><td>-2.303</td><td>-2.526</td><td>-2.813</td><td>-2.120</td><td>-1.897</td></tr><tr><th>$\ln|k|$</th><td>0.092</td><td>0.112</td><td>0.252</td><td>-0.059</td><td>-0.101</td></tr><tr><th>$Z$</th><td>0.758</td><td>0.826</td><td>0.925</td><td>0.706</td><td>0.647</td></tr></table><table class="num"><tr><th>$D_{gb}/D$</th><td>25</td><td>35</td><td>50</td><td>15</td><td>10</td></tr><tr><th>$k$</th><td>&minus;1.08567</td><td>-0.865926</td><td>-0.675888</td><td>-1.55123</td><td>-2.00586</td></tr><tr><th>$\ln[D_{gb}/D]$</th><td>3.219</td><td>3.555</td><td>3.912</td><td>2.708</td><td>2.303</td></tr><tr><th>$\ln|k|$</th><td>0.092</td><td>-0.144</td><td>-0.392</td><td>0.439</td><td>0.696</td></tr><tr><th>$Z$</th><td>0.758</td><td>0.603</td><td>0.473</td><td>1.072</td><td>1.413</td></tr></table><table class="num"><tr><th>$t$</th><td>0.100</td><td>0.080</td><td>0.120</td><td>0.150</td><td>0.200</td></tr><tr><th>$k$</th><td>&minus;1.08567</td><td>-1.18623</td><td>-0.99746</td><td>-0.908966</td><td>-0.799996</td></tr><tr><th>$\ln t$</th><td>-2.303</td><td>-2.526</td><td>-2.120</td><td>-1.897</td><td>-1.609</td></tr><tr><th>$\ln|k|$</th><td>0.092</td><td>0.171</td><td>-0.003</td><td>-0.095</td><td>-0.223</td></tr><tr><th>$Z$</th><td>0.758</td><td>0.836</td><td>0.699</td><td>0.634</td><td>0.558</td></tr></table>
@@ -54,6 +54,6 @@ $$D_{eff} = \frac{1}{4|k|t} = 1 + \alpha\delta(D_{gb}/D - 1).$$
 <div class="ans">$$\xi = -0.39,\qquad \eta = -0.68,\qquad \zeta = -0.44$$</div></div>
 
 <div class="task">
-<p><b>C3.</b> $\psi$, $\xi$, $\eta$, $\zeta$를 알면, $X = Z = \delta^{{-0.39}}[D_{{gb}}/D]^{{-0.68}}t^{{-0.44}}$에 대한 $Y = |k|$의 기울기로 $C$를 구할 수 있다. 앞 문항의 점들에 대해 $X$를 계산하여 <code>InteractiveBuffer.nb</code>로 그리면</p>
+<p><b>C3</b>. $\psi$, $\xi$, $\eta$, $\zeta$를 알면, $X = Z = \delta^{{-0.39}}[D_{{gb}}/D]^{{-0.68}}t^{{-0.44}}$에 대한 $Y = |k|$의 기울기로 $C$를 구할 수 있다. 앞 문항의 점들에 대해 $X$를 계산하여 <code>InteractiveBuffer.nb</code>로 그리면</p>
 <figure><img src="S1_fig7.png" style="width:130mm"><figcaption>$Z$에 대한 $|k|$의 직선 맞춤.</figcaption></figure>
 <div class="ans">$$C = 1.42$$</div></div>
