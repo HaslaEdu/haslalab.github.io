@@ -263,10 +263,11 @@ test('the admin model bench runs a stage with other models and keeps the result 
   assert.match(calls[0].url,/\/gemini-3\.6-flash:generateContent$/);assert.deepEqual(calls[0].body.generationConfig.thinkingConfig,{thinkingLevel:'low'});
   assert.equal(JSON.parse(read.output).calls[0].model,'gemini-3.6-flash');
   calls.length=0;
-  const graded=await bench({stage:'grade',task:'T1',grade:{provider:'deepseek',model:'deepseek-v4-pro',images:false},moderate:{provider:'gemini',model:'gemini-2.5-flash'},reads:{[page.id]:Number(read.id)}});
+  const graded=await bench({stage:'grade',task:'T1',grade:{provider:'deepseek',model:'deepseek-v4-pro',images:false,lessons:'L1: a final expression with an extra term is wrong, however close it looks.'},moderate:{provider:'gemini',model:'gemini-2.5-flash'},reads:{[page.id]:Number(read.id)}});
   assert.equal(graded.status,'done',graded.output);
   const grade=calls.find(c=>c.text.includes('[TASK: grade]')),mod=calls.find(c=>c.text.includes('[TASK: moderate]'));
-  assert.equal(grade.body.model,'deepseek-v4-pro');assert.ok(!grade.parts.some(part=>part.type==='image_url'),'a text-only grader is sent no photo');
+  assert.equal(grade.body.model,'deepseek-v4-pro');
+  for(const c of [grade,mod])assert.ok(c.text.indexOf('L1: a final expression with an extra term')>-1&&c.text.indexOf('[Lessons from audited past gradings')<c.text.indexOf(c===grade?'[Exam context]':'[TASK: moderate]'),'the lessons sit after the regulation, before the paper');assert.ok(!grade.parts.some(part=>part.type==='image_url'),'a text-only grader is sent no photo');
   assert.match(mod.url,/\/gemini-2\.5-flash:generateContent$/);assert.deepEqual(mod.body.generationConfig.thinkingConfig,{thinkingBudget:0});
   assert.ok(JSON.stringify(mod.body).includes('inline_data')||JSON.stringify(mod.body).includes('inlineData'),'the moderator still sees the photo');
   const out=JSON.parse(graded.output);assert.equal(out.points,3);assert.ok(out.items.some(i=>i.id==='R'&&i.moderated));
