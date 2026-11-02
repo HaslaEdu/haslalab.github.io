@@ -2311,12 +2311,12 @@ async function labPurge(env) {
    and transcripts of that task (no problem or solution PDFs, so it is small and quick). Its results replace the first
    grader's for those items and go through the same code checks (quotes, values on the page, official values). */
 const MOD_SCHEMA = { type: "object", properties: { items: GRADE_SCHEMA.properties.items }, required: ["items"] };
-async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, all = false) {
+async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, all = false, tone = "strict") {
   const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
   const items = flagged.map(f => { const it = scheme.items.find(x => x.id === f.id) || {}, g = first.get(f.id) || {};
     return { id: it.id, points: it.points, type: it.type, role: it.role, sheet: it.sheet, unit: it.unit, ref: it.ref, tol: it.tol, full_min: it.full_min, full_max: it.full_max,
       what: it.what, expr: it.expr, first: { score: f.got, page: g.page, value: g.value, expr: g.expr, note: g.note, quote: g.quote }, check: f.check, ...(f.quote_missing ? { quote_missing: true } : {}) }; });
-  const parts = [{ text: [stablePrefix(family, kind), "", "[TASK: moderate]",
+  const parts = [{ text: [stablePrefix(family, kind, tone), "", "[TASK: moderate]",
     `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader ${all ? "graded the items below" : "marked the items below short of full marks"}, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
     (all ? "Check every item, those given full marks too, in the page photos themselves and grade it again under the same regulation: take marks off a wrong answer, a missing factor, an inverted relation or a wrong sign however close it looks, and off a step that is not written; give full marks to an answer equivalent to the official one in another form (rearranged, other notation, another correct method) and to a step written anywhere in the task's pages; keep a deduction the photos confirm, correct one that came from a misreading." :
     "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading.") + " Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Where the photo shows a number the transcript misread (0.31 read as 9.31), give the number as written in the photo as value and add visual:{kind:\"value\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it,description,value}. Give no feedback or review.",
@@ -2351,7 +2351,8 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   if (mine.some(p => p.mime !== "text/plain" && p.ocr == null)) throw new HttpError(502, "ocr_failed");
   const theory = labTheory(s, task);
   const family=familyOf(s.comp), kind=paperKind(s.comp,task,theory);
-  const head = { text: [stablePrefix(family,kind), "", "[Exam context]",
+  const tone = (roles?.tone ?? env.LAB_GRADE_TONE) === "neutral" ? "neutral" : "strict";
+  const head = { text: [stablePrefix(family,kind,tone), "", "[Exam context]",
     `Grade task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam.`,
     "", "[Marking scheme — from the official solution]", "<<SCHEME>>" + JSON.stringify(compactScheme(scheme)) + "<<END>>",
     /* after the scheme: everything above is one paper's prefix for every candidate, Korean or English, which the
@@ -2431,7 +2432,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   if (flagged.length) {
     try {
       /* without a moderator the grader's own model looks at the items the expression check doubts */
-      const mod = await labModerate(env, roles?.moderate ? labAs(s, roles.moderate, roles.moderateBench) : s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles?.moderateScope === "all" || checks.length > 0);
+      const mod = await labModerate(env, roles?.moderate ? labAs(s, roles.moderate, roles.moderateBench) : s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles?.moderateScope === "all" || checks.length > 0, tone);
       const ids = new Set(flagged.map(f => f.id)), byId = new Map((mod.raw.items || []).filter(x => x && ids.has(String(x.id))).map(x => [String(x.id), x]));
       const kept = (raw.items || []).filter(x => !byId.has(String(x?.id)));
       raw = { ...raw, items: [...kept, ...byId.values()] };                    // an item the first grader left out is added
@@ -2766,7 +2767,7 @@ async function labBench(env, s, job) {
       if (spec.scheme && (!scheme || scheme.unscored)) throw new Error('bench_no_scheme');
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
-        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined,
+        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
         /* where a bench grading has got to, kept on its row while it runs (a run that never ends shows its last step) */
         trace: step => env.DB.prepare("UPDATE lab_bench SET output=? WHERE id=? AND status='pending'").bind(JSON.stringify({ trace: step, ms: Date.now() - t0 }), row.id).run().catch(() => {}) };
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
