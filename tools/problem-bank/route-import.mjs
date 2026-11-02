@@ -3,7 +3,7 @@ import {createHash,randomUUID} from 'node:crypto';
 import {readFile,open,rename,unlink} from 'node:fs/promises';
 import path from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {normalizeImport,writeImportSql,privateOutput,sqlLiteral} from './store.mjs';
+import {normalizeImport,writeImportSql,privateOutput,sqlLiteral,readContextTextOverlays} from './store.mjs';
 
 const digest=value=>createHash('sha256').update(value).digest('hex');
 const fail=message=>{throw new Error(message);};
@@ -157,9 +157,10 @@ async function main(argv){
     console.log(JSON.stringify({routes:plan.source_routes.length,server_imported:false}));return;
   }
   const options={};
-  for(let i=0;i<argv.length;i+=2){if(!['--manifest','--questions','--routes','--out-dir'].includes(argv[i])||!argv[i+1]||options[argv[i]])fail('Expected --manifest --questions --routes --out-dir');options[argv[i]]=argv[i+1];}
-  if(Object.keys(options).length!==4)fail('Expected --manifest --questions --routes --out-dir');
-  const normalized=normalizeImport(await json(options['--manifest']),await json(options['--questions'])),plan=await json(options['--routes']);
+  for(let i=0;i<argv.length;i+=2){if(!['--manifest','--questions','--routes','--out-dir','--context-text-overlays'].includes(argv[i])||!argv[i+1]||options[argv[i]])fail('Expected --manifest --questions --routes --out-dir [--context-text-overlays PRIVATE_FILE]');options[argv[i]]=argv[i+1];}
+  if(['--manifest','--questions','--routes','--out-dir'].some(key=>!options[key]))fail('Expected --manifest --questions --routes --out-dir');
+  const contextTextOverlays=options['--context-text-overlays']?await readContextTextOverlays(options['--context-text-overlays']):undefined;
+  const normalized=normalizeImport(await json(options['--manifest']),await json(options['--questions']),{contextTextOverlays}),plan=await json(options['--routes']);
   const groups=splitImport(normalized,plan),{databases}=validateRoutes(normalized,plan);
   for(const [name,sql] of canonicalProgressSql(normalized,plan))await atomicWrite(path.join(options['--out-dir'],name+'.progress.sql'),sql);
   for(const [name,group] of groups){

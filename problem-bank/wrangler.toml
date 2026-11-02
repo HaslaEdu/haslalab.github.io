@@ -1,0 +1,42 @@
+name = "haslalab-problem-bank"
+main = "worker.mjs"
+compatibility_date = "2026-11-02"
+workers_dev = true
+keep_vars = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+[vars]
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslalab-problem-bank.haslalab.workers.dev,http://localhost:8794,http://127.0.0.1:8794"
+BANK_OCR_ENABLED = "1"
+
+[[services]]
+binding = "COMMUNITY"
+service = "haslalab-community"
+
+[[d1_databases]]
+binding = "BANK_REGISTRY"
+database_name = "haslalab-problem-bank"
+database_id = "c2aacdf3-d96a-42dc-8dab-7d4b150d743d"
+
+[[d1_databases]]
+binding = "BANK2"
+database_name = "haslalab-problem-bank-02"
+database_id = "1ab8a67e-2dd2-49c2-98ae-27f84d61e995"
+
+[[d1_databases]]
+binding = "BANK3"
+database_name = "haslalab-problem-bank-03"
+database_id = "694360f3-eca8-4f14-8a5c-edd1356582bb"
+
+[[d1_databases]]
+binding = "BANK_SEARCH"
+database_name = "haslalab-problem-bank-search"
+database_id = "221c550a-14bd-47da-9e43-de1e0bf59e57"
+
+[[r2_buckets]]
+binding = "LIBRARY"
+bucket_name = "haslalab-problem-library"

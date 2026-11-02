@@ -61,7 +61,68 @@ export function sourceId(source){
 }
 export function questionId(source,locator){return 'q_'+sha((typeof source==='string'?source:sourceId(source))+'\0'+text(locator,'locator',1000));}
 
-export function normalizeImport(manifest,questionFile={version:1,questions:[]}){
+// Explicit private overlays retain source-bound context recovered after a frozen
+// extractor draft. They never mutate the supplied manifest, questions or versions.
+export function applyContextTextOverlays(manifest,questionFile,overlay){
+  object(manifest,'manifest');object(questionFile,'questions');object(overlay,'context overlays');
+  if(overlay.version!==1||!Array.isArray(overlay.items)||!Array.isArray(manifest.sources)||!Array.isArray(questionFile.questions))fail('Invalid context overlay format');
+  const sources=new Map(),entries=new Map(),byQuestion=new Map(),contexts=new Map();
+  for(const source of manifest.sources){
+    const id=sourceId(source),sourceHash=hash(source.sha256,'source.sha256');
+    if(sources.has(id)&&hash(sources.get(id).sha256,'source.sha256')!==sourceHash)fail('Conflicting context overlay source revision');
+    sources.set(id,source);
+  }
+  for(const item of overlay.items){
+    object(item,'context overlay');
+    if(!/^q_[a-f\d]{64}$/.test(item.question_id)||!/^src_[a-f\d]{64}$/.test(item.source_id))fail('Invalid context overlay question/source ID');
+    text(item.locator,'context overlay locator',1000);
+    if(questionId(item.source_id,item.locator)!==item.question_id)fail('Context overlay canonical question ID mismatch');
+    const sourceHash=hash(item.source_sha256,'context overlay source SHA'),base=hash(item.base_text_sha256,'context overlay base SHA'),next=hash(item.text_sha256,'context overlay text SHA');
+    const lang=language(item.language,'context overlay language'),body=text(item.text,'context overlay text',200000);
+    if(sha(body)!==next)fail('Context overlay text hash mismatch');
+    if(item.review_status!=null&&item.review_status!=='pending')fail('Context overlays must remain pending review');
+    const source=sources.get(item.source_id);
+    if(source&&hash(source.sha256,'source.sha256')!==sourceHash)fail('Context overlay source PDF hash mismatch');
+    const key=item.question_id+'\0'+lang;if(entries.has(key))fail('Duplicate context overlay question/language');
+    entries.set(key,{item,base,next,body});
+    if(!byQuestion.has(item.question_id))byQuestion.set(item.question_id,[]);
+    byQuestion.get(item.question_id).push({item,base,next,body});
+    if(item.context_overlay!=null){
+      object(item.context_overlay,'context overlay metadata');const encoded=JSON.stringify(item.context_overlay);
+      if(encoded.length>20000)fail('Context overlay metadata exceeds storage limit');
+      if(contexts.has(item.question_id)&&contexts.get(item.question_id)!==encoded)fail('Conflicting context overlay metadata');
+      contexts.set(item.question_id,encoded);
+    }
+  }
+  const questions=questionFile.questions.map(raw=>{
+    object(raw,'question');const sid=sourceId(raw.source),id=questionId(sid,raw.locator);
+    const selected=byQuestion.get(id);if(!selected)return raw;
+    const source=sources.get(sid);if(!source)fail('Context overlay references an unregistered question source');
+    if(!Array.isArray(raw.versions))fail('Context overlay requires existing language versions');
+    const versions=raw.versions.map(v=>({...v}));
+    for(const {item,base,next,body} of selected){
+      if(item.source_id!==sid||item.locator!==raw.locator||hash(source.sha256,'source.sha256')!==hash(item.source_sha256,'context overlay source SHA'))fail('Context overlay source/question identity mismatch');
+      const candidates=versions.filter(v=>v.language===item.language);
+      if(candidates.length!==1)fail('Context overlay requires exactly one matching language version');
+      const version=candidates[0],current=sha(text(version.text,'version.text',200000));
+      if(current!==base&&current!==next)fail('Context overlay base text hash mismatch');
+      // The original role and other original-language versions are untouched.
+      version.text=body;version.review_status='pending';
+    }
+    return {...raw,versions,review_status:'pending',...(contexts.has(id)?{context:JSON.parse(contexts.get(id))}:{})};
+  });
+  return {...questionFile,questions};
+}
+
+export async function readContextTextOverlays(filename){
+  const actual=await realpath(path.resolve(filename)),root=await realpath(PUBLIC_ROOT),relative=path.relative(root,actual);
+  if(!relative||!relative.startsWith('..'+path.sep)&&relative!=='..'&&!path.isAbsolute(relative))fail('Context overlays must be outside the public Git checkout');
+  if(!(await lstat(actual)).isFile())fail('Context overlays require an explicit private JSON file');
+  return JSON.parse((await readFile(actual,'utf8')).replace(/^\uFEFF/,''));
+}
+
+export function normalizeImport(manifest,questionFile={version:1,questions:[]},{contextTextOverlays}={}){
+  if(contextTextOverlays!=null)questionFile=applyContextTextOverlays(manifest,questionFile,contextTextOverlays);
   object(manifest,'manifest');object(questionFile,'questions');if(manifest.version!==1||questionFile.version!==1)fail('Only import format version 1 is supported');
   if(!Array.isArray(manifest.sources)||!manifest.sources.length)fail('sources: at least one source required');
   if(!Array.isArray(questionFile.questions))fail('questions: expected array');
@@ -214,11 +275,13 @@ export async function privateOutput(target){
   return actual;
 }
 export async function main(argv=process.argv.slice(2)){
-  const options={};for(let index=0;index<argv.length;index+=2){if(!['--manifest','--questions','--out'].includes(argv[index])||!argv[index+1]||options[argv[index]])fail('Usage: node store.mjs --manifest PRIVATE/manifest.json [--questions PRIVATE/questions.json] --out PRIVATE/import.sql');options[argv[index]]=argv[index+1];}
+  const options={};for(let index=0;index<argv.length;index+=2){if(!['--manifest','--questions','--out','--context-text-overlays'].includes(argv[index])||!argv[index+1]||options[argv[index]])fail('Usage: node store.mjs --manifest PRIVATE/manifest.json [--questions PRIVATE/questions.json] [--context-text-overlays PRIVATE/overlays.json] --out PRIVATE/import.sql');options[argv[index]]=argv[index+1];}
   if(!options['--manifest']||!options['--out'])fail('--manifest and --out are required');
+  if(options['--context-text-overlays']&&!options['--questions'])fail('--context-text-overlays requires --questions');
   const manifest=JSON.parse(await readFile(options['--manifest'],'utf8'));
   const questionFile=options['--questions']?JSON.parse(await readFile(options['--questions'],'utf8')):undefined;
-  const normalized=normalizeImport(manifest,questionFile),out=await writeImportSql(normalized,options['--out']);
+  const contextTextOverlays=options['--context-text-overlays']?await readContextTextOverlays(options['--context-text-overlays']):undefined;
+  const normalized=normalizeImport(manifest,questionFile,{contextTextOverlays}),out=await writeImportSql(normalized,options['--out']);
   const supplied=normalized.questions.flatMap(q=>q.versions);console.log(JSON.stringify({sources:normalized.sources.length,questions:normalized.questions.length,language_versions:supplied.length,
     verified_language_versions:supplied.filter(v=>v.review_status==='verified').length,output:out,server_imported:false}));
 }

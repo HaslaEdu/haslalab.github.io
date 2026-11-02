@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import uuid
 from pathlib import Path
 from private_paths import private_directory, source_path
@@ -128,7 +129,39 @@ def refresh_reviewed_source_counts(root, sources):
                           extraction_complete=len(raw["questions"]) == expected)
 
 
-def prepare(root, text_only=False, profiles=None):
+def apply_context_text_overlays(manifest, questions, overlay_path):
+    """Use the same canonical-ID/hash gates as both JS import entry points.
+
+    Only thin envelopes cross captured stdio. Image payloads stay in Python and
+    every frozen extractor/translation input remains unchanged.
+    """
+    envelopes = [{key: question[key] for key in
+                  ('source', 'locator', 'versions', 'context', 'review_status')
+                  if key in question} for question in questions]
+    request = {'manifest': manifest, 'questions': {'version': 1, 'questions': envelopes},
+               'overlay_path': str(Path(overlay_path).resolve())}
+    result = subprocess.run(
+        ['node', str(Path(__file__).with_name('apply-context-text-overlays.mjs'))],
+        input=json.dumps(request, ensure_ascii=False), text=True, encoding='utf-8',
+        capture_output=True)
+    if result.returncode:
+        raise ValueError('Private context overlay rejected: ' + result.stderr.strip())
+    updated = json.loads(result.stdout)['questions']
+    if len(updated) != len(questions):
+        raise ValueError('Context overlay bridge changed the question inventory')
+    output = []
+    for original, envelope in zip(questions, updated):
+        if envelope['source'] != original['source'] or envelope['locator'] != original['locator']:
+            raise ValueError('Context overlay bridge changed a canonical identity')
+        copied = dict(original)
+        for key in ('versions', 'context', 'review_status'):
+            if key in envelope:
+                copied[key] = envelope[key]
+        output.append(copied)
+    return output
+
+
+def prepare(root, text_only=False, profiles=None, context_text_overlays=None):
     root = private_directory(root)
     if profiles:
         available = {path.parent.name for pattern in ("*/questions.raw.json", "*/questions-raw.json")
@@ -214,6 +247,8 @@ def prepare(root, text_only=False, profiles=None):
         document.close()
     if profiles and not questions:
         raise ValueError("Selected extractor folders contain no questions; import snapshot was not replaced")
+    if context_text_overlays is not None:
+        questions = apply_context_text_overlays(manifest, questions, context_text_overlays)
     out_manifest, out_questions = root / "import-manifest.json", root / "import-questions.json"
     # Serialize the larger file first; if its encoding fails, both previous
     # outputs remain intact. Consumers run only after this command succeeds.
@@ -230,5 +265,8 @@ if __name__ == "__main__":
     parser.add_argument("--private-root", type=Path, required=True)
     parser.add_argument("--text-only", action="store_true", help="Update already imported questions without resending their crop payloads")
     parser.add_argument("--profiles", nargs="+", help="Only import these complete private extractor folders")
+    parser.add_argument("--context-text-overlays", type=Path,
+                        help="Explicit private, source- and base-hash-bound context overlay JSON")
     args = parser.parse_args()
-    print(json.dumps(prepare(args.private_root.resolve(), args.text_only, args.profiles), ensure_ascii=True))
+    print(json.dumps(prepare(args.private_root.resolve(), args.text_only, args.profiles,
+                             args.context_text_overlays), ensure_ascii=True))

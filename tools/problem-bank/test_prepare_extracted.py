@@ -128,6 +128,48 @@ class AdapterTests(unittest.TestCase):
                 MODULE.prepare(root, profiles=['synthetic-book'])
             self.assertEqual((root / 'import-questions.json').read_bytes(), before)
 
+    def test_explicit_context_overlay_survives_frozen_repreparation_without_changing_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            folder, question = self.fixture(root)
+            self.save(folder, [question])
+            original = (folder / 'questions.raw.json').read_bytes()
+            manifest = json.loads((root / 'manifest.json').read_text())
+            source = manifest['sources'][0]
+            digest = lambda value: hashlib.sha256(value.encode('utf-8')).hexdigest()
+            sid = 'src_' + digest(source['drive_id'] + '\0' + source['revision'])
+            qid = 'q_' + digest(sid + '\0' + question['locator'])
+            before = question['versions'][0]['text']
+            after = before + '\n\nGiven $x=2$.'
+            overlay = {'version': 1, 'items': [{'question_id': qid, 'source_id': sid,
+                'source_sha256': source['sha256'], 'locator': question['locator'],
+                'language': 'en', 'base_text_sha256': digest(before),
+                'text_sha256': digest(after), 'text': after, 'review_status': 'pending'}]}
+            overlay_path = root / 'context-text-overlays.json'
+            overlay_path.write_text(json.dumps(overlay))
+            MODULE.prepare(root, text_only=True)
+            self.assertEqual(self.prepared(root)[0]['versions'][0]['text'], before)
+            for _ in range(2):
+                MODULE.prepare(root, text_only=True, context_text_overlays=overlay_path)
+                version = self.prepared(root)[0]['versions'][0]
+                self.assertEqual(version['text'], after)
+                self.assertEqual(version['role'], 'original')
+                self.assertEqual(version['review_status'], 'pending')
+            MODULE.prepare(root, context_text_overlays=overlay_path)
+            full = self.prepared(root)[0]
+            self.assertTrue(full['assets_complete'])
+            self.assertEqual(len(full['assets']), 3)
+            self.assertTrue(all(a.get('inline_base64') for a in full['assets']))
+            self.assertEqual((folder / 'questions.raw.json').read_bytes(), original)
+            prior = (root / 'import-questions.json').read_bytes()
+            prior_manifest = (root / 'import-manifest.json').read_bytes()
+            overlay['items'][0]['base_text_sha256'] = 'b' * 64
+            overlay_path.write_text(json.dumps(overlay))
+            with self.assertRaisesRegex(ValueError, 'base text hash mismatch'):
+                MODULE.prepare(root, context_text_overlays=overlay_path)
+            self.assertEqual((root / 'import-questions.json').read_bytes(), prior)
+            self.assertEqual((root / 'import-manifest.json').read_bytes(), prior_manifest)
+
 
 if __name__ == '__main__':
     unittest.main()
