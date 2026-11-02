@@ -63,6 +63,9 @@ LAB_READ_TILES = "3"
 LAB_READ_NOTATION = "on"
 # the look-alikes our audits found misread, listed in the read prompt (OCR checks: numbers missed 13 -> 11 of 102, same cost)
 LAB_READ_CONFUSIONS = "on"
+# a numerical answer the code marks wrong (R12) is read again by Mathpix on that page alone; a one-character misread
+# (10^12 for 10^18, 25 for 85) is replaced (bench: 2 misreads fixed, no wrong replacement; ~$0.005 a page it reads)
+LAB_FOCUS_READ = "on"
 LAB_READ_THINKING = "off"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
