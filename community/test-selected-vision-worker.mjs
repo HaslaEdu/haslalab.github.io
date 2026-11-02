@@ -215,6 +215,23 @@ test('a page read caught in a repetition loop is capped and read once more, warm
   assert.deepEqual(reads.map(c=>c.body.generationConfig.temperature),[0,0.8]);
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
+test('bench read.boxes: the reader is asked for the box of every value as well, and only then',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_PIPELINE='mixed';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  const page=sql.prepare('SELECT id FROM lab_pages WHERE session_id=?').get(sid);
+  sql.exec(`CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`);
+  const bench=async spec=>{const b=sql.prepare('INSERT INTO lab_bench(session_id,spec)VALUES(?,?)').run(sid,JSON.stringify(spec)).lastInsertRowid;
+    const j=sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,page_id,status,available_at,created_at,updated_at)VALUES(?,'bench',?,?,'pending',0,0,0)").run('bench:'+b,sid,b).lastInsertRowid;
+    await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:Number(j)}}]);await drain();return sql.prepare('SELECT * FROM lab_bench WHERE id=?').get(b);};
+  for(const boxes of [true,false]){calls.length=0;
+    const r=await bench({stage:'read',page_id:page.id,read:{provider:'gemini',model:'gemini-3.1-flash-lite',thinking:'low',boxes}});
+    assert.equal(r.status,'done',r.output);
+    const read=calls.find(c=>c.text.includes('[TASK: read page]'));
+    assert.equal(read.text.includes('and for every value item the line where its number is written'),boxes);
+    assert.equal(read.text.includes('Give box only for graphs'),!boxes);}
+}));
 test('the admin model bench runs a stage with other models and keeps the result apart from the sitting',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';
   const a=(await start('deepseek')).data,sid=a.session.id;
