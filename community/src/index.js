@@ -9,6 +9,7 @@ import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, 
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
+import { createDesktopOAuth } from './oauth-desktop.js';
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
 import { tokenUnits, tokenBalance, tokenSql, tokenSet } from './lab-tokens.js';
 import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE, LAB_SHORTLIST_CATALOGUE } from './lab-pair-catalog.js';
@@ -183,8 +184,10 @@ async function currentUser(req, env) {
   if (u) u.tokenHash = th;
   return u || null;
 }
-function needUser(u) { if (!u) throw new HttpError(401, "login_required"); return u; }
-const pubUser = u => ({ id: u.id, username: u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null });
+const needsUsername = u => !!u && String(u.username).startsWith('~pending_');
+function needUser(u) { if (!u) throw new HttpError(401, "login_required"); if(needsUsername(u))throw new HttpError(403,'username_required'); return u; }
+const pubUser = u => ({ id: u.id, username: needsUsername(u)?null:u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null, ...(needsUsername(u)?{username_required:true}:{}) });
+const desktopOAuth=createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers:oauthProviders,newSession,pubUser});
 const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab, lab_reg: LAB_REG, jobs: { available: hasLabQueue(env), mode: 'queue' } });
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
@@ -205,11 +208,14 @@ async function handle(req, env, url, ctx) {
   const m = req.method;
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
-  const body = (m === "POST" || m === "PATCH") && !form ? await req.json().catch(() => ({})) : {};
+  const body = (m === "POST" || m === "PATCH") && !form ? /^\/api\/oauth\/(desktop|web)\/(start|exchange)$/.test(p)?await desktopOAuth.readBody(req,env):await req.json().catch(() => ({})) : {};
   const me = publicInvariant(m, p) || m === 'GET' && /^\/api\/users(?:\/[^/]+)?$/.test(p) ? null : await currentUser(req, env);
   let r;
 
+  const desktopResult=await desktopOAuth.handle(req,env,url,body);if(desktopResult!==null)return desktopResult;
+  if(needsUsername(me)&&!['/api/me','/api/me/username','/api/logout','/api/oauth/redeem'].includes(p))throw new HttpError(403,'username_required');
   if (p === "/api/health") return healthData(env, await labReady(env));
+  if(p==='/api/oauth/providers'&&m==='GET')return {providers:oauthProviders(env)};
   if (p === "/api/boards" && m === "GET") return readPublicBoards(env.DB, url);
   const security = await accountSecurityRouter(req,env,{path:p,body,me,ctx});
   if(security!==null)return security;
@@ -251,6 +257,16 @@ async function handle(req, env, url, ctx) {
     return { ok: true };
   }
   if (p === "/api/me" && m === "GET") return { user: me ? pubUser(me) : null };
+  if(p==='/api/me/username'&&m==='POST'){
+    if(!me)throw new HttpError(401,'login_required');
+    if(!needsUsername(me))throw new HttpError(409,'username_already_set');
+    if(me.sessionCreatedAt<now()-1800)throw new HttpError(403,'recent_login_required');
+    const username=String(body.username||'').trim();if(!USERNAME_RE.test(username))bad('bad_username');
+    await limit(env,'username-claim:'+me.id,30,600);
+    let row;try{row=await env.DB.prepare('UPDATE users SET username=? WHERE id=? AND username=? AND deleted=0 RETURNING id,username,nickname,role,created_at,avatar').bind(username,me.id,me.username).first()}catch(error){if(isUnique(error))throw new HttpError(409,'username_taken');throw error}
+    if(!row)throw new HttpError(409,'username_already_set');
+    return {ok:true,user:pubUser(row)};
+  }
   if (p === "/api/me" && m === "DELETE") {
     needUser(me);
     await ensureAccountSecuritySchema(env.DB);
@@ -333,8 +349,8 @@ async function handle(req, env, url, ctx) {
   if (p === "/api/oauth/redeem" && m === "POST") {
     await limit(env, "redeem:" + clientIp(req), 30, 600);
     const h = await sha256(String(body.code || ""));
-    const row = await env.DB.prepare("SELECT * FROM oauth_codes WHERE code_hash=? AND fresh>=0").bind(h).first();
-    await env.DB.prepare("DELETE FROM oauth_codes WHERE code_hash=? OR created_at<?").bind(h, now() - 600).run();
+    const row = await env.DB.prepare("DELETE FROM oauth_codes WHERE code_hash=? AND fresh>=0 RETURNING *").bind(h).first();
+    await env.DB.prepare("DELETE FROM oauth_codes WHERE created_at<?").bind(now() - 600).run();
     if (!row || row.created_at < now() - 60) throw new HttpError(400, "bad_code");
     const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0").bind(row.user_id).first();
     if (!user) throw new HttpError(400, "bad_code");
@@ -1428,7 +1444,7 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
    3.5-flash-lite about twice that; the 3.x Flash models looped to the output cap on 10-30% of pages. */
 /* each stage's provider (LAB_READ_PROVIDER, LAB_GRADE_PROVIDER, LAB_MODERATE_PROVIDER, LAB_SCHEME_PROVIDER): Gemini, DeepSeek,
    OpenAI or Anthropic, whichever the model bench picks for it */
-const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic"];
+const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic", "upstage"];
 const stage = (value, fallback) => STAGE_PROVIDERS.includes(value) ? value : fallback;
 function labRoles(env, s, theory) {
   const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
@@ -2575,6 +2591,11 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     if(size>budget)continue;
     const photo={inline_data:{mime_type:row.mime,data:b64(img)},label:`Original submitted page ${p.no}, ${p.kind}, task ${p.task}`};photos.push({p,photo});
     if(roles?.gradeImages===false)continue;                                       // bench: a text-only grader works from the readings; the moderator still sees the photos
+    /* bench grade.tiles: DeepSeek scales every image down to about 1024 tokens (~1300 px a side), where exponents, signs
+       and subscripts of a handwritten page blur; an answer page goes as strips, top to bottom, each at that resolution */
+    const strips=roles?.tiles>=2&&roles?.grade==='deepseek'&&p.kind==='answer'&&row.mime==='image/jpeg'?pageStrips(img instanceof Uint8Array?img:new Uint8Array(img),roles.tiles):[];
+    if(strips.length){for(const [k,b] of strips.entries()){parts.push({text:`[p${p.no} · part ${k+1} of ${strips.length}, top to bottom, of the photo of page ${p.no}, split for resolution]`},{inline_data:{mime_type:'image/jpeg',data:b64(b)},label:`Original submitted page ${p.no}, part ${k+1} of ${strips.length}`});}
+      budget-=size;p._visionSupplied=true;continue;}
     parts.push(photo);budget-=size;p._visionSupplied=true;
   }
   parts.push({text:'For evidence you can directly see in a supplied original student image, including a graph or handwritten arrow missing from OCR/items, provide visual:{kind,box:[ymin,xmin,ymax,xmax] in 0..1000,description,value,graph,rows,columns}. Graph fields describe observed checks and counts, not an inferred correct answer. Give the actual page and label. This allows visual evidence to be checked without treating an empty transcription as a blank graphical answer. Never claim visual evidence on a typed-only page.'});
@@ -3041,7 +3062,7 @@ async function labBench(env, s, job) {
   const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking, twoStage: c.twoStage, check: c.check });
   let out, failed = false;
   try {
-    if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
+    if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic', 'upstage'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
     /* a dedicated math-OCR service reads a page: {stage:'ocr', engine:'mathpix'|'simpletex', page_id} */
     else if (spec.stage === 'ocr') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
@@ -3083,6 +3104,7 @@ async function labBench(env, s, job) {
         gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, doubleGrade: spec.grade.double === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
         audit: spec.grade.audit === true ? true : undefined,
         lessons: typeof spec.grade.lessons === "string" && spec.grade.lessons.trim() ? spec.grade.lessons.trim().slice(0, 12000) : undefined,
+        tiles: Number.isInteger(spec.grade.tiles) && spec.grade.tiles >= 2 && spec.grade.tiles <= 4 ? spec.grade.tiles : undefined,
         toolRounds: Number.isInteger(spec.grade.toolRounds) && spec.grade.toolRounds > 0 && spec.grade.toolRounds <= 6 ? spec.grade.toolRounds : undefined,
         /* where a bench grading has got to, kept on its row while it runs (a run that never ends shows its last step) */
         trace: step => env.DB.prepare("UPDATE lab_bench SET output=? WHERE id=? AND status='pending'").bind(JSON.stringify({ trace: step, ms: Date.now() - t0 }), row.id).run().catch(() => {}) };
@@ -4159,6 +4181,7 @@ function allowedReturn(env, raw) {
   return ok ? u.origin + u.pathname + u.search : null;                 // the fragment is set on the way back
 }
 function backTo(ret, frag) { return new Response(null, { status: 302, headers: { Location: ret + "#/oauth?" + frag, "Cache-Control": "no-store" } }); }
+function oauthBack(env,ret,frag){return ret.startsWith('desktop:')?desktopOAuth.error(env,ret,new URLSearchParams(frag).get('e')||'oauth_failed'):backTo(ret,frag)}
 /* a provider's display name, made into a free nickname */
 async function freeNick(env, raw) {
   let base = cleanNick(String(raw || "").normalize("NFKC").replace(/[^\p{L}\p{N}_.\- ]/gu, "").replace(NICK_BLANK, "")).slice(0, 12).trim();
@@ -4173,16 +4196,17 @@ async function oauthRoute(req, env, url) {
   const [, , , prov, step] = url.pathname.split("/"), P = OAUTH[prov], keys = oauthKeys(env, prov);
   const redirectUri = url.origin + `/api/oauth/${prov}/callback`;
   if (step === "start") {
-    const ret = allowedReturn(env, url.searchParams.get("return") || "");
+    const intent=url.searchParams.get('desktop'),desktop=intent?await desktopOAuth.start(env,intent,prov):null;
+    const ret = intent?desktop?.returnTo:allowedReturn(env, url.searchParams.get("return") || "");
     if (!ret) return new Response("Bad return address", { status: 400 });
-    if (!keys.id || !keys.secret) return backTo(ret, "e=oauth_off");
+    if (!keys.id || !keys.secret) return oauthBack(env,ret, "e=oauth_off");
     await limit(env, "oauth:" + clientIp(req), 30, 600);
-    let linkUser = null;
+    let linkUser = desktop?.linkUser||null;
     const ticket = url.searchParams.get("ticket");
     if (ticket) {
       const h = await sha256("t:" + ticket), row = await env.DB.prepare("SELECT user_id,created_at FROM oauth_codes WHERE code_hash=? AND fresh=-1").bind(h).first();
       await env.DB.prepare("DELETE FROM oauth_codes WHERE code_hash=?").bind(h).run();
-      if (!row || row.created_at < now() - 120) return backTo(ret, "e=bad_code");
+      if (!row || row.created_at < now() - 120) return oauthBack(env,ret, "e=bad_code");
       linkUser = row.user_id;
     }
     const state = b64u(crypto.getRandomValues(new Uint8Array(24)));
@@ -4198,38 +4222,38 @@ async function oauthRoute(req, env, url) {
     return new Response(null, { status: 302, headers: { Location: (env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(P.auth).pathname : P.auth) + "?" + q, "Cache-Control": "no-store" } });
   }
   /* callback */
-  const st = await env.DB.prepare("SELECT * FROM oauth_states WHERE state=? AND provider=?").bind(url.searchParams.get("state") || "", prov).first();
-  if (st) await env.DB.prepare("DELETE FROM oauth_states WHERE state=?").bind(st.state).run();
+  const st = await env.DB.prepare("DELETE FROM oauth_states WHERE state=? AND provider=? RETURNING *").bind(url.searchParams.get("state") || "", prov).first();
   if (!st || st.created_at < now() - 600) return new Response("This sign-in link has expired. Please try again.", { status: 400 });
   const code = url.searchParams.get("code");
-  if (!code) return backTo(st.return_to, "e=oauth_cancelled");
+  if (!code) return oauthBack(env,st.return_to, "e=oauth_cancelled");
   const form = new URLSearchParams({ grant_type: "authorization_code", code, client_id: keys.id, client_secret: keys.secret, redirect_uri: redirectUri });
   if (st.verifier) form.set("code_verifier", st.verifier);
   if (prov === "naver") form.set("state", st.state);
   const tr = await fetch(mockable(env, P.token), { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" }, body: form });
   const tj = await tr.json().catch(() => ({}));
-  if (!tr.ok || !tj.access_token) { console.error("oauth token", prov, tr.status); return backTo(st.return_to, "e=oauth_failed"); }
+  if (!tr.ok || !tj.access_token) { console.error("oauth token", prov, tr.status); return oauthBack(env,st.return_to, "e=oauth_failed"); }
   const mr = await fetch(mockable(env, P.me), { headers: { Authorization: "Bearer " + tj.access_token, Accept: "application/json", "User-Agent": "HaslaLab" } });   // GitHub refuses requests without a User-Agent
   const mj = await mr.json().catch(() => ({}));
   const prof = prov === "naver" ? (mj.response || {}) : mj;
   const sub = String(prov === "google" ? prof.sub : prof.id || "");
-  if (!mr.ok || !sub) { console.error("oauth profile", prov, mr.status); return backTo(st.return_to, "e=oauth_failed"); }
+  if (!mr.ok || !sub) { console.error("oauth profile", prov, mr.status); return oauthBack(env,st.return_to, "e=oauth_failed"); }
   const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username)
     : prov === "github" ? (prof.name || prof.login) : prov === "kakao" ? ((prof.kakao_account || {}).profile || prof.properties || {}).nickname : (prof.nickname || prof.name);
   const found = await env.DB.prepare("SELECT i.user_id FROM identities i JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=? AND u.deleted=0").bind(prov, sub).first();
   let userId, fresh = 0;
   if (st.link_user) {
-    if (found && found.user_id !== st.link_user) return backTo(st.return_to, "e=oauth_in_use");
+    if (found && found.user_id !== st.link_user) return oauthBack(env,st.return_to, "e=oauth_in_use");
     if (!found) await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, st.link_user, now()).run();
     userId = st.link_user;
   } else if (found) userId = found.user_id;
   else {
     await limit(env, "signup:" + clientIp(req), 20, 3600);
-    const uname = prov[0] + "_" + b64u(crypto.getRandomValues(new Uint8Array(9))).replace(/[^A-Za-z0-9]/g, "").slice(0, 10);
+    const uname = '~pending_' + b64u(crypto.getRandomValues(new Uint8Array(18)));
     const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), now(), SIGNUP_TOKENS).run();
     userId = res.meta.last_row_id; fresh = 1;
     await env.DB.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES(?,?,?,?)").bind(prov, sub, userId, now()).run();
   }
+  if(st.return_to.startsWith('desktop:'))return desktopOAuth.finish(env,st.return_to,userId,fresh);
   const one = b64u(crypto.getRandomValues(new Uint8Array(24)));
   await env.DB.prepare("INSERT INTO oauth_codes(code_hash,user_id,fresh,created_at) VALUES(?,?,?,?)").bind(await sha256(one), userId, fresh, now()).run();
   return backTo(st.return_to, "c=" + one + (st.link_user ? "&linked=" + prov : ""));

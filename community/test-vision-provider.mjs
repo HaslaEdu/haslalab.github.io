@@ -176,8 +176,18 @@ test('a candidate still chooses only Gemini or DeepSeek; the new providers are f
   assert.throws(() => visionProvider('anthropic'), e => e.code === 'bad_provider'); assert.throws(() => visionProvider('openai'), e => e.code === 'bad_provider');
   assert.equal(requireVisionProvider({ CLAUDE_API_KEY: 'x' }, 'anthropic'), 'anthropic', 'an alternative key name is accepted');
   assert.deepEqual(visionCapabilities({}).providers.map(p => p.id), ['gemini', 'deepseek']);
-  assert.deepEqual(providerKeys({ OPENAI_API_KEY: 'a', MY_CLAUDE: 'secret-value' }), { gemini: false, deepseek: false, openai: true, anthropic: false, names: ['MY_CLAUDE', 'OPENAI_API_KEY'] });
+  assert.deepEqual(providerKeys({ OPENAI_API_KEY: 'a', MY_CLAUDE: 'secret-value' }), { gemini: false, deepseek: false, openai: true, anthropic: false, upstage: false, names: ['MY_CLAUDE', 'OPENAI_API_KEY'] });
   assert.throws(() => requireVisionProvider({ ANTHROPIC_API_KEY: '  \n' }, 'anthropic'), e => e.code === 'provider_unavailable', 'a blank key is no key');
+});
+
+test('Upstage Solar goes through its OpenAI-compatible endpoint with max_tokens, and is a stage provider only',async()=>{
+ const { visionProvider } = await import('./src/vision-provider.js');
+ const seen=[];const fetchImpl=async(url,init)=>{seen.push({url,body:JSON.parse(init.body),auth:init.headers.Authorization});return Response.json({model:'solar-mini4',choices:[{finish_reason:'stop',message:{content:'{"text":"x"}'}}],usage:{prompt_tokens:10,completion_tokens:5}});};
+ const out=await visionJSON({UPSTAGE_API_KEY:'u'},{provider:'upstage',model:'solar-mini4',fetchImpl,parts:[{text:'x'}]});
+ assert.equal(seen[0].url,'https://api.upstage.ai/v1/chat/completions');assert.equal(seen[0].auth,'Bearer u');
+ assert.equal(seen[0].body.model,'solar-mini4');assert.ok(seen[0].body.max_tokens>0&&!('max_completion_tokens' in seen[0].body));
+ assert.deepEqual(out.raw,{text:'x'});
+ assert.throws(()=>visionProvider('upstage'),e=>e.code==='bad_provider','a candidate cannot choose it');
 });
 
 test('DeepSeek thinks only when the stage asks for a level; otherwise thinking is off at temperature 0',async()=>{

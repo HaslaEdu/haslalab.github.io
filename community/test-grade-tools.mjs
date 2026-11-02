@@ -44,6 +44,21 @@ test("DeepSeek tool calls are answered and sent back; the last round asks for th
   assert.equal(out.usage.input_tokens, 200, "both rounds metered"); assert.equal(out.tools.length, 1);
 });
 
+test("in thinking mode the model's reasoning goes back with its tool calls", async () => {
+  const sent = [];
+  const reply = (message, finish) => Response.json({ model: "deepseek-flash", choices: [{ finish_reason: finish, message }], usage: { prompt_tokens: 100, completion_tokens: 10 } });
+  const fetchImpl = async (url, init) => {
+    const body = JSON.parse(init.body); sent.push(body);
+    if (sent.length === 1) return reply({ content: "", reasoning_content: "check A.4 first", tool_calls: [{ id: "c1", type: "function", function: { name: "find_on_pages", arguments: '{"text":"0.5"}' } }] }, "tool_calls");
+    return reply({ content: '{"items":[]}' }, "stop");
+  };
+  await visionJSON({ DEEPSEEK_API_KEY: "k" }, { provider: "deepseek", fetchImpl, parts: [{ text: "grade" }], thinking: "high", tools: GRADE_TOOLS,
+    onTool: (name, args) => runGradeTool(name, args, ctx), maxToolRounds: 2 });
+  assert.deepEqual(sent[0].thinking, { type: "enabled" }); assert.equal(sent[0].reasoning_effort, "high");
+  const turn = sent[1].messages.find(m => m.role === "assistant");
+  assert.equal(turn.reasoning_content, "check A.4 first", "DeepSeek rejects a thinking-mode tool turn sent back without it");
+});
+
 test("an empty answer after tool calls is asked for once more, as JSON only", async () => {
   const sent = [];
   const reply = (message, finish) => Response.json({ model: "deepseek-flash", choices: [{ finish_reason: finish, message }], usage: { prompt_tokens: 100, completion_tokens: 10 } });

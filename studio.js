@@ -17,7 +17,7 @@
       skip: '작업 영역으로 건너뛰기', library: '문제 라이브러리', practice: '실전 연습', signIn: '로그인',
       heading: '한 장에서, 다음 문제까지.', intro: '올림피아드 문제를 편집 가능한 글과 수식으로 정리하고, 사진이나 원하는 주제를 바탕으로 새 문제를 만들어 보세요.',
       newWork: '새 작업', mode: '작업 선택', digitize: '문제 디지털화', digitizeHint: '글·수식·그림을 정리해요',
-      generate: '문제 제작', generateHint: '사진이나 요청을 바탕으로', restore: '그림 제작', restoreHint: '사진으로 도형·그래프 재구성', takePhoto: '사진 촬영',
+      generate: '문제 제작', generateHint: '사진이나 요청을 바탕으로', restore: '그림 제작', restoreHint: '사진으로 도형·그래프 재구성', takePhoto: '사진 촬영', search: '문제 검색', searchHint: '문제은행에서 글로 찾기',
       sourceImage: '원본 이미지', upload: '사진을 놓거나 선택하세요', uploadHint: 'PNG · JPG · WebP / 붙여넣기 가능',
       sourceImageOptional: '원본 이미지 (선택)', generationRequest: '제작 요청', requestRequired: '사진 없으면 5자 이상',
       generateNote: '사진 없이도 제작할 수 있어요. 과목과 원하는 주제·조건을 5자 이상 적어 주세요.',
@@ -68,7 +68,7 @@
       skip: 'Skip to workspace', library: 'Problem library', practice: 'Exam practice', signIn: 'Sign in',
       heading: 'One image. Your next problem.', intro: 'Turn an olympiad problem into editable text and equations, or create new problems from an image or a topic you describe.',
       newWork: 'New work', mode: 'Choose a task', digitize: 'Digitize a problem', digitizeHint: 'Text, equations and figures',
-      generate: 'Create a problem', generateHint: 'From an image or your request', restore: 'Create a figure', restoreHint: 'Reconstruct a figure from a photo', takePhoto: 'Take a photo',
+      generate: 'Create a problem', generateHint: 'From an image or your request', restore: 'Create a figure', restoreHint: 'Reconstruct a figure from a photo', takePhoto: 'Take a photo', search: 'Search problems', searchHint: 'Search the problem library',
       sourceImage: 'Source image', upload: 'Drop an image or choose a file', uploadHint: 'PNG · JPG · WebP / paste an image',
       sourceImageOptional: 'Source image (optional)', generationRequest: 'Problem request', requestRequired: '5+ characters without an image',
       generateNote: 'You can create problems without an image. Describe the topic and conditions in at least 5 characters.',
@@ -221,11 +221,19 @@
     document.querySelectorAll('[data-i18n-placeholder]').forEach(e => { e.placeholder = t(e.dataset.i18nPlaceholder); });
     $('uiLanguage').textContent = state.lang === 'en' ? '한국어' : 'EN';
     $('captureInput').setAttribute('aria-label',t('takePhoto'));
+    updateSearchLink();
     $('sourceImage').alt = t('original');
     $('dropZone').querySelector('strong').textContent = state.file ? t('replaceImage') : t('upload');
     state.renderKey = ''; updateMode(); updateAccount(); updateSubmit(); renderHistory(); renderSelected(); renderLimits();
     if (state.capabilities?.available === false) message('serviceNotice', t('unavailable'));
   }
+  function updateSearchLink() {
+    const link=$('problemSearchLink');if(!link)return;
+    const url=new URL('./',location.href);url.searchParams.set('lang',state.lang);
+    url.searchParams.set('theme',document.documentElement.dataset.theme==='dark'?'dark':'light');
+    url.hash='/learn/physics/search';link.href=url.href;
+  }
+  if(typeof MutationObserver==='function')new MutationObserver(updateSearchLink).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
   function updateMode() {
     const generation = modeValue() === 'generate';
     document.querySelectorAll('.generation-option').forEach(e => { e.hidden = !generation; });

@@ -52,10 +52,10 @@ function paintSiteTheme(){
   const label=lang==="ko"?(dark?"화이트 모드":"다크 모드"):(dark?"Light mode":"Dark mode");
   button.setAttribute("aria-label",label);button.setAttribute("title",label);button.setAttribute("aria-pressed",String(dark));button.textContent=dark?"☀":"◐";
   document.querySelector('meta[name="theme-color"]').content=dark?"#111017":"#2E3945";
-  const icon=document.getElementById("siteFavicon"),href="favicon-"+(dark?"dark":"light")+".svg?v=20261103-brands";
+  const icon=document.getElementById("siteFavicon"),href="favicon-"+(dark?"dark":"light")+".svg?v=20261103-brands04";
   if(icon&&icon.getAttribute("href")!==href)icon.setAttribute("href",href);
   [[".mark img,.cmrail .srv img","haslalab"],[".about img.wm","haslaedu"]].forEach(([selector,brand])=>{
-    const src="logo/brand/"+brand+"-"+(dark?"dark":"light")+".svg?v=20261103-brands";
+    const src="logo/brand/"+brand+"-"+(dark?"dark":"light")+".svg?v=20261103-brands04";
     document.querySelectorAll(selector).forEach(img=>{if(img.getAttribute("src")!==src)img.setAttribute("src",src);});
   });
   document.querySelectorAll("img[data-logo-key]").forEach(img=>{
@@ -91,21 +91,21 @@ function initSiteDesign(){
 
 const HOME_STUDIO_TEXT = {
   ko: {
-    title:"문제 제작소",intro:"사진 한 장이나 원하는 주제로 시작해 보세요.",open:"제작소 열기",login:"로그인 후 작업을 시작할 수 있어요. 일일 이용 한도가 적용됩니다.",
+    title:"문제 제작소",intro:"사진 한 장이나 원하는 주제로 시작해 보세요.",open:"제작소 열기",login:"AI 제작·디지털화는 로그인 후 이용하며 일일 한도가 적용됩니다. 문제 검색은 바로 이용할 수 있어요.",
     export:"결과를 확인한 뒤 Markdown · JSON · 그림 파일로 저장하거나 PDF로 인쇄하세요.",
     features:[
       {mode:"generate",title:"문제 제작",description:"원하는 주제를 적거나 원본 사진을 올려, 난이도와 문제 수를 선택해 새 문제를 만드세요.",detail:"사진 없이도 가능 · 1~3문제",action:"문제 만들기"},
       {mode:"digitize",title:"문제 디지털화",description:"문제 사진의 글과 수식을 옮기고 그림을 함께 정리하세요. 원본과 결과를 나란히 확인할 수 있어요.",detail:"원본 사진 필요 · 글·수식·그림",action:"사진으로 시작하기"},
-      {mode:"restore",title:"그림 제작",description:"원본 사진을 바탕으로 도형·그래프를 선명하게 재구성하고 원본과 비교해 보세요.",detail:"원본 사진 필요 · 제작 결과 대조",action:"그림 제작하기"}
+      {mode:"search",title:"문제 검색",description:"문제은행에서 글과 수식으로 문제를 찾고, 한국어·영어 본문을 확인해 보세요.",detail:"분야별 검색 · 한국어와 영어",action:"문제 검색하기"}
     ]
   },
   en: {
-    title:"Problem Studio",intro:"Start with an image or a topic you want to explore.",open:"Open Studio",login:"Sign in to start a task. Daily usage limits apply.",
+    title:"Problem Studio",intro:"Start with an image or a topic you want to explore.",open:"Open Studio",login:"AI creation and digitization require sign-in and have daily limits. Problem search is available immediately.",
     export:"Review your result, then save Markdown, JSON or figure files, or print to PDF.",
     features:[
       {mode:"generate",title:"Create a problem",description:"Describe a topic or upload a source image, then choose the difficulty and number of new problems.",detail:"An image is optional · 1–3 problems",action:"Create a problem"},
       {mode:"digitize",title:"Digitize a problem",description:"Turn a problem photo into text and equations with its figures. Compare the source and result side by side.",detail:"Source image required · Text, math & figures",action:"Start with a photo"},
-      {mode:"restore",title:"Create a figure",description:"Reconstruct a clear diagram or graph from your source photo and compare the result before saving.",detail:"Source image required · Compare the result",action:"Create a figure"}
+      {mode:"search",title:"Search problems",description:"Find problems by text or equation in the problem library and read their Korean or English statements.",detail:"Subject filters · Korean and English",action:"Search problems"}
     ]
   }
 };
@@ -113,11 +113,11 @@ function viewHomeStudio(){
   const T=HOME_STUDIO_TEXT[lang],icons=[
     '<path d="M7 4h12v16H7zM10 9h6M10 12h4M23 9v8M19 13h8"/>',
     '<path d="M5 5h9M5 5v6M27 5h-9M27 5v6M5 23h9M5 23v-6M27 23h-9M27 23v-6M10 11h12M10 15h9M10 19h7"/>',
-    '<path d="M5 23h22M8 26V6M10 20l6-10 5 7 5-12"/><circle cx="16" cy="10" r="1.5"/>'
+    '<circle cx="14" cy="14" r="8"/><path d="m20 20 7 7M10 12h8M10 16h5"/>'
   ];
   return `<section class="hl-home-studio" aria-labelledby="homeStudioTitle">
     <div class="hl-studio-heading"><div><p class="hl-studio-kicker">HASLALAB / STUDIO</p><h2 id="homeStudioTitle">${T.title}</h2><p>${T.intro}</p></div><a class="hl-studio-open" href="#/learn/physics/studio">${T.open} →</a></div>
-    <div class="hl-studio-features">${T.features.map((feature,index)=>`<a class="hl-studio-feature" href="#/learn/physics/studio?mode=${feature.mode}">
+    <div class="hl-studio-features">${T.features.map((feature,index)=>`<a class="hl-studio-feature" href="${feature.mode==='search'?'#/learn/physics/search':'#/learn/physics/studio?mode='+feature.mode}">
       <div class="hl-studio-feature-top"><span class="hl-studio-number">0${index+1}</span><svg viewBox="0 0 32 32" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${icons[index]}</svg></div>
       <h3>${feature.title}</h3><p>${feature.description}</p><span class="hl-studio-detail">${feature.detail}</span><span class="hl-studio-action">${feature.action}<span aria-hidden="true">↗</span></span>
     </a>`).join("")}</div>
