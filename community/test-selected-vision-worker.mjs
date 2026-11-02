@@ -44,13 +44,13 @@ async function fixture(run){
   const t=Math.floor(Date.now()/1000),tokens={},queue=[],calls=[];
   for(const id of [1,2,3]){tokens[id]=('vision_test_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(?,?,?,'unused',?,5)").run(id,'vision'+id,'Vision '+id,t);sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]),id,t,t+86400);}
   const env={DB,GEMINI_API_KEY:'local-gemini',DEEPSEEK_API_KEY:'local-deepseek',UPSTAGE_API_KEY:'must-never-be-used',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>renderer(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
-  let failProvider=false,emptyWithTools=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null,gradeReply=null,moderateReply=null;
+  let mathpixText='$v_0 = I_0 / M$ (mathpix)',failProvider=false,emptyWithTools=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null,gradeReply=null,moderateReply=null;
   const old={fetch:globalThis.fetch,caches:globalThis.caches};globalThis.caches={default:{async match(){},async put(){}}};
   globalThis.fetch=async(input,init={})=>{
     const url=String(input);
     if(url.startsWith('https://github.com/')||url.startsWith('https://haslalab.org/pdfx/')||/https:\/\/www\.(kms|kmo)\.or\.kr\//.test(url))return new Response('%PDF-1.4\nSelected vision local reference fixture '+url);
     assert.ok(!url.includes('upstage'),'no production OCR request may reach Upstage');
-    if(url.startsWith('https://api.mathpix.com/')){calls.push({provider:'mathpix',url,body:JSON.parse(init.body),parts:[],text:''});return Response.json({text:'$v_0 = I_0 / M$ (mathpix)',confidence:.9});}
+    if(url.startsWith('https://api.mathpix.com/')){calls.push({provider:'mathpix',url,body:JSON.parse(init.body),parts:[],text:''});return Response.json({text:mathpixText,confidence:.9});}
     const body=JSON.parse(init.body),provider=url.includes('deepseek')?'deepseek':'gemini',parts=provider==='gemini'?body.contents[0].parts:body.messages[1].content;
     const text=parts.map(part=>part.text||'').join('\n');calls.push({provider,url,body,parts,text});
     const hook=beforeProvider;beforeProvider=async()=>{};await hook();
@@ -65,7 +65,6 @@ async function fixture(run){
     else if(text.includes('Review ONLY problem'))raw={problem_no:5,score:7,confidence:.98,verdict:'valid',summary:'Diagram supported argument.',strengths:[],gaps:[],evidence:[{page:1,quote:'',source:'image',box:[100,100,900,900],description:'A labelled geometric construction with direction arrows.',note:'Visible geometry checked.'}]};
     else if(text.includes('"task":"transcribe"'))raw={text:'',legible:true,confidence:.98,uncertainties:[],visuals:[{page:1,kind:'graph',description:'A graph and upward direction arrow.',box:[.1,.1,.9,.9]}]};
     else if(text.includes('[TASK: moderate]'))raw=moderateReply||{items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
-    else if(text.includes('[TASK: focus read]'))raw={items:[{id:'N',found:true,written:'1.59 × 10^{18} m^{-3}',value:1.59e18,unit:'m^-3'}]};
     else if(text.includes('[TASK: grade]'))raw=gradeReply||visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
     return provider==='gemini'?Response.json({modelVersion:url.match(/\/models\/([^/:]+):/)?.[1]||VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:body.model||VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
@@ -77,7 +76,7 @@ async function fixture(run){
   const seedScheme=(sid,provider)=>{const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=[provider,VISION_MODELS[provider],REG_VERSION,entry.solution,entry.mark||''].join(':');sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[{id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]}]}),'fixture:'+provider,t);};
   const problem=()=>{const r=sql.prepare("INSERT INTO problems(week,no,kind,subject,level,points,title_ko,title_en,body_ko,body_en,model_ko,model_en,rubric,opens_at,closes_at,created_at)VALUES('2098-W01',1,'essay','physics',1,2,'그래프','Graph','Graph task','Graph task','Direction','Direction',?,?,?,?)").run(JSON.stringify([{id:'G',name:'Direction',max:2,requirement:'Inspect actual graph direction.'}]),t-60,t+7200,t);return Number(r.lastInsertRowid);};
   const ocrPhoto=async(pid,provider,id=1)=>{const form=new FormData();form.append('image',new Blob([scan],{type:'image/jpeg'}),'graph.jpg');const response=await worker.fetch(new Request(`https://vision.local/api/ocr?mode=math&problem_id=${pid}${provider?'&provider='+provider:''}`,{method:'POST',headers:{Authorization:'Bearer '+tokens[id]},body:form}),env);return{status:response.status,data:await response.json()};};
-  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},emptyTools:()=>{emptyWithTools=true;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;},replies:(g,mod)=>{gradeReply=g;moderateReply=mod;}});}finally{Object.assign(globalThis,old);sql.close();}
+  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},emptyTools:()=>{emptyWithTools=true;},mathpix:t=>{mathpixText=t;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;},replies:(g,mod)=>{gradeReply=g;moderateReply=mod;}});}finally{Object.assign(globalThis,old);sql.close();}
 }
 
 test('grading mode spends its token when the sitting opens: the provider is pinned then, and an unpaid start leaves nothing open',async()=>fixture(async({api,start,sql,calls})=>{
@@ -337,9 +336,9 @@ test('LAB_GRADE_TOOLS: the DeepSeek grader gets the tools, and a paper it leaves
   assert.ok(!grades[1].body.tools&&!/call compare_expressions/.test(grades[1].text),'the second has neither tools nor their note');
   assert.equal((await api(`/lab/sessions/${sid}`)).data.session.status,'graded');
 }));
-test('LAB_FOCUS_READ: a value the code marks wrong is read once more alone; a misread power of ten is replaced',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+test('LAB_FOCUS_READ: a value the code marks wrong is read once more by Mathpix; a misread power of ten is replaced',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies,mathpix})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
-  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_FOCUS_READ='on';
+  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_FOCUS_READ='on';env['mathpix_client-ID']='mp-id';env['mathpix_client-secret']='mp-secret';
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
   const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
@@ -348,17 +347,17 @@ test('LAB_FOCUS_READ: a value the code marks wrong is read once more alone; a mi
     {id:'K',points:1.4,type:'value',sheet:'answer',what:'k',ref:'4.2',unit:'m'}]}),'fixture',Math.floor(Date.now()/1000));
   const item=(id,value)=>({id,found:true,page:1,label:id,score:0,rules:[],note:'',quote:'',value,unit_ok:true});
   replies({items:[item('N',1.59e13),item('K',7.9)],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  mathpix('C.3 Numerical value: $n_{c} \\approx 1,59 \\cdot 10^{18}$\nK: $k=7.9 \\mathrm{~m}$');
   const text=pageReading.text;pageReading.text='N: n_c = 1.59 × 10^{13} m^-3\nK: k = 7.9 m';
   try{
     await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
     await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
   }finally{pageReading.text=text;}
-  const focus=calls.filter(c=>c.text.includes('[TASK: focus read]'));
-  assert.equal(focus.length,1,'one call for the page');
-  assert.ok(!focus[0].text.includes('1.59e18')&&!/4\.2/.test(focus[0].text),'the official values are never shown');
+  assert.equal(calls.filter(c=>c.provider==='mathpix').length,1,'one Mathpix call for the page');
   const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
   assert.match(detail,/"id":"N"[^}]*"got":0\.6/,'10^13 read again as 10^18');
-  assert.match(detail,/"id":"K"[^}]*"got":0[,}]/,'a re-read that is not one character off changes nothing');
+  assert.match(detail,/"id":"K"[^}]*"got":0[,}]/,'a value Mathpix reads the same changes nothing');
+  assert.equal(sql.prepare("SELECT count(*) n FROM lab_calls WHERE session_id=? AND step='focus' AND provider='mathpix'").get(sid).n,1,'metered');
 }));
 test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
   env.LAB_ONLY_PROVIDER='deepseek';
