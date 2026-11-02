@@ -4,8 +4,16 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {createHash} from 'node:crypto';
-import {ACCOUNT_SECURITY_SCHEMA,createAccountSecurityRouter,accountMailAvailable} from './src/account-security.js';
+import {ACCOUNT_SECURITY_SCHEMA,createAccountSecurityRouter,accountMailAvailable,ensureAccountSecuritySchema} from './src/account-security.js';
 class HttpError extends Error{constructor(status,code){super(code);this.status=status;this.code=code}}
+test('a cold schema works with eager SQLite preparation and concurrent initializers share readiness',async()=>{
+  const sql=new DatabaseSync(':memory:');sql.exec('CREATE TABLE users(id INTEGER PRIMARY KEY)');
+  const db={prepare(query){const statement=sql.prepare(query);return{execute:()=>statement.run(),async run(){return statement.run()}}},async batch(statements){sql.exec('BEGIN');try{const result=statements.map(statement=>statement.execute());sql.exec('COMMIT');return result}catch(error){sql.exec('ROLLBACK');throw error}}};
+  try{const first=ensureAccountSecuritySchema(db);assert.equal(ensureAccountSecuritySchema(db),first);await first;
+    assert.deepEqual(sql.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'account_%' ORDER BY name").all().map(row=>row.name),['account_email_tokens','account_emails']);
+    assert.deepEqual(sql.prepare("SELECT name FROM sqlite_master WHERE type='index' AND name LIKE 'account_email_tokens_%' ORDER BY name").all().map(row=>row.name),['account_email_tokens_expiry','account_email_tokens_user']);
+  }finally{sql.close()}
+});
 const hash=value=>createHash('sha256').update(value).digest('base64url');
 function setup({mailer=true,password='pw:old-password'}={}){
   const sql=new DatabaseSync(':memory:');sql.exec(`CREATE TABLE users(id INTEGER PRIMARY KEY,pw TEXT,deleted INTEGER DEFAULT 0);
