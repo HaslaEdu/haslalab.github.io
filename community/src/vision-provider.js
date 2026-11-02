@@ -109,7 +109,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[2000,6000]}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[]}={}) {
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
@@ -182,7 +182,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
       if(!raw||typeof raw!=='object'||Array.isArray(raw))fail(502,'vision_invalid_response');
       return{raw,provider,model:provider+':'+model,usage};}
     /* «high demand» (503) and rate limits (429): up to two more tries, 2 s and 6 s later with jitter, as Google advises
-       (busyRetries: [] where the caller has a fallback model to go to instead) */
+       (busyRetries, e.g. [2000,6000]: queued work only; a visitor's own request fails at once) */
     const sendRetry=async payload=>{let r=await send(payload);
       for(const wait of busyRetries||[]){if(r.status!==429&&r.status!==503)break;try{await r.body?.cancel();}catch{}
         await new Promise(ok=>setTimeout(ok,wait+Math.floor(Math.random()*1000)));r=await send(payload);}

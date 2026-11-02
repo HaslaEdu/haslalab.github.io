@@ -105,7 +105,7 @@ http.createServer(async (req, res) => {
       seen.translations = (seen.translations || 0) + 1;
       return respond({ items: JSON.parse(prompt.split("\n").at(-1)).map(w => "번역: " + w) });
     }
-    if (prompt.startsWith("[TASK: read page]")) {
+    if (prompt.includes("[TASK: read page]")) {
       if (/theory exam/.test(prompt)) seen.theoryReads = (seen.theoryReads || 0) + 1;
       if (/experiments and theory/.test(prompt) && /Problem 5 → task E1/.test(prompt)) seen.mixedReads = (seen.mixedReads || 0) + 1;
       /* only the tests' PNGs choose a header or a poor page by their length; a phone's JPEG is an ordinary, legible page */
