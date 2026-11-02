@@ -1,0 +1,92 @@
+<style>@page{@top-right{content:"December, 2023"}}</style>
+<h1 class="title">T2. Muon anomalous magnetic moment — Solution</h1>
+
+
+<div class="task">
+<p><b>A1.</b> The energy of a relativistic particle can be expressed in terms of its momentum,</p>
+$$E = \sqrt{p^2c^2 + m_\mu^2c^4},$$
+<p>and its velocity equals</p>
+$$v = \frac{c^2p}{E} = \frac{cp}{\sqrt{p^2 + m_\mu^2c^2}}.$$
+<p>For the speed difference we have</p>
+<div class="ans">$$\Delta v = c - v = c\left(1 - \frac{p}{\sqrt{p^2 + m_\mu^2c^2}}\right) \approx \frac{1}{2}c\left(\frac{m_\mu c}{p}\right)^2 \approx 1.75\cdot 10^5~\mathrm{m/s}$$</div>
+<p>For the given numerical values we can use the approximate formula: it deviates from the exact value only in the fourth figure.</p></div>
+
+<div class="task">
+<p><b>A2.</b> We use the expression for the energy from the previous question. Note that for the given numerical values one can use the approximate expression for an ultrarelativistic particle, $E \approx pc$.</p>
+<div class="ans">$$E_k = \sqrt{p^2c^2 + m_\mu^2c^4} - m_\mu c^2 \approx 2.99~\mathrm{GeV}$$</div></div>
+
+<div class="task">
+<p><b>A3.</b> From the relativistic equation of motion</p>
+$$\frac{d\vec p}{dt} = q\vec v\times\vec B = \frac{q}{\gamma m_\mu}\,\vec p\times\vec B$$
+<p>it follows that the absolute values of the velocity and the momentum are constant. Therefore the momentum rotates:</p>
+$$\frac{d\vec p}{dt} = \vec\omega_c\times\vec p,\qquad \vec\omega_c = -\frac{q\vec B}{\gamma m_\mu}.$$
+<p>Here $\omega_c$ is the angular velocity of the muon. The period is</p>
+<div class="ans">$$T = \frac{2\pi}{\omega_c} = \frac{2\pi m_\mu\gamma}{qB} = 1.49\cdot 10^{-7}~\mathrm{s}$$</div>
+<p>The orbit radius is</p>
+<div class="ans">$$R = \frac{vT}{2\pi} = \frac{\gamma m_\mu}{qB}\,v = \frac{\gamma m_\mu}{qB}\cdot\frac{pc^2}{E} = \frac{p}{qB} = 7.12~\mathrm{m}$$</div></div>
+
+<div class="task">
+<p><b>A4.</b> Due to relativistic time dilation the muon lifetime in the laboratory reference frame is $t = \gamma\tau$, therefore the number of revolutions is</p>
+<div class="ans">$$N = \frac{t}{T} = \gamma\tau\,\frac{qB}{2\pi m_\mu\gamma} = \frac{qB\tau}{2\pi m_\mu} = 431$$</div></div>
+
+<div class="task">
+<p><b>A5.</b> The torque acting on a magnetic dipole in a magnetic field is $\vec M = \vec\mu\times\vec B$, thus the equation of motion is</p>
+<div class="ans">$$\frac{d\vec s}{dt} = \vec M = \vec\mu\times\vec B = g_\mu\frac{q}{2m_\mu}\,\vec s\times\vec B = -g_\mu\frac{q\vec B}{2m_\mu}\times\vec s$$</div></div>
+
+<div class="task">
+<p><b>A6.</b> From the previous question it follows that the angular velocity is</p>
+$$\vec\omega = -g_\mu\frac{q\vec B}{2m_\mu}.$$
+<p>Therefore the $z$ component of the angular velocity is</p>
+<div class="ans">$$\omega_z = -g_\mu\frac{qB}{2m_\mu}$$</div></div>
+
+
+<div class="task">
+<p><b>B1.</b> Recall the formula for the addition of velocities from the problem. In our case $v'_x = 0$ (the velocity component of frame $C$ along the $x$ axis), therefore the denominator is $1 + v'_xv_x/c^2 = 1$:</p>
+<div class="ans">$$v_{Cx} = v_x,\qquad v_{Cy} = v'_y\sqrt{1 - v_x^2/c^2} = v'_y/\gamma$$</div></div>
+
+<div class="task">
+<p><b>B2.</b> Note that if frame $B$ moves relative to $A$ with velocity $\vec v$, then frame $A$ moves relative to frame $B$ with velocity $-\vec v$. Therefore the velocity of frame $B$ with respect to frame $C$ is $-v'_y$, and the velocity of frame $A$ with respect to frame $B$ is $-v_x$. The $\gamma$ coefficient is calculated with the velocity $v'_y$:</p>
+$$\gamma = \frac{1}{\sqrt{1 - v_y'^2/c^2}} \approx 1,$$
+<p>since we have to keep only the terms linear in $v'_y$. The velocities of frames $A$ and $B$ are orthogonal and the denominator in the velocity addition formula is equal to 1. The velocity of frame $A$ with respect to frame $C$ is</p>
+<div class="ans">$$v''_{Ax} = -v_x,\qquad v''_{Ay} = -v'_y$$</div></div>
+
+<div class="task">
+<p><b>B3.</b> The angle between two vectors can be calculated from their vector product (the length of the vector product is $|\vec a\times\vec b| = |\vec a||\vec b|\sin\alpha$, where $\alpha$ is the angle between the vectors). Let $\vec e_x$ be a unit vector in the $x$ direction, $\vec e_y$ in the $y$ direction and $\vec e_z$ in the $z$ direction. The vector product is</p>
+$$-\vec v^{\,\prime\prime}_A\times\vec v_C = (v_x\vec e_x + v'_y\vec e_y)\times\left(v_x\vec e_x + (v'_y/\gamma)\vec e_y\right) = v_xv'_y\left(\frac{1}{\gamma} - 1\right)\vec e_z.$$
+<p>Both vectors are parallel to the $xy$ plane, therefore the vector product is collinear with the $z$ axis, and a positive $z$ component corresponds to a positive angle of rotation. Up to the terms linear in $v'_y$ we can approximate $|\vec v^{\,\prime\prime}_A| = |\vec v_C| = v_x$, thus the angle of rotation is</p>
+<div class="ans">$$\Delta\theta = \frac{1}{v_x^2}\,v_xv'_y\left(\frac{1}{\gamma} - 1\right) = -\frac{v'_y}{v_x}\left(1 - \frac{1}{\gamma}\right)$$</div></div>
+
+<div class="task">
+<p><b>B4.</b> After a time $dt$ in the laboratory frame of reference the particle velocity changes by $v_y = a_y\,dt$; in the frame $B$, which is comoving for the particle at the initial moment of time, the corresponding velocity is $v'_y = \gamma v_y$. This result can be obtained from B1, or directly from the velocity addition formula (the laboratory frame of reference moves relative to frame $B$ with velocity $-v_x$, and the particle velocity with respect to the laboratory frame of reference is $\vec v = (v_x, v_y)$):</p>
+$$v'_y = \frac{v_y\sqrt{1 - v_x^2/c^2}}{1 - v_x^2/c^2} = \frac{v_y}{\sqrt{1 - v_x^2/c^2}} = \gamma v_y.$$
+<p>Thus the rotation angle is</p>
+$$d\theta = -\frac{\gamma a_y\,dt}{v_x}\left(1 - \frac{1}{\gamma}\right),$$
+<p>and the angular velocity is</p>
+<div class="ans">$$\omega_T = \frac{d\theta}{dt} = -\frac{a_y}{v_x}(\gamma - 1)$$</div>
+<p>Note that according to our sign conventions a positive angle of rotation corresponds to a positive $z$ component of the angular velocity.</p></div>
+
+<div class="task">
+<p><b>B5.</b> From the equation of motion in the magnetic field</p>
+$$\frac{d\vec p}{dt} = m_\mu\frac{d(\gamma\vec v)}{dt} = q\vec v\times\vec B$$
+<p>we calculate the acceleration component (note that $\gamma$ is constant)</p>
+$$a_y = -\frac{qv_xB}{\gamma m_\mu},$$
+<p>thus the angular velocity is</p>
+<div class="ans">$$\omega_T = \frac{qB}{\gamma m_\mu}(\gamma - 1)$$</div></div>
+
+
+<div class="task">
+<p><b>C1.</b> The full angular velocity of precession is the sum of the angular velocity of precession in the magnetic field and the Thomas precession angular velocity:</p>
+<div class="ans">$$\omega_s = \omega_z + \omega_T = -g_\mu\frac{qB}{2m_\mu} + \frac{qB}{\gamma m_\mu}(\gamma - 1)$$</div></div>
+
+<div class="task">
+<p><b>C2.</b> The muon momentum rotates with an angular velocity equal to the angular velocity $\omega_c$ of the muon in the magnetic field, which was calculated in A3; its $z$ component is</p>
+$$\omega_{cz} = -\frac{qB}{\gamma m_\mu}.$$
+<p>Therefore the angular velocity of the spin with respect to the momentum is equal to the difference between the angular velocities of the spin and the momentum (all rotations are around the $z$ axis):</p>
+$$\omega_a = \omega_s - \omega_c = -g_\mu\frac{qB}{2m_\mu} + \frac{qB}{\gamma m_\mu}(\gamma - 1) + \frac{qB}{\gamma m_\mu} = -g_\mu\frac{qB}{2m_\mu} + \frac{qB}{m_\mu}.$$
+<p>With the relation $g_\mu = 2(1 + a_\mu)$ we obtain</p>
+<div class="ans">$$\omega_a = -a_\mu\frac{qB}{m_\mu}$$</div></div>
+
+<div class="task">
+<p><b>C3.</b> The frequency is related to the angular velocity by $f_a = \omega_a/2\pi$, therefore</p>
+<div class="ans">$$a_\mu = \frac{m_\mu\omega_a}{qB} = \frac{2\pi f_am_\mu}{qB} = 0.00117$$</div>
+<p>The direction of the spin precession is not given, therefore we cannot determine the sign of $a_\mu$; it turns out that $a_\mu &gt; 0$.</p></div>

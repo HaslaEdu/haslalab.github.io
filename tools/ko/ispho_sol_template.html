@@ -7,7 +7,8 @@
      boxed final answers, page number «n/N» bottom right.  The header and the page number are CSS page-margin
      boxes, so render with --bare (the renderer's own footer would replace them):
          node tools/ko/render.cjs S1.html out.pdf "" --tpl tools/ko/ispho_sol_template.html --bare
-     The right-hand header text («June, 2026») is in the @page rule below: change it for another year.
+     The right-hand header text («June, 2026») is in the @page rule below; a body for another year sets its own date
+     first thing, e.g. <style>@page{@top-right{content:"December, 2023"}}</style> (the later rule wins).
      Body: h1.title, then per task <div class="task"><p><b>A1.</b> … solution …</p> … <div class="ans">$$…$$</div></div>
      — as 2024/2025: the code, then the solution (the question is not restated, no part headings); a task that is only
      its answer starts with <p class="code"><b>A1.</b></p>.  Math: $…$, $$…$$ or \[…\]. -->
