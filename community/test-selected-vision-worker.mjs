@@ -385,6 +385,28 @@ test('a right value with a missing unit loses 0.1, not the item (R3); a step who
   assert.match(detail,/"id":"S1"[^}]*"got":0\.7/,'seen in the photo');
   assert.match(detail,/"id":"S2"[^}]*"got":0[,}]/,'not written');
 }));
+test('units in code: an equivalent unit is the right unit, and a value in another unit is converted by code',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
+    {id:'MU',points:1,type:'value',sheet:'answer',what:'magnetic moment',ref:'1.04',unit:'J T^-1'},
+    {id:'V',points:1,type:'value',sheet:'answer',what:'speed',ref:'2500',unit:'m/s'},
+    {id:'L',points:1,type:'value',sheet:'answer',what:'length',ref:'3.0',unit:'m'}]}),'fixture',Math.floor(Date.now()/1000));
+  const g=(id,value,unit,extra={})=>({id,found:true,page:1,label:id,score:0,rules:[],note:'',quote:'',value,unit,unit_ok:false,...extra});
+  replies({items:[g('MU',1.04,'A·m^2'),g('V',2.5,'km/s',{value_in_unit:2.5}),g('L',3.0,'s')],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  const text=pageReading.text;pageReading.text='MU = 1.04 A m^2\nV = 2.5 km/s\nL = 3.0 s';
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.text=text;}
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"MU"[^}]*"got":1[,}]/,'A·m² is J/T, whatever the grader thought');
+  assert.match(detail,/"id":"V"[^}]*"got":1[,}]/,'2.5 km/s is 2500 m/s, converted by code');
+  assert.match(detail,/"id":"L"[^}]*"got":0\.9/,'a value with a wrong unit loses 0.1');
+}));
 test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
   env.LAB_ONLY_PROVIDER='deepseek';
   const a=(await start('gemini')).data,sid=a.session.id;

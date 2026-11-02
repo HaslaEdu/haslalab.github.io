@@ -40,6 +40,7 @@ import { pageStrips } from './page-tiles.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates } from './focus-read.js';
+import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
@@ -1690,7 +1691,7 @@ function compactRead(read) {
 }
 const GRADE_SCHEMA = { type: "object", properties: {
   items: { type: "array", items: { type: "object", properties: {
-    id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), value_in_unit: N({ type: "number" }), unit_ok: { type: "boolean" },
+    id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), unit: N({ type: "string" }), value_in_unit: N({ type: "number" }), unit_ok: { type: "boolean" },
     visual: N({type:'object',properties:{kind:{type:'string',enum:['value','graph','table','diagram']},box:{type:'array',items:{type:'number'}},description:{type:'string'},value:N({type:'number'}),rows:N({type:'integer'}),columns:{type:'array',items:{type:'string'}},graph:PAGE_SCHEMA.properties.items.items.properties.graph},required:['kind','box','description']}),
     checks_met: { type: "array", items: { type: "string" } }, score: { type: "number" }, expr: N({ type: "string" }),
     rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: { type: "string" },
@@ -2207,9 +2208,12 @@ function labScore(scheme, raw, pages, opts = {}) {
       res.value = v;
       /* R3: a right value with a missing or wrong unit costs the scheme's unit deduction (0.1 where it gives none), as
          IPhO, APhO and EuPhO mark it, not the whole item; OPhO marks a value in another unit wrong */
-      const unitSlip = !!it.unit && g.unit_ok === false;
+      /* the unit in code (unit-check.js): where both the scheme's unit and the written one can be read, their dimensions
+         decide (A·m² is J/T) and the value is converted by code; where either cannot, the grader's judgement stands */
+      const written = typeof g.unit === "string" ? g.unit.trim() : null, units = it.unit && written ? compareUnits(it.unit, written) : null;
+      const unitSlip = !!it.unit && (units ? !units.same : g.unit_ok === false);   // no unit written: the grader knows whether the sheet prints it
       if (unitSlip && opts.family === "answer") return zero("R3");
-      const w = g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
+      const w = units?.same ? v * units.factor : g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
       let pts = 0;
       if (interval) {
         if (w >= Math.min(it.full_min, it.full_max) && w <= Math.max(it.full_min, it.full_max)) pts = it.points;
