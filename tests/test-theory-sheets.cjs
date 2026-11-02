@@ -91,3 +91,8 @@ test('ISPhO 2023–2026: every year has its answer and working sheets in English
   assert.equal((block.match(/problems:\[[^\]]*id:"T1"/g) || []).length, 0);
   assert.equal((block.match(/sims:\[\s*\{id:"T1"/g) || []).length, 3);
 });
+
+test('the English site names the theory problems in English only, with no Korean title under them', () => {
+  const html = read('index.html');
+  assert.match(html, /alt=ko\?probs\.map\(q=>kt\[q\[0\]\]\?q\[1\]:""\)\.filter\(Boolean\):\[\];/);
+});
