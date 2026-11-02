@@ -62,7 +62,10 @@ test('every problem card offers its answer and working sheets beside the problem
   assert.match(thy, /ko&&t\.wk\?a\(t\.wk,"워킹시트"\)/);
   assert.match(html, /concat\(sheetDocs\(code,A,!omr\)\)/);
   // experiment cards: both, before the Python source
-  assert.match(html, /if\(live&&!c\.open&&\/\^E\\d\*\$\/\.test\(p\.id\)\)\{ const h=expSheetsHref\(key,yr,p\);/);
+  assert.match(html, /if\(live&&!c\.open&&\/\^E\\d\*\$\/\.test\(p\.id\)\)\{ const h=expSheetsHref\(key,yr,p\), S=f\.sheets\|\|\{\};/);
+  // a problem whose sheets the site has opens the PDF itself, in the page's language (ISPhO 2024–2026 E1)
+  assert.match(html, /S\[kind\]\?`<a class="btn ghost" href="\$\{esc\(pick\(S\[kind\]\)\)\}" target="_blank"/);
+  for (const y of [2024, 2025, 2026]) assert.ok(html.includes(`answer:{ko:"sim/sheets/ISPhO_${y}_E1_AS_KO.pdf"`), y);
   const sheetKind = new Function('return ' + html.match(/const sheetKind=([^;]+);/)[1])();
   assert.equal(sheetKind('sim/sheets.html?c=ipho', 'working'), 'sim/sheets.html?c=ipho&k=working');
 });

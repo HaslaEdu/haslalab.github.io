@@ -307,6 +307,9 @@ function graph(h, cap) {
     <line x1="${2 * C}" y1="${oy}" x2="98%" y2="${oy}" stroke="#000" stroke-width="1.1" marker-end="url(#gpa)"/>
     <line x1="${2 * C}" y1="${oy + C * 0.6}" x2="${2 * C}" y2="${C * 0.4}" stroke="#000" stroke-width="1.1" marker-end="url(#gpa)"/></svg></div>`;
 }
+/* the heights the items ask for are those of the first sheets, which came out flat; the graph paper of the official
+   sheets (IPhO 2025 T2 B.2, ISPhO 2026 E1) is about half as tall as it is wide, or square: half as tall again */
+const GH = h => Math.round(h * 1.5);
 function rows(prompts, lang) {
   return prompts.map(p => {
     if (p.v) return `<div class="r">$${p.v}$</div>`;
@@ -314,11 +317,11 @@ function rows(prompts, lang) {
     if (p.fv) return `<div class="r two"><span>${FORM[lang][0]} $${p.fv}$</span><span>${FORM[lang][1]} $${p.fv}$</span></div>`;
     if (p.txt) return `<div class="r">${tr(p.txt, lang)}</div>`;
     if (p.space) return `<div style="height:${p.space}pt"></div>`;
-    if (p.plot) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div>${graph(p.plot)}`;
-    if (p.plots) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div><div class="pls">${p.plots.map(c => graph(p.h, tr(c, lang))).join('')}</div>`;
+    if (p.plot) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div>${graph(GH(p.plot))}`;
+    if (p.plots) return `<div class="pl">${lang === 'ko' ? '그래프:' : 'Plot:'}</div><div class="pls">${p.plots.map(c => graph(GH(p.h), tr(c, lang))).join('')}</div>`;
     if (p.table) {
       const { cols, rows: n } = p.table, labels = Array.isArray(n) ? n : null, count = labels ? labels.length : n;
-      return `<table class="at"><tr>${cols.map(c => `<th>${tr(c, lang)}</th>`).join('')}</tr>${Array.from({ length: count }, (_, i) =>
+      return `<table class="at" style="width:${Math.min(100, cols.length * 22)}%"><tr>${cols.map(c => `<th>${tr(c, lang)}</th>`).join('')}</tr>${Array.from({ length: count }, (_, i) =>
         `<tr>${cols.map((c, j) => `<td>${j === 0 && labels ? tr(labels[i], lang) : ''}</td>`).join('')}</tr>`).join('')}</table>`;
     }
     if (p.diode) {
@@ -356,7 +359,7 @@ h1+h2{margin-top:0}
 .pl{line-height:12pt}
 .pls{display:flex;gap:9pt;margin-top:4pt}.pls>.gp{flex:1}
 .gp{position:relative;border:0.4pt solid #888;margin-top:3pt;break-inside:avoid}.gp svg{display:block}.gp i{position:absolute;left:10%;top:2pt;font-style:normal;font-size:8.5pt;background:#fff;padding:0 2pt}
-table.at{border-collapse:collapse;margin:7pt auto 0;font-size:9pt}table.at th,table.at td{border:0.4pt solid #000;height:15pt;min-width:62pt;padding:0 5pt;text-align:center;font-weight:400}
+table.at{border-collapse:collapse;margin:7pt auto 0;font-size:10pt;table-layout:fixed}table.at th,table.at td{border:0.4pt solid #000;height:19pt;padding:0 5pt;text-align:center;font-weight:400}table.at th{background:#f2f2f2}
 .ws{border:0.4pt solid #000;height:615.4pt;margin-top:6.4pt}
 .katex{font-size:1em}`;
 
