@@ -310,6 +310,7 @@ test('experiments go through the same pipeline: Gemini reads (red ink left out),
   assert.equal((await api(`/lab/sessions/${sid}`)).data.session.status,'graded');
 }));
 test('Gemini 3.8 Flash grades alone: no moderation, and no papers beside the readings and photos',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_MISSING_RECHECK='off';   // its grade reply leaves items out on purpose; the re-ask has its own test
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
   const a=(await start('deepseek')).data,sid=a.session.id;
@@ -349,6 +350,7 @@ test('Math-Verify in code: a final expression that is not the official one yet h
   assert.match(items,/"id":"F"[^}]*"got":0/);assert.match(items,/"id":"S"[^}]*"got":1\.4/);
 }));
 test('LAB_GRADE_TOOLS: the DeepSeek grader gets the tools, and a paper it leaves unanswered with them is graded once more without',async()=>fixture(async({api,start,upload,drain,calls,sql,env,emptyTools})=>{
+  env.LAB_MISSING_RECHECK='off';   // its grade reply leaves items out on purpose; the re-ask has its own test
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_GRADE_TOOLS='on';emptyTools();
   const a=(await start('deepseek')).data,sid=a.session.id;
@@ -438,6 +440,31 @@ test('a right value with a missing unit loses 0.1, not the item (R3); a step who
   assert.match(detail,/"id":"N"[^}]*"got":0\.5/,'0.6 less the 0.1 unit deduction');
   assert.match(detail,/"id":"S1"[^}]*"got":0\.7/,'seen in the photo');
   assert.match(detail,/"id":"S2"[^}]*"got":0[,}]/,'not written');
+}));
+test('an item the grader left out is graded once more, and a step found again in the photos keeps its marks without a matching quote',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[
+    {id:'S1',points:0.7,type:'derivation',role:'step',sheet:'any',what:'Gauss law on a small cylinder'},
+    {id:'M',points:0.6,type:'derivation',role:'step',sheet:'any',what:'energy conservation'},
+    {id:'X/1',points:0.7,type:'derivation',role:'result',sheet:'any',alt:'X/1',what:'method one'}]}),'fixture',Math.floor(Date.now()/1000));
+  const g=(id,extra)=>({id,found:true,page:1,label:id,rules:[],note:'',...extra});
+  replies({items:[g('S1',{score:0.7,quote:'2 pi r 2z g_r + pi r^2 g_z = 0'})],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}},
+    {items:[g('S1',{score:0.7,quote:'Gauss on the cylinder, second line'}),g('M',{score:0.6,quote:'E_k + U = const'})]});
+  const text=pageReading.text;pageReading.text='E_k + U = const';
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.text=text;}
+  const mods=calls.filter(c=>c.text.includes('[TASK: moderate]'));
+  assert.equal(mods.length,1);const listed=JSON.parse(mods[0].text.split('<<ITEMS>>')[1].split('<<END>>')[0]);
+  assert.equal(listed.find(x=>x.id==='M')?.missing,true,'the left-out item is asked for');assert.equal(listed.find(x=>x.id==='S1')?.quote_missing,true);assert.ok(!mods[0].text.includes('"id":"X/1"'),'an alternative method is not asked for');
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"S1"[^}]*"got":0\.7/,'found again in the photos');
+  assert.match(detail,/"id":"M"[^}]*"got":0\.6/,'graded the second time');
 }));
 test('units in code: an equivalent unit is the right unit, and a value in another unit is converted by code',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';

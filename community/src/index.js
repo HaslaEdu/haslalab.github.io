@@ -2293,7 +2293,7 @@ function labScore(scheme, raw, pages, opts = {}) {
       res.got = Math.max(0, Math.min(it.points, Math.round((Number(g.score) || 0) * 10) / 10));
       /* R13: a step earns marks only where it is written; the grader's quote of it must be on the page it cites */
       const seenInPhoto = pg._visionSupplied && g.visual && validVisualBox(g.visual.box) && String(g.visual.description || "").trim().length >= 8;
-      if (it.role === "step" && it.sheet !== "answer" && res.got > 0 && !seenInPhoto && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))
+      if (it.role === "step" && it.sheet !== "answer" && res.got > 0 && !seenInPhoto && !g._quoteRechecked && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))
         && !quoteOnPage(g.quote, pages.map(p => [p.ocr, p.text].join("\n")).join("\n"))) return zero("R13");
     }
     /* a table or graph with fewer measurements than it needs, where the scheme has no count check to take marks from: half (R11) */
@@ -2373,19 +2373,20 @@ async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lan
   const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
   const items = flagged.map(f => { const it = scheme.items.find(x => x.id === f.id) || {}, g = first.get(f.id) || {};
     return { id: it.id, points: it.points, type: it.type, role: it.role, sheet: it.sheet, unit: it.unit, ref: it.ref, tol: it.tol, full_min: it.full_min, full_max: it.full_max,
-      what: it.what, expr: it.expr, first: { score: f.got, page: g.page, value: g.value, expr: g.expr, note: g.note, quote: g.quote }, check: f.check, ...(f.quote_missing ? { quote_missing: true } : {}) }; });
+      what: it.what, expr: it.expr, first: { score: f.got, page: g.page, value: g.value, expr: g.expr, note: g.note, quote: g.quote }, check: f.check, ...(f.quote_missing ? { quote_missing: true } : {}), ...(f.missing ? { missing: true } : {}) }; });
   const parts = [{ text: [stablePrefix(family, kind, tone), "", "[TASK: moderate]",
     `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader ${all ? "graded the items below" : "marked the items below short of full marks"}, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
     (all ? "Check every item, those given full marks too, in the page photos themselves and grade it again under the same regulation: take marks off a wrong answer, a missing factor, an inverted relation or a wrong sign however close it looks, and off a step that is not written; give full marks to an answer equivalent to the official one in another form (rearranged, other notation, another correct method) and to a step written anywhere in the task's pages; keep a deduction the photos confirm, correct one that came from a misreading." :
     "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading.") + " Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Where the photo shows a number the transcript misread (0.31 read as 9.31), give the number as written in the photo as value and add visual:{kind:\"value\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it,description,value}. Give no feedback or review.",
     ...(items.some(it => it.quote_missing) ? ["An item with quote_missing: the first grader gave this step marks, but code could not find its quote (first.quote) in the transcripts of the task's pages, so it would score 0. Find the step in the page photos and transcripts, in any notation and on any page of the task. If it is written: give the page, and as quote the line copied character for character from that page's transcript; where the transcript dropped or garbled it, also add visual:{kind:\"text\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it on that page's photo,description:what is written there}. If it is not written, score 0. Never credit a step from the final answer alone."] : []),
+    ...(items.some(it => it.missing) ? ["An item with missing: the first grader returned no grading for it at all (first is empty). Grade it from the page photos and transcripts exactly as any other item, with the same regulation."] : []),
     ...(items.some(it => it.check) ? ["An item's check is a computed fact: code evaluated the candidate's final expression (first.expr) and the official expr at random values of their variables. Confirm in the photo that first.expr is what the candidate wrote, with the official meaning of each symbol (a check made on a misread expression, or on a symbol the candidate uses for something else, is void: then grade from the photo alone); if it is, trust the check on equivalence (an equivalent form earns the result's marks, a non-equivalent one does not) and apply the scheme's own partial rules (a wrong sign or factor earns only the partial marks the scheme prints for it, else none)."] : []),
     `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
     "<<ITEMS>>" + JSON.stringify(lean(items)) + "<<END>>"].join("\n") }];
   for (const { p, photo } of photos) {
     parts.push({ text: `[p${p.no} · ${labPageTag(p)} · ${p.task}] transcript (may misread):\n<<OCR>>\n${p.ocr ?? ""}\n<<END>>` }, photo);
   }
-  const out = await labVision(env, s, parts, MOD_SCHEMA, 6144, m, "moderate");
+  const out = await labVision(env, s, parts, MOD_SCHEMA, items.length > 20 ? 12288 : 6144, m, "moderate");   // a long list of missing items needs room
   if (!Array.isArray(out.raw?.items)) throw new Error("moderation_schema");
   return out;
 }
@@ -2488,6 +2489,14 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const quoteMissing = env.LAB_R13_RECHECK === "off" || roles?.r13Recheck === false ? [] : labScore(scheme, raw, mine, { theory, family }).items
     .filter(i => (i.rules || []).includes("R13")).map(i => ({ id: i.id, got: +((raw.items || []).find(x => String(x?.id) === i.id)?.score) || 0, quote_missing: true })).slice(0, 30);
   const flagged = [...moderated.map(f => ({ ...f, check: checks.find(c => c.id === f.id)?.check })), ...checks.filter(c => !moderated.some(f => f.id === c.id))];
+  /* items the grader returned no grading for at all are graded once more, not left at 0 (a long scheme lost its tail:
+     IPhO 2016 T3 A6.15-A6.22, all written and correct; 19 of 264 item misgrades in the 2026-11-02 bench). Alternative
+     methods (alt) are left out: the method the candidate did not use is not graded. */
+  if (env.LAB_MISSING_RECHECK !== "off") {
+    const graded = new Set((raw.items || []).filter(Boolean).map(x => String(x.id)));
+    for (const it of scheme.items) if (!graded.has(it.id) && !it.alt && !flagged.some(f => f.id === it.id)) flagged.push({ id: it.id, got: 0, missing: true });
+    if (flagged.length > 60) flagged.length = 60;
+  }
   for (const q of quoteMissing) { const f = flagged.find(x => x.id === q.id); if (f) f.quote_missing = true; else flagged.push(q); }
   await roles?.trace?.('checked:' + flagged.length);
   if (flagged.length) {
@@ -2496,6 +2505,10 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
       const mod = await labModerate(env, roles?.moderate ? labAs(s, roles.moderate, roles.moderateBench) : s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles?.moderateScope === "all" || checks.length > 0, tone);
       const ids = new Set(flagged.map(f => f.id)), byId = new Map((mod.raw.items || []).filter(x => x && ids.has(String(x.id))).map(x => [String(x.id), x]));
       const kept = (raw.items || []).filter(x => !byId.has(String(x?.id)));
+      /* a step whose quote code could not find, looked for again in the photos and found: its marks stand (R13 checked it
+         against the transcript, which may have dropped or rewritten the line; 49 such zeros were wrong in the bench) */
+      const recheckedQuote = new Set(flagged.filter(f => f.quote_missing).map(f => f.id));
+      for (const [id, x] of byId) if (recheckedQuote.has(id) && x.found && (+x.score || 0) > 0) x._quoteRechecked = true;
       raw = { ...raw, items: [...kept, ...byId.values()] };                    // an item the first grader left out is added
       moderator = { model: mod.model, ids: [...byId.keys()] };
     } catch (e) { console.error("lab moderate", e?.code || e?.message); }               // a failed moderation keeps the first grading
