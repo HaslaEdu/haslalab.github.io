@@ -366,11 +366,19 @@ test('an expired overview session redirects to login without a fanout of account
 });
 
 test('the actual account renderer consumes overview sections without additional HTTP reads',async()=>{
+  for(const helper of ['missing-library','loaded-library','cached-html']){
   const a=app(),calls=[];vm.runInContext(read('arena.js'),a.context);a.store.set('hlCmTok','account-A');a.context.location.hash='#/me';
+  let mounts=0;
+  if(helper==='loaded-library')a.context.window.HL_ACCOUNT_UI={profile:root=>{mounts++;root.innerHTML='secure settings';}};
+  if(helper==='cached-html')a.run('cmAccountSecurity=undefined;');
   const elements=new Map(),get=s=>{if(!elements.has(s))elements.set(s,{innerHTML:'',textContent:'',value:'A',querySelector:child=>get(s+' '+child),querySelectorAll:()=>[]});return elements.get(s);};
   a.node('arRoot').querySelector=get;get('#arNick').n={value:'A'};a.run('cmAvatarForm=()=>{};cmNickCheck=()=>async()=>true;');
   a.context.fetch=async url=>{calls.push(url);return{ok:true,json:async()=>({user:{nickname:'A',username:'a'},stats:{subs:[],lv:0,rating:0,total:0,solved:0},identities:[{provider:'google'}],has_password:true,active:null,tokens:2,health:{v:5,lab:true,oauth:['google','kakao']}})};};
   await a.run('arMount()');assert.equal(calls.length,1);assert.ok(a.node('arRoot').innerHTML.includes('@a'));assert.match(get('#arIds').innerHTML,/google/);assert.match(get('#arIds').innerHTML,/kakao/);assert.match(get('#arLabMe').innerHTML,/<b>2<\/b>/);
+  assert.equal(mounts,0,'the overview must not eagerly fan out into account security');
+  if(helper==='loaded-library'){get('#arSecurity [data-account-security]').onclick();assert.equal(mounts,1);assert.equal(get('#arSecurity').innerHTML,'secure settings');}
+  else assert.match(get('#arSecurity').innerHTML,/account\.html\?lang=ko#\/forgot-password/);
+  }
 });
 
 test('a legacy weekly response retains its old-server guard while the primary request starts before health',async()=>{

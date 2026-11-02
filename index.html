@@ -1121,7 +1121,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=dce52f5a6403"></script>
+<script src="site-catalogue.js?v=1294ae8fc319"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=0909cf8479fb"></script>
@@ -9581,6 +9581,21 @@ function cmAvatarForm(box, done){
   };
   del.onclick=async()=>{ err.textContent=""; try{ await cmApi("DELETE","/me/avatar"); set(null); }catch(e){ err.textContent=cmErr(e); } };
 }
+function cmAccountSecurity(root,{lazy=false}={}){
+  if(!root)return;
+  const english=lang==='en',reset=`account.html?lang=${english?'en':'ko'}#/forgot-password`;
+  const fallback=()=>{root.innerHTML=`<section class="cmform"><h3>${english?'Account security':'계정 보안'}</h3><p class="cmnote">${english?'Reload this page to manage your password and recovery email, or request a password reset.':'비밀번호와 복구 이메일 설정은 페이지를 새로고침한 뒤 이용해 주세요. 비밀번호 재설정은 아래에서 요청할 수 있습니다.'}</p><a class="cmbtn" href="${reset}">${english?'Reset password':'비밀번호 재설정'}</a></section>`;};
+  const mount=()=>{
+    const ui=window.HL_ACCOUNT_UI;
+    if(typeof ui?.profile!=='function'){fallback();return;}
+    try{Promise.resolve(ui.profile(root,{api:cmApi,language:()=>lang})).catch(()=>{if(root.isConnected!==false)fallback();});}
+    catch(e){fallback();}
+  };
+  if(lazy&&typeof window.HL_ACCOUNT_UI?.profile==='function'){
+    root.innerHTML=`<section class="cmform"><h3>${english?'Account security':'계정 보안'}</h3><button class="cmbtn" type="button" data-account-security>${english?'Manage password and recovery email':'비밀번호·복구 이메일 관리'}</button></section>`;
+    const button=root.querySelector('[data-account-security]');if(button)button.onclick=()=>{button.disabled=true;mount();};
+  }else mount();
+}
 async function cmAccount(root, alive){
   const T=CMT[lang];
   if(!cm.me){ cmGoLogin(); return; }
@@ -9618,7 +9633,7 @@ async function cmAccount(root, alive){
          const h=root.querySelector(".cmpost h2"); if(h) h.textContent=r.nickname; const b=root.querySelector("#cmAvBox"); if(b) b.innerHTML=cmAv(cm.me.nickname,"l",cm.me.avatar); }
     catch(er){ nOut.textContent=cmErr(er); }
   };
-  window.HL_ACCOUNT_UI.profile(root.querySelector('#cmSecurity'),{api:cmApi,language:()=>lang});
+  cmAccountSecurity(root.querySelector('#cmSecurity'));
   root.querySelector("#cmDelAcc").onclick=async()=>{
     if(!confirm(T.confirmDelAcc)) return;
     try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ cmToast(cmErr(e)); }

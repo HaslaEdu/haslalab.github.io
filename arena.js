@@ -1045,7 +1045,9 @@ async function arMe(root, alive,overview) {
       ${idj.has_pw ? "" : `<p class="arinfo">${lang==='en'?'Verify a recovery email below to create your first password.':'첫 비밀번호를 설정하려면 아래에서 복구 이메일을 확인해 주세요.'}</p>`}`;
     for (const a of box.querySelectorAll("a[data-p]")) a.onclick = async (e) => { e.preventDefault(); try { const t = await cmApi("POST", "/oauth/ticket"); sessionStorage.setItem("hlCmBack", "#/me"); arOauthStart(a.dataset.p, t.ticket); } catch (er) { cmToast(arErr(er)); } };
   } catch (e) {}
-  window.HL_ACCOUNT_UI.profile(root.querySelector('#arSecurity'),{api:cmApi,language:()=>lang});
+  const security=root.querySelector('#arSecurity');
+  if(typeof cmAccountSecurity==='function')cmAccountSecurity(security,{lazy:true});
+  else if(security)security.innerHTML=`<p class="arinfo">${lang==='en'?'Open the recovery page or refresh to manage account security.':'계정 보안 설정은 새로고침한 뒤 이용하거나 복구 페이지를 열어 주세요.'}</p><a class="cmbtn" href="account.html?lang=${lang==='en'?'en':'ko'}#/forgot-password">${lang==='en'?'Reset password':'비밀번호 재설정'}</a>`;
   if ((ar.health || {}).lab) {const x=overview; const el = root.querySelector("#arLabMe"); if (!el) return; const L = LBT[lang === "en" ? "en" : "ko"];
     el.innerHTML = `<h3>⏱ ${L.h}</h3><p style="margin:0 0 8px">${L.tokens(x.tokens)}${x.active ? ` · <b>${L.st[x.active.status]}</b>: ${esc(x.active.comp.toUpperCase())} ${x.active.year}` : ""}</p><a class="cmbtn sm" href="#/lab">${L.all}</a>`; }
   else { const el = root.querySelector("#arLabMe"); if (el) el.remove(); }
