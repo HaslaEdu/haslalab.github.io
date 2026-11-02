@@ -15,6 +15,15 @@ function fixture(){
  const solution={question:{...question,source_sha256:source.sha256},source:reference,locator:'solutions/chapter-1/problem-2',kind:'worked_solution',authorship:'source_transcription',source_image_checked:true,review_status:'pending',publication_ready:false,spans:[span],context:{original_solution_number:'1.2'},versions:[{language:'en',role:'original',text:'Using $F=ma$, the acceleration is $a=F/m$.'},{language:'ko',role:'translation',text:'$F=ma$를 이용하면 가속도는 $a=F/m$이다.'}],assets:[{asset_key:'solution-1',role:'solution_crop',mime_type:'image/webp',sha256:hash(bytes),byte_length:bytes.length,spans:[span],inline_base64:bytes.toString('base64')}]};
  return {source,solution,bytes,input:{version:1,sources:[source],solutions:[solution]},index:{version:1,sources:[source],questions:[question]}};
 }
+function generatedFixture(){
+ const f=fixture();f.solution.authorship='haslalab_original_draft';f.solution.context={generated_by:'Codex',source_role:'problem_input_for_original_draft'};f.solution.assets[0].role='source_context';
+ f.solution.versions.forEach(v=>v.role=v.language==='ko'?'original':'translation');
+ const qid=normalizeSolutions(f.input,f.index).solutions[0].question_id;
+ const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lS8AAAAASUVORK5CYII=','base64');
+ const provenance={kind:'generated_figure',method:'analytic_plot',input_question_id:qid,recipe_sha256:'d'.repeat(64),parameters:{a:1,frames:[0,1,2],label:"quoted 'parameter'?"},generator:'Synthetic analytic plot generator v1'};
+ f.solution.assets.push({asset_key:'generated-plot-1',role:'figure',mime_type:'image/png',sha256:hash(png),byte_length:png.length,spans:[],generated_provenance:provenance,inline_base64:png.toString('base64')});
+ return {...f,png,provenance,figure:f.solution.assets[1]};
+}
 test('solutions link to an exact canonical question while leaving question tables untouched',async()=>{
  const f=fixture(),db=new DatabaseSync(':memory:'),normalized=normalizeSolutions(f.input,f.index);
  try{
@@ -24,6 +33,8 @@ test('solutions link to an exact canonical question while leaving question table
   assert.equal(db.prepare('SELECT count(*) n FROM bank_solutions').get().n,1);
   assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_versions WHERE active=1').get().n,2);
   assert.equal(db.prepare('SELECT publication_ready FROM bank_solutions').get().publication_ready,0);
+  assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_asset_provenance').get().n,0);
+  assert.equal(normalized.solutions[0].assets[0].generated_provenance,null);
   assert.deepEqual(readSolutionAsset(db,normalized.solutions[0].assets[0].id),f.bytes);
  }finally{db.close();}
 });
@@ -130,4 +141,79 @@ test('stored solution bytes are checked against chunk and aggregate hashes',asyn
 });
 test('private solution exports reject the public checkout',async()=>{
  const f=fixture();await assert.rejects(writeSolutionSql(normalizeSolutions(f.input,f.index),fileURLToPath(new URL('./must-not-create.sql',import.meta.url))),/private content/);
+});
+
+test('generated figures store honest recipe provenance with no fabricated PDF spans',async()=>{
+ const f=generatedFixture(),db=new DatabaseSync(':memory:');
+ try{
+  const n=normalizeSolutions(f.input,f.index),s=n.solutions[0],a=s.assets[1];await applySolutions(db,n);await applySolutions(db,n);
+  assert.deepEqual(a.spans,[]);assert.deepEqual(a.generated_provenance,f.provenance);
+  const row=db.prepare('SELECT * FROM bank_solution_asset_provenance WHERE asset_id=?').get(a.id);
+  assert.deepEqual(JSON.parse(row.provenance_json),f.provenance);assert.equal(row.sha256,hash(row.provenance_json));assert.equal(a.generated_provenance_sha256,row.sha256);
+  assert.deepEqual(readSolutionAsset(db,a.id),f.png);assert.deepEqual(readSolutionAsset(db,s.assets[0].id),f.bytes);
+  assert.equal(db.prepare('SELECT spans_json FROM bank_solution_assets WHERE id=?').get(a.id).spans_json,'[]');
+  assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_asset_provenance').get().n,1);
+ }finally{db.close();}
+});
+
+test('generated provenance cannot impersonate source crops or another question/recipe',()=>{
+ const changes=[
+  f=>{f.solution.authorship='source_transcription';f.solution.versions.forEach(v=>v.role=v.language==='en'?'original':'translation');},f=>f.figure.role='source_context',
+  f=>f.provenance.kind='pdf_crop',f=>f.provenance.method='unknown_method',
+  f=>f.provenance.input_question_id='q_'+'b'.repeat(64),f=>f.provenance.recipe_sha256='not-a-hash',
+  f=>f.provenance.recipe_sha256='D'.repeat(64),f=>f.provenance.generator='',
+  f=>f.provenance.parameters=[],f=>f.provenance.parameters=null,
+  f=>f.provenance.parameters.a=NaN,f=>f.provenance.parameters.a=undefined,
+  f=>f.provenance.parameters.a=new Date(),f=>f.figure.spans=[{page:7,bbox:[.1,.2,.9,.7]}],
+  f=>delete f.figure.spans,f=>delete f.figure.generated_provenance,
+  f=>f.solution.assets[0].spans=[],f=>f.solution.assets.shift()
+ ];
+ for(const change of changes){const f=generatedFixture();change(f);assert.throws(()=>normalizeSolutions(f.input,f.index));}
+});
+
+test('generated provenance follows asset replacement and deletion without changing source crops',async()=>{
+ const f=generatedFixture(),db=new DatabaseSync(':memory:');
+ try{
+  const first=normalizeSolutions(f.input,f.index);await applySolutions(db,first);const [input,figure]=first.solutions[0].assets;
+  f.provenance.parameters.a=2;const revised=normalizeSolutions(f.input,f.index);await applySolutions(db,revised);
+  const row=db.prepare('SELECT * FROM bank_solution_asset_provenance').get();assert.equal(row.asset_id,figure.id);assert.equal(JSON.parse(row.provenance_json).parameters.a,2);assert.notEqual(row.sha256,first.solutions[0].assets[1].generated_provenance_sha256);
+  const withoutFigure=structuredClone(f.input);withoutFigure.solutions[0].assets.pop();await applySolutions(db,normalizeSolutions(withoutFigure,f.index));
+  assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_asset_provenance').get().n,0);assert.equal(readSolutionAsset(db,figure.id),null);assert.deepEqual(readSolutionAsset(db,input.id),f.bytes);
+  await applySolutions(db,revised);
+  // A retained stable key can become a real PDF figure; old generated metadata
+  // must disappear rather than falsely describing the new crop.
+  delete f.figure.generated_provenance;f.figure.spans=[{page:7,bbox:[.1,.2,.9,.7]}];await applySolutions(db,normalizeSolutions(f.input,f.index));
+  assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_asset_provenance').get().n,0);
+  assert.deepEqual(readSolutionAsset(db,input.id),f.bytes);
+  f.solution.assets.pop();await applySolutions(db,normalizeSolutions(f.input,f.index));assert.equal(readSolutionAsset(db,figure.id),null);assert.deepEqual(readSolutionAsset(db,input.id),f.bytes);
+ }finally{db.close();}
+});
+
+test('exported generated-figure SQL round-trips provenance and cascades only its own child rows',async()=>{
+ const f=generatedFixture(),db=new DatabaseSync(':memory:'),directory=await mkdtemp(join(tmpdir(),'haslalab-generated-export-')),target=join(directory,'synthetic-generated.sql');
+ try{
+  const n=normalizeSolutions(f.input,f.index),[input,figure]=n.solutions[0].assets;await writeSolutionSql(n,target);db.exec(await readFile(target,'utf8'));
+  const row=db.prepare('SELECT provenance_json,sha256 FROM bank_solution_asset_provenance WHERE asset_id=?').get(figure.id);assert.deepEqual(JSON.parse(row.provenance_json),f.provenance);assert.equal(hash(row.provenance_json),row.sha256);assert.deepEqual(readSolutionAsset(db,figure.id),f.png);
+  assert.throws(()=>db.prepare('UPDATE bank_solution_asset_provenance SET provenance_json=? WHERE asset_id=?').run(JSON.stringify({...f.provenance,input_question_id:'q_wrong'}),figure.id),/exact question/);
+  assert.throws(()=>db.prepare('INSERT INTO bank_solution_asset_provenance VALUES(?,?,?)').run(input.id,JSON.stringify(f.provenance),hash(JSON.stringify(f.provenance))),/exact question/);
+  db.prepare('DELETE FROM bank_solution_assets WHERE id=?').run(figure.id);
+  assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_asset_provenance').get().n,0);assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_asset_chunks WHERE asset_id=?').get(figure.id).n,0);assert.deepEqual(readSolutionAsset(db,input.id),f.bytes);
+ }finally{db.close();await unlink(target).catch(()=>{});await rmdir(directory);}
+});
+
+test('adding optional provenance upgrades a legacy asset database without changing crop columns or bytes',async()=>{
+ const f=fixture(),db=new DatabaseSync(':memory:'),n=normalizeSolutions(f.input,f.index),options={timestamp:'2026-11-02T00:00:00.000Z'};
+ try{
+  await applySolutions(db,n,options);
+  // An older database has source assets but no generated-provenance table.
+  db.exec('DROP TABLE bank_solution_asset_provenance');
+  const columns=db.prepare('PRAGMA table_info(bank_solution_assets)').all().map(r=>r.name);
+  const asset={...db.prepare('SELECT * FROM bank_solution_assets').get()};
+  const roles=db.prepare('SELECT id,language,role,text_sha256,active FROM bank_solution_versions ORDER BY id').all().map(r=>({...r}));
+  await applySolutions(db,n,options);
+  assert.equal(columns.length,11);assert.deepEqual(db.prepare('PRAGMA table_info(bank_solution_assets)').all().map(r=>r.name),columns);
+  assert.deepEqual({...db.prepare('SELECT * FROM bank_solution_assets').get()},asset);assert.deepEqual(readSolutionAsset(db,asset.id),f.bytes);
+  assert.deepEqual(db.prepare('SELECT id,language,role,text_sha256,active FROM bank_solution_versions ORDER BY id').all().map(r=>({...r})),roles);
+  assert.equal(db.prepare('SELECT count(*) n FROM bank_solution_asset_provenance').get().n,0);
+ }finally{db.close();}
 });

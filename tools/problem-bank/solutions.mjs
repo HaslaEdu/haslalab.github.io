@@ -18,6 +18,27 @@ function spans(input,source,required=true){
   });
 }
 const reference=source=>({...((source.origin)?{origin:source.origin}:{drive_id:source.drive_id}),revision:source.revision,sha256:source.sha256});
+function generatedProvenance(input,{authorship,role,question_id}){
+  if(input==null)return null;
+  if(authorship!=='haslalab_original_draft'||role!=='figure')fail('Generated figures require original-draft authorship and figure role');
+  if(typeof input!=='object'||Array.isArray(input))fail('Invalid generated figure provenance');
+  if(input.kind!=='generated_figure')fail('Invalid generated figure kind');
+  if(input.input_question_id!==question_id)fail('Generated figure must reference its exact canonical question ID');
+  const parameters=input.parameters;
+  if(!parameters||typeof parameters!=='object'||Array.isArray(parameters))fail('Generated figure parameters must be a JSON object');
+  // Reject values JSON would silently drop or change (undefined, non-finite
+  // numbers, functions, custom serializers), so the stored recipe is faithful.
+  const visit=value=>{
+    if(value===null||typeof value==='string'||typeof value==='boolean')return;
+    if(typeof value==='number'&&Number.isFinite(value))return;
+    if(Array.isArray(value)){for(const entry of value)visit(entry);return;}
+    if(typeof value==='object'&&Object.getPrototypeOf(value)===Object.prototype){for(const entry of Object.values(value))visit(entry);return;}
+    fail('Generated figure parameters must contain only JSON values');
+  };
+  let serialized;
+  try{serialized=JSON.stringify(parameters);if(serialized.length>20000)fail('Generated figure parameters too large');visit(parameters);}catch(error){fail('Invalid generated figure parameters: '+error.message);}
+  return {kind:'generated_figure',method:choose(input.method,['analytic_plot','numeric_simulation','schematic'],'generated figure method'),input_question_id:question_id,recipe_sha256:hash(input.recipe_sha256,'figure recipe hash'),parameters:JSON.parse(serialized),generator:text(input.generator,'figure generator',1000)};
+}
 
 export function normalizeSolutions(input,index){
   if(input?.version!==1||index?.version!==1||!Array.isArray(input.solutions)||!Array.isArray(index.questions))fail('Invalid solution import/index format');
@@ -64,13 +85,15 @@ export function normalizeSolutions(input,index){
     for(const asset of raw.assets??[]){
       const key=text(asset.asset_key,'solution asset key',500);if(keys.has(key))fail('Duplicate solution asset key');keys.add(key);
       if(authorship==='haslalab_original_draft'&&asset.role==='solution_crop')fail('Original draft input crops must be marked source_context or figure');
+      const provenance=generatedProvenance(asset.generated_provenance,{authorship,role:asset.role,question_id:qid});
+      if(provenance&&(!Array.isArray(asset.spans)||asset.spans.length))fail('Generated figure must have explicit empty PDF spans');
       const digest=hash(asset.sha256,'asset hash');
       if(typeof asset.inline_base64!=='string'||!asset.inline_base64.length||asset.inline_base64.length>5600000||!/^([A-Za-z\d+/]{4})*([A-Za-z\d+/]{2}==|[A-Za-z\d+/]{3}=)?$/.test(asset.inline_base64))fail('Invalid solution asset base64');
       const bytes=Buffer.from(asset.inline_base64,'base64');if(!bytes.length||bytes.length>4*1024*1024||sha(bytes)!==digest||asset.byte_length!==bytes.length)fail('Solution asset content hash/length mismatch');
       const chunks=[];for(let offset=0;offset<bytes.length;offset+=32768){const payload=bytes.subarray(offset,offset+32768);chunks.push({payload,sha256:sha(payload)});}
-      item.assets.push({id:'sa_'+sha(id+'\0'+key),asset_key:key,role:choose(asset.role,['solution_crop','figure','source_context'],'solution asset role'),mime_type:choose(asset.mime_type,['image/png','image/jpeg','image/webp','image/svg+xml'],'solution asset MIME'),sha256:digest,byte_length:bytes.length,spans:spans(asset.spans,source),chunks});
+      item.assets.push({id:'sa_'+sha(id+'\0'+key),asset_key:key,role:choose(asset.role,['solution_crop','figure','source_context'],'solution asset role'),mime_type:choose(asset.mime_type,['image/png','image/jpeg','image/webp','image/svg+xml'],'solution asset MIME'),sha256:digest,byte_length:bytes.length,spans:spans(asset.spans,source,!provenance),generated_provenance:provenance,generated_provenance_sha256:provenance?sha(JSON.stringify(provenance)):null,chunks});
     }
-    if(!item.assets.length)fail('Source solution or original-draft input crops are required');
+    if(!item.assets.some(asset=>!asset.generated_provenance))fail('Source solution or original-draft input crops are required separately from generated figures');
     const {versions,assets,...metadata}=item;item.metadata_sha256=sha(JSON.stringify(metadata));
     if(results.has(id))fail('Duplicate solution source locator for a question');results.set(id,item);
   }
@@ -88,10 +111,15 @@ export function* solutionStatements(normalized,{timestamp=new Date().toISOString
     yield statement('UPDATE bank_solution_versions SET active=0 WHERE solution_id=?',[s.id]);
     for(const v of s.versions){yield statement(`INSERT INTO bank_solution_versions VALUES(?,?,?,?,?,?,'pending',1,?,?) ON CONFLICT(id) DO UPDATE SET active=1,review_status='pending',updated_at=excluded.updated_at`,[v.id,s.id,v.language,v.role,v.text,v.text_sha256,timestamp,timestamp]);}
     const obsolete=s.assets.length?' AND id NOT IN ('+s.assets.map(()=>'?').join(',')+')':'';
+    yield statement('DELETE FROM bank_solution_asset_provenance WHERE asset_id IN (SELECT id FROM bank_solution_assets WHERE solution_id=?'+obsolete+')',[s.id,...s.assets.map(a=>a.id)]);
     yield statement('DELETE FROM bank_solution_asset_chunks WHERE asset_id IN (SELECT id FROM bank_solution_assets WHERE solution_id=?'+obsolete+')',[s.id,...s.assets.map(a=>a.id)]);
     yield statement('DELETE FROM bank_solution_assets WHERE solution_id=?'+obsolete,[s.id,...s.assets.map(a=>a.id)]);
     for(const a of s.assets){
+      // Replacing an asset by a source crop must also remove former generated
+      // provenance, even when its stable asset key remains unchanged.
+      yield statement('DELETE FROM bank_solution_asset_provenance WHERE asset_id=?',[a.id]);
       yield statement('INSERT INTO bank_solution_assets VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET role=excluded.role,mime_type=excluded.mime_type,sha256=excluded.sha256,byte_length=excluded.byte_length,chunk_count=excluded.chunk_count,spans_json=excluded.spans_json,updated_at=excluded.updated_at',[a.id,s.id,a.asset_key,a.role,a.mime_type,a.sha256,a.byte_length,a.chunks.length,JSON.stringify(a.spans),timestamp,timestamp]);
+      if(a.generated_provenance){const body=JSON.stringify(a.generated_provenance);yield statement('INSERT INTO bank_solution_asset_provenance VALUES(?,?,?)',[a.id,body,sha(body)]);}
       yield statement('DELETE FROM bank_solution_asset_chunks WHERE asset_id=?',[a.id]);
       for(const [i,chunk] of a.chunks.entries())yield statement('INSERT INTO bank_solution_asset_chunks VALUES(?,?,?,?,?)',[a.id,i,chunk.payload.length,chunk.sha256,chunk.payload]);
     }

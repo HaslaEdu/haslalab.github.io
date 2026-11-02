@@ -63,3 +63,30 @@ CREATE TABLE IF NOT EXISTS bank_solution_asset_chunks (
   payload BLOB NOT NULL CHECK(length(payload)=byte_length),
   PRIMARY KEY(asset_id,chunk_index)
 );
+-- Optional generated-figure records. Existing source crops have no child row;
+-- their original asset columns and nonempty PDF spans remain unchanged.
+CREATE TABLE IF NOT EXISTS bank_solution_asset_provenance (
+  asset_id TEXT PRIMARY KEY REFERENCES bank_solution_assets(id) ON DELETE CASCADE,
+  provenance_json TEXT NOT NULL CHECK(json_valid(provenance_json) AND json_type(provenance_json)='object'),
+  sha256 TEXT NOT NULL CHECK(length(sha256)=64)
+);
+CREATE TRIGGER IF NOT EXISTS bank_solution_generated_provenance_insert
+BEFORE INSERT ON bank_solution_asset_provenance
+WHEN NOT EXISTS (
+  SELECT 1 FROM bank_solution_assets a JOIN bank_solutions s ON s.id=a.solution_id
+  WHERE a.id=NEW.asset_id AND a.role='figure'
+    AND s.authorship='haslalab_original_draft' AND json_type(a.spans_json)='array' AND json_array_length(a.spans_json)=0
+    AND json_extract(NEW.provenance_json,'$.kind')='generated_figure'
+    AND json_extract(NEW.provenance_json,'$.input_question_id')=s.question_id
+)
+BEGIN SELECT RAISE(ABORT,'Generated figure provenance must match an original draft and its exact question'); END;
+CREATE TRIGGER IF NOT EXISTS bank_solution_generated_provenance_update
+BEFORE UPDATE ON bank_solution_asset_provenance
+WHEN NOT EXISTS (
+  SELECT 1 FROM bank_solution_assets a JOIN bank_solutions s ON s.id=a.solution_id
+  WHERE a.id=NEW.asset_id AND a.role='figure'
+    AND s.authorship='haslalab_original_draft' AND json_type(a.spans_json)='array' AND json_array_length(a.spans_json)=0
+    AND json_extract(NEW.provenance_json,'$.kind')='generated_figure'
+    AND json_extract(NEW.provenance_json,'$.input_question_id')=s.question_id
+)
+BEGIN SELECT RAISE(ABORT,'Generated figure provenance must match an original draft and its exact question'); END;
