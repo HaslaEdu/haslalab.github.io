@@ -24,6 +24,21 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
   for (const program of qa.authoring_programs) {
     assert.equal(hash(fs.readFileSync(path.join(root, program.path))), program.sha256);
   }
+  if (qa.link_annotation_subset_regression) {
+    const pin = qa.link_annotation_subset_regression;
+    const regression = read(pin.path, pin.sha256);
+    assert.equal(regression.status, 'PASS');
+    assert.equal(regression.changed_pixels, 0);
+    assert.equal(regression.all_visible_glyph_geometry_identical, true);
+    assert.equal(regression.proof_sha256, qa.page_audits[1].proof_sha256);
+    assert.equal(regression.helper_sha256, pin.helper_sha256);
+    assert.equal(regression.program_sha256, pin.test_program_sha256);
+    assert.equal(hash(fs.readFileSync(path.join(root, pin.test_program_path))), pin.test_program_sha256);
+    assert.equal(qa.authoring_programs.find(p => p.path.endsWith('/ortvay2024_link_annotations.py')).sha256, pin.helper_sha256);
+    assert.equal(regression.links.length, 6);
+    assert.equal(regression.negative_regressions.length, 3);
+    assert.deepEqual(qa.page_audits[1].link_annotation_geometry_audits, regression.links);
+  }
   if (qa.source_path_resolver_sha256) {
     const resolver = qa.authoring_programs.find(p => /\/source_path_resolver\.py$/.test(p.path));
     assert.ok(resolver, 'Source path mapping program is frozen with the publication');
@@ -73,6 +88,34 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       for (let n = 0; n < 4; n++) {
         const expected = link.source_rect_mupdf[n] + (n % 2 === 0 ? link.dx : 0);
         assert.ok(Math.abs(link.actual_target_rect_mupdf[n] - expected) < 0.001);
+      }
+    }
+    for (const link of page.link_annotation_geometry_audits || []) {
+      assert.equal(link.schema, 'reviewed-source-url-subset-v1');
+      assert.equal(link.page, page.page);
+      for (const key of ['passed', 'native_url_glyphs_verified_in_proof', 'only_horizontal_rect_translation', 'other_annotation_settings_preserved']) assert.equal(link[key], true);
+      assert.ok(link.max_url_glyph_geometry_error_pt <= 0.001 && link.position_tolerance_pt <= 0.001);
+      assert.equal(link.glyph_references.length, link.source_url_glyphs);
+      assert.equal(link.glyph_references.map(r => r.source_glyph.c).join(''), link.display_fragment);
+      for (const ref of link.glyph_references) {
+        assert.equal(ref.dx, link.dx);
+        const sameSource = glyph => glyph.c === ref.source_glyph.c && glyph.origin.every((n, i) => Math.abs(n - ref.source_glyph.origin[i]) < 0.00001);
+        assert.equal(body.selected_glyphs.some(sameSource), false);
+        if (ref.native_shift_index === null) {
+          assert.equal(ref.dx, 0);
+          assert.equal(ref.shift_glyph_index, null);
+          assert.equal(body.native_shifts.some(s => s.glyphs.some(sameSource)), false);
+        } else {
+          const shift = body.native_shifts[ref.native_shift_index];
+          assert.equal(shift.dx, ref.dx);
+          assert.ok(sameSource(shift.glyphs[ref.shift_glyph_index]));
+        }
+      }
+      for (let n = 0; n < 4; n++) {
+        const delta = n % 2 === 0 ? link.dx : 0;
+        assert.ok(Math.abs(link.target_rect_pdf[n] - link.source_rect_pdf[n] - delta) < 0.001);
+        assert.ok(Math.abs(link.expected_target_rect_mupdf[n] - link.source_rect_mupdf[n] - delta) < 0.001);
+        assert.ok(Math.abs(link.actual_target_rect_mupdf[n] - link.expected_target_rect_mupdf[n]) < 0.001);
       }
     }
     const plan = read(page.plan_path, page.plan_sha256);

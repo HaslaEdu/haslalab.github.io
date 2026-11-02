@@ -1,0 +1,5536 @@
+{
+  "schema": "natural-source-native-joined-v1",
+  "status": "READY",
+  "file": "Ortvay_2024_T_KO.pdf",
+  "language": "ko",
+  "pages": 13,
+  "bytes": 7854366,
+  "sha256": "60324d40a7432d2fff694516fb8b244c58f6d6070510bde6291da5313b0f39e0",
+  "source": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2024_T_EN.pdf",
+  "source_sha256": "d7b856084d0159122329b2a3f86f123a2517d99b2f2a05607d9df93acf02f2c9",
+  "resolved_source_read_path": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2024_T_EN.pdf",
+  "source_path_resolver_sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9",
+  "no_font_shrink": true,
+  "no_math_rasterization": true,
+  "no_reserved_english_widths": true,
+  "inline_native_math_moved_as_whole_expressions": true,
+  "stationary_display_equations_and_figures": true,
+  "original_font_sizes_and_baselines_preserved": true,
+  "hidden_original_prose_has_empty_ActualText": true,
+  "no_added_editorial_notes": true,
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "d7d540915fd08d5041e7167366cd5e6f49deb3b36a7ac4ac453416f728e2219f",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page01.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page01.qa.json",
+      "qa_sha256": "b889d710a000413650f0612577975ba431cc9ae6e31ccef795d0feaa79eb99c7",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page01.plan.json",
+      "plan_sha256": "ad5ef8f19301b656d4627460835c6141322e5fb0799b3fb60982db4857d247a2",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page01.effective-plan.json",
+      "effective_plan_sha256": "6eed19c5937c6ae40399f39e43813907ac6f783a0ea6720860610712d63e915f",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page01.overrides.json",
+      "overrides_sha256": "fe1b2987e1c6453fc109f6fba1572f9d17b3beff9491c3a5a241cc1c12a55c7b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 507,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 27,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "proof_sha256": "913045f2fabdb22d79d00e0e2c5459efe5525f1a95fe3c558b09a81c3be03a16",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page02.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page02.qa.json",
+      "qa_sha256": "9d09c6a4554c0c1c9be55b342cb06b2bbed7c13363db5e478d955ed8cbc85bcf",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page02.plan.json",
+      "plan_sha256": "35b60827a9f3aaa52857fd74a8d92b8c1a18add314527d5afa35920dcb757983",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page02.effective-plan.json",
+      "effective_plan_sha256": "d5277df884dd594fe61ce3ed3a71490b223acedfd02a1660e9a235799c6e5ce0",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page02.overrides.json",
+      "overrides_sha256": "19ffa2c3fa0ec3b2212493b56d46002054b5290cd2787d0ad6c22801056e1ed4",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 594,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 30,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 2,
+          "source_link_index": 0,
+          "uri": "https://www.idokep.hu/webkamera/piszkesteto_allsky",
+          "display_fragment": "https://www.idokep.hu/webkamera/piszkes-",
+          "source_rect_pdf": [
+            310.634,
+            335.673,
+            554.886,
+            349.617
+          ],
+          "target_rect_pdf": [
+            258.87782424354555,
+            335.673,
+            503.1298242435455,
+            349.617
+          ],
+          "source_rect_mupdf": [
+            310.6340026855469,
+            442.38299560546875,
+            554.885986328125,
+            456.3269958496094
+          ],
+          "expected_target_rect_mupdf": [
+            258.8778269290924,
+            442.38299560546875,
+            503.12981057167053,
+            456.3269958496094
+          ],
+          "dx": -51.75617575645447,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  311.6300048828125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  311.6300048828125,
+                  443.57391357421875,
+                  317.77496337890625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 0,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  317.78692626953125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  317.78692626953125,
+                  443.57391357421875,
+                  323.931884765625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 1,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  323.94384765625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  323.94384765625,
+                  443.57391357421875,
+                  330.08880615234375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 2,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  330.10076904296875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  330.10076904296875,
+                  443.57391357421875,
+                  336.2457275390625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 3,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  336.2576904296875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  336.2576904296875,
+                  443.57391357421875,
+                  342.40264892578125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 4,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 10,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  342.41461181640625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  342.41461181640625,
+                  443.57391357421875,
+                  348.5595703125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 5,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  348.571533203125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  348.571533203125,
+                  443.57391357421875,
+                  354.71649169921875,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 6,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  354.72845458984375,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  354.72845458984375,
+                  443.57391357421875,
+                  360.8734130859375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 7,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  360.8853759765625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  360.8853759765625,
+                  443.57391357421875,
+                  367.03033447265625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 8,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  367.04229736328125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  367.04229736328125,
+                  443.57391357421875,
+                  373.187255859375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 9,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  373.19921875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  373.19921875,
+                  443.57391357421875,
+                  379.34417724609375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 10,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  379.35614013671875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  379.35614013671875,
+                  443.57391357421875,
+                  385.5010986328125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 11,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 18,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  385.5010986328125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  385.5010986328125,
+                  443.57391357421875,
+                  391.64605712890625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 12,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "d",
+                "gid": 11,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  391.65802001953125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  391.65802001953125,
+                  443.57391357421875,
+                  397.802978515625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 13,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  397.81494140625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  397.81494140625,
+                  443.57391357421875,
+                  403.95989990234375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 14,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  403.97186279296875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  403.97186279296875,
+                  443.57391357421875,
+                  410.1168212890625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 15,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  410.1287841796875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  410.1287841796875,
+                  443.57391357421875,
+                  416.27374267578125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 16,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  416.28570556640625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  416.28570556640625,
+                  443.57391357421875,
+                  422.4306640625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 17,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  422.442626953125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  422.442626953125,
+                  443.57391357421875,
+                  428.58758544921875,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 18,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  428.59954833984375,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  428.59954833984375,
+                  443.57391357421875,
+                  434.7445068359375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 19,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  434.7564697265625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  434.7564697265625,
+                  443.57391357421875,
+                  440.90142822265625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 20,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  440.91339111328125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  440.91339111328125,
+                  443.57391357421875,
+                  447.058349609375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 21,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  447.0703125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  447.0703125,
+                  443.57391357421875,
+                  453.21527099609375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 22,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  453.22723388671875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  453.22723388671875,
+                  443.57391357421875,
+                  459.3721923828125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 23,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "b",
+                "gid": 6,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  459.3841552734375,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  459.3841552734375,
+                  443.57391357421875,
+                  465.52911376953125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 24,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  465.54107666015625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  465.54107666015625,
+                  443.57391357421875,
+                  471.68603515625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 25,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  471.697998046875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  471.697998046875,
+                  443.57391357421875,
+                  477.84295654296875,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 26,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "m",
+                "gid": 22,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  477.85491943359375,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  477.85491943359375,
+                  443.57391357421875,
+                  483.9998779296875,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 27,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  484.0118408203125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  484.0118408203125,
+                  443.57391357421875,
+                  490.15679931640625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 28,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  490.16876220703125,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  490.16876220703125,
+                  443.57391357421875,
+                  496.313720703125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 29,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  496.32568359375,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  496.32568359375,
+                  443.57391357421875,
+                  502.47064208984375,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 30,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  502.48260498046875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  502.48260498046875,
+                  443.57391357421875,
+                  508.6275634765625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 31,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  508.6395263671875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  508.6395263671875,
+                  443.57391357421875,
+                  514.7844848632812,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 32,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 18,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  514.7964477539062,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  514.7964477539062,
+                  443.57391357421875,
+                  520.94140625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 33,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  520.953369140625,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  520.953369140625,
+                  443.57391357421875,
+                  527.0983276367188,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 34,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "z",
+                "gid": 38,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  527.0983276367188,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  527.0983276367188,
+                  443.57391357421875,
+                  533.2432861328125,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 35,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  533.2552490234375,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  533.2552490234375,
+                  443.57391357421875,
+                  539.4002075195312,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 36,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  539.4121704101562,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  539.4121704101562,
+                  443.57391357421875,
+                  545.55712890625,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 37,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  545.569091796875,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  545.569091796875,
+                  443.57391357421875,
+                  551.7140502929688,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 38,
+              "dx": -51.75617575645447
+            },
+            {
+              "source_glyph": {
+                "c": "-",
+                "gid": 17,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  551.7260131835938,
+                  452.3429870605469
+                ],
+                "bbox": [
+                  551.7260131835938,
+                  443.57391357421875,
+                  557.8709716796875,
+                  455.52911376953125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 39,
+              "dx": -51.75617575645447
+            }
+          ],
+          "source_url_glyphs": 40,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 1.1205673217773438e-05,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            258.8778381347656,
+            442.38299560546875,
+            503.12982177734375,
+            456.3269958496094
+          ],
+          "passed": true
+        },
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 2,
+          "source_link_index": 1,
+          "uri": "https://www.idokep.hu/webkamera/piszkesteto_allsky",
+          "display_fragment": "teto_allsky",
+          "source_rect_pdf": [
+            71.922,
+            322.724,
+            141.569,
+            336.669
+          ],
+          "target_rect_pdf": [
+            71.922,
+            322.724,
+            141.569,
+            336.669
+          ],
+          "source_rect_mupdf": [
+            71.9219970703125,
+            455.33099365234375,
+            141.56900024414062,
+            469.2760009765625
+          ],
+          "expected_target_rect_mupdf": [
+            71.9219970703125,
+            455.33099365234375,
+            141.56900024414062,
+            469.2760009765625
+          ],
+          "dx": 0.0,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  72.91799926757812,
+                  465.2919921875
+                ],
+                "bbox": [
+                  72.91799926757812,
+                  456.5229187011719,
+                  79.06297302246094,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  79.0749282836914,
+                  465.2919921875
+                ],
+                "bbox": [
+                  79.0749282836914,
+                  456.5229187011719,
+                  85.21990203857422,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  85.23185729980469,
+                  465.2919921875
+                ],
+                "bbox": [
+                  85.23185729980469,
+                  456.5229187011719,
+                  91.3768310546875,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  91.38878631591797,
+                  465.2919921875
+                ],
+                "bbox": [
+                  91.38878631591797,
+                  456.5229187011719,
+                  97.53376007080078,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "_",
+                "gid": 33,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  97.54571533203125,
+                  465.2919921875
+                ],
+                "bbox": [
+                  97.54571533203125,
+                  456.5229187011719,
+                  103.69068908691406,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  103.70264434814453,
+                  465.2919921875
+                ],
+                "bbox": [
+                  103.70264434814453,
+                  456.5229187011719,
+                  109.84761810302734,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  109.85957336425781,
+                  465.2919921875
+                ],
+                "bbox": [
+                  109.85957336425781,
+                  456.5229187011719,
+                  116.00454711914062,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  116.0165023803711,
+                  465.2919921875
+                ],
+                "bbox": [
+                  116.0165023803711,
+                  456.5229187011719,
+                  122.1614761352539,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  122.17343139648438,
+                  465.2919921875
+                ],
+                "bbox": [
+                  122.17343139648438,
+                  456.5229187011719,
+                  128.3184051513672,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  128.33035278320312,
+                  465.2919921875
+                ],
+                "bbox": [
+                  128.33035278320312,
+                  456.5229187011719,
+                  134.47532653808594,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "y",
+                "gid": 37,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  134.48727416992188,
+                  465.2919921875
+                ],
+                "bbox": [
+                  134.48727416992188,
+                  456.5229187011719,
+                  140.6322479248047,
+                  468.4781188964844
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            }
+          ],
+          "source_url_glyphs": 11,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 0,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            71.9219970703125,
+            455.33099365234375,
+            141.56900024414062,
+            469.2760009765625
+          ],
+          "passed": true
+        },
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 2,
+          "source_link_index": 2,
+          "uri": "https://ccdsh.konkoly.hu/share/allsky/",
+          "display_fragment": "https://ccdsh.konkoly.hu/share/allsky/",
+          "source_rect_pdf": [
+            76.473,
+            309.776,
+            312.182,
+            323.72
+          ],
+          "target_rect_pdf": [
+            76.473,
+            309.776,
+            312.182,
+            323.72
+          ],
+          "source_rect_mupdf": [
+            76.4729995727539,
+            468.2799987792969,
+            312.1820068359375,
+            482.2239990234375
+          ],
+          "expected_target_rect_mupdf": [
+            76.4729995727539,
+            468.2799987792969,
+            312.1820068359375,
+            482.2239990234375
+          ],
+          "dx": 0.0,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  77.47000122070312,
+                  478.239990234375
+                ],
+                "bbox": [
+                  77.47000122070312,
+                  469.4709167480469,
+                  83.61497497558594,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  83.6269302368164,
+                  478.239990234375
+                ],
+                "bbox": [
+                  83.6269302368164,
+                  469.4709167480469,
+                  89.77190399169922,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  89.78385925292969,
+                  478.239990234375
+                ],
+                "bbox": [
+                  89.78385925292969,
+                  469.4709167480469,
+                  95.9288330078125,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  95.94078826904297,
+                  478.239990234375
+                ],
+                "bbox": [
+                  95.94078826904297,
+                  469.4709167480469,
+                  102.08576202392578,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  102.09771728515625,
+                  478.239990234375
+                ],
+                "bbox": [
+                  102.09771728515625,
+                  469.4709167480469,
+                  108.24269104003906,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 10,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  108.25464630126953,
+                  478.239990234375
+                ],
+                "bbox": [
+                  108.25464630126953,
+                  469.4709167480469,
+                  114.39962005615234,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  114.41157531738281,
+                  478.239990234375
+                ],
+                "bbox": [
+                  114.41157531738281,
+                  469.4709167480469,
+                  120.55654907226562,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  120.5685043334961,
+                  478.239990234375
+                ],
+                "bbox": [
+                  120.5685043334961,
+                  469.4709167480469,
+                  126.7134780883789,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "c",
+                "gid": 9,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  126.72543334960938,
+                  478.239990234375
+                ],
+                "bbox": [
+                  126.72543334960938,
+                  469.4709167480469,
+                  132.8704071044922,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "c",
+                "gid": 9,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  132.88235473632812,
+                  478.239990234375
+                ],
+                "bbox": [
+                  132.88235473632812,
+                  469.4709167480469,
+                  139.02732849121094,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "d",
+                "gid": 11,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  139.03927612304688,
+                  478.239990234375
+                ],
+                "bbox": [
+                  139.03927612304688,
+                  469.4709167480469,
+                  145.1842498779297,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  145.19619750976562,
+                  478.239990234375
+                ],
+                "bbox": [
+                  145.19619750976562,
+                  469.4709167480469,
+                  151.34117126464844,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  151.34117126464844,
+                  478.239990234375
+                ],
+                "bbox": [
+                  151.34117126464844,
+                  469.4709167480469,
+                  157.48614501953125,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  157.4980926513672,
+                  478.239990234375
+                ],
+                "bbox": [
+                  157.4980926513672,
+                  469.4709167480469,
+                  163.64306640625,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  163.65501403808594,
+                  478.239990234375
+                ],
+                "bbox": [
+                  163.65501403808594,
+                  469.4709167480469,
+                  169.79998779296875,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  169.8119354248047,
+                  478.239990234375
+                ],
+                "bbox": [
+                  169.8119354248047,
+                  469.4709167480469,
+                  175.9569091796875,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "n",
+                "gid": 23,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  175.96885681152344,
+                  478.239990234375
+                ],
+                "bbox": [
+                  175.96885681152344,
+                  469.4709167480469,
+                  182.11383056640625,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  182.1257781982422,
+                  478.239990234375
+                ],
+                "bbox": [
+                  182.1257781982422,
+                  469.4709167480469,
+                  188.270751953125,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  188.28269958496094,
+                  478.239990234375
+                ],
+                "bbox": [
+                  188.28269958496094,
+                  469.4709167480469,
+                  194.42767333984375,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  194.4396209716797,
+                  478.239990234375
+                ],
+                "bbox": [
+                  194.4396209716797,
+                  469.4709167480469,
+                  200.5845947265625,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "y",
+                "gid": 37,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  200.59654235839844,
+                  478.239990234375
+                ],
+                "bbox": [
+                  200.59654235839844,
+                  469.4709167480469,
+                  206.74151611328125,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  206.7534637451172,
+                  478.239990234375
+                ],
+                "bbox": [
+                  206.7534637451172,
+                  469.4709167480469,
+                  212.8984375,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  212.91038513183594,
+                  478.239990234375
+                ],
+                "bbox": [
+                  212.91038513183594,
+                  469.4709167480469,
+                  219.05535888671875,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  219.0673065185547,
+                  478.239990234375
+                ],
+                "bbox": [
+                  219.0673065185547,
+                  469.4709167480469,
+                  225.2122802734375,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  225.22422790527344,
+                  478.239990234375
+                ],
+                "bbox": [
+                  225.22422790527344,
+                  469.4709167480469,
+                  231.36920166015625,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  231.3811492919922,
+                  478.239990234375
+                ],
+                "bbox": [
+                  231.3811492919922,
+                  469.4709167480469,
+                  237.526123046875,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  237.53807067871094,
+                  478.239990234375
+                ],
+                "bbox": [
+                  237.53807067871094,
+                  469.4709167480469,
+                  243.68304443359375,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  243.6949920654297,
+                  478.239990234375
+                ],
+                "bbox": [
+                  243.6949920654297,
+                  469.4709167480469,
+                  249.8399658203125,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  249.85191345214844,
+                  478.239990234375
+                ],
+                "bbox": [
+                  249.85191345214844,
+                  469.4709167480469,
+                  255.99688720703125,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  256.00885009765625,
+                  478.239990234375
+                ],
+                "bbox": [
+                  256.00885009765625,
+                  469.4709167480469,
+                  262.15380859375,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  262.165771484375,
+                  478.239990234375
+                ],
+                "bbox": [
+                  262.165771484375,
+                  469.4709167480469,
+                  268.31072998046875,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  268.32269287109375,
+                  478.239990234375
+                ],
+                "bbox": [
+                  268.32269287109375,
+                  469.4709167480469,
+                  274.4676513671875,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  274.4796142578125,
+                  478.239990234375
+                ],
+                "bbox": [
+                  274.4796142578125,
+                  469.4709167480469,
+                  280.62457275390625,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  280.63653564453125,
+                  478.239990234375
+                ],
+                "bbox": [
+                  280.63653564453125,
+                  469.4709167480469,
+                  286.781494140625,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  286.79345703125,
+                  478.239990234375
+                ],
+                "bbox": [
+                  286.79345703125,
+                  469.4709167480469,
+                  292.93841552734375,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  292.93841552734375,
+                  478.239990234375
+                ],
+                "bbox": [
+                  292.93841552734375,
+                  469.4709167480469,
+                  299.0833740234375,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "y",
+                "gid": 37,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  299.0953369140625,
+                  478.239990234375
+                ],
+                "bbox": [
+                  299.0953369140625,
+                  469.4709167480469,
+                  305.24029541015625,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  305.25225830078125,
+                  478.239990234375
+                ],
+                "bbox": [
+                  305.25225830078125,
+                  469.4709167480469,
+                  311.397216796875,
+                  481.4261169433594
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": null,
+              "shift_glyph_index": null,
+              "dx": 0.0
+            }
+          ],
+          "source_url_glyphs": 38,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 0,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            76.4729995727539,
+            468.2799987792969,
+            312.1820068359375,
+            482.2239990234375
+          ],
+          "passed": true
+        },
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 2,
+          "source_link_index": 3,
+          "uri": "https://www.heavens-above.com/AllSats.aspx",
+          "display_fragment": "https://www.heavens-above.com/AllSats.aspx",
+          "source_rect_pdf": [
+            235.761,
+            163.756,
+            496.569,
+            177.701
+          ],
+          "target_rect_pdf": [
+            226.8609230146408,
+            163.756,
+            487.6689230146408,
+            177.701
+          ],
+          "source_rect_mupdf": [
+            235.76100158691406,
+            614.2990112304688,
+            496.5690002441406,
+            628.2440185546875
+          ],
+          "expected_target_rect_mupdf": [
+            226.86092460155487,
+            614.2990112304688,
+            487.66892325878143,
+            628.2440185546875
+          ],
+          "dx": -8.900076985359192,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  236.7570037841797,
+                  624.260009765625
+                ],
+                "bbox": [
+                  236.7570037841797,
+                  615.490966796875,
+                  242.9019775390625,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 0,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  242.91392517089844,
+                  624.260009765625
+                ],
+                "bbox": [
+                  242.91392517089844,
+                  615.490966796875,
+                  249.05889892578125,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 1,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  249.0708465576172,
+                  624.260009765625
+                ],
+                "bbox": [
+                  249.0708465576172,
+                  615.490966796875,
+                  255.2158203125,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 2,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  255.22776794433594,
+                  624.260009765625
+                ],
+                "bbox": [
+                  255.22776794433594,
+                  615.490966796875,
+                  261.37274169921875,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 3,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  261.38470458984375,
+                  624.260009765625
+                ],
+                "bbox": [
+                  261.38470458984375,
+                  615.490966796875,
+                  267.5296630859375,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 4,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 10,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  267.5416259765625,
+                  624.260009765625
+                ],
+                "bbox": [
+                  267.5416259765625,
+                  615.490966796875,
+                  273.68658447265625,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 5,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  273.69854736328125,
+                  624.260009765625
+                ],
+                "bbox": [
+                  273.69854736328125,
+                  615.490966796875,
+                  279.843505859375,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 6,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  279.85546875,
+                  624.260009765625
+                ],
+                "bbox": [
+                  279.85546875,
+                  615.490966796875,
+                  286.00042724609375,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 7,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  286.01239013671875,
+                  624.260009765625
+                ],
+                "bbox": [
+                  286.01239013671875,
+                  615.490966796875,
+                  292.1573486328125,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 8,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  292.1693115234375,
+                  624.260009765625
+                ],
+                "bbox": [
+                  292.1693115234375,
+                  615.490966796875,
+                  298.31427001953125,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 9,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  298.32623291015625,
+                  624.260009765625
+                ],
+                "bbox": [
+                  298.32623291015625,
+                  615.490966796875,
+                  304.47119140625,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 10,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  304.483154296875,
+                  624.260009765625
+                ],
+                "bbox": [
+                  304.483154296875,
+                  615.490966796875,
+                  310.62811279296875,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 11,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  310.62811279296875,
+                  624.260009765625
+                ],
+                "bbox": [
+                  310.62811279296875,
+                  615.490966796875,
+                  316.7730712890625,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 12,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  316.7850341796875,
+                  624.260009765625
+                ],
+                "bbox": [
+                  316.7850341796875,
+                  615.490966796875,
+                  322.92999267578125,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 13,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  322.94195556640625,
+                  624.260009765625
+                ],
+                "bbox": [
+                  322.94195556640625,
+                  615.490966796875,
+                  329.0869140625,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 14,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "v",
+                "gid": 34,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  329.098876953125,
+                  624.260009765625
+                ],
+                "bbox": [
+                  329.098876953125,
+                  615.490966796875,
+                  335.24383544921875,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 15,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  335.25579833984375,
+                  624.260009765625
+                ],
+                "bbox": [
+                  335.25579833984375,
+                  615.490966796875,
+                  341.4007568359375,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 16,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "n",
+                "gid": 23,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  341.4127197265625,
+                  624.260009765625
+                ],
+                "bbox": [
+                  341.4127197265625,
+                  615.490966796875,
+                  347.55767822265625,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 17,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  347.56964111328125,
+                  624.260009765625
+                ],
+                "bbox": [
+                  347.56964111328125,
+                  615.490966796875,
+                  353.714599609375,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 18,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "-",
+                "gid": 17,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  353.7265625,
+                  624.260009765625
+                ],
+                "bbox": [
+                  353.7265625,
+                  615.490966796875,
+                  359.87152099609375,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 19,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  360.3855895996094,
+                  624.260009765625
+                ],
+                "bbox": [
+                  360.3855895996094,
+                  615.490966796875,
+                  366.5305480957031,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 20,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "b",
+                "gid": 6,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  366.5425109863281,
+                  624.260009765625
+                ],
+                "bbox": [
+                  366.5425109863281,
+                  615.490966796875,
+                  372.6874694824219,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 21,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  372.6994323730469,
+                  624.260009765625
+                ],
+                "bbox": [
+                  372.6994323730469,
+                  615.490966796875,
+                  378.8443908691406,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 22,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "v",
+                "gid": 34,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  378.8563537597656,
+                  624.260009765625
+                ],
+                "bbox": [
+                  378.8563537597656,
+                  615.490966796875,
+                  385.0013122558594,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 23,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  385.0132751464844,
+                  624.260009765625
+                ],
+                "bbox": [
+                  385.0132751464844,
+                  615.490966796875,
+                  391.1582336425781,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 24,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  391.1701965332031,
+                  624.260009765625
+                ],
+                "bbox": [
+                  391.1701965332031,
+                  615.490966796875,
+                  397.3151550292969,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 25,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "c",
+                "gid": 9,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  397.3271179199219,
+                  624.260009765625
+                ],
+                "bbox": [
+                  397.3271179199219,
+                  615.490966796875,
+                  403.4720764160156,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 26,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  403.4720764160156,
+                  624.260009765625
+                ],
+                "bbox": [
+                  403.4720764160156,
+                  615.490966796875,
+                  409.6170349121094,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 27,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "m",
+                "gid": 22,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  409.6289978027344,
+                  624.260009765625
+                ],
+                "bbox": [
+                  409.6289978027344,
+                  615.490966796875,
+                  415.7739562988281,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 28,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  415.7859191894531,
+                  624.260009765625
+                ],
+                "bbox": [
+                  415.7859191894531,
+                  615.490966796875,
+                  421.9308776855469,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 29,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "A",
+                "gid": 1,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  421.9428405761719,
+                  624.260009765625
+                ],
+                "bbox": [
+                  421.9428405761719,
+                  615.490966796875,
+                  428.0877990722656,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 30,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  428.0997619628906,
+                  624.260009765625
+                ],
+                "bbox": [
+                  428.0997619628906,
+                  615.490966796875,
+                  434.2447204589844,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 31,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  434.2566833496094,
+                  624.260009765625
+                ],
+                "bbox": [
+                  434.2566833496094,
+                  615.490966796875,
+                  440.4016418457031,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 32,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "S",
+                "gid": 3,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  440.4136047363281,
+                  624.260009765625
+                ],
+                "bbox": [
+                  440.4136047363281,
+                  615.490966796875,
+                  446.5585632324219,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 33,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  446.5705261230469,
+                  624.260009765625
+                ],
+                "bbox": [
+                  446.5705261230469,
+                  615.490966796875,
+                  452.7154846191406,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 34,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  452.7274475097656,
+                  624.260009765625
+                ],
+                "bbox": [
+                  452.7274475097656,
+                  615.490966796875,
+                  458.8724060058594,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 35,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  458.8843688964844,
+                  624.260009765625
+                ],
+                "bbox": [
+                  458.8843688964844,
+                  615.490966796875,
+                  465.0293273925781,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 36,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  465.0412902832031,
+                  624.260009765625
+                ],
+                "bbox": [
+                  465.0412902832031,
+                  615.490966796875,
+                  471.1862487792969,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 37,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  471.1982116699219,
+                  624.260009765625
+                ],
+                "bbox": [
+                  471.1982116699219,
+                  615.490966796875,
+                  477.3431701660156,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 38,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  477.3551330566406,
+                  624.260009765625
+                ],
+                "bbox": [
+                  477.3551330566406,
+                  615.490966796875,
+                  483.5000915527344,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 39,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  483.5120544433594,
+                  624.260009765625
+                ],
+                "bbox": [
+                  483.5120544433594,
+                  615.490966796875,
+                  489.6570129394531,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 40,
+              "dx": -8.900076985359192
+            },
+            {
+              "source_glyph": {
+                "c": "x",
+                "gid": 36,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  489.6689758300781,
+                  624.260009765625
+                ],
+                "bbox": [
+                  489.6689758300781,
+                  615.490966796875,
+                  495.8139343261719,
+                  627.4461669921875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 1,
+              "shift_glyph_index": 41,
+              "dx": -8.900076985359192
+            }
+          ],
+          "source_url_glyphs": 42,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 2.205371856689453e-05,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            226.8609161376953,
+            614.2990112304688,
+            487.6689147949219,
+            628.2440185546875
+          ],
+          "passed": true
+        },
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 2,
+          "source_link_index": 4,
+          "uri": "https://stellarium-web.org/",
+          "display_fragment": "https://stellarium-web.org/",
+          "source_rect_pdf": [
+            178.855,
+            122.903,
+            347.407,
+            136.847
+          ],
+          "target_rect_pdf": [
+            115.28295205116271,
+            122.903,
+            283.8349520511627,
+            136.847
+          ],
+          "source_rect_mupdf": [
+            178.85499572753906,
+            655.1530151367188,
+            347.4070129394531,
+            669.0969848632812
+          ],
+          "expected_target_rect_mupdf": [
+            115.28294777870178,
+            655.1530151367188,
+            283.83496499061584,
+            669.0969848632812
+          ],
+          "dx": -63.57204794883728,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  179.8509979248047,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  179.8509979248047,
+                  656.3439331054688,
+                  185.9959716796875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 0,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  186.00791931152344,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  186.00791931152344,
+                  656.3439331054688,
+                  192.15289306640625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 1,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  192.1648406982422,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  192.1648406982422,
+                  656.3439331054688,
+                  198.309814453125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 2,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  198.32176208496094,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  198.32176208496094,
+                  656.3439331054688,
+                  204.46673583984375,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 3,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  204.4786834716797,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  204.4786834716797,
+                  656.3439331054688,
+                  210.6236572265625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 4,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 10,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  210.63560485839844,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  210.63560485839844,
+                  656.3439331054688,
+                  216.78057861328125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 5,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  216.7925262451172,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  216.7925262451172,
+                  656.3439331054688,
+                  222.9375,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 6,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  222.94944763183594,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  222.94944763183594,
+                  656.3439331054688,
+                  229.09442138671875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 7,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  229.1063690185547,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  229.1063690185547,
+                  656.3439331054688,
+                  235.2513427734375,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 8,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  235.26329040527344,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  235.26329040527344,
+                  656.3439331054688,
+                  241.40826416015625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 9,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  241.4202117919922,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  241.4202117919922,
+                  656.3439331054688,
+                  247.565185546875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 10,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  247.57713317871094,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  247.57713317871094,
+                  656.3439331054688,
+                  253.72210693359375,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 11,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  253.72210693359375,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  253.72210693359375,
+                  656.3439331054688,
+                  259.8670654296875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 12,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  259.8790283203125,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  259.8790283203125,
+                  656.3439331054688,
+                  266.02398681640625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 13,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  266.03594970703125,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  266.03594970703125,
+                  656.3439331054688,
+                  272.180908203125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 14,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 18,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  272.19287109375,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  272.19287109375,
+                  656.3439331054688,
+                  278.33782958984375,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 15,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  278.34979248046875,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  278.34979248046875,
+                  656.3439331054688,
+                  284.4947509765625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 16,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "m",
+                "gid": 22,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  284.5067138671875,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  284.5067138671875,
+                  656.3439331054688,
+                  290.65167236328125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 17,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "-",
+                "gid": 17,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  290.66363525390625,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  290.66363525390625,
+                  656.3439331054688,
+                  296.80859375,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 18,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 35,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  297.3226623535156,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  297.3226623535156,
+                  656.3439331054688,
+                  303.4676208496094,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 19,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  303.4795837402344,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  303.4795837402344,
+                  656.3439331054688,
+                  309.6245422363281,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 20,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "b",
+                "gid": 6,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  309.6365051269531,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  309.6365051269531,
+                  656.3439331054688,
+                  315.7814636230469,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 21,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  315.7934265136719,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  315.7934265136719,
+                  656.3439331054688,
+                  321.9383850097656,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 22,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  321.9503479003906,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  321.9503479003906,
+                  656.3439331054688,
+                  328.0953063964844,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 23,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  328.1072692871094,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  328.1072692871094,
+                  656.3439331054688,
+                  334.2522277832031,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 24,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "g",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  334.2641906738281,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  334.2641906738281,
+                  656.3439331054688,
+                  340.4091491699219,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 25,
+              "dx": -63.57204794883728
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  340.4211120605469,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  340.4211120605469,
+                  656.3439331054688,
+                  346.5660705566406,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 2,
+              "shift_glyph_index": 26,
+              "dx": -63.57204794883728
+            }
+          ],
+          "source_url_glyphs": 27,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 1.1205673217773438e-05,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            115.28295135498047,
+            655.1530151367188,
+            283.8349609375,
+            669.0969848632812
+          ],
+          "passed": true
+        },
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 2,
+          "source_link_index": 5,
+          "uri": "http://stellarium.org/",
+          "display_fragment": "http://stellarium.org/",
+          "source_rect_pdf": [
+            413.033,
+            122.903,
+            550.335,
+            136.847
+          ],
+          "target_rect_pdf": [
+            395.6191327648163,
+            122.903,
+            532.9211327648163,
+            136.847
+          ],
+          "source_rect_mupdf": [
+            413.0329895019531,
+            655.1530151367188,
+            550.3350219726562,
+            669.0969848632812
+          ],
+          "expected_target_rect_mupdf": [
+            395.6191222667694,
+            655.1530151367188,
+            532.9211547374725,
+            669.0969848632812
+          ],
+          "dx": -17.413867235183716,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  414.02899169921875,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  414.02899169921875,
+                  656.3439331054688,
+                  420.1739501953125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 0,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  420.1859130859375,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  420.1859130859375,
+                  656.3439331054688,
+                  426.33087158203125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 1,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  426.34283447265625,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  426.34283447265625,
+                  656.3439331054688,
+                  432.48779296875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 2,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  432.499755859375,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  432.499755859375,
+                  656.3439331054688,
+                  438.64471435546875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 3,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 10,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  438.65667724609375,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  438.65667724609375,
+                  656.3439331054688,
+                  444.8016357421875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 4,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  444.8135986328125,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  444.8135986328125,
+                  656.3439331054688,
+                  450.95855712890625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 5,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  450.97052001953125,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  450.97052001953125,
+                  656.3439331054688,
+                  457.115478515625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 6,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  457.12744140625,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  457.12744140625,
+                  656.3439331054688,
+                  463.27239990234375,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 7,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  463.28436279296875,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  463.28436279296875,
+                  656.3439331054688,
+                  469.4293212890625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 8,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  469.4412841796875,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  469.4412841796875,
+                  656.3439331054688,
+                  475.58624267578125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 9,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  475.59820556640625,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  475.59820556640625,
+                  656.3439331054688,
+                  481.7431640625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 10,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "l",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  481.755126953125,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  481.755126953125,
+                  656.3439331054688,
+                  487.90008544921875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 11,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  487.90008544921875,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  487.90008544921875,
+                  656.3439331054688,
+                  494.0450439453125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 12,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  494.0570068359375,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  494.0570068359375,
+                  656.3439331054688,
+                  500.20196533203125,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 13,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 18,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  500.21392822265625,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  500.21392822265625,
+                  656.3439331054688,
+                  506.35888671875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 14,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  506.370849609375,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  506.370849609375,
+                  656.3439331054688,
+                  512.5158081054688,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 15,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "m",
+                "gid": 22,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  512.5277709960938,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  512.5277709960938,
+                  656.3439331054688,
+                  518.6727294921875,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 16,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  518.6846923828125,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  518.6846923828125,
+                  656.3439331054688,
+                  524.8296508789062,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 17,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  524.8416137695312,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  524.8416137695312,
+                  656.3439331054688,
+                  530.986572265625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 18,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  530.99853515625,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  530.99853515625,
+                  656.3439331054688,
+                  537.1434936523438,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 19,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "g",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  537.1554565429688,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  537.1554565429688,
+                  656.3439331054688,
+                  543.3004150390625,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 20,
+              "dx": -17.413867235183716
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  543.3123779296875,
+                  665.1129760742188
+                ],
+                "bbox": [
+                  543.3123779296875,
+                  656.3439331054688,
+                  549.4573364257812,
+                  668.2991333007812
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 21,
+              "dx": -17.413867235183716
+            }
+          ],
+          "source_url_glyphs": 22,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 1.2159347534179688e-05,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            395.619140625,
+            655.1530151367188,
+            532.921142578125,
+            669.0969848632812
+          ],
+          "passed": true
+        }
+      ],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "proof_sha256": "ffa0c1dc3318f96c761ab5a00d854e332ca5bd21e887abb7051e46d9bbb2cb61",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page03.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page03.qa.json",
+      "qa_sha256": "526b8d2e4e0004c9fbef751b17bfd7ed44ca50661749fec62de347dc85d2eefc",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page03.plan.json",
+      "plan_sha256": "94fc2a7bf1b4c22dfc6c6eb14bcb26519ce3857cfba0f49da90d18c1700664f6",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page03.effective-plan.json",
+      "effective_plan_sha256": "c0dc1cdf26b6a4c976087c39c28612ccc49d61b977289f357c1e868c181f4f54",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page03.overrides.json",
+      "overrides_sha256": "947c791d344b798714ca470706ab58cfcb3974dc211398cd7557b52da1db90f4",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 591,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 38,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "proof_sha256": "ebcca65d136c62e495342450a32bb7325cb8390ecc46bc41d62883ce39ac3aea",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page04.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page04.qa.json",
+      "qa_sha256": "7c6c9c42cb31ff015d9c628b20938deaa0a84925246bc775ee7e9b9c5e018158",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page04.plan.json",
+      "plan_sha256": "a7199e349e65d116589f98ddb179d9bb2b7ce2532bf7cd0cf44bf38a107fc782",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page04.effective-plan.json",
+      "effective_plan_sha256": "6bebdf8d6195830d34c091885ad30b42e9ebc2227857e693886c6b1882140d66",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page04.overrides.json",
+      "overrides_sha256": "ec3f2f597e58c2566d5985d4b76a7e0a28b503199f7571444ae24423fbfc827f",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 914,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 71,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": []
+    },
+    {
+      "page": 5,
+      "proof_sha256": "32cfa6d72a57ef1ea82d9404f6fa13cc8588c8df52e14e4f628f760910689196",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page05.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page05.qa.json",
+      "qa_sha256": "9896b3c27982df61c4498766031f10d533ecd714b1aa2d8b165c73db99c33f3a",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page05.plan.json",
+      "plan_sha256": "bcc1e329c73d9691d8bd9ef0053d7a32545db8af209d238fecc16a34701943af",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page05.effective-plan.json",
+      "effective_plan_sha256": "c25581a296eb11c1a638e756642700ede379a462ae8c754920614b25d3fd67da",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page05.overrides.json",
+      "overrides_sha256": "d22eba031342073920f70b989617b6c10a40dd04ae62b9ccb9738ae30a471036",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 759,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 45,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "proof_sha256": "2f1d963c09a7260a9a1abf99d02d65f12531acc968a8d5e8ef5a8a22b7733003",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page06.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page06.qa.json",
+      "qa_sha256": "90cef680fa6e842062ec4dcc885295612133992d43966263925f74e53a45becf",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page06.plan.json",
+      "plan_sha256": "53bbb8af52ebc4e87a7f610dda19a4f899917c33499af3b6d73b81232d9b2737",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page06.effective-plan.json",
+      "effective_plan_sha256": "f8f4962108a0a3ab40b0636003b79dd9eb859e986d5ca9b65370b06456a4c271",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page06.overrides.json",
+      "overrides_sha256": "61e75844f805dc2b007f5637d21530dba7b51801b95454ee29fc365f11fab00c",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 608,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 46,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "proof_sha256": "49b78dcc7a068c317fff2ba72a81fc4248a426ff5a6c662e8335ad1efa90fe1d",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page07.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page07.qa.json",
+      "qa_sha256": "ab563d2a454f0b8645d7bf357870396f807eac4ca9d867e84d138bfcc38d6f52",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page07.plan.json",
+      "plan_sha256": "39f9a6dd95ff7609bb9fbd43cd76faa2965453f4c299b2e73e862e9132e5b6e3",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page07.effective-plan.json",
+      "effective_plan_sha256": "436ef3de8070f8047a21857bf8629d514385275fb135b8862423e45caa4153ac",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page07.overrides.json",
+      "overrides_sha256": "53e45b5419d5fb42e43013581c6199e02a905e4efbc755609e8ada433e042484",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 624,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 49,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "proof_sha256": "4a1c57288dbb25341ddeb4a09c9d60da527eac817d14017c4c0412b8479e472d",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page08.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page08.qa.json",
+      "qa_sha256": "a69c61e58c3b09bc129844ef9d2a1d0c25a27c22a300da4b8e680731099c6f0a",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page08.plan.json",
+      "plan_sha256": "6a66c16b5e07797b08e3274a3b47122d9bf0eccd8922fdd10898cf893eb5d6b3",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page08.effective-plan.json",
+      "effective_plan_sha256": "0acfb1a87f9d9b2e731a435b12fdede6f588234215b8fe44f45c0ab72b431cd9",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page08.overrides.json",
+      "overrides_sha256": "f1d1f4150f1fc5e99554431483cf3064b48c69e71acc22f988aec3a826ce08e9",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 864,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 55,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": []
+    },
+    {
+      "page": 9,
+      "proof_sha256": "c37844ffa8e27271ec9bcf80e2d072264a31b0c318b0ef11382b8ea8634c8c8a",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page09.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page09.qa.json",
+      "qa_sha256": "8d498b754b8f7a00e259d22b6bb070b845c96c2a350578184e5aebb68eb969a1",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page09.plan.json",
+      "plan_sha256": "d695b585741849c3433afa2291023bfd6dabd331ca4710a8adfaf1f76bb7d36c",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page09.effective-plan.json",
+      "effective_plan_sha256": "3f4c48a629784ae11a50f7352b6cb17412b4573680d5b98f76befd4da995ccdc",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page09.overrides.json",
+      "overrides_sha256": "1d83fa2389ebb9951c6c96b5e5b141c67fdb82ddd9ae92df4db7855a75e7d83c",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 435,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 33,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "proof_sha256": "11106fac4ac13455ddc340c9347ef5ad9232fbfd5756457ab362deec3ed897fb",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page10.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page10.qa.json",
+      "qa_sha256": "4a11957c5cab65d4915b43efd5ed971c07bf99e9a07a407f6b29f56ea8390e50",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page10.plan.json",
+      "plan_sha256": "fb9227066dd76a08642223ad77a37aecff598b14655467a789ea166a32782400",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page10.effective-plan.json",
+      "effective_plan_sha256": "b8177f478fcbd59de046e9b775f422f827a54dece68e0b9866e2f11e9149529f",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page10.overrides.json",
+      "overrides_sha256": "c20a094430bc4474017f5b522e1025fd4355f5fa8ef47f89bbc47d9851628921",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 541,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 40,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "proof_sha256": "28b56bddd9e293e8929aa4b035cfb2d855e88b13fe8ce2562b48f744b5b02304",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page11.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page11.qa.json",
+      "qa_sha256": "3a059d93bd788a7c9b76f399a6141aaabc8f3eb072dce11308f9aac2ba8b79e2",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page11.plan.json",
+      "plan_sha256": "709b26c05e63ae6b91e48a841b3a357c34fd5a87ecc95fd1206423bb8708fbdb",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page11.effective-plan.json",
+      "effective_plan_sha256": "3f76a7dc78c624346c5f0b5b54ea1f0e7d709d929bd1c6070edc3f5fb221265d",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page11.overrides.json",
+      "overrides_sha256": "cd131cfda7ea3ce8bc95476c8ccd5687d16d02e5094e45980ce57b5557779a01",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 718,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 43,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "proof_sha256": "340340bfb6b8113915a36f492e11c9f4ad53edea8e460b3a281f8b1ca79e6fb4",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page12.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page12.qa.json",
+      "qa_sha256": "78a2a20133a0603b47beee602109aa289ac348e57840001c3b7854a5fd2655e3",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page12.plan.json",
+      "plan_sha256": "c0c17ffae4968a57423fe33ef91eb408e75c9b26d3cdaf16faf03a95198f442d",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page12.effective-plan.json",
+      "effective_plan_sha256": "58ef7361f70f7cea0a58b71f69e0287a5860830e0070d79a445723c8dbf9e814",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page12.overrides.json",
+      "overrides_sha256": "46eb2dc0e97ca654fe6372ff96afc27596fa69750011aa71a6807cc02819f36b",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 743,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 76,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "proof_sha256": "32c8414bb2842ef930dba585aacbf8384832bb6c6577f73a7fe9cf2b53627c63",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\ortvay\\2024\\page13.pdf",
+      "qa_path": "tools/ko/ortvay/2024/T/natural-spacing/page13.qa.json",
+      "qa_sha256": "667f6e9d36af8ea0d5d0bd5f8662efbd510ad41b2109d454d662e9b5858975fc",
+      "plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page13.plan.json",
+      "plan_sha256": "b2342a3373a1867cd0f842e9dcb67a2774e35601464a5c1d7360feacfe3c0b4f",
+      "effective_plan_path": "tools/ko/ortvay/2024/T/natural-spacing/page13.effective-plan.json",
+      "effective_plan_sha256": "cc0e02130bbfb4e99cdba13ae97597e43b6ddd4f4cba7694be167ba5cebefdf3",
+      "overrides_path": "tools/ko/ortvay/2024/T/natural-spacing/page13.overrides.json",
+      "overrides_sha256": "65ed32dc0c599905af4b8fc68f8827dbf4c023f8dcc7cc9f93c67790b28a42b9",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 424,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 32,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/natural_plan_compose_ortvay2024_final.py",
+      "composer_sha256": "dcaa063027552abf40e55e3c1ceb6d9ac5d36fa29bdf05f206c3c7f2e077045c",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2024/T/natural-spacing/scope-ortvay2024-scope.json",
+          "sha256": "a4deae376796dd41393a9da6eb54e45a08b9a51f39d4c6a506d563c460800163"
+        }
+      ]
+    }
+  ],
+  "visual_review_files": [
+    "tools/ko/ortvay/2024/T/natural-spacing/visual-review-natural-01-13.json"
+  ],
+  "all_pages_visually_reviewed": true,
+  "visual_review_required": false,
+  "authoring_programs": [
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/verify_native_vectors_ortvay2024.py",
+      "sha256": "bc32adc3a83c29c271284291fb9fd62235a9eb31270d8951ce7db3db87a2df70"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/assemble_natural.py",
+      "sha256": "03a47a7cdb6a529a81225ddff8db75f05ce1f948bc6cd29a46b9a36e7e5ccfae"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/source_path_resolver.py",
+      "sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/manifest.json",
+      "sha256": "b26b5bbd78b7bdcca09dfb6f1bd2f41e187132c02416546396e44a9833aff567"
+    },
+    {
+      "path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/ortvay2024_link_annotations.py",
+      "sha256": "a6d1999a1668a4038cac207293d8bb88a014b98e437e0051811af23e32c9942c"
+    }
+  ],
+  "strict_korean_glyph_geometry_audit": true,
+  "link_annotation_subset_regression": {
+    "path": "tools/ko/ortvay/2024/T/natural-spacing/link-annotation-subset-regression.json",
+    "sha256": "0a6a24a6db374d4d6aaace23378a655205e5c8ebd7ad6e598ed89020f631d341",
+    "test_program_path": "tools/ko/ortvay/2024/T/natural-spacing/authoring/test_ortvay2024_link_subsets.py",
+    "test_program_sha256": "3008660b927efc86b79058c09bb653a73514a9a17902e07f58ddcf17979dccd8",
+    "helper_sha256": "a6d1999a1668a4038cac207293d8bb88a014b98e437e0051811af23e32c9942c"
+  },
+  "source_url": "https://ortvay.elte.hu/2024/E24.pdf",
+  "source_page_url": "https://ortvay.elte.hu/main.html"
+}
