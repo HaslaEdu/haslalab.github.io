@@ -193,7 +193,21 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
         let out;try{out=String(await onTool(call.function?.name,args)).slice(0,2000);}catch{out='tool failed';}
         toolLog.push({name:String(call.function?.name||'').slice(0,40),args,out:out.slice(0,300)});
         body.messages.push({role:'tool',tool_call_id:call.id,content:out});}
-      if(round+1>=maxToolRounds){body.tool_choice='none';delete body.tools;body.response_format={type:'json_object'};}
+      // the last round: tools stay declared (the history holds their calls) but none may be called, and JSON mode is back
+      if(round+1>=maxToolRounds){body.tool_choice='none';body.response_format={type:'json_object'};}
+      encoded=JSON.stringify(body);response=await send(encoded);providerStatus=response.status;
+      if(!response.ok){providerCode=await providerErrorCode(response);providerMessage=response.providerMessage;fail(502,[400,413,422].includes(response.status)?'vision_request_rejected':response.status===429?'vision_provider_rate_limited':'vision_provider_failed');}
+      const next=await boundedJSON(response),more=deepseekLabUsage(next,started),add=(a,b)=>a==null||b==null?null:a+b;
+      meter={...meter,in:add(meter.in,more.in),out:add(meter.out,more.out),cached:add(meter.cached,more.cached),usage_known:meter.usage_known&&more.usage_known};
+      parsed=next;
+    }
+    /* after tools the model may stop with no text (DeepSeek's JSON mode can answer empty): ask once more, for the JSON only */
+    const said=parsed?.choices?.[0];
+    if(toolLog.length&&(said?.finish_reason==='tool_calls'||said?.finish_reason==='stop'&&!String(said?.message?.content||'').trim())){
+      if(said.finish_reason==='tool_calls')body.messages.push({role:'assistant',content:said.message?.content||'',tool_calls:said.message?.tool_calls||[]},
+        ...(said.message?.tool_calls||[]).map(call=>({role:'tool',tool_call_id:call.id,content:'no more tool calls: give the answer'})));
+      body.messages.push({role:'user',content:'Return the JSON object now, with every required field.'});
+      body.tool_choice='none';body.response_format={type:'json_object'};
       encoded=JSON.stringify(body);response=await send(encoded);providerStatus=response.status;
       if(!response.ok){providerCode=await providerErrorCode(response);providerMessage=response.providerMessage;fail(502,[400,413,422].includes(response.status)?'vision_request_rejected':response.status===429?'vision_provider_rate_limited':'vision_provider_failed');}
       const next=await boundedJSON(response),more=deepseekLabUsage(next,started),add=(a,b)=>a==null||b==null?null:a+b;
