@@ -232,6 +232,15 @@ test('bench read.boxes: the reader is asked for the box of every value as well, 
     assert.equal(read.text.includes('and for every value item the line where its number is written'),boxes);
     assert.equal(read.text.includes('Give box only for graphs'),!boxes);}
 }));
+test('LAB_KEEP_HOURS off keeps every photo: the cron purge removes nothing, and a number of hours still removes them',async()=>fixture(async({api,start,upload,drain,sql,env})=>{
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  sql.prepare("UPDATE lab_sessions SET status='graded',graded_at=? WHERE id=?").run(Math.floor(Date.now()/1000)-30*86400,sid);
+  const cron=async()=>{const work=[];await worker.scheduled({scheduledTime:0},env,{waitUntil:p=>work.push(p)});await Promise.all(work);};
+  const purged=()=>sql.prepare('SELECT count(*) n FROM lab_pages WHERE session_id=? AND purged_at IS NOT NULL').get(sid).n;
+  env.LAB_KEEP_HOURS='off';await cron();assert.equal(purged(),0,'«off» keeps them');
+  env.LAB_KEEP_HOURS='2';await cron();assert.equal(purged(),1,'two hours after grading they go');
+}));
 test('the admin model bench runs a stage with other models and keeps the result apart from the sitting',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';
   const a=(await start('deepseek')).data,sid=a.session.id;

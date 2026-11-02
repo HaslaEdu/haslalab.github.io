@@ -2347,7 +2347,9 @@ async function labR2Drop(env, where, ...args) {
 const keepHours = env => env.LAB_KEEP_HOURS == null || env.LAB_KEEP_HOURS === "" ? 2 : env.LAB_KEEP_HOURS === "off" ? null : parseFloat(env.LAB_KEEP_HOURS);
 async function labPurge(env) {
   const h = keepHours(env);
-  if (!(h >= 0)) return 0;
+  /* «off» is null, and null >= 0 is true in JavaScript: the guard must name it, or «off» purges every graded sitting at
+     once (2026-11-01/02: 121 audit photos, then 28 of them again right after they were put back) */
+  if (h == null || !(h >= 0)) return 0;
   /* an ungraded sitting keeps its photos for a week (LAB_KEEP_ENDED_HOURS), so grading can still be asked for */
   const he = Number(env.LAB_KEEP_ENDED_HOURS) >= 0 && env.LAB_KEEP_ENDED_HOURS !== "" ? Number(env.LAB_KEEP_ENDED_HOURS) : 168;
   /* a sitting the admin model bench is using keeps its photos while runs on it wait and for a week after the last was
