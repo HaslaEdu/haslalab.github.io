@@ -210,7 +210,7 @@ test('a page read caught in a repetition loop is capped and read once more, warm
   await api(`/lab/sessions/${sid}/pay`,{body:{provider:'gemini'}});await drain();
   const reads=calls.filter(c=>c.text.includes('[TASK: read page]'));
   assert.equal(reads.length,2);
-  assert.deepEqual(reads.map(c=>c.body.generationConfig.maxOutputTokens),[16384,16384],'Gemini: its thinking shares the output budget');
+  assert.deepEqual(reads.map(c=>c.body.generationConfig.maxOutputTokens),[32768,32768],'Gemini: its thinking shares the output budget');
   assert.deepEqual(reads.map(c=>c.body.generationConfig.temperature),[0,0.8]);
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
