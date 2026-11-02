@@ -109,7 +109,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[2000,6000]}={}) {
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
@@ -132,7 +132,8 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const body=provider==='anthropic'?null:provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],response_format:{type:'json_object'},max_completion_tokens:count,
       ...(['minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
     provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
-    generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:Number(temperature)||0,maxOutputTokens:count,
+    /* temperature is ignored by Gemini 3.6 Flash and newer (Google's changelog); it is sent only where it still counts */
+    generationConfig:{responseMimeType:'application/json',responseSchema:schema,...(/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(model)?{temperature:Number(temperature)||0}:{}),maxOutputTokens:count,
       /* Gemini only: more image tokens per picture, for small handwriting (bench read.media high) */
       ...(['MEDIA_RESOLUTION_HIGH','MEDIA_RESOLUTION_MEDIUM','MEDIA_RESOLUTION_LOW'].includes(mediaResolution)?{mediaResolution}:{}),
       // thinking is billed as output: a page read with the model's own default once spent 5.5k thought tokens on 263 characters
@@ -180,7 +181,13 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
       let raw;try{raw=JSON.parse(text.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));}catch{fail(502,'vision_invalid_response');}
       if(!raw||typeof raw!=='object'||Array.isArray(raw))fail(502,'vision_invalid_response');
       return{raw,provider,model:provider+':'+model,usage};}
-    let response=await send(encoded);
+    /* «high demand» (503) and rate limits (429): up to two more tries, 2 s and 6 s later with jitter, as Google advises
+       (busyRetries: [] where the caller has a fallback model to go to instead) */
+    const sendRetry=async payload=>{let r=await send(payload);
+      for(const wait of busyRetries||[]){if(r.status!==429&&r.status!==503)break;try{await r.body?.cancel();}catch{}
+        await new Promise(ok=>setTimeout(ok,wait+Math.floor(Math.random()*1000)));r=await send(payload);}
+      return r;};
+    let response=await sendRetry(encoded);
     if(response.status===400){const retry=plain();if(retry){try{await response.body?.cancel();}catch{}encoded=retry;response=await send(encoded);}}
     providerStatus=response.status;
     if(!response.ok){providerCode=await providerErrorCode(response);providerMessage=response.providerMessage;fail(502,response.status===401||response.status===403?'vision_provider_auth':
