@@ -335,6 +335,8 @@ test('recommendations use provisional difficulty and exclude input and unresolve
   const f=fixture(t);seedFacet(f,Q1,S1,3);seedFacet(f,Q2,S1,3);f.index.prepare('UPDATE bank_search_documents SET unresolved_source=0 WHERE question_id=?').run(Q2);
   const body=await (await f.call('/questions/'+Q1+'/recommendations?lang=en')).json();
   assert.equal(body.method,'subject_difficulty_novelty_diversity');assert.ok(body.items.some(x=>x.id===Q2));assert.ok(!body.items.some(x=>x.id===Q1||x.id===Q3));
+  f.main.prepare("INSERT INTO bank_question_feedback VALUES(?,?,?,?,?,'self_report',?)").run(Q2,member.id,3,'solved',10,'1999-01-01');
+  const rated=await (await f.call('/questions/'+Q1+'/recommendations?lang=en',{user:member})).json();assert.ok(!rated.items.some(x=>x.id===Q2));
 });
 
 test('source solutions and original drafts retain distinct authorship, roles and partial coverage',async t=>{
