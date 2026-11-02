@@ -3,7 +3,7 @@
    DocCornerNet (scanic-ml, MIT, served from this site: vendor/scanic-ml-0.2.0), whose quad is fitted to the measured
    edges like any other before chooseDocument picks one. The model is downloaded as doccornernet_lean.f16.bin (weights
    as fp16, 0.84 MB gzipped instead of 1.67 MB) and rebuilt into the fp32 model here. No photo leaves the device. */
-import { toGray, detectDocumentQuadGray, findPageQuadGray, chooseDocument, decodeCornerModel, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=8858050dad4a';
+import { toGray, detectDocumentQuadGray, findPageQuadGray, chooseDocument, decodeCornerModel, documentOutputSize, warpPixels, enhancePixels, inspectDocumentPixels } from './scanner.js?v=dda686b6c637';
 
 const ML_ASSETS = new URL('../../vendor/scanic-ml-0.2.0/', import.meta.url).href;
 let ml = null, mlFailedAt = 0;
@@ -69,7 +69,7 @@ async function render(message) {
   const data = enhancePixels(output.data, size.width, size.height, message.mode || 'original');
   const canvas = new OffscreenCanvas(size.width, size.height);
   canvas.getContext('2d').putImageData(new ImageData(data, size.width, size.height), 0, 0);
-  const blob = await canvas.convertToBlob({ type: message.mode === 'mono' ? 'image/png' : 'image/jpeg', quality: .94 });
+  const blob = await canvas.convertToBlob({ type: message.mode === 'mono' ? 'image/png' : 'image/jpeg', quality: .85 });   // PAGE_JPEG_QUALITY in scanner.js
   return { blob, quality, width: size.width, height: size.height, ...(baseline ? { baseBlob: await baseline } : {}) };
 }
 let chain = Promise.resolve();

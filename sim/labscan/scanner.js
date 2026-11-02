@@ -22,6 +22,10 @@
 
 /* A4 = 210 × 297 mm */
 export const A4_RATIO = 297 / 210;
+/* the quality a scanned page is uploaded at: 0.85 is about half the bytes of 0.94 (IPhO 2025 pages: 0.9 MB -> 0.42 MB),
+   the strokes look the same at 2x zoom, and Gemini 3.1 Flash-Lite read 59 audited pages encoded again at 85 as well as
+   the originals (24/61 against 23/59 known misreads right). The model bills by pixels, not bytes; this is upload time. */
+export const PAGE_JPEG_QUALITY = 0.85;
 
 /** 200dpi 기준 A4 가로 픽셀. 손글씨 OCR 은 150dpi 부터 급격히 나빠집니다. */
 export const DEFAULT_DPI = 200;
@@ -1383,7 +1387,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8858050dad4a', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=dda686b6c637', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1404,14 +1408,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8858050dad4a', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=dda686b6c637', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=8858050dad4a', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=dda686b6c637', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1664,7 +1668,7 @@ export async function processShot(file, opts = {}) {
   say(90, '선명도 확인 중');
 
   const blob = rendered?.blob || await new Promise((r) =>
-    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
+    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', PAGE_JPEG_QUALITY)
   );
   if (!blob) throw { code: 'bad_image' };
   say(100, '완료');
@@ -1713,7 +1717,7 @@ export async function reprocess(baseDataUrl, corners, mode = 'clean', dpi = DEFA
   const quality = rendered?.quality || inspectDocument(out);
   if (out) out = enhance(out, mode);
   const blob = rendered?.blob || await new Promise((r) =>
-    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', 0.94)
+    mode === 'mono' || mode === 'original' && !warpApplied ? out.toBlob(r, 'image/png') : out.toBlob(r, 'image/jpeg', PAGE_JPEG_QUALITY)
   );
   if (!blob) throw { code: 'bad_image' };
   return { blob, previewUrl: rendered ? await blobPreview(blob) : out.toDataURL('image/jpeg', 0.94), quality, width: rendered?.width || out.width, height: rendered?.height || out.height, a4WarpApplied, warpApplied, outputFormat,

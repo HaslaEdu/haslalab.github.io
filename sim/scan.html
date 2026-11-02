@@ -114,7 +114,7 @@
 
 <script src="exam-network.js?v=78b6a42ed001"></script>
 <script type="module">
-import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=8858050dad4a";
+import { processShot, reprocess, canProcess, detectDocumentQuad, warmDocumentDetector, MARKER_INSET, encodeUpload, rotatePhoto, orderCorners, quadScore, inspectDocumentPixels } from "./labscan/scanner.js?v=dda686b6c637";
 let monthlyScanModule;
 const monthlyScanPayload = (...args) => (monthlyScanModule ||= import("./monthly-scan.mjs?v=26b06b7cead5")).then(module => module.monthlyScanPayload(...args));
 
