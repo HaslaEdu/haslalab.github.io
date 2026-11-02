@@ -13,6 +13,7 @@ import re
 import uuid
 from pathlib import Path
 from private_paths import private_directory
+from source_identity import source_reference, source_key
 
 
 def read_json(path):
@@ -49,6 +50,7 @@ def payload(path, expected):
 
 def normalized_subjects(values):
     aliases = {"quantum_atomic_particle_physics": ["quantum_mechanics"],
+               "waves": ["oscillations_waves"],
                "mathematics": ["mathematical_methods"],
                "special_relativity": ["relativity"],
                "thermodynamics_statistical_physics": ["thermodynamics", "statistical_mechanics"]}
@@ -97,7 +99,8 @@ REVIEWED_COUNTS = {"pns-optics": 160, "puzzling-200": 200, "guide-part1": 139,
                    "guide-part2": 182, "kalda": 555, "pns-thermo": 367,
                    "schroeder": 486, "puzzling-more": 200, "blundell": 238, "morin-mechanics": 496,
                    "pns-electro": 440, "astronomy-korean": 439, "griffiths-qm": 491,
-                   "griffiths-electrodynamics": 587, "pns-quantum": 380, "pns-mechanics": 410}
+                   "griffiths-electrodynamics": 587, "pns-quantum": 380, "pns-mechanics": 410,
+                   "purcell-morin": 604}
 
 
 def refresh_reviewed_source_counts(root, sources):
@@ -110,7 +113,7 @@ def refresh_reviewed_source_counts(root, sources):
                 continue
             raw = read_json(path)
             if path.name == "questions.raw.json":
-                ids = {question["source"]["drive_id"] for question in raw["questions"]}
+                ids = {source_key(question["source"]) for question in raw["questions"]}
                 if len(ids) != 1:
                     raise ValueError("A reviewed extractor must identify exactly one registered source")
                 source = sources[next(iter(ids))]
@@ -132,7 +135,7 @@ def prepare(root, text_only=False, profiles=None):
         if missing:
             raise ValueError("Selected extractor folders have no question inventory: " + ", ".join(missing))
     manifest = read_json(root / "manifest.json")
-    sources = {item["drive_id"]: item for item in manifest["sources"]}
+    sources = {source_key(item): item for item in manifest["sources"]}
     refresh_reviewed_source_counts(root, sources)
     questions = []
     for raw_file in sorted(root.glob("*/questions.raw.json")):
@@ -189,7 +192,7 @@ def prepare(root, text_only=False, profiles=None):
                     assets.append({"asset_id": f"crop-{index + 1}", "role": "question_crop",
                     "mime_type": "image/webp", "spans": [span],
                     **payload(folder / segment["image"], segment["image_sha256"])})
-            question = {"source": {"drive_id": source["drive_id"], "revision": source["revision"]},
+            question = {"source": source_reference(source),
                 "locator": "problem-" + original["original_number"],
                 "original_number": original["original_number"],
                 "kind": "problem", "subjects": normalized_subjects(original["subjects"]),

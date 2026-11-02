@@ -68,6 +68,8 @@ For scans mixing ordinary and oversized physical page boxes, profile `page_body_
 
 `prepare-extracted.py --private-root PRIVATE` merges schema-aligned extractor output and statement-segment adapters with numbered translation batches. It verifies crop hashes before generating private import JSON, ignores temporary draft files, preserves non-English originals and leaves every version pending independent review. Use `--text-only` only after the corresponding source crops have already been imported.
 
+A column-extraction profile for a URL PDF uses `source: {origin: {kind: "url", url}, revision}` instead of the legacy `drive_id`. The exact reference and PDF hash must identify one registered revision. The extractor and preparer retain this URL reference, while attribution and license details remain in the manifest. Source lookups include the revision for both Drive and URL records. The preparer maps the extractor alias `waves` to the storage subject `oscillations_waves`.
+
 Directly authored bilingual batches use numbered JSON filenames and an `items` or `questions` array with `original_number`, `text_en`, `text_ko`, `source_image_checked`, `review_notes` and `unresolved_source`. Include `locator` whenever printed numbers repeat in a compilation or for unnumbered exercises. Authors must compare equations, units and figures with the source image; parsing the PDF text alone does not complete that check. `audit-translation-math.mjs PRIVATE_TRANSLATIONS_DIR` checks LaTeX syntax with the repository's KaTeX without contacting a service. Syntax success does not establish scientific correctness.
 
 For image-only source books, `ocr_scanned.py` uses local Tesseract rather than a paid OCR service:

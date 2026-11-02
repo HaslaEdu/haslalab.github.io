@@ -14,6 +14,7 @@ from pathlib import Path
 import pymupdf
 from PIL import Image
 from private_paths import private_directory
+from source_identity import source_reference, select_profile_source
 
 
 def read(path):
@@ -162,9 +163,7 @@ def extract(args):
     if (source_hash != profile['source_sha256'] or inventory['source_sha256'] != source_hash
             or inventory.get('errors') or len(inventory['headers']) != profile['expected_question_count']):
         raise ValueError('Profile/header identity or coverage mismatch')
-    source = next(s for s in read(args.manifest)['sources'] if s['drive_id'] == profile['drive_id'])
-    if source['sha256'] != source_hash:
-        raise ValueError('Registered source revision mismatch')
+    source = select_profile_source(read(args.manifest)['sources'],profile,source_hash)
     document = pymupdf.open(args.pdf)
     maximum_side = getattr(args,'max_render_side',0)
     crop_scale(document[0].rect,args.dpi,maximum_side)
@@ -250,7 +249,7 @@ def extract(args):
             for field in ['source_section_kind','source_difficulty_stars','source_title']:
                 if field in start:
                     context[field] = start[field]
-            questions.append({'source':{key:source[key] for key in ['drive_id','revision']},
+            questions.append({'source':source_reference(source),
                 'source_language':language,'locator':locator,'original_number':original_number,
                 'chapter':str(section['chapter']),'kind':start.get('kind','problem'),
                 'subjects':section.get('subjects',profile['subjects']),
