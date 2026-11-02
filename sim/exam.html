@@ -259,7 +259,7 @@ const T = {
     payAsk: n => `채점 · 첨삭도 신청 (토큰 1개 · 보유 ${n}개) — 신청하면 보낸 답안을 바로 읽어 확인할 수 있습니다`,
     payBtn: "채점 · 첨삭 받기 (토큰 1개)", payNote: "아직 채점을 신청하지 않았습니다. 신청 전에는 보낸 쪽을 읽지 않고, 신청하지 않고 끝내면 채점 없이 저장됩니다(나중에 성적표에서 신청 가능).",
     paid: "채점 신청됨", endNoGrade: "채점 없이 끝내기", endNoGradeQ: "채점 없이 끝낼까요? 답안은 저장되고, 7일 안에 성적표에서 채점을 신청할 수 있습니다.",
-    unpaidPage: "채점 신청 후 읽습니다", endedNote: "채점하지 않고 끝낸 시험입니다. 보낸 답안은 7일 동안 보관되며, 그 안에 채점 · 첨삭을 신청할 수 있습니다.",
+    unpaidPage: "채점 신청 후 읽습니다", endedNote: "채점하지 않고 끝낸 시험입니다. 7일 안에 채점 · 첨삭을 신청할 수 있습니다.",
     otherActive: (x, y) => `진행 중인 다른 실전 시험(${x})이 있습니다. 한 번에 하나만 칠 수 있으니, 그 시험을 먼저 끝내세요.`, goOther: "그 시험으로 가기",
     resume: "진행 중인 시험으로 돌아왔습니다. 타이머는 그동안에도 흘렀습니다 (토큰은 쓰지 않았습니다).",
     end: "시험 끝내기", endQ: "시험을 끝낼까요?", endBody: "끝내면 실험 화면이 꺼지고 다시 켤 수 없습니다. 바로 30분 스캔 시간이 시작됩니다.",
@@ -318,7 +318,7 @@ const T = {
     payAsk: n => `Also ask for grading and the review (1 token · you have ${n}) — your pages are then read as they arrive, so you can check them`,
     payBtn: "Get it graded and reviewed (1 token)", payNote: "Grading has not been asked for yet. Until then your pages are not read; finishing without it keeps them ungraded (you can still ask from the score report).",
     paid: "grading asked for", endNoGrade: "Finish without grading", endNoGradeQ: "Finish without grading? Your pages are kept, and you can ask for grading from the score report within 7 days.",
-    unpaidPage: "read once grading is asked for", endedNote: "This sitting ended ungraded. Its pages are kept for 7 days; ask for grading and the review within that time.",
+    unpaidPage: "read once grading is asked for", endedNote: "This sitting ended ungraded. Ask for grading and the review within 7 days.",
     otherActive: (x, y) => `Another exam (${x}) is in progress. Only one can be open at a time, so finish that one first.`, goOther: "Go to that exam",
     resume: "Back in the exam in progress. The timer kept running meanwhile (no token was used).",
     end: "Finish exam", endQ: "Finish the exam?", endBody: "The experiments will switch off and cannot be turned back on. The 30 minutes for scanning start at once.",
@@ -597,6 +597,11 @@ const PEN_NOTE = {
   en: { exam: "<b>Write your answers in ballpoint pen (black or blue).</b> Plot graph points large and dark, and draw graph lines thick. Pencil, thin lines and small points barely show in a photo, so reading and grading may be inaccurate.",
         review: "<b>Note:</b> work written in pencil rather than ballpoint pen, thin graph lines or small points may not read clearly from a photo, and grading may then be inaccurate. Where you can, write in ballpoint pen and go over graph points and lines dark and thick before photographing." },
 };
+/* what happens to the photographed pages: kept on HaslaLab's server after grading, to improve the reading and grading */
+const KEEP_NOTE = {
+  ko: "제출한 답안 사진과 판독·채점 결과는 채점이 끝난 뒤에도 하슬라랩 서버에 보관되며, 판독·채점 품질을 높이는 데(AI 모델 개선·학습 포함) 쓰입니다. 답안지에 이름 등 개인정보는 쓰지 마세요.",
+  en: "Your answer photos, with what was read and the marks, are kept on HaslaLab's server after grading and used to improve reading and grading (including improving and training AI models). Do not write your name or other personal details on the sheets.",
+};
 async function introView() {
   if (REVIEW) return reviewIntroView();
   const back = `../#/${esc(EX.c)}/exam`;
@@ -627,6 +632,7 @@ async function introView() {
       <tr><th>${t().infoWho}</th><td>${ME && ME.nickname ? esc(ME.nickname) : "—"}</td></tr>
     </tbody></table>
     <div class="note w" style="margin-top:16px">${PEN_NOTE[lang === "en" ? "en" : "ko"].exam}</div>
+    <div class="note" style="margin-top:8px">${KEEP_NOTE[lang === "en" ? "en" : "ko"]}</div>
     <h3 style="margin:18px 0 0;font-size:14px">${t().rulesH}</h3>
     <ol>${(MIX ? [lang === "ko" ? `이 시험은 대회 당일처럼 <b>실험과 이론을 함께</b> 풉니다. 이론 문제는 책자 그대로이며, 책상 위 문제지(왼쪽 아래)를 누르면 열립니다. 이론 답안도 같은 방식으로 스캔해 «${EX.tasks.find((x, i) => isThy(i))}»로 보냅니다.`
       : `As on the day, this exam holds <b>the experiments and the theory together</b>. The theory is the booklet itself: click the problems lying on the desk (bottom left) to open it. Scan the theory answers the same way, as «${EX.tasks.find((x, i) => isThy(i))}».`] : []).concat(t().rules).map(r => `<li>${r}</li>`).join("")}</ol>
@@ -654,6 +660,7 @@ function reviewIntroView() {
   $("main").innerHTML = `<div class="page"><section class="card"><span class="badge">${t().exam}</span><h1>${esc(label())} · ${esc(EX.tasks.join(" + "))}</h1>
     <p class="lead">${ko ? "이미 푼 답안을 제출하고 채점 · 첨삭만 받으세요." : "Submit completed work directly for grading and feedback."}</p>
     <div class="note w">${PEN_NOTE[ko ? "ko" : "en"].review}</div>
+    <div class="note" style="margin-top:8px">${KEEP_NOTE[ko ? "ko" : "en"]}</div>
     <p>${ko ? "시험을 시작하거나 타이머를 기다릴 필요 없이 종이 답안 사진 또는 화면에 입력한 풀이를 제출할 수 있습니다. 답안을 준비하는 동안에는 시간 제한이 없습니다." : "Upload your written answers or type your solutions without starting an exam. There is no time limit while preparing your submission."}</p>
     <p>${ko ? `채점하기를 누르는 순간 실전 토큰 ${COST()}개를 사용합니다. 그 뒤 답안 판독과 채점 · 첨삭에는 토큰이 더 들지 않습니다.` : `Pressing Grade my work spends ${COST()} exam token at once. Reading your pages, grading and feedback then cost nothing more.`}</p>
     ${EX.tasks.some((_, i) => !EX.sols[i]) ? `<p class="note">${ko ? "공식 해설·배점이 없는 문제는 문제 원문과 제출한 풀이를 바탕으로 학습용 첨삭을 제공합니다. 공식 점수나 임의의 수치 점수를 만들지 않습니다." : "For problems without official solutions or point schemes, feedback is qualitative and based on the published problem and your work. No official or invented numeric score is assigned."}</p>` : ""}
