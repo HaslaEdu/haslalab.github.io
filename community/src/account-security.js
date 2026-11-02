@@ -22,7 +22,9 @@ export const ACCOUNT_SECURITY_SCHEMA=[
   'CREATE INDEX IF NOT EXISTS account_email_tokens_expiry ON account_email_tokens(expires_at)',
 ];
 export function ensureAccountSecuritySchema(db){
-  if(!readySchemas.has(db))readySchemas.set(db,db.batch(ACCOUNT_SECURITY_SCHEMA.map(sql=>db.prepare(sql))).catch(error=>{readySchemas.delete(db);throw error}));
+  /* one statement at a time: an index needs its table to exist when the statement is prepared (a batch prepares
+     every statement first, so CREATE INDEX on a table created in the same batch failed under the test database) */
+  if(!readySchemas.has(db))readySchemas.set(db,(async()=>{for(const sql of ACCOUNT_SECURITY_SCHEMA)await db.prepare(sql).run()})().catch(error=>{readySchemas.delete(db);throw error}));
   return readySchemas.get(db);
 }
 const ORIGINS=new Set(['https://haslalab.org','https://www.haslalab.org','https://physleague.kr','https://www.physleague.kr','https://haslaedu.haslalab.workers.dev']);
