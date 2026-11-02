@@ -20,7 +20,6 @@ F = {
     "nsb": os.path.join(ROOT, "tools/ko/fonts/NotoSans-Bold.ttf"),
     "krb": os.path.join(ROOT, "tools/ko/fonts/NotoSansKR-Bold.ttf"),
     "kr": os.path.join(ROOT, "tools/ko/fonts/NotoSansKR-Regular.ttf"),
-    "pts": os.path.join(HERE, "fonts/PT_Sans-Web-Regular.ttf"),
 }
 INSET = (0.045, 0.035, 0.955, 0.965)
 SIDE = 7 / 25.4 * 72
@@ -115,17 +114,7 @@ def ispho(page, i, n, job):
     page.draw_line((56.7, 147.5), (538.6, 147.5), color=(0, 0, 0), width=1.9925)
 
 
-def ispho2023(page, i, n, job):
-    """ISPhO 2023, as its papers: the logo at the top left of every page, «Question: page i of n» (here «Answer sheet: …»)
-    in PT Sans 14.9 pt at baseline 829.3 (measured on ISPhO_2023_T2_EN.pdf) — ending at x = 552 rather than 574.3, clear
-    of the scanner's bottom-right square"""
-    image(page, "ispho2023-logo.png", (51.024, 11.089, 334.479, 62.596))
-    foot = job.get("foot") or "Answer sheet: page {i} of {n}"
-    s = foot.format(i=i, n=n)
-    text(page, 552.0, 829.3, s, "pts" if s.isascii() else "kr", 14.94, "right")
-
-
-STYLES = {"ispho": ispho, "ispho2023": ispho2023, "ipho2017": ipho2017, "ipho2017sol": ipho2017sol, "apho2018": apho2018, "apho2018sol": apho2018sol}
+STYLES = {"ispho": ispho, "ipho2017": ipho2017, "ipho2017sol": ipho2017sol, "apho2018": apho2018, "apho2018sol": apho2018sol}
 
 
 def stamp(job):

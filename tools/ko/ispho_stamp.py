@@ -1,8 +1,8 @@
 """The ISPhO header on every page of a paper rendered with tools/ko/ispho_template.html — as the competition's own
-Korean papers have it: «이론» (or «실험»), the ISPhO logo, the page code «Q1-2» (problem 1, page 2) and the language «Korean (Korea (Republic of))», set as the official
+Korean papers have it: «Theory» (or «Experiment», kept in English as the official translations keep it), the ISPhO logo, the page code «Q1-2» (problem 1, page 2) and the language «Korean (Korea (Republic of))», set as the official
 English paper sets «English (Official)» (Noto Sans 10 pt, right-aligned, over a 2 pt rule).
 
-    python3 tools/ko/ispho_stamp.py <in.pdf> <out.pdf> <problem number> [이론|실험]
+    python3 tools/ko/ispho_stamp.py <in.pdf> <out.pdf> <problem number> [Theory|Experiment]
 """
 import os, sys
 import pymupdf
@@ -11,12 +11,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 F = lambda n: os.path.join(HERE, "fonts", n)
 LABEL = "Korean (Korea (Republic of))"      # as IPhO and APhO label their Korean papers
 
-def stamp(src, dst, q, kind="이론"):
+def stamp(src, dst, q, kind="Theory"):
+    kind = {"이론": "Theory", "실험": "Experiment"}.get(kind, kind)
     doc = pymupdf.open(src)
     for k, page in enumerate(doc, 1):
         page.insert_font(fontname="kr", fontfile=F("NotoSansKR-Regular.ttf"))
         page.insert_font(fontname="nb", fontfile=F("NotoSans-Bold.ttf"))
-        page.insert_text((57, 104), kind, fontname="kr", fontsize=13.5)
+        page.insert_text((57, 104), kind, fontname="nb", fontsize=13.5)
         page.insert_image(pymupdf.Rect(56.7, 110.5, 226.8, 143.0), filename=os.path.join(HERE, "ispho_logo.png"))
         code = f"Q{q}-{k}"
         w = pymupdf.Font(fontfile=F("NotoSans-Bold.ttf")).text_length(code, fontsize=56.7)

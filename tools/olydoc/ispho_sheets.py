@@ -3,12 +3,13 @@
     python3 -I tools/olydoc/ispho_sheets.py
 
 1. 2023–2025: each problem's answer sheets joined into the whole paper's (ISPhO_<y>_TA.pdf, _T_A_KO.pdf), as the
-   official 2026 TA.pdf is (A1-1 … A3-n); 2024–2026: the working sheets of the three problems joined into one
+   official 2026 TA.pdf is (A1-1 … A3-n); 2023–2026: the working sheets of the three problems joined into one
    (ISPhO_<y>_T_W.pdf, _T_W_KO.pdf, W1-1 … W3-3), the per-problem files removed.
 2. 2026: the Korean theory answer sheets keep «Theory» in English at the top left, as the official translations do
    (the overlay had «이론»); the official English answer sheets get the scanner's corner squares too (site copies
-   in pdfx/ispho); the experiment's answer sheet is translated into Korean in place (title, part headings, «(0.2점)»,
-   the language) — every table and graph grid stays the official one.
+   in pdfx/ispho); the experiment's answer sheet is translated into Korean in place (title, part headings, the
+   language) — every table and graph grid stays the official one.  A question's points stay «(0.2pt)» in Korean, as
+   on the official IPhO 2025 Korean answer sheets (the 2026 Korean theory sheets' «(0.2점)» is set back to «pt»).
 
 Coordinates are those of the official 2026 sheets (see stamp.py «ispho»).
 """
@@ -75,6 +76,25 @@ def theory_header(path):
     save(doc, path)
 
 
+def points_pt(path):
+    """the Korean 2026 theory sheets wrote a question's points «(0.2점)» over the English «(0.2pt)», which is still
+    under it: covered and set again as «(0.2pt)» (NotoSans 9.96 pt at the English origin); a page already done is
+    recognised by its first cover"""
+    doc = pymupdf.open(path)
+    for page in doc:
+        spans = [s for b in page.get_text("dict")["blocks"] for line in b.get("lines", []) for s in line["spans"]
+                 if re.fullmatch(r"\s*\(\d+(?:\.\d+)?pt\)", s["text"])]
+        covers = [pymupdf.Rect(s["bbox"][0] + 2.0, s["bbox"][1] + 0.6, s["bbox"][2] + 9.0, s["bbox"][3] - 0.6) for s in spans]
+        if not covers or any(d.get("fill") == (1.0, 1.0, 1.0) and abs(d["rect"].x0 - covers[0].x0) < 0.05 and abs(d["rect"].y0 - covers[0].y0) < 0.05
+                             for d in page.get_drawings()):
+            continue
+        for r in covers:
+            page.draw_rect(r, color=None, fill=(1, 1, 1))
+        for s in spans:
+            text(page, s["origin"][0], s["origin"][1], s["text"], "ns", s["size"])
+    save(doc, path)
+
+
 KO_2026_E1 = {
     "Fiber Bragg grating": "광섬유 브래그 격자",
     "Part A. FBG fabrication technology (5.0 points)": "Part A. FBG 제작 기술 (5.0점)",
@@ -100,8 +120,6 @@ def translate(src, dst, table):
                     rgb = tuple(((s["color"] >> k) & 255) / 255 for k in (16, 8, 0))
                     if t.strip() in table:
                         jobs.append((s, table[t.strip()], "krb" if bold else "kr", rgb, "left")); left.discard(t.strip())
-                    elif re.fullmatch(r"\s*\((\d+(?:\.\d+)?)pt\)", t):
-                        jobs.append((s, " (%s점)" % re.search(r"[\d.]+", t).group(0), "kr", rgb, "left"))
                     elif t.strip() == "English (Official)":
                         jobs.append((s, KO_LABEL, "ns", rgb, "right"))
         for s, ko, key, rgb, align in jobs:
@@ -122,13 +140,15 @@ def main():
     for y in (2025, 2024, 2023):
         join([f"{PX}/ISPhO_{y}_T{q}A.pdf" for q in (1, 2, 3)], f"{PX}/ISPhO_{y}_TA.pdf")
         join([f"{PX}/ISPhO_{y}_T{q}_A_KO.pdf" for q in (1, 2, 3)], f"{PX}/ISPhO_{y}_T_A_KO.pdf")
-    for y in (2026, 2025, 2024):
+    for y in (2026, 2025, 2024, 2023):
         join([f"{PX}/ISPhO_{y}_T{q}W.pdf" for q in (1, 2, 3)], f"{PX}/ISPhO_{y}_T_W.pdf", remove=True)
         join([f"{PX}/ISPhO_{y}_T{q}_W_KO.pdf" for q in (1, 2, 3)], f"{PX}/ISPhO_{y}_T_W_KO.pdf", remove=True)
     # 2. ISPhO 2026
     for name in ("ISPhO_2026_T_A_KO.pdf", "ISPhO_2026_T1_A_KO.pdf", "ISPhO_2026_T2_A_KO.pdf", "ISPhO_2026_T3_A_KO.pdf"):
         theory_header(f"{PX}/{name}")
         print("Theory header", name)
+    for name in ("ISPhO_2026_T_A_KO.pdf", "ISPhO_2026_T1_A_KO.pdf", "ISPhO_2026_T2_A_KO.pdf", "ISPhO_2026_T3_A_KO.pdf"):
+        points_pt(f"{PX}/{name}")
     for name in ("ISPhO_2026_TA.pdf", "ISPhO_2026_T_A_KO.pdf", "ISPhO_2026_T1_A_KO.pdf", "ISPhO_2026_T2_A_KO.pdf", "ISPhO_2026_T3_A_KO.pdf"):
         mark(f"{PX}/{name}", f"{PX}/{name}")
     # the per-problem official English sheets, marked: cut from the marked whole-paper sheet (A1-1 … A3-3)
