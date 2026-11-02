@@ -359,6 +359,32 @@ test('LAB_FOCUS_READ: a value the code marks wrong is read once more by Mathpix;
   assert.match(detail,/"id":"K"[^}]*"got":0[,}]/,'a value Mathpix reads the same changes nothing');
   assert.equal(sql.prepare("SELECT count(*) n FROM lab_calls WHERE session_id=? AND step='focus' AND provider='mathpix'").get(sid).n,1,'metered');
 }));
+test('a right value with a missing unit loses 0.1, not the item (R3); a step whose quote is not found is looked for again before R13 zeroes it',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[
+    {id:'N',points:0.6,type:'value',sheet:'answer',what:'n_c',ref:'1.59e18',unit:'m^-3'},
+    {id:'S1',points:0.7,type:'derivation',role:'step',sheet:'any',what:'Gauss law on a small cylinder'},
+    {id:'S2',points:0.7,type:'derivation',role:'step',sheet:'any',what:'energy conservation'}]}),'fixture',Math.floor(Date.now()/1000));
+  const g=(id,extra)=>({id,found:true,page:1,label:id,rules:[],note:'',...extra});
+  replies({items:[g('N',{score:0.6,value:1.59e18,unit_ok:false,quote:'n_c = 1.59e18'}),g('S1',{score:0.7,quote:'2 pi r 2z g_r + pi r^2 g_z = 0'}),g('S2',{score:0.7,quote:'E_k + U = const'})],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}},
+    {items:[g('S1',{score:0.7,quote:'',visual:{kind:'text',box:[400,100,450,900],description:'Gauss law: g_r 2z 2 pi r + g_z pi r^2 = 0 on the left half'}}),g('S2',{score:0,note:'not written'})]});
+  const text=pageReading.text;pageReading.text='N: n_c = 1.59e18';
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.text=text;}
+  const mods=calls.filter(c=>c.text.includes('[TASK: moderate]'));
+  assert.equal(mods.length,1,'one look at the two steps');assert.match(mods[0].text,/quote_missing/);
+  assert.match(mods[0].text,/"id":"S1"/);assert.match(mods[0].text,/"id":"S2"/);assert.ok(!mods[0].text.includes('"id":"N"'),'the value is not doubted');
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"N"[^}]*"got":0\.5/,'0.6 less the 0.1 unit deduction');
+  assert.match(detail,/"id":"S1"[^}]*"got":0\.7/,'seen in the photo');
+  assert.match(detail,/"id":"S2"[^}]*"got":0[,}]/,'not written');
+}));
 test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
   env.LAB_ONLY_PROVIDER='deepseek';
   const a=(await start('gemini')).data,sid=a.session.id;
