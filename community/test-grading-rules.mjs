@@ -96,3 +96,12 @@ test("theory, every competition: a result item is earned by the answer alone, a 
   assert.ok(!rulesFor("ipho", "experiment").some(r => r.id === "R13"), "experiments keep their own evidence rules");
   assert.ok(!rulesFor("ipho", "theory").some(r => r.id === "IP8"), "R13 replaces the all-or-nothing IP8");
 });
+
+test("IPhO-style theory: a part given only as a total, and a unit slip, follow the official schemes", () => {
+  const ip9 = rulesFor("ipho", "theory").find(r => r.id === "IP9");
+  assert.ok(ip9, "IP9 for IPhO-style theory");
+  assert.match(ip9.en, /at most half/); assert.match(ip9.en, /at most two thirds/);
+  assert.ok(!rulesFor("ipho", "experiment").some(r => r.id === "IP9"));
+  const r3 = rulesFor("ipho", "theory").find(r => r.id === "R3");
+  assert.match(r3.en, /loses 0\.1 pt, never the whole item/);
+});

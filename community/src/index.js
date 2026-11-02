@@ -2205,7 +2205,10 @@ function labScore(scheme, raw, pages, opts = {}) {
       const readThere = list => list.some(i => i.value != null && near(+i.value, v) || numbersIn(i.text).some(seenAs));
       if (g.value == null || !isFinite(v) || !(readThere(live) || readThere(others) || numbersIn([pg.ocr, ...pages.map(p => p.ocr)].join("\n")).some(seenAs))) return zero("R9");   // a value that was not read on the task's pages
       res.value = v;
-      if (it.unit && g.unit_ok === false) return zero("R3");
+      /* R3: a right value with a missing or wrong unit costs the scheme's unit deduction (0.1 where it gives none), as
+         IPhO, APhO and EuPhO mark it, not the whole item; OPhO marks a value in another unit wrong */
+      const unitSlip = !!it.unit && g.unit_ok === false;
+      if (unitSlip && opts.family === "answer") return zero("R3");
       const w = g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
       let pts = 0;
       if (interval) {
@@ -2213,6 +2216,7 @@ function labScore(scheme, raw, pages, opts = {}) {
         else for (const p of it.partial || []) if (w >= Math.min(p.min, p.max) && w <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
       } else if (valueMatches(it, w)) pts = it.points;                                   // R12 in code: the official value and its tolerance
       else rules.add("R12");
+      if (unitSlip && pts > 0) { pts = Math.max(0, pts - (Number.isFinite(+it.unit_penalty) ? +it.unit_penalty : 0.1)); rules.add("R3"); }
       res.got = pts;
     } else if (it.type === "graph" && Array.isArray(it.checks) && it.checks.length) {
       const gr = pick("graph");
@@ -2232,7 +2236,8 @@ function labScore(scheme, raw, pages, opts = {}) {
       res.by = "model";
       res.got = Math.max(0, Math.min(it.points, Math.round((Number(g.score) || 0) * 10) / 10));
       /* R13: a step earns marks only where it is written; the grader's quote of it must be on the page it cites */
-      if (it.role === "step" && it.sheet !== "answer" && res.got > 0 && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))
+      const seenInPhoto = pg._visionSupplied && g.visual && validVisualBox(g.visual.box) && String(g.visual.description || "").trim().length >= 8;
+      if (it.role === "step" && it.sheet !== "answer" && res.got > 0 && !seenInPhoto && !quoteOnPage(g.quote, [pg.ocr, pg.text, ...(read.items || []).map(i => i.text)].join("\n"))
         && !quoteOnPage(g.quote, pages.map(p => [p.ocr, p.text].join("\n")).join("\n"))) return zero("R13");
     }
     /* a table or graph with fewer measurements than it needs, where the scheme has no count check to take marks from: half (R11) */
@@ -2310,11 +2315,12 @@ async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lan
   const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
   const items = flagged.map(f => { const it = scheme.items.find(x => x.id === f.id) || {}, g = first.get(f.id) || {};
     return { id: it.id, points: it.points, type: it.type, role: it.role, sheet: it.sheet, unit: it.unit, ref: it.ref, tol: it.tol, full_min: it.full_min, full_max: it.full_max,
-      what: it.what, expr: it.expr, first: { score: f.got, page: g.page, value: g.value, expr: g.expr, note: g.note }, check: f.check }; });
+      what: it.what, expr: it.expr, first: { score: f.got, page: g.page, value: g.value, expr: g.expr, note: g.note, quote: g.quote }, check: f.check, ...(f.quote_missing ? { quote_missing: true } : {}) }; });
   const parts = [{ text: [stablePrefix(family, kind), "", "[TASK: moderate]",
     `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} ${theory ? "theory" : "experimental"} exam. A first grader ${all ? "graded the items below" : "marked the items below short of full marks"}, working from machine transcripts that can misread handwriting (a square read as a cube, 184 read as 194, A/A/B read as A/A/A).`,
     (all ? "Check every item, those given full marks too, in the page photos themselves and grade it again under the same regulation: take marks off a wrong answer, a missing factor, an inverted relation or a wrong sign however close it looks, and off a step that is not written; give full marks to an answer equivalent to the official one in another form (rearranged, other notation, another correct method) and to a step written anywhere in the task's pages; keep a deduction the photos confirm, correct one that came from a misreading." :
     "Look at each item in the page photos themselves and grade it again under the same regulation: keep a deduction the photos confirm, correct one that came from a misreading.") + " Return every listed item with the grading fields (found, page, value as written, value_in_unit, unit_ok, checks_met, score, rules, note, quote). Where the photo shows a number the transcript misread (0.31 read as 9.31), give the number as written in the photo as value and add visual:{kind:\"value\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it,description,value}. Give no feedback or review.",
+    ...(items.some(it => it.quote_missing) ? ["An item with quote_missing: the first grader gave this step marks, but code could not find its quote (first.quote) in the transcripts of the task's pages, so it would score 0. Find the step in the page photos and transcripts, in any notation and on any page of the task. If it is written: give the page, and as quote the line copied character for character from that page's transcript; where the transcript dropped or garbled it, also add visual:{kind:\"text\",box:[ymin,xmin,ymax,xmax] in 0..1000 around it on that page's photo,description:what is written there}. If it is not written, score 0. Never credit a step from the final answer alone."] : []),
     ...(items.some(it => it.check) ? ["An item's check is a computed fact: code evaluated the candidate's final expression (first.expr) and the official expr at random values of their variables. Confirm in the photo that first.expr is what the candidate wrote, with the official meaning of each symbol (a check made on a misread expression, or on a symbol the candidate uses for something else, is void: then grade from the photo alone); if it is, trust the check on equivalence (an equivalent form earns the result's marks, a non-equivalent one does not) and apply the scheme's own partial rules (a wrong sign or factor earns only the partial marks the scheme prints for it, else none)."] : []),
     `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
     "<<ITEMS>>" + JSON.stringify(lean(items)) + "<<END>>"].join("\n") }];
@@ -2414,7 +2420,13 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     /* «all»: every item, full marks too (a first grader that gives full marks to a wrong answer, a missing factor or an
        inverted relation is never checked otherwise: the largest error in an audit of 15 sittings); «down»: what it marked down */
     return roles.moderateScope === "all" || i.got < i.points && (it.role === "result" || it.sheet === "answer" || ["value", "graph", "table", "other"].includes(it.type)); }).slice(0, roles.moderateScope === "all" ? 90 : 30) : [];
+  /* R13 in code zeroes a step whose quote is not on the pages; the quote is often in another notation, missing, or of a
+     line the transcript dropped (audit: 18 steps zeroed in IPhO 2018 that are plainly written). Before that zero stands,
+     the grader's own model looks for the step in the photos and transcripts once more. */
+  const quoteMissing = env.LAB_R13_RECHECK === "off" || roles?.r13Recheck === false ? [] : labScore(scheme, raw, mine, { theory, family }).items
+    .filter(i => (i.rules || []).includes("R13")).map(i => ({ id: i.id, got: +((raw.items || []).find(x => String(x?.id) === i.id)?.score) || 0, quote_missing: true })).slice(0, 30);
   const flagged = [...moderated.map(f => ({ ...f, check: checks.find(c => c.id === f.id)?.check })), ...checks.filter(c => !moderated.some(f => f.id === c.id))];
+  for (const q of quoteMissing) { const f = flagged.find(x => x.id === q.id); if (f) f.quote_missing = true; else flagged.push(q); }
   await roles?.trace?.('checked:' + flagged.length);
   if (flagged.length) {
     try {
@@ -2427,7 +2439,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     } catch (e) { console.error("lab moderate", e?.code || e?.message); }               // a failed moderation keeps the first grading
   }
   await roles?.trace?.('score');
-  let sc = labScore(scheme, raw, mine, { theory });
+  let sc = labScore(scheme, raw, mine, { theory, family });
   /* focused re-read (focus-read.js; LAB_FOCUS_READ on, bench grade.focus): a value the code marks wrong is read once more
      by Mathpix; a one-character misread (a digit, a power of ten) is replaced and the task scored again */
   const focusLog = roles?.bench ? [] : null;
@@ -2438,7 +2450,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
       const scale = Number.isFinite(+x.value_in_unit) && Number.isFinite(+x.value) && +x.value ? +x.value_in_unit / +x.value : null;
       return { ...x, value: f.value, ...(scale != null ? { value_in_unit: f.value * scale } : {}) }; }) };
     for (const f of focus) { const pg = mine.find(p => p.no === f.page); if (pg) pg.ocr = `${pg.ocr ?? ""}\n[focused re-read of ${f.id}: ${f.written} = ${f.value}]`; }
-    sc = labScore(scheme, raw, mine, { theory });
+    sc = labScore(scheme, raw, mine, { theory, family });
   }
   await roles?.trace?.('scored');
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
