@@ -1458,7 +1458,7 @@ const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI
   ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
-  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined }) };
+  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -1650,6 +1650,15 @@ const LAB_CHECKS = ["axes_labeled", "axes_units", "scale_ok", "points_min", "fit
 /* how many measurements an experiment's table or graph needs when the scheme gives no number (R11) */
 const N_MIN = { few: 3, medium: 5, many: 7 };
 const N = (o) => ({ ...o, nullable: true });
+const SCHEME_ANALYSIS_SCHEMA = { type: "object", properties: { parts: { type: "array", items: { type: "object", properties: {
+  id: { type: "string" }, points: N({ type: "number" }), asks: { type: "string" },
+  results: { type: "array", items: { type: "object", properties: { expression: N({ type: "string" }), value: N({ type: "string" }), unit: N({ type: "string" }) } } },
+  milestones: { type: "array", items: { type: "string" } }, methods: { type: "array", items: { type: "string" } },
+  accepted_forms: { type: "array", items: { type: "string" } }, partial_credit: N({ type: "string" }) }, required: ["id", "results", "milestones"] } },
+  notation: { type: "array", items: { type: "object", properties: { symbol: { type: "string" }, meaning: { type: "string" } } } } }, required: ["parts"] };
+const SCHEME_ANALYSIS_PROMPT = (task, s, theory) => [`[TASK: analyse solution] This is the official solution of ${theory ? "the theory paper" : "experimental problem"} ${task} of ${s.comp.toUpperCase()} ${s.year}, perhaps followed by its marking scheme. Do not build a marking scheme yet: analyse the solution, part by part, in order.`,
+  "For every question or part: id and printed points (copy them from the text layer); asks: what it asks for, in a few words; results: its final result(s) as the solution gives them (the expression in plain ASCII math with the problem's own symbols, and/or the value with its unit); milestones: the key equations and intermediate results a correct solution passes through, in order, each written out (at most 8); methods: the alternative methods the solution gives, if any; accepted_forms: equivalent forms of the result a marker must accept (rearranged, in other quantities the problem defines, a numerical form, another sign convention it allows); partial_credit: what the scheme says about partial marks for this part, as printed.",
+  "notation: the symbols the problem defines, with their meaning.", "Copy points and numbers exactly; never invent a point split the scheme does not print."].join("\n");
 const SCHEME_SCHEMA = { type: "object", properties: {
   points: { type: "number" }, unit_rule: { type: "string" }, notes: { type: "string" },
   total: N({ type: "number" }),
@@ -1886,13 +1895,14 @@ function settleScheme(sc) {
    PDF builds at once could run the isolate out of memory, as three PDF-carrying gradings once did. */
 let labSchemeBuilds = Promise.resolve();
 /* a scheme is kept per provider, model (and DeepSeek thinking level: a thinking DeepSeek reads the solution otherwise), version and source */
-const labSchemeKey = (s, src, sx) => { const p = labProvider(s), th = labSrc(s)._thinking;
-  return [p, (benchModel(p, labSrc(s)._model) || VISION_MODELS[p]) + (p === 'deepseek' && ['low', 'medium', 'high', 'max'].includes(th) ? '@' + th : ''), SCHEME_VERSION, src, sx.mark || ''].join(':'); };
+const labSchemeTwoStage = (env, s) => labSrc(s)._scheme2 === true || env?.LAB_SCHEME_TWO_STAGE === "on";
+const labSchemeKey = (s, src, sx, env) => { const p = labProvider(s), th = labSrc(s)._thinking;
+  return [p, (benchModel(p, labSrc(s)._model) || VISION_MODELS[p]) + (p === 'deepseek' && ['low', 'medium', 'high', 'max'].includes(th) ? '@' + th : '') + (labSchemeTwoStage(env, s) ? '#2' : ''), SCHEME_VERSION, src, sx.mark || ''].join(':'); };
 async function labScheme(env, s, task, m, strict = false) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol;
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = labSchemeKey(s,src,sx);
+  const key = labSchemeKey(s,src,sx,env);
   const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   /* the scheme model refused (its quota) or failed: the fallback model reads the solution, kept under its own key */
   const build = () => labSchemeBuild(env, s, task, m).catch(error => {
@@ -1911,7 +1921,7 @@ async function labSchemeBuild(env, s, task, m) {
   const eotvos = task === "T" && labEotvosSolution(s.comp,s.year,String(src||"").replace(/^pdfx\/eotvos\//,""));
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
-  const key = labSchemeKey(s,src,sx);   // a new SCHEME_VERSION builds every scheme again
+  const key = labSchemeKey(s,src,sx,env);   // a new SCHEME_VERSION builds every scheme again
   const kept = await env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
     const sc = JSON.parse(kept.scheme);
@@ -1972,6 +1982,15 @@ async function labSchemeBuild(env, s, task, m) {
   ];
   /* a provider that refuses the rendered pages (DeepSeek: IPhO 2024 T2's solution and marking scheme as images were too much)
      builds the scheme from the PDFs' text layers alone, where there are any */
+  /* two stages (RefGrader, arXiv 2510.09021: MAE 2.32 -> 1.33 of 7): the solution is first analysed part by part (its
+     results, the milestones a correct solution passes, the forms to accept), then the scheme is built with that beside
+     the PDF; LAB_SCHEME_TWO_STAGE on, bench scheme.twoStage */
+  if (labSchemeTwoStage(env, s)) {
+    const analysis = await labVision(env, s, [{ text: SCHEME_ANALYSIS_PROMPT(task, s, theory) }, ...asked.filter(p => p.inline_data || /^The official marking scheme:/.test(p.text || "")), ...anchors],
+      SCHEME_ANALYSIS_SCHEMA, 16384, m, "scheme").catch(e => { console.error("lab scheme analysis", e?.code || e?.message); return null; });
+    if (Array.isArray(analysis?.raw?.parts) && analysis.raw.parts.length)
+      asked.push({ text: "[Analysis of this solution, made in a first pass: use it to check every part's results, milestones and accepted forms, and to fill `what` with the forms to accept; the PDF and its text layer govern ids, points and printed numbers.]\n<<ANALYSIS>>" + JSON.stringify(analysis.raw).slice(0, 60000) + "<<END>>" });
+  }
   const ask = list => labVision(env, s, list, schema, 32768, m, "scheme");
   const out = await ask(asked).catch(error => {
     if (!anchors.length || !["vision_request_rejected", "reference_too_large", "reference_invalid", "vision_images_too_large"].includes(error?.code)) throw error;
@@ -2742,7 +2761,7 @@ async function labBench(env, s, job) {
   const row = await env.DB.prepare("SELECT * FROM lab_bench WHERE id=? AND session_id=? AND status='pending'").bind(job.page_id, s.id).first();
   if (!row) return { cancelled: true };
   const spec = JSON.parse(row.spec), m = meter(), t0 = Date.now();
-  const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking });
+  const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking, twoStage: c.twoStage });
   let out, failed = false;
   try {
     if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
