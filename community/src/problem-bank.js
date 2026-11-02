@@ -279,13 +279,13 @@ async function search(env,text,opts,{exclude=null}={}) {
   }).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
   // Search rows are derived data. Only current registry routes admit results.
   const sources=[...new Set(scored.map(x=>x.source_id))];
-  const admitted=new Set();
+  const admitted=new Set(),titles=new Map(),sourceJoin=await presentationJoin(env);
   for(let start=0;start<sources.length;start+=80){
     const ids=sources.slice(start,start+80);
-    const found=await rows(binding(env,'BANK_REGISTRY'),`SELECT source_id,database_name FROM bank_source_routes WHERE source_id IN (${ids.map(()=>'?').join(',')})`,ids);
-    for(const row of found) if(DATABASES[row.database_name]) admitted.add(row.source_id);
+    const found=await rows(binding(env,'BANK_REGISTRY'),`SELECT r.source_id,r.database_name${sourceJoin?',p.display_title':''} FROM bank_source_routes r ${sourceJoin} WHERE r.source_id IN (${ids.map(()=>'?').join(',')})`,ids);
+    for(const row of found) if(DATABASES[row.database_name]){admitted.add(row.source_id);const title=safeString(row.display_title);if(title!==null)titles.set(row.source_id,title);}
   }
-  const valid=scored.filter(x=>admitted.has(x.source_id));
+  const valid=scored.filter(x=>admitted.has(x.source_id)).map(x=>({...x,source_title:titles.get(x.source_id)??safeString(x.source_title)??'Source'}));
   const items=valid.slice(opts.offset,opts.offset+opts.limit),has_more=valid.length>opts.offset+opts.limit;
   return {items,limit:opts.limit,offset:opts.offset,has_more,next_cursor:!query&&has_more&&items.length?items.at(-1).id:null,limited_results:!!query&&candidates.length===cap,method:query?'bounded_text_similarity':'canonical_cursor_browse',...PRIVATE};
 }

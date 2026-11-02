@@ -330,6 +330,11 @@ test('search excludes stale index sources absent from the canonical registry',as
   const f=fixture(t),id=qid(S3,'old');f.doc(id,S3,'old','block mass 2 kg');
   const result=await (await f.call('/search?lang=en&q=block')).json();assert.ok(!result.items.some(x=>x.id===id));
 });
+test('search display names use the canonical presentation while an older derived title is being refreshed',async t=>{
+  const f=fixture(t);f.main.prepare('INSERT INTO bank_source_presentations VALUES(?,?,?,?,?,?,?,?,?,?,?)').run(S1,'Published Mechanics','정식 교재명','Published Mechanics · Synthetic Author','Synthetic Author','author',null,'physics',sha('pdf'),'{}','now');
+  const out=await (await f.call('/search?lang=en&source='+S1,{user:null})).json();assert.ok(out.items.length);assert.ok(out.items.every(i=>i.source_title==='Published Mechanics · Synthetic Author'));
+  assert.equal(f.index.prepare('SELECT source_title FROM bank_search_documents WHERE question_id=? LIMIT 1').get(Q1).source_title,'Synthetic source');
+});
 
 test('recommendations use provisional difficulty and exclude input and unresolved candidates',async t=>{
   const f=fixture(t);seedFacet(f,Q1,S1,3);seedFacet(f,Q2,S1,3);f.index.prepare('UPDATE bank_search_documents SET unresolved_source=0 WHERE question_id=?').run(Q2);
