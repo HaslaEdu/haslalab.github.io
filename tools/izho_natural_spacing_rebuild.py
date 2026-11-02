@@ -1,6 +1,7 @@
 """Reviewed source-line scopes for natural-spacing IZhO rebuilds on D:."""
 from __future__ import annotations
 import argparse,hashlib,json,re
+from collections import Counter
 from pathlib import Path
 import pymupdf as fitz
 import pdf_korean_natural_composer as composer
@@ -88,25 +89,31 @@ def stationary_table_math(page,scopes,drawings):
         if not cell:continue
         key=tuple(round(v,3)for v in cell)
         if key in seen:continue
-        seen.add(key);box=fitz.Rect(cell);bounds=fitz.Rect();count=0
+        seen.add(key);box=fitz.Rect(cell);bounds=fitz.Rect();count=0;native=[]
         for trace in traces:
-            if trace['font']!='CambriaMath':continue
+            if not re.fullmatch(r'Cambria ?Math',trace['font']):continue
             for cp,gid,origin,bbox in trace['chars']:
-                if gid<0 or chr(cp).isspace()or not box.contains(fitz.Point(origin)):continue
+                if chr(cp).isspace()or not box.contains(fitz.Point(origin)):continue
+                native.append(dict(c=chr(cp),font=trace['font'],size=trace['size'],origin=list(origin)))
+                if gid<0:continue
                 bounds|=fitz.Rect(bbox);count+=1
         if not count:continue
         for drawing in drawings:
             r=fitz.Rect(drawing['rect'])
             if box.contains(r)and r.height<2 and r.width<box.width*.8:bounds|=r
-        result.append(dict(source_at=scope['source_at'],cell=cell,rect=list(bounds),glyphs=count,
+        maximum=max(g['size']for g in native);baselines=Counter(round(g['origin'][1],3)for g in native if abs(g['size']-maximum)<.01)
+        baseline=baselines.most_common(1)[0][0]
+        result.append(dict(source_at=scope['source_at'],cell=cell,rect=list(bounds),glyphs=count,native_glyphs=native,baseline=baseline,
             policy='Original native score-table mathematics and fraction rules remain at exact source coordinates; prose is packed independently in adjacent gaps.'))
     return result
 
 def split_scopes_around_math(rects,math_regions):
     result=[]
     for rect in rects:
+        baseline=rect[1]+(rect[3]-rect[1])*.85/1.33
         pieces=[list(rect)]
         for region in math_regions:
+            if abs(region['baseline']-baseline)>.9:continue
             box=fitz.Rect(region['rect']);next_pieces=[]
             for piece in pieces:
                 if not fitz.Rect(piece).intersects(box):next_pieces.append(piece);continue
@@ -125,6 +132,19 @@ def prepare(year,kind):
     for final_page,original_plan in enumerate(plans,1):
         d=json.loads(original_plan.read_text('utf8'));source=ROOT/d['source'];doc=fitz.open(source);page=doc[d['page']]
         fitz.TOOLS.set_small_glyph_heights(d.get('small_glyph_heights',True));raw=page.get_text('rawdict')
+        section_prefixes=[]
+        for block in raw['blocks']:
+            if block['type']:continue
+            for line in block['lines']:
+                line_chars=[c for s in line['spans']for c in s['chars']if c['c'].strip()]
+                if not line_chars:continue
+                first_x=min(c['origin'][0]for c in line_chars)
+                for span in line['spans']:
+                    value=''.join(c['c']for c in span['chars'])
+                    visible=[c for c in span['chars']if c['c'].strip()]
+                    if not visible or abs(visible[0]['origin'][0]-first_x)>.1:continue
+                    if not(span['flags']&16)or not re.fullmatch(r'\d+\.\d+\s*',value):continue
+                    section_prefixes.extend(dict(c=c['c'],font=span['font'],size=span['size'],origin=list(c['origin']))for c in span['chars']if c['c'].strip())
         qa_candidates=[ROOT/f'tmp/original-style-repair/{year}/{kind}/{original_plan.stem}.qa.json',ROOT/f'tmp/izho-original-style/{year}/{kind}/{original_plan.stem}.qa.json']
         oldqa=next((p for p in qa_candidates if p.exists()),None)
         if oldqa is None:raise ValueError(('Missing original placement journal',original_plan))
@@ -154,14 +174,19 @@ def prepare(year,kind):
                     starts=[p.get('point',p.get('origin'))[0]for p in placements if tuple((p.get('source_slot')or p.get('at')or[-1,-1])[:2])==(bi,li)and p.get('point',p.get('origin'))]
                     if starts:frozen.x1=min(frozen.x1,min(starts)-.25)
                     display_rects.append(list(frozen))
-            groups=_chunks(line)if y<60 else[nonspace]
+            caption_line=bool(re.match(r'^\s*(?:Figure|Fig\.?)\s*\d',text,re.I))
+            groups=_chunks(line)if y<60 or caption_line else[nonspace]
             for group in groups:
                 x0=min(c['bbox'][0]for c in group);x1=max(c['bbox'][2]for c in group)
                 group_text=''.join(c['c']for c in group)
-                is_center=(bi,li)in centered and y>=60
+                is_caption=bool(re.fullmatch(r'\s*(?:Figure|Fig\.?)\s*\d+(?:[.\-]\d+)*[.)]?\s*',group_text,re.I))
+                is_center=((bi,li)in centered or is_caption)and y>=60
                 left=global_left if is_center else min(x0,block['bbox'][0])if y>=60 else x0
                 right=global_right if is_center else max(x1,block['bbox'][2])if y>=60 else x1
                 row_journal=[p for p in placements if tuple((p.get('source_slot')or p.get('at')or[-1,-1])[:2])==(bi,li)]
+                if is_caption:
+                    left=x0;right=x1
+                    row_journal=[p for p in row_journal if x0-1<=p.get('point',p.get('origin'))[0]<=x1+1]
                 if y>=60:
                     # A reviewed legacy translation may legitimately extend a
                     # ragged English line into the same column's blank space.
@@ -181,7 +206,7 @@ def prepare(year,kind):
                 cell_rect=table_cell_bounds(drawings,(x0+x1)/2 if is_center else x0,y,full=True)if cell else None
                 rects.append(rect);scopes.append(dict(source_at=[bi,li],source_text=group_text,rect=rect,baseline=y,
                     original_grid_cell_bounds=cell,original_grid_cell_rect=cell_rect))
-                if is_center:centers.append(dict(baseline=y,center=(line['bbox'][0]+line['bbox'][2])/2,rect=rect))
+                if is_center:centers.append(dict(baseline=y,center=(x0+x1)/2,rect=rect))
                 if y<60 and re.search(r'Page\s*\d',group_text,re.I):rights.append(dict(baseline=y,right=x1,rect=rect))
         # Word can emit the last phrase of one visible line as a second block.
         # Coalesce only overlapping horizontal scopes on the same baseline;
@@ -194,6 +219,19 @@ def prepare(year,kind):
             for values in(centers,rights):
                 for value in values:
                     if value.get('rect')in(oldrect,rect):value['rect']=list(matching)
+        # A final broad source fragment can bridge several prior fragments.
+        # Finish the transitive union rather than leaving overlapping claims.
+        changed=True
+        while changed:
+            changed=False
+            for i,a in enumerate(merged):
+                match=next((j for j in range(i+1,len(merged))if abs((a[1]+a[3])/2-(merged[j][1]+merged[j][3])/2)<.12 and min(a[2],merged[j][2])>max(a[0],merged[j][0])),None)
+                if match is None:continue
+                b=merged.pop(match);old_a=list(a);a[:]=[min(a[0],b[0]),min(a[1],b[1]),max(a[2],b[2]),max(a[3],b[3])]
+                for values in(centers,rights):
+                    for value in values:
+                        if value.get('rect')in(old_a,b):value['rect']=list(a)
+                changed=True;break
         rects=merged
         table_math=stationary_table_math(page,scopes,drawings)
         rects=split_scopes_around_math(rects,table_math)
@@ -201,13 +239,14 @@ def prepare(year,kind):
         images=[list(info['bbox'])for info in page.get_image_info()if fitz.Rect(info['bbox']).width>30 and fitz.Rect(info['bbox']).height>25]
         # Mathematical inline images are deliberately not classified as figures
         # here; complete native Forms are handled by the atomic helper.
-        reviewed_figures=images+display_rects+[r['rect']for r in table_math]
+        reviewed_figures=images+display_rects
         plan=dict(year=year,kind=kind,source_base=str(base),source_base_sha256=edition['sha256'],page=final_page,
             original_english_source=str(source),original_english_source_sha256=sha(source),source_page=d['page']+1,
             source_line_scopes=scopes,allowed_line_rects=rects,centered_lines=centers,right_aligned_lines=rights,
             excluded_figure_rects=reviewed_figures,prose_placements=placements,
             frozen_display_math_rects=display_rects,
             stationary_table_math=table_math,
+            section_number_prefixes=section_prefixes,
             policy='Batang regular Hangul at original point size; source Latin/math/CIDs and display equations remain native; natural quarter-em word spaces',
             visual_review_required=True)
         plan.update(page_override);plan['frozen_display_math_rects']=display_rects
@@ -218,11 +257,27 @@ def _page_build(plan,body_only=False):
     d=json.loads(Path(plan).read_text('utf8'));source=Path(d['source_base'])
     if sha(source)!=d['source_base_sha256']:raise ValueError('Reviewed base changed')
     if body_only:d['allowed_line_rects']=[r for r in d['allowed_line_rects']if r[1]>60]
-    revisions=d.get('hangul_word_revisions',[]);original_units=composer._units;applied=[]
+    revisions=d.get('hangul_word_revisions',[]);original_units=composer._units;original_gap=composer.boundary_gap;applied=[];paragraph_gaps=[]
+    baseline_revisions=d.get('reviewed_hangul_baseline_revisions',[]);baseline_applied=set()
+    from pdf_original_text_ops import glyph_key
+    section_keys={glyph_key(g)for g in d.get('section_number_prefixes',[])}
+    def paragraph_gap(left,right,word_space_pt=None):
+        keys={glyph_key(g)for g in left['glyphs']if g['c'].strip()}
+        if right['kind']=='korean'and keys and keys<=section_keys:
+            gap=.25*min(left['size'],right['size'])if word_space_pt is None else word_space_pt
+            paragraph_gaps.append(dict(label=left['text'],following=right['text'],gap=gap));return gap
+        return original_gap(left,right,word_space_pt)
     def reviewed_units(item,placements,metric):
         units=original_units(item,placements,metric)
         if 'placement'not in item:return units
         placement=placements[item['placement']];at=placement.get('source_slot',placement.get('at'))
+        for index,rule in enumerate(baseline_revisions):
+            if at!=rule['source_at']:continue
+            if not rule.get('evidence'):raise ValueError('A Korean baseline correction requires original-source evidence')
+            for unit in units:
+                if unit['kind']!='batang':continue
+                if abs(unit['glyphs'][0]['origin'][1]-rule['old'])>.001:raise ValueError('Korean baseline correction does not match its exact input')
+                unit['target_baseline']=rule['new'];baseline_applied.add(index)
         for rule in revisions:
             if at!=rule['source_at']:continue
             for unit in units:
@@ -230,7 +285,7 @@ def _page_build(plan,body_only=False):
                     unit['text']=rule['new'];size=unit['style']['size'];unit['width']=sum(size/4 if c==' 'else metric.text_length(c,fontsize=size)for c in unit['text']);applied.append(rule)
         return units
     out=Path(plan).parents[1]/f'page{d["page"]:02d}{"-body"if body_only else""}.pdf'
-    move_options={}
+    move_options=dict(d.get('native_move_options',{}))
     explicit=[]
     atom_rules=list(d.get('explicit_native_math_atoms',[]))
     if atom_rules:
@@ -250,21 +305,77 @@ def _page_build(plan,body_only=False):
             bounds=fitz.Rect()
             for g in glyphs:
                 if g['gid']>=0:bounds|=fitz.Rect(g['bbox'])
-            for path in paths:bounds|=fitz.Rect(path['rect'])
+            for path in paths:
+                r=fitz.Rect(path['rect'])
+                if rule.get('use_complete_original_clip'):
+                    # A stroked horizontal rule has zero geometric height.
+                    # Rect union treats it as empty, but its endpoints still
+                    # determine the real native mathematical widget width.
+                    bounds=fitz.Rect(min(bounds.x0,r.x0),min(bounds.y0,r.y0),max(bounds.x1,r.x1),max(bounds.y1,r.y1))
+                else:bounds|=r
+            carried_paths=[];complete_clip=None;move_paths=paths
+            if rule.get('use_complete_original_clip'):
+                wanted={glyph_key(g)for g in glyphs if g['c'].strip()}
+                matches=[c for c in inv['clip_groups']if c.get('known_rectangular_clips')and
+                    {glyph_key(g)for g in c['glyphs']if g['c'].strip()}==wanted and
+                    all(c['operator_indices'][0]<=min(v['operator_indices'])<=max(v['operator_indices'])<=c['operator_indices'][-1]for v in paths)]
+                if len(matches)!=1:raise ValueError('Reviewed native fraction must identify one complete original clip containing all its original rules')
+                complete_clip={k:matches[0][k]for k in ['operator_indices','clip_rects','known_rectangular_clips']}
+                carried_paths=paths;move_paths=[]
             explicit.append(dict(kind='native',text=''.join(g['c']for g in sorted(glyphs,key=lambda g:(g['origin'][0],g['origin'][1]))),
                 glyphs=glyphs,x0=bounds.x0,x1=bounds.x1,y=rule['baseline'],size=12.,fonts=sorted({g['font']for g in glyphs}),
-                bbox=list(bounds),shift_kwargs=dict(vector_paths=paths),reviewed_reason=rule['reason']))
+                bbox=list(bounds),shift_kwargs=dict(vector_paths=move_paths),reviewed_reason=rule['reason'],
+                complete_original_clip=complete_clip,preserved_vector_paths_in_complete_clip=carried_paths))
     if not body_only:
         from izho_native_atomic_tokens import _inventory
         stat=source.stat();inv=_inventory(str(source.resolve()),d['page'],stat.st_mtime_ns,stat.st_size)
         underline=[v for v in inv['vector_paths']if v['rect'][1]<60 and v['rect'][2]-v['rect'][0]>400 and v['rect'][3]-v['rect'][1]<2]
-        if underline:move_options['reviewed_stationary_vector_paths']=underline
+        if underline:
+            values=move_options.get('reviewed_stationary_vector_paths',[])+underline
+            move_options['reviewed_stationary_vector_paths']=list({tuple(v['operator_indices']):v for v in values}.values())
+    image_bindings=d.get('reviewed_sibling_math_image_bindings',[]);compiled_image_bindings=[]
+    original_move=composer.reposition_inline
+    def move_with_reviewed_sibling_images(input_source,input_page,*,erased_glyphs,shifts,**options):
+        from pdf_native_inline_reposition import _traces
+        from izho_native_atomic_tokens import _inventory
+        stat=source.stat();inventory=_inventory(str(source.resolve()),d['page'],stat.st_mtime_ns,stat.st_size)
+        with fitz.open(source)as native_doc:source_glyphs=_traces(native_doc[d['page']-1])
+        for rule in image_bindings:
+            if rule.get('reviewed')is not True or not rule.get('reason'):raise ValueError('A sibling math image binding requires an explicit reviewed reason')
+            path=rule['image_path'];matches=[v for v in inventory['images']if v['path']==path]
+            if len(matches)!=1:raise ValueError('The exact original sibling Image Do is missing')
+            image=matches[0]
+            if image['original_raw_sha256']!=rule['original_color_stream_sha256']:raise ValueError('Original sibling math bitmap bytes changed')
+            if max(abs(a-b)for a,b in zip(image['bbox'],rule['original_image_bbox']))>.002:raise ValueError('Original sibling math bitmap CTM changed')
+            box=fitz.Rect(rule['native_glyph_rect']);glyphs=[g for g in source_glyphs if g['c'].strip()and box.contains(fitz.Point(g['origin']))and re.search(rule['native_font_regex'],g['font'])]
+            if not glyphs:raise ValueError('No original native mathematical reference glyphs')
+            moves={glyph_key(g):s['dx']for s in shifts for g in s['glyphs']}
+            values=[moves.get(glyph_key(g),0.)for g in glyphs]
+            if max(values)-min(values)>.001:raise ValueError('A reviewed CID/bitmap expression has split mathematical glyph motions')
+            dx=values[0];existing=[s for s in shifts if s.get('image_path')==path]
+            if existing and any(abs(s['dx']-dx)>.001 for s in existing):raise ValueError('Sibling math image has a conflicting movement')
+            if not existing and abs(dx)>1e-4:shifts.append(dict(glyphs=[],image_path=path,dx=dx))
+            compiled_image_bindings.append(dict(**rule,native_glyphs=glyphs,dx=dx))
+        return original_move(input_source,input_page,erased_glyphs=erased_glyphs,shifts=shifts,**options)
     composer._units=reviewed_units
-    try:raw,qa=compose_page(source,d['page'],native_control_output=out.with_suffix('.native-control.pdf'),native_move_options=move_options,native_atomic_tokens=explicit or None,**{k:d[k]for k in['allowed_line_rects','prose_placements','excluded_figure_rects','centered_lines','right_aligned_lines']})
-    finally:composer._units=original_units
+    composer.boundary_gap=paragraph_gap
+    if image_bindings:composer.reposition_inline=move_with_reviewed_sibling_images
+    locked=[g for region in d.get('stationary_table_math',[])for g in region['native_glyphs']]
+    compose_args={k:d[k]for k in['allowed_line_rects','prose_placements','excluded_figure_rects','centered_lines','right_aligned_lines']}
+    if d.get('reviewed_layout_figure_rects'):
+        # Only explicitly reviewed white bitmap padding may differ from the
+        # layout exclusion. Independent figure QA still uses the FULL source
+        # rectangle in excluded_figure_rects, not this layout-only boundary.
+        compose_args['excluded_figure_rects']=d['reviewed_layout_figure_rects']
+    try:raw,qa=compose_page(source,d['page'],native_control_output=out.with_suffix('.native-control.pdf'),native_move_options=move_options,native_atomic_tokens=explicit or None,stationary_native_glyphs=locked,include_image_only_native_math=d.get('include_image_only_native_math',False),baseline_tolerance_pt=d.get('baseline_tolerance_pt',.12),**compose_args)
+    finally:composer._units=original_units;composer.boundary_gap=original_gap;composer.reposition_inline=original_move
     if len(applied)!=len(revisions):raise ValueError(('Reviewed word revision was not applied exactly once',revisions,applied))
+    if len(baseline_applied)!=len(baseline_revisions):raise ValueError('A reviewed Korean baseline correction was not applied')
     qa['reviewed_hangul_word_revisions']=applied
+    qa['reviewed_hangul_baseline_revisions']=baseline_revisions
+    qa['section_number_prefix_gaps']=paragraph_gaps
     qa['native_move_options']=move_options
+    qa['reviewed_sibling_math_image_bindings']=compiled_image_bindings
     qa['reviewed_explicit_native_math_atoms']=explicit
     qa['body_font_coverage']=coverage(d,qa)
     out.write_bytes(raw)

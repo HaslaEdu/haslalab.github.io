@@ -1,0 +1,116 @@
+{
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "source_font_program_sha256": "511f5a3aca2f9b2b1ed7b40c149fcb858fb77caf441d87efb9363f17716b30b7",
+  "donor_path": "C:\\Windows\\Fonts\\simsun.ttc",
+  "donor_sha256": "1526ac24375f51f6eb73bc2d3f8072dbe4a80a3a65217677c9d9a84f67dab2ab",
+  "donor_face": 0,
+  "donor_version": "Version 5.24",
+  "source_upem": 256,
+  "donor_upem": 256,
+  "checks": [
+    {
+      "c": " ",
+      "source_gid": 3,
+      "donor_gid": 3,
+      "complete_decomposed_outline_equal": true,
+      "advance_and_lsb_equal": true,
+      "source_advance_lsb": [
+        128,
+        0
+      ],
+      "donor_advance_lsb": [
+        128,
+        0
+      ],
+      "source_outline_sha256": "681ce931b291154f191bd82c5a5d72154fa8f375bc36c864d99e6d5e16ae5d23",
+      "donor_outline_sha256": "681ce931b291154f191bd82c5a5d72154fa8f375bc36c864d99e6d5e16ae5d23"
+    },
+    {
+      "c": "!",
+      "source_gid": 4,
+      "donor_gid": 4,
+      "complete_decomposed_outline_equal": true,
+      "advance_and_lsb_equal": true,
+      "source_advance_lsb": [
+        128,
+        49
+      ],
+      "donor_advance_lsb": [
+        128,
+        49
+      ],
+      "source_outline_sha256": "fba4a8079387d466946d06698e95cf5701e5ee7d78852e780ed422bd18fa3ea0",
+      "donor_outline_sha256": "fba4a8079387d466946d06698e95cf5701e5ee7d78852e780ed422bd18fa3ea0"
+    },
+    {
+      "c": "\"",
+      "source_gid": 5,
+      "donor_gid": 5,
+      "complete_decomposed_outline_equal": true,
+      "advance_and_lsb_equal": true,
+      "source_advance_lsb": [
+        128,
+        18
+      ],
+      "donor_advance_lsb": [
+        128,
+        18
+      ],
+      "source_outline_sha256": "5336637b80d02b5178ea81237fbf6e9d390119bd156af218b9f23ec0771d916c",
+      "donor_outline_sha256": "5336637b80d02b5178ea81237fbf6e9d390119bd156af218b9f23ec0771d916c"
+    },
+    {
+      "c": "M",
+      "source_gid": 48,
+      "donor_gid": 48,
+      "complete_decomposed_outline_equal": true,
+      "advance_and_lsb_equal": true,
+      "source_advance_lsb": [
+        128,
+        2
+      ],
+      "donor_advance_lsb": [
+        128,
+        2
+      ],
+      "source_outline_sha256": "78e0750a33252f616e36222b6820213ff508c33d7a01aa8e425c4d240a09c9ef",
+      "donor_outline_sha256": "78e0750a33252f616e36222b6820213ff508c33d7a01aa8e425c4d240a09c9ef"
+    },
+    {
+      "c": "d",
+      "source_gid": 71,
+      "donor_gid": 71,
+      "complete_decomposed_outline_equal": true,
+      "advance_and_lsb_equal": true,
+      "source_advance_lsb": [
+        128,
+        15
+      ],
+      "donor_advance_lsb": [
+        128,
+        15
+      ],
+      "source_outline_sha256": "63b074f7e9a34d9d6de3ab3401749571efd2179869febf3565661555a5ebe66b",
+      "donor_outline_sha256": "63b074f7e9a34d9d6de3ab3401749571efd2179869febf3565661555a5ebe66b"
+    },
+    {
+      "c": "r",
+      "source_gid": 85,
+      "donor_gid": 85,
+      "complete_decomposed_outline_equal": true,
+      "advance_and_lsb_equal": true,
+      "source_advance_lsb": [
+        128,
+        8
+      ],
+      "donor_advance_lsb": [
+        128,
+        8
+      ],
+      "source_outline_sha256": "c4d342ae32cb56db30bdd32ea8b9e46119286fd152dbf689c1fcf74cb6d01af4",
+      "donor_outline_sha256": "c4d342ae32cb56db30bdd32ea8b9e46119286fd152dbf689c1fcf74cb6d01af4"
+    }
+  ],
+  "reason": "Existing TS SimSun retained cmap6 characters may not be live source prose; all are independently proven exact same-face full decomposed outline/advance/LSB to installed original-family donor. No need to trust mere cmap or bbox presence.",
+  "passed": true
+}

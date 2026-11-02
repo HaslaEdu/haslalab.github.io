@@ -1,0 +1,104 @@
+<h1 class="title">Solution</h1>
+
+
+<div class="task">
+<p class="code"><b>A0</b>.</p>
+<div class="ans">$$d_e = X_0\ln 2 = 25.1~\mathrm{g/cm^2}$$</div></div>
+
+<div class="task">
+<p><b>A1</b>. The energy of the shower particles halves after every splitting length, so let us find after how many splittings the energy of a particle falls below the critical energy:</p>
+$$\log_2\frac{E_\gamma}{E_e^{\mathrm{crit}}} = 6.8 \;\Rightarrow$$
+<div class="ans">$$n_{\max} = 7$$</div></div>
+
+<div class="task">
+<p><b>A2</b>. Let us calculate the radiation path length the shower has passed by the 7th splitting:</p>
+$$x_e = d_e\cdot n_{\max} = 175.7~\mathrm{g/cm^2}.$$
+<p>In an atmosphere of constant density $\rho_0$ this radiation path length corresponds to the geometric distance</p>
+<div class="ans">$$l_e = \frac{x_e}{\rho_0} = 1.4~\mathrm{km}$$</div></div>
+
+<div class="task">
+<p><b>A3</b>. Every splitting doubles the number of shower particles. Therefore</p>
+<div class="ans">$$N_{\max} = 2^{n_{\max}} = 128$$</div></div>
+
+<div class="task">
+<p><b>A4</b>. At every splitting a photon turns into an electron–positron pair and disappears, while the electron and the positron each emit one photon. Hence the number of photons after a splitting equals the sum of the numbers of electrons and positrons before it, and the numbers of positrons and electrons each grow by the number of photons before the splitting. Let us tabulate the number of particles of each kind by generation:</p>
+<table>
+<tr><th>$n$</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>
+<tr><th>$\gamma$</th><td>1</td><td>0</td><td>2</td><td>2</td><td>6</td><td>10</td><td>22</td><td>42</td></tr>
+<tr><th>$e^-$</th><td>0</td><td>1</td><td>1</td><td>3</td><td>5</td><td>11</td><td>21</td><td>43</td></tr>
+<tr><th>$e^+$</th><td>0</td><td>1</td><td>1</td><td>3</td><td>5</td><td>11</td><td>21</td><td>43</td></tr>
+</table>
+<p>When the development of the shower stops there are $n_{e^-} = 43$ electrons in it. The total charge carried by the electrons is therefore</p>
+<div class="ans">$$Q_e = n_{e^-}\cdot q_e = -6.9\cdot 10^{-18}~\mathrm{C}$$</div></div>
+
+
+<div class="task">
+<p><b>B1</b>. The number of generations of the hadronic component is found in the same way as in <b>A1</b>, except that in a hadronic shower the energy of the particles drops 15 times at every splitting:</p>
+$$\log_{15}\frac{E_p}{E_\pi^{\mathrm{crit}}} = 2.2 \;\Rightarrow$$
+<div class="ans">$$n^{\max}_{\mathrm{hadr}} = 3$$</div></div>
+
+<div class="task">
+<p><b>B2</b>. In a hadronic interaction the energy of the particles drops 15 times, whereas in an electromagnetic one it drops 2 times. The number of generations is therefore largest when, apart from the first hadronic interaction (the proton breaks up and a $\pi^0$ meson splits into two photons), the shower develops electromagnetically from the start:</p>
+$$\log_2\frac{E_p/(15\cdot 2)}{E_e^{\mathrm{crit}}} = 11.4 \;\Rightarrow$$
+<div class="ans">$$n^{\max}_{\mathrm{EM}} = 12 + 1 = 13$$</div></div>
+
+<div class="task">
+<p><b>B3</b>. The energy carried away by muons and neutrinos is the energy left in the charged pions $\pi^\pm$ when their energy falls below the critical value. In every hadronic interaction 6 of the 15 particles are neutral pions $\pi^0$, whose energy goes to the electromagnetic component; the other 9 of the 15 stay in the hadronic component.</p>
+<p>The fraction of the energy left in the hadronic component when the hadronic shower stops developing (after $n^{\max}_{\mathrm{hadr}} = 3$ splittings) is therefore</p>
+$$\beta_{\mathrm{miss}} = \left(\frac{9}{15}\right)^{n^{\max}_{\mathrm{hadr}}} = \left(\frac{3}{5}\right)^3 = 0.216.$$
+<p>All these charged pions later decay into muons and neutrinos, which carry this energy away. Therefore</p>
+<div class="ans">$$\beta_{\mathrm{miss}} = 0.22$$</div></div>
+
+
+<div class="task">
+<p><b>C1</b>. One hadronic interaction reduces the energy of a particle 15 times, which corresponds to $\log_2 15 = 3.9$ electromagnetic splittings. Reducing the energy 15 times takes the radiation path length $d_h = 57~\mathrm{g/cm^2}$, or $3.9\cdot d_e = 97.9~\mathrm{g/cm^2}$. The electromagnetic shower therefore stops developing later (farther away), so $h_{\mathrm{stop}}$ must be calculated for the electromagnetic component.</p>
+<p>Let us calculate the radiation path length passed until the shower stops: one hadronic interaction, then the decay of a $\pi^0$ into two photons, and the remaining electromagnetic splittings:</p>
+$$\log_2\frac{E/(15\cdot 2)}{E_e^{\mathrm{crit}}} = 15.2 \;\Rightarrow\; x = d_h + 16\cdot d_e = 458.6~\mathrm{g/cm^2}.$$
+<p>Now, taking the density of the atmosphere into account, we calculate the geometric altitude at which the shower stops developing:</p>
+$$x = \int_{h_{\mathrm{stop}}}^{\infty}\rho_0 e^{-h/H}\,dh = \rho_0 H e^{-h_{\mathrm{stop}}/H}.$$
+<div class="ans">$$h_{\mathrm{stop}} = H\ln\frac{\rho_0 H}{x} = 6.6~\mathrm{km}$$</div></div>
+
+<div class="task">
+<p><b>C2</b>. As in <b>B3</b>, let us find the energy carried away by muons and neutrinos:</p>
+$$\log_{15}\frac{E}{E_\pi^{\mathrm{crit}}} = 3.14 \;\Rightarrow\; n_h = 4.$$
+<p>All the remaining energy then stays in the electromagnetic component:</p>
+<div class="ans">$$\beta_{\mathrm{EM}} = 1 - \left(\frac{9}{15}\right)^4 = 0.87$$</div></div>
+
+<div class="task">
+<p><b>C3</b>. Let us calculate the air density at the altitude $h_{\mathrm{stop}}$:</p>
+$$\rho(h_{\mathrm{stop}}) = \rho_0 e^{-h_{\mathrm{stop}}/H} = 0.57~\mathrm{kg/m^3}.$$
+<p>Substituting this value into the formula for the radius, we obtain</p>
+<div class="ans">$$R_{\mathrm{stop}} = \frac{X_0}{\rho_0 e^{-h_{\mathrm{stop}}/H}}\cdot\frac{E_s}{E_e^{\mathrm{crit}}} = 150~\mathrm{m}$$</div></div>
+
+<div class="task">
+<p><b>C4</b>. Converting the shower radius down to the ground, taking the change of the air density into account, we obtain</p>
+$$R = R_{\mathrm{stop}}\frac{\rho}{\rho_0} = 67~\mathrm{m}.$$
+<div class="ans">$$S = \pi R^2 = 14\cdot 10^3~\mathrm{m^2}$$</div></div>
+
+<div class="task">
+<p><b>C5</b>. The particles diverge at the altitude $h_{\mathrm{stop}}$ at the angle $\theta = R_{\mathrm{stop}}/h_{\mathrm{stop}}$, so when the shower front reaches the ground there is a path difference</p>
+$$\Delta = h_{\mathrm{stop}}\cdot(1 - \cos\theta) \approx h_{\mathrm{stop}}\frac{\theta^2}{2} = \frac{R_{\mathrm{stop}}^2}{2h_{\mathrm{stop}}} = 1.7~\mathrm{m}.$$
+<p>The particles move almost at the speed of light, so</p>
+<div class="ans">$$\Delta t = \frac{\Delta}{c} = \frac{R_{\mathrm{stop}}^2}{2ch_{\mathrm{stop}}} = 5.7~\mathrm{ns}$$</div></div>
+
+
+<div class="task">
+<p><b>D1</b>. To find $\kappa$ from the data, let us plot the histogram of the detector signals.</p>
+<figure><img src="S2_fig1.png" style="width:96mm"><figcaption>Histogram of the detector signal amplitudes.</figcaption></figure>
+<p>The energy of a particle reaching the detector cannot exceed the critical energy $E_e^{\mathrm{crit}} = 88~\mathrm{MeV}$. The histogram shows a sharp cutoff at the signal value $A^{\mathrm{crit}} = 1.32\cdot 10^8$, from which</p>
+<div class="ans">$$\kappa = \frac{A^{\mathrm{crit}}}{E_e^{\mathrm{crit}}} = 1.5\cdot 10^9~\mathrm{GeV^{-1}}$$</div></div>
+
+<div class="task">
+<p><b>D2</b>. Let us add up all the signals recorded by the detectors:</p>
+$$A_0 = 70240347424,$$
+<p>from which, with the coefficient $\kappa$,</p>
+<div class="ans">$$E_0 = \frac{A_0}{\kappa} = 46.8~\mathrm{GeV}$$</div></div>
+
+<div class="task">
+<p><b>D3</b>. Using the formula of <b>C3</b>, let us calculate the mean shower radius from the data:</p>
+$$R = \sum_i\frac{\sqrt{x_i^2 + y_i^2}}{N} = 68.3~\mathrm{m}.$$
+<p>When the shower stopped developing, its radius was, according to formula (8),</p>
+$$R_{\mathrm{stop}} = \frac{X_0}{\rho(h_{\mathrm{stop}})}\cdot\frac{E_s}{E_e^{\mathrm{crit}}},$$
+<p>and then, according to formula (9), it shrank in inverse proportion to the density:</p>
+$$R = R_{\mathrm{stop}}\frac{\rho(h_{\mathrm{stop}})}{\rho_{\mathrm{atm}}} = \frac{X_0}{\rho_{\mathrm{atm}}}\cdot\frac{E_s}{E_e^{\mathrm{crit}}}.$$
+<div class="ans">$$\rho_{\mathrm{atm}} = \frac{X_0}{R}\cdot\frac{E_s}{E_e^{\mathrm{crit}}} = 1.26~\mathrm{kg/m^3}$$</div></div>

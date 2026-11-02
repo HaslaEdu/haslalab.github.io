@@ -36,5 +36,16 @@ class ComposerPDFRegression(unittest.TestCase):
             self.assertEqual(qa['new_non_hangul_font_replacements'],0)
             self.assertEqual(qa['retained_native_style_or_geometry_mismatches_after_insertion'],0)
             final.close()
+            with fitz.open(source)as original:
+                locked=[{k:r[k]for k in('c','font','size','origin')}for r in records(original[0])if r['c']=='m']
+            stationary,check=compose_page(source,1,allowed_line_rects=[[19,40,150,80],[185,40,300,80]],
+                stationary_native_glyphs=locked,
+                prose_placements=[dict(point=[20,60],width=23.184,text='질량',border_width=.3),
+                                  dict(point=[190,60],width=70,text='인 강체구')])
+            with fitz.open(stream=stationary,filetype='pdf')as frozen:
+                m=next(r for r in records(frozen[0])if r['c']=='m')
+                self.assertEqual(m['origin'],[160.,60.])
+                self.assertEqual(check['stationary_native_glyphs'],locked)
+                self.assertFalse(any(g['c']=='m'for shift in check['native_shifts']for g in shift['glyphs']))
 
 if __name__=='__main__':unittest.main()

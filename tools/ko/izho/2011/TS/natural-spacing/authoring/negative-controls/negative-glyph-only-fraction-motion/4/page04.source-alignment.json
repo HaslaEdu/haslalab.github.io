@@ -1,0 +1,145 @@
+{
+  "source_sha256": "ecc4a34a50fade6a08fd5f629480bebfa20ec418cdc19fa87915f6c0465ee008",
+  "source_page": 4,
+  "proof_sha256": "f5a9be3a6f78248f3db9af9f3b30eca76d34a4e766472ec6af8e0dcb6abcc943",
+  "plan_sha256": "c2e2e49904e12fcc71e279f1db56f01705fd576ac13f57048a767b7167093bfa",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 4,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 84.8399658203125,
+      "source_center": 312.4159393310547,
+      "independent_original_source_centers": [
+        312.4159393310547
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 273.3699645996094,
+      "actual_nonspace_glyph_right": 351.4619140625,
+      "actual_center": 312.4159393310547,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 8,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 100.915771484375,
+      "source_center": 312.39774322509766,
+      "independent_original_source_centers": [
+        312.39774322509766
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 254.6371307373047,
+      "actual_nonspace_glyph_right": 370.1583557128906,
+      "actual_center": 312.39774322509766,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 8,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          3,
+          0
+        ]
+      ],
+      "baseline": 130.79998779296875,
+      "source_center": 312.44776916503906,
+      "independent_original_source_centers": [
+        312.44776916503906
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 283.5674743652344,
+      "actual_nonspace_glyph_right": 341.32806396484375,
+      "actual_center": 312.44776916503906,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          13,
+          0
+        ]
+      ],
+      "baseline": 363.719970703125,
+      "source_center": 312.4492950439453,
+      "independent_original_source_centers": [
+        312.4492950439453
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 276.78765869140625,
+      "actual_nonspace_glyph_right": 348.1109313964844,
+      "actual_center": 312.4492950439453,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 5,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 4,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "Theoretical Question 2 (10 points) ",
+        "original_center": 312.4159393310547,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "Electrical conductivity of metals  ",
+        "original_center": 312.39774322509766,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          3,
+          0
+        ],
+        "source_text": "Ohm's law ",
+        "original_center": 312.44776916503906,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          13,
+          0
+        ],
+        "source_text": "The Drude model ",
+        "original_center": 312.4492950439453,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

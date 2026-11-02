@@ -1,0 +1,15 @@
+{
+  "11": [
+    {"form_path": [1791], "baseline": 429.66998291015625, "expected_text": "Nddt", "bbox": [142.509986464293,412.7609079430903,161.710836487456,440.71001005499954], "brackets": ["11-14-0","11-14-1"], "reviewed": true, "reason": "Original dN/dt fraction between the particle-count word and proportionality sign. All fraction glyph baselines lie outside the prose anchor band; retain the original complete fraction and bar in its semantic order."}
+  ],
+  "13": [
+    {"form_path": [1115], "baseline": 400.72998046875, "expected_text": "14r", "bbox": [302.8099728565876,383.8109079430902,318.05970820862,411.7600100543488], "brackets": ["13-6-1","13-6-2"], "reviewed": true, "reason": "Original 1/r^4 coefficient between source prose slots; the fraction has no glyph at the surrounding prose baseline. Move the complete original fraction and its bar together."}
+  ],
+  "23": [
+    {"form_path": [1351], "baseline": 282.64996337890625, "expected_text": "", "bbox": [111.05999323195037,272.7096549083962,120.309839113557,284.710037198151], "brackets": ["23-10-0","23-10-1"], "reviewed": true, "reason": "Original bitmap hbar between 'where' and 'is the reduced Planck constant'; retain its original image program, scale, clip and y."},
+    {"form_path": [1970], "baseline": 348.7699890136719, "expected_text": "T", "bbox": [100.50999323195038,338.8096549083962,110.46008987154,350.8100372003926], "brackets": ["23-14-0","23-14-1"], "reviewed": true, "reason": "Original temperature T between the source temperature word and its mass relationship; retain the complete original encoded mathematical object."}
+  ],
+  "33": [
+    {"form_path": [1095], "baseline": 239.89996337890625, "expected_text": "", "bbox": [100.50999323195038,229.9596549083962,109.759839113557,241.960037198151], "brackets": ["33-10-0","33-10-1"], "reviewed": true, "reason": "Original bitmap hbar between the source 'where' and reduced-Planck-constant definition. Retain its exact image program and original scale, clipping and y."}
+  ]
+}

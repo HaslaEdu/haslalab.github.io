@@ -1,0 +1,58 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 12,
+  "proof_sha256": "765697c1318367752a4db4b6d0e27765749d237308035ffed81fd45cfdde3c73",
+  "plan_sha256": "60d58524f055c697a3dc512cb7f193a44cf9f4f0591fcaa57c612d393a8b994d",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          10,
+          2
+        ]
+      ],
+      "baseline": 151.67999267578125,
+      "source_center": 280.81800842285156,
+      "independent_original_source_centers": [
+        280.81800842285156
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 269.22601318359375,
+      "actual_nonspace_glyph_right": 292.4100341796875,
+      "actual_center": 280.8180236816406,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          10,
+          3
+        ]
+      ],
+      "baseline": 151.67999267578125,
+      "source_center": 507.23402404785156,
+      "independent_original_source_centers": [
+        507.23402404785156
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 495.64202880859375,
+      "actual_nonspace_glyph_right": 518.8260498046875,
+      "actual_center": 507.2340393066406,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 0,
+    "rows": [],
+    "passed": true
+  },
+  "passed": true
+}

@@ -1,3 +1,4 @@
+import {pdfiumVisualFixture} from './fixtures/pdfium-visual-fixture.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { MODEL_TEST_EXAMS } from './src/model-test-catalog.js';
@@ -5,7 +6,7 @@ import { modelTestConfig, runModelTest, validateModelTestRequest } from './src/m
 import { resolveModelTestExam, prepareModelTestReference } from './src/model-test-reference.js';
 import { createModelTestRouter } from './src/model-test-route.js';
 
-const env = { GEMINI_API_KEY: 'synthetic-gemini-private', DEEPSEEK_API_KEY: 'synthetic-deepseek-private' };
+const env = { REFERENCE_PDFIUM_LOAD:async()=>pdfiumVisualFixture(),GEMINI_API_KEY: 'synthetic-gemini-private', DEEPSEEK_API_KEY: 'synthetic-deepseek-private' };
 const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/FXChyoAAAAASUVORK5CYII=';
 const entry = MODEL_TEST_EXAMS.find(row => row.referenceStatus === 'published' && row.solution && row.solution !== row.paper);
 assert.ok(entry, 'the real catalogue must contain at least one published problem and distinct solution');
@@ -24,7 +25,7 @@ function fixture({ ref = reference(), grade = grading, pdfReply, gate } = {}) {
       return pdfReply ? pdfReply(url, options) : pdf();
     }
     const body = JSON.parse(options.body), gemini = url.includes('generativelanguage.googleapis.com');
-    const input = JSON.parse(gemini ? body.contents[0].parts[0].text : body.messages[1].content[0].text);
+    const input = JSON.parse((gemini ? body.contents[0].parts : body.messages[1].content).find(part=>part.text?.startsWith('{')).text);
     const kind = gemini && body.generationConfig.responseSchema.properties.scope_verified ? 'reference' : input.task;
     calls.push({ kind, url, options, body, input });
     if (kind === 'reference' && gate) await gate;
@@ -70,8 +71,8 @@ test('selected exam prepares one public context before OCR, reuses it across pip
   const prep = mock.calls.find(call => call.kind === 'reference'), grade = mock.calls.find(call => call.kind === 'grading');
   assert.equal(prep.input.task, entry.task); assert.equal(prep.input.problemNo, entry.problemNo);
   assert.deepEqual(prep.input.skip, entry.skip); assert.equal(prep.input.wholePaper, entry.wholePaper);
-  assert.ok(prep.body.contents[0].parts.slice(1).every(part => part.inline_data.mime_type === 'application/pdf'));
-  assert.ok(!JSON.stringify(grade.body).includes(png)); assert.equal(grade.input.problem, reference().problem);
+  assert.ok(prep.body.contents[0].parts.filter(part=>part.inline_data).every(part => part.inline_data.mime_type === 'application/pdf'));
+  assert.ok(JSON.stringify(grade.body).includes(png));assert.ok(JSON.stringify(grade.body).includes('data:image/png;base64,'),'canonical references reach DeepSeek as images'); assert.equal(grade.input.problem, reference().problem);
   const before = mock.calls.length, second = await runModelTest(env, requestBody(entry.id, { pipeline: 'deepseek-deepseek' }), mock);
   assert.equal(second.reference.cached, true); assert.equal(second.usage.calls, 2); assert.equal(second.usage.reference_pricing.total_calls, 0);
   assert.deepEqual(mock.calls.slice(before).map(call => call.kind), ['ocr', 'grading']);

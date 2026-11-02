@@ -93,5 +93,6 @@ def prepare_english_faces(year,source,page_number,placements,folder):
     report=dict(input=str(source),input_page=page_number,output=str(path),font='Official Microsoft SimHei5.03 Regular400',
                 font_acquisition_sha256=SIMHEI_SHA,embedded_subset=str(donor),original_math_unchanged=True,
                 rewritten_prose=journals,erasure_and_native_number_move_qa=moveqa)
+    report['native_number_shifts']=shifts
     path.with_suffix('.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),'utf8')
     return path,1,newplacements,report

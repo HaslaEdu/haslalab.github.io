@@ -17,29 +17,46 @@ import cv2
 
 def resolved_images(doc,page):
     result=[dict(item)for item in page.get_image_info(xrefs=True)]
-    if any(not item['xref']for item in result):
-        # MuPDF get_images can omit an image inside a nested native math
-        # Form, even while get_image_info renders it. Follow original Do
-        # operators read-only, then require exact paint-count agreement.
-        painted=[]
-        source=doc.name if doc.name and Path(doc.name).is_file()else BytesIO(doc.tobytes(garbage=0))
-        with pikepdf.Pdf.open(source)as pdf:
-            def walk(node,resources,ancestors=()):
-                if len(ancestors)>20:raise ValueError('Excessive image Form nesting')
-                for instruction in pikepdf.parse_content_stream(node):
-                    if str(instruction.operator)!='Do':continue
-                    child=resources.get('/XObject',{}).get(instruction.operands[0])
-                    if child is None:continue
-                    subtype=str(child.get('/Subtype'))
-                    if subtype=='/Image':painted.append(child.objgen[0])
+    if not result:return result
+    # MuPDF may return a nonzero, wrong xref when equal colour streams have
+    # different SMask resources. In particular, Word uses many identical 2x2
+    # black images whose independent masks contain different math symbols.
+    # Resolve every actual Do occurrence, not just a reported zero xref.
+    painted=[];identity=(1.,0.,0.,1.,0.,0.);page_matrix=tuple(page.transformation_matrix)
+    def multiply(a,b):
+        x,y,z,w,e,f=a;A,B,C,D,E,F=b
+        return(x*A+y*C,x*B+y*D,z*A+w*C,z*B+w*D,e*A+f*C+E,e*B+f*D+F)
+    def bounds(matrix):
+        a,b,c,d,e,f=matrix;points=[(a*x+c*y+e,b*x+d*y+f)for x,y in[(0,0),(1,0),(0,1),(1,1)]]
+        return[min(p[0]for p in points),min(p[1]for p in points),max(p[0]for p in points),max(p[1]for p in points)]
+    source=doc.name if doc.name and Path(doc.name).is_file()else BytesIO(doc.tobytes(garbage=0))
+    with pikepdf.Pdf.open(source)as pdf:
+        def walk(node,resources,ctm=identity,path=(),ancestors=()):
+            if len(ancestors)>20:raise ValueError('Excessive image Form nesting')
+            stack=[]
+            for index,instruction in enumerate(pikepdf.parse_content_stream(node)):
+                op=str(instruction.operator);operands=instruction.operands
+                if op=='q':stack.append(ctm)
+                elif op=='Q':
+                    if not stack:raise ValueError('Unbalanced original image graphics state')
+                    ctm=stack.pop()
+                elif op=='cm':ctm=multiply(tuple(map(float,operands)),ctm)
+                elif op=='Do':
+                    child=resources.get('/XObject',{}).get(operands[0])
+                    if child is None:raise ValueError('Missing original image/Form resource')
+                    subtype=str(child.get('/Subtype'));current_path=path+(index,)
+                    if subtype=='/Image':
+                        painted.append(dict(xref=child.objgen[0],path=list(current_path),bbox=bounds(multiply(ctm,page_matrix)),width=int(child.Width),height=int(child.Height)))
                     elif subtype=='/Form':
                         if child.objgen in ancestors:raise ValueError('Recursive image Form')
-                        walk(child,child.get('/Resources',resources),ancestors+(child.objgen,))
-            p=pdf.pages[page.number];walk(p,p.Resources)
-        if len(painted)!=len(result):raise ValueError('Image paint order cannot be proved')
-        for item,xref in zip(result,painted):
-            if item['xref']and item['xref']!=xref:raise ValueError('Image resource/paint order mismatch')
-            item['xref']=xref
+                        walk(child,child.get('/Resources',resources),multiply(tuple(map(float,child.get('/Matrix',identity))),ctm),current_path,ancestors+(child.objgen,))
+        p=pdf.pages[page.number];walk(p,p.Resources)
+    if len(painted)!=len(result):raise ValueError('Image paint order cannot be proved')
+    for item,original in zip(result,painted):
+        if (item['width'],item['height'])!=(original['width'],original['height']):raise ValueError('Original image Do dimensions disagree with rendered occurrence')
+        if max(abs(x-y)for x,y in zip(item['bbox'],original['bbox']))>.002:raise ValueError(('Original image Do CTM disagrees with rendered occurrence',original['path'],item['bbox'],original['bbox']))
+        item['mupdf_cached_xref']=item['xref'];item['xref']=original['xref']
+        item['original_paint_path']=original['path'];item['xref_resolved_from_original_Do']=True
     return result
 
 

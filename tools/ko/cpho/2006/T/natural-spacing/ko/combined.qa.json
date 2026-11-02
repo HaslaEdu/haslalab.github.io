@@ -1,0 +1,2274 @@
+{
+  "passed": true,
+  "output_sha256": "af8943f63916e46684e78289e8505f5ed3b06fa8c070ac11d5eb6a255c80a204",
+  "pages": [
+    {
+      "year": 2006,
+      "language": "ko",
+      "page": 1,
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page01.pdf",
+      "output_sha256": "efb83f38cd8737507c0c88da754f2b1b5d9c8e18e9b55bc5032bb0af5a2106cf",
+      "immutable_input": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+      "immutable_input_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "old_text_outline_uses": 766,
+      "new_text_outline_uses": 768,
+      "outside_bbox": null,
+      "original_physical_native_ink": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 1,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page01.pdf",
+        "final_page": 1,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "output_sha256": "efb83f38cd8737507c0c88da754f2b1b5d9c8e18e9b55bc5032bb0af5a2106cf",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 86,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 86,
+          "expected_signature_count": 86,
+          "matched_outline_uses": 88,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 8129,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 1,
+        "passed": false,
+        "missing_bbox": [
+          224.5,
+          283.5,
+          224.75,
+          283.75
+        ]
+      },
+      "native_graphics_motion_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              324.24,
+              375.3599926757813,
+              325.92,
+              376.3199926757813
+            ],
+            "operator_indices": [
+              126,
+              127,
+              128
+            ],
+            "dx": -51.626686096191406
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              325.92,
+              375.59999267578127,
+              328.08,
+              379.6799926757813
+            ],
+            "operator_indices": [
+              138,
+              139,
+              140
+            ],
+            "dx": -51.626686096191406
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              328.32,
+              367.6799926757813,
+              331.2,
+              379.6799926757813
+            ],
+            "operator_indices": [
+              150,
+              151,
+              152
+            ],
+            "dx": -51.626686096191406
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              331.2,
+              367.6799926757813,
+              337.68,
+              367.6799926757813
+            ],
+            "operator_indices": [
+              162,
+              163,
+              164
+            ],
+            "dx": -51.626686096191406
+          }
+        ],
+        "changed_actual_inline_math_graphical_pixels": 729,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 328,
+        "new_native_math_actual_graphics_pixels": 327
+      },
+      "original_native_expression_relative_geometry": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 1,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page01.pdf",
+        "final_page": 1,
+        "final_sha256": "efb83f38cd8737507c0c88da754f2b1b5d9c8e18e9b55bc5032bb0af5a2106cf",
+        "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+        "tolerance_pt": 0.001,
+        "source_physical_glyphs": 86,
+        "matched_physical_glyphs": 86,
+        "glyph_signature_or_position_errors": [],
+        "script_base_pairs": [
+          {
+            "script": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                220.32000732421875,
+                291.84002685546875
+              ]
+            },
+            "base": {
+              "c": "R",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                214.32000732421875,
+                290.880126953125
+              ]
+            },
+            "script_dx": 5.3040008544921875,
+            "base_dx": 5.3040008544921875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "6",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                283.44000244140625,
+                284.87994384765625
+              ]
+            },
+            "base": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                274.55999755859375,
+                290.87994384765625
+              ]
+            },
+            "script_dx": 5.30401611328125,
+            "base_dx": 5.30401611328125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "-",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                493.1999816894531,
+                284.87994384765625
+              ]
+            },
+            "base": {
+              "c": "s",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                487.20001220703125,
+                290.87994384765625
+              ]
+            },
+            "script_dx": 3.587982177734375,
+            "base_dx": 3.5880126953125,
+            "relative_x_change_pt": -3.0517578125e-05,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "2",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                496.3199768066406,
+                284.87994384765625
+              ]
+            },
+            "base": {
+              "c": "s",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                487.20001220703125,
+                290.87994384765625
+              ]
+            },
+            "script_dx": 3.587982177734375,
+            "base_dx": 3.5880126953125,
+            "relative_x_change_pt": -3.0517578125e-05,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                287.760009765625,
+                731.760009765625
+              ]
+            },
+            "base": {
+              "c": "T",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                281.760009765625,
+                730.7999877929688
+              ]
+            },
+            "script_dx": -20.760009765625,
+            "base_dx": -20.760009765625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "Times New Roman Italic+FPEF",
+              "size": 4.980000019073486,
+              "origin": [
+                136.80059814453125,
+                748.7980346679688
+              ]
+            },
+            "base": {
+              "c": "T",
+              "font": "Times New Roman Italic+FPEF",
+              "size": 6.9720001220703125,
+              "origin": [
+                133.2000732421875,
+                746.8817138671875
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "-",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                197.04000854492188,
+                746.8800048828125
+              ]
+            },
+            "base": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                191.04000854492188,
+                752.8800048828125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "3",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                200.04000854492188,
+                746.8800048828125
+              ]
+            },
+            "base": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                191.04000854492188,
+                752.8800048828125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "-",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                227.04000854492188,
+                746.8800048828125
+              ]
+            },
+            "base": {
+              "c": "m",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                221.27999877929688,
+                752.8800048828125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                230.04000854492188,
+                746.8800048828125
+              ]
+            },
+            "base": {
+              "c": "m",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                221.27999877929688,
+                752.8800048828125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "relative_geometry_failures": [],
+        "reviewed_expression_groups": [
+          {
+            "label": "[native l=sqrt(3)R]",
+            "physical_glyphs": 4,
+            "matched_glyphs": 4,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native full temperature-gradient expression]",
+            "physical_glyphs": 20,
+            "matched_glyphs": 20,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native Earth radius with subscript and power of ten]",
+            "physical_glyphs": 12,
+            "matched_glyphs": 12,
+            "relative_x_spread_pt": 1.52587890625e-05,
+            "passed": true
+          },
+          {
+            "label": "[native surface gravity with complete inverse-square-second unit and original period]",
+            "physical_glyphs": 12,
+            "matched_glyphs": 12,
+            "relative_x_spread_pt": 3.0517578125e-05,
+            "passed": true
+          },
+          {
+            "label": "[native temperature Te original subscript]",
+            "physical_glyphs": 2,
+            "matched_glyphs": 2,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "reviewed_script_exclusions": [],
+        "passed": true
+      },
+      "verified_original_native_ink_passed": true,
+      "exact_native_CID_raster_phase_witness": {
+        "method": "Exact original encoded CID/font/Tf/Tm/paint state in an isolated native Form; source default glyph hinting retained.",
+        "c": "R",
+        "font": "ËÎÌå+FPEF",
+        "gid": 179,
+        "size": 12.0,
+        "origin": [
+          214.32000732421875,
+          290.880126953125
+        ],
+        "source_encoded_cid_hex": "00b3",
+        "source_font_resource": "/F5",
+        "source_Tf": 1.0,
+        "source_Tm_linear": [
+          12.0,
+          0.0,
+          0.0,
+          12.0
+        ],
+        "form_sha256": "1afcf7f1df06b5745972c03f7546dbf11b5be8433cfbdae74e615f57049f4d13",
+        "dx": 5.3040008544921875,
+        "original_font_programs_unchanged": true,
+        "publication_PDF_modified": false,
+        "scale": 4,
+        "native_reference_dark_pixels": 156,
+        "missing_native_CID_reference_pixels": 0,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "proof_sha256": "efb83f38cd8737507c0c88da754f2b1b5d9c8e18e9b55bc5032bb0af5a2106cf",
+        "source_page": 1,
+        "passed": true
+      },
+      "original_font_programs_and_names_retained": true,
+      "original_image_programs_retained": true,
+      "image_palette_icc_mask_and_motion_audits": [
+        {
+          "image": 0,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        }
+      ],
+      "page_group_preserved": true,
+      "colorspace_resources_preserved": true,
+      "native_move_stages_passed": true,
+      "hangul_visibility": {
+        "file": "page01.pdf",
+        "sha256": "efb83f38cd8737507c0c88da754f2b1b5d9c8e18e9b55bc5032bb0af5a2106cf",
+        "method": "independent original glyph outlines without clipping or overlays",
+        "scale": 4,
+        "pixel_tolerance": 2,
+        "flagged_components": 0,
+        "pages": [
+          {
+            "page": 1,
+            "hangul_characters": 638,
+            "missing_pixels": 0,
+            "clusters": []
+          }
+        ]
+      },
+      "new_prose_over_native_graphics": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 624,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 624,
+          "expected_signature_count": 624,
+          "matched_outline_uses": 638,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "inherited_original_footer_overlay": null,
+      "unexpected_Hangul_visibility_components": 0,
+      "remaining_regular_NotoSerif_Hangul": [],
+      "NUL_glyphs": 0,
+      "fresh_process_RGB_render": true,
+      "visual_review_required": true,
+      "passed": true,
+      "combined_vs_proof_MuPDF_4x_changed_pixels": 0,
+      "combined_vs_proof_Poppler_144dpi_changed_pixels": 0
+    },
+    {
+      "year": 2006,
+      "language": "ko",
+      "page": 2,
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page02.pdf",
+      "output_sha256": "b2a931c49dfd3aa2546b94ffb9d6e4e8fe56e0153f1ef73a3ae12e203b4ca9cc",
+      "immutable_input": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+      "immutable_input_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "old_text_outline_uses": 796,
+      "new_text_outline_uses": 797,
+      "outside_bbox": null,
+      "original_physical_native_ink": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 2,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page02.pdf",
+        "final_page": 1,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "output_sha256": "b2a931c49dfd3aa2546b94ffb9d6e4e8fe56e0153f1ef73a3ae12e203b4ca9cc",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 141,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 141,
+          "expected_signature_count": 141,
+          "matched_outline_uses": 141,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 12330,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "native_graphics_motion_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [],
+        "changed_actual_inline_math_graphical_pixels": 0,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 0,
+        "new_native_math_actual_graphics_pixels": 0
+      },
+      "original_native_expression_relative_geometry": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 2,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page02.pdf",
+        "final_page": 1,
+        "final_sha256": "b2a931c49dfd3aa2546b94ffb9d6e4e8fe56e0153f1ef73a3ae12e203b4ca9cc",
+        "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+        "tolerance_pt": 0.001,
+        "source_physical_glyphs": 141,
+        "matched_physical_glyphs": 141,
+        "glyph_signature_or_position_errors": [],
+        "script_base_pairs": [
+          {
+            "script": {
+              "c": "e",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                422.8800048828125,
+                159.84002685546875
+              ]
+            },
+            "base": {
+              "c": "p",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                416.8800048828125,
+                158.8800048828125
+              ]
+            },
+            "script_dx": -57.10797119140625,
+            "base_dx": -57.10797119140625,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "γ",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                257.760009765625,
+                284.87994384765625
+              ]
+            },
+            "base": {
+              "c": "V",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                251.760009765625,
+                290.88006591796875
+              ]
+            },
+            "script_dx": -4.8360137939453125,
+            "base_dx": -4.8360137939453125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "-",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                439.91998291015625,
+                306.9599609375
+              ]
+            },
+            "base": {
+              "c": "l",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                433.9200134277344,
+                312.9599609375
+              ]
+            },
+            "script_dx": -6.191986083984375,
+            "base_dx": -6.1920166015625,
+            "relative_x_change_pt": 3.0517578125e-05,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                442.91998291015625,
+                306.9599609375
+              ]
+            },
+            "base": {
+              "c": "l",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                433.9200134277344,
+                312.9599609375
+              ]
+            },
+            "script_dx": -6.191986083984375,
+            "base_dx": -6.1920166015625,
+            "relative_x_change_pt": 3.0517578125e-05,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "-",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                242.8800048828125,
+                328.79998779296875
+              ]
+            },
+            "base": {
+              "c": "）",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                230.8800048828125,
+                334.7999572753906
+              ]
+            },
+            "script_dx": 0.1200103759765625,
+            "base_dx": 0.1199951171875,
+            "relative_x_change_pt": 1.52587890625e-05,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "-",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                242.8800048828125,
+                350.8799743652344
+              ]
+            },
+            "base": {
+              "c": "s",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                236.8800048828125,
+                356.8799743652344
+              ]
+            },
+            "script_dx": 0.1199951171875,
+            "base_dx": 0.1199951171875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                246.0,
+                350.8799743652344
+              ]
+            },
+            "base": {
+              "c": "s",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                236.8800048828125,
+                356.8799743652344
+              ]
+            },
+            "script_dx": 0.1199951171875,
+            "base_dx": 0.1199951171875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "e",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                377.760009765625,
+                357.8399963378906
+              ]
+            },
+            "base": {
+              "c": "T",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                371.760009765625,
+                356.8799743652344
+              ]
+            },
+            "script_dx": -11.52001953125,
+            "base_dx": -11.52001953125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "o",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                380.760009765625,
+                357.8399963378906
+              ]
+            },
+            "base": {
+              "c": "T",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                371.760009765625,
+                356.8799743652344
+              ]
+            },
+            "script_dx": -11.52001953125,
+            "base_dx": -11.52001953125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "/",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                374.8800048828125,
+                416.8799743652344
+              ]
+            },
+            "base": {
+              "c": "O",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                368.8800048828125,
+                422.87994384765625
+              ]
+            },
+            "script_dx": -29.8800048828125,
+            "base_dx": -29.8800048828125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "/",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                314.8800048828125,
+                438.9599609375
+              ]
+            },
+            "base": {
+              "c": "O",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                308.8800048828125,
+                444.9599609375
+              ]
+            },
+            "script_dx": -16.95599365234375,
+            "base_dx": -16.95599365234375,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "/",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                365.760009765625,
+                438.9599609375
+              ]
+            },
+            "base": {
+              "c": "N",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                359.760009765625,
+                444.9599609375
+              ]
+            },
+            "script_dx": -28.71600341796875,
+            "base_dx": -28.71600341796875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "/",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                96.0,
+                526.7999877929688
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                90.0,
+                532.7999267578125
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "/",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                298.32000732421875,
+                526.7999877929688
+              ]
+            },
+            "base": {
+              "c": "O",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                292.32000732421875,
+                532.7999877929688
+              ]
+            },
+            "script_dx": -42.39601135253906,
+            "base_dx": -42.39601135253906,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "2",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                126.0,
+                702.9599609375
+              ]
+            },
+            "base": {
+              "c": "T",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                120.0,
+                708.9599609375
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "5",
+              "font": "Times New Roman+FPEF",
+              "size": 7.0,
+              "origin": [
+                137.52200317382812,
+                712.3200073242188
+              ]
+            },
+            "base": {
+              "c": "=",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                129.1199951171875,
+                708.9599609375
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "Times New Roman+FPEF",
+              "size": 7.0,
+              "origin": [
+                137.52200317382812,
+                704.8790283203125
+              ]
+            },
+            "base": {
+              "c": "=",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                129.1199951171875,
+                708.9599609375
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "relative_geometry_failures": [],
+        "reviewed_expression_groups": [
+          {
+            "label": "[native aT2=1/5 d]",
+            "physical_glyphs": 7,
+            "matched_glyphs": 7,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native pressure pe original subscript]",
+            "physical_glyphs": 2,
+            "matched_glyphs": 2,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native complete adiabatic law PVgamma=C]",
+            "physical_glyphs": 5,
+            "matched_glyphs": 5,
+            "relative_x_spread_pt": 1.52587890625e-05,
+            "passed": true
+          },
+          {
+            "label": "[native molar mass with full reciprocal-mole unit]",
+            "physical_glyphs": 15,
+            "matched_glyphs": 15,
+            "relative_x_spread_pt": 3.0517578125e-05,
+            "passed": true
+          },
+          {
+            "label": "[native gas constant with parenthesized reciprocal units]",
+            "physical_glyphs": 17,
+            "matched_glyphs": 17,
+            "relative_x_spread_pt": 1.52587890625e-05,
+            "passed": true
+          },
+          {
+            "label": "[native gravity with full source inverse-second unit]",
+            "physical_glyphs": 10,
+            "matched_glyphs": 10,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native ambient temperature with double subscript]",
+            "physical_glyphs": 8,
+            "matched_glyphs": 8,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native OO prime line]",
+            "physical_glyphs": 3,
+            "matched_glyphs": 3,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native OO prime line]",
+            "physical_glyphs": 3,
+            "matched_glyphs": 3,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native NN prime screen]",
+            "physical_glyphs": 3,
+            "matched_glyphs": 3,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native M prime plate]",
+            "physical_glyphs": 2,
+            "matched_glyphs": 2,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native OO prime reference line]",
+            "physical_glyphs": 3,
+            "matched_glyphs": 3,
+            "relative_x_spread_pt": 1.52587890625e-05,
+            "passed": true
+          }
+        ],
+        "reviewed_script_exclusions": [],
+        "passed": true
+      },
+      "verified_original_native_ink_passed": true,
+      "exact_native_CID_raster_phase_witness": null,
+      "original_font_programs_and_names_retained": true,
+      "original_image_programs_retained": true,
+      "image_palette_icc_mask_and_motion_audits": [
+        {
+          "image": 0,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 1,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 2,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 3,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 4,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 5,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 6,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 7,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 8,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 9,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 10,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 11,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 12,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 13,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 14,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 15,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 16,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 17,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 18,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 19,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 20,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 21,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 22,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 23,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 24,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 25,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 26,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 27,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 28,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 29,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 30,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 31,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 32,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 33,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 34,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 35,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        },
+        {
+          "image": 36,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        }
+      ],
+      "page_group_preserved": true,
+      "colorspace_resources_preserved": true,
+      "native_move_stages_passed": true,
+      "hangul_visibility": {
+        "file": "page02.pdf",
+        "sha256": "b2a931c49dfd3aa2546b94ffb9d6e4e8fe56e0153f1ef73a3ae12e203b4ca9cc",
+        "method": "independent original glyph outlines without clipping or overlays",
+        "scale": 4,
+        "pixel_tolerance": 2,
+        "flagged_components": 37,
+        "pages": [
+          {
+            "page": 1,
+            "hangul_characters": 607,
+            "missing_pixels": 4754,
+            "clusters": [
+              {
+                "pixels": 158,
+                "rect": [
+                  431.5,
+                  771.0,
+                  437.25,
+                  776.75
+                ]
+              },
+              {
+                "pixels": 331,
+                "rect": [
+                  360.25,
+                  763.5,
+                  366.75,
+                  775.5
+                ]
+              },
+              {
+                "pixels": 239,
+                "rect": [
+                  374.75,
+                  763.75,
+                  380.25,
+                  770.75
+                ]
+              },
+              {
+                "pixels": 243,
+                "rect": [
+                  446.0,
+                  762.25,
+                  453.25,
+                  777.0
+                ]
+              },
+              {
+                "pixels": 97,
+                "rect": [
+                  383.25,
+                  766.0,
+                  386.5,
+                  771.25
+                ]
+              },
+              {
+                "pixels": 21,
+                "rect": [
+                  331.5,
+                  772.0,
+                  332.0,
+                  775.75
+                ]
+              },
+              {
+                "pixels": 184,
+                "rect": [
+                  408.25,
+                  763.25,
+                  415.25,
+                  770.25
+                ]
+              },
+              {
+                "pixels": 179,
+                "rect": [
+                  321.0,
+                  765.0,
+                  328.25,
+                  770.75
+                ]
+              },
+              {
+                "pixels": 28,
+                "rect": [
+                  426.5,
+                  764.5,
+                  429.5,
+                  765.0
+                ]
+              },
+              {
+                "pixels": 281,
+                "rect": [
+                  305.25,
+                  764.75,
+                  315.25,
+                  773.75
+                ]
+              },
+              {
+                "pixels": 238,
+                "rect": [
+                  397.75,
+                  762.25,
+                  401.0,
+                  777.0
+                ]
+              },
+              {
+                "pixels": 276,
+                "rect": [
+                  288.5,
+                  768.5,
+                  301.0,
+                  776.0
+                ]
+              },
+              {
+                "pixels": 239,
+                "rect": [
+                  366.75,
+                  762.25,
+                  369.25,
+                  777.0
+                ]
+              },
+              {
+                "pixels": 84,
+                "rect": [
+                  446.0,
+                  764.75,
+                  449.0,
+                  769.0
+                ]
+              },
+              {
+                "pixels": 202,
+                "rect": [
+                  389.0,
+                  765.25,
+                  397.5,
+                  773.25
+                ]
+              },
+              {
+                "pixels": 31,
+                "rect": [
+                  431.75,
+                  768.5,
+                  433.5,
+                  770.5
+                ]
+              },
+              {
+                "pixels": 153,
+                "rect": [
+                  270.25,
+                  764.25,
+                  280.75,
+                  771.5
+                ]
+              },
+              {
+                "pixels": 162,
+                "rect": [
+                  262.75,
+                  762.5,
+                  266.75,
+                  771.0
+                ]
+              },
+              {
+                "pixels": 20,
+                "rect": [
+                  417.75,
+                  774.0,
+                  419.0,
+                  774.75
+                ]
+              },
+              {
+                "pixels": 120,
+                "rect": [
+                  405.0,
+                  771.25,
+                  415.5,
+                  775.0
+                ]
+              },
+              {
+                "pixels": 107,
+                "rect": [
+                  336.5,
+                  770.0,
+                  344.0,
+                  776.75
+                ]
+              },
+              {
+                "pixels": 87,
+                "rect": [
+                  345.75,
+                  762.5,
+                  347.0,
+                  768.25
+                ]
+              },
+              {
+                "pixels": 40,
+                "rect": [
+                  431.5,
+                  764.25,
+                  433.0,
+                  766.75
+                ]
+              },
+              {
+                "pixels": 45,
+                "rect": [
+                  345.75,
+                  769.75,
+                  350.75,
+                  770.25
+                ]
+              },
+              {
+                "pixels": 88,
+                "rect": [
+                  442.0,
+                  768.5,
+                  444.25,
+                  773.75
+                ]
+              },
+              {
+                "pixels": 35,
+                "rect": [
+                  323.5,
+                  763.0,
+                  327.25,
+                  763.75
+                ]
+              },
+              {
+                "pixels": 92,
+                "rect": [
+                  432.75,
+                  767.0,
+                  437.0,
+                  771.25
+                ]
+              },
+              {
+                "pixels": 72,
+                "rect": [
+                  331.5,
+                  762.75,
+                  335.0,
+                  770.25
+                ]
+              },
+              {
+                "pixels": 38,
+                "rect": [
+                  323.5,
+                  772.0,
+                  329.75,
+                  772.75
+                ]
+              },
+              {
+                "pixels": 239,
+                "rect": [
+                  268.75,
+                  768.0,
+                  282.25,
+                  774.0
+                ]
+              },
+              {
+                "pixels": 116,
+                "rect": [
+                  338.75,
+                  763.0,
+                  344.0,
+                  768.5
+                ]
+              },
+              {
+                "pixels": 126,
+                "rect": [
+                  290.5,
+                  763.0,
+                  296.75,
+                  767.75
+                ]
+              },
+              {
+                "pixels": 183,
+                "rect": [
+                  378.25,
+                  770.75,
+                  384.0,
+                  776.75
+                ]
+              },
+              {
+                "pixels": 70,
+                "rect": [
+                  262.75,
+                  772.0,
+                  263.75,
+                  777.0
+                ]
+              },
+              {
+                "pixels": 21,
+                "rect": [
+                  298.25,
+                  763.5,
+                  298.75,
+                  765.5
+                ]
+              },
+              {
+                "pixels": 18,
+                "rect": [
+                  381.75,
+                  762.25,
+                  383.25,
+                  763.25
+                ]
+              },
+              {
+                "pixels": 29,
+                "rect": [
+                  426.25,
+                  768.25,
+                  429.5,
+                  771.0
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "new_prose_over_native_graphics": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 607,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 242,
+        "source_outline_match": {
+          "protected_physical_glyphs": 607,
+          "expected_signature_count": 607,
+          "matched_outline_uses": 607,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": false,
+        "overlap_bbox": [
+          295.25,
+          762.25,
+          445.5,
+          777.0
+        ]
+      },
+      "inherited_original_footer_overlay": {
+        "source_role": "Original institution/compiler footer, not an added translation note.",
+        "original_source_paint_order_preserved": true,
+        "original_picture_pixels_in_footer_band_changed": 62,
+        "original_picture_opaque_interior_pixels_changed": 0,
+        "picture_edge_antialias_pixels_over_changed_underlay": 62,
+        "source_bitmap_and_SMask_programs_preserved": true,
+        "raw_visibility_components": 37,
+        "inherited_source_image_occlusion_components": 37,
+        "unexpected_visibility_components": 0,
+        "footer_baseline": 775.446472,
+        "method": "Exact original photo-strip rectangles intersecting the source footer; final text-paint sequence precedes every overlapping original image. Original image opaque interiors and all native foreground ink are unchanged. Antialiased strip edges can blend with the translated underlay; those raw RGB edge differences are reported separately."
+      },
+      "unexpected_Hangul_visibility_components": 0,
+      "remaining_regular_NotoSerif_Hangul": [],
+      "NUL_glyphs": 0,
+      "fresh_process_RGB_render": true,
+      "visual_review_required": true,
+      "passed": true,
+      "combined_vs_proof_MuPDF_4x_changed_pixels": 0,
+      "combined_vs_proof_Poppler_144dpi_changed_pixels": 0
+    },
+    {
+      "year": 2006,
+      "language": "ko",
+      "page": 3,
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page03.pdf",
+      "output_sha256": "c629c3050f5d21da28513d32f2b67c17c1bc111d3997b8c37eb9f5ce1269618d",
+      "immutable_input": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+      "immutable_input_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "old_text_outline_uses": 670,
+      "new_text_outline_uses": 675,
+      "outside_bbox": null,
+      "original_physical_native_ink": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 3,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page03.pdf",
+        "final_page": 1,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "output_sha256": "c629c3050f5d21da28513d32f2b67c17c1bc111d3997b8c37eb9f5ce1269618d",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 95,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 95,
+          "expected_signature_count": 95,
+          "matched_outline_uses": 95,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 8209,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "native_graphics_motion_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              313.2,
+              287.9999926757813,
+              321.12,
+              287.9999926757813
+            ],
+            "operator_indices": [
+              112,
+              113,
+              114
+            ],
+            "dx": -10.595985412597656
+          },
+          {
+            "kind": "explicit original mathematical path",
+            "rect": [
+              472.79999999999995,
+              640.0799926757812,
+              479.03999999999996,
+              640.0799926757812
+            ],
+            "operator_indices": [
+              210,
+              211,
+              212
+            ],
+            "dx": -33.696014404296875
+          }
+        ],
+        "changed_actual_inline_math_graphical_pixels": 302,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 120,
+        "new_native_math_actual_graphics_pixels": 119
+      },
+      "original_native_expression_relative_geometry": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 3,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page03.pdf",
+        "final_page": 1,
+        "final_sha256": "c629c3050f5d21da28513d32f2b67c17c1bc111d3997b8c37eb9f5ce1269618d",
+        "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+        "tolerance_pt": 0.001,
+        "source_physical_glyphs": 95,
+        "matched_physical_glyphs": 95,
+        "glyph_signature_or_position_errors": [],
+        "script_base_pairs": [
+          {
+            "script": {
+              "c": "/",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                102.0,
+                130.79998779296875
+              ]
+            },
+            "base": {
+              "c": "M",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                96.0,
+                136.79998779296875
+              ]
+            },
+            "script_dx": 0.0,
+            "base_dx": 0.0,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "1",
+              "font": "Times New Roman+FPEF",
+              "size": 7.0,
+              "origin": [
+                313.4389953613281,
+                294.23797607421875
+              ]
+            },
+            "base": {
+              "c": "=",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                305.5199890136719,
+                290.87994384765625
+              ]
+            },
+            "script_dx": -10.595977783203125,
+            "base_dx": -10.595977783203125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "Times New Roman+FPEF",
+              "size": 7.0,
+              "origin": [
+                316.7989807128906,
+                294.23797607421875
+              ]
+            },
+            "base": {
+              "c": "=",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                305.5199890136719,
+                290.87994384765625
+              ]
+            },
+            "script_dx": -10.595977783203125,
+            "base_dx": -10.595977783203125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "T",
+              "font": "Times New Roman Italic+FPEF",
+              "size": 7.0,
+              "origin": [
+                314.635986328125,
+                286.7969970703125
+              ]
+            },
+            "base": {
+              "c": "=",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                305.5199890136719,
+                290.87994384765625
+              ]
+            },
+            "script_dx": -10.595977783203125,
+            "base_dx": -10.595977783203125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                461.760009765625,
+                533.760009765625
+              ]
+            },
+            "base": {
+              "c": "v",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                455.760009765625,
+                532.7999267578125
+              ]
+            },
+            "script_dx": -26.98797607421875,
+            "base_dx": -26.98797607421875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                299.760009765625,
+                599.760009765625
+              ]
+            },
+            "base": {
+              "c": "t",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                293.760009765625,
+                598.7999267578125
+              ]
+            },
+            "script_dx": -42.57598876953125,
+            "base_dx": -42.57600402832031,
+            "relative_x_change_pt": 1.52587890625e-05,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          },
+          {
+            "script": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                206.8800048828125,
+                643.9199829101562
+              ]
+            },
+            "base": {
+              "c": "t",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                200.8800048828125,
+                642.9599609375
+              ]
+            },
+            "script_dx": -35.8800048828125,
+            "base_dx": -35.8800048828125,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "relative_geometry_failures": [],
+        "reviewed_expression_groups": [
+          {
+            "label": "[native delta=T/10]",
+            "physical_glyphs": 5,
+            "matched_glyphs": 5,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native alpha=pi/4]",
+            "physical_glyphs": 4,
+            "matched_glyphs": 4,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native MM prime plate]",
+            "physical_glyphs": 3,
+            "matched_glyphs": 3,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native initial velocity subscript]",
+            "physical_glyphs": 2,
+            "matched_glyphs": 2,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          },
+          {
+            "label": "[native initial time subscript]",
+            "physical_glyphs": 2,
+            "matched_glyphs": 2,
+            "relative_x_spread_pt": 1.52587890625e-05,
+            "passed": true
+          },
+          {
+            "label": "[native initial time subscript]",
+            "physical_glyphs": 2,
+            "matched_glyphs": 2,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "reviewed_script_exclusions": [],
+        "passed": true
+      },
+      "verified_original_native_ink_passed": true,
+      "exact_native_CID_raster_phase_witness": null,
+      "original_font_programs_and_names_retained": true,
+      "original_image_programs_retained": true,
+      "image_palette_icc_mask_and_motion_audits": [],
+      "page_group_preserved": true,
+      "colorspace_resources_preserved": true,
+      "native_move_stages_passed": true,
+      "hangul_visibility": {
+        "file": "page03.pdf",
+        "sha256": "c629c3050f5d21da28513d32f2b67c17c1bc111d3997b8c37eb9f5ce1269618d",
+        "method": "independent original glyph outlines without clipping or overlays",
+        "scale": 4,
+        "pixel_tolerance": 2,
+        "flagged_components": 0,
+        "pages": [
+          {
+            "page": 1,
+            "hangul_characters": 535,
+            "missing_pixels": 0,
+            "clusters": []
+          }
+        ]
+      },
+      "new_prose_over_native_graphics": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 535,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 535,
+          "expected_signature_count": 535,
+          "matched_outline_uses": 535,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "inherited_original_footer_overlay": null,
+      "unexpected_Hangul_visibility_components": 0,
+      "remaining_regular_NotoSerif_Hangul": [],
+      "NUL_glyphs": 0,
+      "fresh_process_RGB_render": true,
+      "visual_review_required": true,
+      "passed": true,
+      "combined_vs_proof_MuPDF_4x_changed_pixels": 0,
+      "combined_vs_proof_Poppler_144dpi_changed_pixels": 0
+    },
+    {
+      "year": 2006,
+      "language": "ko",
+      "page": 4,
+      "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page04.pdf",
+      "output_sha256": "edcef60abb1508db933a1985b8ffa2425f6c625e888d832ac82336e0c04eeba1",
+      "immutable_input": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+      "immutable_input_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+      "changed_pixels_outside_old_and_new_text_ink": 0,
+      "old_text_outline_uses": 203,
+      "new_text_outline_uses": 203,
+      "outside_bbox": null,
+      "original_physical_native_ink": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 4,
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page04.pdf",
+        "final_page": 1,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "output_sha256": "edcef60abb1508db933a1985b8ffa2425f6c625e888d832ac82336e0c04eeba1",
+        "scale": 4,
+        "position_tolerance_pt": 0.001,
+        "protected_native_glyphs": 16,
+        "missing_requested_source_glyphs": [],
+        "missing_final_native_glyphs": [],
+        "source_outline_audit": {
+          "protected_physical_glyphs": 16,
+          "expected_signature_count": 16,
+          "matched_outline_uses": 16,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+        "expected_native_dark_pixels": 1221,
+        "inherited_stationary_source_occluded_pixels": 0,
+        "newly_missing_native_ink_pixels": 0,
+        "passed": true
+      },
+      "native_graphics_motion_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [],
+        "changed_actual_inline_math_graphical_pixels": 0,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 0,
+        "new_native_math_actual_graphics_pixels": 0
+      },
+      "original_native_expression_relative_geometry": {
+        "source": "C:\\Users\\andre\\OneDrive\\문서\\ChatGPT\\Hasla 노술\\haslalab\\tmp\\original-style-repair\\2006\\editions\\CPhO_2006_T_KO.pdf",
+        "source_page": 4,
+        "source_sha256": "b226b6458b62763c505339ba6fe119e0c6c176a373dc2ab914b83f00be19b7c1",
+        "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2006\\ko\\page04.pdf",
+        "final_page": 1,
+        "final_sha256": "edcef60abb1508db933a1985b8ffa2425f6c625e888d832ac82336e0c04eeba1",
+        "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+        "tolerance_pt": 0.001,
+        "source_physical_glyphs": 16,
+        "matched_physical_glyphs": 16,
+        "glyph_signature_or_position_errors": [],
+        "script_base_pairs": [
+          {
+            "script": {
+              "c": "一",
+              "font": "ËÎÌå+FPEF",
+              "size": 6.0,
+              "origin": [
+                374.8800048828125,
+                174.9599609375
+              ]
+            },
+            "base": {
+              "c": "0",
+              "font": "ËÎÌå+FPEF",
+              "size": 12.0,
+              "origin": [
+                362.8800048828125,
+                180.96002197265625
+              ]
+            },
+            "script_dx": -1.956024169921875,
+            "base_dx": -1.956024169921875,
+            "relative_x_change_pt": 0.0,
+            "relative_y_change_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "relative_geometry_failures": [],
+        "reviewed_expression_groups": [
+          {
+            "label": "[native proton mass with full power minus twenty-seven and units]",
+            "physical_glyphs": 16,
+            "matched_glyphs": 16,
+            "relative_x_spread_pt": 0.0,
+            "passed": true
+          }
+        ],
+        "reviewed_script_exclusions": [],
+        "passed": true
+      },
+      "verified_original_native_ink_passed": true,
+      "exact_native_CID_raster_phase_witness": null,
+      "original_font_programs_and_names_retained": true,
+      "original_image_programs_retained": true,
+      "image_palette_icc_mask_and_motion_audits": [
+        {
+          "image": 0,
+          "rect_preserved": true,
+          "rect_matches_declared_native_math_dx": false,
+          "dx": 0.0,
+          "full_palette_icc_mask_image_graph_preserved": true
+        }
+      ],
+      "page_group_preserved": true,
+      "colorspace_resources_preserved": true,
+      "native_move_stages_passed": true,
+      "hangul_visibility": {
+        "file": "page04.pdf",
+        "sha256": "edcef60abb1508db933a1985b8ffa2425f6c625e888d832ac82336e0c04eeba1",
+        "method": "independent original glyph outlines without clipping or overlays",
+        "scale": 4,
+        "pixel_tolerance": 2,
+        "flagged_components": 0,
+        "pages": [
+          {
+            "page": 1,
+            "hangul_characters": 178,
+            "missing_pixels": 0,
+            "clusters": []
+          }
+        ]
+      },
+      "new_prose_over_native_graphics": {
+        "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+        "scale": 4,
+        "new_glyphs": 178,
+        "new_reference_threshold": 32,
+        "native_foreground_threshold": 80,
+        "new_hangul_dark_pixels_over_native_foreground": 0,
+        "source_outline_match": {
+          "protected_physical_glyphs": 178,
+          "expected_signature_count": 178,
+          "matched_outline_uses": 178,
+          "missing_source_outline_signatures": [],
+          "ancestor_transforms_flattened": true,
+          "passed": true
+        },
+        "passed": true
+      },
+      "inherited_original_footer_overlay": null,
+      "unexpected_Hangul_visibility_components": 0,
+      "remaining_regular_NotoSerif_Hangul": [],
+      "NUL_glyphs": 0,
+      "fresh_process_RGB_render": true,
+      "visual_review_required": true,
+      "passed": true,
+      "combined_vs_proof_MuPDF_4x_changed_pixels": 0,
+      "combined_vs_proof_Poppler_144dpi_changed_pixels": 0
+    }
+  ],
+  "visual_review": "All four final pages reviewed individually; original drawings/math, natural spaces and centered title/date."
+}

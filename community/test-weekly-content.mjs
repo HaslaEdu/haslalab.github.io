@@ -203,7 +203,7 @@ test('published native problems use authenticated, evidence-backed grading and r
   const answer = 'I derive the governing equation from the stated assumptions and check its limiting case.';
   let requestNumber = 0;
   const answerBody = row => ({
-    request_id: ('weekly-structured-test-' + ++requestNumber).padEnd(40, 'x'), lang: 'ko',
+    provider:'gemini', request_id: ('weekly-structured-test-' + ++requestNumber).padEnd(40, 'x'), lang: 'ko',
     parts: getMonthlyAnswerSheet(row).parts.map(part => ({ id: part.id, answer, working: answer })),
   });
   let calls = 0, evidenceMode = 'valid';

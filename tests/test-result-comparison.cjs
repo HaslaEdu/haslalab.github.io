@@ -77,11 +77,53 @@ test('a verified total-score coverage floor permits full-field rank only within 
   const above=comparison.evaluate(record,40),below=comparison.evaluate(record,19);
   assert.equal(above.complete,false);assert.equal(above.bounded,true);assert.equal(above.rank,2);assert.equal(above.top_pct,10);
   const html=comparison.resultHtml(above,'en');
-  assert.match(html,/coverage floor|published (?:score )?range|verified range/i);
+  assert.match(html,/whole field|full field/i);assert.match(html,/Full field · 20 contestants/);
   assertCollapsed(html);
   assert.equal(below.bounded,false);assert.equal(below.top_pct,null);
   assert.equal(comparison.evaluate({...record,scope:'theory'},40).bounded,false);
   assert.equal(comparison.evaluate({...record,participantCountUncertain:true},40).top_pct,null);
+});
+
+test('a round score at or above the total coverage floor gets an exact full-field round rank and band',()=>{
+  // Unpublished contestants all totalled below 20, so their theory score was below 20 as well.
+  const floorTotal={...total,id:'floor-total',scores:[48,44,40,35,31,26,22,20],complete:false,participants:20,rankFloor:20};
+  const round={...roundTheory,id:'floor-theory',scores:[29,27,25,24,22,18,12,9],complete:false,participants:20,
+    medalReference:{...roundTheory.medalReference,counts:{gold:1,silver:2,bronze:3},cuts:{gold:29,silver:25,bronze:18},population:'published'}};
+  const records=[floorTotal,round];
+  const coverage=comparison.componentFloor(records,round);
+  assert.equal(coverage.floor,20);assert.equal(coverage.total.id,'floor-total');
+  const high=comparison.evaluate(round,26,false,coverage);
+  assert.equal(high.bounded,true);assert.equal(high.rank,3);assert.equal(high.fieldSize,20);assert.equal(high.top_pct,15);
+  assert.equal(high.reference.medal,'silver');assert.equal(high.reference.fullField,true);
+  const low=comparison.evaluate(round,18,false,coverage);
+  assert.equal(low.bounded,false);assert.equal(low.top_pct,null);
+  assert.equal(low.reference.medal,'bronze');assert.equal(low.reference.fullField,false,'a band whose cut is below the floor may fall in the whole field');
+  assert.equal(comparison.evaluate(round,5,false,coverage).reference.fullField,true,'below every band can never improve');
+  const ko=comparison.resultHtml(high,'ko'),en=comparison.resultHtml(high,'en');
+  assert.match(text(withoutDetails(ko)),/전체 20명 기준/);assert.match(text(withoutDetails(ko)),/상위 15%/);
+  assert.match(text(withoutDetails(ko)),/이론 기준 은메달권/);assert.match(text(withoutDetails(en)),/Full field · 20 contestants/);
+  assert.match(text(withoutDetails(comparison.resultHtml(low,'ko'))),/전체 기준으로는 낮아질 수 있음/);
+  assertCollapsed(ko);assertCollapsed(en);
+  // Without the sibling total, a mismatched published set, or a mismatched population, nothing is inferred.
+  assert.equal(comparison.componentFloor([round],round),null);
+  assert.equal(comparison.componentFloor([{...floorTotal,scores:floorTotal.scores.slice(1)},round],round),null);
+  assert.equal(comparison.componentFloor([{...floorTotal,participants:21},round],round),null);
+  assert.equal(comparison.componentFloor([{...floorTotal,rankFloor:undefined},round],round),null);
+  assert.equal(comparison.evaluate(round,26).bounded,false,'a bare round record never infers coverage');
+});
+
+test('the best score comes from a declared topScore or the highest published score',()=>{
+  const declared={...total,scores:[],topScore:44.75,medalCutoffs:{gold:38,silver:33,bronze:27,hm:21}};
+  const e=comparison.evaluate(declared,40);
+  assert.equal(e.best,44.75);assert.equal(e.rank,null);assert.equal(e.medal,'gold');
+  assert.match(text(comparison.resultHtml(e,'ko')),/1위 점수 44.75 \/ 50 · 1위와 4.75점 차이/);
+  assert.match(text(comparison.resultHtml(comparison.evaluate(declared,45,true),'en')),/Best score 44.75 \/ 50 · at or above the best/);
+  assert.equal(comparison.evaluate(total,30).best,48);
+  assert.match(text(comparison.resultHtml(comparison.evaluate(roundTheory,30),'ko')),/이론 1위 점수/);
+  // Outside the gold range no best-score gap is shown.
+  for(const [record,score] of [[declared,30],[declared,10],[roundTheory,20],[total,30]])
+    assert.doesNotMatch(comparison.resultHtml(comparison.evaluate(record,score),'ko'),/hlcr-best/,`${record.id} ${score}`);
+  assert.match(text(comparison.resultHtml(comparison.evaluate(declared,30),'ko')),/순위표 미공개 · 메달 컷으로 비교/);
 });
 
 test('medals use verified thresholds for the full award scope, including exact-boundary rules',()=>{
@@ -183,6 +225,10 @@ test('same-edition full rounds automatically combine using the latest valid same
   }
   const assessment=comparison.assess(scopedDataset,anchor);
   assert.equal(assessment.comparisons.filter(e=>e.record.scope==='total').length,1);
+  assert.deepEqual(assessment.comparisons.map(e=>e.record.scope),['theory','total'],'the graded round keeps its own card before the combined total');
+  assert.equal(assessment.comparisons[0].reference.medal,'silver');
+  const roundNotes=comparison.html(scopedDataset,anchor,'ko').match(/data-round-medal="[^"]*"/g)||[];
+  assert.equal(roundNotes.length,2,'each combined round shows its own round rank and band');
   assert.equal(assessment.totals.length,0,'an automatically covered total does not also request manual entry');
   assert.equal(JSON.stringify(anchor),before);
   const html=comparison.html(scopedDataset,anchor,'en');

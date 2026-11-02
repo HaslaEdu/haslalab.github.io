@@ -37,7 +37,7 @@ async function fixture(run) {
   const saved = { fetch: globalThis.fetch, caches: globalThis.caches, now: Date.now };
   globalThis.fetch = () => { externalCalls++; throw new Error('QR tests must never call external services'); };
   globalThis.caches = { default: { async match() {}, async put() {} } }; Date.now = () => clock * 1000;
-  const env = { DB, LAB_KEEP_HOURS: 'off', LAB_JOBS: { async sendBatch(items) { queued.push(...items); } } };
+  const env = { DB, GEMINI_API_KEY:'local-mock-only', LAB_KEEP_HOURS: 'off', LAB_JOBS: { async sendBatch(items) { queued.push(...items); } } };
   const api = async (path, { user = 1, body, method = body === undefined ? 'GET' : 'POST', headers = {} } = {}) => {
     const response = await worker.fetch(new Request('https://qr.local/api' + path, { method,
       headers: { 'Cache-Control': 'no-cache', ...(user ? { Authorization: 'Bearer ' + tokens[user] } : {}),
@@ -45,7 +45,7 @@ async function fixture(run) {
       ...(body === undefined ? {} : { body: JSON.stringify(body) }) }), env);
     return { status: response.status, data: await response.json(), headers: response.headers };
   };
-  const start = async user => api('/lab/start', { user, body: { comp: 'ipho', year: 2025, tasks: ['E1'] } });
+  const start = async user => api('/lab/start', { user, body: { provider:'gemini',comp: 'ipho', year: 2025, tasks: ['E1'] } });
   const phone = async (token, id) => api('/lab/up' + (id ? '/' + id : ''), { user: null, headers: { 'X-Lab-Token': token } });
   try { await run({ sql, api, start, phone, queries, queued, beforeQrWrite: hook => { beforeQrWrite = hook; }, time: value => { clock = value; } });
     assert.equal(externalCalls, 0);
@@ -86,7 +86,7 @@ test('parallel starts for one account resume one session and hand out the initia
 test('monthly QR capabilities remain separate across simultaneous users and bind the complete ID-secret pair to one problem', async () => {
   await fixture(async ({ api, time }) => {
     time(Date.parse('2026-11-01T12:00:00+09:00') / 1000);
-    const [a, b] = await Promise.all([1, 2].map(user => api('/monthly/problems/4/scan', { user, body: {} })));
+    const [a, b] = await Promise.all([1, 2].map(user => api('/monthly/problems/4/scan', { user, body: {provider:'gemini'} })));
     assert.equal(a.status, 200); assert.equal(b.status, 200);
     const first = a.data.scan, second = b.data.scan;
     assert.notEqual(first.id, second.id); assert.notEqual(first.token, second.token);
@@ -96,7 +96,7 @@ test('monthly QR capabilities remain separate across simultaneous users and bind
     assert.equal((await phone(wrongPair)).status, 403);
     assert.equal((await api('/monthly/problems/4/scan?scan_id=' + first.id, { user: 2 })).status, 404);
     assert.equal((await api('/monthly/problems/5/scan?scan_id=' + first.id)).status, 404);
-    const anotherProblem = await api('/monthly/problems/5/scan', { body: {} });
+    const anotherProblem = await api('/monthly/problems/5/scan', { body: {provider:'gemini'} });
     assert.equal(anotherProblem.status, 200); assert.notEqual(anotherProblem.data.scan.token, first.token);
     assert.equal((await phone(first.token)).data.problem_id, 4, 'opening another problem must not redirect an existing grant');
     assert.equal((await phone(anotherProblem.data.scan.token)).data.problem_id, 5);

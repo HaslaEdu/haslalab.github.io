@@ -1,0 +1,634 @@
+{
+  "source": "C:\\Users\\andre\\.codex\\tmp\\Hasla-original-style-20261102\\izho2019-theory-original\\2019\\source\\IZhO_2019_T.pdf",
+  "source_sha256": "29daec0cb9f759bed9b755cbae2937e1c4ab068fa804c62d512ea291e42619d1",
+  "source_language": "English",
+  "page": 2,
+  "slots": [
+    {
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "text": " 국제 자우티코프 올림피아드 / 이론시험 ",
+      "source_text": " International Zhautykov Olympiad/Theoretical Competition ",
+      "substring": " International Zhautykov Olympiad/Theoretical Competition "
+    },
+    {
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "text": "쪽 ",
+      "source_text": "Page ",
+      "substring": "Page "
+    },
+    {
+      "at": [
+        1,
+        0,
+        0
+      ],
+      "text": "문제 ",
+      "source_text": "Problem ",
+      "substring": "Problem ",
+      "align": "center"
+    },
+    {
+      "at": [
+        1,
+        0,
+        0
+      ],
+      "text": "전기장 속 도체",
+      "source_text": "Conductors in an electric field",
+      "substring": "Conductors in an electric field",
+      "align": "center"
+    },
+    {
+      "at": [
+        1,
+        0,
+        0
+      ],
+      "text": "점",
+      "source_text": "points",
+      "substring": "points",
+      "align": "center"
+    },
+    {
+      "at": [
+        1,
+        1,
+        0
+      ],
+      "text": "도체를 일정한 외부 전기장에 놓으면 표면에 전하가 나타난다. ",
+      "source_text": "When a conductor is placed in a constant external electric field, electric charges appear on its surface. "
+    },
+    {
+      "at": [
+        1,
+        2,
+        0
+      ],
+      "text": "이를 정전기 유도라고 하며, 나타난 전하를 유도전하라고 한다. ",
+      "source_text": "This phenomenon is called an electrostatic induction, and the charges themselves are then called induced. "
+    },
+    {
+      "at": [
+        1,
+        3,
+        0
+      ],
+      "text": "이 현상은 도체 안의 많은 자유 전하 운반자, 보통 전자에 의해 설명된다. ",
+      "source_text": "This phenomenon is explained by a large number of free charge carriers in the conductor, usually electrons, "
+    },
+    {
+      "at": [
+        1,
+        4,
+        0
+      ],
+      "text": "이들은 도체 내부에서 자유롭게 움직일 수 있다. ",
+      "source_text": "which can move freely inside. "
+    },
+    {
+      "at": [
+        2,
+        0,
+        0
+      ],
+      "text": "임의의 모양을 가진 도체에서 유도전하의 분포는 매우 복잡할 수 있다. ",
+      "source_text": "The distribution of the induced charges for a conductor of an arbitrary shape can be quite complex, "
+    },
+    {
+      "at": [
+        2,
+        1,
+        0
+      ],
+      "text": "그러나 다음 명제들은 성립한다. ",
+      "source_text": "but the following statements hold: "
+    },
+    {
+      "at": [
+        3,
+        0,
+        1
+      ],
+      "text": "도체 내부의 전기장은 정확히 영이다. ",
+      "source_text": "The electric field strength inside the conductor is exactly zero; "
+    },
+    {
+      "at": [
+        3,
+        1,
+        1
+      ],
+      "text": "도체 표면 근처의 전기장은 표면의 법선 방향이다. ",
+      "source_text": "The electric field strength near the surface of the conductor is directed along the surface normal; "
+    },
+    {
+      "at": [
+        3,
+        2,
+        1
+      ],
+      "text": "유도전하는 도체 표면에만 분포한다. ",
+      "source_text": "The induced charges are only located on the conductor surface; "
+    },
+    {
+      "at": [
+        3,
+        3,
+        1
+      ],
+      "text": "도체의 모든 점은 전위가 같다. ",
+      "source_text": "All of the conductor points have the same electric potential. "
+    },
+    {
+      "at": [
+        3,
+        4,
+        0
+      ],
+      "text": "이 문제에서는 도체가 있을 때의 전기장을 계산하는 여러 방법을 ",
+      "source_text": "In this problem, we consider several methods for calculating electric fields in the presence of "
+    },
+    {
+      "at": [
+        3,
+        5,
+        0
+      ],
+      "text": "살펴보고 구체적인 물리 상황에 적용한다. 진공 유전율 ",
+      "source_text": "conductors and apply them to a specific physical situation. Consider the vacuum permittivity "
+    },
+    {
+      "at": [
+        3,
+        5,
+        3
+      ],
+      "text": "은 알려져 있다고 하자. ",
+      "source_text": " known. "
+    },
+    {
+      "at": [
+        4,
+        0,
+        0
+      ],
+      "text": "도체 구와 점전하 ",
+      "source_text": "Conductive ball and point charge ",
+      "align": "center"
+    },
+    {
+      "at": [
+        4,
+        1,
+        0
+      ],
+      "text": "반지름이 ",
+      "source_text": "A conducting ball of radius "
+    },
+    {
+      "at": [
+        4,
+        1,
+        2
+      ],
+      "text": "인 도체 구를 접지하고, 점전하 ",
+      "source_text": " is grounded and a point-like charge "
+    },
+    {
+      "at": [
+        4,
+        1,
+        4
+      ],
+      "text": "를 구의 중심에서 거리 ",
+      "source_text": " is placed at a distance "
+    },
+    {
+      "at": [
+        4,
+        1,
+        6
+      ],
+      "text": "인 곳에 놓는다. ",
+      "source_text": " from it. "
+    },
+    {
+      "at": [
+        4,
+        2,
+        0
+      ],
+      "text": "앞서 설명한 대로 구의 표면에 유도전하가 나타난다. 이는 원래의 ",
+      "source_text": "In this case, in accordance with the foregoing, induced charges appear on the ball surface, which distort the "
+    },
+    {
+      "at": [
+        4,
+        3,
+        0
+      ],
+      "text": "점전하 ",
+      "source_text": "electric field of the point-like charge "
+    },
+    {
+      "at": [
+        4,
+        3,
+        2
+      ],
+      "text": "가 만드는 전기장을 변화시킨다. 이 상황에는 영상법을 적용할 수 있다. ",
+      "source_text": ". The image method is applicable to this situation, whose essence is "
+    },
+    {
+      "at": [
+        4,
+        4,
+        0
+      ],
+      "text": "영상법의 핵심은 다음과 같다. 구 바깥의 전기장은 원래의 ",
+      "source_text": "described as follows. The electric field outside the ball can be represented as a superposition of the field of "
+    },
+    {
+      "at": [
+        4,
+        5,
+        0
+      ],
+      "text": "점전하 ",
+      "source_text": "the point-like charge "
+    },
+    {
+      "at": [
+        4,
+        5,
+        2
+      ],
+      "text": "의 전기장과 가상의 점전하 ",
+      "source_text": " and the field of some fictitious point-like charge "
+    },
+    {
+      "at": [
+        4,
+        5,
+        4
+      ],
+      "text": "의 전기장을 중첩해 나타낼 수 있다. 가상 전하는 구 안에서 ",
+      "source_text": " located somewhere inside the ball "
+    },
+    {
+      "at": [
+        4,
+        6,
+        0
+      ],
+      "text": "구의 중심으로부터 거리 ",
+      "source_text": "at a distance "
+    },
+    {
+      "at": [
+        4,
+        6,
+        2
+      ],
+      "text": "인 곳에 있으며, 원래 점전하 ",
+      "source_text": " from its center and on the line connecting the point-like charge "
+    },
+    {
+      "at": [
+        4,
+        6,
+        4
+      ],
+      "text": "와 구의 중심을 잇는 직선 위에 있다. ",
+      "source_text": " to the ball center. To "
+    },
+    {
+      "at": [
+        4,
+        7,
+        0
+      ],
+      "text": "전체 전기장을 계산하기 위해 아래 그림과 같은 평면의 직교좌표계를 ",
+      "source_text": "evaluate the total electric field, we make use of the Cartesian coordinate system on the plane shown in the "
+    },
+    {
+      "at": [
+        4,
+        8,
+        0
+      ],
+      "text": "사용한다. 이 계는 축대칭이므로 이 평면만 다루면 충분하다. ",
+      "source_text": "figure below. This is quite enough, since the system has axial symmetry. "
+    },
+    {
+      "at": [
+        5,
+        1,
+        1
+      ],
+      "text": "구 바깥의 임의의 점 ",
+      "source_text": " Calculate the electric field potential at an arbitrary point "
+    },
+    {
+      "at": [
+        5,
+        1,
+        3
+      ],
+      "text": "에서 전위를 구하시오. 점의 좌표는 ",
+      "source_text": " with coordinates "
+    },
+    {
+      "at": [
+        5,
+        1,
+        5
+      ],
+      "text": "이다. ",
+      "source_text": " lying outside the "
+    },
+    {
+      "at": [
+        5,
+        2,
+        0
+      ],
+      "text": "답을 다음 변수들로 나타내시오: ",
+      "source_text": "ball. Express your answer in terms of "
+    },
+    {
+      "at": [
+        5,
+        3,
+        1
+      ],
+      "text": "위 식을 이용해 구 표면의 전위를 구하시오. ",
+      "source_text": " Using the above expression, evaluate the electric field potential on the ball surface. Express your "
+    },
+    {
+      "at": [
+        5,
+        4,
+        0
+      ],
+      "text": "답을 다음 변수들로 나타내시오: ",
+      "source_text": "answer in terms of "
+    },
+    {
+      "at": [
+        5,
+        5,
+        3
+      ],
+      "text": "와 거리 ",
+      "source_text": " and the distance "
+    },
+    {
+      "at": [
+        5,
+        5,
+        5
+      ],
+      "text": "를 구하시오. 답을 다음 변수들로 나타내시오: ",
+      "source_text": ", expressing them in terms of "
+    },
+    {
+      "at": [
+        5,
+        7,
+        1
+      ],
+      "text": "외부에서 해야 하는 일 ",
+      "source_text": " Calculate the work "
+    },
+    {
+      "at": [
+        5,
+        7,
+        3
+      ],
+      "text": "를 구하시오. 점전하 ",
+      "source_text": " that needs to be done on the point-like charge "
+    },
+    {
+      "at": [
+        5,
+        7,
+        5
+      ],
+      "text": "를 매우 천천히 무한대로 옮기는 경우이다. ",
+      "source_text": " in order to very slowly move "
+    },
+    {
+      "at": [
+        5,
+        8,
+        0
+      ],
+      "text": "답을 다음 변수들로 나타내시오: ",
+      "source_text": "it to infinity. Express your answer in terms of "
+    },
+    {
+      "at": [
+        5,
+        9,
+        1
+      ],
+      "text": "유도전하들 사이의 상호작용 에너지 ",
+      "source_text": " Find the interaction energy "
+    },
+    {
+      "at": [
+        5,
+        9,
+        3
+      ],
+      "text": "를 구하고 다음 변수들로 나타내시오: ",
+      "source_text": " of the induced charges with one another and express it in terms of "
+    },
+    {
+      "at": [
+        6,
+        0,
+        0
+      ],
+      "text": "균일한 전기장 속의 도체 구 ",
+      "source_text": "Conductive ball in a uniform electric field ",
+      "align": "center"
+    },
+    {
+      "at": [
+        6,
+        1,
+        0
+      ],
+      "text": "반지름이 ",
+      "source_text": "A conducting ball of radius "
+    },
+    {
+      "at": [
+        6,
+        1,
+        2
+      ],
+      "text": "인 도체 구를 크기가 ",
+      "source_text": " is placed in an external uniform electric field of strength "
+    },
+    {
+      "at": [
+        6,
+        1,
+        5
+      ],
+      "text": "인 균일한 외부 전기장에 놓는다. ",
+      "source_text": ". In this "
+    },
+    {
+      "at": [
+        6,
+        2,
+        0
+      ],
+      "text": "유도전하의 전기장은 균일하게 대전된 가상의 두 구가 만드는 ",
+      "source_text": "case, the field of induced electric charges can be represented as a superposition of the field of two fictitious "
+    },
+    {
+      "at": [
+        6,
+        3,
+        0
+      ],
+      "text": "전기장을 합한 것이다. 두 구의 반지름은 모두 ",
+      "source_text": "uniformly charged balls of the same radius "
+    },
+    {
+      "at": [
+        6,
+        3,
+        2
+      ],
+      "text": "이고, 중심 사이의 거리는 ",
+      "source_text": " located at a very small distance "
+    },
+    {
+      "at": [
+        6,
+        3,
+        4
+      ],
+      "text": "로 매우 작다. ",
+      "source_text": " from each other. The "
+    },
+    {
+      "at": [
+        6,
+        4,
+        0
+      ],
+      "text": "전하 보존 법칙에 따라 두 구의 알짜 전하는 영이다. 따라서 한 구의 ",
+      "source_text": "net charge of these two balls is , of course, zero due to the charge conservation law, so one of them can be "
+    },
+    {
+      "at": [
+        6,
+        5,
+        0
+      ],
+      "text": "부피 전하밀도가 ",
+      "source_text": "assumed to be charged with the bulk charge density "
+    },
+    {
+      "at": [
+        6,
+        5,
+        2
+      ],
+      "text": "이고, 다른 구의 부피 전하밀도가 ",
+      "source_text": ", whereas the other is to be charged with the bulk "
+    },
+    {
+      "at": [
+        6,
+        6,
+        0
+      ],
+      "text": "다음 값이라고 놓을 수 있다: ",
+      "source_text": "charge density "
+    },
+    {
+      "at": [
+        5,
+        5,
+        1
+      ],
+      "text": "문항 ",
+      "source_text": " Using your answer from ",
+      "substring": " Using your answer from "
+    },
+    {
+      "at": [
+        5,
+        5,
+        1
+      ],
+      "text": "의 답을 이용해 전하 ",
+      "source_text": ", find the charge ",
+      "substring": ", find the charge "
+    }
+  ],
+  "staging_only_prose_baseline": true,
+  "journal_selected_prose_whitespace": true,
+  "native_prose_tokens": [
+    "XV",
+    "sin",
+    "cos",
+    "max",
+    "min",
+    "log",
+    "exp",
+    "const"
+  ],
+  "native_text_exceptions": [],
+  "protected_runs": [],
+  "protected_substrings": [
+    {
+      "at": [
+        0,
+        0,
+        0
+      ],
+      "substring": "XV",
+      "source_text": "XV"
+    },
+    {
+      "at": [
+        5,
+        5,
+        1
+      ],
+      "substring": "2.2",
+      "source_text": "2.2"
+    }
+  ],
+  "reviewed_formula_protection_evidence": [
+    {
+      "at": [
+        5,
+        5,
+        1
+      ],
+      "source_text": "2.2",
+      "reason": "Original native subquestion reference at exact source font/point/baseline."
+    }
+  ],
+  "policy": "Explicit selected source prose only; original physical mathematics, counters, grades, source images and vector paths remain native. Staging is not a deliverable.",
+  "reviewed_math_font_prose_words": []
+}

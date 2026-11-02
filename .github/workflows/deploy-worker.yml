@@ -7,7 +7,7 @@ name: Deploy community Worker
 on:
   push:
     branches: [main]
-    paths: ["community/src/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "community/test-*.mjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
+    paths: ["community/src/**", "tools/model-test-catalogue.cjs", "tools/build-site-catalogue.cjs", "tests/test-physics-archive.cjs", "community/test-*.mjs", "community/provision-jobs.mjs", "community/provision-replication.mjs", "community/weekly/**", "community/migrations/**", "community/wrangler.toml", "community/wrangler.edge.toml", "community/package*.json", "monthly-problems.mjs", "monthly-experiment-sheet.mjs", "wrangler.toml", "pdf-worker/**", ".github/workflows/deploy-worker.yml"]
   workflow_dispatch:
 
 concurrency:
@@ -30,6 +30,11 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
+      # Studio creates its additive schema through the existing DB binding, so
+      # deployment does not require a new D1 management permission or secret.
+      - run: node --check src/worker.js && node --test test-studio.mjs test-studio-schema.mjs
+      - run: node --test test-grading-rules.mjs test-vision-provider.mjs test-reference-images.mjs test-selected-vision-worker.mjs test-ocr-failure-worker.mjs test-expr-check.mjs test-page-tiles.mjs test-grade-tools.mjs test-focus-read.mjs test-unit-check.mjs test-scheme-review.mjs
+      - run: node --test test-vision-runtime.mjs
       - run: node ../tools/build-site-catalogue.cjs --check
       - run: node --test test-lab-call-pricing.mjs test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs test-model-test-reference.mjs ../tests/test-model-test-ui.cjs ../tests/test-model-test-exam-ui.cjs ../tests/test-model-test-catalogue.cjs
       - run: node weekly/build-seed.mjs --check

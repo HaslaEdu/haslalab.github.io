@@ -1,0 +1,145 @@
+<h1 class="title">Solution</h1>
+
+
+<div class="task">
+<p class="code"><b>A1</b>.</p>
+<div class="ans">$$p_1 = \frac{mg}{S}$$</div></div>
+
+<div class="task">
+<p><b>A2</b>. According to Pascal's law, the pressure of a liquid depends only on the depth of immersion, therefore</p>
+<div class="ans">$$p(z) = \rho g z$$</div></div>
+
+
+<div class="task">
+<p><b>B1</b>. The equilibrium condition projected onto the vertical axis:</p>
+<div class="ans">$$\bigl(P(z+\mathrm{d}z) - P(z)\bigr)\pi R^2 - \mathrm{d}m\,g + \mu\sigma(z)\cdot 2\pi R\,\mathrm{d}z = 0$$</div></div>
+
+<div class="task">
+<p><b>B2</b>. Using the relations $\mathrm{d}m = \rho\pi R^2\,\mathrm{d}z$ and $\sigma(z) = KP(z)$, we obtain</p>
+$$\frac{\mathrm{d}P}{\mathrm{d}z} + \frac{2K\mu P(z)}{R} - \rho g = 0$$
+<p>Solving the equation and taking into account that $P(0) = 0$, we obtain</p>
+$$P(z) = \frac{\rho g R}{2\mu K}\left(1 - e^{-2\mu K z/R}\right)$$
+<p>Let us find the pressure at the bottom by substituting $z = h$ into the expression obtained:</p>
+$$P(h) = \frac{\rho g R}{2\mu K}\left(1 - e^{-2\mu K h/R}\right)$$
+<p>Hence</p>
+<div class="ans">$$A = \frac{\rho g R}{2\mu K},\qquad B = -\frac{\rho g R}{2\mu K},\qquad \lambda = \frac{R}{2\mu K}$$</div></div>
+
+<div class="task">
+<p><b>B3</b>. For small heights of the grain layer, the dependence of the pressure on the bottom on the height is approximately described by the expression</p>
+$$P(h) \approx \rho g h$$
+<p>Let us draw a tangent to the graph at the point $(0, 0)$. The slope of this tangent is</p>
+$$k_1 = 6.5~\mathrm{kPa/m}$$
+<p>Hence</p>
+<div class="ans">$$\rho = \frac{k_1}{g} \approx 660~\mathrm{kg/m^3}$$</div>
+<p>For sufficiently large $h$, the pressure on the bottom reaches a steady value. The steady-state pressure is</p>
+$$P_\infty = 26.7~\mathrm{kPa}$$
+<p>Hence</p>
+<div class="ans">$$K = \frac{\rho g R}{2\mu P_\infty} \approx 0.20$$</div></div>
+
+
+<div class="task">
+<p class="code"><b>C1</b>.</p>
+<div class="ans">$$r = R - \alpha z$$</div></div>
+
+<div class="task">
+<p><b>C2</b>. The equilibrium condition projected onto the vertical axis (here it is assumed that $\alpha \ll 1$, therefore $\cos\alpha \approx 1$, $\sin\alpha \approx \alpha$):</p>
+<div class="ans">$$P(z+\mathrm{d}z)\,\pi r^2(z+\mathrm{d}z) - P(z)\,\pi r^2(z) + 2\pi(\mu+\alpha)\sigma(z)r(z)\,\mathrm{d}z - \mathrm{d}m\,g = 0$$</div></div>
+
+<div class="task">
+<p><b>C3</b>. Next, in the equation obtained in the previous step, we neglect the term $\alpha$ compared to $\mu$. Note that near the free surface of the granular material the pressure is zero:</p>
+$$P(0) = A(1-\gamma) = 0$$
+<p>From this</p>
+<div class="ans">$$\gamma = 1$$</div>
+<p>The dependence $P(z)$ is described by the following differential equation:</p>
+$$\frac{\mathrm{d}(Pr^2)}{\mathrm{d}z} + 2K\mu P(z)r(z) - \rho g r^2(z) = 0$$
+<p>Let us introduce the notation $\xi = \dfrac{z}{z_{\max}}$. Substituting the expression for $P(z)$ given in the problem statement into the differential equation, taking into account that $\gamma = 1$:</p>
+$$\begin{aligned}\alpha^2 A z_{\max}\left(-1 + \beta(1-\xi)^{\beta-1}\right)(1-\xi)^2 &+ 2(K\mu-\alpha)A\alpha z_{\max}(1-\xi)\left(1-\xi-(1-\xi)^{\beta}\right)\\ &- \rho g\alpha^2 z_{\max}^2(1-\xi)^2 = 0\end{aligned}$$
+<p>The equation can be satisfied for all $\xi$ only if the coefficients of $(1-\xi)^2$ and $(1-\xi)^{\beta+1}$ vanish. Therefore</p>
+$$-A\alpha^2 + 2(K\mu-\alpha)A\alpha - \rho g\alpha^2 z_{\max} = 0$$
+<p>Hence</p>
+<div class="ans">$$A = \frac{\rho g\alpha z_{\max}}{2K\mu - 3\alpha}$$</div>
+<p>Also, the following holds:</p>
+$$\alpha^2 A\beta - 2(K\mu-\alpha)A\alpha = 0$$
+<p>From this</p>
+<div class="ans">$$\beta = \frac{2(K\mu-\alpha)}{\alpha}$$</div></div>
+
+<div class="task">
+<p class="code"><b>C4</b>.</p>
+<figure><img src="S1_fig1.png" style="width:118mm"><figcaption>The pressure $P$ (in units of $\rho g z_{\max}$) for $\alpha = 0.2K\mu$; the horizontal axis in units of $z_{\max}$.</figcaption></figure>
+
+<p>Let us calculate for $\alpha = 0.2K\mu$:</p>
+$$A \approx 0.143\rho g z_{\max},\qquad \beta = 8$$
+<p>$P(z)$ is maximal when $1 - \xi - (1-\xi)^8 \to \max$, i.e.</p>
+$$8(1-\xi)^7 = 1,\qquad z = \left(1 - 8^{-\frac{1}{7}}\right)z_{\max} \approx 0.26z_{\max}.$$
+<p>The corresponding pressure is</p>
+<div class="ans">$$P_{\max} \approx 0.093\rho g z_{\max}$$</div>
+<p class="note">Editor's note: in the original graph the maximum lies at $\approx 0.74$ on the horizontal axis, so that axis is in fact the distance $1 - z/z_{\max}$ measured from the apex. Against the depth $z$ from the free surface, as in the calculation above, the maximum is at $z \approx 0.26z_{\max}$ and the graph is mirrored: it rises steeply as $P \approx \rho g z$ near the free surface $z = 0$ and falls gently to zero at $z = z_{\max}$.</p></div>
+
+
+<div class="task">
+<p><b>D1</b>. The equilibrium condition projected onto the vertical axis (here the friction force acting on the granules from the vessel is directed downwards, since the force with which the granules act on the vessel lifts it):</p>
+<div class="ans">$$\bigl(P(z+\mathrm{d}z) - P(z)\bigr)\pi(R^2-a^2) - \mathrm{d}m\,g - \mu_1\sigma(z)\cdot 2\pi R\,\mathrm{d}z + \mu_2\sigma(z)\cdot 2\pi a\,\mathrm{d}z = 0$$</div></div>
+
+<div class="task">
+<p><b>D2</b>. The equation obtained has exactly the form of the equation of <b>B1</b>. Solving it, we obtain</p>
+<div class="ans">$$A = \frac{\rho g(R^2-a^2)}{2(-\mu_1 R + \mu_2 a)K},\qquad B = -\frac{\rho g(R^2-a^2)}{2(-\mu_1 R + \mu_2 a)K},\qquad \lambda = \frac{R^2-a^2}{2(-\mu_1 R + \mu_2 a)K}$$</div></div>
+
+<div class="task">
+<p><b>D3</b>. For a fixed height $H$ of the granules, the dependence of the pressure $P(z)$ is likewise given by</p>
+$$P(z) = A + Be^{-z/\lambda}$$
+<p>Let us calculate the total force acting on the rod:</p>
+$$F = 2\pi aK\mu_2\int_0^H P(z)\,\mathrm{d}z = 2\pi aK\mu_2 A\left(H - \lambda\left(1 - e^{-H/\lambda}\right)\right) \approx 2\pi aK\mu_2 A\frac{H^2}{2\lambda},$$
+<p>where we have used $H \ll \lambda$. By Newton's third law, a force of the same magnitude holds the granules up. In the critical situation this force must balance the gravity acting on the granules:</p>
+$$\rho g\pi(R^2-a^2)H = \pi aK\mu_2 A\frac{H^2}{\lambda}$$
+<p>Expressing $H$ from this,</p>
+<div class="ans">$$H = \frac{R^2-a^2}{Ka\mu_2}$$</div></div>
+
+
+<div class="task">
+<p><b>E1</b>. From the incompressibility condition,</p>
+<div class="ans">$$S_1\Delta l_1 = S_2\Delta l_2$$</div></div>
+
+<div class="task">
+<p class="code"><b>E2</b>.</p>
+<div class="ans">$$W_1 = \rho S_1\Delta l_1\left(\frac{v_1^2}{2} + gh_1\right)$$</div>
+<p class="note">Editor's note: the original denotes this energy $W_1$ (the problem's $E$); the energy of the volume at the cross-section $S_2$ is written $W_2$ in the same way.</p></div>
+
+<div class="task">
+<p><b>E3</b>. At the pressure $p_1$ a volume $V_1$ of fluid is “pushed into” the stream tube, and at the pressure $p_2$ a volume $V_2 = V_1$ is “pushed out” of it. Therefore</p>
+<div class="ans">$$A = p_1V_1 - p_2V_2 = (p_1 - p_2)S_1\Delta l_1$$</div></div>
+
+<div class="task">
+<p><b>E4</b>. We write the law of conservation of energy:</p>
+$$\rho S_1\Delta l_1\,\frac{v_2^2 + 2gh_2 - v_1^2 - 2gh_1}{2} = (p_1 - p_2)S_1\Delta l_1$$
+<p>Cancelling $S_1\Delta l_1$ on both sides, we obtain</p>
+<div class="ans">$$p_2 = p_1 - \rho\,\frac{v_2^2 + 2gh_2 - v_1^2 - 2gh_1}{2}$$</div>
+<p class="note">Editor's note: the original answer (marking scheme included) lacks the factor $\rho$, which the equation just above shows must be there.</p></div>
+
+<div class="task">
+<p><b>E5</b>. From the Bernoulli equation derived above, for the flow of an ideal fluid</p>
+$$p + \rho g h + \rho\frac{v^2}{2} = \mathrm{const}$$
+<p>The pressure at the hole equals the atmospheric pressure, and so does the pressure at the upper boundary between the fluid and the air. Therefore</p>
+$$p_0 + \rho g h + 0 = p_0 + 0 + \rho\frac{v(h)^2}{2}$$
+<p>and hence</p>
+<div class="ans">$$v(h) = \sqrt{2gh}$$</div></div>
+
+<div class="task">
+<p><b>E6</b>. The volume flow rate through the hole is</p>
+$$\dot V = -\frac{\pi D^2}{4}\sqrt{2gh}$$
+<p>The continuity equation gives the differential equation for the water height above the hole:</p>
+$$\pi R^2\dot h = -\frac{\pi D^2}{4}\sqrt{2gh}$$
+<p>Since $R \gg D$, $\dot h \ll \sqrt{2gh}$, so the assumption that the fluid velocity far from the hole can be neglected is justified. Now the outflow time can be expressed:</p>
+<div class="ans">$$\tau = \frac{2\sqrt{2}R^2}{D^2\sqrt{g}}\int_0^H\frac{\mathrm{d}h}{\sqrt{h}} = \frac{4\sqrt{2}R^2\sqrt{H}}{D^2\sqrt{g}}$$</div></div>
+
+
+<div class="task">
+<p><b>F1</b>. In the critical situation the surface of the granular material is inclined at the angle $\theta_r$ to the horizontal and touches the outer edge of the hole. From this,</p>
+<div class="ans">$$\omega_{\max} = D\cot\theta_r$$</div></div>
+
+<div class="task">
+<p><b>F2</b>. Let us estimate the velocity of the granules at the exit of the hole using the law of conservation of energy:</p>
+$$v \propto \sqrt{D}$$
+<p>Let us estimate the mass flow rate of the granules:</p>
+$$\frac{\mathrm{d}m}{\mathrm{d}t} = \rho S v \propto D^2\sqrt{D} \propto D^{5/2}$$
+<p>From this</p>
+<div class="ans">$$n = \frac{5}{2},\qquad q = 0$$</div></div>

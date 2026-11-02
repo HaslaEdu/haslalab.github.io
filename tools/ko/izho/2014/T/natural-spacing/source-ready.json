@@ -1,0 +1,377 @@
+{
+  "status": "READY",
+  "year": 2014,
+  "kind": "T",
+  "pages": 5,
+  "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\editions\\IZhO_2014_T_KO.pdf",
+  "sha256": "3ee2d89f87ec04c6bf1a731b010917ba56999830c4fb097f9732373e2dbeee8b",
+  "bytes": 13572083,
+  "original_source_sha256": "aeb3bf3e3eb7330ae56e8399b0eef3b3df52d014c93b745188bf6eaeca5a53a5",
+  "input_korean_source_sha256": "51d7b634ae902b0f011e89f01630bfe4f67a7af8726d96d441e99a4f684e2a6e",
+  "input_archives": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\input-bases\\51d7b634ae902b0f011e89f01630bfe4f67a7af8726d96d441e99a4f684e2a6e\\IZhO_2014_T_KO_native-baseline.pdf",
+      "sha256": "51d7b634ae902b0f011e89f01630bfe4f67a7af8726d96d441e99a4f684e2a6e",
+      "bytes": 12128878
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\input-bases\\aeb3bf3e3eb7330ae56e8399b0eef3b3df52d014c93b745188bf6eaeca5a53a5\\IZhO_2014_T_EN.pdf",
+      "sha256": "aeb3bf3e3eb7330ae56e8399b0eef3b3df52d014c93b745188bf6eaeca5a53a5",
+      "bytes": 196916
+    }
+  ],
+  "font_policy": "Original-point-size Batang for regular serif Hangul; all existing native Latin/math/ASCII, bold, sans, italic and paint retained.",
+  "spacing_policy": "Quarter-em prose word spaces; whole inline native expressions move horizontally with internal geometry retained; original display equations and figures stay fixed; source content centers retained.",
+  "original_point_sizes_scaled": false,
+  "equations_rasterized": false,
+  "no_added_pdf_editorial_notes": true,
+  "original_physical_native_glyphs_checked": 725,
+  "verified_original_native_ink_missing_pixels": 0,
+  "raw_unhinted_svg_reference_deltas": 0,
+  "retained_native_control_ink_missing_pixels": 0,
+  "changed_pixels_outside_text_and_intended_native_math_motion": 0,
+  "changed_nonselected_native_graphical_pixels": 0,
+  "figure_and_locked_display_math_changed_pixels": 0,
+  "new_batang_empty_outlines": 0,
+  "new_batang_hangul_glyphs_checked": 2656,
+  "hangul_visibility_loss_candidates": 0,
+  "unconverted_regular_body_hangul": 0,
+  "stationary_table_math_glyphs": 5,
+  "table_math_internal_geometry_mismatches": 0,
+  "original_grading_glyphs_checked": 0,
+  "grading_glyphs_moved_from_source_cells": 0,
+  "reviewed_complete_inline_expressions": 0,
+  "reviewed_inline_expression_geometry_mismatches": 0,
+  "original_script_base_pairs_checked": 66,
+  "script_base_relative_dx_mismatches": 0,
+  "original_font_image_palette_icc_mask_programs_and_page_groups_retained": true,
+  "assembly": "pikepdf native page append; fresh-process 4x RGB exact comparison to reviewed proofs",
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "7ff2a83483692a99783b3579bf95c3aa7aca681eb884078b3a1e27dfd553760e",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 93,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 331,
+        "shifted_top_level_glyphs": 147,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 0,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            31,
+            32
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "4b01865ba8b1047699808652154a51401b15028eb427210988dfc7d6df690671",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 634,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 6.103515625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.57763671875e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 2,
+      "proof_sha256": "2c102bc035524732630964484020e2d712dbcb510c5c1170c07fb49ad6096cbb",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 103,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 2,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 635,
+        "shifted_top_level_glyphs": 116,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 9,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 46,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            31,
+            32
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "840e0bf9e091294ac27a93a6542a1fc7627a41f0611ff746bd9a5727be82a2bf",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 937,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 4.57763671875e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.57763671875e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 3,
+      "proof_sha256": "acdf2c8a0ed4ffa039191d9983b0fbf5fc76cc7f744f6c3703468fc960b7e6c8",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 245,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 3,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 783,
+        "shifted_top_level_glyphs": 137,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 35,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 2,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            31,
+            32
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "91504fd2db1d478fe1e0ea6b6f2dc38f2b43b85a9cebe4ad5320a067558fb7d5",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 1261,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 4,
+      "proof_sha256": "2fb482fa7bf5ca630f49a607c3d3ca666690ec30ef4485d6a75b99b729d1130c",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 202,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 4,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 597,
+        "shifted_top_level_glyphs": 112,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 15,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            31,
+            32
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c6ecfe18f11c73a78c3fbd0412e8ca55c0e4c66d2010989631b372f823c010e8",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 975,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 2.288818359375e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 2.288818359375e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 5,
+      "proof_sha256": "2fc1a1588d60632c0077aac04f0a3aa9029ac1ef4620164077a368e21d892896",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 82,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 5,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 310,
+        "shifted_top_level_glyphs": 118,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 14,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            31,
+            32
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "623ca89cd3d4ca03435051f2a5dfd5a5d9ddf4a2d47bd62a241b72a68d410ab4",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 639,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 6.103515625e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 6.103515625e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    }
+  ],
+  "audit_reports": [
+    {
+      "page": 1,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014\\T\\page01.audit.json",
+      "sha256": "136d79ad8ba664dfee1fc1d986a7d2553f5f0304d7f19d4dae5932f6bbbc3f9f"
+    },
+    {
+      "page": 2,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014\\T\\page02.audit.json",
+      "sha256": "905f977a2fa0a8eae58d7955df6cc0ab8dd9a1b7077c778f29ac53662bce0af9"
+    },
+    {
+      "page": 3,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014\\T\\page03.audit.json",
+      "sha256": "b826be2128dd9ae966c641392a6e14a852364bfa1dce7509b764de48ce41a352"
+    },
+    {
+      "page": 4,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014\\T\\page04.audit.json",
+      "sha256": "46032d7e74209076fdfa2a4d6b02ef10fc362d8adf329ce40320384d594cd986"
+    },
+    {
+      "page": 5,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014\\T\\page05.audit.json",
+      "sha256": "500f4b20f7f64341b142f1cf0a8dd39b82ba2501e286c2bee184ce34977b9597"
+    }
+  ],
+  "visual_review": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014\\T\\visual-review.json",
+  "authoring_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring",
+  "authoring_files": {
+    "tools\\izho_natural_spacing.py": "407f1c4f3674c83b4ff8083591c84ab24e676c0b4d4e4264af03eb4ead22521b",
+    "tools\\pdf_korean_natural_composer.py": "5554cc9e381a636af77e6e2a07fa53fba06f8f1fb3c78d4b254a183f341ad1fb",
+    "tools\\izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+    "tools\\pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
+    "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools\\pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+    "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools\\pdf_text_motion_ink.py": "cc523d4d00cd3785259975d6b8bc5dcbfb1e9a2685969fcf12453c5be053d5e0",
+    "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools\\izho_natural_spacing_rebuild.py": "2e7672b9e46a793bb86aa4e5c26c66925edf0462acee5321e1d939848de488e1",
+    "tools\\izho_natural_spacing_qa.py": "23bba4eaa4754666934cb0d1d7fd2dca89d359fd49163cfd9f6e10c1c0f8cf1a",
+    "tools\\izho_native_ink_witness.py": "0b256b4e72271bf77adac53c7623468262307e54d8d5d46fe783e640f4dd9387",
+    "tools\\izho_natural_spacing_ready.py": "7694c21e7aabb10fd5fd89d2a9d6829ca8279c3c273ade367f3e8312640b88c1",
+    "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+    "tools\\pdf_native_script_motion_audit.py": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+    "tools\\test_pdf_text_motion_ink_origins.py": "f4be2879ffcf0904777a1a67ccf82254aac6f55f9fca49693677fbe73290b270",
+    "tools\\test_izho_natural_spacing.py": "9980fa2aed2c5e0d112e654d7c417c67a962553befb64a1143d9075669164a6a",
+    "tools\\test_pdf_korean_natural_composer.py": "b76df335fcbaa5af259fe7c4a4f5963abed0d93cfc660d8c070d1eb09e26a0d2",
+    "tools\\izho_initial_fixed_style.py": "5666371ace03c17a80e3c66bf5c6d7e9ee4284d47537c2778a9b4fa0618b66d0",
+    "tools\\initial_prose_reading_order.py": "31a83dacd125b1e7b670846a6d72c270909cda878621e030842be54dbdcc9210",
+    "tools\\test_initial_prose_reading_order.py": "17e4547173b13823c332917d87a90a6a40bfd76faa62fc864151a9a162ffb0f7",
+    "tools\\initial_final_prose_outline_audit.py": "b10da231fa82deff906f023577a55fa6908e2794a1658a3b1655aa97c8be9cf7",
+    "tools\\izho_initial_outline_qa.py": "ea1d050070cd21ad24fa2eeccf2dc78bbcd6e241195636d071a94202c6fc10d6",
+    "tools\\izho_math_type_table_prepare.py": "625b3987ced7cc5071f36ea84a5c7bdd1a62e4ba45d8e296a6497dbd88895216",
+    "tools\\test_partial_authored_spacing.py": "7814ba2f4670647037f0cd2114a19fbdcd30611cfe2d4721980bd5a3e20e8389",
+    "tools\\pdf_display_equation_numbers.py": "893c4a4a72e8bde0b045973e4cfac9fa4f59827e0db29b2f5d7e9323c29656df",
+    "tools\\pdf_native_widget_motion_audit.py": "126e39d0c53a53831294d2b2fddc5af449ca3532bf03c27774e48ababb8c5591",
+    "tools\\modern_new_prose_collision_audit.py": "3f4c8d239f12f70c8b119ebcf722ca65eef393ff3e9ed11e0302605f34423aa3",
+    "tools\\izho_early_fixed_style.py": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+    "tools\\pdf_new_prose_native_text_overlap.py": "2ef62c1b79d38e455a95e85de0812a8b2096443362d62dd0689818531acffb3c",
+    "tools\\pdf_new_hangul_graphics_overlap.py": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620"
+  },
+  "note": "All page proofs passed the ordinary original-input native-ink audit.",
+  "new_prose_native_text_and_graphics_collisions": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring\\independent-additional-audits\\independent-new-prose-collision-audits.json",
+    "sha256": "8ed223e12171face66701ce8973e2f648c48eef36e76a1f31832c8a6e6eb1778",
+    "passed": true
+  },
+  "all_new_prose_actual_embedded_outlines": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring\\independent-additional-audits\\initial-new-prose-outline-audits.json",
+    "sha256": "b33d1d627747cfeed0af5a5ae62ccf48095ebf121e566820d1bb90997f01f6b6",
+    "passed": true
+  },
+  "display_equation_numbers": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring\\independent-additional-audits\\final-display-equation-number-audit.json",
+    "sha256": "2df589ef4509ba29e27495a37ca5f7652b33e62f270a2d4cfb2140d32555f7a5",
+    "passed": true
+  },
+  "complete_native_clip_rigidity": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring\\independent-additional-audits\\tight-native-widget-motion-audit.json",
+    "sha256": "fb0eeefab60f9364ffaf8b7c3972497d27926377ae7a92b87350089440c370d5",
+    "passed": true
+  },
+  "original_displays_and_full_math_table_stationary": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring\\independent-additional-audits\\original-displays-and-full-math-table-stationary.json",
+    "sha256": "430f11440ff957e224e376b8fe348cf77892b660e868ff69b72209caa9e24a3b",
+    "passed": true
+  },
+  "initial_native_baseline_authoring": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring\\tools\\ko\\izho\\2014\\T\\original_style",
+    "history": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-initial-theory\\natural\\2014-T-authoring\\initial-baseline-source-history",
+    "first_exact_compiled_plan_recovered": true,
+    "baseline_is_not_deliverable": true,
+    "source_native_font_image_vector_programs_and_glyph_metadata_retained": true,
+    "staging_only_prose_overlap_removed_in_final": true,
+    "source_slot_semantic_order_verified": true,
+    "actual_source_reading_order_regression_tests": 4
+  },
+  "new_prose_actual_outline_empty_count": 0,
+  "all_new_prose_nonspace_glyphs_checked": 3222,
+  "new_native_ascii_prose_glyphs_checked": 344,
+  "new_prose_dark_pixels_over_original_native_text": 0,
+  "new_prose_dark_pixels_over_native_graphics": 0,
+  "original_display_equation_markers_checked": 0,
+  "original_display_equation_marker_glyphs_checked": 0,
+  "fully_stationary_original_math_table_and_display_glyphs_checked": 137
+}

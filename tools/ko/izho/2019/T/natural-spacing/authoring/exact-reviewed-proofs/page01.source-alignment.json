@@ -1,0 +1,113 @@
+{
+  "source_sha256": "29daec0cb9f759bed9b755cbae2937e1c4ab068fa804c62d512ea291e42619d1",
+  "source_page": 1,
+  "proof_sha256": "a568d26830425149b7a9694d1901cbbd9e6b48593511382f78e192a1fbeb5054",
+  "plan_sha256": "e3fe1a6580eeed08b3a76f1b2c96d8ffcdfb46d5f6922a70738b6e7b0f5e255d",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 3,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          3
+        ]
+      ],
+      "baseline": 105.5,
+      "source_center": 297.5029754638672,
+      "independent_original_source_centers": [
+        297.5029754638672
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 266.66827392578125,
+      "actual_nonspace_glyph_right": 328.33770751953125,
+      "actual_center": 297.50299072265625,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 131.29998779296875,
+      "source_center": 297.6899871826172,
+      "independent_original_source_centers": [
+        297.6899871826172
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 249.26605224609375,
+      "actual_nonspace_glyph_right": 346.1139221191406,
+      "actual_center": 297.6899871826172,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          3,
+          1
+        ]
+      ],
+      "baseline": 161.29998779296875,
+      "source_center": 297.6608123779297,
+      "independent_original_source_centers": [
+        297.6608123779297
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 216.04623413085938,
+      "actual_nonspace_glyph_right": 379.275390625,
+      "actual_center": 297.6608123779297,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 12,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 3,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          3
+        ],
+        "source_text": "THEORETICAL COMPETITION ",
+        "original_center": 297.5029754638672,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "January 11, 2019 ",
+        "original_center": 297.6899871826172,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          3,
+          1
+        ],
+        "source_text": "Please read this first: ",
+        "original_center": 297.6608123779297,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

@@ -8,6 +8,17 @@ function transport(){
   return{client,calls};
 }
 
+test('stored KMO OCR failures show safe provider categories rather than advice to reshoot valid work',()=>{
+  const Review=require('../sim/contest-review.js');
+  for(const [code,pattern]of [['vision_provider_auth',/authentication/],['vision_provider_credits',/API credit/],
+    ['vision_response_empty',/empty response/],['vision_response_truncated',/cut off/],['vision_response_schema',/fields/]]){
+    const text=Review.uploadWarning({ocr_status:'failed',legible:'good',ocr_error:code},'en');
+    assert.match(text,pattern);assert.doesNotMatch(text,/retake|photograph it again|read well/i);
+  }
+  const unknown=Review.uploadWarning({ocr_status:'failed',ocr_error:'<script>provider-secret</script>'},'en');
+  assert.doesNotMatch(unknown,/script|provider-secret/);assert.match(unknown,/photo was saved/i);
+});
+
 test('loading the review client never creates or charges a session',()=>{
   const {calls}=transport();assert.equal(calls.length,0);
 });
@@ -205,7 +216,7 @@ test('desktop queued photos retain unconfirmed originals through mode changes un
   const original=new Blob(['original card pixels'],{type:'image/png'}),corrected=new Blob(['confirmed A4 pixels'],{type:'image/png'});
   const item={name:'answer.png',url:'blob:initial',task:'Q5',mode:'clean',source:original,blob:original,scan:{blob:original,baseUrl:'data:original',corners,method:'page',autoScore:.98,cornersReliable:false,paperStatus:'aspect_mismatch',a4WarpApplied:false,quality:{ok:true}}};
   const scanner={MARKER_INSET:{left:.045},async reprocess(...args){calls.push(args);return{blob:corrected};},async encodeUpload(blob,options){encoded.push({blob,options});return blob;}};
-  const context=vm.createContext({scannerLibrary:async()=>scanner,MAX_IMAGE:1850000,queue:[item],busy:'',tr:(_ko,en)=>en,taskOptions:()=>'',escape:value=>String(value),
+  const context=vm.createContext({scannerLibrary:async()=>scanner,MAX_IMAGE:1850000,queue:[item],busy:'',alive:true,client:{fingerprint:()=> 'owner'},tr:(_ko,en)=>en,taskOptions:()=>'',escape:value=>String(value),
     URL:{revokeObjectURL:url=>revoked.push(url),createObjectURL:()=>`blob:rebuilt-${++urls}`}});
   vm.runInContext(code+'\nglobalThis.queueController={rebuildQueue,queueHTML};',context);const ui=context.queueController;
   assert.match(ui.queueHTML(),/original image is retained/);
@@ -215,12 +226,88 @@ test('desktop queued photos retain unconfirmed originals through mode changes un
     assert.equal(item.scan.a4WarpApplied,false);assert.equal(item.scan.paperStatus,'aspect_mismatch');assert.equal(item.scan.method,'page','a mode change is not manual corner confirmation');
     assert.equal(item.scan.cornersReliable,false);assert.match(ui.queueHTML(),/original image is retained/);
   }
-  const confirmed=corners.map(point=>({...point}));await ui.rebuildQueue(item,{corners:confirmed,marker:false});
+  const confirmed=corners.map(point=>({...point}));await ui.rebuildQueue(item,{corners:confirmed,marker:false,pageFormat:'a4'});
   assert.equal(calls.at(-1)[5].preserveOriginal,false);assert.equal(item.scan.cornersReliable,true);assert.equal(item.scan.autoScore,1);
   assert.equal(item.scan.paperStatus,'manual_a4');assert.equal(item.scan.a4WarpApplied,true);assert.equal(item.scan.method,'manual');
+  assert.equal(item.scan.warpApplied,true);assert.equal(item.scan.outputFormat,'a4');assert.equal(calls.at(-1)[5].pageFormat,'a4');
   assert.doesNotMatch(ui.queueHTML(),/original image is retained|Check the corners and adjust/);
   await ui.rebuildQueue(item,{mode:'mono'});assert.equal(calls.at(-1)[5].preserveOriginal,false);assert.equal(item.scan.paperStatus,'manual_a4');assert.equal(item.scan.method,'manual');
   assert.ok(encoded.every(call=>call.options.maxBytes===1850000));assert.equal(revoked.length,5);
   item.scan={...item.scan,a4WarpApplied:undefined,paperStatus:undefined,cornersReliable:false,autoScore:.99};assert.match(ui.queueHTML(),/Check the corners and adjust/,'high geometry scores do not hide uncertain-corner warnings');
   item.scan.cornersReliable=true;assert.doesNotMatch(ui.queueHTML(),/Check the corners and adjust/);
+  item.scan={...item.scan,warpApplied:true,a4WarpApplied:false,outputFormat:'auto'};assert.doesNotMatch(ui.queueHTML(),/original image is retained/,'auto-aspect correction is a valid completed warp');
+});
+
+test('KMO selection sends only provider IDs through start, payment, OCR and final review, then obeys the server lock',async()=>{
+  const prior={window:global.window,document:global.document,location:global.location};let controller;
+  global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};
+  global.window={qrcode:()=>({addData(){},make(){},createSvgTag:()=>'<svg></svg>'})};global.document={head:{append(){}},body:{append(){}},createElement:testHost};
+  const host=testHost(),calls=[],vision={default:'gemini',providers:[{id:'deepseek',available:true,model:'PRIVATE_MODEL_A'},{id:'gemini',available:true,model:'PRIVATE_MODEL_B'}]};let paid=false,selected='gemini';
+  const session=()=>({id:12,examId:'kmo-example',status:'scanning',paid,provider:selected,provider_locked:paid,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'typed',confirmed:true,text:'Proof',ocr_status:'done'}]});
+  const fetch=async(url,options)=>{const route=new URL(url).pathname,body=options.body?JSON.parse(options.body):null;calls.push({route,body});
+    if(route.endsWith('/bootstrap'))return{ok:true,json:async()=>({tokens:3,health:{vision}})};
+    if(route.endsWith('/start'))selected=body.provider;if(route.endsWith('/pay')){paid=true;selected=body.provider;}
+    return{ok:true,json:async()=>({session:session(),vision,token:route.endsWith('/start')?'server-upload-grant':undefined,tokens:3})};};
+  try {
+    controller=Review.mount(host,{id:'kmo-example',comp:'kmo',kind:'proof',questions:1},{storage:{getItem:key=>key==='hlCmTok'?'owner-token':null,setItem(){}},fetch});await new Promise(done=>setImmediate(done));
+    assert.deepEqual([...host.innerHTML.matchAll(/<option[^>]*>([^<]+)<\/option>/g)].map(match=>match[1]),['deepseek','gemini']);assert.ok(!host.innerHTML.includes('PRIVATE_MODEL_'));
+    const field=host.querySelector('[data-cr-provider]');assert.equal(field.value,'gemini');field.value='deepseek';field.onchange();assert.equal(calls.length,1,'choosing a provider cannot run OCR or use tokens');
+    await host.querySelector('[data-cr-start]').onclick();assert.equal(calls.find(call=>call.route.endsWith('/start')).body.provider,'deepseek');
+    await host.querySelector('[data-cr-pay]').onclick();assert.equal(host.querySelector('[data-cr-provider]').disabled,true);
+    const locked=host.querySelector('[data-cr-provider]');locked.value='gemini';locked.onchange();assert.equal(locked.value,'deepseek');
+    host.querySelector('[data-cr-approved]').onchange({target:{checked:true}});await host.querySelector('[data-cr-submit]').onclick();
+    for(const suffix of ['/pay','/read','/submit'])assert.equal(calls.find(call=>call.route.endsWith(suffix)).body.provider,'deepseek',suffix);
+    assert.ok(calls.filter(call=>call.route.includes('/qr')).every(call=>!call.body?.provider),'QRs retain the authoritative server session rather than a client override');
+  } finally {controller?.dispose();for(const[key,value]of Object.entries(prior)){if(value===undefined)delete global[key];else global[key]=value;}}
+});
+
+test('a stale KMO payment completion cannot start OCR after account switching or route disposal',async()=>{
+  for(const leave of ['account','route']) {
+    const prior={window:global.window,document:global.document,location:global.location};let controller,finish,auth='owner-A';const calls=[];
+    global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};global.window={};global.document={head:{append(){}},body:{append(){}},createElement:testHost};
+    const session={id:12,examId:'kmo-example',status:'scanning',paid:false,provider:'deepseek',provider_locked:false,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'typed',confirmed:true,text:'Proof',ocr_status:'done'}]};
+    const vision={providers:[{id:'deepseek',available:true},{id:'gemini',available:true}]},host=testHost();
+    const fetch=async(url,options)=>{calls.push({url,options});if(url.endsWith('/pay'))return new Promise(resolve=>finish=()=>resolve({ok:true,json:async()=>({session:{...session,paid:true,provider_locked:true},vision})}));return{ok:true,json:async()=>({session,vision,tokens:3})};};
+    try {
+      controller=Review.mount(host,{id:'kmo-example',comp:'kmo',kind:'proof',questions:1},{session,storage:{getItem:key=>key==='hlCmTok'?auth:null,setItem(){}},fetch});await new Promise(done=>setImmediate(done));
+      const pending=host.querySelector('[data-cr-pay]').onclick();await new Promise(done=>setImmediate(done));assert.equal(typeof finish,'function');
+      if(leave==='account')auth='owner-B';else controller.dispose();finish();await pending;
+      assert.equal(calls.filter(call=>call.url.endsWith('/read')).length,0);assert.equal(calls.find(call=>call.url.endsWith('/pay')).options.headers.Authorization,'Bearer owner-A');
+      assert.equal(JSON.parse(calls.find(call=>call.url.endsWith('/pay')).options.body).provider,'deepseek');
+    } finally {controller?.dispose();for(const[key,value]of Object.entries(prior)){if(value===undefined)delete global[key];else global[key]=value;}}
+  }
+});
+
+test('KMO corner editing retains the chosen format and cancels private images on account changes or disposal',async()=>{
+  const fs=require('node:fs'),vm=require('node:vm'),source=fs.readFileSync(require.resolve('../sim/contest-review.js'),'utf8');
+  const closeStart=source.indexOf('    function clearQueuedImages('),closeEnd=source.indexOf('    async function rebuildQueue(',closeStart);
+  const bindStart=source.indexOf('    function bindScanQueue('),bindEnd=source.indexOf('    async function prepareFiles(',bindStart);
+  const accountStart=source.indexOf('    function accountChanged('),accountEnd=source.indexOf("\n    if(typeof window",accountStart);
+  for(const leave of ['complete','account','dispose']){
+    let auth='owner-a',finish,received,rebuilt=0;const revoked=[],button={dataset:{crQedit:'0'}},item={url:'blob:private',scan:{baseUrl:'data:private',corners:[],method:'page',outputFormat:'a4'}};
+    const scanner={editCorners:async(_url,_points,options)=>{received=options;return new Promise(resolve=>finish=resolve);}};
+    const context=vm.createContext({queue:[item],queueDialogs:new Set(),cornerAbort:null,alive:true,identity:'owner-a',client:{fingerprint:()=>auth},revisionEpoch:0,
+      dirty:new Map(),thumbs:new Map(),render(){},getToken:()=>'',init(){},host:{querySelectorAll:selector=>selector==='[data-cr-qedit]'?[button]:[]},ko:true,
+      tr:(_ko,en)=>en,act:async(_label,fn)=>fn(),scannerLibrary:async()=>scanner,rebuildQueue:async()=>{rebuilt++;},AbortController,
+      URL:{revokeObjectURL:url=>revoked.push(url)}});
+    vm.runInContext(source.slice(closeStart,closeEnd)+source.slice(bindStart,bindEnd)+source.slice(accountStart,accountEnd),context);
+    context.bindScanQueue();const pending=button.onclick();await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(received.pageFormat,'a4');assert.equal(received.signal.aborted,false);
+    if(leave==='account'){auth='owner-b';context.accountChanged();}
+    if(leave==='dispose'){context.alive=false;context.clearQueuedImages();}
+    if(leave!=='complete'){assert.equal(received.signal.aborted,true);assert.equal(context.queue.length,0);assert.deepEqual(revoked,['blob:private']);}
+    finish({corners:[],marker:false,pageFormat:'a4'});await pending;
+    assert.equal(rebuilt,leave==='complete'?1:0,'a late editor result cannot restore old private work');
+  }
+  assert.match(source,/dispose\(\)\{[^]*?clearQueuedImages\(\)/);
+});
+
+test('a KMO photo preparation finishing after account switching cannot refill the cleared upload queue',async()=>{
+  const fs=require('node:fs'),vm=require('node:vm'),source=fs.readFileSync(require.resolve('../sim/contest-review.js'),'utf8');
+  const start=source.indexOf('    async function prepareFiles('),end=source.indexOf('    function ocrLabel(',start);let auth='owner-a',finish,urls=0;
+  const context=vm.createContext({client:{fingerprint:()=>auth},MAX_PAGES:40,session:{pages:[]},queue:[],alive:true,tasks:['Q1'],
+    filePages:()=>new Promise(resolve=>finish=resolve),URL:{createObjectURL:()=>{urls++;return'blob:old';}}});
+  vm.runInContext(source.slice(start,end),context);const pending=context.prepareFiles([new Blob(['private'])]);
+  auth='owner-b';finish([{blob:new Blob(['private']),source:new Blob(['private'])}]);await pending;
+  assert.equal(context.queue.length,0);assert.equal(urls,0);
 });

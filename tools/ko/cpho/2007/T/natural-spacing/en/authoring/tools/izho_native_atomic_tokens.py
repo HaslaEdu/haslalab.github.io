@@ -16,7 +16,67 @@ from pdf_original_text_ops import glyph_key
 def _inventory(path,page_number,mtime,size):
     return inspect_inline_groups(path,page_number)
 
-def atomic_tokens(source,page_number,allowed_rect,prose_baselines,excluded_rects=None):
+@lru_cache(maxsize=3)
+def _visible_image_paths(path,page_number,mtime,size):
+    """Read original colour/SMask ink without regenerating image pixels."""
+    import hashlib
+    import numpy as np
+    from pdf_original_image_ink import resolved_images,_planes
+    inventory=_inventory(path,page_number,mtime,size);visible=set()
+    with fitz.open(path)as doc:
+        for image in resolved_images(doc,doc[page_number-1]):
+            encoded=hashlib.sha256(doc.xref_stream_raw(image['xref'])).hexdigest()
+            matches=[g for g in inventory.get('images',[])if g['original_raw_sha256']==encoded
+                and max(abs(a-b)for a,b in zip(g['bbox'],image['bbox']))<.002]
+            if not matches:continue
+            colour,alpha,_=_planes(doc,image)
+            if np.any((alpha>0)&(colour<250)):
+                visible.update(tuple(g['path'])for g in matches)
+    return visible
+
+
+def _image_only_tokens(inv,rect,baselines,excluded,visible_paths,claimed_images):
+    """Explicit opt-in complete original bitmap mathematical objects."""
+    images={tuple(g['path']):g for g in inv.get('images',[])};candidates=[]
+    for group in inv['forms']:
+        if any(g['c'].strip()and g.get('trace_gid',g.get('gid',-1))>=0 for g in group['glyphs']):continue
+        paths={tuple(v)for v in group.get('image_paths',[])}
+        if not paths or not(paths&visible_paths)or paths&claimed_images:continue
+        candidates.append(dict(group_type='image-form',path=group['path'],paths=paths,
+            bbox=group['native_page_bbox'],shift_kwargs=dict(form_path=group['path'])))
+    for path,image in images.items():
+        # A nested image moves only inside its complete original Form.
+        if len(path)!=1 or path not in visible_paths or path in claimed_images:continue
+        candidates.append(dict(group_type='image',path=list(path),paths={path},bbox=image['bbox'],
+            shift_kwargs=dict(image_path=list(path))))
+    candidates.sort(key=lambda g:(-len(g['paths']),g['group_type']!='image-form',len(g['path'])))
+    result=[]
+    for group in candidates:
+        if group['paths']&claimed_images:continue
+        box=fitz.Rect(group['bbox'])
+        if box.is_empty or box.width>rect.width+2 or box.height>max(70,4*max((b['size']for b in baselines),default=12)):continue
+        if box.x0<rect.x0-1 or box.x1>rect.x1+1 or any(box.intersects(r)for r in excluded):continue
+        anchors=[b for b in baselines if rect.y0<=b['baseline']<=rect.y1
+            and abs(b['baseline']-(box.y1-.25*b['size']))<=.5*b['size']]
+        if not anchors:continue
+        # Word inline image boxes include the normal descender allowance.
+        # Associate near bottom-minus-quarter-em, never with an adjacent
+        # paragraph row merely because that row crosses the image's top.
+        # This logical association does not alter the original image CTM/y.
+        anchor=min(anchors,key=lambda b:abs(b['baseline']-(box.y1-.25*b['size'])))
+        result.append(dict(text='\ufffc',kind='native',glyphs=[],x0=box.x0,x1=box.x1,
+            y=anchor['baseline'],size=anchor['size'],fonts=[],bbox=list(box),
+            atomic_native_group=group['group_type'],image_only=True,
+            image_row_alignment='Original inline image box bottom minus quarter-em; physical image y and CTM unchanged',
+            native_image_paths=[list(p)for p in sorted(group['paths'])],
+            painted_image_rects=[images[p]['bbox']for p in sorted(group['paths'])],
+            shift_kwargs=group['shift_kwargs'],
+            source_form_path=group['path']if group['group_type']=='image-form'else None))
+        claimed_images.update(group['paths'])
+    return result
+
+
+def atomic_tokens(source,page_number,allowed_rect,prose_baselines,excluded_rects=None,*,include_image_only=False):
     """Return disjoint native atomic tokens in one reviewed paragraph region.
 
     ``prose_baselines`` accepts numbers or ``{baseline,size}`` dictionaries.
@@ -85,6 +145,7 @@ def atomic_tokens(source,page_number,allowed_rect,prose_baselines,excluded_rects
             kind='native',glyphs=glyphs,x0=x0,x1=x1,y=y,size=base['size'],
             fonts=sorted({g['font']for g in visible}),shift_kwargs=shift_kwargs,
             atomic_native_group=group['group_type'],bbox=list(bounds))
+        if group.get('image_paths'):result['native_image_paths']=group['image_paths']
         if physical_form is not None:result['native_page_bbox']=list(physical_form)
         if group['group_type']=='clip':
             result['source_operator_indices']=group['operator_indices']
@@ -100,4 +161,9 @@ def atomic_tokens(source,page_number,allowed_rect,prose_baselines,excluded_rects
     for keys,item in candidates:
         if keys&claimed:continue
         claimed.update(keys);result.append(item)
+    if include_image_only:
+        if 'images'not in inv:raise ValueError('Original image invocation metadata is required for the explicit image-only profile')
+        image_keys={tuple(path)for token in result for path in token.get('native_image_paths',[])}
+        visible_paths=_visible_image_paths(str(source),page_number,stat.st_mtime_ns,stat.st_size)
+        result.extend(_image_only_tokens(inv,rect,baselines,excluded,visible_paths,image_keys))
     return sorted(result,key=lambda t:(t['y'],t['x0']))

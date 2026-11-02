@@ -13,7 +13,8 @@ theory.js keeps only what the site needs:
 
 Korean translations come from tools/theory_ko.json (uploaded with tools/pdf_release.py, not mirrored): a part's own
 go under ko ({paper, sol, mark, answer, rev}), a translation of the whole paper where the site has only the problems
-under w, Korean titles under pk, the general instructions under g ({ko, en}), a Korean working sheet under wk; NBPhO's experiments
+under w, Korean titles under pk, the general instructions under g ({ko, en}), a Korean working sheet under wk (an English one,
+the manifest year's ws, under we); NBPhO's experiments
 in Korean (the booklet numbers in x) under xk.
 
 A file marked "direct": true (USABO, USNCO) is not mirrored: the site links its url as it is, and its part is not
@@ -122,11 +123,19 @@ def load():
             probs = [[str(p.get('id', ''))[:8], str(p.get('title', '')).strip()[:160]] for p in y.get('problems', [])
                      if p.get('title') and not GENERIC.match(str(p['title']).strip())]
             out.setdefault(comp, {})[year] = {'p': probs, 'f': files}
+            # shortlist / backup problems (sl): not part of the competition's paper — sat and graded one at a time
+            shortlist = [str(p['id']) for p in y.get('problems', []) if p.get('shortlist') and str(p.get('id')) in files]
+            if shortlist:
+                out[comp][year]['sl'] = shortlist
             # where it was held, for a year the site knows only from its theory papers (h: {ko, en}, cc: flag code)
             if y.get('host'):
                 out[comp][year]['h'] = y['host']
             if y.get('cc'):
                 out[comp][year]['cc'] = y['cc']
+            # an English working sheet for the theory, kept on the site (ISPhO 2024–2026: HaslaLab's, in the 2026
+            # answer-sheet layout); the Korean one comes from theory_ko.json (wk)
+            if re.match(r'^pdfx/[a-z]+/[\w.-]+\.pdf$', y.get('ws', '')):
+                out[comp][year]['we'] = y['ws']
             # the answer key of a multiple-choice paper, per part (KPhE): exam mode grades it on the screen, not by AI
             if y.get('keys'):
                 out[comp][year]['k'] = {k: v for k, v in y['keys'].items() if k in files}
@@ -196,10 +205,16 @@ def korean(out, bad):
                     continue
                 ko = dict(ko)
                 title, en = ko.pop('title', None), ko.pop('en', None)
+                if en and en.get('shortlist'):
+                    en = {k: v for k, v in en.items() if k != 'shortlist'}
+                    if part not in t.get('sl', []):
+                        t.setdefault('sl', []).append(part)
                 # NBPhO: a booklet number that is an experiment — its Korean problem goes to the experiment card (xk)
                 if re.match(r'^T\d+$', part) and int(part[1:]) in t.get('x', []):
                     if ko.get('paper'):
                         t.setdefault('xk', {})[part[1:]] = ko['paper']
+                    if ko.get('sol'):
+                        t.setdefault('xs', {})[part[1:]] = ko['sol']     # and its Korean solution (xs)
                     continue
                 if part == rev_at and rev:
                     ko['rev'] = rev
@@ -245,9 +260,11 @@ def split(out):
         t['x'] = e['exp']
         t['c'] = {k: {'paper': 'pdfx/nbpho/' + e['paper'][k], **({'sol': 'pdfx/nbpho/' + e['sol'][k]} if k in e['sol'] else {})}
                   for k in e['paper']}
+        whole = t['f'].get('T', {})
         for k, v in t['c'].items():
             if int(k) not in e['exp']:
-                t['f']['T' + k] = dict(v)
+                # a year whose solutions could not be cut per problem (2024, 2026) opens the whole solution booklet
+                t['f']['T' + k] = dict(v) if 'sol' in v or 'sol' not in whole else dict(v, sol=whole['sol'])
 
 
 def main():

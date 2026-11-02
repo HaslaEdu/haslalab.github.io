@@ -7,22 +7,52 @@ const root=path.resolve(__dirname,'..');
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 
 function app(){
+  const handlers={};
   const dummy={setAttribute(){},addEventListener(){},style:{},classList:{toggle(){},add(){},remove(){}},querySelectorAll(){return[]},dataset:{}};
   const context={window:{},URL,URLSearchParams,location:{hash:'#/nbpho/2026',search:''},history:{replaceState(){}},
     document:{getElementById(){return dummy},querySelectorAll(){return[]},querySelector(){return null},documentElement:{},body:dummy},
-    localStorage:{getItem(){return 'thy'},setItem(){}},addEventListener(){},matchMedia(){return{matches:false}},
+    localStorage:{getItem(){return 'thy'},setItem(){}},addEventListener(name,handler){(handlers[name]??=[]).push(handler)},matchMedia(){return{matches:false}},
     setTimeout(){},clearTimeout(){},requestAnimationFrame(){},cancelAnimationFrame(){},console};
   vm.createContext(context);
   for(const file of ['theory.js','paper-languages.js','contest-exams.js','examdur.js','rupho-selection.js','rupho-archive.js','site-design.js'])vm.runInContext(read(file),context,{filename:file});
   context.HLexam=context.window.HLexam;
   const main=[...read('index.html').matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)].find(m=>m[2].includes('const REL ='))[2];
   vm.runInContext(main.replace(/render\(\);\s*$/,''),context);
-  return {context,run:code=>vm.runInContext(code,context)};
+  return {context,handlers,run:code=>vm.runInContext(code,context)};
 }
 
 function sessionLinks(html){
   return [...html.matchAll(/href="(sim\/exam\.html\?[^\"]+)"/g)].map(m=>new URL(m[1].replaceAll('&amp;','&'),'https://haslalab.org/'));
 }
+
+test('learning physics opens the native studio with physics, creation and current language/theme',()=>{
+  const a=app();a.context.document.documentElement.dataset={theme:'dark'};a.run("lang='ko'");
+  assert.match(a.run('viewLearnSubject("physics")'),/href="#\/learn\/physics\/studio"/);
+  assert.match(a.run('viewLearnSubject("physics")'),/문제 제작소/);
+  assert.match(a.run('viewLearnSubject("chemistry")'),/learn-pending/);
+  for(const language of ['ko','en']){
+    a.run(`lang='${language}'`);
+    const html=a.run('viewLearnStudio()'),src=/id="learnStudioFrame"[^>]*src="([^"]+)"/.exec(html)[1];
+    const url=new URL(src,'https://haslalab.org/');
+    assert.equal(url.origin,'https://haslalab.org');assert.equal(url.pathname,'/studio.html');
+    assert.equal(url.searchParams.get('embed'),'1');assert.equal(url.searchParams.get('subject'),'physics');
+    assert.equal(url.searchParams.get('mode'),'generate');assert.equal(url.searchParams.get('theme'),'dark');
+    assert.equal(url.searchParams.get('lang'),language);
+  }
+});
+
+test('studio resize messages only affect the current same-origin frame and have bounded heights',()=>{
+  const a=app(),frame={contentWindow:{},style:{height:'1050px'}};
+  a.context.location.origin='https://haslalab.org';
+  a.context.document.getElementById=id=>id==='learnStudioFrame'?frame:null;
+  const send=(overrides={})=>a.handlers.message.forEach(fn=>fn({origin:'https://haslalab.org',source:frame.contentWindow,data:{type:'hl-studio-height',height:900},...overrides}));
+  send({origin:'https://other.invalid'});assert.equal(frame.style.height,'1050px');
+  send({source:{}});assert.equal(frame.style.height,'1050px');
+  send({data:{type:'hl-studio-height',height:NaN}});assert.equal(frame.style.height,'1050px');
+  send();assert.equal(frame.style.height,'900px');
+  send({data:{type:'hl-studio-height',height:1}});assert.equal(frame.style.height,'600px');
+  send({data:{type:'hl-studio-height',height:1e9}});assert.equal(frame.style.height,'30000px');
+});
 
 test('NBPhO mode switches retain selected year and theory track shows its combined sitting',()=>{
   const a=app();

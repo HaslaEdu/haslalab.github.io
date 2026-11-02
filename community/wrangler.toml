@@ -1,8 +1,12 @@
 name = "haslalab-community"
-main = "src/index.js"
+main = "src/worker.js"
 compatibility_date = "2025-09-01"
 # Variables set in the dashboard (PADDLE_PRICES, LAB_KEEP_HOURS …) survive `wrangler deploy`; secrets always do.
 keep_vars = true
+
+[[services]]
+binding = "STUDIO_ENGINE"
+service = "haslalab-studio-engine"
 
 # Run the Worker next to its database rather than next to the visitor: a page makes several
 # database queries, and each one is a round trip, so this cuts the waiting the most.
@@ -21,15 +25,72 @@ queue = "haslalab-lab-jobs"
 
 [[queues.consumers]]
 queue = "haslalab-lab-jobs"
-max_batch_size = 1
+max_batch_size = 3
 max_batch_timeout = 1
 max_retries = 3
-max_concurrency = 4
+max_concurrency = 10
 dead_letter_queue = "haslalab-lab-jobs-dead"
 
 # Sites allowed to call the API from the browser (comma-separated).
 [vars]
 ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
+# Production choices are fixed in vision-provider.js; keep the private model bench aligned.
+GEMINI_MODEL = "gemini-3.5-flash-lite"
+DEEPSEEK_MODEL = "deepseek-flash"
+DEEPSEEK_OCR_MODEL = "deepseek-flash"
+# DeepSeek runs every stage while the Gemini account has no credit (LAB_ONLY_PROVIDER pins every sitting to it). When it
+# is topped up, the Gemini choices of the bench were: providers gemini, LAB_READ_MODEL gemini-3.1-pro-preview,
+# LAB_SCHEME_MODEL and LAB_GRADE_MODEL gemini-3.8-flash, LAB_READ_FALLBACK_MODEL gemini-3.8-flash,
+# LAB_SCHEME_FALLBACK_MODEL gemini-3.1-pro-preview, and no LAB_ONLY_PROVIDER. DeepSeek bench (36 audited tasks):
+# deepseek-flash builds the schemes (it sees the PDF pages; v4-pro reads no image and its schemes graded 6 points
+# further from the audits). With Gemini:
+# Gemini reads the pages and Gemini 3.8 Flash grades them alone (labRoles). Model bench of 2026-11-01 against 15 audited
+# sittings: 3.8 Flash alone (thinking low) graded closest to the audits at ~$0.02 a task; DeepSeek moderated by Flash-Lite
+# and a moderation of every item scored lower; handing the grader the papers as well (LAB_GRADE_PDFS) gained nothing.
+LAB_PIPELINE = "mixed"
+LAB_SCHEME_PROVIDER = "deepseek"
+LAB_READ_PROVIDER = "deepseek"
+LAB_ONLY_PROVIDER = "deepseek"
+LAB_GRADE_PROVIDER = "deepseek"
+LAB_GRADE_MODEL = "deepseek-flash"
+# DeepSeek thinking (low, high, max) stays off until the bench has measured it
+LAB_GRADE_THINKING = "off"
+LAB_MODERATE_PROVIDER = "none"
+# Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
+# every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
+LAB_READ_MODEL = "deepseek-flash"
+# DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
+# numbers it missed from 21 to 14 of 102 for $0.0002 more a page
+LAB_READ_TILES = "3"
+# the paper's own symbols handed to the reader to tell look-alikes apart (I0 from Z0, gamma from Y): bench, DeepSeek Flash,
+# hard misreads fixed 5 -> 8 of 28, checked numbers missed 14 -> 13 of 102, for about $0.0001 a page
+LAB_READ_NOTATION = "on"
+# the look-alikes our audits found misread, listed in the read prompt (OCR checks: numbers missed 13 -> 11 of 102, same cost)
+LAB_READ_CONFUSIONS = "on"
+# a numerical answer the code marks wrong (R12) is read again by Mathpix on that page alone; a one-character misread
+# (10^12 for 10^18, 25 for 85) is replaced (bench: 2 misreads fixed, no wrong replacement; ~$0.005 a page it reads)
+LAB_FOCUS_READ = "on"
+# answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
+# reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
+LAB_KEEP_HOURS = "off"
+LAB_READ_THINKING = "off"
+LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
+# build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
+LAB_SCHEME_WARM = "on"
+# admin model-bench runs at once, only while no candidate's job waits
+LAB_BENCH_SLOTS = "8"
+# Marking schemes (once per paper and SCHEME_VERSION) are read from the solution PDFs by Gemini 3.8 Flash: graded with one
+# grader, its schemes came 2.2 points closer to the audits than 3.1 Pro's on 32 tasks (Claude and GPT schemes no closer).
+LAB_SCHEME_MODEL = "deepseek-flash"
+LAB_SCHEME_THINKING = "off"
+# when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
+LAB_READ_FALLBACK_MODEL = ""
+LAB_SCHEME_FALLBACK_MODEL = ""
+
+# answer photos (lab_pages.r2_key): new uploads go here instead of D1; kept after grading (LAB_KEEP_HOURS off)
+[[r2_buckets]]
+binding = "LAB_PAGES"
+bucket_name = "haslalab-lab-pages"
 
 [[d1_databases]]
 binding = "DB"

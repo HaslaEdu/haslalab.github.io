@@ -1,0 +1,166 @@
+{
+  "source_sha256": "29daec0cb9f759bed9b755cbae2937e1c4ab068fa804c62d512ea291e42619d1",
+  "source_page": 2,
+  "proof_sha256": "d83978ed6a59d80a41e433b5ff6d246d006dbd377060538feda5789eadd87e5a",
+  "plan_sha256": "7006649d4102b0e24f153b05a33ab99f003997f8756ac4cdd3ecc7b2e9f36130",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 5,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 62.27996826171875,
+      "source_center": 297.7117691040039,
+      "independent_original_source_centers": [
+        297.7117691040039
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 253.38612365722656,
+      "actual_nonspace_glyph_right": 342.03741455078125,
+      "actual_center": 297.7117691040039,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          1,
+          1
+        ]
+      ],
+      "baseline": 76.55999755859375,
+      "source_center": 297.6449966430664,
+      "independent_original_source_centers": [
+        297.6449966430664
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 165.64498901367188,
+      "actual_nonspace_glyph_right": 429.6449890136719,
+      "actual_center": 297.6449890136719,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 21,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 92.29998779296875,
+      "source_center": 297.71178436279297,
+      "independent_original_source_centers": [
+        297.71178436279297
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 251.81515502929688,
+      "actual_nonspace_glyph_right": 343.6083984375,
+      "actual_center": 297.71177673339844,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          3,
+          0
+        ]
+      ],
+      "baseline": 191.89996337890625,
+      "source_center": 297.7047424316406,
+      "independent_original_source_centers": [
+        297.7047424316406
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 252.16812133789062,
+      "actual_nonspace_glyph_right": 343.2413635253906,
+      "actual_center": 297.7047424316406,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          4,
+          1
+        ]
+      ],
+      "baseline": 561.18994140625,
+      "source_center": 297.71178436279297,
+      "independent_original_source_centers": [
+        297.71178436279297
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 251.81515502929688,
+      "actual_nonspace_glyph_right": 343.6083984375,
+      "actual_center": 297.71177673339844,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 4,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "Problem 1 (10.0 points) ",
+        "original_center": 297.7117691040039,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "Problem 1A (4.0 points) ",
+        "original_center": 297.71178436279297,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          3,
+          0
+        ],
+        "source_text": "Problem 1B (3.0 points) ",
+        "original_center": 297.7047424316406,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          4,
+          1
+        ],
+        "source_text": "Problem 1C (3.0 points) ",
+        "original_center": 297.71178436279297,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

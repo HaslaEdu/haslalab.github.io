@@ -5,7 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import worker from './src/index.js';
 import { tokenUnits, tokenBalance } from './src/lab-tokens.js';
-import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE } from './src/lab-pair-catalog.js';
+import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE, LAB_SHORTLIST_CATALOGUE } from './src/lab-pair-catalog.js';
 
 const sql = new DatabaseSync(':memory:');
 for (const file of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^\d{4}_.*\.sql$/.test(n)).sort())
@@ -37,7 +37,7 @@ for (let id = 1; id <= 80; id++) {
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(auth[id]))).toString('base64url');
   sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash, id, time, time + 3600);
 }
-const env = { DB, LAB_JOBS: { async sendBatch() {} }, LAB_KEEP_HOURS: 'off', ADS_REWARDED_UNIT: 'test', ADS_MIN_SEC: '0', ADS_DAILY: '10', TOSS_BASE: 'https://payments.test', TOSS_SECRET_KEY: 'local-stand-in' };
+const env = { DB,GEMINI_API_KEY:'local-selected-provider-no-AI', LAB_JOBS: { async sendBatch() {} }, LAB_KEEP_HOURS: 'off', ADS_REWARDED_UNIT: 'test', ADS_MIN_SEC: '0', ADS_DAILY: '10', TOSS_BASE: 'https://payments.test', TOSS_SECRET_KEY: 'local-stand-in' };
 globalThis.caches = { default: { async match() {}, async put() {} } };
 const originalFetch = globalThis.fetch;
 let paymentCalls = 0;
@@ -48,6 +48,7 @@ globalThis.fetch = async (url, options) => {
 };
 test.after(() => { globalThis.fetch = originalFetch; sql.close(); });
 async function api(path, body, user = 1, settings = env) {
+  if(body&&/^\/lab\/(?:start|sessions\/\d+\/(?:pay|submit))$/.test(path))body={provider:'gemini',...body};
   const r = await worker.fetch(new Request('https://worker.local/api' + path, {
     method: body === undefined ? 'GET' : 'POST', headers: { Authorization: 'Bearer ' + auth[user], ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
@@ -57,7 +58,7 @@ const balance = user => tokenBalance(sql.prepare('SELECT exam_tokens,exam_half F
 const fund = (user, tokens, half = 0) => sql.prepare('UPDATE users SET exam_tokens=?,exam_half=? WHERE id=?').run(tokens, half, user);
 const paidLedger = id => sql.prepare("SELECT * FROM lab_ledger WHERE session_id=? AND reason='grade'").all(id);
 function seed(user, { tasks = ['T1'], theory = tasks.filter(t => t.startsWith('T')), pair = false, review = false, comp = 'ipho', year = 2024, key = comp + year, charged = 0, pricing } = {}) {
-  const sources = Object.fromEntries(tasks.map(task => [task, { ...(theory.includes(task) ? { kind: 'theory' } : {}), sol: `IPhO_${year}_${task}S.pdf` }]));
+  const sources = {_provider:'gemini',...Object.fromEntries(tasks.map(task => [task, { ...(theory.includes(task) ? { kind: 'theory' } : {}), sol: `IPhO_${year}_${task}S.pdf` }]))};
   if (pair) sources._half = 1; if (review) sources._review = 1; if (pricing) sources._pricing = pricing;
   const id = Number(sql.prepare(`INSERT INTO lab_sessions(user_id,comp,year,exam_key,tasks,sources,started_at,ended_at,scan_until,upload_hash,status,charged,created_at)
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(user, comp, year, key, JSON.stringify(tasks), JSON.stringify(sources), time, time + 3600, time + 5400, crypto.randomUUID(), review ? 'scanning' : 'running', charged, time).lastInsertRowid);
@@ -121,22 +122,23 @@ test('simultaneous complementary payments share one discount and never reuse a p
   assert.equal(competing.filter(r => r.data.session.paired_with === first).length, 1);
 });
 
-test('start, resume, selected GET and bootstrap quote the eligible 0.2 price without spending or reserving tokens', async () => {
+test('a grading-mode start spends the eligible 0.2 paired price at once; resume, GET and bootstrap show it without spending again', async () => {
   fund(27, 0.5); const first = seed(27, { tasks: theory, pair: true }); await pay(first, 27);
   const request = { comp:'ipho',year:2024,tasks:lab,pair:true,review:true,
     sources:Object.fromEntries(lab.map(task => [task,{sol:`IPhO_2024_S${task.slice(1)}.pdf`}])) };
   const opened = await api('/lab/start', request, 27); assert.equal(opened.status, 200, JSON.stringify(opened.data));
   const id = opened.data.session.id;
+  assert.equal(opened.data.session.paid, true); assert.equal(opened.data.tokens, 0);
   const snapshots = [opened, await api('/lab/start', request, 27), await api('/lab/sessions/' + id, undefined, 27), await api('/lab/sessions/' + id)];
   const boot = await api('/lab/bootstrap?id=' + id, undefined, 27); snapshots.push(boot);
   for (const result of snapshots) {
-    assert.equal(result.data.session.cost, 0.2); assert.equal(result.data.session.price_estimate, true);
+    assert.equal(result.data.session.cost, 0.2); assert.equal(result.data.session.price_estimate, false);
     assert.equal(result.data.session.paired_with, first); assert.equal(result.data.session.discount, 0.1);
   }
-  assert.equal(boot.data.active.cost, 0.2); assert.equal(balance(27), 0.2); assert.equal(paidLedger(id).length, 0);
+  assert.equal(boot.data.active.cost, 0.2); assert.equal(balance(27), 0); assert.equal(paidLedger(id).length, 1, 'one charge, at the first press');
   assert.equal((await api('/lab/sessions/' + id, undefined, 28)).status, 404);
   await api('/lab/sessions/' + id + '/text', { answers:{[lab[0]]:'Completed answer'} }, 27);
-  const paid = await pay(id, 27); assert.equal(paid.status, 200); assert.equal(paid.data.tokens, 0);
+  const paid = await pay(id, 27); assert.equal(paid.status, 200); assert.equal(paid.data.tokens, 0); assert.equal(paidLedger(id).length, 1);
   assert.equal(paid.data.session.cost, 0.2); assert.equal(paid.data.session.price_estimate, false);
 });
 
@@ -288,4 +290,23 @@ test('server pack configuration accepts tenths and refuses unrepresentable fract
   assert.equal((await config(0.7)).data.pay.packs[0].tokens, 0.7);
   assert.equal((await config(0.333)).data.pay.packs[0].tokens, 1);
   assert.equal(balance(24), 5, 'existing signup/default grant remains five whole tokens');
+});
+
+test('a shortlist (backup) problem is graded alone for 0.1 token and never joins a pair or the day\'s paper', async () => {
+  const [task] = LAB_SHORTLIST_CATALOGUE.ipho['2025'];
+  assert.equal(task, 'T4');
+  fund(60, 1);
+  const short = seed(60, { tasks: [task], year: 2025, pair: true }), r = await pay(short, 60);
+  assert.equal(r.status, 200, JSON.stringify(r.data)); assert.equal(r.data.session.cost, 0.1); assert.equal(r.data.tokens, 0.9);
+  const note = JSON.parse(paidLedger(short)[0].note);
+  assert.equal(note.units, 1); assert.equal(note.pair_eligible, 0); assert.equal(note.paired_with, null);
+  // the paid shortlist sitting is no partner for the year's experiments: they still cost 0.3
+  const lab25 = LAB_PAIR_CATALOGUE.ipho['2025'][0].lab[0], exp = await pay(seed(60, { tasks: lab25, year: 2025, pair: true }), 60);
+  assert.equal(exp.data.session.cost, 0.3); assert.equal(exp.data.tokens, 0.6);
+  // with the day's paper or other tasks it is refused at the start
+  const mixed = await api('/lab/start', { comp:'ipho', year:2025, tasks:['T1','T4'], sources:{ T1:{ sol:'IPhO_2025_T1S.pdf', kind:'theory' }, T4:{ sol:'IPhO_2025_T4S.pdf', kind:'theory' } } }, 61);
+  assert.equal(mixed.status, 400); assert.equal(mixed.data.error, 'shortlist_alone');
+  // the same task name in another year is an ordinary problem
+  fund(62, 1); const ordinary = await pay(seed(62, { tasks: ['T4'], year: 2024 }), 62);
+  assert.equal(ordinary.data.session.cost, 0.3);
 });

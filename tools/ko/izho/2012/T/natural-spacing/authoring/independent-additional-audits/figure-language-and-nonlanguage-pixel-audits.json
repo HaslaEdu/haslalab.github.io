@@ -1,0 +1,679 @@
+{
+  "pages": [
+    {
+      "page": 3,
+      "proof_sha256": "f9488c31b5153ce4b2692e2de67292dd8f955f4967acb018ed385cc1a7d361de",
+      "bitmap": {
+        "labels": 3,
+        "source_original_language_ink_pixels": 13294,
+        "new_label_outline_pixels": 12167,
+        "new_label_over_original_nonlanguage_foreground_pixels": 0,
+        "original_language_regions": [
+          [
+            108.59804827412859,
+            108.58011133283294,
+            172.39738854356466,
+            121.44043775826447
+          ],
+          [
+            175.85936824810773,
+            142.70943915417044,
+            224.32708411171032,
+            151.61274206408456
+          ],
+          [
+            117.50028180009642,
+            231.24784031387202,
+            153.60378443318814,
+            240.15114322378616
+          ]
+        ],
+        "actual_ink_only_masks": true,
+        "source_background_restored_exactly": true,
+        "source_background_rgb_samples": [
+          {
+            "label": "atmosphere",
+            "source_pixel": [
+              70,
+              5
+            ],
+            "rgb": [
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "label": "piston",
+            "source_pixel": [
+              204,
+              66
+            ],
+            "rgb": [
+              255,
+              255,
+              255
+            ]
+          },
+          {
+            "label": "air",
+            "source_pixel": [
+              85,
+              250
+            ],
+            "rgb": [
+              254,
+              254,
+              254
+            ]
+          }
+        ],
+        "source_nonlanguage_geometry_within_and_outside_language_regions_protected": true
+      },
+      "native": null,
+      "figure_pixel_audits": [
+        {
+          "rect": [
+            71.9999771118164,
+            102.14994812011719,
+            226.7999267578125,
+            281.69989013671875
+          ],
+          "reference": "Original source page before any translation",
+          "reference_source_sha256": "dea58df756d017566cc45aa36e8397b4c7eaae5d338ca9e1fe3b93a94051e4c1",
+          "changed_pixels": 0,
+          "raw_whole_figure_changed_pixels": 15421,
+          "intentionally_translated_language_changed_pixels": 15421,
+          "language_exclusion_profile": "Only exact original language ink and translated glyph outlines; all nonlanguage pixels remain protected"
+        }
+      ],
+      "native_graphics_audit": {
+        "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+        "selected_native_math_groups": [
+          {
+            "kind": "complete original clip",
+            "rect": [
+              481.61,
+              103.00998291015617,
+              528.66,
+              116.95998291015621
+            ],
+            "operator_indices": [
+              114,
+              130
+            ],
+            "dx": -115.99980163574219
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              404.71,
+              117.15998291015626,
+              448.76,
+              131.1099829101563
+            ],
+            "operator_indices": [
+              154,
+              170
+            ],
+            "dx": -119.91827392578125
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              334.61,
+              145.00998291015617,
+              404.56,
+              163.9599829101562
+            ],
+            "operator_indices": [
+              208,
+              231
+            ],
+            "dx": -63.120208740234375
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              498.76,
+              145.9599829101562,
+              541.759,
+              163.9599829101562
+            ],
+            "operator_indices": [
+              259,
+              279
+            ],
+            "dx": -78.45654296875
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              302.71,
+              178.00998291015617,
+              351.65999999999997,
+              191.9599829101562
+            ],
+            "operator_indices": [
+              304,
+              322
+            ],
+            "dx": 63.09210205078125
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              471.56,
+              219.75998291015628,
+              516.56,
+              235.75998291015628
+            ],
+            "operator_indices": [
+              363,
+              380
+            ],
+            "dx": -117.75994873046875
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              433.01,
+              235.9599829101562,
+              477.061,
+              251.9599829101562
+            ],
+            "operator_indices": [
+              398,
+              414
+            ],
+            "dx": -121.586181640625
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              436.76,
+              252.15998291015626,
+              479.71,
+              266.1099829101563
+            ],
+            "operator_indices": [
+              446,
+              464
+            ],
+            "dx": -110.1448974609375
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              320.36,
+              376.60998291015625,
+              336.31,
+              394.60998291015625
+            ],
+            "operator_indices": [
+              671,
+              684
+            ],
+            "dx": 73.45938110351562
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              399.56,
+              408.30998291015624,
+              416.56,
+              426.30998291015624
+            ],
+            "operator_indices": [
+              738,
+              753
+            ],
+            "dx": -125.74752807617188
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              330.41,
+              426.30998291015624,
+              344.36,
+              444.30998291015624
+            ],
+            "operator_indices": [
+              787,
+              802
+            ],
+            "dx": 5.4333953857421875
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              318.16,
+              444.30998291015624,
+              333.16,
+              462.30998291015624
+            ],
+            "operator_indices": [
+              834,
+              846
+            ],
+            "dx": -190.91241455078125
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              469.36,
+              448.35998291015625,
+              479.36,
+              461.35998291015625
+            ],
+            "operator_indices": [
+              859,
+              871
+            ],
+            "dx": -270.7061462402344
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              313.51,
+              462.30998291015624,
+              327.411,
+              480.30998291015624
+            ],
+            "operator_indices": [
+              933,
+              948
+            ],
+            "dx": 67.53573608398438
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              347.56,
+              480.30998291015624,
+              358.609,
+              498.30998291015624
+            ],
+            "operator_indices": [
+              982,
+              997
+            ],
+            "dx": -51.483299255371094
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              146.81,
+              498.30998291015624,
+              159.76,
+              516.3099829101562
+            ],
+            "operator_indices": [
+              1019,
+              1034
+            ],
+            "dx": 25.027603149414062
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              165.76,
+              502.35998291015625,
+              175.76,
+              515.3599829101563
+            ],
+            "operator_indices": [
+              1045,
+              1055
+            ],
+            "dx": 25.027603149414062
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              188.11,
+              498.30998291015624,
+              255.06,
+              516.3099829101562
+            ],
+            "operator_indices": [
+              1067,
+              1093
+            ],
+            "dx": 22.986892700195312
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              412.86,
+              498.30998291015624,
+              423.91,
+              516.3099829101562
+            ],
+            "operator_indices": [
+              1114,
+              1126
+            ],
+            "dx": -39.10566711425781
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              261.56,
+              516.3099829101562,
+              277.51,
+              534.3099829101562
+            ],
+            "operator_indices": [
+              1164,
+              1176
+            ],
+            "dx": -89.59660339355469
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              398.71,
+              517.3599829101563,
+              412.60999999999996,
+              530.3599829101563
+            ],
+            "operator_indices": [
+              1187,
+              1199
+            ],
+            "dx": -52.15901184082031
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              418.96,
+              520.3599829101563,
+              428.96,
+              533.3599829101563
+            ],
+            "operator_indices": [
+              1210,
+              1220
+            ],
+            "dx": -56.88505554199219
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              442.26,
+              516.3099829101562,
+              509.21,
+              534.3099829101562
+            ],
+            "operator_indices": [
+              1233,
+              1259
+            ],
+            "dx": -59.87577819824219
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              210.56,
+              534.3099829101562,
+              226.51,
+              552.3099829101562
+            ],
+            "operator_indices": [
+              1289,
+              1301
+            ],
+            "dx": -27.84454345703125
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              330.16,
+              552.3099829101562,
+              345.16,
+              570.3099829101562
+            ],
+            "operator_indices": [
+              1334,
+              1349
+            ],
+            "dx": -24.328414916992188
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              171.91,
+              570.3099829101562,
+              186.91,
+              588.3099829101562
+            ],
+            "operator_indices": [
+              1375,
+              1390
+            ],
+            "dx": 21.673492431640625
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              199.26,
+              570.3099829101562,
+              266.21,
+              588.3099829101562
+            ],
+            "operator_indices": [
+              1405,
+              1431
+            ],
+            "dx": 21.105453491210938
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              424.01,
+              570.3099829101562,
+              439.01,
+              588.3099829101562
+            ],
+            "operator_indices": [
+              1456,
+              1466
+            ],
+            "dx": -43.23243713378906
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              341.21,
+              588.3099829101562,
+              354.15999999999997,
+              606.3099829101562
+            ],
+            "operator_indices": [
+              1492,
+              1505
+            ],
+            "dx": -33.12434387207031
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              258.91,
+              606.3099829101562,
+              275.96000000000004,
+              624.3099829101562
+            ],
+            "operator_indices": [
+              1544,
+              1556
+            ],
+            "dx": -86.95994567871094
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              395.36,
+              607.3599829101563,
+              409.26,
+              620.3599829101563
+            ],
+            "operator_indices": [
+              1565,
+              1575
+            ],
+            "dx": -47.98231506347656
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              421.609,
+              606.3099829101562,
+              488.55899999999997,
+              624.3099829101562
+            ],
+            "operator_indices": [
+              1588,
+              1614
+            ],
+            "dx": -49.33277893066406
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              243.41,
+              624.3099829101562,
+              260.46,
+              642.3099829101562
+            ],
+            "operator_indices": [
+              1639,
+              1651
+            ],
+            "dx": 5.2920684814453125
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              251.11,
+              645.4099829101563,
+              263.11,
+              656.4599829101562
+            ],
+            "operator_indices": [
+              1684,
+              1696
+            ],
+            "dx": 53.97150421142578
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              505.26,
+              660.6599829101563,
+              516.31,
+              673.6099829101563
+            ],
+            "operator_indices": [
+              1758,
+              1770
+            ],
+            "dx": -58.43614196777344
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              522.66,
+              657.6589829101563,
+              536.5609999999999,
+              670.6089829101562
+            ],
+            "operator_indices": [
+              1781,
+              1791
+            ],
+            "dx": -58.43614196777344
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              542.96,
+              660.6599829101563,
+              552.9100000000001,
+              673.6099829101563
+            ],
+            "operator_indices": [
+              1799,
+              1809
+            ],
+            "dx": -58.43614196777344
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              101.11,
+              674.5599829101562,
+              168.06,
+              692.5599829101562
+            ],
+            "operator_indices": [
+              1822,
+              1848
+            ],
+            "dx": 4.5757598876953125
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              328.86,
+              678.5599829101562,
+              340.86,
+              689.5599829101562
+            ],
+            "operator_indices": [
+              1869,
+              1879
+            ],
+            "dx": -60.51210021972656
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              129.16,
+              720.1599829101563,
+              205.16,
+              739.1599829101563
+            ],
+            "operator_indices": [
+              1917,
+              1940
+            ],
+            "dx": 6.839935302734375
+          },
+          {
+            "kind": "complete original clip",
+            "rect": [
+              192.06,
+              756.0599829101562,
+              202.00900000000001,
+              767.1099829101563
+            ],
+            "operator_indices": [
+              1996,
+              2006
+            ],
+            "dx": -55.49031066894531
+          }
+        ],
+        "changed_actual_inline_math_graphical_pixels": 0,
+        "changed_nonselected_native_graphical_pixels": 0,
+        "original_native_math_actual_graphics_pixels": 0,
+        "new_native_math_actual_graphics_pixels": 0,
+        "coarse_changed_nonselected_native_graphical_pixels": 13293,
+        "explicitly_translated_original_bitmap_language_pixels": 13293,
+        "bitmap_language_profile": "Only reviewed source language ink is excluded; original background, lines, variables and picture surfaces remain protected."
+      }
+    }
+  ],
+  "passed": true
+}

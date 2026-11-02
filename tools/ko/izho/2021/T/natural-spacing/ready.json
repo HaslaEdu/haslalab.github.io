@@ -617,5 +617,81 @@
       "sha256": "4d2317899136218b0b522a74242454a525160faf865d79ec00016efe82f9cd3c"
     }
   ],
-  "original_ready_manifest_sha256": "d1101c89e60e552fecb0bca11a9bde9375303e238d98433edafb7d91f661b15b"
+  "original_ready_manifest_sha256": "d1101c89e60e552fecb0bca11a9bde9375303e238d98433edafb7d91f661b15b",
+  "independent_native_script_geometry_audits": [
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page01-script-relative-geometry.json",
+      "sha256": "a90706acef014ff5e6ca224a7a6649be392729eadcb1362e60af96ac87b9bb26",
+      "kind": "native-script-relative-geometry",
+      "page": 1
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page02-script-relative-geometry.json",
+      "sha256": "3257e4f3b0d88df4189f44f2c99c1305131e1319ccc2a867d6a24c192c7c2c64",
+      "kind": "native-script-relative-geometry",
+      "page": 2
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page03-script-relative-geometry.json",
+      "sha256": "523b2addd02f79f08db2c0588a8fa05b122d697150f3e68f9661d515a12f57b1",
+      "kind": "native-script-relative-geometry",
+      "page": 3
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page04-script-relative-geometry.json",
+      "sha256": "e94cb77e4b834849f4e67e7c29a5f8110f69464ade23a09765f8a9bbc052dee9",
+      "kind": "native-script-relative-geometry",
+      "page": 4
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page05-script-relative-geometry.json",
+      "sha256": "338cef24d8003b7a581c20aae3ba764ff04ff056e9cf65d8023454f2dd57117c",
+      "kind": "native-script-relative-geometry",
+      "page": 5
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page06-script-relative-geometry.json",
+      "sha256": "cff1c76a718e790cd28cab7393ba6ca152cfe1a54371f3b1d3298fb56b1dc163",
+      "kind": "native-script-relative-geometry",
+      "page": 6
+    }
+  ],
+  "independent_display_equation_number_audits": [
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page01-display-equation-numbers.json",
+      "sha256": "444b2ed14e90ee0086afdbc859b99b5404e73bcf4f4cb0e44fe5d7d51afc1cc3",
+      "page": 1,
+      "kind": "stationary-display-equation-numbers"
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page02-display-equation-numbers.json",
+      "sha256": "ada83038447fd47d71863b6dc8f2738536e9c6ceec757dc6cc26fab1df51ccc4",
+      "page": 2,
+      "kind": "stationary-display-equation-numbers"
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page03-display-equation-numbers.json",
+      "sha256": "a6d00499a0a8061611c1e534fb338a3f286799b71deb6426cb30ba804f891394",
+      "page": 3,
+      "kind": "stationary-display-equation-numbers"
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page04-display-equation-numbers.json",
+      "sha256": "818b07683a904bb0bb031a2f07b407fed152ddb5bb95d7bf147e9ff769253570",
+      "page": 4,
+      "kind": "stationary-display-equation-numbers"
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page05-display-equation-numbers.json",
+      "sha256": "de83ad6ec3cb3103e3743d4475da1f9a7d4e163b35b243385e0c11ca0717602f",
+      "page": 5,
+      "kind": "stationary-display-equation-numbers"
+    },
+    {
+      "path": "tools/ko/izho/2021/T/natural-spacing/page06-display-equation-numbers.json",
+      "sha256": "6850f3423c8dc331e299ed069bab1c722d3da04a6b0e75f620f57b4cff75ddc8",
+      "page": 6,
+      "kind": "stationary-display-equation-numbers"
+    }
+  ]
 }

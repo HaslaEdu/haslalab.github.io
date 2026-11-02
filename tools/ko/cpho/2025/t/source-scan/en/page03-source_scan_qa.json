@@ -1,0 +1,93 @@
+{
+  "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\CPhO_2025_T_original-explicit-page-clip.pdf",
+  "source_sha256": "c9562e8f6053b454391083289b179f28ed29f7d9024723a34a2a8b0e663bd306",
+  "source_page": 3,
+  "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\proofs\\en\\page03.pdf",
+  "final_sha256": "d25c586e6965c33f269cc2cd669a669d414c5d62f1f3eb59a782e781261e6d9c",
+  "math_control_sha256": "03545b26fb490c5b5585097e60340b93901dad0413b8c592bb73c0a6b8598555",
+  "prose_reference_sha256": "c09b1641abf321ddcf63be45c42ca46d931b8f45a8e722dfb4fc1c59fceee2a1",
+  "render_scale": 4,
+  "original_encoded_image_programs_masks_palettes_icc_and_declared_ctms_retained": true,
+  "original_native_font_program_changes": [],
+  "original_pagegroup_unchanged": true,
+  "outside_declared_language_and_math_motion": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "stationary_original_dark_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "independent_protected_source_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_overlap_original_or_replayed_nonlanguage_ink": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "raw_collision_including_reviewed_scan_background": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_expected_dark_pixels_missing": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "reviewed_blank_background_records": [],
+  "thresholds": {
+    "source_deep_dark": 160,
+    "new_prose_and_existing_ink": 180,
+    "actual_missing_white": 240
+  },
+  "note": "Only declared language and inline mathematical motion may change; source display/figure rects remain independently protected. Blank records never white-fill anything and exclude every protected/math region. New-prose final visibility is independently required.",
+  "passed": true,
+  "actual_new_prose_style": {
+    "actual_new_glyphs_checked": 2183,
+    "actual_CID_advances_checked": true,
+    "source_hmtx_to_integer_PDF_width_quantization": [],
+    "word_origins_verified_from_authored_positions_and_actual_CID_widths": true,
+    "source_font_program_expected": "7f2139ece18b39b28da30bc1bf3004496adff1cbff3074908ccfddc69e99a20d",
+    "invalid_actual_character_advances": [],
+    "unmatched_actual_glyphs": [],
+    "style_size_baseline_gid_or_stroke_errors": [],
+    "passed": true
+  },
+  "independent_replayed_math_visibility": {
+    "reference": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2025\\p2-6-authoring\\proofs\\en\\page03.math-union-reference.pdf",
+    "reference_sha256": "ad34cb6182ba667e4a23002e87169f97ac4cb1c594eba9b34216c6a05b99f446",
+    "method": "Independent original-image clip replay union: only QA-reference reset BM Multiply avoids opaque white padding hiding earlier exact source mathematical ink. Actual final PDF unchanged.",
+    "original_math_ink_expected_pixels": 52998,
+    "missing_original_replayed_math_ink": {
+      "pixels": 0,
+      "bbox": null
+    },
+    "new_prose_overlap_independent_math_union": {
+      "pixels": 0,
+      "bbox": null
+    },
+    "passed": true
+  },
+  "new_actual_prose_outlines": {
+    "file": "page03.pdf",
+    "sha256": "d25c586e6965c33f269cc2cd669a669d414c5d62f1f3eb59a782e781261e6d9c",
+    "delivered_pdf_modified": false,
+    "pages": [
+      {
+        "page": 1,
+        "new_nonspace_actual_gids_checked": 2183,
+        "ascii_actual_gids_checked": 2183,
+        "empty_outlines": [],
+        "analysis_only_alias_normalisation": [
+          {
+            "alias": "/ScanBody",
+            "pdf_basefont": "/SimSun Regular",
+            "actual_postscript_name": "SimSun"
+          }
+        ],
+        "passed": true
+      }
+    ],
+    "passed": true
+  }
+}

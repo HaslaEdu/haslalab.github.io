@@ -1,0 +1,28 @@
+{
+  "source_page":9,
+  "source_sha256":"612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_text_reviewed":true,
+  "pixel_rois_reviewed":false,
+  "scope_complete":false,
+  "rows":[
+    {"id":"substitute-six-three","hints":[5],"source":"把(6)式代入(3)式得","ko":"식 [[eq6-sub]]을 [[eq3-sub]]에 대입하면","en":"Substituting [[eq6-sub]] into [[eq3-sub]] gives"},
+    {"id":"solve-radius","hints":[12],"source":"由(7)式可解得","ko":"식 [[eq7-radius]]에서 풀면","en":"Solving [[eq7-radius]] gives"},
+    {"id":"marking-problem4-title","hints":[16],"source":"评分标准：本题20分。","role":"mixed-bold","ko":"채점 기준: 총 [[total20]]점.","en":"Marking scheme: [[total20]] points in total."},
+    {"id":"marking-problem4-detail","hints":[17],"source":"(1)式4分，(2)、(3)式各2分，(4)式1分，(5)、(6)、(7)式各3分，(8)式2分。","ko":"[[g1]] [[p4]]점, [[g2]], [[g3]] 각 [[p2-a]]점, [[g4]] [[p1]]점, [[g5]], [[g6]], [[g7]] 각 [[p3]]점, [[g8]] [[p2-b]]점.","en":"[[g1]]: [[p4]]; [[g2]], [[g3]]: [[p2-a]] each; [[g4]]: [[p1]]; [[g5]], [[g6]], [[g7]]: [[p3]] each; [[g8]]: [[p2-b]] points."},
+    {"id":"problem5-reference","hints":[19],"source":"参考解答：","role":"serif-bold","ko":"참고 해설:","en":"Reference solution:"},
+    {"id":"ring-flux","hints":[20],"source":"1.超导细圆环上有电流I时，穿过超导圆环的磁通量为","ko":"[[part1]]. 가는 초전도 고리에 전류 [[ring-current]]가 흐를 때 고리를 지나는 자속은","en":"[[part1]]. When current [[ring-current]] flows in the thin superconducting ring, its magnetic flux is"},
+    {"id":"insert-field-profile","hints":[23],"source":"把B_z=B_0(1−2αz)代入上式，得","ko":"[[Bz-expression]]를 위 식에 대입하면","en":"Substituting [[Bz-expression]] into the above expression gives"},
+    {"id":"conserved-flux-initial","hints":[26],"source":"由于穿过超导圆环的磁通量保持不变，因此Φ为常量。由初始条件：t=0时，z=0、r=0，I=I_0，有","ko":"고리의 자속 [[phi-constant]]는 일정하다. 초기조건 [[t-zero]], [[z-zero]], [[rest-zero]], [[I-initial]]에서","en":"The ring's flux [[phi-constant]] is conserved. Initially [[t-zero]], [[z-zero]], [[rest-zero]], [[I-initial]]:","review_note":"The third original initial-condition bitmap must remain exactly as printed; its r/v-like glyph is not silently corrected or retyped."},
+    {"id":"current-result","hints":[29],"source":"于是","ko":"따라서","en":"Hence"},
+    {"id":"magnetic-force-a","hints":[32],"source":"现在考虑作用在圆环上的安培力。由于磁场为非均匀磁场，因此作用在圆环上的安培力不为零。由","ko":"이제 고리에 작용하는 자기력을 보자. 자기장이 균일하지 않아 고리의 알짜 자기력은 영이 아니다.","en":"Now consider the ring's magnetic force. The nonuniform field makes the net magnetic force nonzero."},
+    {"id":"magnetic-force-b","hints":[33],"source":"于轴对称性，安培力的方向沿轴线，作用在圆环上的安培力为","ko":"축대칭이므로 자기력은 축 방향이며 그 힘은","en":"Axial symmetry makes this force axial. The force on the ring is"},
+    {"id":"force-constants","hints":[37],"source":"其中","ko":"여기서","en":"where"},
+    {"id":"resultant-force","hints":[41],"source":"再考虑到作用在圆环上的重力F_g(z)=−mg，作用在圆环上的合力为","ko":"중력 [[gravity-expression]]도 고려하면 고리에 작용하는 합력은","en":"With gravity [[gravity-expression]], the resultant force on the ring is"},
+    {"id":"equilibrium-position","hints":[44],"source":"在平衡位置z_0处，F(z_0)=0。由上式，得平衡位置为","ko":"평형위치 [[z-equilibrium]]에서는 [[force-zero]]이다. 위 식에서 평형위치는","en":"At equilibrium [[z-equilibrium]], [[force-zero]]. The equilibrium position is therefore"},
+    {"id":"harmonic-frequency","hints":[49],"source":"由(7)式可知，圆环的运动为在其平衡位置附近的简谐振动，振动角频率为","ko":"식 [[eq7-motion]]에 따라 고리는 평형위치 근처에서 단진동한다. 그 각진동수는","en":"Eq. [[eq7-motion]] gives simple harmonic motion about equilibrium, with angular frequency"},
+    {"id":"general-motion","hints":[53],"source":"圆环在t时刻的z坐标的一般形式为","ko":"시간 [[time-t]]에서 고리의 [[coordinate-z]]좌표의 일반형은","en":"The ring's [[coordinate-z]] coordinate at time [[time-t]] has general form"},
+    {"id":"amplitude-phase-initial","hints":[56],"source":"其中振幅A和初始相位φ_0由初始条件","ko":"여기서 진폭 [[amplitude-A]]와 초기위상 [[phase-phi0]]는 초기조건","en":"The amplitude [[amplitude-A]] and initial phase [[phase-phi0]] follow from the initial conditions"},
+    {"id":"initial-conditions-solve","hints":[61],"source":"决定。由(10)、(11)式得","ko":"으로 정해진다. 식 [[eq10-amplitude]], [[eq11-initial]]에서","en":"From [[eq10-amplitude]] and [[eq11-initial]],","translation_shift_note":"English expresses 决定 in the preceding line's follow from, before the unchanged displayed initial-condition equation."}
+  ],
+  "not_language":[{"hint":24,"reason":"元 is OCR pi inside the unchanged displayed flux equation."},{"hint":34,"reason":"元 is OCR pi inside a displayed magnetic-force formula."},{"hint":35,"reason":"Pi-containing continuation of the same force equation."},{"hint":40,"reason":"The entire line is the displayed definition of F_0, including pi."},{"hint":45,"reason":"Displayed equilibrium-position numerator; not Chinese prose."},{"hint":48,"reason":"Displayed equilibrium-position denominator; not Chinese prose."}]
+}

@@ -34,6 +34,15 @@ assert.deepEqual(Object.keys(PaperLanguages.bundle([cpho,oneLanguage], 'en').pap
 assert.deepEqual(PaperLanguages.normalize({ru:['javascript:alert(1)'], en:['../secrets.pdf'],zh:['CPhO_2023_T_ZH.pdf','extra.pdf']},1), {});
 assert.deepEqual(PaperLanguages.normalize({ru:['RuPhO_2026_T1_RU.pdf']},1), {ru:['RuPhO_2026_T1_RU.pdf']});
 
+// Combined translated booklets stay readable, while timed sessions use clean papers.
+const combinedKo={paper:'IChO_2009_T_EN.pdf',paperLang:'en',
+  papers:{en:'IChO_2009_T_EN.pdf',ko:'IChO_2009_T_KO.pdf'},paperContainsSolutions:{ko:true}};
+assert.equal(PaperLanguages.files(combinedKo).ko,'IChO_2009_T_KO.pdf');
+assert.equal(PaperLanguages.containsSolutions(combinedKo,'ko'),true);
+assert.equal(PaperLanguages.containsSolutions(combinedKo,'en'),false);
+assert.deepEqual(PaperLanguages.bundle([combinedKo],'ko'),{papers:{en:['IChO_2009_T_EN.pdf']},language:'en'});
+assert.deepEqual(PaperLanguages.bundle([{paper:'IChO_2008_T_EN.pdf',containsSolutions:true}],'en'),{papers:{},language:''});
+
 // The actual competition links keep interface and paper language independent.
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const hrefStart = html.indexOf('function theoryHref(');
@@ -54,13 +63,15 @@ assert.equal(JSON.parse(ruLink.searchParams.get('papers')).ru.length,3);
 const cardStart = html.indexOf('function theoryHtml(');
 const cardEnd = html.indexOf('/* the general instructions',cardStart);
 Object.assign(context, {UI:{en:{thyPaper:'Problem paper',thySol:'Solutions',thyOrigChip:'Original'}},
-  THY_YEARLY:new Set(),esc:String,thyUrl:x=>x,simThy:()=>new Set(),probCard:card=>JSON.stringify(card),
+  THY_YEARLY:new Set(),esc:String,thyUrl:x=>x,simsOf:()=>[],probCard:card=>JSON.stringify(card),
   contestEntries:()=>[],theoryGroups:()=>[],reviewTheoryGroups:()=>[],examGroups:()=>[],TL:()=>'',thyCount:()=>1});
 vm.runInContext(html.slice(cardStart,cardEnd),context);
 const cards = context.theoryHtml('cpho',{y:2023});
-assert.ok(cards.includes('Problem paper · 中文'));
-assert.ok(cards.includes(cpho.papers.zh));
-assert.ok(cards.includes('Problem paper · 한국어'));
+// In English a card offers the English paper alone, untagged: «Problems», not «Problems English» beside «Problems · 中文»
+// and «Problems · 한국어» (the exam still offers every language)
+assert.ok(!cards.includes('Problem paper · 中文'));
+assert.ok(!cards.includes('Problem paper · 한국어'));
+assert.ok(cards.includes(cpho.papers.en));
 const nativeCard = context.theoryHtml('eotvos',{y:2026});
 assert.ok(nativeCard.includes('Magyar'));
 

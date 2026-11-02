@@ -86,7 +86,9 @@ test('ambiguous perspective retains the outside corners for review without infer
   const q=[{x:140,y:70},{x:397,y:173},{x:50,y:490},{x:343,y:567}], assessed=scanner.assessA4Candidate(q,480,640);
   assert.equal(assessed.status,'perspective_uncertain'); assert.ok(assessed.projectedRatio>1); assert.ok(assessed.angleError>.15);
   const result=findsOuter(photo({quad:q,paper:205,shade:-100}));
-  assert.equal(result.paperStatus,'perspective_uncertain'); assert.equal(result.autoCaptureEligible,false);
+  // the picture's own ratio is not trusted; automatic capture follows the rectified ratio (an A4 seen at an angle)
+  assert.equal(result.paperStatus,'perspective_uncertain');
+  assert.equal(result.autoCaptureEligible, scanner.a4RatioMiss(result.corners,480,640) < .07);
   for(const points of [null,[],[{x:0,y:0}],Array(4).fill({x:10,y:10}),[{x:NaN,y:0},{x:1,y:0},{x:0,y:1},{x:1,y:1}]]) assert.equal(scanner.assessA4Candidate(points,480,640).status,'perspective_uncertain');
 });
 
@@ -145,10 +147,14 @@ test('printed frames on a full-frame sheet and solid dark diagrams do not supply
   }
 });
 
-test('clipped paper is left for manual review rather than inventing invisible corners', () => {
+test('clipped paper is cropped to what is visible, flagged as clipped and never verified or captured automatically', () => {
   const f = photo({ quad: rotated(15, 240, 215, 315, 490) });
   const result = scanner.findPageQuadGray(f.gray, f.W, f.H);
-  assert.equal(result.corners, null); assert.equal(result.autoCaptureEligible, false);
+  if (result.corners) {
+    assert.equal(result.clipped, true, 'a sheet running out of the photo is marked clipped');
+    assert.equal(result.verified, false); assert.equal(result.autoCaptureEligible, false);
+    for (const p of result.corners) assert.ok(p.x >= 0 && p.y >= 0 && p.x <= f.W && p.y <= f.H, 'no corner is invented outside the photo');
+  } else assert.equal(result.autoCaptureEligible, false);
 });
 
 test('shared detector prefers a real boundary to weak dark blobs and never applies marker insets to partial markers', () => {
@@ -188,4 +194,191 @@ test('720p work is bounded on detailed positive and noisy negative frames', t =>
   for (let i = 0; i < 10; i++) { const f = i % 2 ? negative : positive, start = performance.now(); scanner.findPageQuadGray(f.gray, f.W, f.H); times.push(performance.now() - start); }
   times.sort((a, b) => a - b); t.diagnostic(`720p serial warm median=${times[5].toFixed(1)}ms p95=${times[9].toFixed(1)}ms`);
   assert.ok(times[9] < 3000, 'generous hang budget; shared CI contention is not a phone performance benchmark');
+});
+
+/* paper lying on a desk that is wholly in view: the desk is the larger, equally sharp rectangle */
+function project3d({ W, H, f, tilt = 0, pan = 0, roll = 0, distance = 1000 }) {
+  // a plane through (0,0,distance) turned about the y axis (pan) and the x axis (tilt), then rolled in the image;
+  // plane units are millimetres. Tilt or pan alone leaves one pair of edges parallel (one vanishing point).
+  const ct = Math.cos(tilt), st = Math.sin(tilt), cp = Math.cos(pan), sp = Math.sin(pan), cr = Math.cos(roll), sr = Math.sin(roll);
+  return (X, Y) => { const x1 = X * cp, z1 = X * sp, y = Y * ct - z1 * st, z = distance + Y * st + z1 * ct, u = f * x1 / z, v = f * y / z;
+    return { x: W / 2 + u * cr - v * sr, y: H / 2 + u * sr + v * cr }; };
+}
+function deskScene({ W = 640, H = 480, desk = [700, 420], paperAt = [-60, -20], paperSize = [210, 297], deskTone = 125, paperTone = 238, floor = 45, grain = 7,
+  view = { f: 560, tilt: 0, roll: 0, distance: 1000 } } = {}) {
+  const P = project3d({ W, H, ...view });
+  const rect = (cx, cy, w, h) => [P(cx - w / 2, cy - h / 2), P(cx + w / 2, cy - h / 2), P(cx - w / 2, cy + h / 2), P(cx + w / 2, cy + h / 2)];
+  const deskQuad = rect(0, 0, desk[0], desk[1]), paperQuad = rect(paperAt[0], paperAt[1], paperSize[0], paperSize[1]), textQuad = inset(paperQuad, .7);
+  const f = photo({ W, H, quad: null, background: (x, y) => inside(x, y, deskQuad) ? deskTone + grain * Math.sin(x / 6 + y / 40) : floor });
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (inside(x, y, paperQuad))
+    f.gray[y * W + x] = y % 18 < 2 && x % 11 < 6 && inside(x, y, textQuad) ? 60 : paperTone;
+  return { ...f, deskQuad, paperQuad };
+}
+
+test('the rectified ratio undoes perspective: a tilted A4 sheet is A4 although its picture is not', () => {
+  // two vanishing points: the focal length and the ratio are both recovered
+  for (const view of [{ f: 560, tilt: .5, pan: .4 }, { f: 900, tilt: .8, pan: -.3, roll: .4 }, { f: 450, tilt: -.6, pan: .5, roll: -1.2 }]) {
+    const P = project3d({ W: 640, H: 480, distance: 900, ...view }), q = [P(-105, -148.5), P(105, -148.5), P(-105, 148.5), P(105, 148.5)];
+    const ratio = scanner.rectifiedRatio(q, 640, 480), picture = scanner.assessA4Candidate(q, 640, 480).projectedRatio;
+    assert.ok(Math.abs(ratio / scanner.A4_RATIO - 1) < .02, `rectified ${ratio} at ${JSON.stringify(view)}`);
+    assert.ok(Math.abs(picture / scanner.A4_RATIO - 1) > .03, 'the picture itself is not A4-shaped');
+  }
+  // straight on, or one vanishing point: the focal length cannot be measured, and A4 must fit some phone lens
+  for (const view of [{ f: 560 }, { f: 450, tilt: .5 }, { f: 560, tilt: .8, roll: .4 }, { f: 700, tilt: .8 }]) {
+    const P = project3d({ W: 640, H: 480, distance: 900, ...view }), q = [P(-105, -148.5), P(105, -148.5), P(-105, 148.5), P(105, 148.5)];
+    assert.ok(scanner.a4RatioMiss(q, 640, 480) < .05, JSON.stringify(view));
+  }
+  const D = project3d({ W: 640, H: 480, f: 560, tilt: .5, distance: 900 });
+  assert.ok(scanner.a4RatioMiss([D(-350, -210), D(350, -210), D(-350, 210), D(350, 210)], 640, 480) > .12, 'a 5:3 desk does not pass for A4 at any phone lens');
+  const P = project3d({ W: 640, H: 480, f: 560, tilt: .7, pan: .3, distance: 900 }), desk = [P(-350, -210), P(350, -210), P(-350, 210), P(350, 210)];
+  assert.ok(Math.abs(scanner.rectifiedRatio(desk, 640, 480) - 700 / 420) < .05, 'a desk keeps its own ratio');
+  assert.equal(scanner.rectifiedRatio(null, 640, 480), null);
+});
+
+/* A4 sheets held together by a binder clip: one corner folded or bent away, the clip over the top edge */
+function clippedSheet(degrees, corner, fraction, { flap = false, clip = true } = {}) {
+  const W = 480, H = 640, quad = rotated(degrees), poly = polygon(quad), k = [0, 1, 3, 2][corner], P = poly[k], A = poly[(k + 3) % 4], B = poly[(k + 1) % 4];
+  const unit = (q) => { const l = Math.hypot(q.x - P.x, q.y - P.y); return { x: (q.x - P.x) / l, y: (q.y - P.y) / l }; };
+  const u = unit(A), v = unit(B), cut = Math.hypot(poly[1].x - poly[0].x, poly[1].y - poly[0].y) * fraction;
+  const top = { x: (poly[0].x + poly[1].x) / 2, y: (poly[0].y + poly[1].y) / 2 };
+  const gray = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    let value = 90;
+    if (inside(x, y, quad)) {
+      const a = (x - P.x) * u.x + (y - P.y) * u.y, b = (x - P.x) * v.x + (y - P.y) * v.y;
+      value = a + b < cut ? 90 : flap && a + b < cut * 2 && a < cut && b < cut ? 215 : 235;   // the corner is gone; its flap lies on the sheet
+      if (value === 235 && y % 20 < 2 && x % 11 < 6 && inside(x, y, inset(quad, .7))) value = 55;
+    }
+    if (clip && Math.abs(x - top.x) < 22 && y > top.y - 14 && y < top.y + 16) value = 30;    // a black binder clip over the top edge
+    gray[y * W + x] = value;
+  }
+  return { gray, W, H, quad };
+}
+test('a sheet with a folded or bent-away corner and a binder clip still gives its four real corners', () => {
+  for (const degrees of [0, 8, -12, 30]) for (const corner of [0, 1, 2, 3]) for (const fraction of [.12, .25]) for (const flap of [false, true]) {
+    const scene = clippedSheet(degrees, corner, fraction, { flap }), result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
+    const name = `${degrees}° corner ${corner} folded ${fraction * 100}%${flap ? ' with its flap on the sheet' : ''}`;
+    assert.ok(result.corners, name);
+    assert.ok(error(result.corners, scene.quad) < 8, `${name}: corner error ${error(result.corners, scene.quad).toFixed(1)} px`);
+  }
+});
+
+test('a part of the sheet found as the page (the margin under a graph grid) is never shown as ready, and the model\'s A4 outline around it wins', () => {
+  // a sheet whose upper two thirds are a printed graph grid, on a light desk at an angle: only the plain margin below the grid stands out
+  const W = 480, H = 640, a = 25 * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), gray = new Uint8Array(W * H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const px = (x - 240) * c + (y - 320) * s, py = -(x - 240) * s + (y - 320) * c, u = px / 300 + .5, v = py / 424 + .5;
+    let value = 218 + 6 * Math.sin(x / 9 + y / 31);
+    if (u >= 0 && u <= 1 && v >= 0 && v <= 1) {
+      value = 238;
+      if (u >= .03 && u <= .97 && v >= .04 && v <= .7) {
+        const edge = Math.min((u - .03) * 300, (.97 - u) * 300, (v - .04) * 424, (.7 - v) * 424);
+        value = edge < 1.6 ? 60 : ((u - .03) / .03) % 1 < .12 || ((v - .04) / .03) % 1 < .12 ? 150 : 238;
+      }
+    }
+    gray[y * W + x] = Math.round(value);
+  }
+  const sheet = [{ x: 194, y: 64 }, { x: 466, y: 191 }, { x: 14, y: 449 }, { x: 286, y: 576 }];
+  const page = scanner.findPageQuadGray(gray, W, H);
+  if (page.corners && error(page.corners, sheet) > 16) {
+    assert.equal(page.shapeOk, false, 'a strip of the sheet is not shown as a ready A4 page');
+    assert.equal(page.autoCaptureEligible, false);
+    const learned = { corners: sheet, method: 'page', verified: true, weakestEdge: .7, shapeOk: true };
+    assert.equal(scanner.chooseDocument(page, learned, .8).engine, 'doccornernet', 'the model\'s A4 outline around it is the sheet');
+  }
+});
+
+test('paper lying on a desk wholly in view is the page, not the desk', () => {
+  for (const [name, options] of [
+    ['wooden desk, straight on', {}],
+    ['light desk, rotated sheet', { deskTone: 205, paperTone: 245, view: { f: 560, tilt: 0, roll: .12, distance: 1000 } }],
+    ['desk seen at an angle', { view: { f: 600, tilt: .55, roll: 0, distance: 900 } }],
+    ['landscape sheet on a dark desk', { deskTone: 80, paperSize: [297, 210], paperAt: [40, 10] }],
+  ]) {
+    const scene = deskScene(options), result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
+    assert.ok(result.corners, name);
+    const toPaper = error(result.corners, scene.paperQuad), toDesk = error(result.corners, scene.deskQuad);
+    assert.ok(toPaper < 16, `${name}: corner error to the sheet ${toPaper.toFixed(1)} px (to the desk ${toDesk.toFixed(1)})`);
+    const shared = scanner.detectDocumentQuadGray(scene.gray, scene.W, scene.H);
+    assert.ok(error(shared.corners, scene.paperQuad) < 16, name + ': the camera path agrees');
+  }
+});
+
+test('a sheet barely brighter than its desk is still the page when the sheet is A4 and the desk is not', () => {
+  // ten grey levels apart, below the brightness rule's margin: only the shapes tell the sheet from the desk
+  const scene = deskScene({ deskTone: 230, paperTone: 240, grain: 2, floor: 70, view: { f: 600, tilt: .3, pan: .25, roll: .05, distance: 950 } });
+  const result = scanner.findPageQuadGray(scene.gray, scene.W, scene.H);
+  assert.ok(result.corners && error(result.corners, scene.paperQuad) < 16, 'the A4 sheet, not the desk');
+});
+
+test('automatic capture says why it waits: a strongly tilted sheet, a clipped sheet, a small sheet', () => {
+  const tilted = photo({ quad: [{ x: 90, y: 90 }, { x: 390, y: 90 }, { x: 165, y: 560 }, { x: 315, y: 560 }], background: 70 });
+  const t = scanner.findPageQuadGray(tilted.gray, tilted.W, tilted.H);
+  assert.ok(t.corners); assert.equal(t.autoCaptureEligible, false); assert.equal(t.autoBlock, 'tilt', 'the far end has too few pixels: hold the phone parallel');
+  const clipped = photo({ quad: rotated(15, 240, 215, 315, 490) }), c = scanner.findPageQuadGray(clipped.gray, clipped.W, clipped.H);
+  if (c.corners) assert.equal(c.autoBlock, 'clipped');
+  const fine = scanner.findPageQuadGray(photo().gray, 480, 640);
+  assert.equal(fine.autoBlock === null, fine.autoCaptureEligible);
+});
+
+test('a stretched part of the page is sharpened in proportion to the stretch', () => {
+  // a 100×100 photo with a vertical step, straightened to 200×200: twice the output pixels per photo pixel
+  const W = 100, H = 100, src = new Uint8ClampedArray(W * H * 4);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const v = x < 50 ? 40 : 230, o = (y * W + x) * 4; src[o] = src[o + 1] = src[o + 2] = v; src[o + 3] = 255; }
+  const corners = [{ x: 0, y: 0 }, { x: 99, y: 0 }, { x: 0, y: 99 }, { x: 99, y: 99 }];
+  const steepest = data => { let m = 0; for (let x = 1; x < 200; x++) m = Math.max(m, Math.abs(data[(100 * 200 + x) * 4] - data[(100 * 200 + x - 1) * 4])); return m; };
+  const plain = scanner.warpPixels(src, W, H, corners, 200, 200).data, sharp = scanner.warpPixels(src, W, H, corners, 200, 200, null, { sharpen: true }).data;
+  assert.ok(steepest(sharp) > steepest(plain) * 1.3, `edge ${steepest(sharp)} vs ${steepest(plain)}`);
+  assert.equal(sharp[(100 * 200 + 10) * 4], plain[(100 * 200 + 10) * 4], 'flat paper is left as it is');
+});
+
+test('the learned corner model and the page finder: agreement keeps the measured quad, a better-measured disagreement wins', () => {
+  const q = (x0, y0, x1, y1) => [{ x: x0, y: y0 }, { x: x1, y: y0 }, { x: x0, y: y1 }, { x: x1, y: y1 }];
+  const page = { corners: q(100, 100, 400, 520), method: 'page', verified: true, weakestEdge: .8 };
+  assert.equal(scanner.chooseDocument(page, { corners: q(102, 101, 399, 521), method: 'page', verified: true, weakestEdge: .9 }, .95), page, 'the same sheet: the page finder stands');
+  const desk = { corners: q(10, 10, 470, 630), method: 'page', verified: false, weakestEdge: .3 };
+  const sheet = { corners: q(150, 150, 350, 450), method: 'page', verified: true, weakestEdge: .85 };
+  assert.equal(scanner.chooseDocument(desk, sheet, .9).engine, 'doccornernet', 'a better-measured model quad replaces an unverified guess');
+  assert.equal(scanner.chooseDocument(page, sheet, .4), page, 'an unsure model is ignored');
+  const marker = { corners: q(50, 50, 430, 590), method: 'marker', verified: true };
+  assert.equal(scanner.chooseDocument(marker, sheet, .99), marker, 'printed markers always stand');
+  assert.equal(scanner.chooseDocument({ corners: null, method: 'frame' }, { ...sheet, verified: false }, .7).engine, 'doccornernet', 'with no page of its own, the model\'s quad is offered for a check');
+});
+
+test('the corner model downloads as fp16 and is rebuilt byte for byte into the packer\'s fp32 model', async () => {
+  const { createHash } = await import('node:crypto');
+  const packed = await fs.readFile(new URL('../vendor/scanic-ml-0.2.0/doccornernet_lean.f16.bin', import.meta.url));
+  const model = scanner.decodeCornerModel(packed);
+  assert.equal(model.length, 1925824, 'the original .ort length');
+  assert.equal(String.fromCharCode(...model.subarray(4, 8)), 'ORTM', 'an ORT-format flatbuffer');
+  assert.equal(createHash('sha256').update(model).digest('hex'), '15f586b0f16731818d2bab27bb2cd3b34952c412b3f08aa548885fa9fe6fbd23', 'tools/pack_corner_model.py reference rebuild');
+  assert.ok(packed.length < 1.1e6, 'about half the 1.93 MB original');
+  assert.throws(() => scanner.decodeCornerModel(packed.subarray(0, packed.length - 1)), /corner_model_size/);
+  assert.throws(() => scanner.decodeCornerModel(new Uint8Array(32)), /corner_model_format/);
+});
+
+test('graph paper: the sheet, not its printed grid, is the page (white margin round a blue grid, white or dark desk)', () => {
+  // an A4 sheet (520 × 735 px) whose middle 90% × 87% is a blue millimetre grid, on a near-white desk and on a dark one
+  const W = 768, H = 1024, quad = [{ x: 124, y: 140 }, { x: 644, y: 140 }, { x: 124, y: 875 }, { x: 644, y: 875 }];
+  const grid = { x0: 124 + 25, x1: 644 - 25, y0: 140 + 37, y1: 875 - 58 };
+  for (const desk of [[228, 226, 222], [70, 65, 60]]) {
+    const rgba = new Uint8ClampedArray(W * H * 4), gray = new Uint8Array(W * H);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      let c = desk;
+      if (x >= quad[0].x && x < quad[1].x && y >= quad[0].y && y < quad[2].y) {
+        c = [246, 246, 242];
+        if (x >= grid.x0 && x <= grid.x1 && y >= grid.y0 && y <= grid.y1) {
+          const gx = (x - grid.x0) % 3 === 0, gy = (y - grid.y0) % 3 === 0, bold = (x - grid.x0) % 30 < 2 || (y - grid.y0) % 30 < 2;
+          if (gx || gy || bold) c = bold ? [40, 90, 160] : [80, 130, 180];
+        }
+      }
+      const i = y * W + x; rgba[4 * i] = c[0]; rgba[4 * i + 1] = c[1]; rgba[4 * i + 2] = c[2]; rgba[4 * i + 3] = 255;
+      gray[i] = Math.round((c[0] * 299 + c[1] * 587 + c[2] * 114) / 1000);
+    }
+    const result = scanner.findPageQuadGray(gray, W, H, rgba);
+    assert.ok(result.corners, 'the sheet is found');
+    const off = error(result.corners, quad);
+    assert.ok(off < 8, `desk ${desk[0]}: corner error to the sheet ${off.toFixed(1)} px (the grid lies ${25}–${58} px inside)`);
+    assert.equal(result.verified, true, `desk ${desk[0]}: the sheet's four edges are measured`);
+  }
 });

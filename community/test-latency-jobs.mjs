@@ -21,7 +21,7 @@ globalThis.fetch=async(input,options={})=>{
   if(!url.includes(':generateContent'))throw Error('unexpected external request');
   providerCalls++;if(providerFailure){providerFailure=false;return new Response('{}',{status:503});}
   const req=JSON.parse(options.body),prompt=req.contents[0].parts.filter(p=>p.text).map(p=>p.text).join('\n');let value;
-  if(prompt.startsWith('[TASK: read page]'))value={header:{task:'Q5',sheet:'answer',page:1},legible:'good',items:[{label:'proof',kind:'text',text:'Let n be an integer. Submitted proof.',crossed_out:false}]};
+  if(prompt.includes('[TASK: read page]'))value={text:'Let n be an integer. Submitted proof.',header:{task:'Q5',sheet:'answer',page:1},legible:'good',items:[{label:'proof',kind:'text',text:'Let n be an integer. Submitted proof.',crossed_out:false}]};
   else if(prompt.startsWith('[TASK: grade]'))value={items:[{id:'A',found:true,page:1,score:1,rules:[],checks_met:[],note:'submitted argument'}],feedback:[],review:null};
   else{const no=+(prompt.match(/Review ONLY problem (\d+)/)?.[1]||0),page=+(prompt.match(/\[Page (\d+);/)?.[1]||1);value={problem_no:no,score:7,confidence:.96,verdict:'valid',summary:'검토한 풀이',strengths:[],gaps:[],evidence:[{page,quote:'Let n be an integer.',note:'제출한 문장'}]};}
   return Response.json({candidates:[{content:{parts:[{text:JSON.stringify(value)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50}});
@@ -31,7 +31,7 @@ async function api(path,{id=1,body,method=body===undefined?'GET':'POST',headers=
   const req=new Request('https://worker.local/api'+path,{method,headers:{...(id?{Authorization:'Bearer '+tokens[id]}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{}),...headers},...(body===undefined?{}:{body:JSON.stringify(body)})});
   const response=await worker.fetch(req,settings,context);return{status:response.status,data:await response.json(),headers:response.headers};
 }
-async function start(id){return(await api('/lab/contest/start',{id,body:{examId:'kmo-2025-T2-s2',runId:'latency-'+id}})).data;}
+async function start(id){return(await api('/lab/contest/start',{id,body:{provider:'gemini',examId:'kmo-2025-T2-s2',runId:'latency-'+id}})).data;}
 async function save(sid,id,answers){return api(`/lab/contest/sessions/${sid}/text`,{id,body:{answers}});}
 async function drain(settings=env){let safety=0;while(pending.length){assert.ok(++safety<100);const item=pending.shift();sql.prepare('UPDATE lab_jobs SET available_at=0 WHERE id=?').run(item.body.jobId);await worker.queue({messages:[{body:item.body,ack(){},retry(){pending.push(item);}}]},settings);}}
 async function upload(code,task='Q5'){
@@ -107,6 +107,16 @@ test('dependency waits re-enqueue a delayed ID without spending the broker or pr
   assert.equal(acked,true);assert.equal(retried,false);assert.equal(sql.prepare('SELECT attempts FROM lab_jobs WHERE id=?').get(rows[0].id).attempts,0);assert.equal(pending[0].delaySeconds,20);assert.deepEqual(pending[0].body,{v:1,jobId:rows[0].id});pending.splice(0);
 });
 
+test('the messages of one batch run side by side, and each is acknowledged on its own',async()=>{
+  const s=(await api('/lab/bootstrap',{id:5})).data.active;
+  const rows=await enqueueLabJobs(env,['side-a','side-b','side-c'].map(key=>({key,kind:'fixture',sessionId:s.id})));pending.splice(0);
+  let running=0,most=0,release;const gate=new Promise(r=>{release=r;});const acks=[];
+  const handlers={async run(env,job){running++;most=Math.max(most,running);if(running===rows.length)release();await gate;running--;return{ok:true};},async statements(){return[];},async failure(){throw Error('unexpected');}};
+  const done=consumeLabJobs({messages:rows.map(row=>({body:{v:1,jobId:row.id},ack(){acks.push(row.id);},retry(){throw Error('no retry');}}))},env,handlers);
+  await Promise.race([done,new Promise((_,reject)=>setTimeout(()=>reject(Error('the batch ran one message at a time')),2000))]);
+  assert.equal(most,3);assert.deepEqual(acks.sort(),rows.map(r=>r.id).sort());
+});
+
 test('a stale worker lease can be recovered once and a duplicate completed delivery never repeats the provider step',async()=>{
   const s=(await api('/lab/bootstrap',{id:5})).data.active;
   const [job]=await enqueueLabJobs(env,[{key:'abandoned-worker-fixture',kind:'fixture',sessionId:s.id}]);pending.splice(0);
@@ -117,7 +127,7 @@ test('a stale worker lease can be recovered once and a duplicate completed deliv
 });
 
 test('a failed ordinary scan with an error read object stays pending and cannot become an empty zero score',async()=>{
-  const started=await api('/lab/start',{id:6,body:{comp:'ipho',year:2024,tasks:['E1'],sources:{E1:{kind:'theory'}},entry:'?c=ipho&y=2024'}}),sid=started.data.session.id;
+  const started=await api('/lab/start',{id:6,body:{provider:'gemini',comp:'ipho',year:2024,tasks:['E1'],sources:{E1:{kind:'theory'}},entry:'?c=ipho&y=2024'}}),sid=started.data.session.id;
   await api(`/lab/sessions/${sid}/pay`,{id:6,body:{}});sql.prepare("UPDATE lab_sessions SET status='scanning',scan_until=? WHERE id=?").run(time+1800,sid);
   const page=await upload(started.data.token,'E1');assert.equal(page.data.ocr_status,'queued');
   sql.prepare("UPDATE lab_pages SET ocr_status='failed',read=? WHERE id=?").run(JSON.stringify({items:[],structure_status:'failed',ocr:{error:'ocr_failed'}}),page.data.id);
@@ -150,4 +160,18 @@ test('an interruption immediately after the grading transition commit leaves eve
   await dispatchLabJobs(env);await drain();
   const recovered=(await api(`/lab/sessions/${sid}`,{id:7})).data.session;assert.equal(recovered.status,'graded');assert.equal(recovered.score,7);
   assert.equal(sql.prepare("SELECT COUNT(*) n FROM lab_ledger WHERE session_id=? AND reason='grade'").get(sid).n,1);
+});
+
+test('when many wait, page reads go before gradings, each sitting gets a turn, and admin bench runs only while nothing else waits (two at most)',async()=>{
+  sql.exec('PRAGMA foreign_keys=OFF');sql.exec('DELETE FROM lab_jobs');pending.length=0;
+  const add=(kind,session,key)=>sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,lang,status,available_at,created_at,updated_at) VALUES(?,?,?,'ko','pending',0,0,0)").run(key,kind,session);
+  for(let i=0;i<4;i++)add('bench',9001,'b'+i);
+  add('grade',9002,'g1');add('grade',9002,'g2');add('ocr',9003,'o1');add('grade',9004,'g3');add('ocr',9003,'o2');
+  await dispatchLabJobs(env);
+  const order=pending.map(m=>sql.prepare('SELECT job_key FROM lab_jobs WHERE id=?').get(m.body.jobId).job_key);
+  assert.deepEqual(order,['o1','o2','g1','g3','g2'],'reads first; the second grading of one sitting after the first of another; no bench');
+  sql.exec("UPDATE lab_jobs SET status='done' WHERE kind<>'bench'");pending.length=0;
+  await dispatchLabJobs(env);
+  assert.equal(pending.length,2,'only two bench runs at once, and only once the candidates are served');
+  sql.exec('DELETE FROM lab_jobs');sql.exec('PRAGMA foreign_keys=ON');pending.length=0;
 });

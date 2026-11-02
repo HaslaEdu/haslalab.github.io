@@ -1,0 +1,775 @@
+{
+  "labels": [
+    {
+      "id": "spectrum-energy",
+      "source": "电子动能",
+      "roi": [
+        152,
+        369,
+        263,
+        398
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          152,
+          369,
+          263,
+          398
+        ]
+      ],
+      "intersecting_components": 12,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "spectrum-count",
+      "source": "电子的相对数目",
+      "roi": [
+        0,
+        77,
+        32,
+        266
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          0,
+          77,
+          32,
+          266
+        ]
+      ],
+      "intersecting_components": 18,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "single-splitter",
+      "source": "分束器",
+      "roi": [
+        279,
+        198,
+        413,
+        240
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          279,
+          198,
+          413,
+          240
+        ]
+      ],
+      "intersecting_components": 5,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "mz-incident",
+      "source": "入射光",
+      "roi": [
+        45,
+        33,
+        153,
+        70
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          45,
+          33,
+          153,
+          70
+        ]
+      ],
+      "intersecting_components": 7,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "mz-mirror1",
+      "source": "全反镜",
+      "roi": [
+        277,
+        5,
+        376,
+        39
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          277,
+          5,
+          376,
+          39
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "mz-mirror2",
+      "source": "全反镜",
+      "roi": [
+        280,
+        306,
+        378,
+        339
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          280,
+          306,
+          378,
+          339
+        ]
+      ],
+      "intersecting_components": 4,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "mz-splitter-left",
+      "source": "分束器",
+      "roi": [
+        7,
+        159,
+        114,
+        197
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          7,
+          159,
+          114,
+          197
+        ]
+      ],
+      "intersecting_components": 4,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "mz-splitter-right",
+      "source": "分束器",
+      "roi": [
+        485,
+        156,
+        594,
+        194
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          485,
+          156,
+          594,
+          194
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "mz-detector",
+      "source": "探测器",
+      "roi": [
+        540,
+        290,
+        627,
+        332
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          540,
+          290,
+          627,
+          332
+        ]
+      ],
+      "intersecting_components": 9,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "optics-mirror",
+      "source": "全反镜",
+      "roi": [
+        136,
+        27,
+        262,
+        73
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          136,
+          27,
+          262,
+          73
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "optics-slow",
+      "source": "慢轴",
+      "roi": [
+        465,
+        49,
+        560,
+        101
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          465,
+          49,
+          560,
+          101
+        ]
+      ],
+      "intersecting_components": 2,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "optics-fast",
+      "source": "快轴",
+      "roi": [
+        496,
+        258,
+        582,
+        307
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          496,
+          258,
+          582,
+          307
+        ]
+      ],
+      "intersecting_components": 2,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "optics-linear",
+      "source": "线偏振",
+      "roi": [
+        983,
+        65,
+        1106,
+        116
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          983,
+          65,
+          1106,
+          116
+        ]
+      ],
+      "intersecting_components": 8,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-mirror1",
+      "source": "全反镜",
+      "roi": [
+        1,
+        6,
+        42,
+        25
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          1,
+          6,
+          42,
+          25
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-splitter1",
+      "source": "分束器",
+      "roi": [
+        56,
+        12,
+        95,
+        29
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          56,
+          12,
+          95,
+          29
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-path2",
+      "source": "光路",
+      "roi": [
+        166,
+        12,
+        194,
+        29
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          166,
+          12,
+          194,
+          29
+        ]
+      ],
+      "intersecting_components": 4,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-mirror2",
+      "source": "全反镜",
+      "roi": [
+        251,
+        9,
+        292,
+        26
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          251,
+          9,
+          292,
+          26
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-vertical-polarizer",
+      "source": "线偏振片",
+      "roi": [
+        34,
+        44,
+        49,
+        113
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          34,
+          44,
+          49,
+          113
+        ]
+      ],
+      "intersecting_components": 10,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-path1",
+      "source": "光路",
+      "roi": [
+        86,
+        75,
+        111,
+        92
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          86,
+          75,
+          111,
+          92
+        ]
+      ],
+      "intersecting_components": 4,
+      "reviewed_source_word_component_partitions": [
+        {
+          "component": 31,
+          "bbox": [
+            81,
+            64,
+            98,
+            106
+          ],
+          "pixels": 155,
+          "word_pixels": 48,
+          "remaining_source_component_pixels": 107,
+          "review": {
+            "reviewed": true,
+            "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+            "native_component_ids": [
+              31
+            ]
+          }
+        }
+      ],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-mirror4",
+      "source": "全反镜",
+      "roi": [
+        91,
+        49,
+        132,
+        65
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          91,
+          49,
+          132,
+          65
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-polarizer45",
+      "source": "线偏振片",
+      "roi": [
+        157,
+        82,
+        209,
+        102
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          157,
+          82,
+          209,
+          102
+        ]
+      ],
+      "intersecting_components": 5,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-degree-unit",
+      "source": "度",
+      "roi": [
+        227,
+        83,
+        240,
+        102
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          227,
+          83,
+          240,
+          102
+        ]
+      ],
+      "intersecting_components": 1,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-polarizer-h",
+      "source": "线偏振片",
+      "roi": [
+        178,
+        102,
+        227,
+        120
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          178,
+          102,
+          227,
+          120
+        ]
+      ],
+      "intersecting_components": 6,
+      "reviewed_source_word_component_partitions": [
+        {
+          "component": 20,
+          "bbox": [
+            2,
+            26,
+            294,
+            225
+          ],
+          "pixels": 7362,
+          "word_pixels": 47,
+          "remaining_source_component_pixels": 7315,
+          "review": {
+            "reviewed": true,
+            "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+            "native_component_ids": [
+              20
+            ]
+          }
+        }
+      ],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-mirror3",
+      "source": "全反镜",
+      "roi": [
+        256,
+        81,
+        296,
+        98
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          256,
+          81,
+          296,
+          98
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-mirror5",
+      "source": "全反镜",
+      "roi": [
+        39,
+        139,
+        80,
+        154
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          39,
+          139,
+          80,
+          154
+        ]
+      ],
+      "intersecting_components": 3,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-splitter2",
+      "source": "分束器",
+      "roi": [
+        149,
+        137,
+        188,
+        153
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          149,
+          137,
+          188,
+          153
+        ]
+      ],
+      "intersecting_components": 4,
+      "reviewed_source_word_component_partitions": [
+        {
+          "component": 20,
+          "bbox": [
+            2,
+            26,
+            294,
+            225
+          ],
+          "pixels": 7362,
+          "word_pixels": 64,
+          "remaining_source_component_pixels": 7298,
+          "review": {
+            "reviewed": true,
+            "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+            "native_component_ids": [
+              20
+            ]
+          }
+        }
+      ],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-detector-b",
+      "source": "探测器",
+      "roi": [
+        241,
+        145,
+        281,
+        164
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          241,
+          145,
+          281,
+          164
+        ]
+      ],
+      "intersecting_components": 6,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-laser",
+      "source": "激光器",
+      "roi": [
+        0,
+        183,
+        46,
+        199
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          0,
+          183,
+          46,
+          199
+        ]
+      ],
+      "intersecting_components": 5,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-polarizer-v",
+      "source": "线偏振片",
+      "roi": [
+        157,
+        177,
+        209,
+        198
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          157,
+          177,
+          209,
+          198
+        ]
+      ],
+      "intersecting_components": 5,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "quad-detector-a",
+      "source": "探测器",
+      "roi": [
+        158,
+        202,
+        196,
+        221
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          158,
+          202,
+          196,
+          221
+        ]
+      ],
+      "intersecting_components": 4,
+      "reviewed_source_word_component_partitions": [
+        {
+          "component": 20,
+          "bbox": [
+            2,
+            26,
+            294,
+            225
+          ],
+          "pixels": 7362,
+          "word_pixels": 64,
+          "remaining_source_component_pixels": 7298,
+          "review": {
+            "reviewed": true,
+            "reason": "The named Chinese glyph touches the original diagram component in the low-resolution source bitmap. Only its tightly reviewed Chinese word area is replaced; every source component pixel outside this area, including the arrow/element edge, native indices and parentheses, remains protected. No diagram geometry is newly drawn.",
+            "native_component_ids": [
+              20
+            ]
+          }
+        }
+      ],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    },
+    {
+      "id": "wheel-torque",
+      "source": "扭矩",
+      "roi": [
+        137,
+        424,
+        231,
+        478
+      ],
+      "source_word_erasure_regions_px": [
+        [
+          137,
+          424,
+          183,
+          478
+        ],
+        [
+          183,
+          426,
+          231,
+          478
+        ]
+      ],
+      "intersecting_components": 2,
+      "reviewed_source_word_component_partitions": [],
+      "clipped_or_nonlanguage_components": [],
+      "passed": true
+    }
+  ],
+  "threshold": 160,
+  "source_only": true,
+  "passed": true
+}

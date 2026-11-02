@@ -48,6 +48,38 @@ for (const item of published) {
     assert.equal(revisions[alias], item.sha256.slice(0, 16));
     assert.equal(fonts.find(row => row.file === alias).sha256, item.sha256);
   }
+  if (item.audit_schema === 'source-scan-preserved-v1') {
+    require('./helpers/source-scan-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'natural-source-native-joined-v1') {
+    require('./helpers/natural-source-native-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'latex-native-joined-v1') {
+    require('./helpers/latex-native-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'official-korean-historical-v1') {
+    require('./helpers/official-korean-historical-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'official-korean-original-v1') {
+    require('./helpers/official-korean-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'native-original-preserved-v1') {
+    require('./helpers/native-original-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'reviewed-heading-alignment-v1') {
+    require('./helpers/reviewed-heading-alignment-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'reviewed-figure-language-v1') {
+    require('./helpers/reviewed-figure-language-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'natural-spacing-v2') {
     require('./helpers/natural-spacing-publication.cjs')(root, qa, item);
     continue;
@@ -57,43 +89,7 @@ for (const item of published) {
     continue;
   }
   if (item.audit_schema === 'natural-spacing-reviewed') {
-    assert.equal(qa.status, 'READY');
-    assert.equal(qa.sha256, item.sha256);
-    assert.equal(qa.bytes, item.bytes);
-    assert.equal(qa.pages, item.pages);
-    for (const key of ['native_actual_glyph_missing', 'new_batang_empty_outlines', 'hangul_visibility_loss_candidates', 'outside_motion_ink_pixels', 'figure_changed_pixels']) assert.equal(qa[key], 0, key);
-    for (const key of ['original_fonts_and_image_programs_retained', 'page_groups_preserved', 'no_added_editorial_notes']) assert.equal(qa[key], true, key);
-    assert.equal(qa.original_point_sizes_scaled, false);
-    assert.equal(qa.page_proofs.length, item.pages);
-    for (const page of qa.page_proofs) {
-      assert.equal(page.final_vs_reviewed_proof_changed_pixels, 0);
-      assert.match(page.source_pdf_sha256, /^[a-f0-9]{64}$/);
-      assert.equal(page.native_move_qa.passed, true);
-      assert.equal(page.native_move_qa.font_programs_unchanged, true);
-      assert.equal(page.native_move_qa.native_vector_path_bytes_preserved, true);
-      assert.deepEqual(page.native_move_qa.native_glyph_mismatches, []);
-      assert.equal(page.new_empty_hangul_outlines, 0);
-    }
-    for (const [file, hash] of Object.entries(qa.authoring_snapshot_sha256)) {
-      const raw = fs.readFileSync(path.join(root, qa.authoring_snapshotroot, file.replaceAll('\\', '/')));
-      assert.equal(crypto.createHash('sha256').update(raw).digest('hex'), hash);
-    }
-    for (const page of qa.page_audits) {
-      const raw = fs.readFileSync(path.join(root, page.path));
-      assert.equal(crypto.createHash('sha256').update(raw).digest('hex'), page.sha256);
-    }
-    assert.equal(qa.independent_original_input_moved_math_audits.length, item.pages);
-    for (const row of qa.independent_original_input_moved_math_audits) {
-      const raw = fs.readFileSync(path.join(root, row.path));
-      assert.equal(crypto.createHash('sha256').update(raw).digest('hex'), row.sha256);
-      const ink = JSON.parse(raw);
-      assert.equal(ink.passed, true);
-      assert.equal(ink.newly_missing_native_ink_pixels, 0);
-      assert.deepEqual(ink.missing_final_native_glyphs, []);
-      assert.deepEqual(ink.source_outline_audit.missing_source_outline_signatures, []);
-    }
-    const review = read(item.visual_qa);
-    assert.ok(review);
+    require('./helpers/natural-spacing-reviewed-publication.cjs')(root, qa, item);
     continue;
   }
   if (item.audit_schema === 'cpho-2013-reviewed-problems') {

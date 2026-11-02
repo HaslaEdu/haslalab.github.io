@@ -1,0 +1,91 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 2,
+  "proof_sha256": "8c132ba57aa63e232d28bd3e6825517e96956f6d6c6d359c13b8acc106279d64",
+  "plan_sha256": "cd029d292ad099a3443eea277980b67991ac3618d35b4b430deeb673573e9008",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 3,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          16,
+          0
+        ]
+      ],
+      "baseline": 199.55999755859375,
+      "source_center": 264.37799072265625,
+      "independent_original_source_centers": [
+        264.37799072265625
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 252.78598022460938,
+      "actual_nonspace_glyph_right": 275.9700012207031,
+      "actual_center": 264.37799072265625,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          16,
+          1
+        ]
+      ],
+      "baseline": 199.55999755859375,
+      "source_center": 509.99403381347656,
+      "independent_original_source_centers": [
+        509.99403381347656
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 498.40203857421875,
+      "actual_nonspace_glyph_right": 521.5860595703125,
+      "actual_center": 509.9940490722656,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          53,
+          5
+        ]
+      ],
+      "baseline": 548.15576171875,
+      "source_center": 308.3993453979492,
+      "independent_original_source_centers": [
+        308.3993453979492
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 262.27789306640625,
+      "actual_nonspace_glyph_right": 354.52081298828125,
+      "actual_center": 308.39935302734375,
+      "center_error_pt": 7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 11,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          53,
+          5
+        ],
+        "source_text": "Problem 1.2 (3.0 points) ",
+        "original_center": 308.3993453979492,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

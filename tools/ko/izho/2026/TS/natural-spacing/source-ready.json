@@ -1,0 +1,1617 @@
+{
+  "status": "READY",
+  "year": 2026,
+  "kind": "TS",
+  "pages": 11,
+  "output": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\editions\\IZhO_2026_TS_KO.pdf",
+  "sha256": "cf1e13b07d5ea5ead49cbb43596ad4988d120f8f712720f35904623bc526eafe",
+  "bytes": 12469774,
+  "original_source_sha256": "2b27f8e79e0aa84027a08983a04bd59593e1d5839fac466e51c6cca2bad17b92",
+  "input_korean_source_sha256": "07e3310f4e1c1ca46e0ad8d1bef56a4ce2e37193dc77df1d0219200ee77dc400",
+  "input_archives": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\input-bases\\07e3310f4e1c1ca46e0ad8d1bef56a4ce2e37193dc77df1d0219200ee77dc400\\IZhO_2026_TS_KO.pdf",
+      "sha256": "07e3310f4e1c1ca46e0ad8d1bef56a4ce2e37193dc77df1d0219200ee77dc400",
+      "bytes": 8512469
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\input-bases\\2b27f8e79e0aa84027a08983a04bd59593e1d5839fac466e51c6cca2bad17b92\\IZhO_2026_TS.pdf",
+      "sha256": "2b27f8e79e0aa84027a08983a04bd59593e1d5839fac466e51c6cca2bad17b92",
+      "bytes": 805595
+    }
+  ],
+  "font_policy": "Original-point-size Batang for regular serif Hangul; all existing native Latin/math/ASCII, bold, sans, italic and paint retained.",
+  "spacing_policy": "Quarter-em prose word spaces; whole inline native expressions move horizontally with internal geometry retained; original display equations and figures stay fixed; source content centers retained.",
+  "original_point_sizes_scaled": false,
+  "equations_rasterized": false,
+  "no_added_pdf_editorial_notes": true,
+  "original_physical_native_glyphs_checked": 4567,
+  "verified_original_native_ink_missing_pixels": 0,
+  "raw_unhinted_svg_reference_deltas": 0,
+  "retained_native_control_ink_missing_pixels": 0,
+  "changed_pixels_outside_text_and_intended_native_math_motion": 0,
+  "changed_nonselected_native_graphical_pixels": 0,
+  "figure_and_locked_display_math_changed_pixels": 0,
+  "new_batang_empty_outlines": 0,
+  "new_batang_hangul_glyphs_checked": 3550,
+  "hangul_visibility_loss_candidates": 0,
+  "unconverted_regular_body_hangul": 0,
+  "stationary_table_math_glyphs": 1191,
+  "table_math_internal_geometry_mismatches": 0,
+  "original_grading_glyphs_checked": 500,
+  "grading_glyphs_moved_from_source_cells": 0,
+  "original_font_image_palette_icc_mask_programs_and_page_groups_retained": true,
+  "assembly": "pikepdf native page append; fresh-process 4x RGB exact comparison to reviewed proofs",
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "6607aa0ce7339efa9ae75997eeb38b731109947c2e66e68dcab81effaadd9cfe",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 418,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 1,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 343,
+        "shifted_top_level_glyphs": 91,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 13,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "d400d36fa59b47bc1d8eded87e25ea84eebf6c444d9b3b083e5f56617c422803",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 679,
+            "source_origin": [
+              101.90399932861328,
+              683.97998046875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 711,
+            "source_origin": [
+              101.90399932861328,
+              701.8599853515625
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 729,
+            "source_origin": [
+              101.90399932861328,
+              722.5
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 759,
+            "source_origin": [
+              101.90399932861328,
+              745.416015625
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 785,
+            "source_origin": [
+              101.90399932861328,
+              768.0960083007812
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 815,
+            "source_origin": [
+              101.90399932861328,
+              789.6959838867188
+            ],
+            "dx": -28.583999633789062
+          }
+        ],
+        "expected_native_glyphs": 1059,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 4.57763671875e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.57763671875e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 2,
+      "proof_sha256": "0aa59189f3b2aa6e3a750f50adfec5b25c103245e95b0d372939075abe387fde",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 407,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 2,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 378,
+        "shifted_top_level_glyphs": 66,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 49,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c9f4cc84d699fe02bdeea28c7eb604033e8558ea76ff570fed1cc1942296ac8a",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 52,
+            "source_origin": [
+              101.90399932861328,
+              98.29998779296875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 64,
+            "source_origin": [
+              81.51599884033203,
+              121.0999755859375
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 70,
+            "source_origin": [
+              107.8800048828125,
+              121.0999755859375
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 107,
+            "source_origin": [
+              107.91200256347656,
+              146.17999267578125
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 147,
+            "source_origin": [
+              107.91200256347656,
+              184.82000732421875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 195,
+            "source_origin": [
+              107.91200256347656,
+              218.53997802734375
+            ],
+            "dx": -28.583999633789062
+          }
+        ],
+        "expected_native_glyphs": 1075,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 3,
+      "proof_sha256": "528740c3454c4a6f1eb443cc16b1254566eed842d138366f525b583756adf1cf",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 437,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 3,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 363,
+        "shifted_top_level_glyphs": 66,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 36,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "83c99f1464c33c92df3ecb81cb01be289fd48eea0675802f7da2d7971a02d5a6",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 143,
+            "source_origin": [
+              101.90399932861328,
+              180.97998046875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 163,
+            "source_origin": [
+              101.90399932861328,
+              200.65997314453125
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 187,
+            "source_origin": [
+              101.90399932861328,
+              215.29998779296875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 202,
+            "source_origin": [
+              101.90399932861328,
+              229.82000732421875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 222,
+            "source_origin": [
+              101.90399932861328,
+              244.3399658203125
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 241,
+            "source_origin": [
+              101.90399932861328,
+              258.97998046875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 260,
+            "source_origin": [
+              101.90399932861328,
+              273.52996826171875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 279,
+            "source_origin": [
+              101.90399932861328,
+              288.16998291015625
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 296,
+            "source_origin": [
+              101.90399932861328,
+              302.69000244140625
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 308,
+            "source_origin": [
+              81.51599884033203,
+              318.88995361328125
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 314,
+            "source_origin": [
+              107.8800048828125,
+              318.88995361328125
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 325,
+            "source_origin": [
+              81.51599884033203,
+              336.8899841308594
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 331,
+            "source_origin": [
+              107.8800048828125,
+              336.8899841308594
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 346,
+            "source_origin": [
+              81.51599884033203,
+              354.52996826171875
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 352,
+            "source_origin": [
+              107.8800048828125,
+              354.52996826171875
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 365,
+            "source_origin": [
+              81.51599884033203,
+              375.6499938964844
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 371,
+            "source_origin": [
+              107.8800048828125,
+              375.6499938964844
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 392,
+            "source_origin": [
+              81.51599884033203,
+              396.8899841308594
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 398,
+            "source_origin": [
+              107.8800048828125,
+              396.8899841308594
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 419,
+            "source_origin": [
+              81.51599884033203,
+              416.4499816894531
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 425,
+            "source_origin": [
+              107.8800048828125,
+              416.4499816894531
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 456,
+            "source_origin": [
+              81.51599884033203,
+              454.1499938964844
+            ],
+            "dx": -28.59600067138672
+          },
+          {
+            "source_trace_index": 462,
+            "source_origin": [
+              107.8800048828125,
+              454.1499938964844
+            ],
+            "dx": -28.59600067138672
+          }
+        ],
+        "expected_native_glyphs": 1039,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 4.57763671875e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.57763671875e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 4,
+      "proof_sha256": "b475e721533ccb17d1144290693f259fbffc75784762371f2b26ac5ff5f003b7",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 412,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 4,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 247,
+        "shifted_top_level_glyphs": 61,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 23,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "732babfec03878b29970ee55019dd713e2d33690ac913ab39b82e113e88b3f0f",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 149,
+            "source_origin": [
+              101.90399932861328,
+              207.97998046875
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 166,
+            "source_origin": [
+              101.90399932861328,
+              227.65997314453125
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 184,
+            "source_origin": [
+              101.90399932861328,
+              242.17999267578125
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 202,
+            "source_origin": [
+              101.90399932861328,
+              259.70001220703125
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 220,
+            "source_origin": [
+              101.90399932861328,
+              282.28997802734375
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 241,
+            "source_origin": [
+              101.90399932861328,
+              301.969970703125
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 259,
+            "source_origin": [
+              101.90399932861328,
+              316.489990234375
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 277,
+            "source_origin": [
+              101.90399932861328,
+              334.1299743652344
+            ],
+            "dx": -28.583999633789062
+          },
+          {
+            "source_trace_index": 295,
+            "source_origin": [
+              101.90399932861328,
+              356.5699768066406
+            ],
+            "dx": -28.583999633789062
+          }
+        ],
+        "expected_native_glyphs": 960,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 4.57763671875e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.57763671875e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 5,
+      "proof_sha256": "75e7a47183e69e975951737ebaea9a64cb2563fec581a01dcbf27c8a35c4d4da",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 397,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 5,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 466,
+        "shifted_top_level_glyphs": 71,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 17,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "4f43f62d11cd3951df28b80c8af2b4c883b3ebd6ef61a7022278cbc7dc73064d",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 1113,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.8358230590820312e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 6,
+      "proof_sha256": "0de749d495f79d7ea154f096047508263381edd27c0e1703432c141085a4a495",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 115,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 6,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 134,
+        "shifted_top_level_glyphs": 30,
+        "shifted_form_instances": 0,
+        "shifted_direct_image_instances": 0,
+        "shifted_atomic_clip_groups": 9,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "original_image_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "311b6f676830357825def8b7ae18005bc2e24d7a24af1e44d227d86184cf8092",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 385,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 1.8358230590820312e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.8358230590820312e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 7,
+      "proof_sha256": "6053f28248d64d06c37e710f1f81fce0088bdc47884ad39dcd9731295c794e2c",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 752,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 7,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 106,
+        "shifted_top_level_glyphs": 66,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 28,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "0d084156e230450978ac437ff6ed1d60cd2fc6ae5f75eb458c6b8b925699f1b6",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 29,
+            "source_origin": [
+              144.5,
+              88.5799560546875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 53,
+            "source_origin": [
+              144.5,
+              113.29998779296875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 95,
+            "source_origin": [
+              144.5,
+              147.739990234375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 121,
+            "source_origin": [
+              144.5,
+              165.01995849609375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 163,
+            "source_origin": [
+              144.5,
+              202.219970703125
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 213,
+            "source_origin": [
+              144.5,
+              236.41998291015625
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 349,
+            "source_origin": [
+              150.5,
+              330.40997314453125
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 375,
+            "source_origin": [
+              150.5,
+              349.1299743652344
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 401,
+            "source_origin": [
+              150.5,
+              366.40997314453125
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 424,
+            "source_origin": [
+              150.5,
+              389.6899719238281
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 452,
+            "source_origin": [
+              150.5,
+              414.6499938964844
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 492,
+            "source_origin": [
+              150.5,
+              434.3299865722656
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 525,
+            "source_origin": [
+              150.5,
+              463.1499938964844
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 551,
+            "source_origin": [
+              150.5,
+              483.78997802734375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 591,
+            "source_origin": [
+              150.5,
+              506.3499755859375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 659,
+            "source_origin": [
+              150.5,
+              558.18994140625
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 701,
+            "source_origin": [
+              150.5,
+              587.469970703125
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 754,
+            "source_origin": [
+              150.5,
+              625.7799682617188
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 806,
+            "source_origin": [
+              150.5,
+              663.0999755859375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 834,
+            "source_origin": [
+              150.5,
+              689.260009765625
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 865,
+            "source_origin": [
+              150.5,
+              711.8199462890625
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 962,
+            "source_origin": [
+              150.5,
+              800.2799682617188
+            ],
+            "dx": -28.555999755859375
+          }
+        ],
+        "expected_native_glyphs": 1101,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 1.8358230590820312e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.8358230590820312e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 8,
+      "proof_sha256": "ac0004c9204ecf7530fbbcf2959bfe792b487be655aee3747e2d67ad5a4ecadd",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 284,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 8,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 509,
+        "shifted_top_level_glyphs": 66,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 28,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "c1a3c81c42453e444a8ddcda1e4afcde67bed5ae44563326794e25fd5594584d",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 23,
+            "source_origin": [
+              150.5,
+              82.20001220703125
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 55,
+            "source_origin": [
+              150.5,
+              111.97998046875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 140,
+            "source_origin": [
+              150.5,
+              197.89996337890625
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 435,
+            "source_origin": [
+              81.26400756835938,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 436,
+            "source_origin": [
+              124.88402557373047,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 437,
+            "source_origin": [
+              144.84002685546875,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 438,
+            "source_origin": [
+              194.1000213623047,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 439,
+            "source_origin": [
+              238.6920166015625,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 441,
+            "source_origin": [
+              253.3200225830078,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 442,
+            "source_origin": [
+              286.5360107421875,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 443,
+            "source_origin": [
+              303.1199951171875,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 444,
+            "source_origin": [
+              334.3320007324219,
+              499.7499694824219
+            ],
+            "dx": -46.560020446777344
+          },
+          {
+            "source_trace_index": 631,
+            "source_origin": [
+              433.3900146484375,
+              627.219970703125
+            ],
+            "dx": -127.33853912353516
+          },
+          {
+            "source_trace_index": 632,
+            "source_origin": [
+              451.5220031738281,
+              627.219970703125
+            ],
+            "dx": -127.33853912353516
+          },
+          {
+            "source_trace_index": 633,
+            "source_origin": [
+              480.9100036621094,
+              627.219970703125
+            ],
+            "dx": -127.33853912353516
+          },
+          {
+            "source_trace_index": 634,
+            "source_origin": [
+              522.9700927734375,
+              627.219970703125
+            ],
+            "dx": -127.33853912353516
+          },
+          {
+            "source_trace_index": 635,
+            "source_origin": [
+              549.7059936523438,
+              627.219970703125
+            ],
+            "dx": -127.33853912353516
+          },
+          {
+            "source_trace_index": 637,
+            "source_origin": [
+              559.3059692382812,
+              627.219970703125
+            ],
+            "dx": -127.33853912353516
+          },
+          {
+            "source_trace_index": 638,
+            "source_origin": [
+              45.33599853515625,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 640,
+            "source_origin": [
+              57.46799850463867,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 641,
+            "source_origin": [
+              77.74800109863281,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 642,
+            "source_origin": [
+              95.41200256347656,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 643,
+            "source_origin": [
+              119.74800109863281,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 644,
+            "source_origin": [
+              147.34800720214844,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 645,
+            "source_origin": [
+              158.3520050048828,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 646,
+            "source_origin": [
+              215.24400329589844,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 647,
+            "source_origin": [
+              230.24400329589844,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          },
+          {
+            "source_trace_index": 648,
+            "source_origin": [
+              247.9080047607422,
+              641.02001953125
+            ],
+            "dx": -2.3759994506835938
+          }
+        ],
+        "expected_native_glyphs": 1055,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 9,
+      "proof_sha256": "b0640ad735b232c31132538f140aed965f902d8e3d3c4fca948d3241e166c802",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 336,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 9,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 497,
+        "shifted_top_level_glyphs": 81,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 24,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            117,
+            118
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "e45d153a09d8fe5df2bf653ba55b6288b553834de3004e5dbe91d49b690d437a",
+        "atomic_nonpainting_space_occurrence_shifts": [],
+        "expected_native_glyphs": 1156,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 3.0517578125e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 3.0517578125e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 10,
+      "proof_sha256": "814de4e83d43195a6750a09d41edd46732eedfea3c4c333c7e5fa59b59855d17",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 456,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 10,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 460,
+        "shifted_top_level_glyphs": 68,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 47,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            118,
+            119
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "b01fef9acec61ff72cdb8d345120a7bf3566cf410531ff13a6c11d074975fdb3",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 607,
+            "source_origin": [
+              144.5,
+              553.3900146484375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 627,
+            "source_origin": [
+              144.51199340820312,
+              568.0299682617188
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 644,
+            "source_origin": [
+              144.5,
+              585.4299926757812
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 663,
+            "source_origin": [
+              144.5,
+              604.8699951171875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 688,
+            "source_origin": [
+              144.51199340820312,
+              622.8999633789062
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 707,
+            "source_origin": [
+              144.5,
+              637.5399780273438
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 728,
+            "source_origin": [
+              144.5,
+              653.739990234375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 751,
+            "source_origin": [
+              144.51199340820312,
+              668.260009765625
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 772,
+            "source_origin": [
+              144.51199340820312,
+              682.8999633789062
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 793,
+            "source_origin": [
+              150.51199340820312,
+              699.0999755859375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 887,
+            "source_origin": [
+              150.5,
+              784.89599609375
+            ],
+            "dx": -28.555999755859375
+          }
+        ],
+        "expected_native_glyphs": 1130,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 4.57763671875e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 4.57763671875e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    },
+    {
+      "page": 11,
+      "proof_sha256": "37564b2a8ee833494bee0ec98832d019d01195646a5f0eca8e95d958743bd09b",
+      "joined_vs_reviewed_proof_changed_pixels": 0,
+      "original_input_native_ink_missing": 0,
+      "native_glyphs": 553,
+      "native_move_qa": {
+        "api": "native-inline-reposition-v1",
+        "page_number": 11,
+        "text_shift_mode": "tj",
+        "erased_glyphs": 47,
+        "shifted_top_level_glyphs": 46,
+        "shifted_form_instances": 0,
+        "shifted_atomic_clip_groups": 37,
+        "shifted_reviewed_vector_paths": 0,
+        "unchanged_white_background_panels_ignored": 0,
+        "reviewed_stationary_vector_paths_unchanged": [
+          [
+            118,
+            119
+          ]
+        ],
+        "private_form_ancestor_copies": 0,
+        "font_programs_unchanged": true,
+        "original_form_streams_unchanged": true,
+        "native_vector_path_bytes_preserved": true,
+        "native_atomic_clip_bytes_preserved": true,
+        "output_sha256": "d9e90bfdd772d7fe270761470625f4f0343ad9eac61367dc62d3a8b29e8495f8",
+        "atomic_nonpainting_space_occurrence_shifts": [
+          {
+            "source_trace_index": 24,
+            "source_origin": [
+              150.51199340820312,
+              74.27996826171875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 40,
+            "source_origin": [
+              150.51199340820312,
+              88.82000732421875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 55,
+            "source_origin": [
+              150.5,
+              106.0999755859375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 103,
+            "source_origin": [
+              150.5,
+              140.65997314453125
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 124,
+            "source_origin": [
+              150.5,
+              155.17999267578125
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 140,
+            "source_origin": [
+              150.5,
+              172.4599609375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 178,
+            "source_origin": [
+              150.5,
+              210.5
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 210,
+            "source_origin": [
+              150.51199340820312,
+              230.29998779296875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 229,
+            "source_origin": [
+              150.5,
+              248.05999755859375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 277,
+            "source_origin": [
+              150.5,
+              282.52996826171875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 315,
+            "source_origin": [
+              150.5,
+              300.52996826171875
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 361,
+            "source_origin": [
+              150.5,
+              344.2099914550781
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 391,
+            "source_origin": [
+              150.5,
+              365.2099914550781
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 412,
+            "source_origin": [
+              150.5,
+              383.3299865722656
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 445,
+            "source_origin": [
+              150.5,
+              401.2099914550781
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 468,
+            "source_origin": [
+              150.5,
+              424.1299743652344
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 489,
+            "source_origin": [
+              150.5,
+              445.6299743652344
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 536,
+            "source_origin": [
+              150.5,
+              482.9499816894531
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 574,
+            "source_origin": [
+              150.5,
+              504.66998291015625
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 604,
+            "source_origin": [
+              150.5,
+              527.3499755859375
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 639,
+            "source_origin": [
+              150.5,
+              547.0299682617188
+            ],
+            "dx": -28.555999755859375
+          },
+          {
+            "source_trace_index": 666,
+            "source_origin": [
+              150.5,
+              575.3499755859375
+            ],
+            "dx": -28.555999755859375
+          }
+        ],
+        "expected_native_glyphs": 786,
+        "unexpected_glyphs": 0,
+        "native_glyph_mismatches": [],
+        "position_tolerance_pt": 0.001,
+        "max_position_error_x_pt": 1.8358230590820312e-05,
+        "max_position_error_y_pt": 0.0,
+        "max_visible_position_error_x_pt": 1.8358230590820312e-05,
+        "max_visible_position_error_y_pt": 0.0,
+        "nonpainting_ascii_space_rounding": [],
+        "passed": true
+      },
+      "native_ink_reference_profile": null
+    }
+  ],
+  "audit_reports": [
+    {
+      "page": 1,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page01.audit.json",
+      "sha256": "7f18a8bd18d94a2e47113d25610631413abb083530847093939673436ca90b5d"
+    },
+    {
+      "page": 2,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page02.audit.json",
+      "sha256": "09cbae57e215b6a029b29f03e11da268502aacc1477360e1984b400300dbb1e8"
+    },
+    {
+      "page": 3,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page03.audit.json",
+      "sha256": "2f26b59359d4899338456b873900f6ab514d94142c123d1e53d0e2b101cd689a"
+    },
+    {
+      "page": 4,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page04.audit.json",
+      "sha256": "37944f2af9a0996d8edae24d6b20c2b9a4078f9f17339c0f832a9879d602ede2"
+    },
+    {
+      "page": 5,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page05.audit.json",
+      "sha256": "5db96c9f0014f62c37637f653e3d27f522c7fb543040ad46291b7ab5335bc301"
+    },
+    {
+      "page": 6,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page06.audit.json",
+      "sha256": "7276661a6c1b094b162ef5b2751e57b3ff80010a8ae415f1df22c20e0b728736"
+    },
+    {
+      "page": 7,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page07.audit.json",
+      "sha256": "0a8049054b5cb4d8e3a797166db0dfcc28ab44356c7d690961e7fb40a19149a3"
+    },
+    {
+      "page": 8,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page08.audit.json",
+      "sha256": "291bc0b7e7c280721c2eda9b7a03fa10552fe9376035606ba4731a08165ec07b"
+    },
+    {
+      "page": 9,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page09.audit.json",
+      "sha256": "fa9ec69e2b92633359c8828ffe16d2909ecd2fe42d2192d1854232985f2732ac"
+    },
+    {
+      "page": 10,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page10.audit.json",
+      "sha256": "5deb249352372d744f236af7e775053dee8b0ca8bca84baf3336d3774003cb58"
+    },
+    {
+      "page": 11,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\page11.audit.json",
+      "sha256": "d957245f929d355327c82123456a08e349c893846a3463bd6b4d67da904c2c37"
+    }
+  ],
+  "visual_review": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026\\TS\\visual-review.json",
+  "authoring_snapshot": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho-natural-spacing\\2026-TS-authoring",
+  "authoring_files": {
+    "tools\\izho_natural_spacing.py": "fc942fcc612546d06de6185caa86e81958328c2752225d54d2969274f6af9d03",
+    "tools\\pdf_korean_natural_composer.py": "ebfcfcfba05434a989b57d3b4f931612fd413f3fd5e971dff67561abf71a8014",
+    "tools\\izho_native_atomic_tokens.py": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+    "tools\\pdf_native_inline_reposition.py": "8035a653fc88199e05163a617584d01af702933f6018114b8ab587e67f2a3862",
+    "tools\\pdf_native_glyph_promote.py": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+    "tools\\pdf_native_geometry_motion.py": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+    "tools\\pdf_moved_native_ink.py": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+    "tools\\pdf_text_motion_ink.py": "556bdea67fc2851273f03c1ed205a25bdfda98c4967c86059a65ad15fa718690",
+    "tools\\pdf_memory_gate.py": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+    "tools\\izho_natural_spacing_rebuild.py": "eb8c1a4543c68c35f9529cb6a9ba743c3a231c9a7b4e9c9a5afc3ece91e617ed",
+    "tools\\izho_natural_spacing_qa.py": "2b872917bdab6a0516066bee5adb42637b0631ff46f93a4f71aeb0ca3844061d",
+    "tools\\izho_native_ink_witness.py": "0b256b4e72271bf77adac53c7623468262307e54d8d5d46fe783e640f4dd9387",
+    "tools\\izho_natural_spacing_ready.py": "f791ace6a01fa0322b883652e84a97975f98382c7e0bfbbfc52196a967383da2",
+    "tools\\pdf_grading_columns_stationary.py": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+    "tools\\test_izho_natural_spacing.py": "81fd37809b234b39bec14d3dab6d4b399b71db4ecafd662ea125e98745bd6d48",
+    "tools\\test_pdf_korean_natural_composer.py": "b76df335fcbaa5af259fe7c4a4f5963abed0d93cfc660d8c070d1eb09e26a0d2"
+  },
+  "note": "All page proofs passed the ordinary original-input native-ink audit."
+}

@@ -1,5 +1,6 @@
 import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { MonthlyAnswerError } from './monthly-answers.js';
+import { requireVisionProvider, visionProvider } from './vision-provider.js';
 
 const MAX_IMAGE = 4 * 1024 * 1024, CHUNK = 512 * 1024;
 const MAX_PHOTOS = 40, MAX_STORED = 96 * 1024 * 1024;
@@ -7,6 +8,12 @@ export const MONTHLY_MAX_OCR_BYTES = 256 * 1024;
 const ID = /^[a-f0-9-]{36}$/;
 const ready = new WeakMap();
 const fail = (code, status = 400) => { throw new MonthlyAnswerError(code, status); };
+export async function ensureMonthlyProviderColumn(db,table) {
+  if(!['monthly_answer_photos','monthly_capture_sessions'].includes(table))throw new Error('invalid_monthly_schema');
+  const columns=(await db.prepare(`PRAGMA table_info(${table})`).all()).results;
+  if(!columns.some(column=>column.name==='provider'))try{await db.prepare(`ALTER TABLE ${table} ADD COLUMN provider TEXT`).run();}
+  catch(error){if(!/duplicate column/i.test(String(error?.message||error)))throw error;}
+}
 
 // Monthly submissions deliberately do not use the timed IPhO photo purge.
 // Chunking keeps each D1 row below its individual row-size limit.
@@ -23,7 +30,7 @@ export function ensureMonthlyPhotoSchema(db, key = db) {
         photo_id TEXT NOT NULL, no INTEGER NOT NULL, data BLOB NOT NULL,
         PRIMARY KEY(photo_id,no)
       )`),
-    ]).then(() => db.prepare('CREATE INDEX IF NOT EXISTS monthly_photos_owner ON monthly_answer_photos(user_id,problem_id)').run()).then(() => true);
+    ]).then(()=>ensureMonthlyProviderColumn(db,'monthly_answer_photos')).then(() => db.prepare('CREATE INDEX IF NOT EXISTS monthly_photos_owner ON monthly_answer_photos(user_id,problem_id)').run()).then(() => true);
     ready.set(key, promise);
     promise.catch(() => { if (ready.get(key) === promise) ready.delete(key); });
   }
@@ -32,14 +39,14 @@ export function ensureMonthlyPhotoSchema(db, key = db) {
 
 // Capture uploads may supply a trusted server-only SQL guard and follow-up statements.
 // Original bytes, page association, revision and idempotent receipt then commit together.
-export async function storePhoto(db, { userId, problemId, partId, mime, data, transcript, timestamp, authorization, afterInsert }) {
-  const id = crypto.randomUUID(), statements = [db.prepare(`INSERT INTO monthly_answer_photos
-    (id,user_id,problem_id,part_id,mime,bytes,ocr_text,created_at)
-    SELECT ?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM users WHERE id=? AND deleted=0)
+export async function storePhoto(db, { userId, problemId, partId, mime, data, transcript, timestamp, provider, id = crypto.randomUUID(), authorization, afterInsert }) {
+  const statements = [db.prepare(`INSERT INTO monthly_answer_photos
+    (id,user_id,problem_id,part_id,mime,bytes,ocr_text,created_at,provider)
+    SELECT ?,?,?,?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM users WHERE id=? AND deleted=0)
       AND (SELECT COUNT(*) FROM monthly_answer_photos WHERE user_id=? AND problem_id=?)<?
       AND (SELECT COALESCE(SUM(bytes),0) FROM monthly_answer_photos WHERE user_id=? AND problem_id=?)+?<=?
       ${authorization ? `AND (${authorization.sql})` : ''}`)
-    .bind(id,userId,problemId,partId,mime,data.byteLength,transcript,timestamp,
+    .bind(id,userId,problemId,partId,mime,data.byteLength,transcript,timestamp,provider||null,
       userId,userId,problemId,MAX_PHOTOS,userId,problemId,data.byteLength,MAX_STORED,...(authorization?.args || []))];
   for (let offset = 0, no = 0; offset < data.byteLength; offset += CHUNK, no++) {
     statements.push(db.prepare(`INSERT INTO monthly_answer_photo_chunks(photo_id,no,data)
@@ -54,7 +61,7 @@ export async function storePhoto(db, { userId, problemId, partId, mime, data, tr
     if (authorization && !await db.prepare(`SELECT 1 AS authorized WHERE ${authorization.sql}`).bind(...authorization.args).first()) fail('scan_over',409);
     fail('monthly_photo_storage_full', 413);
   }
-  return { id, part_id: partId, mime, bytes: data.byteLength };
+  return { id, part_id: partId, mime, bytes: data.byteLength, provider:provider||null };
 }
 
 function photoIds(value) {
@@ -65,7 +72,7 @@ function photoIds(value) {
 
 async function ownedPhotos(db, userId, problemId, ids) {
   if (!ids.length) return [];
-  const rows = (await db.prepare(`SELECT id,part_id,mime,bytes,ocr_text FROM monthly_answer_photos
+  const rows = (await db.prepare(`SELECT id,part_id,mime,bytes,ocr_text,provider FROM monthly_answer_photos
     WHERE user_id=? AND problem_id=? AND id IN (${ids.map(() => '?').join(',')})`)
     .bind(userId,problemId,...ids).all()).results;
   if (rows.length !== ids.length) fail('bad_photo_ids');
@@ -76,13 +83,16 @@ async function ownedPhotos(db, userId, problemId, ids) {
 // Any other typed addition remains eligible for the authorship screen. A photograph
 // itself is not proof of human authorship, and a client via_ocr flag is never trusted.
 const comparable = text => String(text || '').normalize('NFKC').replace(/\\[()[\]]|\$|\s/g, '');
-export async function prepareMonthlyPhotoSubmission(db, userId, problem, normalized, value) {
+export async function prepareMonthlyPhotoSubmission(db, userId, problem, normalized, value, provider) {
+  provider=visionProvider(provider);
+  normalized.provider=provider;normalized.sheet.provider=provider;
   normalized.viaOcr = 0;
   normalized.photographedPartIds = [];
   const ids = photoIds(value);
   if (ids.length) {
     await ensureMonthlyPhotoSchema(db);
     const photos = await ownedPhotos(db,userId,problem.id,ids);
+    if(photos.some(photo=>photo.provider&&photo.provider!==provider))fail('provider_locked',409);
     const parts = new Set(normalized.sheet.parts.map(part => part.id));
     if (photos.some(photo => !parts.has(photo.part_id))) fail('bad_photo_ids');
     normalized.viaOcr = 1;
@@ -158,9 +168,10 @@ export function createMonthlyPhotoRouter({ HttpError, needUser, ensureContent, v
     if (!sheet || problem.opens_at > Math.floor(Date.now()/1000)) throw new HttpError(404,'not_found');
     const remaining = await attempts(env.DB,problem.id,me.id);
     if (!remaining.remaining) throw new HttpError(409,'attempts_exhausted',{attempts:remaining});
-    if (!env.UPSTAGE_API_KEY) throw new HttpError(503,'ocr_off');
     // A bounded multipart payload includes both the scanner result and its original.
     const form = await boundedForm(req,HttpError);
+    if(url.searchParams.has('provider')&&form.has('provider')&&url.searchParams.get('provider')!==form.get('provider'))throw new HttpError(400,'bad_provider');
+    const provider=requireVisionProvider(env,url.searchParams.get('provider')||form.get('provider'));
     const image = form.get('image'), original = form.get('original_image') || image, partId = form.get('part_id');
     if (!sheet.parts.some(part => part.id === partId)) throw new HttpError(400,'bad_answer_sheet');
     for (const file of [image,original]) {
@@ -172,14 +183,19 @@ export function createMonthlyPhotoRouter({ HttpError, needUser, ensureContent, v
     const usage = await env.DB.prepare('SELECT COUNT(*) n,COALESCE(SUM(bytes),0) bytes FROM monthly_answer_photos WHERE user_id=? AND problem_id=?').bind(me.id,problem.id).first();
     if (usage.n >= MAX_PHOTOS || usage.bytes + original.size > MAX_STORED) throw new HttpError(413,'monthly_photo_storage_full');
     await limit(env,'ocr:'+me.id,30,86400);
-    const result = await ocr(env,image,url.searchParams.get('mode') === 'math' ? 'math' : 'text');
-    if (typeof result.text !== 'string' || !result.text.trim()) throw new HttpError(422,'ocr_empty');
+    const result = await ocr(env,image,url.searchParams.get('mode') === 'math' ? 'math' : 'text',undefined,provider);
+    if (typeof result.text !== 'string' || !result.text.trim()&&!result.visuals?.length) throw new HttpError(422,'ocr_empty');
     if (new TextEncoder().encode(result.text).byteLength > MONTHLY_MAX_OCR_BYTES) throw new HttpError(413,'ocr_too_big');
     const data = new Uint8Array(await original.arrayBuffer()), mime = imageType(data);
     try {
       const saved = await storePhoto(env.DB,{userId:me.id,problemId:problem.id,partId,mime,data,
-        transcript:result.text,timestamp:Math.floor(Date.now()/1000)});
-      return {...result,photo_id:saved.id,part_id:saved.part_id,mime:saved.mime,bytes:saved.bytes};
+        transcript:result.text,provider,timestamp:Math.floor(Date.now()/1000)});
+      // This is a reference to a stored photograph, never a fabricated transcription.
+      // A caller can use it for an image-only answer; grading validates ownership,
+      // problem/part/provider and attaches the actual original before accepting it.
+      const photoEvidence=result.visuals?.length?`[PHOTO:${saved.id}:${saved.part_id}]`:null;
+      return {...result,provider,photo_id:saved.id,part_id:saved.part_id,mime:saved.mime,bytes:saved.bytes,
+        ...(photoEvidence?{photo_evidence:photoEvidence}:{})};
     } catch (error) {
       if (error instanceof MonthlyAnswerError) throw new HttpError(error.status,error.code);
       throw error;

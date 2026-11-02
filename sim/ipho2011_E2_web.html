@@ -2,11 +2,12 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
 <meta name="theme-color" content="#1c2027">
 <title>IPhO 2011 E2 — 역학 블랙박스 · Mechanical Blackbox · HaslaLab</title>
-<meta name="description" content="IPhO 2011 실험 2번을 브라우저에서 실행합니다. 공이 든 원통을 실 고리로 매달아 무게중심을 찾고, 구멍마다 걸어 진자 주기를 재어 공의 위치와 질량비를 알아냅니다. 계산은 대신 해주지 않습니다.">
+<meta name="description" content="IPhO 2011 실험 2를 브라우저에서 실행합니다. 공이 든 알루미늄 원통을 실 고리로 균형 잡고 구멍마다 핀에 걸어 흔들어, 공의 위치와 질량비, 중력가속도를 구합니다.">
 <link rel="canonical" href="https://haslalab.org/sim/ipho2011_E2_web.html">
 <link rel="alternate" hreflang="ko" href="https://haslalab.org/sim/ipho2011_E2_web.html?lang=ko">
 <link rel="alternate" hreflang="en" href="https://haslalab.org/sim/ipho2011_E2_web.html?lang=en">
@@ -14,7 +15,7 @@
 <meta property="og:site_name" content="HaslaLab">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IPhO 2011 E2 — 역학 블랙박스 · Mechanical Blackbox">
-<meta property="og:description" content="IPhO 2011 실험 2번을 브라우저에서 실행합니다. 공이 든 원통을 실 고리로 매달아 무게중심을 찾고, 구멍마다 걸어 진자 주기를 잽니다.">
+<meta property="og:description" content="IPhO 2011 실험 2를 브라우저에서 실행합니다. 공이 든 알루미늄 원통을 실 고리로 균형 잡고 구멍마다 핀에 걸어 흔들어, 공의 위치와 질량비, 중력가속도를 구합니다.">
 <meta property="og:url" content="https://haslalab.org/sim/ipho2011_E2_web.html">
 <meta property="og:image" content="https://haslalab.org/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -39,7 +40,6 @@
   .tray h3{margin:2px 0 6px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;
            color:var(--accent);text-align:center}
   #tray{display:block;width:100%;height:auto;background:#15181d;border-radius:6px;cursor:pointer}
-  #closeCv{display:block;width:100%;height:auto;border-radius:6px;background:#15181d}
   @media (max-width:1180px){ .tray{position:static} .stage{flex:1 1 100%;order:-1} }
   @media (max-width:760px){ .tray{flex:1 1 100%} }
 
@@ -47,16 +47,24 @@
   .stage{flex:1 1 auto;min-width:0;width:100%;display:flex;flex-direction:column;gap:10px}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
   .card h3{margin:6px 0 7px;font-size:13px;font-weight:600;color:var(--muted)}
-  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;cursor:default;background:#c8b08c}
   .tabs{display:flex;gap:6px;flex-wrap:wrap}
   .tabs button{width:auto;margin:0;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted)}
   .tabs button.on{background:var(--accent);border-color:var(--accent);color:#1c2027}
+  .tabs button.on:hover{background:var(--accent);color:#1c2027}
   .info{background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:14px 18px;
         font-size:13.5px;line-height:1.7;color:#d6dde2}
   .info h4{margin:14px 0 4px;color:var(--accent);font-size:13px;letter-spacing:.03em}
   .info h4:first-child{margin-top:0}
-  .info ol,.info ul{margin:4px 0 4px 20px;padding:0}
+  .info ul{margin:4px 0 4px 20px;padding:0}
   .info .warn{color:#f0a79f;font-weight:600}
+  .cvwrap{position:relative}
+  #cv{display:block;width:100%;height:auto;border-radius:6px;touch-action:none;background:#1b1f25;cursor:grab}
+  #cv.grabbing{cursor:grabbing}
+  #cv.copy{cursor:copy}
+  #cv.pointer{cursor:pointer}
+  .back{position:absolute;left:10px;top:10px;width:auto!important;background:rgba(242,193,78,.92);color:#1c2027;
+        border-color:#f2c14e;font-weight:700;padding:6px 12px}
+  .back:hover{background:#f2c14e!important;color:#1c2027}
 
   /* ── control panel ── */
   .panel{flex:0 0 300px;background:var(--panel);border:1px solid var(--line);
@@ -74,47 +82,42 @@
   button:hover:not(:disabled){background:#343941;border-color:var(--accent)}
   button.on{background:var(--accent);border-color:var(--accent);color:#1c2027;font-weight:600}
   button:disabled{opacity:.45;cursor:default}
-  #redBtn{width:100%;background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600;user-select:none}
-  #redBtn:hover{background:#a3322b}
+  .panel button{width:100%}
+  .panel .row button{font-size:12px;padding:6px 4px}
+  #sw{background:#8a2a24;border-color:#b3372f;color:#fff;font-weight:600}
+  #sw:hover{background:#a3322b}
+  #sw.on{background:#2f7d43;border-color:#3d9a55}
   .chk{display:flex;align-items:center;gap:7px;margin:6px 0;cursor:pointer;font-size:13px}
   .chk input{accent-color:var(--accent);width:15px;height:15px}
   .hint{font-size:11.5px;color:#9aa3ab;line-height:1.6;margin:4px 0 2px;white-space:pre-line}
+  .read{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9;margin-top:4px;white-space:pre-line}
+  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
+        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
+  .dark{color:#9fb6ff}
   .status{font:12.5px/1.65 -apple-system,"Segoe UI","Malgun Gothic",sans-serif;color:var(--accent);
           background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:8px 9px;
-          margin-top:12px;min-height:120px}
-  .status div + div{margin-top:8px}
-  .status .w{color:#f0a79f}
+          margin-top:12px;min-height:70px;white-space:pre-line}
 
   /* ── header ── */
   header{max-width:1680px;margin:0 auto;padding:16px 12px 0;
          display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  header > div:first-child{flex:1 1 320px;min-width:0}
   header h1{margin:0;font-size:18px;font-weight:650;color:var(--accent)}
   header p{margin:3px 0 0;font-size:13px;color:var(--muted)}
   .lang{display:flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--panel)}
   .lang button{width:auto;margin:0;border:0;border-radius:0;padding:7px 15px;font-size:13px;
                font-weight:600;color:var(--muted);text-align:center;background:transparent}
   .lang button.on{background:var(--accent);color:#1c2027}
-  .disp{font:600 26px/1.2 ui-monospace,Consolas,monospace;text-align:center;background:var(--deep);
-        border:1px solid var(--line);border-radius:6px;padding:6px 0;color:#e8eef2;letter-spacing:.04em}
-  .laps{font:12px/1.6 ui-monospace,Consolas,monospace;color:#9aa3ab;max-height:130px;overflow:auto;margin-top:4px}
-  .hidden{display:none!important}
-  .readout{font:12.5px/1.6 ui-monospace,Consolas,monospace;color:#c9d1d9}
-  #actA button,#btnNew{width:100%}
-  #bench{touch-action:none;cursor:grab}
-  #bench.grabbing{cursor:grabbing}
-  #sw{display:block;margin:4px auto;border-radius:8px}
-  #closeCv{max-width:760px;margin:0 auto}
-  .tabs{margin-bottom:6px}
-  .tabs button.on:hover{background:var(--accent);color:#1c2027}
-  .status{white-space:pre-wrap}
+  dialog{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:16px;max-width:360px}
+  dialog::backdrop{background:rgba(0,0,0,.55)}
 </style>
 </head>
 <body>
 
 <header>
   <div>
-    <h1 id="t-title"></h1>
-    <p id="t-sub"></p>
+    <h1 data-i18n="title"></h1>
+    <p data-i18n="sub"></p>
   </div>
   <div class="lang">
     <button id="btn-ko" class="on">한국어</button>
@@ -124,58 +127,119 @@
 
 <div class="wrap">
   <aside class="tray">
-    <h3 id="t-tray"></h3>
+    <h3 data-i18n="trayTitle"></h3>
     <canvas id="tray"></canvas>
   </aside>
 
   <div class="stage">
     <div class="card">
-      <div class="tabs"><button id="tabA" class="on"></button><button id="tabB"></button></div>
-      <h3 id="t-benchcap"></h3>
-      <canvas id="bench"></canvas>
+      <h3 id="t-cap3"></h3>
+      <div class="cvwrap"><canvas id="cv"></canvas><button class="back" id="back" hidden></button></div>
     </div>
-    <div class="card">
-      <h3 id="t-closecap"></h3>
-      <canvas id="closeCv"></canvas>
-    </div>
+    <div class="info" id="info"></div>
   </div>
 
   <aside class="panel">
-    <h2 id="t-h-part"></h2>
-    <div id="actA">
-      <button id="btnHold"></button>
-      <button id="btnRehang"></button>
-    </div>
-    <div id="actB" class="hidden">
-      <div class="readout" id="selLbl"></div>
-    </div>
-    <div id="swBox" class="hidden">
-      <h2 id="t-h-sw"></h2>
-      <canvas id="sw" width="254" height="182"></canvas>
-      <div class="row">
-        <button id="swStart"></button>
-        <button id="swStop"></button>
-        <button id="swReset"></button>
-      </div>
-    </div>
-    <h2 id="t-h-view"></h2>
-    <div class="readout" id="scaleLbl"></div>
-    <div class="row">
-      <button id="btnFit"></button>
-      <button id="btn11"></button>
-    </div>
-    <button id="btnNew"></button>
-    <p class="hint" id="t-note"></p>
+    <h2 data-i18n="pPart"></h2>
+    <div id="actA"><button id="btnHold"></button><button id="btnRehang"></button></div>
+    <div id="actB" class="read"></div>
+    <h2 data-i18n="pSw"></h2>
+    <div class="disp" id="swDisp">00:00.00</div>
+    <div class="row"><button id="swStart"></button><button id="swStop"></button><button id="swReset"></button></div>
+    <div class="hint" id="swHint"></div>
     <div class="status" id="status"></div>
   </aside>
 </div>
 
-<script>
-"use strict";
 
-/* ══════════════════════════════════════════════════════════════
-   0.  i18n  —  language is switched by a button, no page reload
-   ══════════════════════════════════════════════════════════════ */
+<script>
+/* ==================================================================
+   IPhO 2011 (Bangkok) — Experiment 2 "Mechanical Blackbox: a cylinder
+   with a ball inside", in 3-D after the photograph on page 2 of the
+   paper: the aluminium tube with its row of holes, the clear base plate
+   clamped to the table with its thin pin and black pin cap, the thread,
+   the ruler, the stopwatch, the pencil and the rubber.  The rig (the loop
+   that balances the tube, slipping and falling, the pendulum on the pin,
+   the reaction time on the stopwatch) is the one of the 2-D version.
+   ================================================================== */
+let LANG = new URLSearchParams(location.search).get("lang") === "en" ? "en" : "ko";
+let lang = LANG;
+const I18N = {
+  trayTitle: ["Parts box", "부품함"],
+  it_ruler: ["ruler (35 cm)", "자 (35 cm)"], it_pencil: ["pencil", "연필"], it_eraser: ["rubber", "지우개"],
+  it_tube: ["cylinder with holes", "구멍 뚫린 원통"], it_plate: ["base plate with pin", "핀이 꽂힌 받침판"], it_tape: ["adhesive tape", "접착테이프"],
+  it_thread: ["thread", "실"], it_sw: ["stopwatch", "초시계"],
+  trayHand: ["in your hand: click where it goes", "손에 있음: 놓을 곳을 클릭"],
+  hand_tube: ["The cylinder is in your hand: put it on the table (or into the thread loop under the pin).", "원통을 들었습니다. 책상 위에 놓거나 핀 아래 실 고리에 넣으세요."],
+  hand_plate: ["The base plate is in your hand: put it on the table at its front edge; the pin sticks out over the edge.", "받침판을 들었습니다. 책상 앞 모서리에 놓으면 핀이 모서리 밖으로 나옵니다."],
+  hand_tape: ["The tape is in your hand: click on the base plate where a strip should go (the wheel turns it, Shift: fine); click an empty spot of the table to put the roll down.", "테이프를 들었습니다. 받침판 위 붙일 곳을 클릭하면 그 자리에 한 줄이 붙습니다(휠: 방향 돌리기, Shift: 미세). 책상 빈 곳을 클릭하면 롤을 내려놓습니다."],
+  hand_thread: ["The thread is in your hand: put it on the pin to hang a loop from it.", "실을 들었습니다. 핀에 놓으면 고리가 걸립니다."],
+  hand_sw: ["The stopwatch is in your hand: put it on the table.", "초시계를 들었습니다. 책상 위에 놓으세요."],
+  hand_ruler: ["In your hand: move it where you want and click (or let go if you dragged it).", "손에 들었습니다. 원하는 곳으로 옮겨 클릭하세요(끌었다면 놓으면 됩니다)."],
+  st_setup: ["Take the apparatus out of the parts box.", "부품함에서 장비를 꺼내세요."],
+  st_plateWhere: ["Put the base plate on the table.", "받침판은 책상 위에 놓으세요."],
+  st_plateOn: ["The base plate lies at the table edge. Tape it down, then take the cap off the pin.", "받침판을 책상 모서리에 놓았습니다. 테이프로 붙인 뒤 핀 뚜껑을 빼세요."],
+  st_taped: ["The base plate is taped to the table. To move it again, click a strip to peel it off.", "받침판을 책상에 테이프로 붙였습니다. 다시 옮기려면 테이프를 클릭해 떼어 내세요."],
+  st_peelFirst: ["The base plate is taped down: click the tape to peel it off before you move the plate.", "받침판이 테이프로 붙어 있습니다. 옮기기 전에 테이프를 클릭해 떼어 내세요."],
+  st_stripOn: ["Strip %d pressed down. Click again to add another (wheel: turn it, Shift: fine); click an empty spot of the table to put the roll down.", "테이프 %d줄을 붙였습니다. 다시 클릭하면 한 줄 더 붙습니다(휠: 방향, Shift: 미세). 책상 빈 곳을 클릭하면 롤을 내려놓습니다."],
+  st_peeledOne: ["One strip peeled off.", "테이프 한 줄을 떼었습니다."],
+  st_tapeGave: ["The tape could not hold what hangs on the pin: it peeled off the table and the base plate went over the edge with the cylinder. Tape it across the plate onto the table on both sides, well behind the edge.", "테이프가 핀에 걸린 무게를 버티지 못하고 책상에서 떨어지면서, 받침판이 원통과 함께 모서리 밖으로 넘어갔습니다. 판을 가로질러 양쪽 책상에 걸치도록, 모서리에서 충분히 뒤쪽에 붙이세요."],
+  st_peeled: ["Tape peeled off: the base plate is loose.", "테이프를 떼었습니다. 받침판이 고정되지 않은 상태입니다."],
+  st_fell: ["The base plate was not taped down: the weight on the pin tipped it over the edge and it fell with the cylinder. Click the parts on the bench below to pick them up.", "받침판이 테이프로 고정되지 않아, 핀에 걸린 무게에 책상 모서리 밖으로 넘어가며 원통과 함께 떨어졌습니다. 아래 받침대 위의 부품을 클릭해 주우세요."],
+  st_dropped: ["Fallen off the table — pick the parts up and set up again (tape the plate down first).", "책상에서 떨어짐 — 부품을 주워 다시 설치하세요(받침판은 먼저 테이프로 고정)."],
+  st_tapeFirst: ["The base plate is not fixed: tape it to the table first.", "받침판이 고정되지 않았습니다. 먼저 테이프로 붙이세요."],
+  st_capFirst: ["The pin still has its cap on: click the cap to take it off.", "핀에 아직 뚜껑이 씌워져 있습니다. 뚜껑을 클릭해 빼세요."],
+  st_capOffMsg: ["Cap off: mind the sharp pin.", "뚜껑을 뺐습니다. 핀 끝이 날카로우니 조심하세요."],
+  st_capOnMsg: ["The cap is back on the pin.", "핀에 뚜껑을 씌웠습니다."],
+  st_capBusy: ["Take the thread and the cylinder off the pin first.", "먼저 실과 원통을 핀에서 빼세요."],
+  st_loopOn: ["The thread loop hangs from the pin. Drag the cylinder from the table into it (to the green ring).", "핀에 실 고리를 걸었습니다. 책상 위 원통을 끌어 고리(초록 원)에 넣으세요."],
+  st_onTableOnly: ["Put it on the table.", "책상 위에 놓으세요."],
+  st_tubeTable: ["The cylinder lies on the table: lay the ruler beside it to measure; click a hole and then the pin to hang it.", "원통을 책상에 눕혔습니다. 옆에 자를 대고 재세요. 구멍을 클릭한 뒤 핀을 클릭하면 걸립니다."],
+  st_offFirst: ["Take the cylinder off the pin (right-click) first.", "먼저 원통을 핀에서 빼세요(우클릭)."],
+  st_plateBusy: ["Take the thread and the cylinder off the pin first.", "먼저 실과 원통을 핀에서 빼세요."],
+  st_backBox: ["Put back in the parts box.", "부품함에 넣었습니다."],
+  trayTake: ["drag it onto the bench", "끌어서 실험대에 놓기"], trayBack: ["out · click: put back", "꺼냄 · 클릭: 넣기"],
+  toolHand: ["In your hand: move it where you want and click (or let go if you dragged it). Right-click or Esc: back in the box.", "손에 들었습니다. 원하는 곳으로 옮겨 클릭하세요(끌었다면 놓으면 됩니다). 우클릭·Esc: 부품함으로."],
+  trayHelp: ["drag a part out of the box, or click\nit and click where it goes\nright-click: back in the box", "부품을 끌어서 꺼내거나, 클릭 후\n놓을 곳을 클릭 · 우클릭: 되돌리기"],
+  pPart: ["The cylinder", "원통"],
+  partA: ["A · balance on the thread", "A · 실 고리로 균형"], partB: ["B · swing on the pin", "B · 핀에 걸어 흔들기"],
+  pSw: ["Stopwatch", "초시계"],
+  swHint: ["click the stopwatch on the table, or press the space bar", "책상 위 초시계를 클릭하거나 스페이스바를 누르세요"],
+  cap_3d: ["the bench — drag the empty space to turn · right-drag: pan · wheel: zoom (over the cylinder in the loop: slide it 2 mm, Shift 0.2 mm) · drag the held cylinder: push it through the loop · double-click the empty space: view back",
+           "실험대 — 빈 곳을 끌어 회전 · 오른쪽 끌기: 이동 · 휠: 확대 (고리 속 원통 위 휠: 2 mm, Shift 0.2 mm 밀기) · 받친 원통 끌기: 고리 속으로 밀기 · 빈 곳 더블클릭: 처음 시점"],
+  cap_close: ["close-up — straight on to the tube · right-click: back", "확대 — 원통을 정면에서 · 우클릭: 돌아가기"],
+  back: ["◀ the bench", "◀ 실험대"],
+  info: [`<h4>The apparatus (pages 1–2 of the paper)</h4><ul>
+<li>Everything starts in the parts box: the aluminium cylinder with its row of holes (a ball is fixed inside it on the axis), the base plate (a thick clear plate with a thin pin in its end face, its black cap on), adhesive tape, thread, a ruler, a stopwatch, a pencil and a rubber. Drag a part out, or click it and then click where it goes; right-click puts it back.</li></ul>
+<h4>Setting up</h4><ul>
+<li>Put the base plate at the front edge of the table: the pin sticks out over the edge. Pick up the tape and click on the plate where a strip should go: each click presses one strip down there, along the direction the wheel turns it to. Click the cap to take it off the pin.</li>
+<li>Taped down, the plate stays put: click a strip to peel it off before you move it. The load on the pin tips the plate forward about the table edge, so what holds it is tape stuck to the table beyond the plate: a strip across the plate onto the table on both sides, well behind the edge, holds best; one stuck on one side only, or close to the edge, peels off when the cylinder hangs (or swings hard), and the plate goes over the edge with it onto the bench below. With no tape at all it goes at once.</li>
+<li>Put the cylinder on the table to measure it: lay the ruler beside it (the wheel over the ruler turns it) and mark it with the pencil; the rubber wipes marks off.</li></ul>
+<h4>Centre of mass</h4><ul>
+<li>Put the thread on the pin: a knotted loop hangs from it. Drag the cylinder from the table into the loop; it lies level, held by your finger. Drag it sideways to push it through the loop (or roll the wheel over it: 2 mm, Shift 0.2 mm), click it to let go and see which end goes down. Where it stays level, the loop is under the centre of mass: mark the tube there with the pencil, take it down and measure the mark from the end with the ruler.</li>
+<li>Too far off, it slips out; click it while it slips to catch it, or pick it up and click at the loop to put it back.</li></ul>
+<h4>Periods</h4><ul>
+<li>With the cylinder on the table, click a hole and then the pin: it hangs by that hole. Drag it aside and let go; time several swings with the stopwatch (click it, or the space bar). Right-click puts it back on the table.</li>
+<li>The swing dies down as a real one does: air drag on the whole length of the tube (faster at large amplitude) and the friction of the hole on the thin pin (strongest relative to gravity at the holes near the centre of mass). Time the swings while the amplitude is small.</li></ul>
+<h4>Measuring</h4><ul>
+<li>Nothing is computed for you. Positions are read on the ruler; the stopwatch has your reaction time in it, as a real one does.</li></ul>`,
+`<h4>장비 (문제지 1–2쪽)</h4><ul>
+<li>모든 장비는 부품함에서 시작합니다. 구멍이 한 줄로 뚫린 알루미늄 원통(축 위에 공이 고정됨), 받침판(끝면에 가는 핀이 꽂힌 두꺼운 투명판, 검은 뚜껑이 씌워져 있음), 접착테이프, 실, 자, 초시계, 연필, 지우개입니다. 부품을 끌어서 꺼내거나, 클릭한 뒤 놓을 곳을 클릭하세요. 우클릭하면 부품함으로 돌아갑니다.</li></ul>
+<h4>준비</h4><ul>
+<li>받침판을 책상 앞 모서리에 놓으면 핀이 모서리 밖으로 나옵니다. 테이프를 집어 받침판 위 붙일 곳을 클릭하면 그 자리에 한 줄씩 붙습니다(휠로 방향을 돌립니다). 뚜껑을 클릭해 핀에서 빼세요.</li>
+<li>테이프로 붙인 받침판은 움직이지 않습니다. 옮기려면 테이프를 클릭해 떼어 내세요. 핀에 걸린 무게는 받침판을 책상 모서리를 축으로 앞으로 넘기려 하므로, 판 밖 책상에 붙은 테이프가 이를 버팁니다. 판을 가로질러 양쪽 책상에 붙이고 모서리에서 충분히 뒤쪽에 붙인 테이프가 가장 단단합니다. 한쪽에만 붙였거나 모서리 가까이에 붙인 테이프는 원통을 걸거나 세게 흔들 때 떨어지고, 받침판도 원통과 함께 아래 받침대로 넘어갑니다. 테이프가 없으면 바로 넘어갑니다.</li>
+<li>원통을 책상에 눕혀 놓고 옆에 자를 대어 재세요(자 위에서 휠: 회전). 연필로 표시하고 지우개로 지웁니다.</li></ul>
+<h4>무게중심</h4><ul>
+<li>실을 핀에 놓으면 매듭지은 실 고리가 걸립니다. 책상 위 원통을 끌어 고리에 넣으면 손가락으로 받쳐 수평으로 놓입니다. 원통을 좌우로 끌면 고리 속으로 밀려 움직이고(원통 위 휠: 2 mm, Shift: 0.2 mm), 원통을 클릭해 손을 떼면 어느 쪽이 내려가는지 보입니다. 수평으로 머무는 곳이 무게중심 바로 위입니다. 그 자리를 연필로 표시하고, 원통을 내려 끝에서 표시까지를 자로 재세요.</li>
+<li>너무 치우치면 미끄러져 빠집니다. 미끄러지는 중에 클릭하면 붙잡고, 떨어진 원통은 집어서 고리 위치에서 클릭하면 다시 끼워집니다.</li></ul>
+<h4>주기</h4><ul>
+<li>책상 위 원통의 구멍을 클릭한 뒤 핀을 클릭하면 그 구멍으로 걸립니다. 끌어서 젖혔다 놓고 초시계(클릭 또는 스페이스바)로 여러 번의 진동을 재세요. 우클릭하면 책상으로 돌아갑니다.</li>
+<li>진동은 실제처럼 줄어듭니다. 원통 전체 길이에 걸리는 공기 저항(진폭이 클수록 큼)과 가는 핀에 걸린 구멍의 마찰(무게중심에 가까운 구멍일수록 상대적으로 큼) 때문입니다. 진폭이 작을 때 주기를 재세요.</li></ul>
+<h4>측정</h4><ul>
+<li>프로그램은 아무것도 계산해 주지 않습니다. 위치는 자로 읽고, 초시계에는 실제처럼 반응 시간이 들어갑니다.</li></ul>`],
+};
+function tr(k){ const e = I18N[k]; if (e) return LANG === "ko" ? e[1] : e[0]; const d = T[lang] && T[lang][k]; return typeof d === "string" ? d : k; }
+
 const T = {
   ko:{
     title:"IPhO 2011 실험 2 — 역학 블랙박스 : 공이 든 원통",
@@ -213,7 +277,7 @@ const T = {
     /* rig messages */
     mLoopFirst:"먼저 실 고리를 핀에 거세요.",
     mAlreadyPin:"원통이 이미 핀에 걸려 있습니다.",
-    mInLoop:"원통을 실 고리 안에 넣었습니다. 고리를 좌우로 끌어 균형을 맞추세요.",
+    mInLoop:"원통을 실 고리 안에 넣었습니다. 원통을 좌우로 끌어 고리 속으로 밀며 균형점을 찾고, 클릭해서 손을 떼 보세요.",
     mThreadOff:"실 고리를 먼저 치우세요.",
     mNoHole:"그런 구멍은 없습니다.",
     mOnPin:"원통을 핀에 걸었습니다.",
@@ -236,9 +300,9 @@ const T = {
     sBsel:"Part B - 구멍 #%d 선택됨. 핀 구멍을 클릭하세요.",
     sBal:"균형 실험 - ", sSlip:"  (미끄러지는 중!)",
     vLevel:"수평", vBottom:"아래쪽 끝이 내려감", vTop:"위쪽 끝이 내려감",
-    vCarried:"손에 들고 있음", vHeld:"손으로 받치는 중 - 좌클릭으로 손을 떼세요",
+    vCarried:"손에 들고 있음", vHeld:"손으로 받치는 중 - 좌우로 끌어 밀기 · 클릭으로 손 떼기",
     vFallen:"원통이 빠져 떨어짐 - 클릭해서 집으세요",
-    sPend:"진자 실험 - 구멍 #%d, 기울기 %s deg",
+    sPend:"진자 실험 - 구멍 #%d 로 핀에 걸림",
     note:"화면에는 실제 기구와 눈에 보이는 것만 나옵니다. 프로그램은 아무것도 계산해 주지 않습니다."
   },
   en:{
@@ -276,7 +340,7 @@ const T = {
           "- wheel: zoom   - space bar: start / stop the stopwatch",
     mLoopFirst:"Hang the thread loop on the pin first.",
     mAlreadyPin:"The cylinder is already hanging on the pin.",
-    mInLoop:"Cylinder placed in the loop. Drag the loop to balance it.",
+    mInLoop:"Cylinder placed in the loop. Drag it sideways to push it through the loop, then click it to let go.",
     mThreadOff:"Take the thread loop off first.",
     mNoHole:"No such hole.",
     mOnPin:"Cylinder hung on the pin.",
@@ -298,14 +362,15 @@ const T = {
     sBsel:"Part B - hole #%d selected. Click the pin.",
     sBal:"Balance - ", sSlip:"  (slipping!)",
     vLevel:"level", vBottom:"far end down", vTop:"near end down",
-    vCarried:"in hand", vHeld:"supported by hand - left click to let go",
+    vCarried:"in hand", vHeld:"supported by hand - drag to push it through the loop · click to let go",
     vFallen:"slipped out - click it to pick it up",
-    sPend:"Pendulum - hole #%d, angle %s deg",
+    sPend:"Pendulum - hanging by hole #%d",
     note:"The screen shows only the apparatus and what the naked eye would see. Nothing is computed for you."
   }
 };
-let lang = (new URLSearchParams(location.search).get("lang")==="en") ? "en" : "ko";
-const $ = id=>document.getElementById(id);
+
+
+/* ==== PHYSICS START ==== the apparatus and the rig, as in the 2-D version */
 const L_ = () => T[lang];
 const fmt = (s, ...a)=>{ let i=0; return s.replace(/%d|%s/g, ()=>a[i++]); };
 const copysign = (x,s)=> (s<0 ? -Math.abs(x) : Math.abs(x));
@@ -353,7 +418,7 @@ function makeTruth(seed){
   for(let attempt=0; attempt<2000; attempt++){
     if(official){
       L=0.3000; hole0=0.0110; pitch=0.0100; nHoles=16;
-      ratio=2.66744; z=0.252688; g=9.8100; dOut=0.0220;
+      ratio=2.66744; z=0.252688; g=9.7830; dOut=0.0220;   /* g of Bangkok */
     }else{
       L=rng.uniform(0.280,0.320);
       hole0=rng.uniform(0.0090,0.0140);
@@ -385,6 +450,8 @@ function makeTruth(seed){
   return {
     seed, L, d_out:dOut, d_in:dOut-0.0030, m, M, z, g,
     holes, x_cm:xcm, I_cm:Icm, r, R_min:Rmin, d_ball:0.0130,
+    /* the air of the hall (Bangkok in July, ~30 °C) and the thin steel pin the tube turns on */
+    rho_air:1.16, nu_air:1.60e-5, r_pin:0.00050, mu_pin:0.18,
     /* height of the bench top below the pin: clear of the longest swing */
     bench_y: Math.max(0.300, L - holes[0] + 0.012)
   };
@@ -695,7 +762,6 @@ function makeRig(truth){
     }else if(R.mode==="free"){
       out.selected_hole = R.sel_hole;
     }else if(R.mode==="pendulum"){
-      out.angle_deg = Math.round(R.theta*180/Math.PI*2.0)/2.0;
       out.swinging = R.released;
       out.hole = R.hole_index;
     }
@@ -714,7 +780,7 @@ function makeRig(truth){
       if(r.sliding) s += d.sSlip;
       return s;
     }
-    return fmt(d.sPend, r.hole+1, r.angle_deg.toFixed(1));
+    return fmt(d.sPend, r.hole+1);
   };
 
   /* ---------------- time stepping ---------------------------------------- */
@@ -771,13 +837,32 @@ function makeRig(truth){
       R._slide_v = 0.0;
     }
   }
+  /* The losses of the swinging tube, as for the wire pendulum of APhO 2023: real air drag and the pivot, nothing else.
+     Air: every slice ds of the tube at a distance s from the pin (s<0 above it) moves across its axis at v = ω s and
+     feels ½ ρ C_d(Re) d v|v| ds, C_d of a long cylinder in cross flow from Re = |v| d / ν (White: 1 + 10 Re^-2/3, which
+     goes over to Stokes-like drag as the swing dies down); its torque is summed slice by slice, so the short stub
+     above the pin and the long part below each do their share.  Pin: the hole rides on a 1 mm steel pin, a dry
+     friction torque μ N r_pin with N the weight plus the centripetal pull, smoothed through zero so the swing settles
+     instead of chattering. */
+  const AIR_N = 24;
+  function dragTorque(om){
+    const top = -truth.holes[R.hole_index], ds = truth.L / AIR_N, d = truth.d_out;
+    let tq = 0.0;
+    for(let i=0;i<AIR_N;i++){
+      const sx = top + (i+0.5)*ds, v = om*sx, av = Math.abs(v);
+      if(av < 1e-9) continue;
+      const Re = av*d/truth.nu_air, Cd = 1.0 + 10.0*Math.pow(Re, -2/3);
+      tq -= 0.5*truth.rho_air*Cd*d*v*av*ds*sx;
+    }
+    return tq;
+  }
   function stepPendulum(dt){
     if(!R.released) return;
-    const Rr = truth.x_cm - truth.holes[R.hole_index];
-    const Ip = truth.I_cm + (truth.M+truth.m)*Rr*Rr;
-    const Wg = (truth.M+truth.m)*truth.g*Rr;
-    const b  = 2.0*Ip/78.0;                    /* light air/pivot damping */
-    const acc = (th,om)=>(-Wg*Math.sin(th) - b*om)/Ip;
+    const Rr = truth.x_cm - truth.holes[R.hole_index], Mt = truth.M+truth.m;
+    const Ip = truth.I_cm + Mt*Rr*Rr;
+    const Wg = Mt*truth.g*Rr;
+    const fric = (th,om)=>{ const N = Mt*(truth.g*Math.cos(th) + om*om*Rr); return -truth.mu_pin*Math.abs(N)*truth.r_pin*Math.tanh(om/0.02); };
+    const acc = (th,om)=>(-Wg*Math.sin(th) + dragTorque(om) + fric(th,om))/Ip;
     /* RK4 */
     const k1v = acc(R.theta, R.omega),                     k1x = R.omega;
     const k2v = acc(R.theta+0.5*dt*k1x, R.omega+0.5*dt*k1v), k2x = R.omega+0.5*dt*k1v;
@@ -793,778 +878,1192 @@ function makeRig(truth){
   return R;
 }
 
+/* ==== PHYSICS END ==== */
+
 /* ══════════════════════════════════════════════════════════════
-   4.  ARTWORK
-        everything reconstructed from the apparatus photograph on
-        page 2 of the official problem sheet
+   LAB3D — a small orthographic 3-D bench renderer for canvas
+   (the APhO 2026 bench style: a wooden desk seen from above at an
+   angle; drag to turn it round, wheel to zoom, shift-drag to pan)
+
+   World units are centimetres: x and z lie on the desk, y is up.
+   Every frame the scene is described again as a list of faces, lines,
+   texts and custom items; they are sorted far-to-near and painted.
    ══════════════════════════════════════════════════════════════ */
-const COL_TABLE="#93ab8b", COL_TABLE_DK="#7e9678";
-const COL_AL=["#63696d","#8f9599","#bcc2c6","#e3e7e9","#aeb4b8","#767c80"];
-const COL_AL_EDGE="#4d5255", COL_HOLE="#22262a", COL_PLATE="#d7e4e8";
-const COL_PIN="#3a3f43", COL_THREAD="#f4f2ec", COL_RULER="#c9302c", COL_MARK="#43403c";
-
-const cv  = $("bench"),  ctx  = cv.getContext("2d");
-const swc = $("sw"),     swx  = swc.getContext("2d");
-let G = ctx;                       /* the context the helpers draw on */
-
-function fontStr(size, family, weight){
-  const fam = (family==="Courier") ? '"Courier New",Consolas,monospace'
-                                   : '-apple-system,"Segoe UI",Roboto,"Malgun Gothic",sans-serif';
-  return (weight?weight+" ":"") + Math.max(1,size).toFixed(1) + "px " + fam;
+const CAM={yaw:-0.62, pitch:0.62, k:6, tx:40, ty:8, tz:0, px:0, py:0, W:1000, H:600, dpr:1};
+const CAM0={};
+function camSave(){ Object.assign(CAM0,{yaw:CAM.yaw,pitch:CAM.pitch,k:CAM.k,tx:CAM.tx,ty:CAM.ty,tz:CAM.tz,px:CAM.px,py:CAM.py}); }
+function camReset(){ Object.assign(CAM,CAM0); }
+/* world → [screen x, screen y, depth]; larger depth is nearer the eye */
+function P3(x,y,z){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const dx=x-CAM.tx, dy=y-CAM.ty, dz=z-CAM.tz;
+  const xr=dx*c-dz*s, zr=dx*s+dz*c;
+  const up=dy*cp-zr*sp, dep=dy*sp+zr*cp;
+  const sx=CAM.W/2+CAM.px+xr*CAM.k, sy=CAM.H/2+CAM.py-up*CAM.k;
+  if(_REC) _REC.set(sx+","+sy,dep);
+  return [sx, sy, dep];
 }
-/* largest size whose rendering of `text` really fits in the box */
-const _fitCache = {};
-function fitFont(text, maxW, maxH, family, weight, floor){
-  floor = floor||4;
-  const key = [family||"", weight||"", text.length, Math.floor(maxW), Math.floor(maxH)].join("|");
-  if(_fitCache[key]!==undefined) return _fitCache[key];
-  let size = Math.max(floor, Math.min(Math.floor(maxH), 64));
-  while(size > floor){
-    G.font = fontStr(size, family, weight);
-    if(G.measureText(text).width <= maxW && size*1.20 <= maxH) break;
-    size--;
+/* screen point → world point on the horizontal plane y = h */
+function onPlane(px,py,h){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  const zr=((h-CAM.ty)*cp-up)/sp;
+  return [CAM.tx+xr*c+zr*s, h, CAM.tz-xr*s+zr*c];
+}
+/* screen point → world point on the vertical plane x = x0 (for things mounted on a rail) */
+function onPlaneX(px,py,x0){
+  const c=Math.cos(CAM.yaw), s=Math.sin(CAM.yaw), cp=Math.cos(CAM.pitch), sp=Math.sin(CAM.pitch);
+  const xr=(px-CAM.W/2-CAM.px)/CAM.k, up=-(py-CAM.H/2-CAM.py)/CAM.k;
+  /* unknowns dz, dy with dx fixed: xr = dx c - dz s ; up = dy cp - (dx s + dz c) sp */
+  const dx=x0-CAM.tx; if(Math.abs(s)<1e-4) return null;
+  const dz=(dx*c-xr)/s, dy=(up+(dx*s+dz*c)*sp)/cp;
+  return [x0, CAM.ty+dy, CAM.tz+dz];
+}
+function hex2rgb(h){ h=h.replace("#",""); if(h.length===3) h=h.split("").map(c=>c+c).join("");
+  return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+const _shadeCache=new Map();
+function shade(col,f){
+  const key=col+"|"+f.toFixed(2); let v=_shadeCache.get(key); if(v) return v;
+  let a=1, rgb;
+  if(col.startsWith("rgba")){ const m=col.match(/[\d.]+/g).map(Number); rgb=m.slice(0,3); a=m[3]; } else rgb=hex2rgb(col);
+  const r=rgb.map(c=>Math.max(0,Math.min(255,Math.round(c*f))));
+  v=a<1?`rgba(${r[0]},${r[1]},${r[2]},${a})`:`rgb(${r[0]},${r[1]},${r[2]})`;
+  _shadeCache.set(key,v); return v;
+}
+const LIGHT=(()=>{ const v=[-0.45,0.85,0.35], n=Math.hypot(...v); return v.map(a=>a/n); })();
+let ITEMS=[], HITS=[], _REC=null;
+/* the room light: 1 with the hall lit, low in the blackout; o.glow parts (laser light) ignore it */
+let LUX=1;
+function begin3(){ ITEMS=[]; }
+function _cross(a,b){ return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]; }
+function _sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
+/* a flat polygon; o = {fill, stroke, lw, id, layer, cull, flat, bias, alpha} */
+function face(pts,o){
+  o=o||{};
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0])), nl=Math.hypot(...n)||1;
+  const nn=n.map(a=>a/nl);
+  const lum=o.glow?1:o.flat?LUX:LUX*(0.62+0.48*Math.max(0,nn[0]*LIGHT[0]+nn[1]*LIGHT[1]+nn[2]*LIGHT[2]));
+  ITEMS.push({t:"f",p:pts,o,lum,n:nn});
+}
+function quad(a,b,c,d,o){ face([a,b,c,d],o); }
+/* axis-aligned box, outward faces culled when they point away */
+function box3(x0,x1,y0,y1,z0,z1,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const t=o.top?Object.assign({},f,{fill:o.top}):f;
+  if(!o.noTop) face([[x0,y1,z0],[x0,y1,z1],[x1,y1,z1],[x1,y1,z0]],t);          /* top    +y */
+  if(!o.noBot) face([[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]],f);          /* bottom -y */
+  face([[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]],f);          /* +z */
+  face([[x0,y0,z0],[x0,y1,z0],[x1,y1,z0],[x1,y0,z0]],f);          /* -z */
+  face([[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]],f);          /* +x */
+  face([[x0,y0,z0],[x0,y0,z1],[x0,y1,z1],[x0,y1,z0]],f);          /* -x */
+}
+/* make a polygon face the direction `want` (a world vector) */
+function orient(pts,want){
+  const n=_cross(_sub(pts[1],pts[0]),_sub(pts[2],pts[0]));
+  return (n[0]*want[0]+n[1]*want[1]+n[2]*want[2])<0?pts.slice().reverse():pts;
+}
+/* cylinder (or cone, with o.r1) along an axis ("x","y","z") from a0 to a1, centre (u,v) across it */
+function cyl3(axis,a0,a1,u,v,r,col,o){
+  o=Object.assign({cull:true,seg:18},o||{}); const N=o.seg, f=Object.assign({},o,{fill:col});
+  const r1=o.r1===undefined?r:o.r1;
+  const W=(a,cu,cv)=>axis==="x"?[a,cu,cv]:axis==="y"?[cu,a,cv]:[cu,cv,a];
+  const pt=(a,rr,ang)=>W(a,u+rr*Math.cos(ang),v+rr*Math.sin(ang));
+  const ax=W(1,0,0).map((c,i)=>c-W(0,0,0)[i]), sg=a1>=a0?1:-1;
+  for(let i=0;i<N;i++){
+    const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    const q=[pt(a0,r,t0),pt(a0,r,t1),pt(a1,r1,t1),pt(a1,r1,t0)];
+    const rad=_sub(pt(a0,1,tm),pt(a0,0,tm));
+    face(orient(q,rad),Object.assign({},f,{smooth:true}));
   }
-  _fitCache[key] = size;
-  return size;
+  if(o.caps!==false){
+    const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(pt(a0,r,t)); c1.push(pt(a1,r1,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{},{stroke:o.capStroke});
+    if(r>0.001&&o.cap0!==false) face(orient(c0,ax.map(c=>-c*sg)),cf);
+    if(r1>0.001&&o.cap1!==false) face(orient(c1,ax.map(c=>c*sg)),cf);
+  }
 }
-function line(x0,y0,x1,y1,col,w,cap,dash){
-  G.beginPath(); G.moveTo(x0,y0); G.lineTo(x1,y1);
-  G.strokeStyle=col; G.lineWidth=Math.max(0.4,w||1);
-  G.lineCap=cap||"butt"; G.setLineDash(dash||[]);
-  G.stroke(); G.setLineDash([]);
+/* a prism: polygon pts2 [[u,v]..] in the plane across `axis`, extruded from a0 to a1 */
+function prism3(axis,a0,a1,pts2,col,o){
+  o=Object.assign({cull:true},o||{}); const f=Object.assign({},o,{fill:col});
+  const P=(a,[u,v])=>axis==="x"?[a,u,v]:axis==="y"?[u,a,v]:[u,v,a];
+  const n=pts2.length, A=pts2.map(p=>P(a0,p)), B=pts2.map(p=>P(a1,p));
+  const ax=_sub(P(1,[0,0]),P(0,[0,0])), sg=a1>=a0?1:-1;
+  let cu=0,cvv=0; for(const [x,y] of pts2){ cu+=x; cvv+=y; } cu/=n; cvv/=n;
+  face(orient(A,ax.map(c=>-c*sg)),f); face(orient(B,ax.map(c=>c*sg)),f);
+  for(let i=0;i<n;i++){ const j=(i+1)%n; const q=[A[i],A[j],B[j],B[i]];
+    const mid=[(pts2[i][0]+pts2[j][0])/2-cu,(pts2[i][1]+pts2[j][1])/2-cvv];
+    face(orient(q,_sub(P(0,mid),P(0,[0,0]))),f); }
 }
-function poly(pts, fill, outline, w){
-  G.beginPath(); G.moveTo(pts[0][0],pts[0][1]);
-  for(let i=1;i<pts.length;i++) G.lineTo(pts[i][0],pts[i][1]);
-  G.closePath();
-  if(fill){ G.fillStyle=fill; G.fill(); }
-  if(outline){ G.strokeStyle=outline; G.lineWidth=Math.max(0.4,w||1); G.stroke(); }
-}
-function rect(x0,y0,x1,y1,fill,outline,w){
-  if(fill){ G.fillStyle=fill; G.fillRect(x0,y0,x1-x0,y1-y0); }
-  if(outline){ G.strokeStyle=outline; G.lineWidth=Math.max(0.4,w||1); G.strokeRect(x0,y0,x1-x0,y1-y0); }
-}
-function oval(x0,y0,x1,y1,fill,outline,w){
-  const cx=(x0+x1)/2, cy=(y0+y1)/2, rx=Math.abs(x1-x0)/2, ry=Math.abs(y1-y0)/2;
-  G.beginPath(); G.ellipse(cx,cy,Math.max(rx,.01),Math.max(ry,.01),0,0,2*Math.PI);
-  if(fill){ G.fillStyle=fill; G.fill(); }
-  if(outline){ G.strokeStyle=outline; G.lineWidth=Math.max(0.4,w||1); G.stroke(); }
-}
-function arcOutline(x0,y0,x1,y1,startDeg,extentDeg,col,w){
-  const cx=(x0+x1)/2, cy=(y0+y1)/2, rx=Math.abs(x1-x0)/2, ry=Math.abs(y1-y0)/2;
-  /* tk measures counter-clockwise from the +x axis; canvas y points down */
-  const a0=-startDeg*Math.PI/180, a1=-(startDeg+extentDeg)*Math.PI/180;
-  G.beginPath(); G.ellipse(cx,cy,rx,ry,0,a0,a1,true);
-  G.strokeStyle=col; G.lineWidth=Math.max(0.5,w); G.stroke();
-}
-function txt(x,y,s,col,size,family,weight,angle){
-  G.save(); G.translate(x,y); if(angle) G.rotate(angle);
-  G.font = fontStr(size, family, weight);
-  G.fillStyle = col; G.textAlign="center"; G.textBaseline="middle";
-  G.fillText(s,0,0); G.restore();
-}
-/* screen point at axial offset s and transverse offset t (pixels) */
-const _pt=(ox,oy,ux,uy,s,t)=>[ox+ux*s-uy*t, oy+uy*s+ux*t];
+/* tall parts cut into short slices, so each slice is sorted at its own height
+   (one long face sorted by its centre is what makes posts jump in front of things) */
+function boxY(x0,x1,y0,y1,z0,z1,col,o,step){ const n=Math.max(1,Math.ceil((y1-y0)/(step||1)));
+  for(let i=0;i<n;i++) box3(x0,x1,y0+(y1-y0)*i/n,y0+(y1-y0)*(i+1)/n,z0,z1,col,Object.assign({},o,{noTop:i<n-1,noBot:i>0})); }
+function cylSeg(axis,a0,a1,u,v,r,col,o,step){ const n=Math.max(1,Math.ceil(Math.abs(a1-a0)/(step||1)));
+  for(let i=0;i<n;i++) cyl3(axis,a0+(a1-a0)*i/n,a0+(a1-a0)*(i+1)/n,u,v,r,col,Object.assign({},o,{cap0:i===0&&(o||{}).cap0!==false,cap1:i===n-1&&(o||{}).cap1!==false})); }
+function line3(a,b,col,lw,o){ ITEMS.push({t:"l",p:[a,b],o:Object.assign({col,lw:lw||1},o||{})}); }
+function poly3(pts,col,lw,o){ ITEMS.push({t:"pl",p:pts,o:Object.assign({col,lw:lw||1},o||{})}); }
+/* text lying in the plane spanned by U (right) and V (up), size in cm */
+function text3(O,U,V,str,size,col,o){ ITEMS.push({t:"x",p:[O],O,U,V,str,size,o:Object.assign({col},o||{})}); }
+/* anything else: draw(ctx) is called in its depth order; ref is a world point */
+function custom3(ref,draw,o){ ITEMS.push({t:"c",p:[ref],draw,o:o||{}}); }
 
-/*  Draw the hollow aluminium cylinder.  (ox, oy) is the screen position of
-    the centre of the TOP end face, (ux, uy) the unit vector along the axis
-    pointing from the top end towards the bottom end.
-    The ball inside is NEVER drawn — it is a blackbox.                     */
-function drawCylinder(ox,oy,ux,uy,ppm,truth,marks,showHoles){
-  const Lp = truth.L*ppm, rp = truth.d_out*0.5*ppm, n = COL_AL.length;
-  for(let i=0;i<n;i++){
-    const t0=-rp+2.0*rp*i/n, t1=-rp+2.0*rp*(i+1)/n;
-    poly([_pt(ox,oy,ux,uy,0,t0), _pt(ox,oy,ux,uy,Lp,t0),
-          _pt(ox,oy,ux,uy,Lp,t1), _pt(ox,oy,ux,uy,0,t1)], COL_AL[i]);
-  }
-  poly([_pt(ox,oy,ux,uy,0,-rp), _pt(ox,oy,ux,uy,Lp,-rp),
-        _pt(ox,oy,ux,uy,Lp,rp), _pt(ox,oy,ux,uy,0,rp)],
-       null, COL_AL_EDGE, Math.max(1, ppm*0.0006));
-  /* end faces (the tube is open, with a dark bore visible) */
-  for(const s of [0.0, Lp]){
-    const bore = rp*0.72;
-    const a=_pt(ox,oy,ux,uy,s,-bore), b=_pt(ox,oy,ux,uy,s,bore);
-    line(a[0],a[1],b[0],b[1],"#4a4f52",Math.max(2, ppm*0.0022));
-  }
-  if(showHoles!==false){
-    const hr = 0.0019*ppm;
-    for(const h of truth.holes){
-      const s = h*ppm, pl=[];
-      for(let k=0;k<8;k++){
-        const a = 2*Math.PI*k/8;
-        pl.push(_pt(ox,oy,ux,uy, s+hr*Math.cos(a), hr*0.85*Math.sin(a)));
-      }
-      poly(pl, COL_HOLE, "#585d60", 1);
+function render3_2d(ctx){
+  const vis=[];
+  for(const it of ITEMS){
+    const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+    let dep=0; for(const v of q) dep+=v[2]; dep/=q.length;
+    if(it.t==="f"&&it.o.cull){
+      let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; }
+      if(a>=0) continue;                                  /* facing away */
     }
+    vis.push({it,q,dep:dep+(it.o.bias||0),layer:it.o.layer||0});
   }
-  for(const mk of marks||[]){
-    const s = mk*ppm;
-    const p0=_pt(ox,oy,ux,uy,s,-rp), p1=_pt(ox,oy,ux,uy,s,rp);
-    line(p0[0],p0[1],p1[0],p1[1],COL_MARK,Math.max(1, ppm*0.0009));
-  }
-}
-/*  Perspex base plate clamped to the table edge.  The thin pin passes
-    through the middle of the block, so (x, y) — the pivot — is at the
-    centre of the fixture.                                                */
-function drawBasePlate(x,y,ppm){
-  const w=0.150*ppm, h=0.062*ppm, d=0.022*ppm;
-  const top=y-h/2, bot=y+h/2;
-  poly([[x-w/2,top],[x+w/2,top],[x+w/2+d,top-d],[x-w/2+d,top-d]],"#c3d3d8","#8fa2a8",1);
-  rect(x-w/2,top,x+w/2,bot,COL_PLATE,"#8fa2a8",1);
-  line(x-w/2,bot,x+w/2,bot,"#93a6ac",1);
-  drawPinHead(x,y,ppm);
-}
-/* the thin pin seen end-on, sticking out of the plate towards us */
-function drawPinHead(x,y,ppm){
-  const pr = Math.max(3.0, 0.0042*ppm);
-  oval(x-pr*1.5,y-pr*1.5,x+pr*1.5,y+pr*1.5,"#9aa0a4","#6b7175",1);
-  oval(x-pr,y-pr,x+pr,y+pr,COL_PIN,"#22262a",1);
-}
-/* thread loop: two strands from the pin down to a loop round the tube */
-function drawThread(px,py,cx,cy,rp,ux,uy,ppm){
-  const w = Math.max(1, ppm*0.0008);
-  const span = Math.max(2.0, 0.0035*ppm);
-  const lx=ux*span, ly=uy*span;
-  line(px,py,cx-lx,cy-ly,COL_THREAD,w);
-  line(px,py,cx+lx,cy+ly,COL_THREAD,w);
-  const pl=[];
-  for(let k=0;k<24;k++){
-    const a=2*Math.PI*k/24;
-    pl.push(_pt(cx,cy,ux,uy, span*Math.cos(a), rp*Math.sin(a)));
-  }
-  poly(pl, null, COL_THREAD, w);
-}
-/*  The 35 cm plastic ruler of the photograph.  (x, y) is the 0 graduation
-    and the scale runs along `angle`.  As on a real ruler the scale is
-    inset from the ends of the body, the three tick lengths stay clearly
-    different, and the numerals are printed in the clear band underneath. */
-function drawRuler(x,y,ppm,length,angle){
-  length = (length===undefined) ? RULER_LEN : length;
-  angle  = angle || 0.0;
-  const ux=Math.cos(angle), uy=Math.sin(angle);
-  const Lp=length*ppm, hp=RULER_H*ppm;
-  const bw = Math.max(1.0, hp*0.05);            /* moulded rim */
-  const inset = Math.max(bw*2.0, hp*0.22);      /* the scale does not reach the ends */
-
-  poly([_pt(x,y,ux,uy,-inset,-hp/2), _pt(x,y,ux,uy,Lp+inset,-hp/2),
-        _pt(x,y,ux,uy,Lp+inset,hp/2), _pt(x,y,ux,uy,-inset,hp/2)],
-       "#f5efe2", COL_RULER, bw);
-
-  const t0 = -hp/2 + bw;                        /* graduations start inside the rim */
-  const mm_px = 0.001*ppm;
-  const step = (mm_px>=3.0) ? 1 : (mm_px>=1.2 ? 5 : 10);
-  for(let i=0; i<=Math.round(length*1000); i+=step){
-    let ln,col,wd;
-    if(i%10===0){ ln=hp*0.46; col="#33383a"; wd=Math.max(1.0,hp*0.030); }
-    else if(i%5===0){ ln=hp*0.30; col="#3b4143"; wd=Math.max(1.0,hp*0.024); }
-    else{ ln=hp*0.16; col="#6a7073"; wd=1.0; }
-    const a=_pt(x,y,ux,uy,i*mm_px,t0), b=_pt(x,y,ux,uy,i*mm_px,t0+ln);
-    line(a[0],a[1],b[0],b[1],col,wd);
-  }
-  /* numerals in the clear band below the graduations */
-  const cm_px = 0.01*ppm;
-  const n_cm = Math.round(length*100);
-  const band_top = t0 + hp*0.46;
-  const band_bot = hp/2 - bw;
-  const band_c = 0.5*(band_top+band_bot);
-  const band_h = Math.min(hp*0.36, band_bot-band_top);
-  const label = String(n_cm);
-  let fs=0, every=1;
-  for(const ev of [1,2,5,10]){
-    every = ev;
-    fs = fitFont(label, cm_px*ev*0.80, band_h);
-    if(fs>=6) break;
-  }
-  if(fs<6) return;
-  for(let i=0;i<=n_cm;i+=every){
-    const c=_pt(x,y,ux,uy,i*cm_px,band_c);
-    txt(c[0],c[1],String(i),"#33383a",fs,null,null,angle);
+  vis.sort((a,b)=>a.layer-b.layer||a.dep-b.dep);
+  HITS=[];
+  for(const v of vis){
+    const it=v.it, o=it.o, q=v.q;
+    if(it.t==="f"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]); ctx.closePath();
+      if(o.fill){ if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.fillStyle=o.flat?o.fill:shade(o.fill,it.lum); ctx.fill(); ctx.globalAlpha=1; }
+      if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=o.lw||0.8; ctx.lineJoin="round"; ctx.stroke(); }
+      else if(o.fill&&o.alpha===undefined){ ctx.strokeStyle=ctx.fillStyle; ctx.lineWidth=0.6; ctx.stroke(); }
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="l"||it.t==="pl"){
+      ctx.beginPath(); ctx.moveTo(q[0][0],q[0][1]); for(let i=1;i<q.length;i++) ctx.lineTo(q[i][0],q[i][1]);
+      ctx.strokeStyle=o.col; ctx.lineWidth=o.lw; ctx.lineCap=o.cap||"round"; ctx.lineJoin="round";
+      if(o.alpha!==undefined) ctx.globalAlpha=o.alpha; ctx.stroke(); ctx.globalAlpha=1;
+    }else if(it.t==="x"){
+      const O=q[0], pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue;                 /* seen from behind */
+      if(Math.hypot(...a)*it.size<2.2) continue;           /* too small to read */
+      ctx.save(); ctx.transform(a[0],a[1],-b[0],-b[1],O[0],O[1]);
+      ctx.font=(o.weight||"600")+" "+it.size+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+      ctx.textAlign=o.align||"left"; ctx.textBaseline=o.base||"middle"; ctx.fillStyle=o.col; ctx.fillText(it.str,0,0); ctx.restore();
+    }else if(it.t==="c"){ ctx.save(); it.draw(ctx); ctx.restore(); }
   }
 }
-/*  The hand-held stopwatch of the problem-sheet photograph: a teal oval
-    body with a crown button on top, two side buttons, a lanyard eye and a
-    pale rectangular LCD window carrying the reading.                      */
-function drawStopwatch(x,y,r,text){
-  /* lanyard eye and crown button */
-  rect(x-r*0.14,y-r*1.34,x+r*0.14,y-r*0.92,"#8d9498","#5f666a",1);
-  oval(x-r*0.24,y-r*1.56,x+r*0.24,y-r*1.18,null,"#5f666a",Math.max(2,r*0.07));
-  /* side buttons */
-  for(const sx of [-1,1])
-    rect(x+sx*r*0.92, y-r*0.66, x+sx*r*1.14, y-r*0.40, "#8d9498","#5f666a",1);
-  /* body */
-  oval(x-r,y-r,x+r,y+r,"#1d7a8b","#14606e",Math.max(1,r*0.05));
-  oval(x-r*0.90,y-r*0.90,x+r*0.90,y+r*0.90,"#2fa5b8","#1d7a8b",1);
-  arcOutline(x-r*0.86,y-r*0.86,x+r*0.86,y+r*0.86,35,110,"#63c4d2",Math.max(1,r*0.06));
-  /* LCD window */
-  const lw=r*0.88, lh=r*0.32;
-  rect(x-lw, y-lh-r*0.02, x+lw, y+lh-r*0.02, "#cdd8c6","#5d675a",Math.max(1,r*0.035));
-  const fs = fitFont(text, 2.0*lw*0.86, 2.0*lh*0.82, "Courier","bold",5);
-  txt(x, y-r*0.02, text, "#1b2220", fs, "Courier","bold");
-  const fa = fitFont("ALBA", r*0.80, r*0.24);
-  txt(x, y-r*0.52, "ALBA", "#e8f3f5", fa);
-  const fb = fitFont("1/100 sec", r*1.00, r*0.20);
-  txt(x, y+r*0.56, "1/100 sec", "#cfeaef", fb);
+function pointIn(q,x,y){ let c=false; for(let i=0,j=q.length-1;i<q.length;j=i++){
+  const xi=q[i][0], yi=q[i][1], xj=q[j][0], yj=q[j][1];
+  if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi)) c=!c; } return c; }
+/* the id of the nearest object under a screen point */
+function pick3_2d(x,y){ for(let i=HITS.length-1;i>=0;i--) if(pointIn(HITS[i][1],x,y)) return HITS[i][0]; return null; }
+/* a sphere: a shaded disc in its depth order */
+function sphere3_2d(c,r,col,o){ o=o||{};
+  custom3(c,ctx=>{ const p=P3(...c), R=r*CAM.k;
+    const g=ctx.createRadialGradient(p[0]-R*0.35,p[1]-R*0.4,R*0.08,p[0],p[1],R);
+    g.addColorStop(0,o.hi||"#ffffff"); g.addColorStop(0.35,col); g.addColorStop(1,o.lo||"#5d646b");
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p[0],p[1],R,0,7); ctx.fill();
+    if(o.stroke){ ctx.strokeStyle=o.stroke; ctx.lineWidth=0.8; ctx.stroke(); }
+    if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283)])]);
+  },{bias:o.bias||0,layer:o.layer||0});
 }
-/*  A fingertip seen from the side, propping the tube up from underneath.
-    (tx, ty) is the contact point on the lower surface of the cylinder.   */
-function drawFinger(tx,ty,ppm){
-  const ux=0.62, uy=0.79;                    /* finger axis, down and to the right */
-  const ln=0.062*ppm, wd=Math.max(4.0, 0.015*ppm);
-  const ex=tx+ux*ln, ey=ty+uy*ln;
-  line(tx,ty,ex,ey,"#e3bd9c",wd,"round");
-  line(tx+ux*ln*0.10, ty+uy*ln*0.10, ex,ey, "#f0d0b2", wd*0.52, "round");
-  const kx=tx+ux*ln*0.55, ky=ty+uy*ln*0.55;  /* knuckle crease */
-  line(kx-uy*wd*0.42, ky+ux*wd*0.42, kx+uy*wd*0.42, ky-ux*wd*0.42,
-       "#c99f7e", Math.max(1, wd*0.10));
-  const nx=tx+ux*ln*0.17, ny=ty+uy*ln*0.17;  /* nail */
-  const pl=[];
-  for(let k=0;k<12;k++){
-    const a=2*Math.PI*k/12;
-    const ca=wd*0.34*Math.cos(a), sa=wd*0.22*Math.sin(a);
-    pl.push([nx+ux*ca-uy*sa, ny+uy*ca+ux*sa]);
-  }
-  poly(pl,"#f7e6d6","#d3b295",1);
+/* a cylinder between two arbitrary points */
+function cylAB(a,b,r,col,o){
+  o=Object.assign({cull:true,seg:14},o||{}); const f=Object.assign({},o,{fill:col});
+  const ax=_sub(b,a), L=Math.hypot(...ax), n=ax.map(v=>v/L);
+  const t=Math.abs(n[1])<0.9?[0,1,0]:[1,0,0];
+  let u=_cross(n,t); const ul=Math.hypot(...u); u=u.map(v=>v/ul); const v=_cross(n,u);
+  const r1=o.r1===undefined?r:o.r1, P=(base,ang,rr)=>{ rr=rr===undefined?(base===b?r1:r):rr; return [base[0]+rr*(u[0]*Math.cos(ang)+v[0]*Math.sin(ang)),base[1]+rr*(u[1]*Math.cos(ang)+v[1]*Math.sin(ang)),base[2]+rr*(u[2]*Math.cos(ang)+v[2]*Math.sin(ang))]; };
+  const N=o.seg;
+  for(let i=0;i<N;i++){ const t0=i/N*2*Math.PI, t1=(i+1)/N*2*Math.PI, tm=(t0+t1)/2;
+    face(orient([P(a,t0),P(a,t1),P(b,t1),P(b,t0)],[u[0]*Math.cos(tm)+v[0]*Math.sin(tm),u[1]*Math.cos(tm)+v[1]*Math.sin(tm),u[2]*Math.cos(tm)+v[2]*Math.sin(tm)]),f); }
+  if(o.caps!==false){ const c0=[],c1=[]; for(let i=0;i<N;i++){ const t=i/N*2*Math.PI; c0.push(P(a,t)); c1.push(P(b,t)); }
+    const cf=Object.assign({},f,o.cap?{fill:o.cap}:{}); face(orient(c0,n.map(x=>-x)),cf); face(orient(c1,n),cf); }
 }
-/* a rubber block with its paper sleeve, seen from above */
-function drawEraser(cx,cy,ppm){
-  const w=ERASER_W*ppm*0.5, h=ERASER_H*ppm*0.5;
-  rect(cx-w,cy-h,cx+w,cy+h,"#f2dfe0","#b99aa0",1);
-  rect(cx-w*0.34,cy-h,cx+w*0.34,cy+h,"#4d6fb0","#33518a",1);
-  line(cx-w,cy-h*0.45,cx+w,cy-h*0.45,"#ffffff",1);
-}
-/* a pencil whose point is at (tx, ty), body running down to the right */
-function drawPencil(tx,ty,ppm){
-  const ux=0.80, uy=0.60;
-  const ln=0.110*ppm, hw=Math.max(2.0, 0.0055*ppm);
-  const pt=(s,t)=>[tx+ux*s-uy*t, ty+uy*s+ux*t];
-  const wa=0.0, wb=0.020*ppm;
-  poly([pt(wa,0), pt(wb,-hw), pt(wb,hw)], "#e4d2ae","#a67f22",1);
-  poly([pt(wa,0), pt(0.008*ppm,-hw*0.42), pt(0.008*ppm,hw*0.42)], "#3c3a37");
-  poly([pt(wb,-hw), pt(ln*0.90,-hw), pt(ln*0.90,hw), pt(wb,hw)], "#e2b13c","#a67f22",1);
-  poly([pt(ln*0.90,-hw), pt(ln,-hw), pt(ln,hw), pt(ln*0.90,hw)], "#c0392b","#8e2c21",1);
+/* a 2-D canvas (or a part of it) painted onto a flat rectangle: O is the world
+   point of its top-left corner, U and V the world vectors along its width and down its height */
+function tex3_2d(src,sx,sy,sw,sh,O,U,V,o){ o=o||{};
+  const C=[O[0]+U[0]/2+V[0]/2,O[1]+U[1]/2+V[1]/2,O[2]+U[2]/2+V[2]/2];
+  custom3(C,ctx=>{ const a=P3(...O), b=P3(O[0]+U[0],O[1]+U[1],O[2]+U[2]), c=P3(O[0]+V[0],O[1]+V[1],O[2]+V[2]);
+    const ux=b[0]-a[0], uy=b[1]-a[1], vx=c[0]-a[0], vy=c[1]-a[1];
+    if(ux*vy-uy*vx<=0) return;                                /* seen from behind */
+    ctx.save(); ctx.transform(ux/sw,uy/sw,vx/sh,vy/sh,a[0],a[1]); ctx.imageSmoothingEnabled=true;
+    try{ ctx.drawImage(src,sx,sy,sw,sh,0,0,sw,sh); }catch(e){}
+    ctx.restore();
+    if(o.id) HITS.push([o.id,[a,b,[b[0]+vx,b[1]+vy],c]]);
+  },{bias:o.bias||0.3,layer:o.layer||0});
 }
 
 /* ══════════════════════════════════════════════════════════════
-   5.  THE LABORATORY VIEW
-        One physical bench, seen twice.  `part` is "A" or "B"; it
-        decides how the mouse behaves and which hardware is in use,
-        but the apparatus and the hand tools are the same objects
-        in both views.
+   WebGL back end — the same scene list drawn with a depth buffer,
+   so parts can no longer show through one another from some angles
+   (the 2-D painter above stays as the fallback without WebGL)
    ══════════════════════════════════════════════════════════════ */
-let seed  = (()=>{ const q=new URLSearchParams(location.search).get("seed");
-                   return q ? (parseInt(q,10)|0) : OFFICIAL_SEED; })();
-let truth = makeTruth(seed);
-let rig   = makeRig(truth);
-
-/* pixels per metre at 1:1 — one CSS pixel is 1/96 inch */
-const PPM_TRUE = Math.max(1200.0, Math.min(6000.0, 96.0/0.0254));
-
-const V = {                              /* the view state of each tab */
-  A:{ ppm:PPM_TRUE, pan:[0,0], anchor:0.28, fitted:false },
-  B:{ ppm:PPM_TRUE, pan:[0,0], anchor:0.36, fitted:false }
-};
-let part = "A";
-let CVW = 900, CVH = 660, DPR = 1;
-let dragMode = null, pendingHole = null, pressXY = [0,0], grab = [0,0], last = [0,0];
-let hoverXY = [0,0];
-let statusMsg = "";
-const view = ()=>V[part];
-
-function viewBox(){
-  const top = (part==="A") ? 0.075 : Math.max(truth.holes[truth.holes.length-1]+0.012, 0.075);
-  const need_h = top + truth.bench_y + 0.085;
-  const need_w = truth.L * ((part==="A") ? 1.20 : 1.05);
-  return [need_w, need_h, top/need_h];
+function sphere3(c,r,col,o){ if(!gl3Init()) return sphere3_2d(c,r,col,o); ITEMS.push({t:"sp",p:[c],c,r,col,o:o||{}}); }
+function tex3(src,sx,sy,sw,sh,O,U,V,o){ if(!gl3Init()) return tex3_2d(src,sx,sy,sw,sh,O,U,V,o);
+  o=o||{}; ITEMS.push({t:"tx",p:[O],src,sx,sy,sw,sh,O,U,V,o}); }
+const GL3={ok:null};
+function gl3Init(){
+  if(GL3.ok!==null) return GL3.ok;
+  try{
+    const c=document.createElement("canvas");
+    const opt={antialias:true,alpha:true,premultipliedAlpha:true,preserveDrawingBuffer:true,depth:true}, gl=c.getContext("webgl2",opt)||c.getContext("webgl",opt);
+    if(!gl){ GL3.ok=false; return false; }
+    c.addEventListener("webglcontextlost",e=>{ e.preventDefault(); GL3.ok=false; });
+    const sh=(t,src)=>{ const o=gl.createShader(t); gl.shaderSource(o,src); gl.compileShader(o); if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; };
+    const prog=(vs,fs)=>{ const p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs)); gl.linkProgram(p);
+      if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; };
+    const pc=prog("attribute vec3 p;attribute vec4 c;varying vec4 v;void main(){gl_Position=vec4(p,1.0);v=c;}",
+                  "precision mediump float;varying vec4 v;void main(){gl_FragColor=v;}");
+    const pt=prog("attribute vec3 p;attribute vec2 t;varying vec2 u;void main(){gl_Position=vec4(p,1.0);u=t;}",
+                  "precision mediump float;varying vec2 u;uniform sampler2D s;uniform float a;uniform float l;void main(){vec4 c=texture2D(s,u)*a;if(c.a<0.015)discard;gl_FragColor=vec4(c.rgb*l,c.a);}");
+    Object.assign(GL3,{ok:true,c,gl,pc,pt,pcP:gl.getAttribLocation(pc,"p"),pcC:gl.getAttribLocation(pc,"c"),
+      ptP:gl.getAttribLocation(pt,"p"),ptT:gl.getAttribLocation(pt,"t"),ptS:gl.getUniformLocation(pt,"s"),ptA:gl.getUniformLocation(pt,"a"),ptL:gl.getUniformLocation(pt,"l"),
+      buf:gl.createBuffer(),txt:new Map(),src:new Map(),frame:0,gl2:typeof WebGL2RenderingContext!=="undefined"&&gl instanceof WebGL2RenderingContext,aniso:gl.getExtension("EXT_texture_filter_anisotropic")});
+  }catch(e){ GL3.ok=false; }
+  return GL3.ok;
 }
-function scaleFit(){
-  const w = Math.max(CVW, 640), h = Math.max(CVH, 520);
-  const [nw,nh,anchor] = viewBox();
-  const v = view();
-  v.fitted = true; v.anchor = anchor;
-  v.ppm = Math.max(180.0, Math.min(14000.0, Math.min(w/nw, h/nh)*0.94));
-  v.pan = [0,0];
+/* css colour → premultiplied-ready [r,g,b,a] in 0..1 */
+const _rgbaCache=new Map(); let _parseCtx=null;
+function rgba01(col){
+  let v=_rgbaCache.get(col); if(v) return v;
+  let m;
+  if(col[0]==="#"){ const r=hex2rgb(col); v=[r[0]/255,r[1]/255,r[2]/255,1]; }
+  else if((m=col.match(/^rgba?\(([^)]+)\)/))){ const a=m[1].split(",").map(Number); v=[a[0]/255,a[1]/255,a[2]/255,a.length>3?a[3]:1]; }
+  else { if(!_parseCtx) _parseCtx=document.createElement("canvas").getContext("2d"); _parseCtx.fillStyle="#000"; _parseCtx.fillStyle=col;
+    const f=_parseCtx.fillStyle; v=f[0]==="#"?rgba01(f):rgba01(f.replace(/\s/g,"")); }
+  if(_rgbaCache.size>4000) _rgbaCache.clear(); _rgbaCache.set(col,v); return v;
 }
-function scale1to1(){
-  const v = view();
-  v.ppm = PPM_TRUE; v.anchor = viewBox()[2]; v.pan = [0,0]; v.fitted = true;
+/* the per-frame geometry: opaque triangles, then see-through pieces sorted far to near */
+function _G(){ return {op:[],tq:[],tr:[],dmin:Infinity,dmax:-Infinity}; }
+function _gd(G,d){ if(d<G.dmin) G.dmin=d; if(d>G.dmax) G.dmax=d; }
+function _gtri(G,vs,col,alpha,dep){            /* vs: [[x,y,d],...] a fan */
+  const c=rgba01(col), a=c[3]*(alpha===undefined?1:alpha); if(a<=0.003) return;
+  const out=[]; for(let i=1;i+1<vs.length;i++) for(const v of [vs[0],vs[i],vs[i+1]]){ _gd(G,v[2]); out.push(v[0],v[1],v[2],c[0]*a,c[1]*a,c[2]*a,a); }
+  if(a>0.995) for(const x of out) G.op.push(x);
+  else G.tr.push({dep:dep===undefined?vs.reduce((s,v)=>s+v[2],0)/vs.length:dep,col:out});
 }
-function w2s(x,y){
-  const v = view();
-  return [CVW*0.5 + v.pan[0] + x*v.ppm, CVH*v.anchor + v.pan[1] + y*v.ppm];
+function _gline(G,a,b,w,col,alpha,cap){
+  const dx=b[0]-a[0], dy=b[1]-a[1], L=Math.hypot(dx,dy); if(L<1e-6) return;
+  const h=Math.max(0.5,w)/2, ux=dx/L, uy=dy/L, nx=-uy*h, ny=ux*h, e=cap==="butt"?0:h;
+  const A=[a[0]-ux*e,a[1]-uy*e,a[2]], B=[b[0]+ux*e,b[1]+uy*e,b[2]];
+  _gtri(G,[[A[0]+nx,A[1]+ny,A[2]],[B[0]+nx,B[1]+ny,B[2]],[B[0]-nx,B[1]-ny,B[2]],[A[0]-nx,A[1]-ny,A[2]]],col,alpha);
 }
-function s2w(sx,sy){
-  const v = view();
-  return [(sx - (CVW*0.5+v.pan[0]))/v.ppm, (sy - (CVH*v.anchor+v.pan[1]))/v.ppm];
+/* a stand-in 2-D context: custom3 drawings are recorded as lines and fills that keep
+   the depth of every point they took from P3 */
+class Rec3{
+  constructor(G,d0,e){ this.G=G; this.d0=d0; this.e=e; this.path=[]; this.cur=null; this.strokeStyle="#000"; this.fillStyle="#000";
+    this.lineWidth=1; this.globalAlpha=1; this.lineCap="butt"; this.lineJoin="miter"; this.font="10px sans-serif"; this.textAlign="left"; this.textBaseline="alphabetic"; }
+  _d(x,y){ const v=_REC&&_REC.get(x+","+y); return (v===undefined?this.d0:v)+this.e; }
+  beginPath(){ this.path=[]; this.cur=null; }
+  moveTo(x,y){ this.cur=[[x,y,this._d(x,y)]]; this.path.push(this.cur); }
+  lineTo(x,y){ if(!this.cur) return this.moveTo(x,y); this.cur.push([x,y,this._d(x,y)]); }
+  closePath(){ if(this.cur&&this.cur.length>1) this.cur.push(this.cur[0]); }
+  rect(x,y,w,h){ this.moveTo(x,y); this.lineTo(x+w,y); this.lineTo(x+w,y+h); this.lineTo(x,y+h); this.closePath(); }
+  arc(x,y,r,a0,a1){ const n=20; for(let i=0;i<=n;i++){ const a=a0+(a1-a0)*i/n, px=x+r*Math.cos(a), py=y+r*Math.sin(a); if(i===0&&!this.cur) this.moveTo(px,py); else this.lineTo(px,py); } }
+  stroke(){ const st=typeof this.strokeStyle==="string"?this.strokeStyle:"#000";
+    for(const s of this.path) for(let i=1;i<s.length;i++) _gline(this.G,s[i-1],s[i],this.lineWidth,st,this.globalAlpha,this.lineCap); }
+  fill(){ const st=typeof this.fillStyle==="string"?this.fillStyle:"#888"; for(const s of this.path) if(s.length>=3) _gtri(this.G,s,st,this.globalAlpha); }
+  fillRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.fill(); }
+  strokeRect(x,y,w,h){ this.beginPath(); this.rect(x,y,w,h); this.stroke(); }
+  save(){} restore(){} setLineDash(){} fillText(){} strokeText(){} clip(){} drawImage(){} translate(){} scale(){} rotate(){} setTransform(){} transform(){}
+  measureText(){ return {width:0}; } createLinearGradient(){ return {addColorStop(){}}; } createRadialGradient(){ return {addColorStop(){}}; }
 }
-
-/* ── mouse ──────────────────────────────────────────────────── */
-function holeAt(wx,wy){
-  const [ox,oy,ux,uy] = rig.cyl_world();
-  let best=null, bd=1e9;
-  truth.holes.forEach((h,i)=>{
-    const d = Math.hypot(ox+ux*h-wx, oy+uy*h-wy);
-    if(d<bd){ best=i; bd=d; }
-  });
-  return bd < Math.max(0.0035, 8.0/view().ppm) ? best : null;
+function _textTex(str,o){
+  const key=str+"|"+(o.weight||"600")+"|"+(o.font||"")+"|"+o.col;
+  let t=GL3.txt.get(key); if(t) return t;
+  const F=48, c=document.createElement("canvas"), x=c.getContext("2d"), font=(o.weight||"600")+" "+F+"px "+(o.font||"-apple-system,'Segoe UI','Malgun Gothic',sans-serif");
+  x.font=font; const w=Math.ceil(x.measureText(str).width);
+  c.width=Math.max(4,w+8); c.height=Math.ceil(F*1.5);
+  x.font=font; x.textBaseline="middle"; x.fillStyle=o.col; x.fillText(str,4,c.height/2);
+  const gl=GL3.gl, tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
+  gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true); gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
+  _texParams(); t={tex,F,w,cw:c.width,ch:c.height};
+  if(GL3.txt.size>600){ for(const v of GL3.txt.values()) gl.deleteTexture(v.tex); GL3.txt.clear(); }
+  GL3.txt.set(key,t); return t;
 }
-/*  Hit testing follows what is drawn on top of what: the pencil and the
-    rubber lie on everything, then the apparatus, and the ruler last —
-    exactly the stacking order the drawing uses.                          */
-function onPress(ex,ey,button){
-  last = [ex,ey];
-  const [wx,wy] = s2w(ex,ey);
-
-  if(TOOLS.eraser && rig.on_eraser(wx,wy)){
-    dragMode = "eraser";
-    grab = [wx-rig.eraser_pos[0], wy-rig.eraser_pos[1]];
-    rig.eraser_to(wx-grab[0], wy-grab[1], true);
-    return;
-  }
-  if(TOOLS.pencil && rig.on_pencil(wx,wy)){
-    dragMode = "pencil";
-    grab = [wx-rig.pencil_pos[0], wy-rig.pencil_pos[1]];
-    rig.pencil_to(wx-grab[0], wy-grab[1], true);
-    return;
-  }
-
-  if(part==="A"){
-    if(rig.carried){
-      if(Math.hypot(wx, wy-LOOP_DROP) < 0.030) status(rig.insert_into_loop()[1]);
-      else status(L_().mClickLoop);
-      return;
-    }
-    if(rig.slipping || (rig.fallen && rig.on_cylinder(wx,wy,0.010))){
-      const m = rig.catch_()[1];
-      hoverXY = [ex,ey];
-      rig.carry_pos = [wx,wy];
-      status(m);
-      return;
-    }
-    if(rig.held && rig.on_cylinder(wx,wy,truth.d_out)){
-      status(rig.hold(false)[1]);
-      return;
-    }
+/* trilinear filtering with mipmaps (WebGL2 takes any size), anisotropic where the card has it */
+function _texParams(){ const gl=GL3.gl;
+  if(GL3.gl2){ gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR); }
+  else gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+  if(GL3.aniso&&GL3.gl2) gl.texParameterf(gl.TEXTURE_2D,GL3.aniso.TEXTURE_MAX_ANISOTROPY_EXT,8); }
+/* a canvas used as a texture: uploaded once if _static, else whenever its _ver moves on (or every frame if it has none) */
+function _srcTex(src){
+  const gl=GL3.gl; let t=GL3.src.get(src);
+  if(!t){ t={tex:gl.createTexture(),frame:-1,ver:undefined}; GL3.src.set(src,t); }
+  const stale=t.frame<0||(!src._static&&(src._ver===undefined?t.frame!==GL3.frame:t.ver!==src._ver));
+  if(stale){ t.frame=GL3.frame; t.ver=src._ver; gl.bindTexture(gl.TEXTURE_2D,t.tex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,true);
+    try{ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src); _texParams(); }catch(e){} }
+  return t;
+}
+/* a smooth shaded ball as a sprite: painted once per colour; o.metal paints polished steel (the room and the desk
+   reflected in it, a sharp window highlight) instead of a matt plastic one */
+const _SPR=new Map();
+function _sphereSprite(col,o){
+  const key=col+"|"+(o.metal?1:0)+"|"+(o.hi||"")+"|"+(o.lo||""); let c=_SPR.get(key); if(c) return c;
+  const N=256; c=document.createElement("canvas"); c.width=c.height=N; c._static=true; const g=c.getContext("2d"), R=N/2-1;
+  g.save(); g.beginPath(); g.arc(N/2,N/2,R,0,6.2832); g.clip();
+  if(o.metal){
+    /* polished steel: the light room above, a dark horizon band, the grey desk below, darker to the rim */
+    const v=g.createLinearGradient(0,0,0,N); v.addColorStop(0,"#f4f6f8"); v.addColorStop(0.30,"#b9c0c7"); v.addColorStop(0.47,"#4a5058");
+    v.addColorStop(0.53,"#2a2e33"); v.addColorStop(0.70,"#6b7178"); v.addColorStop(1,"#3a3e44"); g.fillStyle=v; g.fillRect(0,0,N,N);
+    const rim=g.createRadialGradient(N/2,N/2,R*0.35,N/2,N/2,R); rim.addColorStop(0,"rgba(0,0,0,0)"); rim.addColorStop(0.75,"rgba(10,12,14,0.18)"); rim.addColorStop(1,"rgba(10,12,14,0.75)");
+    g.fillStyle=rim; g.fillRect(0,0,N,N);
+    const h=g.createRadialGradient(N*0.36,N*0.27,0,N*0.36,N*0.27,R*0.36); h.addColorStop(0,"rgba(255,255,255,1)"); h.addColorStop(0.25,"rgba(255,255,255,0.85)"); h.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=h; g.fillRect(0,0,N,N);
+    const k=g.createRadialGradient(N*0.66,N*0.76,0,N*0.66,N*0.76,R*0.3); k.addColorStop(0,"rgba(220,226,232,0.55)"); k.addColorStop(1,"rgba(220,226,232,0)");
+    g.fillStyle=k; g.fillRect(0,0,N,N);
   }else{
-    if(Math.hypot(wx,wy) < Math.max(0.008, 10.0/view().ppm)){
-      status(rig.connect_selected_to_pin()[1]);
-      return;
+    const [r,gg,b,a]=rgba01(col), base="rgba("+[r,gg,b].map(v=>Math.round(v*255)).join(",")+",";
+    const gr=g.createRadialGradient(N*0.38,N*0.32,R*0.04,N*0.5,N*0.5,R); gr.addColorStop(0,"rgba(255,255,255,"+a+")"); gr.addColorStop(0.18,base+a+")");
+    gr.addColorStop(0.75,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.62)).join(",")+","+a+")"); gr.addColorStop(1,"rgba("+[r,gg,b].map(v=>Math.round(v*255*0.38)).join(",")+","+a+")");
+    g.fillStyle=gr; g.fillRect(0,0,N,N); }
+  g.restore(); _SPR.set(key,c); return c;
+}
+function render3(ctx){
+  if(!gl3Init()) return render3_2d(ctx);
+  const G=_G(), W=CAM.W, H=CAM.H; HITS=[]; GL3.frame++;
+  const eff=o=>0.004*(o.bias||0)+0.02*(o.layer||0);
+  for(const it of ITEMS){
+    const o=it.o, e=eff(o);
+    if(it.t==="f"){
+      const q=it.p.map(p=>P3(p[0],p[1],p[2]));
+      if(o.cull){ let a=0; for(let i=0;i<q.length;i++){ const j=(i+1)%q.length; a+=q[i][0]*q[j][1]-q[j][0]*q[i][1]; } if(a>=0) continue; }
+      const vs=q.map(v=>[v[0],v[1],v[2]+e]);
+      if(o.fill) _gtri(G,vs,o.glow||(o.flat&&LUX===1)?o.fill:shade(o.fill,it.lum),o.alpha);
+      if(o.stroke){ const sc=o.glow||LUX===1?o.stroke:shade(o.stroke,LUX); for(let i=0;i<vs.length;i++) _gline(G,vs[i],vs[(i+1)%vs.length],o.lw||0.8,sc,undefined,"round"); }
+      if(o.id) HITS.push([o.id,vs]);
+    }else if(it.t==="l"||it.t==="pl"){
+      const vs=it.p.map(p=>{ const v=P3(p[0],p[1],p[2]); return [v[0],v[1],v[2]+e]; });
+      const lc=o.glow||LUX===1?o.col:shade(o.col,LUX); for(let i=1;i<vs.length;i++) _gline(G,vs[i-1],vs[i],o.lw,lc,o.alpha,o.cap||"round");
+    }else if(it.t==="x"){
+      const O=P3(...it.O), pu=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), pv=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      const a=[pu[0]-O[0],pu[1]-O[1]], b=[pv[0]-O[0],pv[1]-O[1]];
+      if(a[0]*b[1]-a[1]*b[0]>=0) continue; if(Math.hypot(...a)*it.size<2.2) continue;
+      const T=_textTex(it.str,o), s=it.size/T.F, wcm=T.w*s, x0=-4*s+(o.align==="center"?-wcm/2:o.align==="right"?-wcm:0), x1=x0+T.cw*s;
+      let y0=-T.ch*s/2; if(o.base==="top") y0=-0.25*it.size; else if(o.base==="bottom"||o.base==="alphabetic") y0=-T.ch*s+0.25*it.size;
+      const y1=y0+T.ch*s, Wp=(x,y)=>{ const v=P3(it.O[0]+x*it.U[0]-y*it.V[0],it.O[1]+x*it.U[1]-y*it.V[1],it.O[2]+x*it.U[2]-y*it.V[2]); return [v[0],v[1],v[2]+e+0.002]; };
+      G.tr.push({dep:O[2]+e,tex:T.tex,a:1,l:o.glow?1:LUX,q:[Wp(x0,y0),Wp(x1,y0),Wp(x1,y1),Wp(x0,y1)]});
+    }else if(it.t==="tx"){
+      const a=P3(...it.O), b=P3(it.O[0]+it.U[0],it.O[1]+it.U[1],it.O[2]+it.U[2]), c=P3(it.O[0]+it.V[0],it.O[1]+it.V[1],it.O[2]+it.V[2]);
+      if((b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])<=0) continue;
+      const d=P3(it.O[0]+it.U[0]+it.V[0],it.O[1]+it.U[1]+it.V[1],it.O[2]+it.U[2]+it.V[2]), ee=e+0.004*(o.bias===undefined?0.3:0);
+      const q=[a,b,d,c].map(v=>[v[0],v[1],v[2]+ee]); for(const v of q) _gd(G,v[2]);
+      const sw=it.src.width||1, sh=it.src.height||1;
+      if(o.alpha!==undefined&&o.alpha<1) G.tr.push({dep:(a[2]+b[2]+c[2]+d[2])/4+ee,tex:_srcTex(it.src).tex,a:o.alpha,l:o.glow?1:LUX,q,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      else G.tq.push({src:it.src,q,l:o.glow?1:LUX,uv:[it.sx/sw,it.sy/sh,(it.sx+it.sw)/sw,(it.sy+it.sh)/sh]});
+      if(o.id) HITS.push([o.id,q]);
+    }else if(it.t==="sp"){
+      const p=P3(...it.c), R=it.r*CAM.k, A=rgba01(it.col)[3];
+      if(A>0.004){ const z=p[2]+e+it.r*0.5, q=[[p[0]-R,p[1]-R,z],[p[0]+R,p[1]-R,z],[p[0]+R,p[1]+R,z],[p[0]-R,p[1]+R,z]]; _gd(G,z);
+        if(A>0.99) G.tq.push({src:_sphereSprite(it.col,o),q,l:LUX,uv:[0,0,1,1]}); else G.tr.push({dep:z,tex:_srcTex(_sphereSprite(it.col,o)).tex,a:1,l:LUX,q}); }
+      if(o.id) HITS.push([o.id,Array.from({length:12},(_,i)=>[p[0]+R*Math.cos(i/12*6.283),p[1]+R*Math.sin(i/12*6.283),p[2]+it.r])]);
+    }else if(it.t==="c"){
+      const r=P3(...it.p[0]); _REC=new Map(); try{ it.draw(new Rec3(G,r[2],e)); }catch(err){} _REC=null;
     }
-    const i = holeAt(wx,wy);
-    if(i!==null){
-      /* a click selects the hole, but a drag from the same point
-         moves or swings the tube instead */
-      dragMode = "hole"; pendingHole = i; pressXY = [ex,ey];
-      grab = [wx-rig.free_pos[0], wy-rig.free_pos[1]];
-      return;
-    }
-    if(rig.on_cylinder(wx,wy,truth.d_out*0.4)){
-      if(rig.mode==="pendulum"){ dragMode="swing"; rig.released=false; return; }
-      if(rig.mode==="free"){
-        dragMode="move"; grab=[wx-rig.free_pos[0], wy-rig.free_pos[1]];
-        return;
-      }
-    }
   }
-
-  if(TOOLS.ruler && rig.on_ruler(wx,wy)){
-    dragMode = "ruler";
-    grab = [wx-rig.ruler_pos[0], wy-rig.ruler_pos[1]];
-    return;
-  }
-  dragMode = "pan";
+  for(const t of G.tr) if(t.q) for(const v of t.q) _gd(G,v[2]);
+  /* draw */
+  const gl=GL3.gl, dpr=CAM.dpr||1, cw=Math.max(1,Math.round(W*dpr)), ch=Math.max(1,Math.round(H*dpr));
+  if(GL3.c.width!==cw||GL3.c.height!==ch){ GL3.c.width=cw; GL3.c.height=ch; }
+  gl.viewport(0,0,cw,ch); gl.clearColor(0,0,0,0); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  const d0=G.dmin===Infinity?0:G.dmin, dr=Math.max(1e-6,(G.dmax===-Infinity?1:G.dmax)-d0);
+  const X=x=>x/W*2-1, Y=y=>1-y/H*2, Z=d=>0.98-1.96*(d-d0)/dr;
+  const drawCol=arr=>{ if(!arr.length) return; const n=arr.length/7, f=new Float32Array(arr.length);
+    for(let i=0;i<n;i++){ const j=i*7; f[j]=X(arr[j]); f[j+1]=Y(arr[j+1]); f[j+2]=Z(arr[j+2]); f[j+3]=arr[j+3]; f[j+4]=arr[j+4]; f[j+5]=arr[j+5]; f[j+6]=arr[j+6]; }
+    gl.useProgram(GL3.pc); gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.pcP); gl.vertexAttribPointer(GL3.pcP,3,gl.FLOAT,false,28,0);
+    gl.enableVertexAttribArray(GL3.pcC); gl.vertexAttribPointer(GL3.pcC,4,gl.FLOAT,false,28,12);
+    gl.drawArrays(gl.TRIANGLES,0,n); gl.disableVertexAttribArray(GL3.pcC); };
+  const drawTex=(tex,q,uv,a,l)=>{ const [u0,v0,u1,v1]=uv||[0,0,1,1], t=[[u0,v0],[u1,v0],[u1,v1],[u0,v1]], f=new Float32Array(30); let k=0;
+    for(const i of [0,1,2,0,2,3]){ f[k++]=X(q[i][0]); f[k++]=Y(q[i][1]); f[k++]=Z(q[i][2]); f[k++]=t[i][0]; f[k++]=t[i][1]; }
+    gl.useProgram(GL3.pt); gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,tex); gl.uniform1i(GL3.ptS,0); gl.uniform1f(GL3.ptA,a===undefined?1:a); gl.uniform1f(GL3.ptL,l===undefined?1:l);
+    gl.bindBuffer(gl.ARRAY_BUFFER,GL3.buf); gl.bufferData(gl.ARRAY_BUFFER,f,gl.STREAM_DRAW);
+    gl.enableVertexAttribArray(GL3.ptP); gl.vertexAttribPointer(GL3.ptP,3,gl.FLOAT,false,20,0);
+    gl.enableVertexAttribArray(GL3.ptT); gl.vertexAttribPointer(GL3.ptT,2,gl.FLOAT,false,20,12);
+    gl.drawArrays(gl.TRIANGLES,0,6); gl.disableVertexAttribArray(GL3.ptT); };
+  gl.depthMask(true); drawCol(G.op);
+  for(const t of G.tq) drawTex(_srcTex(t.src).tex,t.q,t.uv,1,t.l);
+  gl.depthMask(false); G.tr.sort((a,b)=>a.dep-b.dep);
+  let batch=[];
+  for(const t of G.tr){ if(t.col){ for(const x of t.col) batch.push(x); continue; } drawCol(batch); batch=[]; drawTex(t.tex,t.q,t.uv,t.a,t.l); }
+  drawCol(batch); gl.depthMask(true);
+  ctx.drawImage(GL3.c,0,0,W,H);
 }
-function onMotion(ex,ey){
-  const [wx,wy] = s2w(ex,ey);
-  if(dragMode==="hole"){
-    if(Math.hypot(ex-pressXY[0], ey-pressXY[1]) < 5) return;
-    dragMode = (rig.mode==="pendulum") ? "swing" : "move";
-    if(dragMode==="swing") rig.released = false;
-  }
-  const v = view();
-  if(dragMode==="pan"){
-    v.pan[0] += ex-last[0]; v.pan[1] += ey-last[1];
-  }else if(dragMode==="ruler"){
-    rig.move_ruler(wx-grab[0], wy-grab[1]);
-  }else if(dragMode==="pencil"){
-    rig.pencil_to(wx-grab[0], wy-grab[1], true);
-  }else if(dragMode==="eraser"){
-    rig.eraser_to(wx-grab[0], wy-grab[1], true);
-  }else if(dragMode==="move"){
-    rig.free_pos = [wx-grab[0], wy-grab[1]];
-  }else if(dragMode==="swing"){
-    rig.pull_aside(Math.atan2(wx,wy)*180/Math.PI);
-  }
-  last = [ex,ey];
-}
-function onRelease(){
-  if(dragMode==="swing") rig.release();
-  else if(dragMode==="hole") status(rig.select_hole(pendingHole)[1]);
-  dragMode = null;
-}
-function zoomBy(d){
-  const v = view();
-  v.ppm = Math.max(180.0, Math.min(14000.0, v.ppm*(d>0 ? 1.12 : 1/1.12)));
-}
-function onWheel(ex,ey,d,fine,zoom){
-  const [wx,wy] = s2w(ex,ey);
-  if(zoom){ zoomBy(d); return; }
-  /*  the loop only moves while the pointer is on the cylinder, so that
-      turning the ruler can never slide it by accident, and the tube takes
-      precedence because it is drawn on top of the ruler                  */
-  if(part==="A" && rig.mode==="balance" && !(rig.fallen||rig.carried)
-     && rig.on_cylinder(wx,wy,truth.d_out)){
-    const step = fine ? 0.0002 : 0.0020;
-    rig.hold(true);
-    rig.nudge_loop(d>0 ? -step : step);
-    return;
-  }
-  if(TOOLS.ruler && rig.on_ruler(wx,wy)){
-    /* the wheel turns the ruler about the point under the cursor */
-    const step = (fine ? 0.5 : 2.5)*Math.PI/180;
-    rig.rotate_ruler(d>0 ? step : -step, wx, wy);
-    return;
-  }
-  zoomBy(d);
+/* the id under a screen point: the nearest of the faces that contain it */
+function pick3(x,y){
+  if(GL3.ok!==true) return pick3_2d(x,y);
+  let best=null, bd=-Infinity;
+  for(const [id,q] of HITS){ if(!pointIn(q,x,y)) continue;
+    let d=-Infinity;
+    for(let i=1;i+1<q.length;i++){ const a=q[0], b=q[i], c=q[i+1], den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]); if(Math.abs(den)<1e-9) continue;
+      const l1=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den, l2=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den, l3=1-l1-l2;
+      if(l1>=-1e-6&&l2>=-1e-6&&l3>=-1e-6){ d=l1*a[2]+l2*b[2]+l3*c[2]; break; } }
+    if(d===-Infinity) d=q.reduce((s,v)=>s+(v[2]||0),0)/q.length;
+    if(d>=bd){ bd=d; best=id; } }
+  return best;
 }
 
-/* ── drawing ────────────────────────────────────────────────── */
-let CLOSE = false;
-function redraw(c, el){
-  c = c || ctx; el = el || cv;
-  G = c;
-  c.setTransform(1,0,0,1,0,0);
-  c.clearRect(0,0,el.width,el.height);
-  c.setTransform(DPR,0,0,DPR,0,0);
 
-  const v = view(), ppm = v.ppm;
-  const w = CVW, h = CVH;
-  const by = w2s(0.0, truth.bench_y)[1];
-  const [px,py] = w2s(0.0, 0.0);
-
-  rect(0,0,w,h,COL_TABLE);
-  rect(0,by,w,h,COL_TABLE_DK);
-  line(0,py,w,py,"#7d9577",1,"butt",[6,6]);
-  drawBasePlate(px,py,ppm);
-
-  if(TOOLS.ruler) drawRuler(...w2s(rig.ruler_pos[0], rig.ruler_pos[1]), ppm, RULER_LEN, rig.ruler_angle);
-
-  if(rig.mode!==null){
-    const [oxw,oyw,ux,uy] = rig.cyl_world();
-    const [ox,oy] = w2s(oxw,oyw);
-    if(rig.mode==="balance"){
-      const [cx,cy] = w2s(0.0, LOOP_DROP);
-      if(rig.fallen || rig.carried){
-        drawThread(px,py,cx,cy, truth.d_out*0.5*ppm*1.25, 1.0, 0.0, ppm);
-      }else{
-        const [lx,ly] = w2s(oxw+ux*rig.thread_x, oyw+uy*rig.thread_x);
-        drawThread(px,py,lx,ly, truth.d_out*0.5*ppm*1.25, ux, uy, ppm);
-      }
-    }
-    drawCylinder(ox,oy,ux,uy,ppm,truth,rig.marks);
-    if(rig.mode==="balance" && rig.held && !(rig.fallen||rig.carried)){
-      const tp = _pt(ox,oy,ux,uy, rig.thread_x*ppm, truth.d_out*0.5*ppm);
-      drawFinger(tp[0],tp[1],ppm);
-    }
-    if(rig.sel_hole!==null && (rig.mode==="free"||rig.mode==="pendulum")){
-      const p = _pt(ox,oy,ux,uy, truth.holes[rig.sel_hole]*ppm, 0.0);
-      const q = Math.max(6.0, 0.005*ppm);
-      oval(p[0]-q,p[1]-q,p[0]+q,p[1]+q,null,"#ffd54f",2);
-    }
-    drawPinHead(px,py,ppm);
-    if(rig.mode==="pendulum")
-      line(px,py,px,py+truth.L*1.05*ppm,"#7d9577",1,"butt",[3,5]);
-  }
-
-  if(TOOLS.pencil) drawPencil(...w2s(rig.pencil_pos[0], rig.pencil_pos[1]), ppm);
-  if(TOOLS.eraser) drawEraser(...w2s(rig.eraser_pos[0], rig.eraser_pos[1]), ppm);
-  if(CLOSE) return;
-
-  G.font = fontStr(13); G.fillStyle="#2f3a2c";
-  G.textAlign="left"; G.textBaseline="alphabetic";
-  G.fillText(rig.status_line(), 10, h-10);
-  G.font = fontStr(10.5); G.fillStyle="#4d5c49"; G.textAlign="right";
-  G.fillText(part==="A" ? L_().tipA : L_().tipB, w-10, h-10);
+/* ==================================================================
+   SHAPES, SURFACES AND CABLES SHARED BY THE TWO 2011 BENCHES
+   ================================================================== */
+const mk = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return c; };
+const add3 = (a, b, s) => [a[0] + b[0] * (s === undefined ? 1 : s), a[1] + b[1] * (s === undefined ? 1 : s), a[2] + b[2] * (s === undefined ? 1 : s)];
+const lerpC = (a, b, t) => { const A = hex2rgb(a), B = hex2rgb(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
+function rand32(s){ return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+/* planed wood: long wavy grain lines, a few darker streaks and knots, along the canvas width */
+function woodTex(w, h, base, dark, seed, P){
+  P = P || 24; const c = mk(Math.round(w * P), Math.round(h * P)), g = c.getContext("2d"), r = rand32(seed || 7);
+  g.fillStyle = base; g.fillRect(0, 0, c.width, c.height);
+  for (let i = 0; i < c.height / 3; i++){ const y0 = r() * c.height, a = 1 + r() * 3, f = 0.002 + r() * 0.006, ph = r() * 6;
+    g.strokeStyle = r() < 0.5 ? dark : lerpC(base, "#ffffff", 0.12); g.globalAlpha = 0.08 + r() * 0.22; g.lineWidth = 0.6 + r() * 1.8;
+    g.beginPath(); for (let x = 0; x <= c.width; x += 6){ const y = y0 + a * Math.sin(x * f + ph) + 2 * Math.sin(x * f * 3.1 + ph * 2); if (x) g.lineTo(x, y); else g.moveTo(x, y); } g.stroke(); }
+  for (let k = 0; k < 2; k++){ const cx = r() * c.width, cy = r() * c.height; g.globalAlpha = 0.25; g.strokeStyle = dark;
+    for (let i = 1; i < 6; i++){ g.lineWidth = 1; g.beginPath(); g.ellipse(cx, cy, i * 7, i * 2.4, 0, 0, 7); g.stroke(); } }
+  g.globalAlpha = 1; c._static = true; return c; }
+/* a rounded rectangle in the (x, z) plane, counter-clockwise, n points per corner */
+function rrect2(cx, cz, hw, hd, r, n){ const P = []; n = n || 5;
+  for (const [sx, sz, a0] of [[1, 1, 0], [-1, 1, 90], [-1, -1, 180], [1, -1, 270]]) for (let i = 0; i <= n; i++){ const a = (a0 + 90 * i / n) * Math.PI / 180;
+    P.push([cx + sx * (hw - r) + r * Math.cos(a), cz + sz * (hd - r) + r * Math.sin(a)]); }
+  return P; }
+/* a box with rounded vertical corners and a softened top edge */
+function rbox3(cx, cz, hw, hd, y0, y1, r, col, o){ o = o || {};
+  const out = rrect2(cx, cz, hw, hd, r, 4), e = Math.min(0.25, (y1 - y0) * 0.2), inn = rrect2(cx, cz, hw - e, hd - e, Math.max(0.05, r - e), 4);
+  prism3("y", y0, y1 - e, out.map(p => [p[0], p[1]]), col, Object.assign({}, o, {cull: true}));
+  const n = out.length;
+  for (let i = 0; i < n; i++){ const j = (i + 1) % n, A = out[i], B = out[j], a = inn[i], b = inn[j];
+    face(orient([[A[0], y1 - e, A[1]], [B[0], y1 - e, B[1]], [b[0], y1, b[1]], [a[0], y1, a[1]]], [(A[0] + B[0]) / 2 - cx, 1, (A[1] + B[1]) / 2 - cz]), Object.assign({}, o, {fill: lerpC(col, "#ffffff", 0.06), cull: true})); }
+  face(orient(inn.map(p => [p[0], y1, p[1]]), [0, 1, 0]), Object.assign({}, o, {fill: o.top || col, cull: true}));
 }
-let swCache = null;
-function drawPanelStopwatch(){
-  if(part!=="B") return;
-  const s = rig.stopwatch_display();
-  if(s===swCache) return;
-  swCache = s;
-  G = swx;
-  swx.setTransform(1,0,0,1,0,0);
-  swx.clearRect(0,0,swc.width,swc.height);
-  swx.setTransform(DPR,0,0,DPR,0,0);
-  rect(0,0,254,182,"#eef1ec");
-  drawStopwatch(254*0.5, 106, 62, s);
-  G = ctx;
+/* a knurled knob: a short cylinder with ribs round its rim */
+function knurl3(axis, a0, a1, u, v, r, col, o){
+  cyl3(axis, a0, a1, u, v, r, col, Object.assign({seg: 20, cap: lerpC(col, "#ffffff", 0.22)}, o || {}));
+  for (let i = 0; i < 18; i++){ const t = i / 18 * 2 * Math.PI, cu = u + r * 1.01 * Math.cos(t), cv = v + r * 1.01 * Math.sin(t);
+    const W = a => axis === "x" ? [a, cu, cv] : axis === "y" ? [cu, a, cv] : [cu, cv, a];
+    line3(W(a0 + (a1 - a0) * 0.12), W(a0 + (a1 - a0) * 0.88), lerpC(col, "#000000", 0.40), 0.8); }
+}
+function ring3(c, r, col, lw, n, axis){ n = n || 28; const pts = []; for (let i = 0; i <= n; i++){ const a = i / n * 2 * Math.PI;
+  pts.push(axis === "z" ? [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a), c[2]] : axis === "x" ? [c[0], c[1] + r * Math.cos(a), c[2] + r * Math.sin(a)] : [c[0] + r * Math.cos(a), c[1], c[2] + r * Math.sin(a)]); }
+  poly3(pts, col, lw); }
+function bez(P0, P1, P2, P3, n){ const out = []; for (let i = 0; i <= n; i++){ const t = i / n, u = 1 - t;
+  out.push([0, 1, 2].map(j => u * u * u * P0[j] + 3 * u * u * t * P1[j] + 3 * u * t * t * P2[j] + t * t * t * P3[j])); } return out; }
+const plen = pts => { let s = 0; for (let i = 1; i < pts.length; i++) s += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]); return s; };
+/* the things on the bench a cable has to go over: [x0, x1, z0, z1, top] */
+let OBST = [];
+/* a cable keeps out of the things on the bench and never sinks into the desk; it bends over an edge, never steps */
+function avoid(pts, r){
+  const fine = [pts[0]];
+  for (let i = 1; i < pts.length; i++){ const a = pts[i - 1], b = pts[i], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / 0.5));
+    for (let j = 1; j <= n; j++) fine.push([a[0] + (b[0] - a[0]) * j / n, a[1] + (b[1] - a[1]) * j / n, a[2] + (b[2] - a[2]) * j / n]); }
+  const out = fine.map(([x, y, z], i) => { if (i === 0 || i === fine.length - 1) return [x, y, z]; y = Math.max(y, r + 0.03);
+    for (const [x0, x1, z0, z1, top] of OBST) if (x > x0 - r && x < x1 + r && z > z0 - r && z < z1 + r && y < top + r) y = top + r + 0.02;
+    return [x, y, z]; });
+  for (let k = 0; k < 12; k++) for (let i = 1; i < out.length - 1; i++){ const m = 0.5 * (out[i - 1][1] + out[i + 1][1]) - 0.05; if (m > out[i][1]) out[i] = [out[i][0], m, out[i][2]]; }
+  return out;
+}
+/* a cable of a given length from a fixed point (leaving along d0) to its end (arriving along d1): the slack hangs as a
+   loop that lies on whatever is under it */
+function cablePath(A, d0, B, d1, len, side){
+  const D = Math.hypot(B[0] - A[0], B[1] - A[1], B[2] - A[2]), slack = Math.max(0, len - D);
+  const k = Math.max(1.5, Math.min(D * 0.4 + slack * 0.15, len * 0.3));
+  /* the spare length lies to one side in a loose bow, a little lower than the ends */
+  let nx = -(B[2] - A[2]), nz = B[0] - A[0]; const nl = Math.hypot(nx, nz) || 1; nx /= nl; nz /= nl;
+  const bow = Math.min(slack * 0.3, 9) * (side || 1), drop = Math.min(slack * 0.15, 3);
+  const P1 = add3(A, d0, k), P2 = add3(B, d1, -k);
+  P1[0] += nx * bow; P1[2] += nz * bow; P2[0] += nx * bow; P2[2] += nz * bow; P1[1] -= drop; P2[1] -= drop;
+  return bez(A, P1, P2, B, 30);
+}
+/* the spare length bows to whichever side keeps it lower, off the things on the bench */
+function cableRoute(A, d0, B, d1, len, r){
+  let best = null, bh = Infinity;
+  for (const side of [1, -1]){ const p = avoid(cablePath(A, d0, B, d1, len, side), r), h = p.reduce((s, q) => s + q[1], 0); if (h < bh){ bh = h; best = p; } }
+  return best; }
+/* the cable itself: a dark ribbon as wide as the wire is on screen, with a lit stripe along it */
+function tube(pts, r, col, o){ o = o || {}; const lw = Math.max(1.4, 2 * r * CAM.k);
+  poly3(pts, lerpC(col, "#000000", 0.30), lw + 1, {bias: o.bias || 0, cap: "butt"});
+  poly3(pts, col, lw, {bias: (o.bias || 0) + 2, cap: "butt"});
+  poly3(pts, lerpC(col.startsWith("#") ? col : "#888888", "#ffffff", 0.4), Math.max(0.6, lw * 0.28), {bias: (o.bias || 0) + 4, cap: "butt"});
+  if (o.id){ const step = Math.max(1, Math.floor(pts.length / 14)); for (let i = step; i < pts.length - 1; i += step) sphere3(pts[i], Math.max(r * 1.6, 0.35), "rgba(0,0,0,0.004)", {id: o.id}); }
+}
+/* the highest surface under a screen point, and the point on it: tops are [x0, x1, z0, z1, top] boxes over the desk */
+function surfaceUnder(p, tops){
+  let best = null;
+  for (const t of tops){ const q = onPlane(p[0], p[1], t[4]); if (q[0] > t[0] && q[0] < t[1] && q[2] > t[2] && q[2] < t[3] && (!best || t[4] > best[1])) best = q; }
+  return best || onPlane(p[0], p[1], 0);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   6.  PANEL
-   ══════════════════════════════════════════════════════════════ */
-function status(m){ if(m){ statusMsg = m; } }
+/* ==================================================================
+   THE BENCH IN 3-D.  World units are cm: x along the table edge, y up,
+   z towards the student.  The clear base plate is clamped on the table
+   with its pin sticking out over the front edge; the tube hangs (or lies
+   in the thread loop) in the vertical plane z = PLANE_Z in front of the
+   edge, and the ruler, pencil and rubber are held against it just in
+   front.  The rig works in that plane in metres, x right and y down from
+   the pin, exactly as in the 2-D version; W() puts its points in the room.
+   ================================================================== */
+let PIN_X = 0, CARRY = null;                                       /* where the base plate is taped along the table edge */
+const PIN_Y = 0.5, PLANE_Z = 2.4, PIN_TIP = 3.9, TZ0 = -46;
+let seed = (() => { const q = new URLSearchParams(location.search).get("seed"); return q ? (parseInt(q, 10) | 0) : OFFICIAL_SEED; })();
+let truth = makeTruth(seed), rig = makeRig(truth);
+const TOOLS = {ruler: false, pencil: false, eraser: false};
+/* everything starts in the parts box; what is out is on the table */
+const OUT = {plate: false, tape: false, thread: false, sw: false};
+/* strips: the pieces of tape pressed down ({x, z, ang, t0}); tapeAng: the angle the next one is turned to; creep: how far
+   the tape has given way under a load it cannot hold (it peels, then the plate goes); drop: what fell off the
+   table edge with a base plate that was not taped down (the plate, the cylinder, the thread), as it tumbles and where it lies */
+const KIT = {strips: [], tapeAng: 0, creep: 0, capOn: true, tapeAt: [-22, -12], threadAt: [12, -17], swAt: [24, -9], tableAt: [0, 0.18], drop: null};
+/* the tube lies on the table, or hangs (in the thread loop or on the pin) in the plane in front of the edge;
+   the ruler, pencil and rubber go with it: flat on the table, or held up against it */
+const onTable = () => rig.mode === "free";
+const hanging = () => rig.mode === "pendulum" || rig.mode === "balance";
+/* two surfaces carry the rig's metres: the table top (x along the edge from the middle of the table, y towards the
+   student) and the vertical plane in front of the edge (x from the pin, y down from it) */
+const WS = (sf, x, y, dz) => sf === "table" ? [100 * x, dz || 0, TZ0 + 100 * y] : [PIN_X + 100 * x, PIN_Y - 100 * y, PLANE_Z + (dz || 0)];
+const WVS = (sf, vx, vy) => sf === "table" ? [100 * vx, 0, 100 * vy] : [100 * vx, -100 * vy, 0];
+/* the tube's own surface, and a vector of it in the room */
+const tubeSurf = () => onTable() ? "table" : "plane";
+const W = (x, y, dz) => WS(tubeSurf(), x, y, dz);
+const WV = (vx, vy) => WVS(tubeSurf(), vx, vy);
+/* the ruler, pencil and rubber lie on the table wherever they were put, whatever the tube does; only when they are
+   held up against a hanging tube do they go into its plane (and fall back onto the table when it is taken down) */
+const TSURF = {ruler: "table", pencil: "table", eraser: "table"};
+const shelfY = () => PIN_Y - 100 * truth.bench_y;
+const plateDown = () => !!(KIT.drop && KIT.drop.plate);
+const pinFree = () => OUT.plate && !KIT.capOn && !plateDown();
+const plateReady = () => pinFree() && KIT.strips.length > 0;
+const CREEP_FALL = 0.45;
+/* ---- textures ---- */
+const R_INSET = RULER_H * 0.22;
+function rulerTex(){ const P = 40, Lc = (RULER_LEN + 2 * R_INSET) * 100, Hc = RULER_H * 100, c = mk(Math.round(Lc * P), Math.round(Hc * P)), g = c.getContext("2d");
+  g.fillStyle = "rgba(236,244,247,0.82)"; g.fillRect(0, 0, c.width, c.height);
+  g.fillStyle = "#c9302c"; g.fillRect(0, 0, c.width, 0.16 * P);                    /* the red moulded edge, as in the photograph */
+  const x0 = R_INSET * 100 * P;
+  g.strokeStyle = "#2c3133"; g.fillStyle = "#2c3133";
+  for (let i = 0; i <= Math.round(RULER_LEN * 1000); i++){ const x = x0 + i / 10 * P, L = i % 10 === 0 ? 1.35 : i % 5 === 0 ? 0.9 : 0.5;
+    g.lineWidth = i % 10 === 0 ? 2 : 1.2; g.beginPath(); g.moveTo(x, 0.16 * P); g.lineTo(x, (0.16 + L * 0.5) * P); g.stroke(); }
+  g.font = "600 " + Math.round(0.62 * P) + "px Arial"; g.textAlign = "center"; g.textBaseline = "middle";
+  for (let i = 0; i <= Math.round(RULER_LEN * 100); i++) g.fillText(String(i), x0 + i * P, 1.6 * P);
+  g.strokeStyle = "rgba(120,150,160,0.8)"; g.lineWidth = 2; g.strokeRect(1, 1, c.width - 2, c.height - 2);
+  c._static = true; return c; }
+const RULER_TEX = rulerTex();
+/* the face of the stopwatch: the printed button names along its top, the LCD in its dark window, the maker's line */
+const SW_TEX = mk(400, 420); SW_TEX._ver = 0; let SW_KEY = "";
+function drawSW(){ const s = rig.stopwatch_display(), key = s + (rig.sw_running ? "r" : "s"); if (key === SW_KEY) return; SW_KEY = key; SW_TEX._ver++;
+  const g = SW_TEX.getContext("2d"), rr = (x, y, w, h, r) => { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); };
+  g.clearRect(0, 0, 400, 420);
+  g.fillStyle = "#e9edf0"; g.font = "700 22px Arial"; g.textAlign = "center"; g.textBaseline = "middle";
+  g.fillText("START/STOP", 112, 34); g.fillText("RESET", 300, 34);
+  g.fillStyle = "#f2c14e"; g.beginPath(); g.moveTo(112, 58); g.lineTo(104, 70); g.lineTo(120, 70); g.fill(); g.beginPath(); g.moveTo(300, 58); g.lineTo(292, 70); g.lineTo(308, 70); g.fill();
+  /* the window: a dark bezel and the grey-green liquid crystal, its digits a little shadowed */
+  g.fillStyle = "#0d0f12"; rr(26, 92, 348, 196, 26); g.fill();
+  const lcd = g.createLinearGradient(0, 108, 0, 272); lcd.addColorStop(0, "#c3cfb7"); lcd.addColorStop(1, "#a6b39b"); g.fillStyle = lcd; rr(44, 108, 312, 164, 14); g.fill();
+  g.font = "700 62px 'DS-Digital','Courier New',monospace"; g.textAlign = "center";
+  g.fillStyle = "rgba(40,52,40,0.18)"; g.fillText(s, 203, 205); g.fillStyle = "#1b231c"; g.fillText(s, 200, 202);
+  g.font = "700 19px Arial"; g.textAlign = "left"; g.fillStyle = rig.sw_running ? "#1b231c" : "rgba(27,35,28,0.22)"; g.fillText("RUN", 62, 132);
+  g.fillStyle = rig.sw_running ? "rgba(27,35,28,0.22)" : "#1b231c"; g.fillText("STOP", 118, 132);
+  g.fillStyle = "rgba(27,35,28,0.55)"; g.textAlign = "right"; g.fillText("1/100 s", 340, 132);
+  g.fillStyle = "#c7cdd3"; g.font = "italic 700 24px Arial"; g.textAlign = "center"; g.fillText("STOPWATCH", 200, 336);
+  g.fillStyle = "#8b939b"; g.font = "600 15px Arial"; g.fillText("WATER RESIST · 1/100 SEC", 200, 368); }
+/* a roll of tape and the coil of thread, lying on the table */
+/* a roll of clear adhesive tape (18 mm wide) lying on its side: the wound tape, glossy and a little cloudy, on a
+   cardboard core; the free end turned back on the roll as a tab */
+const TAPE_W = 1.8, TAPE_R = 2.45, CORE_R = 1.62, HOLE_R = 1.38;
+function annulus(c, y, r0, r1, col, o, up){ const n = 30;
+  for (let i = 0; i < n; i++){ const a = i / n * 2 * Math.PI, b = (i + 1) / n * 2 * Math.PI, P = (r, t) => [c[0] + r * Math.cos(t), y, c[1] + r * Math.sin(t)];
+    face(orient([P(r0, a), P(r1, a), P(r1, b), P(r0, b)], [0, up === false ? -1 : 1, 0]), Object.assign({fill: col}, o || {})); } }
+function tapeRoll(x, z, ghost){ const o = ghost ? {alpha: 0.6} : {id: "tape"}, H = TAPE_W;
+  cyl3("y", 0, H, x, z, TAPE_R, "#c7d2cf", Object.assign({seg: 36, caps: false}, o));
+  annulus([x, z], H, CORE_R, TAPE_R, "#dde6e3", o);
+  /* the layers, seen on the side as faint rings */
+  if (!ghost) for (const r of [1.85, 2.08, 2.28]) ring3([x, H + 0.005, z], r, "rgba(255,255,255,0.55)", 0.8, 32);
+  /* the cardboard core, its rim just proud of the tape, and the hole through it */
+  annulus([x, z], H + 0.04, HOLE_R, CORE_R, "#c49a64", o);
+  cyl3("y", 0.02, H + 0.04, x, z, HOLE_R, "#a87c4b", Object.assign({seg: 30, caps: false, cull: false}, o));
+  if (ghost) return;
+  /* the free end, folded over into a tab */
+  const a = 0.6, t = [-Math.sin(a), 0, Math.cos(a)], P = [x + TAPE_R * Math.cos(a), 0, z + TAPE_R * Math.sin(a)];
+  face([[P[0], 0.15, P[2]], [P[0], H - 0.15, P[2]], [P[0] + t[0] * 0.9 + Math.cos(a) * 0.12, H - 0.15, P[2] + t[2] * 0.9 + Math.sin(a) * 0.12], [P[0] + t[0] * 0.9 + Math.cos(a) * 0.12, 0.15, P[2] + t[2] * 0.9 + Math.sin(a) * 0.12]],
+    {fill: "rgba(236,242,240,0.7)", alpha: 0.7, id: "tape"}); }
+function threadCoil(x, z){ for (let i = 0; i < 6; i++) ring3([x + i * 0.18, 0.1 + i * 0.04, z + i * 0.12], 3.2 + i * 0.15, "#f4f2ec", 1.3, 30); cyl3("y", 0, 0.4, x + 0.5, z + 0.3, 3.6, "rgba(0,0,0,0.004)", {alpha: 0.004, id: "thread"}); }
+/* ---- parts ---- */
+function tube(){
+  if (rig.mode === null) return;
+  const [ox, oy, ux, uy] = rig.cyl_world(), r = truth.d_out * 50;
+  const tb = onTable(), A = W(ox, oy, tb ? r : 0), B = W(ox + ux * truth.L, oy + uy * truth.L, tb ? r : 0);
+  cylAB(A, B, r, "#c3c8cc", {seg: 22, id: "tube", cap: "#8d9397"});
+  /* the open ends show the bore */
+  const ua = WV(ux, uy).map(v => v / 100);
+  for (const [P, s] of [[A, -1], [B, 1]]){ const c = add3(P, ua, s * 0.02); cylAB(c, add3(c, ua, s * 0.01), truth.d_in * 50, "#3a3f43", {seg: 18}); }
+  const nx = -uy, ny = ux, front = tb ? 2 * r + 0.02 : r + 0.02;
+  /* a small disc lying on the face of the tube you look at: up on the table, towards you when it hangs */
+  const disc = (s, rad, col, id) => { const C = W(ox + ux * s, oy + uy * s, front), pts = [];
+    for (let i = 0; i < 12; i++){ const a = i / 12 * 2 * Math.PI; pts.push(tb ? [C[0] + rad * Math.cos(a), C[1], C[2] + rad * Math.sin(a)] : [C[0] + rad * Math.cos(a), C[1] + rad * Math.sin(a), C[2]]); }
+    face(tb ? orient(pts, [0, 1, 0]) : pts, {fill: col, id, flat: true}); };
+  truth.holes.forEach((h, i) => disc(h, 0.17, "#202428", "hole" + i));
+  if (rig.sel_hole !== null && (rig.mode === "free" || rig.mode === "pendulum")){ const C = W(ox + ux * truth.holes[rig.sel_hole], oy + uy * truth.holes[rig.sel_hole], front + 0.03);
+    const pts = []; for (let i = 0; i <= 24; i++){ const a = i / 24 * 2 * Math.PI; pts.push(tb ? [C[0] + 0.45 * Math.cos(a), C[1], C[2] + 0.45 * Math.sin(a)] : [C[0] + 0.45 * Math.cos(a), C[1] + 0.45 * Math.sin(a), C[2]]); } poly3(pts, "#ffd54f", 2.5); }
+  /* pencil marks across the tube */
+  for (const s of rig.marks){ const a = W(ox + ux * s + nx * truth.d_out * 0.42, oy + uy * s + ny * truth.d_out * 0.42, front + 0.01), b = W(ox + ux * s - nx * truth.d_out * 0.42, oy + uy * s - ny * truth.d_out * 0.42, front + 0.01); line3(a, b, "#3a3836", 1.6); }
+}
+function thread(){
+  if (rig.mode !== "balance" || !rig.loop_present) return;
+  const pin = [PIN_X, PIN_Y, PLANE_Z], r = truth.d_out * 50 + 0.05;
+  if (rig.fallen || rig.carried){ const c = W(0, LOOP_DROP);
+    for (const dz of [-0.35, 0.35]) line3(pin, [c[0], c[1] + r, c[2] + dz], "#f4f2ec", 1.3);
+    const pts = []; for (let i = 0; i <= 20; i++){ const a = i / 20 * 2 * Math.PI; pts.push([c[0], c[1] + r * Math.cos(a), c[2] + r * Math.sin(a)]); } poly3(pts, "#f4f2ec", 1.3); return; }
+  const [ox, oy, ux, uy] = rig.cyl_world(), P = W(ox + ux * rig.thread_x, oy + uy * rig.thread_x);
+  /* the two strands come down to the top of the tube and the loop wraps under it */
+  for (const dz of [-0.35, 0.35]) line3(pin, [P[0], P[1] + r * Math.cos(Math.asin(dz / r)), P[2] + dz], "#f4f2ec", 1.3);
+  const pts = []; for (let i = 0; i <= 24; i++){ const a = (0.08 + 0.84 * i / 24) * 2 * Math.PI; pts.push([P[0] + 0, P[1] + r * Math.cos(a), P[2] + r * Math.sin(a)]); } poly3(pts, "#f4f2ec", 1.3);
+  if (rig.held){ const y = P[1] - r - 0.75; cylAB([P[0], y, PLANE_Z - 1.6], [P[0], y, PLANE_Z + 1.8], 0.72, "#e8b896", {seg: 12, id: "finger"}); sphere3([P[0], y, PLANE_Z + 1.8], 0.72, "#e8b896"); }
+}
+function ruler(){
+  if (!TOOLS.ruler) return;
+  const [x, y] = rig.ruler_pos, a = rig.ruler_angle, ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
+  const L = RULER_LEN + 2 * R_INSET, h = RULER_H;
+  const o = [x - ux * R_INSET - nx * h / 2, y - uy * R_INSET - ny * h / 2];
+  const sf = TSURF.ruler, O = WS(sf, o[0], o[1], toolH("ruler")), U = WVS(sf, ux * L, uy * L), V = WVS(sf, nx * h, ny * h);
+  tex3(RULER_TEX, 0, 0, RULER_TEX.width, RULER_TEX.height, O, U, V, {id: "ruler"});
+}
+function pencil(){
+  if (!TOOLS.pencil) return;
+  const [x, y] = rig.pencil_pos, sf = TSURF.pencil, tip = WS(sf, x, y, toolH("pencil")), u = WVS(sf, PENCIL_U, PENCIL_V).map(v => v / 100);
+  const at = s => [tip[0] + u[0] * s, tip[1] + u[1] * s, tip[2]];
+  cylAB(tip, at(1.6), 0.03, "#3c3a37", {seg: 6, r1: 0.3, id: "pencil"});
+  cylAB(at(1.6), at(10), 0.32, "#e2b13c", {seg: 6, id: "pencil"}); cylAB(at(10), at(11), 0.32, "#c0392b", {seg: 8, id: "pencil"});
+}
+function eraser(){
+  if (!TOOLS.eraser) return;
+  const [x, y] = rig.eraser_pos;
+  if (TSURF.eraser === "table"){ const C = WS("table", x, y, 0); box3(C[0] - ERASER_W * 50, C[0] + ERASER_W * 50, 0, 1.0, C[2] - ERASER_H * 50, C[2] + ERASER_H * 50, "#f0d6db", {id: "eraser"});
+    box3(C[0] - 0.8, C[0] + 1.2, 0, 1.02, C[2] - ERASER_H * 50 - 0.02, C[2] + ERASER_H * 50 + 0.02, "#4b6fb0", {id: "eraser"}); return; }
+  const C = WS("plane", x, y, truth.d_out * 50 + 0.8);
+  box3(C[0] - ERASER_W * 50, C[0] + ERASER_W * 50, C[1] - ERASER_H * 50, C[1] + ERASER_H * 50, C[2] - 0.5, C[2] + 0.5, "#f0d6db", {id: "eraser"});
+  box3(C[0] - 0.8, C[0] + 1.2, C[1] - ERASER_H * 50 - 0.02, C[1] + ERASER_H * 50 + 0.02, C[2] - 0.52, C[2] + 0.52, "#4b6fb0", {id: "eraser"});
+}
+
+/* the base plate, as drawn on page 1 of the paper: a thick clear block lying on the table, the thin pin
+   pushed into the middle of its end face and sticking out over the edge; fixed down with adhesive tape */
+const PLATE = {hw: 4, z0: -12.4, z1: -0.15, h: 1.0};
+/* ---- adhesive tape, laid by hand: a strip at a time, anywhere, at any angle ----
+   A strip is torn off the roll (STRIP_L long) and pressed down where you click, along the angle you turned it to.
+   It drapes over whatever is under it: flat on the table, a small tent up to the plate's top edge (tape does not get
+   into the corner), flat across the plate, and limp over the table edge where there is no table under it. */
+const STRIP_L = 18;
+const plateBox = () => ({x0: PIN_X - PLATE.hw, x1: PIN_X + PLATE.hw, z0: PLATE.z0, z1: PLATE.z1});
+/* how far a point of the table is outside the plate's footprint (0 inside) and on which side */
+function outside(x, z){ const b = plateBox(), dx = x < b.x0 ? b.x0 - x : x > b.x1 ? x - b.x1 : 0, dz = z < b.z0 ? b.z0 - z : z > b.z1 ? z - b.z1 : 0;
+  return {d: Math.hypot(dx, dz), side: dx >= dz ? (x < b.x0 ? "L" : x > b.x1 ? "R" : "") : (z < b.z0 ? "B" : z > b.z1 ? "F" : "")}; }
+const TENT = 1.25;
+function tapeH(x, z, lift){ const e = 0.012, top = PLATE.h + 0.025, o = outside(x, z);
+  if (o.d === 0) return top;
+  let h = o.d < TENT ? e + (top - e) * (1 - o.d / TENT) : e;
+  if (z > 0) h -= Math.min(4, z * 1.1);                         /* over the table edge: nothing under it */
+  if (lift) h += lift * Math.max(0, o.d - TENT * 0.5) * 0.55;   /* peeling up from its loose end */
+  return h; }
+/* the strip's centre line, sampled */
+function stripPts(st, n){ const u = [Math.cos(st.ang), Math.sin(st.ang)], P = [];
+  for (let i = 0; i <= n; i++){ const t = -STRIP_L / 2 + STRIP_L * i / n; P.push([st.x + u[0] * t, st.z + u[1] * t]); } return P; }
+function drawStrip(st, k, o){
+  const n = 40, P = stripPts(st, n), nx = -Math.sin(st.ang) * TAPE_W / 2, nz = Math.cos(st.ang) * TAPE_W / 2;
+  const prog = o.prog === undefined ? 1 : o.prog, m = Math.max(1, Math.round(n * prog)), lift = o.lift || 0;
+  const E = (q, s) => { const x = q[0] + nx * s, z = q[1] + nz * s; return [x, tapeH(x, z, lift) + 0.003, z]; };
+  const f = {fill: o.ghost ? "rgba(140,255,150,0.45)" : "rgba(247,249,238,0.55)", alpha: o.ghost ? 0.45 : 0.55, id: o.ghost ? undefined : "strip:" + k, flat: true};
+  for (let i = 1; i <= m; i++){ const a = P[i - 1], b = P[i];
+    face([E(a, -1), E(b, -1), E(b, 1), E(a, 1)], f);
+    if (!o.ghost){ line3(E(a, -1), E(b, -1), "rgba(255,255,255,0.95)", 1.1); line3(E(a, 1), E(b, 1), "rgba(255,255,255,0.95)", 1.1);
+      line3(E(a, -0.35), E(b, -0.35), "rgba(255,255,255,0.45)", 2.2); } }
+  if (o.ghost) return;
+  /* the cut ends: a fine zigzag where it was torn off the roll */
+  const zig = q => { const Q = []; for (let i = 0; i <= 8; i++){ const s = -1 + 2 * i / 8, a = E(q, s), j = (i % 2 ? 0.09 : -0.09); Q.push([a[0] + Math.cos(st.ang) * j, a[1] + 0.002, a[2] + Math.sin(st.ang) * j]); } poly3(Q, "rgba(250,253,255,0.85)", 0.9); };
+  zig(P[0]); if (prog >= 1) zig(P[n]);
+  /* clickable all along it, to peel it off */
+  for (let i = 2; i < n; i += 4) sphere3(E(P[i], 0), TAPE_W * 0.6, "rgba(0,0,0,0.004)", {id: "strip:" + k}); }
+/* How hard a strip holds the plate down against the pull of what hangs on the pin.  The load tips the plate forward
+   about the table edge and lifts its back end; what resists is the tape stuck to the table beyond the plate.
+   - its grip on each side is the length stuck to the table there, up to ~4 cm (beyond that the bond adds little);
+   - a strip that crosses the plate and is stuck on both opposite sides (left and right, or over the back end and
+     round onto a side) holds in shear and pulls straight down: full strength;
+   - stuck on one side only it is peeled off from its loose edge: a fraction of it;
+   - its lever is how far behind the table edge it presses on the plate: near the edge it holds almost nothing. */
+function stripHold(st){
+  const n = 80, P = stripPts(st, n), ds = STRIP_L / n, side = {L: 0, R: 0, B: 0, F: 0};
+  let onPlate = 0, lever = 0;
+  for (const q of P){ if (q[1] > 0) continue; const o = outside(q[0], q[1]);
+    if (o.d === 0){ onPlate += ds; lever += -q[1] * ds; } else if (o.d > TENT && o.side) side[o.side] += ds; }
+  if (onPlate < 0.5) return 0;
+  lever /= onPlate;
+  const g = {}; for (const k in side) g[k] = Math.min(4, side[k]);
+  const n2 = ["L", "R", "B", "F"].filter(k => g[k] > 0.6), grip = n2.reduce((a, k) => a + g[k], 0);
+  const opposite = (g.L > 0.6 && g.R > 0.6) || (g.B > 0.6 && g.F > 0.6);
+  const factor = opposite ? 1.0 : n2.length >= 2 ? 0.55 : 0.22;
+  return factor * grip * lever; }
+const tapeHold = () => KIT.strips.reduce((a, st) => a + stripHold(st), 0);
+/* what the hanging tube asks of it: 40 units hanging at rest (one full strip across the plate 5 cm behind the edge
+   just holds), more by the pull of the swing through the bottom */
+function tapeNeed(){
+  if (rig.mode === "balance") return 40;
+  if (rig.mode !== "pendulum") return 0;
+  const Rr = truth.x_cm - truth.holes[rig.hole_index], N = truth.g * Math.cos(rig.theta) + rig.omega * rig.omega * Rr;
+  return 40 * Math.max(0.2, N / truth.g); }
+const taped = () => KIT.strips.length > 0;
+function basePlate(){
+  const x = PIN_X, z0 = -12.4, z1 = -0.15, y1 = 1.0;
+  box3(x - 4, x + 4, 0, y1, z0, z1, "#d4e6ec", {alpha: 0.42, id: "plate"});
+  for (const [p, q] of [[[x - 4, y1, z0], [x + 4, y1, z0]], [[x + 4, y1, z0], [x + 4, y1, z1]], [[x + 4, y1, z1], [x - 4, y1, z1]], [[x - 4, y1, z1], [x - 4, y1, z0]],
+    [[x - 4, 0, z1], [x + 4, 0, z1]], [[x - 4, 0, z1], [x - 4, y1, z1]], [[x + 4, 0, z1], [x + 4, y1, z1]]]) line3(p, q, "#f2fafc", 1.3);
+  /* the pin: its head sunk in the end face, the thin steel shank over the edge */
+  cyl3("z", z1 - 0.9, z1 + 0.02, x, PIN_Y, 0.16, "#3a3f44", {seg: 10, id: "pin"});
+  cylAB([x, PIN_Y, z1], [x, PIN_Y, PIN_TIP], 0.05, "#aab0b6", {seg: 8, id: "pin"});
+  /* the black pin cap: on the tip, or put down beside the plate; both it and the bare pin take a click well around them */
+  if (KIT.capOn){ cyl3("z", PIN_TIP - 1.4, PIN_TIP + 0.15, x, PIN_Y, 0.2, "#141618", {seg: 12, id: "cap", cap: "#222528"});
+    sphere3([x, PIN_Y, PIN_TIP - 0.6], 1.9, "rgba(0,0,0,0.004)", {id: "cap"}); }
+  else { cylAB([x + 6, 0.2, -3.5], [x + 7.6, 0.2, -3.1], 0.2, "#141618", {seg: 12, id: "cap"});
+    sphere3([x + 6.8, 0.2, -3.3], 1.4, "rgba(0,0,0,0.004)", {id: "cap"});
+    sphere3([x, PIN_Y, PLANE_Z + 0.3], 1.6, "rgba(0,0,0,0.004)", {id: "pin"}); }
+  /* the strips of tape, each laid as it was pressed down (and lifting as it gives way) */
+  const now = performance.now();
+  KIT.strips.forEach((st, k) => drawStrip(st, k, {prog: Math.min(1, (now - st.t0) / 350), lift: KIT.creep > 0 ? Math.min(1, KIT.creep / CREEP_FALL) * (st.weak ? 1 : 0.25) : 0}));
+}
+/* ---- what falls off the edge when the plate is not taped down ---- */
+const rotX = (v, a) => [v[0], v[1] * Math.cos(a) - v[2] * Math.sin(a), v[1] * Math.sin(a) + v[2] * Math.cos(a)];
+/* the plate at a pose: its centre and its turn about an axis along the table edge */
+function plateAt(c, a, id){
+  const {hw, z0, z1, h} = PLATE, hd = (z1 - z0) / 2, P = v => add3(c, rotX(v, a));
+  const V = [[-hw, -h / 2, -hd], [hw, -h / 2, -hd], [hw, h / 2, -hd], [-hw, h / 2, -hd], [-hw, -h / 2, hd], [hw, -h / 2, hd], [hw, h / 2, hd], [-hw, h / 2, hd]].map(P);
+  for (const f of [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [3, 2, 6, 7], [0, 3, 7, 4], [1, 2, 6, 5]]) face(f.map(i => V[i]), {fill: "#d4e6ec", alpha: 0.42, id});
+  for (const [i, j] of [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]]) line3(V[i], V[j], "#f2fafc", 1.1);
+  const py = PIN_Y - h / 2;
+  cylAB(P([0, py, hd - 0.9]), P([0, py, hd + 0.02]), 0.16, "#3a3f44", {seg: 10, id});
+  cylAB(P([0, py, hd]), P([0, py, PIN_TIP - (z0 + z1) / 2]), 0.05, "#aab0b6", {seg: 8, id});
+  return P([0, py, PIN_TIP - (z0 + z1) / 2]); }
+const ease2 = t => t * t;
+/* the poses of the fall: the plate tips over the edge about it as the weight on the pin pulls its end down, slides off
+   and drops, turning over, onto the low bench; the cylinder (and the thread) go down with it */
+function dropPose(t){
+  const D = KIT.drop, sy = shelfY(), c0 = [D.x, PLATE.h / 2, (PLATE.z0 + PLATE.z1) / 2], E = [D.x, 0, 0];
+  const T1 = 0.28, T2 = 0.95;
+  const tip = u => { const a = -0.95 * ease2(u); return {c: add3(E, rotX(add3(c0, E, -1), a)), a}; };
+  const end = {c: [D.x + 2.5, sy + PLATE.h / 2, 8.5], a: -Math.PI};
+  if (t <= T1) return tip(t / T1);
+  const s = Math.min(1, (t - T1) / (T2 - T1)), A = tip(1);
+  return {c: [A.c[0] + (end.c[0] - A.c[0]) * s, A.c[1] + (end.c[1] - A.c[1]) * ease2(s), A.c[2] + (end.c[2] - A.c[2]) * s], a: A.a + (end.a - A.a) * s}; }
+function drawDrop(){
+  const D = KIT.drop; if (!D) return;
+  const t = Math.min(2, (performance.now() - D.t0) / 1000), sy = shelfY(), r = truth.d_out * 50, done = t >= 0.95;
+  let pinTip = null;
+  if (D.plate){ const P = dropPose(t); pinTip = plateAt(P.c, P.a, "dplate"); }
+  if (D.tube){
+    /* the tube's ends: hanging from the pin while the plate tips, then down onto the bench, lying across it */
+    const lie = [[D.x - 14, sy + r, 3.2], [D.x - 14 + truth.L * 100, sy + r, 3.0]];
+    let A, B;
+    if (t <= 0.28 && pinTip){ if (D.how === "loop"){ const y = pinTip[1] - 100 * LOOP_DROP; A = [pinTip[0] - 100 * D.grip, y, pinTip[2]]; B = [A[0] + truth.L * 100, y, A[2]]; }
+      else { const top = 100 * truth.holes[D.hole]; A = [pinTip[0], pinTip[1] + top, pinTip[2]]; B = [pinTip[0], pinTip[1] + top - truth.L * 100, pinTip[2]]; } D.A = A; D.B = B; }
+    else { const s = done ? 1 : Math.min(1, (t - 0.28) / 0.67), A0 = D.A || lie[0], B0 = D.B || lie[1], k = ease2(s);
+      const mix = (P0, P1) => [P0[0] + (P1[0] - P0[0]) * s, P0[1] + (P1[1] - P0[1]) * k, P0[2] + (P1[2] - P0[2]) * s];
+      A = mix(A0, lie[0]); B = mix(B0, lie[1]); }
+    cylAB(A, B, r, "#c3c8cc", {seg: 22, id: "dtube", cap: "#8d9397"});
+    if (D.thread && !done && pinTip) for (const dz of [-0.3, 0.3]) line3(pinTip, [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2 + r, (A[2] + B[2]) / 2 + dz], "#f4f2ec", 1.2); }
+  if (D.thread && done){ for (let i = 0; i < 5; i++) ring3([D.x + 9 + i * 0.15, sy + 0.08 + i * 0.03, 11 + i * 0.1], 2.4 + i * 0.12, "#f4f2ec", 1.2, 26);
+    cyl3("y", sy, sy + 0.4, D.x + 9.3, 11.2, 2.8, "rgba(0,0,0,0.004)", {alpha: 0.004, id: "dthread"}); }
+}
+/* the plate was not taped down: with the weight on its pin it tips over the edge and everything on it falls */
+function plateFalls(){
+  const how = rig.mode === "balance" ? "loop" : "pin";
+  KIT.drop = {t0: performance.now(), x: PIN_X, plate: true, tube: true, thread: how === "loop" || rig.loop_present, how, hole: rig.hole_index, grip: rig.thread_x || truth.L / 2};
+  rig.take_cylinder_off(); rig.mode = "dropped"; rig.loop_present = false; OUT.thread = false; KIT.strips = []; KIT.creep = 0;
+  toolsDown(); statusMsg = tr("st_fell"); drawTray(); }
+/* a hand-held digital stopwatch lying face up: a rounded body, a bright bezel round the face, two push buttons in its
+   top edge (start/stop, reset) and a third in its side, the loop for the lanyard */
+function swShape(cx, cz, a, b, n){ const P = []; for (let i = 0; i < 40; i++){ const t = i / 40 * 2 * Math.PI, c = Math.cos(t), s = Math.sin(t);
+  P.push([cx + a * Math.sign(c) * Math.pow(Math.abs(c), 2 / n), cz + b * Math.sign(s) * Math.pow(Math.abs(s), 2 / n)]); } return P; }
+function stopwatch(sx, sz, ghost){
+  const o = ghost ? {alpha: 0.7} : {id: "sw"}, A = 3.45, B = 3.95;
+  prism3("y", 0, 1.05, swShape(sx, sz, A, B, 3.2), "#262a30", o);
+  prism3("y", 1.05, 1.22, swShape(sx, sz, A - 0.18, B - 0.18, 3.2), "#3a3f46", o);
+  prism3("y", 1.22, 1.32, swShape(sx, sz, A - 0.32, B - 0.32, 3.2), "#b9c0c6", o);
+  prism3("y", 1.32, 1.36, swShape(sx, sz, A - 0.5, B - 0.5, 3.2), "#1c1f24", o);
+  for (const dx of [-1.55, 1.55]){ cyl3("z", sz - B - 0.55, sz - B + 0.3, sx + dx, 0.62, 0.42, "#c9ced3", Object.assign({seg: 14, cap: "#e4e8eb"}, o));
+    cyl3("z", sz - B + 0.15, sz - B + 0.35, sx + dx, 0.62, 0.62, "#8d949b", Object.assign({seg: 14}, o)); }
+  cyl3("x", sx + A - 0.2, sx + A + 0.35, 0.58, sz - 1.2, 0.3, "#c9ced3", Object.assign({seg: 12, cap: "#e4e8eb"}, o));
+  if (!ghost){ ring3([sx, 0.55, sz + B + 0.45], 0.55, "#9aa1a8", 2.2, 20, "x");
+    drawSW(); tex3(SW_TEX, 0, 0, 400, 420, [sx - 2.75, 1.37, sz - 3.05], [5.5, 0, 0], [0, 0, 5.78], {id: "sw"}); } }
+/* the thread loop hanging from the pin with nothing in it: knotted, it hangs as a long narrow loop */
+function emptyLoop(){
+  if (!rig.loop_present || rig.mode === "balance" || !OUT.plate || plateDown()) return;
+  const P = [PIN_X, PIN_Y, PLANE_Z], bot = [PIN_X, PIN_Y - 100 * LOOP_DROP - 1.2, PLANE_Z];
+  const side = s => bez(P, [P[0] + 0.25 * s, P[1] - 3, P[2] + 0.2 * s], [P[0] + 0.55 * s, bot[1] + 3, P[2] + 0.5 * s], bot, 14);
+  poly3(side(1), "#f4f2ec", 1.3); poly3(side(-1), "#f4f2ec", 1.3);
+  sphere3([P[0], P[1] - 0.25, P[2]], 0.13, "#e8e5dc");
+  sphere3([PIN_X, PIN_Y - 100 * LOOP_DROP * 0.55, PLANE_Z], 1.6, "rgba(0,0,0,0.004)", {id: "loop"}); }
+function scene3(){
+  /* the table, its front edge at z = 0, and the shelf under the pin that catches the tube */
+  box3(-75, 75, -3, 0, -60, 0, "#94ad8f", {top: "#9ab494", id: "room"});
+  const sy = shelfY();
+  box3(-42, 42, sy - 2, sy, -2, 16, "#b08a62", {top: "#bb956c", id: "shelf"});
+  for (const x of [-40, 40]) for (const z of [0, 14]) box3(x - 1, x + 1, sy - 45, sy - 2, z - 1, z + 1, "#8b6a48");
+  if (OUT.plate && !plateDown()) basePlate();
+  drawDrop();
+  if (OUT.sw) stopwatch(...KIT.swAt);
+  if (OUT.tape) tapeRoll(...KIT.tapeAt);
+  if (OUT.thread && !rig.loop_present) threadCoil(...KIT.threadAt);
+  emptyLoop(); thread(); if (rig.mode !== "dropped") tube();
+  ruler(); pencil(); eraser();
+  if (CARRY && CARRY.ghost) CARRY.ghost();
+}
+
+/* ==================================================================
+   CAMERA, TRAY, PANEL AND THE HANDS.  Everything starts in the parts box
+   and is dragged out (or clicked, then put down with a click).  The tube
+   lies on the table, where the ruler, pencil and rubber lie flat beside
+   it, or hangs in the plane in front of the edge, where they are held up
+   against it.  The pointer is taken onto that surface and handed to the
+   rig in its own metres, so the actions of the 2-D version work as before.
+   ================================================================== */
+const cv3 = document.getElementById("cv"), ctx3 = cv3.getContext("2d");
+const $ = id => document.getElementById(id);
+let statusMsg = "";
+function layout3(){
+  const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2), w = cv3.parentElement.clientWidth || 900;
+  const h = Math.max(460, Math.min(Math.round(w * 0.66), Math.round(window.innerHeight * 0.8)));
+  cv3.style.width = w + "px"; cv3.style.height = h + "px"; cv3.width = Math.round(w * dpr); cv3.height = Math.round(h * dpr);
+  const first = !CAM0.k; CAM.W = w; CAM.H = h; CAM.dpr = dpr;
+  if (first){ Object.assign(CAM, {yaw: -0.12, pitch: 0.42, k: h / 58, tx: 2, ty: -10, tz: -6, px: 0, py: 0}); camSave(); }
+}
+function syncTabs(){ $("t-cap3").textContent = tr("cap_3d"); $("back").hidden = true; }
+
+/* screen point -> the vertical plane z = z0 */
+function onPlaneZ(px, py, z0){
+  const c = Math.cos(CAM.yaw), s = Math.sin(CAM.yaw), cp = Math.cos(CAM.pitch), sp = Math.sin(CAM.pitch);
+  const xr = (px - CAM.W / 2 - CAM.px) / CAM.k, up = -(py - CAM.H / 2 - CAM.py) / CAM.k;
+  const dz = z0 - CAM.tz; if (Math.abs(c) < 1e-4) return null;
+  const dx = (xr + dz * s) / c, dy = (up + (dx * s + dz * c) * sp) / cp;
+  return [CAM.tx + dx, CAM.ty + dy, z0];
+}
+/* the rig's own coordinates (m) of a screen point: on the table, or on the plane just in front of the tube */
+function s2wS(sf, p, dz){
+  if (sf === "table"){ const q = onPlane(p[0], p[1], dz || 0); return [q[0] / 100, (q[2] - TZ0) / 100]; }
+  const q = onPlaneZ(p[0], p[1], PLANE_Z + (dz || 0)); return q ? [(q[0] - PIN_X) / 100, (PIN_Y - q[1]) / 100] : [0, 0]; }
+const s2w = (p, dz) => s2wS(tubeSurf(), p, dz);
+const ppm = () => CAM.k * 100;
+const front = () => onTable() ? 2 * truth.d_out * 50 : truth.d_out * 50;
+/* a tool's height over the table, or its distance in front of the hanging tube */
+const toolH = k => TSURF[k] === "table" ? (k === "ruler" ? 0.06 : k === "pencil" ? 0.32 : 0.5) : truth.d_out * 50 + (k === "ruler" ? 0.5 : 0.8);
+const toolXY = (k, p) => s2wS(TSURF[k], p, toolH(k));
+const tableAt = p => onPlane(p[0], p[1], 0);
+const onTableTop = q => q[2] < -0.8 && q[2] > -58 && Math.abs(q[0]) < 72;
+/* where a tool under the pointer goes: against the hanging tube when the pointer is off the table in front of it */
+const surfAt = p => hanging() && !onTableTop(tableAt(p)) ? "plane" : "table";
+/* a tool on the table stays on it: pulled back in from over the edge */
+function keepOnTable(k){
+  if (TSURF[k] !== "table") return;
+  const pos = k === "ruler" ? rig.ruler_pos : k === "pencil" ? rig.pencil_pos : rig.eraser_pos;
+  const zmax = (-1.2 - TZ0) / 100, zmin = (-57 - TZ0) / 100, xm = 0.70;
+  let dx = 0, dz = 0;
+  if (k === "ruler"){ const ex = pos[0] + Math.cos(rig.ruler_angle) * RULER_LEN, ez = pos[1] + Math.sin(rig.ruler_angle) * RULER_LEN;
+    const hi = Math.max(pos[1], ez) + RULER_H / 2, lo = Math.min(pos[1], ez) - RULER_H / 2, r = Math.max(pos[0], ex), l = Math.min(pos[0], ex);
+    if (hi > zmax) dz = zmax - hi; else if (lo < zmin) dz = zmin - lo; if (r > xm) dx = xm - r; else if (l < -xm) dx = -xm - l; }
+  else { if (pos[1] > zmax) dz = zmax - pos[1]; else if (pos[1] < zmin) dz = zmin - pos[1]; if (pos[0] > xm) dx = xm - pos[0]; else if (pos[0] < -xm) dx = -xm - pos[0]; }
+  pos[0] += dx; pos[1] += dz; }
+/* a tool held up against the tube when the tube is taken down drops onto the table at the edge below */
+function toolsDown(){
+  for (const k of ["ruler", "pencil", "eraser"]) if (TSURF[k] === "plane"){
+    const pos = k === "ruler" ? rig.ruler_pos : k === "pencil" ? rig.pencil_pos : rig.eraser_pos;
+    const X = PIN_X + 100 * pos[0]; TSURF[k] = "table"; pos[0] = X / 100; pos[1] = (-4 - TZ0) / 100; if (k === "ruler") rig.ruler_angle = 0; keepOnTable(k); } }
+/* move a tool to the pointer, onto the surface the pointer is over */
+function toolMove(k, p, grab){
+  const sf = surfAt(p); if (sf !== TSURF[k]){ TSURF[k] = sf; if (grab){ grab[0] = k === "ruler" ? RULER_LEN / 2 : 0; grab[1] = 0; } }
+  const [x, y] = toolXY(k, p), g = grab || [k === "ruler" ? RULER_LEN / 2 : 0, 0];
+  /* the pencil leaves a mark, and the rubber wipes, only on the surface the tube is on */
+  const live = !!grab && TSURF[k] === tubeSurf() && rig.mode !== null && rig.mode !== "dropped";
+  if (k === "ruler") rig.move_ruler(x - g[0], y - g[1]); else if (k === "pencil") rig.pencil_to(x - g[0], y - g[1], live); else rig.eraser_to(x - g[0], y - g[1], live); }
+
+function draw3(){
+  const dpr = CAM.dpr; ctx3.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const g = ctx3.createLinearGradient(0, 0, 0, CAM.H); g.addColorStop(0, "#2a3038"); g.addColorStop(1, "#1b1f25");
+  ctx3.fillStyle = g; ctx3.fillRect(0, 0, CAM.W, CAM.H);
+  begin3(); scene3(); render3(ctx3);
+  /* where the thing in the hand can go: the pin, the thread loop or the plate, ringed in green */
+  if (CARRY){ const rings = [];
+    if (CARRY.item === "thread" && pinFree()) rings.push([PIN_X, PIN_Y, PLANE_Z]);
+    if (CARRY.item === "tube" && rig.loop_present && pinFree()) rings.push([PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z]);
+
+    for (const w of rings){ const s = P3(...w), near = Math.hypot(s[0] - MOUSE[0], s[1] - MOUSE[1]) < 60;
+      ctx3.strokeStyle = near ? "#7dff6a" : "rgba(125,255,106,0.55)"; ctx3.lineWidth = near ? 4 : 2; ctx3.beginPath(); ctx3.arc(s[0], s[1], near ? 22 : 18, 0, 6.2832); ctx3.stroke(); } }
+  if (rig.mode === "free" && rig.sel_hole !== null && pinFree()){ const s = P3(PIN_X, PIN_Y, PLANE_Z);
+    ctx3.strokeStyle = "rgba(125,255,106,0.8)"; ctx3.lineWidth = 2.5; ctx3.beginPath(); ctx3.arc(s[0], s[1], 18, 0, 6.2832); ctx3.stroke(); }
+}
+
+/* ---- the tray ---- */
+const trayCv = $("tray"), tctx = trayCv.getContext("2d"), TROW = 44, TRAY_UI = ["tube", "plate", "tape", "thread", "sw", "ruler", "pencil", "eraser"];
+let TRW = 190, trayCells = [];
+const isOut = k => k === "tube" ? rig.mode !== null : TOOLS[k] !== undefined ? TOOLS[k] : OUT[k];
+function trayLayout(){
+  const dpr = window.devicePixelRatio || 1; TRW = Math.max(150, trayCv.parentElement.clientWidth - 18 || 190);
+  const h = TRAY_UI.length * TROW + 64; trayCv.style.width = TRW + "px"; trayCv.style.height = h + "px";
+  trayCv.width = Math.round(TRW * dpr); trayCv.height = Math.round(h * dpr); drawTray(); }
+function trayIcon(c, k, x, y){
+  c.save(); c.translate(x, y);
+  if (k === "ruler"){ c.fillStyle = "rgba(236,244,247,.9)"; c.fillRect(-17, -6, 34, 12); c.fillStyle = "#c9302c"; c.fillRect(-17, -6, 34, 2); c.strokeStyle = "#333"; for (let i = -15; i <= 15; i += 3){ c.beginPath(); c.moveTo(i, -4); c.lineTo(i, i % 15 ? -1 : 1); c.stroke(); } }
+  else if (k === "pencil"){ c.rotate(-0.5); c.fillStyle = "#e2b33c"; c.fillRect(-14, -3, 24, 6); c.fillStyle = "#f1d3a4"; c.beginPath(); c.moveTo(10, -3); c.lineTo(17, 0); c.lineTo(10, 3); c.fill(); c.fillStyle = "#d4524a"; c.fillRect(-17, -3, 3, 6); }
+  else if (k === "eraser"){ c.fillStyle = "#f0d6db"; c.fillRect(-12, -6, 24, 12); c.fillStyle = "#4b6fb0"; c.fillRect(-3, -6, 8, 12); }
+  else if (k === "tube"){ const g = c.createLinearGradient(0, -4, 0, 4); g.addColorStop(0, "#e2e6e9"); g.addColorStop(1, "#8d9397"); c.fillStyle = g; c.fillRect(-19, -4, 38, 8); c.fillStyle = "#222"; for (let i = -15; i < 2; i += 3) c.fillRect(i, -1, 1.4, 1.4); }
+  else if (k === "plate"){ c.fillStyle = "rgba(212,230,236,.55)"; c.strokeStyle = "#e9f5f8"; c.beginPath(); c.moveTo(-14, 2); c.lineTo(-4, -8); c.lineTo(14, -8); c.lineTo(4, 2); c.closePath(); c.fill(); c.stroke();
+    c.fillRect(-14, 2, 18, 4); c.strokeStyle = "#aab0b6"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-5, 4); c.lineTo(-12, 11); c.stroke(); }
+  else if (k === "tape"){ c.fillStyle = "#d3ddda"; c.beginPath(); c.arc(0, 0, 12, 0, 7); c.fill(); c.strokeStyle = "rgba(255,255,255,.6)"; for (const r of [9, 10.5]){ c.beginPath(); c.arc(0, 0, r, 0, 7); c.stroke(); }
+    c.fillStyle = "#c49a64"; c.beginPath(); c.arc(0, 0, 8, 0, 7); c.fill(); c.fillStyle = "#15181d"; c.beginPath(); c.arc(0, 0, 6.6, 0, 7); c.fill(); }
+  else if (k === "thread"){ c.strokeStyle = "#f4f2ec"; for (let i = 0; i < 4; i++){ c.beginPath(); c.ellipse(i, 0, 11 + i, 7, 0, 0, 7); c.stroke(); } }
+  else if (k === "sw"){ c.fillStyle = "#c9ced3"; c.fillRect(-7, -15, 4, 4); c.fillRect(3, -15, 4, 4); c.fillStyle = "#262a30"; c.beginPath(); c.ellipse(0, 0, 12, 13, 0, 0, 7); c.fill();
+    c.strokeStyle = "#b9c0c6"; c.lineWidth = 1.5; c.stroke(); c.fillStyle = "#b3c0a8"; c.fillRect(-8, -6, 16, 8); }
+  c.restore(); }
+function drawTray(){
+  const dpr = window.devicePixelRatio || 1, c = tctx, h = TRAY_UI.length * TROW + 64;
+  c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = "#15181d"; c.fillRect(0, 0, TRW, h);
+  trayCells = []; let y = 6; const wd = TRW - 12;
+  for (const k of TRAY_UI){ const on = isOut(k) && !(CARRY && CARRY.item === k && CARRY.fresh), hand = CARRY && CARRY.item === k;
+    c.fillStyle = on ? "#1a1d22" : "#1f242b"; c.fillRect(6, y, wd, TROW - 4); c.strokeStyle = hand ? "#f2c14e" : on ? "#3f4650" : "#353b43"; c.lineWidth = 1; c.strokeRect(6.5, y + 0.5, wd - 1, TROW - 5);
+    c.globalAlpha = on || hand ? 0.45 : 1; trayIcon(c, k, 28, y + (TROW - 4) / 2); c.globalAlpha = 1;
+    c.font = '11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign = "left"; c.textBaseline = "middle";
+    c.fillStyle = on ? "#8b939b" : "#e8eef2"; c.fillText(tr("it_" + k), 52, y + 13);
+    c.font = '9.5px "Malgun Gothic",sans-serif'; c.fillStyle = on || hand ? "#f2c14e" : "#69717a"; c.fillText(tr(hand ? "trayHand" : on ? "trayBack" : "trayTake"), 52, y + 29);
+    trayCells.push([k, y, y + TROW - 4]); y += TROW; }
+  c.font = '10.5px "Malgun Gothic",sans-serif'; c.textAlign = "center"; c.textBaseline = "top"; c.fillStyle = "#69717a";
+  tr("trayHelp").split("\n").forEach((ln, i) => c.fillText(ln, TRW / 2, y + 6 + i * 14)); }
+
+/* ---- the hand ---- */
+let MOUSE = [0, 0], trayPress = null;
+function toolTo(k, p){ toolMove(k, p, null); }
+/* a ghost of the part in the hand, under the pointer on the table */
+function ghostOf(item){ return () => { const q = tableAt(MOUSE);
+  if (item === "plate"){ box3(q[0] - 4, q[0] + 4, 0.6, 1.6, -12.4, -0.15, "#d4e6ec", {alpha: 0.35}); }
+  else if (item === "tape"){ const at = tapeAt(MOUSE); if (at) drawStrip({x: at[0], z: at[1], ang: KIT.tapeAng}, -1, {ghost: true}); else tapeRoll(q[0], q[2], true); }
+  else if (item === "thread") for (let i = 0; i < 4; i++) ring3([q[0], 0.6, q[2]], 3.2 + i * 0.15, "#f4f2ec", 1.3, 24);
+  else if (item === "sw") stopwatch(q[0], q[2], true);
+  else if (item === "tube" && CARRY.fresh) cylAB([q[0] - truth.L * 50, truth.d_out * 50 + 0.6, q[2]], [q[0] + truth.L * 50, truth.d_out * 50 + 0.6, q[2]], truth.d_out * 50, "#c3c8cc", {seg: 18}); }; }
+function take(item, fresh){ CARRY = {item, fresh, ghost: ["ruler", "pencil", "eraser"].includes(item) || (item === "tube" && !fresh) ? null : ghostOf(item)};
+  if (["ruler", "pencil", "eraser"].includes(item)){ CARRY.wasOut = TOOLS[item]; TOOLS[item] = true; toolTo(item, MOUSE); }
+  if (item === "tube" && !fresh){ CARRY.was = rig.free_pos.slice(); }
+  statusMsg = tr("hand_" + (["pencil", "eraser"].includes(item) ? "ruler" : item)); drawTray(); }
+function cancelCarry(){ if (!CARRY) return false; const c = CARRY; CARRY = null;
+  if (["ruler", "pencil", "eraser"].includes(c.item) && c.fresh) TOOLS[c.item] = false;
+  if (c.item === "tube" && !c.fresh) rig.free_pos = c.was;
+  statusMsg = ""; drawTray(); return true; }
+/* put down what is in the hand where the pointer is */
+function putDown(p){
+  const c = CARRY; if (!c) return; const q = tableAt(p), t = T[lang];
+  const nearScr = (w, r) => { const s = P3(...w); return Math.hypot(s[0] - p[0], s[1] - p[1]) < r; };
+  if (["ruler", "pencil", "eraser"].includes(c.item)){ toolTo(c.item, p); keepOnTable(c.item); statusMsg = t.mPlaced(t.items[c.item]); CARRY = null; drawTray(); return; }
+  if (c.item === "plate"){ if (!onTableTop([q[0], 0, -3])){ statusMsg = tr("st_plateWhere"); return; }
+    PIN_X = Math.max(-38, Math.min(38, q[0])); OUT.plate = true; KIT.strips = []; KIT.capOn = true; statusMsg = tr("st_plateOn"); }
+  else if (c.item === "tape"){
+    const at = tapeAt(p);
+    if (at){ KIT.strips.push({x: at[0], z: at[1], ang: KIT.tapeAng, t0: performance.now()}); markWeak();
+      statusMsg = fmt(tr("st_stripOn"), KIT.strips.length); drawTray(); return; }
+    else if (onTableTop(q)){ KIT.tapeAt = [q[0], q[2]]; statusMsg = ""; } else return;
+    OUT.tape = true; }
+  else if (c.item === "thread"){
+    if (nearScr([PIN_X, PIN_Y, PLANE_Z], 60) && OUT.plate && !plateDown()){ if (KIT.capOn){ statusMsg = tr("st_capFirst"); return; }
+      rig.loop_present = true; statusMsg = tr("st_loopOn"); }
+    else if (onTableTop(q)){ KIT.threadAt = [q[0], q[2]]; rig.loop_present = false; statusMsg = ""; } else return;
+    OUT.thread = true; }
+  else if (c.item === "sw"){ if (!onTableTop(q)) return; KIT.swAt = [q[0], q[2]]; OUT.sw = true; statusMsg = ""; }
+  else if (c.item === "tube"){
+    if (rig.loop_present && pinFree() && nearScr([PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z], 90)){
+      rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); statusMsg = T[lang].mInLoop; if (!taped()){ CARRY = null; plateFalls(); return; } }
+    else { if (!onTableTop(q)){ statusMsg = tr("st_onTableOnly"); return; }
+      rig.mode = "free"; rig.free_pos = [q[0] / 100, (q[2] - TZ0) / 100]; rig.sel_hole = null; rig.hole_index = null;
+      rig.theta = rig.omega = 0; rig.released = false; statusMsg = tr("st_tubeTable"); } }
+  CARRY = null; drawTray(); }
+trayCv.addEventListener("contextmenu", e => { e.preventDefault(); cancelCarry(); });
+trayCv.addEventListener("pointerdown", e => {
+  if (e.button) return; const y = e.clientY - trayCv.getBoundingClientRect().top;
+  for (const [k, y0, y1] of trayCells) if (y >= y0 && y <= y1){
+    if (CARRY && CARRY.item === k){ cancelCarry(); return; }
+    cancelCarry();
+    if (isOut(k)){ backInBox(k); return; }
+    take(k, true); trayPress = {x: e.clientX, y: e.clientY}; return; } });
+window.addEventListener("pointermove", e => { const r = cv3.getBoundingClientRect(); MOUSE = [e.clientX - r.left, e.clientY - r.top];
+  if (CARRY && ["ruler", "pencil", "eraser"].includes(CARRY.item)) toolTo(CARRY.item, MOUSE);
+});
+window.addEventListener("pointerup", e => { if (!trayPress) return; const moved = Math.hypot(e.clientX - trayPress.x, e.clientY - trayPress.y) > 6; trayPress = null;
+  const r = cv3.getBoundingClientRect(); if (moved && CARRY && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) putDown([e.clientX - r.left, e.clientY - r.top]); });
+/* back in the box: only what nothing else is resting on */
+function backInBox(k){
+  const t = T[lang];
+  if (["ruler", "pencil", "eraser"].includes(k)){ TOOLS[k] = false; statusMsg = t.mBack(t.items[k]); }
+  else if (k === "tube"){ if (rig.mode === "pendulum" || rig.mode === "balance"){ statusMsg = tr("st_offFirst"); drawTray(); return; } rig.mode = null; rig.sel_hole = null; if (KIT.drop) KIT.drop.tube = false; statusMsg = tr("st_backBox"); }
+  else if (k === "plate"){ if (plateDown()){ KIT.drop.plate = false; OUT.plate = false; KIT.capOn = true; statusMsg = tr("st_backBox"); }
+    else if (taped()){ statusMsg = tr("st_peelFirst"); drawTray(); return; }
+    else if (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present){ statusMsg = tr("st_plateBusy"); drawTray(); return; }
+    else { OUT.plate = false; KIT.capOn = true; statusMsg = tr("st_backBox"); } }
+  else if (k === "thread"){ if (rig.mode === "balance"){ statusMsg = tr("st_offFirst"); drawTray(); return; } OUT.thread = false; rig.loop_present = false; if (KIT.drop) KIT.drop.thread = false; statusMsg = tr("st_backBox"); }
+  else { OUT[k] = false; statusMsg = tr("st_backBox"); }
+  if (KIT.drop && !KIT.drop.plate && !KIT.drop.tube && !KIT.drop.thread) KIT.drop = null;
+  drawTray(); }
+/* where a strip goes for the pointer: on the plate or just round it (the tape must touch the plate) */
+function tapeAt(p){
+  if (!OUT.plate || plateDown()) return null;
+  const b = plateBox(), top = onPlane(p[0], p[1], PLATE.h), q = top[0] > b.x0 && top[0] < b.x1 && top[2] > b.z0 && top[2] < b.z1 ? top : onPlane(p[0], p[1], 0);
+  const m = 2.2; return q[0] > b.x0 - m && q[0] < b.x1 + m && q[2] > b.z0 - m && q[2] < b.z1 + 0.4 ? [q[0], q[2]] : null; }
+/* the strips that hold least: the ones seen peeling first */
+function markWeak(){ for (const st of KIT.strips) st.weak = stripHold(st) < 20; }
+window.addEventListener("keydown", e => { if (e.key === "Escape") cancelCarry(); });
+window.addEventListener("resize", () => { trayLayout(); layout3(); });
+
+/* ---- the panel ---- */
+function status(m){ if (m) statusMsg = m; }
 function syncPanel(){
-  const d = L_();
-  setTxt("t-h-part", (part==="A") ? d.headA : d.headB);
-  setTxt("t-benchcap", (part==="A") ? d.benchcapA : d.benchcapB);
-  setTxt("t-note", ((part==="A") ? d.hintA : d.hintB) + "\n" + d.note);
-  setTxt("status", statusMsg || rig.status_line());
-  $("actA").classList.toggle("hidden", part!=="A");
-  $("actB").classList.toggle("hidden", part!=="B");
-  $("swBox").classList.toggle("hidden", part!=="B");
-  setTxt("btnHold", rig.held ? d.letgo : d.hold);
-  setTxt("btnRehang", d.rehang);
-  if(part==="B"){
-    let s;
-    if(rig.mode==="pendulum") s = fmt(d.selPin, rig.hole_index+1);
-    else if(rig.sel_hole!==null) s = fmt(d.selSel, rig.sel_hole+1);
-    else s = d.selNone;
-    setTxt("selLbl", s);
-  }
-  const sc = Math.round(view().ppm/PPM_TRUE*100)/100;
-  setTxt("scaleLbl", fmt(d.scale, sc.toFixed(2),
-                         Math.abs(sc-1.0)<0.01 ? d.actual : ""));
-}
-function setPart(p){
-  part = p;
-  if(p==="A") rig.enter_part_a(); else rig.enter_part_b();
-  $("tabA").className = p==="A" ? "on" : "";
-  $("tabB").className = p==="B" ? "on" : "";
-  if(!view().fitted) scaleFit();
-  swCache = null;
-  syncPanel();
-}
-$("tabA").onclick = ()=>setPart("A");
-$("tabB").onclick = ()=>setPart("B");
-
-$("btnHold").onclick  = ()=>{ status(rig.hold(!rig.held)[1]); };
-$("btnRehang").onclick = ()=>{
-  const x = rig.thread_x || truth.L*0.5;
-  rig.take_cylinder_off();
-  rig.loop_present = true;
-  rig.mount_on_loop(x);
-  rig.hold(true);
-};
-$("swStart").onclick = ()=>rig.stopwatch_start();
-$("swStop").onclick  = ()=>rig.stopwatch_stop();
-$("swReset").onclick = ()=>rig.stopwatch_reset();
-/* one press starts the watch, the next one stops it */
-function swToggle(){ if(rig.sw_running) rig.stopwatch_stop(); else rig.stopwatch_start(); }
-swc.addEventListener("click", swToggle);
-
-$("btnFit").onclick = ()=>scaleFit();
-$("btn11").onclick  = ()=>scale1to1();
-$("btnNew").onclick = ()=>{
-  seed = (Math.floor(Math.random()*1e8)+1)|0;
-  truth = makeTruth(seed);
-  rig   = makeRig(truth);
-  V.A.fitted = V.B.fitted = false;
-  statusMsg = "";
-  setPart(part);
-  rig.move_ruler(-truth.L*0.60, LOOP_DROP+0.055);
-  rig.pencil_to(truth.L*0.30, LOOP_DROP+0.090);
-  rig.eraser_to(truth.L*0.30-0.055, LOOP_DROP+0.150);
-  scaleFit();
-};
-
-/* ══════════════════════════════════════════════════════════════
-   7.  EVENTS
-   ══════════════════════════════════════════════════════════════ */
-function evXY(e){
-  const r = cv.getBoundingClientRect();
-  return [(e.clientX-r.left)*CVW/r.width, (e.clientY-r.top)*CVH/r.height];
-}
-let down = false;
-cv.addEventListener("pointerdown", e=>{
-  if(e.button===2) return;
-  if(hand){ const [hx,hy]=evXY(e); placeTool(hx,hy); return; }
-  down = true; cv.setPointerCapture(e.pointerId);
-  const [x,y]=evXY(e); onPress(x,y,e.button);
-  cv.classList.add("grabbing"); e.preventDefault();
-});
-cv.addEventListener("pointermove", e=>{
-  const [x,y]=evXY(e);
-  hoverXY=[x,y];
-  if(rig.carried) rig.carry_pos = s2w(x,y);
-  if(down) onMotion(x,y);
-});
-cv.addEventListener("pointerup", ()=>{
-  if(!down) return;
-  down=false; cv.classList.remove("grabbing"); onRelease();
-});
-cv.addEventListener("pointercancel", ()=>{ down=false; dragMode=null; cv.classList.remove("grabbing"); });
-cv.addEventListener("contextmenu", e=>{
-  e.preventDefault();
-  if(hand){ hand=null; drawTray(); return; }
-  { const [x,y]=evXY(e), [wx,wy]=s2w(x,y);
-    for(const [k,f] of [["eraser","on_eraser"],["pencil","on_pencil"],["ruler","on_ruler"]])
-      if(TOOLS[k] && rig[f](wx,wy)){ TOOLS[k]=false; say("mBack",T[lang].items[k]); drawTray(); return; } }
-  if(part==="B") status(rig.unmount_from_pin()[1]);
-});
-cv.addEventListener("wheel", e=>{
-  e.preventDefault();
-  const [x,y]=evXY(e);
-  onWheel(x,y, e.deltaY<0 ? 1 : -1, e.shiftKey, e.ctrlKey||e.metaKey);
-}, {passive:false});
-/* space bar: start the stopwatch, press again to stop it */
-window.addEventListener("keydown", e=>{
-  if(e.code==="Space" || e.key===" "){
-    if(document.activeElement && document.activeElement.tagName==="BUTTON")
-      document.activeElement.blur();
-    e.preventDefault();
-    if(part==="B") swToggle();
-  }
-});
-
-/* ══════════════════════════════════════════════════════════════
-   8.  LANGUAGE
-   ══════════════════════════════════════════════════════════════ */
-function applyLang(){
   const d = T[lang];
-  document.documentElement.lang = lang;
-  document.title = (lang==="ko")
-    ? "IPhO 2011 E2 — 역학 블랙박스 · Mechanical Blackbox · HaslaLab"
-    : "IPhO 2011 E2 — Mechanical Blackbox · HaslaLab";
-  $("t-title").textContent = d.title;
-  $("t-sub").textContent   = d.sub;
-  $("tabA").textContent    = d.tabA;
-  $("tabB").textContent    = d.tabB;
-  $("t-h-sw").textContent  = d.hSw;
-  $("swStart").textContent = d.start;
-  $("swStop").textContent  = d.stop;
-  $("swReset").textContent = d.reset;
-  $("t-h-view").textContent= d.hView;
-  $("btnFit").textContent  = d.fit;
-  $("btn11").textContent   = d.one;
-  $("btnNew").textContent  = d.newrig;
-  $("t-tray").textContent = d.tray; $("t-closecap").textContent = d.closecap; drawTray();
-  $("btn-ko").className = lang==="ko" ? "on" : "";
-  $("btn-en").className = lang==="en" ? "on" : "";
-  statusMsg = "";
-  swCache = null;
-  syncPanel();
+  $("actA").hidden = rig.mode !== "balance"; $("actB").hidden = !(rig.mode === "free" || rig.mode === "pendulum");
+  setTxt("btnHold", rig.held ? d.letgo : d.hold); setTxt("btnRehang", d.rehang);
+  if (!$("actB").hidden) setTxt("actB", rig.mode === "pendulum" ? fmt(d.selPin, rig.hole_index + 1) : rig.sel_hole !== null ? fmt(d.selSel, rig.sel_hole + 1) : d.selNone);
+  setTxt("swDisp", OUT.sw ? rig.stopwatch_display() : "--:--.--");
+  for (const id of ["swStart", "swStop", "swReset"]) $(id).disabled = !OUT.sw;
+  setTxt("status", (statusMsg ? statusMsg + "\n" : "") + (rig.mode === null ? tr("st_setup") : rig.mode === "dropped" ? tr("st_dropped") : rig.status_line()));
 }
-$("btn-ko").onclick = ()=>{ lang="ko"; applyLang(); };
-$("btn-en").onclick = ()=>{ lang="en"; applyLang(); };
+$("btnHold").onclick = () => status(rig.hold(!rig.held)[1]);
+$("btnRehang").onclick = () => { const x = rig.thread_x || truth.L * 0.5; rig.take_cylinder_off(); rig.loop_present = true; rig.mount_on_loop(x); rig.hold(true); };
+$("swStart").onclick = () => rig.stopwatch_start(); $("swStop").onclick = () => rig.stopwatch_stop(); $("swReset").onclick = () => rig.stopwatch_reset();
+function swToggle(){ if (!OUT.sw) return; if (rig.sw_running) rig.stopwatch_stop(); else rig.stopwatch_start(); }
+window.addEventListener("keydown", e => { if ((e.code === "Space" || e.key === " ") && OUT.sw){ if (document.activeElement && document.activeElement.tagName === "BUTTON") document.activeElement.blur(); e.preventDefault(); swToggle(); } });
 
-/* ══════════════════════════════════════════════════════════════
-   9.  MAIN LOOP
-   ══════════════════════════════════════════════════════════════ */
-function layout(){
-  DPR = window.devicePixelRatio || 1;
-  const r = cv.parentElement.getBoundingClientRect();
-  CVW = Math.max(360, Math.floor(r.width-24));
-  CVH = Math.max(460, Math.min(Math.round(CVW*0.74), Math.round(window.innerHeight*0.82)));
-  cv.style.height = CVH+"px";
-  cv.width  = Math.round(CVW*DPR);
-  cv.height = Math.round(CVH*DPR);
-  swc.style.width = "254px"; swc.style.height = "182px";
-  swc.width  = Math.round(254*DPR);
-  swc.height = Math.round(182*DPR);
-  swCache = null;
-  trayLayout(); closeLayout();
-  if(!V.A.fitted && part==="A") scaleFit();
-  if(!V.B.fitted && part==="B") scaleFit();
-}
+/* ---- the hands on the bench: the 2-D press / motion / release ---- */
+let dragMode = null, pendingHole = null, pressXY = [0, 0], grab = [0, 0], down = null, mPrev = [0, 0];
+function holeAt(wx, wy){
+  const [ox, oy, ux, uy] = rig.cyl_world(); let best = null, bd = 1e9;
+  truth.holes.forEach((h, i) => { const d = Math.hypot(ox + ux * h - wx, oy + uy * h - wy); if (d < bd){ best = i; bd = d; } });
+  return bd < Math.max(0.0035, 8.0 / ppm()) ? best : null; }
+const pe = e => { const r = cv3.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+function onPress(p){
+  const id = pick3(p[0], p[1]);
+  const [wx, wy] = s2w(p, onTable() ? 2 * truth.d_out * 50 : 0), [tx, ty] = toolXY("pencil", p), [ex, ey] = toolXY("eraser", p);
+  if (TOOLS.eraser && rig.on_eraser(ex, ey)){ dragMode = "eraser"; grab = [ex - rig.eraser_pos[0], ey - rig.eraser_pos[1]]; toolMove("eraser", p, grab); return; }
+  if (TOOLS.pencil && rig.on_pencil(tx, ty)){ dragMode = "pencil"; grab = [tx - rig.pencil_pos[0], ty - rig.pencil_pos[1]]; toolMove("pencil", p, grab); return; }
+  if (id === "cap"){ if (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present){ status(tr("st_capBusy")); dragMode = null; return; }
+    KIT.capOn = !KIT.capOn; status(tr(KIT.capOn ? "st_capOnMsg" : "st_capOffMsg")); dragMode = null; return; }
+  /* a strip of tape peeled off (what is left may not hold what hangs on the pin) */
+  if (id && id.startsWith("strip:")){ KIT.strips.splice(+id.slice(6), 1); markWeak(); dragMode = null; status(tr(taped() ? "st_peeledOne" : "st_peeled")); drawTray(); return; }
+  /* the parts that fell are picked up off the bench */
+  if (KIT.drop && (performance.now() - KIT.drop.t0) > 950 && (id === "dplate" || id === "dtube" || id === "dthread")){
+    const D = KIT.drop, k = id === "dplate" ? "plate" : id === "dtube" ? "tube" : "thread";
+    if (k === "plate"){ D.plate = false; OUT.plate = false; KIT.capOn = false; } else if (k === "tube"){ D.tube = false; rig.mode = null; } else { D.thread = false; OUT.thread = false; }
+    if (!D.plate && !D.tube && !D.thread) KIT.drop = null;
+    take(k, true); dragMode = null; return; }
+  if (id === "plate" && taped()){ status(tr("st_peelFirst")); dragMode = null; return; }
+  if (id === "tape" || id === "thread" || id === "loop" || id === "sw" || id === "plate"){ dragMode = "item:" + (id === "loop" ? "thread" : id); pressXY = p.slice(); return; }
+  if (rig.mode === "balance"){
+    if (rig.carried){ if (Math.hypot(wx, wy - LOOP_DROP) < 0.030) status(rig.insert_into_loop()[1]); else status(T[lang].mClickLoop); return; }
+    if (rig.slipping || (rig.fallen && rig.on_cylinder(wx, wy, 0.010))){ const m = rig.catch_()[1]; rig.carry_pos = [wx, wy]; status(m); return; }
+    /* hold the tube and push it through the loop (drag), or let go of it (click) */
+    if (rig.held && rig.on_cylinder(wx, wy, truth.d_out)){ dragMode = "slide"; pressXY = p.slice(); grab = [wx, rig.thread_x]; return; }
+  } else if (rig.mode === "free" || rig.mode === "pendulum"){
+    if (rig.mode === "free" && (id === "pin") && rig.sel_hole !== null){
+      if (!pinFree()){ status(tr("st_capFirst")); return; }
+      KIT.tableAt = rig.free_pos.slice(); status(rig.connect_selected_to_pin()[1]); if (!taped()) plateFalls(); return; }
+    const i = holeAt(wx, wy);
+    if (i !== null){ dragMode = "hole"; pendingHole = i; pressXY = p.slice(); grab = [wx - rig.free_pos[0], wy - rig.free_pos[1]]; return; }
+    if (rig.on_cylinder(wx, wy, truth.d_out * 0.4)){
+      if (rig.mode === "pendulum"){ dragMode = "swing"; rig.released = false; return; }
+      if (rig.mode === "free"){ dragMode = "move"; pressXY = p.slice(); grab = [wx - rig.free_pos[0], wy - rig.free_pos[1]]; return; } }
+  }
+  const [rx, ry] = toolXY("ruler", p);
+  if (TOOLS.ruler && rig.on_ruler(rx, ry)){ dragMode = "ruler"; grab = [rx - rig.ruler_pos[0], ry - rig.ruler_pos[1]]; return; }
+  dragMode = "orbit"; }
+function onMotion(p, dx, dy){
+  const [wx, wy] = s2w(p, onTable() ? 2 * truth.d_out * 50 : 0);
+  if (dragMode === "hole"){ if (Math.hypot(p[0] - pressXY[0], p[1] - pressXY[1]) < 5) return; dragMode = rig.mode === "pendulum" ? "swing" : "move"; if (dragMode === "swing") rig.released = false; }
+  if (dragMode && dragMode.startsWith("item:")){ if (Math.hypot(p[0] - pressXY[0], p[1] - pressXY[1]) < 5) return;
+    const k = dragMode.slice(5), item = k;
+    if (item === "plate" && taped()){ status(tr("st_peelFirst")); dragMode = null; return; }
+    if (item === "plate" && (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present)){ status(tr("st_plateBusy")); dragMode = null; return; }
+    if (item === "thread" && rig.mode === "balance"){ status(tr("st_offFirst")); dragMode = null; return; }
+    OUT[item] = false; if (item === "thread") rig.loop_present = false; if (item === "plate"){ KIT.strips = []; }
+    take(item, true); dragMode = "carry"; return; }
+  if (dragMode === "orbit"){ CAM.yaw = Math.max(-1.3, Math.min(1.3, CAM.yaw + dx * 0.006)); CAM.pitch = Math.min(1.5, Math.max(-0.2, CAM.pitch + dy * 0.005)); cv3.classList.add("grabbing"); }
+  else if (dragMode === "pan"){ CAM.px += dx; CAM.py += dy; cv3.classList.add("grabbing"); }
+  else if (dragMode === "ruler" || dragMode === "pencil" || dragMode === "eraser") toolMove(dragMode, p, grab);
+  else if (dragMode === "move"){ rig.free_pos = [wx - grab[0], wy - grab[1]];
+    /* lifted off the table and brought to the thread loop, it goes into the loop */
+    const s = P3(PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z); if (rig.loop_present && Math.hypot(s[0] - p[0], s[1] - p[1]) < 90) CARRY = {item: "tube", fresh: false, ghost: null, was: rig.free_pos}; else if (CARRY && CARRY.item === "tube") CARRY = null; }
+  else if (dragMode === "swing") rig.pull_aside(Math.atan2(wx, wy) * 180 / Math.PI);
+  else if (dragMode === "slide" && Math.hypot(p[0] - pressXY[0], p[1] - pressXY[1]) > 4){ dragMode = "sliding"; }
+  if (dragMode === "sliding") rig.drag_loop_to(grab[1] - (wx - grab[0])); }
+function onRelease(p){
+  if (dragMode === "ruler" || dragMode === "pencil" || dragMode === "eraser") keepOnTable(dragMode);
+  if (dragMode === "swing") rig.release();
+  else if (dragMode === "hole") status(rig.select_hole(pendingHole)[1]);
+  else if (dragMode === "slide") status(rig.hold(false)[1]);
+  else if (dragMode === "carry") putDown(p);
+  else if (dragMode === "move" && CARRY && CARRY.item === "tube"){ CARRY = null; if (!pinFree()) status(tr("st_capFirst")); else { rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); status(T[lang].mInLoop); if (!taped()) plateFalls(); } }
+  else if (dragMode === "move"){ const [x, y] = rig.free_pos, q = W(x, y, 0); if (!onTableTop(q)) rig.free_pos = [x, Math.min(y, (-3 - TZ0) / 100)]; }
+  else if (dragMode && dragMode.startsWith("item:")){ const k = dragMode.slice(5); if (k === "sw") swToggle(); else if (k === "tape"){ OUT.tape = false; dragMode = null; take("tape", true); return; } }
+  dragMode = null; drawTray(); }
+cv3.addEventListener("contextmenu", e => e.preventDefault());
+cv3.addEventListener("pointerdown", e => {
+  const p = pe(e); mPrev = p; MOUSE = p; cv3.setPointerCapture(e.pointerId);
+  if (e.button === 2 && CARRY){ e.preventDefault(); cancelCarry(); return; }
+  if (e.button === 1 || e.button === 2){ e.preventDefault(); down = {p, btn: e.button, moved: false}; dragMode = "pan"; return; }
+  if (e.button) return;
+  if (CARRY){ putDown(p); return; }
+  down = {p, btn: 0, moved: false}; onPress(p); });
+cv3.addEventListener("pointermove", e => {
+  const p = pe(e), dx = p[0] - mPrev[0], dy = p[1] - mPrev[1]; mPrev = p; MOUSE = p;
+  if (rig.carried) rig.carry_pos = s2w(p);
+  if (!down) return;
+  if (Math.hypot(p[0] - down.p[0], p[1] - down.p[1]) > 3) down.moved = true;
+  onMotion(p, dx, dy); });
+cv3.addEventListener("pointerup", e => {
+  cv3.classList.remove("grabbing"); const d = down; down = null; if (!d) return; const p = pe(e);
+  if (d.btn === 2 && !d.moved){
+    const id = pick3(p[0], p[1]), [tx, ty] = toolXY("pencil", d.p), [ex, ey] = toolXY("eraser", d.p), [rx, ry] = toolXY("ruler", d.p);
+    for (const [k, f, x, y] of [["eraser", "on_eraser", ex, ey], ["pencil", "on_pencil", tx, ty], ["ruler", "on_ruler", rx, ry]])
+      if (TOOLS[k] && rig[f](x, y)){ backInBox(k); dragMode = null; return; }
+    if (rig.mode === "pendulum" || rig.mode === "balance"){ rig.take_cylinder_off(); rig.mode = "free"; rig.free_pos = KIT.tableAt.slice(); rig.loop_present = OUT.thread && rig.loop_present; statusMsg = tr("st_tubeTable"); }
+    else if (id === "tube" && rig.mode === "free") backInBox("tube");
+    else if (id && ["tape", "thread", "sw", "plate"].includes(id)) backInBox(id);
+    else if (id && id.startsWith("strip:")){ KIT.strips.splice(+id.slice(6), 1); markWeak(); statusMsg = tr(taped() ? "st_peeledOne" : "st_peeled"); }
+    else if (id === "loop" || id === "dthread") backInBox("thread"); else if (id === "dplate") backInBox("plate"); else if (id === "dtube") backInBox("tube");
+    dragMode = null; drawTray(); return; }
+  onRelease(p); });
+cv3.addEventListener("dblclick", e => { const p = pe(e), id = pick3(p[0], p[1]); if (CARRY || (id && id !== "room" && id !== "shelf")) return; Object.assign(CAM, CAM0); });
+cv3.addEventListener("wheel", e => { e.preventDefault();
+  const p = pe(e), d = e.deltaY < 0 ? 1 : -1, fine = e.shiftKey, [wx, wy] = s2w(p);
+  if (CARRY && CARRY.item === "tape" && !(e.ctrlKey || e.metaKey)){ KIT.tapeAng += d * (fine ? 5 : 15) * Math.PI / 180; return; }
+  if (!(e.ctrlKey || e.metaKey)){
+    if (rig.mode === "balance" && !(rig.fallen || rig.carried) && rig.on_cylinder(wx, wy, truth.d_out)){
+      const step = fine ? 0.0002 : 0.0020; rig.hold(true); rig.nudge_loop(d > 0 ? -step : step); return; }
+    const [rx, ry] = toolXY("ruler", p);
+    if (TOOLS.ruler && rig.on_ruler(rx, ry)){ const step = (fine ? 0.5 : 2.5) * Math.PI / 180; rig.rotate_ruler(TSURF.ruler === "table" ? (d > 0 ? -step : step) : (d > 0 ? step : -step), rx, ry); if (!down) keepOnTable("ruler"); return; } }
+  const f = d > 0 ? 1.12 : 1 / 1.12, nk = Math.min(400, Math.max(3, CAM.k * f)), r = nk / CAM.k;
+  CAM.px = (p[0] - CAM.W / 2) - (p[0] - CAM.W / 2 - CAM.px) * r; CAM.py = (p[1] - CAM.H / 2) - (p[1] - CAM.H / 2 - CAM.py) * r; CAM.k = nk; }, {passive: false});
 
+/* ---- language ---- */
+function applyLang(){
+  lang = LANG; const d = T[lang];
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = tr(el.getAttribute("data-i18n")); });
+  $("btn-en").className = LANG === "en" ? "on" : ""; $("btn-ko").className = LANG === "ko" ? "on" : "";
+  document.documentElement.lang = LANG; $("info").innerHTML = tr("info");
+  document.title = LANG === "ko" ? "IPhO 2011 E2 — 역학 블랙박스 · HaslaLab" : "IPhO 2011 E2 — Mechanical Blackbox · HaslaLab";
+  $("swStart").textContent = d.start; $("swStop").textContent = d.stop; $("swReset").textContent = d.reset; $("swHint").textContent = tr("swHint");
+  for (const k in _dom) delete _dom[k];
+  trayLayout(); syncTabs(); syncPanel(); }
+function setLang(l){ LANG = l; const u = new URL(location.href); u.searchParams.set("lang", l); history.replaceState(null, "", u); applyLang(); }
+$("btn-en").onclick = () => setLang("en"); $("btn-ko").onclick = () => setLang("ko");
+
+/* ---- the clock ---- */
 let lastT = performance.now();
 function loop(now){
-  const dt = Math.min(0.06, (now-lastT)/1000);
-  lastT = now;
-  const n = Math.max(1, Math.floor(dt/0.004)+1);
-  for(let i=0;i<n;i++) rig.step(dt/n);
-  drawPanelStopwatch();
-  redraw();
-  drawClose();
-  syncPanel();
-  requestAnimationFrame(loop);
-}
+  const dt = Math.min(0.06, (now - lastT) / 1000); lastT = now;
+  const n = Math.max(1, Math.floor(dt / 0.004) + 1); for (let i = 0; i < n; i++) rig.step(dt / n);
+  /* the tape against the load on the pin: when it cannot hold, it gives way within a fraction of a second */
+  if (hanging() && OUT.plate && !plateDown() && taped()){
+    const need = tapeNeed(), have = tapeHold();
+    if (have < need){ KIT.creep += dt * (0.6 + need / Math.max(have, 1)); if (KIT.creep >= CREEP_FALL){ plateFalls(); statusMsg = tr("st_tapeGave"); } }
+    else KIT.creep = Math.max(0, KIT.creep - dt);
+  } else KIT.creep = 0;
+  if (!hanging() && !(dragMode === "ruler" || dragMode === "pencil" || dragMode === "eraser") && (TSURF.ruler === "plane" || TSURF.pencil === "plane" || TSURF.eraser === "plane")) toolsDown();
+  draw3(); syncPanel(); requestAnimationFrame(loop); }
+document.addEventListener("visibilitychange", () => { lastT = performance.now(); });
+rig.loop_present = false;
+layout3(); applyLang(); requestAnimationFrame(loop);
 
-/* ══════════════════════════════════════════════════════════════
-   10.  PARTS BOX AND MAGNIFIER
-   ══════════════════════════════════════════════════════════════ */
-const TOOLS={ruler:false,pencil:false,eraser:false};
-const trayCv=$("tray"), trayCtx=trayCv.getContext("2d"), TRAY=["ruler","pencil","eraser"], TROW=44;
-let hand=null, TRW=190, trayCells=[], toolMsg=null;
-function say(k,a){ const f=T[lang][k]; statusMsg=typeof f==="function"?f(a):f; }
-function trayLayout(){
-  const dpr=window.devicePixelRatio||1, r=trayCv.parentElement.getBoundingClientRect();
-  TRW=Math.max(150,Math.floor(r.width-16)); const h=TRAY.length*TROW+50;
-  trayCv.style.height=h+"px"; trayCv.width=Math.round(TRW*dpr); trayCv.height=Math.round(h*dpr); drawTray();
-}
-const trayAvail=k=>!TOOLS[k]&&hand!==k;
-function trayIcon(c,k,x,y){
-  if(k==="ruler"){ c.fillStyle="#c9302c"; c.fillRect(x-17,y-5,34,10); c.strokeStyle="#fff"; for(let i=-15;i<=15;i+=3){ c.beginPath(); c.moveTo(x+i,y-5); c.lineTo(x+i,y-(i%15?2:0)); c.stroke(); } }
-  else if(k==="pencil"){ c.save(); c.translate(x,y); c.rotate(-0.5); c.fillStyle="#e2b33c"; c.fillRect(-14,-3,24,6); c.fillStyle="#f1d3a4"; c.beginPath(); c.moveTo(10,-3); c.lineTo(17,0); c.lineTo(10,3); c.fill(); c.fillStyle="#d4524a"; c.fillRect(-17,-3,3,6); c.restore(); }
-  else { c.fillStyle="#f0d6db"; c.fillRect(x-12,y-6,24,12); c.fillStyle="#4b6fb0"; c.fillRect(x-3,y-6,8,12); }
-}
-function drawTray(){
-  const dpr=window.devicePixelRatio||1, c=trayCtx, d=T[lang], h=TRAY.length*TROW+50;
-  c.setTransform(dpr,0,0,dpr,0,0); c.fillStyle="#15181d"; c.fillRect(0,0,TRW,h);
-  trayCells=[]; let y=6; const wd=TRW-12;
-  for(const k of TRAY){
-    const av=trayAvail(k), sel=hand===k;
-    c.fillStyle=av||sel?"#1f242b":"#171a1e"; c.fillRect(6,y,wd,TROW-4);
-    c.strokeStyle=sel?"#f2c14e":"#353b43"; c.lineWidth=1; c.strokeRect(6.5,y+.5,wd-1,TROW-5);
-    c.globalAlpha=av||sel?1:.35; trayIcon(c,k,28,y+(TROW-4)/2); c.globalAlpha=1;
-    c.font='11.5px "Malgun Gothic","Apple SD Gothic Neo",sans-serif'; c.textAlign="left"; c.textBaseline="middle";
-    c.fillStyle=av||sel?"#e8eef2":"#868e96"; c.fillText(d.items[k],52,y+13);
-    c.font='9.5px "Malgun Gothic",sans-serif'; c.fillStyle="#69717a"; c.fillText(sel?"":av?d.trayTake:d.trayOut,52,y+28);
-    trayCells.push([k,y,y+TROW-4]); y+=TROW;
-  }
-  c.font='10.5px "Malgun Gothic",sans-serif'; c.textAlign="center"; c.textBaseline="top"; c.fillStyle="#69717a";
-  d.trayHelp.split("\n").forEach((ln,i)=>c.fillText(ln,TRW/2,y+6+i*14));
-}
-function placeTool(x,y){
-  const [wx,wy]=s2w(x,y), k=hand;
-  if(k==="ruler") rig.move_ruler(wx-RULER_LEN/2, wy);
-  else if(k==="pencil") rig.pencil_to(wx,wy,false);
-  else rig.eraser_to(wx,wy,false);
-  TOOLS[k]=true; hand=null; say("mPlaced",T[lang].items[k]); drawTray(); cv.style.cursor="";
-}
-let trayDrag=false;
-trayCv.addEventListener("contextmenu",e=>{ e.preventDefault(); hand=null; drawTray(); cv.style.cursor=""; });
-trayCv.addEventListener("pointerdown",e=>{
-  if(e.button!==0) return; const y=e.clientY-trayCv.getBoundingClientRect().top; trayDrag=true;
-  for(const [k,y0,y1] of trayCells){ if(y<y0||y>y1) continue;
-    const same=hand===k; hand=null; if(!same&&trayAvail(k)) hand=k; cv.style.cursor=hand?"copy":""; drawTray(); return; } });
-window.addEventListener("pointerup",e=>{ if(trayDrag&&hand&&e.target===cv){ const [x,y]=evXY(e); placeTool(x,y); } trayDrag=false; });
-
-const closeCv=$("closeCv"), closeCtx=closeCv.getContext("2d"), CLW=760, CLH=300;
-let clW=CLW, overBench=false;
-cv.addEventListener("pointerenter",()=>{ overBench=true; });
-cv.addEventListener("pointerleave",()=>{ overBench=false; });
-function closeLayout(){
-  clW=Math.min(CLW,closeCv.parentElement.clientWidth-20);
-  closeCv.style.width=clW+"px"; closeCv.style.height=(clW*CLH/CLW)+"px";
-  closeCv.width=Math.round(clW*DPR); closeCv.height=Math.round(clW*CLH/CLW*DPR);
-}
-function drawClose(){
-  /* the same bench, drawn again four times larger around the cursor */
-  const v=view(), saved={ppm:v.ppm,pan:v.pan.slice(),anchor:v.anchor}, sw=CVW, sh=CVH;
-  const c=overBench?s2w(hoverXY[0],hoverXY[1]):[0,LOOP_DROP];
-  CVW=clW; CVH=clW*CLH/CLW; v.ppm=saved.ppm*4; v.anchor=0.5;
-  v.pan=[-c[0]*v.ppm, -c[1]*v.ppm];
-  CLOSE=true;
-  try{ redraw(closeCtx,closeCv); } finally {
-    CLOSE=false; v.ppm=saved.ppm; v.pan=saved.pan; v.anchor=saved.anchor; CVW=sw; CVH=sh; G=ctx; }
-  closeCtx.setTransform(DPR,0,0,DPR,0,0); closeCtx.strokeStyle="#f2c14e"; closeCtx.lineWidth=1;
-  const mx=clW/2, my=clW*CLH/CLW/2; closeCtx.beginPath(); closeCtx.moveTo(mx-8,my); closeCtx.lineTo(mx+8,my); closeCtx.moveTo(mx,my-8); closeCtx.lineTo(mx,my+8); closeCtx.stroke();
-}
-
-/* ── boot ── */
-window.addEventListener("resize", layout);
-layout();
-rig.enter_part_a();
-rig.move_ruler(-truth.L*0.60, LOOP_DROP+0.055);
-rig.pencil_to(truth.L*0.30, LOOP_DROP+0.090);
-rig.eraser_to(truth.L*0.30-0.055, LOOP_DROP+0.150);
-scaleFit();
-applyLang();
-requestAnimationFrame(loop);
 </script>
 <script src="adfit.js"></script>
-  <script src="simfull.js"></script>
+<script src="simfull.js"></script>
 </body>
 </html>

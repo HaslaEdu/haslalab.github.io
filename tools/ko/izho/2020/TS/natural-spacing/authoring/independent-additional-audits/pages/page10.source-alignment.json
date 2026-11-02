@@ -1,0 +1,49 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 10,
+  "proof_sha256": "bfc3f233163d4de550c4e0604fc95281795e90d8b626c2b9e7f1c43a563a2bba",
+  "plan_sha256": "70e42d7762cc462aa80b02177bada7a390d8c7f7d38c92a336623415c00dbe43",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 1,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          37,
+          9
+        ]
+      ],
+      "baseline": 610.6799926757812,
+      "source_center": 308.36854553222656,
+      "independent_original_source_centers": [
+        308.36854553222656
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 272.7069091796875,
+      "actual_nonspace_glyph_right": 344.0301818847656,
+      "actual_center": 308.36854553222656,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 5,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          37,
+          9
+        ],
+        "source_text": "Conductive ring ",
+        "original_center": 308.36854553222656,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

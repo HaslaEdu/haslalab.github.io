@@ -46,7 +46,10 @@ test('generated backend pairs preserve complete IPhO sittings and omit known par
   const {LAB_PAIR_CATALOGUE:catalogue}=await import('../community/src/lab-pair-catalog.js');
   assert.deepEqual(catalogue.ipho['2025'],[{id:'default',theory:[['T1','T2','T3']],lab:[['E1','E2']]}]);
   assert.deepEqual(catalogue.ispho['2026'],[{id:'default',theory:[['T']],lab:[['E1']]}]);
-  for(const year of ['2023','2024','2025'])assert.equal(catalogue.ispho[year],undefined,'ISPhO simulation-excluded theory is incomplete');
+  // T1 (solved on the organisers' program) is a theory problem sat with its paper: 2024 and 2025 are complete sets,
+  // 2023 has no experiment
+  for(const year of ['2024','2025'])assert.deepEqual(catalogue.ispho[year],[{id:'default',theory:[['T']],lab:[['E1']]}]);
+  assert.equal(catalogue.ispho['2023'],undefined,'ISPhO 2023 has no experiment round');
   assert.equal(catalogue.nbpho,undefined,'NBPhO already combines its theory and experiment');
   assert.equal(catalogue.ioaa,undefined,'individual observation/data analysis/team simulators are not the complete practical round');
   assert.equal(catalogue.opho['2025'].some(profile=>profile.id==='i'),false,'a missing international theory part must not qualify');
@@ -56,6 +59,17 @@ test('generated backend pairs preserve complete IPhO sittings and omit known par
       assert.ok(tasks.length>0&&tasks.length<=4);
       assert.equal(new Set(tasks).size,tasks.length);
     }
+  }
+});
+
+test('shortlist (backup) problems are listed for their own 0.1-token price and stay out of every pair',async()=>{
+  const {LAB_PAIR_CATALOGUE:pairs,LAB_SHORTLIST_CATALOGUE:shortlist}=await import('../community/src/lab-pair-catalog.js');
+  assert.deepEqual(shortlist.ipho['2025'],['T4']);
+  assert.deepEqual(shortlist.ipho['2017'],['T4']);
+  assert.deepEqual(shortlist.apho['2018'],['T4','T5']);
+  for(const [comp,years] of Object.entries(shortlist))for(const [year,tasks] of Object.entries(years)){
+    for(const profile of pairs[comp]?.[year]||[])for(const set of profile.theory)
+      assert.ok(!set.some(task=>tasks.includes(task)),`${comp} ${year}: a shortlist problem cannot complete a theory round`);
   }
 });
 

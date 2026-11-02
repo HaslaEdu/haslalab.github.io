@@ -1,0 +1,29 @@
+{
+  "source_page":12,
+  "source_sha256":"612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "manual_text_reviewed":true,
+  "pixel_rois_reviewed":false,
+  "scope_complete":false,
+  "rows":[
+    {"id":"trigonometric-and","hints":[],"manually_found_ocr_omission":true,"source":"和","ko":"그리고","en":"and"},
+    {"id":"small-angle-when","hints":[1],"source":"当","kind":"display-language","stationary_math":true,"ko":"일 때","en":"as","placement_note":"Erase only the original Han 当, not its cos/sin/limit formula. English as fits the source connective slot; Korean 일 때 follows the unchanged final limit expression at the original baseline. All displayed mathematical pixels stay in place."},
+    {"id":"small-angle-cosine","hints":[2],"source":"可得","ko":"다음을 얻는다.","en":"we obtain"},
+    {"id":"OE-expansion","hints":[5],"source":"所以","ko":"따라서","en":"Therefore"},
+    {"id":"QE-from-one-five","hints":[12],"source":"因而由(1)、(5)式得","ko":"그러므로 식 [[eq1-first]], [[eq5-first]]에서","en":"Thus, from [[eq1-first]] and [[eq5-first]],"},
+    {"id":"virtual-intersection","hints":[16],"source":"进而，设EB_+交QB于F（设其z坐标为z_+），则在直角三角形EQF中有","ko":"또 [[ray-EBplus]]와 [[ray-QB]]의 교점을 [[point-F]]라 하고 그 [[axis-z-F]]좌표를 [[z-plus-F]]라 두면, 직각삼각형 [[triangle-EQF]]에서","en":"Let [[ray-EBplus]] meet [[ray-QB]] at [[point-F]], of [[axis-z-F]] coordinate [[z-plus-F]]. Right triangle [[triangle-EQF]] gives"},
+    {"id":"upper-image-first-method","hints":[21],"source":"因此，上侧入射角在π/4附近的入射光线虚像的位置为","ko":"따라서 위쪽에서 [[pi-four-upper]] 근처로 입사한 광선의 허상 위치는","en":"Thus the virtual image for upper incidence near [[pi-four-upper]] is at"},
+    {"id":"lower-image-first-method","hints":[23],"source":"利用对称性可见，下侧入射角在π/4附近的入射光线虚像的位置为","ko":"대칭성에 따라 아래쪽에서 [[pi-four-lower]] 근처로 입사한 광선의 허상 위치는","en":"By symmetry, lower incidence near [[pi-four-lower]] gives the virtual image"},
+    {"id":"alternative2-title","hints":[25],"source":"另解二：","role":"serif-bold","preserve_original_opening_bracket_pixels":true,"ko":"다른 풀이 2:","en":"Alternative solution 2:"},
+    {"id":"original-method-instruction","hints":[26],"source":"（前解答中由开始到“夹角为2Δθ”全部保留）。","ko":"(앞 풀이의 처음부터 '각이 [[quoted-2delta]]'까지를 모두 그대로 쓴다.)","en":"(Retain the previous solution from its beginning through 'angle [[quoted-2delta]]'.)","review_note":"This instruction is in the original scan and must be translated. It is not a new translator's note. Preserve its positive2Delta bitmap as printed, despite the negative angle in the preceding method."},
+    {"id":"PPplus-angle","hints":[29],"source":"进而，由于PP_+与QB的夹角为45°，可得","ko":"또 [[segment-PPplus]]와 [[segment-QB]] 사이 각이 [[angle45-b]]이므로","en":"Since [[segment-PPplus]] makes angle [[angle45-b]] with [[segment-QB]],"},
+    {"id":"second-method-right-triangle","hints":[31],"source":"反向延长P_+B_+交y轴于E，在直角三角形EQ_+P_+中","ko":"[[ray-PplusBplus]]를 뒤로 연장하면 [[axis-y-E2]]축의 [[point-E2]]와 만난다. 직각삼각형 [[triangle-EQplusPplus]]에서","en":"Extend [[ray-PplusBplus]] backward to [[point-E2]] on [[axis-y-E2]]. In right triangle [[triangle-EQplusPplus]],"},
+    {"id":"first-order-QQplus","hints":[36,37],"source":"考虑到QQ_+=(√2/2)rΔθ，所以精确到Δθ","ko":"[[QQplus-expansion]]을 쓰면 [[delta-precision]] 차수까지","en":"Using [[QQplus-expansion]], to order [[delta-precision]],"},
+    {"id":"similar-triangles","hints":[40],"source":"由ΔEQF～ΔEQ_+P_+有","ko":"[[triangle-similarity]]에서","en":"From [[triangle-similarity]],"},
+    {"id":"image-is-intersection","hints":[43],"source":"F是PB、P_+B_+两条反射光线反向延长线的交点，即为虚像。","ko":"[[point-F-image]]는 반사광 [[ray-PB-image]], [[ray-PplusBplus-image]]의 역연장선 교점, 곧 허상이다.","en":"[[point-F-image]] is where the backward rays [[ray-PB-image]] and [[ray-PplusBplus-image]] meet: the virtual image."},
+    {"id":"negative-delta-symmetry-a","hints":[44],"source":"对于Δθ<0的情形，得到虚像位置不变。由对称性可知，下侧虚像位置与上侧虚像以z","ko":"[[negative-delta]]여도 허상 위치는 같다. 대칭성에 따라 아래쪽·위쪽 허상은 [[axis-z-symmetry]]","en":"For [[negative-delta]], the image is unchanged. Symmetry places the lower image across [[axis-z-symmetry]]"},
+    {"id":"negative-delta-symmetry-b","hints":[45],"source":"轴为对称。","ko":"축에 대해 대칭이다.","en":"axis from the upper image."},
+    {"id":"upper-image-label","hints":[46],"source":"上虚像：","kind":"display-prefix-label","stationary_math":true,"align":"right_before_original_math","ko":"위쪽 허상:","en":"Upper image:"},
+    {"id":"lower-image-label","hints":[48],"source":"下虚像：","kind":"display-prefix-label","stationary_math":true,"align":"right_before_original_math","ko":"아래쪽 허상:","en":"Lower image:"}
+  ],
+  "review_notes":["Preserve all original repeated equation tags(4)–(9) in Alternative2. Do not prime or renumber them.","The source closing square bracket at the bottom is retained as original bitmap ink; no new editorial closing line is added.","Coordinate formulas following the upper/lower captions are stationary display mathematics; fit translated labels into the available left slot with natural quarter-em spacing rather than moving the formulas."]
+}

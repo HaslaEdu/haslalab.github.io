@@ -4,7 +4,9 @@ import { ensureMonthlyPhotoSchema } from './monthly-photos.js';
 import { ensureMonthlyCaptureSchema } from './monthly-capture.js';
 
 export const MONTHLY_EXPERIMENT_VISUAL_MAX_IMAGES = 20;
-export const MONTHLY_EXPERIMENT_VISUAL_MAX_BYTES = 20 * 1024 * 1024;
+// Base64 plus prompts/schema must fit the selected visual provider's JSON budget.
+// Enforce this before a monthly attempt is reserved, with room below its 14 MiB image cap.
+export const MONTHLY_EXPERIMENT_VISUAL_MAX_BYTES = 12 * 1024 * 1024;
 const MAX_STORED_PHOTOS = 40, MAX_PHOTO_BYTES = 4 * 1024 * 1024;
 const UUID = /^[a-f0-9-]{36}$/;
 const fail = (code,status = 400) => { throw new MonthlyAnswerError(code,status); };
@@ -49,18 +51,20 @@ function graderText(answer,parts,evidence) {
 // submissions and idempotency keys remain unchanged; image references are transient.
 export async function prepareMonthlyExperimentVisuals(db,userId,problem,normalized,key = db) {
   const sheet = getMonthlyAnswerSheet(problem);
-  if (sheet?.key !== 'pressure-wave-experiment-v1') return {images:[],imageCount:0,bytes:0};
+  if (!sheet) return {images:[],imageCount:0,bytes:0};
   const evidence = new Map();
   normalized.visualEvidence = evidence;
   normalized.graderAnswer = normalized.answer;
   const ids = photoIds(normalized.sheet?.photo_ids);
   if (!ids.length) return {images:[],imageCount:0,bytes:0};
   await ensureMonthlyPhotoSchema(db,key);
-  const rows = (await db.prepare(`SELECT id,part_id,mime,bytes FROM monthly_answer_photos
+  const rows = (await db.prepare(`SELECT id,part_id,mime,bytes,provider FROM monthly_answer_photos
     WHERE user_id=? AND problem_id=? AND id IN (${ids.map(() => '?').join(',')})`)
     .bind(userId,problem.id,...ids).all()).results;
   const byId = new Map(rows.map(row => [row.id,row]));
   if (rows.length !== ids.length || ids.some(id => !byId.has(id))) fail('bad_photo_ids');
+  const provider=normalized.provider||normalized.sheet.provider;
+  if(rows.some(row=>row.provider&&row.provider!==provider))fail('provider_locked',409);
   const known = new Set(sheet.parts.map(part => part.id));
   const answered = new Set(normalized.sheet.parts.filter(part => known.has(part.id) && part.answer && part.working).map(part => part.id));
   const associations = new Map();
@@ -68,9 +72,10 @@ export async function prepareMonthlyExperimentVisuals(db,userId,problem,normaliz
   if (capture) {
     if (typeof capture.scan_id !== 'string' || !UUID.test(capture.scan_id)) fail('bad_photo_ids');
     await ensureMonthlyCaptureSchema(db,key);
-    const session = await db.prepare('SELECT id FROM monthly_capture_sessions WHERE id=? AND user_id=? AND problem_id=?')
+    const session = await db.prepare('SELECT id,provider FROM monthly_capture_sessions WHERE id=? AND user_id=? AND problem_id=?')
       .bind(capture.scan_id,userId,problem.id).first();
     if (!session) fail('bad_photo_ids');
+    if(session.provider&&session.provider!==provider)fail('provider_locked',409);
     const pages = (await db.prepare(`SELECT photo_id,page_no,kind,parts,ocr_status FROM monthly_capture_pages
       WHERE session_id=? AND active=1 AND photo_id IN (${ids.map(() => '?').join(',')})`)
       .bind(capture.scan_id,...ids).all()).results;
@@ -82,7 +87,8 @@ export async function prepareMonthlyExperimentVisuals(db,userId,problem,normaliz
       if (!allowed || !['answer','working'].includes(page.kind) || page.ocr_status !== 'done' ||
           !Array.isArray(extracted) || extracted.some(part => !part || !allowed.includes(part.id))) fail('photo_unavailable',500);
       // A graph can be visible even when OCR did not extract any text from it.
-      associations.set(page.photo_id,allowed.filter(id => answered.has(id)));
+      const visible=new Set(extracted.filter(part=>part.answer||part.working).map(part=>part.id));
+      associations.set(page.photo_id,allowed.filter(id => answered.has(id)&&visible.has(id)));
     }
   } else {
     for (const row of rows) {

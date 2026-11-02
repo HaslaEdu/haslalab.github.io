@@ -1,0 +1,177 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 1,
+  "proof_sha256": "2f07563339330a35b5728329cb14cb10ef696aabc3893f5add0cc0a1107ef908",
+  "plan_sha256": "02699e407494bbd4fd418a188cb515b87e6de31011de6430ab0777f61a8f7e2d",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 5,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 86.8800048828125,
+      "source_center": 308.3460006713867,
+      "independent_original_source_centers": [
+        308.3460006713867
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 260.09893798828125,
+      "actual_nonspace_glyph_right": 356.5931091308594,
+      "actual_center": 308.3460235595703,
+      "center_error_pt": 2.288818359375e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 105.2340087890625,
+      "source_center": 308.26697540283203,
+      "independent_original_source_centers": [
+        308.26697540283203
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 292.8495788574219,
+      "actual_nonspace_glyph_right": 323.6842956542969,
+      "actual_center": 308.2669372558594,
+      "center_error_pt": -3.814697265625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          1
+        ]
+      ],
+      "baseline": 121.79998779296875,
+      "source_center": 308.38045501708984,
+      "independent_original_source_centers": [
+        308.38045501708984
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 157.54864501953125,
+      "actual_nonspace_glyph_right": 459.2122497558594,
+      "actual_center": 308.3804473876953,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 22,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          3,
+          0
+        ]
+      ],
+      "baseline": 137.87579345703125,
+      "source_center": 308.33126068115234,
+      "independent_original_source_centers": [
+        308.33126068115234
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 264.0083312988281,
+      "actual_nonspace_glyph_right": 352.6541748046875,
+      "actual_center": 308.3312530517578,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          3,
+          1
+        ]
+      ],
+      "baseline": 153.95159912109375,
+      "source_center": 308.39441680908203,
+      "independent_original_source_centers": [
+        308.39441680908203
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 262.2729797363281,
+      "actual_nonspace_glyph_right": 354.515869140625,
+      "actual_center": 308.39442443847656,
+      "center_error_pt": 7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 11,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 5,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "SOLUTIONS TO THE PROBLEMS OF THE THEORETICAL ",
+        "original_center": 308.3460006713867,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "COMPETITION ",
+        "original_center": 308.26697540283203,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          1
+        ],
+        "source_text": "Attention. Points in grading are not divided! ",
+        "original_center": 308.38045501708984,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          3,
+          0
+        ],
+        "source_text": "Problem 1 (10.0 points) ",
+        "original_center": 308.33126068115234,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          3,
+          1
+        ],
+        "source_text": "Problem 1.1 (4.0 points) ",
+        "original_center": 308.39441680908203,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

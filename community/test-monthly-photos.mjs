@@ -9,7 +9,7 @@ import { prepareMonthlyPhotoSubmission, deleteMonthlyPhotos } from './src/monthl
 const NOW = Date.parse('2026-11-01T12:00:00+09:00')/1000;
 const ANSWER = '$a^2+b^2=c^2$', WORKING = 'Apply the governing equation.';
 const png = size => { const bytes = new Uint8Array(size).fill(73); bytes.set([137,80,78,71,13,10,26,10]); return bytes; };
-const payload = (key, photoIds) => ({ request_id:key.padEnd(32,'x'), parts:[{id:'a',answer:ANSWER,working:WORKING}], photo_ids:photoIds });
+const payload = (key, photoIds) => ({ provider:'gemini',request_id:key.padEnd(32,'x'), parts:[{id:'a',answer:ANSWER,working:WORKING}], photo_ids:photoIds });
 
 async function environment(run) {
   const sql = new DatabaseSync(':memory:');
@@ -36,33 +36,38 @@ async function environment(run) {
     sql.prepare("INSERT INTO users(id,username,nickname,pw,role,created_at) VALUES(?,?,?,'unused',?,?)").run(id,'photo'+id,'Photo '+id,id===3?'admin':'user',NOW-100);
     sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash,id,NOW-100,NOW+86400);
   }
-  let transcript=ANSWER+'\n'+WORKING, ocrCalls=0, screenCalls=0, beforeOcr=async()=>{};
+  let transcript=ANSWER+'\n'+WORKING, visuals=[], gradeEvidence=ANSWER, ocrCalls=0, screenCalls=0, beforeOcr=async()=>{};
+  const gradingRequests=[];
   globalThis.fetch=async(url,init)=>{
-    if(String(url).includes('document-digitization')){
-      ocrCalls++; const document=init.body.get('document');
+    const request=JSON.parse(init.body),gemini=String(url).endsWith(':generateContent'),schema=gemini?request.generationConfig.responseSchema:JSON.parse(request.messages[0].content.split('JSON schema:\n')[1]);
+    assert.ok(gemini||String(url).endsWith('/chat/completions'),'no legacy OCR request is allowed');
+    if(schema.properties.visuals){
+      ocrCalls++;
       await beforeOcr();
-      assert.deepEqual(new Uint8Array(await document.arrayBuffer()),png(32),'OCR receives selected scan, not the stored original');
-      return Response.json({content:{markdown:transcript},confidence:0.97,usage:{pages:1}});
+      assert.ok(JSON.stringify(request).includes(Buffer.from(png(32)).toString('base64')),'OCR receives selected scan, not the stored original');
+      const raw={text:transcript,confidence:0.97,legible:true,uncertainties:[],visuals};
+      return Response.json(gemini?{candidates:[{content:{parts:[{text:JSON.stringify(raw)}]}}]}:{choices:[{message:{content:JSON.stringify(raw)},finish_reason:'stop'}]});
     }
-    const request=JSON.parse(init.body), isScreen=!!request.generationConfig.responseSchema.properties.assessment;
+    const isScreen=!!schema.properties.assessment;
     let raw;
     if(isScreen){screenCalls++;raw={assessment:'uncertain',confidence:0.5,signals:[]};}
-    else{const rubric=JSON.parse(sql.prepare('SELECT rubric FROM problems WHERE id=4').get().rubric);raw={scores:rubric.map(c=>({id:c.id,got:c.id==='a'?c.max:0,note:'Private note',decision:c.id==='a'?'met':'not_met',evidence:c.id==='a'?[ANSWER]:[]})),feedback:[],confidence:0.9};}
-    return Response.json({candidates:[{content:{parts:[{text:JSON.stringify(raw)}]}}]});
+    else{gradingRequests.push(request);const rubric=JSON.parse(sql.prepare('SELECT rubric FROM problems WHERE id=4').get().rubric);raw={scores:rubric.map(c=>({id:c.id,got:c.id==='a'?c.max:0,note:'Private note',decision:c.id==='a'?'met':'not_met',evidence:c.id==='a'?[gradeEvidence]:[]})),feedback:[],confidence:0.9};}
+    return Response.json(gemini?{candidates:[{content:{parts:[{text:JSON.stringify(raw)}]}}]}:{choices:[{message:{content:JSON.stringify(raw)},finish_reason:'stop'}]});
   };
-  const env={DB,ALLOWED_ORIGINS:'http://localhost:8765',UPSTAGE_API_KEY:'local-ocr',GEMINI_API_KEY:'local-grader',LAB_KEEP_HOURS:'off'};
+  const env={DB,ALLOWED_ORIGINS:'http://localhost:8765',GEMINI_API_KEY:'local-grader',DEEPSEEK_API_KEY:'local-deepseek',LAB_KEEP_HOURS:'off'};
   const api=async(path,{user=1,body,method,headers={}}={})=>{
+    if(body&&!(body instanceof FormData)&&path==='/problems/4/submit')body={provider:'gemini',...body};
     const form=body instanceof FormData;
     const response=await worker.fetch(new Request('http://monthly.local/api'+path,{method:method||(body===undefined?'GET':'POST'),
       headers:{Origin:'http://localhost:8765','Cache-Control':'no-cache',...(user?{Authorization:'Bearer '+tokens[user-1]}:{}),...(!form&&body!==undefined?{'Content-Type':'application/json'}:{}),...headers},
       ...(body===undefined?{}:{body:form?body:JSON.stringify(body)})}),env);
     return {status:response.status,response,data:response.headers.get('Content-Type')?.includes('application/json')?await response.json():new Uint8Array(await response.arrayBuffer())};
   };
-  const upload=async({part='a',original=png(600000),image=png(32),user=1}={})=>{
+  const upload=async({part='a',original=png(600000),image=png(32),user=1,provider='gemini'}={})=>{
     const form=new FormData();form.set('image',new File([image],'scan.png',{type:'image/png'}));form.set('original_image',new File([original],'original.png',{type:'image/png'}));form.set('part_id',part);
-    return api('/monthly/problems/4/photos?mode=math',{user,body:form});
+    return api('/monthly/problems/4/photos?mode=math&provider='+provider,{user,body:form});
   };
-  try{return await run({sql,DB,api,upload,transcript:value=>{transcript=value;},beforeOcr:callback=>{beforeOcr=callback;},ocrCalls:()=>ocrCalls,screenCalls:()=>screenCalls});}
+  try{return await run({sql,DB,api,upload,transcript:value=>{transcript=value;},visuals:value=>{visuals=value;},gradeEvidence:value=>{gradeEvidence=value;},gradingRequests,beforeOcr:callback=>{beforeOcr=callback;},ocrCalls:()=>ocrCalls,screenCalls:()=>screenCalls});}
   finally{globalThis.fetch=saved.fetch;globalThis.caches=saved.caches;Date.now=saved.now;sql.close();}
 }
 
@@ -97,12 +102,12 @@ test('via_ocr, unrelated same-part images and typed additions cannot bypass scre
   await environment(async({DB,sql,api,upload,transcript,screenCalls})=>{
     const id=(await upload()).data.photo_id, problem=sql.prepare('SELECT * FROM problems WHERE id=4').get();
     const value=payload('changed',[id]);value.parts[0].working+=' Additional typed text.';value.via_ocr=true;
-    const normalized=normalizeMonthlyParts(problem,value);await prepareMonthlyPhotoSubmission(DB,1,problem,normalized,[id]);
+    const normalized=normalizeMonthlyParts(problem,value);await prepareMonthlyPhotoSubmission(DB,1,problem,normalized,[id],'gemini');
     assert.deepEqual(normalized.photographedPartIds,[]);assert.equal(normalized.viaOcr,1);
-    const forged=normalizeMonthlyParts(problem,{...payload('forged',[]),via_ocr:true});await prepareMonthlyPhotoSubmission(DB,1,problem,forged,[]);assert.equal(forged.viaOcr,0);
+    const forged=normalizeMonthlyParts(problem,{...payload('forged',[]),via_ocr:true});await prepareMonthlyPhotoSubmission(DB,1,problem,forged,[],'gemini');assert.equal(forged.viaOcr,0);
     const submitted=await api('/problems/4/submit',{body:value});assert.equal(submitted.status,200);assert.equal(screenCalls(),1);
     transcript('Unrelated printed text.');const unrelated=(await upload()).data.photo_id;
-    const next=normalizeMonthlyParts(problem,payload('unrelated',[unrelated]));await prepareMonthlyPhotoSubmission(DB,1,problem,next,[unrelated]);assert.deepEqual(next.photographedPartIds,[]);
+    const next=normalizeMonthlyParts(problem,payload('unrelated',[unrelated]));await prepareMonthlyPhotoSubmission(DB,1,problem,next,[unrelated],'gemini');assert.deepEqual(next.photographedPartIds,[]);
   });
 });
 
@@ -138,5 +143,51 @@ test('an OCR upload finishing after account deletion cannot recreate original ph
     assert.equal(sql.prepare('SELECT deleted FROM users WHERE id=1').get().deleted,1);
     assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_answer_photos').get().n,0);
     assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_answer_photo_chunks').get().n,0);
+  });
+});
+
+test('direct photo metadata binds the explicit provider and rejects mismatched grading before reserving an attempt',async()=>{
+  await environment(async({sql,api,upload})=>{
+    const photo=await upload({provider:'deepseek'});assert.equal(photo.status,200);assert.equal(photo.data.provider,'deepseek');
+    assert.equal(sql.prepare('SELECT provider FROM monthly_answer_photos WHERE id=?').get(photo.data.photo_id).provider,'deepseek');
+    const mismatch=await api('/problems/4/submit',{body:{...payload('wrong-provider',[photo.data.photo_id]),provider:'gemini'}});
+    assert.equal(mismatch.status,409);assert.equal(mismatch.data.error,'provider_locked');assert.equal(sql.prepare('SELECT COUNT(*) n FROM submissions').get().n,0);
+    const good=await api('/problems/4/submit',{body:{...payload('right-provider',[photo.data.photo_id]),provider:'deepseek'}});assert.equal(good.status,200);assert.equal(good.data.answer_sheet.provider,'deepseek');
+    const foreign=await api('/problems/4/submit',{user:2,body:{...payload('foreign-provider',[photo.data.photo_id]),provider:'deepseek'}});assert.equal(foreign.status,400);assert.equal(foreign.data.error,'bad_photo_ids');
+  });
+});
+
+test('image-only direct photos expose an owned evidence reference and retain original images at final grading',async()=>{
+  await environment(async({sql,api,upload,transcript,visuals,gradeEvidence,gradingRequests})=>{
+    transcript('');visuals([{page:1,kind:'graph',description:'A visible labelled curve and direction arrow',box:[0.1,0.1,0.9,0.9]}]);
+    const image=png(700000),saved=await upload({original:image,provider:'deepseek'});
+    assert.equal(saved.status,200);assert.equal(saved.data.text,'','photo references must not be presented as OCR text');
+    const marker=`[PHOTO:${saved.data.photo_id}:a]`;assert.equal(saved.data.photo_evidence,marker);gradeEvidence(marker);
+    const body={...payload('image-only-direct',[saved.data.photo_id]),provider:'deepseek',parts:[{id:'a',answer:marker,working:marker}]};
+    const foreign=await api('/problems/4/submit',{user:2,body});assert.equal(foreign.status,400);
+    assert.equal(sql.prepare('SELECT COUNT(*) n FROM submissions').get().n,0);
+    const graded=await api('/problems/4/submit',{body});assert.equal(graded.status,200);assert.equal(graded.data.status,'graded');
+    assert.ok(graded.data.score>0,'the final server-owned image map authorizes evidence for the matching part');
+    assert.equal(gradingRequests.length,1);const request=JSON.stringify(gradingRequests[0]);
+    assert.ok(request.includes(Buffer.from(image).toString('base64')),'final grading receives the original, not just OCR or a marker');
+    assert.ok(request.includes(marker));assert.ok(!request.includes('"cachedContent"'));
+  });
+});
+
+test('a visual batch beyond the provider-safe byte budget fails before reserving an attempt or grading',async()=>{
+  await environment(async({sql,api,upload,gradingRequests,screenCalls})=>{
+    const saved=await upload(),ids=[saved.data.photo_id];assert.equal(saved.status,200);
+    // Four legitimate maximum-size photos cannot fit one provider request. The
+    // metadata alone must reject this batch, before chunks or models are loaded.
+    sql.prepare('UPDATE monthly_answer_photos SET bytes=? WHERE id=?').run(4*1024*1024,ids[0]);
+    for(let i=0;i<3;i++){
+      const id=crypto.randomUUID();ids.push(id);
+      sql.prepare(`INSERT INTO monthly_answer_photos(id,user_id,problem_id,part_id,mime,bytes,ocr_text,provider,created_at)
+        SELECT ?,user_id,problem_id,part_id,mime,bytes,ocr_text,provider,created_at FROM monthly_answer_photos WHERE id=?`).run(id,ids[0]);
+    }
+    const result=await api('/problems/4/submit',{body:payload('oversized-visual-batch',ids)});
+    assert.equal(result.status,413);assert.equal(result.data.error,'monthly_visuals_too_large');
+    assert.equal(sql.prepare('SELECT COUNT(*) n FROM submissions').get().n,0);
+    assert.equal(screenCalls(),0);assert.equal(gradingRequests.length,0,'neither screening nor final grading may start');
   });
 });

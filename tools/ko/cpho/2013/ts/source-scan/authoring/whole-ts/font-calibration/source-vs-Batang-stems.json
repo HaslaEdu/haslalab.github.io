@@ -1,0 +1,590 @@
+{
+  "source_sha256": "612d676f525ddc35ad3b417a8f25141d3467f48309d52dfdbcab7bd222201d68",
+  "source_page": 4,
+  "source_runs": [
+    {
+      "id": "first-ten",
+      "rect": [
+        75,
+        135,
+        184,
+        150
+      ],
+      "role": "regular",
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.875,
+          "median_pt": 0.875,
+          "quartiles_pt": [
+            0.5,
+            0.875
+          ],
+          "samples": 1347,
+          "histogram_px": {
+            "3": 171,
+            "4": 230,
+            "7": 763,
+            "8": 127,
+            "11": 56
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.5,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.5,
+            0.5
+          ],
+          "samples": 1287,
+          "histogram_px": {
+            "3": 234,
+            "4": 837,
+            "7": 108,
+            "8": 108
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.75
+      }
+    },
+    {
+      "id": "speed-clause",
+      "rect": [
+        178,
+        135,
+        333,
+        150.2
+      ],
+      "role": "regular",
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.875,
+          "median_pt": 0.875,
+          "quartiles_pt": [
+            0.5,
+            0.875
+          ],
+          "samples": 2014,
+          "histogram_px": {
+            "3": 247,
+            "4": 514,
+            "7": 1074,
+            "8": 146,
+            "11": 33
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.5,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.375,
+            0.875
+          ],
+          "samples": 2646,
+          "histogram_px": {
+            "3": 739,
+            "4": 1165,
+            "7": 616,
+            "8": 126
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.75
+      }
+    },
+    {
+      "id": "reference-bold",
+      "rect": [
+        76,
+        123,
+        119.5,
+        135
+      ],
+      "role": "bold",
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.875,
+          "median_pt": 0.875,
+          "quartiles_pt": [
+            0.5,
+            0.875
+          ],
+          "samples": 528,
+          "histogram_px": {
+            "3": 83,
+            "4": 129,
+            "7": 213,
+            "8": 77,
+            "11": 26
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.5,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.375,
+            0.875
+          ],
+          "samples": 941,
+          "histogram_px": {
+            "3": 286,
+            "4": 412,
+            "7": 192,
+            "8": 29,
+            "11": 22
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.75
+      }
+    }
+  ],
+  "korean_font": "Batang face0",
+  "font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+  "sample_text": "처음 튄 직후의 수직 속력",
+  "source_pointsize_fixed": 9.78,
+  "quarter_em_spaces": true,
+  "scale": 8,
+  "threshold": 160,
+  "method": "Long primary stem openings (.28em); cross-sections above .17em excluded as junction/serif rather than stems. Horizontal/vertical widths and contrast compared independently. No whole-ink-density target or glyph-width fitting.",
+  "results": [
+    {
+      "stroke_pt": 0,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.5,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.5,
+            0.625
+          ],
+          "samples": 573,
+          "histogram_px": {
+            "1": 7,
+            "2": 36,
+            "3": 73,
+            "4": 280,
+            "5": 177
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.25,
+          "median_pt": 0.25,
+          "quartiles_pt": [
+            0.25,
+            0.25
+          ],
+          "samples": 1051,
+          "histogram_px": {
+            "1": 138,
+            "2": 754,
+            "3": 159
+          }
+        },
+        "vertical_horizontal_mode_ratio": 2.0
+      },
+      "stem_median_absolute_error_pt": 0.625,
+      "bold_stem_median_absolute_error_pt": 0.625
+    },
+    {
+      "stroke_pt": 0.05,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.625,
+          "median_pt": 0.625,
+          "quartiles_pt": [
+            0.5,
+            0.75
+          ],
+          "samples": 607,
+          "histogram_px": {
+            "1": 7,
+            "2": 7,
+            "3": 20,
+            "4": 130,
+            "5": 240,
+            "6": 203
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.375,
+          "median_pt": 0.25,
+          "quartiles_pt": [
+            0.25,
+            0.375
+          ],
+          "samples": 1097,
+          "histogram_px": {
+            "1": 89,
+            "2": 470,
+            "3": 526,
+            "4": 12
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.6666666666666667
+      },
+      "stem_median_absolute_error_pt": 0.5,
+      "bold_stem_median_absolute_error_pt": 0.5
+    },
+    {
+      "stroke_pt": 0.1,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.75,
+          "median_pt": 0.625,
+          "quartiles_pt": [
+            0.625,
+            0.75
+          ],
+          "samples": 612,
+          "histogram_px": {
+            "1": 5,
+            "2": 11,
+            "3": 17,
+            "4": 100,
+            "5": 185,
+            "6": 294
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.375,
+          "median_pt": 0.375,
+          "quartiles_pt": [
+            0.25,
+            0.375
+          ],
+          "samples": 1161,
+          "histogram_px": {
+            "1": 131,
+            "2": 374,
+            "3": 588,
+            "4": 68
+          }
+        },
+        "vertical_horizontal_mode_ratio": 2.0
+      },
+      "stem_median_absolute_error_pt": 0.375,
+      "bold_stem_median_absolute_error_pt": 0.375
+    },
+    {
+      "stroke_pt": 0.15,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.75,
+          "median_pt": 0.75,
+          "quartiles_pt": [
+            0.625,
+            0.75
+          ],
+          "samples": 620,
+          "histogram_px": {
+            "1": 4,
+            "2": 15,
+            "3": 8,
+            "4": 75,
+            "5": 88,
+            "6": 407,
+            "7": 23
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.375,
+          "median_pt": 0.375,
+          "quartiles_pt": [
+            0.375,
+            0.5
+          ],
+          "samples": 1207,
+          "histogram_px": {
+            "1": 87,
+            "2": 206,
+            "3": 609,
+            "4": 299,
+            "5": 6
+          }
+        },
+        "vertical_horizontal_mode_ratio": 2.0
+      },
+      "stem_median_absolute_error_pt": 0.25,
+      "bold_stem_median_absolute_error_pt": 0.25
+    },
+    {
+      "stroke_pt": 0.2,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.75,
+          "median_pt": 0.75,
+          "quartiles_pt": [
+            0.625,
+            0.75
+          ],
+          "samples": 623,
+          "histogram_px": {
+            "1": 2,
+            "2": 8,
+            "3": 12,
+            "4": 70,
+            "5": 86,
+            "6": 386,
+            "7": 59
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.5,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.375,
+            0.5
+          ],
+          "samples": 1281,
+          "histogram_px": {
+            "1": 68,
+            "2": 173,
+            "3": 398,
+            "4": 595,
+            "5": 39,
+            "6": 8
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.5
+      },
+      "stem_median_absolute_error_pt": 0.125,
+      "bold_stem_median_absolute_error_pt": 0.125
+    },
+    {
+      "stroke_pt": 0.25,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.75,
+          "median_pt": 0.75,
+          "quartiles_pt": [
+            0.625,
+            0.875
+          ],
+          "samples": 742,
+          "histogram_px": {
+            "1": 94,
+            "2": 6,
+            "3": 32,
+            "4": 38,
+            "5": 34,
+            "6": 314,
+            "7": 224
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.5,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.375,
+            0.5
+          ],
+          "samples": 1402,
+          "histogram_px": {
+            "1": 101,
+            "2": 172,
+            "3": 173,
+            "4": 741,
+            "5": 203,
+            "6": 11,
+            "7": 1
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.5
+      },
+      "stem_median_absolute_error_pt": 0.125,
+      "bold_stem_median_absolute_error_pt": 0.125
+    },
+    {
+      "stroke_pt": 0.3,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 0.875,
+          "median_pt": 0.875,
+          "quartiles_pt": [
+            0.75,
+            0.875
+          ],
+          "samples": 779,
+          "histogram_px": {
+            "1": 117,
+            "2": 12,
+            "3": 7,
+            "4": 11,
+            "5": 28,
+            "6": 135,
+            "7": 296,
+            "8": 173
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.5,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.5,
+            0.625
+          ],
+          "samples": 1415,
+          "histogram_px": {
+            "1": 77,
+            "2": 107,
+            "3": 160,
+            "4": 564,
+            "5": 488,
+            "6": 16,
+            "7": 3
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.75
+      },
+      "stem_median_absolute_error_pt": 0.0,
+      "bold_stem_median_absolute_error_pt": 0.0
+    },
+    {
+      "stroke_pt": 0.35,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 1.0,
+          "median_pt": 0.875,
+          "quartiles_pt": [
+            0.625,
+            1.0
+          ],
+          "samples": 835,
+          "histogram_px": {
+            "1": 55,
+            "2": 121,
+            "3": 9,
+            "4": 16,
+            "5": 15,
+            "6": 106,
+            "7": 196,
+            "8": 317
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.625,
+          "median_pt": 0.5,
+          "quartiles_pt": [
+            0.375,
+            0.625
+          ],
+          "samples": 1478,
+          "histogram_px": {
+            "1": 95,
+            "2": 94,
+            "3": 184,
+            "4": 383,
+            "5": 633,
+            "6": 84,
+            "7": 5
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.6
+      },
+      "stem_median_absolute_error_pt": 0.0,
+      "bold_stem_median_absolute_error_pt": 0.0
+    },
+    {
+      "stroke_pt": 0.4,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 1.0,
+          "median_pt": 0.875,
+          "quartiles_pt": [
+            0.375,
+            1.0
+          ],
+          "samples": 888,
+          "histogram_px": {
+            "1": 59,
+            "2": 94,
+            "3": 76,
+            "4": 9,
+            "5": 23,
+            "6": 97,
+            "7": 93,
+            "8": 413,
+            "9": 24
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.625,
+          "median_pt": 0.625,
+          "quartiles_pt": [
+            0.5,
+            0.6875
+          ],
+          "samples": 1495,
+          "histogram_px": {
+            "1": 38,
+            "2": 90,
+            "3": 153,
+            "4": 215,
+            "5": 625,
+            "6": 359,
+            "7": 15
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.6
+      },
+      "stem_median_absolute_error_pt": 0.125,
+      "bold_stem_median_absolute_error_pt": 0.125
+    },
+    {
+      "stroke_pt": 0.45,
+      "pointsize": 9.78,
+      "metrics": {
+        "vertical": {
+          "mode_pt": 1.0,
+          "median_pt": 1.0,
+          "quartiles_pt": [
+            0.375,
+            1.0
+          ],
+          "samples": 904,
+          "histogram_px": {
+            "1": 15,
+            "2": 51,
+            "3": 165,
+            "4": 10,
+            "5": 14,
+            "6": 77,
+            "7": 108,
+            "8": 381,
+            "9": 83
+          }
+        },
+        "horizontal": {
+          "mode_pt": 0.75,
+          "median_pt": 0.625,
+          "quartiles_pt": [
+            0.5,
+            0.75
+          ],
+          "samples": 1579,
+          "histogram_px": {
+            "1": 81,
+            "2": 43,
+            "3": 104,
+            "4": 218,
+            "5": 356,
+            "6": 713,
+            "7": 55,
+            "8": 9
+          }
+        },
+        "vertical_horizontal_mode_ratio": 1.3333333333333333
+      },
+      "stem_median_absolute_error_pt": 0.25,
+      "bold_stem_median_absolute_error_pt": 0.25
+    }
+  ],
+  "comparison_image": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2013\\TS\\font-calibration\\source-vs-Batang-stems.png"
+}

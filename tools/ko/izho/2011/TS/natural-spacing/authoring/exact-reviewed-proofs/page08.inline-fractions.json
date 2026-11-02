@@ -1,0 +1,150 @@
+{
+  "source_sha256": "ecc4a34a50fade6a08fd5f629480bebfa20ec418cdc19fa87915f6c0465ee008",
+  "source_base_sha256": "02bfcd38ca50dda538607d8a657d774bbbbb6793b855018dab4ad25cd9bd983f",
+  "proof_sha256": "28f6e931dadbd0400e0c90c4c82496f5a4ffb64841cfa014e30b8b6764077d96",
+  "method": "Independent actual final-PDF original native font/GID/point/y matching AND actual painted fraction-rule endpoint/paint-operator matching at the same common horizontal dx. Do not infer rule movement from glyph metadata or from the motion journal alone.",
+  "groups": [
+    {
+      "label": "Complete original exp(-epsilon/kBT) approximately1-epsilon/kBT",
+      "original_native_glyphs": 21,
+      "source_native_font_gid_point_y_and_actual_dx_matched": true,
+      "glyph_errors": [],
+      "actual_native_common_dx": 29.753326416015625,
+      "actual_native_relative_dx_spread_pt": 3.0517578125e-05,
+      "original_fraction_rules": [
+        {
+          "original": {
+            "operator_indices": [
+              964,
+              965,
+              966
+            ],
+            "rect": [
+              210.78708856699998,
+              524.5099287759763,
+              230.19784256699998,
+              524.5099287759763
+            ],
+            "paint_operator": "S"
+          },
+          "expected_actual_rect": [
+            240.5404149830156,
+            524.5099287759763,
+            259.9511689830156,
+            524.5099287759763
+          ],
+          "actual_matching_painted_paths": [
+            {
+              "operator_indices": [
+                972,
+                973,
+                974
+              ],
+              "rect": [
+                240.54039972422655,
+                524.5099287759763,
+                259.9511537242266,
+                524.5099287759763
+              ],
+              "paint_operator": "S"
+            }
+          ],
+          "passed": true
+        },
+        {
+          "original": {
+            "operator_indices": [
+              977,
+              978,
+              979
+            ],
+            "rect": [
+              263.02760626349993,
+              524.5099287759763,
+              282.43836026349993,
+              524.5099287759763
+            ],
+            "paint_operator": "S"
+          },
+          "expected_actual_rect": [
+            292.78093267951556,
+            524.5099287759763,
+            312.19168667951556,
+            524.5099287759763
+          ],
+          "actual_matching_painted_paths": [
+            {
+              "operator_indices": [
+                988,
+                989,
+                990
+              ],
+              "rect": [
+                292.7809174207265,
+                524.5099287759763,
+                312.1916714207265,
+                524.5099287759763
+              ],
+              "paint_operator": "S"
+            }
+          ],
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "label": "Complete original low-temperature exp(-epsilon/kBT) much-less-than1",
+      "original_native_glyphs": 17,
+      "source_native_font_gid_point_y_and_actual_dx_matched": true,
+      "glyph_errors": [],
+      "actual_native_common_dx": -3.04522705078125,
+      "actual_native_relative_dx_spread_pt": 0.0,
+      "original_fraction_rules": [
+        {
+          "original": {
+            "operator_indices": [
+              1099,
+              1100,
+              1101
+            ],
+            "rect": [
+              345.55233696852,
+              580.8094485130962,
+              364.94405776852,
+              580.8094485130962
+            ],
+            "paint_operator": "S"
+          },
+          "expected_actual_rect": [
+            342.5071099177388,
+            580.8094485130962,
+            361.89883071773875,
+            580.8094485130962
+          ],
+          "actual_matching_painted_paths": [
+            {
+              "operator_indices": [
+                1116,
+                1117,
+                1118
+              ],
+              "rect": [
+                342.5071099177388,
+                580.8094485130962,
+                361.89883071773875,
+                580.8094485130962
+              ],
+              "paint_operator": "S"
+            }
+          ],
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "reviewed_complete_expressions": 2,
+  "original_fraction_rules_checked": 3,
+  "passed": true
+}

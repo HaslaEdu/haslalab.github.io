@@ -1,5 +1,25 @@
 # Original-layout translations
 
+The 2026 PLANCKS and Ortvay editions use the separate
+`latex-native-joined-v1` evidence profile. The source's encoded Latin prose is
+retained with text rendering mode 3 and empty `ActualText`; its original
+rendering mode is restored immediately after each selected run. This keeps the
+original Type1 interpreter advances, including ligatures, and avoids changing
+adjacent mathematical glyph positions through rounded `/Widths` values.
+Only the Korean counterparts are painted, at the original point sizes and
+baselines. Original embedded font programs, equations, paths, image streams,
+soft masks and page boxes are retained. Their Latin fonts have no Hangul, so
+the existing pinned Noto CJK regular/bold masters supply the Korean glyphs.
+Figure-language overlays retain the original bitmap and cover only reviewed
+English-label boxes; raster font sizes are explicitly recorded as estimates.
+Every joined page is checked against its visually reviewed proof for identical
+glyph metadata and zero changed rendered pixels.
+
+The 2026 IChO Korean paper is the untouched official Korean exam published by
+the Korean Chemical Society. Its `official-korean-original-v1` record requires
+byte-identical source/output SHA-256, all 46 pages, nonmissing Korean glyphs
+and a complete visual review. It is not passed through the translation engine.
+
 `original_style_publication.json` lists the reviewed files served by the PDF
 release. Each entry points to the audit of the final joined PDF, rather than
 only the temporary page proofs. The PDFs are stored in the `pdf-izho` and

@@ -1,0 +1,27 @@
+{
+  "source_sha256": "2b553d707456ac992698b78d2ef94bd1a81994833b4815a3a0a60884b88823e9",
+  "source_page": 6,
+  "proof_sha256": "06741c4148ae45fec1596c31dafc5398b916ca993ce3831a33e5b32f5f183102",
+  "plan_sha256": "b1550182e9ad682882d3481ce942d76d7d6d7a0cc8f597f956d024d60a6b5161",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 0,
+  "rows": [],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          20,
+          0
+        ],
+        "source_text": "The Clausius–Clapeyron relation ",
+        "original_center": 315.4831771850586,
+        "alignment_intent_present": false,
+        "actual_center_preserved": false,
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "passed": false
+}

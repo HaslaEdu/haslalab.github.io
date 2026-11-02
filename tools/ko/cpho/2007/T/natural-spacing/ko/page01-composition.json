@@ -1,8 +1,8 @@
 {
-  "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing\\2007\\ko\\prose-stage\\page01-reviewed-Korean.pdf",
+  "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho-natural-spacing-v2\\2007\\ko\\prose-stage\\page01-reviewed-Korean.pdf",
   "source_page": 1,
-  "source_sha256": "5f73c84d0985dfc97b63b83c0cdfa397a77b40c93a8d30543829d54b21aba8d6",
-  "output_sha256": "560c17381ed33bbf6dc981778202016ae418ae713c242d2f1634eb723cddea5f",
+  "source_sha256": "1be2cd3cefc13ef57a4b139a6a60348614b27b1ef8ce735524ba766235158397",
+  "output_sha256": "7e85c57df970e777fb9d27c6e9ab9483a0b210d97fbfd3aa37fffb8da2fb68f3",
   "font": "Windows Batang TTC face0; subset only",
   "font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
   "font_resource_name": "KO_Natural_Batang",
@@ -5403,20 +5403,6 @@
     {
       "glyphs": [
         {
-          "c": "O",
-          "font": "Times New Roman Italic+FPEF",
-          "size": 10.5600004196167,
-          "origin": [
-            113.76290130615234,
-            290.40570068359375
-          ]
-        }
-      ],
-      "dx": -1.1920928955078125e-06
-    },
-    {
-      "glyphs": [
-        {
           "c": "B",
           "font": "Times New Roman Italic+FPEF",
           "size": 10.5600004196167,
@@ -10707,13 +10693,16 @@
       ]
     }
   ],
+  "stationary_native_glyphs": [],
+  "stationary_native_glyph_keys_matched": 0,
   "native_move_qa": {
     "api": "native-inline-reposition-v1",
     "page_number": 1,
     "text_shift_mode": "tj",
     "erased_glyphs": 472,
-    "shifted_top_level_glyphs": 145,
+    "shifted_top_level_glyphs": 144,
     "shifted_form_instances": 0,
+    "shifted_direct_image_instances": 0,
     "shifted_atomic_clip_groups": 0,
     "shifted_reviewed_vector_paths": 0,
     "unchanged_white_background_panels_ignored": 0,
@@ -10721,9 +10710,10 @@
     "private_form_ancestor_copies": 0,
     "font_programs_unchanged": true,
     "original_form_streams_unchanged": true,
+    "original_image_streams_unchanged": true,
     "native_vector_path_bytes_preserved": true,
     "native_atomic_clip_bytes_preserved": true,
-    "output_sha256": "9d6611315445914f415029689831267e103d9669c456b6801fd9dcfce1aa39d6",
+    "output_sha256": "a3f9e013e2806d1a4411532e8cbcdaab53e2d0d72fbae4dae0452854e713930c",
     "atomic_nonpainting_space_occurrence_shifts": [],
     "expected_native_glyphs": 403,
     "unexpected_glyphs": 0,
@@ -10828,12 +10818,12 @@
         },
         {
           "left": "m",
-          "right": "이며,비신축줄(길이",
+          "right": "이며, 비신축 줄(길이",
           "old_gap": 5.331024169921875,
           "new_gap": 0
         },
         {
-          "left": "이며,비신축줄(길이",
+          "left": "이며, 비신축 줄(길이",
           "right": "l",
           "old_gap": 22.693450927734375,
           "new_gap": 2.640000104904175
@@ -10853,7 +10843,7 @@
       "new_right": 293.4579243659973,
       "gaps": [
         {
-          "left": ")로연결된다.",
+          "left": ")로 연결된다.",
           "right": "AB",
           "old_gap": 19.69439697265625,
           "new_gap": 2.640000104904175
@@ -11453,7 +11443,7 @@
   ],
   "no_font_scaling": true,
   "original_native_ascii_latin_math_programs_retained": true,
-  "native_control_sha256": "9d6611315445914f415029689831267e103d9669c456b6801fd9dcfce1aa39d6",
+  "native_control_sha256": "a3f9e013e2806d1a4411532e8cbcdaab53e2d0d72fbae4dae0452854e713930c",
   "native_control_output": null,
   "retained_native_glyphs_after_new_text_insertion": 192,
   "retained_native_style_or_geometry_mismatches_after_insertion": 0,
@@ -11464,7 +11454,7 @@
   "word_spacing": "One quarter of the original prose point size; no justification tracking",
   "visual_review_required": true,
   "semantic_order": "작은 세 강체구 A,B,C가 …; same original characters, only horizontal native/prose order changed.",
-  "input_sha256": "5f73c84d0985dfc97b63b83c0cdfa397a77b40c93a8d30543829d54b21aba8d6",
+  "input_sha256": "1be2cd3cefc13ef57a4b139a6a60348614b27b1ef8ce735524ba766235158397",
   "original_sha256": "2e30b56ab9274363686cbf5bc1ef7532dcf579e0703de2c01098b003ab70cdd9",
   "prototype": true,
   "caption_regions_pending": [],

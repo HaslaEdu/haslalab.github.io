@@ -9,7 +9,7 @@ import { normalizeMonthlyParts, guardMonthlyGrade } from './src/monthly-answers.
 
 const NOW = Date.parse('2026-11-01T12:00:00+09:00') / 1000;
 const equation = '$a^2+b^2=c^2$';
-const payload = key => ({ request_id: key.padEnd(32, 'x'), parts: [{ id: 'a', answer: equation, working: 'Apply the governing equation.' }], lang: 'ko' });
+const payload = key => ({ provider:'gemini', request_id: key.padEnd(32, 'x'), parts: [{ id: 'a', answer: equation, working: 'Apply the governing equation.' }], lang: 'ko' });
 
 function database() {
   const sql = new DatabaseSync(':memory:'), migrations = new URL('./migrations/', import.meta.url);

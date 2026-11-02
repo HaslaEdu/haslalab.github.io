@@ -1,0 +1,50 @@
+{
+  "output_sha256": "3fa8c0d3c4a8817aeef4fd6b7ccec0dae9f48cfa1d639f9c6699aab4800e107b",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2020-complete-solutions\\natural\\2020\\TS\\page03.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2020-complete-solutions\\natural\\2020\\TS\\page03.pdf",
+    "final_page": 1,
+    "source_sha256": "fea129bb98a9bfd92b8697b3e688ee4edcf0320784de227ef76390d646eb85be",
+    "output_sha256": "3fa8c0d3c4a8817aeef4fd6b7ccec0dae9f48cfa1d639f9c6699aab4800e107b",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 422,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 422,
+      "expected_signature_count": 422,
+      "matched_outline_uses": 422,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 49615,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 2,
+    "passed": false,
+    "missing_bbox": [
+      95.75,
+      498.0,
+      102.0,
+      738.25
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "kind": "multiple-original-native-CID-references",
+    "method": "Two exact original12pt TNR table parentheses; original encoded CID references at actual x and independent8x/12x SVG comparisons all have zero missing ink. Both raw4x edge diagnostics retained; global thresholds unchanged.",
+    "original_4x_svg_dark_pixel_delta": 2,
+    "native_original_CID_reference_missing_pixels": 0,
+    "svg_8x_missing_pixels": 0,
+    "svg_12x_missing_pixels": 0,
+    "original_glyphs_independently_checked": 2,
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2020-complete-solutions\\natural\\2020\\TS\\page03-parentheses-native-reference\\witness.json",
+    "witness_sha256": "55bdd1434024b1482618688d5aeb2dda969a735e857bd59befc4d0a37e454276",
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2020/TS/natural-spacing/witnesses/page03-native-cid.json"
+  }
+}

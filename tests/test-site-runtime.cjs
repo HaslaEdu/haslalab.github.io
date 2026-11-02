@@ -141,7 +141,7 @@ test('PLANCKS public resources contain only its official homepage and general ru
   for(const year of manifest.years){
     const published=lean.run(`THEORY.plancks[${year.y}].f.T`);
     for(const file of year.files){
-      if(file.kind==='paper')assert.equal(published.papers[file.lang.toLowerCase()],file.local,`${year.y}: paper remains available`);
+      if(file.kind==='paper')assert.equal(published.papers[file.lang.toLowerCase()],file.local||file.file,`${year.y}: paper remains available`);
       if(file.kind==='solution')assert.equal(published.sol,file.local,`${year.y}: solution remains available`);
     }
   }

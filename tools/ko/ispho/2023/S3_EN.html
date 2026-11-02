@@ -1,0 +1,134 @@
+<style>@page{@top-right{content:"December, 2023"}}</style>
+<h1 class="title">Solution</h1>
+
+
+<div class="task">
+<p><b>A1</b>. They are equal to 0 because the field cannot tend to infinity at a large distance from the fiber.</p>
+<div class="ans">$$C_1 = 0,\qquad C_2 = 0$$</div></div>
+
+<div class="task">
+<p><b>A2</b>. Substituting the form of the solution into the wave equation:</p>
+$$\frac{\partial^2A}{\partial x^2} + \frac{\partial^2A}{\partial y^2} + \left(\frac{\omega^2\varepsilon}{c^2} - \beta^2\right)A = 0.$$
+<p>Considering that $\partial^2A/\partial y^2 \ll \partial^2A/\partial x^2$, and that outside the fiber $\varepsilon = 1$, we get:</p>
+<div class="ans">$$k_{in} = \sqrt{\frac{\omega^2\varepsilon(\omega)}{c^2} - \beta^2},\qquad k_{out} = \sqrt{\beta^2 - \frac{\omega^2}{c^2}}$$</div></div>
+
+<div class="task">
+<p><b>A3</b>. We can write Faraday’s law of electromagnetic induction for a rectangular circuit with vertices at the points $(a/2 - \delta a, y, z)$, $(a/2 - \delta a, y, z + \Delta z)$, $(a/2 + \delta a, y, z + \Delta z)$, $(a/2 + \delta a, y, z)$. At $\delta a \to 0$ the derivative of the magnetic flux tends to 0, while the circulation of the electric field strength keeps the same form; hence the circulation is also equal to 0. At $\delta a \to 0$ the circulation can be expressed as $\Gamma = (E_{\tau 1} - E_{\tau 2})\Delta z = 0$, hence</p>
+<div class="ans">$$E_{\tau 1} = E_{\tau 2}$$</div></div>
+
+<div class="task">
+<p class="code"><b>A4</b>.</p>
+<div class="ans">$$B = \exp(k_{out}a/2)\cos(k_{in}a/2)$$</div></div>
+
+<div class="task">
+<p><b>A5</b>. The proof is similar to A3, but instead of the law of electromagnetic induction, the circulation theorem for the magnetic field strength is used.</p></div>
+
+<div class="task">
+<p><b>A6</b>. Using the differential form of Faraday’s law we get:</p>
+$$-\mu_0\frac{\partial H_z}{\partial t} = \frac{\partial E_y}{\partial x}.$$
+<p>The derivative of $H_z$ with respect to time can be expressed as</p>
+$$\frac{\partial H_z}{\partial t} = i\omega H_z,$$
+<p>and therefore</p>
+<div class="ans">$$H_z = E_0\,\mathrm{Re}\left(\frac{i}{\mu_0\omega}\frac{\partial A}{\partial x}\exp(i\omega t - i\beta z)\right)$$</div></div>
+
+<div class="task">
+<p><b>A7</b>. To find $H_z$, differentiate $A$ with respect to $x$:</p>
+$$\frac{\partial A}{\partial x} = -k_{in}\sin(k_{in}x),\quad |x| < a/2;\qquad \frac{\partial A}{\partial x} = -k_{out}\exp\bigl(-k_{out}(x - a/2)\bigr)\cos(k_{in}a/2),\quad x > a/2.$$
+<p>Equating $H_z$ on both sides of the interface:</p>
+<div class="ans">$$\tan(k_{in}a/2) = \frac{k_{out}}{k_{in}}$$</div></div>
+
+<div class="task">
+<p class="code"><b>A8</b>.</p>
+<div class="ans">$$\tan\left(\frac{a}{2}\sqrt{\frac{\omega^2\varepsilon(\omega)}{c^2} - \beta^2}\right) = \sqrt{\frac{\beta^2c^2 - \omega^2}{\omega^2\varepsilon(\omega) - \beta^2c^2}}$$</div></div>
+
+
+<div class="task">
+<p class="code"><b>B1</b>.</p>
+<div class="ans">$$r_s^2 + t_s^2 = 1$$</div></div>
+
+<div class="task">
+<p class="code"><b>B2</b>.</p>
+<div class="ans">$$B_{in}(t) = \kappa B_{out}(t - \tau(\omega))$$</div></div>
+
+<div class="task">
+<p><b>B3</b>. Let $\varphi = -\omega\tau$. Then</p>
+$$B_{out}(t) = it_sA_{in}(t) - r_sB_{in}(t),\qquad B_{in}(t) = \kappa e^{i\varphi}B_{out}(t),$$
+<div class="ans">$$B_{in}(t) = \kappa e^{-i\omega\tau}B_{out}(t)$$</div></div>
+
+<div class="task">
+<p><b>B4</b>. Substituting $B_{out}(t)$ from the previous task:</p>
+$$B_{in}(t) = \kappa e^{i\varphi}\bigl(it_sA_{in}(t) - r_sB_{in}(t)\bigr),\qquad B_{in}(t) = \frac{it_s\kappa e^{i\varphi}A_{in}(t)}{1 + r_s\kappa e^{i\varphi}},$$
+<div class="ans">$$B_{in}(t) = \frac{it_s\kappa e^{-i\omega\tau}A_0e^{i\omega t}}{1 + r_s\kappa e^{-i\omega\tau}}$$</div></div>
+
+<div class="task">
+<p><b>B5</b>. The wave leaving $P_2$ is</p>
+$$A_{out}(t) = -r_sA_{in}(t) + it_sB_{in}(t) = -A_{in}(t)\left(r_s + \frac{t_s^2\kappa e^{i\varphi}}{1 + r_s\kappa e^{i\varphi}}\right).$$
+<p>Let us bring the expression in brackets to a common denominator and divide the squared modulus of the numerator by the squared modulus of the denominator:</p>
+<div class="ans">$$\eta = \frac{N_2}{N_1} = \frac{\kappa^2\sin^2(\omega\tau) + \bigl(r_s + \kappa\cos(\omega\tau)\bigr)^2}{\kappa^2r_s^2\sin^2(\omega\tau) + \bigl(1 + r_s\kappa\cos(\omega\tau)\bigr)^2}$$</div></div>
+
+<div class="task">
+<p class="code"><b>B6</b>.</p>
+<figure><img src="S3_fig1.png" style="width:100mm"><figcaption>The transmitted power $N_2/N_1$ against $\omega\tau$.</figcaption></figure>
+<div class="ans">$$\omega_{res}\tau = \pi(1 + 2n)$$</div></div>
+
+<div class="task">
+<p><b>B7</b>. Let us find the depth of the absorption peak by expanding the expression for the power ratio in a Taylor series:</p>
+$$\eta(\omega_{res}) \approx \frac{(1 - \kappa - t_s^2/2)^2}{(1 - \kappa + t_s^2/2)^2} \approx 0,\qquad \Delta\eta_{max} = 1 - \eta(\omega_{res}) \approx 1,$$
+<p>or by substituting the value of $\varphi$ from the previous item without expanding: $\eta(\omega_{res}) \approx 1.6\cdot 10^{-6} \approx 0$, $\Delta\eta_{max} \approx 1$.</p>
+<p>The sharpness is the ratio of $\omega$ to the width of the region in which $\Delta\eta &gt; \Delta\eta_{max}/2$. Let us estimate the width of this region. Put</p>
+$$\varphi = \delta + \pi(1 + 2n),\qquad \delta \ll \pi,$$
+<p>and expand in a Maclaurin series in $\delta$:</p>
+$$\eta \approx \frac{\delta^2 + (1 - \kappa - t_s^2/2 + \delta^2/2)^2}{\delta^2 + (1 - \kappa + t_s^2/2 + \delta^2/2)^2} \approx \frac{\delta^2}{\delta^2 + (1 - \kappa + t_s^2/2)^2} = \frac{1}{2}.$$
+<p>From here we get</p>
+$$\delta \approx 1 - \kappa + t_s^2/2 \approx 0.01,$$
+<div class="ans">$$Q = \frac{\omega_{res}}{\Delta\omega} = \frac{\pi(1 + 2n)}{2\delta} \approx \frac{\pi n}{1 - \kappa + t_s^2/2} = \pi\cdot 10^4 = 3.14\cdot 10^4$$</div></div>
+
+
+<div class="task">
+<p class="code"><b>C1</b>.</p>
+<figure><img src="S3_fig2.png" style="width:100mm"><figcaption>Oscilloscope readings: the interferometer signal and the resonator signal with its absorption dip.</figcaption></figure></div>
+
+<div class="task">
+<p><b>C2</b>. The field amplitude at the exit of the EOM equals</p>
+$$E_{EOM}(t) = f(t)\cos(\omega(t)t) = \beta\cos(\omega t) + \frac{1 - \beta}{2}\Bigl(\cos(\Omega + \omega)t + \cos(-\Omega + \omega)t\Bigr),$$
+<p>where $\omega = \omega(t) = \omega_0 + \alpha t$. In this case three waves fall on the FR, with frequencies shifted relative to each other by exactly $\Omega$. Therefore the number of absorption peaks triples: they can be observed at the frequencies $\omega_{res}$, $\omega_{res} + \Omega$, $\omega_{res} - \Omega$, where $\omega_{res}$ is the frequency of minimum transmission (defined in B6).</p>
+<figure><img src="S3_fig3.jpg" style="width:96mm"><figcaption>What the oscilloscope shows with the modulator on.</figcaption></figure></div>
+
+<div class="task">
+<p><b>C3</b>. We can measure one period by changing $\Omega$ so that the absorption maxima are separated by $\omega_{MZI}$ from each other. Then the absolute error is of order $\omega_0/Q = 24~\mathrm{MHz}$, and the relative error is</p>
+<div class="ans">$$\frac{\omega_0}{Q\,\Omega_{max}} = 0.02$$</div></div>
+
+
+<div class="task">
+<p class="code"><b>D1</b>.</p>
+<div class="ans">$$v_g = 1/\beta_1$$</div></div>
+
+<div class="task">
+<p><b>D2</b>. Let us calculate the derivatives and substitute them into the equation (dividing by $iF_0\exp(i\sigma z)$):</p>
+$$\frac{\sigma}{\cosh\theta s} + \frac{\beta_2\theta^2}{2\beta_1^2}\left(-\frac{2}{\cosh^3\theta s} + \frac{1}{\cosh\theta s}\right) = \frac{\gamma F_0^2}{\cosh^3\theta s}.$$
+<p>From here we get</p>
+<div class="ans">$$F_0^2 = -\frac{\beta_2\theta^2}{\gamma\beta_1^2},\qquad \sigma = -\frac{\beta_2\theta^2}{2\beta_1^2}$$</div></div>
+
+<div class="task">
+<p><b>D3</b>. Using the result of B3, the natural-frequency condition reads</p>
+$$\beta(\omega_\mu)L + \pi = 2\pi(\mu + \mu_0).$$
+<p>Now let us substitute the expression for $\beta(\omega)$, and into it $\omega_\mu$. We get</p>
+$$\left(\beta_0 + \beta_1\left(D_1\mu + \frac{D_2\mu^2}{2}\right) + \frac{\beta_2D_1^2\mu^2}{2}\right)L \approx 2\pi(\mu + \mu_0 + \mathrm{const}).$$
+<p>Equating the coefficients of $\mu$ and $\mu^2$ on the two sides:</p>
+<div class="ans">$$D_1 = \frac{2\pi}{\beta_1L},\qquad D_2 = -\frac{\beta_2D_1^2}{\beta_1} = -\frac{4\pi^2\beta_2}{\beta_1^3L^2}$$</div></div>
+
+<div class="task">
+<p><b>D4</b>. $F_0^2 &gt; 0$, so $\beta_2 &lt; 0$ (as $\gamma$ has the sign of $\chi &gt; 0$), and then</p>
+<div class="ans">$$D_2 &gt; 0$$</div></div>
+
+<div class="task">
+<p><b>D5</b>. The spectrum consists of narrow bands at the natural frequencies of the FR, as shown in the figure. The envelope can be fitted by $F_1/\cosh^2\bigl(F_2(\omega - \omega_0)\bigr)$ (here $F_1$, $F_2$ are some constants depending on $F_0, \sigma, \theta$), but an analytical expression for the envelope is not required.</p>
+<figure><img src="S3_fig4.png" style="width:84mm"><figcaption>Emission spectrum of the resonator: lines at the natural frequencies $\omega_0 + D_1\mu$ (horizontal axis: mode number $\mu$).</figcaption></figure></div>
+
+<div class="task">
+<p><b>D6</b>. We get a ruler with a pitch of $D_1$, and the absolute error is about half of this pitch:</p>
+<div class="ans">$$\Delta\omega \approx \frac{D_1}{2}$$</div></div>
+
+<div class="task">
+<p class="code"><b>D7</b>.</p>
+<div class="ans">$$\tau_s = \frac{2\pi}{D_1}$$</div></div>

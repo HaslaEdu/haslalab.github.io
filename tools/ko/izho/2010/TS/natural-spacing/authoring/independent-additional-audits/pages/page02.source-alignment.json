@@ -1,0 +1,26 @@
+{
+  "source_sha256": "7b05288bf9480392aa2b945b589f00e6034de6d3739da4dd06f01d6d1118f114",
+  "source_page": 2,
+  "proof_sha256": "f66a9409b49f9e4ac8b1653e1787ff5955153ee15286b5df05bd7e90ffaa82de",
+  "plan_sha256": "9d71a1c14fa0e95e3dfc1468fb30d4b0ad54edf70cecf3285f95c7e55463301f",
+  "method": "Independently read every final glyph position/bounding envelope on each original centered source line. Check the actual nonspace center against the source-only measured center and require the alignment rectangle to bind to an active composer scope.",
+  "headings_and_captions_checked": 1,
+  "rows": [
+    {
+      "baseline": 96.719970703125,
+      "source_center": 308.2379913330078,
+      "independent_original_source_centers": [
+        308.2379913330078
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 286.9439392089844,
+      "actual_nonspace_glyph_right": 329.53204345703125,
+      "actual_center": 308.2379913330078,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

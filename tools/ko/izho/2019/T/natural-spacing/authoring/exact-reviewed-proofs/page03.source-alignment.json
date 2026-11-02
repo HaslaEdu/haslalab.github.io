@@ -1,0 +1,91 @@
+{
+  "source_sha256": "29daec0cb9f759bed9b755cbae2937e1c4ab068fa804c62d512ea291e42619d1",
+  "source_page": 3,
+  "proof_sha256": "bdfe232d718e73e610535c3469e3cdc39cc34300c8454e3bd151594fb46e8200",
+  "plan_sha256": "81d4fb44fd7d474efba21c02e4fe1f2924bd2d068f84509e76b92e5fc728c576",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 3,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 62.27996826171875,
+      "source_center": 297.71765899658203,
+      "independent_original_source_centers": [
+        297.71765899658203
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 205.6680908203125,
+      "actual_nonspace_glyph_right": 389.7672424316406,
+      "actual_center": 297.71766662597656,
+      "center_error_pt": 7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 17,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          4,
+          0
+        ]
+      ],
+      "baseline": 242.41998291015625,
+      "source_center": 297.62601470947266,
+      "independent_original_source_centers": [
+        297.62601470947266
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 254.05398559570312,
+      "actual_nonspace_glyph_right": 341.1980285644531,
+      "actual_center": 297.6260070800781,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 7,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          6,
+          0
+        ]
+      ],
+      "baseline": 711.3399658203125,
+      "source_center": 297.5599899291992,
+      "independent_original_source_centers": [
+        297.5599899291992
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 227.80393981933594,
+      "actual_nonspace_glyph_right": 367.3160400390625,
+      "actual_center": 297.5599899291992,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 11,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "Problem 2. Conductors in an electric field (10.0 points) ",
+        "original_center": 297.71765899658203,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

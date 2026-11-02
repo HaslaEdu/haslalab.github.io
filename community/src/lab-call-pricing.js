@@ -32,6 +32,20 @@ export function geminiLabUsage(response = {}, startedAt) {
   return result;
 }
 
+/** Normalize DeepSeek chat-completions usage: prompt_cache_hit_tokens are the cached part of the prompt. */
+export function deepseekLabUsage(response = {}, startedAt) {
+  const raw = response?.usage, value = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+  const input = token(value.prompt_tokens), output = token(value.completion_tokens), miss = token(value.prompt_cache_miss_tokens);
+  let cached = token(value.prompt_cache_hit_tokens ?? value.prompt_tokens_details?.cached_tokens);
+  if (cached === null && miss !== null && input !== null && miss <= input) cached = input - miss;
+  let known = input !== null && output !== null && cached !== null;
+  if (cached !== null && input !== null && (cached > input || miss !== null && cached + miss !== input)) { cached = null; known = false; }
+  const resolved = modelId(response?.model);
+  const result = { in: input, out: output, cached, usage_known: known, resolved_model: resolved, model_unknown: response?.model !== undefined && !resolved };
+  if (typeof startedAt === 'number' && Number.isFinite(startedAt)) result.started_at = new Date(startedAt).toISOString();
+  return result;
+}
+
 function overrides(env) {
   try {
     const parsed = env?.LAB_PRICES ? JSON.parse(env.LAB_PRICES) : null;
@@ -115,4 +129,24 @@ export function summarizeLabCalls(calls = []) {
   total.usd = total.unknown_cost_calls ? null : total.known_usd;
   total.cost_incomplete = total.unknown_cost_calls > 0;
   return total;
+}
+
+/* A sitting where only some of its papers were handed in (T1 of T1-T3, E1 of E1-E2) is reckoned, for the cost
+   statistics, as the whole sitting it stands for. Per paper handed in it spent `read` (page reading) on `pages` pages
+   and `work` (grading, moderation); the marking schemes, read once per paper for every candidate, are left out.
+     min: the same per paper for every paper of the sitting                      (work + read) · n / k
+     max: as min, with WORKING_PAGES more working pages read for every paper     min + n · WORKING_PAGES · read / pages
+   and the sitting counts (min + max) · 3/4. A complete sitting counts as it was. Tokens are reckoned the same way. */
+export const WORKING_PAGES = 4;
+export function fullSitting({ papers, handed, pages, read = {}, work = {} }) {
+  const n = Math.max(1, papers | 0), k = Math.max(0, Math.min(n, handed | 0));
+  const keys = ["usd", "in_tok", "out_tok"], sum = key => (+read[key] || 0) + (+work[key] || 0);
+  if (!k || k >= n) return { partial: false, ...Object.fromEntries(keys.map(key => [key, read[key] == null && work[key] == null ? null : +sum(key).toFixed(key === "usd" ? 6 : 0)])) };
+  const out = { partial: true, papers: n, handed: k };
+  for (const key of keys) {
+    const min = sum(key) * n / k, perPage = pages > 0 ? (+read[key] || 0) / pages : 0, max = min + n * WORKING_PAGES * perPage;
+    out[key] = +((min + max) * .75).toFixed(key === "usd" ? 6 : 0);
+    out[key + "_min"] = +min.toFixed(key === "usd" ? 6 : 0); out[key + "_max"] = +max.toFixed(key === "usd" ? 6 : 0);
+  }
+  return out;
 }

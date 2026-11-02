@@ -1,6 +1,6 @@
 """Regressions for actual trace layouts seen in published IZhO translations."""
 import unittest
-from izho_natural_spacing import plan_page,boundary_gap
+from izho_natural_spacing import plan_page,boundary_gap,inject_atomic_tokens,records,token
 
 def trace(text,x,y=50,font='NotoSerifCJKkr-Regular',size=12):
     chars=[]
@@ -14,6 +14,30 @@ class Page:
     def get_texttrace(self):return self.traces
 
 class SpacingRegression(unittest.TestCase):
+    def test_atom_with_no_matching_prose_baseline_fails_before_claiming_glyphs(self):
+        rows=records(Page([trace('m',100,font='TimesNewRomanPSMT')]))
+        item=token(rows,'native');line=dict(baseline=50,tokens=[item])
+        with self.assertRaisesRegex(ValueError,'exactly one'):
+            inject_atomic_tokens([line],[dict(item,y=50.36)])
+        self.assertEqual(line['tokens'],[item])
+
+    def test_english_possessive_attaches_only_the_possessive_suffix(self):
+        left=dict(text='C_v',kind='native',size=12,x0=20,x1=40)
+        for text,gap in [("'s derivative",0),('’s',0),("'some quoted text'",3)]:
+            right=dict(text=text,kind='korean',size=12,x0=100,x1=200)
+            self.assertEqual(boundary_gap(left,right),gap)
+
+    def test_unclaimed_atomic_pass_preserves_authored_spaces_and_metadata(self):
+        rows=records(Page([trace('rdPhysics',100,font='TimesNewRomanPSMT')]))
+        item=dict(token(rows,'korean'),text='rd Physics',placement=7,reviewed='original authoring text')
+        line=dict(baseline=50,tokens=[item])
+        output=inject_atomic_tokens([line],[])[0]['tokens'][0]
+        self.assertEqual(output,item)
+        left=dict(text='23',kind='native',size=12,x0=20,x1=32)
+        self.assertEqual(boundary_gap(left,output),0)
+        output['text']='인 강체구'
+        self.assertEqual(boundary_gap(dict(left,text='m'),output),0)
+
     def test_all_native_math_gaps_including_punctuation_remain_original(self):
         left=dict(text='x',kind='native',size=12,x0=20,x1=26)
         for text,x in[('y',50),(',',29),(')',28)]:

@@ -19,13 +19,16 @@ function app(){
   return{run:code=>vm.runInContext(code,context)};
 }
 
-test('the learning overview marks every subject coming soon without publishing ready-resource totals',()=>{
+test('the learning overview exposes the physics studio and keeps unreleased subjects coming soon',()=>{
   const a=app(),keys=Array.from(a.run('Object.keys(LEARN)'));
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run('viewLearn()');
     assert.match(html,language==='ko'?/준비중/:/Coming soon/);
-    assert.equal((html.match(/class="learn-state"/g)||[]).length,keys.length+1);
+    assert.equal((html.match(/class="learn-state"/g)||[]).length,keys.length);
+    assert.equal((html.match(language==='ko'?/준비중/g:/Coming soon/g)||[]).length,keys.length-1);
+    const physicsCard=[...html.matchAll(/<a\b[^>]*href="#\/learn\/physics"[\s\S]*?<\/a>/g)][0]?.[0];
+    assert.ok(physicsCard);assert.match(physicsCard,language==='ko'?/문제 제작소/:/Problem Studio/);
     for(const key of keys){
       assert.ok(links(html).includes('#/learn/'+key));
       assert.deepEqual(Runtime.routeNeeds('#/learn/'+key),[],'learning navigation does not download archive papers');
@@ -36,17 +39,21 @@ test('the learning overview marks every subject coming soon without publishing r
   }
 });
 
-test('every learning subject and unknown deep link shows a placeholder instead of active external learning cards',()=>{
+test('physics publishes only its internal studio while other subjects keep placeholders and no external cards',()=>{
   const a=app(),keys=Array.from(a.run('Object.keys(LEARN)'));
   for(const language of ['ko','en'])for(const key of [...keys,'not-a-subject']){
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run(`viewLearnSubject(${JSON.stringify(key)})`);
-    assert.match(html,language==='ko'?/준비중/:/Coming soon/);
+    if(key==='physics'){
+      assert.match(html,language==='ko'?/문제 제작소/:/Problem Studio/);
+      assert.ok(links(html).includes('#/learn/physics/studio'));
+      assert.doesNotMatch(html,/learn-pending/);
+    }else assert.match(html,language==='ko'?/준비중/:/Coming soon/);
     assert.ok(links(html).every(href=>href.startsWith('#/learn')));
     assert.doesNotMatch(html,/IPhO|APhO|EuPhO|IChO|IBO|IMO|IOAA|IESO|IJSO|in preparation|when ready|준비하고 있습니다|준비가 끝나면/);
     assert.doesNotMatch(html,/<a[^>]*class="ritem"|<dd>|https?:\/\/(?:openstax|ocw\.mit|stellarium|bio\.libretexts)/);
     if(keys.includes(key)){
-      assert.match(html,/<section class="learn-pending" role="status">/);
+      if(key!=='physics')assert.match(html,/<section class="learn-pending" role="status">/);
       assert.ok(links(html).includes('#/learn'));
       assert.ok(html.includes(a.run(`LEARN[${JSON.stringify(key)}].name[lang]`)));
     }
@@ -66,7 +73,10 @@ test('IPhO 2019 E1 exposes the new browser URL and bilingual original documents 
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)};track="exp"`);
     const html=a.run('viewYear("ipho",2019)');
-    assert.ok(links(html).includes('sim/ipho2019_E1_web.html?lang='+language));
+    /* the run button carries the digest of the simulator page, so an updated simulator is never served from a cache */
+    const v=JSON.parse(JSON.stringify(require('node:vm').runInNewContext(read('site-catalogue.js')+';window.HL_CATALOGUE',{window:{}}))).versions.sims.ipho2019_E1;
+    assert.match(v,/^[a-f0-9]{12}$/);
+    assert.ok(links(html).includes('sim/ipho2019_E1_web.html?v='+v+'&lang='+language));
     assert.ok(html.includes(entry.title[language]));
   }
   const tasks=Array.from(a.run('examGroups("ipho",DATA.ipho.years.find(year=>year.y===2019))[0].map(problem=>problem.id)'));

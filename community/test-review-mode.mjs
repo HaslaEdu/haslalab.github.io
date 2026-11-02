@@ -4,6 +4,8 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import test from 'node:test';
 import worker from './src/index.js';
+import {VISION_MODELS} from './src/vision-provider.js';
+import { SCHEME_VERSION as REG_VERSION } from './src/grading-rules.js';
 
 const sqlite = new DatabaseSync(':memory:');
 for (const file of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^00(?:0[1-9]|1[01])_.*\.sql$/.test(n)).sort()) sqlite.exec(readFileSync(new URL('./migrations/' + file, import.meta.url), 'utf8'));
@@ -18,18 +20,19 @@ const DB = {
 };
 globalThis.caches = { default: { async match() {}, async put() {} } };
 const timestamp = Math.floor(Date.now() / 1000), tokens = {};
-for (let id = 1; id <= 20; id++) {
+for (let id = 1; id <= 21; id++) {
   sqlite.prepare('INSERT INTO users(id,username,nickname,pw,role,created_at,exam_tokens) VALUES(?,?,?,?,?,?,?)').run(id, 'review' + id, 'Review ' + id, 'unused', 'user', timestamp, 5);
   const token = String(id).padStart(48, 'a'); tokens[id] = token;
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');
   sqlite.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash, id, timestamp, timestamp + 3600);
 }
 const messages=[];
-const env = { DB,LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: 'http://localhost:8765', LAB_KEEP_HOURS: 'off' };
+const env = { DB,GEMINI_API_KEY:'local-selected-provider-no-AI',LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: 'http://localhost:8765', LAB_KEEP_HOURS: 'off' };
 const originalFetch = globalThis.fetch;
-globalThis.fetch = () => { throw new Error('Unexpected external request'); };
+globalThis.fetch = url => { if(String(url).startsWith('https://github.com/')||String(url).startsWith('https://haslalab.org/pdfx/'))return Promise.resolve(new Response('',{status:404}));throw new Error('Unexpected provider request'); };
 test.after(() => { globalThis.fetch = originalFetch; sqlite.close(); });
 async function request(path, body, id = 1, method = body === undefined ? 'GET' : 'POST', extra = {}) {
+  if(body&&/^\/lab\/(?:start|sessions\/\d+\/(?:pay|submit))$/.test(path))body={provider:'gemini',...body};
   const response = await worker.fetch(new Request('http://worker.local/api' + path, { method, headers: { ...(id ? { Authorization: 'Bearer ' + tokens[id] } : {}), ...(body === undefined ? {} : { 'Content-Type': 'application/json' }), ...extra }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }), env);
   return { status: response.status, data: await response.json() };
 }
@@ -48,19 +51,19 @@ async function settled(path,body,id=1){
 }
 const exam = { comp: 'ipho', year: 2024, tasks: ['T1'], sources: { T1: { kind: 'theory', sol: 'IPhO_2024_T1S.pdf' } }, entry: '?c=ipho&y=2024&m=t&e=T1&review=1', review: true };
 let first;
-test('standalone review starts without an exam or upload timer and preserves the grading price', async () => {
+test('standalone review starts without an exam or upload timer and spends its grading price at the first press', async () => {
   const r = await request('/lab/start', { ...exam, pair: true }); assert.equal(r.status, 200); first = r.data;
   assert.equal(first.session.status, 'scanning'); assert.equal(first.session.review_only, true);
   assert.equal(first.session.exam_sec, 0); assert.equal(first.session.scan_sec, null); assert.equal(first.session.scan_until, 0);
-  assert.equal(first.session.started_at, first.session.ended_at); assert.equal(first.session.cost, 0.3); assert.equal(first.session.paid, false); assert.equal(first.tokens, 5);
+  assert.equal(first.session.started_at, first.session.ended_at); assert.equal(first.session.cost, 0.3); assert.equal(first.session.paid, true); assert.equal(first.tokens, 4.7);
   const saved = sqlite.prepare('SELECT sources FROM lab_sessions WHERE id=?').get(first.session.id);
   assert.equal(JSON.parse(saved.sources)._review, 1);
-  const resume = await request('/lab/start', { ...exam, pair: true }); assert.equal(resume.data.session.id, first.session.id); assert.equal(resume.data.resumed, true);
+  const resume = await request('/lab/start', { ...exam, pair: true }); assert.equal(resume.data.session.id, first.session.id); assert.equal(resume.data.resumed, true); assert.equal(resume.data.tokens, 4.7, 'coming back spends nothing more');
 });
 test('review mode survives old timestamps and has a usable phone scan link without a deadline', async () => {
   const id = first.session.id;
   sqlite.prepare('UPDATE lab_sessions SET started_at=?,ended_at=? WHERE id=?').run(timestamp - 10 * 86400, timestamp - 10 * 86400, id);
-  const r = await request('/lab/sessions/' + id); assert.equal(r.data.session.status, 'scanning'); assert.equal(r.data.session.paid, false);
+  const r = await request('/lab/sessions/' + id); assert.equal(r.data.session.status, 'scanning'); assert.equal(r.data.session.paid, true);
   const phone = await request('/lab/up', undefined, null, 'GET', { 'X-Lab-Token': first.token });
   assert.equal(phone.status, 200); assert.equal(phone.data.open, true); assert.equal(phone.data.review_only, true); assert.equal(phone.data.scan_until, 0);
 });
@@ -68,17 +71,17 @@ test('timed and standalone sessions of the same paper cannot resume each other',
   const r = await request('/lab/start', { ...exam, review: false });
   assert.equal(r.status, 409); assert.equal(r.data.error, 'other_active'); assert.equal(r.data.other.review_only, true);
 });
-test('typed work is validated, saved and replaced without spending tokens', async () => {
+test('typed work is validated, saved and replaced without spending more tokens', async () => {
   const path = '/lab/sessions/' + first.session.id + '/text';
   assert.equal((await request(path, { answers: { T1: 'foreign' } }, 2)).status, 404);
   for (const answers of [[], { T2: 'wrong task' }, { T1: true }, { T1: 'x'.repeat(50001) }]) assert.equal((await request(path, { answers })).status, 400);
   let r = await request(path, { answers: { T1: 'Let x denote displacement. Then F = ma.' } });
-  assert.equal(r.status, 200); assert.equal(r.data.tokens, 5); assert.equal(r.data.session.pages.length, 1); assert.equal(r.data.session.pages[0].source, 'typed');
+  assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.7); assert.equal(r.data.session.pages.length, 1); assert.equal(r.data.session.pages[0].source, 'typed');
   r = await request(path, { answers: { T1: 'Updated solution: F = ma.' } }); assert.equal(r.data.session.pages.length, 1); assert.equal(r.data.session.pages[0].text, 'Updated solution: F = ma.');
 });
 test('grading is charged once, closes the review, and never assigns a timed ranking', async () => {
   const id = first.session.id;
-  let r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.7); assert.equal(r.data.session.paid, true); assert.equal(r.data.session.status, 'pending');
+  let r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.status, 200); assert.equal(r.data.tokens, 4.7); assert.equal(r.data.session.paid, true); assert.equal(r.data.session.status,'error');assert.equal(r.data.session.detail.tasks.T1.why,'problem_unavailable','missing canonical reference never fabricates a mark');
   r = await settled('/lab/sessions/' + id + '/submit', { grade: true }); assert.equal(r.data.tokens, 4.7);
   assert.equal((await request('/lab/sessions/' + id + '/text', { answers: { T1: 'late edit' } })).status, 409);
   assert.equal((await request('/lab/up', undefined, null, 'GET', { 'X-Lab-Token': first.token })).status, 410);
@@ -90,14 +93,17 @@ test('Physics Cup, Ortvay, OPhO and WOPHO enforce review-only even for old timed
   for (const [index, comp] of ['physcup', 'ortvay', 'opho', 'wopho'].entries()) {
     const r = await request('/lab/start', { ...exam, comp, review: false }, index + 3);
     assert.equal(r.status, 200); assert.equal(r.data.session.status, 'scanning'); assert.equal(r.data.session.review_only, true); assert.equal(r.data.session.exam_sec, 0);
-    assert.equal(r.data.tokens, 5);
+    assert.equal(r.data.tokens, 4.7, 'review-only competitions spend at the first press too');
   }
 });
-test('empty reviews cannot spend tokens, but can close for free to release the active session', async () => {
-  const r = await request('/lab/start', exam, 7), id = r.data.session.id;
+test('an empty review is never graded, and closing it releases the active session without spending again', async () => {
+  const r = await request('/lab/start', exam, 7), id = r.data.session.id; assert.equal(r.data.tokens, 4.7);
   const empty = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 7); assert.equal(empty.status, 400); assert.equal(empty.data.error, 'no_answers');
-  assert.equal((await request('/lab/sessions/' + id + '/pay', {}, 7)).data.error, 'no_answers');
-  const ended = await settled('/lab/sessions/' + id + '/submit', { grade: false }, 7); assert.equal(ended.status, 200); assert.equal(ended.data.session.status, 'ended'); assert.equal(ended.data.tokens, 5);
+  const ended = await settled('/lab/sessions/' + id + '/submit', { grade: false }, 7); assert.equal(ended.status, 200); assert.equal(ended.data.session.status, 'ended'); assert.equal(ended.data.tokens, 4.7);
+  assert.equal((await request('/lab/start', { ...exam, year: 2023 }, 7)).status, 200, 'another paper can be opened');
+  sqlite.prepare('UPDATE users SET exam_tokens=0 WHERE id=21').run();
+  const unpaid = await request('/lab/start', exam, 21); assert.equal(unpaid.status, 402); assert.equal(unpaid.data.error, 'no_tokens');
+  assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM lab_sessions WHERE user_id=21').get().n, 0, 'without a token nothing is opened and nothing can be read');
 });
 test('ordinary timed exams retain their duration, scan window and answer lock', async () => {
   const r = await request('/lab/start', { ...exam, review: false, entry: '?c=ipho&y=2024&m=t&e=T1' }, 8), s = r.data.session;
@@ -110,10 +116,12 @@ test('ordinary timed exams retain their duration, scan window and answer lock', 
 test('typed numeric answers are indexed independently and fabricated grader values still score zero', async () => {
   const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; const prompts = [];
   globalThis.fetch = async (url, options) => {
+    if(String(url).startsWith('https://github.com/')||String(url).startsWith('https://haslalab.org/pdfx/'))return new Response('%PDF-1.7\nCanonical reference');
     assert.ok(String(url).includes(':generateContent'));
     const parts = JSON.parse(options.body).contents[0].parts, prompt = parts.map(p => p.text || '').join('\n'); prompts.push(prompt);
     let raw;
-    if (prompt.includes('[TASK: index typed answer]')) {
+    if (prompt.startsWith('[TASK: translate marking-scheme items]')) raw = { items: ['힘', '쓰지 않은 값'] };
+    else if (prompt.includes('[TASK: index typed answer]')) {
       assert.ok(prompt.includes('A.1: F = 42 N')); assert.ok(!parts.some(p => p.inline_data));
       raw = { legible: 'good', items: [{ label: 'A.1', kind: 'value', text: 'F = 42 N', value: 42, unit: 'N', crossed_out: false }] };
     } else {
@@ -125,15 +133,16 @@ test('typed numeric answers are indexed independently and fabricated grader valu
   };
   try {
     const scheme = { points: 2, items: [{ id: 'A.1', points: 1, type: 'value', sheet: 'answer', what: 'Force', unit: 'N', full_min: 42, full_max: 42 }, { id: 'A.2', points: 1, type: 'value', sheet: 'answer', what: 'Unwritten value', full_min: 999, full_max: 999 }] };
-    sqlite.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)').run('ipho2025', 'T1', 'IPhO_2024_T1S.pdf', JSON.stringify(scheme), 'test', timestamp);
+    sqlite.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)').run('ipho2025','T1',['gemini',VISION_MODELS.gemini,REG_VERSION,'IPhO_2025_T1S.pdf',''].join(':'), JSON.stringify(scheme), 'test', timestamp);
     const started = await request('/lab/start', { ...exam, year: 2025 }, 9), id = started.data.session.id;
     await request('/lab/sessions/' + id + '/text', { answers: { T1: 'A.1: F = 42 N' } }, 9);
     assert.equal(prompts.length, 0, 'saving a solution makes no provider request');
     const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 9), result = graded.data.session.detail.tasks.T1;
     assert.equal(graded.status, 200); assert.equal(result.status, 'graded'); assert.equal(result.score, 1); assert.equal(result.points, 2);
-    assert.equal(result.items[0].got, 1); assert.equal(result.items[1].got, 0); assert.ok(result.items[1].rules.includes('R9')); assert.equal(prompts.length, 2);
+    assert.equal(result.items[0].got, 1); assert.equal(result.items[1].got, 0); assert.ok(result.items[1].rules.includes('R9')); assert.equal(prompts.length, 3);
+    assert.deepEqual(result.items.map(i => i.what), ['힘', '쓰지 않은 값'], 'a Korean sitting reads each requirement in Korean');
     assert.equal(graded.data.session.pages[0].text, 'A.1: F = 42 N');
-  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+  } finally { env.GEMINI_API_KEY='local-selected-provider-no-AI'; globalThis.fetch = savedFetch; }
 });
 test('Ortvay receives grounded qualitative feedback from the official paper without invented points', async () => {
   const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; let calls = 0;
@@ -151,7 +160,7 @@ test('Ortvay receives grounded qualitative feedback from the official paper with
     assert.equal(graded.status, 200); assert.equal(s.status, 'graded'); assert.equal(s.score, null); assert.equal(s.points, null); assert.equal(graded.data.tokens, 4.7); assert.equal(calls, 1);
     assert.equal(result.grading_mode, 'qualitative_review'); assert.equal(result.official, false); assert.equal(result.reference, 'published_problem_only'); assert.equal(result.score, null); assert.ok(result.review.summary); assert.equal(result.evidence[0].quote, 'F = ma');
     assert.equal((await request('/lab/sessions/' + id, undefined, 10)).data.session.standing, null);
-  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+  } finally { env.GEMINI_API_KEY='local-selected-provider-no-AI'; globalThis.fetch = savedFetch; }
 });
 test('qualitative scans preserve the original OCR once, include the image, and respect the D1 row budget', async () => {
   const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; env.UPSTAGE_API_KEY = 'test-ocr';
@@ -159,10 +168,11 @@ test('qualitative scans preserve the original OCR once, include the image, and r
   const original = 'Problem 1: F = ma; x_i^2 = a/b. Original transcript.';
   globalThis.fetch = async (url, options) => {
     if (String(url) === 'https://ortvay.elte.hu/2026/E26.pdf') return new Response('%PDF-1.7\nOfficial problem');
-    if (String(url).includes('upstage')) return Response.json({ content: { markdown: oversized ? original.repeat(10000) : original }, confidence: 0.94, usage: { pages: 1 } });
-    assert.ok(String(url).includes(':generateContent'));
+        assert.ok(String(url).includes(':generateContent'));
     const parts = JSON.parse(options.body).contents[0].parts, prompt = parts.map(p => p.text || '').join('\n'); let raw;
-    if (prompt.includes('[TASK: read page]')) raw = { header: { task: 'T', sheet: 'answer' }, legible: 'good', items: [{ label: '1', kind: 'text', text: 'Short auxiliary index.' }] };
+    // Keep the transcription inside the schema's character bound while its
+    // UTF-8 bytes plus the retained original exceed D1's row budget.
+    if (prompt.includes('[TASK: read page]')) raw = { text:oversized?original+'한'.repeat(90000):original,confidence:.94,header: { task: 'T', sheet: 'answer' }, legible: 'good', items: [{ label: '1', kind: 'text', text: 'Short auxiliary index.' }] };
     else { reviewCalls++; assert.ok(parts.some(p => p.inline_data?.mime_type === 'image/png')); assert.ok(prompt.includes(original)); raw = { summary: 'The stated law is explicit.', strengths: ['A force law.'], gaps: [], evidence: [{ page: 1, quote: 'F = ma', note: 'Original transcript.' }] }; }
     return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(raw) }] } }] });
   };
@@ -179,11 +189,11 @@ test('qualitative scans preserve the original OCR once, include the image, and r
       else { assert.equal(graded.data.session.status, 'graded', JSON.stringify(graded.data.session.detail)); assert.equal(stored.ocr, original); assert.equal(stored.text, null); assert.equal(JSON.parse(stored.read).ocr.text, undefined); }
     }
     assert.equal(reviewCalls, 1, 'oversized OCR never reaches the feedback model');
-  } finally { delete env.GEMINI_API_KEY; delete env.UPSTAGE_API_KEY; globalThis.fetch = savedFetch; }
+  } finally { env.GEMINI_API_KEY='local-selected-provider-no-AI'; delete env.UPSTAGE_API_KEY; globalThis.fetch = savedFetch; }
 });
 const eotvosSources = JSON.parse(readFileSync(new URL('../tools/theory/eotvos.json', import.meta.url), 'utf8')).years
   .filter(y => [2014, 2015, 2016, 2020].includes(y.y)).sort((a, b) => a.y - b.y)
-  .map(y => ({ year: y.y, solution: y.files.find(f => f.kind === 'solution').url }));
+  .map(y => ({ year:y.y,solution:y.files.find(f=>f.kind==='solution').url,canonical:`https://haslalab.org/pdfx/eotvos/Eotvos_${y.y}_TS.pdf` }));
 const eotvosSessions = [];
 test('timed Eotvos preserves exactly the four verified journal source URLs for their matching year', async () => {
   for (const [index, source] of eotvosSources.entries()) {
@@ -211,7 +221,7 @@ test('a source journal without printed current-year point values remains unscore
   const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; let calls = 0;
   const sitting = eotvosSessions[0];
   globalThis.fetch = async (url, options) => {
-    if (String(url) === sitting.solution) return new Response('%PDF-1.7\nOfficial Eotvos report with historical tasks');
+    if (String(url) === sitting.canonical) return new Response('%PDF-1.7\nOfficial Eotvos report with historical tasks');
     assert.ok(String(url).includes(':generateContent')); calls++;
     const request = JSON.parse(options.body), prompt = request.contents[0].parts.map(p => p.text || '').join('\n');
     assert.ok(prompt.includes('ONLY the exact 2014')); assert.ok(prompt.includes('exclude anniversary and historical problems')); assert.ok(prompt.includes('Never invent equal weights'));
@@ -223,17 +233,17 @@ test('a source journal without printed current-year point values remains unscore
     sqlite.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_status,text,created_at) VALUES(?,1,'T','answer','text/plain',X'','F = ma','done','F = ma',?)").run(sitting.id, timestamp);
     const r = await settled('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
     assert.equal(r.status, 200); assert.equal(r.data.session.status, 'pending'); assert.equal(r.data.session.detail.tasks.T.why, 'no_official_points'); assert.equal(r.data.session.points, null); assert.equal(r.data.session.score, null); assert.equal(calls, 1);
-  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+  } finally { env.GEMINI_API_KEY='local-selected-provider-no-AI'; globalThis.fetch = savedFetch; }
 });
 test('a verified Eotvos journal cannot redirect the Worker to an untrusted host', async () => {
   const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; const sitting = eotvosSessions[1], fetched = [];
-  globalThis.fetch = async url => { fetched.push(String(url)); assert.equal(String(url), sitting.solution); return new Response('', { status: 302, headers: { location: 'https://evil.invalid/paper.pdf' } }); };
+  globalThis.fetch = async url => { fetched.push(String(url)); assert.equal(String(url), sitting.canonical); return new Response('', { status: 302, headers: { location: 'https://evil.invalid/paper.pdf' } }); };
   try {
     await request('/lab/sessions/' + sitting.id + '/finish', {}, sitting.user);
     sqlite.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,ocr,ocr_status,text,created_at) VALUES(?,1,'T','answer','text/plain',X'','F = ma','done','F = ma',?)").run(sitting.id, timestamp);
     const r = await settled('/lab/sessions/' + sitting.id + '/submit', { grade: true }, sitting.user);
-    assert.equal(r.status, 200); assert.equal(r.data.session.status, 'error'); assert.equal(r.data.session.detail.tasks.T.why, 'scheme_failed'); assert.ok(fetched.length>=1&&fetched.length<=4);assert.ok(fetched.every(url=>url===sitting.solution),'queue retries never follow an untrusted redirect');
-  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+    assert.equal(r.status, 200); assert.equal(r.data.session.status, 'error'); assert.equal(r.data.session.detail.tasks.T.why, 'scheme_failed'); assert.ok(fetched.length>=1&&fetched.length<=4);assert.ok(fetched.every(url=>url===sitting.canonical),'queue retries never follow an untrusted redirect');
+  } finally { env.GEMINI_API_KEY='local-selected-provider-no-AI'; globalThis.fetch = savedFetch; }
 });
 
 test('PLANCKS uses its verified four-hour sitting and the 2021 sixteen-hour online exception on the server', async () => {
@@ -247,13 +257,14 @@ test('PLANCKS uses its verified four-hour sitting and the 2021 sixteen-hour onli
   }
 });
 
-test('a locally archived Eotvos report keeps the same current-year and printed-points safeguards as its publisher URL', async () => {
+test('a locally archived Eotvos report keeps current-year/printed-points safeguards and uses the canonical problem for qualitative review', async () => {
   const savedFetch = globalThis.fetch; env.GEMINI_API_KEY = 'test-provider'; let calls = 0;
   globalThis.fetch = async (url, options) => {
     if (String(url).startsWith('https://github.com/')) return new Response('', { status: 404 });
-    if (String(url) === 'https://haslalab.org/pdfx/eotvos/Eotvos_2014_TS.pdf') return new Response('%PDF-1.7\nOriginal annual report');
+    if (String(url).startsWith('https://haslalab.org/pdfx/eotvos/')) return new Response('%PDF-1.7\nOriginal annual report');
     assert.ok(String(url).includes(':generateContent')); calls++;
     const prompt = JSON.parse(options.body).contents[0].parts.map(p => p.text || '').join('\n');
+    if(prompt.includes('qualitative physics study review'))return Response.json({candidates:[{content:{parts:[{text:JSON.stringify({summary:'The submitted force law is explicit.',strengths:['Force law'],gaps:[],evidence:[{page:1,quote:'F = ma',note:'Original submitted expression.'}]})}]}}]});
     assert.ok(prompt.includes('ONLY the exact 2014'));
     assert.ok(prompt.includes('exclude anniversary and historical problems'));
     return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({ points_verified: false, items: [], notes: 'no_official_points' }) }] } }] });
@@ -265,11 +276,11 @@ test('a locally archived Eotvos report keeps the same current-year and printed-p
     await request('/lab/sessions/' + id + '/text', { answers: { T: 'A submitted derivation: F = ma.' } }, 20);
     const graded = await settled('/lab/sessions/' + id + '/submit', { grade: true }, 20);
     assert.equal(graded.status, 200);
-    assert.equal(graded.data.session.detail.tasks.T.why, 'no_official_points');
+    assert.equal(graded.data.session.detail.tasks.T.grading_mode,'qualitative_review');assert.equal(graded.data.session.detail.tasks.T.official,false);
     assert.equal(graded.data.session.score, null);
     assert.equal(graded.data.session.points, null);
-    assert.equal(calls, 1);
-  } finally { delete env.GEMINI_API_KEY; globalThis.fetch = savedFetch; }
+    assert.equal(calls, 2);
+  } finally { env.GEMINI_API_KEY='local-selected-provider-no-AI'; globalThis.fetch = savedFetch; }
 });
 
 test('paying for an untimed review never submits it through GET, bootstrap or the minute recovery sweep',async()=>{
@@ -286,4 +297,20 @@ test('paying for an untimed review never submits it through GET, bootstrap or th
     assert.equal(row.status,'scanning');assert.equal(row.submitted_at,null);assert.equal(calls,0);
     assert.equal(sqlite.prepare('SELECT COUNT(*) n FROM lab_jobs WHERE session_id=?').get(id).n,0);
   }finally{globalThis.fetch=savedFetch;}
+});
+
+test('a grading request can be cancelled where it stands; the token stays spent and queued work is closed', async () => {
+  const user = 21; sqlite.prepare('UPDATE users SET exam_tokens=5 WHERE id=?').run(user);
+  const started = await request('/lab/start', { ...exam, year: 2022 }, user), id = started.data.session.id;
+  assert.equal(started.data.tokens, 4.7);
+  await request('/lab/sessions/' + id + '/text', { answers: { T1: 'A typed answer.' } }, user);
+  sqlite.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,task,lang,status,available_at,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?)").run('grade:cancel-fixture:'+id, 'grade', id, 'T1', 'ko', 'pending', timestamp, timestamp, timestamp);
+  assert.equal((await request('/lab/sessions/' + id + '/cancel', {}, 2)).status, 404, 'only the owner (or an admin) cancels');
+  const cancelled = await request('/lab/sessions/' + id + '/cancel', {}, user);
+  assert.equal(cancelled.status, 200); assert.equal(cancelled.data.session.status, 'cancelled'); assert.equal(cancelled.data.tokens, 4.7, 'no refund');
+  assert.equal(sqlite.prepare("SELECT COUNT(*) n FROM lab_jobs WHERE session_id=? AND status IN ('pending','queued')").get(id).n, 0, 'queued work is closed');
+  assert.match(sqlite.prepare('SELECT upload_hash FROM lab_sessions WHERE id=?').get(id).upload_hash, /^void:/, 'the phone link no longer uploads');
+  assert.equal((await request('/lab/sessions/' + id + '/cancel', {}, user)).status, 409, 'a cancelled sitting cannot be cancelled again');
+  assert.equal((await request('/lab/sessions/' + id + '/submit', { grade: true }, user)).data.session.status, 'cancelled', 'nor graded afterwards');
+  assert.equal((await request('/lab/start', { ...exam, year: 2021 }, user)).status, 200, 'the active slot is free again');
 });

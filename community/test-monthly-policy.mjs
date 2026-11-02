@@ -12,7 +12,7 @@ const equation = '$a^2+b^2=c^2$';
 const disclosure = 'As an AI language model, I can present a derivation.';
 const metadata = 'The generated message has "role": "assistant" in its metadata.';
 const payload = (name, working = 'Apply the governing equation.') => ({
-  request_id: name.padEnd(32, 'x'), lang: 'ko',
+  provider:'gemini', request_id: name.padEnd(32, 'x'), lang: 'ko',
   parts: [{ id: 'a', answer: equation, working }],
 });
 const suspect = () => ({ assessment: 'ai_suspected', confidence: 0.999,

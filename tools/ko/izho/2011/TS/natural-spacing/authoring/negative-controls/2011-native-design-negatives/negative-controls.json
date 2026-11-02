@@ -1,0 +1,48 @@
+{
+  "source_sha256": "ecc4a34a50fade6a08fd5f629480bebfa20ec418cdc19fa87915f6c0465ee008",
+  "rows": [
+    {
+      "id": "unrelated-original-plot-ink",
+      "page": 9,
+      "proof_sha256": "1df1b663981f242b30ed681f96846ecf2a75f7fe4d86aaa009cb4e01f2e50a53",
+      "mutant_sha256": "b969980c34c64fde3866d23d4faeb3351e5f44273b07c3305eec647b91d9f991",
+      "actual_overlay_rect": [
+        380.0,
+        200.0,
+        381.0,
+        201.0
+      ],
+      "delivered_proof_unmodified": true,
+      "negative_rejected": true,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed",
+      "changed_nonselected_native_graphical_pixels": 16,
+      "missing_source_native_outline_pixels": 0,
+      "missing_native_control_ink_pixels": 0,
+      "figure_changed_pixels": 16,
+      "source_native_caption_counter_metadata_still_exact": true,
+      "passed": true
+    },
+    {
+      "id": "covered-original-native-caption-counter",
+      "page": 10,
+      "proof_sha256": "a050bd311f6af082ff6fe051ec4c3798a0bb3bc3fd62fd86ceb15955f600d7b1",
+      "mutant_sha256": "5b7b06ab2047cfce4731ddd37ad981d6e3785cd267a84d3c59d7f19c0958b950",
+      "actual_overlay_rect": [
+        381.47999572753906,
+        248.73497009277344,
+        387.47999572753906,
+        260.7349548339844
+      ],
+      "delivered_proof_unmodified": true,
+      "negative_rejected": true,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed",
+      "changed_nonselected_native_graphical_pixels": 0,
+      "missing_source_native_outline_pixels": 154,
+      "missing_native_control_ink_pixels": 178,
+      "figure_changed_pixels": 0,
+      "source_native_caption_counter_metadata_still_exact": true,
+      "passed": true
+    }
+  ],
+  "passed": true
+}
