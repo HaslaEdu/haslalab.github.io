@@ -145,5 +145,6 @@ export function describeCheck(c) {
   if (c.verdict === "equal") return "the candidate's final expression equals the official one at random values of its variables (an equivalent form)";
   const vars = [c.missing?.length ? `missing ${c.missing.join(", ")}` : "", c.extra?.length ? `extra ${c.extra.join(", ")}` : ""].filter(Boolean).join("; ");
   if (c.verdict === "factor") return `the candidate's final expression is ${c.ratio} times the official one at every random point (a wrong constant factor or sign)${vars ? "; " + vars : ""}`;
-  return `the candidate's final expression differs from the official one at random values of its variables (not equivalent)${vars ? "; " + vars : ""}`;
+  const extract = c.extra?.length ? ". First make sure this is the candidate's final answer as written in the answer box, not a line of the working (IPhO 2021 T2: a grader quoted E_r = -q r/(8 pi eps0 R^3) for the boxed beta = 1/(16 pi eps0 R^3)); if it is not, judge the boxed answer." : "";
+  return `the candidate's final expression differs from the official one at random values of its variables (not equivalent)${vars ? "; " + vars : ""}${extract}`;
 }
