@@ -1,8 +1,12 @@
 name = "haslalab-community"
-main = "src/index.js"
+main = "src/worker.js"
 compatibility_date = "2025-09-01"
 # Variables set in the dashboard (PADDLE_PRICES, LAB_KEEP_HOURS …) survive `wrangler deploy`; secrets always do.
 keep_vars = true
+
+[[services]]
+binding = "STUDIO_ENGINE"
+service = "haslalab-studio-engine"
 
 # Run the Worker next to its database rather than next to the visitor: a page makes several
 # database queries, and each one is a round trip, so this cuts the waiting the most.

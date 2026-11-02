@@ -2,9 +2,17 @@
 # The Worker itself lives in community/ (see community/README.md); this file lets the
 # build run from the repository root, where Workers Builds starts by default.
 name = "haslalab-community"
-main = "community/src/index.js"
+main = "community/src/worker.js"
 compatibility_date = "2025-09-01"
 keep_vars = true
+
+[[services]]
+binding = "STUDIO_ENGINE"
+service = "haslalab-studio-engine"
+
+[[r2_buckets]]
+binding = "LAB_PAGES"
+bucket_name = "haslalab-lab-pages"
 
 [placement]
 # Keep in sync with community/wrangler.toml; D1's primary reports HKG.

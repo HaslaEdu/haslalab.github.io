@@ -389,6 +389,16 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 
 월별 점수는 문제별 최고 제출 점수의 합계입니다. 85 → 90 → 88점 제출은 해당 문제 90점으로 기록됩니다. 2026년 11월부터 최종 1·2·3위에게 각각 실전 토큰 9·6·3개를 지급합니다. 최종 발표일은 해당 월 문제들의 마감 시각이며, 접수된 답안의 채점 대기·오류가 남아 있으면 해결 후 확정합니다. 기본 11월 발표는 2026년 12월 1일 00:00(한국 시각)입니다. 서버의 기존 분 단위 예약 작업이 최종 순위 고정, `users.exam_tokens` 잔액 추가, `lab_ledger`의 `monthly_reward` 이력을 한 트랜잭션으로 처리합니다. 재실행·중복 호출에도 한 번만 지급되고, 마감 후 연습 제출이나 발표 후 재채점으로 확정 순위·보상을 변경하지 않습니다. 공개 조회는 읽기 전용이며 토큰 지급을 실행하지 않습니다.
 
+## 문제 제작실
+
+`https://haslalab.org/studio.html`은 문제 전사, 새 문제 제작, 그림 복원을 제공합니다. 로그인 세션은 기존 계정을 사용합니다. `src/worker.js`는 기존 커뮤니티의 fetch·scheduled·queue를 전달하며, `/api/studio/*`와 내부 `StudioProvider` RPC만 추가합니다.
+
+프롬프트·출력 스키마·독립 풀이·수정·그림 검토는 별도 비공개 `haslalab-studio-engine` Worker에서 실행합니다. 이 저장소나 데스크톱 배포물에는 포함하지 않습니다. 비공개 Worker는 workers.dev와 preview URL을 비활성화하고, `PROVIDER_GATEWAY`를 `haslalab-community#StudioProvider`에 연결합니다. 공개 Worker는 `STUDIO_ENGINE` service binding을 사용하고 기존 `OPENAI_API_KEY` secret을 내부 relay에서만 읽습니다. 최초 배포는 비공개 Worker를 service binding 없이 준비한 뒤 공개 Worker, 마지막으로 비공개 Worker의 전체 설정 순서로 진행합니다.
+
+`studio-schema.js`는 `0015_studio.sql`과 동일한 additive schema를 기존 D1 binding으로 준비합니다. 기본 한도는 4 MiB/16 MP, 한 작업 최대 3문항, 사용자별 하루 3회·전체 하루 30회·동시 2개입니다. 새 작업만 중지하려면 `STUDIO_ENABLED=false`를 설정합니다. 이미 만든 작업의 조회·취소·삭제는 유지됩니다. 원본·결과와 provider replay는 24시간 후 만료되며, 계정 탈퇴는 즉시 정리하고 실패한 private 삭제는 cron으로 재시도합니다. `STUDIO_DAILY_LIMIT`, `STUDIO_GLOBAL_DAILY_LIMIT`, `STUDIO_ACCESS=admin`으로 시험 운영 범위를 조정할 수 있습니다.
+
+생성 모델의 응답을 실행하지 않습니다. 허용한 JSON 도형 요소만 SVG로 렌더링하며, 사용자가 정답·판독·과학적 의미를 확인해야 합니다. 가중치 fine-tuning이나 Nova와 동일한 출력 품질을 주장하지 않습니다. `node --test test-studio.mjs test-studio-schema.mjs`로 공개 경계와 삭제 경합을 확인합니다.
+
 ## 개발자 모델 테스트
 
 `https://haslalab.org/#/lab/model-test`는 기존 관리자 계정(`role=admin`) 전용입니다. 같은 답안 사진과 문제·채점 기준으로 Gemini OCR/Gemini 채점, Gemini OCR/DeepSeek 채점, DeepSeek OCR/DeepSeek 채점을 선택해 비교합니다. OCR 원문, 모델명, 점수·피드백, 소요 시간과 API 토큰 사용량을 표시하며, 실전 성적·랭킹·실전 토큰에는 반영하지 않습니다. 외부 제공업체의 API 사용료는 해당 계정에서 발생합니다.

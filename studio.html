@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#16212e">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="same-origin">
+  <title>문제 스튜디오 · HaslaLab</title>
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="studio.css">
+  <script defer src="vendor/katex/katex.min.js"></script>
+  <script defer src="studio.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace" data-i18n="skip">작업 영역으로 건너뛰기</a>
+  <header class="site-header">
+    <a class="brand" href="./#/" aria-label="HaslaLab home"><span class="brand-mark" aria-hidden="true">H<span>+</span></span><span>HaslaLab<span class="brand-sub">PROBLEM STUDIO</span></span></a>
+    <nav class="header-nav" aria-label="Main navigation"><a href="./#/" data-i18n="library">문제 라이브러리</a><a href="./#/lab" data-i18n="practice">실전 연습</a></nav>
+    <div class="header-actions"><button id="uiLanguage" class="text-button" type="button" aria-label="Switch interface language">EN</button><button id="accountButton" class="account-button" type="button" data-i18n="signIn">로그인</button></div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="pageTitle">
+      <div><p class="eyebrow"><span class="red-dash" aria-hidden="true"></span> HASLALAB / STUDIO</p><h1 id="pageTitle" data-i18n="heading">한 장에서, 다음 문제까지.</h1><p class="intro-copy" data-i18n="intro">올림피아드 문제를 편집 가능한 글과 수식으로 정리하고, 원본의 개념에서 새 문제를 만들어 보세요.</p></div>
+      <div class="intro-index" aria-hidden="true"><span>READ</span><span>REBUILD</span><span>RETHINK <b>↗</b></span></div>
+    </section>
+    <div id="serviceNotice" class="notice" role="status" hidden></div>
+    <div id="pageMessage" class="notice error" role="alert" hidden></div>
+    <div class="workspace" id="workspace">
+      <aside class="control-panel" aria-label="Create a job">
+        <form id="studioForm">
+          <div class="section-heading"><h2 data-i18n="newWork">새 작업</h2><span class="section-code">01 / INPUT</span></div>
+          <fieldset class="mode-picker"><legend class="sr-only" data-i18n="mode">작업 선택</legend>
+            <label><input type="radio" name="mode" value="digitize" checked><span><b data-i18n="digitize">문제 디지털 전사</b><small data-i18n="digitizeHint">글·수식·그림을 정리해요</small></span><i aria-hidden="true">↗</i></label>
+            <label><input type="radio" name="mode" value="generate"><span><b data-i18n="generate">새 문제 제작</b><small data-i18n="generateHint">사진이나 요청을 바탕으로</small></span><i aria-hidden="true">↗</i></label>
+            <label><input type="radio" name="mode" value="restore"><span><b data-i18n="restore">그림 복원</b><small data-i18n="restoreHint">도형·그래프를 선명하게</small></span><i aria-hidden="true">↗</i></label>
+          </fieldset>
+          <label id="sourceImageLabel" class="field-label" for="imageInput" data-i18n="sourceImage">원본 이미지</label>
+          <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-controls="imageInput">
+            <svg class="upload-symbol" viewBox="0 0 40 40" width="38" height="38" fill="none" aria-hidden="true"><path d="M8 27v6h24v-6M20 26V7m-7 7 7-7 7 7" stroke="currentColor" stroke-width="1.5"/></svg>
+            <strong data-i18n="upload">사진을 놓거나 선택하세요</strong><span data-i18n="uploadHint">PNG · JPG · WebP / 붙여넣기 가능</span>
+            <input id="imageInput" type="file" name="image" accept="image/png,image/jpeg,image/webp" class="sr-only">
+          </div>
+          <div id="selectedFile" class="selected-file" hidden><img id="fileThumbnail" alt=""><div><b id="fileName"></b><span id="fileSize"></span></div><button id="removeImage" class="icon-button" type="button" aria-label="Remove image">×</button></div>
+          <div class="form-grid">
+            <label><span data-i18n="subject">과목</span><select id="subject" name="subject"><option value="math" data-i18n="math">수학</option><option value="physics" data-i18n="physics">물리</option><option value="chemistry" data-i18n="chemistry">화학</option><option value="biology" data-i18n="biology">생물</option><option value="astronomy" data-i18n="astronomy">천문</option><option value="informatics" data-i18n="informatics">정보</option></select></label>
+            <label><span data-i18n="outputLanguage">결과 언어</span><select id="language" name="language"><option value="ko">한국어</option><option value="en">English</option></select></label>
+            <label class="generation-option" hidden><span data-i18n="difficulty">난이도</span><select id="difficulty" name="difficulty"><option value="similar" data-i18n="similar">원본과 비슷하게</option><option value="easier" data-i18n="easier">조금 쉽게</option><option value="harder" data-i18n="harder">더 어렵게</option></select></label>
+            <label class="generation-option" hidden><span data-i18n="count">문제 수</span><select id="count" name="count"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+          </div>
+          <label class="instruction-label" for="instruction"><span id="instructionTitle" data-i18n="instruction">추가 요청</span><small id="instructionOptional" data-i18n="optional">선택</small></label>
+          <textarea id="instruction" name="instruction" rows="3" maxlength="1200" data-i18n-placeholder="instructionPlaceholder" placeholder="유지할 조건, 필요한 그림, 바꾸고 싶은 부분을 적어 주세요."></textarea>
+          <p id="generateNote" class="submission-note" hidden data-i18n="generateNote">사진 없이도 제작할 수 있어요. 과목과 원하는 주제·조건을 5자 이상 적어 주세요.</p>
+          <p id="formError" class="form-error" role="alert" hidden></p>
+          <button id="submitJob" class="primary-button" type="submit"><span data-i18n="start">작업 시작</span><span aria-hidden="true">↗</span></button>
+          <p class="submission-note" data-i18n="uploadNote">시작하면 선택한 이미지가 처리 서버로 전송됩니다. 결과에서 수식과 조건을 확인해 주세요.</p>
+          <p id="limitsNote" class="submission-note" hidden></p>
+        </form>
+        <section class="history-section" aria-labelledby="historyTitle"><div class="section-heading"><h2 id="historyTitle" data-i18n="recentWork">최근 작업</h2><button id="refreshHistory" class="text-button" type="button" data-i18n="refresh">새로고침</button></div><p id="historyEmpty" class="empty-history" data-i18n="historySignIn">로그인하면 이전 작업을 볼 수 있어요.</p><ol id="jobHistory" class="job-history"></ol></section>
+      </aside>
+      <section class="result-panel" aria-labelledby="resultTitle">
+        <div class="result-toolbar"><div><p class="section-code">02 / WORKSPACE</p><h2 id="resultTitle" data-i18n="workspace">작업 공간</h2></div><div class="toolbar-actions"><button id="retryJob" type="button" hidden data-i18n="retry">같은 설정으로 다시</button><button id="cancelJob" class="danger-button" type="button" hidden data-i18n="cancel">작업 취소</button></div></div>
+        <div id="jobProgress" class="job-progress" role="status" aria-live="polite" hidden><div class="progress-top"><span id="jobStatus" class="status-tag"></span><span id="jobStage"></span></div><div class="progress-track"><span></span></div><p id="jobTime"></p></div>
+        <div id="jobError" class="notice error" role="alert" hidden></div>
+        <div id="emptyWorkspace" class="empty-workspace"><div class="empty-paper" aria-hidden="true"><span>01.</span><div>F = ma</div><i></i><i></i><svg viewBox="0 0 160 90" fill="none"><path d="M16 74h130M28 81V10" stroke="#a6bacb"/><path d="M28 68c28-2 33-42 57-42s24 34 53 14" stroke="#e02424" stroke-width="2"/><circle cx="85" cy="26" r="3" fill="#16212e"/></svg></div><p class="eyebrow" data-i18n="emptyEyebrow">YOUR NEXT PROBLEM STARTS HERE</p><h3 data-i18n="emptyHeading">문제 한 장을 올려 보세요.</h3><p data-i18n="emptyBody">원본과 결과를 나란히 보고,<br>필요한 문제와 그림을 내려받을 수 있어요.</p></div>
+        <div id="comparison" class="comparison" hidden>
+          <section id="sourcePane" class="source-pane" aria-labelledby="sourceTitle"><div class="pane-heading"><h3 id="sourceTitle" data-i18n="original">원본</h3><button id="expandSource" class="text-button" type="button" data-i18n="enlarge">크게 보기</button></div><div class="source-image-wrap"><img id="sourceImage" alt="Original problem image"><p id="sourceUnavailable" hidden data-i18n="sourceUnavailable">원본 이미지를 불러오지 못했습니다.</p></div></section>
+          <section class="output-pane" aria-labelledby="outputTitle"><div class="pane-heading"><h3 id="outputTitle" data-i18n="result">결과</h3><span id="reviewStatus" class="review-status" hidden></span></div><div id="resultPlaceholder" class="result-placeholder" data-i18n="preparing">문제와 수식을 정리하고 있습니다.</div><div id="resultContent"></div></section>
+        </div>
+        <div id="exportBar" class="export-bar" hidden><p id="exportNote" data-i18n="exportHint">결과를 확인하고 원하는 형식으로 보관하세요.</p><div><label class="print-option"><input id="printSolutions" type="checkbox"><span data-i18n="includeSolutions">정답·해설도 인쇄</span></label><button id="exportMarkdown" type="button">Markdown <span aria-hidden="true">↓</span></button><button id="exportJson" type="button">JSON <span aria-hidden="true">↓</span></button><button id="printResult" type="button" data-i18n="print">인쇄 / PDF</button></div></div>
+      </section>
+    </div>
+    <footer><span>HaslaLab <span class="footer-dot">·</span> MADE FOR THE NEXT QUESTION.</span><a href="./#/community" data-i18n="help">질문·의견 남기기 ↗</a></footer>
+  </main>
+  <dialog id="loginDialog" class="login-dialog"><form id="loginForm"><div class="dialog-heading"><h2 data-i18n="signIn">로그인</h2><button id="closeLogin" class="icon-button" type="button" aria-label="Close">×</button></div><p data-i18n="accountHint">기존 HaslaLab 계정으로 작업을 이어가세요.</p><label><span data-i18n="username">아이디</span><input name="username" autocomplete="username" required maxlength="64"></label><label><span data-i18n="password">비밀번호</span><input name="password" type="password" autocomplete="current-password" required maxlength="256"></label><p id="loginError" class="form-error" role="alert" hidden></p><button id="loginSubmit" class="primary-button" type="submit" data-i18n="signIn">로그인</button><a class="full-login" href="./#/login" target="_blank" rel="noopener" data-i18n="otherLogin">소셜 로그인 · 회원가입 ↗</a></form></dialog>
+  <dialog id="imageDialog" class="image-dialog"><button id="closeImage" class="image-close" type="button" aria-label="Close">×</button><img id="largeImage" alt=""></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <noscript><p class="notice">문제 스튜디오를 사용하려면 JavaScript를 켜 주세요. / JavaScript is required for Problem Studio.</p></noscript>
+</body>
+</html>
