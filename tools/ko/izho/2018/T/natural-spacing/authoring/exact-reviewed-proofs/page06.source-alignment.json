@@ -1,0 +1,58 @@
+{
+  "source_sha256": "0782ab2ced4c911ce92b550aa2fd86cb7f6c9a6e24d7a60f64b13275df1e38ba",
+  "source_page": 6,
+  "proof_sha256": "41044e85be85c67d431883666d1d8ee02a0874af9ecbb90f0193d676a2689c9a",
+  "plan_sha256": "021b2150099d08b81b4129435ec66e92f707226eb82bde1004bce1fc9abbd839",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 67.70001220703125,
+      "source_center": 318.8379821777344,
+      "independent_original_source_centers": [
+        318.8379821777344
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 244.58193969726562,
+      "actual_nonspace_glyph_right": 393.0940246582031,
+      "actual_center": 318.8379821777344,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 13,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          14,
+          0
+        ]
+      ],
+      "baseline": 708.9099731445312,
+      "source_center": 318.9360046386719,
+      "independent_original_source_centers": [
+        318.9360046386719
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 282.65997314453125,
+      "actual_nonspace_glyph_right": 355.2120361328125,
+      "actual_center": 318.9360046386719,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 0,
+    "rows": [],
+    "passed": true
+  },
+  "passed": true
+}

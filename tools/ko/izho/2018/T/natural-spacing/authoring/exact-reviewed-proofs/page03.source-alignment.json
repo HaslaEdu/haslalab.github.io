@@ -1,0 +1,123 @@
+{
+  "source_sha256": "0782ab2ced4c911ce92b550aa2fd86cb7f6c9a6e24d7a60f64b13275df1e38ba",
+  "source_page": 3,
+  "proof_sha256": "158a40a7f283452974ac1930cb41e5304bb13acf220032600023a8cb0de34f41",
+  "plan_sha256": "e46d7cbd32fbd238eacdf00c71a3715de97b874c0f21cac2088087631a679f5b",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 4,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 69.6199951171875,
+      "source_center": 318.75767517089844,
+      "independent_original_source_centers": [
+        318.75767517089844
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 274.72991943359375,
+      "actual_nonspace_glyph_right": 362.7854309082031,
+      "actual_center": 318.75767517089844,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          1,
+          1
+        ]
+      ],
+      "baseline": 85.70001220703125,
+      "source_center": 318.6898956298828,
+      "independent_original_source_centers": [
+        318.6898956298828
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 276.6097412109375,
+      "actual_nonspace_glyph_right": 360.7700500488281,
+      "actual_center": 318.6898956298828,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 271.02996826171875,
+      "source_center": 318.76599884033203,
+      "independent_original_source_centers": [
+        318.76599884033203
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 276.4899597167969,
+      "actual_nonspace_glyph_right": 361.0420227050781,
+      "actual_center": 318.7659912109375,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 8,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          6,
+          0
+        ]
+      ],
+      "baseline": 543.02001953125,
+      "source_center": 318.69202423095703,
+      "independent_original_source_centers": [
+        318.69202423095703
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 276.4159851074219,
+      "actual_nonspace_glyph_right": 360.9680480957031,
+      "actual_center": 318.6920166015625,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 8,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "Problem 2 (10.0 points) ",
+        "original_center": 318.75767517089844,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          1,
+          1
+        ],
+        "source_text": "Physics in the mountains ",
+        "original_center": 318.6898956298828,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}
