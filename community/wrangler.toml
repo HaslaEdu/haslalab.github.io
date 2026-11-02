@@ -83,6 +83,11 @@ LAB_SCHEME_THINKING = "off"
 LAB_READ_FALLBACK_MODEL = ""
 LAB_SCHEME_FALLBACK_MODEL = ""
 
+# answer photos (lab_pages.r2_key): new uploads go here instead of D1; kept after grading (LAB_KEEP_HOURS off)
+[[r2_buckets]]
+binding = "LAB_PAGES"
+bucket_name = "haslalab-lab-pages"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "haslalab-community"
