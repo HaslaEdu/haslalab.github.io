@@ -201,3 +201,14 @@ test('math-OCR services: keys found by the admin\'s secret names, MD5 signature 
  assert.equal(h.sign,md5(`app-id=st-id&random-str=${h['random-str']}&timestamp=${h.timestamp}&secret=st-secret`));assert.ok(!JSON.stringify(h).includes('st-secret'));
  await assert.rejects(mathpixRead(env,jpeg,'image/jpeg',{fetchImpl:async()=>Response.json({error:'bad key mp-secret'},{status:401})}),e=>e.code==='ocr_engine_failed'&&!JSON.stringify(e).includes('mp-secret'));
 });
+
+test("Gemini: mediaResolution goes in the generation config, and a 400 is tried once without it, keeping the thinking level", async () => {
+  const sent = [];
+  const fetchImpl = async (url, init) => { const body = JSON.parse(init.body); sent.push(body);
+    if (sent.length === 1) return new Response(JSON.stringify({ error: { message: "unknown field" } }), { status: 400 });
+    return Response.json({ modelVersion: "gemini-3.8-flash", candidates: [{ finishReason: "STOP", content: { parts: [{ text: '{"ok":true}' }] } }], usageMetadata: { promptTokenCount: 10, candidatesTokenCount: 2 } }); };
+  const out = await visionJSON({ GEMINI_API_KEY: "k" }, { provider: "gemini", stage: "ocr", model: "gemini-3.8-flash", thinking: "low", fetchImpl, parts: [{ text: "read" }], mediaResolution: "MEDIA_RESOLUTION_HIGH" });
+  assert.deepEqual(out.raw, { ok: true });
+  assert.equal(sent[0].generationConfig.mediaResolution, "MEDIA_RESOLUTION_HIGH");
+  assert.ok(!("mediaResolution" in sent[1].generationConfig) && sent[1].generationConfig.thinkingConfig, "only the media setting is dropped");
+});

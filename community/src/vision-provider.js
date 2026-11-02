@@ -109,7 +109,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null}={}) {
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
@@ -133,6 +133,8 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
       ...(['minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
     provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
     generationConfig:{responseMimeType:'application/json',responseSchema:schema,temperature:Number(temperature)||0,maxOutputTokens:count,
+      /* Gemini only: more image tokens per picture, for small handwriting (bench read.media high) */
+      ...(['MEDIA_RESOLUTION_HIGH','MEDIA_RESOLUTION_MEDIUM','MEDIA_RESOLUTION_LOW'].includes(mediaResolution)?{mediaResolution}:{}),
       // thinking is billed as output: a page read with the model's own default once spent 5.5k thought tokens on 263 characters
       ...(level==='off'?{}:/^gemini-2\.5-flash/.test(model)?{thinkingConfig:{thinkingBudget:level==='minimal'?0:-1}}:{thinkingConfig:{thinkingLevel:level}})}}:
     {model,messages:[{role:'system',content:jsonRules},
@@ -145,7 +147,9 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   let encoded=body?JSON.stringify(body):'x'.repeat(0);
   if(!body&&content.reduce((a,p)=>a+(p.data?.length||p.text?.length||0),0)>30e6)fail(413,'vision_images_too_large');
   /* an API version that does not know thinkingLevel rejects the request: send it once more without, never fail on it */
-  const plain=()=>{if(provider!=='gemini'||!body?.generationConfig?.thinkingConfig)return null;const {thinkingConfig,...config}=body.generationConfig;return JSON.stringify({...body,generationConfig:config});};
+  /* a 400 is retried once without the setting an API version may not know: mediaResolution where it was asked, else thinkingLevel */
+  const plain=()=>{const g=body?.generationConfig;if(provider!=='gemini'||!(g?.thinkingConfig||g?.mediaResolution))return null;
+    const {thinkingConfig,mediaResolution,...rest}=g;return JSON.stringify({...body,generationConfig:mediaResolution?{...rest,...(thinkingConfig?{thinkingConfig}:{})}:rest});};
   /* a UTF-8 byte is at most 3 per UTF-16 unit: encode (one more copy of a body of several MB) only when that bound is over the limit */
   const cap=provider==='gemini'?20000000:48*1024*1024;
   if(encoded.length>cap||encoded.length*3>cap&&new TextEncoder().encode(encoded).length>cap)fail(413,'vision_images_too_large');

@@ -1458,7 +1458,7 @@ const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI
   ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
-  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined }) };
+  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined, _media: ['high', 'medium', 'low'].includes(bench?.media) ? bench.media : undefined }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -2059,7 +2059,9 @@ async function labReadPage(env,s,buf,mime,notation,m) {
   const strips=tiles>=2&&mime==='image/jpeg'?pageStrips(buf instanceof Uint8Array?buf:new Uint8Array(buf),tiles):[];
   const zoom=strips.length?[{text:`The same page follows as ${strips.length} zoomed strips, top to bottom; neighbouring strips overlap. Read small or faint handwriting from them, but transcribe every line of the page once, in page order.`},
     ...strips.map((strip,i)=>({inline_data:{mime_type:'image/jpeg',data:b64(strip)},label:`Zoomed strip ${i+1} of ${strips.length} of the same page`}))]:[];
-  const read=temperature=>labVision(env,s,[{text:prompt},{inline_data:{mime_type:mime,data:b64(buf)},label:'Original submitted page; inspect every graph, diagram, arrow and annotation'},...zoom],PAGE_SCHEMA,6144,m,'ocr',temperature);
+  const media=src._media||env.LAB_READ_MEDIA||'';   // Gemini's image tokens per picture (LAB_READ_MEDIA high, bench read.media)
+  const read=temperature=>labVision(env,s,[{text:prompt},{inline_data:{mime_type:mime,data:b64(buf)},label:'Original submitted page; inspect every graph, diagram, arrow and annotation'},...zoom],PAGE_SCHEMA,6144,m,'ocr',temperature,
+    ['high','medium','low'].includes(media)?{mediaResolution:'MEDIA_RESOLUTION_'+media.toUpperCase()}:{});
   const warm=Number.isFinite(src._temperature)?src._temperature:Number.isFinite(+env.LAB_READ_TEMPERATURE)&&env.LAB_READ_TEMPERATURE!==undefined&&env.LAB_READ_TEMPERATURE!==''?+env.LAB_READ_TEMPERATURE:0;
   const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated')return read(Math.max(warm,0.8));throw error;});
   const raw=out.raw;
@@ -2793,7 +2795,7 @@ async function labBench(env, s, job) {
     } else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles, confusions: typeof spec.read.confusions === 'boolean' ? spec.read.confusions : undefined }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
+      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles, confusions: typeof spec.read.confusions === 'boolean' ? spec.read.confusions : undefined, media: spec.read.media }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
         proof: spec.proof?.provider || null, proofBench: spec.proof ? { model: spec.proof.model, thinking: spec.proof.thinking } : undefined };
       const read = await labReadChecked(env, s, roles, page.task, bytes, page.mime, m, page.kind), text = readText(read);
       const stored = labStoredReading(env, bytes, { ocr: read.ocr?.text ?? text, text, read, legible: read.legible, status: 'done' });
