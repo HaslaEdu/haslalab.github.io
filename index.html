@@ -1109,7 +1109,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=df3325a423a9"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=cda1c31bd562"></script>
+<script src="site-design.js?v=d0440fdeaaf3"></script>
 <script>
 "use strict";
 
@@ -5335,7 +5335,7 @@ function theoryHtml(key,yr){
      const languageDocs=ko?[]:Object.entries(paperLanguages).filter(([language,file])=>file!==P[0]&&(!paperLanguages.en||f.paperContainsSolutions?.[language])).map(([language,file])=>a(file,key==="kphe"?d.thyPaper:`${f.paperContainsSolutions?.[language]?"Problems & solutions":d.thyPaper} · ${esc(PaperLanguages.label(language,lang))}`));
      if(selectedLanguage) P[1]=ko&&selectedLanguage==="ko"||!ko&&selectedLanguage==="en"?"":PaperLanguages.label(selectedLanguage,lang);
      const K=o(k.key,f.key), A=o(k.answer,f.answer);
-    const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=probs.map(q=>ko?(kt[q[0]]?q[1]:""):kt[q[0]]||"").filter(Boolean);
+    const titles=probs.map(q=>ko&&kt[q[0]]||q[1]), alt=ko?probs.map(q=>kt[q[0]]?q[1]:"").filter(Boolean):[];   /* the English site names the problems in English only */
     /* a card for several problems (a paper published whole) names the paper and lists the problems in its text */
     const many=titles.length>1;
     return probCard({code, mode:has?"live":"dl", chip:archive?(archiveLabels[archive.type]||archive.type):has?d.thyKoChip:paperSourceType==="unofficial_translation"?(ko?"비공식 영문 번역":"Unofficial English translation"):d.thyOrigChip,
