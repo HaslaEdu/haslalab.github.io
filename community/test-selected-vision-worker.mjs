@@ -65,6 +65,8 @@ async function fixture(run){
     else if(text.includes('Review ONLY problem'))raw={problem_no:5,score:7,confidence:.98,verdict:'valid',summary:'Diagram supported argument.',strengths:[],gaps:[],evidence:[{page:1,quote:'',source:'image',box:[100,100,900,900],description:'A labelled geometric construction with direction arrows.',note:'Visible geometry checked.'}]};
     else if(text.includes('"task":"transcribe"'))raw={text:'',legible:true,confidence:.98,uncertainties:[],visuals:[{page:1,kind:'graph',description:'A graph and upward direction arrow.',box:[.1,.1,.9,.9]}]};
     else if(text.includes('[TASK: moderate]'))raw=moderateReply||{items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
+    else if(text.includes('[TASK: analyse solution]'))raw={parts:[{id:'G',points:2,results:[{expression:'v = sqrt(2 g h)'}],milestones:['energy conservation'],accepted_forms:['v^2 = 2 g h']}]};
+    else if(text.includes('[TASK: build marking scheme]'))raw={points:2,items:[{id:'G',points:2,type:'derivation',role:'result',sheet:'answer',what:'v = sqrt(2 g h); accept v^2 = 2 g h'}],parts:[],total:2};
     else if(text.includes('[TASK: grade]'))raw=gradeReply||visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
     return provider==='gemini'?Response.json({modelVersion:url.match(/\/models\/([^/:]+):/)?.[1]||VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:body.model||VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
@@ -406,6 +408,18 @@ test('units in code: an equivalent unit is the right unit, and a value in anothe
   assert.match(detail,/"id":"MU"[^}]*"got":1[,}]/,'A·m² is J/T, whatever the grader thought');
   assert.match(detail,/"id":"V"[^}]*"got":1[,}]/,'2.5 km/s is 2500 m/s, converted by code');
   assert.match(detail,/"id":"L"[^}]*"got":0\.9/,'a value with a wrong unit loses 0.1');
+}));
+test('LAB_SCHEME_TWO_STAGE: the solution is analysed first, and the scheme is built with that analysis beside it',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';env.LAB_SCHEME_TWO_STAGE='on';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const i=calls.findIndex(c=>c.text.includes('[TASK: analyse solution]')),j=calls.findIndex(c=>c.text.includes('[TASK: build marking scheme]'));
+  assert.ok(i>=0&&j>i,'the analysis comes first');
+  assert.match(calls[j].text,/<<ANALYSIS>>[^]*accepted_forms[^]*<<END>>/,'and goes beside the solution');
+  assert.ok(sql.prepare("SELECT source FROM lab_schemes WHERE exam_key='ipho2025' AND task='T1'").all().some(r=>/#2:/.test(r.source)),'kept under its own key');
 }));
 test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
   env.LAB_ONLY_PROVIDER='deepseek';
