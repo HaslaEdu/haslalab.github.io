@@ -28,6 +28,12 @@ export function misreadOf(first, again) {
   return ma !== mb || Math.abs(+ea) >= 3 && Math.abs(+eb) >= 3;
 }
 
+/** as many significant digits written in both (3.3 and 3.8, 1.04e-4 and 1.84e-4): a zoomed crop that cut a digit off
+    (3.3 read again as 3) is not a misread fixed */
+export function sameDigitCount(a, b) {
+  const digits = x => Math.abs(x).toExponential(11).split('e')[0].replace('.', '').replace(/0+$/, '');   // 1.59e13 -> 159
+  return Number.isFinite(a) && Number.isFinite(b) && digits(a).length === digits(b).length;
+}
 /* ⁹ -> ^9, so 3,11·10⁹ is one number */
 const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
 const plainDigits = text => String(text || '').replace(/⁻?[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, m => '^' + (m[0] === '⁻' ? '-' : '') + [...m.replace('⁻', '')].map(c => SUP.indexOf(c)).join(''));
