@@ -495,7 +495,11 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .xm .xmme .tk{font:700 28px var(--mono);color:#7a2e1f}
 .xm .xmme a.lnk{color:#3b5bdb;font-weight:600}
 .prob .acts .docs{display:grid;gap:8px}
-.prob .acts .docs.n1{grid-template-columns:1fr} .prob .acts .docs.n2{grid-template-columns:1fr 1fr} .prob .acts .docs.n3{grid-template-columns:1fr 1fr 1fr}
+.prob .acts .docs.n1{grid-template-columns:1fr} .prob .acts .docs.n2{grid-template-columns:1fr 1fr} .prob .acts .docs.n3{grid-template-columns:1fr 1fr 1fr} .prob .acts .docs.n4{grid-template-columns:repeat(4,1fr)}
+/* a theory problem solved on the organisers' program: its simulator, a wide button under the documents */
+.prob .acts .run .btn{display:flex;width:100%;justify-content:center;padding:15px 13px;font-size:15px;font-weight:700}
+/* theory cards keep their buttons under their text (a short card is not padded down to the row's tallest) */
+.probs.thy .prob p{flex:0 0 auto}
 .prob .acts .btn{padding:8px 13px;font-size:12.5px}
 .prob .acts .docs .btn{padding:8px 6px;font-size:12px;justify-content:center;text-align:center;line-height:1.25}
 .prob .top .tr{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
@@ -2978,6 +2982,7 @@ const DATA={
               exe:{ko:REL+"v1.0/ISPhO2026_E1_sim_EN.exe", en:REL+"v1.0/ISPhO2026_E1_sim_EN.exe"},
               src:{ko:"src/ispho2026_E1_fbg_sim_KO.py", en:"src/ispho2026_E1_fbg_sim_EN.py"},
               pdf:{ko:"pdfx/ispho/ISPhO_2026_E1_KO.pdf", en:"pdf/ISPhO_2026_E1_EN.pdf"},
+              sheets:{answer:{ko:"sim/sheets/ISPhO_2026_E1_AS_KO.pdf", en:"sim/sheets/ISPhO_2026_E1_AS.pdf"}, working:{ko:"sim/sheets/ISPhO_2026_E1_WS_KO.pdf", en:"sim/sheets/ISPhO_2026_E1_WS.pdf"}},
               sol:{ko:"pdf/ISPhO_2026_S_E_KO.pdf", en:"pdf/ISPhO_2026_S_E_EN.pdf"}}}
     ]},
    {y:2025,host:{ko:"러시아 · 한티만시스크, MIPT",en:"Khanty-Mansiysk, Russia · MIPT"},cc:"ru",
@@ -2990,6 +2995,7 @@ const DATA={
        files:{sim:"sim/ispho2025_E1_web.html",
               src:{ko:"src/ispho2025_E1_led_sim_KO.py", en:"src/ispho2025_E1_led_sim_EN.py"},
               pdf:{ko:"pdfx/ispho/ISPhO_2025_E1_KO.pdf", en:"pdf/ISPhO_2025_E1_EN.pdf"},
+              sheets:{answer:{ko:"sim/sheets/ISPhO_2025_E1_AS_KO.pdf", en:"sim/sheets/ISPhO_2025_E1_AS.pdf"}, working:{ko:"sim/sheets/ISPhO_2025_E1_WS_KO.pdf", en:"sim/sheets/ISPhO_2025_E1_WS.pdf"}},
               sol:{ko:"pdf/ISPhO_2025_S_E_KO.pdf", en:"pdf/ISPhO_2025_S_E.pdf"},
               data:"pdfx/ispho/ISPhO_2025_E1_tables.zip"}}
     ],
@@ -3015,6 +3021,7 @@ const DATA={
        files:{sim:"sim/ispho2024_E1_web.html",
               src:{ko:"src/ispho2024_E1_spectro_sim_KO.py", en:"src/ispho2024_E1_spectro_sim_EN.py"},
               pdf:{ko:"pdfx/ispho/ISPhO_2024_E1_KO.pdf", en:"pdf/ISPhO_2024_E1_EN.pdf"},
+              sheets:{answer:{ko:"sim/sheets/ISPhO_2024_E1_AS_KO.pdf", en:"sim/sheets/ISPhO_2024_E1_AS.pdf"}, working:{ko:"sim/sheets/ISPhO_2024_E1_WS_KO.pdf", en:"sim/sheets/ISPhO_2024_E1_WS.pdf"}},
               sol:"pdf/ISPhO_2024_S_E.pdf",
               data:"pdfx/ispho/ISPhO_2024_E1_Results.zip"}}
     ],
@@ -5273,7 +5280,7 @@ function probCard(o){
           <div class="tags">${o.tags.map((t,i)=>`<span class="tag${i===0?" exp":""}">${esc(t)}</span>`).join("")}</div>
           ${o.note||""}
           <div class="acts">${o.main?`<div class="main">${o.main.join("\n")}</div>`:""}
-            ${o.docs.length?`<div class="docs n${o.dn||o.docs.length}">${o.docs.join("\n")}</div>`:""}</div>
+            ${o.docs.length?`<div class="docs n${o.dn||o.docs.length}">${o.docs.join("\n")}</div>`:""}${o.run?`<div class="run">${o.run}</div>`:""}</div>
         </article>`;
 }
 /* the year's theory problems, as the experiments: «choose a problem» and a card per problem (T1, T2, …; T for a paper
@@ -5303,7 +5310,8 @@ function theoryHtml(key,yr){
   /* a problem solved on the organisers' program (ISPhO T1): the simulator and its source beside the paper */
   const sims=Object.fromEntries(simsOf(key,yr).map(p=>[p.id,p]));
   const simDocs=code=>{ const p=sims[code]; if(!p) return []; const f=p.files, pick=v=>typeof v==="string"?v:v&&(v[lang]||v.en||v.ko);
-    return [`<a class="btn" href="${esc(f.sim)}${f.sim.includes("?")?"&":"?"}lang=${lang}">${d.actRun}</a>`].concat(f.src?[`<a class="btn ghost" href="${esc(pick(f.src))}">${d.actSrc}</a>`]:[]); };
+    return f.src?[`<a class="btn ghost" href="${esc(pick(f.src))}">${d.actSrc}</a>`]:[]; };
+  const simRun=code=>{ const p=sims[code]; return p?`<a class="btn" href="${esc(p.files.sim)}${p.files.sim.includes("?")?"&":"?"}lang=${lang}">${d.actRun}</a>`:""; };
   const sheetDocs=(code,A,on)=>{
     if(!on||!t.f[code]||key==="kmo"||key==="kmchc") return [];
     const h=sheetsHref(theoryHref(key,yr,[code]));
@@ -5338,7 +5346,7 @@ function theoryHtml(key,yr){
          (K[0]?[a(K[0],key==="kphe"?(ko?"답안":"Answers"):t.keySources&&t.keySources[code]==="user_supplied_marked_paper"?(ko?"제공 표시 답안":"Supplied marked answers"):d.omrKey,false,K[1])]:[]).concat(S[0]?[a(S[0],d.thySol,false,S[1])]:[]):[a(S[0],d.thySol,false,S[1])]),
       /* a year's card (yearly): its invitational round; RMPh 2012: the revised problem 2; a multiple-choice paper with
          its answer key (KPhE): the on-screen exam, graded against the key, not by AI */
-       docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(sheetDocs(code,A,!omr)).concat(simDocs(code)).concat(docs||[]).concat(M[0]&&!MARK_HIDDEN.has(key)?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0}); };
+       docs:languageDocs.concat(contestEntries(key,yr.y,code).map(e=>`<a class="btn ghost" href="${contestHref(e)}">⏱ ${esc(typeof e.title==="object"?e.title[lang]||e.title.ko:e.title)} · ${e.minutes||"—"}${ko?"분":" min"}</a>`)).concat(archive?[`<a class="btn ghost" href="${esc(archive.url)}" target="_blank" rel="noopener">${ko?"재수록 출처":"Reprint source"}</a>`]:[]).concat(omr&&t.k&&t.k[code]?[`<a class="btn ghost" href="sim/omr.html?${new URLSearchParams({c:key,y:yr.y,e:code,lang})}">${d.omrGo}</a>`]:[]).concat(omr&&A[0]?[a(A[0],d.thyAns,false,A[1])]:[]).concat(sheetDocs(code,A,!omr)).concat(simDocs(code)).concat(docs||[]).concat(M[0]&&!MARK_HIDDEN.has(key)?[a(M[0],d.thyMark,false,M[1])]:[]).concat(f.data?[a(f.data,d.thyData)]:[]).concat(k.rev?[a(k.rev,ko?d.thyRev:d.thyRev+" ("+d.thyKo+")")]:[]), dn:docs&&docs.length>3?2:0, run:simRun(code)}); };
   /* a paper published whole is not a card of its own once its problems have cards (they open it as the original) */
   const order=Object.keys(t.f).filter(x=>!(x==="T"&&t.f.T1)).sort((a,b)=>a.localeCompare(b,"en",{numeric:true}));
   /* the problems of a part: its own; for a whole paper T every problem but the invitational round's (Ti1, Ti2, …),
@@ -5366,7 +5374,7 @@ function theoryHtml(key,yr){
      ${['report_reprint','historical_reprint'].includes(t.sourceType)?`<p class="trknote"><b>${ko?"학술지·대회 보고서 재수록":"Journal / competition report"}</b><br>${esc(typeof t.note==="object"?t.note[lang]||t.note.en||t.note.ko:t.note||"")} ${t.sourcePage?`<a href="${esc(t.sourcePage)}" target="_blank" rel="noopener">${ko?"자료 출처":"Source archive"}</a>`:""}</p>`:""}
      ${t.note&&!['recall','report_reprint','historical_reprint'].includes(t.sourceType)&&key!=="kphe"?`<p class="trknote">${esc(typeof t.note==="object"?t.note[lang]||t.note.en||t.note.ko:t.note)}</p>`:""}
      ${contestEntries(key,yr.y).length||reviewTheoryGroups(key,yr).length||examGroups(key,yr).some(g=>g.some(p=>p.thy))?`<p class="yrexam"><a href="${compModeHref(key,REVIEW_ONLY.has(key)?"review":"exam",yr.y)}">${REVIEW_ONLY.has(key)?(ko?"✎ 채점·첨삭만 받기":"✎ Grading & feedback"):"⏱ "+TL(compOf(key),"thyExam")}</a></p>`:""}
-    <div class="probs">${cards}</div></div>`;
+    <div class="probs thy">${cards}</div></div>`;
 }
 /* the general instructions of a year's experiments (or observation rounds): theory.js's GENERAL, in the original,
    with a translation the year names (yr.general) laid over the unlabelled one */
@@ -5454,8 +5462,10 @@ function viewYear(key,year,mode=""){
         if(c.open) docs.splice(1,1);                      /* IYPT: no solution exists, so no greyed solution button */
         if(live&&f.data) docs.push(doc(f.data,d.thyData,false));   /* the tables the paper hands out (ISPhO 2024–2025 E1: Excel files) */
         /* an experiment: its answer and working sheets next to the problem and the solution */
-        if(live&&!c.open&&/^E\d*$/.test(p.id)){ const h=expSheetsHref(key,yr,p);
-          docs.splice(docs.length-(docsOnly?0:1),0,sheetBtn(sheetKind(h,"answer"),lang==="ko"?"답안지":"Answer sheet"),sheetBtn(sheetKind(h,"working"),lang==="ko"?"워킹시트":"Working sheet")); }
+        if(live&&!c.open&&/^E\d*$/.test(p.id)){ const h=expSheetsHref(key,yr,p), S=f.sheets||{};
+          /* a problem that names its sheets (ISPhO) opens the PDF in the reader's language straight away */
+          const sb=(kind,lbl)=>S[kind]?`<a class="btn ghost" href="${esc(pick(S[kind]))}" target="_blank" rel="noopener">${lbl}</a>`:sheetBtn(sheetKind(h,kind),lbl);
+          docs.splice(docs.length-(docsOnly?0:1),0,sb("answer",lang==="ko"?"답안지":"Answer sheet"),sb("working",lang==="ko"?"워킹시트":"Working sheet")); }
         const note = docsOnly ? "" : `<p class="exenote">${d.exeNote}</p>`;
         const grp = grpOf(c,p);
         return probCard({soon:mode==="wip"&&!c.chip, grp, code:grp?p.id.replace(/[αβγ]+$/,""):p.id, tr:grp?grpTag(d,grp):"", mode, chip,
