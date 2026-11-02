@@ -61,7 +61,10 @@ export function canonicalProgressSql(normalized,plan){
 // and historical inactive versions. Text and bytes already have SHA-256 IDs.
 export function snapshotRecords(normalized){
   const rows=[];
-  for(const s of normalized.sources)rows.push([s.id,'source',s.id,s.sha256,s.page_count,s.source_language,s.expected_question_count,s.extraction_complete?1:0]);
+  for(const s of normalized.sources){
+    rows.push([s.id,'source',s.id,s.sha256,s.page_count,s.source_language,s.expected_question_count,s.extraction_complete?1:0]);
+    if(s.origin)rows.push([s.id,'origin',s.id,JSON.stringify(s.origin)]);
+  }
   for(const q of normalized.questions){
     rows.push([q.source_id,'question',q.id,q.metadata_hash,q.review_status]);
     rows.push([q.source_id,'context',q.id,q.source_language,JSON.stringify(q.context)]);
@@ -81,6 +84,7 @@ export function verificationSql(sourceIds){
   const scope=sourceIds.map(sqlLiteral).join(','),where=`q.source_id IN (${scope})`;
   return [
     `SELECT json_array(s.id,'source',s.id,s.sha256,s.page_count,s.source_language,s.expected_question_count,s.extraction_complete) record FROM book_sources s WHERE s.id IN (${scope})`,
+    `SELECT json_array(s.id,'origin',s.id,o.origin_json) FROM bank_source_origins o JOIN book_sources s ON s.id=o.source_id WHERE s.id IN (${scope})`,
     `SELECT json_array(q.source_id,'question',q.id,q.metadata_hash,q.review_status) FROM bank_questions q WHERE ${where}`,
     `SELECT json_array(q.source_id,'context',q.id,c.source_language,c.context_json) FROM bank_question_context c JOIN bank_questions q ON q.id=c.question_id WHERE ${where}`,
     `SELECT json_array(q.source_id,'version',q.id,v.language,v.role,v.text_sha256,v.review_status) FROM bank_question_versions v JOIN bank_questions q ON q.id=v.question_id WHERE v.active=1 AND ${where}`,

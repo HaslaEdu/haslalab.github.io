@@ -25,6 +25,15 @@ CREATE TABLE IF NOT EXISTS book_sources (
 CREATE INDEX IF NOT EXISTS book_sources_shortest ON book_sources(page_count,id);
 CREATE INDEX IF NOT EXISTS book_sources_content_hash ON book_sources(sha256);
 
+-- Optional explicit URL provenance. Drive records and their historical IDs stay
+-- unchanged. For URL records, the legacy drive_id SQL column stores the URL as
+-- an identity key, while APIs must use this typed provenance, never a Drive link.
+CREATE TABLE IF NOT EXISTS bank_source_origins (
+  source_id TEXT PRIMARY KEY REFERENCES book_sources(id),
+  origin_json TEXT NOT NULL CHECK(json_valid(origin_json)),
+  updated_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS bank_questions (
   id TEXT PRIMARY KEY,
   source_id TEXT NOT NULL REFERENCES book_sources(id),

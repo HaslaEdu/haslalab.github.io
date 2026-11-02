@@ -21,6 +21,10 @@ The manifest is JSON with `version: 1` and a `sources` array. Each source needs:
 
 Source IDs are deterministic SHA-256 identifiers of Drive ID plus revision. The same revision cannot silently change its PDF hash, page count or original language. Renaming a book does not create another source. Equal file hashes across different Drive IDs remain separate provenance records; a hash index allows duplicate detection without losing attribution.
 
+A PDF obtained from an official course website can instead provide `origin: {kind: "url", url, attribution, license_identifier, license_url, terms_url?}` and omit `drive_id`. Its `revision` must be `sha256:` followed by the actual PDF hash. URLs use HTTPS without credentials, query strings or custom ports; page fragments are removed from their identity. Questions refer to `{origin: {kind: "url", url}, revision}`. This registers provenance from an already downloaded and checked PDF; the import tools do not fetch it or infer permission from public availability.
+
+URL source IDs have a separate namespace and preserve every existing Drive source/question ID. Normalized URL sources have `drive_id: null` and explicit origin metadata. For compatibility with existing databases, the legacy SQL `book_sources.drive_id` column stores the **actual URL** as its identity key; no fictitious Drive ID is created. `bank_source_origins` stores typed attribution and license metadata, and copy fingerprints verify it. Consumers must use this origin URL instead of constructing a Drive link. License conditions and third-party exceptions still need source review before any publication; storing a license identifier is not evidence that every component has reuse permission.
+
 The optional questions file has `version: 1` and a `questions` array. Each question needs:
 
 - `source: {drive_id, revision}` referencing a manifest source.

@@ -33,7 +33,27 @@ function spans(value,source,label){
     const b=span.bbox;if(!Array.isArray(b)||b.length!==4||!b.every(v=>Number.isFinite(v)&&v>=0&&v<=1)||b[0]>=b[2]||b[1]>=b[3])fail(`${label}[${index}]: bbox must be [x0,y0,x1,y1] in normalized 0..1 coordinates`);
     return {page:span.page,bbox:[...b]};});
 }
-export function sourceId(source){return 'src_'+sha(text(source.drive_id,'drive_id',240)+'\0'+text(source.revision,'revision',240));}
+function sourceUrl(value){
+  const input=text(value,'origin.url',3000);let url;try{url=new URL(input);}catch{fail('origin.url: expected an absolute HTTPS URL');}
+  if(url.protocol!=='https:'||url.username||url.password||url.search||url.port)fail('origin.url: expected HTTPS URL without credentials, query or custom port');
+  url.hash='';return url.href;
+}
+function urlOrigin(raw){
+  object(raw,'source.origin');choice(raw.kind,['url'],'source.origin.kind');
+  const origin={kind:'url',url:sourceUrl(raw.url),attribution:text(raw.attribution,'origin.attribution',2000),
+    license_identifier:text(raw.license_identifier,'origin.license_identifier',240),license_url:sourceUrl(raw.license_url)};
+  if(raw.terms_url!=null)origin.terms_url=sourceUrl(raw.terms_url);
+  return origin;
+}
+export function sourceId(source){
+  const revision=text(source.revision,'revision',240);
+  if(source.origin!=null){
+    if(source.drive_id!=null)fail('Source identity cannot combine Drive and URL origins');
+    object(source.origin,'source.origin');choice(source.origin.kind,['url'],'source.origin.kind');
+    return 'src_'+sha('url\0'+sourceUrl(source.origin.url)+'\0'+revision);
+  }
+  return 'src_'+sha(text(source.drive_id,'drive_id',240)+'\0'+revision);
+}
 export function questionId(source,locator){return 'q_'+sha((typeof source==='string'?source:sourceId(source))+'\0'+text(locator,'locator',1000));}
 
 export function normalizeImport(manifest,questionFile={version:1,questions:[]}){
@@ -42,11 +62,15 @@ export function normalizeImport(manifest,questionFile={version:1,questions:[]}){
   if(!Array.isArray(questionFile.questions))fail('questions: expected array');
   const sourceMap=new Map();
   for(const raw of manifest.sources){object(raw,'source');const id=sourceId(raw);
-    if(!/^[A-Za-z\d_-]{5,240}$/.test(raw.drive_id))fail('drive_id: invalid stable Drive ID');
-    const source={id,drive_id:raw.drive_id,revision:raw.revision,title:text(raw.title,'title',2000),mime_type:choice(raw.mime_type??'application/pdf',['application/pdf'],'mime_type'),
+    if(raw.origin==null&&!/^[A-Za-z\d_-]{5,240}$/.test(raw.drive_id))fail('drive_id: invalid stable Drive ID');
+    const source={id,drive_id:raw.origin==null?raw.drive_id:null,revision:raw.revision,title:text(raw.title,'title',2000),mime_type:choice(raw.mime_type??'application/pdf',['application/pdf'],'mime_type'),
       sha256:hash(raw.sha256,'source.sha256'),page_count:positive(raw.page_count,'page_count'),subjects:subjects(raw.subjects,'source.subjects'),level:choice(raw.level,LEVELS,'source.level'),
       source_language:language(raw.source_language,'source_language'),private_object_key:raw.private_object_key==null?null:privateKey(raw.private_object_key,'source.private_object_key'),
       local_path:raw.local_path==null?null:text(raw.local_path,'local_path',3000),expected_question_count:raw.expected_question_count==null?null:positive(raw.expected_question_count,'expected_question_count'),extraction_complete:raw.extraction_complete===true};
+    if(raw.origin!=null){
+      source.origin=urlOrigin(raw.origin);
+      if(source.revision!=='sha256:'+source.sha256)fail('URL source revision must identify the actual PDF SHA-256');
+    }
     if(raw.extraction_complete!=null&&typeof raw.extraction_complete!=='boolean')fail('extraction_complete: expected boolean');
     if(source.extraction_complete&&source.expected_question_count==null)fail('Complete extraction requires expected_question_count');
     if(sourceMap.has(id)&&JSON.stringify(sourceMap.get(id))!==JSON.stringify(source))fail('Conflicting duplicate source revision');sourceMap.set(id,source);
@@ -81,12 +105,18 @@ export function normalizeImport(manifest,questionFile={version:1,questions:[]}){
 // SQL text has fixed identifiers only; external values are parameters throughout.
 export function* importStatementIterator(normalized,{timestamp=new Date().toISOString()}={}){
   if(!Number.isFinite(Date.parse(timestamp)))fail('Invalid import timestamp');const statement=(sql,params)=>({sql,params});
-  for(const s of normalized.sources)yield statement(`INSERT INTO book_sources(id,drive_id,revision,title,mime_type,sha256,page_count,subjects_json,level,source_language,private_object_key,local_path,expected_question_count,extraction_complete,created_at,updated_at)
+  for(const s of normalized.sources){yield statement(`INSERT INTO book_sources(id,drive_id,revision,title,mime_type,sha256,page_count,subjects_json,level,source_language,private_object_key,local_path,expected_question_count,extraction_complete,created_at,updated_at)
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,
     sha256=CASE WHEN book_sources.sha256=excluded.sha256 AND book_sources.page_count=excluded.page_count AND book_sources.source_language=excluded.source_language THEN excluded.sha256 ELSE NULL END,
     subjects_json=excluded.subjects_json,level=excluded.level,private_object_key=COALESCE(excluded.private_object_key,book_sources.private_object_key),local_path=COALESCE(excluded.local_path,book_sources.local_path),
     expected_question_count=COALESCE(excluded.expected_question_count,book_sources.expected_question_count),extraction_complete=MAX(book_sources.extraction_complete,excluded.extraction_complete),updated_at=excluded.updated_at`,
-    [s.id,s.drive_id,s.revision,s.title,s.mime_type,s.sha256,s.page_count,JSON.stringify(s.subjects),s.level,s.source_language,s.private_object_key,s.local_path,s.expected_question_count,+s.extraction_complete,timestamp,timestamp]);
+    // The legacy SQL column is an opaque identity key. A URL origin stores its
+    // actual URL here; it never fabricates a Drive file ID. Public provenance
+    // remains explicitly typed in bank_source_origins and normalized sources.
+    [s.id,s.drive_id??s.origin?.url,s.revision,s.title,s.mime_type,s.sha256,s.page_count,JSON.stringify(s.subjects),s.level,s.source_language,s.private_object_key,s.local_path,s.expected_question_count,+s.extraction_complete,timestamp,timestamp]);
+    if(s.origin)yield statement(`INSERT INTO bank_source_origins(source_id,origin_json,updated_at) VALUES(?,?,?)
+      ON CONFLICT(source_id) DO UPDATE SET origin_json=excluded.origin_json,updated_at=excluded.updated_at`,[s.id,JSON.stringify(s.origin),timestamp]);
+  }
   for(const q of normalized.questions){
     yield statement(`INSERT INTO bank_questions(id,source_id,locator,original_number,chapter,kind,subjects_json,level,spans_json,review_status,metadata_hash,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET original_number=excluded.original_number,chapter=excluded.chapter,kind=excluded.kind,subjects_json=excluded.subjects_json,level=excluded.level,spans_json=excluded.spans_json,
