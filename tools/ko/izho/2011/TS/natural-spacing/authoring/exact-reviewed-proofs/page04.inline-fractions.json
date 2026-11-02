@@ -1,0 +1,61 @@
+{
+  "source_sha256": "ecc4a34a50fade6a08fd5f629480bebfa20ec418cdc19fa87915f6c0465ee008",
+  "source_base_sha256": "0ddd63d97c276a4e67ec01d218157a7f1f55c1353dc118fcec7c8e0a884d0271",
+  "proof_sha256": "693974b1d04fbbf88a979b31d55b387980d1eb508327ebf16de8e541ca0af25e",
+  "method": "Independent actual final-PDF original native font/GID/point/y matching AND actual painted fraction-rule endpoint/paint-operator matching at the same common horizontal dx. Do not infer rule movement from glyph metadata or from the motion journal alone.",
+  "groups": [
+    {
+      "label": "Complete original E=U/l",
+      "original_native_glyphs": 4,
+      "source_native_font_gid_point_y_and_actual_dx_matched": true,
+      "glyph_errors": [],
+      "actual_native_common_dx": -14.119903564453125,
+      "actual_native_relative_dx_spread_pt": 0.0,
+      "original_fraction_rules": [
+        {
+          "original": {
+            "operator_indices": [
+              479,
+              480,
+              481
+            ],
+            "rect": [
+              228.197464,
+              289.28414151015625,
+              238.509964,
+              289.28414151015625
+            ],
+            "paint_operator": "S"
+          },
+          "expected_actual_rect": [
+            214.07756043554687,
+            289.28414151015625,
+            224.39006043554687,
+            289.28414151015625
+          ],
+          "actual_matching_painted_paths": [
+            {
+              "operator_indices": [
+                484,
+                485,
+                486
+              ],
+              "rect": [
+                214.07756043554687,
+                289.28414151015625,
+                224.39006043554687,
+                289.28414151015625
+              ],
+              "paint_operator": "S"
+            }
+          ],
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "reviewed_complete_expressions": 1,
+  "original_fraction_rules_checked": 1,
+  "passed": true
+}

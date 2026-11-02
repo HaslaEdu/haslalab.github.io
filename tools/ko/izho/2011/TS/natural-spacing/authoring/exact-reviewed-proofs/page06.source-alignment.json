@@ -1,0 +1,49 @@
+{
+  "source_sha256": "ecc4a34a50fade6a08fd5f629480bebfa20ec418cdc19fa87915f6c0465ee008",
+  "source_page": 6,
+  "proof_sha256": "d85b71a79588f23cb55e2f9f6b0230b64503b43f79f269d5df7a599b72973256",
+  "plan_sha256": "ec828ef545105948a240406d4f41b145068450ef65c3a83b339678ed2c0d1ec3",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 1,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          22,
+          0
+        ]
+      ],
+      "baseline": 355.79998779296875,
+      "source_center": 312.46885681152344,
+      "independent_original_source_centers": [
+        312.46885681152344
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 290.369873046875,
+      "actual_nonspace_glyph_right": 334.5678405761719,
+      "actual_center": 312.46885681152344,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 3,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          22,
+          0
+        ],
+        "source_text": "The Hall effect ",
+        "original_center": 312.46885681152344,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}
