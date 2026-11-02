@@ -1428,7 +1428,7 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
    3.5-flash-lite about twice that; the 3.x Flash models looped to the output cap on 10-30% of pages. */
 /* each stage's provider (LAB_READ_PROVIDER, LAB_GRADE_PROVIDER, LAB_MODERATE_PROVIDER, LAB_SCHEME_PROVIDER): Gemini, DeepSeek,
    OpenAI or Anthropic, whichever the model bench picks for it */
-const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic"];
+const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic", "upstage"];
 const stage = (value, fallback) => STAGE_PROVIDERS.includes(value) ? value : fallback;
 function labRoles(env, s, theory) {
   const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
@@ -3046,7 +3046,7 @@ async function labBench(env, s, job) {
   const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking, twoStage: c.twoStage, check: c.check });
   let out, failed = false;
   try {
-    if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
+    if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic', 'upstage'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
     /* a dedicated math-OCR service reads a page: {stage:'ocr', engine:'mathpix'|'simpletex', page_id} */
     else if (spec.stage === 'ocr') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();

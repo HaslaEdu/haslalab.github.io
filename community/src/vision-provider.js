@@ -6,10 +6,10 @@ import { anthropicMessage, anthropicUsage, anthropicFailure, anthropicModels } f
 
 export const VISION_MODELS = Object.freeze({ gemini: 'gemini-3.5-flash-lite', deepseek: 'deepseek-flash' });
 /* providers the lab pipeline's stages can be given (LAB_*_PROVIDER, the admin bench) beside the two a candidate can choose */
-const STAGE_MODELS = Object.freeze({ ...VISION_MODELS, openai: 'gpt-5-mini', anthropic: 'claude-sonnet-5-5' });
+const STAGE_MODELS = Object.freeze({ ...VISION_MODELS, openai: 'gpt-5-mini', anthropic: 'claude-sonnet-5-5', upstage: 'solar-pro4' });
 export const VISION_IMAGE_LIMIT = 14 * 1024 * 1024; // decoded; JSON+base64 must also fit Gemini's 20 MB request limit
-const BASE = { gemini: 'https://generativelanguage.googleapis.com/v1beta/models', deepseek: 'https://api.deepseek.com', openai: 'https://api.openai.com/v1' };
-const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY', openai: 'OPENAI_API_KEY', anthropic: 'ANTHROPIC_API_KEY' };
+const BASE = { gemini: 'https://generativelanguage.googleapis.com/v1beta/models', deepseek: 'https://api.deepseek.com', openai: 'https://api.openai.com/v1', upstage: 'https://api.upstage.ai/v1' };
+const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY', openai: 'OPENAI_API_KEY', anthropic: 'ANTHROPIC_API_KEY', upstage: 'UPSTAGE_API_KEY' };
 const ALT_KEYS = { openai: ['OPENAI_KEY'], anthropic: ['CLAUDE_API_KEY', 'ANTHROPIC_KEY'] };
 /* a key pasted with a trailing newline or spaces is the same key */
 const keyOf = (env, provider) => [KEYS[provider], ...(ALT_KEYS[provider] || [])].map(k => typeof env[k] === 'string' ? env[k].trim() : '').find(Boolean) || null;
@@ -57,10 +57,10 @@ export function visionCapabilities(env) {
     available:!!env[KEYS[id]]&&(!only||id===only),...(!env[KEYS[id]]||only&&id!==only?{reason:'provider_unavailable'}:{})}))};
 }
 /* a model other than the provider's default, only for the admin model bench: the provider's own id pattern, never a URL part */
-const MODEL_ID = { openai: /^(?:gpt|o\d|chatgpt)[a-z0-9._-]{0,80}$/, anthropic: /^claude-[a-z0-9][a-z0-9._-]{0,80}$/ };
+const MODEL_ID = { openai: /^(?:gpt|o\d|chatgpt)[a-z0-9._-]{0,80}$/, anthropic: /^claude-[a-z0-9][a-z0-9._-]{0,80}$/, upstage: /^(?:solar|syn)-[a-z0-9][a-z0-9._-]{0,80}$/ };
 export const benchModel=(provider,value)=>typeof value==='string'&&(MODEL_ID[provider]||new RegExp('^'+provider+'-[a-z0-9][a-z0-9._-]{0,80}$')).test(value)?value:null;
 function endpoint(env,provider,model=STAGE_MODELS[provider]) {
-  const value=env[provider==='gemini'?'GEMINI_BASE':provider==='openai'?'OPENAI_BASE':'DEEPSEEK_BASE'] || BASE[provider];
+  const value=env[provider==='gemini'?'GEMINI_BASE':provider==='openai'?'OPENAI_BASE':provider==='upstage'?'UPSTAGE_BASE':'DEEPSEEK_BASE'] || BASE[provider];
   let url;try{url=new URL(value);}catch{fail(503,'provider_configuration');}
   const local=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
   if (url.username||url.password||url.search||url.hash||url.protocol!=='https:'&&!(local&&url.protocol==='http:')) fail(503,'provider_configuration');
@@ -127,14 +127,16 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const count=Math.max(256,Math.min(32768,Number(maxTokens)||8192));
   /* function calling (grade-tools.js, OpenAI format): DeepSeek and OpenAI as given; Gemini with the same tools as
      functionDeclarations beside its response schema (Gemini 3). JSON comes back for the last answer */
-  const useTools=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&(provider==='deepseek'||provider==='openai');
+  const useTools=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&(provider==='deepseek'||provider==='openai'||provider==='upstage');
   const geminiCalls=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&provider==='gemini';
   /* Gemini's own tools (geminiTools, e.g. [{code_execution:{}}]: it crops and zooms into a photo itself) */
   const builtIn=provider==='gemini'&&Array.isArray(geminiTools)?geminiTools.filter(t=>t&&typeof t==='object').slice(0,4):[];
   const geminiToolList=[...(geminiCalls?[{functionDeclarations:tools.map(t=>({name:t.function.name,description:t.function.description,parameters:t.function.parameters}))}]:[]),...builtIn];
   const toolLog=[];
   const jsonRules=rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{});
-  const body=provider==='anthropic'?null:provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],response_format:{type:'json_object'},max_completion_tokens:count,
+  /* Upstage's Solar speaks OpenAI's chat completions (api.upstage.ai/v1), with max_tokens for the answer's room (bench only) */
+  const body=provider==='anthropic'?null:provider==='upstage'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_tokens:count,temperature:0}:
+    provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_completion_tokens:count,
       ...(['minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
     provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],...(geminiToolList.length?{tools:geminiToolList}:{}),
     /* temperature is ignored by Gemini 3.6 Flash and newer (Google's changelog); it is sent only where it still counts */
