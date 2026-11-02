@@ -1,19 +1,19 @@
-<h1 class="title">T3. 반도체의 PN 접합 (PN junctions in semiconductors) — 풀이</h1>
+<h1 class="title">풀이</h1>
 
 
 <div class="task">
-<p><b>A1.</b> 접촉 면적을 $A$라 하자. 부피 전하 밀도는 $\rho = \pm q_e N_{a,d}$(정공은 $+$, 전자는 $-$)이므로, 정공과 전자의 총전하가 0이 된다는 조건은 $AN_ad_p = AN_dd_n$을 뜻한다. 따라서</p>
+<p><b>A1</b>. 접촉 면적을 $A$라 하자. 부피 전하 밀도는 $\rho = \pm q_e N_{a,d}$(정공은 $+$, 전자는 $-$)이므로, 정공과 전자의 총전하가 0이 된다는 조건은 $AN_ad_p = AN_dd_n$을 뜻한다. 따라서</p>
 <div class="ans">$$N_ad_p = N_dd_n.$$</div></div>
 
 <div class="task">
-<p><b>A2.</b> 미분형 가우스 법칙에 따르면</p>
+<p><b>A2</b>. 미분형 가우스 법칙에 따르면</p>
 $$\mathrm{div}\vec E = \frac{\rho}{\varepsilon_0\varepsilon}.$$
 <p>$\vec E = \vec E(x)$이므로</p>
 $$\mathrm{div}\vec E = \frac{dE_x}{dx}$$
 <p>이고, 이로써 주어진 식이 증명된다.</p></div>
 
 <div class="task">
-<p><b>A3.</b> A2의 결과와 함께, 농도와 부피 전하 밀도 사이의 관계 $\rho = \pm q_eN_{a,d}$(정공은 $+$, 전자는 $-$)를 이용하면 다음을 얻는다.</p>
+<p><b>A3</b>. A2의 결과와 함께, 농도와 부피 전하 밀도 사이의 관계 $\rho = \pm q_eN_{a,d}$(정공은 $+$, 전자는 $-$)를 이용하면 다음을 얻는다.</p>
 $$\frac{dE_x}{dx} = \begin{cases} -\dfrac{q_eN_a}{\varepsilon_0\varepsilon}, & -d_p \le x \le 0,\\[2mm] \dfrac{q_eN_d}{\varepsilon_0\varepsilon}, & 0 < x \le d_n,\\[2mm] 0, & x < -d_p \text{ 또는 } x > d_n.\end{cases}$$
 <p>이제 부정적분을 구하고 적분 상수를 정하면 된다. 답을 더 빨리 얻기 위해 정적분을 직접 계산하자. $E_x(\pm\infty) = 0$이므로</p>
 $$E_x(x) = \int_{-\infty}^{x}E'(x)\,dx = -\int_{x}^{+\infty}E'(x)\,dx.$$
@@ -21,18 +21,18 @@ $$E_x(x) = \int_{-\infty}^{x}E'(x)\,dx = -\int_{x}^{+\infty}E'(x)\,dx.$$
 <div class="ans">$$E_x(x) = \begin{cases} -\dfrac{q_eN_a(x+d_p)}{\varepsilon_0\varepsilon}, & -d_p \le x \le 0,\\[2mm] \dfrac{q_eN_d(x-d_n)}{\varepsilon_0\varepsilon}, & 0 < x \le d_n,\\[2mm] 0, & x < -d_p \text{ 또는 } x > d_n.\end{cases}$$</div></div>
 
 <div class="task">
-<p><b>A4.</b> 1차원에서는 $\varphi'(x) = -E_x(x)$이다. $\varphi(0) = 0$ 조건을 이용하면 정전기 퍼텐셜을 다음과 같이 나타낼 수 있다.</p>
+<p><b>A4</b>. 1차원에서는 $\varphi'(x) = -E_x(x)$이다. $\varphi(0) = 0$ 조건을 이용하면 정전기 퍼텐셜을 다음과 같이 나타낼 수 있다.</p>
 $$\varphi(x) = -\int_0^x E_x(x)\,\mathrm{d}x.$$
 <p>적분을 직접 계산하면 다음을 얻는다.</p>
 <div class="ans">$$\varphi(x) = \begin{cases} -\dfrac{q_eN_ad_p^2}{2\varepsilon_0\varepsilon}, & x < -d_p,\\[2mm] \dfrac{q_eN_a(x^2 + 2d_px)}{2\varepsilon_0\varepsilon}, & -d_p \le x < 0,\\[2mm] \dfrac{q_eN_d(2d_nx - x^2)}{2\varepsilon_0\varepsilon}, & 0 \le x < d_n,\\[2mm] \dfrac{q_eN_dd_n^2}{2\varepsilon_0\varepsilon}, & x \ge d_n.\end{cases}$$</div>
 <div class="ans">$$\Delta\varphi = \frac{q_e\left(N_ad_p^2 + N_dd_n^2\right)}{2\varepsilon\varepsilon_0}.$$</div></div>
 
 <div class="task">
-<p class="code"><b>A5.</b></p>
+<p class="code"><b>A5</b>.</p>
 <figure><img src="S3_fig1.png" style="width:74mm"><figcaption>퍼텐셜 $\varphi(x)$의 정성적 그래프.</figcaption></figure></div>
 
 <div class="task">
-<p><b>A6.</b> A4로부터</p>
+<p><b>A6</b>. A4로부터</p>
 $$\Delta\varphi = \frac{q_e\left(N_ad_p^2 + N_dd_n^2\right)}{2\varepsilon\varepsilon_0}.$$
 <p>A1에서 얻은 식 $N_ad_p = N_dd_n$을 이용하면</p>
 $$\Delta\varphi = \frac{q_e\left(N_ad_p^2 + \frac{N_a^2}{N_d}d_p^2\right)}{2\varepsilon\varepsilon_0} = \frac{q_eN_a(N_a+N_d)d_p^2}{2\varepsilon\varepsilon_0N_d}.$$
@@ -42,14 +42,14 @@ $$\Delta\varphi = \frac{q_e\left(\frac{N_d^2}{N_a}d_n^2 + N_dd_n^2\right)}{2\var
 <div class="ans">$$d_p = \sqrt{\frac{2\varepsilon\varepsilon_0\Delta\varphi N_d}{q_eN_a(N_a+N_d)}} \approx 58.7~\mathrm{nm},\qquad d_n = \sqrt{\frac{2\varepsilon\varepsilon_0\Delta\varphi N_a}{q_eN_d(N_a+N_d)}} \approx 117.5~\mathrm{nm}.$$</div></div>
 
 <div class="task">
-<p><b>A7.</b> A3에서 얻은 $E_x(x)$로부터, 전기장 절댓값의 최댓값은 $x = 0$에서 얻어지며 그 값은 다음과 같다.</p>
+<p><b>A7</b>. A3에서 얻은 $E_x(x)$로부터, 전기장 절댓값의 최댓값은 $x = 0$에서 얻어지며 그 값은 다음과 같다.</p>
 $$E_{\max} = \frac{q_eN_ad_p}{\varepsilon\varepsilon_0}.$$
 <p>A6에서 얻은 $d_p$의 식을 대입하면 다음을 얻는다.</p>
 <div class="ans">$$E_{\max} = \sqrt{\frac{2q_e\Delta\varphi N_aN_d}{\varepsilon\varepsilon_0(N_a+N_d)}} \approx 9.08\cdot 10^6~\mathrm{V/m}.$$</div></div>
 
 
 <div class="task">
-<p><b>B1.</b> $n(x)$의 분포식으로부터 다음이 성립한다.</p>
+<p><b>B1</b>. $n(x)$의 분포식으로부터 다음이 성립한다.</p>
 $$\frac{n(x=+\infty)}{n(x=-\infty)} = \exp\left(-\frac{U_n(x=+\infty) - U_n(x=-\infty)}{kT}\right)$$
 <p>전압을 가하기 전에는 $n(x=+\infty) = N_d$, $n(x=-\infty) = n_{10}$이다. 전압을 가하면 전자 하나의 위치 에너지 차이 $U_n(x=+\infty) - U_n(x=-\infty)$는 $(-q_e)\cdot(-V) = q_eV$만큼 변한다. 문제의 본문에 따르면 $n$형 반도체의 전자 농도는 전압과 무관하게 $N_d$이다. 따라서 전압을 가한 뒤에도 $n(x=+\infty) = N_d$이지만, $n(x=-\infty) = n_1$이 된다. 따라서</p>
 $$\frac{N_d}{n_1} = \exp\left(-\frac{q_eV}{kT}\right)\cdot\frac{N_d}{n_{10}},$$
@@ -64,7 +64,7 @@ $$p_1 = p_{10}\cdot\exp\left(\frac{q_eV}{kT}\right).$$
 <div class="ans">$$n_1 = n_{10}\cdot\exp\left(\frac{q_eV}{kT}\right),\qquad p_1 = p_{10}\cdot\exp\left(\frac{q_eV}{kT}\right).$$</div></div>
 
 <div class="task">
-<p><b>B2.</b> $n$형 반도체의 단면적을 $A$라 하자. 짧은 시간 $\Delta t$ 동안, 고려하는 작은 부피 안에서 정공 수의 변화를 계산하자. 재결합으로 인한 변화는 $\left(\frac{dp_1}{dt}\right)_{\mathrm{rec}}A\Delta x\Delta t$이다. 두 평면을 통한 확산으로 인한 변화는 $J_p(x)A\Delta t$(좌표 $x$에서)와 $-J_p(x+\Delta x)A\Delta t$(좌표 $x+\Delta x$에서)이다. 정공의 총수, 따라서 농도는 일정하므로 전체 변화는 0이어야 한다.</p>
+<p><b>B2</b>. $n$형 반도체의 단면적을 $A$라 하자. 짧은 시간 $\Delta t$ 동안, 고려하는 작은 부피 안에서 정공 수의 변화를 계산하자. 재결합으로 인한 변화는 $\left(\frac{dp_1}{dt}\right)_{\mathrm{rec}}A\Delta x\Delta t$이다. 두 평면을 통한 확산으로 인한 변화는 $J_p(x)A\Delta t$(좌표 $x$에서)와 $-J_p(x+\Delta x)A\Delta t$(좌표 $x+\Delta x$에서)이다. 정공의 총수, 따라서 농도는 일정하므로 전체 변화는 0이어야 한다.</p>
 $$\left(\frac{dp_1}{dt}\right)_{\mathrm{rec}}A\Delta x\Delta t + J_p(x)A\Delta t - J_p(x+\Delta x)A\Delta t = 0.$$
 <p>따라서 다음을 얻는다.</p>
 $$\left(\frac{dp_1}{dt}\right)_{\mathrm{rec}} = \frac{J_p(x+\Delta x) - J_p(x)}{\Delta x} = \frac{dJ_p(x)}{dx} = -D_p\frac{d^2p_1}{dx^2}.$$
@@ -76,7 +76,7 @@ $$\left(\frac{dp_1}{dt}\right)_{\mathrm{rec}} = -\frac{\Delta p}{\tau_p}$$
 <div class="ans">$$\frac{d^2\Delta p}{dx^2} = \frac{\Delta p}{\tau_pD_p}$$</div></div>
 
 <div class="task">
-<p><b>B3.</b> B2에서 얻은 방정식의 일반해는 다음 꼴이다.</p>
+<p><b>B3</b>. B2에서 얻은 방정식의 일반해는 다음 꼴이다.</p>
 $$\Delta p = a\exp\left(-\frac{x}{\sqrt{\tau_pD_p}}\right) + b\exp\left(\frac{x}{\sqrt{\tau_pD_p}}\right),$$
 <p>여기서 $a$, $b$는 계수이다. $x \to +\infty$일 때 정공 농도는 평형값 $p_{10}$에 가까워져야 하므로 $\Delta p \to 0$이고, 따라서 $b = 0$이다. 그러므로</p>
 $$\Delta p \sim \exp\left(-\frac{x}{\sqrt{\tau_pD_p}}\right),$$
@@ -84,7 +84,7 @@ $$\Delta p \sim \exp\left(-\frac{x}{\sqrt{\tau_pD_p}}\right),$$
 <div class="ans">$$L_p = \sqrt{\tau_pD_p} \approx 2.24\cdot 10^{-5}~\mathrm{m}.$$</div></div>
 
 <div class="task">
-<p><b>B4.</b> B3에서 얻은 $\Delta p$의 식으로부터, $x > d_n$에 대해 다음을 얻는다.</p>
+<p><b>B4</b>. B3에서 얻은 $\Delta p$의 식으로부터, $x > d_n$에 대해 다음을 얻는다.</p>
 $$p_1(x) = p_{10} + a\exp\left(-\frac{x}{L_p}\right),$$
 <p>여기서 $a$는 어떤 계수이다. 공핍층 안에서 농도 $p(x)$는 볼츠만 분포를 따른다. 따라서</p>
 $$\frac{p(d_n)}{p(-d_p)} = \exp\left(-\frac{U_p(d_n) - U_p(-d_p)}{kT}\right).$$
@@ -97,13 +97,13 @@ $$a = p_{10}\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right)\exp\left(\frac{d_n
 <div class="ans">$$p_1(x) = p_{10} + p_{10}\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right)\exp\left(-\frac{x - d_n}{L_p}\right)$$</div></div>
 
 <div class="task">
-<p><b>B5.</b> 정공 전류를 계산하기 위해, 공핍층 경계 근처의 $n$형 영역을 생각하자. 여기서 정공의 플럭스는 확산으로 결정된다.</p>
+<p><b>B5</b>. 정공 전류를 계산하기 위해, 공핍층 경계 근처의 $n$형 영역을 생각하자. 여기서 정공의 플럭스는 확산으로 결정된다.</p>
 $$\begin{aligned}J_p = -D_p\frac{dp_1}{dx} &= \frac{D_pp_{10}}{L_p}\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right)\exp\left(-\frac{x - d_n}{L_p}\right)\bigg|_{x=d_n}\\ &= \frac{D_pp_{10}}{L_p}\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right).\end{aligned}$$
 <p>전류 밀도는 $j_p = q_eJ_p$이므로 다음을 얻는다.</p>
 <div class="ans">$$j_p = \frac{q_eD_pp_{10}}{L_p}\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right).$$</div></div>
 
 <div class="task">
-<p><b>B6.</b> B5와 마찬가지로, 전자 전류의 식은 다음 꼴이다.</p>
+<p><b>B6</b>. B5와 마찬가지로, 전자 전류의 식은 다음 꼴이다.</p>
 $$j_n = \frac{q_eD_nn_{10}}{L_n}\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right).$$
 <p>다음을 고려하면</p>
 $$p_{10} = \frac{n_i^2}{N_d},\qquad n_{10} = \frac{n_i^2}{N_a},$$
@@ -113,11 +113,11 @@ $$I = q_eAn_i^2\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right)\left(\frac{D_p}
 <div class="ans">$$I = q_eAn_i^2\left(\exp\left(\frac{q_eV}{kT}\right) - 1\right)\left(\frac{1}{N_d}\sqrt{\frac{D_p}{\tau_p}} + \frac{1}{N_a}\sqrt{\frac{D_n}{\tau_n}}\right).$$</div></div>
 
 <div class="task">
-<p class="code"><b>B7.</b></p>
+<p class="code"><b>B7</b>.</p>
 <figure><img src="S3_fig2.png" style="width:74mm"><figcaption>$I(V)$의 정성적 그래프.</figcaption></figure></div>
 
 <div class="task">
-<p><b>B8.</b> 포화 전류는 다음과 같다.</p>
+<p><b>B8</b>. 포화 전류는 다음과 같다.</p>
 $$I_\infty = q_eAn_i^2\left(\frac{1}{N_d}\sqrt{\frac{D_p}{\tau_p}} + \frac{1}{N_a}\sqrt{\frac{D_n}{\tau_n}}\right) = 5.77\cdot 10^{-16}~\mathrm{A},$$
 <p>$V = 0.7~\mathrm{V}$에서의 전류는 $I_1 = 3.23\cdot 10^{-4}~\mathrm{A}$이다.</p>
 <div class="ans">$$I_\infty = 5.77\cdot 10^{-16}~\mathrm{A},\qquad I_1 = 3.23\cdot 10^{-4}~\mathrm{A}.$$</div>

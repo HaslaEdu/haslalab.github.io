@@ -1,0 +1,159 @@
+<style>@page{@top-right{content:"July, 2025"}} .grid2{display:grid;grid-template-columns:1fr 1fr;gap:2mm 4mm;margin:2mm 0} .grid2 img{width:100%} table.num{font-size:10.5pt}</style>
+<h1 class="title">풀이</h1>
+
+<div class="task">
+<p><b>A1</b>. $\vec M$의 크기의 제곱은</p>
+$$M^2 = \vec M\cdot\vec M$$
+<p>이므로, 그 시간 미분은</p>
+$$\frac{\partial}{\partial t}M^2 = 2\vec M\cdot\frac{\partial\vec M}{\partial t}.$$
+<p>임의의 벡터 $\vec a$, $\vec b$에 대해 벡터곱 $\vec a\times\vec b$는 두 벡터에 수직이다. 특히 벡터 $\vec M\times\vec B_{\rm eff}$와 $\vec M\times\dfrac{\partial\vec M}{\partial t}$는 $\vec M$에 수직이므로, LLG 방정식에 따라 $\vec M$과 $\dfrac{\partial\vec M}{\partial t}$는 서로 수직이다. 따라서</p>
+$$\vec M\cdot\frac{\partial\vec M}{\partial t} = 0,\qquad \frac{\partial}{\partial t}M^2 = 0$$
+<p>이고, $\vec M$의 크기는 일정하다.</p>
+<div class="ans">$$\frac{\partial}{\partial t}M^2 = 2\vec M\cdot\frac{\partial\vec M}{\partial t} = 0$$</div></div>
+
+<div class="task">
+<p><b>A2</b>. 다음 방정식의 $z$ 성분을 생각하자.</p>
+$$\frac{d\vec m}{dt} = -\frac{\gamma}{1+\alpha^2}\,\vec m\times\vec B_{\rm eff} - \frac{\alpha\gamma}{1+\alpha^2}\Bigl((\vec m\cdot\vec B_{\rm eff})\,\vec m - \vec B_{\rm eff}\Bigr).$$
+<p>벡터곱 $(\vec m\times\vec B_{\rm eff})$는 $z$축에 수직이므로, 방정식에는 두 번째 항만 기여한다. $\vec m\cdot\vec B_{\rm eff} = m_zB_0$임을 고려하면</p>
+$$\dot m_z = \frac{\alpha\gamma}{1+\alpha^2}B_0\,(1 - m_z^2).$$
+<p>변수를 분리하면</p>
+$$\frac{dm_z}{1 - m_z^2} = \frac{\alpha\gamma}{1+\alpha^2}B_0\,dt$$
+<p>이고, 이를 $0$부터 $t$까지 적분하면</p>
+$$\frac{1}{2}\ln\frac{1+m_z(t)}{1-m_z(t)}\Biggr|_0^t = \frac{\alpha\gamma}{1+\alpha^2}B_0t.$$
+<p>초기 조건 $m_z(0) = 0$을 대입하면</p>
+$$\frac{1}{2}\ln\frac{1+m_z(t)}{1-m_z(t)} = \frac{\alpha\gamma}{1+\alpha^2}B_0t$$
+<p>이고, 답을 얻는다.</p>
+<div class="ans">$$m_z(t) = \frac{\exp\left(\dfrac{\alpha\gamma B_0t}{1+\alpha^2}\right) - \exp\left(-\dfrac{\alpha\gamma B_0t}{1+\alpha^2}\right)}{\exp\left(\dfrac{\alpha\gamma B_0t}{1+\alpha^2}\right) + \exp\left(-\dfrac{\alpha\gamma B_0t}{1+\alpha^2}\right)} = \tanh\frac{\alpha\gamma B_0t}{1+\alpha^2}$$</div></div>
+
+<div class="task">
+<p><b>A3</b>. <b>첫 번째 풀이.</b> 벡터 $\vec m$의 $xy$ 평면 위 사영을 $\vec m_{xy}$라 하자. 벡터 $\vec B_{\rm eff}$는 $z$축 방향이므로 그 $xy$ 평면 위 사영은 0이다. 또한 $\vec m\cdot\vec B_{\rm eff} = m_zB_0$이고</p>
+$$\vec m\times\vec B_{\rm eff} = (\vec m_{xy} + m_z\vec e_z)\times\vec B_{\rm eff} = \vec m_{xy}\times\vec B_{\rm eff}\qquad(\vec e_z\times\vec B_{\rm eff} = 0)$$
+<p>이므로, LLG 방정식의 $xy$ 평면 위 사영은 다음 꼴이다.</p>
+$$\frac{d\vec m_{xy}}{dt} = -\frac{\gamma}{1+\alpha^2}\,\vec m_{xy}\times\vec B_{\rm eff} - \frac{\alpha\gamma}{1+\alpha^2}\,m_zB_0\,\vec m_{xy}.$$
+<figure style="float:right;width:40mm;margin:0 0 2mm 4mm"><img src="S1_fig1.png" style="width:40mm"></figure>
+<p>여기서 첫 번째 항(크기 $\gamma B_0m_{xy}/(1+\alpha^2)$)은 $\vec m_{xy}$에 수직이므로 $\vec m_{xy}$를 회전시킨다. 두 번째 항은 $\vec m_{xy}$에 평행하며 길이를 바꾼다. 시간 $dt$ 동안 수직 방향 변화 성분은</p>
+$$dm_\perp = \frac{\gamma B_0m_{xy}}{1+\alpha^2}\,dt$$
+<p>이므로, 회전각은 $d\varphi = dm_\perp/m_{xy}$이고 각속도는</p>
+$$\Omega = \frac{d\varphi}{dt} = \frac{\gamma B_0}{1+\alpha^2}.$$
+<p style="clear:both">$\Omega$를 얻는 또 다른 방법은, 어떤 벡터가 각속도 $\vec\Omega$로 회전하면 그 시간 미분이</p>
+$$\frac{d\vec m_{xy}}{dt} = \vec\Omega\times\vec m_{xy}$$
+<p>임을 이용하는 것이다. LLG 방정식의 첫 번째 항과 비교하면 곧바로</p>
+$$\vec\Omega = \frac{\gamma\vec B_{\rm eff}}{1+\alpha^2} = \frac{\gamma B_0}{1+\alpha^2}\,\vec e_z.$$
+<p>따라서 답은</p>
+<div class="ans">$$\Omega = \frac{\gamma B_0}{1+\alpha^2}$$</div>
+<p><b>두 번째 풀이.</b> LLG 방정식을 $x$축과 $y$축에 사영하면</p>
+$$\begin{cases}\dot m_x = -\dfrac{\gamma B_0}{1+\alpha^2}\,m_y - \dfrac{\alpha\gamma B_0m_z}{1+\alpha^2}\,m_x,\\[2mm] \dot m_y = \dfrac{\gamma B_0}{1+\alpha^2}\,m_x - \dfrac{\alpha\gamma B_0m_z}{1+\alpha^2}\,m_y.\end{cases}$$
+<p>새 복소 변수 $\hat m = m_x + im_y$를 도입하고, 두 번째 식에 $i$를 곱한 뒤 두 식을 더하면</p>
+$$\frac{d}{dt}(m_x + im_y) = -\frac{\gamma B_0}{1+\alpha^2}(-m_y + im_x) - \frac{\alpha\gamma m_zB_0}{1+\alpha^2}(m_x + im_y).$$
+<p>이 식은 다음과 같이 다시 쓸 수 있다.</p>
+$$\frac{d\hat m}{dt} = i\frac{\gamma B_0}{1+\alpha^2}\,\hat m - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}\,\hat m.$$
+<p>변수를 분리하면</p>
+$$\int\frac{d\hat m}{\hat m} = \int dt\left(\frac{i\gamma B_0}{1+\alpha^2} - \frac{\alpha\gamma B_0}{1+\alpha^2}\,m_z\right).$$
+<p>초기 조건 $\hat m(0) = m_x(0) + im_y(0) = 1$에 의해</p>
+$$\ln\hat m = \frac{i\gamma B_0t}{1+\alpha^2} - \frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t dt\,m_z(t),\qquad \hat m = A(t)\,e^{i\varphi(t)},$$
+<p>여기서</p>
+$$A(t) = \exp\left(-\frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t m_z(t)\,dt\right)$$
+<p>는 $\vec m_{xy}$의 크기이고,</p>
+$$\varphi = \frac{\gamma B_0t}{1+\alpha^2}$$
+<p>는 $\vec m_{xy}$의 회전각에 해당한다. 왜냐하면</p>
+$$m_x(t) = A(t)\cos\varphi(t),\qquad m_y(t) = A(t)\sin\varphi(t)$$
+<p>이기 때문이다. 각 $\varphi$는 $t$의 일차 함수이므로 각속도는 일정하고, 그 값은 앞에서 얻은 것과 같다. $m_z(t)$의 식을 이용하면 크기 $A(t)$도 구할 수 있다.</p>
+$$\ln A(t) = -\frac{\alpha\gamma B_0}{1+\alpha^2}\int_0^t m_z(t)\,dt = -\int_0^t\frac{\alpha\gamma B_0\,dt}{1+\alpha^2}\tanh\frac{\alpha\gamma B_0t}{1+\alpha^2} = -\ln\cosh\frac{\alpha\gamma B_0t}{1+\alpha^2},$$
+<p>즉</p>
+$$A(t) = \frac{1}{\cosh\dfrac{\alpha\gamma B_0t}{1+\alpha^2}}$$
+<p>이므로 $m_z^2 + m_{xy}^2 = 1$, 즉 $\vec m$의 크기는 일정하며 1과 같다. 여기서 다음 공식과 관계식을 이용하였다.</p>
+$$\int\tanh x\,dx = \int\frac{\sinh x}{\cosh x}dx = \int\frac{d(\cosh x)}{\cosh x} = \ln\cosh x + C,\qquad \tanh^2x + \frac{1}{\cosh^2x} = 1.$$
+<p>복소수를 쓰지 않고 해를 다음 꼴로 찾을 수도 있다.</p>
+$$m_x = A(t)\cos\varphi(t),\qquad m_y = A(t)\sin\varphi(t).$$
+<p>이 식들을 $\dot m_x$, $\dot m_y$의 방정식에 대입하면</p>
+$$\frac{dA}{dt}\cos\varphi - A\sin\varphi\,\frac{d\varphi}{dt} = -\frac{\gamma B_0}{1+\alpha^2}A\sin\varphi - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}A\cos\varphi;$$
+$$\frac{dA}{dt}\sin\varphi + A\cos\varphi\,\frac{d\varphi}{dt} = \frac{\gamma B_0}{1+\alpha^2}A\cos\varphi - \frac{\alpha\gamma B_0m_z}{1+\alpha^2}A\sin\varphi.$$
+<p>이 방정식들로부터 크기와 각의 시간 미분을 얻을 수 있다.</p>
+$$\frac{d\varphi}{dt} = \frac{\gamma B_0}{1+\alpha^2},\qquad \frac{dA}{dt} = -\frac{\alpha\gamma B_0m_z}{1+\alpha^2}A.$$
+<p>이 관계식들은 처음 연립방정식에서 $\cos\varphi$와 $\sin\varphi$의 계수가 같다는 것에 지나지 않는다. 첫 번째 식은 앞에서 얻은 각속도의 식을, 두 번째 식은 크기의 미분을 준다.</p>
+<div class="ans">$$\Omega = \frac{\gamma B_0}{1+\alpha^2}$$</div></div>
+
+<div class="task">
+<p><b>B1</b>. 정의에 의해</p>
+$$\vec B_{{\rm eff},i} = -\frac{1}{a^3}\frac{\partial W(\vec M_i)}{\partial\vec M_i},$$
+<p>여기서 $W$는 계의 에너지이며, 문제에 주어진 기여들로 이루어진다.</p>
+$$W = \sum_i a^3\left(-\frac{KM_{i,z}^2}{2M_0^2} + \frac{K_1M_{i,y}^2}{2M_0^2}\right) - \sum_i\frac{A\vec M_i\vec M_{i+1}a}{M_0^2} - \sum_i a^3\vec B_0\vec M_i.$$
+<p>첫 번째 항은 비등방성 에너지로, 각 칸의 자화에는 그중 한 항만 의존하므로 대응하는 자기장은 다음 꼴이다.</p>
+$$\vec B_{{\rm an},i} = \frac{\partial}{\partial M_{z,i}}\frac{KM_{i,z}^2}{2M_0^2}\,\vec e_z - \frac{\partial}{\partial M_{y,i}}\frac{K_1M_{i,y}^2}{2M_0^2}\,\vec e_y = \frac{KM_{i,z}}{M_0^2}\vec e_z - \frac{k_1KM_{i,y}}{M_0^2}\vec e_y = \frac{K}{M_0}\left(m_{i,z}\vec e_z - k_1m_{i,y}\vec e_y\right).$$
+<p>문제의 식과 비교하면</p>
+$$B_{\rm an} = \frac{K}{M_0}.$$
+<p>$W$의 두 번째 항은 교환 에너지이며, 그중 두 항이 $\vec M_i$에 의존한다.</p>
+$$-\frac{Aa}{M_0^2}\vec M_i(\vec M_{i-1} + \vec M_{i+1}),$$
+<p>따라서 유효 자기장은</p>
+$$\vec B_{\rm ex} = -\frac{1}{a^3}\frac{\partial}{\partial\vec M_i}\left(-\frac{Aa}{M_0^2}\vec M_i(\vec M_{i-1} + \vec M_{i+1})\right) = \frac{A}{a^2M_0^2}(\vec M_{i-1} + \vec M_{i+1}) = \frac{A}{a^2M_0}(\vec m_{i-1} + \vec m_{i+1}).$$
+<p>그러므로</p>
+$$B_{\rm ex} = \frac{A}{a^2M_0}.$$
+<p>마지막 항을 미분하면, 문제에 쓰여 있는 대로 외부 자기장 $\vec B_0$의 유효 자기장 기여를 얻는다.</p>
+<div class="ans">$$B_{\rm an} = \frac{K}{M_0} \approx 0.83~{\rm T};\qquad B_{\rm ex} = \frac{A}{M_0a^2} \approx 83.33~{\rm T};\qquad \omega \approx 1.47\cdot 10^{11}~{\rm s^{-1}}$$</div></div>
+
+<div class="task">
+<p><b>B2</b>. $\alpha = 0.5$, $\beta = 100$, $b = 0$, $T = 10$으로 프로그램을 실행하자. 그림은 $[0, 10]$ 범위의 여러 $t$에서 $m_x$, $m_y$, $m_z$의 그래프이다. 마지막 두 그림의 자화 분포가 거의 같으므로 정상 상태로 볼 수 있다. 특히 정상 상태의 특징 중 하나는 모든 $x$에서 $m_y(x) = 0$이라는 것이다.</p>
+<div class="grid2"><img src="S1_fig2.png"><img src="S1_fig3.png"><img src="S1_fig4.png"><img src="S1_fig5.png"></div>
+<figure><img src="S1_fig6.png" style="width:110mm"></figure>
+<p>$d$ 측정의 정확도를 높이기 위해, $t = 10$에서 $m_z(x)$ 그래프의 일부를 양 끝 점이 $m_z = \pm 0.5$에 해당하도록 확대하자. $m_z = 0.5$와 $m_z = -0.5$인 점의 $x$좌표는 각각 $x_{\rm left} = 95.5$와 $x_{\rm right} = 106.5$이므로 $d = x_{\rm right} - x_{\rm left} = 11.0$이다.</p>
+<figure><img src="S1_fig7.png" style="width:110mm"></figure>
+<div class="ans">$$d = 11.0$$</div></div>
+
+<div class="task">
+<p><b>B3</b>. B2에서 $\alpha = 0.5$, $\beta = 100$, $b = 0$, $T = 10$일 때 마지막에 정상 상태에 이르는 것을 보았다. 따라서 이 문항에서는 같은 $\alpha$와 $T$ 값과 서로 다른 $\beta\in[20, 400]$을 사용한다. 폭 $d$는 B2의 풀이에서 설명한 방법으로 $t = 10$에서 구한다. 계가 실제로 정상 상태인지 확인하기 위해, 그래프에서 $t = 10$일 때 $m_y\equiv 0$인지 확인한다. 자구벽의 왼쪽(오른쪽) 경계의 좌표를 $x_{\rm left}$($x_{\rm right}$)라 하면, 벽의 폭은 $d = x_{\rm right} - x_{\rm left}$로 계산할 수 있다.</p>
+<table class="num"><tr><th>$\beta$</th><th>$x_{\rm left}$</th><th>$x_{\rm right}$</th><th>$d$</th></tr>
+<tr><td>20</td><td>98.5</td><td>103.5</td><td>5.0</td></tr><tr><td>100</td><td>95.5</td><td>106.5</td><td>11.0</td></tr><tr><td>200</td><td>93.2</td><td>108.8</td><td>15.6</td></tr><tr><td>300</td><td>91.5</td><td>110.5</td><td>19.0</td></tr><tr><td>400</td><td>90.0</td><td>112.0</td><td>22.0</td></tr></table></div>
+
+<div class="task">
+<p><b>B4</b>. $d(\beta) = \gamma\beta^c$라 하자. 여기서 $\gamma$는 상수 계수이다. 그러면 $\ln d(\beta) = \ln\gamma + c\ln\beta$이므로 $\ln d(\ln\beta)$ 의존성은 선형이고 그 기울기는 $c$와 같다. B3에서 얻은 점들에 대해 $\ln d$와 $\ln\beta$를 계산한 뒤, 그 데이터로 Excel에서 그래프를 그린다.</p>
+<table class="num"><tr><th>$\ln\beta$</th><td>3.00</td><td>4.61</td><td>5.30</td><td>5.70</td><td>5.99</td></tr><tr><th>$\ln d$</th><td>1.61</td><td>2.40</td><td>2.75</td><td>2.94</td><td>3.09</td></tr></table>
+<figure><img src="S1_fig8.png" style="width:100mm"><figcaption>$\ln d(\ln\beta)$ 그래프.</figcaption></figure>
+<div class="ans">$$c = 0.495$$</div></div>
+
+<div class="task">
+<p><b>C1</b>. $b\ne 0$인 값을 정하고 프로그램을 실행하면, 자구벽이 오른쪽으로 움직이는 것을 볼 수 있다.</p>
+<div class="ans">오른쪽으로.</div></div>
+
+<div class="task">
+<p><b>C2</b>. 프로그램을 시작하면 과도 과정이 시작된다. $b$가 충분히 작으면 계는 등속 운동에 자리 잡고, 자기장 회전각 $\varphi$는 더 이상 변하지 않는다. 운동이 등속이 될 만큼 시간 $T$가 충분히 길어야 한다. 길이 $L$은 그 시간 동안 자구벽이 오른쪽 끝에 닿지 않을 만큼이어야 한다. 한편 $T$와 $L$이 커질수록 실행 시간이 늘어나므로, 알맞은 매개변수를 찾아야 한다.</p>
+<p>프로그램 시작 직후에는 아직 등속 운동이 확립되지 않으므로, 자구벽 중심의 처음 위치를 $x_0$이라 할 때 속도를 $v = \dfrac{x - x_0}{t}$로 계산할 수 없다. 측정은 정상 상태에서 해야 하므로 과도 과정의 지속 시간을 알아야 한다. 이를 위해 어떤 $b$에 대해 $x(t)$ 의존성을 재어 대략적인 과도 시간을 어림한다. 올바른 측정을 하는 또 다른 방법은 $m_y$의 모양이 시간에 따라 더 이상 변하지 않을 때만 재는 것이다(그래프를 확대해야 $m_y$의 변화가 보인다). 정상 상태에서는 측정이 매우 정확하므로, 벽 중심의 속도를 두 점만으로 $v = \dfrac{x_2 - x_1}{t_2 - t_1}$로 계산해도 충분하다.</p>
+<p>자구벽의 중심에서는 $m_z = 0$이고 $m_x = m_{x0}$, $m_y = m_{y0}$가 둘 다 최대이다(그래프에서 $m_x$와 $m_y$의 최댓값의 좌표와 $m_z(x) = 0$인 좌표 $x$가 거의 일치함을 볼 수 있다). 따라서 등속 운동이 확립된 뒤에는 동등한 관계식 $m_{x0} = \cos\varphi$, $m_{y0} = \sin\varphi$ 중 어느 것으로도 각 $\varphi$를 구할 수 있다.</p>
+$$\varphi = \arcsin m_{y0} = \arccos m_{x0} = \arctan\frac{m_{y0}}{m_{x0}}.$$
+<p>$m_y/m_x$의 그래프를 그려 보면 $\varphi$가 실제로 좌표에 의존하지 않음을 알 수 있다(참가자에게 이런 확인을 요구하지는 않는다).</p>
+<figure><img src="S1_fig10.png" style="width:100%"><figcaption>과도 과정: $m_y$가 커진다.</figcaption></figure>
+<figure><img src="S1_fig9.png" style="width:100%"><figcaption>정상 상태: $m_y$의 모양이 일정하다.</figcaption></figure>
+<p>$b &gt; 0.1$이면 자구벽의 거동이 바뀐다. 자화각 $\varphi$가 커지고 자기 모멘트가 $z$축 둘레로 회전한다. 자구벽의 운동에는 그 중심의 진동이 동반된다. $b &lt; 0.1$인 경우와 달리 $m_y$가 때때로 $m_x$보다 커진다(주황색과 파란색 그래프가 서로 바뀐다). 따라서 $b_{\rm cr}\approx 0.1$이다. $b &lt; 0.1$에 대해 $v(b)$와 $\varphi(b)$를 재자.</p>
+<table class="num"><tr><th>$b$</th><th>$m_y$</th><th>$t_1$</th><th>$x_1$</th><th>$t_2$</th><th>$x_2$</th><th>$v$</th><th>$\varphi$</th></tr>
+<tr><td>0.03</td><td>0.152</td><td>40</td><td>101.5</td><td>50</td><td>116.5</td><td>1.50</td><td>0.152</td></tr>
+<tr><td>0.05</td><td>0.258</td><td>40</td><td>134.0</td><td>50</td><td>158.5</td><td>2.45</td><td>0.261</td></tr>
+<tr><td>0.06</td><td>0.316</td><td>40</td><td>149.0</td><td>50</td><td>178.0</td><td>2.90</td><td>0.322</td></tr>
+<tr><td>0.07</td><td>0.378</td><td>40</td><td>164.0</td><td>50</td><td>197.0</td><td>3.30</td><td>0.387</td></tr>
+<tr><td>0.08</td><td>0.446</td><td>35</td><td>159.0</td><td>45</td><td>195.0</td><td>3.60</td><td>0.462</td></tr>
+<tr><td>0.09</td><td>0.525</td><td>37</td><td>176.0</td><td>43</td><td>200.0</td><td>4.00</td><td>0.893</td></tr></table>
+<p class="note">편집자 주: 원문 표의 마지막 줄 $\varphi = 0.893$은 $\sin 2\varphi$의 값이다. $\varphi = \arcsin 0.525 = 0.553$이고 $\sin 2\varphi = 0.893$이다(C4 그래프의 마지막 점).</p></div>
+
+<div class="task">
+<p><b>C3</b>. $v(b)$ 그래프를 그린다.</p>
+<figure><img src="S1_fig11.png" style="width:100mm"></figure>
+<p>그 기울기는</p>
+<div class="ans">$$\frac{dv}{db} = 42$$</div></div>
+
+<div class="task">
+<p><b>C4</b>. $v(\sin 2\varphi)$ 그래프를 그린다. 그 기울기는 $v_c = 4.2$이다. $b = b_{\rm cr}$에서 자구벽의 속도가 임계값이 되므로</p>
+$$b_{\rm cr} = \frac{v_c}{dv/db} = 0.10.$$
+<figure><img src="S1_fig12.png" style="width:100mm"></figure>
+<div class="ans">$$v_c = 4.2,\qquad b_{\rm cr} = 0.10$$</div></div>
+
+<div class="task">
+<p class="code"><b>C5</b>.</p>
+<div class="ans">$$v_c = 4.2\,a\omega = 1850~{\rm m/s};\qquad B_{\rm cr} = b_{\rm cr}B_{\rm an} = 0.083~{\rm T}$$</div></div>
+
+<div class="task">
+<p><b>C6</b>. $\alpha = 0.2$, $\beta = 100$, $b = 0.2$, $T = 100$, $L = 200$으로 프로그램을 실행한다. $t = 3, 6, 9, 12, \ldots, 90$에서 $m_z(x)$를 그리고, 그래프가 $x$축과 만나는 점의 $x$좌표로 $x_{\rm center}$를 정한다.</p>
+<table class="num"><tr><th>$t$</th><th>$x_{\rm center}$</th><th>$t$</th><th>$x_{\rm center}$</th><th>$t$</th><th>$x_{\rm center}$</th></tr>
+<tr><td>3</td><td>57.4</td><td>33</td><td>115.2</td><td>63</td><td>151.4</td></tr><tr><td>6</td><td>70.1</td><td>36</td><td>105.9</td><td>66</td><td>163.3</td></tr>
+<tr><td>9</td><td>82.0</td><td>39</td><td>106.2</td><td>69</td><td>170.2</td></tr><tr><td>12</td><td>89.2</td><td>42</td><td>117.1</td><td>72</td><td>170.0</td></tr>
+<tr><td>15</td><td>86.1</td><td>45</td><td>129.9</td><td>75</td><td>158.3</td></tr><tr><td>18</td><td>77.3</td><td>48</td><td>140.2</td><td>78</td><td>162.8</td></tr>
+<tr><td>21</td><td>81.5</td><td>51</td><td>143.6</td><td>81</td><td>174.9</td></tr><tr><td>24</td><td>93.6</td><td>54</td><td>137.2</td><td>84</td><td>187.4</td></tr>
+<tr><td>27</td><td>106.1</td><td>57</td><td>131.0</td><td>87</td><td>196.2</td></tr><tr><td>30</td><td>115.0</td><td>60</td><td>138.7</td><td>90</td><td>196.1</td></tr></table>
+<figure><img src="S1_fig13.png" style="width:110mm"><figcaption>$x_{\rm center}(t)$ 그래프.</figcaption></figure></div>
