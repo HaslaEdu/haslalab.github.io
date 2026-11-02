@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import jpeg from "jpeg-js";
-import { pageStrips, cropJpeg } from "./src/page-tiles.js";
+import { pageStrips, cropJpeg, reencodeJpeg } from "./src/page-tiles.js";
 
 const page = (width, height) => {
   const data = new Uint8Array(width * height * 4);
@@ -44,4 +44,15 @@ test("a box of the page (0..1000, Gemini's box_2d) is cut out with its padding, 
   assert.equal(cropJpeg(bytes, [500, 500, 501, 501], 0, 0), null, "too small to read");
   assert.equal(cropJpeg(bytes, [1, 2, 3]), null);
   assert.equal(cropJpeg(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), [0, 0, 500, 500]), null);
+});
+
+test("a JPEG page encoded again at a lower quality is a smaller JPEG of the same size; anything else is null", () => {
+  const w = 160, h = 200, data = new Uint8Array(w * h * 4);
+  for (let i = 0; i < data.length; i += 4) data[i] = data[i + 1] = data[i + 2] = (i * 7919) % 251, data[i + 3] = 255;
+  const bytes = new Uint8Array(jpeg.encode({ width: w, height: h, data }, 95).data), smaller = reencodeJpeg(bytes, 60);
+  const back = jpeg.decode(smaller, { useTArray: true });
+  assert.deepEqual([back.width, back.height], [w, h]);
+  assert.ok(smaller.length < bytes.length);
+  assert.equal(reencodeJpeg(bytes, 10), null);
+  assert.equal(reencodeJpeg(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), 80), null);
 });

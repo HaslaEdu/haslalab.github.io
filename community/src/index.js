@@ -36,7 +36,7 @@ import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './l
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages,referenceText} from './reference-images.js';
 import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
-import { pageStrips, cropJpeg } from './page-tiles.js';
+import { pageStrips, cropJpeg, reencodeJpeg } from './page-tiles.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './focus-read.js';
@@ -2900,9 +2900,12 @@ async function labBench(env, s, job) {
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
       const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles, confusions: typeof spec.read.confusions === 'boolean' ? spec.read.confusions : undefined, media: spec.read.media, boxes: typeof spec.read.boxes === 'boolean' ? spec.read.boxes : undefined }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
         proof: spec.proof?.provider || null, proofBench: spec.proof ? { model: spec.proof.model, thinking: spec.proof.thinking } : undefined };
-      const read = await labReadChecked(env, s, roles, page.task, bytes, page.mime, m, page.kind), text = readText(read);
-      const stored = labStoredReading(env, bytes, { ocr: read.ocr?.text ?? text, text, read, legible: read.legible, status: 'done' });
-      out = { page_id: page.id, read: stored.read, ocr: stored.ocr, legible: stored.legible };
+      /* read.requality: the page encoded again at that JPEG quality first (would a smaller upload read as well?) */
+      const again = Number.isFinite(spec.read.requality) ? reencodeJpeg(bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), spec.read.requality) : null;
+      const used = again || bytes;
+      const read = await labReadChecked(env, s, roles, page.task, used, page.mime, m, page.kind), text = readText(read);
+      const stored = labStoredReading(env, used, { ocr: read.ocr?.text ?? text, text, read, legible: read.legible, status: 'done' });
+      out = { page_id: page.id, read: stored.read, ocr: stored.ocr, legible: stored.legible, ...(again ? { bytes_in: bytes.byteLength, bytes_read: again.byteLength } : {}) };
     } else if (spec.stage === 'grade') {
       const pages = await labPagesOf(env, s.id), mine = pages.filter(p => p.task === spec.task);
       for (const p of mine) {

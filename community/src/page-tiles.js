@@ -49,3 +49,13 @@ export function cropJpeg(bytes, box, padY = 20, padX = 40, quality = 90) {
   for (let r = r0; r < r1; r++) out.set(data.subarray((r * width + c0) * 4, (r * width + c1) * 4), (r - r0) * w * 4);
   return encode({ width: w, height: r1 - r0, data: out }, quality);
 }
+
+/** the same JPEG page encoded again at another quality (the admin bench: does a smaller upload read as well?); null for
+    anything that is not a JPEG it can decode */
+export function reencodeJpeg(bytes, quality) {
+  if (!(bytes instanceof Uint8Array) || bytes.length < 4 || bytes[0] !== 0xff || bytes[1] !== 0xd8 || !(quality >= 30 && quality <= 100)) return null;
+  let image;
+  try { image = jpeg.decode(bytes, { useTArray: true, formatAsRGBA: true, maxResolutionInMP: MAX_PIXELS / 1e6, maxMemoryUsageInMB: 160 }); }
+  catch { return null; }
+  return image.width * image.height > MAX_PIXELS ? null : encode(image, quality);
+}
