@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -2363,6 +2363,7 @@ function labScore(scheme, raw, pages, opts = {}) {
     return res;
   });
   finalAnswerFull(items, scheme);                                                     // a part whose correct final answer earns its marks
+  impliedSteps(items, scheme);                                                       // a step credited «even if done inherently»
   /* R15: of alternative methods for one question only the one that earns most counts */
   { const alt = new Map(scheme.items.map(it => [it.id, it.alt])), { dropped } = oneMethod(items.map(i => ({ ...i, alt: alt.get(i.id) })), i => i.got);
     for (const i of items) if (dropped.has(i.id) && i.got > 0) { i.got = 0; i.decision = "not_met"; i.rules = [...new Set([...(i.rules || []), "R15"])]; } }
@@ -2443,6 +2444,54 @@ async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lan
   const out = await labVision(env, s, parts, MOD_SCHEMA, items.length > 20 ? 12288 : 6144, m, "moderate");   // a long list of missing items needs room
   if (!Array.isArray(out.raw?.items)) throw new Error("moderation_schema");
   return out;
+}
+/* The step audit (bench grade.audit, LAB_STEP_AUDIT on): DeepSeek-Math-V2's meta-verification turned on our errors.
+   After grading, every step of the scheme is checked once more against the transcripts alone, as a claim and not a new
+   grading: is the step's own content written (states), is a line in its place something else (differs: another equation,
+   a wrong sign, a missing or extra factor or term), or is nothing there (absent)? The quote it gives must be on the pages
+   (code checks); a step that states its content earns its points, one that differs or is absent earns none. Re-grading
+   with the same model kept the same mistakes (2026-11-02: 75% repeat); checking each claim is a different question. */
+const AUDIT_SCHEMA = { type: "object", properties: { items: { type: "array", items: { type: "object", properties: {
+  id: { type: "string" }, verdict: { type: "string", enum: ["states", "differs", "absent"] }, page: N({ type: "integer" }), quote: { type: "string" }, reason: { type: "string" } },
+  required: ["id", "verdict", "page", "quote", "reason"] } } }, required: ["items"] };
+const AUDIT_STEPS_MAX = 90;
+function auditableSteps(scheme) {
+  /* steps the model marks by judgement: not values, graphs or tables (code checks those), not a step the solution credits
+     implicitly (impliedSteps does), not one that carries its own partial credit */
+  return (scheme.items || []).filter(it => it.role === "step" && !["value", "graph", "table"].includes(it.type) && !INHERENT.test(String(it.what || ""))
+    && !(Array.isArray(it.partial) && it.partial.length) && +it.points > 0).slice(0, AUDIT_STEPS_MAX);
+}
+async function labAuditSteps(env, s, task, mine, scheme, raw, m, family, kind, tone, lessons = "") {
+  const steps = auditableSteps(scheme);
+  if (!steps.length) return { raw, log: [] };
+  const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
+  const list = steps.map(it => ({ id: it.id, step: String(it.what || "").slice(0, 400), ...(it.alt ? { method: it.alt } : {}), ...(first.get(it.id)?.quote ? { cited: String(first.get(it.id).quote).slice(0, 200) } : {}) }));
+  const pages = mine.map(p => `[p${p.no} · ${labPageTag(p)} · ${p.task}] read: ${compactRead(p.read) || "(could not be read)"}${p.ocr != null ? "\n<<OCR>>\n" + p.ocr + "\n<<END>>" : ""}`).join("\n\n");
+  const parts = [{ text: [stablePrefix(family, kind, tone), ...lessonLines(lessons), "", "[TASK: audit steps]",
+    `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} exam. For each step of the marking scheme below, decide from the candidate's transcribed pages whether the candidate wrote that step. This is a check of what is written, not a grading:`,
+    "- states: a line on the pages states the step's own content: the same equation or relation (rearranged, in other symbols or units, or used inside a longer line), or for an idea, the idea itself. Copy that line from the transcript, character for character, as quote, with its page.",
+    "- differs: the candidate wrote a line in the step's place, but it is not the step: another equation, a wrong sign, a missing or extra factor or term, another constant or initial condition. Copy that line as quote.",
+    "- absent: nothing on the pages states the step. quote is empty.",
+    "Judge each step against its own content only. A correct final result does not show a step that is not written. A step of another method (method differs) is absent unless that method's own line is written. cited is where an earlier reader looked; check it, and look on every page, the working sheets too. Return every listed step.",
+    "<<STEPS>>" + JSON.stringify(list) + "<<END>>"].join("\n") }, { text: pages }];
+  const out = await labVision(env, s, parts, AUDIT_SCHEMA, Math.min(16384, 1500 + 120 * steps.length), m, "audit");
+  const all = mine.map(p => [p.ocr, p.text, compactRead(p.read)].join("\n")).join("\n");
+  const log = [], items = [...(raw.items || [])], byId = new Map(items.map((x, k) => [String(x?.id), k]));
+  for (const a of Array.isArray(out.raw?.items) ? out.raw.items : []) {
+    const it = steps.find(x => x.id === String(a?.id)); if (!it) continue;
+    const k = byId.get(it.id), g = k == null ? null : items[k], before = +(g?.score) || 0;
+    const seen = a.verdict === "states" && quoteOnPage(a.quote, all);
+    const on = seen ? (mine.find(p => p.no === a.page && quoteOnPage(a.quote, [p.ocr, p.text, compactRead(p.read)].join("\n"))) || mine.find(p => quoteOnPage(a.quote, [p.ocr, p.text, compactRead(p.read)].join("\n")))) : null;
+    let score = before;
+    if (a.verdict === "states" && on) score = +it.points;
+    else if (a.verdict === "differs" || a.verdict === "absent") score = 0;
+    log.push({ id: it.id, verdict: a.verdict, seen, before, after: score });
+    if (score === before) continue;
+    const next = { ...(g || { id: it.id, rules: [], note: "" }), score, found: score > 0, ...(score > 0 ? { page: on?.no ?? g?.page ?? null, quote: String(a.quote).slice(0, 300), _quoteRechecked: true } : {}),
+      note: String(a.reason || g?.note || "").slice(0, 600) };
+    if (k == null) { byId.set(it.id, items.length); items.push(next); } else items[k] = next;
+  }
+  return { raw: { ...raw, items }, log };
 }
 async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null) {
   // Typed solutions need their own structured evidence before the numeric/graph/table checks in labScore.
@@ -2530,6 +2579,13 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const out2 = double ? await gradeOnce().catch(e => { console.error("lab second grading", e?.code || e?.message); return null; }) : null;
   await roles?.trace?.('graded');
   let raw = out.raw, moderator = null;
+  /* the step audit, before the code's checks and the recheck of what they doubt */
+  let auditLog = null;
+  if (roles?.audit ?? env.LAB_STEP_AUDIT === "on") {
+    try { const a = await labAuditSteps(env, s, task, mine, scheme, raw, m, family, kind, tone, lessons); raw = a.raw; auditLog = a.log; }
+    catch (e) { console.error("lab step audit", e?.code || e?.message); }
+    await roles?.trace?.('audited');
+  }
   const specOf = new Map(scheme.items.map(it => [it.id, it]));
   /* Math-Verify's check in code: a result whose final expression is not the official one at random points yet has full
      marks, or is the official one in another form yet has under half, is looked at once more with that fact */
@@ -2604,7 +2660,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   await roles?.trace?.('scored');
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
   if (roles?.bench) sc.raw_items = (raw.items || []).map(x => ({ id: String(x?.id), score: +x?.score || 0 }));   // the model's own marks, before the rules in code
-  return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && out.tools ? { tool_calls: out.tools } : {}), ...(roles?.bench && focusLog?.length ? { focus_reads: focusLog } : {}), ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
+  return { status: "graded", raw_items: sc.raw_items, ...(roles?.bench && out.tools ? { tool_calls: out.tools } : {}), ...(roles?.bench && focusLog?.length ? { focus_reads: focusLog } : {}), ...(roles?.bench && auditLog ? { audit: auditLog } : {}), ...(roles?.bench && checks.length ? { expr_checks: checks.map(c => ({ id: c.id, before: c.got, check: c.check })) } : {}), score: sc.score, points: scheme.points, comparison_rubric: labComparisonRubric(scheme.items), grader: out.model + (moderator ? " · moderated by " + moderator.model : ""), regulation: regulationId(family,kind), pages: mine.length, items: sc.items, feedback: sc.feedback, ...(sc.review ? { review: sc.review } : {}) };
 }
 
 /* the items a page's numerical answer was marked wrong for (R12), read once more by Mathpix page by page (focus-read.js) */
@@ -3007,6 +3063,7 @@ async function labBench(env, s, job) {
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
         gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, doubleGrade: spec.grade.double === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
+        audit: spec.grade.audit === true ? true : undefined,
         lessons: typeof spec.grade.lessons === "string" && spec.grade.lessons.trim() ? spec.grade.lessons.trim().slice(0, 12000) : undefined,
         toolRounds: Number.isInteger(spec.grade.toolRounds) && spec.grade.toolRounds > 0 && spec.grade.toolRounds <= 6 ? spec.grade.toolRounds : undefined,
         /* where a bench grading has got to, kept on its row while it runs (a run that never ends shows its last step) */
@@ -3014,7 +3071,7 @@ async function labBench(env, s, job) {
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
       /* raw_score: the model's own marks, each capped at its item and bounded by the paper's headings, with no rule in code */
       const rawBy = new Map((res.raw_items || []).map(x => [x.id, x.score])), rv = it => Math.max(0, Math.min(+it.points || 0, rawBy.get(String(it.id)) ?? 0));
-      out = { expr_checks: res.expr_checks, tool_calls: res.tool_calls, focus_reads: res.focus_reads, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
+      out = { expr_checks: res.expr_checks, tool_calls: res.tool_calls, focus_reads: res.focus_reads, audit: res.audit, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
         items: res.items.map(i => ({ id: i.id, got: i.got, raw: rawBy.get(String(i.id)) ?? null, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, rules: i.rules || [], note: i.note || '' })) };
     } else throw new Error('bench_stage');
   } catch (e) { failed = true; out = { error: String(e?.code || e?.message || 'bench_failed').slice(0, 200), ...(e?.provider_message ? { detail: String(e.provider_message).slice(0, 240) } : {}) }; }
