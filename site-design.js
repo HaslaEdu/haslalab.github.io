@@ -67,6 +67,7 @@ function applySiteAppearance(value){
     value.preference!=="system"&&value.preference!==value.theme)return false;
   document.documentElement.dataset.themePreference=value.preference;document.documentElement.dataset.theme=value.theme;
   try{localStorage.setItem("hlTheme",value.theme);localStorage.setItem("hlThemePreference",value.preference);}catch(e){}
+  try{const url=new URL(location.href);if(url.searchParams.has("theme")){url.searchParams.set("theme",value.preference);history.replaceState(history.state,"",url);}}catch(e){}
   paintSiteTheme();return true;
 }
 function initSiteDesign(){
