@@ -113,7 +113,7 @@ for(const file of ['paper-languages.js','examdur.js','rupho-archive.js','logo/va
 expectedHtml=expectedHtml.replace(/<script src="monthly-figures\.js(?:\?[^"\n]*)?"><\/script>/,'<script src="monthly-figures.js?v='+digest(read('monthly-figures.js'))+'"></script>');
 outputs.set('index.html',expectedHtml);
 let examHtml=read('sim/exam.html');
-for(const file of ['result-comparison.js','exam-network.js'])examHtml=examHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read('sim/'+file))+'"');
+for(const file of ['result-comparison.js','exam-network.js','xlsx-lite.js'])examHtml=examHtml.replace(new RegExp('src="'+file.replaceAll('.','\\.')+'(?:\\?[^"\\n]*)?"'),'src="'+file+'?v='+digest(read('sim/'+file))+'"');
 outputs.set('sim/exam.html',examHtml);
 let contestHtml=read('sim/contest-exam.html');
 for(const file of ['../contest-exams.js','contest-review.js','contest-exam.js','exam-network.js']){

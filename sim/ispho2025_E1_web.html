@@ -182,6 +182,9 @@
 </div>
 </div></div>
 
+<script src="xlsx-lite.js?v=a6eed8e27a12"></script>
+<script src="ispho-xlsx-templates.js?v=eb67b3317a91"></script>
+<script src="vexcel.js?v=72c8e6e6fc72"></script>
 <script>
 "use strict";
 const T={
@@ -1715,7 +1718,7 @@ const OSL={ko:{notepad:"메모장",untitled:"제목 없음",calc:"계산기",exp
     wd:["Su","Mo","Tu","We","Th","Fr","Sa"],month:(y,m)=>new Date(y,m,1).toLocaleDateString("en-US",{month:"long",year:"numeric"}),desk1:"Desktop 1",std:"Standard",justNow:"Just now",bad:"A file name can't contain any of these characters: \\ / : * ? \" < > |",
     loc:"en-US"}};
 const ot=()=>OSL[lang];
-const appName=a=>({spec:ot().spec,files:ot().explorer,note:ot().notepad,calc:ot().calc,edge:"Microsoft Edge",chrome:"Google Chrome",youtube:"YouTube",haslalab:"HaslaLab"})[a];
+const appName=a=>({spec:ot().spec,files:ot().explorer,note:ot().notepad,calc:ot().calc,excel:"Excel",edge:"Microsoft Edge",chrome:"Google Chrome",youtube:"YouTube",haslalab:"HaslaLab"})[a];
 /* the browsers: Edge comes with Windows, Chrome is installed; the live page sits over the canvas */
 const BR={}, isBr=a=>a==="edge"||a==="chrome";
 const BR_LINKS=[{t:{ko:"ISPhO 2025 문제지",en:"ISPhO 2025 problem"},url:lang==="ko"?"../pdfx/ispho/ISPhO_2025_E1_KO.pdf":"https://haslalab-pdf.haslalab.workers.dev/pdf/ISPhO_2025_E1_EN.pdf",ic:"📄",col:"#c0392b"},
@@ -1724,6 +1727,7 @@ function brGet(a){ if(!BR[a]&&window.VBrowser){ BR[a]=VBrowser({kind:a,lang:()=>
 const brTitle=a=>BR[a]?BR[a].title():(lang==="ko"?"새 탭":"New tab");
 const APPS={spec:{title:()=>ot().spec,w:1040,h:640},note:{title:()=>(OS.note.node?OS.note.node.name:OS.note.name||ot().untitled)+" - "+ot().notepad,w:660,h:470},
   calc:{title:()=>ot().calc,w:330,h:540},files:{title:()=>ot().explorer,w:900,h:540},
+  excel:{title:()=>(XL?XL.title():lang==="ko"?"통합 문서1":"Book1")+" - Excel",w:1080,h:650},
   edge:{title:()=>brTitle("edge")+" - Microsoft Edge",w:1060,h:660},chrome:{title:()=>brTitle("chrome")+" - Google Chrome",w:1060,h:660}};
 const OS={wins:[],z:0,start:null,sleep:false,off:false,boot:0,note:{name:null,node:null,text:"",menu:-1,dirty:false,zoom:1,status:true,wrap:false,all:false,undo:null},
   calc:{disp:"0",acc:null,op:null,fresh:true,hist:"",mem:null},kb:false,clickT:0,clickK:null,
@@ -1742,14 +1746,14 @@ const F_DESK=fsNode("Desktop","dir",F_ME,{sys:"desk"}), F_DOCS=fsNode("Documents
   F_PICS=fsNode("Pictures","dir",F_ME,{sys:"pics"}), F_MUSIC=fsNode("Music","dir",F_ME,{sys:"music"}), F_VIDS=fsNode("Videos","dir",F_ME,{sys:"vids"});
 const USERDIRS=[F_DESK,F_DOWN,F_DOCS,F_PICS,F_MUSIC,F_VIDS];
 const F_BIN=fsNode("$Recycle.Bin","bin",F_DESK,{sys:"bin"});
-for(const a of ["edge","chrome","youtube","haslalab","spec","files","note","calc"]) fsNode(a,"lnk",F_DESK,{app:a});
+for(const a of ["edge","chrome","youtube","haslalab","spec","excel","files","note","calc"]) fsNode(a,"lnk",F_DESK,{app:a});
 F_DESK.kids.forEach((n,i)=>n.pos=[0,i]);
 const V_HOME={virt:"home",kids:[]}, V_PC={virt:"pc",kids:[]}, V_GAL={virt:"gallery",kids:[]}, V_NET={virt:"net",kids:[]};
 const isDir=n=>n&&(n.type==="dir"||n.type==="bin"||!!n.virt);
 const ext=n=>{ const m=/\.([^.]+)$/.exec(n.name||""); return m?m[1].toLowerCase():""; };
 const nm=n=>n.virt?ot()[n.virt]:n.sys?ot()[n.sys]:n.type==="lnk"?appName(n.app):n.name;
-const typeOf=n=>n.type==="dir"?ot().tFolder:n.type==="lnk"?ot().tLnk:ext(n)==="csv"?ot().tCsv:ext(n)==="txt"?ot().tTxt:(ext(n)?ext(n).toUpperCase()+" "+ot().tFile:ot().tFile);
-const sizeOf=n=>n.type==="file"?Math.max(1,Math.ceil(n.text.length/1024))+" KB":n.type==="lnk"?"1 KB":"";
+const typeOf=n=>n.type==="dir"?ot().tFolder:n.type==="lnk"?ot().tLnk:ext(n)==="xlsx"?(lang==="ko"?"Microsoft Excel 워크시트":"Microsoft Excel Worksheet"):ext(n)==="csv"?ot().tCsv:ext(n)==="txt"?ot().tTxt:(ext(n)?ext(n).toUpperCase()+" "+ot().tFile:ot().tFile);
+const sizeOf=n=>n.type==="file"?Math.max(1,Math.ceil((n.wb?7000+Object.keys(n.wb.sheets[0].cells).length*40:n.text.length)/1024))+" KB":n.type==="lnk"?"1 KB":"";
 const p2=n=>String(n).padStart(2,"0");
 const fmtT=d=>lang==="ko"?d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate())+" "+(d.getHours()<12?"오전 ":"오후 ")+((d.getHours()+11)%12+1)+":"+p2(d.getMinutes())
   :(d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear()+" "+((d.getHours()+11)%12+1)+":"+p2(d.getMinutes())+(d.getHours()<12?" AM":" PM");
@@ -1768,6 +1772,33 @@ const deskItems=()=>F_DESK.kids;
 function freeCell(skip){ const used=new Set(deskItems().filter(n=>n!==skip&&n.pos).map(n=>n.pos[0]+","+n.pos[1])); for(let c=0;;c++) for(let r=0;r<DROWS();r++) if(!used.has(c+","+r)) return [c,r]; }
 function deskArrange(by){ const L=deskItems().slice(); if(by) L.sort(by); L.forEach((n,i)=>n.pos=[Math.floor(i/DROWS()),i%DROWS()]); }
 const cellXY=p=>[6+p[0]*DCW(),4+p[1]*DCH()];
+/* ── Excel: the tables the paper hands out wait on the desktop (sim/ispho-xlsx-templates.js), workbooks open in vexcel.js ── */
+let XL=null;
+const pathOf=n=>{ const a=[]; for(let q=n;q&&q!==F_ME&&q!==FS;q=q.parent) a.unshift(nm(q)); return a.join("\\"); };
+function xlGet(){ if(!XL&&window.VExcel){ XL=VExcel({lang:()=>lang,host:XLHOST,onclose:()=>{ const w=OS.wins.find(q=>q.a==="excel"); if(w){ w._closing=true; osClose(w); } }}); document.body.appendChild(XL.el); } return XL; }
+function xlOpen(n){ const w=osOpen("excel"); const r=XLHOST.load(n.id); if(r) XL.guard(()=>XL.open(r)); return w; }
+const xlDirs=(d=F_ME,out=[])=>{ for(const k of d.kids||[]) if(k.type==="dir"){ out.push(k); xlDirs(k,out); } return out; };
+const XLHOST={
+  list:()=>allFiles(F_ME).filter(n=>/^(xlsx|csv)$/.test(ext(n))).map(n=>({id:n.id,path:pathOf(n)})),
+  load:id=>{ const n=nodeById(id); if(!n||n.type!=="file") return null; return {name:n.name,id:n.id,folder:n.parent&&n.parent.id,wb:n.wb?HLXlsx.clone(n.wb):HLXlsx.fromCsv(n.text,n.name)}; },
+  save:doc=>{ const n=nodeById(doc.id); if(!n||!n.parent||n.parent.type==="bin") return false;
+    if(ext(n)==="csv"){ const sh=doc.wb.sheets[0]; n.text=HLXlsx.toCsv(sh); } else n.wb=HLXlsx.clone(doc.wb);
+    n.t=new Date(); n.tpl=false; return true; },
+  folders:()=>[F_DESK,F_DOCS,F_DOWN,...xlDirs(F_DESK),...xlDirs(F_DOCS)].filter((d,i,a)=>a.indexOf(d)===i).map(d=>({id:d.id,path:pathOf(d)||nm(d)})),
+  saveAs:(doc,folderId,name,type,si)=>{ const dir=nodeById(+folderId)||F_DOCS; let n=dir.kids.find(k=>k.type==="file"&&k.name.toLowerCase()===name.toLowerCase());
+    if(!n){ n=fsNode(name,"file",dir,{text:""}); if(dir===F_DESK) n.pos=freeCell(n); }
+    if(type==="csv"){ n.text=HLXlsx.toCsv(doc.wb.sheets[si||0]); delete n.wb; } else n.wb=HLXlsx.clone(doc.wb);
+    n.t=new Date(); n.tpl=false; return {id:n.id,name:n.name,folder:dir.id,path:pathOf(n)}; } };
+(()=>{ const P=window.HLIsphoXlsx&&HLIsphoXlsx.pack("2025E1"); if(!P) return;
+  for(const e of P.entries){ const parts=e.path.split("/"); let d=F_DESK;
+    for(let i=0;i<parts.length-(e.dir?0:1);i++){ let k=d.kids.find(q=>q.type==="dir"&&q.name===parts[i]); if(!k){ k=fsNode(parts[i],"dir",d); if(d===F_DESK) k.pos=freeCell(k); } d=k; }
+    if(!e.dir) fsNode(parts[parts.length-1],"file",d,{wb:e.wb,tpl:true}); } })();
+/* in an exam (sim/exam.html) the files written on this laptop are handed in with the answer sheets: workbooks and
+   CSV files as the text the grader reads; a table handed out and never saved is left out */
+window.HL_EXAM_FILES=()=>allFiles(F_ME).filter(n=>!n.tpl&&/^(xlsx|csv|tsv|txt)$/.test(ext(n))).map(n=>{ const path=(()=>{ const a=[]; for(let q=n;q&&q!==F_ME;q=q.parent) a.unshift(q.name); return a.join("/"); })();
+  let text; try{ text=n.wb?HLXlsx.toText(HLXlsx.clone(n.wb),path,{maxRows:150}):/^(csv|tsv)$/.test(ext(n))?HLXlsx.toText(HLXlsx.fromCsv(n.text,n.name),path,{maxRows:60}):"[Text file: "+path+"]\n"+String(n.text).slice(0,40000); }
+  catch(e){ text="[File: "+path+"] (could not be read)"; }
+  return {path,name:n.name,text:text.slice(0,60000)}; });
 /* ── file operations ── */
 function say11(s){ OS.msg=s; OS.msgT=performance.now(); }
 function moveTo(n,dest,cell){ if(!dest||dest.virt||n===dest||(isDir(n)&&inside(n,dest))||n.type==="bin"||n.sys) return false;
@@ -1776,7 +1807,7 @@ function moveTo(n,dest,cell){ if(!dest||dest.virt||n===dest||(isDir(n)&&inside(n
   const [b,e]=splitN(n.name); fsOut(n); n.name=n.type==="dir"?uniq(dest,n.name,""):uniq(dest,b,e); fsAdd(dest,n); n.t=new Date();
   if(dest===F_DESK) n.pos=cell||freeCell(n); return true; }
 function clone(n,dest){ const [b,e]=n.type==="dir"?[n.name,""]:splitN(n.name); const same=n.parent===dest;
-  const c=fsNode(n.type==="dir"?uniq(dest,same?b+ot().copySuf:b,""):uniq(dest,same?b+ot().copySuf:b,e),n.type,dest,{text:n.text,app:n.app});
+  const c=fsNode(n.type==="dir"?uniq(dest,same?b+ot().copySuf:b,""):uniq(dest,same?b+ot().copySuf:b,e),n.type,dest,{text:n.text,app:n.app,...(n.wb?{wb:HLXlsx.clone(n.wb)}:{})});
   if(n.kids&&n.type==="dir") for(const k of n.kids) clone(k,c); if(dest===F_DESK) c.pos=freeCell(c); return c; }
 function trash(n){ if(n.type==="bin"||n.ro||n.sys) return; n.from=n.parent; n.del=new Date(); fsOut(n); fsAdd(F_BIN,n);
   if(OS.note.node===n){ OS.note.node=null; } }
@@ -1792,7 +1823,7 @@ function commitRename(){ const R=OS.ren; if(!R) return; OS.ren=null; const n=R.n
 function openNode(n,w){
   if(n.type==="lnk"){ osOpen(n.app); return; }
   if(isDir(n)){ if(w&&w.a==="files"){ exGo(w,n); } else { const ew=osOpenNew("files"); exGo(ew,n,true); } return; }
-  if(n.type==="file"){ noteLoad(n); } }
+  if(n.type==="file"){ if(/^(xlsx|csv)$/.test(ext(n))&&window.VExcel) xlOpen(n); else noteLoad(n); } }
 function noteLoad(n){ const N=OS.note; N.node=n; N.name=null; N.text=n.text.replace(/\r/g,""); N.dirty=false; N.all=false; osOpen("note"); }
 function noteSave(as){ const N=OS.note, txt=N.text.replace(/\n/g,"\r\n");
   if(N.node&&!as&&N.node.parent&&N.node.parent.type!=="bin"){ N.node.text=txt; N.node.t=new Date(); N.dirty=false; return; }
@@ -1805,14 +1836,15 @@ const label=n=>n.type==="lnk"&&n.label?n.label:nm(n);
 /* HaslaLab is a shortcut to the site itself, opened in Edge inside the laptop */
 function osOpen(a){ if(a==="haslalab"){ const w=osOpen("edge"), b=brGet("edge"); if(b) b.go(new URL("../index.html",location.href).href); return w; }
   if(a==="youtube"){ const w=osOpen("chrome"), b=brGet("chrome"); if(b) b.go("https://www.youtube.com/"); return w; }
-  if(isBr(a)) brGet(a); let w=OS.wins.find(w=>w.a===a);
+  if(isBr(a)) brGet(a); if(a==="excel") xlGet(); let w=OS.wins.find(w=>w.a===a);
   if(!w) return osOpenNew(a);
   w.min=false; w.z=++OS.z; OS.start=null; OS.fly=null; OS.focus=w; return w; }
 function osOpenNew(a){ const n=OS.wins.length; const w={a,x:110+n*30,y:36+n*26,w:APPS[a].w,h:APPS[a].h,min:false,max:false,z:++OS.z};
   if(a==="files") Object.assign(w,{dir:V_HOME,back:[],fwd:[],sel:new Set(),view:"details",sortK:"name",sortD:1,q:"",scroll:0});
   OS.wins.push(w); OS.start=null; OS.fly=null; OS.focus=w; return w; }
 function osTop(){ let t=null; for(const w of OS.wins) if(!w.min&&(!t||w.z>t.z)) t=w; return t; }
-function osClose(w){ OS.wins=OS.wins.filter(q=>q!==w); if(w.a==="spec") stopSpec(); if(w.a==="note") OS.note.menu=-1; if(OS.focus===w) OS.focus="desk"; }
+function osClose(w){ if(w.a==="excel"&&XL&&!w._closing){ XL.guard(()=>{ w._closing=true; osClose(w); }); return; }
+  OS.wins=OS.wins.filter(q=>q!==w); if(w.a==="spec") stopSpec(); if(w.a==="note") OS.note.menu=-1; if(OS.focus===w) OS.focus="desk"; }
 const wRect=w=>w.max?[0,0,VW,VH-TBH]:[w.x,w.y,w.w,w.h];
 osOpen("spec").max=true;
 function exGo(w,dir,fresh){ if(!fresh&&w.dir!==dir){ w.back.push(w.dir); w.fwd=[]; } w.dir=dir; w.sel=new Set(); w.q=""; w.scroll=0; w.min=false; w.z=++OS.z; }
@@ -1837,6 +1869,10 @@ function appIcon(a,x,y,s){ ctx.save(); ctx.translate(x,y); ctx.scale(s/32,s/32);
   if(a==="youtube"){ fillR(1,6,30,21,6,"#ff0000"); poly([[13,11],[21,16.5],[13,22]],"#ffffff"); }
   else if(a==="haslalab"){ fillR(1,1,30,30,7,"#1f3b63"); ctx.fillStyle="#f2c14e"; ctx.font="700 19px 'Segoe UI',Arial,sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText("H",16,17); fillR(7,24,18,2.4,1,"#f2c14e"); }
   else if(a==="spec"){ fillR(0,2,32,28,4,"#1f2f4f"); ctx.strokeStyle="#5fd0ff"; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(3,24); for(let i=0;i<=26;i++){ const t=i/26; ctx.lineTo(3+t*26,24-16*Math.exp(-Math.pow((t-0.55)/0.12,2))-2*Math.sin(t*20)*0.2); } ctx.stroke(); }
+  else if(a==="excel"){ fillR(9,2,21,28,3,"#21a366"); fillR(9,2,21,9,3,"#33c481"); fillR(9,21,21,9,3,"#107c41"); fillR(2,8,16,16,2.5,"#185c37");
+    ctx.strokeStyle="#fff"; ctx.lineWidth=2.2; ctx.beginPath(); ctx.moveTo(6.5,12); ctx.lineTo(13.5,20); ctx.moveTo(13.5,12); ctx.lineTo(6.5,20); ctx.stroke(); }
+  else if(a==="xlsx"){ poly([[6,1],[21,1],[27,7],[27,31],[6,31]],"#ffffff","#8c9aaa",1.2); poly([[21,1],[21,7],[27,7]],"#dfe5ec","#8c9aaa",1); fillR(2,14,14,13,2,"#107c41");
+    ctx.strokeStyle="#fff"; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(5.5,17.5); ctx.lineTo(12.5,23.5); ctx.moveTo(12.5,17.5); ctx.lineTo(5.5,23.5); ctx.stroke(); for(let r=0;r<3;r++) fillR(18,11+r*5,6,3,0,"#9fd1b0"); }
   else if(a==="note"){ fillR(5,1,22,30,3,"#ffffff","#7a8ea6",1.4); fillR(5,1,22,6,2,"#3c8ce7"); for(let i=0;i<4;i++) fillR(9,11+i*5,14,1.6,0,"#8aa0b8"); }
   else if(a==="calc"){ fillR(4,1,24,30,4,"#3a3f47"); fillR(7,4,18,7,1.5,"#d6e8f2"); for(let r=0;r<3;r++) for(let c=0;c<3;c++) fillR(7+c*6.4,14+r*5.6,4.8,4,1,c===2&&r===2?"#4ca3ff":"#8b929c"); }
   else if(a==="files"||a==="dir"||a==="dirOpen"){ fillR(1,6,30,24,3,"#e3a21a"); fillR(1,4,12,6,2,"#e3a21a"); const g=vgrad(10,20,[[0,"#ffd96a"],[1,"#f8b425"]]); fillR(1,10,30,20,3,g);
@@ -1873,7 +1909,7 @@ function nodeIcon(n,x,y,s){ if(n.virt) appIcon(n.virt==="home"?"home":n.virt==="
   else if(n===F_DESK) appIcon("desk",x,y,s); else if(n===F_DOWN) appIcon("down",x,y,s); else if(n===F_DOCS) appIcon("docs",x,y,s);
   else if(n===F_PICS) appIcon("pics",x,y,s); else if(n===F_MUSIC) appIcon("music",x,y,s); else if(n===F_VIDS) appIcon("vids",x,y,s);
   else if(n===FS) appIcon("drive",x,y,s);
-  else if(n.type==="dir") appIcon("dir",x,y,s); else appIcon(ext(n)==="csv"?"csv":ext(n)==="txt"?"txt":"file",x,y,s); }
+  else if(n.type==="dir") appIcon("dir",x,y,s); else appIcon(ext(n)==="xlsx"?"xlsx":ext(n)==="csv"?"csv":ext(n)==="txt"?"txt":"file",x,y,s); }
 /* wraps a label into at most two lines, as under desktop icons */
 function wrap2(s,maxW,size,full){ ctx.font=size+"px "+WF; if(ctx.measureText(s).width<=maxW) return [s];
   const out=[]; let cur=""; for(const ch of s){ if(ctx.measureText(cur+ch).width>maxW){ out.push(cur); cur=ch; } else cur+=ch; } if(cur) out.push(cur);
@@ -1911,6 +1947,7 @@ function osDrawWin(w,small){ const [x,y,ww,hh]=wRect(w), top=osTop()===w, idx=OS
   else if(w.a==="calc") osCalc(w,cx,cy,cw,ch,small);
   else if(w.a==="files") osFiles(w,cx,cy,cw,ch,small);
   else if(isBr(w.a)){ window.VBrowser&&VBrowser.sketch(ctx,cx,cy,cw,ch,w.a,BR[w.a]&&BR[w.a].title()); if(!small) w._cr=[cx,cy,cw,ch]; }
+  else if(w.a==="excel"){ window.VExcel&&VExcel.sketch(ctx,cx,cy,cw,ch,XL&&XL.title()); if(!small) w._cr=[cx,cy,cw,ch]; }
   ctx.restore(); ctx.restore();
   if(!w.max){ fillR(x+0.5,y+0.5,ww-1,hh-1,8,null,top?"rgba(0,95,184,0.45)":"rgba(0,0,0,0.18)",1);
     if(!small){ const E=5; osHit("rs:"+idx+":e",x+ww-E,y+8,E*2,hh-16); osHit("rs:"+idx+":s",x+8,y+hh-E,ww-16,E*2); osHit("rs:"+idx+":w",x-E,y+8,E*2,hh-16); osHit("rs:"+idx+":n",x+8,y-E,ww-16,E+1);
@@ -2141,7 +2178,7 @@ function osDrawTaskbar(small){ const y=VH-TBH, t=ot();
   if(!small) osHit("tb:cal",cx,y+6,124,36);
   fillR(VW-6,y+8,1,32,0,"rgba(0,0,0,0.15)"); if(!small) osHit("tb:desk",VW-6,y,6,TBH); }
 function flyBox(x,y,w,h){ ctx.save(); ctx.shadowColor="rgba(0,0,0,0.3)"; ctx.shadowBlur=30; ctx.shadowOffsetY=8; fillR(x,y,w,h,8,"rgba(243,246,250,0.98)"); ctx.restore(); fillR(x+0.5,y+0.5,w-1,h-1,8,null,"rgba(0,0,0,0.1)",1); }
-const START_APPS=["edge","chrome","youtube","haslalab","spec","files","note","calc"];
+const START_APPS=["edge","chrome","youtube","haslalab","spec","excel","files","note","calc"];
 function osDrawStart(small){ const S0=OS.start; if(!S0) return; const t=ot(), w=640, h=650, x=VW/2-w/2, y=VH-TBH-h-12;
   flyBox(x,y,w,h); if(!small) osHit("startmenu",x,y,w,h);
   fillR(x+32,y+28,w-64,36,18,"#ffffff",S0.search?ACC:"#d6dbe2",S0.search?1.6:1); appIcon("search",x+48,y+39,14);
@@ -2256,7 +2293,7 @@ function itemMenu(n,c){ const t=ot(), inBin=n.parent===F_BIN, sys=n.type==="bin"
   if(sys) return {items:[{t:t.open,bold:1,f:()=>openNode(n)},{sep:1},{t:t.emptyBin,ic:"del",dis:!F_BIN.kids.length,f:()=>{ F_BIN.kids=[]; }}]};
   const top=[{ic:"cut",f:()=>doCut(c,false)},{ic:"copy",f:()=>doCut(c,true)},{ic:"rename",f:()=>startRename(n)},{ic:"share",dis:true},{ic:"del",f:()=>doDelete(c)}];
   const items=[{t:t.open,bold:1,kb:"Enter",f:()=>openNode(n,c.w)}];
-  if(n.type==="file") items.push({t:t.openWith,node:null,ic:null,f:()=>noteLoad(n)});
+  if(n.type==="file"&&ext(n)!=="xlsx") items.push({t:t.openWith,node:null,ic:null,f:()=>noteLoad(n)});
   if(isDir(n)) items.push({t:t.paste,ic:"paste",dis:!OS.clip,f:()=>doPaste(n)});
   items.push({sep:1},{t:t.rename,ic:"rename",kb:"F2",f:()=>startRename(n)},{t:t.del,ic:"del",kb:"Del",f:()=>doDelete(c)});
   return {top,items}; }
@@ -2467,7 +2504,12 @@ function drawLaptopFront(){ const W=CLW, H=CLH, bg=ctx.createLinearGradient(0,0,
   /* touchpad */
   poly([D(0.36,0.69),D(0.64,0.69),D(0.645,0.95),D(0.355,0.95)],"#c6c9ce","#9fa4ab",1); }
 let LAP_PWR=null;
-function brSync(){ for(const a in BR){ const w=OS.wins.find(q=>q.a===a), up=performance.now()>=(OS.boot||0);
+function xlSync(){ if(!XL) return; const w=OS.wins.find(q=>q.a==="excel"), up=performance.now()>=(OS.boot||0);
+  const vis=tab==="prog"&&w&&!w.min&&osTop()===w&&w._cr&&LAP_R&&!OS.start&&!OS.fly&&!OS.menu&&!OS.drag&&!OS.off&&!OS.sleep&&up&&closeCv.offsetParent!==null;
+  if(!vis){ XL.place(0,0,0,0,false); return; }
+  const r=closeCv.getBoundingClientRect(), s=OSXF.s, [cx,cy,cw,ch]=w._cr, x0=Math.max(0,cx), y0=Math.max(0,cy), x1=Math.min(VW,cx+cw), y1=Math.min(VH-TBH,cy+ch);
+  XL.place(r.left+scrollX+OSXF.ox+x0*s, r.top+scrollY+OSXF.oy+y0*s, (x1-x0)*s, (y1-y0)*s, x1>x0&&y1>y0, s); }
+function brSync(){ xlSync(); for(const a in BR){ const w=OS.wins.find(q=>q.a===a), up=performance.now()>=(OS.boot||0);
     const vis=tab==="prog"&&w&&!w.min&&osTop()===w&&w._cr&&LAP_R&&!OS.start&&!OS.fly&&!OS.menu&&!OS.drag&&!OS.off&&!OS.sleep&&up&&closeCv.offsetParent!==null;
     if(!vis){ BR[a].place(0,0,0,0,false); continue; }
     const r=closeCv.getBoundingClientRect(), s=OSXF.s, [cx,cy,cw,ch]=w._cr, x0=Math.max(0,cx), y0=Math.max(0,cy), x1=Math.min(VW,cx+cw), y1=Math.min(VH-TBH,cy+ch);

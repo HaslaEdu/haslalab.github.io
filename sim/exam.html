@@ -140,6 +140,13 @@
   .pg{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px}
   .pg .th{width:150px;aspect-ratio:210/297;background:#0b0e12;border-radius:6px;overflow:hidden;cursor:zoom-in}
   .pg .th img{width:100%;height:100%;object-fit:contain;display:block}
+  .pg .th.file{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:default;color:#9fd1b0;font-size:12px;aspect-ratio:auto;height:96px}
+  .pg .th.file b{font-size:30px;line-height:1}
+  .pg pre.fl{max-height:150px;overflow:auto;margin:4px 0 0;padding:6px 8px;background:var(--deep);border-radius:6px;font:11px/1.45 ui-monospace,Consolas,monospace;white-space:pre;color:var(--ink)}
+  .files{margin-top:18px;text-align:left;font-size:13px}
+  .files .row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+  .files label.btn{display:inline-block;padding:6px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+  .files p{margin:6px 0 0;color:var(--muted);line-height:1.5}
   .pg .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;font-size:12.5px}
   .pg .meta select{font:inherit;font-size:12.5px;background:#2b2f36;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
   .pg .meta .st2{margin-left:auto;color:var(--muted)}
@@ -206,6 +213,7 @@
 <script src="../paper-languages.js?v=1"></script>
 <script src="result-comparison.js?v=b189a5d97ba5"></script>
 <script src="exam-network.js?v=78b6a42ed001"></script>
+<script src="xlsx-lite.js?v=a6eed8e27a12"></script>
 <script>
 "use strict";
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
@@ -865,6 +873,8 @@ async function finishExam() {
   const identity=transport.fingerprint(),id=SES.id;
   finishing = true; clearInterval(tick);
   PAPER.ticket = (PAPER.ticket || 0) + 1; closePaper();
+  /* the files written on a simulator's laptop (its tables, its spectra) are taken before the frames go */
+  collectPcFiles(id);
   /* switch the experiments off: the frames go blank and are removed, nothing keeps running */
   stations.forEach(st => { try { st.frame.src = "about:blank"; } catch (e) {} st.frame.remove(); });
   stations = []; clearInterval(mirror);
@@ -879,6 +889,62 @@ async function finishExam() {
   }
   finishing = false;
   setTimeout(() => { dark.remove();if(identity!==transport.fingerprint()||SES?.id!==id)return;shown="";render(); }, 1800);
+}
+
+/* ── files handed in with the pages: a simulator laptop's workbooks and CSV files, collected at the end of the exam,
+      and any .xlsx/.csv/.txt the candidate attaches.  They go as text (xlsx-lite.js toText) and are graded with the pages ── */
+const FILE_KEY = id => "hlExamFiles:" + id;
+function collectPcFiles(id) {
+  const out = [];
+  stations.forEach(st => { try { const fn = st.win && st.win.HL_EXAM_FILES; if (typeof fn === "function") for (const f of fn() || []) if (f && f.text) out.push({ task: st.id, name: String(f.path || f.name).slice(0, 240), text: String(f.text).slice(0, 60000) }); } catch (e) {} });
+  if (!out.length) return;
+  try { localStorage.setItem(FILE_KEY(id), JSON.stringify(out.slice(0, 60))); } catch (e) {}
+  PC_FILES[id] = out.slice(0, 60);
+}
+const PC_FILES = {};
+async function postFiles(id, files) {          /* in parts, each well inside the server's limits */
+  let r = null;
+  for (let i = 0; i < files.length;) {
+    const part = []; let n = 0;
+    while (i < files.length && part.length < 20 && n + files[i].text.length <= 600000) { n += files[i].text.length; part.push(files[i++]); }
+    if (!part.length) part.push(files[i++]);
+    r = await api("POST", `/lab/sessions/${id}/files`, { files: part });
+  }
+  return r;
+}
+async function sendPcFiles(id) {
+  let files = PC_FILES[id];
+  if (!files) { try { files = JSON.parse(localStorage.getItem(FILE_KEY(id)) || "null"); } catch (e) {} }
+  if (!files || !files.length || !SES || SES.id !== id || SES.status !== "scanning") return;
+  delete PC_FILES[id];
+  try { const r = await postFiles(id, files); try { localStorage.removeItem(FILE_KEY(id)); } catch (e) {}
+    if (r && SES && SES.id === id) { setSession(r.session); pagesSeen = ""; paintPages(SES); }
+    toast(lang === "ko" ? `노트북의 파일 ${files.length}개를 답안과 함께 제출했습니다.` : `${files.length} files from the laptop were handed in with your pages.`, 5000); }
+  catch (e) { PC_FILES[id] = files; toast(errMsg(e)); }
+}
+function filesBoxHtml() {
+  const ko = lang === "ko";
+  return `<details class="files"${REVIEW ? "" : " open"}><summary>${ko ? "엑셀·CSV·텍스트 파일 첨부" : "Attach Excel, CSV or text files"}</summary>
+    <p>${ko ? "표·그래프를 엑셀로 만들도록 한 문제(ISPhO 2025 T1의 B3·C2·C6, 실험의 표 파일 등)는 그 파일을 여기 올리세요. 셀 값·수식·차트(축, 로그 눈금, 추세선)를 읽어 답안과 함께 채점합니다. 시뮬레이터 노트북에서 저장한 파일은 시험이 끝날 때 자동으로 함께 제출됩니다."
+      : "Where a problem asks for its tables and graphs in Excel (ISPhO 2025 T1's B3, C2, C6; an experiment's table files), upload those files here. Their cells, formulas and charts (axes, log scales, trendlines) are read and graded with your pages. Files saved on a simulator's laptop are handed in automatically when the exam ends."}</p>
+    <div class="row">${EX.tasks.length > 1 ? `<select id="fileTask">${EX.tasks.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>` : ""}
+      <label class="btn">${ko ? "파일 선택" : "Choose files"}<input type="file" id="fileIn" multiple accept=".xlsx,.xlsm,.csv,.tsv,.txt,.dat" hidden></label><span id="fileMsg" role="status"></span></div></details>`;
+}
+function bindFilesBox() {
+  const inp = $("fileIn"); if (!inp) return;
+  inp.onchange = async () => {
+    const list = [...inp.files]; inp.value = ""; if (!list.length || !SES) return;
+    const id = SES.id, task = $("fileTask") ? $("fileTask").value : EX.tasks[0], msg = $("fileMsg"), files = [];
+    msg.textContent = "…";
+    for (const f of list) {
+      if (f.size > 20e6) { toast((lang === "ko" ? "너무 큰 파일: " : "Too large: ") + f.name); continue; }
+      try { const text = await HLXlsx.fileToText(f.name, new Uint8Array(await f.arrayBuffer()), { maxRows: 150 }); files.push({ task, name: f.name, text: text.slice(0, 60000) }); }
+      catch (e) { toast((lang === "ko" ? "읽을 수 없는 파일: " : "Could not read: ") + f.name); }
+    }
+    if (!files.length) { msg.textContent = ""; return; }
+    try { const r = await postFiles(id, files); if (r && SES && SES.id === id) { setSession(r.session); pagesSeen = ""; paintPages(SES); } msg.textContent = lang === "ko" ? ` ${files.length}개 첨부함` : ` ${files.length} attached`; }
+    catch (e) { msg.textContent = ""; toast(errMsg(e)); }
+  };
 }
 
 /* ── thirty minutes to scan ── */
@@ -917,7 +983,7 @@ async function scanView() {
   $("main").innerHTML = `<div class="page"><div class="scan">
     <div class="qrbox"><h2>${t().scanH}</h2><div style="color:var(--muted);font-size:12.5px">${t().scanLeft}</div>
       ${REVIEW ? "" : `<div class="big" id="sClock">${hms(SES.scan_until - srvNow())}</div>`}
-      ${providerHtml()}<div id="qrArea"><div class="note">…</div></div>${REVIEW ? `<details style="margin-top:20px;text-align:left"><summary>${lang === "ko" ? "풀이 직접 입력" : "Type your solutions"}</summary><form id="typedAnswers">${EX.tasks.map(task => `<label style="display:block;margin-top:12px"><b>${esc(task)}</b><textarea data-answer="${esc(task)}" maxlength="50000" rows="6" style="display:block;width:100%;box-sizing:border-box;margin:5px 0;background:var(--deep);color:var(--ink);font:inherit">${esc((SES.pages || []).find(p => p.task === task && p.source === "typed")?.text || "")}</textarea></label>`).join("")}<button class="pri" type="submit">${lang === "ko" ? "입력한 답안 저장" : "Save typed answers"}</button><span id="typedSaved" role="status"></span></form></details>` : ""}</div>
+      ${providerHtml()}<div id="qrArea"><div class="note">…</div></div>${REVIEW ? `<details style="margin-top:20px;text-align:left"><summary>${lang === "ko" ? "풀이 직접 입력" : "Type your solutions"}</summary><form id="typedAnswers">${EX.tasks.map(task => `<label style="display:block;margin-top:12px"><b>${esc(task)}</b><textarea data-answer="${esc(task)}" maxlength="50000" rows="6" style="display:block;width:100%;box-sizing:border-box;margin:5px 0;background:var(--deep);color:var(--ink);font:inherit">${esc((SES.pages || []).find(p => p.task === task && p.source === "typed")?.text || "")}</textarea></label>`).join("")}<button class="pri" type="submit">${lang === "ko" ? "입력한 답안 저장" : "Save typed answers"}</button><span id="typedSaved" role="status"></span></form></details>` : ""}${filesBoxHtml()}</div>
     <div class="pages" id="pages"></div></div></div>`;
   pagesSeen = "";
   bindProvider();
@@ -935,6 +1001,7 @@ async function scanView() {
     catch (error) { toast(errMsg(error)); }
     finally { button.disabled = false; }
   };
+  bindFilesBox(); sendPcFiles(sessionId);
   let k = upTok(SES.id);
   if(!k){try{const response=await api("POST",`/lab/sessions/${sessionId}/qr`);if(identity!==transport.fingerprint()||SES?.id!==sessionId)return;k=upTok(sessionId,response.token);}catch(e){}}
   if(SES?.id!==sessionId||SES.status!=='scanning'||shown!=='scan')return;
@@ -998,7 +1065,11 @@ function paintPages(s) {
       ${s.paid ? `<span class="leg good">${t().paid}</span><button id="cancelGrade">${lang === "ko" ? "채점 취소" : "Cancel grading"}</button><button class="pri" id="sub">${t().submit}</button>`
         : `<button id="noGrade">${t().endNoGrade}</button><button class="pri" id="sub">${t().payBtn}</button>`}</div>
     ${s.paid ? "" : `<div class="note w">${t().payNote}</div>`}<div class="note">${t().noEdit}</div>` +
-    (s.pages.length ? s.pages.map(p => `<div class="pg" data-id="${p.id}">
+    (s.pages.length ? s.pages.map(p => p.kind === "data" ? `<div class="pg" data-id="${p.id}">
+      <div class="th file"><b>📊</b>${lang === "ko" ? "첨부 파일" : "File"}</div>
+      <div><div class="meta">#${p.no} <select data-f="task">${s.tasks.map(x => opt(x, p.task, x)).join("")}</select>
+        <b style="overflow-wrap:anywhere">${esc(p.read?.header?.file || "")}</b><button class="rm" data-rm="${p.id}">${t().remove}</button></div>
+        <pre class="fl">${esc(String(p.text || "").slice(0, 1500))}${String(p.text || "").length > 1500 ? "\n…" : ""}</pre></div></div>` : `<div class="pg" data-id="${p.id}">
       <div class="th"${p.source === "typed" ? "" : ` data-img="${p.id}"`}>${p.source === "typed" ? (lang === "ko" ? "직접 입력" : "Typed") : ""}</div>
       <div><div class="meta">#${p.no}
         <select data-f="task">${s.tasks.map(x => opt(x, p.task, x)).join("")}</select>
