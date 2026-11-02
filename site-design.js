@@ -61,13 +61,27 @@ function paintSiteTheme(){
   });
 }
 
+function applySiteAppearance(value){
+  if(!value||typeof value!=="object"||Array.isArray(value)||value.version!==1||
+    !["system","light","dark"].includes(value.preference)||!["light","dark"].includes(value.theme)||
+    value.preference!=="system"&&value.preference!==value.theme)return false;
+  document.documentElement.dataset.themePreference=value.preference;document.documentElement.dataset.theme=value.theme;
+  try{localStorage.setItem("hlTheme",value.theme);localStorage.setItem("hlThemePreference",value.preference);}catch(e){}
+  paintSiteTheme();return true;
+}
 function initSiteDesign(){
   document.getElementById("siteTheme").onclick=()=>{
     const theme=document.documentElement.dataset.theme==="dark"?"light":"dark";
-    document.documentElement.dataset.theme=theme;
-    try{localStorage.setItem("hlTheme",theme);}catch(e){}
-    paintSiteTheme();
+    applySiteAppearance({version:1,preference:theme,theme});
   };
+  addEventListener("haslaedu:appearance",event=>applySiteAppearance(event.detail));
+  if(typeof matchMedia==="function"){
+    const media=matchMedia("(prefers-color-scheme: dark)"),changed=event=>{
+      if(document.documentElement.dataset.themePreference==="system")applySiteAppearance({version:1,preference:"system",theme:event.matches?"dark":"light"});
+    };
+    if(typeof media.addEventListener==="function")media.addEventListener("change",changed);
+    else if(typeof media.addListener==="function")media.addListener(changed);
+  }
 }
 
 const HOME_STUDIO_TEXT = {
