@@ -44,7 +44,7 @@ async function fixture(run){
   const t=Math.floor(Date.now()/1000),tokens={},queue=[],calls=[];
   for(const id of [1,2,3]){tokens[id]=('vision_test_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(?,?,?,'unused',?,5)").run(id,'vision'+id,'Vision '+id,t);sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]),id,t,t+86400);}
   const env={DB,GEMINI_API_KEY:'local-gemini',DEEPSEEK_API_KEY:'local-deepseek',UPSTAGE_API_KEY:'must-never-be-used',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>renderer(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
-  let mathpixText='$v_0 = I_0 / M$ (mathpix)',failProvider=false,emptyWithTools=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null,gradeReply=null,moderateReply=null;
+  let mathpixText='$v_0 = I_0 / M$ (mathpix)',failProvider=false,emptyWithTools=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null,gradeReply=null,moderateReply=null,reviewReply=null;
   const old={fetch:globalThis.fetch,caches:globalThis.caches};globalThis.caches={default:{async match(){},async put(){}}};
   globalThis.fetch=async(input,init={})=>{
     const url=String(input);
@@ -68,7 +68,8 @@ async function fixture(run){
     else if(text.includes('[TASK: analyse solution]'))raw={parts:[{id:'G',points:2,results:[{expression:'v = sqrt(2 g h)'}],milestones:['energy conservation'],accepted_forms:['v^2 = 2 g h']}]};
     else if(text.includes('[TASK: build marking scheme]'))raw={points:2,items:[{id:'G',points:2,type:'derivation',role:'result',sheet:'answer',what:'v = sqrt(2 g h); accept v^2 = 2 g h'}],parts:[],total:2};
     else if(text.includes('[TASK: zoom read]'))raw={reads:[{id:'N',written:'1.59 · 10^18',value:1.59e18,sure:true,alternatives:[]},{id:'K',written:'7.9',value:7.9,sure:true,alternatives:[]}]};
-    else if(text.includes('[TASK: grade]'))raw=gradeReply||visualGrade;
+    else if(text.includes('[TASK: review marking scheme]'))raw=reviewReply||{fixes:[]};
+    else if(text.includes('[TASK: grade]'))raw=Array.isArray(gradeReply)?(gradeReply.length>1?gradeReply.shift():gradeReply[0]):gradeReply||visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
     return provider==='gemini'?Response.json({modelVersion:url.match(/\/models\/([^/:]+):/)?.[1]||VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:body.model||VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
   };
@@ -79,7 +80,7 @@ async function fixture(run){
   const seedScheme=(sid,provider)=>{const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=[provider,VISION_MODELS[provider],REG_VERSION,entry.solution,entry.mark||''].join(':');sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[{id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]}]}),'fixture:'+provider,t);};
   const problem=()=>{const r=sql.prepare("INSERT INTO problems(week,no,kind,subject,level,points,title_ko,title_en,body_ko,body_en,model_ko,model_en,rubric,opens_at,closes_at,created_at)VALUES('2098-W01',1,'essay','physics',1,2,'그래프','Graph','Graph task','Graph task','Direction','Direction',?,?,?,?)").run(JSON.stringify([{id:'G',name:'Direction',max:2,requirement:'Inspect actual graph direction.'}]),t-60,t+7200,t);return Number(r.lastInsertRowid);};
   const ocrPhoto=async(pid,provider,id=1)=>{const form=new FormData();form.append('image',new Blob([scan],{type:'image/jpeg'}),'graph.jpg');const response=await worker.fetch(new Request(`https://vision.local/api/ocr?mode=math&problem_id=${pid}${provider?'&provider='+provider:''}`,{method:'POST',headers:{Authorization:'Bearer '+tokens[id]},body:form}),env);return{status:response.status,data:await response.json()};};
-  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},emptyTools:()=>{emptyWithTools=true;},mathpix:t=>{mathpixText=t;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;},replies:(g,mod)=>{gradeReply=g;moderateReply=mod;}});}finally{Object.assign(globalThis,old);sql.close();}
+  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},emptyTools:()=>{emptyWithTools=true;},mathpix:t=>{mathpixText=t;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;},replies:(g,mod)=>{gradeReply=g;moderateReply=mod;},review:r=>{reviewReply=r;}});}finally{Object.assign(globalThis,old);sql.close();}
 }
 
 test('grading mode spends its token when the sitting opens: the provider is pinned then, and an unpaid start leaves nothing open',async()=>fixture(async({api,start,sql,calls})=>{
@@ -486,6 +487,39 @@ test('experiments: a table read as two pages under one label counts all its rows
   const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
   assert.match(detail,/"id":"T"[^}]*"got":1[,}]/,'8 + 12 rows');
   assert.match(detail,/"id":"G"[^}]*"got":1[,}]/,'the fitted line and the eight points the grader saw in the photo, though the reader counted 4');
+}));
+test('double grading: an item the two gradings mark differently is decided once more from the photos, and the scheme review fixes a one-point window before grading',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies,review})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  env.LAB_DOUBLE_GRADE='on';env.LAB_SCHEME_CHECK='on';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[
+    {id:'V',points:1,type:'value',sheet:'answer',what:'v',ref:'4.5',full_min:4.5,full_max:4.5,unit:'m/s'},
+    {id:'S',points:1,type:'derivation',role:'step',sheet:'any',what:'energy conservation'}]}),'fixture',Math.floor(Date.now()/1000));
+  review({fixes:[{id:'S',add_rule:'0.5 if a factor 2 is missing',reason:'printed in the solution'}],drop:[],final_full:[]});
+  const g=(id,extra)=>({id,found:true,page:1,label:id,rules:[],note:'',...extra});
+  const rev={summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''};
+  replies([{items:[g('V',{score:1,value:4.52,unit_ok:true,quote:'v = 4.52 m/s'}),g('S',{score:1,quote:'E_k + U = const'})],feedback:[],review:rev},
+           {items:[g('V',{score:1,value:4.52,unit_ok:true,quote:'v = 4.52 m/s'}),g('S',{score:0,note:'not written'})],feedback:[],review:rev}],
+    {items:[g('S',{score:0.5,quote:'E_k + U = const',note:'factor 2 missing'})]});
+  const text=pageReading.text;pageReading.text='v = 4.52 m/s\nE_k + U = const';
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.text=text;}
+  const grades=calls.filter(c=>c.text.includes('[TASK: grade]')&&!c.text.includes('[TASK: moderate]')),mods=calls.filter(c=>c.text.includes('[TASK: moderate]'));
+  assert.equal(grades.length,2,'two independent gradings');
+  assert.equal(calls.filter(c=>c.text.includes('[TASK: review marking scheme]')).length,1,'the scheme is reviewed once');
+  assert.match(grades[0].text,/Scheme rule: 0\.5 if a factor 2 is missing/,'the reviewed scheme is the one graded with');
+  const listed=JSON.parse(mods[0].text.split('<<ITEMS>>')[1].split('<<END>>')[0]);
+  assert.deepEqual(listed.map(x=>x.id),['S'],'only the item the gradings disagree on');assert.equal(listed[0].second.score,0);
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"V"[^}]*"got":1[,}]/,'4.52 within the printed tolerance of 4.5');
+  assert.match(detail,/"id":"S"[^}]*"got":0\.5/,'decided once more');
+  const kept=sql.prepare("SELECT scheme FROM lab_schemes WHERE source LIKE 'review:v1:%'").get();assert.ok(kept,'kept for the next candidate');
+  assert.deepEqual(JSON.parse(kept.scheme).review.applied.map(x=>x.fix),['rule'],'a one-point window is already dropped when a scheme is tidied; the review adds the missing rule');
 }));
 test('units in code: an equivalent unit is the right unit, and a value in another unit is converted by code',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';

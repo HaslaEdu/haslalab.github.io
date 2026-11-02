@@ -207,3 +207,61 @@ export function valueMatches(item, v) {
   if (item.tol === "order") return r.value !== 0 && v !== 0 && Math.sign(v) === Math.sign(r.value) && Math.round(Math.log10(Math.abs(v))) === Math.round(Math.log10(Math.abs(r.value)));
   return Math.abs(v - r.value) <= r.tol * (1 + 1e-9);
 }
+
+/* ── automatic scheme review (LAB_SCHEME_CHECK): a scheme is built once per paper and marks every candidate, so a fault
+   in it is a misgrade for all of them (bench 2026-11-02: 3 of 4 item misgrades came back identically on a second
+   grading). Code fixes what code can see; a review call against the official solution proposes the rest, and code
+   applies only what keeps ids and points as they are. */
+const IMPLIED = /(given|awarded|credited|full (?:marks|points))[^.;]{0,80}\bif\b[^.;]{0,120}\b(appears|is stated|is written|is obtained|is given)[^.;]{0,80}even if[^.;]{0,60}(intermediate|not (?:fully|explicitly))/i;
+/** code checks: a full-mark window of one point is widened to the official value's printed tolerance, and an item whose
+    own text gives its marks for a correct result even without the steps makes its part «final answer earns the part» */
+export function checkSchemeCode(scheme) {
+  const items = scheme?.items || [], parts = cleanParts(scheme?.parts), applied = [];
+  for (const it of items) {
+    if (it.type === "value" && it.full_min != null && it.full_max != null && +it.full_min === +it.full_max) {
+      const v = +it.full_min, t = refTolerance(it.ref ?? String(v)) || { tol: .02 * Math.abs(v) };
+      if (Number.isFinite(v) && t.tol > 0) { it.full_min = v - t.tol; it.full_max = v + t.tol; applied.push({ id: it.id, fix: "window" }); }
+    }
+    if (IMPLIED.test(String(it.what || ""))) {
+      const t = tokens(it.id);
+      const own = parts.filter(p => { const pt = tokens(p.id); return pt.length < t.length && pt.every((x, k) => x === t[k]); }).sort((a, b) => tokens(b.id).length - tokens(a.id).length)[0];
+      if (own && !own.final_full) { own.final_full = true; it.role = "result"; applied.push({ id: it.id, fix: "final_full", part: own.id }); }
+    }
+  }
+  return { scheme: { ...scheme, items, parts }, applied };
+}
+const ALT_ID = /^[A-Za-z0-9.]{1,20}\/\d{1,2}$/;
+/** the review call's corrections, applied by code: ids and points never change; a field is set only to a valid value;
+    an item is dropped only where its part's items add up to more than the part's printed points and dropping it does
+    not take them below (a step the scheme lists twice, inside its own result and on its own) */
+export function applySchemeReview(scheme, review) {
+  const items = (scheme?.items || []).map(it => ({ ...it })), parts = cleanParts(scheme?.parts), byId = new Map(items.map(it => [String(it.id), it])), applied = [];
+  const num = x => x != null && x !== "" && Number.isFinite(+x) ? +x : null;
+  for (const f of Array.isArray(review?.fixes) ? review.fixes.slice(0, 80) : []) {
+    const it = byId.get(String(f?.id)); if (!it) continue;
+    const done = [];
+    const lo = num(f.full_min), hi = num(f.full_max);
+    if (it.type === "value" && lo != null && hi != null && lo !== hi) { it.full_min = Math.min(lo, hi); it.full_max = Math.max(lo, hi); done.push("window"); }
+    if (typeof f.ref === "string" && refTolerance(f.ref)) { it.ref = f.ref.trim(); done.push("ref"); }
+    if (["interval", "order", "digits"].includes(f.tol)) { it.tol = f.tol; done.push("tol"); }
+    if (typeof f.unit === "string" && f.unit.trim().length <= 30) { it.unit = f.unit.trim(); done.push("unit"); }
+    if (typeof f.alt === "string" && ALT_ID.test(f.alt.trim())) { it.alt = f.alt.trim(); done.push("alt"); }
+    if (f.alt === "") { delete it.alt; done.push("alt-"); }
+    if (["result", "step"].includes(f.role)) { it.role = f.role; done.push("role"); }
+    if (typeof f.add_rule === "string" && f.add_rule.trim() && !String(it.what || "").includes(f.add_rule.trim())) { it.what = `${it.what || ""} [Scheme rule: ${f.add_rule.trim().slice(0, 400)}]`.slice(0, 4000); done.push("rule"); }
+    if (done.length) applied.push({ id: it.id, fix: done.join(",") });
+  }
+  const owner = id => { const t = tokens(id); return parts.filter(p => { const pt = tokens(p.id); return pt.length < t.length && pt.every((x, k) => x === t[k]); }).sort((a, b) => tokens(b.id).length - tokens(a.id).length)[0] || null; };
+  let kept = items;
+  for (const d of Array.isArray(review?.drop) ? review.drop.slice(0, 20) : []) {
+    const it = kept.find(x => String(x.id) === String(d?.id)); if (!it) continue;
+    const p = owner(it.id); if (!p) continue;
+    const sum = oneMethod(kept.filter(x => owner(x.id) === p)).kept.reduce((a, x) => a + (+x.points || 0), 0);
+    if (sum - it.points >= p.points - 1e-9) { kept = kept.filter(x => x !== it); applied.push({ id: it.id, fix: "drop" }); }
+  }
+  for (const id of Array.isArray(review?.final_full) ? review.final_full.slice(0, 40) : []) {
+    const p = parts.find(x => tokens(x.id).join(".") === tokens(id).join("."));
+    if (p && !p.final_full) { p.final_full = true; applied.push({ id: p.id, fix: "final_full" }); }
+  }
+  return { scheme: { ...scheme, items: kept, parts }, applied };
+}
