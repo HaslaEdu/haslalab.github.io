@@ -20,6 +20,7 @@ F = {
     "nsb": os.path.join(ROOT, "tools/ko/fonts/NotoSans-Bold.ttf"),
     "krb": os.path.join(ROOT, "tools/ko/fonts/NotoSansKR-Bold.ttf"),
     "kr": os.path.join(ROOT, "tools/ko/fonts/NotoSansKR-Regular.ttf"),
+    "pts": os.path.join(HERE, "fonts/PT_Sans-Web-Regular.ttf"),
 }
 INSET = (0.045, 0.035, 0.955, 0.965)
 SIDE = 7 / 25.4 * 72
@@ -103,7 +104,28 @@ def apho2018sol(page, i, n, job):
     text(page, 297.6, 818, f"Page {i}", "ns", 11, "center")
 
 
-STYLES = {"ipho2017": ipho2017, "ipho2017sol": ipho2017sol, "apho2018": apho2018, "apho2018sol": apho2018sol}
+def ispho(page, i, n, job):
+    """ISPhO 2024–2026 answer and working sheets, as the official 2026 sheets: «Theory» / «Experiment» 14.2 pt bold at
+    (56.7, 106.1), the ISPhO logo under it, «A1-i» / «W1-i» 56.7 pt bold to x = 538.6 at baseline 131, the language
+    10 pt to x = 536 at baseline 143, a 2 pt rule at y = 147.5 (measured on ISPhO_2026_TA.pdf)"""
+    text(page, 56.7, 106.1, job.get("section", "Theory"), "nsb", 14.17)
+    image(page, "ispho-logo.png", (56.693, 110.503, 226.772, 142.954))
+    text(page, 538.6, 131.0, f"{job['code']}-{i}", "nsb", 56.69, "right")
+    text(page, 536.0, 143.0, job["langLabel"], "ns", 9.96, "right")
+    page.draw_line((56.7, 147.5), (538.6, 147.5), color=(0, 0, 0), width=1.9925)
+
+
+def ispho2023(page, i, n, job):
+    """ISPhO 2023, as its papers: the logo at the top left of every page, «Question: page i of n» (here «Answer sheet: …»)
+    in PT Sans 14.9 pt at baseline 829.3 (measured on ISPhO_2023_T2_EN.pdf) — ending at x = 552 rather than 574.3, clear
+    of the scanner's bottom-right square"""
+    image(page, "ispho2023-logo.png", (51.024, 11.089, 334.479, 62.596))
+    foot = job.get("foot") or "Answer sheet: page {i} of {n}"
+    s = foot.format(i=i, n=n)
+    text(page, 552.0, 829.3, s, "pts" if s.isascii() else "kr", 14.94, "right")
+
+
+STYLES = {"ispho": ispho, "ispho2023": ispho2023, "ipho2017": ipho2017, "ipho2017sol": ipho2017sol, "apho2018": apho2018, "apho2018sol": apho2018sol}
 
 
 def stamp(job):
@@ -113,6 +135,7 @@ def stamp(job):
         STYLES[job["style"]](page, k + 1, n, job)
         if job["kind"] in ("answer", "working"):
             markers(page)
+    doc.subset_fonts()              # the stamped fonts are embedded whole (a Korean one is ~3 MB)
     tmp = job["pdf"] + ".tmp"
     doc.save(tmp, garbage=3, deflate=True)
     doc.close()

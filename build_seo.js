@@ -62,7 +62,7 @@ const langs = v => {
 for (const [key, c] of Object.entries(DATA)) {
   if (c.general) for (const v of Object.values(c.general)) if (exists(v)) docs.add(v);
   for (const y of c.years) {
-    for (const p of y.problems || []) {
+    for (const p of (y.problems || []).concat(y.sims || [])) {      /* sims: theory problems on a simulator */
       const f = p.files || {};
       const released = !p.hold && !!(f.sim || f.exe);
       const simFile = f.sim ? f.sim.split("?")[0] : null;          /* a page holding several problems takes ?task= */

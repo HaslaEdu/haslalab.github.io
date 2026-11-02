@@ -13,7 +13,8 @@ theory.js keeps only what the site needs:
 
 Korean translations come from tools/theory_ko.json (uploaded with tools/pdf_release.py, not mirrored): a part's own
 go under ko ({paper, sol, mark, answer, rev}), a translation of the whole paper where the site has only the problems
-under w, Korean titles under pk, the general instructions under g ({ko, en}), a Korean working sheet under wk; NBPhO's experiments
+under w, Korean titles under pk, the general instructions under g ({ko, en}), a Korean working sheet under wk (an English one,
+the manifest year's ws, under we); NBPhO's experiments
 in Korean (the booklet numbers in x) under xk.
 
 A file marked "direct": true (USABO, USNCO) is not mirrored: the site links its url as it is, and its part is not
@@ -131,6 +132,10 @@ def load():
                 out[comp][year]['h'] = y['host']
             if y.get('cc'):
                 out[comp][year]['cc'] = y['cc']
+            # an English working sheet for the theory, kept on the site (ISPhO 2024–2026: HaslaLab's, in the 2026
+            # answer-sheet layout); the Korean one comes from theory_ko.json (wk)
+            if re.match(r'^pdfx/[a-z]+/[\w.-]+\.pdf$', y.get('ws', '')):
+                out[comp][year]['we'] = y['ws']
             # the answer key of a multiple-choice paper, per part (KPhE): exam mode grades it on the screen, not by AI
             if y.get('keys'):
                 out[comp][year]['k'] = {k: v for k, v in y['keys'].items() if k in files}

@@ -24,7 +24,9 @@ const fontFaces = `
 @font-face{font-family:"HL Sans";src:url("${url(FONTS + '/NotoSans-Bold.ttf')}");font-weight:700}
 @font-face{font-family:"HL Sans KR";src:url("${url(FONTS + '/NotoSansKR-Regular.ttf')}");font-weight:400}
 @font-face{font-family:"HL Sans KR";src:url("${url(FONTS + '/NotoSansKR-Bold.ttf')}");font-weight:700}
-@font-face{font-family:"HL Serif KR";src:url("${url(FONTS + '/NotoSerifKR-Regular.ttf')}");font-weight:400}`;
+@font-face{font-family:"HL Serif KR";src:url("${url(FONTS + '/NotoSerifKR-Regular.ttf')}");font-weight:400}
+@font-face{font-family:"HL PT Serif";src:url("${url(__dirname + '/fonts/PT_Serif-Web-Regular.ttf')}");font-weight:400}
+@font-face{font-family:"HL PT Serif";src:url("${url(__dirname + '/fonts/PT_Serif-Web-Bold.ttf')}");font-weight:700}`;
 
 /* scan squares, drawn in the header (top pair) and footer (bottom pair) templates, which span the full page width */
 const SQ = 'position:absolute;width:7mm;height:7mm;background:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact';
@@ -53,6 +55,9 @@ const STYLES = {
   ipho2017sol: { stamp: true, margin: { top: '53mm', bottom: '35mm', left: '31mm', right: '31mm' } },
   apho2018: { stamp: true, margin: { top: '51mm', bottom: '25mm', left: '20mm', right: '20mm' } },
   apho2018sol: { stamp: true, margin: { top: '13mm', bottom: '25mm', left: '11mm', right: '14mm' } },
+  /* ISPhO 2024–2026 answer and working sheets (the official 2026 layout), ISPhO 2023 (its papers' layout) */
+  ispho: { stamp: true, margin: { top: '54.22mm', bottom: '22.6mm', left: '20mm', right: '20mm' } },
+  ispho2023: { stamp: true, margin: { top: '23.5mm', bottom: '16mm', left: '5.36mm', right: '5.36mm' } },
 };
 
 const BASE_CSS = `
@@ -90,6 +95,8 @@ const BODY = {
   ipho2017sol: "font-family:Calibri,Carlito,'HL Sans','HL Sans KR',sans-serif",
   apho2018: "font-family:'HL Sans','HL Sans KR',sans-serif;font-size:9.8pt",
   apho2018sol: "font-family:'Times New Roman','Liberation Serif','DejaVu Serif','HL Serif KR',serif;font-size:11pt",
+  ispho: "font-family:'HL Sans','HL Sans KR',sans-serif;font-size:9.96pt",
+  ispho2023: "font-family:'HL PT Serif','HL Serif KR',serif;font-size:9.96pt",
 };
 
 /* «<» inside $…$ would open an HTML tag: escape it there (KaTeX reads the decoded text) */
@@ -125,7 +132,7 @@ async function build(docs) {
       const sheet = doc.kind === 'answer' || doc.kind === 'working';
       if (s.stamp) {
         await p.pdf({ path: out, format: 'A4', printBackground: true, displayHeaderFooter: false, margin: doc.margin || s.margin });
-        stamped.push({ pdf: out, style: doc.style, kind: doc.kind, lang: doc.lang, code: doc.code, langLabel: doc.langLabel, section: doc.section || 'Theory' });
+        stamped.push({ pdf: out, style: doc.style, kind: doc.kind, lang: doc.lang, code: doc.code, langLabel: doc.langLabel, section: doc.section || 'Theory', foot: doc.foot });
       } else {
         await p.pdf({ path: out, format: 'A4', printBackground: true, displayHeaderFooter: true,
           headerTemplate: `<div style="width:100%;height:100%;position:relative;margin:0;-webkit-print-color-adjust:exact">${sheet ? TOP_MARKS : ''}${s.header(doc)}</div>`,
