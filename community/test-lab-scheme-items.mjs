@@ -227,3 +227,16 @@ test("an item with its heading's own id counts under that heading: IPhO 2023 T2 
   const earned = { "A.1": 0.9, "A.1.1": 0.2, "B.1.1": 0.4 };
   assert.equal(cappedSum(items, parts, null, i => earned[i.id] || 0), 1.3, "the final answer and its steps together earn at most A.1's 0.9");
 });
+test('a step credited «even if it was done inherently» is earned with a correct result of its question, not with a wrong one or another question\'s', async () => {
+  const { impliedSteps } = await import('./src/lab-scheme-items.js');
+  const scheme = { items: [{ id: 'A.2.1', role: 'step', what: 'Correct calculation of omega (even if it was done inherently): omega = 2 pi/(24 h)' },
+    { id: 'A.2.2', role: 'result', what: 'h_max = 22 km' }, { id: 'B.1', role: 'step', what: 'Idea that tau = -tau\' (even if it was done inherently)' },
+    { id: 'C.1', role: 'result', what: 'tau' }, { id: 'A.3', role: 'step', what: 'Energy balance' }] };
+  const run = (a22, c1) => impliedSteps([{ id: 'A.2.1', got: 0, points: 0.1 }, { id: 'A.2.2', got: a22, points: 0.3 }, { id: 'B.1', got: 0, points: 0.2 },
+    { id: 'C.1', got: c1, points: 0.5 }, { id: 'A.3', got: 0, points: 0.2 }], scheme);
+  const full = run(0.3, 0.5);
+  assert.equal(full.find(i => i.id === 'A.2.1').got, 0.1, 'the correct h_max needs omega');
+  assert.equal(full.find(i => i.id === 'B.1').got, 0, 'B.1 has no result of its own question; C.1 is another question');
+  assert.equal(full.find(i => i.id === 'A.3').got, 0, 'an ordinary step is never implied');
+  assert.equal(run(0.1, 0.5).find(i => i.id === 'A.2.1').got, 0, 'a wrong result implies nothing');
+});

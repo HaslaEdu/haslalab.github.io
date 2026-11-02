@@ -74,6 +74,24 @@ export function finalAnswerFull(items, scheme) {
   return items;
 }
 
+/* A step the solution credits «even if it was done inherently» (APhO 2025 T1 A.2.1 ω, C.2.1 «the net torque on a sphere
+   is zero», C.2.2 «τ = −τ'») has no line of its own to quote: it is earned when a result of its question is fully met
+   (the correct h_max cannot be had without ω). Code gives it then; the grader and R13 zeroed all three, written or not. */
+export const INHERENT = /\b(?:even if (?:it (?:was|is) )?(?:done |used |shown )?(?:inherently|implicitly)|(?:done|used) (?:inherently|implicitly))\b/i;
+export function impliedSteps(items, scheme) {
+  const spec = new Map((scheme?.items || []).map(i => [i.id, i]));
+  for (const i of items || []) {
+    const it = spec.get(i.id);
+    if (!it || +i.got >= +i.points || !INHERENT.test(String(it.what || ""))) continue;
+    const t = tokens(i.id).slice(0, -1);
+    if (!t.length) continue;
+    const results = (items || []).filter(j => j !== i && spec.get(j.id)?.role === "result" && (spec.get(j.id)?.alt || null) === (it.alt || null)
+      && (() => { const u = tokens(j.id); return u.length >= t.length && t.every((x, k) => x === u[k]); })());
+    if (results.length && results.some(j => +j.got >= +j.points)) { i.got = +i.points; i.decision = "met"; i.implied = true; }
+  }
+  return items;
+}
+
 export function cappedSum(items, parts, total, value = i => i.points) {
   const list = cleanParts(parts).map(p => ({ ...p, t: tokens(p.id), max: 0, sum: 0, kids: [] }));
   /* a heading owns the items under it and an item with its own id (IPhO 2023 T2 lists A.1's final answer as item A.1 beside
