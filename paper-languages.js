@@ -36,16 +36,22 @@
     }
     return out;
   }
+  function containsSolutions(slot, language) {
+    if (!slot || typeof slot !== 'object') return false;
+    if (Object.hasOwn(slot.paperContainsSolutions || {}, language)) return !!slot.paperContainsSolutions[language];
+    return files(slot)[language] === slot.paper && !!slot.containsSolutions;
+  }
   function bundle(slots, ui) {
     if (!Array.isArray(slots) || !slots.length) return {papers:{}, language:''};
-    const options = slots.map(files), papers = {};
+    const options = slots.map(slot => Object.fromEntries(Object.entries(files(slot))
+      .filter(([language]) => !containsSolutions(slot, language)))), papers = {};
     for (const language of Object.keys(options[0])) {
       if (options.every(option => option[language])) papers[language] = options.map(option => option[language]);
     }
     // A session with mixed source languages still has its published papers.
-    if (!Object.keys(papers).length && slots.every(slot => path(slot.paper))) papers.original = slots.map(slot => slot.paper);
+    if (!Object.keys(papers).length && slots.every(slot => path(slot.paper) && !slot.containsSolutions)) papers.original = slots.map(slot => slot.paper);
     const language = papers[ui] ? ui : papers.en ? 'en' : Object.keys(papers)[0] || '';
     return {papers, language};
   }
-  return {label, files, normalize, bundle};
+  return {label, files, normalize, bundle, containsSolutions};
 });
