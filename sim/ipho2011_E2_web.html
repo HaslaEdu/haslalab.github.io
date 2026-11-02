@@ -148,11 +148,9 @@
     <div class="row"><button id="swStart"></button><button id="swStop"></button><button id="swReset"></button></div>
     <div class="hint" id="swHint"></div>
     <div class="status" id="status"></div>
-    <button id="newExp"></button>
   </aside>
 </div>
 
-<dialog id="resetDlg"><p id="resetQ"></p><div class="row"><button id="resetNo"></button><button id="resetYes" class="on"></button></div></dialog>
 
 <script>
 /* ==================================================================
@@ -174,7 +172,7 @@ const I18N = {
   trayHand: ["in your hand: click where it goes", "손에 있음: 놓을 곳을 클릭"],
   hand_tube: ["The cylinder is in your hand: put it on the table (or into the thread loop under the pin).", "원통을 들었습니다. 책상 위에 놓거나 핀 아래 실 고리에 넣으세요."],
   hand_plate: ["The base plate is in your hand: put it on the table at its front edge; the pin sticks out over the edge.", "받침판을 들었습니다. 책상 앞 모서리에 놓으면 핀이 모서리 밖으로 나옵니다."],
-  hand_tape: ["The tape is in your hand: put it on the base plate to tape the plate to the table (two strips across it).", "테이프를 들었습니다. 받침판 위에 놓으면 두 줄을 가로질러 붙여 판을 책상에 고정합니다."],
+  hand_tape: ["The tape is in your hand: click on the base plate where a strip should go (the wheel turns it, Shift: fine); click an empty spot of the table to put the roll down.", "테이프를 들었습니다. 받침판 위 붙일 곳을 클릭하면 그 자리에 한 줄이 붙습니다(휠: 방향 돌리기, Shift: 미세). 책상 빈 곳을 클릭하면 롤을 내려놓습니다."],
   hand_thread: ["The thread is in your hand: put it on the pin to hang a loop from it.", "실을 들었습니다. 핀에 놓으면 고리가 걸립니다."],
   hand_sw: ["The stopwatch is in your hand: put it on the table.", "초시계를 들었습니다. 책상 위에 놓으세요."],
   hand_ruler: ["In your hand: move it where you want and click (or let go if you dragged it).", "손에 들었습니다. 원하는 곳으로 옮겨 클릭하세요(끌었다면 놓으면 됩니다)."],
@@ -183,6 +181,9 @@ const I18N = {
   st_plateOn: ["The base plate lies at the table edge. Tape it down, then take the cap off the pin.", "받침판을 책상 모서리에 놓았습니다. 테이프로 붙인 뒤 핀 뚜껑을 빼세요."],
   st_taped: ["The base plate is taped to the table. To move it again, click a strip to peel it off.", "받침판을 책상에 테이프로 붙였습니다. 다시 옮기려면 테이프를 클릭해 떼어 내세요."],
   st_peelFirst: ["The base plate is taped down: click the tape to peel it off before you move the plate.", "받침판이 테이프로 붙어 있습니다. 옮기기 전에 테이프를 클릭해 떼어 내세요."],
+  st_stripOn: ["Strip %d pressed down. Click again to add another (wheel: turn it, Shift: fine); click an empty spot of the table to put the roll down.", "테이프 %d줄을 붙였습니다. 다시 클릭하면 한 줄 더 붙습니다(휠: 방향, Shift: 미세). 책상 빈 곳을 클릭하면 롤을 내려놓습니다."],
+  st_peeledOne: ["One strip peeled off.", "테이프 한 줄을 떼었습니다."],
+  st_tapeGave: ["The tape could not hold what hangs on the pin: it peeled off the table and the base plate went over the edge with the cylinder. Tape it across the plate onto the table on both sides, well behind the edge.", "테이프가 핀에 걸린 무게를 버티지 못하고 책상에서 떨어지면서, 받침판이 원통과 함께 모서리 밖으로 넘어갔습니다. 판을 가로질러 양쪽 책상에 걸치도록, 모서리에서 충분히 뒤쪽에 붙이세요."],
   st_peeled: ["Tape peeled off: the base plate is loose.", "테이프를 떼었습니다. 받침판이 고정되지 않은 상태입니다."],
   st_fell: ["The base plate was not taped down: the weight on the pin tipped it over the edge and it fell with the cylinder. Click the parts on the bench below to pick them up.", "받침판이 테이프로 고정되지 않아, 핀에 걸린 무게에 책상 모서리 밖으로 넘어가며 원통과 함께 떨어졌습니다. 아래 받침대 위의 부품을 클릭해 주우세요."],
   st_dropped: ["Fallen off the table — pick the parts up and set up again (tape the plate down first).", "책상에서 떨어짐 — 부품을 주워 다시 설치하세요(받침판은 먼저 테이프로 고정)."],
@@ -208,14 +209,11 @@ const I18N = {
            "실험대 — 빈 곳을 끌어 회전 · 오른쪽 끌기: 이동 · 휠: 확대 (고리 속 원통 위 휠: 2 mm, Shift 0.2 mm 밀기) · 받친 원통 끌기: 고리 속으로 밀기 · 빈 곳 더블클릭: 처음 시점"],
   cap_close: ["close-up — straight on to the tube · right-click: back", "확대 — 원통을 정면에서 · 우클릭: 돌아가기"],
   back: ["◀ the bench", "◀ 실험대"],
-  newExp: ["New apparatus (another blackbox)", "새 장치 (다른 블랙박스)"],
-  resetQ: ["Take a new cylinder with a different ball inside? The marks and the stopwatch are cleared.", "공의 위치가 다른 새 원통으로 바꿀까요? 연필 자국과 초시계도 지워집니다."],
-  yes: ["New apparatus", "새 장치"], no: ["Cancel", "취소"],
   info: [`<h4>The apparatus (pages 1–2 of the paper)</h4><ul>
 <li>Everything starts in the parts box: the aluminium cylinder with its row of holes (a ball is fixed inside it on the axis), the base plate (a thick clear plate with a thin pin in its end face, its black cap on), adhesive tape, thread, a ruler, a stopwatch, a pencil and a rubber. Drag a part out, or click it and then click where it goes; right-click puts it back.</li></ul>
 <h4>Setting up</h4><ul>
-<li>Put the base plate at the front edge of the table: the pin sticks out over the edge. Put the tape on the plate: two strips go across it onto the table. Click the cap to take it off the pin.</li>
-<li>Taped down, the plate stays put: click a strip to peel it off before you move it. A plate that is not taped down tips over the edge as soon as the cylinder hangs on its pin (by a hole or in the thread loop), and falls with it onto the bench below.</li>
+<li>Put the base plate at the front edge of the table: the pin sticks out over the edge. Pick up the tape and click on the plate where a strip should go: each click presses one strip down there, along the direction the wheel turns it to. Click the cap to take it off the pin.</li>
+<li>Taped down, the plate stays put: click a strip to peel it off before you move it. The load on the pin tips the plate forward about the table edge, so what holds it is tape stuck to the table beyond the plate: a strip across the plate onto the table on both sides, well behind the edge, holds best; one stuck on one side only, or close to the edge, peels off when the cylinder hangs (or swings hard), and the plate goes over the edge with it onto the bench below. With no tape at all it goes at once.</li>
 <li>Put the cylinder on the table to measure it: lay the ruler beside it (the wheel over the ruler turns it) and mark it with the pencil; the rubber wipes marks off.</li></ul>
 <h4>Centre of mass</h4><ul>
 <li>Put the thread on the pin: a knotted loop hangs from it. Drag the cylinder from the table into the loop; it lies level, held by your finger. Drag it sideways to push it through the loop (or roll the wheel over it: 2 mm, Shift 0.2 mm), click it to let go and see which end goes down. Where it stays level, the loop is under the centre of mass: mark the tube there with the pencil, take it down and measure the mark from the end with the ruler.</li>
@@ -228,8 +226,8 @@ const I18N = {
 `<h4>장비 (문제지 1–2쪽)</h4><ul>
 <li>모든 장비는 부품함에서 시작합니다. 구멍이 한 줄로 뚫린 알루미늄 원통(축 위에 공이 고정됨), 받침판(끝면에 가는 핀이 꽂힌 두꺼운 투명판, 검은 뚜껑이 씌워져 있음), 접착테이프, 실, 자, 초시계, 연필, 지우개입니다. 부품을 끌어서 꺼내거나, 클릭한 뒤 놓을 곳을 클릭하세요. 우클릭하면 부품함으로 돌아갑니다.</li></ul>
 <h4>준비</h4><ul>
-<li>받침판을 책상 앞 모서리에 놓으면 핀이 모서리 밖으로 나옵니다. 테이프를 받침판 위에 놓으면 두 줄이 판을 가로질러 책상까지 붙습니다. 뚜껑을 클릭해 핀에서 빼세요.</li>
-<li>테이프로 붙인 받침판은 움직이지 않습니다. 옮기려면 테이프를 클릭해 떼어 내세요. 테이프로 고정하지 않은 받침판은 원통을 핀(구멍이든 실 고리든)에 거는 순간 무게에 넘어가 원통과 함께 아래 받침대로 떨어집니다.</li>
+<li>받침판을 책상 앞 모서리에 놓으면 핀이 모서리 밖으로 나옵니다. 테이프를 집어 받침판 위 붙일 곳을 클릭하면 그 자리에 한 줄씩 붙습니다(휠로 방향을 돌립니다). 뚜껑을 클릭해 핀에서 빼세요.</li>
+<li>테이프로 붙인 받침판은 움직이지 않습니다. 옮기려면 테이프를 클릭해 떼어 내세요. 핀에 걸린 무게는 받침판을 책상 모서리를 축으로 앞으로 넘기려 하므로, 판 밖 책상에 붙은 테이프가 이를 버팁니다. 판을 가로질러 양쪽 책상에 붙이고 모서리에서 충분히 뒤쪽에 붙인 테이프가 가장 단단합니다. 한쪽에만 붙였거나 모서리 가까이에 붙인 테이프는 원통을 걸거나 세게 흔들 때 떨어지고, 받침판도 원통과 함께 아래 받침대로 넘어갑니다. 테이프가 없으면 바로 넘어갑니다.</li>
 <li>원통을 책상에 눕혀 놓고 옆에 자를 대어 재세요(자 위에서 휠: 회전). 연필로 표시하고 지우개로 지웁니다.</li></ul>
 <h4>무게중심</h4><ul>
 <li>실을 핀에 놓으면 매듭지은 실 고리가 걸립니다. 책상 위 원통을 끌어 고리에 넣으면 손가락으로 받쳐 수평으로 놓입니다. 원통을 좌우로 끌면 고리 속으로 밀려 움직이고(원통 위 휠: 2 mm, Shift: 0.2 mm), 원통을 클릭해 손을 떼면 어느 쪽이 내려가는지 보입니다. 수평으로 머무는 곳이 무게중심 바로 위입니다. 그 자리를 연필로 표시하고, 원통을 내려 끝에서 표시까지를 자로 재세요.</li>
@@ -304,7 +302,7 @@ const T = {
     vLevel:"수평", vBottom:"아래쪽 끝이 내려감", vTop:"위쪽 끝이 내려감",
     vCarried:"손에 들고 있음", vHeld:"손으로 받치는 중 - 좌우로 끌어 밀기 · 클릭으로 손 떼기",
     vFallen:"원통이 빠져 떨어짐 - 클릭해서 집으세요",
-    sPend:"진자 실험 - 구멍 #%d, 기울기 %s deg",
+    sPend:"진자 실험 - 구멍 #%d 로 핀에 걸림",
     note:"화면에는 실제 기구와 눈에 보이는 것만 나옵니다. 프로그램은 아무것도 계산해 주지 않습니다."
   },
   en:{
@@ -366,7 +364,7 @@ const T = {
     vLevel:"level", vBottom:"far end down", vTop:"near end down",
     vCarried:"in hand", vHeld:"supported by hand - drag to push it through the loop · click to let go",
     vFallen:"slipped out - click it to pick it up",
-    sPend:"Pendulum - hole #%d, angle %s deg",
+    sPend:"Pendulum - hanging by hole #%d",
     note:"The screen shows only the apparatus and what the naked eye would see. Nothing is computed for you."
   }
 };
@@ -764,7 +762,6 @@ function makeRig(truth){
     }else if(R.mode==="free"){
       out.selected_hole = R.sel_hole;
     }else if(R.mode==="pendulum"){
-      out.angle_deg = Math.round(R.theta*180/Math.PI*2.0)/2.0;
       out.swinging = R.released;
       out.hole = R.hole_index;
     }
@@ -783,7 +780,7 @@ function makeRig(truth){
       if(r.sliding) s += d.sSlip;
       return s;
     }
-    return fmt(d.sPend, r.hole+1, r.angle_deg.toFixed(1));
+    return fmt(d.sPend, r.hole+1);
   };
 
   /* ---------------- time stepping ---------------------------------------- */
@@ -1406,9 +1403,10 @@ let truth = makeTruth(seed), rig = makeRig(truth);
 const TOOLS = {ruler: false, pencil: false, eraser: false};
 /* everything starts in the parts box; what is out is on the table */
 const OUT = {plate: false, tape: false, thread: false, sw: false};
-/* taped: the two strips are on (tapeT0: when they were laid, for the hand smoothing them down); drop: what fell off the
+/* strips: the pieces of tape pressed down ({x, z, ang, t0}); tapeAng: the angle the next one is turned to; creep: how far
+   the tape has given way under a load it cannot hold (it peels, then the plate goes); drop: what fell off the
    table edge with a base plate that was not taped down (the plate, the cylinder, the thread), as it tumbles and where it lies */
-const KIT = {taped: false, tapeT0: 0, capOn: true, tapeAt: [-22, -12], threadAt: [12, -17], swAt: [24, -9], tableAt: [0, 0.18], drop: null};
+const KIT = {strips: [], tapeAng: 0, creep: 0, capOn: true, tapeAt: [-22, -12], threadAt: [12, -17], swAt: [24, -9], tableAt: [0, 0.18], drop: null};
 /* the tube lies on the table, or hangs (in the thread loop or on the pin) in the plane in front of the edge;
    the ruler, pencil and rubber go with it: flat on the table, or held up against it */
 const onTable = () => rig.mode === "free";
@@ -1427,7 +1425,8 @@ const TSURF = {ruler: "table", pencil: "table", eraser: "table"};
 const shelfY = () => PIN_Y - 100 * truth.bench_y;
 const plateDown = () => !!(KIT.drop && KIT.drop.plate);
 const pinFree = () => OUT.plate && !KIT.capOn && !plateDown();
-const plateReady = () => pinFree() && KIT.taped;
+const plateReady = () => pinFree() && KIT.strips.length > 0;
+const CREEP_FALL = 0.45;
 /* ---- textures ---- */
 const R_INSET = RULER_H * 0.22;
 function rulerTex(){ const P = 40, Lc = (RULER_LEN + 2 * R_INSET) * 100, Hc = RULER_H * 100, c = mk(Math.round(Lc * P), Math.round(Hc * P)), g = c.getContext("2d");
@@ -1541,27 +1540,68 @@ function eraser(){
 /* the base plate, as drawn on page 1 of the paper: a thick clear block lying on the table, the thin pin
    pushed into the middle of its end face and sticking out over the edge; fixed down with adhesive tape */
 const PLATE = {hw: 4, z0: -12.4, z1: -0.15, h: 1.0};
-/* a strip of clear tape across the plate onto the table on both sides: flat on the table, a little tent from the table
-   up to the top edge (tape does not get into the corner), flat across the top; cut ends, faint edges, a bubble or two */
-function tapeStrip(x, zc, prog, id){
-  const w = TAPE_W / 2, h = PLATE.h + 0.025, e = 0.012, R = PLATE.hw;
-  const prof = [[x - R - 5.4, e], [x - R - 1.3, e], [x - R - 0.05, h], [x + R + 0.05, h], [x + R + 1.3, e], [x + R + 5.4, e]];
-  /* laid from the left as the hand smooths it down */
-  const segL = []; let tot = 0; for (let i = 1; i < prof.length; i++){ const L = Math.hypot(prof[i][0] - prof[i - 1][0], prof[i][1] - prof[i - 1][1]); segL.push(L); tot += L; }
-  let left = tot * prog; const pts = [prof[0]];
-  for (let i = 1; i < prof.length && left > 0; i++){ const f = Math.min(1, left / segL[i - 1]); pts.push([prof[i - 1][0] + (prof[i][0] - prof[i - 1][0]) * f, prof[i - 1][1] + (prof[i][1] - prof[i - 1][1]) * f]); left -= segL[i - 1]; }
-  const o = {fill: "rgba(247,249,238,0.55)", alpha: 0.55, id, flat: true};
-  for (let i = 1; i < pts.length; i++){ const [a, b] = [pts[i - 1], pts[i]];
-    face([[a[0], a[1], zc - w], [b[0], b[1], zc - w], [b[0], b[1], zc + w], [a[0], a[1], zc + w]], o);
-    for (const zz of [zc - w, zc + w]) line3([a[0], a[1] + 0.004, zz], [b[0], b[1] + 0.004, zz], "rgba(255,255,255,0.95)", 1.1);
-    /* a sheen along it */
-    line3([a[0], a[1] + 0.006, zc - w * 0.35], [b[0], b[1] + 0.006, zc - w * 0.35], "rgba(255,255,255,0.45)", 2.2); }
-  /* the cut ends: a fine zigzag where the tape was torn off the roll */
-  const zig = (X, Y) => { const P = []; for (let i = 0; i <= 8; i++) P.push([X + (i % 2 ? 0.09 : -0.09), Y + 0.004, zc - w + 2 * w * i / 8]); poly3(P, "rgba(250,253,255,0.85)", 0.9); };
-  zig(pts[0][0], pts[0][1]); if (prog >= 1) zig(pts[pts.length - 1][0], pts[pts.length - 1][1]);
-  else { /* the rest still in the hand, lifted off */ const t = pts[pts.length - 1]; face([[t[0], t[1], zc - w], [t[0] + 1.8, t[1] + 1.6, zc - w], [t[0] + 1.8, t[1] + 1.6, zc + w], [t[0], t[1], zc + w]], o); }
-  if (prog >= 1) for (const [dx, dz] of [[-2.1, -0.3], [1.4, 0.25]]) ring3([x + dx, h + 0.006, zc + dz], 0.13, "rgba(255,255,255,0.6)", 0.8, 10);
-}
+/* ---- adhesive tape, laid by hand: a strip at a time, anywhere, at any angle ----
+   A strip is torn off the roll (STRIP_L long) and pressed down where you click, along the angle you turned it to.
+   It drapes over whatever is under it: flat on the table, a small tent up to the plate's top edge (tape does not get
+   into the corner), flat across the plate, and limp over the table edge where there is no table under it. */
+const STRIP_L = 18;
+const plateBox = () => ({x0: PIN_X - PLATE.hw, x1: PIN_X + PLATE.hw, z0: PLATE.z0, z1: PLATE.z1});
+/* how far a point of the table is outside the plate's footprint (0 inside) and on which side */
+function outside(x, z){ const b = plateBox(), dx = x < b.x0 ? b.x0 - x : x > b.x1 ? x - b.x1 : 0, dz = z < b.z0 ? b.z0 - z : z > b.z1 ? z - b.z1 : 0;
+  return {d: Math.hypot(dx, dz), side: dx >= dz ? (x < b.x0 ? "L" : x > b.x1 ? "R" : "") : (z < b.z0 ? "B" : z > b.z1 ? "F" : "")}; }
+const TENT = 1.25;
+function tapeH(x, z, lift){ const e = 0.012, top = PLATE.h + 0.025, o = outside(x, z);
+  if (o.d === 0) return top;
+  let h = o.d < TENT ? e + (top - e) * (1 - o.d / TENT) : e;
+  if (z > 0) h -= Math.min(4, z * 1.1);                         /* over the table edge: nothing under it */
+  if (lift) h += lift * Math.max(0, o.d - TENT * 0.5) * 0.55;   /* peeling up from its loose end */
+  return h; }
+/* the strip's centre line, sampled */
+function stripPts(st, n){ const u = [Math.cos(st.ang), Math.sin(st.ang)], P = [];
+  for (let i = 0; i <= n; i++){ const t = -STRIP_L / 2 + STRIP_L * i / n; P.push([st.x + u[0] * t, st.z + u[1] * t]); } return P; }
+function drawStrip(st, k, o){
+  const n = 40, P = stripPts(st, n), nx = -Math.sin(st.ang) * TAPE_W / 2, nz = Math.cos(st.ang) * TAPE_W / 2;
+  const prog = o.prog === undefined ? 1 : o.prog, m = Math.max(1, Math.round(n * prog)), lift = o.lift || 0;
+  const E = (q, s) => { const x = q[0] + nx * s, z = q[1] + nz * s; return [x, tapeH(x, z, lift) + 0.003, z]; };
+  const f = {fill: o.ghost ? "rgba(140,255,150,0.45)" : "rgba(247,249,238,0.55)", alpha: o.ghost ? 0.45 : 0.55, id: o.ghost ? undefined : "strip:" + k, flat: true};
+  for (let i = 1; i <= m; i++){ const a = P[i - 1], b = P[i];
+    face([E(a, -1), E(b, -1), E(b, 1), E(a, 1)], f);
+    if (!o.ghost){ line3(E(a, -1), E(b, -1), "rgba(255,255,255,0.95)", 1.1); line3(E(a, 1), E(b, 1), "rgba(255,255,255,0.95)", 1.1);
+      line3(E(a, -0.35), E(b, -0.35), "rgba(255,255,255,0.45)", 2.2); } }
+  if (o.ghost) return;
+  /* the cut ends: a fine zigzag where it was torn off the roll */
+  const zig = q => { const Q = []; for (let i = 0; i <= 8; i++){ const s = -1 + 2 * i / 8, a = E(q, s), j = (i % 2 ? 0.09 : -0.09); Q.push([a[0] + Math.cos(st.ang) * j, a[1] + 0.002, a[2] + Math.sin(st.ang) * j]); } poly3(Q, "rgba(250,253,255,0.85)", 0.9); };
+  zig(P[0]); if (prog >= 1) zig(P[n]);
+  /* clickable all along it, to peel it off */
+  for (let i = 2; i < n; i += 4) sphere3(E(P[i], 0), TAPE_W * 0.6, "rgba(0,0,0,0.004)", {id: "strip:" + k}); }
+/* How hard a strip holds the plate down against the pull of what hangs on the pin.  The load tips the plate forward
+   about the table edge and lifts its back end; what resists is the tape stuck to the table beyond the plate.
+   - its grip on each side is the length stuck to the table there, up to ~4 cm (beyond that the bond adds little);
+   - a strip that crosses the plate and is stuck on both opposite sides (left and right, or over the back end and
+     round onto a side) holds in shear and pulls straight down: full strength;
+   - stuck on one side only it is peeled off from its loose edge: a fraction of it;
+   - its lever is how far behind the table edge it presses on the plate: near the edge it holds almost nothing. */
+function stripHold(st){
+  const n = 80, P = stripPts(st, n), ds = STRIP_L / n, side = {L: 0, R: 0, B: 0, F: 0};
+  let onPlate = 0, lever = 0;
+  for (const q of P){ if (q[1] > 0) continue; const o = outside(q[0], q[1]);
+    if (o.d === 0){ onPlate += ds; lever += -q[1] * ds; } else if (o.d > TENT && o.side) side[o.side] += ds; }
+  if (onPlate < 0.5) return 0;
+  lever /= onPlate;
+  const g = {}; for (const k in side) g[k] = Math.min(4, side[k]);
+  const n2 = ["L", "R", "B", "F"].filter(k => g[k] > 0.6), grip = n2.reduce((a, k) => a + g[k], 0);
+  const opposite = (g.L > 0.6 && g.R > 0.6) || (g.B > 0.6 && g.F > 0.6);
+  const factor = opposite ? 1.0 : n2.length >= 2 ? 0.55 : 0.22;
+  return factor * grip * lever; }
+const tapeHold = () => KIT.strips.reduce((a, st) => a + stripHold(st), 0);
+/* what the hanging tube asks of it: 40 units hanging at rest (one full strip across the plate 5 cm behind the edge
+   just holds), more by the pull of the swing through the bottom */
+function tapeNeed(){
+  if (rig.mode === "balance") return 40;
+  if (rig.mode !== "pendulum") return 0;
+  const Rr = truth.x_cm - truth.holes[rig.hole_index], N = truth.g * Math.cos(rig.theta) + rig.omega * rig.omega * Rr;
+  return 40 * Math.max(0.2, N / truth.g); }
+const taped = () => KIT.strips.length > 0;
 function basePlate(){
   const x = PIN_X, z0 = -12.4, z1 = -0.15, y1 = 1.0;
   box3(x - 4, x + 4, 0, y1, z0, z1, "#d4e6ec", {alpha: 0.42, id: "plate"});
@@ -1570,13 +1610,15 @@ function basePlate(){
   /* the pin: its head sunk in the end face, the thin steel shank over the edge */
   cyl3("z", z1 - 0.9, z1 + 0.02, x, PIN_Y, 0.16, "#3a3f44", {seg: 10, id: "pin"});
   cylAB([x, PIN_Y, z1], [x, PIN_Y, PIN_TIP], 0.05, "#aab0b6", {seg: 8, id: "pin"});
-  sphere3([x, PIN_Y, PLANE_Z + 0.4], 0.75, "rgba(0,0,0,0.004)", {id: "pin"});
-  /* the black pin cap: on the tip, or put down beside the plate */
-  if (KIT.capOn) cyl3("z", PIN_TIP - 1.4, PIN_TIP + 0.15, x, PIN_Y, 0.2, "#141618", {seg: 12, id: "cap", cap: "#222528"});
-  else cylAB([x + 6, 0.2, -3.5], [x + 7.6, 0.2, -3.1], 0.2, "#141618", {seg: 12, id: "cap"});
-  /* two strips of tape across the plate onto the table, laid one after the other */
-  if (KIT.taped){ const t = (performance.now() - KIT.tapeT0) / 1000;
-    tapeStrip(x, -10.4, Math.max(0, Math.min(1, t / 0.45)), "strip"); if (t > 0.3) tapeStrip(x, -3.0, Math.max(0, Math.min(1, (t - 0.3) / 0.45)), "strip"); }
+  /* the black pin cap: on the tip, or put down beside the plate; both it and the bare pin take a click well around them */
+  if (KIT.capOn){ cyl3("z", PIN_TIP - 1.4, PIN_TIP + 0.15, x, PIN_Y, 0.2, "#141618", {seg: 12, id: "cap", cap: "#222528"});
+    sphere3([x, PIN_Y, PIN_TIP - 0.6], 1.9, "rgba(0,0,0,0.004)", {id: "cap"}); }
+  else { cylAB([x + 6, 0.2, -3.5], [x + 7.6, 0.2, -3.1], 0.2, "#141618", {seg: 12, id: "cap"});
+    sphere3([x + 6.8, 0.2, -3.3], 1.4, "rgba(0,0,0,0.004)", {id: "cap"});
+    sphere3([x, PIN_Y, PLANE_Z + 0.3], 1.6, "rgba(0,0,0,0.004)", {id: "pin"}); }
+  /* the strips of tape, each laid as it was pressed down (and lifting as it gives way) */
+  const now = performance.now();
+  KIT.strips.forEach((st, k) => drawStrip(st, k, {prog: Math.min(1, (now - st.t0) / 350), lift: KIT.creep > 0 ? Math.min(1, KIT.creep / CREEP_FALL) * (st.weak ? 1 : 0.25) : 0}));
 }
 /* ---- what falls off the edge when the plate is not taped down ---- */
 const rotX = (v, a) => [v[0], v[1] * Math.cos(a) - v[2] * Math.sin(a), v[1] * Math.sin(a) + v[2] * Math.cos(a)];
@@ -1624,7 +1666,7 @@ function drawDrop(){
 function plateFalls(){
   const how = rig.mode === "balance" ? "loop" : "pin";
   KIT.drop = {t0: performance.now(), x: PIN_X, plate: true, tube: true, thread: how === "loop" || rig.loop_present, how, hole: rig.hole_index, grip: rig.thread_x || truth.L / 2};
-  rig.take_cylinder_off(); rig.mode = "dropped"; rig.loop_present = false; OUT.thread = false; KIT.taped = false;
+  rig.take_cylinder_off(); rig.mode = "dropped"; rig.loop_present = false; OUT.thread = false; KIT.strips = []; KIT.creep = 0;
   toolsDown(); statusMsg = tr("st_fell"); drawTray(); }
 /* a hand-held digital stopwatch lying face up: a rounded body, a bright bezel round the face, two push buttons in its
    top edge (start/stop, reset) and a third in its side, the loop for the lanyard */
@@ -1740,7 +1782,7 @@ function draw3(){
   if (CARRY){ const rings = [];
     if (CARRY.item === "thread" && pinFree()) rings.push([PIN_X, PIN_Y, PLANE_Z]);
     if (CARRY.item === "tube" && rig.loop_present && pinFree()) rings.push([PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z]);
-    if (CARRY.item === "tape" && OUT.plate && !plateDown() && !KIT.taped) rings.push([PIN_X, 1.0, -6.5]);
+
     for (const w of rings){ const s = P3(...w), near = Math.hypot(s[0] - MOUSE[0], s[1] - MOUSE[1]) < 60;
       ctx3.strokeStyle = near ? "#7dff6a" : "rgba(125,255,106,0.55)"; ctx3.lineWidth = near ? 4 : 2; ctx3.beginPath(); ctx3.arc(s[0], s[1], near ? 22 : 18, 0, 6.2832); ctx3.stroke(); } }
   if (rig.mode === "free" && rig.sel_hole !== null && pinFree()){ const s = P3(PIN_X, PIN_Y, PLANE_Z);
@@ -1789,7 +1831,7 @@ function toolTo(k, p){ toolMove(k, p, null); }
 /* a ghost of the part in the hand, under the pointer on the table */
 function ghostOf(item){ return () => { const q = tableAt(MOUSE);
   if (item === "plate"){ box3(q[0] - 4, q[0] + 4, 0.6, 1.6, -12.4, -0.15, "#d4e6ec", {alpha: 0.35}); }
-  else if (item === "tape") tapeRoll(q[0], q[2], true);
+  else if (item === "tape"){ const at = tapeAt(MOUSE); if (at) drawStrip({x: at[0], z: at[1], ang: KIT.tapeAng}, -1, {ghost: true}); else tapeRoll(q[0], q[2], true); }
   else if (item === "thread") for (let i = 0; i < 4; i++) ring3([q[0], 0.6, q[2]], 3.2 + i * 0.15, "#f4f2ec", 1.3, 24);
   else if (item === "sw") stopwatch(q[0], q[2], true);
   else if (item === "tube" && CARRY.fresh) cylAB([q[0] - truth.L * 50, truth.d_out * 50 + 0.6, q[2]], [q[0] + truth.L * 50, truth.d_out * 50 + 0.6, q[2]], truth.d_out * 50, "#c3c8cc", {seg: 18}); }; }
@@ -1807,9 +1849,11 @@ function putDown(p){
   const nearScr = (w, r) => { const s = P3(...w); return Math.hypot(s[0] - p[0], s[1] - p[1]) < r; };
   if (["ruler", "pencil", "eraser"].includes(c.item)){ toolTo(c.item, p); keepOnTable(c.item); statusMsg = t.mPlaced(t.items[c.item]); CARRY = null; drawTray(); return; }
   if (c.item === "plate"){ if (!onTableTop([q[0], 0, -3])){ statusMsg = tr("st_plateWhere"); return; }
-    PIN_X = Math.max(-38, Math.min(38, q[0])); OUT.plate = true; KIT.taped = false; KIT.capOn = true; statusMsg = tr("st_plateOn"); }
+    PIN_X = Math.max(-38, Math.min(38, q[0])); OUT.plate = true; KIT.strips = []; KIT.capOn = true; statusMsg = tr("st_plateOn"); }
   else if (c.item === "tape"){
-    if (OUT.plate && !plateDown() && !KIT.taped && Math.abs(q[0] - PIN_X) < 6 && q[2] > -14 && q[2] < 1){ tapeDown(); statusMsg = tr("st_taped"); }
+    const at = tapeAt(p);
+    if (at){ KIT.strips.push({x: at[0], z: at[1], ang: KIT.tapeAng, t0: performance.now()}); markWeak();
+      statusMsg = fmt(tr("st_stripOn"), KIT.strips.length); drawTray(); return; }
     else if (onTableTop(q)){ KIT.tapeAt = [q[0], q[2]]; statusMsg = ""; } else return;
     OUT.tape = true; }
   else if (c.item === "thread"){
@@ -1820,7 +1864,7 @@ function putDown(p){
   else if (c.item === "sw"){ if (!onTableTop(q)) return; KIT.swAt = [q[0], q[2]]; OUT.sw = true; statusMsg = ""; }
   else if (c.item === "tube"){
     if (rig.loop_present && pinFree() && nearScr([PIN_X, PIN_Y - 100 * LOOP_DROP, PLANE_Z], 90)){
-      rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); statusMsg = T[lang].mInLoop; if (!KIT.taped){ CARRY = null; plateFalls(); return; } }
+      rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); statusMsg = T[lang].mInLoop; if (!taped()){ CARRY = null; plateFalls(); return; } }
     else { if (!onTableTop(q)){ statusMsg = tr("st_onTableOnly"); return; }
       rig.mode = "free"; rig.free_pos = [q[0] / 100, (q[2] - TZ0) / 100]; rig.sel_hole = null; rig.hole_index = null;
       rig.theta = rig.omega = 0; rig.released = false; statusMsg = tr("st_tubeTable"); } }
@@ -1844,14 +1888,20 @@ function backInBox(k){
   if (["ruler", "pencil", "eraser"].includes(k)){ TOOLS[k] = false; statusMsg = t.mBack(t.items[k]); }
   else if (k === "tube"){ if (rig.mode === "pendulum" || rig.mode === "balance"){ statusMsg = tr("st_offFirst"); drawTray(); return; } rig.mode = null; rig.sel_hole = null; if (KIT.drop) KIT.drop.tube = false; statusMsg = tr("st_backBox"); }
   else if (k === "plate"){ if (plateDown()){ KIT.drop.plate = false; OUT.plate = false; KIT.capOn = true; statusMsg = tr("st_backBox"); }
-    else if (KIT.taped){ statusMsg = tr("st_peelFirst"); drawTray(); return; }
+    else if (taped()){ statusMsg = tr("st_peelFirst"); drawTray(); return; }
     else if (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present){ statusMsg = tr("st_plateBusy"); drawTray(); return; }
     else { OUT.plate = false; KIT.capOn = true; statusMsg = tr("st_backBox"); } }
   else if (k === "thread"){ if (rig.mode === "balance"){ statusMsg = tr("st_offFirst"); drawTray(); return; } OUT.thread = false; rig.loop_present = false; if (KIT.drop) KIT.drop.thread = false; statusMsg = tr("st_backBox"); }
-  else { OUT[k] = false; if (k === "tape") KIT.taped = KIT.taped; statusMsg = tr("st_backBox"); }
+  else { OUT[k] = false; statusMsg = tr("st_backBox"); }
   if (KIT.drop && !KIT.drop.plate && !KIT.drop.tube && !KIT.drop.thread) KIT.drop = null;
   drawTray(); }
-function tapeDown(){ KIT.taped = true; KIT.tapeT0 = performance.now(); KIT.tapeAt = [PIN_X - 12.5, -9]; }
+/* where a strip goes for the pointer: on the plate or just round it (the tape must touch the plate) */
+function tapeAt(p){
+  if (!OUT.plate || plateDown()) return null;
+  const b = plateBox(), top = onPlane(p[0], p[1], PLATE.h), q = top[0] > b.x0 && top[0] < b.x1 && top[2] > b.z0 && top[2] < b.z1 ? top : onPlane(p[0], p[1], 0);
+  const m = 2.2; return q[0] > b.x0 - m && q[0] < b.x1 + m && q[2] > b.z0 - m && q[2] < b.z1 + 0.4 ? [q[0], q[2]] : null; }
+/* the strips that hold least: the ones seen peeling first */
+function markWeak(){ for (const st of KIT.strips) st.weak = stripHold(st) < 20; }
 window.addEventListener("keydown", e => { if (e.key === "Escape") cancelCarry(); });
 window.addEventListener("resize", () => { trayLayout(); layout3(); });
 
@@ -1871,10 +1921,6 @@ $("btnRehang").onclick = () => { const x = rig.thread_x || truth.L * 0.5; rig.ta
 $("swStart").onclick = () => rig.stopwatch_start(); $("swStop").onclick = () => rig.stopwatch_stop(); $("swReset").onclick = () => rig.stopwatch_reset();
 function swToggle(){ if (!OUT.sw) return; if (rig.sw_running) rig.stopwatch_stop(); else rig.stopwatch_start(); }
 window.addEventListener("keydown", e => { if ((e.code === "Space" || e.key === " ") && OUT.sw){ if (document.activeElement && document.activeElement.tagName === "BUTTON") document.activeElement.blur(); e.preventDefault(); swToggle(); } });
-$("newExp").onclick = () => { $("resetQ").textContent = tr("resetQ"); $("resetNo").textContent = tr("no"); $("resetYes").textContent = tr("yes"); $("resetDlg").showModal(); };
-$("resetNo").onclick = () => $("resetDlg").close();
-$("resetYes").onclick = () => { $("resetDlg").close(); seed = (Math.floor(Math.random() * 1e8) + 1) | 0; truth = makeTruth(seed); rig = makeRig(truth);
-  for (const k of ["ruler", "pencil", "eraser"]){ TOOLS[k] = false; TSURF[k] = "table"; } for (const k in OUT) OUT[k] = false; KIT.taped = false; KIT.capOn = true; KIT.drop = null; CARRY = null; statusMsg = ""; drawTray(); };
 
 /* ---- the hands on the bench: the 2-D press / motion / release ---- */
 let dragMode = null, pendingHole = null, pressXY = [0, 0], grab = [0, 0], down = null, mPrev = [0, 0];
@@ -1890,16 +1936,15 @@ function onPress(p){
   if (TOOLS.pencil && rig.on_pencil(tx, ty)){ dragMode = "pencil"; grab = [tx - rig.pencil_pos[0], ty - rig.pencil_pos[1]]; toolMove("pencil", p, grab); return; }
   if (id === "cap"){ if (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present){ status(tr("st_capBusy")); dragMode = null; return; }
     KIT.capOn = !KIT.capOn; status(tr(KIT.capOn ? "st_capOnMsg" : "st_capOffMsg")); dragMode = null; return; }
-  if (id === "tape" && OUT.plate && !plateDown() && !KIT.taped){ tapeDown(); status(tr("st_taped")); dragMode = null; return; }
-  /* a strip of tape peeled off: the plate is loose again (and goes over the edge if something hangs on its pin) */
-  if (id === "strip"){ KIT.taped = false; dragMode = null; if (hanging()) plateFalls(); else status(tr("st_peeled")); drawTray(); return; }
+  /* a strip of tape peeled off (what is left may not hold what hangs on the pin) */
+  if (id && id.startsWith("strip:")){ KIT.strips.splice(+id.slice(6), 1); markWeak(); dragMode = null; status(tr(taped() ? "st_peeledOne" : "st_peeled")); drawTray(); return; }
   /* the parts that fell are picked up off the bench */
   if (KIT.drop && (performance.now() - KIT.drop.t0) > 950 && (id === "dplate" || id === "dtube" || id === "dthread")){
     const D = KIT.drop, k = id === "dplate" ? "plate" : id === "dtube" ? "tube" : "thread";
     if (k === "plate"){ D.plate = false; OUT.plate = false; KIT.capOn = false; } else if (k === "tube"){ D.tube = false; rig.mode = null; } else { D.thread = false; OUT.thread = false; }
     if (!D.plate && !D.tube && !D.thread) KIT.drop = null;
     take(k, true); dragMode = null; return; }
-  if (id === "plate" && KIT.taped){ status(tr("st_peelFirst")); dragMode = null; return; }
+  if (id === "plate" && taped()){ status(tr("st_peelFirst")); dragMode = null; return; }
   if (id === "tape" || id === "thread" || id === "loop" || id === "sw" || id === "plate"){ dragMode = "item:" + (id === "loop" ? "thread" : id); pressXY = p.slice(); return; }
   if (rig.mode === "balance"){
     if (rig.carried){ if (Math.hypot(wx, wy - LOOP_DROP) < 0.030) status(rig.insert_into_loop()[1]); else status(T[lang].mClickLoop); return; }
@@ -1909,7 +1954,7 @@ function onPress(p){
   } else if (rig.mode === "free" || rig.mode === "pendulum"){
     if (rig.mode === "free" && (id === "pin") && rig.sel_hole !== null){
       if (!pinFree()){ status(tr("st_capFirst")); return; }
-      KIT.tableAt = rig.free_pos.slice(); status(rig.connect_selected_to_pin()[1]); if (!KIT.taped) plateFalls(); return; }
+      KIT.tableAt = rig.free_pos.slice(); status(rig.connect_selected_to_pin()[1]); if (!taped()) plateFalls(); return; }
     const i = holeAt(wx, wy);
     if (i !== null){ dragMode = "hole"; pendingHole = i; pressXY = p.slice(); grab = [wx - rig.free_pos[0], wy - rig.free_pos[1]]; return; }
     if (rig.on_cylinder(wx, wy, truth.d_out * 0.4)){
@@ -1924,10 +1969,10 @@ function onMotion(p, dx, dy){
   if (dragMode === "hole"){ if (Math.hypot(p[0] - pressXY[0], p[1] - pressXY[1]) < 5) return; dragMode = rig.mode === "pendulum" ? "swing" : "move"; if (dragMode === "swing") rig.released = false; }
   if (dragMode && dragMode.startsWith("item:")){ if (Math.hypot(p[0] - pressXY[0], p[1] - pressXY[1]) < 5) return;
     const k = dragMode.slice(5), item = k;
-    if (item === "plate" && KIT.taped){ status(tr("st_peelFirst")); dragMode = null; return; }
+    if (item === "plate" && taped()){ status(tr("st_peelFirst")); dragMode = null; return; }
     if (item === "plate" && (rig.mode === "pendulum" || rig.mode === "balance" || rig.loop_present)){ status(tr("st_plateBusy")); dragMode = null; return; }
     if (item === "thread" && rig.mode === "balance"){ status(tr("st_offFirst")); dragMode = null; return; }
-    OUT[item] = false; if (item === "thread") rig.loop_present = false; if (item === "plate"){ KIT.taped = false; }
+    OUT[item] = false; if (item === "thread") rig.loop_present = false; if (item === "plate"){ KIT.strips = []; }
     take(item, true); dragMode = "carry"; return; }
   if (dragMode === "orbit"){ CAM.yaw = Math.max(-1.3, Math.min(1.3, CAM.yaw + dx * 0.006)); CAM.pitch = Math.min(1.5, Math.max(-0.2, CAM.pitch + dy * 0.005)); cv3.classList.add("grabbing"); }
   else if (dragMode === "pan"){ CAM.px += dx; CAM.py += dy; cv3.classList.add("grabbing"); }
@@ -1944,9 +1989,9 @@ function onRelease(p){
   else if (dragMode === "hole") status(rig.select_hole(pendingHole)[1]);
   else if (dragMode === "slide") status(rig.hold(false)[1]);
   else if (dragMode === "carry") putDown(p);
-  else if (dragMode === "move" && CARRY && CARRY.item === "tube"){ CARRY = null; if (!pinFree()) status(tr("st_capFirst")); else { rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); status(T[lang].mInLoop); if (!KIT.taped) plateFalls(); } }
+  else if (dragMode === "move" && CARRY && CARRY.item === "tube"){ CARRY = null; if (!pinFree()) status(tr("st_capFirst")); else { rig.mode = null; rig.mount_on_loop(truth.L * 0.5); rig.hold(true); status(T[lang].mInLoop); if (!taped()) plateFalls(); } }
   else if (dragMode === "move"){ const [x, y] = rig.free_pos, q = W(x, y, 0); if (!onTableTop(q)) rig.free_pos = [x, Math.min(y, (-3 - TZ0) / 100)]; }
-  else if (dragMode && dragMode.startsWith("item:")){ const k = dragMode.slice(5); if (k === "sw") swToggle(); }
+  else if (dragMode && dragMode.startsWith("item:")){ const k = dragMode.slice(5); if (k === "sw") swToggle(); else if (k === "tape"){ OUT.tape = false; dragMode = null; take("tape", true); return; } }
   dragMode = null; drawTray(); }
 cv3.addEventListener("contextmenu", e => e.preventDefault());
 cv3.addEventListener("pointerdown", e => {
@@ -1971,12 +2016,14 @@ cv3.addEventListener("pointerup", e => {
     if (rig.mode === "pendulum" || rig.mode === "balance"){ rig.take_cylinder_off(); rig.mode = "free"; rig.free_pos = KIT.tableAt.slice(); rig.loop_present = OUT.thread && rig.loop_present; statusMsg = tr("st_tubeTable"); }
     else if (id === "tube" && rig.mode === "free") backInBox("tube");
     else if (id && ["tape", "thread", "sw", "plate"].includes(id)) backInBox(id);
+    else if (id && id.startsWith("strip:")){ KIT.strips.splice(+id.slice(6), 1); markWeak(); statusMsg = tr(taped() ? "st_peeledOne" : "st_peeled"); }
     else if (id === "loop" || id === "dthread") backInBox("thread"); else if (id === "dplate") backInBox("plate"); else if (id === "dtube") backInBox("tube");
     dragMode = null; drawTray(); return; }
   onRelease(p); });
 cv3.addEventListener("dblclick", e => { const p = pe(e), id = pick3(p[0], p[1]); if (CARRY || (id && id !== "room" && id !== "shelf")) return; Object.assign(CAM, CAM0); });
 cv3.addEventListener("wheel", e => { e.preventDefault();
   const p = pe(e), d = e.deltaY < 0 ? 1 : -1, fine = e.shiftKey, [wx, wy] = s2w(p);
+  if (CARRY && CARRY.item === "tape" && !(e.ctrlKey || e.metaKey)){ KIT.tapeAng += d * (fine ? 5 : 15) * Math.PI / 180; return; }
   if (!(e.ctrlKey || e.metaKey)){
     if (rig.mode === "balance" && !(rig.fallen || rig.carried) && rig.on_cylinder(wx, wy, truth.d_out)){
       const step = fine ? 0.0002 : 0.0020; rig.hold(true); rig.nudge_loop(d > 0 ? -step : step); return; }
@@ -1993,7 +2040,6 @@ function applyLang(){
   document.documentElement.lang = LANG; $("info").innerHTML = tr("info");
   document.title = LANG === "ko" ? "IPhO 2011 E2 — 역학 블랙박스 · HaslaLab" : "IPhO 2011 E2 — Mechanical Blackbox · HaslaLab";
   $("swStart").textContent = d.start; $("swStop").textContent = d.stop; $("swReset").textContent = d.reset; $("swHint").textContent = tr("swHint");
-  $("newExp").textContent = tr("newExp");
   for (const k in _dom) delete _dom[k];
   trayLayout(); syncTabs(); syncPanel(); }
 function setLang(l){ LANG = l; const u = new URL(location.href); u.searchParams.set("lang", l); history.replaceState(null, "", u); applyLang(); }
@@ -2004,6 +2050,12 @@ let lastT = performance.now();
 function loop(now){
   const dt = Math.min(0.06, (now - lastT) / 1000); lastT = now;
   const n = Math.max(1, Math.floor(dt / 0.004) + 1); for (let i = 0; i < n; i++) rig.step(dt / n);
+  /* the tape against the load on the pin: when it cannot hold, it gives way within a fraction of a second */
+  if (hanging() && OUT.plate && !plateDown() && taped()){
+    const need = tapeNeed(), have = tapeHold();
+    if (have < need){ KIT.creep += dt * (0.6 + need / Math.max(have, 1)); if (KIT.creep >= CREEP_FALL){ plateFalls(); statusMsg = tr("st_tapeGave"); } }
+    else KIT.creep = Math.max(0, KIT.creep - dt);
+  } else KIT.creep = 0;
   if (!hanging() && !(dragMode === "ruler" || dragMode === "pencil" || dragMode === "eraser") && (TSURF.ruler === "plane" || TSURF.pencil === "plane" || TSURF.eraser === "plane")) toolsDown();
   draw3(); syncPanel(); requestAnimationFrame(loop); }
 document.addEventListener("visibilitychange", () => { lastT = performance.now(); });
