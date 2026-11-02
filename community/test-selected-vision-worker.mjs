@@ -469,6 +469,33 @@ test('an item the grader left out is graded once more, and a step found again in
   assert.match(detail,/"id":"S1"[^}]*"got":0\.7/,'found again in the photos');
   assert.match(detail,/"id":"M"[^}]*"got":0\.6/,'graded the second time');
 }));
+test('experiments: checks a scheme left at 0 points share the item, and a graph or table marked from the photo with no checks named keeps the grader\'s mark less a short count',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','experiment') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:4.2,items:[
+    {id:'Z',points:1.8,type:'graph',sheet:'answer',what:'graph of y against x',checks:[{check:'axes_labeled',points:0},{check:'fit_line',points:0},{check:'points_min',n:8,points:0}]},
+    {id:'G',points:0.8,type:'graph',sheet:'answer',what:'graph of U against I',checks:[{check:'axes_labeled',points:0.8}]},
+    {id:'T',points:1,type:'table',sheet:'answer',what:'table of I against r',checks:[{check:'columns_units',points:0.6},{check:'rows_min',n:20,points:0.4}]},
+    {id:'S',points:0.6,type:'table',sheet:'answer',what:'table of U against I',checks:[{check:'columns_units',points:0.6}]}]}),'fixture',Math.floor(Date.now()/1000));
+  replies({items:[{id:'Z',found:true,page:1,label:'Z',score:1.8,rules:[],checks_met:['axes_labeled','fit_line','points_min'],note:''},{id:'G',found:true,page:1,label:'G',score:0.8,rules:[],note:''},
+    {id:'T',found:true,page:1,label:'T',score:1,rules:[],checks_met:[],note:''},{id:'S',found:true,page:1,label:'S',score:0.6,rules:[],checks_met:['columns_units'],note:''}],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  const items=pageReading.items;
+  pageReading.items=[{label:'T',kind:'table',text:'r, I',rows:11,columns:['r (mm)','I (mA)'],crossed_out:false},{label:'S',kind:'table',text:'U, I',rows:11,columns:['U (V)','I (mA)'],crossed_out:false},
+    {label:'Z',kind:'graph',text:'y against x',crossed_out:false,graph:{axes_labeled:true,axes_units:true,scale_ok:true,n_points:8,fit_line:true,slope_read:false,error_bars:false,title:false}},
+    {label:'G',kind:'graph',text:'U against I',crossed_out:false,graph:{axes_labeled:true,axes_units:true,scale_ok:true,n_points:10,fit_line:false,slope_read:false,error_bars:false,title:false}}];
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.items=items;}
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"Z"[^}]*"got":1\.8[,}]/,'three checks at 0 points share the 1.8');
+  assert.match(detail,/"id":"G"[^}]*"got":0\.8[,}]/,'marked from the photo, no checks named');
+  assert.match(detail,/"id":"T"[^}]*"got":0\.6[,}]/,'its mark less the 20-row count the 11 rows miss');
+  assert.match(detail,/"id":"S"[^}]*"got":0\.6[,}]/,'named checks are still checked as before');
+}));
 test('experiments: a table read as two pages under one label counts all its rows, and a graph check the grader saw in the photo counts though the reader left it unset',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_MISSING_RECHECK='off';
