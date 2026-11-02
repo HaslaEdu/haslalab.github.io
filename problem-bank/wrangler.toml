@@ -10,7 +10,7 @@ binding = "ASSETS"
 run_worker_first = true
 
 [vars]
-ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslalab-problem-bank.haslalab.workers.dev,http://localhost:8794,http://127.0.0.1:8794"
+ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,https://haslalab-problem-bank.haslalab.workers.dev,http://localhost:8794,http://127.0.0.1:8794"
 BANK_OCR_ENABLED = "1"
 
 [[services]]

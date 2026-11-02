@@ -321,9 +321,9 @@ section{padding:58px 0}
 .learn-pending{max-width:760px;margin:0 0 48px;padding:32px;border:1px dashed var(--grid-bold);border-radius:12px}
 .learn-pending h2{margin:0;font-size:1.35rem}
 .learn-tool-copy{color:var(--graphite);font-size:13px;line-height:1.8;margin:14px 0 0;max-width:600px}
-.learn-studio{padding-bottom:36px}
-.learn-studio .phead{margin-bottom:24px}
-.learn-studio-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
+.learn-studio,.learn-library{padding-bottom:36px}
+.learn-studio .phead,.learn-library .phead{margin-bottom:24px}
+.learn-studio-frame,.learn-library-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
 @media(max-width:600px){.learn-pending{padding:24px}.phead h1 .learn-state{margin-left:8px}}
 .lsec{margin:0 0 38px}
 .lsec>h2{font-size:1.25rem;margin:0 0 6px}
@@ -4973,7 +4973,7 @@ function viewLearn(){
     <div class="comps" data-lang="${lang}">
       ${Object.entries(LEARN).map(([key,L])=>{
         return `<a class="comp lsubj" href="#/learn/${key}">
-          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"문제 제작소":"Problem Studio"):d.learnSoon}</span></div>
+          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"문제 제작소 · 문제은행":"Problem Studio · Library"):d.learnSoon}</span></div>
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
@@ -4993,6 +4993,10 @@ function viewLearnSubject(key){
     ${key==="physics"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio">
       <div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div>
       <p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만들거나 그림을 선명하게 정리해 보세요.":"Turn physics problem photos into text and equations, create new problems from a topic, or restore a scientific figure."}</p>
+      <span class="go">→</span>
+    </a><a class="comp lsubj" href="#/learn/physics/library" data-learn-tool="library">
+      <div class="chead"><div class="abbr">${lang==="ko"?"문제은행":"Problem library"}</div><span class="learn-state">${lang==="ko"?"관리자 전용":"Administrators"}</span></div>
+      <p class="learn-tool-copy">${lang==="ko"?"저장된 문제를 글이나 사진으로 찾고, 한국어·영어 본문과 풀이를 확인합니다.":"Find stored problems by text or photo, with Korean and English statements and solutions."}</p>
       <span class="go">→</span>
     </a></div>`:`<section class="learn-pending" role="status">
       <h2>${d.learnSoon}</h2>
@@ -5035,6 +5039,31 @@ addEventListener("message",event=>{
 });
 if(typeof MutationObserver==="function")new MutationObserver(syncLearnStudio).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 addEventListener("resize",syncLearnStudio);
+
+function learnLibraryHeading(){
+  const ko=lang==="ko",label=ko?"문제은행":"Problem library";
+  return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p>
+    <h1>${label}</h1><p class="learn-tool-copy">${ko?"문제 검색 · 한국어/영어 본문 · 풀이":"Problem search · Korean/English statements · Solutions"}</p>`;
+}
+function viewLearnLibrary(){
+  const label=lang==="ko"?"문제은행":"Problem library";
+  const query=new URLSearchParams({embed:"1",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:"20261103-native-learning"});
+  return `<div class="shell learn-library"><div class="phead">${learnLibraryHeading()}</div>
+    <iframe id="learnLibraryFrame" class="learn-library-frame" src="problem-bank/public/index.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
+}
+function syncLearnLibrary(){
+  const frame=document.getElementById("learnLibraryFrame");
+  if(!frame?.contentWindow)return;
+  frame.contentWindow.postMessage({type:"hl-bank-settings",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",viewportHeight:innerHeight},location.origin);
+}
+addEventListener("message",event=>{
+  const frame=document.getElementById("learnLibraryFrame");
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(event.data?.type==="hl-bank-height"&&Number.isFinite(event.data.height))
+    frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+"px";
+});
+if(typeof MutationObserver==="function")new MutationObserver(syncLearnLibrary).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+addEventListener("resize",syncLearnLibrary);
 
 function viewAbout(){
   const d=UI[lang];
@@ -9623,7 +9652,7 @@ function setDocTitle(first, second){
   else if(first==="community")   parts.push(d.navComm);
   else if(["monthly","weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
-  else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
+  else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):location.hash.split("?")[0]==="#/learn/physics/library"?(lang==="ko"?"학습 — 물리 — 문제은행":"Learn — Physics — Problem library"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=first==="rupho"&&RUPHO_ARCHIVE?compOf(RUPHO_ARCHIVE.route(location.hash).key):DATA[first];
     const route=location.hash.split("?")[0].split("/"),mode=route.at(-1);
@@ -9682,6 +9711,14 @@ function render(){
   const d=UI[lang];
   const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
   const [first,second,third]=parts;
+  const currentLibrary=document.getElementById("learnLibraryFrame");
+  if(first==="learn"&&second==="physics"&&third==="library"&&currentLibrary&&document.querySelector(".learn-library .phead")){
+    document.querySelector(".learn-library .phead").innerHTML=learnLibraryHeading();
+    currentLibrary.title=lang==="ko"?"문제은행":"Problem library";
+    document.documentElement.lang=lang;setDocTitle(first,second);paintPageChrome("learn");paintSiteTheme();syncLearnLibrary();
+    if(typeof arChip==="function")arChip();else cmAccountChip();
+    return;
+  }
   const currentStudio=document.getElementById("learnStudioFrame");
   if(first==="learn"&&second==="physics"&&third==="studio"&&currentStudio&&document.querySelector(".learn-studio .phead")){
     document.querySelector(".learn-studio .phead").innerHTML=learnStudioHeading();
@@ -9704,7 +9741,7 @@ function render(){
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
-  else if(first==="learn"){       html=second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="learn"){       html=second==="physics"&&third==="studio"?viewLearnStudio():second==="physics"&&third==="library"?viewLearnLibrary():second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
@@ -9722,6 +9759,8 @@ function render(){
   paintSiteTheme();
   const studioFrame=document.getElementById("learnStudioFrame");
   if(studioFrame)studioFrame.addEventListener("load",()=>{studioFrame.dataset.studioReady="true";syncLearnStudio();},{once:true});
+  const libraryFrame=document.getElementById("learnLibraryFrame");
+  if(libraryFrame)libraryFrame.addEventListener("load",syncLearnLibrary,{once:true});
   if(active==="home"){ startHero(); mountHomeActivity(); }
   if(active==="community") cmMount();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
@@ -9731,7 +9770,7 @@ function render(){
 }
 
 addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });
-addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;if(document.getElementById("learnStudioFrame")){if(typeof arChip==="function")arChip();else cmAccountChip();}else render();}});
+addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;if(document.getElementById("learnStudioFrame")||document.getElementById("learnLibraryFrame")){if(typeof arChip==="function")arChip();else cmAccountChip();}else render();}});
 initSiteDesign();
 render();
 </script>

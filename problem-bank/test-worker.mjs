@@ -100,24 +100,24 @@ test('OCR disabled, non-admin calls and invalid input cannot reach a paid adapte
   const limited=fixture({ocrStatus:429}),photo=new FormData();photo.set('image',new Blob([PNG],{type:'image/png'}),'scan.png');const res=await limited.call('/api/problem-bank/identify',{method:'POST',body:photo});assert.equal(res.status,429);assert.doesNotMatch(await res.text(),/secret-upstream/);
 });
 
-function browserFixture(){
-  const nodes=new Map(),pending=[],revoked=[],calls=[];
+function browserFixture({embedded=false,initialize=true,parentOrigin='https://haslalab.org',pageOrigin='https://haslalab.org'}={}){
+  const nodes=new Map(),pending=[],revoked=[],calls=[],events={},messages=[];
   class Element {
     constructor(id=''){this.id=id;this.hidden=false;this.disabled=false;this.value='';this.dataset={};this.isConnected=true;this.listeners={};this.style={};this.children=[];this.classList={toggle(){},add(){},remove(){}};this._html='';this._text='';}
     set innerHTML(x){this._html=String(x);this._text='';}get innerHTML(){return this._html;}
     set textContent(x){this._text=String(x);this._html='';}get textContent(){return this._text;}
-    addEventListener(type,fn){this.listeners[type]=fn;}setAttribute(){}querySelector(){return this.button??=new Element();}querySelectorAll(){return [];}reset(){this.value='';}append(x){this.children.push(x);}click(){}
+    addEventListener(type,fn){this.listeners[type]=fn;}setAttribute(){}querySelector(){return this.button??=new Element();}querySelectorAll(){return [];}reset(){this.value='';}append(x){this.children.push(x);}click(){}getBoundingClientRect(){return {height:800};}
   }
   const node=id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id);};
   const storage=()=>{const values=new Map();return {getItem(key){return values.get(key)??null;},setItem(key,value){values.set(key,String(value));},removeItem(key){values.delete(key);}};};
-  const sessionStore=storage();
+  const sessionStore=storage(),localStore=storage();if(embedded)localStore.setItem('hlCmTok',TOKEN);
   class BrowserFormData extends FormData {constructor(form){super();for(const [key,value] of Object.entries(form?.fields||{}))this.set(key,value);}}
   class BrowserURL extends URL {static createObjectURL(){return 'blob:synthetic';}static revokeObjectURL(x){revoked.push(x);}}
-  const sandbox={console,URL:BrowserURL,URLSearchParams,AbortController,DOMException,FormData:BrowserFormData,Blob,Set,Map,Number,String,Object,Promise,localStorage:storage(),sessionStorage:sessionStore,matchMedia:()=>({matches:false}),window:{location:new URL(origin+'/'),renderMathInElement:null},document:{documentElement:{dataset:{}},getElementById:node,querySelectorAll:()=>[],createElement:()=>new Element()},fetch:(path,opts)=>new Promise((resolve,reject)=>{const request={path,opts,resolve,reject};pending.push(request);calls.push(request);})};
+  const parent={location:{origin:parentOrigin},postMessage:(data,target)=>messages.push({data,target})};
+  const sandbox={console,URL:BrowserURL,URLSearchParams,AbortController,DOMException,FormData:BrowserFormData,Blob,Set,Map,Number,String,Object,Promise,localStorage:localStore,sessionStorage:sessionStore,matchMedia:()=>({matches:false}),window:{location:new URL(embedded?pageOrigin+'/problem-bank/public/index.html?embed=1&lang=ko&theme=light':origin+'/'),renderMathInElement:null,parent:embedded?parent:null,addEventListener:(name,fn)=>{events[name]=fn;}},document:{documentElement:{dataset:{}},body:node('body'),getElementById:node,querySelector:()=>node('main'),querySelectorAll:()=>[],createElement:()=>new Element()},fetch:(path,opts)=>new Promise((resolve,reject)=>{const request={path,opts,resolve,reject};pending.push(request);calls.push(request);})};
   vm.createContext(sandbox);const source=readFileSync(new URL('./public/app.js',import.meta.url),'utf8');vm.runInContext(source+'\nglobalThis.exposed={state,api,signOut,restoreSession,showLibrary,search,identify,selectQuestion,showSolutions,showRecommendations,prose};',sandbox);
-  sandbox.exposed.state.token=TOKEN;sandbox.exposed.state.user={...ADMIN};
-  sessionStore.setItem('hlBankToken',TOKEN);node('bootstrapStatus').hidden=true;
-  return {...sandbox.exposed,node,pending,revoked,calls,sessionStore};
+  if(initialize){sandbox.exposed.state.token=TOKEN;sandbox.exposed.state.user={...ADMIN};sessionStore.setItem('hlBankToken',TOKEN);node('bootstrapStatus').hidden=true;}
+  return {...sandbox.exposed,node,pending,revoked,calls,sessionStore,localStore,events,parent,messages};
 }
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 const metadata={questions:7,language_bodies:14,ocr_available:false};
@@ -127,6 +127,32 @@ async function finishBootstrap(b,sources=[{id:SID,title:'Current source'}]){
   for(const request of requests)request.resolve(Response.json(request.path.endsWith('/status')?metadata:{sources}));
   await tick();const search=b.pending.shift();assert.match(search.path,/\/search\?/);search.resolve(Response.json({items:[],has_more:false}));
 }
+test('native Learn embedding reuses the existing site session only with the fixed bank API',async()=>{
+  const b=browserFixture({embedded:true,initialize:false});
+  assert.equal(b.pending[0].path,'https://haslalab-problem-bank.haslalab.workers.dev/auth/me');assert.equal(b.pending[0].opts.headers.Authorization,'Bearer '+TOKEN);
+  assert.equal(b.node('loginForm').hidden,true);assert.equal(b.node('siteLogin').hidden,false);
+  b.node('siteLogin').listeners.click();assert.equal(b.sessionStore.getItem('hlCmBack'),'#/learn/physics/library');assert.equal(b.node('siteLogin').href,'../../?lang=ko#/login');
+  b.pending.shift().resolve(Response.json({user:ADMIN}));await tick();await finishBootstrap(b);await tick();
+  assert.equal(b.state.user.role,'admin');assert.equal(b.localStore.getItem('hlCmTok'),TOKEN);assert.equal(b.sessionStore.getItem('hlBankToken'),null);
+  assert(b.calls.every(c=>c.path.startsWith('https://haslalab-problem-bank.haslalab.workers.dev/')));assert(!b.calls.some(c=>c.path.endsWith('/auth/login')));
+  await assert.rejects(b.api('https://evil.test/api/problem-bank/search'),/invalid_api_path/);
+  assert.deepEqual(JSON.parse(JSON.stringify(b.messages)),[{data:{type:'hl-bank-height',height:824},target:'https://haslalab.org'}]);
+});
+test('embedded non-admin denial never deletes or revokes the parent site session',async()=>{
+  const b=browserFixture({embedded:true,initialize:false});b.pending.shift().resolve(Response.json({user:USER}));await tick();
+  assert.equal(b.state.token,'');assert.equal(b.localStore.getItem('hlCmTok'),TOKEN);assert.equal(b.node('library').hidden,true);assert.equal(b.calls.length,1);
+});
+test('parent logout clears embedded private data and rejects the previous account response',async()=>{
+  const b=browserFixture({embedded:true,initialize:false}),old=b.pending.shift();b.node('detail').innerHTML='PRIVATE';b.localStore.removeItem('hlCmTok');b.events.storage({key:'hlCmTok'});
+  old.resolve(Response.json({user:ADMIN}));await tick();assert.equal(b.state.token,'');assert.equal(b.node('detail').innerHTML,'');assert.equal(b.node('library').hidden,true);assert.equal(b.calls.length,1);
+});
+test('embedding admits only same-origin HaslaLab parents and never accepts session data in messages',async()=>{
+  const foreign=browserFixture({embedded:true,initialize:false,parentOrigin:'https://evil.test'});assert.equal(foreign.pending.length,0);assert.equal(foreign.state.token,'');assert.equal(foreign.messages.length,0);
+  const b=browserFixture({embedded:true,initialize:false});
+  for(const event of [{origin:'https://evil.test',source:b.parent},{origin:'https://haslalab.org',source:{}}])b.events.message({...event,data:{type:'hl-bank-settings',theme:'dark',lang:'en',token:OTHER}});
+  assert.equal(b.state.theme,'light');assert.equal(b.state.lang,'ko');
+  b.events.message({origin:'https://haslalab.org',source:b.parent,data:{type:'hl-bank-settings',theme:'dark',token:OTHER,role:'admin'}});assert.equal(b.state.theme,'dark');assert.equal(b.state.token,TOKEN);
+});
 
 test('successful login exposes bootstrap failures with a retry that never resubmits credentials',async()=>{
   const b=browserFixture();b.state.token='';b.state.user=null;b.sessionStore.removeItem('hlBankToken');
