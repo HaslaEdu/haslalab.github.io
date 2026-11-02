@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { misreadOf, focusPrompt, acceptedRereads } from "./src/focus-read.js";
+import { misreadOf, mathpixRereads } from "./src/focus-read.js";
 
 test("a re-read replaces a reading only one character off: a digit or a power of ten", () => {
-  assert.ok(misreadOf(1.59e13, 1.59e18), "IPhO 2021 T3 C.3: 10^13 for 10^18");
+  assert.ok(misreadOf(1.59e12, 1.59e18), "IPhO 2021 T3 C.3: 10^12 for 10^18");
   assert.ok(misreadOf(25, 85), "IPhO 2021 T3 D.5: 25 for 85");
   assert.ok(misreadOf(0.31, 0.37));
   assert.ok(!misreadOf(223, 129), "a different number is a different answer, not a misread");
@@ -11,18 +11,12 @@ test("a re-read replaces a reading only one character off: a digit or a power of
   assert.ok(!misreadOf(0, 8));
   assert.ok(!misreadOf(3.3, NaN));
 });
-test("the question names the items and their units: neither the first reading nor the official value", () => {
-  const p = focusPrompt([{ id: "C.3", unit: "m^-3", first: "15900000000000" }]);
-  assert.match(p, /\[TASK: focus read\]/); assert.match(p, /"id":"C.3","unit":"m\^-3"/); assert.ok(!p.includes("159"), "a blind re-read");
-  assert.match(p, /never compute/);
-});
-test("only found values one character off are accepted", () => {
-  const disputed = [{ id: "C.3", value: 1.59e13 }, { id: "D.5", value: 25 }, { id: "B.2", value: 223 }, { id: "B.4", value: 3.3 }];
-  const out = acceptedRereads(disputed, { items: [
-    { id: "C.3", found: true, written: "1.59 × 10^{18}", value: 1.59e18 },
-    { id: "D.5", found: false, written: "", value: null },
-    { id: "B.2", found: true, written: "129 nm", value: 129 },
-    { id: "B.4", found: true, written: "3.3 ns", value: 3.3 }] });
-  assert.deepEqual(out, [{ id: "C.3", value: 1.59e18, written: "1.59 × 10^{18}" }]);
-  assert.deepEqual(acceptedRereads(disputed, null), []);
+test("Mathpix's page gives the one number a character off the first reading, absent from the first transcript", () => {
+  // IPhO 2021 T3, session 34: what DeepSeek and Mathpix read on the answer pages
+  assert.deepEqual(mathpixRereads([{ id: "C.3", value: 1.59e12 }], "Numerical value: $n_{c} \\approx 1,59 \\cdot 10^{18}$ ... $n_{0} / n_{c} \\approx(.5) \\cdot 10^{7}$", "n_c ≈ 1.59·10^{12}"),
+    [{ id: "C.3", value: 1.59e18, written: "Mathpix: 1590000000000000000" }]);
+  assert.deepEqual(mathpixRereads([{ id: "D.5", value: 25 }], "D. 5 (1.1 pt) Numerical value: $n \\approx 85$", "D.5 (1.1 pt) n ≈ 25").map(r => r.value), [85]);
+  assert.deepEqual(mathpixRereads([{ id: "2.3.b", value: 3.11 }], "3,11·10⁹ pa", "3,11·10⁹ pa"), [], "a unit, not a misread: the transcript has the same number");
+  assert.deepEqual(mathpixRereads([{ id: "B.2", value: 223 }], "\\Delta \\lambda \\approx 223 \\mathrm{hm}", "Δλ ≈ 223 nm"), [], "the same reading");
+  assert.deepEqual(mathpixRereads([{ id: "X", value: 25 }], "n = 85 and m = 35", "n = 25"), [], "two candidates: no choice");
 });
