@@ -12,7 +12,7 @@ import os
 import re
 import uuid
 from pathlib import Path
-from private_paths import private_directory
+from private_paths import private_directory, source_path
 from source_identity import source_reference, source_key
 
 
@@ -39,7 +39,8 @@ def write_json_atomic(path, value):
         raise
 
 
-def payload(path, expected):
+def payload(path, expected, path_map=None):
+    path = source_path(path, path_map)
     data = path.read_bytes()
     digest = hashlib.sha256(data).hexdigest()
     if digest != expected:
@@ -162,7 +163,7 @@ def prepare(root, text_only=False, profiles=None):
                     path = Path(asset["local_path"])
                     if not path.is_absolute():
                         path = folder / path
-                    asset.update(payload(path, asset["sha256"]))
+                    asset.update(payload(path, asset["sha256"], root / "runtime-path-map.json"))
             if text_only:
                 question["assets"] = []
             translated_item = translated.get(question["locator"])
@@ -179,7 +180,7 @@ def prepare(root, text_only=False, profiles=None):
         source = matches[0]
         translated = translations(folder)
         import pymupdf
-        document = pymupdf.open(source["local_path"])
+        document = pymupdf.open(source_path(source["local_path"], root / "runtime-path-map.json"))
         for original in raw["questions"]:
             spans, assets = [], []
             for index, segment in enumerate(original["statement_segments"]):
@@ -192,7 +193,7 @@ def prepare(root, text_only=False, profiles=None):
                 if not text_only:
                     assets.append({"asset_id": f"crop-{index + 1}", "role": "question_crop",
                     "mime_type": "image/webp", "spans": [span],
-                    **payload(folder / segment["image"], segment["image_sha256"])})
+                    **payload(folder / segment["image"], segment["image_sha256"], root / "runtime-path-map.json")})
             question = {"source": source_reference(source),
                 "locator": "problem-" + original["original_number"],
                 "original_number": original["original_number"],
