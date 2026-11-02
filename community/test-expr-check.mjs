@@ -2,7 +2,7 @@
 // Final expressions compared by evaluation at random points (audit cases of 2026-11-01), with a closed parser.
 import assert from "node:assert/strict";
 import test from "node:test";
-import { compareExpr, parseExpr, describeCheck } from "./src/expr-check.js";
+import { compareExpr, parseExpr, describeCheck, schemeSymbols } from "./src/expr-check.js";
 
 test("the audit's over-credited results are told apart from the official ones", () => {
   assert.deepEqual(compareExpr("2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1)", "2*rho_1*g*h^2/k^2*(1-rho_0/rho_1)^2"), { verdict: "differs", missing: ["L"], extra: [] }, "IPhO 2021 T1 A.4: no L");
@@ -31,4 +31,13 @@ test("anything outside the grammar is not judged", () => {
   assert.equal(compareExpr("sqrt(-1-x^2)", "sqrt(-1-x^2)"), null, "no real value anywhere");
   assert.equal(describeCheck(null), null);
   assert.match(describeCheck(compareExpr("G*M^3", "M^3")), /not equivalent.*missing G/);
+});
+test("an extra variable that is one of the paper's own symbols is a real dependence, not another notation", () => {
+  // IPhO 2021 T1 (audit, session 34): tau with an extra L, and B.2 with an extra 1/L, both given full marks
+  const known = schemeSymbols(["2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1)", "A*c*rho_1*D^2/kappa", "2*E*z_0/(pi*(4*z_0^2+x^2))", "x +"]);
+  assert.ok(known.has("L") && known.has("z_0"));
+  const b2 = compareExpr("2*E*z_0/(pi*(4*z_0^2+x^2))", "E/(pi*L)*2*z_0/(x^2+4*z_0^2)", { known });
+  assert.equal(b2.verdict, "differs"); assert.deepEqual(b2.extra, ["L"]);
+  assert.equal(compareExpr("2*E*z_0/(pi*(4*z_0^2+x^2))", "E/(pi*L)*2*z_0/(x^2+4*z_0^2)"), null, "without the paper's symbols: no verdict, as before");
+  assert.equal(compareExpr("2*E*z_0/(pi*(4*z_0^2+x^2))", "2*E*z_s/(pi*(4*z_s^2+x^2))", { known }), null, "a name the paper does not use is still notation");
 });

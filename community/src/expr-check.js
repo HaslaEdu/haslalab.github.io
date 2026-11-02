@@ -107,8 +107,17 @@ function points(names, n, seed) {
   return Array.from({ length: n }, () => Object.fromEntries(names.map(v => [v, 0.3 + 0.9 * rnd() + (rnd() < .5 ? 0 : 0.7 * rnd())])));
 }
 
-/** {verdict:'equal'|'differs'|'factor', ratio?, missing?, extra?} or null when either side cannot be parsed or evaluated */
-export function compareExpr(official, candidate) {
+/** the variables of the paper's official expressions (a task's scheme items), for compareExpr's `known` */
+export function schemeSymbols(exprs) {
+  const out = new Set();
+  for (const e of exprs || []) { const node = typeof e === "string" ? parseExpr(e) : null; if (node) vars(node, out); }
+  return out;
+}
+
+/** {verdict:'equal'|'differs'|'factor', ratio?, missing?, extra?} or null when either side cannot be parsed or evaluated.
+    known: the paper's own symbols (schemeSymbols of the task); a candidate's extra variable among them is a real
+    dependence on a quantity of the problem (an L too many), not another notation */
+export function compareExpr(official, candidate, { known = null } = {}) {
   const a = parseExpr(official); let b = parseExpr(candidate);
   if (!a || !b) return null;
   const va = vars(a); b = rename(b, aliases(va, vars(b)));
@@ -116,7 +125,7 @@ export function compareExpr(official, candidate) {
   const missing = [...va].filter(v => !vb.has(v)), extra = [...vb].filter(v => !va.has(v));
   /* a name of the candidate's own that matches no official one, or more than one official name gone, is most likely a
      different notation (or a misreading), not a different answer: no verdict */
-  if (extra.length || missing.length > 1) return null;
+  if (extra.some(v => !known?.has(v)) || missing.length > 1) return null;
   const ratios = [];
   for (const at of points(names, 24, names.join(",").length * 7919 + 17)) {
     const x = evaluate(a, at), y = evaluate(b, at);

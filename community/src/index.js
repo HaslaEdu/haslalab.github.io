@@ -35,7 +35,7 @@ import { prepareMonthlyExperimentVisuals } from './monthly-experiment-visuals.js
 import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './lab-call-pricing.js';
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages,referenceText} from './reference-images.js';
-import { compareExpr, describeCheck } from './expr-check.js';
+import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips } from './page-tiles.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
@@ -2402,9 +2402,10 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const specOf = new Map(scheme.items.map(it => [it.id, it]));
   /* Math-Verify's check in code: a result whose final expression is not the official one at random points yet has full
      marks, or is the official one in another form yet has under half, is looked at once more with that fact */
+  const known = schemeSymbols(scheme.items.map(it => it.expr));
   const checks = env.LAB_EXPR_CHECK === "off" || roles?.exprCheck === false ? [] : (raw.items || []).flatMap(x => {
     const it = specOf.get(String(x?.id)); if (!it?.expr || !x?.expr || it.role === "step") return [];   // a scheme that leaves role out (DeepSeek's) still checks its formula items
-    const c = compareExpr(it.expr, x.expr), score = +x.score || 0; if (!c) return [];
+    const c = compareExpr(it.expr, x.expr, { known }), score = +x.score || 0; if (!c) return [];
     const doubt = c.verdict === "equal" ? score < .5 * it.points : score >= .99 * it.points;
     return doubt ? [{ id: it.id, got: score, check: describeCheck(c) }] : [];
   }).slice(0, 30);
