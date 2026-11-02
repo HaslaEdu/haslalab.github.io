@@ -40,4 +40,6 @@ test("an extra variable that is one of the paper's own symbols is a real depende
   assert.equal(b2.verdict, "differs"); assert.deepEqual(b2.extra, ["L"]);
   assert.equal(compareExpr("2*E*z_0/(pi*(4*z_0^2+x^2))", "E/(pi*L)*2*z_0/(x^2+4*z_0^2)"), null, "without the paper's symbols: no verdict, as before");
   assert.equal(compareExpr("2*E*z_0/(pi*(4*z_0^2+x^2))", "2*E*z_s/(pi*(4*z_s^2+x^2))", { known }), null, "a name the paper does not use is still notation");
+  assert.match(describeCheck(b2), /extra L\. First make sure this is the candidate's final answer as written in the answer box/, "an extra variable may be a line of working quoted instead of the answer");
+  assert.ok(!/answer box/.test(describeCheck(compareExpr("G*M^3", "M^3"))));
 });
