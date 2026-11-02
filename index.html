@@ -1121,7 +1121,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=396231d48b78"></script>
+<script src="site-catalogue.js?v=1e45a7fa6372"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=3b50617f7063"></script>
@@ -9469,6 +9469,12 @@ function cmAuthDone(r){
   if(r.user?.username_required){location.hash='#/me';return;}
   cmBack();
 }
+if(typeof window!=='undefined'&&typeof window.addEventListener==='function')window.addEventListener('haslaedu:oauth-desktop',async event=>{
+  const detail=event.detail;if(detail?.version!==1)return;
+  if(detail.error){cmToast(lang==='ko'?'외부 로그인을 완료하지 못했습니다. 다시 시도해 주세요.':'External sign-in did not complete. Try again.');return;}
+  if(!/^[A-Za-z0-9_-]{32,128}$/.test(detail.code||'')||!/^[A-Za-z0-9._~-]{43,128}$/.test(detail.code_verifier||'')||!/^[A-Za-z0-9_-]{43,128}$/.test(detail.state||''))return;
+  try{cmAuthDone(await cmApi('POST','/oauth/desktop/exchange',{code:detail.code,code_verifier:detail.code_verifier,state:detail.state}));if(typeof arChip==='function')arChip();else cmAccountChip();}catch(e){cmToast(cmErr(e));}
+});
 function cmLogin(root){
   const T=CMT[lang];
   if(cm.me){ location.hash="#/community"; return; }

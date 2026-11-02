@@ -285,12 +285,6 @@ function arClaimUsername(root){
   const form=root.querySelector('form'),submit=form.querySelector('button'),error=form.querySelector('.cmerr');
   form.onsubmit=async event=>{event.preventDefault();if(submit.disabled||!form.reportValidity())return;submit.disabled=true;error.textContent='';try{const response=await cmApi('POST','/me/username',{username:form.username.value.trim()});cm.me=response.user;cm.meChecked=true;arChip();if(location.hash==='#/me')arMount();else location.hash='#/me';}catch(e){error.textContent=cmErr(e);submit.disabled=false;}};
 }
-if(typeof window!=='undefined'&&typeof window.addEventListener==='function')window.addEventListener('haslaedu:oauth-desktop',async event=>{
-  const detail=event.detail;if(detail?.version!==1)return;
-  if(detail.error){cmToast(lang==='ko'?'외부 로그인을 완료하지 못했습니다. 다시 시도해 주세요.':'External sign-in did not complete. Try again.');return;}
-  if(!/^[A-Za-z0-9_-]{32,128}$/.test(detail.code||'')||!/^[A-Za-z0-9._~-]{43,128}$/.test(detail.code_verifier||'')||!/^[A-Za-z0-9_-]{43,128}$/.test(detail.state||''))return;
-  try{cmAuthDone(await cmApi('POST','/oauth/desktop/exchange',{code:detail.code,code_verifier:detail.code_verifier,state:detail.state}));arChip();}catch(e){cmToast(arErr(e));}
-});
 
 /* ── sign in with Google plus Kakao and NAVER (Korean pages) or GitHub and Discord (English pages) ── */
 const OAUTH_BY_LANG = {ko: ["google", "kakao", "naver"], en: ["google", "github", "discord"]};
