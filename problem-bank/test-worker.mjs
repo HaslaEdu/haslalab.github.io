@@ -285,6 +285,24 @@ test('frontend question selection inlines only givens, deduplicates variants and
   const solutions=b.node('showSolutions').listeners.click();assert.match(b.pending[0].path,/\/solutions\?/);b.pending.shift().resolve(Response.json({solutions:[]}));await solutions;
 });
 
+test('frontend theme inversion marks only explicitly verified monochrome figures and preserves source captions',async()=>{
+  const b=browserFixture({token:'',user:null}),load=b.selectQuestion('same');
+  const figures=[true,false,undefined,'true',1].map((flag,index)=>({id:'fig-'+index,monochrome:flag,figure_label:'Fig.1.'+index,url:'/api/problem-bank/figures/f_'+index,spans:[{page:13}]}));
+  b.pending.shift().resolve(Response.json(detail('same','QUESTION',{figures})));await load;
+  for(let i=0;i<figures.length;i++){assert.equal(b.pending.length,1);b.pending.shift().resolve(imageResponse());await tick();}
+  const rendered=b.node('questionFigures').children;assert.equal(rendered.length,5);
+  for(let i=0;i<rendered.length;i++){
+    assert.equal(rendered[i].className.includes('figure-monochrome'),i===0);
+    assert.equal(rendered[i].children[0].className==='source-monochrome',i===0);
+    assert.equal(rendered[i].children[0].src,'blob:synthetic-'+i);
+    assert.match(rendered[i].children[1].textContent,new RegExp('Fig\\.1\\.'+i));
+  }
+  const css=readFileSync(new URL('./public/styles.css',import.meta.url),'utf8');
+  assert.match(css,/:root\[data-theme=dark\] \.figure img\.source-monochrome\{filter:invert\(1\);mix-blend-mode:screen\}/);
+  assert.match(css,/:root\[data-theme=dark\] \.figure\.figure-monochrome\{background:var\(--panel\)/);
+  assert.equal((css.match(/filter:invert\(/g)||[]).length,1);
+});
+
 test('frontend administrator raw captures remain collapsed and image completions cannot reappear after logout',async()=>{
   const b=browserFixture(),load=b.selectQuestion('same');
   b.pending.shift().resolve(Response.json(detail('same','QUESTION',{can_view_source:true,assets:[{id:'raw',role:'question_crop',url:'/api/problem-bank/assets/raw'},{id:'annotated',role:'figure',placement:'source_only',url:'/api/problem-bank/assets/annotated'}]})));await load;

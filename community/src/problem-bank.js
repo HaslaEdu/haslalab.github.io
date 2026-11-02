@@ -67,8 +67,8 @@ async function scopedAssets(env,data,user,questionId){
 }
 async function figureVariants(env,questionId){
   if(!await optionalTable(env,'BANK_REGISTRY','bank_figure_variants'))return [];
-  const data=await rows(binding(env,'BANK_REGISTRY'),"SELECT id,parent_asset_id,mime_type,sha256,width,height,spans_json,json_extract(proof_json,'$.figure_label') AS figure_label,json_extract(proof_json,'$.partial_source_figure') AS partial_source_figure FROM bank_figure_variants WHERE question_id=? AND verified_givens_only=1 ORDER BY id LIMIT 100",[questionId]);
-  return data.filter(a=>/^f_[a-f0-9]{64}$/.test(a.id)&&HASH.test(a.sha256)).map(a=>({id:a.id,parent_asset_id:a.parent_asset_id,mime_type:a.mime_type,sha256:a.sha256,width:a.width,height:a.height,spans:array(a.spans_json),figure_label:safeString(a.figure_label,240),partial_source_figure:a.partial_source_figure===1,role:'figure',placement:'inline',figure_review_status:'source_verified',url:PREFIX+'/figures/'+a.id}));
+  const data=await rows(binding(env,'BANK_REGISTRY'),"SELECT id,parent_asset_id,mime_type,sha256,width,height,spans_json,json_extract(proof_json,'$.figure_label') AS figure_label,json_extract(proof_json,'$.partial_source_figure') AS partial_source_figure,json_extract(proof_json,'$.monochrome') AS monochrome FROM bank_figure_variants WHERE question_id=? AND verified_givens_only=1 ORDER BY id LIMIT 100",[questionId]);
+  return data.filter(a=>/^f_[a-f0-9]{64}$/.test(a.id)&&HASH.test(a.sha256)).map(a=>({id:a.id,parent_asset_id:a.parent_asset_id,mime_type:a.mime_type,sha256:a.sha256,width:a.width,height:a.height,spans:array(a.spans_json),figure_label:safeString(a.figure_label,240),partial_source_figure:a.partial_source_figure===1,monochrome:a.monochrome===1,role:'figure',placement:'inline',figure_review_status:'source_verified',url:PREFIX+'/figures/'+a.id}));
 }
 
 function baseText(text) {

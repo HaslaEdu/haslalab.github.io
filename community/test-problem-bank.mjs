@@ -125,10 +125,11 @@ test('cursor browse reaches every canonical row beyond offset300 without duplica
 });
 test('admitted figure metadata exposes only bounded safe labels and partial-source flags',async t=>{
   const f=fixture(t);
-  for(const [n,label] of [[1,'Fig. 1.16 · input portion only'],[2,'D:/private/source-proof.pdf']])f.main.prepare('INSERT INTO bank_figure_variants VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run('f_'+sha('figure'+n),Q1,S1,sha('pdf'),A1,sha(PNG),'[]','figures/'+sha(PNG)+'.png','image/png',sha(PNG),PNG.length,1,1,1,JSON.stringify({figure_label:label,partial_source_figure:true,private_path:'D:/private/secret',api_key:'topsecret'}),'now');
+  for(const [n,label] of [[1,'Fig. 1.16 · input portion only'],[2,'D:/private/source-proof.pdf']])f.main.prepare('INSERT INTO bank_figure_variants VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run('f_'+sha('figure'+n),Q1,S1,sha('pdf'),A1,sha(PNG),'[]','figures/'+sha(PNG)+'.png','image/png',sha(PNG),PNG.length,1,1,1,JSON.stringify({figure_label:label,partial_source_figure:true,monochrome:n===1,private_path:'D:/private/secret',api_key:'topsecret'}),'now');
   const detail=await (await f.call('/questions/'+Q1,{user:null})).json();assert.equal(detail.question.figures.length,2);
   assert.ok(detail.question.figures.some(a=>a.figure_label==='Fig. 1.16 · input portion only'));assert.ok(detail.question.figures.some(a=>a.figure_label===null));assert.ok(detail.question.figures.every(a=>a.partial_source_figure===true));
   assert.doesNotMatch(JSON.stringify(detail),/D:\/private|topsecret|private_path|proof_json/);
+  assert.equal(detail.question.figures.filter(a=>a.monochrome===true).length,1);
 });
 
 test('member feedback upserts one self-report per question without changing difficulty or ratings',async t=>{

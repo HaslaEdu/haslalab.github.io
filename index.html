@@ -5051,7 +5051,7 @@ function learnLibraryHeading(subject="physics"){
 }
 function viewLearnLibrary(subject="physics"){
   const label=lang==="ko"?"문제은행":"Problem library";
-  const query=new URLSearchParams({embed:"1",collection:subject,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:"20261103-public-library"});
+  const query=new URLSearchParams({embed:"1",collection:subject,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:"20261103-public-figures"});
   return `<div class="shell learn-library"><div class="phead">${learnLibraryHeading(subject)}</div>
     <iframe id="learnLibraryFrame" class="learn-library-frame" data-library-subject="${subject}" src="problem-bank/public/index.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
 }
