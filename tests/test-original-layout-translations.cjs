@@ -52,8 +52,16 @@ for (const item of published) {
     require('./helpers/source-scan-publication.cjs')(root, qa, item);
     continue;
   }
+  if (item.audit_schema === 'natural-source-native-joined-v1') {
+    require('./helpers/natural-source-native-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'latex-native-joined-v1') {
     require('./helpers/latex-native-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'official-korean-historical-v1') {
+    require('./helpers/official-korean-historical-publication.cjs')(root, qa, item);
     continue;
   }
   if (item.audit_schema === 'official-korean-original-v1') {

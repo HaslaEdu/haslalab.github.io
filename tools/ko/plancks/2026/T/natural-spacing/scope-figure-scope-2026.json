@@ -1,0 +1,33 @@
+{
+  "source": "PLANCKS_2026_T_EN.pdf",
+  "reviewed_native_pages": [1, 3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+  "coordinate_system": "PyMuPDF page points, top-left origin",
+  "pages": {
+    "1": {"excluded_figure_rects": [[150, 185, 460, 600]], "mode": "fixed-cover"},
+    "3": {"fixed_native_rects": [[545, 75, 582, 390]], "mode": "fixed-toc-grid", "note": "Original right page-number column is not inline mathematical prose; preserve its coordinates."},
+    "4": {"excluded_figure_rects": [[77.5, 169.3, 534.6, 300.1]]},
+    "6": {"excluded_figure_rects": [[206.2, 167.8, 405.8, 394.5]]},
+    "8": {"excluded_figure_rects": [], "note": "No figure: all paths other than page rules are mathematical expressions."},
+    "9": {"excluded_figure_rects": [], "note": "No figure: prose and mathematical expressions only."},
+    "10": {"excluded_figure_rects": [], "note": "No figure: prose only."},
+    "11": {"excluded_figure_rects": [], "note": "No figure: prose only."},
+    "12": {"excluded_figure_rects": [], "note": "No figure: prose and displayed mathematics only."},
+    "13": {"excluded_figure_rects": [[170.5, 286.0, 441.6, 495.9]]},
+    "14": {"excluded_figure_rects": [[168, 67, 443, 247]], "note": "Whole vector Penrose diagram, including native E0/E1/E2 labels, circles, arrows and dashed trajectories. Caption begins below y255 and remains translatable."},
+    "15": {"excluded_figure_rects": [], "note": "No diagram: rotating-cord question is text-only."},
+    "16": {"excluded_figure_rects": [[170.5, 442.1, 441.6, 636.2]]},
+    "17": {"excluded_figure_rects": [], "note": "No figure: final prose question only."},
+    "18": {"excluded_figure_rects": [[163.7, 156.4, 448.3, 299.7]]}
+  },
+  "additional_historical_scope": {
+    "PLANCKS_2025_T_EN.pdf:10": {
+      "excluded_figure_rects": [[365, 95, 492, 237]],
+      "prose_column_rects": [[44, 104, 310, 229]],
+      "note": "Native vector chain figure and original F/x/lambda labels on right must stay fixed. Introductory prose occupies only the left column; do not pack it into the figure. Body questions below y260 use full width. Hidden LaTeXiT metadata in extraction is not printable prose."
+    },
+    "PLANCKS_2025_T_EN.pdf:2": {
+      "mode": "fixed-toc-grid",
+      "note": "Keep original dotted leaders and right printed page numbers. Translate title cells only; do not treat leaders/page numbers as inline mathematical atoms."
+    }
+  }
+}

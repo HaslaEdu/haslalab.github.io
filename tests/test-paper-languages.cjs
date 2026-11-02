@@ -34,6 +34,15 @@ assert.deepEqual(Object.keys(PaperLanguages.bundle([cpho,oneLanguage], 'en').pap
 assert.deepEqual(PaperLanguages.normalize({ru:['javascript:alert(1)'], en:['../secrets.pdf'],zh:['CPhO_2023_T_ZH.pdf','extra.pdf']},1), {});
 assert.deepEqual(PaperLanguages.normalize({ru:['RuPhO_2026_T1_RU.pdf']},1), {ru:['RuPhO_2026_T1_RU.pdf']});
 
+// Combined translated booklets stay readable, while timed sessions use clean papers.
+const combinedKo={paper:'IChO_2009_T_EN.pdf',paperLang:'en',
+  papers:{en:'IChO_2009_T_EN.pdf',ko:'IChO_2009_T_KO.pdf'},paperContainsSolutions:{ko:true}};
+assert.equal(PaperLanguages.files(combinedKo).ko,'IChO_2009_T_KO.pdf');
+assert.equal(PaperLanguages.containsSolutions(combinedKo,'ko'),true);
+assert.equal(PaperLanguages.containsSolutions(combinedKo,'en'),false);
+assert.deepEqual(PaperLanguages.bundle([combinedKo],'ko'),{papers:{en:['IChO_2009_T_EN.pdf']},language:'en'});
+assert.deepEqual(PaperLanguages.bundle([{paper:'IChO_2008_T_EN.pdf',containsSolutions:true}],'en'),{papers:{},language:''});
+
 // The actual competition links keep interface and paper language independent.
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const hrefStart = html.indexOf('function theoryHref(');
