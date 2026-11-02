@@ -2,9 +2,9 @@
  *
  *     node tools/olydoc/build.cjs tools/olydoc/docs/ispho-sheets.cjs && python3 -I tools/olydoc/ispho_sheets.py
  *
- * 2024 and 2025 are set as the official 2026 answer sheets are (style «ispho»: «Theory»/«Experiment», the logo, «A1-1»,
- * the language, a 2 pt rule; a box per question with its label, points and what is to be written in it); 2023 as its
- * own papers (style «ispho2023»: the logo, PT Serif, the 2 pt question frames, «… page i of n» at the foot).  The
+ * 2023–2025 are set as the official 2026 answer sheets are (style «ispho»: «Theory»/«Experiment», the logo, «A1-1»,
+ * the language, a 2 pt rule; a box per question with its label, points «(0.2pt)» — in Korean too, as the official IPhO
+ * 2025 Korean sheets — and what is to be written in it).  The
  * questions, their points and what each asks for are read from the official papers and solutions; where a question
  * hands its result over as a file (the 2024–2025 experiments were sat on a computer), the sheet gives the table or the
  * graph paper to write it on.  A working sheet is the answer sheet's head with «W» for «A» and one empty frame, the
@@ -224,7 +224,7 @@ const Y2024 = [
 
 /* ─────────────────────────── ISPhO 2023 ─────────────────────────── */
 const Y2023 = [
-  { q: 1, kind: 'T', title: L('T1. Polycrystal diffusion', 'T1. 다결정 확산'), parts: [
+  { q: 1, kind: 'T', title: L('Polycrystal diffusion', '다결정 확산'), parts: [
     { t: L('Part A. Temperature dependence of the diffusion coefficient', 'Part A. 확산 계수의 온도 의존성'), pts: 2.6, items: [
       ['A1', 0.2, v('v='), v('D(T)\\propto')],
       ['A2', 0.4, v('\\Delta r_{\\rm sq}=')],
@@ -236,7 +236,7 @@ const Y2023 = [
       ['C1', 0.4, sp(30)],
       ['C2', 4.0, tbl(['$t$', '$D_{gb}/D$', '$\\delta$', '$\\ln\\bar c$'], 8), pair('\\xi=', '\\eta='), v('\\zeta=')],
       ['C3', 0.6, v('C=')]] }] },
-  { q: 2, kind: 'T', title: L('T2. Muon anomalous magnetic moment', 'T2. 뮤온의 비정상 자기 모멘트'), parts: [
+  { q: 2, kind: 'T', title: L('Muon anomalous magnetic moment', '뮤온의 비정상 자기 모멘트'), parts: [
     { t: L('Part A. Dynamics in magnetic field', 'Part A. 자기장 속에서의 동역학'), pts: 4.5, items: [
       ['A1', 1.0, fv('\\Delta v=')],
       ['A2', 0.5, fv('E_k=')],
@@ -254,7 +254,7 @@ const Y2023 = [
       ['C1', 0.7, v('\\omega_s=')],
       ['C2', 0.5, v('\\omega_a=')],
       ['C3', 0.8, fv('a_\\mu=')]] }] },
-  { q: 3, kind: 'T', title: L('T3. Frequency measurements with ring resonators', 'T3. 링 공진기를 이용한 주파수 측정'), parts: [
+  { q: 3, kind: 'T', title: L('Frequency measurements with ring resonators', '링 공진기를 이용한 주파수 측정'), parts: [
     { t: L('Part A. Field profile in fiber optics', 'Part A. 광섬유에서의 장 분포'), pts: 2.5, items: [
       ['A1', 0.3, pair('C_1=', 'C_2=')],
       ['A2', 0.5, pair('k_{\\rm in}=', 'k_{\\rm out}=')],
@@ -289,9 +289,9 @@ const Y2023 = [
 /* ─────────────────────────── rendering ─────────────────────────── */
 const tr = (x, lang) => typeof x === 'object' && x ? x[lang] : x;
 const fmt = p => (Math.round(p * 10) / 10).toFixed(1);
-const PTW = { en: p => ` (${fmt(p)}pt)`, ko: p => ` (${fmt(p)}점)` };
+/* the points of a question in «pt» in Korean too, as the official IPhO 2025 Korean answer sheets have them */
+const PTW = { en: p => ` (${fmt(p)}pt)`, ko: p => ` (${fmt(p)}pt)` };
 const PART = { en: p => ` (${p} points)`, ko: p => ` (${p}점)` };
-const ppts = (p, style) => style === 'ispho2023' ? String(p) : fmt(p);   /* as each year's papers write them: «(5 points)», «(2.0 points)» */
 const FORM = { en: ['(Formula)', '(Value)'], ko: ['(식)', '(값)'] };
 
 function rows(prompts, lang) {
@@ -321,14 +321,10 @@ function rows(prompts, lang) {
 
 function answerSheet(P, lang, style) {
   const out = [];
-  if (style === 'ispho2023') out.push(`<h1>${tr(P.title, lang)}</h1><div class="sub">${lang === 'ko' ? '답안지' : 'Answer sheet'}</div>`);
-  else out.push(`<h1>${tr(P.title, lang)}</h1>`);
+  out.push(`<h1>${tr(P.title, lang)}</h1>`);
   for (const part of P.parts) {
-    out.push(`<h2>${tr(part.t, lang)}${part.pts != null ? PART[lang](ppts(part.pts, style)) : ''}</h2>`);
+    out.push(`<h2>${tr(part.t, lang)}${part.pts != null ? PART[lang](fmt(part.pts)) : ''}</h2>`);
     for (const [label, pts, ...prompts] of part.items) {
-      if (style === 'ispho2023')
-        out.push(`<div class="bx23"><b>${label}</b><div>${rows(prompts, lang)}</div><b class="p">${pts != null ? fmt(pts) : ''}</b></div>`);
-      else
         out.push(`<div class="bx"><div class="lb"><b>${label}</b>${pts != null ? PTW[lang](pts) : ''}</div>${rows(prompts, lang)}</div>`);
     }
   }
@@ -350,20 +346,6 @@ table.at{border-collapse:collapse;margin:7pt auto 0;font-size:9pt}table.at th,ta
 .ws{border:0.4pt solid #000;height:615.4pt;margin-top:6.4pt}
 .katex{font-size:1em}`;
 
-/* the 2023 question frames run from x = 15.2 to 580.1 pt, past the text's margins (51 / 547 pt): the page is printed
-   with 15.2 pt margins (Chromium clips what passes a page margin) and the text indented to 51 pt */
-const CSS23 = `
-h1{font:400 17.93pt/1.25 'HL PT Serif','HL Serif KR',serif;color:#000;text-align:center;margin:0 0 1pt}
-.sub{text-align:center;font:700 11.96pt/1.3 'HL PT Serif','HL Serif KR',serif;margin:0 0 6pt}
-h2{font:700 11.96pt/1.3 'HL PT Serif','HL Serif KR',serif;color:#000;margin:12pt 0 4pt;padding-left:35.8pt;break-after:avoid}
-.bx23{display:grid;grid-template-columns:35.8pt 1fr 33pt;border:2pt solid #000;margin:0 0 9pt;padding:6pt 0 9pt;break-inside:avoid;line-height:12pt}
-.bx23>b{font:700 11.96pt/1.3 'HL PT Serif',serif;padding-left:9pt}.bx23>b.p{padding:0 0 0 2pt}
-.r{min-height:23.9pt;display:flex;align-items:flex-end}.r.two>span{flex:1}
-.pl{line-height:12pt}
-.pls{display:flex;gap:9pt;margin-top:4pt}.pls>div{flex:1;border:0.4pt solid #000;position:relative}.pls i{position:absolute;left:4pt;top:2pt;font-style:normal;font-size:8.5pt}
-table.at{border-collapse:collapse;margin:4pt auto 0;font-size:9pt}table.at th,table.at td{border:0.4pt solid #000;height:15pt;min-width:56pt;padding:0 5pt;text-align:center;font-weight:400}
-.katex{font-size:1.04em}`;
-
 const LANG = { en: 'English', ko: 'Korean (Korea (Republic of))' };
 const docs = [];
 const name = (y, P, kind, lang) => {
@@ -373,16 +355,15 @@ const name = (y, P, kind, lang) => {
   if (P.kind === 'E') return `${dir}/ISPhO_${y}_${k}${tail}${lang === 'ko' ? '_KO' : ''}.pdf`;
   return `${dir}/ISPhO_${y}_${k}${lang === 'ko' ? (kind === 'answer' ? '_A_KO' : '_W_KO') : tail}.pdf`;
 };
-for (const [y, problems, style] of [[2025, Y2025, 'ispho'], [2024, Y2024, 'ispho'], [2023, Y2023, 'ispho2023']]) {
+for (const [y, problems, style] of [[2025, Y2025, 'ispho'], [2024, Y2024, 'ispho'], [2023, Y2023, 'ispho']]) {
   for (const P of problems) for (const lang of ['en', 'ko']) {
     const section = P.kind === 'E' ? 'Experiment' : 'Theory';
     docs.push({ out: name(y, P, 'answer', lang), style, kind: 'answer', lang, code: `A${P.q}`, section, langLabel: LANG[lang],
-      foot: style === 'ispho2023' ? (lang === 'ko' ? '답안지: {n}쪽 중 {i}쪽' : 'Answer sheet: page {i} of {n}') : undefined,
-      css: style === 'ispho2023' ? CSS23 : CSS, html: answerSheet(P, lang, style) });
+      css: CSS, html: answerSheet(P, lang, style) });
   }
 }
-/* working sheets: 2024–2026, theory (each problem) and experiment */
-const WS = { 2026: [['T', 1], ['T', 2], ['T', 3], ['E', 1]], 2025: [['T', 1], ['T', 2], ['T', 3], ['E', 1]], 2024: [['T', 1], ['T', 2], ['T', 3], ['E', 1]] };
+/* working sheets: 2023–2026, theory (each problem) and experiment */
+const WS = { 2023: [['T', 1], ['T', 2], ['T', 3]], 2026: [['T', 1], ['T', 2], ['T', 3], ['E', 1]], 2025: [['T', 1], ['T', 2], ['T', 3], ['E', 1]], 2024: [['T', 1], ['T', 2], ['T', 3], ['E', 1]] };
 for (const [y, list] of Object.entries(WS)) for (const [kind, q] of list) for (const lang of ['en', 'ko'])
   docs.push({ out: name(y, { kind, q }, 'working', lang), style: 'ispho', kind: 'working', lang, code: `W${q}`,
     section: kind === 'E' ? 'Experiment' : 'Theory', langLabel: LANG[lang], css: CSS, html: workingSheet(kind === 'E' ? 4 : 3) });

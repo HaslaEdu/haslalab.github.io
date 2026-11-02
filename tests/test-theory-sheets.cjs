@@ -67,7 +67,7 @@ test('every problem card offers its answer and working sheets beside the problem
   assert.equal(sheetKind('sim/sheets.html?c=ipho', 'working'), 'sim/sheets.html?c=ipho&k=working');
 });
 
-test('ISPhO 2023–2026: every year has its answer sheets (and 2024–2026 their working sheets) in English and Korean, on the site', () => {
+test('ISPhO 2023–2026: every year has its answer and working sheets in English and Korean, on the site', () => {
   const window = {};
   require('node:vm').runInNewContext(read('theory.js'), { window });
   const T = window.THEORY.ispho;
@@ -76,7 +76,7 @@ test('ISPhO 2023–2026: every year has its answer sheets (and 2024–2026 their
       const f = T[y].f[part];
       for (const file of [f.answer, f.ko.answer]) { assert.match(file, /^pdfx\/ispho\//, `${y} ${part}`); assert.ok(fs.existsSync(path.join(root, file)), file); }
     }
-    if (y !== '2023') for (const file of [T[y].we, T[y].wk]) assert.ok(file && fs.existsSync(path.join(root, file)), `${y} working sheet`);
+    for (const file of [T[y].we, T[y].wk]) assert.ok(file && fs.existsSync(path.join(root, file)), `${y} working sheet`);
   }
   const index = JSON.parse(read('sim/sheets/index.json'));
   for (const y of ['2024', '2025', '2026']) for (const kind of ['answer', 'working']) {
