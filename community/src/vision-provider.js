@@ -109,7 +109,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3}={}) {
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
@@ -125,6 +125,9 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   for(const part of sequence){if(typeof part?.text==='string')content.push(provider==='gemini'||provider==='anthropic'?{text:part.text}:{type:'text',text:part.text});
     else {content.push(picture[imageIndex++],picture[imageIndex++]);}}
   const count=Math.max(256,Math.min(32768,Number(maxTokens)||8192));
+  /* function calling (grade-tools.js): DeepSeek and OpenAI only, with a handler; JSON mode comes back for the last answer */
+  const useTools=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&(provider==='deepseek'||provider==='openai');
+  const toolLog=[];
   const jsonRules=rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{});
   const body=provider==='anthropic'?null:provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],response_format:{type:'json_object'},max_completion_tokens:count,
       ...(['minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
@@ -133,7 +136,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
       // thinking is billed as output: a page read with the model's own default once spent 5.5k thought tokens on 263 characters
       ...(level==='off'?{}:/^gemini-2\.5-flash/.test(model)?{thinkingConfig:{thinkingBudget:level==='minimal'?0:-1}}:{thinkingConfig:{thinkingLevel:level}})}}:
     {model,messages:[{role:'system',content:jsonRules},
-      {role:'user',content}],response_format:{type:'json_object'},
+      {role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),
       /* DeepSeek thinks by default; only a stage's own level asks for it (low, medium/high, max), never GEMINI_THINKING_LEVEL */
       ...(['low','medium','high','max'].includes(thinking)?{thinking:{type:'enabled'},reasoning_effort:thinking==='medium'?'high':thinking,
         // the reasoning counts against max_tokens: room for it beside the answer (only what is written is billed)
@@ -179,7 +182,24 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     if(!response.ok){providerCode=await providerErrorCode(response);providerMessage=response.providerMessage;fail(502,response.status===401||response.status===403?'vision_provider_auth':
       response.status===402?'vision_provider_credits':response.status===429?'vision_provider_rate_limited':response.status===404?'vision_model_unavailable':
       [400,413,422].includes(response.status)?'vision_request_rejected':'vision_provider_failed');}
-    const parsed=await boundedJSON(response),meter=provider==='gemini'?geminiLabUsage(parsed,started):deepseekLabUsage(parsed,started);
+    let parsed=await boundedJSON(response),meter=provider==='gemini'?geminiLabUsage(parsed,started):deepseekLabUsage(parsed,started);
+    /* the grader asks for tools: answer each call and send the conversation back (the prefix is the provider's cache),
+       at most maxToolRounds times; the last round allows no tool and asks for the JSON answer */
+    for(let round=0;useTools&&parsed?.choices?.[0]?.finish_reason==='tool_calls';round++){
+      const message=parsed.choices[0].message||{},calls=Array.isArray(message.tool_calls)?message.tool_calls.slice(0,16):[];
+      if(!calls.length)break;
+      body.messages.push({role:'assistant',content:message.content||'',tool_calls:calls});
+      for(const call of calls){let args={};try{args=JSON.parse(call.function?.arguments||'{}');}catch{}
+        let out;try{out=String(await onTool(call.function?.name,args)).slice(0,2000);}catch{out='tool failed';}
+        toolLog.push({name:String(call.function?.name||'').slice(0,40),args,out:out.slice(0,300)});
+        body.messages.push({role:'tool',tool_call_id:call.id,content:out});}
+      if(round+1>=maxToolRounds){body.tool_choice='none';delete body.tools;body.response_format={type:'json_object'};}
+      encoded=JSON.stringify(body);response=await send(encoded);providerStatus=response.status;
+      if(!response.ok){providerCode=await providerErrorCode(response);providerMessage=response.providerMessage;fail(502,[400,413,422].includes(response.status)?'vision_request_rejected':response.status===429?'vision_provider_rate_limited':'vision_provider_failed');}
+      const next=await boundedJSON(response),more=deepseekLabUsage(next,started),add=(a,b)=>a==null||b==null?null:a+b;
+      meter={...meter,in:add(meter.in,more.in),out:add(meter.out,more.out),cached:add(meter.cached,more.cached),usage_known:meter.usage_known&&more.usage_known};
+      parsed=next;
+    }
     const ended=Date.now();usage={...meter,provider,model,stage,ms:Math.max(0,ended-started),calls:1,
       input_tokens:meter.in,cached_tokens:meter.cached,uncached_input_tokens:meter.in!=null&&meter.cached!=null?meter.in-meter.cached:null,
       output_tokens:meter.out,started_at:new Date(started).toISOString(),finished_at:new Date(ended).toISOString(),ok:true};
@@ -196,7 +216,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     if(typeof content!=='string'||!content.trim())fail(502,'vision_response_empty');
     let raw;try{raw=JSON.parse(String(content).trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));}catch{fail(502,'vision_invalid_response');}
     if(!raw||typeof raw!=='object'||Array.isArray(raw))fail(502,'vision_invalid_response');
-    return{raw,provider,model:provider+':'+(meter.resolved_model||model),usage};
+    return{raw,provider,model:provider+':'+(meter.resolved_model||model),usage,...(toolLog.length?{tools:toolLog}:{})};
   };
   try{return await Promise.race([request(),timeout,cancelled]);}
   catch(error){const failure=error instanceof VisionProviderError?error:new VisionProviderError(aborted||controller.signal.aborted?504:502,
