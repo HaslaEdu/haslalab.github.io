@@ -96,6 +96,7 @@ test('R2 PDF reads require the exact hash-addressed key and preserve private hea
   const f=fixture(),res=await f.call('/api/problem-bank/sources/'+SID+'/pdf');
   assert.equal(res.status,200);assert.deepEqual(Buffer.from(await res.arrayBuffer()),PDF);assert.equal(f.calls.r2[0].key,'sources/'+sha(PDF)+'.pdf');assert.equal(f.calls.metadata,0);assert.equal(res.headers.get('Cache-Control'),'private, no-store');assert.equal(res.headers.get('Content-Disposition'),'inline; filename="source.pdf"');assert.equal(res.headers.get('X-Source-SHA256'),sha(PDF));assert.match(res.headers.get('Content-Security-Policy'),/sandbox/);
   const bad=fixture({pdfRow:{object_key:'../../private.pdf',sha256:sha(PDF),byte_length:PDF.length}});assert.equal((await bad.call('/api/problem-bank/sources/'+SID+'/pdf')).status,404);assert.equal(bad.calls.r2.length,0);
+  const full=fixture({pdfObject:{range:{offset:0,length:PDF.length}}}),whole=await full.call('/api/problem-bank/sources/'+SID+'/pdf');assert.equal(whole.status,200);assert.deepEqual(Buffer.from(await whole.arrayBuffer()),PDF);
 });
 test('PDF ranges are single, bounded and verified against actual R2 object metadata',async()=>{
   const f=fixture(),res=await f.call('/api/problem-bank/sources/'+SID+'/pdf',{headers:{Range:'bytes=2-9'}});assert.equal(res.status,206);assert.equal(res.headers.get('Content-Range'),`bytes 2-9/${PDF.length}`);assert.deepEqual(Buffer.from(await res.arrayBuffer()),PDF.subarray(2,10));assert.deepEqual(f.calls.r2[0].options,{range:{offset:2,length:8}});

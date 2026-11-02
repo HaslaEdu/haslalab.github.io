@@ -89,7 +89,7 @@ async function sourcePdf(request,env,id){
   const object=await env.LIBRARY.get(row.object_key,range?{range}:undefined);
   if(!object)return json({error:'source_pdf_not_found'},404);
   if(object.size!==row.byte_length||(object.customMetadata?.sha256&&object.customMetadata.sha256!==row.sha256)||
-    (range&&(!object.range||object.range.offset!==range.offset||object.range.length!==range.length))||(!range&&object.range)){
+    (range&&(!object.range||object.range.offset!==range.offset||object.range.length!==range.length))||(!range&&object.range&&(object.range.offset!==0||object.range.length!==row.byte_length))){
     await object.body?.cancel?.().catch(()=>{});return json({error:'source_pdf_integrity_error'},503);
   }
   const headers=new Headers({...PRIVATE,'Content-Type':'application/pdf','Content-Disposition':'inline; filename="source.pdf"','Content-Security-Policy':"default-src 'none'; sandbox",'Accept-Ranges':'bytes','X-Source-SHA256':row.sha256});
