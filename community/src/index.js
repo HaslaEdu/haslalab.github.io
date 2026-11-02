@@ -2278,13 +2278,20 @@ function labScore(scheme, raw, pages, opts = {}) {
       const gr = pick("graph");
       if (!gr) return zero("R9");
       const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), seen = gr.graph;
+      /* a check the grader saw met in the photo itself counts even where the page reader left the flag unset (bench: fit
+         lines and slope triangles on hand-drawn graphs read as absent, R7 zeroing marked graphs); without the photo
+         both must agree */
+      const saw = !!pg._visionSupplied;
       res.got = it.checks.reduce((a, c) => a + (c.check === "points_min" ? ((seen.n_points || 0) >= (c.n || nmin || 1) ? c.points : 0)    // counted from what was read (R11)
-        : met.has(c.check) && !!seen[c.check] ? c.points : 0), 0);
+        : met.has(c.check) && (saw || !!seen[c.check]) ? c.points : 0), 0);
       if (res.got < it.checks.reduce((a, c) => a + c.points, 0)) rules.add("R7");
     } else if (it.type === "table" && Array.isArray(it.checks) && it.checks.length) {
       const tb = pick("table");
       if (!tb) return zero("R9");
-      const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), rows = tb.rows || 0;
+      /* a table that runs over several pages is read as one table per page under the same label: its rows add up
+         (bench: 33 g data, rows 1-8 on one page and 9-20 on the next, failed «20 rows» with 8) */
+      const parts = tb.label ? [...live, ...others].filter(i => i.kind === "table" && i.label === tb.label) : [tb];
+      const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), rows = Math.max(tb.rows || 0, parts.reduce((a, i) => a + (+i.rows || 0), 0));
       res.got = it.checks.reduce((a, c) => a + (c.check === "rows_min" ? (rows >= (c.n || nmin || 1) ? c.points : 0)
         : c.check === "columns_units" ? (met.has(c.check) && (tb.columns || []).length ? c.points : 0) : met.has(c.check) ? c.points : 0), 0);
       if (res.got < it.checks.reduce((a, c) => a + c.points, 0)) rules.add("R8");
