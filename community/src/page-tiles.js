@@ -30,3 +30,22 @@ export function pageStrips(bytes, n = 2, overlap = 0.1, quality = 85) {
   }
   return strips;
 }
+
+/** a region of a photographed page, as JPEG bytes: box [ymin,xmin,ymax,xmax] in 0..1000 of the image (Gemini's
+    box_2d), widened by padY / padX (in 0..1000 units) on each side and clipped to the page; null when it cannot be cut */
+export function cropJpeg(bytes, box, padY = 20, padX = 40, quality = 90) {
+  if (!(bytes instanceof Uint8Array) || bytes.length < 4 || bytes[0] !== 0xff || bytes[1] !== 0xd8) return null;
+  if (!Array.isArray(box) || box.length !== 4 || !box.every(Number.isFinite)) return null;
+  const [y0, x0, y1, x1] = box, top = Math.min(y0, y1) - padY, bottom = Math.max(y0, y1) + padY, left = Math.min(x0, x1) - padX, right = Math.max(x0, x1) + padX;
+  let image;
+  try { image = jpeg.decode(bytes, { useTArray: true, formatAsRGBA: true, maxResolutionInMP: MAX_PIXELS / 1e6, maxMemoryUsageInMB: 160 }); }
+  catch { return null; }
+  const { width, height, data } = image;
+  if (!(width > 0 && height > 0) || width * height > MAX_PIXELS) return null;
+  const r0 = Math.max(0, Math.floor(top / 1000 * height)), r1 = Math.min(height, Math.ceil(bottom / 1000 * height));
+  const c0 = Math.max(0, Math.floor(left / 1000 * width)), c1 = Math.min(width, Math.ceil(right / 1000 * width));
+  if (r1 - r0 < 8 || c1 - c0 < 8) return null;
+  const w = c1 - c0, out = new Uint8Array(w * (r1 - r0) * 4);
+  for (let r = r0; r < r1; r++) out.set(data.subarray((r * width + c0) * 4, (r * width + c1) * 4), (r - r0) * w * 4);
+  return encode({ width: w, height: r1 - r0, data: out }, quality);
+}

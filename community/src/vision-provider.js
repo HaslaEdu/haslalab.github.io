@@ -109,7 +109,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[]}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null}={}) {
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
@@ -125,13 +125,18 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   for(const part of sequence){if(typeof part?.text==='string')content.push(provider==='gemini'||provider==='anthropic'?{text:part.text}:{type:'text',text:part.text});
     else {content.push(picture[imageIndex++],picture[imageIndex++]);}}
   const count=Math.max(256,Math.min(32768,Number(maxTokens)||8192));
-  /* function calling (grade-tools.js): DeepSeek and OpenAI only, with a handler; JSON mode comes back for the last answer */
+  /* function calling (grade-tools.js, OpenAI format): DeepSeek and OpenAI as given; Gemini with the same tools as
+     functionDeclarations beside its response schema (Gemini 3). JSON comes back for the last answer */
   const useTools=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&(provider==='deepseek'||provider==='openai');
+  const geminiCalls=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&provider==='gemini';
+  /* Gemini's own tools (geminiTools, e.g. [{code_execution:{}}]: it crops and zooms into a photo itself) */
+  const builtIn=provider==='gemini'&&Array.isArray(geminiTools)?geminiTools.filter(t=>t&&typeof t==='object').slice(0,4):[];
+  const geminiToolList=[...(geminiCalls?[{functionDeclarations:tools.map(t=>({name:t.function.name,description:t.function.description,parameters:t.function.parameters}))}]:[]),...builtIn];
   const toolLog=[];
   const jsonRules=rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{});
   const body=provider==='anthropic'?null:provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],response_format:{type:'json_object'},max_completion_tokens:count,
       ...(['minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
-    provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],
+    provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],...(geminiToolList.length?{tools:geminiToolList}:{}),
     /* temperature is ignored by Gemini 3.6 Flash and newer (Google's changelog); it is sent only where it still counts */
     generationConfig:{responseMimeType:'application/json',responseSchema:schema,...(/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(model)?{temperature:Number(temperature)||0}:{}),maxOutputTokens:count,
       /* Gemini only: more image tokens per picture, for small handwriting (bench read.media high) */
@@ -212,6 +217,31 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
       meter={...meter,in:add(meter.in,more.in),out:add(meter.out,more.out),cached:add(meter.cached,more.cached),usage_known:meter.usage_known&&more.usage_known};
       parsed=next;
     }
+    /* Gemini's function calls: the model's turn goes back as it came (its thought signatures with it), then the answers */
+    const merge=(a,b)=>{const add=(x,y)=>x==null||y==null?null:x+y;return{...a,in:add(a.in,b.in),out:add(a.out,b.out),cached:add(a.cached,b.cached),usage_known:a.usage_known&&b.usage_known};};
+    const geminiAgain=async()=>{encoded=JSON.stringify(body);response=await sendRetry(encoded);providerStatus=response.status;
+      if(!response.ok){providerCode=await providerErrorCode(response);providerMessage=response.providerMessage;fail(502,[400,413,422].includes(response.status)?'vision_request_rejected':response.status===429?'vision_provider_rate_limited':'vision_provider_failed');}
+      const next=await boundedJSON(response);meter=merge(meter,geminiLabUsage(next,started));parsed=next;};
+    for(let round=0;geminiCalls&&round<maxToolRounds;round++){
+      const turn=parsed?.candidates?.[0]?.content,calls=(turn?.parts||[]).filter(part=>part?.functionCall).slice(0,16);
+      if(!calls.length)break;
+      body.contents.push({role:'model',parts:turn.parts});
+      const answers=[];
+      for(const {functionCall:call} of calls){const args=call.args&&typeof call.args==='object'?call.args:{};
+        let out;try{out=String(await onTool(call.name,args)).slice(0,2000);}catch{out='tool failed';}
+        toolLog.push({name:String(call.name||'').slice(0,40),args,out:out.slice(0,300)});
+        answers.push({functionResponse:{name:call.name,...(call.id?{id:call.id}:{}),response:{result:out}}});}
+      body.contents.push({role:'user',parts:answers});
+      // the last round: the tools stay declared (the history holds their calls) but none may be called
+      if(round+1>=maxToolRounds)body.toolConfig={functionCallingConfig:{mode:'NONE'}};
+      await geminiAgain();
+    }
+    if(geminiCalls&&toolLog.length){const said=parsed?.candidates?.[0],text=(said?.content?.parts||[]).filter(part=>!part.thought).map(part=>part.text||'').join('');
+      if((said?.content?.parts||[]).some(part=>part?.functionCall)||said?.finishReason==='STOP'&&!text.trim()){
+        if(said?.content?.parts?.length)body.contents.push({role:'model',parts:said.content.parts},
+          ...((said.content.parts.some(part=>part?.functionCall))?[{role:'user',parts:said.content.parts.filter(part=>part?.functionCall).map(({functionCall:c})=>({functionResponse:{name:c.name,...(c.id?{id:c.id}:{}),response:{result:'no more tool calls: give the answer'}}}))}]:[]));
+        body.contents.push({role:'user',parts:[{text:'Return the JSON object now, with every required field.'}]});
+        body.toolConfig={functionCallingConfig:{mode:'NONE'}};await geminiAgain();}}
     /* after tools the model may stop with no text (DeepSeek's JSON mode can answer empty): ask once more, for the JSON only */
     const said=parsed?.choices?.[0];
     if(toolLog.length&&(said?.finish_reason==='tool_calls'||said?.finish_reason==='stop'&&!String(said?.message?.content||'').trim())){
@@ -234,7 +264,10 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
       if(candidate?.finishReason==='MAX_TOKENS')fail(502,'vision_response_truncated');
       if(candidate?.finishReason&&['SAFETY','RECITATION','BLOCKLIST','PROHIBITED_CONTENT','SPII'].includes(candidate.finishReason))fail(502,'vision_response_blocked');
       if(!candidate||(candidate.finishReason&&candidate.finishReason!=='STOP'))fail(502,'vision_invalid_response');
-      content=(candidate.content?.parts||[]).filter(part=>!part.thought).map(part=>part.text||'').join('');}
+      const said=(candidate.content?.parts||[]).filter(part=>!part.thought&&typeof part.text==='string'&&part.text.trim());
+      content=said.map(part=>part.text).join('');
+      /* with code execution the model may write notes between its runs: the answer is its last text */
+      if(builtIn.length&&said.length>1){try{JSON.parse(content.trim());}catch{content=said.at(-1).text;}}}
     else {const choice=parsed?.choices?.[0];if(choice?.finish_reason==='length')fail(502,'vision_response_truncated');
       if(choice?.finish_reason==='content_filter')fail(502,'vision_response_blocked');
       if(!choice||(choice.finish_reason&&choice.finish_reason!=='stop'))fail(502,'vision_invalid_response');content=choice.message?.content;}
