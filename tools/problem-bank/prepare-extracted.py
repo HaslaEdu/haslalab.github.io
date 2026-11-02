@@ -100,7 +100,8 @@ REVIEWED_COUNTS = {"pns-optics": 160, "puzzling-200": 200, "guide-part1": 139,
                    "schroeder": 486, "puzzling-more": 200, "blundell": 238, "morin-mechanics": 496,
                    "pns-electro": 440, "astronomy-korean": 439, "griffiths-qm": 491,
                    "griffiths-electrodynamics": 587, "pns-quantum": 380, "pns-mechanics": 410,
-                   "purcell-morin": 604, "carroll-ostlie": 626, "zangwill-999": 580}
+                   "purcell-morin": 604, "carroll-ostlie": 626, "zangwill-999": 580,
+                   "jackson": 374, "zangwill-1006": 579}
 
 
 def refresh_reviewed_source_counts(root, sources):
