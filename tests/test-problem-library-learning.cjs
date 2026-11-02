@@ -13,7 +13,7 @@ function app(){
       if(this.id==='view'){
         nodes.delete('learnLibraryFrame');nodes.delete('learnStudioFrame');
         const match=this._html.match(/<iframe id="(learnLibraryFrame|learnStudioFrame)"[^>]*src="([^"]+)"/);
-        if(match){const frame=new Element(match[1]);frame.src=match[2];frame.contentWindow={postMessage(data,origin){messages.push({data:JSON.parse(JSON.stringify(data)),origin});}};nodes.set(match[1],frame);}
+        if(match){const frame=new Element(match[1]);frame.src=match[2];frame.dataset.librarySubject=/data-library-subject="([^"]+)"/.exec(this._html)?.[1];frame.contentWindow={postMessage(data,origin){messages.push({data:JSON.parse(JSON.stringify(data)),origin});}};nodes.set(match[1],frame);}
       }
     }
     get innerHTML(){return this._html;}
@@ -39,14 +39,15 @@ function app(){
   return{context,run,node,nodes,handlers,observers,messages,calls};
 }
 
-test('physics offers its existing studio and the native private library, without adding another login',()=>{
+test('physics and astronomy offer the native public library without adding another login',()=>{
   const a=app();
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)}`);
     const physics=a.run('viewLearnSubject("physics")');
     assert.match(physics,/href="#\/learn\/physics\/studio"/);assert.match(physics,/href="#\/learn\/physics\/library"/);
     assert.match(physics,language==='ko'?/문제은행/:/Problem library/);
-    assert.match(physics,language==='ko'?/관리자 전용/:/Administrators/);
+    assert.match(physics,language==='ko'?/사용 가능/:/Available/);
+    assert.match(a.run('viewLearnSubject("astronomy")'),/href="#\/learn\/astronomy\/library"/);
     assert.doesNotMatch(physics,/<form|type="password"|workers\.dev/);
     assert.doesNotMatch(a.run('viewLearnSubject("chemistry")'),/learn\/physics\/library/);
     assert.deepEqual(Runtime.routeNeeds('#/learn/physics/library'),[]);
@@ -96,4 +97,11 @@ test('navigating away releases the embedded bank rather than preserving it in an
   const a=app();a.run('render()');const old=a.nodes.get('learnLibraryFrame');
   a.context.location.hash='#/learn/physics';a.run('render()');assert.equal(a.nodes.has('learnLibraryFrame'),false);
   a.context.location.hash='#/learn/physics/library';a.run('render()');assert.notEqual(a.nodes.get('learnLibraryFrame'),old);
+});
+
+test('switching physics to astronomy remounts the correct collection and preserves its own heading on language changes',()=>{
+  const a=app();a.run('render()');const old=a.nodes.get('learnLibraryFrame');
+  a.context.location.hash='#/learn/astronomy/library';a.run('render()');const frame=a.nodes.get('learnLibraryFrame');
+  assert.notEqual(frame,old);assert.equal(new URL(frame.src,a.context.location).searchParams.get('collection'),'astronomy');assert.match(a.node('view').innerHTML,/천문/);
+  a.run('setLang("en")');assert.equal(a.nodes.get('learnLibraryFrame'),frame);assert.match(a.node('libraryHeading').innerHTML,/Astronomy/);
 });

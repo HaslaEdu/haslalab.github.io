@@ -4,27 +4,29 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow"><title>문제은행 · HaslaLab</title>
   <link id="favicon" rel="icon" type="image/svg+xml" href="./favicon-light.svg">
-  <link rel="stylesheet" href="./vendor/katex/katex.min.css"><link rel="stylesheet" href="./styles.css?v=20261103-learn">
+  <link rel="stylesheet" href="./vendor/katex/katex.min.css"><link rel="stylesheet" href="./styles.css?v=20261103-public">
   <script src="./vendor/katex/katex.min.js" defer></script><script src="./vendor/katex/contrib/auto-render.min.js" defer></script>
-  <script src="./app.js?v=20261103-learn" type="module"></script>
+  <script src="./app.js?v=20261103-public" type="module"></script>
 </head>
 <body>
   <header><a class="brand" href="https://haslalab.org/"><img src="./brand-logo.png" width="34" height="34" alt="">HaslaLab <span data-i18n="title">문제은행</span></a><div class="tools"><select id="language" aria-label="Language"><option value="ko">한국어</option><option value="en">English</option></select><button id="theme" aria-label="테마 전환">◐</button><span id="account"></span><button id="logout" hidden>로그아웃</button></div></header>
   <main>
     <div id="bootstrapStatus" class="bootstrap-status" hidden><p id="bootstrapMessage" role="status" aria-live="polite"></p><button id="retryBootstrap" data-i18n="retryLoad">다시 불러오기</button></div>
-    <section id="loginPanel" class="login-panel">
+    <section id="loginPanel" class="login-panel" hidden>
       <h1 data-i18n="title">문제은행</h1><p data-i18n="adminOnly">관리자 계정으로 로그인하세요.</p>
       <form id="loginForm"><label><span data-i18n="username">아이디</span><input name="username" autocomplete="username" required maxlength="100"></label><label><span data-i18n="password">비밀번호</span><input name="password" type="password" autocomplete="current-password" required maxlength="200"></label><button class="primary" data-i18n="login">로그인</button></form>
       <a id="siteLogin" href="../../#/login" target="_top" data-i18n="siteLogin" hidden>하슬라랩에서 로그인</a>
       <p id="loginMessage" role="status"></p>
     </section>
-    <section id="library" hidden>
-      <div class="page-head"><div><h1 data-i18n="title">문제은행</h1><p id="counts" class="muted"></p></div><span class="badge" data-i18n="privateLibrary">비공개 · 관리자</span></div>
+    <section id="library">
+      <div class="page-head"><div><h1 data-i18n="title">문제은행</h1><p id="counts" class="muted"></p></div><span class="badge" data-i18n="publicLibrary">물리 · 천문 문제</span></div>
       <div class="mode-tabs" role="tablist"><button id="textMode" class="selected" role="tab" aria-selected="true" data-i18n="textSearch">텍스트 검색</button><button id="photoMode" role="tab" aria-selected="false" data-i18n="photoSearch">사진으로 찾기</button></div>
-      <form id="searchForm" class="search-form"><label class="grow"><span class="sr-only" data-i18n="query">검색어</span><input id="query" maxlength="600" placeholder="문제의 문장, 수식, 문항 번호"></label><label><span class="sr-only" data-i18n="subject">분야</span><select id="subject"></select></label><label><span class="sr-only" data-i18n="source">교재·강좌</span><select id="source"></select></label><button class="primary" data-i18n="search">검색</button></form>
+      <p id="photoAccess" class="muted" data-i18n="photoAdmin">사진 인식은 관리자 계정에서 사용할 수 있습니다.</p>
+      <form id="searchForm" class="search-form"><label class="grow"><span class="sr-only" data-i18n="query">검색어</span><input id="query" maxlength="600" placeholder="문제의 문장, 수식, 문항 번호"></label><label><span class="sr-only" data-i18n="collection">문제 모음</span><select id="collection"><option value="" data-i18n="allCollections">물리·천문 전체</option><option value="physics" data-i18n="physics">물리학</option><option value="astronomy" data-i18n="astronomy">천문학</option></select></label><label><span class="sr-only" data-i18n="subject">분야</span><select id="subject"></select></label><label><span class="sr-only" data-i18n="source">교재·강좌</span><select id="source"></select></label><label><span class="sr-only" data-i18n="stars">난이도</span><select id="stars"><option value="" data-i18n="allStars">난이도 전체</option><option value="1">★☆☆☆☆</option><option value="2">★★☆☆☆</option><option value="3">★★★☆☆</option><option value="4">★★★★☆</option><option value="5">★★★★★</option></select></label><button class="primary" data-i18n="search">검색</button></form>
       <form id="photoForm" hidden class="photo-form"><label><span data-i18n="photoLabel">문제 사진</span><input id="photo" type="file" accept="image/png,image/jpeg,image/webp" required></label><button class="primary" data-i18n="readPhoto">사진 인식·검색</button><span id="ocrPolicy" class="muted" data-i18n="ocrPolicy">관리자 전용 · Upstage OCR 호출</span></form>
       <div id="recognizedPanel" hidden><label for="recognized" data-i18n="recognized">인식된 문장·수식</label><textarea id="recognized" rows="5" maxlength="12000"></textarea><button id="retryText" data-i18n="searchCorrected">수정한 텍스트로 다시 검색</button><span class="muted" data-i18n="noExtraOcr">이 버튼은 OCR을 다시 호출하지 않습니다.</span></div>
       <p id="message" role="status" aria-live="polite"></p>
+      <p id="resultLimit" class="muted"></p>
       <div class="workspace"><section class="results"><div class="section-head"><h2 data-i18n="results">검색 결과</h2><span id="resultCount" class="muted"></span></div><div id="results"></div><div class="pager"><button id="previous" data-i18n="previous">이전</button><button id="next" data-i18n="next">다음</button></div></section>
       <article id="detail" class="detail"><p class="muted" data-i18n="selectQuestion">문제를 선택하면 본문을 확인할 수 있습니다.</p></article></div>
     </section>

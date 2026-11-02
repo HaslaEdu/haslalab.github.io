@@ -58,13 +58,6 @@ async function auth(request,env,url){
   if(!response.ok&&response.status!==401&&response.status!==403&&response.status!==429){await response.body?.cancel?.().catch(()=>{});throw new AuthError('auth_unavailable');}
   const data=await authJson(response);
   if(!response.ok)return json({error:response.status===429?'rate_limited':'bad_credentials'},response.status===429?429:401);
-  if(data?.user?.role!=='admin'){
-    if(sessionToken(data?.token)){
-      const revoke=new Request(request.url,{method:'POST',headers:{...Object.fromEntries(safeHeaders(request)),Authorization:'Bearer '+data.token,'Content-Type':'application/json'}});
-      await community(env,'/api/logout',revoke,{method:'POST',body:'{}'});
-    }
-    return json({error:'admin_required'},403);
-  }
   const user=publicUser(data.user);
   if(!sessionToken(data.token)||!user)return json({error:'invalid_auth_response'},502);
   return json({token:data.token,user});
@@ -106,6 +99,18 @@ async function sourcePdf(request,env,id){
   else headers.set('Content-Length',String(object.size));
   return new Response(object.body,{status:range?206:200,headers});
 }
+async function figure(env,id){
+  const row=await env.BANK_REGISTRY.prepare('SELECT object_key,mime_type,sha256,byte_length FROM bank_figure_variants WHERE id=? AND verified_givens_only=1').bind(id).first();
+  if(!row)return json({error:'figure_not_found'},404);
+  const ext=row.mime_type==='image/png'?'png':row.mime_type==='image/svg+xml'?'svg':null;
+  if(!ext||!/^[a-f0-9]{64}$/.test(row.sha256)||row.object_key!==`figures/${row.sha256}.${ext}`||!Number.isSafeInteger(row.byte_length)||row.byte_length<1||row.byte_length>4*1024*1024)return json({error:'figure_integrity_error'},503);
+  const object=await env.LIBRARY.get(row.object_key);
+  if(!object)return json({error:'figure_not_found'},404);
+  if(object.size!==row.byte_length||object.range||(object.customMetadata?.sha256&&object.customMetadata.sha256!==row.sha256)){await object.body?.cancel?.().catch(()=>{});return json({error:'figure_integrity_error'},503);}
+  const bytes=await object.arrayBuffer(),hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');
+  if(bytes.byteLength!==row.byte_length||hash!==row.sha256)return json({error:'figure_integrity_error'},503);
+  return new Response(bytes,{headers:{...PRIVATE,'Content-Type':row.mime_type,'Content-Length':String(bytes.byteLength),'Content-Security-Policy':"default-src 'none'; sandbox",'X-Asset-SHA256':row.sha256}});
+}
 function decorate(response,request,env){
   const headers=new Headers(response.headers),origin=request.headers.get('Origin')||'';
   if((env.ALLOWED_ORIGINS||'').split(',').map(x=>x.trim()).includes(origin))headers.set('Access-Control-Allow-Origin',origin);
@@ -118,15 +123,15 @@ export const worker={async fetch(request,env){
   const url=new URL(request.url);let response;
   try{
     if(request.method==='OPTIONS')response=new Response(null,{status:204,headers:PRIVATE});
-    else if(url.pathname==='/api/health'&&request.method==='GET')response=json({ok:true,service:'haslalab-problem-bank',access:'admin'});
+    else if(url.pathname==='/api/health'&&request.method==='GET')response=json({ok:true,service:'haslalab-problem-bank',access:'public'});
     else if(url.pathname.startsWith('/auth/'))response=await auth(request,env,url);
     else if(url.pathname.startsWith('/api/')){
-      const user=await currentUser(request,env);
-      if(!user)response=json({error:'login_required'},401);
-      else if(user.role!=='admin')response=json({error:'admin_required'},403);
+      const pdf=url.pathname.match(/^\/api\/problem-bank\/sources\/(src_[a-f0-9]{64})\/pdf$/),fig=url.pathname.match(/^\/api\/problem-bank\/figures\/(f_[a-f0-9]{64})$/);
+      const restricted=!!pdf||request.method!=='GET';let user=null;
+      try{user=await currentUser(request,env);}catch(error){if(restricted)throw error;}
+      if(pdf&&request.method==='GET'&&user?.role!=='admin')response=json({error:user?'admin_required':'login_required'},user?403:401);
       else{
-        const pdf=url.pathname.match(/^\/api\/problem-bank\/sources\/(src_[a-f0-9]{64})\/pdf$/);
-        response=pdf&&request.method==='GET'?await sourcePdf(request,env,pdf[1]):await problemBankRoute(request,env,url,{user,ocr:ocrAdapter(env)});
+        response=pdf&&request.method==='GET'?await sourcePdf(request,env,pdf[1]):fig&&request.method==='GET'?await figure(env,fig[1]):await problemBankRoute(request,env,url,{user,ocr:ocrAdapter(env)});
         response??=json({error:'not_found'},404);
       }
     }else if(['GET','HEAD'].includes(request.method)&&env.ASSETS?.fetch)response=await env.ASSETS.fetch(request);

@@ -4,6 +4,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync} from 'node:fs';
 import {createHash,webcrypto} from 'node:crypto';
 import {problemBankRoute,problemBankIndexText,PROBLEM_BANK_SEARCH_SCHEMA} from './src/problem-bank.js';
+import {BANK_REGISTRY_SCHEMA} from './src/problem-bank-model.js';
 
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const sha=x=>createHash('sha256').update(x).digest('hex');
@@ -23,7 +24,7 @@ class D1 {
     const owner=this;
     return {bind(...args){
       const run=()=>{owner.calls.push({sql,args});return owner.db.prepare(sql);};
-      return {async first(){return run().get(...args)??null;},async all(){return {results:run().all(...args)};}};
+      return {async first(){return run().get(...args)??null;},async all(){return {results:run().all(...args)};},async run(){return run().run(...args);}};
     }};
   }
 }
@@ -33,6 +34,7 @@ function fixture(t){
   for(const db of [main,b2,b3])db.exec(schema);
   b2.exec(solutionSchema);index.exec(PROBLEM_BANK_SEARCH_SCHEMA);
   main.exec('CREATE TABLE bank_source_routes(source_id TEXT PRIMARY KEY,source_json TEXT,database_name TEXT); CREATE TABLE bank_solution_routes(solution_id TEXT PRIMARY KEY,question_id TEXT,database_name TEXT);');
+  main.exec(BANK_REGISTRY_SCHEMA);
   function source(db,id){db.prepare(`INSERT INTO book_sources(id,drive_id,revision,title,mime_type,sha256,page_count,subjects_json,level,source_language,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`).run(id,id,'v1','Synthetic source','application/pdf',sha('pdf'),2,'["classical_mechanics"]','undergraduate','en','now','now');}
   for(const db of [main,b2,b3])for(const s of [S1,S2,S3])source(db,s);
   for(const [s,name] of [[S1,'haslalab-problem-bank-02'],[S2,'haslalab-problem-bank-03']])main.prepare('INSERT INTO bank_source_routes VALUES(?,?,?)').run(s,JSON.stringify({id:s,title:'Synthetic source',subjects:['classical_mechanics'],page_count:2,level:'undergraduate',source_language:'en',expected_question_count:2,extraction_complete:true,local_path:'D:/private/source.pdf',origin:{url:'https://drive.google.com/private',license_identifier:'Private'}}),name);
@@ -80,6 +82,68 @@ function contextQuestion(f,n){
   const loc='context-'+n,id=qid(S1,loc),text='Canonical context '+n;
   f.question(f.b2,id,S1,loc,text);f.doc(id,S1,loc,text);f.doc(id,S1,loc,'문맥 '+n,'ko');return id;
 }
+function seedFacet(f,id,source,stars=3,collection='physics',subjects=['classical_mechanics']){
+  const basis=f.index.prepare("SELECT text_sha256 FROM bank_search_documents WHERE question_id=? AND language='en'").get(id).text_sha256;
+  f.index.prepare('INSERT INTO bank_question_facets VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)').run(id,source,collection,JSON.stringify(subjects),stars,'provisional','low','["source_level"]','{"prerequisites":1,"integration":1,"mathematics":1,"reasoning":1}',basis,'rubric-v1','{}','now');
+}
+
+test('guests can browse digital statements and must explicitly request any stored solution',async t=>{
+  const f=fixture(t);
+  const status=await (await f.call('/status',{user:null,ocr:()=>assert.fail('paid call')})).json();assert.equal(status.access,'public');assert.equal(status.user,null);assert.equal(status.ocr_available,false);
+  for(const user of [null,member]){
+    const detail=await (await f.call('/questions/'+Q1+'?lang=en',{user})).json();assert.equal(detail.question.selected_version.text,statement);assert.deepEqual(detail.question.assets,[]);assert.equal(detail.question.can_view_source,false);
+    assert.doesNotMatch(JSON.stringify(detail),/solution draft|bank_solution|A pending solution/);
+    assert.equal((await f.call('/questions/'+Q1+'/solutions?lang=en',{user})).status,200);
+    assert.equal((await f.call('/assets/'+A1,{user})).status,403);
+  }
+});
+
+test('figure policies enforce question, hash and blocked-answer placement before returning bytes',async t=>{
+  const f=fixture(t);f.b2.prepare("UPDATE bank_assets SET role='figure' WHERE id=?").run(A1);
+  f.main.prepare('INSERT INTO bank_asset_display_policy VALUES(?,?,?,?,?,?,?)').run(A1,Q1,sha(PNG),'inline','source_verified','{}','now');
+  let detail=await (await f.call('/questions/'+Q1,{user:null})).json();assert.equal(detail.question.assets[0].placement,'inline');
+  assert.deepEqual(Buffer.from(await (await f.call('/assets/'+A1,{user:null})).arrayBuffer()),PNG);
+  f.main.prepare("UPDATE bank_asset_display_policy SET placement='blocked'").run();
+  detail=await (await f.call('/questions/'+Q1,{user:null})).json();assert.deepEqual(detail.question.assets,[]);
+  detail=await (await f.call('/questions/'+Q1)).json();assert.equal(detail.question.assets[0].placement,'source_only');assert.equal((await f.call('/assets/'+A1,{user:null})).status,403);
+  f.main.prepare("UPDATE bank_asset_display_policy SET placement='inline',sha256=?").run(sha('wrong'));assert.equal((await f.call('/assets/'+A1,{user:null})).status,403);
+  assert.ok(!f.env.BANK2.calls.slice(-8).some(c=>c.sql.includes('bank_asset_chunks')));
+  f.main.prepare('UPDATE bank_asset_display_policy SET sha256=?,question_id=?').run(sha(PNG),Q2);
+  detail=await (await f.call('/questions/'+Q1,{user:null})).json();assert.deepEqual(detail.question.assets,[]);assert.equal((await f.call('/assets/'+A1,{user:null})).status,403);
+});
+
+test('cursor browse reaches every canonical row beyond offset300 without duplicates and filters use facets',async t=>{
+  const f=fixture(t);
+  for(let n=0;n<315;n++){const loc='browse-'+n,id=qid(S1,loc);f.doc(id,S1,loc,'Synthetic browse row');seedFacet(f,id,S1,1+n%5,n%2?'physics':'astronomy',n%2?['special_relativity']:['general_relativity']);}
+  const seen=new Set();let cursor=null;
+  for(let page=0;page<20;page++){
+    const out=await (await f.call('/search?lang=en&limit=30'+(cursor?'&cursor='+cursor:''),{user:null})).json();
+    assert.ok(out.items.length);for(const item of out.items){assert.ok(!seen.has(item.id));seen.add(item.id);}cursor=out.next_cursor;if(!out.has_more)break;assert.ok(cursor);
+  }
+  assert.equal(seen.size,318);
+  const filtered=await (await f.call('/search?lang=en&collection=astronomy&stars=2&subject=general_relativity',{user:null})).json();assert.ok(filtered.items.length);assert.ok(filtered.items.every(i=>i.collection==='astronomy'&&i.stars===2&&i.subjects.includes('general_relativity')));
+});
+
+test('member feedback upserts one self-report per question without changing difficulty or ratings',async t=>{
+  const f=fixture(t);seedFacet(f,Q1,S1,3);
+  const post=(body,user=member)=>f.call('/questions/'+Q1+'/feedback',{method:'POST',user,body:JSON.stringify(body),headers:{'Content-Type':'application/json'}});
+  assert.equal((await post({stars:2,outcome:'solved'},null)).status,401);
+  assert.equal((await post({stars:2,outcome:'solved',evidence:'verified_grade'})).status,400);
+  assert.equal((await post({stars:2,outcome:'solved',minutes:10})).status,200);
+  assert.equal((await post({stars:4,outcome:'partial',minutes:null})).status,200);
+  const summary=await (await f.call('/questions/'+Q1+'/feedback',{user:member})).json();assert.equal(summary.count,1);assert.equal(summary.mean_stars,4);assert.deepEqual(summary.own,{stars:4,outcome:'partial',minutes:null});assert.equal(summary.evidence,'self_report');
+  assert.equal((await (await f.call('/questions/'+Q1+'/feedback',{user:null})).json()).own,null);
+  assert.equal(f.index.prepare('SELECT stars FROM bank_question_facets WHERE question_id=?').get(Q1).stars,3);
+  f.main.prepare('UPDATE bank_feedback_limits SET n=100').run();assert.equal((await post({stars:2,outcome:'solved'})).status,429);
+});
+
+test('administrator rubric review requires the current canonical statement hash and full context acknowledgement',async t=>{
+  const f=fixture(t);seedFacet(f,Q1,S1,3);
+  const rubric={prerequisites:2,integration:2,mathematics:2,reasoning:2},post=(body,user=admin)=>f.call('/questions/'+Q1+'/difficulty-review',{method:'POST',user,body:JSON.stringify(body),headers:{'Content-Type':'application/json'}});
+  const body={rubric,basis_text_sha256:sha(statement),all_required_context_read:true};
+  assert.equal((await post(body,member)).status,403);assert.equal((await post({...body,all_required_context_read:false})).status,400);assert.equal((await post({...body,basis_text_sha256:sha('stale')})).status,409);
+  assert.equal((await post(body)).status,200);assert.equal(f.index.prepare('SELECT difficulty_status FROM bank_question_facets WHERE question_id=?').get(Q1).difficulty_status,'reviewed');
+});
 
 test('unrelated paths return null and private auth precedes reading a body or database',async t=>{
   const f=fixture(t);
@@ -122,7 +186,7 @@ test('missing additive context schema returns empty references without runtime w
   assert.deepEqual(detail.question.context_links,[]);
   const res=await f.call('/questions/'+Q1+'/context'),body=await res.json();
   assert.equal(res.status,200);assert.deepEqual(body.contexts,[]);assert.deepEqual(body.cycles,[]);assert.equal(body.truncated,false);
-  assert.equal(body.visibility,'private');assert.equal(body.publication_ready,false);
+  assert.equal(body.visibility,'public');assert.equal(body.publication_ready,false);
   assert.equal(res.headers.get('cache-control'),'private, no-store');
   const queries=Object.values(f.env).flatMap(db=>db.calls).map(c=>c.sql);
   assert.ok(queries.some(sql=>sql.includes('sqlite_master')&&sql.includes('bank_context_graph_edges')));
@@ -202,11 +266,10 @@ test('invalid, stale and unadmitted graph targets never expose retained copies o
   assert.ok(body.unavailable_links>0);assert.doesNotMatch(JSON.stringify(body),new RegExp(Q1+'|'+absent+'|D:/private|Private stale|not-a-qid'));
 });
 
-test('context authorization precedes all graph reads and corrupt canonical versions fail closed',async t=>{
+test('guests and members read public context, while corrupt canonical versions fail closed',async t=>{
   const f=fixture(t);contextEdges(f,[{from:Q1,to:Q2}]);
-  for(const [user,status] of [[null,401],[member,403]])assert.equal((await f.call('/questions/'+Q1+'/context',{user})).status,status);
+  for(const user of [null,member]){const res=await f.call('/questions/'+Q1+'/context',{user});assert.equal(res.status,200);assert.ok((await res.json()).contexts.every(c=>c.assets.length===0));}
   assert.equal((await f.call('/questions/not-a-qid/context')).status,400);
-  assert.equal(Object.values(f.env).reduce((n,db)=>n+db.calls.length,0),0);
   f.b2.prepare("UPDATE bank_question_versions SET text='corrupt D:/private/provider-key' WHERE question_id=? AND language='en'").run(Q2);
   const res=await f.call('/questions/'+Q1+'/context'),body=await res.json();
   assert.equal(res.status,503);assert.equal(body.error,'problem_bank_integrity_error');assert.doesNotMatch(JSON.stringify(body),/D:\/private|provider-key|SELECT/);
@@ -261,9 +324,10 @@ test('search excludes stale index sources absent from the canonical registry',as
   const result=await (await f.call('/search?lang=en&q=block')).json();assert.ok(!result.items.some(x=>x.id===id));
 });
 
-test('recommendations use subject/text similarity and exclude the input question',async t=>{
-  const f=fixture(t),body=await (await f.call('/questions/'+Q1+'/recommendations?lang=en')).json();
-  assert.equal(body.method,'subject_and_text_similarity');assert.ok(body.items.some(x=>x.id===Q2));assert.ok(!body.items.some(x=>x.id===Q1));
+test('recommendations use provisional difficulty and exclude input and unresolved candidates',async t=>{
+  const f=fixture(t);seedFacet(f,Q1,S1,3);seedFacet(f,Q2,S1,3);f.index.prepare('UPDATE bank_search_documents SET unresolved_source=0 WHERE question_id=?').run(Q2);
+  const body=await (await f.call('/questions/'+Q1+'/recommendations?lang=en')).json();
+  assert.equal(body.method,'subject_difficulty_novelty_diversity');assert.ok(body.items.some(x=>x.id===Q2));assert.ok(!body.items.some(x=>x.id===Q1||x.id===Q3));
 });
 
 test('source solutions and original drafts retain distinct authorship, roles and partial coverage',async t=>{

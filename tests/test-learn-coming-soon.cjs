@@ -26,7 +26,7 @@ test('the learning overview exposes the physics studio and keeps unreleased subj
     const html=a.run('viewLearn()');
     assert.match(html,language==='ko'?/준비중/:/Coming soon/);
     assert.equal((html.match(/class="learn-state"/g)||[]).length,keys.length);
-    assert.equal((html.match(language==='ko'?/준비중/g:/Coming soon/g)||[]).length,keys.length-1);
+    assert.equal((html.match(language==='ko'?/준비중/g:/Coming soon/g)||[]).length,keys.length-2);
     const physicsCard=[...html.matchAll(/<a\b[^>]*href="#\/learn\/physics"[\s\S]*?<\/a>/g)][0]?.[0];
     assert.ok(physicsCard);assert.match(physicsCard,language==='ko'?/문제 제작소/:/Problem Studio/);
     for(const key of keys){
@@ -48,12 +48,12 @@ test('physics publishes only its internal studio while other subjects keep place
       assert.match(html,language==='ko'?/문제 제작소/:/Problem Studio/);
       assert.ok(links(html).includes('#/learn/physics/studio'));
       assert.doesNotMatch(html,/learn-pending/);
-    }else assert.match(html,language==='ko'?/준비중/:/Coming soon/);
+    }else if(key==='astronomy')assert.ok(links(html).includes('#/learn/astronomy/library'));else assert.match(html,language==='ko'?/준비중/:/Coming soon/);
     assert.ok(links(html).every(href=>href.startsWith('#/learn')));
     assert.doesNotMatch(html,/IPhO|APhO|EuPhO|IChO|IBO|IMO|IOAA|IESO|IJSO|in preparation|when ready|준비하고 있습니다|준비가 끝나면/);
     assert.doesNotMatch(html,/<a[^>]*class="ritem"|<dd>|https?:\/\/(?:openstax|ocw\.mit|stellarium|bio\.libretexts)/);
     if(keys.includes(key)){
-      if(key!=='physics')assert.match(html,/<section class="learn-pending" role="status">/);
+      if(!['physics','astronomy'].includes(key))assert.match(html,/<section class="learn-pending" role="status">/);
       assert.ok(links(html).includes('#/learn'));
       assert.ok(html.includes(a.run(`LEARN[${JSON.stringify(key)}].name[lang]`)));
     }
