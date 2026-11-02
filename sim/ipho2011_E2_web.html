@@ -221,7 +221,8 @@ const I18N = {
 <li>Put the thread on the pin: a knotted loop hangs from it. Drag the cylinder from the table into the loop; it lies level, held by your finger. Drag it sideways to push it through the loop (or roll the wheel over it: 2 mm, Shift 0.2 mm), click it to let go and see which end goes down. Where it stays level, the loop is under the centre of mass: mark the tube there with the pencil, take it down and measure the mark from the end with the ruler.</li>
 <li>Too far off, it slips out; click it while it slips to catch it, or pick it up and click at the loop to put it back.</li></ul>
 <h4>Periods</h4><ul>
-<li>With the cylinder on the table, click a hole and then the pin: it hangs by that hole. Drag it aside and let go; time several swings with the stopwatch (click it, or the space bar). Right-click puts it back on the table.</li></ul>
+<li>With the cylinder on the table, click a hole and then the pin: it hangs by that hole. Drag it aside and let go; time several swings with the stopwatch (click it, or the space bar). Right-click puts it back on the table.</li>
+<li>The swing dies down as a real one does: air drag on the whole length of the tube (faster at large amplitude) and the friction of the hole on the thin pin (strongest relative to gravity at the holes near the centre of mass). Time the swings while the amplitude is small.</li></ul>
 <h4>Measuring</h4><ul>
 <li>Nothing is computed for you. Positions are read on the ruler; the stopwatch has your reaction time in it, as a real one does.</li></ul>`,
 `<h4>장비 (문제지 1–2쪽)</h4><ul>
@@ -234,7 +235,8 @@ const I18N = {
 <li>실을 핀에 놓으면 매듭지은 실 고리가 걸립니다. 책상 위 원통을 끌어 고리에 넣으면 손가락으로 받쳐 수평으로 놓입니다. 원통을 좌우로 끌면 고리 속으로 밀려 움직이고(원통 위 휠: 2 mm, Shift: 0.2 mm), 원통을 클릭해 손을 떼면 어느 쪽이 내려가는지 보입니다. 수평으로 머무는 곳이 무게중심 바로 위입니다. 그 자리를 연필로 표시하고, 원통을 내려 끝에서 표시까지를 자로 재세요.</li>
 <li>너무 치우치면 미끄러져 빠집니다. 미끄러지는 중에 클릭하면 붙잡고, 떨어진 원통은 집어서 고리 위치에서 클릭하면 다시 끼워집니다.</li></ul>
 <h4>주기</h4><ul>
-<li>책상 위 원통의 구멍을 클릭한 뒤 핀을 클릭하면 그 구멍으로 걸립니다. 끌어서 젖혔다 놓고 초시계(클릭 또는 스페이스바)로 여러 번의 진동을 재세요. 우클릭하면 책상으로 돌아갑니다.</li></ul>
+<li>책상 위 원통의 구멍을 클릭한 뒤 핀을 클릭하면 그 구멍으로 걸립니다. 끌어서 젖혔다 놓고 초시계(클릭 또는 스페이스바)로 여러 번의 진동을 재세요. 우클릭하면 책상으로 돌아갑니다.</li>
+<li>진동은 실제처럼 줄어듭니다. 원통 전체 길이에 걸리는 공기 저항(진폭이 클수록 큼)과 가는 핀에 걸린 구멍의 마찰(무게중심에 가까운 구멍일수록 상대적으로 큼) 때문입니다. 진폭이 작을 때 주기를 재세요.</li></ul>
 <h4>측정</h4><ul>
 <li>프로그램은 아무것도 계산해 주지 않습니다. 위치는 자로 읽고, 초시계에는 실제처럼 반응 시간이 들어갑니다.</li></ul>`],
 };
@@ -450,6 +452,8 @@ function makeTruth(seed){
   return {
     seed, L, d_out:dOut, d_in:dOut-0.0030, m, M, z, g,
     holes, x_cm:xcm, I_cm:Icm, r, R_min:Rmin, d_ball:0.0130,
+    /* the air of the hall (Bangkok in July, ~30 °C) and the thin steel pin the tube turns on */
+    rho_air:1.16, nu_air:1.60e-5, r_pin:0.00050, mu_pin:0.18,
     /* height of the bench top below the pin: clear of the longest swing */
     bench_y: Math.max(0.300, L - holes[0] + 0.012)
   };
@@ -836,13 +840,32 @@ function makeRig(truth){
       R._slide_v = 0.0;
     }
   }
+  /* The losses of the swinging tube, as for the wire pendulum of APhO 2023: real air drag and the pivot, nothing else.
+     Air: every slice ds of the tube at a distance s from the pin (s<0 above it) moves across its axis at v = ω s and
+     feels ½ ρ C_d(Re) d v|v| ds, C_d of a long cylinder in cross flow from Re = |v| d / ν (White: 1 + 10 Re^-2/3, which
+     goes over to Stokes-like drag as the swing dies down); its torque is summed slice by slice, so the short stub
+     above the pin and the long part below each do their share.  Pin: the hole rides on a 1 mm steel pin, a dry
+     friction torque μ N r_pin with N the weight plus the centripetal pull, smoothed through zero so the swing settles
+     instead of chattering. */
+  const AIR_N = 24;
+  function dragTorque(om){
+    const top = -truth.holes[R.hole_index], ds = truth.L / AIR_N, d = truth.d_out;
+    let tq = 0.0;
+    for(let i=0;i<AIR_N;i++){
+      const sx = top + (i+0.5)*ds, v = om*sx, av = Math.abs(v);
+      if(av < 1e-9) continue;
+      const Re = av*d/truth.nu_air, Cd = 1.0 + 10.0*Math.pow(Re, -2/3);
+      tq -= 0.5*truth.rho_air*Cd*d*v*av*ds*sx;
+    }
+    return tq;
+  }
   function stepPendulum(dt){
     if(!R.released) return;
-    const Rr = truth.x_cm - truth.holes[R.hole_index];
-    const Ip = truth.I_cm + (truth.M+truth.m)*Rr*Rr;
-    const Wg = (truth.M+truth.m)*truth.g*Rr;
-    const b  = 2.0*Ip/78.0;                    /* light air/pivot damping */
-    const acc = (th,om)=>(-Wg*Math.sin(th) - b*om)/Ip;
+    const Rr = truth.x_cm - truth.holes[R.hole_index], Mt = truth.M+truth.m;
+    const Ip = truth.I_cm + Mt*Rr*Rr;
+    const Wg = Mt*truth.g*Rr;
+    const fric = (th,om)=>{ const N = Mt*(truth.g*Math.cos(th) + om*om*Rr); return -truth.mu_pin*Math.abs(N)*truth.r_pin*Math.tanh(om/0.02); };
+    const acc = (th,om)=>(-Wg*Math.sin(th) + dragTorque(om) + fric(th,om))/Ip;
     /* RK4 */
     const k1v = acc(R.theta, R.omega),                     k1x = R.omega;
     const k2v = acc(R.theta+0.5*dt*k1x, R.omega+0.5*dt*k1v), k2x = R.omega+0.5*dt*k1v;

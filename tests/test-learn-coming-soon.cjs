@@ -66,7 +66,10 @@ test('IPhO 2019 E1 exposes the new browser URL and bilingual original documents 
   for(const language of ['ko','en']){
     a.run(`lang=${JSON.stringify(language)};track="exp"`);
     const html=a.run('viewYear("ipho",2019)');
-    assert.ok(links(html).includes('sim/ipho2019_E1_web.html?lang='+language));
+    /* the run button carries the digest of the simulator page, so an updated simulator is never served from a cache */
+    const v=JSON.parse(JSON.stringify(require('node:vm').runInNewContext(read('site-catalogue.js')+';window.HL_CATALOGUE',{window:{}}))).versions.sims.ipho2019_E1;
+    assert.match(v,/^[a-f0-9]{12}$/);
+    assert.ok(links(html).includes('sim/ipho2019_E1_web.html?v='+v+'&lang='+language));
     assert.ok(html.includes(entry.title[language]));
   }
   const tasks=Array.from(a.run('examGroups("ipho",DATA.ipho.years.find(year=>year.y===2019))[0].map(problem=>problem.id)'));

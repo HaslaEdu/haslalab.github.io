@@ -1106,10 +1106,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=02da77ca0988"></script>
+<script src="site-catalogue.js?v=c07ad997938e"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=e44416ac5fca"></script>
+<script src="site-design.js?v=8eaece63e71d"></script>
 <script>
 "use strict";
 
@@ -4581,6 +4581,10 @@ const EOTVOS_TIMED=new Set([2014,2015,2016,2020]);
 /* a theory problem solved on a simulator (ISPhO 2023–2025 T1: the organisers' program, ported to the site): a year's
    sims. It is a theory problem: its card is in the theory track, with the simulator beside the paper, and it is sat
    with the rest of its paper */
+/* a simulator's address with the digest of its page (site-catalogue.js), so an updated simulator is never served stale;
+   always ends in a query, for «&lang=» to follow */
+const simHref=f=>{ const m=/^sim\/([A-Za-z0-9_]+)_web\.html/.exec(f||""), v=m&&window.HL_CATALOGUE?.versions?.sims?.[m[1]];
+  return f+(f.includes("?")?"&":"?")+(v?"v="+v:"v=0"); };
 const simsOf=(key,yr)=>((compOf(key)||{}).years||[]).filter(y=>String(y.y)===String(yr.y)).flatMap(y=>y.sims||[]).filter(p=>p.files&&p.files.sim);
 function theoryGroups(key,yr){
   const t=thyOf(key,yr.y); if(!t) return [];
@@ -5311,7 +5315,7 @@ function theoryHtml(key,yr){
   const sims=Object.fromEntries(simsOf(key,yr).map(p=>[p.id,p]));
   const simDocs=code=>{ const p=sims[code]; if(!p) return []; const f=p.files, pick=v=>typeof v==="string"?v:v&&(v[lang]||v.en||v.ko);
     return f.src?[`<a class="btn ghost" href="${esc(pick(f.src))}">${d.actSrc}</a>`]:[]; };
-  const simRun=code=>{ const p=sims[code]; return p?`<a class="btn" href="${esc(p.files.sim)}${p.files.sim.includes("?")?"&":"?"}lang=${lang}">${d.actRun}</a>`:""; };
+  const simRun=code=>{ const p=sims[code]; return p?`<a class="btn" href="${esc(simHref(p.files.sim))}&lang=${lang}">${d.actRun}</a>`:""; };
   const sheetDocs=(code,A,on)=>{
     if(!on||!t.f[code]||key==="kmo"||key==="kmchc") return [];
     const h=sheetsHref(theoryHref(key,yr,[code]));
@@ -5452,7 +5456,7 @@ function viewYear(key,year,mode=""){
         const live=!held;
         const off=(lbl,g)=>`<button class="btn${g?" ghost":""}" disabled>${lbl}</button>`;
         const b=[
-          (live&&f.sim) ? `<a class="btn" href="${f.sim}${f.sim.includes("?")?"&":"?"}lang=${lang}">${d.actRun}</a>` : off(d.actRun,false),
+          (live&&f.sim) ? `<a class="btn" href="${simHref(f.sim)}&lang=${lang}">${d.actRun}</a>` : off(d.actRun,false),
           (live&&f.exe) ? `<a class="btn ghost" href="${pick(f.exe)}">${d.actExe}${tag(f.exe)}</a>` : off(d.actExe,true)];
         const doc=(v,lbl,blank)=> (live&&v) ? `<a class="btn ghost" href="${pick(v)}"${blank?' target="_blank" rel="noopener"':""}>${lbl}${tag(v)}</a>` : off(lbl,true);
         const docs=[doc(f.pdf,d.actPdf,true), doc(f.sol,d.actSol,true), doc(f.src,d.actSrc,false)];
