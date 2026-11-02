@@ -24,6 +24,15 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
   for (const program of qa.authoring_programs) {
     assert.equal(hash(fs.readFileSync(path.join(root, program.path))), program.sha256);
   }
+  for (const evidence of qa.supplemental_evidence || []) {
+    const document = read(evidence.path, evidence.sha256);
+    if (evidence.path.endsWith('/root-independent-final-review.json')) {
+      assert.equal(document.status, 'PASS');
+      assert.equal(document.source_sha256, qa.source_sha256);
+      assert.equal(document.pages.length, qa.page_audits.length);
+      for (const [i, row] of document.pages.entries()) assert.equal(row.proof_sha256, qa.page_audits[i].proof_sha256);
+    }
+  }
   if (qa.link_annotation_subset_regression) {
     const pin = qa.link_annotation_subset_regression;
     const regression = read(pin.path, pin.sha256);

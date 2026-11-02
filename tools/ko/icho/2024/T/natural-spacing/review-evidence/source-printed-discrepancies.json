@@ -1,0 +1,34 @@
+{
+  "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+  "source_physical_pages": 62,
+  "general_pages": 4,
+  "question_pages": 30,
+  "blank_answer_pages": 28,
+  "printed_discrepancies_retained": [
+    {
+      "pages": [
+        1,
+        4
+      ],
+      "printed_question_booklet_pages": 29,
+      "printed_question3_pages": 4,
+      "actual_question3_page_headers": [
+        "Q3-1",
+        "Q3-2",
+        "Q3-3",
+        "Q3-4",
+        "Q3-5"
+      ],
+      "actual_question3_pages": 5,
+      "treatment": "Original printed numbers and all62physical pages are retained in the Korean PDF. This QA note is outside the translated paper."
+    },
+    {
+      "pages": [
+        46
+      ],
+      "source_body_word": "wavelengths",
+      "source_table_axis_units": "cm^-1",
+      "treatment": "The source body says wavelengths while its IR table gives wavenumbers. The Korean body retains the source wording 파장; table headings and numeric entries follow the original table. No silent scientific correction is made in the translated paper."
+    }
+  ]
+}
