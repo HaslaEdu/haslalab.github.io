@@ -39,7 +39,7 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips } from './page-tiles.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
-import { mathpixRereads } from './focus-read.js';
+import { mathpixRereads, focusCandidates } from './focus-read.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 
@@ -2461,7 +2461,8 @@ async function labFocusRead(env, s, sc, raw, photos, mine, m, log = null) {
     catch (e) { m?.calls?.push({ step: 'focus', provider: 'mathpix', model: 'mathpix-v3-text', in: null, out: null, cached: null, usd: 0, ms: Date.now() - t0, ok: 0, error: e?.code || 'ocr_engine_failed' }); continue; }
     const taken = mathpixRereads(here, text, mine.find(p => p.no === no)?.ocr ?? "");
     out.push(...taken.map(f => ({ ...f, page: no })));
-    if (log) for (const h of here) { const t = taken.find(x => x.id === h.id); log.push({ id: h.id, page: no, first: h.value, again: t?.value ?? null, taken: !!t }); }
+    if (log) for (const h of here) { const t = taken.find(x => x.id === h.id), c = focusCandidates(h.value, text, mine.find(p => p.no === no)?.ocr ?? "");
+      log.push({ id: h.id, page: no, first: h.value, again: t?.value ?? null, taken: !!t, fits: c.fits.slice(0, 6), in_transcript: c.in_transcript.slice(0, 6), mathpix_chars: text.length }); }
   }
   return out;
 }

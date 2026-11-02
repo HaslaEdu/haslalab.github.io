@@ -31,10 +31,12 @@ const sameValue = (a, b) => Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math
     Mathpix's page one character off the first reading and absent from the first transcript (a number the transcript
     already has differs by a unit, not by a misread: 3.11 GPa written 3,11·10⁹ Pa) */
 export function mathpixRereads(disputed, mathpixText, transcript) {
-  const seen = numbersIn(plainDigits(transcript)), found = [...new Set(numbersIn(plainDigits(mathpixText)))];
-  return disputed.flatMap(d => {
-    const near = found.filter(n => misreadOf(d.value, n) && !seen.some(x => sameValue(x, n)));
-    const distinct = near.filter((n, i) => near.findIndex(x => sameValue(x, n)) === i);
-    return distinct.length === 1 ? [{ id: d.id, value: distinct[0], written: `Mathpix: ${distinct[0]}` }] : [];
-  });
+  return disputed.flatMap(d => { const { fits } = focusCandidates(d.value, mathpixText, transcript);
+    return fits.length === 1 ? [{ id: d.id, value: fits[0], written: `Mathpix: ${fits[0]}` }] : []; });
+}
+/** Mathpix's numbers one character off a reading: fits (absent from the transcript) and in_transcript (left out) */
+export function focusCandidates(value, mathpixText, transcript) {
+  const seen = numbersIn(plainDigits(transcript)), near = [];
+  for (const n of numbersIn(plainDigits(mathpixText))) if (misreadOf(value, n) && !near.some(x => sameValue(x, n))) near.push(n);
+  return { fits: near.filter(n => !seen.some(x => sameValue(x, n))), in_transcript: near.filter(n => seen.some(x => sameValue(x, n))) };
 }
