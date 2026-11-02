@@ -1,0 +1,66 @@
+{
+  "output_sha256": "158a40a7f283452974ac1930cb41e5304bb13acf220032600023a8cb0de34f41",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2018-theory-original\\natural\\2018\\T\\page03.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2018-theory-original\\natural\\2018\\T\\page03.pdf",
+    "final_page": 1,
+    "source_sha256": "dabf7a0c1894f486abcb093e3d3231ac39e9eb762bb4d910aa42703ce21ba83b",
+    "output_sha256": "158a40a7f283452974ac1930cb41e5304bb13acf220032600023a8cb0de34f41",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 216,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 216,
+      "expected_signature_count": 216,
+      "matched_outline_uses": 216,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 34483,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      275.0,
+      627.75,
+      275.25,
+      628.0
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "kind": "2018-original-native-Cambria-digit-phase-v1",
+    "method": "The exact original encoded source CID/font/Tf/Tm/paint is authoritative for these four reviewed curved digits. Original native reference nonwhite RGB matches final exactly in independent MuPDF and Poppler at4x/8x/12x; independent unhinted SVG checks at8x/12x also have zero missing ink. Raw4x SVG phase diagnostic retained, thresholds and delivered proof unchanged; actual-CID omission negatives rejected.",
+    "source_page": 3,
+    "source_character": "5",
+    "source_gid": 887,
+    "source_encoded_cid": "0377",
+    "source_font_resource": "/F9",
+    "source_point_size": 12,
+    "source_glyphs_checked": 1,
+    "original_4x_svg_dark_pixel_delta": 1,
+    "native_reference_nonwhite_RGB_errors": 0,
+    "native_reference_renderers": [
+      "MuPDF",
+      "Poppler"
+    ],
+    "native_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "svg_8x_missing_pixels": 0,
+    "svg_12x_missing_pixels": 0,
+    "actual_CID_omission_negative_rejected": true,
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2018-theory-original\\natural\\2018\\T\\page03-native-digit-phase\\witness.json",
+    "witness_sha256": "5931852a693a4a7323cc7fcd27085e81902535618c1f80a9cb91bb301e2acbec",
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2018/T/natural-spacing/witnesses/page03-native-cid.json"
+  }
+}

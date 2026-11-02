@@ -1,0 +1,37 @@
+{
+  "source_sha256": "0782ab2ced4c911ce92b550aa2fd86cb7f6c9a6e24d7a60f64b13275df1e38ba",
+  "source_page": 4,
+  "proof_sha256": "6e42e9c12e1094dc5654040f5ba69445b3502349130e55eb1a7db2f8746b343d",
+  "plan_sha256": "941e2738368cd4d0f717564e96e6c6544ee6947d002987f9081a34249c134c4f",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory every original bold14pt-or-larger English prose heading, including subtitles, and require its alignment intent and actual center to be present.",
+  "headings_and_captions_checked": 1,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          14,
+          0
+        ]
+      ],
+      "baseline": 512.5399780273438,
+      "source_center": 318.94200134277344,
+      "independent_original_source_centers": [
+        318.94200134277344
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 282.6659851074219,
+      "actual_nonspace_glyph_right": 355.2180480957031,
+      "actual_center": 318.9420166015625,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 0,
+    "rows": [],
+    "passed": true
+  },
+  "passed": true
+}

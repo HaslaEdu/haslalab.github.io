@@ -48,21 +48,27 @@
      "part": "T1",
      "kind": "answer",
      "url": "https://olimpicos.net/files/ispho/ISPhO_2026_A1.pdf",
-     "bytes": 41868
+     "bytes": 41868,
+     "local": "pdfx/ispho/ISPhO_2026_T1A.pdf",
+     "note": "the official sheet, with the scanner's corner squares (cut from ISPhO_2026_TA.pdf): tools/olydoc/ispho_sheets.py"
     },
     {
      "file": "ISPhO_2026_T2A.pdf",
      "part": "T2",
      "kind": "answer",
      "url": "https://olimpicos.net/files/ispho/ISPhO_2026_A2.pdf",
-     "bytes": 40253
+     "bytes": 40253,
+     "local": "pdfx/ispho/ISPhO_2026_T2A.pdf",
+     "note": "the official sheet, with the scanner's corner squares (cut from ISPhO_2026_TA.pdf): tools/olydoc/ispho_sheets.py"
     },
     {
      "file": "ISPhO_2026_T3A.pdf",
      "part": "T3",
      "kind": "answer",
      "url": "https://olimpicos.net/files/ispho/ISPhO_2026_A3.pdf",
-     "bytes": 40429
+     "bytes": 40429,
+     "local": "pdfx/ispho/ISPhO_2026_T3A.pdf",
+     "note": "the official sheet, with the scanner's corner squares (cut from ISPhO_2026_TA.pdf): tools/olydoc/ispho_sheets.py"
     },
     {
      "file": "ISPhO_2026_T1S.pdf",
@@ -140,7 +146,8 @@
      "label": "Part D detector data"
     }
    ],
-   "note": "not yet on ispho.mipt.ru; all files from olimpicos.net. Papers and answer sheets are the official 'English (Official)' PDFs; the solutions and marking schemes are browser printouts of the pho.rs grading pages (Russian site chrome, English content), so lower quality"
+   "note": "not yet on ispho.mipt.ru; all files from olimpicos.net. Papers and answer sheets are the official 'English (Official)' PDFs; the solutions and marking schemes are browser printouts of the pho.rs grading pages (Russian site chrome, English content), so lower quality",
+   "ws": "pdfx/ispho/ISPhO_2026_T_W.pdf"
   },
   {
    "y": 2025,
@@ -210,9 +217,38 @@
      "part": "T3",
      "kind": "solution",
      "local": "pdfx/ispho/ISPhO_2025_T3S.pdf"
+    },
+    {
+     "file": "ISPhO_2025_T1A.pdf",
+     "part": "T1",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2025_T1A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2025_T2A.pdf",
+     "part": "T2",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2025_T2A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2025_T3A.pdf",
+     "part": "T3",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2025_T3A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2025_TA.pdf",
+     "part": "T",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2025_TA.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
     }
    ],
-   "note": "online (MIPT). Only combined PDFs are published (problem statement followed by the official solution), so paper and solution entries point to the same file; ispho.mipt.ru/tasks | Papers: the official ISPhO English booklets, from the owner's archive (kept on the site, pdfx/ispho); per-problem files cut from them. Solutions: the official solution booklet, cut per problem."
+   "note": "online (MIPT). Only combined PDFs are published (problem statement followed by the official solution), so paper and solution entries point to the same file; ispho.mipt.ru/tasks | Papers: the official ISPhO English booklets, from the owner's archive (kept on the site, pdfx/ispho); per-problem files cut from them. Solutions: the official solution booklet, cut per problem.",
+   "ws": "pdfx/ispho/ISPhO_2025_T_W.pdf"
   },
   {
    "y": 2024,
@@ -285,9 +321,38 @@
      "part": "T",
      "kind": "solution",
      "local": "pdfx/ispho/ISPhO_2024_T_S_KO.pdf"
+    },
+    {
+     "file": "ISPhO_2024_T1A.pdf",
+     "part": "T1",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2024_T1A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2024_T2A.pdf",
+     "part": "T2",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2024_T2A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2024_T3A.pdf",
+     "part": "T3",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2024_T3A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2024_TA.pdf",
+     "part": "T",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2024_TA.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
     }
    ],
-   "note": "online (MIPT). MIPT publishes only combined statement+solution PDFs (the official solution files here; same text also at ispho.mipt.ru/tasks); the problem-only papers are the olimpicos.net page-splits of those official files | Papers: the official ISPhO English booklets, from the owner's archive (kept on the site, pdfx/ispho); per-problem files cut from them. 2024 solutions: per problem from olimpicos (statement+solution); the whole Korean solution for the exam."
+   "note": "online (MIPT). MIPT publishes only combined statement+solution PDFs (the official solution files here; same text also at ispho.mipt.ru/tasks); the problem-only papers are the olimpicos.net page-splits of those official files | Papers: the official ISPhO English booklets, from the owner's archive (kept on the site, pdfx/ispho); per-problem files cut from them. 2024 solutions: per problem from olimpicos (statement+solution); the whole Korean solution for the exam.",
+   "ws": "pdfx/ispho/ISPhO_2024_T_W.pdf"
   },
   {
    "y": 2023,
@@ -357,6 +422,34 @@
      "part": "T3",
      "kind": "solution",
      "local": "pdfx/ispho/ISPhO_2023_T3S.pdf"
+    },
+    {
+     "file": "ISPhO_2023_T1A.pdf",
+     "part": "T1",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2023_T1A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2023_T2A.pdf",
+     "part": "T2",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2023_T2A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2023_T3A.pdf",
+     "part": "T3",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2023_T3A.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
+    },
+    {
+     "file": "ISPhO_2023_TA.pdf",
+     "part": "T",
+     "kind": "answer",
+     "local": "pdfx/ispho/ISPhO_2023_TA.pdf",
+     "note": "HaslaLab's answer sheet (no official one was published): tools/olydoc/docs/ispho-sheets.cjs"
     }
    ],
    "note": "online (MIPT); T1 is a computer-simulation-based task but was part of the theoretical exam | Papers: the official ISPhO English booklets, from the owner's archive (kept on the site, pdfx/ispho); per-problem files cut from them. Solutions: the official solution booklet, cut per problem."

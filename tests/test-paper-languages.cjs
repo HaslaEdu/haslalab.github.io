@@ -63,7 +63,7 @@ assert.equal(JSON.parse(ruLink.searchParams.get('papers')).ru.length,3);
 const cardStart = html.indexOf('function theoryHtml(');
 const cardEnd = html.indexOf('/* the general instructions',cardStart);
 Object.assign(context, {UI:{en:{thyPaper:'Problem paper',thySol:'Solutions',thyOrigChip:'Original'}},
-  THY_YEARLY:new Set(),esc:String,thyUrl:x=>x,simThy:()=>new Set(),probCard:card=>JSON.stringify(card),
+  THY_YEARLY:new Set(),esc:String,thyUrl:x=>x,simsOf:()=>[],probCard:card=>JSON.stringify(card),
   contestEntries:()=>[],theoryGroups:()=>[],reviewTheoryGroups:()=>[],examGroups:()=>[],TL:()=>'',thyCount:()=>1});
 vm.runInContext(html.slice(cardStart,cardEnd),context);
 const cards = context.theoryHtml('cpho',{y:2023});
