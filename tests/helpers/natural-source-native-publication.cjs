@@ -29,6 +29,23 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     assert.ok(resolver, 'Source path mapping program is frozen with the publication');
     assert.equal(resolver.sha256, qa.source_path_resolver_sha256);
   }
+  const canonicalMigratedSource = value => {
+    const source = value.replace(/\\/g, '/').toLowerCase();
+    const oldParent = 'c:/users/andre/onedrive/문서/chatgpt/hasla 노술/';
+    const newParent = 'c:/users/andre/codexwork/haslalab/';
+    for (const repo of ['haslalab', 'haslalab-translations', 'haslalab-design-release', 'haslalab-chem-kmo-exams']) {
+      const prefix = oldParent + repo + '/';
+      if (source.startsWith(prefix)) return newParent + repo + '/' + source.slice(prefix.length);
+    }
+    return source;
+  };
+  const assertSourcePath = source => {
+    if (source === qa.source) return;
+    assert.ok(qa.source_path_resolver_sha256 && qa.resolved_source_read_path,
+      'Different provenance paths require the frozen migration resolver and verified read path');
+    assert.equal(canonicalMigratedSource(source), canonicalMigratedSource(qa.source));
+    assert.equal(canonicalMigratedSource(source), canonicalMigratedSource(qa.resolved_source_read_path));
+  };
   const folder = path.dirname(path.join(root, item.qa));
   const reviews = fs.readdirSync(folder).filter(f => /^visual-review.*\.json$/.test(f)).flatMap(f => {
     const review = JSON.parse(fs.readFileSync(path.join(folder, f), 'utf8'));
@@ -66,7 +83,7 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     assert.equal(body.page, page.page);
     for (const p of [plan, effective]) {
       assert.equal(p.page, page.page);
-      assert.equal(p.source, qa.source);
+      assertSourcePath(p.source);
       assert.equal(p.source_sha256, qa.source_sha256);
     }
     assert.equal(body.output_sha256, page.proof_sha256);
@@ -102,10 +119,20 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
         assert.equal(body[field], qa.authoring_programs.find(p => p.path.endsWith('/' + filename)).sha256);
       }
     }
+    if (body.native_text_ops_sha256) {
+      const textOps = qa.authoring_programs.find(p => p.path.endsWith('/pdf_latex_text_ops.py'));
+      assert.ok(textOps);
+      assert.equal(textOps.sha256, body.native_text_ops_sha256);
+    }
     if (body.native_type3_profile_sha256) {
       const profile = qa.authoring_programs.find(p => p.path.endsWith('/native_type3_profile.py'));
       assert.ok(profile);
       assert.equal(profile.sha256, body.native_type3_profile_sha256);
+    }
+    if (body.original_type3_program_preservation) {
+      const type3 = body.original_type3_program_preservation;
+      assert.equal(type3.passed, true);
+      assert.deepEqual(type3.target, type3.source);
     }
     for (const contact of body.intentional_prose_decoration_contacts || []) {
       assert.equal(contact.x_translation_only, true);

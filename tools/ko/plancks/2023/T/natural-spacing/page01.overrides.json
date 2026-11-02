@@ -1,0 +1,54 @@
+{
+  "__layout_scope__": {
+    "right_aligned_prose_lines": [
+      {
+        "baseline": 784.3291015625,
+        "right": 530.330810546875
+      }
+    ],
+    "centered_prose_lines": [
+      {
+        "baseline": 260.33203125,
+        "center": 284.27233505249023
+      },
+      {
+        "baseline": 683.839111328125,
+        "center": 291.17603302001953
+      }
+    ]
+  },
+  "__allowed_prose_line_rects__": [
+    {
+      "baseline": 784.3291015625,
+      "rect": [
+        52.075,
+        774.9857177734375,
+        530.330810546875,
+        786.94091796875
+      ]
+    },
+    {
+      "baseline": 260.33203125,
+      "rect": [
+        52.075,
+        244.1836395263672,
+        530.4,
+        264.84613037109375
+      ]
+    },
+    {
+      "baseline": 683.839111328125,
+      "rect": [
+        52.075,
+        674.4957275390625,
+        530.4,
+        686.450927734375
+      ]
+    }
+  ],
+  "reason": "The original Milan/date signature is right aligned. Retain its exact measured source right edge and physical font size/baseline, allowing the Korean text to extend into the original empty body column to its left.",
+  "p1:b5:l2:s0-8": "해당 답안이 채점된다",
+  "punctuation_review": "The original language sentence period after the bold scoring sentence remains native; omit a duplicated Korean period.",
+  "p1:b4:l0:s1-8": "대회는",
+  "boundary_review": "Use a complete Korean subject so the opening subject particle cannot attach to the preceding native bullet or point label; ordinary word spacing remains automatic."
+}

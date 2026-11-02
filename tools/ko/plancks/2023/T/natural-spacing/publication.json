@@ -1,0 +1,745 @@
+{
+  "schema": "natural-source-native-joined-v1",
+  "status": "READY",
+  "file": "PLANCKS_2023_T_KO.pdf",
+  "language": "ko",
+  "pages": 16,
+  "bytes": 29376368,
+  "sha256": "96a2290dd55442f8e46217aeb7af49b69566cf977a1b4d774e0d83ecfc8113d7",
+  "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\haslalab-translations\\pdfx\\plancks\\PLANCKS_2023_T_EN.pdf",
+  "source_sha256": "0a220ceffb3e86ce86d2a0fc7fa52e9fdd080eb91020b4393c96e26b5b0768d9",
+  "resolved_source_read_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\haslalab-translations\\pdfx\\plancks\\PLANCKS_2023_T_EN.pdf",
+  "source_path_resolver_sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9",
+  "no_font_shrink": true,
+  "no_math_rasterization": true,
+  "no_reserved_english_widths": true,
+  "inline_native_math_moved_as_whole_expressions": true,
+  "stationary_display_equations_and_figures": true,
+  "original_font_sizes_and_baselines_preserved": true,
+  "hidden_original_prose_has_empty_ActualText": true,
+  "no_added_editorial_notes": true,
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "02570786e1425b0386dbb231aa231043ee9fc242a4fa40f576cdb269823ce4d1",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page01.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page01.qa.json",
+      "qa_sha256": "e24b84dc0af70be597a2b6a89d54a3d1226a19b3f055fd26f15901389bcad57e",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page01.plan.json",
+      "plan_sha256": "7a22c90fa55e2fdad88e8618bad3a1b34bab344d4195ae0c174b08fc9d7126ee",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page01.effective-plan.json",
+      "effective_plan_sha256": "387954d019b81e117f91b71a18dbaa7f50e4d3a840b0bda1196b419bb98c1de7",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page01.overrides.json",
+      "overrides_sha256": "a83325f4efd9245733235a3c04a776ff2792282d7517c6785802e1a8904d15e3",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 355,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 26,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 2,
+      "proof_sha256": "cb4b1cc2c29340e5b83119a5719af464bc4e22f7451092d1ae2fb7ef3d6a1d14",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page02.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page02.qa.json",
+      "qa_sha256": "e92ca91616adee71dedbdfc86827430ce6551b658ffc823efd4a3ced6025fe1d",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page02.plan.json",
+      "plan_sha256": "f3fb89a505466d6ec4dc23b1c3f52303f40af916341d2d34bbf84b6e544612bd",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page02.effective-plan.json",
+      "effective_plan_sha256": "50b06aec37dced182d94a23bcddb3c4a5b0b241c09f93aa5c625baa8d5a999be",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page02.overrides.json",
+      "overrides_sha256": "54939d59d12917312d354c82ed9cbeb373ef040560c4a89f2ed0259ab9f891e2",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 266,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 24,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 3,
+      "proof_sha256": "d03f5602496e5eb7740ebf4974cf05dd3b3642097a4ff1d00bc3352fa5ebcf97",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page03.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page03.qa.json",
+      "qa_sha256": "37b47f7b5cf2becf054ea89efd4ceca1787134f65b290f7b45dd19f534d7ac6e",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page03.plan.json",
+      "plan_sha256": "dc0782fb03ce03bc5bf300ecf7090bb03cc8fda67a0596ee9b59a32df2282b57",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page03.effective-plan.json",
+      "effective_plan_sha256": "7a0458e304a7cf6ff936fb338a2986373c26a461d8e4b80f130ac19771828a41",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page03.overrides.json",
+      "overrides_sha256": "4256b289d02401f4b6d51af26406c25e9d8730295662be130ddb029b2c4f021f",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 11,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 1,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 4,
+      "proof_sha256": "f02fa3f07ccb77ddf6ee30394a131ee1940d122296920d2e183e83f10d041ee9",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page04.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page04.qa.json",
+      "qa_sha256": "d88ee2918d937e5c934fe7c0516eed14421ab88c1960639ece93eb89caf3def1",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page04.plan.json",
+      "plan_sha256": "263b2255668fb05bc180bd57daed4daf83bbbf8a4825fe4cf455c349af4efffa",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page04.effective-plan.json",
+      "effective_plan_sha256": "b5ea891fd182405919c883ce6811fafbaade658823e6c9c394e84a931961516d",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 149,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 17,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 5,
+      "proof_sha256": "4f2f56fcb5dc67895d84d3d3fcfb8c4b92cf403a00a7cb66c96937d6c00f740b",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page05.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page05.qa.json",
+      "qa_sha256": "da110bfccaac37b2d517c8dd1e05795c7684445c7b98e235b4c597a3217155ae",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page05.plan.json",
+      "plan_sha256": "bd16b404a3f138dd8f6bbfef5adf6c4358e6a2440f2fc3288a2840f5b5f4fbcc",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page05.effective-plan.json",
+      "effective_plan_sha256": "37c486d7807fe5e7a686e0f78b81ebd4c0167a194bc149448795feeb5b18effc",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page05.overrides.json",
+      "overrides_sha256": "d0e903cee45f72f14b12b4404c2dae12f53f234a80a9f53d81520279a34702ae",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 457,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 54,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 6,
+      "proof_sha256": "e518ae68097d293e6954ef15ed3989416d983e2301d21da667b8e6c9d7ed7145",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page06.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page06.qa.json",
+      "qa_sha256": "5ac992bbc66cf433a7d4c8f6d5de5564a5e3e614215282fde689e49f08dc5f63",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page06.plan.json",
+      "plan_sha256": "9a09d40ed4d718443b1912d2503eb80aebd41a8ccd82a795df1f6f43ab1f496b",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page06.effective-plan.json",
+      "effective_plan_sha256": "210a1a68182fc98357d3269143fe1978cddfeca6e8696e3f19120ae255a3eaa4",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page06.overrides.json",
+      "overrides_sha256": "bd4764a0f88d4d506b04fb7359707fa04302e149a156600069b6184617a65447",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 63,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 12,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 7,
+      "proof_sha256": "2c61c3298cb0395f7dc62cf850f272fb285d6536e9bb88892bec63204e6edbfb",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page07.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page07.qa.json",
+      "qa_sha256": "2e3f9376d605b56df62efb6f16bedd80f4e2f7e425e3ac4571516ee6aa1adbd1",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page07.plan.json",
+      "plan_sha256": "2e4998313165ae38ac08a9bfe7bd199b35f926a53ec52253b4cdb7edabaea8c7",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page07.effective-plan.json",
+      "effective_plan_sha256": "ab649f4d4e30e637f401d34124cddef6968d7f5c08816d8cb339041a35789898",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page07.overrides.json",
+      "overrides_sha256": "e60c452fc6812482c95c04dab43ce2d19c4b510d110088e8024b001d3e4982e8",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 635,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 51,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 8,
+      "proof_sha256": "fc554ff6629f3966288341db2a4184871c229e9ba9beba5b552cc540018effaf",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page08.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page08.qa.json",
+      "qa_sha256": "57e067f9e86f94975a35576cdaa62df0c4a41d2ae701053194e972c905275b5e",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page08.plan.json",
+      "plan_sha256": "cf311b39e82368f5b9c638a7a4c9fe2683de4a3fc7f47024fd483d191b307641",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page08.effective-plan.json",
+      "effective_plan_sha256": "82fa1ac3cb616c06355be0639a8ec7f71dbe8f789ea4b34f7f99d60668dcf090",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page08.overrides.json",
+      "overrides_sha256": "05c7ee179e3fa8114b47cc8664353ae3229e440e6c96aa73da8aa337236211df",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 380,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 49,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 9,
+      "proof_sha256": "a968b68b997d099dec1a9618a0cbf6cccb0edc894f0f5c84e727845fbf4ca361",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page09.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page09.qa.json",
+      "qa_sha256": "baf56f0fd16e5087334491bd770d3a379a47f13743be71383f52bfe10ddf4cab",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page09.plan.json",
+      "plan_sha256": "27da56288e01270d7d915f665938284b1550421aca6c869a9ae9e4c8d238c55f",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page09.effective-plan.json",
+      "effective_plan_sha256": "2f4e46e2f67292447ddd511f7af29664b3dd64c8b14cec7edbf2c1aa6e3bc969",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page09.overrides.json",
+      "overrides_sha256": "b5d427b4b39a8843ae22e14973b8a47f9f18cbdbb1ec0195320e00a9bc3ea57a",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 342,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 36,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 10,
+      "proof_sha256": "1e7e9a98534a735fc1e12866b3b2ee5b37efdd3bb2ad8310f4fb98ca44568b20",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page10.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page10.qa.json",
+      "qa_sha256": "1fb2b83e4e79c7d2e640c3c84c4205b30fa584d110215587b0c51d3ee35b4608",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page10.plan.json",
+      "plan_sha256": "797802e790a5383b8d65be0e6c3ddc40fb4ca65b38a153617af3ba4c644a2aaf",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page10.effective-plan.json",
+      "effective_plan_sha256": "9abc58a498dc63abe53eecaacbae9d18e13c1dd0f8daed9b232ee60a3f8cddb1",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 41,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 4,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 11,
+      "proof_sha256": "f8d7f4d12c986c48896bf781b97a7475680a31b4374e849139aa76a7fb4221fa",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page11.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page11.qa.json",
+      "qa_sha256": "e05ab25d716fd7561398e3f87bb53f2d599b034adbd69961d517489da9894492",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page11.plan.json",
+      "plan_sha256": "f0b4b649e10479683038893585394fbe1b77ba5dec697ef10b08cf436c218ff7",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page11.effective-plan.json",
+      "effective_plan_sha256": "203812a7ecb5da1281a35fc444cc61165b496bf86be8956c1aa523db61462c85",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page11.overrides.json",
+      "overrides_sha256": "7002be1d9dec6cfdd530d7ec58ace7f4b2f9c9a93ad20d31071d4c1dbae1612d",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 798,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 66,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 12,
+      "proof_sha256": "05141f73ab7d1fbd1873bb6cf661146e4522ab65f0403481d96befa5c6576504",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page12.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page12.qa.json",
+      "qa_sha256": "d68a07848c027465ea1c8a75b77a126df49ed0cb50970497153f7206dba36c6b",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page12.plan.json",
+      "plan_sha256": "5d8208b25e2a515274d1fb9928517e23d022cf1997411e9b0ae05e2ac79182be",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page12.effective-plan.json",
+      "effective_plan_sha256": "1592732a973af2583df94092a602e2478e77a3f9424f5d7465cc70895e584995",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page12.overrides.json",
+      "overrides_sha256": "666d4c348f558fa9b85672ba4356bd348a97dbcb37f3438d8ea73b8632014e65",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 215,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 18,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 13,
+      "proof_sha256": "d624cd293011260a276b84baf47c39353e64ce126672fff7abd807bafc934139",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page13.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page13.qa.json",
+      "qa_sha256": "8751a59867df769a934cc513592f25dd34fa41301aaa17029270ef2180e22bc0",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page13.plan.json",
+      "plan_sha256": "395b0c03b4ebce7b92401fb01145ad3a1cc0adfbc4293e6063ec02e2ee424bc0",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page13.effective-plan.json",
+      "effective_plan_sha256": "d2aedc8c07f57dd4466e9d3bb201a78c9f4d37e7b74510b638e0ed10c1b0d567",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page13.overrides.json",
+      "overrides_sha256": "94d0080a1ed30b11737cc0ef84d3549f42eff4cd94293fdece80cc21cb8b352e",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 706,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 51,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 14,
+      "proof_sha256": "831b3a778e093c8c542cdb88b88185dc3d3f71207faf49e2fba15d7a192358bb",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page14.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page14.qa.json",
+      "qa_sha256": "2ed2ed9969b194545b1df83f461d4c988ae9a0156cb3cafcc3e09bf04fac391b",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page14.plan.json",
+      "plan_sha256": "9dff4da2cc07cd35c11f414b185075bedd8e126755e401f1911861bdbf1af6f2",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page14.effective-plan.json",
+      "effective_plan_sha256": "89520f6ea5490e518c205f1c5d890c225562a0edd8b93bcc84e43f6fd97afb39",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 19,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 3,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 15,
+      "proof_sha256": "1c408137b9a35d536a315202751e49ef7273f962d213ed5f737aa0f58a0d5155",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page15.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page15.qa.json",
+      "qa_sha256": "dca3bd160acee5f64fa2b1d1247abb2cfa09c59bb9dcb60d8359d6cce6dbfb4c",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page15.plan.json",
+      "plan_sha256": "750dc5a20b2b04e820c6f40f7e4d56dfb206fe4ecce718d74690bde6e86264fc",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page15.effective-plan.json",
+      "effective_plan_sha256": "090a31d0e9285ab4c31520251beffbcf2fc7c8def095923f642cff4db1dc745e",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page15.overrides.json",
+      "overrides_sha256": "51c25b7341fc1b918efe372b175a343d65101b82c0f733d9ea343c96cf145d80",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 625,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 51,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    },
+    {
+      "page": 16,
+      "proof_sha256": "937cf07fd03bcc850d8266587f5038b37e4ab0a076868230a060c8fcf92b7106",
+      "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-proof-work\\proofs\\plancks\\2023\\page16.pdf",
+      "qa_path": "tools/ko/plancks/2023/T/natural-spacing/page16.qa.json",
+      "qa_sha256": "c6ef3bd07fb4f43fff41694c7a6cb427872a67860605eb13e4b64a5da3b9ad86",
+      "plan_path": "tools/ko/plancks/2023/T/natural-spacing/page16.plan.json",
+      "plan_sha256": "4282e249ff7db4ed218fad536ff9ed882cd4de5b85255251196e10a7ff1e1b60",
+      "effective_plan_path": "tools/ko/plancks/2023/T/natural-spacing/page16.effective-plan.json",
+      "effective_plan_sha256": "6ff22c75425570be05aa2364a589d3257449c42801b0edbd97dc7f8cb7cfb7e2",
+      "overrides_path": "tools/ko/plancks/2023/T/natural-spacing/page16.overrides.json",
+      "overrides_sha256": "5d36f81d2166ee99769faa29dd725b17397a6030a65e015d7cbe9332dec76e40",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 428,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 45,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "composer_path": "tools/ko/plancks/2023/T/natural-spacing/authoring/natural_plan_compose_plancks2023_final.py",
+      "composer_sha256": "a9e8e22674537047d574badb9698350c9c75a6178874dd42d8fe0599d9cfa831",
+      "source_scopes": [
+        {
+          "path": "tools/ko/plancks/2023/T/natural-spacing/scope-plancks2023-scope.json",
+          "sha256": "251bcf02ded7e46f5796a0b8dd1150f570011d9f02b2626664dc0000b45b5ab5"
+        }
+      ],
+      "raster_label_manifest": {
+        "path": "tools/ko/plancks/2023/T/natural-spacing/raster-labels-reviewed.json",
+        "sha256": "2e6d1ebb7d191c1a5a2d8b3c21955fe20db52a45c17dc711bc1da93006e77235"
+      }
+    }
+  ],
+  "visual_review_files": [
+    "tools/ko/plancks/2023/T/natural-spacing/visual-review-natural-01-16.json",
+    "tools/ko/plancks/2023/T/natural-spacing/visual-review-progress.json",
+    "tools/ko/plancks/2023/T/natural-spacing/visual-review-revised-06-08.json",
+    "tools/ko/plancks/2023/T/natural-spacing/visual-review-root-independent.json",
+    "tools/ko/plancks/2023/T/natural-spacing/visual-review-stable-02-08.json"
+  ],
+  "all_pages_visually_reviewed": true,
+  "visual_review_required": false,
+  "authoring_programs": [
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/latex_native_motion.py",
+      "sha256": "3e50b9c96c6972d26ac4742b45b513c1b134440908f5858656e0e383db813944"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/pdf_latex_text_ops.py",
+      "sha256": "56c63bef88bea8a23f4b207e77a3d1e2474860e3b6ba95c4c55b3cc0fff2c90b"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/native_proof.py",
+      "sha256": "480a9070522c030859ce53db0ac9fab528cf266d1eca2f34f8307808eecd20f0"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/verify_native_vectors_plancks2023.py",
+      "sha256": "39155bc844d5b5e20efa50eec1d510b7c279b669bd43f53616edf47d62d20741"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/assemble_natural.py",
+      "sha256": "ed0fc1e4c945b6ce6fff27cb63deaf65774001f0e2240c8f278a5344e251d5f6"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/source_path_resolver.py",
+      "sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/native_ink_bounds.py",
+      "sha256": "14a7a5d77d6d4613b859f8cfde443bb36e1dad8f48e56a979755c660880b1986"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/native_type3_profile.py",
+      "sha256": "3c6f965a13e1e771ac3b47e52f07a2ba9c48ebed9da88ed0f01f08f514825f60"
+    },
+    {
+      "path": "tools/ko/plancks/2023/T/natural-spacing/authoring/manifest.json",
+      "sha256": "ceafc176f4c8eeb83adee89de47108b5a1ad107d690c61abbf5de98d8103ba46"
+    }
+  ],
+  "strict_korean_glyph_geometry_audit": true,
+  "source_url": "https://plancks.uk/wp-content/uploads/2023/11/solutions.pdf",
+  "source_page_url": "https://plancks.uk/about/past-papers/"
+}
