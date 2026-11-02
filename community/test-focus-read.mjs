@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { misreadOf, mathpixRereads } from "./src/focus-read.js";
+import { misreadOf, mathpixRereads, labelSection } from "./src/focus-read.js";
 
 test("a re-read replaces a reading only one character off: a digit or a power of ten", () => {
   assert.ok(misreadOf(1.59e12, 1.59e18), "IPhO 2021 T3 C.3: 10^12 for 10^18");
@@ -22,4 +22,11 @@ test("Mathpix's page gives the one number a character off the first reading, abs
   assert.deepEqual(mathpixRereads([{ id: "2.3.b", value: 3.11 }], "3,11·10⁹ pa", "3,11·10⁹ pa"), [], "a unit, not a misread: the transcript has the same number");
   assert.deepEqual(mathpixRereads([{ id: "B.2", value: 223 }], "\\Delta \\lambda \\approx 223 \\mathrm{hm}", "Δλ ≈ 223 nm"), [], "the same reading");
   assert.deepEqual(mathpixRereads([{ id: "X", value: 25 }], "n = 85 and m = 35", "n = 25"), [], "two candidates: no choice");
+});
+test("two candidates on the page: the one under the item's own label", () => {
+  const page = "D. 3 (1.2 pt) $x=\\frac{4 \\pi}{3 k}$ y 23 D. 4 (0.8 pt) $a / \\lambda=\\frac{2}{3}$\nD. 5 (1.1 pt)\nNumerical value: $n \\approx 85$";
+  assert.equal(labelSection(page, "D.5"), " (1.1 pt)\nNumerical value: $n \\approx 85$");
+  assert.equal(labelSection(page, "D.6"), null);
+  assert.deepEqual(mathpixRereads([{ id: "D.5", value: 25 }], page, "D.5 (1.1 pt) n ≈ 25").map(r => r.value), [85], "IPhO 2021 T3: 23 elsewhere, 85 under D. 5");
+  assert.deepEqual(mathpixRereads([{ id: "1.1.e", value: 25 }], "n = 85 and m = 35", "n = 25"), [], "no label to go by: no choice");
 });
