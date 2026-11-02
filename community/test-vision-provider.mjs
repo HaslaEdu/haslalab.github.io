@@ -217,3 +217,36 @@ test("Gemini: mediaResolution goes in the generation config, and a 400 is tried 
   assert.equal(sent[0].generationConfig.mediaResolution, "MEDIA_RESOLUTION_HIGH");
   assert.ok(!("mediaResolution" in sent[1].generationConfig) && sent[1].generationConfig.thinkingConfig, "only the media setting is dropped");
 });
+test('Gemini calls the grade tools as functions: its turn (thought signature) goes back, then the answers, and JSON at the end',async()=>{
+ const tools=[{type:'function',function:{name:'check_value',description:'check a number',parameters:{type:'object',properties:{item_id:{type:'string'},value:{type:'number'}},required:['item_id','value']}}}];
+ const bodies=[],seen=[];
+ const turn={role:'model',parts:[{text:'',thought:true,thoughtSignature:'sig-1'},{functionCall:{id:'c1',name:'check_value',args:{item_id:'A.2',value:5.3e-11}},thoughtSignature:'sig-2'}]};
+ const usage={promptTokenCount:100,cachedContentTokenCount:0,candidatesTokenCount:20,totalTokenCount:120};
+ const result=await visionJSON(env,{provider:'gemini',schema:{type:'object'},input:'x',tools,maxToolRounds:2,onTool:(name,args)=>{seen.push([name,args]);return 'within tolerance';},
+  fetchImpl:async(url,request)=>{const body=JSON.parse(request.body);bodies.push(body);
+   return Response.json(bodies.length===1?{candidates:[{finishReason:'STOP',content:turn}],usageMetadata:usage}:{candidates:[{finishReason:'STOP',content:{parts:[{text:'{"ok":true}'}]}}],usageMetadata:usage});}});
+ assert.deepEqual(result.raw,{ok:true});
+ assert.deepEqual(bodies[0].tools,[{functionDeclarations:[{name:'check_value',description:'check a number',parameters:tools[0].function.parameters}]}]);
+ assert.ok(bodies[0].generationConfig.responseSchema,'the response schema stays beside the tools');
+ assert.deepEqual(seen,[['check_value',{item_id:'A.2',value:5.3e-11}]]);
+ assert.deepEqual(bodies[1].contents[1],turn,'the model turn is sent back as it came, signatures included');
+ assert.deepEqual(bodies[1].contents[2],{role:'user',parts:[{functionResponse:{name:'check_value',id:'c1',response:{result:'within tolerance'}}}]});
+ assert.equal(bodies[1].toolConfig,undefined,'a round that may still call keeps the default');
+ assert.equal(result.usage.input_tokens,200,'both calls are metered');assert.equal(result.tools.length,1);
+});
+test('Gemini: the last tool round allows no more calls, and a turn that still calls one is asked for the JSON',async()=>{
+ const tools=[{type:'function',function:{name:'find_on_pages',description:'find',parameters:{type:'object',properties:{text:{type:'string'}},required:['text']}}}];
+ const bodies=[],call={candidates:[{finishReason:'STOP',content:{role:'model',parts:[{functionCall:{name:'find_on_pages',args:{text:'v_1'}}}]}}],usageMetadata:{promptTokenCount:10,candidatesTokenCount:2,totalTokenCount:12}};
+ const result=await visionJSON(env,{provider:'gemini',schema:{type:'object'},input:'x',tools,maxToolRounds:1,onTool:()=>'p2: v_1 = alpha c',
+  fetchImpl:async(url,request)=>{bodies.push(JSON.parse(request.body));return Response.json(bodies.length<3?call:{candidates:[{finishReason:'STOP',content:{parts:[{text:'{"done":1}'}]}}],usageMetadata:{promptTokenCount:10,candidatesTokenCount:2,totalTokenCount:12}});}});
+ assert.deepEqual(result.raw,{done:1});assert.equal(bodies.length,3);
+ assert.equal(bodies[1].toolConfig.functionCallingConfig.mode,'NONE');
+ assert.match(JSON.stringify(bodies[2].contents.at(-1)),/Return the JSON object now/);
+});
+test('Gemini code execution: the answer is the last text after the notes between runs',async()=>{
+ let body;
+ const result=await visionJSON(env,{provider:'gemini',schema:{type:'object'},input:'x',geminiTools:[{code_execution:{}}],
+  fetchImpl:async(url,request)=>{body=JSON.parse(request.body);return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:'Let me zoom in.'},{executableCode:{language:'PYTHON',code:'crop()'}},{codeExecutionResult:{outcome:'OUTCOME_OK',output:''}},{text:'{"value":"0.31"}'}]}}],
+   usageMetadata:{promptTokenCount:10,candidatesTokenCount:2,totalTokenCount:12}});}});
+ assert.deepEqual(body.tools,[{code_execution:{}}]);assert.deepEqual(result.raw,{value:'0.31'});
+});

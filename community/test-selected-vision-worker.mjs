@@ -67,6 +67,7 @@ async function fixture(run){
     else if(text.includes('[TASK: moderate]'))raw=moderateReply||{items:[{id:'R',found:true,page:1,score:1,rules:[],note:'',quote:''}]};
     else if(text.includes('[TASK: analyse solution]'))raw={parts:[{id:'G',points:2,results:[{expression:'v = sqrt(2 g h)'}],milestones:['energy conservation'],accepted_forms:['v^2 = 2 g h']}]};
     else if(text.includes('[TASK: build marking scheme]'))raw={points:2,items:[{id:'G',points:2,type:'derivation',role:'result',sheet:'answer',what:'v = sqrt(2 g h); accept v^2 = 2 g h'}],parts:[],total:2};
+    else if(text.includes('[TASK: zoom read]'))raw={reads:[{id:'N',written:'1.59 · 10^18',value:1.59e18,sure:true,alternatives:[]},{id:'K',written:'7.9',value:7.9,sure:true,alternatives:[]}]};
     else if(text.includes('[TASK: grade]'))raw=gradeReply||visualGrade;
     else {const marker=text.match(/\[PHOTO [a-f0-9-]+\]/)?.[0]||'';raw={scores:[{id:'G',got:2,note:'Visible direction.',decision:'met',evidence:[marker]}],feedback:[],confidence:.98};}
     return provider==='gemini'?Response.json({modelVersion:url.match(/\/models\/([^/:]+):/)?.[1]||VISION_MODELS.gemini,candidates:[{finishReason:'STOP',content:{parts:[{text:JSON.stringify(raw)}]}}],usageMetadata:{promptTokenCount:100,candidatesTokenCount:50,cachedContentTokenCount:0}}):Response.json({model:body.model||VISION_MODELS.deepseek,choices:[{finish_reason:'stop',message:{content:JSON.stringify(raw)}}],usage:{prompt_tokens:100,completion_tokens:50,prompt_cache_hit_tokens:0,prompt_cache_miss_tokens:100}});
@@ -360,6 +361,31 @@ test('LAB_FOCUS_READ: a value the code marks wrong is read once more by Mathpix;
   assert.match(detail,/"id":"N"[^}]*"got":0\.6/,'10^13 read again as 10^18');
   assert.match(detail,/"id":"K"[^}]*"got":0[,}]/,'a value Mathpix reads the same changes nothing');
   assert.equal(sql.prepare("SELECT count(*) n FROM lab_calls WHERE session_id=? AND step='focus' AND provider='mathpix'").get(sid).n,1,'metered');
+}));
+test('LAB_FOCUS_ENGINE gemini: the value the code marks wrong is read again by Gemini zooming into the photo itself',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_FOCUS_READ='on';env.LAB_FOCUS_ENGINE='gemini';env.LAB_FOCUS_MODE='agentic';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[
+    {id:'N',points:0.6,type:'value',sheet:'answer',what:'n_c',ref:'1.59e18',unit:'m^-3'},
+    {id:'K',points:1.4,type:'value',sheet:'answer',what:'k',ref:'4.2',unit:'m'}]}),'fixture',Math.floor(Date.now()/1000));
+  const item=(id,value)=>({id,found:true,page:1,label:id,score:0,rules:[],note:'',quote:'',value,unit_ok:true});
+  replies({items:[item('N',1.59e13),item('K',7.9)],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  const text=pageReading.text;pageReading.text='N: n_c = 1.59 × 10^{13} m^-3\nK: k = 7.9 m';
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.text=text;}
+  const zoom=calls.filter(c=>c.text.includes('[TASK: zoom read]'));
+  assert.equal(zoom.length,1,'one call for the page');assert.equal(calls.filter(c=>c.provider==='mathpix').length,0);
+  assert.deepEqual(zoom[0].body.tools,[{code_execution:{}}]);assert.match(zoom[0].url,/gemini-3\.1-flash-lite/);
+  assert.ok(!zoom[0].text.includes('1.59e13')&&!zoom[0].text.includes('1.59e18'),'blind: neither the first reading nor the official value');
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"N"[^}]*"got":0\.6/,'10^13 read again as 10^18');
+  assert.match(detail,/"id":"K"[^}]*"got":0[,}]/,'a value read the same changes nothing');
+  assert.equal(sql.prepare("SELECT count(*) n FROM lab_calls WHERE session_id=? AND step='focus' AND provider='gemini'").get(sid).n,1,'metered');
 }));
 test('a right value with a missing unit loses 0.1, not the item (R3); a step whose quote is not found is looked for again before R13 zeroes it',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';

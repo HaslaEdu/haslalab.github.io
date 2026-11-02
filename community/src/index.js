@@ -36,10 +36,10 @@ import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './l
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages,referenceText} from './reference-images.js';
 import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
-import { pageStrips } from './page-tiles.js';
+import { pageStrips, cropJpeg } from './page-tiles.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
-import { mathpixRereads, focusCandidates } from './focus-read.js';
+import { mathpixRereads, focusCandidates, misreadOf } from './focus-read.js';
 import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
@@ -2501,7 +2501,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   /* focused re-read (focus-read.js; LAB_FOCUS_READ on, bench grade.focus): a value the code marks wrong is read once more
      by Mathpix; a one-character misread (a digit, a power of ten) is replaced and the task scored again */
   const focusLog = roles?.bench ? [] : null;
-  const focus = (roles?.focusRead ?? env.LAB_FOCUS_READ === "on") ? await labFocusRead(env, s, sc, raw, photos, mine, m, focusLog).catch(e => { console.error("lab focus read", e?.code || e?.message); return []; }) : [];
+  const focus = (roles?.focusRead ?? env.LAB_FOCUS_READ === "on") ? await labFocusRead(env, s, sc, raw, photos, mine, m, focusLog, roles?.focusEngine).catch(e => { console.error("lab focus read", e?.code || e?.message); return []; }) : [];
   if (focus.length) {
     const byId = new Map(focus.map(f => [f.id, f]));
     raw = { ...raw, items: (raw.items || []).map(x => { const f = byId.get(String(x?.id)); if (!f) return x;
@@ -2517,9 +2517,10 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
 }
 
 /* the items a page's numerical answer was marked wrong for (R12), read once more by Mathpix page by page (focus-read.js) */
-async function labFocusRead(env, s, sc, raw, photos, mine, m, log = null) {
-  if (!ocrEngineKeys(env).mathpix) return [];
+async function labFocusRead(env, s, sc, raw, photos, mine, m, log = null, engine = env.LAB_FOCUS_ENGINE || "mathpix") {
   const disputed = sc.items.filter(i => i.rules?.includes("R12") && Number.isFinite(i.value) && i.page != null).slice(0, 8);
+  if (engine === "gemini") return labZoomFocus(env, s, disputed, photos, m, log);
+  if (!ocrEngineKeys(env).mathpix) return [];
   const out = [];
   for (const no of [...new Set(disputed.map(i => i.page))]) {
     const shot = photos.find(x => x.p.no === no); if (!shot) continue;
@@ -2533,6 +2534,63 @@ async function labFocusRead(env, s, sc, raw, photos, mine, m, log = null) {
     out.push(...taken.map(f => ({ ...f, page: no })));
     if (log) for (const h of here) { const t = taken.find(x => x.id === h.id), c = focusCandidates(h.value, text, mine.find(p => p.no === no)?.ocr ?? "");
       log.push({ id: h.id, page: no, first: h.value, again: t?.value ?? null, taken: !!t, fits: c.fits.slice(0, 6), in_transcript: c.in_transcript.slice(0, 6), mathpix_chars: text.length }); }
+  }
+  return out;
+}
+
+/* Gemini's own focused re-read (LAB_FOCUS_ENGINE gemini, bench grade.focusEngine, bench stage 'focus'). A page reader
+   writes what a line should say more often than it misreads a stroke (WildHandBench: ~79% of Gemini's handwriting errors
+   are plausible text it made up; IPhO 2025 bench: 0.31 μm read 9.31, 10^2 read 10^-2 by every model). So the line is
+   found on the page (box_2d), cut out of the full-resolution photo, and read again alone, character by character, with no
+   problem, no first reading and no official value: the crop gets the whole image budget a page shares. mode 'agentic'
+   instead lets the model crop and zoom itself with code execution (Google's Agentic Vision). */
+const ZOOM_FIND_SCHEMA = { type: "object", properties: { found: { type: "array", items: { type: "object", properties: {
+  id: { type: "string" }, box: { type: "array", items: { type: "integer" } } }, required: ["id", "box"] } } }, required: ["found"] };
+const ZOOM_READ_SCHEMA = { type: "object", properties: { reads: { type: "array", items: { type: "object", properties: {
+  id: { type: "string" }, written: { type: "string" }, value: N({ type: "number" }), unit: N({ type: "string" }),
+  sure: { type: "boolean" }, alternatives: { type: "array", items: { type: "string" } } }, required: ["id", "written", "sure"] } } }, required: ["reads"] };
+const ZOOM_READ_RULES = "Read the final numerical value written for the named item, character by character, exactly as written: every digit, the decimal point or comma, the power of ten with its sign, and the unit. Do not compute, round, complete or correct anything: you are not told the problem or the right answer, and you must not guess one. Look hard at what handwriting confuses: a 0 with a tail or slash and 9 or 6, 1 and 7, 3 and 8, 4 and 9, 5 and 6, a minus sign in an exponent and a stray stroke, a decimal point and a speck, μ and m and n. sure is false when any character could be read two ways; then give the other full readings in alternatives. value is the number as written, in scientific form (e.g. 2.45e2), without the unit.";
+async function labZoomRead(env, s, bytes, mime, ids, m, opt = {}) {
+  const who = labAs(s, "gemini", { model: opt.model || env.LAB_FOCUS_MODEL || "gemini-3.1-flash-lite", thinking: opt.thinking || "low" });
+  const raw = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), list = ids.map(String).slice(0, 8);
+  const page = { inline_data: { mime_type: mime, data: b64(raw) }, label: "Original submitted answer page" };
+  if (opt.mode === "agentic") {
+    const out = await labVision(env, who, [page, { text: `[TASK: zoom read] Items: ${list.join(", ")}. For each item, find on the page above where the candidate writes its final value, crop and enlarge that line with code, and read it from the enlarged crop. ${ZOOM_READ_RULES} Leave out an item that is not on the page.` }],
+      ZOOM_READ_SCHEMA, 16384, m, "focus", 0, { geminiTools: [{ code_execution: {} }], mediaResolution: "MEDIA_RESOLUTION_HIGH" });
+    return { found: [], reads: (out.raw.reads || []).filter(r => list.includes(String(r?.id))) };
+  }
+  const find = await labVision(env, who, [page, { text: `[TASK: locate answers] Items: ${list.join(", ")}. For each item, give box: [ymin,xmin,ymax,xmax] in 0..1000 of the image, around the line where the candidate writes that item's final value (the number with its power of ten and unit), not its label alone or its working. Leave out an item that is not on the page.` }],
+    ZOOM_FIND_SCHEMA, 4096, m, "focus", 0, { mediaResolution: "MEDIA_RESOLUTION_HIGH" });
+  const crops = [];
+  for (const f of find.raw.found || []) {
+    const id = String(f?.id); if (!list.includes(id) || crops.some(c => c.id === id)) continue;
+    const cut = cropJpeg(raw, f.box, 25, 60); if (cut) crops.push({ id, box: f.box, bytes: cut });
+  }
+  if (!crops.length) return { found: [], reads: [] };
+  const parts = crops.flatMap((c, i) => [{ text: `Crop ${i + 1}: item ${c.id}` }, { inline_data: { mime_type: "image/jpeg", data: b64(c.bytes) }, label: `Crop ${i + 1}, item ${c.id}` }]);
+  const out = await labVision(env, who, [...parts, { text: `[TASK: read values] Each crop above is cut from a photographed handwritten answer sheet. ${ZOOM_READ_RULES}` }],
+    ZOOM_READ_SCHEMA, 4096, m, "focus", 0, { mediaResolution: "MEDIA_RESOLUTION_HIGH" });
+  return { found: crops.map(c => ({ id: c.id, box: c.box })), reads: (out.raw.reads || []).filter(r => crops.some(c => c.id === String(r?.id))) };
+}
+/* a zoomed reading replaces the first only when it is sure of every character and is one misread apart (focus-read.js) */
+function zoomTakes(first, read) {
+  const again = Number(read?.value);
+  return read?.sure === true && Number.isFinite(again) && misreadOf(first, again) ? again : null;
+}
+async function labZoomFocus(env, s, disputed, photos, m, log) {
+  const out = [];
+  for (const no of [...new Set(disputed.map(i => i.page))]) {
+    const shot = photos.find(x => x.p.no === no); if (!shot) continue;
+    const here = disputed.filter(i => i.page === no);
+    const bytes = Uint8Array.from(atob(shot.photo.inline_data.data), c => c.charCodeAt(0));
+    let z;
+    try { z = await labZoomRead(env, s, bytes, shot.photo.inline_data.mime_type, here.map(i => i.id), m, { mode: env.LAB_FOCUS_MODE }); }
+    catch (e) { console.error("lab zoom read", e?.code || e?.message); continue; }
+    for (const h of here) {
+      const r = z.reads.find(x => String(x.id) === h.id), took = zoomTakes(h.value, r);
+      if (took != null) out.push({ id: h.id, value: took, written: `zoom: ${String(r.written).slice(0, 60)}`, page: no });
+      if (log) log.push({ id: h.id, page: no, first: h.value, again: Number.isFinite(Number(r?.value)) ? Number(r.value) : null, written: r?.written ?? null, sure: r?.sure ?? null, alternatives: r?.alternatives ?? [], taken: took != null, engine: "gemini" });
+    }
   }
   return out;
 }
@@ -2803,6 +2861,13 @@ async function labBench(env, s, job) {
       const read = { mathpix: mathpixRead, simpletex: simpletexRead }[spec.engine]; if (!read) throw new Error('bench_engine');
       const r = await read(env, bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), page.mime, { signal: AbortSignal.timeout(90000) });
       out = { page_id: page.id, engine: spec.engine, ocr: r.text, confidence: r.confidence, handwritten: r.handwritten ?? null };
+    } else if (spec.stage === 'focus') {
+      /* the zoomed re-read alone, on given values: {stage:'focus', page_id, items:[{id, value}], focus:{model, mode, thinking}} */
+      const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
+      const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
+      const items = (spec.items || []).slice(0, 8), z = await labZoomRead(env, s, bytes, page.mime, items.map(i => i.id), m, spec.focus || {});
+      out = { page_id: page.id, found: z.found, reads: z.reads, items: items.map(i => { const r = z.reads.find(x => String(x.id) === String(i.id));
+        return { id: i.id, first: i.value, again: Number.isFinite(Number(r?.value)) ? Number(r.value) : null, written: r?.written ?? null, sure: r?.sure ?? null, alternatives: r?.alternatives ?? [], taken: zoomTakes(i.value, r) != null }; }) };
     } else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
@@ -2824,7 +2889,7 @@ async function labBench(env, s, job) {
       if (spec.scheme && (!scheme || scheme.unscored)) throw new Error('bench_no_scheme');
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
-        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
+        gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
         /* where a bench grading has got to, kept on its row while it runs (a run that never ends shows its last step) */
         trace: step => env.DB.prepare("UPDATE lab_bench SET output=? WHERE id=? AND status='pending'").bind(JSON.stringify({ trace: step, ms: Date.now() - t0 }), row.id).run().catch(() => {}) };
       const res = await labGradeVision(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, roles);
