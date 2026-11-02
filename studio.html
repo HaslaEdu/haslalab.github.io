@@ -7,12 +7,22 @@
   <meta name="robots" content="noindex">
   <meta name="referrer" content="same-origin">
   <title>문제 스튜디오 · HaslaLab</title>
+  <script>
+  (function(){
+    const p=new URLSearchParams(location.search),embedded=p.get('embed')==='1';
+    if(!embedded&&p.get('standalone')!=='1'){location.replace('./#/learn/physics/studio');return;}
+    document.documentElement.dataset.embed=String(embedded);
+    try{document.documentElement.dataset.theme=p.get('theme')==='dark'||p.get('theme')!=='light'&&localStorage.getItem('hlTheme')==='dark'?'dark':'light';}catch(_){document.documentElement.dataset.theme='light';}
+  })();
+  </script>
   <link rel="stylesheet" href="vendor/katex/katex.min.css">
   <link rel="stylesheet" href="studio.css">
   <script defer src="vendor/katex/katex.min.js"></script>
-  <script defer src="studio.js"></script>
+  <link rel="stylesheet" href="studio-embed.css?v=20261102-learn">
+  <script defer src="studio.js?v=20261102-learn"></script>
 </head>
 <body>
+  <script>if(document.documentElement.dataset.embed==='true')document.body.classList.add('studio-embedded');</script>
   <a class="skip-link" href="#workspace" data-i18n="skip">작업 영역으로 건너뛰기</a>
   <header class="site-header">
     <a class="brand" href="./#/" aria-label="HaslaLab home"><span class="brand-mark" aria-hidden="true">H<span>+</span></span><span>HaslaLab<span class="brand-sub">PROBLEM STUDIO</span></span></a>

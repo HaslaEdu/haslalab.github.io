@@ -309,6 +309,10 @@ section{padding:58px 0}
 .phead h1 .learn-state{margin-left:12px;vertical-align:middle}
 .learn-pending{max-width:760px;margin:0 0 48px;padding:32px;border:1px dashed var(--grid-bold);border-radius:12px}
 .learn-pending h2{margin:0;font-size:1.35rem}
+.learn-tool-copy{color:var(--graphite);font-size:13px;line-height:1.8;margin:14px 0 0;max-width:600px}
+.learn-studio{padding-bottom:36px}
+.learn-studio .phead{margin-bottom:24px}
+.learn-studio-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
 @media(max-width:600px){.learn-pending{padding:24px}.phead h1 .learn-state{margin-left:8px}}
 .lsec{margin:0 0 38px}
 .lsec>h2{font-size:1.25rem;margin:0 0 6px}
@@ -4953,12 +4957,12 @@ function viewLearn(){
   <div class="shell">
     <div class="phead">
       <p class="eyebrow">${d.ebLearn}</p>
-      <h1>${d.hLearn} <span class="learn-state">${d.learnSoon}</span></h1>
+      <h1>${d.hLearn}</h1>
     </div>
     <div class="comps" data-lang="${lang}">
       ${Object.entries(LEARN).map(([key,L])=>{
         return `<a class="comp lsubj" href="#/learn/${key}">
-          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${d.learnSoon}</span></div>
+          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"문제 제작소":"Problem Studio"):d.learnSoon}</span></div>
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
@@ -4975,12 +4979,44 @@ function viewLearnSubject(key){
       <p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p>
       <h1>${L.name[lang]}</h1>
     </div>
-    <section class="learn-pending" role="status">
+    ${key==="physics"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio">
+      <div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div>
+      <p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만들거나 그림을 선명하게 정리해 보세요.":"Turn physics problem photos into text and equations, create new problems from a topic, or restore a scientific figure."}</p>
+      <span class="go">→</span>
+    </a></div>`:`<section class="learn-pending" role="status">
       <h2>${d.learnSoon}</h2>
-    </section>
+    </section>`}
   </div>
   ${adFitBanner("primary")}`;
 }
+
+function learnStudioHeading(){
+  const ko=lang==="ko",label=ko?"문제 제작소":"Problem Studio";
+  return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p>
+    <h1>${label}</h1><p class="learn-tool-copy">${ko?"문제 전사 · 새 문제 제작 · 그림 복원":"Problem transcription · New problems · Figure restoration"}</p>`;
+}
+function viewLearnStudio(){
+  const label=lang==="ko"?"문제 제작소":"Problem Studio";
+  const query=new URLSearchParams({embed:"1",subject:"physics",mode:"generate",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:"20261102-learn"});
+  return `<div class="shell learn-studio"><div class="phead">${learnStudioHeading()}</div>
+    <iframe id="learnStudioFrame" class="learn-studio-frame" src="studio.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
+}
+function syncLearnStudio(){
+  const frame=document.getElementById("learnStudioFrame");
+  frame?.contentWindow?.postMessage({type:"hl-studio-settings",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",viewportHeight:innerHeight},location.origin);
+}
+addEventListener("message",event=>{
+  const frame=document.getElementById("learnStudioFrame");
+  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
+  if(event.data?.type==="hl-studio-height"&&Number.isFinite(event.data.height))
+    frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+"px";
+  if(event.data?.type==="hl-studio-dialog"&&Number.isFinite(event.data.top)&&Number.isFinite(event.data.height)&&event.data.top>=0&&event.data.top<=30000&&event.data.height>0&&event.data.height<=4000){
+    const top=frame.getBoundingClientRect().top+scrollY+event.data.top-Math.max(110,(innerHeight-event.data.height)/2);
+    scrollTo({top:Math.max(0,top),behavior:"instant"});
+  }
+});
+if(typeof MutationObserver==="function")new MutationObserver(syncLearnStudio).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+addEventListener("resize",syncLearnStudio);
 
 function viewAbout(){
   const d=UI[lang];
@@ -9569,7 +9605,7 @@ function setDocTitle(first, second){
   else if(first==="community")   parts.push(d.navComm);
   else if(["monthly","weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
-  else if(first==="learn")       parts.push(second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
+  else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=first==="rupho"&&RUPHO_ARCHIVE?compOf(RUPHO_ARCHIVE.route(location.hash).key):DATA[first];
     const route=location.hash.split("?")[0].split("/"),mode=route.at(-1);
@@ -9612,7 +9648,6 @@ function paintPageChrome(active){
     `<a href="#/" class="${active==="home"?"on":""}">${d.navHome}</a>
      <a href="#/comps" class="${active==="comps"?"on":""}">${d.navComps}</a>
      <a href="#/learn" class="${active==="learn"?"on":""}">${d.navLearn}</a>
-     <a href="studio.html">${lang==="ko"?"문제 제작실":"Problem Studio"}</a>
      <a href="#/monthly" class="${active==="weekly"?"on":""}">${d.navWeekly}</a>
      <a href="#/community" class="${active==="community"?"on":""}">${d.navComm}</a>
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
@@ -9629,6 +9664,14 @@ function render(){
   const d=UI[lang];
   const parts=location.hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean);
   const [first,second,third]=parts;
+  const currentStudio=document.getElementById("learnStudioFrame");
+  if(first==="learn"&&second==="physics"&&third==="studio"&&currentStudio&&document.querySelector(".learn-studio .phead")){
+    document.querySelector(".learn-studio .phead").innerHTML=learnStudioHeading();
+    currentStudio.title=lang==="ko"?"문제 제작소":"Problem Studio";
+    document.documentElement.lang=lang;setDocTitle(first,second);paintPageChrome("learn");paintSiteTheme();syncLearnStudio();
+    if(typeof arChip==="function")arChip();else cmAccountChip();
+    return;
+  }
   const studyMode=second==="exam"||second==="review"?second:third==="exam"||third==="review"?third:"";
   if(siteDataLoader){
     const needs=window.HL_RUNTIME.routeNeeds(location.hash,{known:Object.keys(window.HL_CATALOGUE.competitions),theory:window.HL_CATALOGUE.theoryKeys,versions:window.HL_CATALOGUE.versions});
@@ -9643,7 +9686,7 @@ function render(){
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
-  else if(first==="learn"){       html=second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="learn"){       html=second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
@@ -9659,6 +9702,8 @@ function render(){
 
   buildRails();
   paintSiteTheme();
+  const studioFrame=document.getElementById("learnStudioFrame");
+  if(studioFrame)studioFrame.addEventListener("load",syncLearnStudio,{once:true});
   if(active==="home"){ startHero(); mountHomeActivity(); }
   if(active==="community") cmMount();
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
@@ -9668,7 +9713,7 @@ function render(){
 }
 
 addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });
-addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;render();}});
+addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;if(document.getElementById("learnStudioFrame")){if(typeof arChip==="function")arChip();else cmAccountChip();}else render();}});
 initSiteDesign();
 render();
 </script>

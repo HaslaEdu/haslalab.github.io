@@ -5,6 +5,9 @@
   const $ = id => document.getElementById(id);
   const readStore = key => { try { return localStorage.getItem(key) || ''; } catch (_) { return ''; } };
   const writeStore = (key, value) => { try { value ? localStorage.setItem(key, value) : localStorage.removeItem(key); } catch (_) {} };
+  const studioParams = new URLSearchParams(location.search);
+  const embedded = studioParams.get('embed') === '1' && window.parent !== window;
+  if (embedded) document.body.classList.add('studio-embedded');
   const subjects = ['math', 'physics', 'chemistry', 'biology', 'astronomy', 'informatics'];
   const modes = ['digitize', 'generate', 'restore'];
   const activeStatuses = new Set(['queued', 'running']);
@@ -114,7 +117,7 @@
     }
   };
   const state = {
-    lang: new URLSearchParams(location.search).get('lang') === 'en' || readStore('hlLang') === 'en' ? 'en' : 'ko',
+    lang: ['ko','en'].includes(studioParams.get('lang')) ? studioParams.get('lang') : readStore('hlLang') === 'en' ? 'en' : 'ko',
     user: null, capabilities: null, file: null, fileUrl: '', jobs: [], selected: null,
     creating: false, cancelling: false, exporting: false, timer: null, pollFailures: 0, epoch: 0,
     renderKey: '', originalUrl: '', sourceInputs: new Map(), assets: new Map(), toastTimer: null, pendingSubmission: null,
@@ -213,7 +216,7 @@
   }
   function applyLanguage() {
     document.documentElement.lang = state.lang;
-    document.title = (state.lang === 'en' ? 'Problem Studio' : '문제 스튜디오') + ' · HaslaLab';
+    document.title = (state.lang === 'en' ? 'Problem Studio' : '문제 제작소') + ' · HaslaLab';
     document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
     document.querySelectorAll('[data-i18n-placeholder]').forEach(e => { e.placeholder = t(e.dataset.i18nPlaceholder); });
     $('uiLanguage').textContent = state.lang === 'en' ? '한국어' : 'EN';
@@ -342,7 +345,10 @@
     if (!list.length) return;
     const ul = node('ul', 'warnings'); list.forEach(v => ul.append(node('li', '', text(v, 2000)))); host.append(ul);
   }
-  function showImage(url, alt) { if (!url || !url.startsWith('blob:')) return; $('largeImage').src = url; $('largeImage').alt = text(alt, 300); $('imageDialog').showModal(); }
+  function openStudioDialog(dialog) { dialog.showModal(); if (embedded) requestAnimationFrame(()=>{
+    const rect=dialog.getBoundingClientRect();window.parent.postMessage({type:'hl-studio-dialog',top:rect.top,height:rect.height},location.origin);
+  }); }
+  function showImage(url, alt) { if (!url || !url.startsWith('blob:')) return; $('largeImage').src = url; $('largeImage').alt = text(alt, 300); openStudioDialog($('imageDialog')); }
   function extension(type) { return type === 'image/svg+xml' ? 'svg' : type === 'image/jpeg' ? 'jpg' : type === 'image/webp' ? 'webp' : 'png'; }
   function download(blob, filename) {
     const url = URL.createObjectURL(blob), a = node('a'); a.href = url; a.download = filename; a.hidden = true; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000);
@@ -475,7 +481,7 @@
   async function createJob() {
     if (state.creating || isActive(currentJob())) return;
     message('formError', ''); message('pageMessage', '');
-    if (!token()) { message('formError', t('loginRequired')); $('loginDialog').showModal(); return; }
+    if (!token()) { message('formError', t('loginRequired')); openStudioDialog($('loginDialog')); return; }
     const values = formValues(), file = state.file, fingerprint = JSON.stringify(values), previous = state.pendingSubmission, version = state.sessionVersion;
     if (!file && values.mode !== 'generate') { message('formError', t('chooseImage')); $('dropZone').focus(); return; }
     if (!file && values.instruction.length < 5) { message('formError', t('generateInput')); $('instruction').focus(); return; }
@@ -495,7 +501,7 @@
       state.pendingSubmission = null;
       const job = upsertJob(data.job); state.sourceInputs.set(String(job.id), { ...values, file }); selectJob(job);
       if (matchMedia('(max-width: 720px)').matches) $('resultTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } catch (error) { if (error.code === 'account_changed') return; if (error.code !== 'network') state.pendingSubmission = null; message('formError', errorMessage(error)); if (error.status === 401) $('loginDialog').showModal(); }
+    } catch (error) { if (error.code === 'account_changed') return; if (error.code !== 'network') state.pendingSubmission = null; message('formError', errorMessage(error)); if (error.status === 401) openStudioDialog($('loginDialog')); }
     finally { if (version === state.sessionVersion) { state.creating = false; updateSubmit(); } }
   }
   async function cancelJob() {
@@ -596,6 +602,24 @@
     finally { $('loginSubmit').disabled = false; }
   }
   $('language').value = state.lang;
+  if (subjects.includes(studioParams.get('subject'))) $('subject').value = studioParams.get('subject');
+  if (modes.includes(studioParams.get('mode'))) document.querySelector('input[name="mode"][value="'+studioParams.get('mode')+'"]').checked=true;
+  if (embedded) {
+    let heightQueued=false;
+    const reportHeight=()=>{if(heightQueued)return;heightQueued=true;requestAnimationFrame(()=>{
+      heightQueued=false;window.parent.postMessage({type:'hl-studio-height',height:Math.ceil(document.body.getBoundingClientRect().height)+2},location.origin);
+    });};
+    if (typeof ResizeObserver==='function') new ResizeObserver(reportHeight).observe(document.body);
+    window.addEventListener('load',reportHeight);
+    window.addEventListener('message',event=>{
+      if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='hl-studio-settings')return;
+      if(['light','dark'].includes(event.data.theme))document.documentElement.dataset.theme=event.data.theme;
+      if(Number.isFinite(event.data.viewportHeight))document.documentElement.style.setProperty('--studio-viewport-height',Math.max(300,Math.min(3000,event.data.viewportHeight))+'px');
+      if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang){state.lang=event.data.lang;applyLanguage();}
+      reportHeight();
+    });
+    reportHeight();
+  }
   $('studioForm').addEventListener('submit', e => { e.preventDefault(); createJob(); });
   document.querySelectorAll('input[name="mode"]').forEach(e => e.addEventListener('change', updateMode));
   $('imageInput').addEventListener('change', e => selectFile(e.target.files[0]));
@@ -613,7 +637,7 @@
   $('expandSource').addEventListener('click', () => showImage(state.originalUrl, t('original')));
   $('closeImage').addEventListener('click', () => $('imageDialog').close());
   $('imageDialog').addEventListener('close', () => $('largeImage').removeAttribute('src'));
-  $('accountButton').addEventListener('click', () => { if (token()) location.href = './#/me'; else $('loginDialog').showModal(); });
+  $('accountButton').addEventListener('click', () => { if (token()) location.href = './#/me'; else openStudioDialog($('loginDialog')); });
   $('loginForm').addEventListener('submit', signIn); $('closeLogin').addEventListener('click', () => $('loginDialog').close());
   $('loginDialog').addEventListener('close', () => { $('loginForm').elements.password.value = ''; message('loginError', ''); });
   $('uiLanguage').addEventListener('click', () => { state.lang = state.lang === 'ko' ? 'en' : 'ko'; writeStore('hlLang', state.lang); applyLanguage(); });
