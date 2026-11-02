@@ -1,0 +1,103 @@
+<h1>T1. Polycrystal diffusion</h1>
+
+<p><b>Instructions for working with the program can be found in the Appendix. It is recommended to read the text of the task and the Appendix completely before starting the measurements.</b></p>
+<p>In the preparatory lectures we have already discussed diffusion in solids and its applications. This problem also discusses diffusion of impurities in solids, in particular, in polycrystals.</p>
+
+<h2>Part A. Temperature dependence of the diffusion coefficient (2.6 points)</h2>
+<p>This part of the problem discusses the diffusion of impurity particles within the crystal lattice of a substance.</p>
+<figure><img src="T1_fig1.jpg" style="width:45mm"><figcaption><b>Figure 1.</b> Inter‑nodal diffusion of impurity atoms</figcaption></figure>
+<p>The diffusion process in a crystal lattice is carried out in most “ordinary” substances by the jump of diffusive impurity atoms between neighboring lattice cells. The impurity particles spend most of their time in the vicinity of the point where the potential energy of interaction between the impurity particle and the lattice atoms is minimal. The vicinity of such points is called <b>inter‑nodes</b>. Usually, the energy of impurity particles is low, so they can only jump between neighboring inter‑nodes. For this purpose, an energy barrier of at least $E_g$ must be overcome. The energy $E_g$ is called the <b>activation energy</b>. It is known from statistical physics that the probability of such a transition is proportional to $\exp(-E_g/kT)$. Moreover, the jump time between neighboring inter‑nodes should be inversely proportional to the characteristic particle velocity. Thus,</p>
+\[D \propto v\,\exp(-E_g/kT),\]
+<p>where $v$ is the rms velocity associated with the thermal motion of impurity particles.</p>
+
+<div class="task"><b>A1</b><div>Write the expression for $v$ in terms of $T$ and physical constants. From this, obtain the law of proportionality $D(T)$.</div><i>0.2pt</i></div>
+
+<div class="task"><b>A2</b><div>Write down how the rms displacement of a particle $\Delta r_{sq}$, diffusion coefficient $D$ and simulation time $t$ are related to each other in the <b>three-dimensional case</b>. Note: the particle motion along each of the three axes in random walk can be considered independent. The diffusion coefficient $D$ in the <b>one-dimensional case</b> is related to the cell size $a$ and characteristic jump time $\tau$ as $D = a^2/2\tau$. Note: if you cannot complete this task, in the future, consider $\Delta r_{sq} = \sqrt{Dt}$.</div><i>0.4pt</i></div>
+
+<p>The program for Part A simulates the motion of impurity particles in the inter‑nodes for a cubic lattice. Select the number of particles to be simulated, as well as the temperature and simulation time. The program will output the root mean square of the particle displacement and its error among the simulations. All program inputs and outputs are made in arbitrary units.</p>
+
+<div class="task"><b>A3</b><div>Get the points to find $D(T)$ and linearize the resulting dependence. Find the energy $E_g$ in arbitrary units with an accuracy of at least $2\,\%$. Explicitly state how you achieve this accuracy. Make measurements in $T \in [1; 10]$, $t \in [1; 10]$, and $N \in [10^2; 10^4]$.</div><i>2.0pt</i></div>
+
+<p>In the remaining part of the problem, a solid of large dimensions with a flat boundary is modeled, on the surface of which some large number of impurity atoms are uniformly deposited. Over time, the impurity atoms diffuse into the substance. The result of the simulation is the concentration distribution $c$ of the impurity particles in the solid depending on the penetration depth $z$ of these particles.</p>
+
+<h2>Part B. Effective diffusion coefficient (2.4 points)</h2>
+<p>If all solids were completely homogeneous bodies at the microscopic level, the problem of diffusion inside them would be trivial. However, most materials in their structure are many small single crystals — grains, on the boundaries between which the atoms of matter are arranged chaotically. Although this state does not have minimum energy, at normal temperatures it is still the most probable from a thermodynamic point of view. In particular, almost all metals are polycrystalline in nature (e.g., it is this mechanism that ensures their plasticity, as it allows parts of the crystal lattice to move relative to each other).</p>
+<p>Since the atoms at the grain boundary are arranged chaotically and much more “loosely”, the movement of impurity atoms between them does not require such a large amount of energy as movement inside the lattice of a single crystal. Because of this, the diffusion coefficient at the grain boundary is much larger than inside the grains, which can noticeably affect the diffusion processes in a polycrystal. The purpose of Parts B and C of this problem is to investigate the phenomena that occur during polycrystalline diffusion.</p>
+<div style="display:flex;gap:6mm;justify-content:center;align-items:flex-start">
+<figure style="margin:2mm 0"><img src="T1_fig2.jpg" style="width:48mm"><figcaption><b>Figure 2.</b> Characteristic structure of a polycrystal</figcaption></figure>
+<figure style="margin:2mm 0"><img src="T1_fig3.jpg" style="width:48mm"><figcaption style="max-width:52mm"><b>Figure 3.</b> Image of a polycrystal made with an atomic force microscope</figcaption></figure>
+</div>
+<p>Diffusion processes in a polycrystal have three different regimes. They are called kinetic modes of type A, B, and C, respectively. The kinetic regime of type A is observed on the largest time scales, regime C — on the smallest. Mode B is intermediate between them. Only modes A and B are investigated in the problem. When the characteristic diffusion scale $\sim\sqrt{Dt}$ exceeds the grain size of the polycrystal, each atom of the “embedded” substance passes through a large number of grains. Due to this, diffusion proceeds in a single “front” and can be characterized by the effective diffusion coefficient $D_{eff}$, which depends on the coefficient of diffusion in grains $D$, at grain boundaries $D_{gb}$ and the relative volume $\delta$ occupied by the boundaries.</p>
+<p>If the grain boundaries in a polycrystal were oriented exclusively along the diffusion, then the effective diffusion coefficient would be equal simply to the weighted average of $D$ and $D_{gb}$:</p>
+\[D_{eff} = D + \delta(D_{gb} - D).\]
+<p>If the boundaries are oriented perpendicularly to the diffusion direction, then at $\delta \ll 1$ the effective diffusion coefficient would practically not change.</p>
+<p>In a real polycrystal, the grain boundaries are oriented arbitrarily. Because of this, the effective diffusion coefficient differs from the measures given above. It is very difficult to solve precisely the problem of the effective diffusion coefficient in such a structure, and in reality one can only give an estimate in the limiting case $\delta \ll 1$, $D_{gb}/D \gg 1$:</p>
+\[D_{eff}/D = 1 + \alpha\delta(D_{gb}/D - 1).\]
+<p>Let us try to estimate $\alpha$ in some approximation and then find it experimentally. The easiest way to estimate $\alpha$ is to take $D \to 0$ at $D_{gb} = \mathrm{const}$ and find $D_{eff}$ for some simple three-dimensional configuration of the polycrystal. For example, let us take a polycrystal consisting of cubic single crystals of size $a$ separated by boundaries of thickness $\delta a/3$. The effective diffusion coefficient can be estimated as the diffusion coefficient along one of the axes of the system (it will be the same along all three axes).</p>
+
+<div class="task"><b>B1</b><div>What will be the coefficient $\alpha$ in such a structure?<br>Note: It is not necessary to solve this task to proceed to numerical modeling.</div><i>0.4pt</i></div>
+
+<p>Let’s check the validity of the estimate with the help of the program. The program simulates an arbitrary polycrystalline structure. The program in Parts B and C takes as input values in relative units such that $a, D = 1$, and the time unit is $D/a^2$. You can adjust the diffusion coefficient at the boundary $D_{gb}$, the simulation time $t$ and the relative volume of the boundaries $\delta$.</p>
+<p>Note: when performing the following item, consider it known that the distribution of the particle concentration $c$ over the penetration depth $z$ in the case of a homogeneous crystal with diffusion coefficient $D_{eff}$ would have the following form:</p>
+\[c(z) = \frac{N_0}{4\sqrt{\pi D_{eff} t}}\exp\!\left(-\frac{z^2}{4D_{eff}t}\right).\]
+
+<div class="task"><b>B2</b><div>Simulate diffusion in a polycrystal with $t \in [2; 5]$, $D_{gb}/D \in [2; 5]$, and $\delta \in [0.005; 0.05]$, to obtain the experimental value of $\alpha$. Compare with the result of B1.<br>Note: As a result of the program operation, the dependence of the logarithm of the mean concentration $\ln\bar c$ of impurity particles on the square of the penetration depth $z^2$ is written to the file <code>Bavg.csv</code>. This dependence can be analyzed with the program <code>B.nb</code>.</div><i>2.0pt</i></div>
+
+<p>Finally, it is worth noting that the coefficient $\alpha$ depends on the dimensionality of the space in which diffusion takes place.</p>
+
+<h2>Part C. Type B kinetics (5 points)</h2>
+<p>In the previous parts of the problem, we considered the diffusion type at which the characteristic scales of diffusion are much larger than the size of inhomogeneities in the polycrystal. However, this is not the only diffusion mode that can be observed in a polycrystal. If the diffusion scales are much larger than the grain boundary width of the polycrystal and much smaller than the size of the grains themselves, diffusion of kinetic type B will occur.</p>
+<figure><img src="T1_fig4.jpg" style="width:60mm"><figcaption style="max-width:110mm;margin-left:auto;margin-right:auto"><b>Figure 4.</b> Diffusion concentration distributions in the B-type kinetic regime under different edge conditions (a — constant concentration at the boundary, b — constant number of particles in the system). The linear dependence of $\ln\bar c(z^{6/5})$ is observed in both cases.</figcaption></figure>
+<p>The main distinguishing characteristic of this type of diffusion is that the logarithm of the mean concentration $\bar c$ depends on the depth $z$ not quadratically, but to the degree $6/5$. This value is not analytically derived, but it is so well observed in the experiment that the presence of such a dependence is used as an indicator of the quality of the experiment! In spite of the “non-analyticity”, the parameters of the dependence $\ln\bar c(z^{6/5})$ are included in empirical relations with rather precisely known parameters. The remaining part of the problem will be devoted to the study of diffusion of type B and the relations arising there.</p>
+<p>Even though the linear dependence of $\ln\bar c(z^{6/5})$ cannot be analytically obtained, the parameters of this dependence are unambiguously expressed through the input parameters of the problem (for physical reasons — from the dimensionless variables $\delta$, $D_{gb}/D$ and $Dt/a^2$, where $a^3$ is the volume of one grain of the polycrystal). It can be written:</p>
+\[\frac{d\ln c}{dz^{6/5}} = -C\,\delta^{\xi}\,a^{\psi}\left[\frac{D_{gb}}{D}\right]^{\eta}\left[\frac{Dt}{a^2}\right]^{\zeta}.\]
+<p>Here $C$ is a numerical coefficient of order $\sim 10^0$.</p>
+
+<div class="task"><b>C1</b><div>What can one say about the coefficients without resorting to numerical modeling? Find all values of coefficients that can be determined a priori.</div><i>0.4pt</i></div>
+
+<div class="task"><b>C2</b><div>Find the remaining coefficients by numerical simulation. Take measurements in the range of $t \in [0.005; 0.200]$, $D_{gb}/D \in [5; 50]$, $\delta \in [0.02; 0.20]$. As a result of the program’s operation, the <code>Cavg.csv</code> file contains the dependence of the logarithm of the average concentration $\ln\bar c$ of impurity particles on the penetration depth $z^{6/5}$, and the file <code>Cmap.csv</code> — the dependence of the logarithm of the concentration $\ln c$ on the penetration depth $z^{6/5}$ and the $y$ coordinate along the solid surface. These dependencies can be analyzed using the <code>C.nb</code> program.</div><i>4.0pt</i></div>
+
+<div class="task"><b>C3</b><div>Find the value of $C$ as accurately as possible.</div><i>0.6pt</i></div>
+
+<h2 style="break-before:page;text-align:center;color:#111">Appendix №1</h2>
+<p>The software for the task is located in the <code>ISPhO</code> folder. The programs you will need are the following:</p>
+<ul>
+<li><code>A.exe</code></li>
+<li><code>B.exe</code></li>
+<li><code>C.exe</code></li>
+<li><code>InteractiveBuffer.nb</code></li>
+<li><code>B.nb</code></li>
+<li><code>C.nb</code></li>
+</ul>
+<p>The first three programs are used for modeling, the other three are used for visualization and processing of the obtained data.</p>
+<p><b>Working with .exe</b> Files with the <code>.exe</code> extension provide a command line interface. When the program is started, it asks for a set of input parameters:</p>
+<ul>
+<li><code>A.exe</code> is used in Part A. The program asks for the simulation time, crystal temperature and number of simulation repetitions. Time and temperature are measured in conventional units. <b>The activation energy must be given in the same units!</b> Increasing the number of repetitions and the simulation time increases the accuracy of the results but can be quite time-consuming. It is strongly recommended to run simulations with small values of these parameters first.</li>
+<li><code>B.exe</code> is used in Part B. The program asks for the simulation time, the relative diffusion coefficient of impurity at the polycrystal grain boundary and the relative volume of the boundary. Usually, the simulation is quite fast.</li>
+<li><code>C.exe</code> is used in Part C. The program asks for the same set of parameters but takes a bit more time because it simulates the effect on a much smaller scale. It may be worth planning measurements in this part.</li>
+</ul>
+<p><b>All programs display the expected simulation time. This may differ from the actual simulation time depending on the characteristics of your computer. Do not delete or edit the <code>.csv</code> files you create!</b></p>
+<p><b>Working with .nb</b> To quickly and conveniently visualize and process results, programs with the <code>.nb</code> extension (so-called “notebooks”) based on the Wolfram Mathematica computer algebra package are used.</p>
+<ul>
+<li><code>InteractiveBuffer.nb</code> is a simple program that can memorize the points entered into it, graph them and draw a line through them by the least squares method. The program exists as an “application tool” to solve the problem.</li>
+<li><code>B.nb</code> is a tool that allows you to load actual simulation results from Part B, plot them as $\ln\bar c(z^2)$, and fit them to the requirements of the problem.</li>
+<li><code>C.nb</code> is a tool that allows you to load actual simulation results from Part C, plot the $\ln\bar c(z^{6/5})$ dependence for them, and fit it according to the requirements of the problem. It also allows you to plot the detailed concentration distribution at the boundary of polycrystalline grains.</li>
+</ul>
+<div class="warn"><b>WARNING: Although it is technically possible to change the source code in <code>.nb</code> files, it is strongly discouraged! In case you break the source code, there will be no help in returning it to the initial state!</b></div>
+
+<h2 style="break-before:page;text-align:center;color:#111">Appendix №2</h2>
+<p><b>InteractiveBuffer.nb example</b> To make working with Wolfram Mathematica easier for Olympiad participants, this appendix will provide a step-by-step guide to one of the programs, <code>InteractiveBuffer.nb</code>. After opening the file, its contents should appear on the screen (the details may look different depending on the WM version):</p>
+<figure><img src="T1_app1.png" style="width:150mm"></figure>
+<p>Click anywhere in the code cell and press Shift+Enter. This will execute the code in the cell. A new cell will appear at the bottom and will look like this:</p>
+<figure><img src="T1_app2.png" style="width:150mm"></figure>
+<p>This is the interactive buffer that you can work with when solving the problem. You can enter $x$ and $y$ coordinates in the interactive input fields. If you then press the Add point button, these values are added to the buffer:</p>
+<figure><img src="T1_app3.jpg" style="width:140mm"></figure>
+<p>In case of adding an incorrect point to the buffer, the program provides the possibility to remove the last point in the buffer. To do this, click the Remove last point button:</p>
+<figure><img src="T1_app4.jpg" style="width:140mm"></figure>
+<p>To completely clear the buffer, click Clear data:</p>
+<figure><img src="T1_app5.jpg" style="width:140mm"></figure>
+<p>After filling the buffer with the required points, evaluate the cell in the second section. The result will look as follows:</p>
+<figure><img src="T1_app6.png" style="width:140mm"></figure>
+<p>If you press the Plot fit button, the program will plot the points from the buffer and calculate linear regression coefficients for them. An example of the buffer contents and the corresponding fit result:</p>
+<figure><img src="T1_app7.jpg" style="width:140mm"></figure>
+<p>The rest of the <code>.nb</code> files look and work in a similar way, with comments and an intuitive interface.</p>

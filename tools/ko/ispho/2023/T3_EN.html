@@ -1,0 +1,186 @@
+<h1>T3. Frequency measurements with ring resonators</h1>
+
+<p>This task deals with methods for high-precision frequency measurements. During the solution, you will learn two measurement methods: signal modulation (Part C) and frequency comb (Part D).</p>
+<p><b>Why do you need more precision?</b></p>
+<ul>
+<li>The accuracy of physical measurements is important when we determine the values of fundamental constants. Many times in the history of physics, small discrepancies between experimental results and theory have required revision of the entire theoretical model and led to major discoveries in fundamental physics.</li>
+<li>High accuracy of frequency measurement is necessary for normal operation of satellite communication systems, navigation, ground-based telecommunication systems, etc.</li>
+</ul>
+<p>In the framework of classical physics, any measurement is a comparison with a standard. As a frequency standard we will use the natural frequencies of a ring optical resonator, because today the best resonators are ring resonators. And the higher the quality, the more accurate is the value of the reference natural frequency. In Part B, you will learn more about ring resonators with the example of a ring fiber optical resonator. In Part A, you will derive the theory of wave propagation in the optical fiber from which the resonator described in Part B is made. At the very end of the problem there are reference materials: Maxwell’s equations and differential operators. If you know all the physical laws that are included in the Olympiad program, you will not need reference materials to solve the problem.</p>
+<p><b>Equations of EM wave propagation</b> The electromagnetic field at each point of space is described by four vectors: $\vec E(\vec r, t)$, $\vec H(\vec r, t)$, $\vec D(\vec r, t)$, $\vec B(\vec r, t)$ — electric field strength, magnetic field strength, electric induction and magnetic induction. These vectors are related to the polarisation $\vec P$ and magnetisation $\vec M$ of the medium by the relations:</p>
+\[\vec D = \varepsilon_0\vec E + \vec P,\qquad \vec B = \mu_0(\vec H + \vec M),\]
+<p>where $\varepsilon_0$ is the electric constant and $\mu_0$ is the magnetic constant.</p>
+<p><b>Use the following approximations when solving the problem:</b></p>
+<ul>
+<li>All media are non-magnetic and $\vec M = 0$.</li>
+<li>There are no free charges.</li>
+<li>The response of the medium is instantaneous and local, that is, $\vec P(\vec r, t)$ depends only on $\vec E(\vec r, t)$.</li>
+</ul>
+<p><b>EM wave theory.</b> By applying the rot operator to Maxwell’s equations, Faraday’s induction law in differential form and the theorem on the circulation of magnetic field strength in differential form (see References), we obtain the basic equations of electromagnetic wave propagation:</p>
+\[\Delta\vec E = \mu_0\frac{\partial^2\vec D}{\partial t^2},\qquad \Delta\vec H = \varepsilon_0\frac{\partial^2\vec B}{\partial t^2}.\]
+
+<h2>Part A. Field profile in fiber optics (2.5 points)</h2>
+<p>In Parts A, B, C, we will assume that the polarization depends linearly on the electric field strength: $\vec P = \varepsilon_0(\varepsilon(\omega) - 1)\vec E$, where $\varepsilon(\omega)$ is the dielectric permittivity of the medium, which usually depends on the frequency of the electromagnetic wave in the medium. The dielectric permittivity of vacuum is equal to 1.</p>
+<p>So, the equations of propagation of electromagnetic waves can be written in this form:</p>
+\[\Delta\vec E = \mu_0\varepsilon\varepsilon_0\frac{\partial^2\vec E}{\partial t^2},\qquad \Delta\vec H = \mu_0\varepsilon\varepsilon_0\frac{\partial^2\vec H}{\partial t^2}.\]
+<figure><img src="T3_fig1.svg" style="width:110mm"></figure>
+<p>A plane monochromatic electromagnetic wave of frequency $\omega$ propagates along a dielectric waveguide along the $z$-axis (fig. 1), which is a rectangular parallelepiped of material with dielectric constant $\varepsilon(\omega)$ with sides $a$, $L_1$ and $L_2$. $L_1, L_2 \to \infty$ and are much larger than any characteristic lengths in this problem.</p>
+<p>Let’s introduce the Cartesian coordinate system $Oxyz$. $O$ coincides with the center of the parallelepiped. The edges of length $L_1$ are parallel to the $z$-axis, of length $a$ — to the $x$-axis, of length $L_2$ — to the $y$-axis. $(\hat x, \hat y, \hat z)$ is a right triple.</p>
+<p>Consider a wave polarized parallel to the $y$-axis: $\vec E \parallel \hat y$. We will look for the solution for the field $\vec E$ in the waveguide in the following form:</p>
+\[\vec E(\vec r, t) = E_0\,\mathrm{Re}\left(A(x, y)\exp(i\omega t - i\beta z)\right)\hat y,\]
+<p>where $E_0$ has the dimensionality of the electric field, and $A(x, y)$ is a dimensionless complex quantity that contains information about the ratio of amplitudes and phase differences of the field at different points of the waveguide. Without restriction of generality $A(0, 0) = 1$.</p>
+<p>Let us also consider that $L_2 \gg a$, so it will be assumed that $\partial A/\partial y \ll \partial A/\partial x$, and hence $A$ is only dependent on $x$.</p>
+<p>The solution for $A(x)$ can be sought in the form:</p>
+\[A(x) = \begin{cases} \cos(k_{in}x), & |x| < a/2\\ C_1\exp(k_{out}x) + B\exp(-k_{out}x), & x > a/2\\ B\exp(k_{out}x) + C_2\exp(-k_{out}x), & x < -a/2 \end{cases}\]
+<p>where $k_{in} > 0$, $k_{out} > 0$.</p>
+
+<div class="task"><b>A1</b><div>What are the coefficients $C_1$ and $C_2$?</div><i>0.3pt</i></div>
+
+<div class="task"><b>A2</b><div>Express $k_{in}$ and $k_{out}$ in terms of $\varepsilon, \omega, \beta$ and the speed of light in vacuum $c = 1/\sqrt{\varepsilon_0\mu_0}$, using the wave equation.</div><i>0.5pt</i></div>
+
+<p>To find $B$, we need to write down the boundary conditions for the boundary $x = a/2$ (for the boundary $x = -a/2$ we get the same equations because $A(x)$ is an even function).</p>
+
+<div class="task"><b>A3</b><div>Prove that the tangential components of the electric field strength are equal on both sides of the interface (as in electrostatics).</div><i>0.3pt</i></div>
+
+<div class="task"><b>A4</b><div>Write the boundary conditions for the tangential component of the electric field. Express $B$ in terms of $a, k_{in}, k_{out}$.</div><i>0.3pt</i></div>
+
+<p>Now we need to derive an equation for finding $\beta(\omega)$. For this purpose we can write another boundary condition — for $\vec H$.</p>
+
+<div class="task"><b>A5</b><div>Prove that the tangential components of the magnetic field strength are equal on both sides of the interface (as in magnetostatics).</div><i>0.3pt</i></div>
+
+<div class="task"><b>A6</b><div>Prove that
+\[H_z = E_0\,\mathrm{Re}\left(\frac{i}{\mu_0\omega}\frac{\partial A}{\partial x}\exp(i(\omega t - \beta z))\right).\]</div><i>0.3pt</i></div>
+
+<div class="task"><b>A7</b><div>Write the boundary conditions for the tangential component of the magnetic field $\vec H$. The answer can be expressed in terms of $k_{in}, k_{out}, a$.</div><i>0.3pt</i></div>
+
+<div class="task"><b>A8</b><div>Substitute the values $k_{in}, k_{out}$ obtained in A2 into the equation from A7. Obtain an equation from which $\beta$ can be determined (this equation is solved numerically only). The equation can include $\beta, \omega, \varepsilon, c, a$.</div><i>0.2pt</i></div>
+
+<h2>Part B. Fiber resonator transmittance (3.0 points)</h2>
+<figure><img src="T3_fig2.svg" style="width:110mm"></figure>
+<p>The radiation from the external laser enters a quadrupole beam splitter, which is an optical system with two pairs of coupled channels: $(P_1, P_2)$ and $(Q_1, Q_2)$.</p>
+<p>A monochromatic wave with complex amplitude $A_{in}(t)$ entering the splitter is split into two outgoing waves of smaller amplitude propagating in the same direction. The first of them propagates along the same pair channel as the incoming wave, and its complex amplitude is $A_{out}(t) = -r_sA_{in}(t)$. The second wave propagates through the channel of the other pair and its amplitude is $B_{out}(t) = it_sA_{in}(t)$. Waves incident on $Q_1$ are divided similarly to those incident on $P_1$. Consider that $r_s$ and $t_s$ are real positive numbers and $t_s \ll 1$.</p>
+
+<div class="task"><b>B1</b><div>Assuming that there is no energy loss in the splitter, find the relationship between $r_s$ and $t_s$.</div><i>0.2pt</i></div>
+
+<p>A fiber resonator can be assembled with the splitter. In order to do so, it is necessary to connect the channels $Q_1$ and $Q_2$ with a loop of single-mode fiber (the equation for $\beta(\omega)$ has the only solution for the frequencies considered in this part) of length $L$. The time for light of frequency $\omega$ to travel through the loop is $\tau(\omega)$. Also note that due to material absorption, the amplitude of the wave in the loop decreases by a factor $1/\kappa$ for each round in the loop ($1 - \kappa \ll 1$). For all tasks in Parts B and C neglect backscattering.</p>
+<figure><img src="T3_fig3.svg" style="width:110mm"></figure>
+<p>Let a monochromatic wave $A_{in}(t) = A_0e^{i\omega t}$ from an external laser be incident on the input of channel $P_1$.</p>
+
+<div class="task"><b>B2</b><div>Express the field amplitude at the input to $Q_1$ of the splitter $B_{in}(t)$ in terms of $\kappa$ and the field amplitude at the output of $Q_2$ at time $(t - \tau(\omega))$ — $B_{out}(t - \tau(\omega))$.</div><i>0.3pt</i></div>
+
+<p>Assume the system has come to the steady-state regime, i.e. the absolute values of complex field amplitudes at any point are constant, and the phase difference of the field at two points does not change with time. Then for any amplitude $E_i$ (instead of $E_i$ we can substitute $A_{in}, A_{out}, B_{in}, B_{out}$) the expressions are valid:</p>
+\[E_i(t - t') = e^{-i\omega t'}E_i(t).\]
+
+<div class="task"><b>B3</b><div>Using the stationarity conditions, express $B_{in}(t)$ in terms of $B_{out}(t), \kappa, \omega, \tau$.</div><i>0.3pt</i></div>
+
+<div class="task"><b>B4</b><div>Express $B_{in}(t)$ in terms of $A_0, r_s, t_s, \kappa, \omega, \tau$ and $t$, using the result of the previous task.</div><i>0.5pt</i></div>
+
+<div class="task"><b>B5</b><div>What is the power $N_2$ leaving the channel $P_2$? Express the answer in terms of $\omega\tau(\omega), \kappa, r_s$ and the power $N_1$ in channel $P_1$.</div><i>0.5pt</i></div>
+
+<div class="task"><b>B6</b><div>Sketch a qualitative plot of $N_2/N_1(\omega\tau)$ for a fiber resonator with the following parameters:
+<ul style="margin:1mm 0"><li>$\kappa = 1 - 5\cdot 10^{-3}$;</li><li>$t_s = 0.1$.</li></ul>
+At what values of $\omega\tau$ is the ratio $N_2/N_1$ minimal?</div><i>0.6pt</i></div>
+
+<div class="task"><b>B7</b><div>Find the sharpness $Q$ of the absorption peak with number $n = 100$.<br>Sharpness is the ratio of the peak frequency to the width of the region of frequencies for which the transmission dip is not less than half of the maximum dip of a particular peak.</div><i>0.6pt</i></div>
+
+<p>Today it is possible to create a fiber resonator based on a beam splitter with peak sharpness of about $5\cdot 10^7$ near the frequency corresponding to the wavelength of $1550\ \mathrm{nm}$. And if we use a ring microresonator made of fused quartz, we can obtain a sharpness of $10^9$. Resonators with such small losses open us a wide range of possibilities for accurate frequency measurements.</p>
+<p>That is, with a quartz microresonator we can obtain a spectral line with an average wavelength of $1550\ \mathrm{nm}$ with a width of only $0.000002\ \mathrm{nm}$!</p>
+
+<h2>Part C. Calibration of the Mach‑Zehnder Interferometer (2.0 points)</h2>
+<p>Consider the setup for calibrating the interferometer shown in Fig. 1. Now the laser frequency varies smoothly with time (the derivative $\dot\omega\tau$ is much smaller than the inverse time for establishing the stationary mode in the resonator), and its power is constant.</p>
+\[\omega(t) = \omega_0 + \alpha t\]
+<p>The radiation flux from the laser is split into two arms by another beam splitter similar to the splitter in Part B. The first arm of the optical circuit contains a Mach‑Zehnder calibrated interferometer and a photodetector that measures the power coming out of it, and the second arm contains a resonator and a similar photodetector. The signals from the photodetectors are fed to an oscilloscope. The signal of the photodetector is proportional to the radiation power. <b>The oscilloscope shows the time dependence of the photodetector voltages (not XY mode!).</b></p>
+<figure><img src="T3_fig4.svg" style="width:115mm"></figure>
+<p><b>Laser parameters:</b></p>
+<ul>
+<li>$\omega_0 = 1.26\cdot 10^{15}\ \mathrm{s^{-1}}$</li>
+<li>$\alpha = 5\cdot 10^{9}\ \mathrm{s^{-2}}$</li>
+</ul>
+<p><b>Resonator parameters:</b></p>
+<ul>
+<li>Sharpness of absorption peaks near $\omega_0$ is $5\cdot 10^7$</li>
+<li>Consider that $\tau(\omega)$ is independent of frequency and equal to $\tau_0 = 3\cdot 10^{-11}\ \mathrm{s}$</li>
+<li>$\kappa = 1 - 1\cdot 10^{-3}$</li>
+<li>$t_s = 0.1$</li>
+</ul>
+<p><b>Parameters of the interferometer to be calibrated:</b></p>
+<ul>
+<li>Its power throughput capacity is approximately $F_{MZI}(\omega) = \cos^2(\omega/2\omega_{MZI})$</li>
+<li>$\omega_{MZI} \approx 1250\ \mathrm{MHz}$. The exact value will be determined at this setup.</li>
+</ul>
+
+<div class="task"><b>C1</b><div>Sketch a qualitative plot of the oscilloscope readings if it is known for sure that the frequency of the tunable laser reaches exactly one of the frequencies given in B6 (these are the frequencies where the FR transmittance is minimal).</div><i>0.5pt</i></div>
+
+<p>Now an amplitude electro‑optic modulator is connected to the second arm. Its amplitude bandwidth is independent of the radiation wavelength and is equal to:</p>
+\[f_{EOM}(t) = \beta + (1 - \beta)\cos(\Omega t),\qquad \Omega \ll \omega_0,\qquad \beta < 1.\]
+
+<div class="task"><b>C2</b><div>Draw what the oscilloscope will show when $\Omega \approx 220\ \mathrm{MHz}$. Note that $\alpha \ll \Omega\omega_0$.</div><i>1.0pt</i></div>
+
+<div class="task"><b>C3</b><div>Estimate with what relative accuracy the period $\omega_{MZI}$ can be measured on this setup if the maximum signal frequency of the high-frequency oscillator is $\Omega_{max} = 1250\ \mathrm{MHz}$.</div><i>0.5pt</i></div>
+
+<h2>Part D. Cubic nonlinearity and solitons (2.5 points)</h2>
+<p>For precision measurements and high-frequency communication, it is necessary to obtain very short light pulses that do not change their profile with time (such pulses are called solitons). This is not possible in linear optics because the dielectric constant and the dispersion constant depend on frequency, and the pulses “blur” due to dispersion.</p>
+<p>Fortunately, the approximations of linear optics do not work for all materials, and the resulting nonlinearities can compensate for the undesirable effects associated with dispersion.</p>
+<figure><img src="T3_fig5.jpg" style="width:52mm"></figure>
+<p>In Part D, we will assume that the projection $P_i(\vec r, t)$ of the polarisation vector on an arbitrary axis $i$ depends on the projection of the electric field strength $E_i(\vec r, t)$ at the same point at that instant of time as follows:</p>
+\[P_i(\vec r, t) = \varepsilon_0\left((\varepsilon(\omega) - 1)E_i(\vec r, t) + \chi E_i^3(\vec r, t)\right).\]
+<p>The pulse is a sum of electromagnetic waves with frequencies very close to the carrier frequency ($\omega \approx \omega_0$), and propagation constants very close to the propagation constant of the carrier wave $\beta \approx \beta_0 = \beta(\omega_0)$:</p>
+\[\vec E(\vec r, t) = \mathrm{Re}\left(E_0F(z, t)A(x, y)\exp(i\omega_0t - i\beta_0z)\right)\hat y.\]
+<p>Here $\beta(\omega)$ is the propagation constant found in Part A, $A(x, y)$ is also taken from Part A, $F(z, t)$ is a complex function that contains information about the pulse profile.</p>
+<p>The function $\beta(\omega)$ can be approximated by a quadratic function:</p>
+\[\beta = \beta_0 + \beta_1(\omega - \omega_0) + \beta_2(\omega - \omega_0)^2/2.\]
+<p>We can substitute this type of solution into the wave equation, which was derived in the introduction, and by mathematical transformations beyond the school program, obtain the equation for $F(z, t)$:</p>
+\[\frac{\partial F}{\partial z} + \beta_1\frac{\partial F}{\partial t} + \frac{i\beta_2}{2}\frac{\partial^2F}{\partial t^2} - i\gamma|F|^2F = 0.\]
+<p>The pulse will propagate with group velocity, so it is reasonable to move to a frame of reference that will also move with group velocity. In this system the last equation will be rewritten in the form:</p>
+\[\frac{\partial F}{\partial z} + \frac{i\beta_2}{2\beta_1^2}\frac{\partial^2F}{\partial s^2} = i\gamma|F|^2F,\]
+<p>where $s = t/\beta_1 - z$ is the spatial coordinate in the soliton reference frame, and $\gamma$ is the cubic nonlinearity coefficient, which is proportional to $\chi$ (and has the same sign). The resulting equation is called the <b>Nonlinear Schrödinger equation</b> (hereafter referred to as the NLSE). In the Part D assignment, you will analyze the NLSE. You will need to express all answers through its coefficients.</p>
+
+<div class="task"><b>D1</b><div>Express the group velocity $v_g$ through $\beta_1$.</div><i>0.1pt</i></div>
+
+<div class="task"><b>D2</b><div>Let us find the form of the soliton. The solution of the NLSE can be found in the form:
+\[F(z, s) = \frac{F_0\exp(i\sigma z)}{\cosh(\theta s)}.\]
+Express $F_0$ and $\sigma$ in terms of $\theta, \beta_1, \beta_2$ and $\gamma$.</div><i>0.6pt</i></div>
+
+<p>Let one of the natural frequencies of the FR be $\omega_0$. The length of the FR is such that there are very many other natural frequencies in the range from 0 to $\omega_0$. Then the following equality is true for the other natural frequencies: $\omega_\mu \approx \omega_0 + D_1\mu + D_2\mu^2/2$, where $\mu$ is an integer and $\omega_0 \gg D_1 \gg D_2$.</p>
+
+<div class="task"><b>D3</b><div>Express $D_1$ and $D_2$ in terms of $\beta_1, \beta_2$ and the loop length $L$. Hint: the natural frequency criterion: $B_{in}(t)$ and $B_{in}(t - \tau(\omega_\mu))$ have the same phase.</div><i>0.5pt</i></div>
+
+<div class="task"><b>D4</b><div>Let the resonator be made of a material with $\chi > 0$. At what $D_2$ can solitons exist in it?</div><i>0.3pt</i></div>
+
+<div class="task"><b>D5</b><div>Let a soliton with carrier frequency $\omega_0$ circulate in the FR described in D3. The external laser does not work. Plot the emission spectrum of the resonator (the dependence of specific power on frequency) qualitatively in the frequency range $(\omega_0 - 20D_1, \omega_0 + 20D_1)$. Consider that $\omega_0/Q(\omega_0) \ll D_1$. (Remember that $Q$ is the sharpness defined in B7.)</div><i>0.6pt</i></div>
+
+<div class="task"><b>D6</b><div>Estimate the absolute error of the angular frequency measurement $\omega$ using the spectrum from item D5.</div><i>0.2pt</i></div>
+
+<div class="task"><b>D7</b><div>Express the round-trip time $\tau_s$ through $D_1$.</div><i>0.2pt</i></div>
+
+<style>.ref{line-height:1.45}.ref .katex-display{margin:1.2mm 0}.ref li{margin:0 0 .6mm}.ref h2{margin:3mm 0 1.5mm}</style>
+<div class="ref">
+<h2 style="break-before:page;text-align:center;color:#111;margin-top:0">Reference materials</h2>
+<p>Let us introduce a Cartesian coordinate system $Oxyz$ in space. The unit vectors along the corresponding axes are $\hat x, \hat y, \hat z$ and form the right triple.</p>
+<ul>
+<li>The grad operator converts a scalar $\varphi$ into a vector as follows:
+\[\operatorname{grad}\varphi = \hat x\frac{\partial\varphi}{\partial x} + \hat y\frac{\partial\varphi}{\partial y} + \hat z\frac{\partial\varphi}{\partial z}\]</li>
+<li>The div operator converts the vector $\vec a = a_x\hat x + a_y\hat y + a_z\hat z$ into a scalar as follows:
+\[\operatorname{div}\vec a = \frac{\partial a_x}{\partial x} + \frac{\partial a_y}{\partial y} + \frac{\partial a_z}{\partial z}\]</li>
+<li>The rot operator converts the vector $\vec a = a_x\hat x + a_y\hat y + a_z\hat z$ into a vector as follows:
+\[\operatorname{rot}\vec a = \hat x\left(\frac{\partial a_z}{\partial y} - \frac{\partial a_y}{\partial z}\right) + \hat y\left(\frac{\partial a_x}{\partial z} - \frac{\partial a_z}{\partial x}\right) + \hat z\left(\frac{\partial a_y}{\partial x} - \frac{\partial a_x}{\partial y}\right)\]</li>
+<li>The Laplace operator $\Delta$ converts a scalar to a scalar or a vector to a vector:
+\[\Delta\varphi = \frac{\partial^2\varphi}{\partial x^2} + \frac{\partial^2\varphi}{\partial y^2} + \frac{\partial^2\varphi}{\partial z^2},\qquad \Delta\vec a = \frac{\partial^2\vec a}{\partial x^2} + \frac{\partial^2\vec a}{\partial y^2} + \frac{\partial^2\vec a}{\partial z^2}\]</li>
+<li>If we apply rot twice to the vector $\vec a$ we get the vector:
+\[\operatorname{rot}\operatorname{rot}\vec a = \operatorname{grad}\operatorname{div}\vec a - \Delta\vec a.\]</li>
+</ul>
+
+<h2 style="text-align:center;color:#111">Maxwell’s equations</h2>
+<p>Each equation is written first in integral form and then in differential form:</p>
+<ul>
+<li>Gauss’s theorem for magnetic field induction (the flux of magnetic induction through any closed surface is 0):
+\[\oint_S(\vec B\cdot d\vec S) = 0,\qquad \operatorname{div}\vec B = 0\]</li>
+<li>Gauss’s theorem for electric induction (the flux of electric induction through a closed surface is equal to the free charge inside the volume bounded by it):
+\[\oint_S(\vec D\cdot d\vec S) = q_f = \int_V\rho_f\,dV,\qquad \operatorname{div}\vec D = \rho_f\]
+here $\rho_f$ is the bulk density of free charges.</li>
+<li>Faraday’s law of electromagnetic induction (the rate of change of the flux of magnetic induction through an unclosed surface, taken with the opposite sign, is equal to the circulation of the electric field on a closed loop, which is the boundary of the surface):
+\[\oint_l(\vec E\cdot d\vec l) = -\frac{\partial}{\partial t}\int_S(\vec B\cdot d\vec S),\qquad \operatorname{rot}\vec E = -\frac{\partial\vec B}{\partial t}\]</li>
+<li>Circulation theorem for the magnetic field strength (the sum of the rate of change of the electric induction flux through an unclosed surface and the total electric current of free charges through it is equal to the magnetic field circulation on a closed contour, which is the boundary of the surface):
+\[\oint_l(\vec H\cdot d\vec l) = I_f + \frac{\partial}{\partial t}\int_S(\vec D\cdot d\vec S),\qquad \operatorname{rot}\vec H = \frac{\partial\vec D}{\partial t} + \vec j_f\]</li>
+</ul>
+</div>

@@ -1,0 +1,67 @@
+<h1>T2. Muon anomalous magnetic moment</h1>
+
+<p>Measurement of electron and muon magnetic moments is one of the most accurate in modern physics. This measurement provides a very precise test for the elementary particles model. In the experiment positively charged muons (also called antimuons) are used. The antimuon mass is approximately 200 times larger than the mass of the electron and the antimuon charge is equal to the absolute value of the electron charge. Throughout the problem we will refer to the positively charged muons as just muons for brevity.</p>
+<p>The muon (and the electron) has angular momentum $\vec s$, which is not connected with its motion in space. This angular momentum is called the spin of the muon. Spin motion can be described by the torque equation: the rate of change of the spin moment is equal to the applied torque. Moreover, the muon has magnetic moment</p>
+\[\vec\mu = g_\mu\,\frac{q}{2m_\mu}\,\vec s.\]
+<p>Here $m_\mu$ and $q$ are the mass and charge of the muon, $g_\mu = 2(1+a_\mu)$ is a dimensionless constant. The parameter $a_\mu$ describes the deviation of the magnetic moment from the “normal” value (which corresponds to $g_\mu = 2$). The problem deals with an experiment in which the anomalous contribution to the magnetic moment $a_\mu$ is determined. Muons move in a circle in a homogeneous magnetic field and their magnetic moment precession frequency is measured.</p>
+<figure><img src="T2_fig1.jpg" style="width:120mm"><figcaption>Storage ring for the muon $g-2$ measurement experiment, Fermilab</figcaption></figure>
+<p>In particle physics energies are usually measured in electronvolts (eV). Instead of the particle mass $m$ the rest energy $mc^2$ is used; its value is also measured in electronvolts. You may use the following numerical values:</p>
+<ul>
+<li>$1\ \mathrm{eV} = 1.602\cdot 10^{-19}\ \mathrm{J}$</li>
+<li>Speed of light in vacuum $c = 2.998\cdot 10^{8}\ \mathrm{m/s}$</li>
+<li>Muon mass $m_\mu c^2 = 105.7\ \mathrm{MeV}$</li>
+<li>Antimuon charge $q = 1.602\cdot 10^{-19}\ \mathrm{C}$</li>
+<li>The muon is unstable, its lifetime in the rest frame is $\tau = 2.197\cdot 10^{-6}\ \mathrm{s}$</li>
+</ul>
+<p>Rotation can be described by an angular velocity vector $\vec\omega$, which is directed along the rotation axis; the direction of $\vec\omega$ is determined by the right-hand rule. If a vector $\vec A$ rotates in the laboratory frame of reference with angular velocity $\vec\omega$, its time derivative is</p>
+\[\frac{d\vec A}{dt} = \vec\omega\times\vec A.\]
+<p>Let the reference frame $B$ (coordinates and time are $x', y', z', t'$) move with respect to the laboratory reference frame $A$ (coordinates and time are $x, y, z, t$) with velocity $V$ along the $x$ axis. The coordinates in these frames are related by the Lorentz transformation</p>
+\[x = \gamma(x' + Vt'),\quad t = \gamma\left(t' + \frac{V}{c^2}x'\right),\quad y = y',\quad z = z',\quad \gamma = \frac{1}{\sqrt{1 - V^2/c^2}}.\]
+<p>In all your answers you can use the $\gamma$ defined above to simplify formulas.</p>
+<p>If the particle’s velocity in the moving reference frame $B$ is $\vec v^{\,\prime}$, with projections on the coordinate axes $v'_x, v'_y, v'_z$, its velocity components in the laboratory reference frame are</p>
+\[v_x = \frac{v'_x + V}{1 + \dfrac{v'_x V}{c^2}},\qquad v_y = \frac{v'_y\sqrt{1 - V^2/c^2}}{1 + \dfrac{v'_x V}{c^2}},\qquad v_z = \frac{v'_z\sqrt{1 - V^2/c^2}}{1 + \dfrac{v'_x V}{c^2}}.\]
+<p>The energy and momentum of a relativistic particle with mass $m$ moving at speed $\vec v$ are</p>
+\[E = \gamma mc^2,\qquad \vec p = \gamma m\vec v,\qquad \gamma = \frac{1}{\sqrt{1 - v^2/c^2}}.\]
+<p>If the particle moves under the force $\vec F$, the equation of motion is</p>
+\[\frac{d\vec p}{dt} = \vec F.\]
+<p><b>In questions that require a numerical answer you need to calculate three significant figures.</b></p>
+
+<h2>Part A. Dynamics in magnetic field (4.5 points)</h2>
+<p>During the anomalous magnetic moment measurement experiment a beam of muons moves in the magnetic field $B = 1.450\ \mathrm{T}$; the muons’ momenta are perpendicular to the magnetic field and equal to $pc = 3.094\ \mathrm{GeV}$. The magnetic field is directed along the $z$ axis.</p>
+
+<div class="task"><b>A1</b><div>For a muon in the beam find the difference between the speed of light and the muons’ speed $\Delta v = c - v$ (provide a formula and compute the numerical value).</div><i>1.0pt</i></div>
+
+<div class="task"><b>A2</b><div>For a muon in the beam find the kinetic energy $E_k$, that is the difference between the full energy and the rest energy (provide a formula and compute the numerical value in GeV).</div><i>0.5pt</i></div>
+
+<div class="task"><b>A3</b><div>Find the radius $R$ of the muon’s orbit and the period $T$ of its motion. (Provide formulas and compute numerical values.)</div><i>1.0pt</i></div>
+
+<div class="task"><b>A4</b><div>Due to instability a muon can orbit the circle only a finite time. Find the number of revolutions $N$ the muon makes before its decay.</div><i>0.8pt</i></div>
+
+<p>Now we consider the case when the muon is at rest in the same magnetic field $B$ as in the previous parts.</p>
+
+<div class="task"><b>A5</b><div>Obtain a formula for the spin time derivative, $d\vec s/dt$; express the answer in terms of $\vec B, \vec s, g_\mu$ and fundamental constants.</div><i>0.7pt</i></div>
+
+<div class="task"><b>A6</b><div>Find the $z$ component of the angular velocity $\omega_z$ of the muon’s spin. Express the answer in terms of $B, g_\mu$ and fundamental constants.</div><i>0.5pt</i></div>
+
+<h2>Part B. Thomas precession (3.5 points)</h2>
+<p>The muon spin is not related to its spatial motion and should be described in the frame of reference in which the muon is at rest (such a frame is called the comoving frame). If the muon is moving with acceleration, at each instant of time we must choose a different comoving frame of reference. Consider two successive Lorentz transformations. The first transformation is from the laboratory frame $A$ (coordinates $x, y, t$) to the moving frame $B$ (coordinates $x', y', t'$). The second is from the reference frame $B$ to the third reference frame $C$ (coordinates $x'', y'', t''$). It turns out that the combination of these transformations is not a Lorentz transformation with some resulting velocity. There is an additional rotation which leads to the spin precession. This effect is called Thomas precession. Thomas precession is a purely kinematic phenomenon, so to describe it we do not have to consider the magnetic moment dynamics.</p>
+<p>Let the reference frame $B$ move with velocity $v_x$ along the $x$ axis with respect to $A$. In turn the reference frame $C$ moves with velocity $v'_y$ along the $y$ axis with respect to $B$. You may assume that $v'_y \ll v_x$ and work up to the first order in $v'_y$. To simplify your expressions you may use the notation $\gamma = 1/\sqrt{1 - v_x^2/c^2}$.</p>
+
+<div class="task"><b>B1</b><div>Find the $x$ and $y$ components of the velocity $\vec v_C$ of the reference frame $C$ with respect to the reference frame $A$. Express the answer in terms of $v_x, v'_y$.</div><i>0.5pt</i></div>
+
+<div class="task"><b>B2</b><div>Find the $x''$ and $y''$ components of the velocity $\vec v^{\,\prime\prime}_{A}$ of the reference frame $A$ with respect to the reference frame $C$. Take into account that $v''_y$ is small.</div><i>0.7pt</i></div>
+
+<div class="task"><b>B3</b><div>It turns out that $\vec v^{\,\prime\prime}_{A} \ne -\vec v_C$. It can be attributed to the fact that the axes of the reference frame $C$ are rotated with respect to the axes of frame $A$. Therefore all vectors in frame $C$ are also rotated with respect to the frame $A$. Calculate the angle of rotation $\Delta\theta$ defined as the angle between the vectors $-\vec v^{\,\prime\prime}_{A}$ and $\vec v_C$. The angle is positive if the rotation from the first vector to the second vector viewed from the $z$ axis is counterclockwise. (Axes $x, y, z$ form a right-handed coordinate system.) Express your answer in terms of $v_x, v'_y, \gamma = 1/\sqrt{1 - v_x^2/c^2}, c$.</div><i>0.6pt</i></div>
+
+<div class="task"><b>B4</b><div>Let a particle move with velocity $\vec v$ along the $x$ axis with respect to the frame $A$. The particle’s acceleration is directed along the $y$ axis, its projection is $a_y$. Frame $B$ is the comoving frame for the particle at the considered moment (i.e. the velocity of the particle in it is zero) and moves with the speed $v$ along the $x$ axis. After a time interval $dt$ (measured in the laboratory reference frame) the particle velocity is $\vec v + d\vec v$; the corresponding comoving reference frame is $C$. From the previous question it follows that the axes of the comoving frame rotate. Using the results of the previous question, find the $z$ component $\omega_T$ (angular velocity of Thomas precession) of the comoving frame angular velocity (in this case the rotation is around the $z$ axis). Express the answer in terms of $v_x, a_y, \gamma$.</div><i>1.0pt</i></div>
+
+<div class="task"><b>B5</b><div>Let the muon move in a homogeneous magnetic field $B$ directed along the $z$ axis. The muon velocity is perpendicular to the magnetic field. Calculate the $z$ component of the Thomas precession angular velocity. Express the answer in terms of $B, q, m_\mu, \gamma$.</div><i>0.7pt</i></div>
+
+<h2>Part C. Magnetic moment precession (2 points)</h2>
+<p>Let us consider a muon moving in a homogeneous magnetic field. Muon spin precession is determined by two factors: direct interaction with the magnetic field and Thomas precession due to the accelerated motion. The angular velocity of precession due to the magnetic field can be calculated by the formula obtained in question A6 in the case of the muon at rest. From now on we assume everywhere that the muon spin is parallel to the plane of the muon motion.</p>
+
+<div class="task"><b>C1</b><div>Find the expression for the $z$ component of the muon spin precession angular velocity $\omega_s$ with respect to the laboratory reference frame. Express the answer in terms of $B, g_\mu, q, m_\mu, \gamma$.</div><i>0.7pt</i></div>
+
+<div class="task"><b>C2</b><div>In practice it is more convenient to consider the spin rotation with respect to the direction of the muon momentum. Find the angular velocity $\omega_a$ of the muon spin rotation with respect to the direction of its momentum (that is also equal to the time derivative of the angle between the momentum and the spin). Express the answer in terms of $B, a_\mu, q, m_\mu, \gamma$.</div><i>0.5pt</i></div>
+
+<div class="task"><b>C3</b><div>The experimentally measured frequency of muon spin precession with respect to the momentum direction is $f_a = 229081\ \mathrm{Hz}$. Find the expression for the muon anomalous magnetic moment $a_\mu$. Express the answer in terms of $f_a, B, q, m_\mu, \gamma$. Compute the numerical value of $a_\mu$.</div><i>0.8pt</i></div>
