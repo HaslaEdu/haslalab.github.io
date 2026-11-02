@@ -127,7 +127,7 @@ export const worker={async fetch(request,env){
     else if(url.pathname.startsWith('/auth/'))response=await auth(request,env,url);
     else if(url.pathname.startsWith('/api/')){
       const pdf=url.pathname.match(/^\/api\/problem-bank\/sources\/(src_[a-f0-9]{64})\/pdf$/),fig=url.pathname.match(/^\/api\/problem-bank\/figures\/(f_[a-f0-9]{64})$/);
-      const restricted=!!pdf||request.method!=='GET';let user=null;
+      const restricted=!!pdf||request.method==='POST'&&(/\/(?:feedback|difficulty-review)$/.test(url.pathname)||url.pathname==='/api/problem-bank/identify'&&!/^application\/json(?:;|$)/i.test(request.headers.get('Content-Type')||''));let user=null;
       try{user=await currentUser(request,env);}catch(error){if(restricted)throw error;}
       if(pdf&&request.method==='GET'&&user?.role!=='admin')response=json({error:user?'admin_required':'login_required'},user?403:401);
       else{

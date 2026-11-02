@@ -71,6 +71,7 @@ test('guest reads survive auth transport failures while guest writes and photo O
   assert.equal((await guest.call('/api/problem-bank/identify',{method:'POST',body:form,token:null})).status,401);assert.equal(guest.calls.community.length,0);
   const feedback=await guest.call('/api/problem-bank/questions/q_'+'a'.repeat(64)+'/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({stars:3,outcome:'not_attempted',minutes:null}),token:null});assert.equal(feedback.status,401);assert.equal(guest.calls.db.length,0);
   const typed=await guest.call('/api/problem-bank/identify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'A freely moving body has constant velocity.'}),token:null});assert.equal(typed.status,200);assert.equal((await typed.json()).ocr_used,false);assert.equal(guest.calls.community.length,0);
+  const typedDuringAuthFailure=await f.call('/api/problem-bank/identify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'A freely moving body has constant velocity.'})});assert.equal(typedDuringAuthFailure.status,200);assert.equal((await typedDuringAuthFailure.json()).ocr_used,false);
 });
 test('auth readiness checks omit caller credentials and expose only sanitized failures',async()=>{
   const f=fixture(),res=await f.call('/auth/status');assert.equal(res.status,200);assert.deepEqual(await res.json(),{authentication:'available'});assert.equal(f.calls.community[0].headers.get('Authorization'),null);assert.equal(f.calls.db.length,0);
