@@ -146,9 +146,17 @@ const COMMON = [
   "handwriting: rating — clear, readable or hard — and one sentence on what a grader could misread (1/7, 0/6, 4/9, u/μ, decimal points and minus signs, exponents, subscripts), on crowding and layout, and on what would make the pages quicker to mark.",
 ].join("\n");
 /* the cacheable head of a grading request: blocks 1–3, nothing that depends on the year or the candidate */
-export function stablePrefix(family, kind) {
+/* the neutral tone (LAB_GRADE_TONE neutral, bench grade.tone): «strict» and «no benefit of the doubt» wording makes LLM
+   graders under-credit (arXiv 2607.01247, 2609.29333; our grader gave ~10 points below the reference); the same rules
+   are put neutrally, and a zero for an attempted item must say where the grader looked, as a mark must say where it is */
+const STRICT_HEAD = "[TASK: grade] You are a strict invigilator-grader for an olympiad exam.";
+const STRICT_APPLY = "Apply the regulation strictly: no benefit of the doubt (R10), an item that cannot be read is not found.";
+const NEUTRAL_HEAD = "[TASK: grade] You are an experienced olympiad marker. Give every mark the written work earns under the official scheme and the regulation below, and none that it does not.";
+const NEUTRAL_APPLY = "Apply the regulation as written (R10: an item that cannot be read is not found). Evidence works both ways: a mark needs its page and quote, and a 0 or a deduction on an item the candidate attempted needs a note naming where you looked and the closest thing the candidate wrote.";
+export function stablePrefix(family, kind, tone = "strict") {
   const k = KINDS[kind] || KINDS.experiment, f = FAMILIES[family] || FAMILIES.general;
-  return [COMMON, ...block(`[Paper rules — ${k.name.en}]`, k.rules), ...k.review,
+  const common = tone === "neutral" ? COMMON.replace(STRICT_HEAD, NEUTRAL_HEAD).replace(STRICT_APPLY, NEUTRAL_APPLY) : COMMON;
+  return [common, ...block(`[Paper rules — ${k.name.en}]`, k.rules), ...k.review,
     ...block(`[Competition rules — ${f.name.en}]`, familyRules(family, kind)), "[End of fixed rules]"].join("\n");
 }
 /* the same rules for the text grader (rubric scores, no page review) */

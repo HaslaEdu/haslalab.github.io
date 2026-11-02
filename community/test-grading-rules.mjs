@@ -105,3 +105,11 @@ test("IPhO-style theory: a part given only as a total, and a unit slip, follow t
   const r3 = rulesFor("ipho", "theory").find(r => r.id === "R3");
   assert.match(r3.en, /loses 0\.1 pt, never the whole item/);
 });
+
+test("the neutral tone puts the same rules without «strict» and asks a zero for its evidence", () => {
+  const strict = stablePrefix("ipho", "theory"), neutral = stablePrefix("ipho", "theory", "neutral");
+  assert.match(strict, /You are a strict invigilator-grader/);
+  assert.ok(!/strict/i.test(neutral.split("\n").slice(0, 2).join("\n")) && /experienced olympiad marker/.test(neutral));
+  assert.match(neutral, /a 0 or a deduction on an item the candidate attempted needs a note naming where you looked/);
+  assert.equal(neutral.split("\n").length, strict.split("\n").length, "the same rules, line for line");
+});
