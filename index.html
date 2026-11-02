@@ -1102,10 +1102,10 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="site-catalogue.js?v=90a445101562"></script>
+<script src="site-catalogue.js?v=2181746619d7"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=1626bfee78eb"></script>
+<script src="site-design.js?v=e4ce8dde1a8a"></script>
 <script>
 "use strict";
 
@@ -2990,7 +2990,8 @@ const DATA={
        files:{sim:"sim/ispho2025_E1_web.html",
               src:{ko:"src/ispho2025_E1_led_sim_KO.py", en:"src/ispho2025_E1_led_sim_EN.py"},
               pdf:{ko:"pdfx/ispho/ISPhO_2025_E1_KO.pdf", en:"pdf/ISPhO_2025_E1_EN.pdf"},
-              sol:{ko:"pdf/ISPhO_2025_S_E_KO.pdf", en:"pdf/ISPhO_2025_S_E.pdf"}}}
+              sol:{ko:"pdf/ISPhO_2025_S_E_KO.pdf", en:"pdf/ISPhO_2025_S_E.pdf"},
+              data:"pdfx/ispho/ISPhO_2025_E1_tables.zip"}}
     ],
     /* the theory problem solved on the organisers' program: practised and sat in the theory track */
     sims:[
@@ -3014,7 +3015,8 @@ const DATA={
        files:{sim:"sim/ispho2024_E1_web.html",
               src:{ko:"src/ispho2024_E1_spectro_sim_KO.py", en:"src/ispho2024_E1_spectro_sim_EN.py"},
               pdf:{ko:"pdfx/ispho/ISPhO_2024_E1_KO.pdf", en:"pdf/ISPhO_2024_E1_EN.pdf"},
-              sol:"pdf/ISPhO_2024_S_E.pdf"}}
+              sol:"pdf/ISPhO_2024_S_E.pdf",
+              data:"pdfx/ispho/ISPhO_2024_E1_Results.zip"}}
     ],
     /* the theory problem solved on the organisers' program: practised and sat in the theory track */
     sims:[
@@ -5447,6 +5449,7 @@ function viewYear(key,year,mode=""){
         const docsOnly = !!c.soon && !f.sim;
         if(docsOnly) docs.pop();
         if(c.open) docs.splice(1,1);                      /* IYPT: no solution exists, so no greyed solution button */
+        if(live&&f.data) docs.push(doc(f.data,d.thyData,false));   /* the tables the paper hands out (ISPhO 2024–2025 E1: Excel files) */
         /* an experiment: its answer and working sheets next to the problem and the solution */
         if(live&&!c.open&&/^E\d*$/.test(p.id)){ const h=expSheetsHref(key,yr,p);
           docs.splice(docs.length-(docsOnly?0:1),0,sheetBtn(sheetKind(h,"answer"),lang==="ko"?"답안지":"Answer sheet"),sheetBtn(sheetKind(h,"working"),lang==="ko"?"워킹시트":"Working sheet")); }
