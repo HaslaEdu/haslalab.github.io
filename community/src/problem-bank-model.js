@@ -54,27 +54,28 @@ export function starsFromRubric(rubric){
 const ADVANCED=/green'?s? function|spherical harmonics?|bessel|legendre|sturm.?liouville|hamilton.?jacobi|tensor|christoffel|riemann|schwarzschild|geodesic|dirac equation|renormal|path integral|wkb|degenerate perturbation/i;
 const ODE=/differential equation|laplace'?s? equation|poisson'?s? equation|schr[oö]dinger|wave equation|fourier|normal modes?|eigenvalue|eigenfunction/i;
 const ALGEBRA=/matrix|matrices|eigenvector|determinant|commutator|operator|hilbert/i;
-const CALCULUS=/integrat|derivativ|gradient|divergence|curl|\\(?:int|partial|nabla)\b/i;
+const CALCULUS=/integr(?:al|at)|derivativ|gradient|divergence|curl|\\(?:int|partial|nabla)\b/i;
 const APPROX=/approximation|perturb|asymptot|lineariz|linearisation|small.oscillation|leading.order|limit of|limiting case/i;
 const REASONING=/self.consistent|stability|stationary action|variational|optimi[sz]|extrem|prove.*(?:unique|necessary|sufficient)|inverse problem|reconstruct|without assuming/i;
-const GROUPS=[/force|momentum|newton|lagrang|hamilton/i,/electri|magnetic|charge|current|gauss/i,/heat|entropy|temperature|thermodynamic/i,/quantum|wavefunction|spin|schr[oö]dinger/i,/ray|refract|diffraction|interference|optic/i,/lorentz|relativ|spacetime|four.vector/i,/star|stellar|galax|luminosity|cosmolog|astronom/i];
+const GROUPS=[/force|momentum|newton|lagrang|hamilton/i,/electri|magnetic|charge|current|gauss/i,/heat|entropy|temperature|thermodynamic/i,/quantum|wavefunction|schr[oö]dinger|pauli/i,/\brays?\b|refract|diffraction|interference|optic/i,/lorentz|relativ|spacetime|four.vector/i,/\bstars?\b|stellar|galax|luminosity|cosmolog|astronom/i];
 
 export function estimateDifficulty({text='',chapter='',level='mixed',subjects=[],unresolved_source=false}){
   // Length, printed problem number, OCR quality and language are not difficulty.
   const prompt=String(chapter)+'\n'+String(text),reasons=['source_level'];
-  const prerequisite={high_school:.2,olympiad:1.2,undergraduate:1.5,graduate:3,mixed:1.5}[level]??1.5;
+  let prerequisite={high_school:.1,olympiad:.8,undergraduate:.8,graduate:1.5,mixed:.8}[level]??.8;
   let mathematics=.2;
-  if(CALCULUS.test(prompt)){mathematics=1;reasons.push('calculus');}
-  if(ALGEBRA.test(prompt)){mathematics=Math.max(mathematics,2);reasons.push('linear_algebra');}
-  if(ODE.test(prompt)){mathematics=Math.max(mathematics,2.5);reasons.push('differential_equations');}
-  if(ADVANCED.test(prompt)){mathematics=3.5;reasons.push('advanced_mathematics');}
+  if(CALCULUS.test(prompt)){mathematics=1.2;prerequisite=Math.max(prerequisite,1.5);reasons.push('calculus');}
+  if(ALGEBRA.test(prompt)){mathematics=Math.max(mathematics,2);prerequisite=Math.max(prerequisite,2);reasons.push('linear_algebra');}
+  if(ODE.test(prompt)){mathematics=Math.max(mathematics,2.8);prerequisite=Math.max(prerequisite,2.3);reasons.push('differential_equations');}
+  if(ADVANCED.test(prompt)){mathematics=4;prerequisite=Math.max(prerequisite,3.6);reasons.push('advanced_mathematics');}
   const groups=GROUPS.filter(re=>re.test(prompt)).length;
-  const integration=Math.min(3,Math.max(0,Math.max(groups,subjects.filter(x=>x!=='mixed'&&x!=='mathematical_methods').length)-1));
+  // Coarse source tags and overlapping SR/GR labels are not independent concepts.
+  const integration=Math.min(3,Math.max(0,groups-1));
   if(integration>0)reasons.push('concept_integration');
-  let reasoning=level==='high_school'?.5:level==='olympiad'?1.7:1.3;
-  if(APPROX.test(prompt)){reasoning+=.5;reasons.push('approximation');}
-  if(REASONING.test(prompt)){reasoning+=1;reasons.push('nontrivial_reasoning');}
-  if(ADVANCED.test(prompt))reasoning+=.5;
+  let reasoning=level==='high_school'?.2:level==='olympiad'?.8:level==='graduate'?1:.5;
+  if(APPROX.test(prompt)){reasoning+=.8;reasons.push('approximation');}
+  if(REASONING.test(prompt)){reasoning+=1.4;reasons.push('nontrivial_reasoning');}
+  if(ADVANCED.test(prompt))reasoning+=.9;
   if(unresolved_source)reasons.push('reference_context_pending');
   const rubric={prerequisites:prerequisite,integration,mathematics,reasoning:Math.min(4,reasoning)};
   return {...starsFromRubric(rubric),status:'provisional',confidence:'low',reason_codes:[...new Set(reasons)],rubric,method_version:BANK_METHOD};

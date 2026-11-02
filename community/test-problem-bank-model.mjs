@@ -10,6 +10,13 @@ test('advanced mathematical evidence raises a provisional estimate while languag
  const base=estimateDifficulty({text:'Find the acceleration of a mass.',level:'undergraduate'}),advanced=estimateDifficulty({text:'Construct a self-consistent asymptotic Green function of the tensor wave equation.',level:'graduate'});assert(advanced.stars>base.stars);assert(advanced.reason_codes.includes('advanced_mathematics'));
  assert.equal(estimateDifficulty({text:'Problem 1. Find acceleration.'}).stars,estimateDifficulty({text:'Problem 9999. Find acceleration.'}).stars);
 });
+test('one source can contain simple one-concept questions and advanced multi-method questions across the full scale',()=>{
+ const prompts=['A mass moves. Find its acceleration.','Evaluate the integral of the velocity.','Solve the differential equation for a normal mode.','Find the Green function.','Construct a self-consistent asymptotic Green function for a tensor wave equation.'];
+ assert.deepEqual(prompts.map(text=>estimateDifficulty({text,level:'undergraduate'}).stars),[1,2,3,4,5]);
+ const text='A Lorentz transformation relates two frames.';
+ assert.equal(estimateDifficulty({text,subjects:['relativity']}).stars,estimateDifficulty({text,subjects:['relativity','special_relativity','general_relativity']}).stars);
+ assert.equal(estimateDifficulty({text:'A force starts at time zero.'}).rubric.integration,0);
+});
 test('unverified self reports cannot change Elo ability or item difficulty',()=>{
  assert.throws(()=>eloUpdate({ability:0,difficulty:0,correct:1,evidence:'self_report'}),/verified_grade_required/);
  const r=eloUpdate({ability:0,difficulty:0,correct:1,evidence:'verified_grade'});assert(r.ability>0&&r.difficulty<0);assert.equal(r.expected,.5);assert(solveProbability(1,0)>.5);assert(solveProbability(0,1)<.5);
