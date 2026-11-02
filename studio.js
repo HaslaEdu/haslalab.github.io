@@ -16,8 +16,8 @@
     ko: {
       skip: '작업 영역으로 건너뛰기', library: '문제 라이브러리', practice: '실전 연습', signIn: '로그인',
       heading: '한 장에서, 다음 문제까지.', intro: '올림피아드 문제를 편집 가능한 글과 수식으로 정리하고, 사진이나 원하는 주제를 바탕으로 새 문제를 만들어 보세요.',
-      newWork: '새 작업', mode: '작업 선택', digitize: '문제 디지털 전사', digitizeHint: '글·수식·그림을 정리해요',
-      generate: '새 문제 제작', generateHint: '사진이나 요청을 바탕으로', restore: '그림 복원', restoreHint: '도형·그래프를 선명하게',
+      newWork: '새 작업', mode: '작업 선택', digitize: '문제 디지털화', digitizeHint: '글·수식·그림을 정리해요',
+      generate: '문제 제작', generateHint: '사진이나 요청을 바탕으로', restore: '그림 제작', restoreHint: '사진으로 도형·그래프 재구성', takePhoto: '사진 촬영',
       sourceImage: '원본 이미지', upload: '사진을 놓거나 선택하세요', uploadHint: 'PNG · JPG · WebP / 붙여넣기 가능',
       sourceImageOptional: '원본 이미지 (선택)', generationRequest: '제작 요청', requestRequired: '사진 없으면 5자 이상',
       generateNote: '사진 없이도 제작할 수 있어요. 과목과 원하는 주제·조건을 5자 이상 적어 주세요.',
@@ -68,7 +68,7 @@
       skip: 'Skip to workspace', library: 'Problem library', practice: 'Exam practice', signIn: 'Sign in',
       heading: 'One image. Your next problem.', intro: 'Turn an olympiad problem into editable text and equations, or create new problems from an image or a topic you describe.',
       newWork: 'New work', mode: 'Choose a task', digitize: 'Digitize a problem', digitizeHint: 'Text, equations and figures',
-      generate: 'Create new problems', generateHint: 'From an image or your request', restore: 'Restore a figure', restoreHint: 'Clear diagrams and graphs',
+      generate: 'Create a problem', generateHint: 'From an image or your request', restore: 'Create a figure', restoreHint: 'Reconstruct a figure from a photo', takePhoto: 'Take a photo',
       sourceImage: 'Source image', upload: 'Drop an image or choose a file', uploadHint: 'PNG · JPG · WebP / paste an image',
       sourceImageOptional: 'Source image (optional)', generationRequest: 'Problem request', requestRequired: '5+ characters without an image',
       generateNote: 'You can create problems without an image. Describe the topic and conditions in at least 5 characters.',
@@ -220,6 +220,7 @@
     document.querySelectorAll('[data-i18n]').forEach(e => { e.textContent = t(e.dataset.i18n); });
     document.querySelectorAll('[data-i18n-placeholder]').forEach(e => { e.placeholder = t(e.dataset.i18nPlaceholder); });
     $('uiLanguage').textContent = state.lang === 'en' ? '한국어' : 'EN';
+    $('captureInput').setAttribute('aria-label',t('takePhoto'));
     $('sourceImage').alt = t('original');
     $('dropZone').querySelector('strong').textContent = state.file ? t('replaceImage') : t('upload');
     state.renderKey = ''; updateMode(); updateAccount(); updateSubmit(); renderHistory(); renderSelected(); renderLimits();
@@ -248,7 +249,7 @@
   }
   function removeFile() {
     if (state.fileUrl) URL.revokeObjectURL(state.fileUrl);
-    state.file = null; state.fileUrl = ''; $('imageInput').value = ''; $('fileThumbnail').removeAttribute('src');
+    state.file = null; state.fileUrl = ''; $('imageInput').value = ''; $('captureInput').value = ''; $('fileThumbnail').removeAttribute('src');
     $('selectedFile').hidden = true; $('dropZone').classList.remove('has-file'); $('dropZone').querySelector('strong').textContent = t('upload'); updateMode();
   }
   function safeJob(job) { return job && typeof job === 'object' && job.id != null && String(job.id).length <= 180 ? job : null; }
@@ -624,6 +625,12 @@
   $('studioForm').addEventListener('submit', e => { e.preventDefault(); createJob(); });
   document.querySelectorAll('input[name="mode"]').forEach(e => e.addEventListener('change', updateMode));
   $('imageInput').addEventListener('change', e => selectFile(e.target.files[0]));
+  const phoneCaptureAvailable=navigator.userAgentData?.mobile===true||/(?:iPhone|iPod|Android[^\n]*Mobile)/i.test(navigator.userAgent||'');
+  $('phoneCapture').hidden=!phoneCaptureAvailable;
+  $('capturePhoto').addEventListener('click',()=>{if(phoneCaptureAvailable)$('captureInput').click();});
+  $('captureInput').addEventListener('change',e=>{selectFile(e.target.files[0]);e.target.value='';});
+  const paintBrand=()=>{$('studioBrandMark').src='logo/brand/haslalab-'+(document.documentElement.dataset.theme==='dark'?'dark':'light')+'.svg?v=20261103-brands';};
+  new MutationObserver(paintBrand).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});paintBrand();
   $('dropZone').addEventListener('click', e => { if (e.target !== $('imageInput')) $('imageInput').click(); });
   $('dropZone').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('imageInput').click(); } });
   ['dragenter', 'dragover'].forEach(name => $('dropZone').addEventListener(name, e => { e.preventDefault(); $('dropZone').classList.add('drag-over'); }));

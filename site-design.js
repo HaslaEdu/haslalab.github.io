@@ -52,8 +52,12 @@ function paintSiteTheme(){
   const label=lang==="ko"?(dark?"화이트 모드":"다크 모드"):(dark?"Light mode":"Dark mode");
   button.setAttribute("aria-label",label);button.setAttribute("title",label);button.setAttribute("aria-pressed",String(dark));button.textContent=dark?"☀":"◐";
   document.querySelector('meta[name="theme-color"]').content=dark?"#111017":"#2E3945";
-  const icon=document.getElementById("siteFavicon"),href="favicon-"+(dark?"dark":"light")+".svg?v=20261030-logos";
+  const icon=document.getElementById("siteFavicon"),href="favicon-"+(dark?"dark":"light")+".svg?v=20261103-brands";
   if(icon&&icon.getAttribute("href")!==href)icon.setAttribute("href",href);
+  [[".mark img,.cmrail .srv img","haslalab"],[".about img.wm","haslaedu"]].forEach(([selector,brand])=>{
+    const src="logo/brand/"+brand+"-"+(dark?"dark":"light")+".svg?v=20261103-brands";
+    document.querySelectorAll(selector).forEach(img=>{if(img.getAttribute("src")!==src)img.setAttribute("src",src);});
+  });
   document.querySelectorAll("img[data-logo-key]").forEach(img=>{
     const src=logoSource(img.dataset.logoKey)+"?v="+LOGO_V;
     img.dataset.logoVariant=src.match(/\/(dark|light)\//)?.[1]||"original";
@@ -90,18 +94,18 @@ const HOME_STUDIO_TEXT = {
     title:"문제 제작소",intro:"사진 한 장이나 원하는 주제로 시작해 보세요.",open:"제작소 열기",login:"로그인 후 작업을 시작할 수 있어요. 일일 이용 한도가 적용됩니다.",
     export:"결과를 확인한 뒤 Markdown · JSON · 그림 파일로 저장하거나 PDF로 인쇄하세요.",
     features:[
-      {mode:"generate",title:"새 문제 제작",description:"원하는 주제를 적거나 원본 사진을 올려, 난이도와 문제 수를 선택해 새 문제를 만드세요.",detail:"사진 없이도 가능 · 1~3문제",action:"새 문제 만들기"},
-      {mode:"digitize",title:"문제 디지털 전사",description:"문제 사진의 글과 수식을 옮기고 그림을 함께 정리하세요. 원본과 결과를 나란히 확인할 수 있어요.",detail:"원본 사진 필요 · 글·수식·그림",action:"사진으로 시작하기"},
-      {mode:"restore",title:"그림 복원",description:"흐릿한 과학 그림을 복원 후보로 만들고 원본과 비교해 보세요. 필요한 그림만 내려받을 수 있어요.",detail:"원본 사진 필요 · 복원 결과 대조",action:"그림 복원하기"}
+      {mode:"generate",title:"문제 제작",description:"원하는 주제를 적거나 원본 사진을 올려, 난이도와 문제 수를 선택해 새 문제를 만드세요.",detail:"사진 없이도 가능 · 1~3문제",action:"문제 만들기"},
+      {mode:"digitize",title:"문제 디지털화",description:"문제 사진의 글과 수식을 옮기고 그림을 함께 정리하세요. 원본과 결과를 나란히 확인할 수 있어요.",detail:"원본 사진 필요 · 글·수식·그림",action:"사진으로 시작하기"},
+      {mode:"restore",title:"그림 제작",description:"원본 사진을 바탕으로 도형·그래프를 선명하게 재구성하고 원본과 비교해 보세요.",detail:"원본 사진 필요 · 제작 결과 대조",action:"그림 제작하기"}
     ]
   },
   en: {
     title:"Problem Studio",intro:"Start with an image or a topic you want to explore.",open:"Open Studio",login:"Sign in to start a task. Daily usage limits apply.",
     export:"Review your result, then save Markdown, JSON or figure files, or print to PDF.",
     features:[
-      {mode:"generate",title:"Create new problems",description:"Describe a topic or upload a source image, then choose the difficulty and number of new problems.",detail:"An image is optional · 1–3 problems",action:"Create a problem"},
+      {mode:"generate",title:"Create a problem",description:"Describe a topic or upload a source image, then choose the difficulty and number of new problems.",detail:"An image is optional · 1–3 problems",action:"Create a problem"},
       {mode:"digitize",title:"Digitize a problem",description:"Turn a problem photo into text and equations with its figures. Compare the source and result side by side.",detail:"Source image required · Text, math & figures",action:"Start with a photo"},
-      {mode:"restore",title:"Restore a figure",description:"Create a restoration candidate for an unclear scientific figure and compare it with the source before saving.",detail:"Source image required · Compare the restoration",action:"Restore a figure"}
+      {mode:"restore",title:"Create a figure",description:"Reconstruct a clear diagram or graph from your source photo and compare the result before saving.",detail:"Source image required · Compare the result",action:"Create a figure"}
     ]
   }
 };

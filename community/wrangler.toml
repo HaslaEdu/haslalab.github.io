@@ -8,6 +8,10 @@ keep_vars = true
 binding = "STUDIO_ENGINE"
 service = "haslalab-studio-engine"
 
+[[send_email]]
+name = "ACCOUNT_EMAIL"
+allowed_sender_addresses = ["noreply@notify.physleague.kr"]
+
 # Run the Worker next to its database rather than next to the visitor: a page makes several
 # database queries, and each one is a round trip, so this cuts the waiting the most.
 [placement]
@@ -33,6 +37,8 @@ dead_letter_queue = "haslalab-lab-jobs-dead"
 
 # Sites allowed to call the API from the browser (comma-separated).
 [vars]
+AUTH_EMAIL_ENABLED = "on"
+AUTH_MAIL_FROM = "noreply@notify.physleague.kr"
 ALLOWED_ORIGINS = "https://haslalab.org,https://www.haslalab.org,https://haslaedu.github.io,http://localhost:8765"
 # Production choices are fixed in vision-provider.js; keep the private model bench aligned.
 GEMINI_MODEL = "gemini-3.5-flash-lite"

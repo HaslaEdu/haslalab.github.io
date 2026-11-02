@@ -1026,6 +1026,7 @@ async function arMe(root, alive,overview) {
       <h3 style="margin-top:14px">${CMT[lang].avatarH}</h3><div id="arAv"><div class="arq"><label class="cmbtn sm">${CMT[lang].avatarPick}<input type="file" accept="image/jpeg,image/png,image/webp" hidden></label>
         <button class="cmbtn sm" type="button" data-del ${cm.me.avatar ? "" : "hidden"}>${CMT[lang].avatarDel}</button><span class="arinfo cmerr"></span></div></div>
       <h3 style="margin-top:14px">${T.linkH}</h3><div id="arIds" class="arids"></div></div>
+    <div class="arpanel" id="arSecurity"></div>
     <div class="arpanel" id="arLabMe"></div>
     <div class="arpanel"><h3>${T.recent}</h3>${j.subs.length ? `<table class="cmtbl artbl"><tbody>${j.subs.map((s) => `<tr><td style="width:96px">${esc(arPeriodLabel(s))}</td>
       <td class="t"><a href="#/monthly/p/${s.problem_id}">${s.no}. ${esc(lang === "en" ? s.title_en : s.title_ko)}</a></td>
@@ -1041,10 +1042,10 @@ async function arMe(root, alive,overview) {
     const idj = {identities:overview.identities||[],providers:overview.providers||ar.health?.oauth||[],has_pw:overview.has_password}, have = idj.identities.map((x) => x.provider), box = root.querySelector("#arIds");
     box.innerHTML = `<div class="oauth">${[...new Set(arProvs().concat(have))].map((p) => have.includes(p) ? `<span class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.connected}</span>`
       : idj.providers.includes(p) && arProvs().includes(p) ? `<a href="#" data-p="${p}" class="${p}">${OAUTH_ICON[p]}${(T.oauthWith[p] || p).replace(/로 계속하기|Continue with /g, "")} · ${T.link}</a>` : "").join("")}</div>
-      ${idj.has_pw ? "" : `<form id="arPw" class="arq"><span>${T.pwSet}</span><input type="password" name="pw" placeholder="${T.pwNew}" minlength="8"><button class="cmbtn sm">${T.save}</button><span class="arinfo"></span></form>`}`;
+      ${idj.has_pw ? "" : `<p class="arinfo">${lang==='en'?'Verify a recovery email below to create your first password.':'첫 비밀번호를 설정하려면 아래에서 복구 이메일을 확인해 주세요.'}</p>`}`;
     for (const a of box.querySelectorAll("a[data-p]")) a.onclick = async (e) => { e.preventDefault(); try { const t = await cmApi("POST", "/oauth/ticket"); sessionStorage.setItem("hlCmBack", "#/me"); arOauthStart(a.dataset.p, t.ticket); } catch (er) { cmToast(arErr(er)); } };
-    const pf = box.querySelector("#arPw"); if (pf) pf.onsubmit = async (e) => { e.preventDefault(); try { await cmApi("POST", "/me/password", {password: pf.pw.value}); pf.querySelector(".arinfo").textContent = T.done; } catch (er) { pf.querySelector(".arinfo").textContent = arErr(er); } };
   } catch (e) {}
+  window.HL_ACCOUNT_UI.profile(root.querySelector('#arSecurity'),{api:cmApi,language:()=>lang});
   if ((ar.health || {}).lab) {const x=overview; const el = root.querySelector("#arLabMe"); if (!el) return; const L = LBT[lang === "en" ? "en" : "ko"];
     el.innerHTML = `<h3>⏱ ${L.h}</h3><p style="margin:0 0 8px">${L.tokens(x.tokens)}${x.active ? ` · <b>${L.st[x.active.status]}</b>: ${esc(x.active.comp.toUpperCase())} ${x.active.year}` : ""}</p><a class="cmbtn sm" href="#/lab">${L.all}</a>`; }
   else { const el = root.querySelector("#arLabMe"); if (el) el.remove(); }

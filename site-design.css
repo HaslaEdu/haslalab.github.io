@@ -7,7 +7,8 @@ body.hl-site .mark{
   gap:9px;color:#28324b;font-family:Georgia,"Times New Roman",serif;
   font-size:24px;font-weight:700;letter-spacing:-.055em;line-height:1.15;white-space:nowrap;
 }
-body.hl-site .mark img{width:26px;height:26px;top:0;filter:none}
+body.hl-site .mark img{width:26px;height:26px;top:0;filter:none;border-radius:6px;background:#fff;content:url("logo/brand/haslalab-light.svg?v=20261103-brands")}
+html[data-theme="dark"] body.hl-site .mark img{background:#111017;content:url("logo/brand/haslalab-dark.svg?v=20261103-brands")}
 body.hl-site .clogo{max-width:48%}
 body.hl-site .clogo:is([data-logo-key="ortvay"],[data-logo-key="usnco"],[data-logo-key="putnam"],[data-logo-key="useso"],[data-logo-key="mskbo"]){max-width:56%}
 body.hl-site .archive-resources{margin:28px 0}
@@ -173,7 +174,7 @@ html[data-theme="dark"] body.hl-site header{
   --ink:#ebe8f5;--graphite:#b5a8c8;--rail:#3b2e4b;--grid-bold:#44374f;--laser:#bca0ed;
 }
 html[data-theme="dark"] body.hl-site .mark{color:#e9ecf5}
-html[data-theme="dark"] body.hl-site :is(.mark img,.about .wm,.cmrail .srv img){filter:hue-rotate(52deg) saturate(.66)}
+html[data-theme="dark"] body.hl-site :is(.about .wm,.cmrail .srv img){filter:none}
 html[data-theme="dark"] body.hl-site .mark em{color:#a8b2c8}
 /* Dark variants remove the exterior backing and brighten neutral lettering.
    Brand colours and the original source files stay intact. */

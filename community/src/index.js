@@ -43,6 +43,7 @@ import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './fo
 import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
+import { createAccountSecurityRouter, ensureAccountSecuritySchema } from './account-security.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -177,7 +178,7 @@ async function currentUser(req, env) {
   if (!m) return null;
   const th = await sha256(m[1]);
   const u = await env.DB.prepare(
-    `SELECT u.id,u.username,u.nickname,u.role,u.created_at,u.avatar FROM sessions s JOIN users u ON u.id=s.user_id
+    `SELECT u.id,u.username,u.nickname,u.role,u.created_at,u.avatar,s.created_at AS sessionCreatedAt FROM sessions s JOIN users u ON u.id=s.user_id
      WHERE s.token_hash=? AND s.expires_at>? AND u.deleted=0`).bind(th, now()).first();
   if (u) u.tokenHash = th;
   return u || null;
@@ -189,6 +190,7 @@ const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 const modelTestRouter = createModelTestRouter({HttpError, currentUser, needUser, limit});
+const accountSecurityRouter = createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,checkPw,pwOk});
 const monthlyPhotoRouter = createMonthlyPhotoRouter({HttpError, needUser, limit, ocr, imageType,
   ensureContent:ensureWeeklyContent, visibleSql:visibleMonthlySql, attempts:monthlyAttempts, scope:env => env[DB_SCOPE] || env.DB});
 const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr,imageType,invoke:callGrader,
@@ -198,7 +200,7 @@ const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUse
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,scope:env=>env[DB_SCOPE]||env.DB});
 
 /* ── routes ─────────────────────────────────────────────────── */
-async function handle(req, env, url) {
+async function handle(req, env, url, ctx) {
   const p = url.pathname.replace(/\/+$/, "");
   const m = req.method;
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
@@ -209,6 +211,8 @@ async function handle(req, env, url) {
 
   if (p === "/api/health") return healthData(env, await labReady(env));
   if (p === "/api/boards" && m === "GET") return readPublicBoards(env.DB, url);
+  const security = await accountSecurityRouter(req,env,{path:p,body,me,ctx});
+  if(security!==null)return security;
 
   /* auth */
   if (p === "/api/signup" && m === "POST") {
@@ -247,21 +251,9 @@ async function handle(req, env, url) {
     return { ok: true };
   }
   if (p === "/api/me" && m === "GET") return { user: me ? pubUser(me) : null };
-  if (p === "/api/me/password" && m === "POST") {
-    needUser(me);
-    await limit(env, "pw:" + me.id, 10, 900);
-    const u = await env.DB.prepare("SELECT pw FROM users WHERE id=?").bind(me.id).first();
-    // an account made with Google, Discord or NAVER has no password yet and may set one
-    if (u.pw && !(await checkPw(String(body.old || ""), u.pw))) throw new HttpError(401, "bad_credentials");
-    if (!pwOk(body.password)) bad("bad_password");
-    await env.DB.batch([
-      env.DB.prepare("UPDATE users SET pw=? WHERE id=?").bind(await hashPw(body.password), me.id),
-      env.DB.prepare("DELETE FROM sessions WHERE user_id=? AND token_hash<>?").bind(me.id, me.tokenHash),
-    ]);
-    return { ok: true };
-  }
   if (p === "/api/me" && m === "DELETE") {
     needUser(me);
+    await ensureAccountSecuritySchema(env.DB);
     await ensureOmrSchema(env);
     await ensureMonthlyCaptureSchema(env.DB,env[DB_SCOPE] || env.DB);
     await ensureMonthlyExperimentSchema(env.DB,env[DB_SCOPE] || env.DB);
@@ -273,6 +265,8 @@ async function handle(req, env, url) {
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
       env.DB.prepare("DELETE FROM sessions WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM identities WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM account_email_tokens WHERE user_id=?").bind(me.id),
+      env.DB.prepare("DELETE FROM account_emails WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM avatars WHERE user_id=?").bind(me.id),
       env.DB.prepare("UPDATE users SET avatar=NULL WHERE id=?").bind(me.id),
       env.DB.prepare("DELETE FROM lab_pages WHERE session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)").bind(me.id),
@@ -675,7 +669,7 @@ const worker = {
     if (shared&&!refreshCache) { const hit = await caches.default.match(ckey);
       if (hit) return new Response(hit.body, { headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": cacheSeconds(url.pathname) === 300 ? 'public, max-age=300' : 'no-store', "X-Edge-Cache": "hit", ...cors } }); }
     try {
-      const data = await handle(req, env, url);
+      const data = await handle(req, env, url, ctx);
       if (data instanceof Response) {
         const headers = new Headers(data.headers);
         for (const [key,value] of Object.entries(cors)) headers.set(key,value);

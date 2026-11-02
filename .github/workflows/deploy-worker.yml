@@ -30,6 +30,7 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
+      - run: node --test test-account-security.mjs test-account-routes.mjs test-account-ui.cjs
       # Studio creates its additive schema through the existing DB binding, so
       # deployment does not require a new D1 management permission or secret.
       - run: node --check src/worker.js && node --test test-studio.mjs test-studio-schema.mjs
