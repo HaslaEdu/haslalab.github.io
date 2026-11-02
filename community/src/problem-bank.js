@@ -489,7 +489,7 @@ export async function problemBankRoute(req,env,url,{user,ocr}={}) {
     }
     if(suffix==='/recommendations'){
       const target=opts.stars??3,pool=await search(env,'',{...opts,stars:null,limit:30,offset:0,cursor:null});
-      return json({items:recommendProblems(pool.items,{targetStars:target,limit:opts.limit,preferredSubjects:opts.subject?[opts.subject]:[]}),target_stars:target,method:'target_difficulty_and_source_diversity',...PRIVATE});
+      return json({items:recommendProblems(pool.items.filter(i=>!i.unresolved_source),{targetStars:target,limit:opts.limit,preferredSubjects:opts.subject?[opts.subject]:[]}),target_stars:target,method:'target_difficulty_and_source_diversity',...PRIVATE});
     }
     const a=suffix.match(/^\/assets\/([^/]+)$/);if(a)return await asset(env,a[1],user);
     const q=suffix.match(/^\/questions\/([^/]+)(?:\/(solutions|recommendations|context|feedback))?$/);
