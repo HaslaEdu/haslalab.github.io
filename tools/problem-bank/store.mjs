@@ -43,6 +43,11 @@ function urlOrigin(raw){
   const origin={kind:'url',url:sourceUrl(raw.url),attribution:text(raw.attribution,'origin.attribution',2000),
     license_identifier:text(raw.license_identifier,'origin.license_identifier',240),license_url:sourceUrl(raw.license_url)};
   if(raw.terms_url!=null)origin.terms_url=sourceUrl(raw.terms_url);
+  if(raw.archive_member!=null){
+    const member=object(raw.archive_member,'origin.archive_member');
+    origin.archive_member={container_sha256:hash(member.container_sha256,'archive.container_sha256'),
+      member_path:privateKey(member.member_path,'archive.member_path'),member_sha256:hash(member.member_sha256,'archive.member_sha256')};
+  }
   return origin;
 }
 export function sourceId(source){
@@ -70,6 +75,7 @@ export function normalizeImport(manifest,questionFile={version:1,questions:[]}){
     if(raw.origin!=null){
       source.origin=urlOrigin(raw.origin);
       if(source.revision!=='sha256:'+source.sha256)fail('URL source revision must identify the actual PDF SHA-256');
+      if(source.origin.archive_member&&source.origin.archive_member.member_sha256!==source.sha256)fail('Archive member SHA-256 must identify the actual source PDF');
     }
     if(raw.extraction_complete!=null&&typeof raw.extraction_complete!=='boolean')fail('extraction_complete: expected boolean');
     if(source.extraction_complete&&source.expected_question_count==null)fail('Complete extraction requires expected_question_count');

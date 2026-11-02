@@ -37,6 +37,28 @@ test('URL identity ignores PDF page fragments and attribution edits but retains 
   assert.equal(sourceId({...f.source,origin:{...f.source.origin,attribution:'Corrected attribution'}}),id);
   assert.notEqual(sourceId({...f.source,revision:'sha256:'+'b'.repeat(64)}),id);
 });
+test('archive members keep their real container URL and exact member provenance in storage',async()=>{
+  const f=fixture();f.source.origin.url='https://archive.example.edu/course/materials.zip';
+  f.source.origin.archive_member={container_sha256:'c'.repeat(64),member_path:'course/PSet01.pdf',member_sha256:f.source.sha256};
+  f.question.source.origin.url=f.source.origin.url;
+  const second=structuredClone(f.source);second.sha256='b'.repeat(64);second.revision='sha256:'+second.sha256;
+  second.origin.archive_member={...second.origin.archive_member,member_path:'course/PSet02.pdf',member_sha256:second.sha256};
+  const secondQuestion=structuredClone(f.question);secondQuestion.source.revision=second.revision;
+  const normalized=normalizeImport({version:1,sources:[f.source,second]},{version:1,questions:[f.question,secondQuestion]}),database=new DatabaseSync(':memory:');
+  try{
+    await applyImport(database,normalized);
+    const origin=JSON.parse(database.prepare('SELECT origin_json FROM bank_source_origins WHERE source_id=?').get(sourceId(f.source)).origin_json);
+    assert.deepEqual(origin,f.source.origin);
+    assert.equal(database.prepare('SELECT count(*) n FROM book_sources').get().n,2);
+    assert.equal(database.prepare('SELECT count(*) n FROM bank_questions').get().n,2);
+    assert.notEqual(sourceId(second),sourceId(f.source));
+  }finally{database.close();}
+});
+test('archive provenance rejects unsafe member paths and unbound content hashes',()=>{
+  const changes=[member=>member.member_path='../outside.pdf',member=>member.member_path='/absolute.pdf',
+    member=>member.member_path='course\\outside.pdf',member=>member.container_sha256='invalid',member=>member.member_sha256='b'.repeat(64)];
+  for(const change of changes){const f=fixture();f.source.origin.archive_member={container_sha256:'c'.repeat(64),member_path:'course/PSet01.pdf',member_sha256:f.source.sha256};change(f.source.origin.archive_member);assert.throws(()=>normalizeImport(f.manifest,f.questions));}
+});
 test('URL sources reject ambiguous origins, authenticated URL forms and unbound content revisions',()=>{
   const changes=[f=>f.source.drive_id='invented-drive-id',f=>f.source.revision='guessed-date',
     f=>f.source.sha256='b'.repeat(64),f=>f.source.origin.attribution='',f=>delete f.source.origin.license_identifier,
