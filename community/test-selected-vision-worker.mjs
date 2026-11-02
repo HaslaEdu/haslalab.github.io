@@ -421,6 +421,21 @@ test('LAB_SCHEME_TWO_STAGE: the solution is analysed first, and the scheme is bu
   assert.match(calls[j].text,/<<ANALYSIS>>[^]*accepted_forms[^]*<<END>>/,'and goes beside the solution');
   assert.ok(sql.prepare("SELECT source FROM lab_schemes WHERE exam_key='ipho2025' AND task='T1'").all().some(r=>/#2:/.test(r.source)),'kept under its own key');
 }));
+test('an admin puts a purged page photo back from a saved copy: into R2, the page readable again',async()=>fixture(async({api,start,upload,sql,env})=>{
+  const a=(await start('deepseek')).data,sid=a.session.id;await upload(a.token);   // into D1: no bucket yet
+  const store=new Map();env.LAB_PAGES={async put(k,v,o){store.set(k,{v:new Uint8Array(v),o});},async get(k){const x=store.get(k);return x?{arrayBuffer:async()=>x.v.buffer}:null;},async delete(){}};
+  const pid=sql.prepare('SELECT id FROM lab_pages WHERE session_id=?').get(sid).id;
+  const send=(id,image,user=1)=>api(`/admin/lab/pages/${id}/photo`,{id:user,body:{image}});
+  const jpeg=Buffer.concat([Buffer.from([0xff,0xd8,0xff,0xe0]),Buffer.alloc(2000,7)]).toString('base64');
+  assert.equal((await send(pid,jpeg)).status,403,'admins only');
+  sql.prepare("UPDATE users SET role='admin' WHERE id=1").run();
+  assert.equal((await send(pid,jpeg)).data.restored,false,'a page that still has its photo is left alone');
+  sql.prepare("UPDATE lab_pages SET data=X'',purged_at=1 WHERE id=?").run(pid);
+  assert.equal((await send(pid,Buffer.alloc(3000,1).toString('base64'))).status,400,'only a JPEG or PNG');
+  const r=await send(pid,jpeg);assert.equal(r.data.restored,true);
+  const row=sql.prepare('SELECT r2_key,purged_at,mime FROM lab_pages WHERE id=?').get(pid);
+  assert.ok(row.r2_key&&store.has(row.r2_key)&&row.purged_at===null&&row.mime==='image/jpeg');
+}));
 test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
   env.LAB_ONLY_PROVIDER='deepseek';
   const a=(await start('gemini')).data,sid=a.session.id;

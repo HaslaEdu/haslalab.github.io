@@ -3684,6 +3684,22 @@ async function lab(p, m, body, me, req, env, url) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
     /* which AI finds the corners of a photographed A4 page best (sim/scanbench.html): every connected provider, with
        its cheapest vision model, gets the same photo; the admin then marks the true corners on it */
+    /* a purged page's photo put back from a saved copy (the audits kept 121 originals): into R2, the page live again */
+    const restore = p.match(/^\/api\/admin\/lab\/pages\/(\d+)\/photo$/);
+    if (restore && m === "POST") {
+      if (!env.LAB_PAGES) throw new HttpError(503, "r2_unavailable");
+      const page = await env.DB.prepare("SELECT id, session_id, mime, purged_at, length(data) n, r2_key FROM lab_pages WHERE id=?").bind(+restore[1]).first();
+      if (!page) throw new HttpError(404, "not_found");
+      if (page.purged_at == null && (page.n > 0 || page.r2_key)) return { restored: false, reason: "photo_present" };   // a purged page keeps its old r2_key
+      const img = String(body.image || "");
+      if (!/^[A-Za-z0-9+/=]{1000,6000000}$/.test(img)) bad("bad_image");
+      const bytes = Uint8Array.from(atob(img), c => c.charCodeAt(0));
+      if (!(bytes[0] === 0xff && bytes[1] === 0xd8) && !(bytes[0] === 0x89 && bytes[1] === 0x50)) bad("bad_image");
+      const mime = bytes[0] === 0xff ? "image/jpeg" : "image/png", key = `lab/${page.session_id}/restored-${page.id}.${mime.split("/")[1]}`;
+      await env.LAB_PAGES.put(key, bytes, { httpMetadata: { contentType: mime } });
+      await env.DB.prepare("UPDATE lab_pages SET r2_key=?, mime=?, data=X'', purged_at=NULL WHERE id=?").bind(key, mime, page.id).run();
+      return { restored: true, page_id: page.id, bytes: bytes.length };
+    }
     if (p === "/api/admin/lab/scanbench" && m === "POST") {
       const img = String(body.image || "");
       if (!/^[A-Za-z0-9+/=]{1000,2400000}$/.test(img)) bad("bad_image");
