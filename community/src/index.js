@@ -2011,7 +2011,7 @@ const labSchemeKey = (s, src, sx, env) => { const p = labProvider(s), th = labSr
    LAB_CURATED_SCHEMES off, or bench scheme.curated false, skips it. */
 /* the papers that have curated schemes (schemes/<exam>/ in the repository; test-curated-schemes.mjs keeps the two in step):
    no other paper's grading reaches out for one */
-const CURATED_SCHEMES = new Set(["ipho2025"]);
+const CURATED_SCHEMES = new Set(["ipho2011", "ipho2025"]);
 async function labCuratedScheme(env, s, task) {
   if (env.LAB_CURATED_SCHEMES === 'off' || labSrc(s)._curated === false || !CURATED_SCHEMES.has(String(s.exam_key))) return null;
   if (!/^[a-z]{3,8}\d{4}$/.test(String(s.exam_key)) || !LAB_TASK_RE.test(String(task))) return null;
