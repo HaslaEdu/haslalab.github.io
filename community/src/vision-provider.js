@@ -109,7 +109,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null,openaiApi=null,serviceTier=null}={}) {
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
@@ -138,7 +138,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const body=provider==='anthropic'?null:provider==='upstage'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_tokens:count,temperature:0}:
     provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_completion_tokens:count,
       /* none: GPT-5.4 takes function tools on chat completions only without reasoning */
-      ...(['none','minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{})}:
+      ...(['none','minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{}),...(serviceTier==='flex'?{service_tier:'flex'}:{})}:
     provider==='gemini'?{systemInstruction:{parts:[{text:rules}]},contents:[{role:'user',parts:content}],...(geminiToolList.length?{tools:geminiToolList}:{}),
     /* temperature is ignored by Gemini 3.6 Flash and newer (Google's changelog); it is sent only where it still counts */
     generationConfig:{responseMimeType:'application/json',responseSchema:schema,...(/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(model)?{temperature:Number(temperature)||0}:{}),maxOutputTokens:count,
@@ -183,12 +183,54 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     if(message.stop_reason==='refusal')fail(502,'vision_response_blocked');
     return (message.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
   };
+  /* OpenAI's Responses API (bench grade.api 'responses'): reasoning together with function tools, which chat completions
+     refuses for GPT-6 (tools only with reasoning_effort none). The reasoning items go back with the tool answers, encrypted
+     (store:false), so a tool round keeps the model's own thinking; JSON mode as on chat completions. */
+  const openaiResponses=async()=>{
+    const rurl=url.replace(/\/chat\/completions$/,'/responses');
+    const input=[{role:'user',content:content.map(p=>p.type==='image_url'?{type:'input_image',image_url:p.image_url.url,detail:p.image_url.detail||'high'}:
+      p.type==='file'?{type:'input_file',filename:p.file.filename,file_data:p.file.file_data}:{type:'input_text',text:p.text})}];
+    const rbody={model,instructions:jsonRules,input,text:{format:{type:'json_object'}},max_output_tokens:Math.max(count,16384),store:false,
+      ...(['none','low','medium','high','xhigh'].includes(level)?{reasoning:{effort:level}}:{}),...(serviceTier==='flex'?{service_tier:'flex'}:{}),
+      ...(useTools?{tools:tools.map(t=>({type:'function',name:t.function.name,description:t.function.description,parameters:t.function.parameters})),include:['reasoning.encrypted_content']}:{})};
+    const post=async()=>{const r=await fetchImpl(rurl,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+keyOf(env,provider)},
+        body:JSON.stringify(rbody),signal:controller.signal,redirect:'manual'});providerStatus=r.status;
+      if(!r.ok){providerCode=await providerErrorCode(r);providerMessage=r.providerMessage;fail(502,r.status===401||r.status===403?'vision_provider_auth':r.status===429?'vision_provider_rate_limited':
+        r.status===404?'vision_model_unavailable':[400,413,422].includes(r.status)?'vision_request_rejected':'vision_provider_failed');}
+      return boundedJSON(r);};
+    const meterOf=j=>{const u=j?.usage||{};return deepseekLabUsage({model:j?.model,usage:{prompt_tokens:u.input_tokens,completion_tokens:u.output_tokens,prompt_tokens_details:{cached_tokens:u.input_tokens_details?.cached_tokens??0}}},started);};
+    let j=await post(),meter=meterOf(j);
+    const add=(a,b)=>a==null||b==null?null:a+b;
+    for(let round=0;useTools&&round<=maxToolRounds;round++){
+      const calls=(j.output||[]).filter(o=>o?.type==='function_call').slice(0,16);
+      if(!calls.length)break;
+      rbody.input.push(...(j.output||[]).filter(o=>o?.type==='reasoning'||o?.type==='function_call'));
+      for(const call of calls){let args={};try{args=JSON.parse(call.arguments||'{}');}catch{}
+        let out;try{out=String(await onTool(call.name,args)).slice(0,2000);}catch{out='tool failed';}
+        toolLog.push({name:String(call.name||'').slice(0,40),args,out:out.slice(0,300)});
+        rbody.input.push({type:'function_call_output',call_id:call.call_id,output:out});}
+      if(round+1>=maxToolRounds)rbody.tool_choice='none';
+      j=await post();const more=meterOf(j);meter={...meter,in:add(meter.in,more.in),out:add(meter.out,more.out),cached:add(meter.cached,more.cached),usage_known:meter.usage_known&&more.usage_known};
+    }
+    const ended=Date.now();usage={...meter,provider,model,stage,ms:Math.max(0,ended-started),calls:1,input_tokens:meter.in,cached_tokens:meter.cached,
+      uncached_input_tokens:meter.in!=null&&meter.cached!=null?meter.in-meter.cached:null,output_tokens:meter.out,started_at:new Date(started).toISOString(),finished_at:new Date(ended).toISOString(),ok:true,
+      ...(serviceTier?{service_tier:j?.service_tier||serviceTier}:{})};
+    usage.pricing=priceModelTestStage(usage);
+    if(j?.status==='incomplete')fail(502,j?.incomplete_details?.reason==='content_filter'?'vision_response_blocked':'vision_response_truncated');
+    if(j?.status&&j.status!=='completed')fail(502,'vision_invalid_response');
+    const text=(j?.output||[]).filter(o=>o?.type==='message').flatMap(o=>o.content||[]).filter(c=>c?.type==='output_text').map(c=>c.text).join('');
+    if(!text.trim())fail(502,'vision_response_empty');
+    let raw;try{raw=JSON.parse(text.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));}catch{fail(502,'vision_invalid_response');}
+    if(!raw||typeof raw!=='object'||Array.isArray(raw))fail(502,'vision_invalid_response');
+    return{raw,provider,model:provider+':'+(meter.resolved_model||model),usage,...(toolLog.length?{tools:toolLog}:{})};
+  };
   const request=async()=>{
     if(provider==='anthropic'){const text=await claude();
       if(!text.trim())fail(502,'vision_response_empty');
       let raw;try{raw=JSON.parse(text.trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));}catch{fail(502,'vision_invalid_response');}
       if(!raw||typeof raw!=='object'||Array.isArray(raw))fail(502,'vision_invalid_response');
       return{raw,provider,model:provider+':'+model,usage};}
+    if(provider==='openai'&&openaiApi==='responses')return openaiResponses();
     /* «high demand» (503) and rate limits (429): up to two more tries, 2 s and 6 s later with jitter, as Google advises
        (busyRetries, e.g. [2000,6000]: queued work only; a visitor's own request fails at once) */
     const sendRetry=async payload=>{let r=await send(payload);

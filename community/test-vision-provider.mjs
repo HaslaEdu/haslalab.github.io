@@ -186,6 +186,28 @@ test('OpenAI: reasoning none is sent as asked (GPT-5.4 takes function tools only
  assert.equal(seen[0].reasoning_effort,'none');assert.equal(seen[0].tools.length,1);
 });
 
+test('OpenAI Responses API (bench): reasoning with tools, the reasoning items sent back with the tool answers, JSON from output_text; flex tier',async()=>{
+ const seen=[];let n=0;
+ const fetchImpl=async(url,init)=>{seen.push({url,body:JSON.parse(init.body)});
+  if(n++===0)return Response.json({model:'gpt-6-luna',status:'completed',output:[{type:'reasoning',id:'r1',encrypted_content:'enc'},{type:'function_call',call_id:'c1',name:'f',arguments:'{"a":1}'}],usage:{input_tokens:100,input_tokens_details:{cached_tokens:0},output_tokens:20}});
+  return Response.json({model:'gpt-6-luna',status:'completed',service_tier:'flex',output:[{type:'reasoning',id:'r2'},{type:'message',content:[{type:'output_text',text:'{"text":"ok"}'}]}],usage:{input_tokens:130,input_tokens_details:{cached_tokens:100},output_tokens:10}});};
+ const asked=[];
+ const out=await visionJSON({OPENAI_API_KEY:'o'},{provider:'openai',model:'gpt-6-luna',thinking:'low',openaiApi:'responses',serviceTier:'flex',fetchImpl,
+  parts:[{text:'x'},{mime:'image/png',data:'iVBORw0KGgo=',label:'p1'}],tools:[{type:'function',function:{name:'f',description:'d',parameters:{type:'object',properties:{}}}}],onTool:(name,args)=>{asked.push([name,args]);return 'seen';}});
+ assert.match(seen[0].url,/\/v1\/responses$/);
+ const b=seen[0].body;assert.deepEqual(b.reasoning,{effort:'low'});assert.equal(b.service_tier,'flex');assert.equal(b.store,false);
+ assert.deepEqual(b.text.format,{type:'json_object'});assert.equal(b.tools[0].name,'f');assert.deepEqual(b.include,['reasoning.encrypted_content']);
+ assert.deepEqual(b.input[0].content.map(c=>c.type),['input_text','input_text','input_image']);
+ assert.deepEqual(asked,[['f',{a:1}]]);
+ const back=seen[1].body.input.slice(1);
+ assert.deepEqual(back.map(x=>x.type),['reasoning','function_call','function_call_output'],'the turn goes back with its reasoning');
+ assert.equal(back[2].call_id,'c1');assert.equal(back[2].output,'seen');
+ assert.deepEqual(out.raw,{text:'ok'});assert.equal(out.usage.input_tokens,230);assert.equal(out.usage.cached_tokens,100);assert.equal(out.usage.output_tokens,30);
+ assert.equal(out.tools.length,1);
+ await assert.rejects(visionJSON({OPENAI_API_KEY:'o'},{provider:'openai',model:'gpt-6-luna',openaiApi:'responses',parts:[{text:'x'}],
+  fetchImpl:async()=>Response.json({status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output:[],usage:{input_tokens:1,output_tokens:1}})}),e=>e.code==='vision_response_truncated');
+});
+
 test('Upstage Solar goes through its OpenAI-compatible endpoint with max_tokens, and is a stage provider only',async()=>{
  const { visionProvider } = await import('./src/vision-provider.js');
  const seen=[];const fetchImpl=async(url,init)=>{seen.push({url,body:JSON.parse(init.body),auth:init.headers.Authorization});return Response.json({model:'solar-mini4',choices:[{finish_reason:'stop',message:{content:'{"text":"x"}'}}],usage:{prompt_tokens:10,completion_tokens:5}});};
