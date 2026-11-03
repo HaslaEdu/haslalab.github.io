@@ -7,7 +7,7 @@
 
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
-import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1480,7 +1480,9 @@ function labRoles(env, s, theory) {
       moderate: env.LAB_MODERATE_PROVIDER === "none" ? null : stage(env.LAB_MODERATE_PROVIDER, "gemini"), gradePdfs: env.LAB_GRADE_PDFS === "on",
       readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
       moderateBench: pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING), moderateScope: env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
-      pair: STAGE_PROVIDERS.includes(env.LAB_PAIR_PROVIDER) ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL || undefined, thinking: env.LAB_PAIR_THINKING || undefined } : undefined,
+      /* theory only unless LAB_PAIR_SCOPE "all": on experiments (IPhO 2013 E1/E2, 2017 E1, bench 2026-11-03) the pair's
+         moderation lowered marks the audits give in full, and DeepSeek alone came closer */
+      pair: STAGE_PROVIDERS.includes(env.LAB_PAIR_PROVIDER) && (theory || env.LAB_PAIR_SCOPE === "all") ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL || undefined, thinking: env.LAB_PAIR_THINKING || undefined } : undefined,
       readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
@@ -1492,7 +1494,7 @@ const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI
   ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
-  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined, _schemeCheck: typeof bench?.check === 'boolean' ? bench.check : undefined, _media: ['high', 'medium', 'low'].includes(bench?.media) ? bench.media : undefined, _boxes: typeof bench?.boxes === 'boolean' ? bench.boxes : undefined, _api: bench?.api === 'responses' ? 'responses' : undefined, _tier: bench?.tier === 'flex' ? 'flex' : undefined }) };
+  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined, _schemeCheck: typeof bench?.check === 'boolean' ? bench.check : undefined, _media: ['high', 'medium', 'low'].includes(bench?.media) ? bench.media : undefined, _boxes: typeof bench?.boxes === 'boolean' ? bench.boxes : undefined, _api: bench?.api === 'responses' ? 'responses' : undefined, _endpoint: /^projects\/\d+\/locations\/[\w-]+\/endpoints\/\d+$/.test(bench?.endpoint || '') ? bench.endpoint : undefined, _tier: bench?.tier === 'flex' ? 'flex' : undefined }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -1777,7 +1779,9 @@ async function labVision(env, s, parts, schema, max, m, step, temperature = 0, e
   /* _model/_thinking exist only on the admin model bench's copies of a sitting (labAs with a bench choice) */
   const model = benchModel(provider, src._model) || VISION_MODELS[provider], thinking = typeof src._thinking === 'string' ? src._thinking : undefined;
   /* bench only: OpenAI's Responses API and its flex tier (half price, slower) */
-  const openai = provider === 'openai' ? { openaiApi: src._api === 'responses' ? 'responses' : null, serviceTier: src._tier === 'flex' ? 'flex' : null } : {};
+  const openai = provider === 'openai' ? { openaiApi: src._api === 'responses' ? 'responses' : null, serviceTier: src._tier === 'flex' ? 'flex' : null }
+    /* bench read.endpoint: a page reader tuned on Vertex AI, through GCP_TUNED_HOST (the endpoint's API host) */
+    : provider === 'gemini' && src._endpoint ? { geminiUrl: `https://${String(env.GCP_TUNED_HOST || 'aiplatform.googleapis.com').trim()}/v1/${src._endpoint}:generateContent`, geminiBearer: await gcpToken(env) } : {};
   const sequence=[];
   for(const part of parts){
     if(part.text){sequence.push({text:part.text});continue;}
@@ -1957,10 +1961,12 @@ async function labScheme(env, s, task, m, strict = false) {
   });
   const reviewed = sc => sc && !sc.unscored && Array.isArray(sc.items) && sc.items.length && (typeof labSrc(s)._schemeCheck === "boolean" ? labSrc(s)._schemeCheck : env.LAB_SCHEME_CHECK === "on")
     ? labSchemeReviewed(env, s, task, key, sc, m).catch(e => { console.error("lab scheme review", e?.code || e?.message); return sc; }) : sc;
-  if (await cached()) return build().then(reviewed);
+  /* on every load, not stored: a window that is only the official example's reading of its own graph (ownDataWindows) */
+  const own = sc => sc && Array.isArray(sc.items) ? ownDataWindows(sc).scheme : sc;
+  if (await cached()) return build().then(reviewed).then(own);
   const turn = labSchemeBuilds.then(build);
   labSchemeBuilds = turn.catch(() => {});
-  return turn.then(reviewed);
+  return turn.then(reviewed).then(own);
 }
 /* the automatic scheme review (lab-scheme-items.js): code checks, then one call that compares the scheme with the official
    solution and proposes corrections, which code applies; kept beside the scheme as «review:v1:<key>», once per paper */
@@ -2349,6 +2355,7 @@ function labItemGroups(scheme, max = 30) {
   return out;
 }
 function labScore(scheme, raw, pages, opts = {}) {
+  const readCache = new Map(), readOf = p => { if (!readCache.has(p)) { let v = []; try { v = (p.read ? JSON.parse(p.read).items || [] : []).filter(i => !i.crossed_out); } catch {} readCache.set(p, v); } return readCache.get(p); };
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
   const items = scheme.items.map(it => {
@@ -2359,7 +2366,7 @@ function labScore(scheme, raw, pages, opts = {}) {
     const pg = byNo.get(g.page);
     if (!pg) return zero("R9");                                                   // no page to point to
     res.page = pg.no; res.sheet = pg.kind;
-    const read = pg.read ? JSON.parse(pg.read) : {items:[]},live=(read.items||[]).filter(i=>!i.crossed_out);
+    const read = pg.read ? JSON.parse(pg.read) : {items:[]},live=readOf(pg).slice();
     const visual=g.visual;
     if(pg._visionSupplied&&visual&&validVisualBox(visual.box)&&String(visual.description||'').trim().length>=8&&['value','graph','table','diagram'].includes(visual.kind)) {
       live.unshift({...visual,label:it.id,text:visual.description,crossed_out:false});
@@ -2368,9 +2375,26 @@ function labScore(scheme, raw, pages, opts = {}) {
     /* the table or graph of this item as read (by its label, else the first of its kind), and how many measurements it needs (R11) */
     /* the rest of the task's pages, for evidence the grader cited on the wrong page (a graph on p9 cited as p8, a value
        written on a working sheet beside the answer sheet): its own label anywhere, else the first of its kind on the cited page */
-    const others = pages.filter(p => p !== pg).flatMap(p => { try { return (p.read ? JSON.parse(p.read).items || [] : []).filter(i => !i.crossed_out); } catch { return []; } });
-    const pick = kind => { const ok = i => i.kind === kind && (kind !== "graph" || i.graph);
-      return live.find(i => ok(i) && i.label === it.id) || others.find(i => ok(i) && i.label === it.id) || live.find(ok); };
+    const others = pages.filter(p => p !== pg).flatMap(readOf);
+    const ok = kind => i => i.kind === kind && (kind !== "graph" || i.graph);
+    /* the item's own table or graph: by its label, else the one on the cited page that fits the item best (the 33 g table
+       of three on the page), else one on another page of the task: labelled with the item's question, or with no item's
+       label at all, nearest after the cited page (a graph drawn on the page after its table, cited by the table's page) */
+    const fitBest = list => list.reduce((b, i) => !b || fitsItem(it.what, i.text) > fitsItem(it.what, b.text) ? i : b, null);
+    const elsewhere = kind => {
+      const cand = pages.filter(p => p !== pg).flatMap(p => readOf(p).filter(ok(kind)).map(i => ({ i, d: p.no > pg.no ? p.no - pg.no : pg.no - p.no + .5 })));
+      const own = cand.filter(c => labelNames(c.i.label, it.id)), loose = cand.filter(c => !scheme.items.some(x => labelNames(c.i.label, x.id)));
+      return [...own.sort((a, b) => a.d - b.d), ...loose.sort((a, b) => a.d - b.d)][0]?.i || null; };
+    const pick = kind => live.find(i => ok(kind)(i) && i.label === it.id) || others.find(i => ok(kind)(i) && i.label === it.id)
+      || fitBest(live.filter(i => ok(kind)(i) && !i.box)) || live.find(ok(kind)) || elsewhere(kind);
+    /* how many measurements the item's table or graph holds: a table with its rows continued on the next pages (whatever
+       label each part was read under) or its parts under one label; the grader's own count from the photo where higher */
+    const pageOf = i => pages.find(p => readOf(p).includes(i))?.no ?? pg.no;
+    const measured = (kind, m) => { if (!m) return 0;
+      const readM = m.box ? fitBest(live.filter(i => ok(kind)(i) && !i.box)) : m;
+      const own = x => !x ? 0 : kind === "graph" ? +(x.graph || {}).n_points || 0 : Math.max(+x.rows || 0, continuedRows(x, pageOf(x), pages.map(p => ({ no: p.no, items: readOf(p) }))),
+        x.label ? [...live, ...others].filter(i => i.kind === "table" && i.label === x.label).reduce((a, i) => a + (+i.rows || 0), 0) : 0);
+      return Math.max(own(m), own(readM)); };
     const nmin = it.n_min > 0 ? it.n_min : N_MIN[it.n_class] || null;
     /* R1: a final answer off the answer sheet counts only where the task's answer sheets give none for its question (an
        empty box or no answer sheet at all, as IPhO, APhO and EuPhO mark); the answer sheet governs where it has one */
@@ -2408,7 +2432,8 @@ function labScore(scheme, raw, pages, opts = {}) {
       const saw = !!pg._visionSupplied;
       /* the number of plotted points as read decides (R11), unless the grader, looking at the photo, counted them met: a
          reader that misses faint points on a hand-drawn graph zeroed graphs that hold enough of them (bench, 2026-11-02) */
-      const checks = weighChecks(it), countOk = c => (seen.n_points || 0) >= (c.n || nmin || 1) || saw && met.has("points_min");
+      const nPts = Math.max(seen.n_points || 0, measured("graph", gr));
+      const checks = weighChecks(it), countOk = c => nPts >= (c.n || nmin || 1) || saw && met.has("points_min");
       /* a grader that saw the photo and marked the graph without naming the checks it saw (checks_met empty) is taken at
          its mark, less a point count the reading finds short: IPhO 2013 E2 2.1b and 2.2b, drawn and given full marks, came
          out at 0 under R7 */
@@ -2425,8 +2450,7 @@ function labScore(scheme, raw, pages, opts = {}) {
       if (!tb) return zero("R9");
       /* a table that runs over several pages is read as one table per page under the same label: its rows add up
          (bench: 33 g data, rows 1-8 on one page and 9-20 on the next, failed «20 rows» with 8) */
-      const parts = tb.label ? [...live, ...others].filter(i => i.kind === "table" && i.label === tb.label) : [tb];
-      const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), rows = Math.max(tb.rows || 0, parts.reduce((a, i) => a + (+i.rows || 0), 0));
+      const met = new Set(Array.isArray(g.checks_met) ? g.checks_met : []), rows = measured("table", tb);
       const sawTable = !!pg._visionSupplied;
       const checks = weighChecks(it), rowsOk = c => rows >= (c.n || nmin || 1) || sawTable && met.has("rows_min");
       /* as for graphs: a table marked from the photo with no checks named keeps the grader's mark, less a short row count
@@ -2446,12 +2470,12 @@ function labScore(scheme, raw, pages, opts = {}) {
     }
     /* a table or graph with fewer measurements than it needs, where the scheme has no count check to take marks from: half (R11) */
     if (nmin && (it.type === "graph" || it.type === "table") && !(it.checks || []).some(c => c.check === "points_min" || c.check === "rows_min")) {
-      const m = it.type === "graph" ? pick("graph") : pick("table"), n = m ? (it.type === "graph" ? m.graph.n_points : m.rows) || 0 : 0;
+      const m = pick(it.type), n = measured(it.type, m);
       if (m && n < nmin) { res.got = res.got / 2; rules.add("R11"); }
     }
     const counts = (it.checks || []).filter(c => c.check === "points_min" || c.check === "rows_min");
     if (counts.length) {
-      const m = it.type === "graph" ? pick("graph") : pick("table"), n = m ? (it.type === "graph" ? (m.graph || {}).n_points : m.rows) || 0 : 0;
+      const m = pick(it.type), n = measured(it.type, m);
       const need = Math.max(...counts.map(c => c.n || nmin || 0));
       if (m && n < need) rules.add("R11");
     }
@@ -2713,6 +2737,9 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
       budget-=size;p._visionSupplied=true;continue;}
     parts.push(photo);budget-=size;p._visionSupplied=true;
   }
+  /* a table whose rows go on over the next page was read as two tables (8 and 12 rows); the grader is told they are one */
+  const continued = tableContinuations(mine.map(p => { try { return { no: p.no, items: (p.read ? JSON.parse(p.read).items || [] : []).filter(i => !i.crossed_out) }; } catch { return { no: p.no, items: [] }; } }));
+  if (continued.length) parts.push({ text: "[Tables continued over pages, found by code from the row numbers]\n" + continued.join("\n") });
   parts.push({text:'For evidence you can directly see in a supplied original student image, including a graph or handwritten arrow missing from OCR/items, provide visual:{kind,box:[ymin,xmin,ymax,xmax] in 0..1000,description,value,graph,rows,columns}. Graph fields describe observed checks and counts, not an inferred correct answer. Give the actual page and label. This allows visual evidence to be checked without treating an empty transcription as a blank graphical answer. Never claim visual evidence on a typed-only page.'});
   await roles?.trace?.('grade-call');
   /* the grader's tools (grade-tools.js, LAB_GRADE_TOOLS on, bench grade.tools): it checks formulas, numbers and what is
@@ -3260,6 +3287,13 @@ async function labBench(env, s, job) {
       const t = await gcpToken(env);
       if (!/^gs:\/\//.test(spec.train || '')) throw new Error('bad_train_uri');
       out = await startTuning(env, t, { baseModel: String(spec.baseModel || 'gemini-3.1-flash-lite'), train: spec.train, validation: spec.validation || null, epochs: spec.epochs, name: spec.name });
+    } else if (spec.stage === 'tune-ping') {                                       // which API host serves a tuned endpoint
+      const t = await gcpToken(env), ep = String(spec.endpoint || '');
+      if (!/^projects\/\d+\/locations\/[\w-]+\/endpoints\/\d+$/.test(ep)) throw new Error('bad_endpoint');
+      const loc = ep.split('/')[3], hosts = [...new Set(['aiplatform.googleapis.com', `${loc}-aiplatform.googleapis.com`, `aiplatform.${loc}.rep.googleapis.com`, ...(spec.hosts || [])])].filter(h => /^[a-z0-9.-]+\.googleapis\.com$/.test(h));
+      out = { hosts: {} };
+      for (const h of hosts) { try { const r = await fetch(`https://${h}/v1/${ep}:generateContent`, { method: 'POST', headers: { Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'Reply with the word ok.' }] }] }), signal: AbortSignal.timeout(60000) });
+        out.hosts[h] = { status: r.status, body: (await r.text()).slice(0, 200) }; } catch (e) { out.hosts[h] = { error: String(e?.message || e).slice(0, 120) }; } }
     } else if (spec.stage === 'tune-status') {
       out = await tuningStatus(env, await gcpToken(env), spec.job);
     } else
@@ -3302,7 +3336,7 @@ async function labBench(env, s, job) {
     } else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles, confusions: typeof spec.read.confusions === 'boolean' ? spec.read.confusions : undefined, media: spec.read.media, boxes: typeof spec.read.boxes === 'boolean' ? spec.read.boxes : undefined }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
+      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, endpoint: spec.read.endpoint, temperature: spec.read.temperature, tiles: spec.read.tiles, confusions: typeof spec.read.confusions === 'boolean' ? spec.read.confusions : undefined, media: spec.read.media, boxes: typeof spec.read.boxes === 'boolean' ? spec.read.boxes : undefined }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
         proof: spec.proof?.provider || null, proofBench: spec.proof ? { model: spec.proof.model, thinking: spec.proof.thinking } : undefined };
       /* read.requality: the page encoded again at that JPEG quality first (would a smaller upload read as well?) */
       const again = Number.isFinite(spec.read.requality) ? reencodeJpeg(bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), spec.read.requality) : null;

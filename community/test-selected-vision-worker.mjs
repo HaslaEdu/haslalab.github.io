@@ -693,6 +693,32 @@ test('experiments: a table read as two pages under one label counts all its rows
   assert.match(detail,/"id":"G"[^}]*"got":1[,}]/,'the fitted line and the eight points the grader saw in the photo, though the reader counted 4');
   assert.match(detail,/"id":"H"[^}]*"got":0\.7[,}]/,'checks named in the grader\'s own words match none of the scheme\'s: the mark it gave from the photo stands');
 }));
+test('experiments: of three tables on a page the one with the item\'s concentration is counted, and a value found from the candidate\'s own graph is the grader\'s to judge, not the example\'s window',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','experiment') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:1.1,items:[
+    {id:'A2.b',points:0.5,type:'table',sheet:'answer',what:'Table 1 of C0 = 28 g/150 mL: # data >= 20',checks:[{check:'rows_min',n:20,points:0.5}]},
+    {id:'A2.c',points:0.5,type:'table',sheet:'answer',what:'Table 1 of C0 = 33 g/150 mL: # data >= 20',checks:[{check:'rows_min',n:20,points:0.5}]},
+    {id:'A4.a',points:0.1,type:'value',sheet:'answer',unit:'cm',full_min:1.4,full_max:1.6,ref:'1.5',tol:'interval',role:'result',what:'h = (1.5 ± 0.1) cm. If h is correctly determined from graph A3: -0; if not: -0.1.'}]}),'fixture',Math.floor(Date.now()/1000));
+  replies({items:[{id:'A2.b',found:true,page:1,score:0.5,rules:[],checks_met:[],note:''},{id:'A2.c',found:true,page:1,score:0.5,rules:[],checks_met:[],note:''},
+    {id:'A4.a',found:true,page:1,score:0.1,value:2.81,unit:'cm',rules:[],note:'h read off the candidate\'s own graph'}],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  const items=pageReading.items;
+  pageReading.items=[{label:'Table 1',kind:'table',text:'Table 1 of C0 = 28 g / 150 mL\n1 | 0.3\n20 | 0.9',rows:20,columns:['i','d (cm)'],crossed_out:false},
+    {label:'Table 1 (second)',kind:'table',text:'Table 1 of C0 = 33 g / 150 mL\n1 | 0.3\n8 | 0.5',rows:8,columns:['i','d (cm)'],crossed_out:false},
+    {label:'A4',kind:'value',text:'h = 2.81 cm',value:2.81,crossed_out:false}];
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.items=items;}
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"A2\.b"[^}]*"got":0\.5[,}]/,'the 28 g table: 20 rows');
+  assert.match(detail,/"id":"A2\.c"[^}]*"got":0[,}]/,'the 33 g table holds 8 rows, not the 20 of the first table on the page');
+  assert.match(detail,/"id":"A4\.a"[^}]*"got":0\.1[,}]/,'h from the candidate\'s own graph, outside the example\'s 1.4-1.6 cm');
+}));
+
 test('double grading: an item the two gradings mark differently is decided once more from the photos, and the scheme review fixes a one-point window before grading',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies,review})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
