@@ -1,0 +1,226 @@
+{
+  "status": "PRIVATE_SOURCE_BOUND_CONTRACT_READY",
+  "original_source_sha256": "fb90239d8da3dea3dcfe104551243f444802632a74a47a139374013aa16080f1",
+  "full_pdf_sha256": "3a27a3561c779bb9fbc149387da370dfa9db10173dd9b24b055842ce62fa3b62",
+  "full_pdf_bytes": 52262121,
+  "contract": {
+    "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\source-bound-native-design-contract.json",
+    "sha256": "c2235b05d93ddd9689563b8904f396ce2b814265ff7b464ce802e69abcdd382b",
+    "bytes": 2979064
+  },
+  "artifact_map": {
+    "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\actual-native-design-artifact-map.json",
+    "sha256": "d554a9cf376f03f8885aaa21d7c9c973848874b6050d0519113d20eb3ff8b528",
+    "actual_artifacts": 123
+  },
+  "verification": {
+    "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\actual-native-design-contract-verification.json",
+    "sha256": "48c6636173b085167e81d69ea613fa1146ad6364894a89959191ccdeb086a035",
+    "checks": 75,
+    "semantic_mutations_rejected": 69,
+    "actual_byte_mutations_rejected": 3,
+    "mandatory_actual_resolver": true,
+    "source_path_is_never_trusted": true
+  },
+  "integration": {
+    "module": "izho-2017-native-design-programs.cjs",
+    "function": "validateEdition(bundle, actualItem, {readArtifact})",
+    "ledger_field": "source_native_contract",
+    "ledger_shape": {
+      "path": "actual frozen contract path",
+      "sha256": "actual contract SHA",
+      "artifact_bindings": [
+        {
+          "id": "same contract artifact ID",
+          "path": "actual frozen artifact path",
+          "sha256": "same exact artifact SHA",
+          "bytes": "same exact bytes"
+        }
+      ]
+    },
+    "resolver": "Caller must resolve actual ledger artifact_bindings by ID/SHA/byte count and read actual frozen bytes. Never dereference contract source_path.",
+    "mutation_module": "izho-2017-native-design-mutations.cjs",
+    "mutation_export": "69 [name, mutation] pairs to apply to the actual parsed ledger bundle; no copied fixture.",
+    "lambda_phase_module": "Existing izho-2017-native-lambda-program.cjs stays separate and unchanged.",
+    "required_runtime_siblings": [
+      "izho-2017-native-design-programs.cjs",
+      "izho-2017-native-design-pins.cjs"
+    ]
+  },
+  "page06": {
+    "proof_sha256": "0f751352301d8ec901bcc1c06180cce70490e3f6d6eb328aa8cdae290c475b25",
+    "native_CID_groups": [
+      9,
+      6
+    ]
+  },
+  "page07": {
+    "proof_sha256": "685e9c601a8e1350244b39dc775a94e57a6b366c484ef6e092e0b95094033db4",
+    "native_CID_groups": [
+      4,
+      24,
+      4,
+      14,
+      4,
+      14
+    ],
+    "outside_three_source_rows_changed_pixels": 0,
+    "other13_accepted_proof_SHA_unchanged": true
+  },
+  "actual_unique_negative_PDFs": [
+    {
+      "id": "bad-page06-order",
+      "sha256": "88e033658373013e16df058d55bbeb0693fa633376f5128ea1ca626a23e31aef",
+      "bytes": 2778967
+    },
+    {
+      "id": "bad-page04-counter-drift",
+      "sha256": "35111f908187e6de1cef647d4b5168c774270ef634df2daafdc09f63ca9589e7",
+      "bytes": 2806868
+    },
+    {
+      "id": "bad-page04-counter-covered",
+      "sha256": "85d218caa57523ff0d7759db09e75b1ac10da2caebaae0a97f1674c200fff823",
+      "bytes": 2807092
+    },
+    {
+      "id": "bad-page11-lambda-covered",
+      "sha256": "d5453be356d46f20b4b35a7c500f1f8397461aed0f2eb79d512c109815d4330b",
+      "bytes": 2637595
+    },
+    {
+      "id": "bad-page11-root-covered",
+      "sha256": "85a9d77fa2e1e92587d3249d5ae182a24ed22cf0a1f4c1c326f7b59949c4909f",
+      "bytes": 2637596
+    },
+    {
+      "id": "bad-page07-order",
+      "sha256": "949b9ec26d254bf4fec971f6a9de8e419c6ab746a6d08d19092fe1dc621f2521",
+      "bytes": 1988664
+    },
+    {
+      "id": "bad-page07-one-fraction-rule",
+      "sha256": "52d884e96ea56a91bed07ca9d4571d20c0fbbaff4c762ca65a07ec558f51b037",
+      "bytes": 12500291
+    }
+  ],
+  "all14_current_proof_hashes_verified": true,
+  "source_guard_unchanged": true,
+  "no_PDF_plan_engine_repo_upload_global_state_changes": true,
+  "files": [
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\actual-native-design-artifact-map.json",
+      "sha256": "d554a9cf376f03f8885aaa21d7c9c973848874b6050d0519113d20eb3ff8b528",
+      "bytes": 45087
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\actual-native-design-contract-verification.json",
+      "sha256": "48c6636173b085167e81d69ea613fa1146ad6364894a89959191ccdeb086a035",
+      "bytes": 9368
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\actual-source-program-extraction.json",
+      "sha256": "b2ad0bd78dcf5aa26490676522f04bf7e2ace9e4121c833bbd36883a76a6bf60",
+      "bytes": 2262527
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\extract-izho2017-native-design-programs.py",
+      "sha256": "0bf49bc75f932d8f6fa2dab5178f616e5644de4ddc725188620020a02975cbab",
+      "bytes": 10880
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\izho-2017-native-design-mutations.cjs",
+      "sha256": "0fa002ba9325f8ec7b63c27ec1e14d22e136540c9b79763845a9ce7645e90829",
+      "bytes": 8469
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\izho-2017-native-design-pins.cjs",
+      "sha256": "bcdb38fafb2a28ab95a8e596a9099eae183a6643a311e8277e256edd18fa3dd6",
+      "bytes": 7943
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\izho-2017-native-design-programs.cjs",
+      "sha256": "4ca0ce1fe1639c5b4a371102cb4a942bfb701a081864c8263e071892fa3d47f5",
+      "bytes": 13307
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\izho-2017-native-lambda-program.cjs",
+      "sha256": "eddeb52ef48d17be052f79d4a8df45cbaeed143a024b644bd80b038a0895b221",
+      "bytes": 5122
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\native-design-integration-snippet.cjs",
+      "sha256": "59dab8f26ac6cd465fc724c1a9d6137e96345e55df3cc92d10cfed2ea7fc5623",
+      "bytes": 1125
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page06-expression0-actual-original-program.bin",
+      "sha256": "720e490fdfc679a3e3c4a0913af45305a8754906d42d4184bccde2850a67e50e",
+      "bytes": 99938
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page06-expression1-actual-original-program.bin",
+      "sha256": "145d5fbcdc2aabcca4e5e9dbd86947c01dc50a7e3ad1bf9660dad1ea1e6df1b9",
+      "bytes": 99939
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page07-expression0-actual-original-program.bin",
+      "sha256": "d181827aa018a8da519c7353e37e4c195a8ed51d410bdac1f687139db64a7e77",
+      "bytes": 121494
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page07-expression1-actual-original-program.bin",
+      "sha256": "ddd5f2f0149cb70d03743199840853e0ff32fe208b47aaddf470fdad1dee41d0",
+      "bytes": 121528
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page07-expression2-actual-original-program.bin",
+      "sha256": "4e3362631f097d17baa40c121f71269cf1654d22f69ffed599cf999a8cfa3e7d",
+      "bytes": 121494
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page07-expression3-actual-original-program.bin",
+      "sha256": "ef052d8618a865b155135749ebdd5513f76a37f5878b65d2c010f41664ce8216",
+      "bytes": 121516
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page07-expression4-actual-original-program.bin",
+      "sha256": "bd73db7491f8e0dfbbf6bae8446aae833f1536603dacc391ac5788d8847f24f0",
+      "bytes": 121494
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\page07-expression5-actual-original-program.bin",
+      "sha256": "5650cfee9060244030d19ad18d05f48959272172ae398d25b6451c30594746c9",
+      "bytes": 121516
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\prepare-izho2017-native-design-contract.cjs",
+      "sha256": "1dcdb3a8706370ec1453a5a1dbbe2a94b826fd554f1357063060620bc0627cc2",
+      "bytes": 9332
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\source-bound-native-design-contract.json",
+      "sha256": "c2235b05d93ddd9689563b8904f396ce2b814265ff7b464ce802e69abcdd382b",
+      "bytes": 2979064
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\test-izho-2017-native-lambda-program.cjs",
+      "sha256": "904ab30db7cfb37067ca7f810f264366179ce8b52dafb5a5befdba8dd1dd9ae0",
+      "bytes": 3588
+    },
+    {
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\publication-contracts\\verify-izho2017-actual-native-design-contract.cjs",
+      "sha256": "09a3bc657dda509ced9938e418738130d4d9e03197a68c2d218c4bd16ca8d740",
+      "bytes": 3178
+    }
+  ],
+  "root_owns_final_freeze_and_publication": true,
+  "separate_existing_lambda_phase_regression": {
+    "existing_helper_input_and_test_unchanged": true,
+    "tests": 25,
+    "passed": 25,
+    "failed": 0,
+    "private_runner_environment": "HASLA2017_PRIVATE_PROOF_INPUT=publication-contracts/private-lambda-input.json",
+    "public_runner": "Root must bind the actual staged public ledger; private input is not a public fixture."
+  }
+}

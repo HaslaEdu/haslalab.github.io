@@ -1,0 +1,12 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'..'),read=f=>JSON.parse(fs.readFileSync(path.join(root,f),'utf8'));
+const item=read('tools/original_style_publication.json').find(r=>r.file==='IZhO_2017_TS_KO.pdf');assert.ok(item);
+const record=read(item.qa),contract=record.source_native_contract;assert.ok(contract);const bundle=read(contract.path),bindings=new Map(contract.artifact_bindings.map(a=>[a.id,a]));
+assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,contract.path))).digest('hex'),contract.sha256);
+const readArtifact=a=>{const b=bindings.get(a.id);assert.ok(b);assert.equal(b.sha256,a.sha256);assert.equal(b.bytes,a.bytes);assert.ok(b.path.startsWith(record.authoring_snapshotroot+'/'));const target=path.resolve(root,b.path);assert.ok(target.startsWith(root+path.sep));return fs.readFileSync(target);};
+const validate=require('./helpers/izho-2017-native-design-programs.cjs'),mutations=require('./helpers/izho-2017-native-design-mutations.cjs');
+test('Actual public source2017 native programmes preserve original CID/font/point/clip/rule and conjunction order',()=>validate.validateEdition(bundle,item,{readArtifact}));
+for(const [name,change]of mutations)test(`reject ${name}`,()=>{const b=structuredClone(bundle);change(b);assert.throws(()=>validate.validateEdition(b,item,{readArtifact}),name);});
+test('Reject a detached source2017 fixture without the actual frozen ledger resolver',()=>assert.throws(()=>validate.validateEdition(bundle,item),/actual frozen publication-ledger/));
+for(const id of ['proof-07','original-program-07-1','bad-page07-one-fraction-rule'])test(`reject actual staged byte mutation of ${id}`,()=>assert.throws(()=>validate.validateEdition(bundle,item,{readArtifact:a=>{const raw=readArtifact(a);if(a.id===id)raw[Math.floor(raw.length/2)]^=1;return raw;}})));
+test('Historical private source_path cannot redirect actual immutable ledger artifact reads',()=>{const b=structuredClone(bundle);for(const a of b.artifacts)a.source_path='X:/untrusted/does-not-exist';assert.equal(validate.validateEdition(b,item,{readArtifact}),true);});

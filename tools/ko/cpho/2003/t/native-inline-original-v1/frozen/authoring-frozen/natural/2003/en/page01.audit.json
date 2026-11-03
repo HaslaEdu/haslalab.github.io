@@ -1,0 +1,807 @@
+{
+  "year": 2003,
+  "language": "en",
+  "page": 1,
+  "output": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\natural\\2003\\en\\page01.pdf",
+  "output_sha256": "b6f31765142786957301be9df2b7baa57ecbeb4da17c8274b9e1d63a692d7d9f",
+  "immutable_input": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\native-baseline\\en\\page01-source-indexed.pdf",
+  "immutable_input_sha256": "7adae3aa1b99d3385248662bc1dd1ba4f3283ecdfdf4ad4199bf5e47dcb2db6f",
+  "changed_pixels_outside_old_and_new_text_ink": 0,
+  "old_text_outline_uses": 1575,
+  "new_text_outline_uses": 1574,
+  "outside_bbox": null,
+  "original_physical_native_ink": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\native-baseline\\en\\page01-source-indexed.pdf",
+    "source_page": 1,
+    "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\natural\\2003\\en\\page01.pdf",
+    "final_page": 1,
+    "source_sha256": "7adae3aa1b99d3385248662bc1dd1ba4f3283ecdfdf4ad4199bf5e47dcb2db6f",
+    "output_sha256": "b6f31765142786957301be9df2b7baa57ecbeb4da17c8274b9e1d63a692d7d9f",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 107,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 107,
+      "expected_signature_count": 107,
+      "matched_outline_uses": 107,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 10405,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 0,
+    "passed": true
+  },
+  "native_graphics_motion_audit": {
+    "method": "Original raw-token non-text controls; complete mathematical Form/clip/path membership and actual painted ink only.",
+    "selected_native_math_groups": [],
+    "changed_actual_inline_math_graphical_pixels": 0,
+    "changed_nonselected_native_graphical_pixels": 0,
+    "original_native_math_actual_graphics_pixels": 0,
+    "new_native_math_actual_graphics_pixels": 0
+  },
+  "original_native_expression_relative_geometry": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\native-baseline\\en\\page01-source-indexed.pdf",
+    "source_page": 1,
+    "source_sha256": "7adae3aa1b99d3385248662bc1dd1ba4f3283ecdfdf4ad4199bf5e47dcb2db6f",
+    "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\natural\\2003\\en\\page01.pdf",
+    "final_page": 1,
+    "final_sha256": "b6f31765142786957301be9df2b7baa57ecbeb4da17c8274b9e1d63a692d7d9f",
+    "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+    "tolerance_pt": 0.001,
+    "source_physical_glyphs": 107,
+    "matched_physical_glyphs": 107,
+    "glyph_signature_or_position_errors": [],
+    "script_base_pairs": [
+      {
+        "script": {
+          "c": "2",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            76.7040023803711,
+            259.3399658203125
+          ]
+        },
+        "base": {
+          "c": "x",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            72.26399993896484,
+            262.8499755859375
+          ]
+        },
+        "script_dx": 0.0,
+        "base_dx": 0.0,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "2",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            77.06400299072266,
+            271.969970703125
+          ]
+        },
+        "base": {
+          "c": "x",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            72.26399993896484,
+            262.8499755859375
+          ]
+        },
+        "script_dx": 0.0,
+        "base_dx": 0.0,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "2",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            99.74400329589844,
+            259.3399658203125
+          ]
+        },
+        "base": {
+          "c": "y",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            95.30400085449219,
+            262.8499755859375
+          ]
+        },
+        "script_dx": 0.0,
+        "base_dx": 0.0,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "2",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            100.0999984741211,
+            271.969970703125
+          ]
+        },
+        "base": {
+          "c": "y",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            95.30400085449219,
+            262.8499755859375
+          ]
+        },
+        "script_dx": 0.0,
+        "base_dx": 0.0,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "E",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            220.72999572753906,
+            347.80999755859375
+          ]
+        },
+        "base": {
+          "c": "m",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            213.41000366210938,
+            346.8499755859375
+          ]
+        },
+        "script_dx": 14.373977661132812,
+        "base_dx": 14.373977661132812,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "0",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            79.46399688720703,
+            458.5899963378906
+          ]
+        },
+        "base": {
+          "c": "Ω",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            72.02400207519531,
+            457.6299743652344
+          ]
+        },
+        "script_dx": 0.0,
+        "base_dx": 0.0,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "0",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            180.25999450683594,
+            458.5899963378906
+          ]
+        },
+        "base": {
+          "c": "I",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            177.13999938964844,
+            457.6299743652344
+          ]
+        },
+        "script_dx": 94.41444396972656,
+        "base_dx": 94.41444396972656,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "0",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            198.64999389648438,
+            527.3499755859375
+          ]
+        },
+        "base": {
+          "c": "Ω",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            191.2100067138672,
+            526.3900146484375
+          ]
+        },
+        "script_dx": -51.83601379394531,
+        "base_dx": -51.83601379394531,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "0",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            250.72999572753906,
+            527.3499755859375
+          ]
+        },
+        "base": {
+          "c": "I",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            247.49000549316406,
+            526.3900146484375
+          ]
+        },
+        "script_dx": -62.99603271484375,
+        "base_dx": -62.99603271484375,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "0",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            241.1300048828125,
+            775.656005859375
+          ]
+        },
+        "base": {
+          "c": "B",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            234.88999938964844,
+            774.6959838867188
+          ]
+        },
+        "script_dx": 63.22100830078125,
+        "base_dx": 63.22099304199219,
+        "relative_x_change_pt": 1.52587890625e-05,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      },
+      {
+        "script": {
+          "c": "0",
+          "font": "TimesNewRomanPSMT",
+          "size": 6.960000038146973,
+          "origin": [
+            419.8299865722656,
+            775.656005859375
+          ]
+        },
+        "base": {
+          "c": "B",
+          "font": "TimesNewRomanPS-ItalicMT",
+          "size": 10.5600004196167,
+          "origin": [
+            413.7099914550781,
+            774.6959838867188
+          ]
+        },
+        "script_dx": -3.511962890625,
+        "base_dx": -3.511962890625,
+        "relative_x_change_pt": 0.0,
+        "relative_y_change_pt": 0.0,
+        "passed": true
+      }
+    ],
+    "relative_geometry_failures": [],
+    "reviewed_expression_groups": [
+      {
+        "label": "Original complete inline expression 1-3-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-3-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-3-2",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-3-3",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-4-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-4-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-4-2",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-4-3",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-8-0",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-9-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-11-0",
+        "physical_glyphs": 2,
+        "matched_glyphs": 2,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-11-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-13-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-13-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-13-2",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-14-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-14-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-14-2",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-16-0",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-16-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-17-0",
+        "physical_glyphs": 2,
+        "matched_glyphs": 2,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-17-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-17-2",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 1.52587890625e-05,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-18-0",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-18-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-18-2",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-18-3",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-18-4",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-19-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-19-1",
+        "physical_glyphs": 4,
+        "matched_glyphs": 4,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-19-2",
+        "physical_glyphs": 4,
+        "matched_glyphs": 4,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-20-0",
+        "physical_glyphs": 4,
+        "matched_glyphs": 4,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-20-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-20-2",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-20-3",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-21-0",
+        "physical_glyphs": 4,
+        "matched_glyphs": 4,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-21-1",
+        "physical_glyphs": 4,
+        "matched_glyphs": 4,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-21-2",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-21-3",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-22-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-23-0",
+        "physical_glyphs": 5,
+        "matched_glyphs": 5,
+        "relative_x_spread_pt": 7.62939453125e-06,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-24-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-24-1",
+        "physical_glyphs": 4,
+        "matched_glyphs": 4,
+        "relative_x_spread_pt": 3.0517578125e-05,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-24-2",
+        "physical_glyphs": 4,
+        "matched_glyphs": 4,
+        "relative_x_spread_pt": 3.0517578125e-05,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-24-3",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-25-0",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-28-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-28-1",
+        "physical_glyphs": 3,
+        "matched_glyphs": 3,
+        "relative_x_spread_pt": 3.0517578125e-05,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-28-2",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-28-3",
+        "physical_glyphs": 2,
+        "matched_glyphs": 2,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-29-0",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      },
+      {
+        "label": "Original complete inline expression 1-29-1",
+        "physical_glyphs": 1,
+        "matched_glyphs": 1,
+        "relative_x_spread_pt": 0.0,
+        "passed": true
+      }
+    ],
+    "reviewed_script_exclusions": [],
+    "passed": true
+  },
+  "verified_original_native_ink_passed": true,
+  "exact_native_CID_raster_phase_witness": null,
+  "original_font_programs_and_names_retained": true,
+  "original_image_programs_retained": true,
+  "image_palette_icc_mask_and_motion_audits": [
+    {
+      "image": 0,
+      "rect_preserved": true,
+      "rect_matches_declared_native_math_dx": false,
+      "dx": 0.0,
+      "full_palette_icc_mask_image_graph_preserved": true
+    },
+    {
+      "image": 1,
+      "rect_preserved": true,
+      "rect_matches_declared_native_math_dx": false,
+      "dx": 0.0,
+      "full_palette_icc_mask_image_graph_preserved": true
+    }
+  ],
+  "page_group_preserved": true,
+  "colorspace_resources_preserved": true,
+  "native_move_stages_passed": true,
+  "hangul_visibility": {
+    "flagged_components": 0,
+    "pages": []
+  },
+  "new_prose_over_native_graphics": {
+    "method": "Independent new Hangul outline reference versus clip-aware actual native non-text foreground.",
+    "scale": 4,
+    "new_glyphs": 1486,
+    "new_reference_threshold": 32,
+    "native_foreground_threshold": 80,
+    "new_hangul_dark_pixels_over_native_foreground": 0,
+    "source_outline_match": {
+      "protected_physical_glyphs": 1486,
+      "expected_signature_count": 1486,
+      "matched_outline_uses": 1494,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "passed": true
+  },
+  "inherited_original_footer_overlay": null,
+  "unexpected_Hangul_visibility_components": 0,
+  "remaining_regular_NotoSerif_Hangul": [],
+  "NUL_glyphs": 0,
+  "fresh_process_RGB_render": true,
+  "visual_review_required": true,
+  "passed": true,
+  "independent_actual_new_prose_native_text_ink": {
+    "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\natural\\2003\\en\\page01.pdf",
+    "sha256": "b6f31765142786957301be9df2b7baa57ecbeb4da17c8274b9e1d63a692d7d9f",
+    "page": 1,
+    "method": "Independent prose glyph outlines versus exact native-CID control minus clip-aware non-text control.",
+    "scale": 4,
+    "native_physical_glyphs": 107,
+    "translated_prose_glyphs": 1459,
+    "prose_outline_match": {
+      "protected_physical_glyphs": 1459,
+      "expected_signature_count": 1459,
+      "matched_outline_uses": 1467,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "native_control_erasure_qa": {
+      "api": "native-inline-reposition-v1",
+      "page_number": 1,
+      "text_shift_mode": "tj",
+      "erased_glyphs": 1459,
+      "shifted_top_level_glyphs": 0,
+      "shifted_form_instances": 0,
+      "shifted_direct_image_instances": 0,
+      "shifted_atomic_clip_groups": 0,
+      "shifted_reviewed_vector_paths": 0,
+      "unchanged_white_background_panels_ignored": 0,
+      "reviewed_stationary_vector_paths_unchanged": [],
+      "private_form_ancestor_copies": 0,
+      "font_programs_unchanged": true,
+      "original_form_streams_unchanged": true,
+      "original_image_streams_unchanged": true,
+      "native_vector_path_bytes_preserved": true,
+      "native_atomic_clip_bytes_preserved": true,
+      "output_sha256": "90de3bbcf940f66fdd350f6cae7a2f5a4195e0c524bc3aee32eca085fdc4a2f8",
+      "atomic_nonpainting_space_occurrence_shifts": [],
+      "expected_native_glyphs": 360,
+      "unexpected_glyphs": 0,
+      "native_glyph_mismatches": [],
+      "position_tolerance_pt": 0.001,
+      "max_position_error_x_pt": 0.0,
+      "max_position_error_y_pt": 0.0,
+      "max_visible_position_error_x_pt": 0.0,
+      "max_visible_position_error_y_pt": 0.0,
+      "nonpainting_ascii_space_rounding": [],
+      "passed": true
+    },
+    "dark_prose_pixels_over_native_text": 0,
+    "passed": true
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "original_source_sha256": "fb90239d8da3dea3dcfe104551243f444802632a74a47a139374013aa16080f1",
+  "positive_proof_sha256": "685e9c601a8e1350244b39dc775a94e57a6b366c484ef6e092e0b95094033db4",
+  "positive_proof_unmodified": true,
+  "actual_single_fraction_rule_only_bad_PDF_sha256": "52d884e96ea56a91bed07ca9d4571d20c0fbbaff4c762ca65a07ec558f51b037",
+  "source_original_fraction_rule_before_mutation": {
+    "operator_indices": [
+      1492,
+      1493
+    ],
+    "rect": [
+      189.84799987793,
+      163.00998291015617,
+      207.60799987792998,
+      163.7299829101562
+    ],
+    "paint_operator": "f*"
+  },
+  "all_native_CID_font_GID_point_paint_X_Y_identical": true,
+  "all_original_font_programs_unchanged": true,
+  "strict_original_program_geometry_rejected_bad_PDF": true,
+  "failure": "AssertionError: ",
+  "negative_audit": null,
+  "other13_approved_proofs_unmodified": true,
+  "passed": true,
+  "expected_complete_original_program_sha256": "ddd5f2f0149cb70d03743199840853e0ff32fe208b47aaddf470fdad1dee41d0",
+  "actual_damaged_program_sha256": "d856ce75f4c98855f514f907dec7052f0ecbb59fb835ebde5c2e1a6f1d415374",
+  "positive_original_fraction_paths": [
+    {
+      "operator_indices": [
+        1492,
+        1493
+      ],
+      "rect": [
+        189.84799987793,
+        163.00998291015617,
+        207.60799987792998,
+        163.7299829101562
+      ],
+      "paint_operator": "f*"
+    },
+    {
+      "operator_indices": [
+        1627,
+        1628
+      ],
+      "rect": [
+        262.58799987793,
+        163.00998291015617,
+        280.34799987792996,
+        163.7299829101562
+      ],
+      "paint_operator": "f*"
+    }
+  ],
+  "actual_bad_fraction_paths": [
+    {
+      "operator_indices": [
+        1494,
+        1495
+      ],
+      "rect": [
+        190.84799987793,
+        163.00998291015617,
+        208.60799987792998,
+        163.7299829101562
+      ],
+      "paint_operator": "f*"
+    },
+    {
+      "operator_indices": [
+        1630,
+        1631
+      ],
+      "rect": [
+        262.58799987793,
+        163.00998291015617,
+        280.34799987792996,
+        163.7299829101562
+      ],
+      "paint_operator": "f*"
+    }
+  ],
+  "only_original_fraction_path_horizontal_geometry_changed": true
+}

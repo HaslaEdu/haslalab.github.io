@@ -1,0 +1,133 @@
+{
+  "source_sha256": "fb90239d8da3dea3dcfe104551243f444802632a74a47a139374013aa16080f1",
+  "source_page": 3,
+  "proof_sha256": "6dd1b70118fed0beff69dd7bc9312aa40d5528ffe29934517b301e05efba40d1",
+  "plan_sha256": "efcce4e38530657d9aef13a4eafa6375109ffb70c28a961035a65b49f750cf88",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 5,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 84.5,
+      "source_center": 264.40601348876953,
+      "independent_original_source_centers": [
+        264.40601348876953
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 239.7220001220703,
+      "actual_nonspace_glyph_right": 289.09002685546875,
+      "actual_center": 264.40601348876953,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          1,
+          1
+        ]
+      ],
+      "baseline": 84.5,
+      "source_center": 510.35203552246094,
+      "independent_original_source_centers": [
+        510.35203552246094
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 498.7600402832031,
+      "actual_nonspace_glyph_right": 521.9440307617188,
+      "actual_center": 510.35203552246094,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 215.5899658203125,
+      "source_center": 312.27767181396484,
+      "independent_original_source_centers": [
+        312.27767181396484
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 185.61817932128906,
+      "actual_nonspace_glyph_right": 438.9371643066406,
+      "actual_center": 312.27767181396484,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 22,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          3,
+          0
+        ]
+      ],
+      "baseline": 229.75,
+      "source_center": 312.55799865722656,
+      "independent_original_source_centers": [
+        312.55799865722656
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 238.33798217773438,
+      "actual_nonspace_glyph_right": 386.77801513671875,
+      "actual_center": 312.55799865722656,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 16,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          7,
+          1
+        ]
+      ],
+      "baseline": 274.14996337890625,
+      "source_center": 259.4199981689453,
+      "independent_original_source_centers": [
+        259.4199981689453
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 253.4199981689453,
+      "actual_nonspace_glyph_right": 265.41998291015625,
+      "actual_center": 259.4199905395508,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 1,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "Problem 2. Fantastic trip through the Universe (10.0 points) ",
+        "original_center": 312.27767181396484,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

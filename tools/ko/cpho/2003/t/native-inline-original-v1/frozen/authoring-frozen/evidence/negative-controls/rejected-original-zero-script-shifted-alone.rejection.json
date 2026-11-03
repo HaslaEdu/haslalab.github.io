@@ -1,0 +1,103 @@
+{
+  "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\natural\\2003\\en\\page03.pdf",
+  "source_page": 1,
+  "source_sha256": "ab2fb87638dba70d83cb08205b01c8bfedebdf85dcf86380372e55386047a190",
+  "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\evidence\\negative-controls\\rejected-original-zero-script-shifted-alone.pdf",
+  "final_page": 1,
+  "final_sha256": "ad3b737e96a5c64dab59e699eeb727c04121f1dcaf7fc3f59acd8746dd82bd86",
+  "scope": "Read-only native scripts and reviewed complete expressions; source font/GID/size/y exact within numeric serialization tolerance",
+  "tolerance_pt": 0.001,
+  "source_physical_glyphs": 6,
+  "matched_physical_glyphs": 6,
+  "glyph_signature_or_position_errors": [],
+  "script_base_pairs": [
+    {
+      "script": {
+        "c": "2",
+        "font": "TimesNewRomanPSMT",
+        "size": 6.960000038146973,
+        "origin": [
+          419.9039611816406,
+          84.5
+        ]
+      },
+      "base": {
+        "c": "m",
+        "font": "TimesNewRomanPS-ItalicMT",
+        "size": 10.5600004196167,
+        "origin": [
+          412.5839538574219,
+          83.53997802734375
+        ]
+      },
+      "script_dx": 0.0,
+      "base_dx": 0.0,
+      "relative_x_change_pt": 0.0,
+      "relative_y_change_pt": 0.0,
+      "passed": true
+    },
+    {
+      "script": {
+        "c": "0",
+        "font": "TimesNewRomanPSMT",
+        "size": 6.960000038146973,
+        "origin": [
+          445.3439636230469,
+          84.5
+        ]
+      },
+      "base": {
+        "c": "m",
+        "font": "TimesNewRomanPS-ItalicMT",
+        "size": 10.5600004196167,
+        "origin": [
+          437.9039611816406,
+          83.53997802734375
+        ]
+      },
+      "script_dx": 2.0,
+      "base_dx": 0.0,
+      "relative_x_change_pt": 2.0,
+      "relative_y_change_pt": 0.0,
+      "passed": false
+    }
+  ],
+  "relative_geometry_failures": [
+    {
+      "script": {
+        "c": "0",
+        "font": "TimesNewRomanPSMT",
+        "size": 6.960000038146973,
+        "origin": [
+          445.3439636230469,
+          84.5
+        ]
+      },
+      "base": {
+        "c": "m",
+        "font": "TimesNewRomanPS-ItalicMT",
+        "size": 10.5600004196167,
+        "origin": [
+          437.9039611816406,
+          83.53997802734375
+        ]
+      },
+      "script_dx": 2.0,
+      "base_dx": 0.0,
+      "relative_x_change_pt": 2.0,
+      "relative_y_change_pt": 0.0,
+      "passed": false
+    }
+  ],
+  "reviewed_expression_groups": [
+    {
+      "label": "Original m2=4m0 complete expression",
+      "physical_glyphs": 6,
+      "matched_glyphs": 6,
+      "relative_x_spread_pt": 2.0,
+      "passed": false
+    }
+  ],
+  "reviewed_script_exclusions": [],
+  "passed": false
+}

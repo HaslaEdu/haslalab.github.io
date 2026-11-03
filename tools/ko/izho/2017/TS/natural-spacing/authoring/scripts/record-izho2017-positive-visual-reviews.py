@@ -1,0 +1,11 @@
+from pathlib import Path
+import json,hashlib,datetime
+B=Path('C:/Users/andre/CodexWork/HaslaLab/translation-builds/izho2017-complete-solutions');F=B/'natural/2017/TS';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();path=F/'partial-visual-review.json';q=json.loads(path.read_text('utf8'));rows={r['page']:r for r in q['pages']}
+for n in [3,4,8,10,11,12,13]:
+ proof=F/f'page{n:02}.pdf';pin=sha(proof)
+ for suffix,key in [('.audit.json','output_sha256'),('.font-source-style.json','proof_sha256'),('.source-alignment.json','proof_sha256'),('.prose-collision.json','final_sha256'),('.equation-counters.json','proof_sha256'),('.non-hangul-prose-collision.json','proof_sha256'),('.independent-original-math-geometry.json','proof_sha256')]:
+  a=json.loads(proof.with_suffix(suffix).read_text('utf8'));assert a['passed']and a[key]==pin,(n,suffix)
+ preview=json.loads((F/f'page{n:02}-preview.json').read_text('utf8'));assert preview['pdf_sha256']==pin and preview['png_sha256']==sha(F/f'page{n:02}-preview.png')
+ rows[n]=dict(page=n,proof_sha256=pin,reviewed=True,full_page_original_and_final_visually_read=True,preview_sha256=preview['png_sha256'],notes='Full source/current144dpi pages visually read, including all prose, figures and grading schemes. Korean ordinary word gaps; source role/point/italic/bold and main/subtitle/caption centers retained. Original native math fonts/GIDs/points/paint/fractional scripts/rules/figure geometry and all scoring columns remain exact. Original mistakes and numerical conventions retained literally. Page11 full literal original7-CID MathType Form has six nativeRGB comparisons and SVG4/8/12 zero missing ink; source proof unchanged.')
+q.update(reviewed_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),pages=[rows[k]for k in sorted(rows)],all14_pages_complete=False,pending_pages=[6,7],pending_reason='Full-page visual reading rejected cell-wide mathematical atoms that appended and/or after both independent expressions. New exact-native programme isolation on6 and analogous7 repair required, then recheck all6 audits/extra/Poppler and new fullvisuals. Other12 approved proof hashes remain unchanged.')
+path.write_text(json.dumps(q,ensure_ascii=False,indent=2)+'\n','utf8');print('RECORDED12_FULL_SOURCE_AND_CURRENT_VISUAL_POSITIVES_PENDING6_7',flush=True)

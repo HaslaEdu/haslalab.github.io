@@ -24,12 +24,13 @@ module.exports = function validate(root, record, item) {
     validate.validateLabels(pinned(contract.label_witness.path,contract.label_witness.sha256));
     validate.validateNegatives(pinned(contract.actual_negative_controls.path,contract.actual_negative_controls.sha256));
   }
-  if (item.file === 'IZhO_2019_TS_KO.pdf') {
+  if (['IZhO_2017_TS_KO.pdf','IZhO_2019_TS_KO.pdf'].includes(item.file)) {
     const contract=record.source_native_contract;
-    assert.ok(contract, 'Actual source-bound native programs and painted-space heads are required');
+    assert.ok(contract, 'Actual source-bound original native programs are required');
     const bundle=pinned(contract.path,contract.sha256),bindings=new Map(contract.artifact_bindings.map(a=>[a.id,a]));
     assert.equal(bindings.size,bundle.artifacts.length);
-    require('./izho-2019-native-source-programs.cjs').validateEdition(bundle,item,{readArtifact:a=>{
+    const validate=require(item.file==='IZhO_2017_TS_KO.pdf'?'./izho-2017-native-design-programs.cjs':'./izho-2019-native-source-programs.cjs');
+    validate.validateEdition(bundle,item,{readArtifact:a=>{
       const binding=bindings.get(a.id);assert.ok(binding,a.id);assert.equal(binding.sha256,a.sha256);assert.equal(binding.bytes,a.bytes);
       assert.ok(binding.path.startsWith(record.authoring_snapshotroot+'/'), 'Read actual immutable staged artifacts only');
       const target=path.resolve(root,binding.path);assert.ok(target.startsWith(path.resolve(root)+path.sep));return fs.readFileSync(target);
@@ -113,7 +114,7 @@ module.exports = function validate(root, record, item) {
         assert.deepEqual(profile.native_reference_scales, [4,8,12]);
         assert.deepEqual(profile.cropped_SVG_reference_scales, [4,8,12]);
         assert.equal(profile.cropped_SVG_native_ink_missing_pixels, 0);
-      } else if (profile.kind === 'source2015-complete-original-equation16-native-program-v1') {
+      } else if (['source2015-complete-original-equation16-native-program-v1','source2017-page11-complete-original-inline-lambda-native-Form-program-v1'].includes(profile.kind)) {
         assert.equal(profile.original_native_reference_missing_pixels, 0);
         assert.equal(profile.native_reference_nonwhite_RGB_errors, 0);
         assert.deepEqual(profile.native_reference_renderers, ['MuPDF','Poppler']);
@@ -122,7 +123,7 @@ module.exports = function validate(root, record, item) {
         assert.equal(profile.cropped_SVG_native_ink_missing_pixels, 0);
       } else if (profile.kind === '2018-original-native-Cambria-digit-phase-v1') assert.equal(profile.native_reference_nonwhite_RGB_errors, 0);
       else assert.equal(profile.native_original_CID_reference_missing_pixels, 0);
-      if (!['original-native-CID-reference-all','source2015-complete-original-equation16-native-program-v1','source2018-complete-original-native-program-v1'].includes(profile.kind)) {
+      if (!['original-native-CID-reference-all','source2015-complete-original-equation16-native-program-v1','source2018-complete-original-native-program-v1','source2017-page11-complete-original-inline-lambda-native-Form-program-v1'].includes(profile.kind)) {
         assert.equal(profile.svg_8x_missing_pixels, 0);
         assert.equal(profile.svg_12x_missing_pixels, 0);
       }
@@ -138,6 +139,8 @@ module.exports = function validate(root, record, item) {
         require('./izho-2018-native-programs.cjs')(profile,witness,raw,page,item);
       } else if (profile.kind === 'source2019-exact-original-digit3-native-program-v1') {
         require('./izho-2019-native-source-programs.cjs')(profile,witness,raw,page,item);
+      } else if (profile.kind === 'source2017-page11-complete-original-inline-lambda-native-Form-program-v1') {
+        require('./izho-2017-native-lambda-program.cjs')(profile,witness,raw,page,item);
       } else if (profile.kind === 'original-native-CID-reference-all') {
         assert.equal(witness.kind, 'all-original-instruction-native-CIDs-v1');
         assert.equal(witness.delivered_pdf_modified, false);
