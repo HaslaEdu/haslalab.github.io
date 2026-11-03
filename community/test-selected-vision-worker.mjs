@@ -575,6 +575,25 @@ test('training data: with LAB_TRAIN_CAPTURE on a graded paper is kept unverified
   const list=(await api('/admin/lab/train')).data;assert.equal(list.capture,true);assert.ok(list.counts.some(c=>c.verified===1&&c.n===1));
   assert.equal((await api('/admin/lab/train/export?kind=read&bucket=https://x')).status,400,'a gs:// bucket for the photos');
 }));
+test('pair grading: a second grader marks the paper as a chat would; agreed marks stand, an item they mark apart is rechecked with both opinions',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  env.LAB_PAIR_PROVIDER='deepseek';env.LAB_PAIR_MODEL='deepseek-flash';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';env.LAB_EXPR_CHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:1,items:[
+    {id:'P',points:0.4,type:'derivation',role:'result',sheet:'any',what:'period'},{id:'R',points:0.6,type:'derivation',role:'result',sheet:'any',what:'velocity'}]}),'fixture',Math.floor(Date.now()/1000));
+  const g=(id,score)=>({id,found:true,page:1,label:id,rules:[],note:'',score,quote:''}),rev={summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''};
+  replies([{items:[g('P',0.4),g('R',0)],feedback:[],review:rev},{analysis:'R is right.',items:[{id:'P',score:0.4},{id:'R',score:0.6,note:'correct'}]}],{items:[{id:'R',found:true,page:1,score:0.6,rules:[],note:'both read, R correct',quote:''}]});
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const grades=calls.filter(c=>c.text.includes('[TASK: grade]'));assert.ok(grades.some(c=>/strict invigilator-grader/.test(c.text)),'the grader');
+  assert.ok(grades.some(c=>/A teacher hands you one student's paper/.test(c.text)),'and the pair, marking as a chat would');
+  const mod=calls.find(c=>c.text.includes('[TASK: moderate]'));assert.ok(mod,'the item they disagree on is rechecked');
+  assert.match(mod.text,/"id":"R"[^\n]*"second"/);assert.ok(!/"id":"P"[^\n]*"second"/.test(mod.text),'an agreed item is not');
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"R"[^}]*"got":0\.6[,}]/,'the recheck decides');assert.match(detail,/"id":"P"[^}]*"got":0\.4[,}]/);
+}));
 test('suspects: every item of a question with alternative methods, and the credited steps of a question whose result was marked down, are rechecked whatever their marks',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';

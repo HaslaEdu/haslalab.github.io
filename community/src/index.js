@@ -1459,6 +1459,7 @@ function labRoles(env, s, theory) {
       moderate: env.LAB_MODERATE_PROVIDER === "none" ? null : stage(env.LAB_MODERATE_PROVIDER, "gemini"), gradePdfs: env.LAB_GRADE_PDFS === "on",
       readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
       moderateBench: pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING), moderateScope: env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
+      pair: STAGE_PROVIDERS.includes(env.LAB_PAIR_PROVIDER) ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL || undefined, thinking: env.LAB_PAIR_THINKING || undefined } : undefined,
       readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
@@ -2713,7 +2714,12 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
      decided once more from the photos (the recheck call), not by either */
   const double = roles?.doubleGrade ?? env.LAB_DOUBLE_GRADE === "on";
   const out = await gradeOnce();
-  const out2 = double ? await gradeOnce().catch(e => { console.error("lab second grading", e?.code || e?.message); return null; }) : null;
+  /* pair grading (LAB_PAIR_PROVIDER, bench grade.pair): a second grader of another family marks the paper as a chat would
+     (labChatGrade: GPT-6 Luna); where the two agree the marks stand (bench: agreed marks were wrong on 3 of 191 items, all
+     disputed audit items), where they differ by a quarter of an item or more it is decided once more (the recheck) */
+  const pairOut = !double && roles?.pair ? await labChatGrade(env, labAs(s, roles.pair.provider, roles.pair), task, mine, scheme, lang, m).catch(e => { console.error("lab pair grading", e?.code || e?.message); return null; }) : null;
+  const out2 = double ? await gradeOnce().catch(e => { console.error("lab second grading", e?.code || e?.message); return null; })
+    : pairOut ? { raw: { items: pairOut.items.filter(i => i.raw != null).map(i => ({ id: i.id, score: i.got, found: true, note: i.note || "", quote: "" })) } } : null;
   await roles?.trace?.('graded');
   let raw = out.raw, moderator = null;
   /* the step audit, before the code's checks and the recheck of what they doubt */
@@ -2733,7 +2739,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     const doubt = c.verdict === "equal" ? score < .5 * it.points : score >= .99 * it.points;
     return doubt ? [{ id: it.id, got: score, check: describeCheck(c) }] : [];
   }).slice(0, 30);
-  const moderated = roles?.moderate ? labScore(scheme, raw, mine, { theory }).items.filter(i => { const it = specOf.get(i.id) || {};
+  const moderated = roles?.moderate && roles.moderateScope !== "pair" ? labScore(scheme, raw, mine, { theory }).items.filter(i => { const it = specOf.get(i.id) || {};
     /* «all»: every item, full marks too (a first grader that gives full marks to a wrong answer, a missing factor or an
        inverted relation is never checked otherwise: the largest error in an audit of 15 sittings); «down»: what it marked down */
     return roles.moderateScope === "all" || i.got < i.points && (it.role === "result" || it.sheet === "answer" || ["value", "graph", "table", "other"].includes(it.type)); }).slice(0, roles.moderateScope === "all" ? 90 : 30) : [];
@@ -2766,7 +2772,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
       const it = specOf.get(String(y?.id)); if (!it) continue;
       const x = firstBy.get(it.id), a = +(x?.score) || 0, b = +(y.score) || 0;
       if (!x && !y.found) continue;
-      if (x && Math.abs(a - b) < Math.max(.05, .05 * it.points) && !!x.found === !!y.found) continue;
+      if (x && Math.abs(a - b) < (pairOut ? .25 * it.points : Math.max(.05, .05 * it.points)) && (pairOut || !!x.found === !!y.found)) continue;
       const second = { score: b, found: !!y.found, page: y.page, value: y.value, note: String(y.note || "").slice(0, 300), quote: String(y.quote || "").slice(0, 300) };
       const f = flagged.find(z => z.id === it.id);
       if (f) f.second = second; else flagged.push({ id: it.id, got: a, second, ...(x ? {} : { missing: true }) });
@@ -3245,12 +3251,13 @@ async function labBench(env, s, job) {
       if (spec.grade.chat === true) out = await labChatGrade(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, { reads: spec.grade.reads !== false, pdfs: spec.grade.pdfs !== false });
       else {
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
-        moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking, api: spec.moderate.api, tier: spec.moderate.tier } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
+        moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking, api: spec.moderate.api, tier: spec.moderate.tier } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : spec.moderate?.scope === "pair" ? "pair" : "down",
         gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, doubleGrade: spec.grade.double === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
         audit: spec.grade.audit === true ? true : undefined,
         methods: spec.grade.methods === true ? true : undefined,
         suspect: spec.grade.suspect === true ? true : undefined,
         split: spec.grade.split === true ? true : undefined, ecf: spec.grade.ecf === true ? true : undefined, implicit: spec.grade.implicit === true ? true : undefined,
+        pair: spec.grade.pair?.provider ? { provider: spec.grade.pair.provider, model: spec.grade.pair.model, thinking: spec.grade.pair.thinking } : undefined,
         lessons: typeof spec.grade.lessons === "string" && spec.grade.lessons.trim() ? spec.grade.lessons.trim().slice(0, 12000) : undefined,
         tiles: Number.isInteger(spec.grade.tiles) && spec.grade.tiles >= 2 && spec.grade.tiles <= 4 ? spec.grade.tiles : undefined,
         toolRounds: Number.isInteger(spec.grade.toolRounds) && spec.grade.toolRounds > 0 && spec.grade.toolRounds <= 6 ? spec.grade.toolRounds : undefined,
