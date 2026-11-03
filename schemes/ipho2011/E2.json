@@ -1,0 +1,366 @@
+{
+ "points": 10,
+ "derived": true,
+ "unit_rule": null,
+ "notes": "IPhO 2011 Experiment 2 'Mechanical blackbox: a cylinder with a ball inside' (10 pt). DERIVED, not official: the official solution prints no marks. Question points are those printed in the problem paper (i 1.0, ii 3.5, iii 3.5, iv 2.0); within each the points are split the way IPhO experiment schemes of nearby years split comparable work. Official results with L = 30.0 cm: x_CM = 17.8 +/- 0.1 cm; linear method T^2 R vs R^2: slope 0.04108 s^2/cm, intercept 3.10 s^2 cm, g = 961 +/- 20 cm/s^2, z = 25.3 +/- 0.3 cm, M/m = 2.7 +/- 0.1; minimum method: R_min = 8.9 cm, T_min = 0.846 s, g = 982 +/- 40 cm/s^2, z = 26.1 +/- 0.8 cm, M/m = 3.0 +/- 0.3. Either method earns the marks; error estimates are required by the paper.",
+ "parts": [
+  {
+   "id": "i",
+   "points": 1.0,
+   "final_full": false
+  },
+  {
+   "id": "ii",
+   "points": 3.5,
+   "final_full": false
+  },
+  {
+   "id": "iii",
+   "points": 3.5,
+   "final_full": false
+  },
+  {
+   "id": "iv",
+   "points": 2.0,
+   "final_full": false
+  }
+ ],
+ "items": [
+  {
+   "id": "i.1",
+   "points": 0.4,
+   "type": "other",
+   "sheet": "any",
+   "role": "result",
+   "what": "Schematic drawing of the set-up for finding the centre of mass (balancing the cylinder on a thread or edge, x_CM measured from the top).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "i.2",
+   "points": 0.4,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Position of the centre of mass x_CM from the top of the cylinder (official 17.8 cm with L = 30.0 cm).",
+   "unit": "cm",
+   "ref": null,
+   "tol": null,
+   "full_min": 17.2,
+   "full_max": 18.4,
+   "partial": [
+    {
+     "min": 16.6,
+     "max": 19.0,
+     "points": 0.2
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "i.3",
+   "points": 0.2,
+   "type": "other",
+   "sheet": "answer",
+   "role": "result",
+   "what": "An error estimate for x_CM (about 0.1-0.2 cm).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "ii.1",
+   "points": 0.8,
+   "type": "table",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Table of the period T (timing several cycles, e.g. 20) for at least 10 pivot holes, with x_CM - R (or R), R, and the plotted quantities (T^2 R, R^2) with units.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [
+    {
+     "check": "columns_units",
+     "n": null,
+     "points": 0.3
+    },
+    {
+     "check": "rows_min",
+     "n": 10,
+     "points": 0.5
+    }
+   ],
+   "n_min": 10,
+   "n_class": "medium"
+  },
+  {
+   "id": "ii.2",
+   "points": 0.8,
+   "type": "graph",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Graph for the analysis: T^2 R against R^2 (straight line), or T against R (minimum method), axes labelled with units, points plotted, line or curve drawn.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [
+    {
+     "check": "axes_labeled",
+     "n": null,
+     "points": 0.2
+    },
+    {
+     "check": "points_min",
+     "n": 10,
+     "points": 0.3
+    },
+    {
+     "check": "fit_line",
+     "n": null,
+     "points": 0.3
+    }
+   ],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "ii.3",
+   "points": 0.5,
+   "type": "derivation",
+   "sheet": "any",
+   "role": "step",
+   "what": "I_CM from the graph, I_CM = (M+m) x intercept/slope (or (M+m) R_min^2), set equal to I_CM = M L^2/12 + M (L/2 - x_CM)^2 + m (z - x_CM)^2.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "ii.4",
+   "points": 1.0,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Distance z of the ball below the top (official 25.3 cm, linear method; 26.1 cm, minimum method).",
+   "unit": "cm",
+   "ref": null,
+   "tol": null,
+   "full_min": 24.5,
+   "full_max": 26.8,
+   "partial": [
+    {
+     "min": 23.5,
+     "max": 27.8,
+     "points": 0.5
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "ii.5",
+   "points": 0.4,
+   "type": "other",
+   "sheet": "answer",
+   "role": "result",
+   "what": "An error estimate for z from the graph's uncertainty (official 0.3 cm, linear; 0.8 cm, minimum method).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "iii.1",
+   "points": 0.8,
+   "type": "derivation",
+   "sheet": "any",
+   "role": "step",
+   "what": "Centre of mass relation x_CM (M+m) = M L/2 + m z, giving M/m = (z - x_CM)/(x_CM - L/2).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "iii.2",
+   "points": 0.7,
+   "type": "derivation",
+   "sheet": "any",
+   "role": "step",
+   "what": "Combines it with the I_CM equation and solves the quadratic for z - x_CM (official 7.47 cm, linear method).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "iii.3",
+   "points": 1.4,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Ratio M/m (official 2.7, linear method; 3.0, minimum method).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": 2.4,
+   "full_max": 3.2,
+   "partial": [
+    {
+     "min": 2.0,
+     "max": 3.6,
+     "points": 0.7
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "iii.4",
+   "points": 0.6,
+   "type": "other",
+   "sheet": "answer",
+   "role": "result",
+   "what": "An error estimate for M/m (official 0.1, linear; 0.3, minimum method).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "iv.1",
+   "points": 0.6,
+   "type": "derivation",
+   "sheet": "any",
+   "role": "step",
+   "what": "g from the graph: g = 4 pi^2/slope of T^2 R against R^2, or g = 8 pi^2 R_min/T_min^2.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "iv.2",
+   "points": 1.0,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Acceleration due to gravity g (official 961 cm/s^2, linear; 982 cm/s^2, minimum method).",
+   "unit": "cm/s^2",
+   "ref": null,
+   "tol": null,
+   "full_min": 930,
+   "full_max": 1010,
+   "partial": [
+    {
+     "min": 890,
+     "max": 1050,
+     "points": 0.5
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "iv.3",
+   "points": 0.4,
+   "type": "other",
+   "sheet": "answer",
+   "role": "result",
+   "what": "An error estimate for g (official 20 cm/s^2, linear; 40 cm/s^2, minimum method).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  }
+ ]
+}
