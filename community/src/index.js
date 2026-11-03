@@ -2209,9 +2209,11 @@ async function labReadPage(env,s,buf,mime,notation,m) {
     ['high','medium','low'].includes(media)?{mediaResolution:'MEDIA_RESOLUTION_'+media.toUpperCase()}:{});
   const warm=Number.isFinite(src._temperature)?src._temperature:Number.isFinite(+env.LAB_READ_TEMPERATURE)&&env.LAB_READ_TEMPERATURE!==undefined&&env.LAB_READ_TEMPERATURE!==''?+env.LAB_READ_TEMPERATURE:0;
   /* a read cut short is read again warmer, where the model takes a temperature at all (Gemini 3.6 Flash and newer
-     ignore it: the same loop again, so the caller's fallback reads it instead) */
+     ignore it, and are simply asked again) */
   const readModel=String(src._model||VISION_MODELS[labProvider(s)]||''),warmable=!gemini||/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(readModel);
-  const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated'&&warmable)return read(Math.max(warm,0.8));throw error;});
+  /* 3.8 Flash's loops come and go from one call to the next (pages that looped read in 10-25 s on another try, and the
+     other way round), so a capped read is read once more by the same model before the caller's fallback takes it */
+  const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated')return read(warmable?Math.max(warm,0.8):warm);throw error;});
   const raw=out.raw;
   if(typeof raw?.text!=='string'||raw.text.length>160000||!Array.isArray(raw.items)||!LEG.includes(raw.legible)) {
     const call=m?.calls?.at(-1);if(call?.step==='ocr'){call.ok=0;call.error='vision_response_schema';}

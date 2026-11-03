@@ -965,7 +965,7 @@ test('LAB_READ_VERTEX: a page AI Studio is too busy for is read by the same mode
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
 
-test('a 3.8 Flash read that runs to its token cap (looping) goes to the fallback model at once: no warmer retry it ignores, not Vertex',async()=>fixture(async({api,start,upload,drain,calls,sql,env,truncate})=>{
+test('a 3.8 Flash read that runs to its token cap (looping) is asked once more by the same model, not Vertex, before any fallback',async()=>fixture(async({api,start,upload,drain,calls,sql,env,truncate})=>{
   const kp=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);
   const der=new Uint8Array(await crypto.subtle.exportKey('pkcs8',kp.privateKey)),pem='-----BEGIN PRIVATE KEY-----\n'+Buffer.from(der).toString('base64').match(/.{1,64}/g).join('\n')+'\n-----END PRIVATE KEY-----\n';
   env.GCP_SA_KEY=JSON.stringify({client_email:'reader@proj-9.iam.gserviceaccount.com',private_key:pem,project_id:'proj-9'});
@@ -976,8 +976,9 @@ test('a 3.8 Flash read that runs to its token cap (looping) goes to the fallback
   await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
   const reads=calls.filter(c=>c.text.includes('[TASK: read page]'));
   assert.equal(reads.length,2);assert.match(reads[0].url,/generativelanguage.*gemini-3\.8-flash:/);
-  assert.equal(reads[0].body.generationConfig.maxOutputTokens,10240,'a loop ends at 10k tokens, not 32k');
-  assert.match(reads[1].url,/gemini-3\.1-flash-lite:/,'straight to the fallback');
+  assert.equal(reads[0].body.generationConfig.maxOutputTokens,10240,'a loop ends at the cap (10k by default), not 32k');
+  assert.match(reads[1].url,/generativelanguage.*gemini-3\.8-flash:/,'the same model once more: its loops come and go');
+  assert.ok(!reads.some(c=>/aiplatform|gemini-3\.1-flash-lite/.test(c.url)),'neither Vertex nor the fallback was needed');
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
 
