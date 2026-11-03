@@ -1,0 +1,45 @@
+{
+  "status": "ACTUAL_FINAL_PNG_ORIGINAL_RESOLUTION_READ_PASS",
+  "reviewer": "/root/plancks_all",
+  "year": 2025,
+  "page": 9,
+  "reviewed_utc": "2026-11-03T14:55:58.136085+00:00",
+  "artifacts": {
+    "proof": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page09.pdf",
+      "sha256": "b19f33fdf66ac6e10cacffd00559b56ad711be0a94cf05ef961152dfe1f81545"
+    },
+    "layout": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page09.layout.json",
+      "sha256": "182368907b129f5b4db2ffb8bc4fe15743a6b088ac26eee87b2608db9d4f9b22"
+    },
+    "png": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2025\\page09\\page09.png",
+      "sha256": "b688d33e329bbf56b21b8597ad772f1fb860c7e8b97d13417a66ec643d88b5e8"
+    },
+    "independent_audit": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2025\\page09\\independent-qa.json",
+      "sha256": "868664f13f73cbdf5046107ad22b861cbbc5452291c845263bd9f46f250ce29c"
+    },
+    "effective_plan": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page09.effective-plan.json",
+      "sha256": "f0a82f06bc2d698479c2a8fc2971176ee8fae766b9676e49efbb2f30a6061473"
+    },
+    "runtime_snapshot": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\ctm-production-runtime-v1\\2025\\page09\\build\\runtime-snapshot.json",
+      "sha256": "d6871d43a10980816800a2e994bc2c4c672772dea16d8b636161a7a5cc4618b1"
+    }
+  },
+  "machine_result": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2025\\page09\\result.json",
+    "sha256": "7318e4bbf5b6d621a24ccdc317bdb548c67d8104128662f25ec56c88ce5d8f59"
+  },
+  "composer": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\natural_plan_compose_ortvay2025_title_final.py",
+    "sha256": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5"
+  },
+  "notes": [
+    "최종 PNG를 original 해상도로 실제 읽었다. 문항22의 native 링크/플라켓 도형과 빨강·파랑 화살표/라벨, 작용·플라켓·평균식 및 격자/경계조건/콜드 스타트/임계값 질문이 정상이다. 일반 띄어쓰기와 문단·문항 a/b/c 및 원래 수식/출제자/페이지번호에 잘림이나 접촉이 없다.",
+    "동일 frozen QA6/root GO의 fullCTM·opacity·master outline·native·P0/P1 엄격 PASS와 실제 이미지 읽기를 결속한다."
+  ]
+}

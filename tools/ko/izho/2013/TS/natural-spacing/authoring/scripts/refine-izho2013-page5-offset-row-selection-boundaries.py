@@ -1,0 +1,10 @@
+from pathlib import Path
+import json,hashlib,shutil
+B=Path('D:/CodexBuilds/Hasla-original-style-20261031/izho2013-complete-solutions');p=B/'natural/2013/TS/plans/page05.json';d=json.loads(p.read_text('utf8'));sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();saved=p.parent.parent/'history'/('plan-before-offset-row-midpoint-selection-'+sha(p)[:16]);saved.mkdir(parents=True,exist_ok=True);shutil.copy2(p,saved/p.name)
+a=next(s for s in d['source_line_scopes']if s['source_at']==[26,0]);b=next(s for s in d['source_line_scopes']if s['source_at']==[26,6]);old_a=a['rect'][:];old_b=b['rect'][:];mid=(a['baseline']+b['baseline'])/2;rule=d['reviewed_offset_source_prose_row_start_positions'][0];assert rule['selection_rect']==old_b
+new_a=old_a[:];new_a[3]=mid;new_b=old_b[:];new_b[0]=rule['natural_start_x']-.25;new_b[1]=mid
+assert new_a[1]<a['baseline']<new_a[3]and new_b[1]<b['baseline']<new_b[3]
+for old,new in[(old_a,new_a),(old_b,new_b)]:assert old in d['allowed_line_rects'];d['allowed_line_rects'][d['allowed_line_rects'].index(old)]=new
+a['rect']=new_a;b['rect']=new_b;rule['selection_rect']=new_b
+d['reviewed_original_offset_rows_midpoint_selection']={'original_baselines':[a['baseline'],b['baseline']],'origin_selection_midpoint':mid,'first_source_selection_before':old_a,'first_source_selection_after':new_a,'trailing_source_selection_before':old_b,'trailing_source_selection_after':new_b,'reason':'The two original source rows differ by3pt. Split selection by their exact baseline midpoint, so each original glyph/prose slot is claimed once even though the trailing translated clause now starts at the preceding condition endpoint plus3pt. These are selection/layout regions only, never PDF paint clipping. All original physical Y, points, full glyph outlines and the full source paragraph column remain unchanged; no overflow/collision/native audit threshold changes.'}
+p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n','utf8');print('ORIGINAL_OFFSET_ROW_SELECTIONS_DISJOINT_IN_Y_NATURAL_CLAUSE_START_INSIDE_SOURCE_PARAGRAPH',flush=True)

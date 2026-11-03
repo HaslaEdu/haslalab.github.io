@@ -1,0 +1,69 @@
+{
+  "page": 51,
+  "passed": true,
+  "proof_sha256": "80fb522dc3c5375190e09c779482b08c130faa202ff5fc97982cd77b9dc375e1",
+  "reference_proof_sha256": "272edd409b6e476500648e1364463e9eb3d21318070670d3ff4c3810bbfd4f82",
+  "protected_source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+  "source_bound_changed_row_baselines": [
+    745.3870239257812
+  ],
+  "source_bound_row_rects": [
+    [
+      114.18260955810547,
+      734.2369995117188,
+      269.0048681621423,
+      748.8060913085938
+    ]
+  ],
+  "anti_alias_support_pad_pt": 0.5,
+  "pixel_scale": 2,
+  "changed_pixels_total": 8,
+  "changed_pixels_outside_named_source_rows": 0,
+  "visible_glyph_geometry_outside_rows_exactly_equal": true,
+  "source_font_programs_images_and_image_placements_preserved": true,
+  "kk": {
+    "passed": true,
+    "page": 51,
+    "proof_sha256": "80fb522dc3c5375190e09c779482b08c130faa202ff5fc97982cd77b9dc375e1",
+    "scale": 2,
+    "threshold": 220,
+    "same_row_grouping_tolerance_pt": 0.001,
+    "close_row_selection_em": 2.0,
+    "tested_close_row_pairs": 4,
+    "pairs": [
+      {
+        "upper_source_baseline": 165.8679962158203,
+        "lower_source_baseline": 177.822998046875,
+        "gap_pt": 11.955001831054688,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 664.6380004882812,
+        "lower_source_baseline": 682.5709838867188,
+        "gap_pt": 17.9329833984375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 682.5709838867188,
+        "lower_source_baseline": 700.5040283203125,
+        "gap_pt": 17.93304443359375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 700.5040283203125,
+        "lower_source_baseline": 712.4590454101562,
+        "gap_pt": 11.95501708984375,
+        "contact_pixels_2x": 0
+      }
+    ],
+    "failures": [],
+    "actual_embedded_subset_fonts": true,
+    "unchanged_word_space_size_shear_paints": true,
+    "cached_row_renders": 6,
+    "old_pair_specific_row_renders": 8,
+    "cache_regression_grayscale_byte_comparisons": 0,
+    "intentional_same_row_overlap_negative_control_pixels": 5076,
+    "orthogonal_labels_excluded": []
+  },
+  "program_sha256": "da97a0ca5a5e425f2dbcb640f274ae48610c4ee55780837e9c71150c1c28e37e"
+}

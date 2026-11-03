@@ -1,0 +1,148 @@
+{
+  "status": "PASS",
+  "actual_PDF_counterexamples": 3,
+  "additional_layout_binding_counterexamples": 1,
+  "all_rejected": true,
+  "positive_proof_sha256": "295d4bcd98d367c2cc0a140ba5d824fdf3345407500b03a127e04d1d2b159219",
+  "positive_layout_sha256": "1b5cdf8f40e8774344d024a5ccdbde997137be37a0f18027000619cfc2971eea",
+  "positive_actual_source_support_audit_program_sha256": "71a4437ddf0a99abc9585ef3585c26c668e42fc891ee0148f7cf6e44f153f21b",
+  "program_sha256": "0735e1cca3fe0b681ee5e166596635ac8dc365547cb8ac548416d608c008fd8f",
+  "cases": [
+    {
+      "case": "unrelated-native-header-rule-erased",
+      "rejected": true,
+      "actual_PDF_mutation": {
+        "kind": "white paint removes real native header stroke",
+        "rect": [
+          61.69300079345703,
+          142.9499969482422,
+          66.69300079345703,
+          144.9499969482422
+        ],
+        "no_text_glyph_changed": true
+      },
+      "fake_layout_fresh_output_sha256_supplied": true,
+      "proof_sha256": "641dab0b020d8135a39430904ee115ded801b087777d2659fac823be0a94d881",
+      "layout_sha256": "ddd198ee9209cb9b56fbb8afd39b704ad0e0b74cd2b155f971509eec2e98faf8",
+      "expected_actual_check": "Actual pixels outside exact source/target stroke support union",
+      "observed_error": "('Actual pixels outside exact source/target stroke support union', 55)"
+    },
+    {
+      "case": "original-native-numeral5-moved",
+      "rejected": true,
+      "actual_PDF_mutation": {
+        "kind": "original native numeral5 moved .75pt horizontally outside named rows",
+        "original_source_native": {
+          "c": "5",
+          "gid": 24,
+          "font": "NotoSans-Bold",
+          "size": 15.940199851989746,
+          "origin": [
+            127.80223083496094,
+            168.0159912109375
+          ],
+          "bbox": [
+            127.80223083496094,
+            155.5049285888672,
+            136.91647338867188,
+            171.44512939453125
+          ],
+          "paint": 0,
+          "native_ink_bbox": [
+            128.58056091308595,
+            156.63680546875,
+            136.18484577636718,
+            168.1716572265625
+          ]
+        },
+        "source_to_current_dx": -38.16083644578305,
+        "original_actual": {
+          "c": "5",
+          "gid": 24,
+          "font": "NotoSans-Bold",
+          "size": 15.940199851989746,
+          "origin": [
+            89.64140319824219,
+            168.0159912109375
+          ],
+          "bbox": [
+            89.64140319824219,
+            155.5049285888672,
+            98.75564575195312,
+            171.44512939453125
+          ],
+          "paint": 0,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.699999988079071
+          ],
+          "opacity": 1.0
+        },
+        "actual": {
+          "c": "5",
+          "gid": 24,
+          "font": "NotoSans-Bold",
+          "size": 15.940199851989746,
+          "origin": [
+            90.39140319824219,
+            168.0159912109375
+          ],
+          "bbox": [
+            90.39140319824219,
+            155.5049285888672,
+            99.50564575195312,
+            171.44512939453125
+          ],
+          "paint": 0,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.699999988079071
+          ],
+          "opacity": 1.0
+        },
+        "motion_audit_passed": true
+      },
+      "fake_layout_fresh_output_sha256_supplied": true,
+      "proof_sha256": "bbbb7dae08448879bfbbc2239f74b34c8957bbff62b6cc2238c0e987e1fb6972",
+      "layout_sha256": "9747af44161401498f8a429066068f143c6cddf5d4be5102d2d4403385ac4e40",
+      "expected_actual_check": "Actual visible glyph geometry differs from audited immutable p32 proof",
+      "observed_error": "Actual visible glyph geometry differs from audited immutable p32 proof"
+    },
+    {
+      "case": "actual-source-path-replaced",
+      "rejected": true,
+      "actual_PDF_mutation": {
+        "kind": "actual m/l/S source construction replaced by the other underline path",
+        "original_fragment_sha256": "8756e7deb5c4dd9e6d470d9fc562f58398996bc4a34371ebcd759b4da9be9477",
+        "replacement_fragment_sha256": "c8ee1179ff61d9ce326c2dfb5386623cbcd9ecf9d3e06c2360fe561a3e3305fd"
+      },
+      "fake_layout_fresh_output_sha256_supplied": true,
+      "proof_sha256": "614a9718b3627d36ffc1b74ff71603898eec07f9d98405f0b5747fa140fb25e0",
+      "layout_sha256": "3d2e422a00efde2c197d81e9f582e06a6792bbdd0667a14baf111f4368b2a0e5",
+      "expected_actual_check": "Original source underline construction bytes missing or replaced",
+      "observed_error": "Original source underline construction bytes missing or replaced"
+    },
+    {
+      "case": "forged-layout-expands-mask-around-erased-native-rule",
+      "rejected": true,
+      "actual_PDF_mutation": {
+        "kind": "same actual native-rule deletion plus fake changed row bounds; layout-binding control, not an extra PDF pixel-test claim"
+      },
+      "fake_layout_fresh_output_sha256_supplied": true,
+      "proof_sha256": "641dab0b020d8135a39430904ee115ded801b087777d2659fac823be0a94d881",
+      "layout_sha256": "78b7567aa5e64480acb9239d15ffac07e1c6e43edbed8450b5571262d9fc017e",
+      "expected_actual_check": "Certified layout changed beyond output_sha256",
+      "observed_error": "Certified layout changed beyond output_sha256"
+    }
+  ]
+}

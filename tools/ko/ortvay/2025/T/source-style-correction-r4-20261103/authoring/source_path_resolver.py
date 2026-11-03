@@ -1,0 +1,30 @@
+"""Read migrated source files without changing hash-pinned provenance JSON."""
+from pathlib import Path
+import hashlib
+
+OLD_ROOT='C:/Users/andre/OneDrive/문서/ChatGPT/Hasla 노술'
+NEW_ROOT=Path('C:/Users/andre/CodexWork/HaslaLab')
+REPOSITORIES=('haslalab','haslalab-chem-kmo-exams','haslalab-design-release','haslalab-translations')
+SOURCE_ALIASES={'d:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2003_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2003_T_KO_OFFICIAL.pdf', 'sha256': '3d9b0371de6fe73d8a970f96e303d01ab0376dd4f1f413f04990c94910cace3a'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2004_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2004_T_KO_OFFICIAL.pdf', 'sha256': '63c3f0b309d46f22ac3f5523577a2333553d17ea3861bb25b5aab3dece247e88'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2008_ts_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\legacy-office\\IChO_2008_T_OFFICIAL_SOURCE_680.pdf', 'sha256': '505ca63b3bcb7729ca013631dad301bd46e089b44da3e109e13d7ea8b7a78bcd'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2009_ts_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2009_T_KO_OFFICIAL.pdf', 'sha256': '707230d468d26ca4b525bb62ad5f3fc9c4d6dceec1805a351e2db1a75aab6cd6'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2011_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2011_T_KO_OFFICIAL.pdf', 'sha256': 'dcb96a91918e276faf67325ccc911265e13caa967796f6728dba65b027307674'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2012_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2012_T_KO_OFFICIAL.pdf', 'sha256': '8af85ff6f727b56dd28e4b4a0ce41b1dd2fd45fdb96e3b7951ea26b65ba9655b'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2013_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2013_T_KO_OFFICIAL.pdf', 'sha256': '3483001188204cced249a0e25ca93506e55f7be2e962cb6bedb07a0625e1516b'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2014_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2014_T_KO_OFFICIAL.pdf', 'sha256': '6985fa320d2f4ce79d602822693f7b5b0556c81e59d8c25a18885f25692d9629'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2016_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2016_T_KO_OFFICIAL.pdf', 'sha256': '4d5bc5a8d85d22664d204c2d8967e61f6bd5ef0f4279610788fb609b0ab2135c'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2017_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2017_T_KO_OFFICIAL.pdf', 'sha256': '1d8242ccd55485a65ec08a9f1c23df3433a48bf20dfacfa7569f39f4f950c339'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2018_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2018_T_KO_OFFICIAL.pdf', 'sha256': '629b1fa5227f84098df26847915fa94869462568f61ac201d7a28965d7a1a8e1'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2020_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2020_T_KO_HOST_ORIGINAL.pdf', 'sha256': 'c17a9887b3cc12caa67e2282af3b09edde346e073abb1d88bca03c499bd5ad24'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2021_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2021_T_KO_OFFICIAL.pdf', 'sha256': 'e62b6f55738bb9146617f834b270f533018afb745780e67f82c046f34be65889'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2022_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2022_T_KO_OFFICIAL.pdf', 'sha256': '5b3c6af800fd7dacbaec84f2b030dafc933aef6761f9246d784c736ee85813cc'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2023_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2023_T_KO_OFFICIAL.pdf', 'sha256': '955a1730f35d6bbed5e6740e0b7284f1f84207e7d59a753bb41f2e9f73362212'}, 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/staged/icho_2025_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2025_T_KO_OFFICIAL.pdf', 'sha256': '057edb6d2e8d6bfdc7bb2e3f71d0e087c35ed86a718a21def7031cbf118eb4e5'}, 'd:/codexbuilds/hasla-plancks-ortvay-icho-20261102/staged/icho/icho_2026_t_ko.pdf': {'path': 'D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\icho\\IChO_2026_T_KO_OFFICIAL.pdf', 'sha256': 'c52d9adb406aff0d22fb5a74b2b6ec04855982ca1a22ac7c92e511d5e41e26bc'}}
+
+def resolve_source(value,expected_sha256=None):
+    logical=str(value).replace('\\','/')
+    actual=Path(value)
+    for name in REPOSITORIES:
+        prefix=OLD_ROOT+'/'+name
+        if logical.casefold()==prefix.casefold() or logical.casefold().startswith(prefix.casefold()+'/'):
+            actual=NEW_ROOT/name/logical[len(prefix):].lstrip('/')
+            break
+    alias=SOURCE_ALIASES.get(logical.casefold())
+    if alias:
+        actual=Path(alias['path'])
+        if expected_sha256 and expected_sha256!=alias['sha256']:raise ValueError('Source alias SHA256 mismatch')
+        expected_sha256=alias['sha256']
+    if not actual.is_absolute():raise ValueError('Source paths must be absolute')
+    if not actual.is_file():raise FileNotFoundError(actual)
+    if expected_sha256:
+        digest=hashlib.sha256()
+        with actual.open('rb')as source:
+            for chunk in iter(lambda:source.read(65536),b''):digest.update(chunk)
+        if digest.hexdigest()!=expected_sha256:raise ValueError('Migrated source SHA256 mismatch: '+str(actual))
+    return actual

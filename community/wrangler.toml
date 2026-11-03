@@ -80,6 +80,8 @@ LAB_GRADE_TOOLS = "on"
 LAB_READ_MODEL = "gemini-3.8-flash"
 # DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
 # numbers it missed from 21 to 14 of 102 for $0.0002 more a page
+# kept for Gemini 3.8 Flash too: without them its reads of the 9 gold pages loosened (28 of 31 checks against 97% with
+# them) and looped as often (3 of 9 pages to the 10k cap), 2026-11-03
 LAB_READ_TILES = "3"
 # the paper's own symbols handed to the reader to tell look-alikes apart (I0 from Z0, gamma from Y): bench, DeepSeek Flash,
 # hard misreads fixed 5 -> 8 of 28, checked numbers missed 14 -> 13 of 102, for about $0.0001 a page
@@ -94,6 +96,12 @@ LAB_FOCUS_READ = "on"
 LAB_KEEP_HOURS = "off"
 # empty: Gemini thinks at the level the bench measured (minimal); "off" would leave it to the model
 LAB_READ_THINKING = ""
+# 3.8 Flash on AI Studio: 7 of 17 production reads failed at 126-128 s (a page looping on itself; the same on Vertex),
+# a whole page takes 16-41 s. A read is cut at 70 s and 10k tokens and goes to the fallback model; a page Google is too
+# busy for (429/503) is read by the same model through Vertex AI first (the service account's project)
+LAB_READ_TIMEOUT_MS = "70000"
+LAB_READ_MAX_TOKENS = "10240"
+LAB_READ_VERTEX = "on"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
 LAB_SCHEME_WARM = "on"

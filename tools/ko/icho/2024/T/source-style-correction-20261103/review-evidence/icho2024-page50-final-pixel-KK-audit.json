@@ -1,0 +1,66 @@
+{
+  "page": 50,
+  "passed": true,
+  "proof_sha256": "bd2e22957fc5968589f03259648faef8054c698f39cec6ab4bfa397545c28165",
+  "reference_proof_sha256": "32cd3074a3541537e913e5dec5f55fece6ede82bf353e2b94be425086c62cf34",
+  "protected_source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+  "source_bound_changed_row_baselines": [],
+  "source_bound_row_rects": [],
+  "anti_alias_support_pad_pt": 0.5,
+  "pixel_scale": 2,
+  "changed_pixels_total": 0,
+  "changed_pixels_outside_named_source_rows": 0,
+  "visible_glyph_geometry_outside_rows_exactly_equal": true,
+  "source_font_programs_images_and_image_placements_preserved": true,
+  "kk": {
+    "passed": true,
+    "page": 50,
+    "proof_sha256": "bd2e22957fc5968589f03259648faef8054c698f39cec6ab4bfa397545c28165",
+    "scale": 2,
+    "threshold": 220,
+    "same_row_grouping_tolerance_pt": 0.001,
+    "close_row_selection_em": 2.0,
+    "tested_close_row_pairs": 5,
+    "pairs": [
+      {
+        "upper_source_baseline": 139.36700439453125,
+        "lower_source_baseline": 168.10198974609375,
+        "gap_pt": 28.7349853515625,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 168.10198974609375,
+        "lower_source_baseline": 199.98199462890625,
+        "gap_pt": 31.8800048828125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 673.9520263671875,
+        "lower_source_baseline": 685.9080200195312,
+        "gap_pt": 11.95599365234375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 685.9080200195312,
+        "lower_source_baseline": 703.8400268554688,
+        "gap_pt": 17.9320068359375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 703.8400268554688,
+        "lower_source_baseline": 721.7730102539062,
+        "gap_pt": 17.9329833984375,
+        "contact_pixels_2x": 0
+      }
+    ],
+    "failures": [],
+    "actual_embedded_subset_fonts": true,
+    "unchanged_word_space_size_shear_paints": true,
+    "cached_row_renders": 7,
+    "old_pair_specific_row_renders": 10,
+    "cache_regression_grayscale_byte_comparisons": 0,
+    "intentional_same_row_overlap_negative_control_pixels": 674,
+    "orthogonal_labels_excluded": []
+  },
+  "program_sha256": "da97a0ca5a5e425f2dbcb640f274ae48610c4ee55780837e9c71150c1c28e37e"
+}

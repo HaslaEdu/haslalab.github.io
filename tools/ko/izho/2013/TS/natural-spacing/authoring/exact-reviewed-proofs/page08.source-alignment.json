@@ -1,0 +1,81 @@
+{
+  "source_sha256": "2804ded48ad009bf58884b871f0f4817c64762b8a0f586e42056908fc4be10f1",
+  "source_page": 8,
+  "proof_sha256": "33032dda21e32c38b5e764bba47ac345c39db929c9549b685667d9f2a96b1800",
+  "plan_sha256": "5d04fb14019e0da12f3d255e5772e66a4b3c64a26a19981469e445292691097b",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 158.53997802734375,
+      "source_center": 312.5376739501953,
+      "independent_original_source_centers": [
+        312.5376739501953
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 273.4814147949219,
+      "actual_nonspace_glyph_right": 351.59393310546875,
+      "actual_center": 312.5376739501953,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 8,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          1
+        ]
+      ],
+      "baseline": 174.6199951171875,
+      "source_center": 312.5653076171875,
+      "independent_original_source_centers": [
+        312.5653076171875
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 246.2683868408203,
+      "actual_nonspace_glyph_right": 378.86224365234375,
+      "actual_center": 312.56531524658203,
+      "center_error_pt": 7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 9,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "Problem 3 (10 pts) ",
+        "original_center": 312.5376739501953,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          1
+        ],
+        "source_text": "Bohr model for hydrogen atom ",
+        "original_center": 312.5653076171875,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

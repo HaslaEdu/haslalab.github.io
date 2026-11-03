@@ -129,6 +129,14 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       const prefix = oldParent + repo + '/';
       if (source.startsWith(prefix)) return newParent + repo + '/' + source.slice(prefix.length);
     }
+    // The reviewed style worktree retains an exact copy of this EN source.
+    // Keep historical plan provenance immutable and recognize only this pair.
+    if (item.file === 'IChO_2024_T_KO.pdf' && qa.source_style_correction &&
+        qa.source_sha256 === '959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a') {
+      const original = 'd:/codexbuilds/hasla-poi-natural-20261102/historical/icho/english-missing/icho_2024_t_en.pdf';
+      const retained = 'd:/codexbuilds/hasla-poi-natural-20261102/style-corrections/icho2024-20261103/frozen/source/icho_2024_t_en.pdf';
+      if (source === original || source === retained) return original;
+    }
     return source;
   };
   const assertSourcePath = source => {

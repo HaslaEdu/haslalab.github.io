@@ -1,0 +1,39 @@
+{
+  "page": 1,
+  "passed": true,
+  "proof_sha256": "4311cf47b3643809e59e61989083b9a19a3ee4076828c72d6edcbabde8447a0c",
+  "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+  "mapping_sha256": "ad5990b8ceb44b2dabbfc7a53ce8c344907d4b5b243f58e4e7cd88fba0dfde8a",
+  "approved_source_clause_manifest_sha256": "bc06cca28d8b2f3ed93b437a5c3ed12f37cc8dd40d096f174314e5e2dffa68b2",
+  "exact_approved_text_edits": 11,
+  "all_expected_Korean_nonspace_characters_preserved_once": 637,
+  "all_requested_font_roles_bound_to_actual_original_source_styles": true,
+  "exact_original_sizes_and_raw_prose_baseline_pool_membership_preserved": true,
+  "no_other_bold_or_italic_changes": true,
+  "semantic_mappings": [
+    {
+      "index": 0,
+      "source_English": " make a note",
+      "source_original_font": "NotoSans-Bold",
+      "source_pointsize": 9.962599754333496,
+      "source_original_baseline": 305.8789978027344,
+      "target_literal": "메모를 남겨라",
+      "target_fragment_id": "p1:b7:l1:s1-1#style0",
+      "target_font_role": "sans-bold",
+      "actual_target_baseline": 305.8789978027344
+    },
+    {
+      "index": 1,
+      "source_English": " Do not separate",
+      "source_original_font": "NotoSans-Bold",
+      "source_pointsize": 9.962599754333496,
+      "source_original_baseline": 336.76300048828125,
+      "target_literal": "분리하지 마라",
+      "target_fragment_id": "p1:b8:l0:s3-4#style0",
+      "target_font_role": "sans-bold",
+      "actual_target_baseline": 336.76300048828125
+    }
+  ],
+  "new_Korean_italic_placements": 0,
+  "program_sha256": "bbc753360d5c243a4ca31fede8047b67b212cecea704bfae275521e82b8082e4"
+}

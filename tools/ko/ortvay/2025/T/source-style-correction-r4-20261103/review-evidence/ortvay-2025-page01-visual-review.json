@@ -1,0 +1,42 @@
+{
+  "status": "ACTUAL_FINAL_PNG_ORIGINAL_RESOLUTION_READ_PASS",
+  "reviewer": "/root/plancks_all",
+  "year": 2025,
+  "page": 1,
+  "reviewed_utc": "2026-11-03T12:02:12.625759+00:00",
+  "artifacts": {
+    "proof": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.pdf",
+      "sha256": "2062385ac5e56ecaa46656fe2110865166b61b6e533c60c5d8a0ddecfcc67d86"
+    },
+    "layout": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.layout.json",
+      "sha256": "047382c1a6e2e0b429982ef36bea3127913149a3261ab53ccd2d77255b9426ba"
+    },
+    "png": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.png",
+      "sha256": "ccc38c455397b8c079dcf8de8af5121fd9ff3d7f97465dbae776fc61ca644983"
+    },
+    "independent_audit": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.independent-qa.json",
+      "sha256": "c8d2a3edae9bf028140311e4d900083269e75e40ae32a2bc7ecad6f86c100b3c"
+    },
+    "effective_plan": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.effective-plan.json",
+      "sha256": "0f986b7def34607dd0bbeaaa3ed16c269cc765cd6b20484c8c47d052fcad950e"
+    },
+    "runtime_snapshot": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2025-01-build\\runtime-snapshot.json",
+      "sha256": "e501e120ed6e4d0343382d652126276f67274f988f5ee975e5ab7f35f9e43a1f"
+    }
+  },
+  "composer": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\natural_plan_compose_ortvay2025_title_final.py",
+    "sha256": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5"
+  },
+  "preparation_sha256": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a",
+  "notes": [
+    "최종 PNG를 original 해상도로 실제 읽었다. 제목4줄의 중앙정렬·날짜·굵은 글자 역할/원래 줄 높이가 정상이다. 문항1의 비탄성 한국어 italic이 오른 방향으로 기울고 승인된 한 행+0.75pt 수평보정 뒤 본문 접촉이 보이지 않는다. 이 행은 italic 윤곽 변경이 결합되므로 bbox 전체가 순수 x이동이라고 주장하지 않는다.",
+    "문항2의 세 구슬 native 컬러 그림·v0/k/d·0<k<1 및 탄성/비탄성 극한 질문, 문항3의 도로곡선/차폭/alpha/beta/속도 수치와 시간절약 질문이 읽힌다. 수식·그림·출제자·문항/페이지번호와 보통 띄어쓰기·본문 간격이 정상이며 잘림이나 접촉이 없다. strict actual/master/native/P0·P1/결합행 outline 및2×4×8× KK audit PASS인 이 proof에 결속한다."
+  ]
+}

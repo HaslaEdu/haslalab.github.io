@@ -1,0 +1,1507 @@
+{
+  "schema": "icho2024-root-approved-source-clause-translation-v1",
+  "status": "DRAFT_P7_VERB_APPROVED_P57_NATIVE_PREFIX_REQUIRES_GATED_PROBE_NO_FINAL_GO",
+  "proposal_sha256": "c07ecbdf6459a261650669d41287fe8cbe5af4e9128e9829352f09fe0404a78c",
+  "root_conditions": [
+    "preserve and/or",
+    "apply same-clause edits as one union",
+    "p39 no isolated period row and preserve native symbols",
+    "p55 a-e toI-V correspondence/particles",
+    "no native row/pointsize/baseline-pool change"
+  ],
+  "pages": [
+    1,
+    7,
+    13,
+    15,
+    19,
+    21,
+    28,
+    37,
+    39,
+    43,
+    45,
+    46,
+    55,
+    57,
+    58
+  ],
+  "edits": {
+    "p7:b21:l0:s5-7": {
+      "slot_id": "p7:b21:l0:s5-7",
+      "original_English_guard": ") for",
+      "source_at": [
+        21,
+        0,
+        5,
+        7
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": ")를,",
+      "after": ")를.",
+      "before_sha256": "18b86e338488b51f10f567b88eaea032fd65b893db24453edac30f7c38483d87",
+      "after_sha256": "cb00d3c4dca43e9d4a085cd60a3bca89ba9b7132aa51e2bb54d2fa5e758122a7",
+      "existing_physical_baselines": [
+        578.68896484375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 7,
+      "inventory_indices": [
+        7
+      ]
+    },
+    "p7:b21:l1:s0-0": {
+      "slot_id": "p7:b21:l1:s0-0",
+      "original_English_guard": "catalysts",
+      "source_at": [
+        21,
+        1,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "촉매",
+      "after": "대상 촉매:",
+      "before_sha256": "e8386d30186dd0f2b5cb7634c74374d9092d5db74b9151a08a61d65b7fe3f311",
+      "after_sha256": "02c963963900ba00d684760d068c341f20938d9092fb5fb65d0f23b2a6631a3b",
+      "existing_physical_baselines": [
+        590.6439819335938
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 7,
+      "inventory_indices": [
+        7
+      ]
+    },
+    "p13:b11:l1:s1-1": {
+      "slot_id": "p13:b11:l1:s1-1",
+      "original_English_guard": " the percentage of the tetrahedral sites that is occupied in the case of",
+      "source_at": [
+        11,
+        1,
+        1,
+        1
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "사면체 자리 중 점유된 자리의 비율이다. 대상은 다음 조성을 갖는",
+      "after": "사면체 자리의 점유 백분율이다. 대상 조성은 다음과 같다:",
+      "before_sha256": "0b423a9992f9eee8e1afd4d7c6452b14ef530dfc56db404570ea3b8ba58e7289",
+      "after_sha256": "d176cd5165328042cbd9e47a9e45a1aa703406af555c49efcc4776a2f076b49e",
+      "existing_physical_baselines": [
+        445.7349853515625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 13,
+      "inventory_indices": [
+        11
+      ],
+      "root_condition": "Source says percentage: retain it explicitly as 백분율, keeping the native spinel formula and semantic imperative on their original rows."
+    },
+    "p15:b5:l2:s0-0": {
+      "slot_id": "p15:b5:l2:s0-0",
+      "original_English_guard": "different conductivity types,",
+      "source_at": [
+        5,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "활성화 에너지들을,",
+      "after": "활성화 에너지를. 대상은",
+      "before_sha256": "9ecbc1038a013e64103135f7f825139745cc2e201cafc23d8373fa9c745387b0",
+      "after_sha256": "79d0bc38040e4ca7393e841cef2e7f35e438d7ea5c254671b9fe41914d878490",
+      "existing_physical_baselines": [
+        491.7459716796875
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 15,
+      "inventory_indices": [
+        14
+      ]
+    },
+    "p15:b5:l2:s10-10": {
+      "slot_id": "p15:b5:l2:s10-10",
+      "original_English_guard": ", from largest to smallest.",
+      "source_at": [
+        5,
+        2,
+        10,
+        10
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "에 대하여 큰 것부터 작은 것 순으로 나열하라.",
+      "after": "이며, 내림차순으로 나열한다.",
+      "before_sha256": "6ec915bf059f51cf4e9af9e60a6f6a6c2be44902333a355a8d3a79e848462480",
+      "after_sha256": "cfecd461d76984544798fadaa9570b23c6fe7c0a2c43f664f0890fd441437786",
+      "existing_physical_baselines": [
+        491.7459716796875
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 15,
+      "inventory_indices": [
+        14
+      ],
+      "root_condition": "Root-approved: clarify required sorting action; do not state that the printed I/II/III target list is already the descending answer."
+    },
+    "p19:b14:l3:s0-0": {
+      "slot_id": "p19:b14:l3:s0-0",
+      "original_English_guard": "formulas based on the kinetic data.",
+      "source_at": [
+        14,
+        3,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "이 과정의 균형 반응식을 작성하라.",
+      "after": "이 과정의 균형 반응식을.",
+      "before_sha256": "d36fdf7c03f11bef252f5778af7f243171f790ad6df08dd861306e576bc0fb10",
+      "after_sha256": "c2eda755f4feb4645173268f120561ee85b1df259ee595da443cbb7ee911050b",
+      "existing_physical_baselines": [
+        348.7729797363281
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 19,
+      "inventory_indices": [
+        16
+      ]
+    },
+    "p19:b16:l2:s0-0": {
+      "slot_id": "p19:b16:l2:s0-0",
+      "original_English_guard": "appropriate unit.",
+      "source_at": [
+        16,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "적절한 단위와 함께 구하라.",
+      "after": "적절한 단위도 함께 적는다.",
+      "before_sha256": "90074542caef3214287c4a4524bf56d21d42ade4f4a92c27087a6128cce04a84",
+      "after_sha256": "734c21a20ac575a6b7bb8e6386ccb231f8358d8dea1a9c5514249d01c0436cd3",
+      "existing_physical_baselines": [
+        408.14398193359375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 19,
+      "inventory_indices": [
+        17
+      ]
+    },
+    "p19:b26:l1:s1-1": {
+      "slot_id": "p19:b26:l1:s1-1",
+      "original_English_guard": " the rate law of the reaction between catechol and oxygen produc-",
+      "source_at": [
+        26,
+        1,
+        1,
+        1
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "카테콜과 산소가 반응하여 다음 물질을 생성하는 반응의 속도식을:",
+      "after": "카테콜과 산소의 반응 속도식을. 생성물은 다음 물질이다:",
+      "before_sha256": "36f3e15277ad036a444aaa9d5d4828cd021f0f11b0a5b35ce5de69333c8e0c64",
+      "after_sha256": "e0c8cff32a32ad3cb1af46a7c6edea6914af4bbc0e92db7b6545d02a06ecd9ce",
+      "existing_physical_baselines": [
+        670.1300048828125
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 19,
+      "inventory_indices": [
+        18
+      ]
+    },
+    "p19:b26:l3:s0-0": {
+      "slot_id": "p19:b26:l3:s0-0",
+      "original_English_guard": "appropriate unit.",
+      "source_at": [
+        26,
+        3,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "적절한 단위와 함께 제시하라.",
+      "after": "적절한 단위도 함께 적는다.",
+      "before_sha256": "ec38aa88451b347d572f783605dcb663d095744eee5c717d2a396cd3c10a671a",
+      "after_sha256": "734c21a20ac575a6b7bb8e6386ccb231f8358d8dea1a9c5514249d01c0436cd3",
+      "existing_physical_baselines": [
+        694.0400390625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 19,
+      "inventory_indices": [
+        19
+      ]
+    },
+    "p21:b4:l2:s0-20": {
+      "slot_id": "p21:b4:l2:s0-20",
+      "original_English_guard": "enzyme ([E]) from the data of these experiments in terms of",
+      "source_at": [
+        4,
+        2,
+        0,
+        20
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "계산할 수 있는 식을, 다음 상수들과",
+      "after": "계산할 수 있는 식을. 식은 다음 상수들과",
+      "before_sha256": "09c616dae0a145b52da634e1c90871f517e67a8634bc9cced62922a5fad27006",
+      "after_sha256": "660023fa1a912a3e7d31f5f37c90f2139d80ce4e8c764cd2a7460168582dc365",
+      "existing_physical_baselines": [
+        188.8330078125
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 21,
+      "inventory_indices": [
+        20
+      ]
+    },
+    "p21:b4:l3:s4-4": {
+      "slot_id": "p21:b4:l3:s4-4",
+      "original_English_guard": "), and/or reagent concentrations.",
+      "source_at": [
+        4,
+        3,
+        4,
+        4
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "), 또는 시약의 농도로 나타내라.",
+      "after": "), 및/또는 시약의 농도로 나타낸다.",
+      "before_sha256": "691aa94797463a318a5d7ed3fb1edc4fbd0b2e5b5aa2a5bb4456587448ef2002",
+      "after_sha256": "5621dc8d04d95de1f7915b718795b79f5a7da35fc7bf50ba9ab2a57008b1156b",
+      "existing_physical_baselines": [
+        200.78900146484375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 21,
+      "inventory_indices": [
+        20
+      ]
+    },
+    "p21:b8:l3:s0-0": {
+      "slot_id": "p21:b8:l3:s0-0",
+      "original_English_guard": "and of",
+      "source_at": [
+        8,
+        3,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "식을:",
+      "after": "식을. 상수:",
+      "before_sha256": "f55fb10524e8c91e99b34dc8f9e32d28ffbfea6ba0388a19781678df239967e4",
+      "after_sha256": "dc35c8afd4bde0fc2b1716453f7a266fcac72f631b476646a00b275bf32aca3f",
+      "existing_physical_baselines": [
+        380.0279846191406
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 21,
+      "inventory_indices": [
+        23
+      ]
+    },
+    "p28:b7:l2:s0-0": {
+      "slot_id": "p28:b7:l2:s0-0",
+      "original_English_guard": "each of the four salts.",
+      "source_at": [
+        7,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "공명 구조를 하나씩 그려라.",
+      "after": "공명 구조를 하나씩.",
+      "before_sha256": "a7dde477b59ba2a445fe8e2bc116060927265d2e8718e5867d0778dfaed1222e",
+      "after_sha256": "f36f54ba621895003b386ea84072b60fbeaebeda291e0c3c67ca052a2c14fe66",
+      "existing_physical_baselines": [
+        331.9230041503906
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 28,
+      "inventory_indices": [
+        32
+      ]
+    },
+    "p37:b15:l1:s1-1:c65-76": {
+      "slot_id": "p37:b15:l1:s1-1:c65-76",
+      "original_English_guard": " on the an-",
+      "source_at": [
+        15,
+        1,
+        1,
+        1
+      ],
+      "source_char_start": 65,
+      "source_char_end": 76,
+      "before": "구조에 입체 생성 탄소 중심을",
+      "after": "구조에 입체 생성 탄소 중심을.",
+      "before_sha256": "6aa479d41114fbbb19ed368b35199d7b36aa6a34b3ea630799c91f0ed239eed0",
+      "after_sha256": "48432c871fc91ff39a3840703f6e58a46147104a7c0c799b2beaae1e271635d3",
+      "existing_physical_baselines": [
+        354.8210144042969
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 37,
+      "inventory_indices": [
+        36
+      ]
+    },
+    "p37:b15:l2:s0-0": {
+      "slot_id": "p37:b15:l2:s0-0",
+      "original_English_guard": "swer sheet.",
+      "source_at": [
+        15,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "표시하라.",
+      "after": "",
+      "before_sha256": "4110220df02d5f2d15a293f2c70ed83357b35405d7188428d6f2b9f2f0e0dd2e",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_physical_baselines": [
+        366.7760009765625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 37,
+      "inventory_indices": [
+        36
+      ]
+    },
+    "p37:b15:l3:s0-0": {
+      "slot_id": "p37:b15:l3:s0-0",
+      "original_English_guard": "on the answer sheet.",
+      "source_at": [
+        15,
+        3,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "답안지에 적어라.",
+      "after": "답안지에.",
+      "before_sha256": "338b6c8f08af5649d03f153f919352c70be3fc15c2ecf096bdca38bb6cf857d1",
+      "after_sha256": "016beac95af95f78db3c5156a902b1944e26ad93c42d01a36cbd180822b5bf4a",
+      "existing_physical_baselines": [
+        378.7309875488281
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 37,
+      "inventory_indices": [
+        37
+      ]
+    },
+    "p39:b6:l1:s17-17": {
+      "slot_id": "p39:b6:l1:s17-17",
+      "original_English_guard": " the",
+      "source_at": [
+        6,
+        1,
+        17,
+        17
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "필요한 경우",
+      "after": "",
+      "before_sha256": "131c1bae30acac53c2fc3acdbc01adaf2b470d8d72faadb0e7c40d09c6fff967",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_physical_baselines": [
+        379.5690002441406,
+        391.5249938964844
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 39,
+      "inventory_indices": [
+        43
+      ],
+      "root_condition": "p39 source-clause refinement: translate the article jointly and bind the condition to the actual when relevant source slot; fragment/permute on its existing physical row."
+    },
+    "p39:b6:l2:s0-0": {
+      "slot_id": "p39:b6:l2:s0-0",
+      "original_English_guard": "stereostructure using wedge–dash notation",
+      "source_at": [
+        6,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "입체 구조는 쐐기–점선 표기법을 사용하여",
+      "after": "입체 구조를 쐐기–점선 표기법으로",
+      "before_sha256": "5ac2855caada6077489626b9a2e19c071fe1d68b697399950327dcee34ffe3ad",
+      "after_sha256": "36b1a3d147716bd80458ffb4d97f7b47b37a307f2fca3c016c388a00ca1dc202",
+      "existing_physical_baselines": [
+        391.5249938964844
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 39,
+      "inventory_indices": [
+        43
+      ]
+    },
+    "p39:b6:l4:s1-1": {
+      "slot_id": "p39:b6:l4:s1-1",
+      "original_English_guard": " when relevant.",
+      "source_at": [
+        6,
+        4,
+        1,
+        1
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "나타내라.",
+      "after": "필요할 때.",
+      "before_sha256": "e24c7ad96b0fbfdaab780b7de61197455b1a3e316323896a70308cad2c149cc4",
+      "after_sha256": "f41096b5d251b7ca9ce2b0ba482fadaafbec60e500178b3a9dd29d691c1f5d1e",
+      "existing_physical_baselines": [
+        391.5249938964844
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 39,
+      "inventory_indices": [
+        43
+      ],
+      "root_condition": "p39 source-clause refinement: translate the article jointly and bind the condition to the actual when relevant source slot; fragment/permute on its existing physical row."
+    },
+    "p39:b10:l2:s0-0": {
+      "slot_id": "p39:b10:l2:s0-0",
+      "original_English_guard": "sheet.",
+      "source_at": [
+        10,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "답안지에 표시하라.",
+      "after": "답안지에서.",
+      "before_sha256": "d7a2ae31dbfc77dbfd6b2ac08515b51882769edb65ecbe8976c6379d73fd92ce",
+      "after_sha256": "928ab1730caad6d380a04100e823b3ce08b6395dbaa14e3192b2cfed67e8aea5",
+      "existing_physical_baselines": [
+        617.5800170898438
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 39,
+      "inventory_indices": [
+        45
+      ]
+    },
+    "p43:b9:l1:s9-25": {
+      "slot_id": "p43:b9:l1:s9-25",
+      "original_English_guard": "which ensures that the product mixture of olefins shows",
+      "source_at": [
+        9,
+        1,
+        9,
+        25
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": ". 닫힌계에서 반응을 진행할 때 올레핀 생성물 혼합물의",
+      "after": ". 조건: 닫힌계에서 반응한 올레핀 생성물 혼합물은",
+      "before_sha256": "179518070936b38fbe9be8965660d490788e40cba9b25b0f02d99ae04c2bf329",
+      "after_sha256": "5de1dda638991e68f68cdc87d4333ff8260a306948aed4eff6a11216264cdff7",
+      "existing_physical_baselines": [
+        332.0039978027344
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 43,
+      "inventory_indices": [
+        48
+      ]
+    },
+    "p43:b9:l2:s0-0": {
+      "slot_id": "p43:b9:l2:s0-0",
+      "original_English_guard": "the required ratio of products in accordance with the Schulz–Flory distribution",
+      "source_at": [
+        9,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "생성물 비율이 슐츠–플로리 분포의 조건에 맞도록 하는 값을",
+      "after": "생성물 비율이 슐츠–플로리 분포의 요구 조건을 만족한다.",
+      "before_sha256": "bcc2fa839665308115527fd7376ac6a993b426883f370ad366cd833c498536e7",
+      "after_sha256": "a752d0d2070de2e5ea19f53da7a040c2af3908eb05808eff5e71ac1f12c8af8b",
+      "existing_physical_baselines": [
+        343.958984375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 43,
+      "inventory_indices": [
+        48
+      ]
+    },
+    "p43:b9:l3:s0-0": {
+      "slot_id": "p43:b9:l3:s0-0",
+      "original_English_guard": "when the reaction is run in a closed system.",
+      "source_at": [
+        9,
+        3,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "찾아라.",
+      "after": "",
+      "before_sha256": "8af165a6bc1535a9f2f3b2ebbc292b18da0351df3cb5771873b32bd1e080112e",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_physical_baselines": [
+        355.9139709472656
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 43,
+      "inventory_indices": [
+        48
+      ]
+    },
+    "p43:b9:l3:s3-3": {
+      "slot_id": "p43:b9:l3:s3-3",
+      "original_English_guard": " a formula for this case that",
+      "source_at": [
+        9,
+        3,
+        3,
+        3
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "이 경우에 해당하는 다음 관계식을,",
+      "after": "이 경우의 관계식을,",
+      "before_sha256": "69998574855ce089cfb53d719bde8c951524fc621c4980bd2ede0622e4d299b4",
+      "after_sha256": "61ad06bf64a961aa1ec9a845511ad228d697df80a7f4fe9b5a97cda5e94f7e22",
+      "existing_physical_baselines": [
+        355.91400146484375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 43,
+      "inventory_indices": [
+        49
+      ]
+    },
+    "p43:b9:l4:s2-2": {
+      "slot_id": "p43:b9:l4:s2-2",
+      "original_English_guard": "as the function of rate constants.",
+      "source_at": [
+        9,
+        4,
+        2,
+        2
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "를 속도 상수들의 함수로 나타내는 식을 유도하라.",
+      "after": "를 속도 상수들의 함수로 나타내는 식을.",
+      "before_sha256": "d4c2793b025e7e82b90bad42ef7090a267b0cf1013c107ae6f37e674cf0bae55",
+      "after_sha256": "7e3a8c23db13c34770562429b8a32dde3112472c7670011ec0d548e261d3380a",
+      "existing_physical_baselines": [
+        367.8689880371094
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 43,
+      "inventory_indices": [
+        49
+      ]
+    },
+    "p45:b6:l1:s1-1": {
+      "slot_id": "p45:b6:l1:s1-1",
+      "original_English_guard": " on the answer sheet which reagent(s) and/or condition is/are appropri-",
+      "source_at": [
+        6,
+        1,
+        1,
+        1
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "다이옥사보롤레인 말레이미드 단위를 다음 물질에 결합시키기에 적절한",
+      "after": "다이옥사보롤레인 말레이미드 단위 결합에 적절한 시약 및/또는 조건을.",
+      "before_sha256": "a50c33a6a4bdbcbc33b10588dc192906b69b37d43925726e88b91c8cda9523eb",
+      "after_sha256": "3bef253341e0bf06593bab4908d37035233c3d781af0ea81418ce85221eabe53",
+      "existing_physical_baselines": [
+        369.18499755859375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 45,
+      "inventory_indices": [
+        53
+      ],
+      "root_condition": "reagent(s) and/or condition must preserve the inclusive and/or choice."
+    },
+    "p45:b6:l2:s0-0": {
+      "slot_id": "p45:b6:l2:s0-0",
+      "original_English_guard": "ate for linking the dioxaborolane maleimide units to",
+      "source_at": [
+        6,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "시약 및 조건을 답안지에서 골라라. 결합할 고분자는",
+      "after": "답은 답안지에 표시한다. 결합할 고분자는",
+      "before_sha256": "5ae034cd20e8a28003cdf0fd17ea82f7aeb17f253a519ce7c5f4af27b8d33db8",
+      "after_sha256": "63233bde9d6a3ae064e784d964cd30e928c54acf7c00357b08569a9dc2f23487",
+      "existing_physical_baselines": [
+        381.1399841308594
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 45,
+      "inventory_indices": [
+        53
+      ]
+    },
+    "p46:b19:l1:s1-6": {
+      "slot_id": "p46:b19:l1:s1-6",
+      "original_English_guard": " the grafting density",
+      "source_at": [
+        19,
+        1,
+        1,
+        6
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "폴리에틸렌의 그래프트 밀도",
+      "after": "측정 결과에서 얻은 폴리에틸렌의 그래프트 밀도",
+      "before_sha256": "7e39e858a4778a5aa2c09c1e9df57ead60a951bd3d1718779c440ff3189dc1c7",
+      "after_sha256": "62410b639b4ae79bea8c5e083bf18ed360e496d265900bf8aec28a114f94280d",
+      "existing_physical_baselines": [
+        550.8099975585938
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 46,
+      "inventory_indices": [
+        54
+      ]
+    },
+    "p46:b19:l1:s11-22": {
+      "slot_id": "p46:b19:l1:s11-22",
+      "original_English_guard": " of polyethylene based on the measure-",
+      "source_at": [
+        19,
+        1,
+        11,
+        22
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "를, 측정 결과를 바탕으로",
+      "after": "를.",
+      "before_sha256": "dac904783dde0378f33509c69cb57841379e357b8256cbeebbe0fa76b79942c9",
+      "after_sha256": "ee20cfef9c5084096674e44a4081e825a0d44726e2894128638c48fa37842246",
+      "existing_physical_baselines": [
+        550.8099975585938
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 46,
+      "inventory_indices": [
+        54
+      ]
+    },
+    "p46:b19:l2:s0-2": {
+      "slot_id": "p46:b19:l2:s0-2",
+      "original_English_guard": "ments. That is the ratio of the grafted groups over the ethylene units.",
+      "source_at": [
+        19,
+        2,
+        0,
+        2
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "구하라. 이는 에틸렌 단위 수에 대한 그래프트된 기의 수의 비율이다.",
+      "after": "이는 에틸렌 단위 수에 대한 그래프트된 기의 수의 비율이다.",
+      "before_sha256": "f30b307bedd0234998cd3738d21c52412ac83b0a7cc266bff603016e780c75c8",
+      "after_sha256": "a618fc3e49deefed8472f5cc2ef4a13821783e5e818addbc108b1a308fbd6d71",
+      "existing_physical_baselines": [
+        562.7650146484375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 46,
+      "inventory_indices": [
+        54
+      ]
+    },
+    "p55:b28:l1:s5-5": {
+      "slot_id": "p55:b28:l1:s5-5",
+      "original_English_guard": " (given in the answer sheet) to the interme-",
+      "source_at": [
+        28,
+        1,
+        5,
+        5
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "를 중간체",
+      "after": "를 다음 중간체에:",
+      "before_sha256": "d21167d9f57e3df22ade75b9cbaa0770f7ca475a777bfc1967ea0e74a0f6bffb",
+      "after_sha256": "31c55d0444e45c99911abb8d97acee0ad3cb5055ea60de82f2f4c033032ecb9a",
+      "existing_physical_baselines": [
+        614.3699951171875
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 55,
+      "inventory_indices": [
+        58
+      ]
+    },
+    "p55:intermediates-postposition": {
+      "slot_id": "p55:intermediates-postposition",
+      "original_English_guard": ".",
+      "source_at": [
+        28,
+        2,
+        4,
+        4
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "에.",
+      "after": ".",
+      "before_sha256": "5c29ac1297be55cde2674d285250a859a183e08fefc643f8ca1835c6ba7195d4",
+      "after_sha256": "cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8",
+      "existing_physical_baselines": [
+        626.3250122070312
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 55,
+      "inventory_indices": [
+        58
+      ]
+    },
+    "p55:b30:l1:s5-5": {
+      "slot_id": "p55:b30:l1:s5-5",
+      "original_English_guard": " using the pre-",
+      "source_at": [
+        30,
+        1,
+        5,
+        5
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "의 구조를, 미리",
+      "after": "의 구조를. 미리",
+      "before_sha256": "7ee3c4f565e82eb5bf4e131fcab3c22245d68dd44a4e198253889b11cfff37b7",
+      "after_sha256": "fc8667160def624d7019faaa01428e25c49f4cfe8788bb90e365a21a3c62d82b",
+      "existing_physical_baselines": [
+        673.739990234375
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 55,
+      "inventory_indices": [
+        59
+      ]
+    },
+    "p55:b30:l2:s0-2": {
+      "slot_id": "p55:b30:l2:s0-2",
+      "original_English_guard": "drawn framework of porphyrin. (",
+      "source_at": [
+        30,
+        2,
+        0,
+        2
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "그려진 포르피린 골격을 사용하여 나타내라. (",
+      "after": "그려진 포르피린 골격을 사용한다. (",
+      "before_sha256": "8b4e7ace499f7d2018c1e8459b9021a35282bcf948c63188f408a94789959ea7",
+      "after_sha256": "f387ff762b5b96679150a3cc8b7f24efb8fdb174b1518c00e61496f0254d2c3e",
+      "existing_physical_baselines": [
+        685.6959838867188
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 55,
+      "inventory_indices": [
+        59
+      ]
+    },
+    "p58:b4:l1:s35-35": {
+      "slot_id": "p58:b4:l1:s35-35",
+      "original_English_guard": " bonding orbitals",
+      "source_at": [
+        4,
+        1,
+        35,
+        35
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "결합 궤도함수를,",
+      "after": "결합 궤도함수를.",
+      "before_sha256": "ce40c77c96666dfe55cbacf7d15f60f2591c403f41a9afa6764bbc00e74a24a3",
+      "after_sha256": "5660340f647cdfa9c910e3ffe7aee6f4c309997e7432365f514a2216d89ad51d",
+      "existing_physical_baselines": [
+        176.8249969482422
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 58,
+      "inventory_indices": [
+        65
+      ]
+    },
+    "p58:b4:l2:s0-0": {
+      "slot_id": "p58:b4:l2:s0-0",
+      "original_English_guard": "according to the specified coordinate system.",
+      "source_at": [
+        4,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "주어진 좌표계에 따라 나타내라.",
+      "after": "주어진 좌표계를 따른다.",
+      "before_sha256": "2ed195bfb92801ce69e8af120c764bc4f051a9acb2f1e890f0032425a28776d3",
+      "after_sha256": "3e0eec4429e0121295ae49597c6076db851e0a1f5439faffadd5220cb82ef4a8",
+      "existing_physical_baselines": [
+        188.77999877929688
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 58,
+      "inventory_indices": [
+        65
+      ]
+    },
+    "p58:b6:l1:s1-20": {
+      "slot_id": "p58:b6:l1:s1-20",
+      "original_English_guard": " the metal–metal bond order in the following complexes in eclipsed",
+      "source_at": [
+        6,
+        1,
+        1,
+        20
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "다음 겹친형 착물들의 금속–금속 결합",
+      "after": "겹친형 착물의 금속–금속 결합",
+      "before_sha256": "2d2bfd5ea8a2ce87028b7bd3ca93d1a2fa8b45d3138cff56d5bf16501176ac46",
+      "after_sha256": "ed84927f0a1fb5bbabfa78085bdd9dc991992d6c0ebbd96d843ca5e8e8378f89",
+      "existing_physical_baselines": [
+        238.44700622558594
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 58,
+      "inventory_indices": [
+        66
+      ]
+    },
+    "p58:b6:l2:s0-0": {
+      "slot_id": "p58:b6:l2:s0-0",
+      "original_English_guard": "conformation:",
+      "source_at": [
+        6,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "차수를:",
+      "after": "차수를. 대상 착물:",
+      "before_sha256": "256eb8fb6f8bf08130d73b16e0f7fcb6a654c565ec3e3a4810bc54979153046c",
+      "after_sha256": "8bd668bb21229a3f2265efd49cdd65e8270a64bddcaa9930f1aac7ea74ee48ec",
+      "existing_physical_baselines": [
+        250.40200805664062
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 58,
+      "inventory_indices": [
+        66
+      ]
+    },
+    "p58:b10:l1:s1-20": {
+      "slot_id": "p58:b10:l1:s1-20",
+      "original_English_guard": " how the splitting (i.e., the energy between antibonding and bonding",
+      "source_at": [
+        10,
+        1,
+        1,
+        20
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "각 유형의 궤도함수 상호작용에서 갈라짐(반결합 궤도함수와 결합 궤도함수의 에너지 차이)이",
+      "after": "각 궤도함수 상호작용의 갈라짐(반결합과 결합 궤도함수의 에너지 차이)이",
+      "before_sha256": "015a706918c21fe647ac4640227d4569f34df8d17513420d1660dc1a36d46f9b",
+      "after_sha256": "93f1c95df513f71b4ee7ad6ec9dd8d89af9fa08251ac6f4e8aa5390adc418b83",
+      "existing_physical_baselines": [
+        355.90399169921875,
+        367.8599853515625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 58,
+      "inventory_indices": [
+        67
+      ]
+    },
+    "p58:b10:l2:s0-22": {
+      "slot_id": "p58:b10:l2:s0-22",
+      "original_English_guard": "orbitals) changes for each type of orbital interaction during the conversion of",
+      "source_at": [
+        10,
+        2,
+        0,
+        22
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "어떻게 변하는지를, 다음 배치 변화에 대하여",
+      "after": "어떻게 변하는지를. 배치 변화:",
+      "before_sha256": "4f723d0c65dc31d34a7f4c35610c505bd36805fc12c99ec642732671de6a3853",
+      "after_sha256": "209691882eecb4b07ef8ee60302bc7d10c15df3b71ebb485fffb705a5fc2e9aa",
+      "existing_physical_baselines": [
+        367.8599853515625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 58,
+      "inventory_indices": [
+        67
+      ]
+    },
+    "p58:b10:l3:s0-0": {
+      "slot_id": "p58:b10:l3:s0-0",
+      "original_English_guard": "eclipsed conformation into staggered:",
+      "source_at": [
+        10,
+        3,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "겹친형에서 엇갈린형으로 바뀔 때를 고려하라:",
+      "after": "겹친형에서 엇갈린형으로 바뀌는 경우이다:",
+      "before_sha256": "dc310af151ac374970a0866398c2ac776d85f0c765a6a0bc883ab3e77ba3405e",
+      "after_sha256": "7f1e47187b44dfe229eaf9cab6caf7c06cbe79228f45bb16f9eaf172dbe19cfe",
+      "existing_physical_baselines": [
+        379.8149719238281
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 58,
+      "inventory_indices": [
+        67
+      ]
+    },
+    "p1:b9:l1:s3-4": {
+      "slot_id": "p1:b9:l1:s3-4",
+      "original_English_guard": " Do not",
+      "source_at": [
+        9,
+        1,
+        3,
+        4
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "QR 코드에는",
+      "after": "금지:",
+      "before_sha256": "dcb8329315a2fa56e3fa3163e89083b9e9d255e3a671e55868b04a8bcf835b15",
+      "after_sha256": "430adcb75cfdbf45e0ea653311af860cc4f68a143e835b11ec42e3237c0947cf",
+      "existing_physical_baselines": [
+        368.6969909667969
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans-Bold",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-QR-prohibition"
+    },
+    "p1:b9:l1:s5-5": {
+      "slot_id": "p1:b9:l1:s5-5",
+      "original_English_guard": " draw",
+      "source_at": [
+        9,
+        1,
+        5,
+        5
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "아무것도",
+      "after": "",
+      "before_sha256": "7fe97b694951cb3ea1a410e81533bb1af5637e2055c5a9c0f0a2cfbbba491334",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_physical_baselines": [
+        368.6969909667969
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-QR-prohibition"
+    },
+    "p1:b9:l2:s0-0": {
+      "slot_id": "p1:b9:l2:s0-0",
+      "original_English_guard": "anything into or close to the QR codes.",
+      "source_at": [
+        9,
+        2,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "그리지 말고, 가까운 곳에도 그리지 마라.",
+      "after": "QR 코드 안이나 근처에 무엇이든 그리는 행위.",
+      "before_sha256": "7af433691c8b9661e592aa8e559824e31975ae5671619c64acba37bd1d73c646",
+      "after_sha256": "a12a9ef39f7847cd1a959bd81045c644affd5d966837a010af50bf50383a53ef",
+      "existing_physical_baselines": [
+        380.6519775390625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-QR-prohibition"
+    },
+    "p1:b16:l1:s1-2": {
+      "slot_id": "p1:b16:l1:s1-2",
+      "original_English_guard": " Do not",
+      "source_at": [
+        16,
+        1,
+        1,
+        2
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "봉투를",
+      "after": "금지:",
+      "before_sha256": "a3bda09dedf59ad1068104140017351f2ee967acd72f7a44d1880cd6d230bb3b",
+      "after_sha256": "430adcb75cfdbf45e0ea653311af860cc4f68a143e835b11ec42e3237c0947cf",
+      "existing_physical_baselines": [
+        584.885986328125
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans-Bold",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-envelope-prohibition"
+    },
+    "p1:b16:l1:s3-3": {
+      "slot_id": "p1:b16:l1:s3-3",
+      "original_English_guard": " seal the envelope.",
+      "source_at": [
+        16,
+        1,
+        3,
+        3
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "밀봉하지 마라.",
+      "after": "봉투를 밀봉하는 행위.",
+      "before_sha256": "8551bdce11e1c8cdce23b6a713a65b60f8806812cec7dee750a2a8807322922c",
+      "after_sha256": "b9ffb2dcbf187bd57b5c8a94a17f2381a87ea373b62cd4bc49fc80502234b700",
+      "existing_physical_baselines": [
+        584.885986328125
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-envelope-prohibition"
+    },
+    "p1:b15:l0:s13-18": {
+      "slot_id": "p1:b15:l0:s13-18",
+      "original_English_guard": " warning before the",
+      "source_at": [
+        15,
+        0,
+        13,
+        18
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "전에 종료를 예고한다. 종료 신호는",
+      "after": "전에 종료를 예고한다.",
+      "before_sha256": "c20856fd774f91fe3c49e45db9b4280e567bd6481a89a70900f7838b5b5dafdf",
+      "after_sha256": "fc63ac5cf7b3bc225acf802626bb7858f57a1e766cffd83510ba986157efdd84",
+      "existing_physical_baselines": [
+        530.092041015625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-mandatory-stop"
+    },
+    "p1:b15:l0:s25-28": {
+      "slot_id": "p1:b15:l0:s25-28",
+      "original_English_guard": " must stop",
+      "source_at": [
+        15,
+        0,
+        25,
+        28
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "즉시",
+      "after": "반드시 중단하라:",
+      "before_sha256": "3edbcdf75cdadbc177fedf1c6ea0b6b83a8f520f2a29b1d35dca2cfe51f743d3",
+      "after_sha256": "99f301d907f38353c9e6cbfa80d9e6a7c92f4d0a4ceb6ef7bd154b50f8b0cdb1",
+      "existing_physical_baselines": [
+        530.092041015625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans-Bold",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-mandatory-stop"
+    },
+    "p1:b15:l1:s0-0": {
+      "slot_id": "p1:b15:l1:s0-0",
+      "original_English_guard": "working when the",
+      "source_at": [
+        15,
+        1,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "시험을 중단해야 한다. 종료를 알리는",
+      "after": "시험을. 종료를 알리는",
+      "before_sha256": "548a674d5c7087f2b3f448fd7fbbb3ee69e5e8321556c44b0006ae3473486d9a",
+      "after_sha256": "57806c3e5470e63fb9438a37f98196797f0ab37551103d9eaaefb0cec792522f",
+      "existing_physical_baselines": [
+        542.0469970703125
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-mandatory-stop"
+    },
+    "p1:b11:l0:s4-4": {
+      "slot_id": "p1:b11:l0:s4-4",
+      "original_English_guard": ", fill the tick box completely",
+      "source_at": [
+        11,
+        0,
+        4,
+        4
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "이미 표시한 칸을 완전히 칠한",
+      "after": "이미 표시한 칸을 완전히 칠하라.",
+      "before_sha256": "19a7a8f29dff48a152b01bfacae2e403ffdcf5a704c5b73622786967988d872a",
+      "after_sha256": "9d0e00ea3c5132c1ee47004340d903ea5f789e786467c8a8aa2f04d08e46434e",
+      "existing_physical_baselines": [
+        430.4649963378906
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-new-box-noun-emphasis"
+    },
+    "p1:b11:l1:s0-0": {
+      "slot_id": "p1:b11:l1:s0-0",
+      "original_English_guard": "and then make a",
+      "source_at": [
+        11,
+        1,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "다음",
+      "after": "다음으로 그려라:",
+      "before_sha256": "aef613c6612d424ab454e08337ab51a5c8f4695e4762b8c63c8b171667eb66b2",
+      "after_sha256": "77ce4f01cfefccd1be68b7a5c58e2353751abcc1e4d883e9ff719278cf4e3e36",
+      "existing_physical_baselines": [
+        442.41998291015625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-new-box-noun-emphasis"
+    },
+    "p1:b11:l1:s1-1": {
+      "slot_id": "p1:b11:l1:s1-1",
+      "original_English_guard": " new box next to it",
+      "source_at": [
+        11,
+        1,
+        1,
+        1
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "그 옆에 새 칸을 그려라.",
+      "after": "그 옆의 새 칸을",
+      "before_sha256": "6a65688d5f78d700b839e74c35b0ace5e17759f3929a5df584690fccdcd93616",
+      "after_sha256": "f07ba7d916c913beffc5772e5f37bb2ba5e214c4371ab4ad3ad27161123a306a",
+      "existing_physical_baselines": [
+        442.41998291015625
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans-Bold",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 1,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p1-new-box-noun-emphasis"
+    },
+    "p7:b6:l1:s0-0:c0-33": {
+      "slot_id": "p7:b6:l1:s0-0:c0-33",
+      "original_English_guard": "oxidizes active surface sites to ",
+      "source_at": [
+        6,
+        1,
+        0,
+        0
+      ],
+      "source_char_start": 0,
+      "source_char_end": 33,
+      "before": "표면의 활성점만",
+      "after": "표면의 활성점만 다음 상태로 산화한다:",
+      "before_sha256": "71233d1b8db7112e37b8827a3b3e312837ffd3c37ee3662de5c81603610e2dd0",
+      "after_sha256": "cae82a065efedefaea4bcdd246a67460e13088c1e104db0c0395876735face71",
+      "existing_physical_baselines": [
+        276.4530029296875
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 7,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p7-restored-oxidation-verb",
+      "original_native_glyph_retention_required": false
+    },
+    "p57:b11:l3:s0-0": {
+      "slot_id": "p57:b11:l3:s0-0",
+      "original_English_guard": "between d",
+      "source_at": [
+        11,
+        3,
+        0,
+        0
+      ],
+      "source_char_start": null,
+      "source_char_end": null,
+      "before": "d",
+      "after": "",
+      "before_sha256": "18ac3e7343f016890c510e93f935261169d9e3f565436429830faf0934f4f8e4",
+      "after_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_physical_baselines": [
+        495.7949523925781
+      ],
+      "original_pointsize": 9.962599754333496,
+      "original_font": "NotoSans",
+      "native_symbols_numbers_units_and_formula_programs_edited": false,
+      "applied": false,
+      "page": 57,
+      "inventory_indices": [],
+      "additional_exact_case_id": "p57-original-native-orbital-d",
+      "original_native_glyph_retention_required": true
+    }
+  },
+  "p39_explicit_same_physical_row_fragment_order": {
+    "baseline": 391.5249938964844,
+    "source_condition_slot": "p39:b6:l4:s1-1",
+    "source_condition_English": " when relevant.",
+    "target_condition": "필요할 때",
+    "target_final_period": ".",
+    "source_stereostructure_slot": "p39:b6:l2:s0-0",
+    "native_atom_text": "(;)",
+    "order": [
+      "condition",
+      "stereostructure",
+      "native-wedge-dash-atom",
+      "period"
+    ]
+  },
+  "program_sha256": "859714defc89080e27e64a53f38bf650abe8a3b6156938483cd3fd29e21946a9",
+  "parent_manifest_sha256": "9745a31abcc918a057a4fe2a6589003a8d6a7c2ad1c56b75ff394859352f0803",
+  "prior_manifest_program_sha256": "f70fa1bf0d3e4929346b9a4ee1c93aeef116d72c62e94afc018cbdb0b705bb3d",
+  "additional_p1_exact_four_clause_review": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\style-corrections\\icho2024-20261103\\revisions\\p1-bold-v6\\exact-four-clause-proposals.json",
+    "sha256": "7d07facba4ece1e19ccd982cf79147e5366f6ed9d292af3b8737fb50ff92ab49"
+  }
+}

@@ -147,6 +147,10 @@
   .files .row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
   .files label.btn{display:inline-block;padding:6px 12px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
   .files p{margin:6px 0 0;color:var(--muted);line-height:1.5}
+  .files.need{border:2px solid var(--accent,#e0a030);border-radius:10px;padding:12px 14px;background:color-mix(in srgb,var(--accent,#e0a030) 8%,transparent)}
+  .files.need summary{font-size:15px;font-weight:700;color:var(--ink);cursor:pointer}
+  .files ul{margin:8px 0 0 18px;padding:0;line-height:1.6}
+  .files.need label.btn{border-color:var(--accent,#e0a030);font-weight:600}
   .pg .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px;font-size:12.5px}
   .pg .meta select{font:inherit;font-size:12.5px;background:#2b2f36;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
   .pg .meta .st2{margin-left:auto;color:var(--muted)}
@@ -668,7 +672,7 @@ function reviewIntroView() {
     <p>${ko ? `채점하기를 누르는 순간 실전 토큰 ${COST()}개를 사용합니다. 그 뒤 답안 판독과 채점 · 첨삭에는 토큰이 더 들지 않습니다.` : `Pressing Grade my work spends ${COST()} exam token at once. Reading your pages, grading and feedback then cost nothing more.`}</p>
     ${EX.tasks.some((_, i) => !EX.sols[i]) ? `<p class="note">${ko ? "공식 해설·배점이 없는 문제는 문제 원문과 제출한 풀이를 바탕으로 학습용 첨삭을 제공합니다. 공식 점수나 임의의 수치 점수를 만들지 않습니다." : "For problems without official solutions or point schemes, feedback is qualitative and based on the published problem and your work. No official or invented numeric score is assigned."}</p>` : ""}
     <div>${EX.tasks.map((task, i) => `<p><b>${esc(task)}</b> ${esc(EX.titles[i] || "")}${EX.pdfs[i] ? ` · <a class="reviewPaperLink" data-paper="${i}" href="${esc(pdfUrl(EX.pdfs[i]))}" target="_blank" rel="noopener">${ko ? "문제지 보기" : "View problem paper"}</a>` : ""}</p>`).join("")}</div>
-    ${paperLanguageHtml()}${providerHtml()}${gate}<p><a href="../#/${esc(EX.c)}/review">${t().back}</a></p></section></div>`;
+    ${filesNoteHtml()}${paperLanguageHtml()}${providerHtml()}${gate}<p><a href="../#/${esc(EX.c)}/review">${t().back}</a></p></section></div>`;
   bindPaperLanguage();bindProvider();
   const select = $("paperLanguage");
   if (select) { const update = select.onchange; select.onchange = () => { update(); document.querySelectorAll(".reviewPaperLink").forEach(a => { a.href = pdfUrl(EX.pdfs[+a.dataset.paper]); }); }; }
@@ -932,19 +936,46 @@ async function sendPcFiles(id) {
     toast(lang === "ko" ? `노트북의 파일 ${files.length}개를 답안과 함께 제출했습니다.` : `${files.length} files from the laptop were handed in with your pages.`, 5000); }
   catch (e) { PC_FILES[id] = files; toast(errMsg(e)); }
 }
+/* the problems whose official paper has files handed in with the pages (ISPhO: the exam laptop's Excel tables and the
+   programs' output, read from each paper); a competition listed here offers the file box only for these problems,
+   each with the files its paper names. Elsewhere every problem of the sitting may have files attached. */
+const FILE_TASKS = {
+  ispho2023: { T1: { ko: "프로그램이 만든 CSV 파일 (Bavg.csv, Cavg.csv, Cmap.csv 등)", en: "the CSV files the programs write (Bavg.csv, Cavg.csv, Cmap.csv …)" } },
+  ispho2024: { T1: { ko: "입력·출력 파일 (A_in.txt, B_in.txt와 프로그램 출력)", en: "the input and output files (A_in.txt, B_in.txt and the programs' output)" },
+               E1: { ko: "Results 폴더의 표 (Part A–D, Recalibrate, Report, Calibration)", en: "the tables of the Results folder (Part A–D, Recalibrate, Report, Calibration)" } },
+  ispho2025: { T1: { ko: "엑셀 파일 B3 · C2 · C6 (report 폴더)", en: "the Excel files B3, C2 and C6 (report folder)" },
+               E1: { ko: "답안 표 A2-ans.xlsx … F2-ans.xlsx", en: "the answer tables A2-ans.xlsx … F2-ans.xlsx" } },
+  ispho2026: { T2: { ko: "Part D 데이터 분석에 쓴 엑셀 파일 (선택)", en: "the spreadsheet of the Part D data analysis (optional)", optional: true } },
+};
+const FILE_COMPS = new Set(["ispho"]);
+function fileTasks() {
+  const map = FILE_TASKS[KEY];
+  if (map) return EX.tasks.filter(t => map[t]);
+  return FILE_COMPS.has(EX.c) ? [] : EX.tasks;
+}
+function filesNeeded() { const map = FILE_TASKS[KEY]; return !!map && fileTasks().some(t => !map[t].optional); }
+/* on the page before the exam starts: which problems need files, so they are ready */
+function filesNoteHtml() {
+  if (!filesNeeded()) return "";
+  const ko = lang === "ko", map = FILE_TASKS[KEY];
+  return `<div class="note w" style="margin-top:10px"><b>${ko ? "엑셀·파일 제출이 필요한 문제" : "Problems with files to hand in"}</b><br>${fileTasks().map(t => `${esc(t)}: ${esc(map[t][ko ? "ko" : "en"])}`).join("<br>")}</div>`;
+}
 function filesBoxHtml() {
-  const ko = lang === "ko";
-  return `<details class="files"${REVIEW ? "" : " open"}><summary>${ko ? "엑셀·CSV·텍스트 파일 첨부" : "Attach Excel, CSV or text files"}</summary>
-    <p>${ko ? "표·그래프를 엑셀로 만들도록 한 문제(ISPhO 2025 T1의 B3·C2·C6, 실험의 표 파일 등)는 그 파일을 여기 올리세요. 셀 값·수식·차트(축, 로그 눈금, 추세선)를 읽어 답안과 함께 채점합니다. 시뮬레이터 노트북에서 저장한 파일은 시험이 끝날 때 자동으로 함께 제출됩니다."
-      : "Where a problem asks for its tables and graphs in Excel (ISPhO 2025 T1's B3, C2, C6; an experiment's table files), upload those files here. Their cells, formulas and charts (axes, log scales, trendlines) are read and graded with your pages. Files saved on a simulator's laptop are handed in automatically when the exam ends."}</p>
-    <div class="row">${EX.tasks.length > 1 ? `<select id="fileTask">${EX.tasks.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>` : ""}
+  const ko = lang === "ko", tasks = fileTasks(), map = FILE_TASKS[KEY];
+  if (!tasks.length) return "";
+  const needed = map && tasks.some(t => !map[t].optional);
+  const list = map ? `<ul>${tasks.map(t => `<li><b>${esc(t)}</b> — ${esc(map[t][ko ? "ko" : "en"])}</li>`).join("")}</ul>` : "";
+  return `<details class="files${needed ? " need" : ""}"${REVIEW && !needed ? "" : " open"}><summary>${needed ? (ko ? `엑셀·파일 제출 필요: ${tasks.join(", ")}` : `Files to hand in: ${tasks.join(", ")}`) : ko ? "엑셀·CSV·텍스트 파일 첨부" : "Attach Excel, CSV or text files"}</summary>
+    ${list}<p>${ko ? "문제에서 엑셀·파일로 만들라고 한 표와 그래프는 여기 올리세요. 셀 값·수식·차트(축, 로그 눈금, 추세선)를 읽어 사진 답안과 함께 채점합니다. 올리지 않으면 그 부분은 점수를 받지 못할 수 있습니다. 시뮬레이터 노트북에서 저장한 파일은 시험이 끝날 때 자동으로 함께 제출됩니다."
+      : "Upload here the tables and graphs a problem asks for as files. Their cells, formulas and charts (axes, log scales, trendlines) are read and graded with your pages; parts handed in without them may get no marks. Files saved on a simulator's laptop are handed in automatically when the exam ends."}</p>
+    <div class="row">${tasks.length > 1 ? `<select id="fileTask" aria-label="${ko ? "파일을 낼 문제" : "Problem the files belong to"}">${tasks.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>` : `<span><b>${esc(tasks[0])}</b></span>`}
       <label class="btn">${ko ? "파일 선택" : "Choose files"}<input type="file" id="fileIn" multiple accept=".xlsx,.xlsm,.csv,.tsv,.txt,.dat" hidden></label><span id="fileMsg" role="status"></span></div></details>`;
 }
 function bindFilesBox() {
   const inp = $("fileIn"); if (!inp) return;
   inp.onchange = async () => {
     const list = [...inp.files]; inp.value = ""; if (!list.length || !SES) return;
-    const id = SES.id, task = $("fileTask") ? $("fileTask").value : EX.tasks[0], msg = $("fileMsg"), files = [];
+    const id = SES.id, task = $("fileTask") ? $("fileTask").value : fileTasks()[0] || EX.tasks[0], msg = $("fileMsg"), files = [];
     msg.textContent = "…";
     for (const f of list) {
       if (f.size > 20e6) { toast((lang === "ko" ? "너무 큰 파일: " : "Too large: ") + f.name); continue; }
@@ -993,7 +1024,7 @@ async function scanView() {
   $("main").innerHTML = `<div class="page"><div class="scan">
     <div class="qrbox"><h2>${t().scanH}</h2><div style="color:var(--muted);font-size:12.5px">${t().scanLeft}</div>
       ${REVIEW ? "" : `<div class="big" id="sClock">${hms(SES.scan_until - srvNow())}</div>`}
-      ${providerHtml()}<div id="qrArea"><div class="note">…</div></div>${REVIEW ? `<details style="margin-top:20px;text-align:left"><summary>${lang === "ko" ? "풀이 직접 입력" : "Type your solutions"}</summary><form id="typedAnswers">${EX.tasks.map(task => `<label style="display:block;margin-top:12px"><b>${esc(task)}</b><textarea data-answer="${esc(task)}" maxlength="50000" rows="6" style="display:block;width:100%;box-sizing:border-box;margin:5px 0;background:var(--deep);color:var(--ink);font:inherit">${esc((SES.pages || []).find(p => p.task === task && p.source === "typed")?.text || "")}</textarea></label>`).join("")}<button class="pri" type="submit">${lang === "ko" ? "입력한 답안 저장" : "Save typed answers"}</button><span id="typedSaved" role="status"></span></form></details>` : ""}${filesBoxHtml()}</div>
+      ${providerHtml()}${filesNeeded() ? filesBoxHtml() : ""}<div id="qrArea"><div class="note">…</div></div>${REVIEW ? `<details style="margin-top:20px;text-align:left"><summary>${lang === "ko" ? "풀이 직접 입력" : "Type your solutions"}</summary><form id="typedAnswers">${EX.tasks.map(task => `<label style="display:block;margin-top:12px"><b>${esc(task)}</b><textarea data-answer="${esc(task)}" maxlength="50000" rows="6" style="display:block;width:100%;box-sizing:border-box;margin:5px 0;background:var(--deep);color:var(--ink);font:inherit">${esc((SES.pages || []).find(p => p.task === task && p.source === "typed")?.text || "")}</textarea></label>`).join("")}<button class="pri" type="submit">${lang === "ko" ? "입력한 답안 저장" : "Save typed answers"}</button><span id="typedSaved" role="status"></span></form></details>` : ""}${filesNeeded() ? "" : filesBoxHtml()}</div>
     <div class="pages" id="pages"></div></div></div>`;
   pagesSeen = "";
   bindProvider();

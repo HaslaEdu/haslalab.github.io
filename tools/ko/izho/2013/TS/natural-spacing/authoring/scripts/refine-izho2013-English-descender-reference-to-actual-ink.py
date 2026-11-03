@@ -1,0 +1,7 @@
+from pathlib import Path
+import hashlib,shutil
+B=Path('D:/CodexBuilds/Hasla-original-style-20261031/izho2013-complete-solutions');p=B/'engine/izho_2013_prose_bitmap_overlap_reference.py';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();text=p.read_text('utf8');history=B/'engine/history'/sha(p)[:16];history.mkdir(parents=True,exist_ok=True);shutil.copy2(p,history/p.name)
+a='import numpy as np';b='import numpy as np\nimport pymupdf as f\nfrom pdf_text_motion_ink import ink_envelope';assert text.count(a)==1;text=text.replace(a,b)
+a=" removed=np.any(original_pixels!=control,axis=2);h,w=removed.shape;xs=(np.arange(w)+.5)/4;ys=(np.arange(h)+.5)/4;x0,y0,x1,y1=glyph['bbox'];glyph_box=(ys[:,None]>=y0)&(ys[:,None]<y1)&(xs[None,:]>=x0)&(xs[None,:]<x1)\n if np.any(removed&~glyph_box):raise ValueError('Reference changes pixels outside the exact selected original English glyph bounds')"
+b=" assert sha(plan['original_english_source'])==SOURCE\n removed=np.any(original_pixels!=control,axis=2)\n with f.open(plan['original_english_source'])as source:actual_glyph_ink,uses=ink_envelope(source[1],[glyph['origin']],4)\n if uses!=1 or np.any(removed&~actual_glyph_ink):raise ValueError('Reference changes pixels outside the actual original selected English p outline envelope')"
+assert text.count(a)==1;text=text.replace(a,b);p.write_text(text,'utf8');print('ENGLISH_P_REFERENCE_USES_ACTUAL_ORIGINAL_GLYPH_OUTLINE_INSTEAD_OF_FONT_METRIC_BBOX',sha(p),flush=True)

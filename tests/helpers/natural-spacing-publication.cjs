@@ -153,6 +153,8 @@ module.exports = function validate(root, record, item) {
             assert.deepEqual(row.svg_reference_scales[scale].missing_final_native_glyphs, []);
           }
         }
+      } else if (item.file === 'IZhO_2014_TS_KO.pdf' && page.page === 2) {
+        require('./izho-2014-native-parenthesis.cjs')(profile,witness,raw,page,item);
       } else if (witness.native_CID_reference) {
         const cid = witness.native_CID_reference;
         assert.equal(cid.passed, true);

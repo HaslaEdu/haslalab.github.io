@@ -1,0 +1,45 @@
+{
+  "status": "ACTUAL_FINAL_PNG_ORIGINAL_RESOLUTION_READ_PASS",
+  "reviewer": "/root/plancks_all",
+  "year": 2025,
+  "page": 7,
+  "reviewed_utc": "2026-11-03T14:49:02.436668+00:00",
+  "artifacts": {
+    "proof": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+      "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+    },
+    "layout": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.layout.json",
+      "sha256": "41cf76bcca8a97afdbd85db47492ec846e327317cdab74a9053b231e17480ad4"
+    },
+    "png": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.png",
+      "sha256": "fbd792148233e7670e123095b653463afdf15d05da7cf628591dcc71f18563fe"
+    },
+    "independent_audit": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2025\\page07\\independent-qa.json",
+      "sha256": "f6044575c3c66d981e35d6d659a578bdd2bdacc840aee5249b36801e50df9f56"
+    },
+    "effective_plan": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.effective-plan.json",
+      "sha256": "ad1c51ccd8a066561c7e1d4678d55f29387dd88f7b08fc98bfc506fa4d439a18"
+    },
+    "runtime_snapshot": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2025-07-build\\runtime-snapshot.json",
+      "sha256": "c2ea09bac7cdc5858515c9f44a5fe44841683f2505af6af31194de398d6fcc8f"
+    }
+  },
+  "machine_result": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2025\\page07\\result.json",
+    "sha256": "49c3f81c9d720008dd1b38e4c3104b6ff8b9efc0f23d5c5d25929a94f5fe27b4"
+  },
+  "composer": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\natural_plan_compose_ortvay2025_title_final.py",
+    "sha256": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5"
+  },
+  "notes": [
+    "기존 실제 PNG를 original 해상도로 읽고 root-approved production QA가 동일proof에PASS한뒤결속했다. 문항19의 라돈 측정조건·10분 평균 수치열과 빨간 점 그래프 전체가 읽힌다. 시간/라돈농도 한국어 축라벨, 원래native[hour]/[Bq/m³] 단위와 눈금·간격이 보존되어 있고 y축라벨은정확히세로방향이다.",
+    "문항20의 세 영양단계/잡식동물없음·개체수곱 일정·방사성물질 q감쇠식·안정평형/지표종 질문이 읽힌다. 원본 수식·출제자·문항/쪽수와 일반띄어쓰기·여백이 정상이며 잘림/접촉이 없다. 원래frozen오판실패로그/PDF/PNG/layout은수정하지않고 새외부QA sidecar만결속했다."
+  ]
+}

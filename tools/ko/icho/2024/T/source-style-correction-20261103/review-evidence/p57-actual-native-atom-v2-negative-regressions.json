@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "actual_PDF_corruptions": 4,
+  "all_rejected": true,
+  "positive_proof_sha256": "ba76283af2744dbdf2873b1c106e400b498d528bc23891ab56011eac2d7288f7",
+  "positive_layout_sha256": "0495f9556ea8bbdd75b6050ce89bd48d2dd0d038d9da0b9dd81531f696063695",
+  "source_original_d_and_five_subscript_geometry_checked": true,
+  "actual_new_Korean_d_and_ordinary_space_counts_checked_from_PDF": true,
+  "program_sha256": "aeaedd8612fdbda2aa813c8838f40fa3baf84229d2353ffd3f84cfe69c75f3f8",
+  "auditor_program_sha256": "f3129c8888eedf9a9d51c82c5533e6f4bcb50a74d84c8cc44dff3f23da5b3207",
+  "cases": [
+    {
+      "name": "ordinary-space-width-separates-five-subscripts",
+      "rejected": true,
+      "actual_PDF_corruption": true,
+      "false_six_glyph_report_and_fresh_output_hash_were_supplied": true,
+      "proof_sha256": "f7555a3a7fbbe243acc63a6f9e9cc0cb08436df0c6187680c527098bb4e3e5ec",
+      "layout_sha256": "7dcf6ae6b1f397f68c50cfbb87ff42ecfc6446f5de61570f919c6f481292e19d",
+      "expected_actual_check": "Actual native font/GID/point/common-dx mismatch",
+      "concrete_mismatch": "('Actual native font/GID/point/common-dx mismatch', {'c': '𝘹', 'gid': 3233, 'font': 'LatinModernMath-Regular', 'size': 6.973800182342529, 'origin': [105.98098754882812, 498.2559509277344], 'bbox': [105.98098754882812, 492.63507080078125, 109.19590759277344, 499.6088562011719], 'paint': 0, 'native_ink_bbox': [105.98098754882812, 495.1595837277344, 109.72591814882813, 498.2559509277344]}, [62.832969665527344, 498.2559509277344], [])",
+      "unrelated_slot_label": null
+    },
+    {
+      "name": "retained-old-proof-redraws-CJK-d",
+      "rejected": true,
+      "actual_PDF_corruption": true,
+      "false_six_glyph_report_and_fresh_output_hash_were_supplied": true,
+      "proof_sha256": "54aa61b0c0cedb00cf1cc1f73ec8633a58dd3ff33c772bdfd5fa1d3b0f9e915e",
+      "layout_sha256": "2c457308187e5aadec69e02b51998995f08ec1d0a9d1670af78bc5277348aa45",
+      "expected_actual_check": "Actual native font/GID/point/common-dx mismatch",
+      "concrete_mismatch": "('Actual native font/GID/point/common-dx mismatch', {'c': 'd', 'gid': 71, 'font': 'NotoSans', 'size': 9.962599754333496, 'origin': [99.84101104736328, 495.7949523925781], 'bbox': [99.84101104736328, 487.9755554199219, 105.97034454345703, 497.9381408691406], 'paint': 0}, [56.6929931640625, 495.7949523925781], [])",
+      "unrelated_slot_label": null
+    },
+    {
+      "name": "another-slot-adds-visible-Korean-font-d",
+      "rejected": true,
+      "actual_PDF_corruption": true,
+      "false_six_glyph_report_and_fresh_output_hash_were_supplied": true,
+      "proof_sha256": "635af04dcc4fb146830203392249124c09437a42436dbf0a14aa8b3f25fe375b",
+      "layout_sha256": "f166390dcd8b170de4cab947898e1fab1e7b8b9e1e8cfacbea094daaa46e413d",
+      "expected_actual_check": "Actual new-Korean d at orbital row",
+      "concrete_mismatch": "('Actual new-Korean d at orbital row', [{'c': 'd', 'gid': 69, 'font': 'NotoSansCJKkr-Regular', 'size': 9.962599754333496, 'origin': [520.0, 495.7949523925781], 'bbox': [520.0, 487.8138732910156, 526.1768188476562, 497.7764587402344], 'paint': 0, 'opacity': 1.0, 'color': [0.0, 0.0, 0.0], 'direction': [1.0, 0.0]}])",
+      "unrelated_slot_label": "d"
+    },
+    {
+      "name": "another-slot-adds-ordinary-space-glyph",
+      "rejected": true,
+      "actual_PDF_corruption": true,
+      "false_six_glyph_report_and_fresh_output_hash_were_supplied": true,
+      "proof_sha256": "4de2bcd4b33fdd2063c78207089e6df08746f1c512f45f715e70b1783facae4f",
+      "layout_sha256": "5f93f5d352f1a3b7c7098c333325044f466ef8e874f098898f3d605f3e29cc7d",
+      "expected_actual_check": "Actual ordinary-space glyph inside d-to-subscript interval",
+      "concrete_mismatch": "('Actual ordinary-space glyph inside d-to-subscript interval', [{'c': ' ', 'gid': 1, 'font': 'NotoSansCJKkr-Regular', 'size': 9.962599754333496, 'origin': [62.8276481628418, 495.7949523925781], 'bbox': [62.8276481628418, 487.8138732910156, 65.05927276611328, 497.7764587402344], 'paint': 0, 'opacity': 1.0, 'color': [0.0, 0.0, 0.0], 'direction': [1.0, 0.0]}])",
+      "unrelated_slot_label": " "
+    }
+  ]
+}
