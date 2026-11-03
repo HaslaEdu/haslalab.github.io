@@ -67,3 +67,15 @@ test("a read table fits the item whose numbers with units it carries; a label na
   assert.equal(labelNames("A.3", "A3.c"), true); assert.equal(labelNames("2.7a", "2.7a"), true);
   assert.equal(labelNames("graph", "2.7a"), false); assert.equal(labelNames("1", "1.2"), false);
 });
+
+import { slopeWindow, inSlopeWindow, slopeInText } from "./src/lab-scheme-items.js";
+test("a graph's slope window and its cost come from the scheme's words; the other sign of an axis drawn the other way counts", () => {
+  const b = slopeWindow({ points: 0.3, what: "Plot of Table 3. Using linear regression of eq. (B1.1): m (slope) = -10 cm^-2 till -8.8 cm^-2. Deductions: without x-axis label -0.01; m is out of range: -0.3 pts." });
+  assert.deepEqual(b, { min: -10, max: -8.8, cost: 0.3 });
+  assert.equal(inSlopeWindow(b, -9.1), true); assert.equal(inSlopeWindow(b, 9.1), true, "-ln y plotted: the same slope, other sign");
+  assert.equal(inSlopeWindow(b, 12.7), false);
+  assert.deepEqual(slopeWindow({ points: 0.5, what: "slope between 1.5 and 2.0 V/A" }), { min: 1.5, max: 2, cost: 0.5 });
+  assert.equal(slopeWindow({ points: 1, what: "the slope of the line drawn from 0 to 10 s" }), null, "a span of the axis is no window");
+  assert.equal(slopeWindow({ points: 1, what: "axes labelled, fit line" }), null);
+  assert.equal(slopeInText("Graph of f vs g with slope m = 12.7 cm^-2"), 12.7);
+});

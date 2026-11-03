@@ -354,3 +354,27 @@ export function tableContinuations(pages) {
   }
   return out.slice(0, 20);
 }
+
+/* The range a scheme prints for a graph's slope and what it costs to miss it (IPhO 2017 E1 B2: «m (slope) = -10 cm^-2
+   till -8.8 cm^-2 … m is out of range: -0.3 pts»): {min, max, cost} or null. cost is the item's points where no
+   deduction is printed. */
+export function slopeWindow(item) {
+  const what = String(item?.what || ""), at = what.search(/\b(?:slope|gradient)\b/i); if (at < 0) return null;
+  const m = /^(?:slope|gradient)\b[^=:;\d]{0,20}(?:[=:≈]|\bbetween\b|\bwithin\b|\bin the range(?: of)?\b)\s*(-?\d+(?:\.\d+)?)\s*(?:[^\s;,]+\s+)?(?:till|to|until|through|and|–|—)\s*(-?\d+(?:\.\d+)?)/i.exec(what.slice(at, at + 140));
+  if (!m) return null;
+  const a = +m[1], b = +m[2]; if (!Number.isFinite(a) || !Number.isFinite(b) || a === b) return null;
+  const d = /out of (?:the )?range[^.;]{0,24}?[-−]\s*(\d+(?:\.\d+)?)\s*(?:pts?|points?)?/i.exec(what);
+  const points = +item?.points || 0, cost = d ? Math.min(points, +d[1]) : points;
+  return { min: Math.min(a, b), max: Math.max(a, b), cost };
+}
+/* a slope inside the window, or inside it with the other sign (an axis drawn the other way round: -ln y against x) */
+export function inSlopeWindow(w, v) {
+  if (!w || !Number.isFinite(v)) return true;
+  const lo = Math.min(Math.abs(w.min), Math.abs(w.max)), hi = Math.max(Math.abs(w.min), Math.abs(w.max)), eps = 1e-9 * Math.max(1, hi);
+  return v >= w.min - eps && v <= w.max + eps || w.min * w.max > 0 && Math.abs(v) >= lo - eps && Math.abs(v) <= hi + eps;
+}
+/* the slope written with a read graph («… with slope m = 12.7 cm^-2») */
+export function slopeInText(text) {
+  const m = /(?:slope|gradient|\bm)\s*[=≈:]\s*([-+−]?\d+(?:\.\d+)?)/i.exec(String(text || "").replace(/−/g, "-"));
+  return m ? +m[1].replace("−", "-") : null;
+}

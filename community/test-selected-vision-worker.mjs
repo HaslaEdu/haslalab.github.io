@@ -744,6 +744,32 @@ test('experiments: a graph cited by its table\'s page is taken from the next pag
   assert.match(detail,/"id":"A1"[^}]*"got":0[,}]/,'the next page holds C1\'s graph, and no graph of its own is anywhere near');
 }));
 
+test('experiments: a graph\'s slope outside the range the scheme prints loses what the scheme takes for it, from the grader\'s value or the slope read with the graph',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','experiment') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  const graph=(lo,hi)=>({points:0.3,type:'graph',sheet:'answer',what:`Plot of Table 3. m (slope) = ${lo} cm^-2 till ${hi} cm^-2. Deductions: without x-axis label -0.01; m is out of range: -0.3 pts.`,checks:[{check:'fit_line',points:0.3},{check:'slope_read',points:0.3}]});
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:0.9,items:[
+    {id:'B2.b',...graph(-10,-8.8)},{id:'B2.f',...graph(-11.3,-12.8)},{id:'B2.d',...graph(-11,-10.3)}]}),'fixture',Math.floor(Date.now()/1000));
+  replies({items:[{id:'B2.b',found:true,page:1,label:'B2.b',score:0.3,value:12.7,rules:[],checks_met:['fit_line','slope_read'],note:'slope out of range'},
+    {id:'B2.f',found:true,page:1,label:'B2.f',score:0.3,value:11.3,rules:[],checks_met:['fit_line','slope_read'],note:''},
+    {id:'B2.d',found:true,page:1,label:'B2.d',score:0.3,rules:[],checks_met:['fit_line','slope_read'],note:''}],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  const g={axes_labeled:true,axes_units:true,scale_ok:true,n_points:10,fit_line:true,slope_read:true,error_bars:false,title:false};
+  const items=pageReading.items;
+  pageReading.items=[{label:'B2.b',kind:'graph',text:'f against g, slope m = 12.7 cm^-2',graph:g,crossed_out:false},{label:'B2.f',kind:'graph',text:'f against g, slope m = 11.3',graph:g,crossed_out:false},
+    {label:'B2.d',kind:'graph',text:'Graph of f vs g with slope m = 16.0 cm^-2',graph:g,crossed_out:false}];
+  try{
+    await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+    await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  }finally{pageReading.items=items;}
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"B2\.b"[^}]*"got":0[,}]/,'12.7 against 8.8-10 (the other sign counts, the size does not)');
+  assert.match(detail,/"id":"B2\.f"[^}]*"got":0\.3[,}]/,'11.3 within 11.3-12.8, with the sign of a -ln axis');
+  assert.match(detail,/"id":"B2\.d"[^}]*"got":0[,}]/,'no value from the grader: the slope read with the graph, 16.0, decides');
+}));
+
 test('double grading: an item the two gradings mark differently is decided once more from the photos, and the scheme review fixes a one-point window before grading',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies,review})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';

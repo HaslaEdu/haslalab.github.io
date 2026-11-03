@@ -7,7 +7,7 @@
 
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
-import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -2458,6 +2458,10 @@ function labScore(scheme, raw, pages, opts = {}) {
         : met.has(c.check) && (saw || !!seen[c.check]) ? c.points : 0), 0);
       const fromModel = saw && +g.score > 0 ? Math.max(0, Math.min(it.points, +g.score) - checks.filter(c => c.check === "points_min" && !countOk(c)).reduce((a, c) => a + c.points, 0)) : -1;
       if (fromModel > fromChecks) { res.by = "model"; res.got = fromModel; } else res.got = fromChecks;
+      /* the slope against the window the scheme prints, in code: the grader's own value, else the slope read with the
+         graph (IPhO 2017 E1 B2.b: slope 12.7 against 8.8-10 given full marks, the grader's note saying it was out) */
+      const win = slopeWindow(it), slope = Number.isFinite(+g.value) && g.value != null ? +g.value : slopeInText(gr.text) ?? slopeInText(g.visual?.description);
+      if (win && slope != null && !inSlopeWindow(win, slope)) { res.got = Math.min(res.got, Math.max(0, it.points - win.cost)); res.value = slope; rules.add("R12"); }
       if (res.got < Math.min(it.points, checks.reduce((a, c) => a + c.points, 0)) - 1e-9) rules.add("R7");
     } else if (it.type === "table" && Array.isArray(it.checks) && it.checks.length) {
       const tb = pick("table");
@@ -2754,6 +2758,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   /* a table whose rows go on over the next page was read as two tables (8 and 12 rows); the grader is told they are one */
   const continued = tableContinuations(mine.map(p => { try { return { no: p.no, items: (p.read ? JSON.parse(p.read).items || [] : []).filter(i => !i.crossed_out) }; } catch { return { no: p.no, items: [] }; } }));
   if (continued.length) parts.push({ text: "[Tables continued over pages, found by code from the row numbers]\n" + continued.join("\n") });
+  if (scheme.items.some(it => it.type === "graph" && slopeWindow(it))) parts.push({ text: "Graph items whose scheme gives a range for the slope: put the slope the candidate found (from the fit line or slope triangle, in the item's units) as value; code checks it against the range." });
   parts.push({text:'For evidence you can directly see in a supplied original student image, including a graph or handwritten arrow missing from OCR/items, provide visual:{kind,box:[ymin,xmin,ymax,xmax] in 0..1000,description,value,graph,rows,columns}. Graph fields describe observed checks and counts, not an inferred correct answer. Give the actual page and label. This allows visual evidence to be checked without treating an empty transcription as a blank graphical answer. Never claim visual evidence on a typed-only page.'});
   await roles?.trace?.('grade-call');
   /* the grader's tools (grade-tools.js, LAB_GRADE_TOOLS on, bench grade.tools): it checks formulas, numbers and what is
