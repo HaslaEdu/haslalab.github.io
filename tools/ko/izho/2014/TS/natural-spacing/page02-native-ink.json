@@ -1,0 +1,64 @@
+{
+  "output_sha256": "bfeda4e1facf5b4555781d2c517dae2d1140a7e14aee428fe05ecfee297da3c2",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2014-complete-solutions\\natural\\2014\\TS\\page02.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2014-complete-solutions\\natural\\2014\\TS\\page02.pdf",
+    "final_page": 1,
+    "source_sha256": "9343ce36f66d0bbdb9aee69d64cd08672bca50765173f4503ca9402189c952a2",
+    "output_sha256": "bfeda4e1facf5b4555781d2c517dae2d1140a7e14aee428fe05ecfee297da3c2",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 262,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 262,
+      "expected_signature_count": 262,
+      "matched_outline_uses": 262,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 30047,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      196.5,
+      753.75,
+      196.75,
+      754.0
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "method": "One exact original TNR left-parenthesis encoded CID at its actual measured destination. Original Tf=1 and Tm linear12/12.0774 are replayed with the original font hinting; native CID4x/8x/12x and independent SVG8x/12x all show zero loss. Raw4x unhinted SVG diagnostic is retained. Delivered proof and every global threshold are unchanged.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "native_original_CID_reference_missing_pixels": 0,
+    "native_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "svg_8x_missing_pixels": 0,
+    "svg_12x_missing_pixels": 0,
+    "original_font_resource": "/TT2",
+    "original_encoded_CID": "28",
+    "original_GID": 9,
+    "original_native_trace_point": 12.0,
+    "original_Tf": 1.0,
+    "original_Tm_linear": [
+      12.0,
+      0.0,
+      0.0,
+      12.0774
+    ],
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2014-complete-solutions\\natural\\2014\\TS\\..\\..\\2014-page02-independent-native-parenthesis-witness\\witness.json",
+    "witness_sha256": "1623586cf1a6d2067ce9b50494a9e8a41a89e122ee3cf4b9c59c933516074d4d",
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2014/TS/natural-spacing/witnesses/page02-native-cid.json"
+  }
+}
