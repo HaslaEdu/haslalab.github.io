@@ -9,7 +9,7 @@ const call = async (m, p, body, tok) => { const r = await fetch(API + "/api" + p
 
 (async () => {
   const r = Math.random().toString(36).slice(2, 6);
-  const [, other] = await call("POST", "/signup", { username: "pfo" + r, nickname: "Taken" + r, password: "password1" });
+  const [, other] = await call("POST", "/signup", { username: "pfo" + r, nickname: "Taken" + r, password: "password1", consent: { terms: true, privacy: true, age14: true } });
   const browser = await chromium.launch(), errs = [];
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   await ctx.addInitScript(api => { if (!sessionStorage.getItem("s")) { sessionStorage.setItem("s", 1); localStorage.setItem("hlCmApi", api); localStorage.removeItem("hlCmTok"); localStorage.setItem("hlLang", "ko"); } }, API);

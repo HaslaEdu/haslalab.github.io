@@ -4,7 +4,7 @@ const call = async (m, p, body, tok) => { const r = await fetch(B + p, { method:
 let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const r = Math.random().toString(36).slice(2, 6);
-const sign = (u, n) => call("POST", "/signup", { username: u + r, nickname: n, password: "password1" });
+const sign = (u, n) => call("POST", "/signup", { username: u + r, nickname: n, password: "password1", consent: { terms: true, privacy: true, age14: true } });
 const chk = (n, tok) => call("GET", "/nick-check?n=" + encodeURIComponent(n), null, tok);
 
 let [s, j] = await sign("nA", "Kim" + r); const A = j.token;

@@ -7,6 +7,7 @@ import http from "node:http";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import worker from "./src/index.js";
+import { agreeTerms } from "./fixtures/consent.mjs";
 import { SCHEME_VERSION as REG_VERSION } from "./src/grading-rules.js";
 import { MODEL_TEST_EXAMS } from "./src/model-test-catalog.js";
 import { ensureWeeklyContent } from "./src/weekly-content.js";
@@ -107,6 +108,7 @@ async function session(options = {}) {
   const sol = canonical?.solution || `IPhO_${year}_S1.pdf`, mark=canonical?.mark||"", sources = { _provider: options.provider || "gemini", [task]: { sol, ...(options.theory ? { kind: "theory" } : {}) } };
   sqlite.prepare("INSERT INTO users(id,username,nickname,pw,created_at) VALUES(?,?,?,'unused',?)").run(id, "ocr" + id, "OCR " + id, timestamp);
   sqlite.prepare("INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)").run(await hash(token), id, timestamp, timestamp + 3600);
+  agreeTerms(sqlite, id, timestamp);
   sqlite.prepare(`INSERT INTO lab_sessions(id,user_id,exam_key,comp,year,tasks,lang,started_at,ended_at,scan_until,upload_hash,status,charged,created_at,sources)
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(id, id, examKey, comp, year, JSON.stringify([task]), options.lang || "ko", timestamp - 18000, timestamp - 10, timestamp + 3600, await hash(scan), options.status || "scanning", options.charged ?? 1, timestamp, JSON.stringify(sources));
   return { id, token, scan, task, examKey, sol, mark };

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import worker from './src/index.js';
+import {agreeTerms} from './fixtures/consent.mjs';
 import {dispatchLabJobs,consumeLabJobs,enqueueLabJobs,LabJobDeferred} from './src/lab-jobs.js';
 
 const sql=new DatabaseSync(':memory:');
@@ -15,6 +16,7 @@ const env={DB,LAB_KEEP_HOURS:'off',GEMINI_API_KEY:'local-test-key',ALLOWED_ORIGI
 globalThis.caches={default:{async match(key){return cache.get(key.url)?.clone();},async put(key,response){cache.set(key.url,response.clone());}}};
 const time=Math.floor(Date.now()/1000),hash=async v=>Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v))).toString('base64url');
 for(let id=1;id<=8;id++){tokens[id]=('local_owner_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,role,created_at,exam_tokens,token_parts)VALUES(?,?,?,'unused','user',?,10,3)").run(id,'latency'+id,'Latency '+id,time);sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at)VALUES(?,?,?,?)').run(await hash(tokens[id]),id,time,time+3600);}
+agreeTerms(sql,Object.keys(tokens).map(Number),time);
 const originalFetch=globalThis.fetch;
 globalThis.fetch=async(input,options={})=>{
   const url=String(input);if(/https:\/\/www\.(kms|kmo)\.or\.kr\//.test(url))return new Response('%PDF-1.7\nfixture');

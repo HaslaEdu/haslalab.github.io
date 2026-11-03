@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import worker from './src/index.js';
+import {agreeTerms} from './fixtures/consent.mjs';
 import {VISION_MODELS} from './src/vision-provider.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './src/ocr-errors.js';
 import {pdfiumVisualFixture} from './fixtures/pdfium-visual-fixture.mjs';
@@ -16,7 +17,7 @@ async function fixture(providerResponse,run){
   const DB={prepare(query){const statement=sql.prepare(query),bound=args=>({query,bind:(...args)=>bound(args),async first(){return statement.get(...args)||null;},async all(){return{results:statement.all(...args)};},async run(){return this.executeSync();},executeSync(){if(statement.columns().length)return{results:statement.all(...args)};const result=statement.run(...args);return{results:[],meta:{changes:result.changes,last_row_id:Number(result.lastInsertRowid)}};}});return bound([]);},async batch(statements){sql.exec('BEGIN');try{const result=statements.map(statement=>statement.executeSync());sql.exec('COMMIT');return result;}catch(error){sql.exec('ROLLBACK');throw error;}}};
   const token='local_ocr_failure_owner'.padEnd(48,'x'),hash=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token))).toString('base64url'),at=Math.floor(Date.now()/1000);
   sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(1,'failuretest','Fixture','unused',?,5)").run(at);
-  sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(hash,1,at,at+3600);
+  sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(hash,1,at,at+3600);agreeTerms(sql,1,at);
   const queue=[],calls=[],env={DB,DEEPSEEK_API_KEY:'fixture-secret-never-print',GEMINI_API_KEY:'fixture-gemini',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>pdfiumVisualFixture(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
   const previous={fetch:globalThis.fetch,caches:globalThis.caches};globalThis.caches={default:{async match(){},async put(){}}};
   globalThis.fetch=async(url,request)=>{

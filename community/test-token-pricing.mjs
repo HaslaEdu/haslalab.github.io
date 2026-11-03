@@ -4,6 +4,7 @@ import test from 'node:test';
 import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import worker from './src/index.js';
+import {agreeTerms} from './fixtures/consent.mjs';
 import { tokenUnits, tokenBalance } from './src/lab-tokens.js';
 import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE, LAB_SHORTLIST_CATALOGUE } from './src/lab-pair-catalog.js';
 
@@ -37,6 +38,7 @@ for (let id = 1; id <= 80; id++) {
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(auth[id]))).toString('base64url');
   sql.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash, id, time, time + 3600);
 }
+agreeTerms(sql, Object.keys(auth).map(Number), time);
 const env = { DB,GEMINI_API_KEY:'local-selected-provider-no-AI', LAB_JOBS: { async sendBatch() {} }, LAB_KEEP_HOURS: 'off', ADS_REWARDED_UNIT: 'test', ADS_MIN_SEC: '0', ADS_DAILY: '10', TOSS_BASE: 'https://payments.test', TOSS_SECRET_KEY: 'local-stand-in' };
 globalThis.caches = { default: { async match() {}, async put() {} } };
 const originalFetch = globalThis.fetch;

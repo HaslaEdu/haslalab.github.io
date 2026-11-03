@@ -848,6 +848,15 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmauth .rules{margin:0;padding:10px 12px 10px 28px;background:var(--cm-soft);border-radius:8px;font-size:12.5px;color:#4b5563}
 .cmauth .chk{flex-direction:row;align-items:flex-start;gap:8px;text-transform:none;letter-spacing:0;font-weight:500;font-size:13px}
 .cmauth .chk input{margin-top:3px;width:auto}
+/* the consent boxes: sign-up, the social username step and the dialog for accounts from before the terms */
+.cmconsent{border:1px solid var(--cm-line);border-radius:8px;padding:10px 12px;margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.cmconsent legend{font-size:12px;font-weight:700;color:#4b5563;padding:0 4px}
+.cmconsent label.chk{display:flex;flex-direction:row;align-items:flex-start;gap:8px;text-transform:none;letter-spacing:0;font-weight:500;font-size:13px;line-height:1.45}
+.cmconsent label.chk input{margin-top:3px;width:auto;flex:none}
+.cmconsent [hidden]{display:none}
+.cmconsent a{color:var(--cm-acc);font-weight:600}
+.cmconsent .cmai{font-size:12px;color:var(--graphite);line-height:1.5}
+.cmcrop form.box{display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 32px);overflow:auto}
 .cmnote{padding:16px 18px;background:#fff;border:1px solid var(--cm-line);border-left:4px solid var(--brass);border-radius:10px;font-size:14px;color:var(--graphite)}
 .cmnote b{color:var(--ink)}
 .cmtoast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1f2630;color:#fff;padding:10px 16px;border-radius:10px;font-size:13.5px;z-index:90;
@@ -1121,7 +1130,8 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 
 <footer><div class="shell frow">
   <span id="footL"></span>
-  <span><a href="mailto:mgsnew88@naver.com">mgsnew88@naver.com</a>
+  <span><a href="terms.html" id="footTerms">이용약관</a> &nbsp;·&nbsp; <a href="privacy.html" id="footPrivacy"><b>개인정보 처리방침</b></a>
+        &nbsp;·&nbsp; <a href="mailto:mgsnew88@naver.com">mgsnew88@naver.com</a>
         &nbsp;·&nbsp; <a href="#/" id="footTop"></a></span>
 </div></footer>
 
@@ -1135,7 +1145,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=093476a8bf6d"></script>
-<script src="account-ui.js?v=21f0796b6bed"></script>
+<script src="account-ui.js?v=c917e0f1296e"></script>
 <script>
 "use strict";
 
@@ -8778,6 +8788,12 @@ const CMT = {
     confirmDelAcc:"정말 계정을 삭제할까요? 되돌릴 수 없습니다.", myPosts:"내가 쓴 글",
     confirmDel:"삭제할까요?", reportAsk:"신고 사유를 적어 주세요.", reported:"신고를 접수했습니다.",
     pwMismatch:"비밀번호 확인이 맞지 않습니다.", mustAgree:"커뮤니티 규칙에 동의해 주세요.",
+    consent:{h:"약관 동의", terms:'[필수] <a href="terms.html" target="_blank" rel="noopener">이용약관</a> 동의', privacy:'[필수] <a href="privacy.html" target="_blank" rel="noopener">개인정보 수집·이용</a> 동의',
+      age:"[필수] 만 14세 이상입니다.", train:"[선택] 내 답안과 채점 결과를 AI 채점 개선(학습)에 최대 1년 활용하는 데 동의합니다. (언제든 철회 가능)",
+      ai:"HaslaLab의 채점은 AI가 하는 참고용 결과이며 실제 대회 점수와 다를 수 있습니다.",
+      dlgH:"약관 동의가 필요합니다", dlgP:"이용약관과 개인정보 처리방침이 2026년 11월 3일부터 시행됩니다. 계속 이용하려면 아래 항목에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
+      agreeBtn:"동의하고 계속하기", trainH:"AI 채점 개선(학습) 활용", trainHelp:"동의하면 이후 채점되는 답안과 채점 결과를 AI 채점 개선에 최대 1년 활용합니다. 철회하면 이미 모아 둔 학습용 사본도 바로 지웁니다.",
+      trainOn:"동의함", trainOff:"동의하지 않음", trainGive:"동의하기", trainWithdraw:"동의 철회", trainGiven:"동의했습니다. 이후 채점부터 적용됩니다.", trainWithdrawn:"철회했습니다. 모아 둔 학습용 사본도 지웠습니다.", policies:"이용약관 · 개인정보 처리방침"},
     justNow:"방금", minAgo:"분 전", hrAgo:"시간 전", dayAgo:"일 전",
     stPosts:"글", stToday:"오늘", hotH:"지금 뜨는 글", aboutH:"게시판 정보", boardList:"이 게시판의 다른 글",
     err:{bad_image:"JPG · PNG · WebP 사진만 올릴 수 있습니다.", bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
@@ -8790,6 +8806,8 @@ const CMT = {
          not_found:"글을 찾을 수 없습니다. 삭제되었을 수 있습니다.",
          bad_title:"제목을 입력하세요. (120자 이내)", bad_body:"내용을 입력하세요.",
          bad_reason:"사유를 입력하세요.", network:"서버에 연결하지 못했습니다. 잠시 뒤에 다시 해 주세요.",
+         consent_required:"필수 항목(이용약관, 개인정보 수집·이용)에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
+         age_required:"만 14세 이상만 가입할 수 있습니다. 만 14세 미만은 가입할 수 없습니다.",
          server_error:"서버 오류가 났습니다."}
   },
   en:{
@@ -8833,6 +8851,12 @@ const CMT = {
     confirmDelAcc:"Delete your account? This can't be undone.", myPosts:"My posts",
     confirmDel:"Delete this?", reportAsk:"Why are you reporting this?", reported:"Thanks — the report was sent.",
     pwMismatch:"The passwords don't match.", mustAgree:"Please agree to the community rules.",
+    consent:{h:"Agreements", terms:'[Required] I agree to the <a href="terms.html#en" target="_blank" rel="noopener">Terms of Service</a>', privacy:'[Required] I agree to the <a href="privacy.html#en" target="_blank" rel="noopener">collection and use of personal data</a>',
+      age:"[Required] I am 14 or older.", train:"[Optional] My answers and grading results may be used to improve the AI grading (training) for up to 1 year. (You can withdraw at any time.)",
+      ai:"HaslaLab's grading is done by AI for reference only and may differ from an official competition score.",
+      dlgH:"Please accept the terms", dlgP:"New Terms of Service and a Privacy Policy take effect on 3 November 2026. Please agree below to keep using the site. Grading cannot start until you do.",
+      agreeBtn:"Agree and continue", trainH:"Use for AI grading improvement (training)", trainHelp:"If you agree, answers and grading results graded from now on may be used to improve the AI grading for up to 1 year. Withdrawing also deletes the training copies already kept.",
+      trainOn:"Agreed", trainOff:"Not agreed", trainGive:"Agree", trainWithdraw:"Withdraw", trainGiven:"Thanks. This applies from your next grading.", trainWithdrawn:"Withdrawn. The training copies kept so far were deleted.", policies:"Terms · Privacy"},
     justNow:"just now", minAgo:"m ago", hrAgo:"h ago", dayAgo:"d ago",
     stPosts:"posts", stToday:"today", hotH:"Trending now", aboutH:"About this board", boardList:"More from this board",
     err:{bad_image:"Only JPG, PNG or WebP pictures can be used.", bad_username:"Usernames are 3–20 letters, digits or _.",
@@ -8845,6 +8869,8 @@ const CMT = {
          not_found:"Post not found. It may have been deleted.",
          bad_title:"Enter a title (up to 120 characters).", bad_body:"Enter some text.",
          bad_reason:"Enter a reason.", network:"Couldn't reach the server. Please try again shortly.",
+         consent_required:"Please accept the required terms (Terms of Service and data collection). Grading cannot start until you do.",
+         age_required:"You must be 14 or older to sign up.",
          server_error:"The server hit an error."}
   }
 };
@@ -8916,7 +8942,7 @@ function cmLoadMe(){
   if(!token){cm.meChecked=true;return Promise.resolve(null);}
   if(cm.meChecked)return Promise.resolve(cm.me);
   if(cmMeP)return cmMeP;
-  const p=cmApi("GET","/me").then(r=>{if(cmIdentityScope()===scope){cm.me=r.user;cm.meChecked=true;}return cmIdentityScope()===scope?cm.me:null;},()=>null).finally(()=>{if(cmMeP===p)cmMeP=null;});
+  const p=cmApi("GET","/me").then(r=>{if(cmIdentityScope()===scope){cm.me=r.user;cm.meChecked=true;cmConsentGate();}return cmIdentityScope()===scope?cm.me:null;},()=>null).finally(()=>{if(cmMeP===p)cmMeP=null;});
   cmMeP=p;return p;
 }
 function cmHealth(){
@@ -8956,7 +8982,7 @@ function cmMeOverview(){
     return{user:identity.user,stats,identities:ids.identities,providers:ids.providers,has_password:ids.has_pw,active:active?.active,tokens:active?.tokens,health};
   }).then(r=>{
     if(cmIdentityScope()!==scope)throw{code:"account_changed"};
-    cm.me=r.user;cm.meChecked=true;
+    cm.me=r.user;cm.meChecked=true;cmConsentGate();
     if(r.health){cm.v=r.health.v||cm.v;cmHealthBase=cmBase();cmHealthUntil=Date.now()+600000;cmHealthP=Promise.resolve(r.health);}
     return r;
   }).finally(()=>{if(cmOverviewP?.promise===p)cmOverviewP=null;});
@@ -8985,7 +9011,7 @@ function cmLabBootstrap(options={}){
     return{user:me.user,tokens:active.tokens,parts:active.parts||0,active:active.active,sessions:list.sessions,health:health||detail?.health,session:detail?.session,now:active.now};
   }).then(r=>{
     if(cmIdentityScope()!==scope)throw{code:"account_changed"};
-    if(cmIdentityScope()===scope){cm.me=r.user;cm.meChecked=true;cm.v=r.health?.v||cm.v;}
+    if(cmIdentityScope()===scope){cm.me=r.user;cm.meChecked=true;cm.v=r.health?.v||cm.v;cmConsentGate();}
     if(r.health&&cmBase()===scope.split("\n")[0]){cmHealthBase=cmBase();cmHealthUntil=Date.now()+600000;cmHealthP=Promise.resolve(r.health);}
     return r;
   }).finally(()=>{if(cmBootstrapP?.promise===p)cmBootstrapP=null;});
@@ -9506,7 +9532,59 @@ async function cmEdit(root, id, alive){
 function cmAuthDone(r){
   cmTok(r.token); cm.me=r.user; cm.meChecked=true;
   if(r.user?.username_required){location.hash='#/me';return;}
-  cmBack();
+  cmBack();cmConsentGate();
+}
+/* the consent boxes, one markup for sign-up, the social username step and the dialog below. The age box appears only
+   where the server says the request comes from Korea: there is no guardian-consent flow, so under-14s cannot join. */
+let cmConsentInfoP=null;
+function cmConsentInfo(){return cmConsentInfoP||(cmConsentInfoP=cmApi("GET","/consent/info").catch(()=>{cmConsentInfoP=null;return{age_required:true};}));}
+function cmConsentHtml(){const C=CMT[lang].consent;return `<fieldset class="cmconsent"><legend>${C.h}</legend>
+  <label class="chk"><input type="checkbox" name="cTerms"> <span>${C.terms}</span></label>
+  <label class="chk"><input type="checkbox" name="cPrivacy"> <span>${C.privacy}</span></label>
+  <label class="chk" data-age hidden><input type="checkbox" name="cAge"> <span>${C.age}</span></label>
+  <label class="chk"><input type="checkbox" name="cTrain"> <span>${C.train}</span></label>
+  <small class="cmai">${C.ai}</small></fieldset>`;}
+/* returns read(): the body's consent field, or throws {code} for what is missing (the server checks the same) */
+function cmConsentWire(box){
+  let age=false;const row=box.querySelector("[data-age]"),on=n=>!!box.querySelector(`[name=${n}]`)?.checked;
+  cmConsentInfo().then(i=>{age=!!i.age_required;if(row)row.hidden=!age;});
+  return()=>{if(!on("cTerms")||!on("cPrivacy"))throw{code:"consent_required"};if(age&&!on("cAge"))throw{code:"age_required"};
+    return{terms:true,privacy:true,age14:on("cAge"),train:on("cTrain")};};
+}
+/* an account without consent to the current terms (one from before them, or after a new version) is asked as soon as
+   it is known to be signed in; the server refuses grading until then. A social sign-up agrees on its username step. */
+function cmConsentGate(){
+  const me=cm.me;if(me?.consent_required!==true||me.username_required||typeof document!=="object"||document.getElementById("cmConsentDlg"))return;
+  const T=CMT[lang],C=T.consent,ov=document.createElement("div");ov.className="cm cmcrop";ov.id="cmConsentDlg";
+  ov.innerHTML=`<form class="box" role="dialog" aria-modal="true" aria-labelledby="cmConsentH"><h3 id="cmConsentH">${C.dlgH}</h3><p>${C.dlgP}</p>${cmConsentHtml()}<span class="cmerr"></span>
+    <div class="btns"><button type="button" class="cmbtn" data-out>${T.logout}</button><button type="submit" class="cmbtn pri">${C.agreeBtn}</button></div></form>`;
+  document.body.append(ov);
+  const f=ov.querySelector("form"),err=f.querySelector(".cmerr"),read=cmConsentWire(f),id=me.id;
+  f.onsubmit=async e=>{
+    e.preventDefault();err.textContent="";let consent;
+    try{consent=read();}catch(x){err.textContent=cmErr(x);return;}
+    try{await cmApi("POST","/me/consent",{consent});ov.remove();cmMeP=null;cmBootstrapP=null;cmOverviewP=null;
+      if(cm.me?.id===id){delete cm.me.consent_required;cm.me.train_ok=consent.train;}}
+    catch(x){err.textContent=cmErr(x);}
+  };
+  ov.querySelector("[data-out]").onclick=async()=>{try{await cmApi("POST","/logout");}catch(x){}cmTok(null);cm.me=null;ov.remove();location.hash="#/community";};
+}
+/* the optional training consent, on the profile pages: withdrawing deletes the training copies at once. `known` is a
+   user the page already read (the overview carries train_ok), so that page makes no extra request */
+async function cmTrainToggle(box,known){
+  if(!box||!cm.me)return;
+  const C=CMT[lang].consent,hide=()=>{if(box.style)box.style.display="none";else box.hidden=true;};let on=cm.me.train_ok===true;
+  if(known){if(known.consent_required||typeof known.train_ok!=="boolean")return hide();on=known.train_ok;}
+  else try{const st=await cmApi("GET","/me/consent");if(st.consent_required)return hide();on=st.train_ok===true;}catch(e){if(e.status===404)return hide();}
+  const draw=msg=>{box.innerHTML=`<h3 style="font-size:15px;margin:0 0 6px">${C.trainH}</h3><p style="font-size:13px;color:var(--graphite);margin:0 0 8px">${C.trainHelp}</p>
+    <div class="row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:13px">${on?C.trainOn:C.trainOff}</b><span style="flex:1"></span>
+    <button class="cmbtn" type="button" data-train>${on?C.trainWithdraw:C.trainGive}</button></div><span class="cmerr" style="color:${msg?"var(--graphite)":""}">${msg||""}</span>
+    <p style="font-size:12px;margin:8px 0 0"><a href="terms.html${lang==="en"?"#en":""}" target="_blank" rel="noopener">${C.policies.split(" · ")[0]}</a> · <a href="privacy.html${lang==="en"?"#en":""}" target="_blank" rel="noopener">${C.policies.split(" · ")[1]}</a></p>`;
+    box.querySelector("[data-train]").onclick=async()=>{
+      try{const r=await cmApi("POST","/me/consent/train",{train:!on});on=r.train_ok===true;if(cm.me)cm.me.train_ok=on;draw(on?C.trainGiven:C.trainWithdrawn);}
+      catch(e){box.querySelector(".cmerr").textContent=cmErr(e);}
+    };};
+  draw();
 }
 if(typeof window!=='undefined'&&typeof window.addEventListener==='function')window.addEventListener('haslaedu:oauth-desktop',async event=>{
   const detail=event.detail;if(detail?.version!==1)return;
@@ -9547,18 +9625,20 @@ function cmSignup(root){
       <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
       <ol class="rules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
       <label class="chk"><input type="checkbox" name="agree"> ${T.agree}</label>
+      ${cmConsentHtml()}
       <span class="cmerr"></span>
       <button class="cmbtn pri" type="submit">${T.signup}</button>
     </form>
     <p class="alt">${T.haveAcc} <a href="#/community/login">${T.login}</a></p></div></div>`;
-  const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr");
+  const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr"), consentOf=cmConsentWire(f);
   const nickFree=cmNickCheck(f.nickname, root.querySelector("#cmSnick"));
   f.onsubmit=async e=>{
     e.preventDefault();
     if(await nickFree()===false){ err.textContent=cmErr({code:"nickname_taken"}); f.nickname.focus(); return; }
     if(f.password.value!==f.password2.value){ err.textContent=T.pwMismatch; return; }
     if(!f.agree.checked){ err.textContent=T.mustAgree; return; }
-    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value})); }
+    let consent; try{ consent=consentOf(); }catch(er){ err.textContent=cmErr(er); return; }
+    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent})); }
     catch(er){ err.textContent=cmErr(er); if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); } }
   };
   arOauth(root);
@@ -9655,7 +9735,11 @@ function cmAccountUsername(root,done){
   if(!root)return;
   const ui=window.HL_ACCOUNT_UI;
   if(typeof ui?.username!=='function'){root.innerHTML=`<p class="cmnote">${lang==='ko'?'아이디 설정을 이용하려면 페이지를 새로고침해 주세요.':'Reload this page to set your username.'}</p>`;return;}
-  ui.username(root,{api:cmApi,language:()=>lang,user:cm.me,done:updated=>{
+  /* a social sign-up finishes here, so it agrees to the terms here: the boxes go above the username form and are sent with it */
+  let consent=null;
+  if(cm.me?.consent_required===true){const holder=document.createElement("div");holder.className="cm";holder.innerHTML=cmConsentHtml();const read=cmConsentWire(holder);root.before(holder);
+    consent=()=>cm.me?.consent_required===true?read():undefined;}   // agreed meanwhile in the dialog: nothing more to send
+  ui.username(root,{api:cmApi,language:()=>lang,user:cm.me,consent,done:updated=>{
     if(!updated||updated.id!==cm.me?.id||updated.role!==cm.me?.role)throw{code:'account_changed'};
     cmInvalidate();cm.me=updated;cm.meChecked=true;cmMeP=null;cmBootstrapP=null;cmOverviewP=null;
     if(typeof arChip==='function')arChip();else cmAccountChip();done?.();
@@ -9699,6 +9783,7 @@ async function cmAccount(root, alive){
       <div class="row"><span class="cmerr"></span><span class="sp"></span><button class="cmbtn pri" type="submit">${T.nickChange}</button></div></form>
     <div class="cmbh"><h2 style="font-size:1rem">${T.myPosts}</h2></div><div id="cmMine"><p class="cmempty">${T.loading}</p></div>
     <div id="cmSecurity" style="border-top:8px solid var(--cm-soft)"></div>
+    <div class="cmform" id="cmTrain" style="border-top:8px solid var(--cm-soft)"></div>
     <div class="cmform" style="border-top:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${T.delAcc}</h3>
       <p style="font-size:13px;color:var(--graphite);margin:0">${T.delAccHelp}</p>
@@ -9716,6 +9801,7 @@ async function cmAccount(root, alive){
     catch(er){ nOut.textContent=cmErr(er); }
   };
   cmAccountSecurity(root.querySelector('#cmSecurity'));
+  cmTrainToggle(root.querySelector('#cmTrain'));
   root.querySelector("#cmDelAcc").onclick=async()=>{
     if(!confirm(T.confirmDelAcc)) return;
     try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ cmToast(cmErr(e)); }
@@ -9793,6 +9879,9 @@ function paintPageChrome(active){
      <a href="#/about" class="${active==="about"?"on":""}">${d.navAbout}</a>`;
   document.getElementById("footL").textContent=d.footL;
   document.getElementById("footTop").textContent=d.footTop;
+  const terms=document.getElementById("footTerms"),privacy=document.getElementById("footPrivacy");
+  if(terms){terms.textContent=lang==="en"?"Terms":"이용약관";terms.href="terms.html"+(lang==="en"?"#en":"");}
+  if(privacy){privacy.innerHTML=lang==="en"?"<b>Privacy</b>":"<b>개인정보 처리방침</b>";privacy.href="privacy.html"+(lang==="en"?"#en":"");}
 }
 
 function render(){

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import worker from './src/index.js';
+import {agreeTerms} from './fixtures/consent.mjs';
 import {MODEL_TEST_EXAMS} from './src/model-test-catalog.js';
 import {VISION_MODELS} from './src/vision-provider.js';
 import {ensureWeeklyContent} from './src/weekly-content.js';
@@ -43,6 +44,7 @@ async function fixture(run){
   await ensureWeeklyContent(DB,DB);
   const t=Math.floor(Date.now()/1000),tokens={},queue=[],calls=[];
   for(const id of [1,2,3]){tokens[id]=('vision_test_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(?,?,?,'unused',?,5)").run(id,'vision'+id,'Vision '+id,t);sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]),id,t,t+86400);}
+  agreeTerms(sql,[1,2,3],t);
   const env={DB,GEMINI_API_KEY:'local-gemini',DEEPSEEK_API_KEY:'local-deepseek',UPSTAGE_API_KEY:'must-never-be-used',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>renderer(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
   const curatedSchemes={};
   let mathpixText='$v_0 = I_0 / M$ (mathpix)',failProvider=false,emptyWithTools=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null,gradeReply=null,moderateReply=null,reviewReply=null,auditReply=null;
@@ -556,6 +558,7 @@ test('training data: with LAB_TRAIN_CAPTURE on a graded paper is kept unverified
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
   env.LAB_TRAIN_CAPTURE='on';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';
+  agreeTerms(sql,[1,2,3],undefined,{train:true});   // capture also needs the candidate's optional training consent
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
   const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
