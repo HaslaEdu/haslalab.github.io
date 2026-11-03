@@ -1,0 +1,34 @@
+{
+  "status": "EXTERNAL_AMENDMENT_QA_REJECTED_NOT_READY",
+  "case": "negative_unplanned_body_rotation",
+  "year": 2025,
+  "page": 7,
+  "stage": "amended_full_CTM_independent_audit",
+  "exception_type": "AssertionError",
+  "message": "('Source-bound full R^-1(Tm*CTM) physical transform differs', 80, 0, 0.0, [0.0, 1.0, -1.0, 0.0], [1.0, 0.0, 0.0, 1.0], 1.0)",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py\", line 77, in main\n    stage='amended_full_CTM_independent_audit';value=verify(e,q,target,cfg)\n                                                     ~~~~~~^^^^^^^^^^^^^^^^\n  File \"D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py\", line 168, in verify\n    physical_report=verify_physical_streams(target,q,cfg,matched_all)\n  File \"D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py\", line 82, in verify_physical_streams\n    assert error<=1e-6,('Source-bound full R^-1(Tm*CTM) physical transform differs',record['xref'],rotation,angle,actual,expected,error)\n           ^^^^^^^^^^^\nAssertionError: ('Source-bound full R^-1(Tm*CTM) physical transform differs', 80, 0, 0.0, [0.0, 1.0, -1.0, 0.0], [1.0, 0.0, 0.0, 1.0], 1.0)\n",
+  "target": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_unplanned_body_rotation.pdf",
+    "sha256": "262861c4f9750ffb1e115ca02452e005d491f679d814bb4c8b30371c0d8db9b7"
+  },
+  "layout": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.layout.json",
+    "sha256": "41cf76bcca8a97afdbd85db47492ec846e327317cdab74a9053b231e17480ad4"
+  },
+  "snapshot": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_unplanned_body_rotation\\snapshot.json",
+    "sha256": "04a1e2071f03e94ff8da5d8b318e12294f5bea2e37af5ac824348cea1bb4eca4"
+  },
+  "external_code_sha256": {
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+  },
+  "original_runtime_source_snapshot": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\ctm-amendment-runtime-v1\\runs\\prototype03\\negative_unplanned_body_rotation\\runtime-snapshot.json",
+    "sha256": "2337057cdd2157c3610e334ba5814be6b04f9d85b19782ca4cb113dad53c5685"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "ortvay2026-page07-exact-row-root-go-v1",
+  "status": "ROOT_GO_2026_PAGE07_EXACT_ROW_POSTPROCESS",
+  "year": 2026,
+  "page": 7,
+  "production_repair_authorized": true,
+  "existing_source_or_runtime_programs_may_change": false,
+  "original_proofs_or_global_lifecycle_may_change": false,
+  "repair_code_input_freeze": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\REPAIR-CODE-INPUT-FROZEN.json",
+    "sha256": "772c5a7536811f041ad4e0d9bc8d179072e08e472942dfead7ee95bedd43cb50"
+  },
+  "numeric_spec": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\root-2026p7-review-20261104\\NUMERIC-REPAIR-SPEC.json",
+    "sha256": "b552b2f0cc95c1f0e8aae8bfdfc34fddae4037ce88703eca33f7fe61c914b24c"
+  },
+  "root_review": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\ROOT-CODE-INPUT-REVIEW.json",
+    "sha256": "46d52c25c737208956ed898712c338196706342fe72e6ba350a3c23aa65c765c"
+  },
+  "permitted_output_directory": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07",
+  "mixed_bridge_directory": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104",
+  "allowed_output_namespaces": [
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\audit-scratch",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104"
+  ],
+  "allowed_operation": {
+    "year": 2026,
+    "page": 7,
+    "slot_id": "p7:b5:l6:s0-0",
+    "text": "논하라.",
+    "baseline": 421.5059509277344,
+    "point_size": 11.9552001953125,
+    "dx": 3.3125,
+    "selected_original_stream_xrefs": [
+      317,
+      318,
+      319,
+      320
+    ],
+    "only_four_original_KO_Tm_e_operands_may_change": true,
+    "all_other_failed_P1_actual_glyphs_including_spaces_and_effective_objects_exact": true
+  },
+  "actual_runtime_source_sha256": {
+    "postprocess_page07.py": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18",
+    "audit_page07_repair.py": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a",
+    "continue_and_bridge_2026.py": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+  },
+  "required_order": [
+    "Gated postprocess produce",
+    "Gated fresh independent positive audit",
+    "Gated seven genuine PDF rejects plus four binding rejects and valid candidate read-only PASS",
+    "Machine result, actual final PNG read, typed combined byte-copy READY bridge",
+    "Root-owned unchanged ASM98 join without proof-helper, actual D/C checks, upload/CI/full public GET/catalogue"
+  ],
+  "no_publication_or_full_archive_complete_claim": true
+}
