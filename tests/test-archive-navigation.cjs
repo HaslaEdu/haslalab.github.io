@@ -29,6 +29,9 @@ test('query state retains source/question and opaque browse cursors, never secre
   assert.equal(A.clean('q=%00bad&stars=6&year=1799&cursor=https%3A%2F%2Fevil.invalid').toString(),'');
   assert.equal(A.clean('subject=special_relativity').get('topic'),'special_relativity');
   assert.equal(A.clean('cursor=o_20').get('cursor'),'o_20');
+  assert.equal(A.parse(A.href('schools','math',{school:'kaist'})).params.get('school'),'kaist');
+  assert.equal(A.clean({school:'https://evil.invalid'}).has('school'),false);
+  assert.equal(A.clean('school=snu&school=kaist').has('school'),false);
   const longCursor='sc_'+'A'.repeat(2797);
   assert.equal(A.parse(A.href('books','phys',{cursor:longCursor})).params.get('cursor'),longCursor);
   assert.equal(A.clean({cursor:longCursor+'A'}).has('cursor'),false);

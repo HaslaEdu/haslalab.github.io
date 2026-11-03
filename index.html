@@ -990,7 +990,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 </style>
 <link rel="stylesheet" href="site-design.css?v=3c1c7baa824c">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=cdd19492eecf">
+<link rel="stylesheet" href="archive-library.css?v=5ecf3bb77c74">
 </head>
 <body class="hl-site">
 
@@ -1132,7 +1132,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="archive-navigation.js?v=22f1a14056b5"></script>
+<script src="archive-navigation.js?v=cd23758edf22"></script>
 <script src="site-catalogue.js?v=c7f3f96d2d2d"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
@@ -4900,7 +4900,7 @@ function archiveCategories(category,subject){
   return `<nav class="archive-categories" aria-label="${lang==="ko"?"아카이브 자료 구분":"Archive categories"}">${[["contests","대회","Contests"],["books","교재","Books"],["schools","학교","Schools"]].map(([key,ko,en])=>`<a href="${archiveHref(key,subject==="sci"&&key!=="contests"?"phys":subject)}"${key===category?' aria-current="page"':""}>${lang==="ko"?ko:en}</a>`).join("")}</nav>`;
 }
 function viewArchiveDigital(route){
-  const name=route.resolveLegacy?(lang==="ko"?"아카이브":"Archive"):route.category==="books"?(lang==="ko"?"교재 아카이브":"Book archive"):route.category==="schools"?(lang==="ko"?"학교 아카이브":"School archive"):(lang==="ko"?"대회 아카이브":"Competition archive");
+  const name=route.resolveLegacy?(lang==="ko"?"아카이브":"Archive"):route.category==="books"?(lang==="ko"?"교재":"Books"):route.category==="schools"?(lang==="ko"?"학교":"Schools"):(lang==="ko"?"대회 아카이브":"Competition archive");
   return `<div class="shell archive-shell">${archiveCategories(route.category,route.sub)}<div class="phead"><h1>${name}</h1></div>${route.resolveLegacy?"":`<nav class="archive-disciplines" aria-label="${UI[lang].subjLabel}">${SUBJ.filter(x=>window.HL_ARCHIVE?.subjects[x.k]).map(x=>`<a href="${archiveHref(route.category,x.k)}"${x.k===route.sub?' aria-current="page"':""}>${x[lang]}</a>`).join("")}</nav>`}<div id="archiveNative"><p class="archive-loading" role="status">${lang==="ko"?"자료를 불러오는 중…":"Loading archive…"}</p></div></div>`;
 }
 function archiveUsesNative(route){
@@ -4912,7 +4912,7 @@ function disposeArchiveLibrary(){
 }
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=import("./archive-library.js?v=fe4a3d901eeb").catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=cbebe7ae31b2"),import("./archive-book-media.js?v=1af258b84432"),import("./archive-school-media.js?v=356121d191a3")]).then(([reader,books,schools])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){
@@ -4931,7 +4931,7 @@ function mountArchiveNative(route,generation){
   const current=()=>generation===siteRenderSeq&&document.getElementById("archiveNative")===container;
   loadArchiveModule().then(module=>{
     if(!current())return;
-    archiveController=module.mountArchiveLibrary(container,{kind:route.kind,collection:route.collection,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",baseHash:route.baseHash,params:route.params,resolveLegacy:route.resolveLegacy,apiOrigin:"https://haslalab-problem-bank.haslalab.workers.dev",getToken:()=>cmTok(),renderMath:archiveMath,
+    archiveController=module.mountArchiveLibrary(container,{kind:route.kind,collection:route.collection,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",baseHash:route.baseHash,params:route.params,resolveLegacy:route.resolveLegacy,bookMedia:module.bookMedia,schoolMedia:module.schoolMedia,apiOrigin:"https://haslalab-problem-bank.haslalab.workers.dev",getToken:()=>cmTok(),renderMath:archiveMath,
       onNavigate:(href,options={})=>{if(!current()||typeof href!=="string"||!href.startsWith("#/archive/")||/[\r\n]/.test(href))return;if(route.resolveLegacy||options.replace){history.replaceState(null,"",href);render();}else location.hash=href;},
       onLogin:()=>{if(!current())return;try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}location.hash="#/login";}
     });

@@ -3,9 +3,9 @@ name: Archive contracts
 on:
   push:
     branches: [main]
-    paths: ["problem-bank/**", "community/src/problem-bank*.js", "community/test-problem-bank*.mjs", "tools/problem-bank/**", "index.html", "archive-library.*", "archive-navigation.js", "tests/test-archive-*.cjs", "tests/test-problem-library-learning.cjs", ".github/workflows/problem-library.yml"]
+    paths: ["problem-bank/**", "community/src/problem-bank*.js", "community/test-problem-bank*.mjs", "tools/problem-bank/**", "index.html", "archive-library.*", "archive-navigation.js", "archive-*-media.js", "archive-media/**", "tests/test-archive-*.cjs", "tests/test-problem-library-learning.cjs", ".github/workflows/problem-library.yml"]
   pull_request:
-    paths: ["problem-bank/**", "community/src/problem-bank*.js", "community/test-problem-bank*.mjs", "tools/problem-bank/**", "index.html", "archive-library.*", "archive-navigation.js", "tests/test-archive-*.cjs", "tests/test-problem-library-learning.cjs", ".github/workflows/problem-library.yml"]
+    paths: ["problem-bank/**", "community/src/problem-bank*.js", "community/test-problem-bank*.mjs", "tools/problem-bank/**", "index.html", "archive-library.*", "archive-navigation.js", "archive-*-media.js", "archive-media/**", "tests/test-archive-*.cjs", "tests/test-problem-library-learning.cjs", ".github/workflows/problem-library.yml"]
 
 permissions:
   contents: read
@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 22
       - run: npm ci --ignore-scripts --no-audit --no-fund --prefix community
-      - run: node --test community/test-problem-bank.mjs community/test-problem-bank-model.mjs community/test-problem-bank-archive-scope.mjs problem-bank/test-worker.mjs problem-bank/test-public-ui.mjs problem-bank/test-archive-redirect.mjs tools/problem-bank/test-search-index.mjs tools/problem-bank/test-store.mjs tools/problem-bank/test-solutions.mjs tools/problem-bank/test-url-origin.mjs tools/problem-bank/test-repository-origin.mjs tools/problem-bank/test-catalogue.mjs tools/problem-bank/test-collection-migration.mjs tests/test-problem-library-learning.cjs tests/test-archive-navigation.cjs tests/test-archive-library.cjs tests/test-learn-coming-soon.cjs tests/test-site-runtime.cjs tests/test-problem-search-learning.cjs
+      - run: node --test community/test-problem-bank.mjs community/test-problem-bank-model.mjs community/test-problem-bank-archive-scope.mjs problem-bank/test-worker.mjs problem-bank/test-public-ui.mjs problem-bank/test-archive-redirect.mjs tools/problem-bank/test-search-index.mjs tools/problem-bank/test-store.mjs tools/problem-bank/test-solutions.mjs tools/problem-bank/test-url-origin.mjs tools/problem-bank/test-repository-origin.mjs tools/problem-bank/test-catalogue.mjs tools/problem-bank/test-collection-migration.mjs tests/test-problem-library-learning.cjs tests/test-archive-navigation.cjs tests/test-archive-library.cjs tests/test-archive-media.cjs tests/test-learn-coming-soon.cjs tests/test-site-runtime.cjs tests/test-problem-search-learning.cjs
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

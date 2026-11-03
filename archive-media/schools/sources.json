@@ -1,0 +1,74 @@
+{
+  "checked_at_utc": "2026-11-03T14:39:15.640926+00:00",
+  "source_snapshot_url": "https://haslalab-problem-bank.haslalab.workers.dev/api/problem-bank/sources?kind=course&collection=physics&source_limit=200&lang=en",
+  "verified_source_counts": {
+    "mit": 72,
+    "princeton": 12,
+    "yale": 31
+  },
+  "canonical_source_ids_total": 115,
+  "mathematics_canonical_course_sources": 0,
+  "assets": [
+    {
+      "file": "snu-seal.png",
+      "source_url": "https://identity.snu.ac.kr/webdata/uploads/kor/image/2022/09/snu_ui_download.png",
+      "sha256": "6efef4d80908f9b1f60f6e5be6baa116020977d1cdbfd571b406cbf16f7dfb53",
+      "bytes": 83376,
+      "transformation": "none"
+    },
+    {
+      "file": "kaist.svg",
+      "source_url": "https://pr.kaist.ac.kr/site/kr/img/layout/logo.svg",
+      "sha256": "6175c1e8262d7b9786563b606d057f66b1225702ee0c9d15b72d279c94ca1642",
+      "bytes": 1452,
+      "transformation": "Official wordmark primitives unchanged; identical original motif clip-path outline filled directly; horizontal gradient expressed in equivalent source coordinates; unused definitions and external DTD removed. No <use> or external references.",
+      "original_download_sha256": "bd19ba5d0b2057ced3d73162cc7f984846d54966b4a90343ed86176be6d865f6"
+    },
+    {
+      "file": "kaist-dark.svg",
+      "source_url": "https://pr.kaist.ac.kr/site/kr/img/layout/logo_w.svg",
+      "sha256": "922becaed7b77d1b89c78a90f54dbe4b98e63ac2f8cbe3ed53de78ac641da67b",
+      "bytes": 1158,
+      "transformation": "Official wordmark primitives unchanged; identical original motif clip-path outline filled directly; horizontal gradient expressed in equivalent source coordinates; unused definitions and external DTD removed. No <use> or external references.",
+      "original_download_sha256": "eb2405faf7b32a206b6bb3d0602c02ffcd0e277e0d513e411ed6bab97803e6c0"
+    },
+    {
+      "file": "mit.svg",
+      "source_url": "https://www.mit.edu/",
+      "sha256": "d945b6cbc309ac0d19b8837c4a066651ad037ab73f9d754d1c02a2a10a58cb60",
+      "bytes": 429,
+      "transformation": "exact inline footer SVG extraction; no geometry change"
+    },
+    {
+      "file": "yale.png",
+      "source_url": "https://www.yale.edu/sites/all/themes/yale_blue/images/logo-print.png",
+      "sha256": "47d22258c64dbcbd06d18e006e4c913a798872de21a978c08828568aa1984197",
+      "bytes": 3042,
+      "transformation": "none"
+    },
+    {
+      "file": "princeton.png",
+      "source_url": "https://coursera.cs.princeton.edu/introcs/assignments/oop1/files/shield.png",
+      "sha256": "b495ae14968781a8941851e23c3345eff77aa617b3479fb13fdc8a498d538638",
+      "bytes": 36686,
+      "transformation": "none"
+    }
+  ],
+  "material_notes": [
+    "SNU/KAIST source_ids are empty: external official links do not add canonical questions.",
+    "SNU mathematics TA-office past-exam page is indexed on the official domain but direct access timed out; a working official mathematics resource-page alternative is included.",
+    "KAIST PH101/MAS100 official CELT page is independently indexed; its overview explicitly describes physics problems/solutions. Direct host access was intermittent.",
+    "The KAIST 2026 admissions physics PDF is a secondary high-school/admission-level resource, not a college course or imported question set.",
+    "Princeton source mark is colored with a white backing; do not invert its colors.",
+    "No mark redistribution license or institutional endorsement is asserted.",
+    "SVG visual QA uses a direct equivalent motif outline because the local MuPDF SVG renderer does not resolve the official clipPath/use combination; primary-source path coordinates are preserved."
+  ],
+  "visual_qa": {
+    "snu_seal": "original PNG viewed; single-ink blue with transparent background including letter counters",
+    "yale": "original transparent black wordmark viewed",
+    "princeton": "original colored shield viewed; opaque white backing retained, not inverted",
+    "mit": "600px SVG rendering viewed, original MIT glyph geometry",
+    "kaist_dark": "600px SVG rendering on dark background viewed, official white wordmark and motif",
+    "kaist_light": "official blue/gradient SVG XML and source geometry checked; local MuPDF preview does not paint SVG gradients (shows black motif), so browser rendering is required to assess gradient color"
+  }
+}

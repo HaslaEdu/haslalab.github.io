@@ -8,6 +8,10 @@ const WORDS={
   ko:{sources:'자료 목록',findSource:'자료 이름 찾기',allSources:'전체 자료',search:'검색',query:'문장·수식·문항 번호',topic:'분야',allTopics:'전체 분야',stars:'난이도',allStars:'전체 난이도',provisional:'잠정',problems:'문제',empty:'조건에 맞는 문제가 없습니다.',emptySources:'등록된 자료가 없습니다.',loading:'불러오는 중…',retry:'다시 불러오기',error:'자료를 불러오지 못했습니다. 잠시 후 다시 시도하세요.',notFound:'이 분류에 해당하는 자료를 찾지 못했습니다.',list:'문제 목록',first:'처음',next:'다음',back:'← 문제 목록',statement:'문제',solutions:'풀이 보기',hideSolutions:'풀이 닫기',noSolutions:'저장된 풀이가 아직 없습니다.',sourceSolution:'원문 풀이',draft:'보완 풀이 초안',pending:'검토 대기',sourceIssue:'원문 확인 사항 있음',recommendations:'추천 문제',contexts:'참조 문제',referenceFigures:'참고 그림',rawFigures:'원문 캡처',given:'문제 그림',pages:'원문 쪽수',pdf:'원본 PDF',source:'자료',limited:'검색 결과 일부입니다. 자료나 분야로 범위를 좁혀 주세요.',photo:'사진으로 찾기',ocr:'사진 인식·검색',ocrNote:'관리자 전용 · Upstage OCR 호출',image:'문제 사진',badImage:'PNG·JPEG·WebP 이미지(최대 8MB)를 선택하세요.',recognized:'인식된 문장·수식',resubmit:'수정한 텍스트로 다시 검색',noOcr:'OCR을 다시 호출하지 않습니다.',candidates:'후보 문제입니다. 원문의 수식과 수치를 확인하세요.',feedback:'난이도 평가',feedbackNote:'사용자가 직접 남기는 풀이 기록입니다.',noFeedback:'아직 사용자 평가가 없습니다.',rate:'별점 선택',outcome:'풀이 상태',minutes:'풀이 시간(분, 선택)',not_attempted:'아직 풀지 않음',solved:'풀었음',partial:'일부 해결',unsolved:'해결하지 못함',save:'평가 저장',saved:'평가를 저장했습니다.',login:'로그인하고 평가 남기기',invalidFeedback:'별점과 풀이 시간을 확인하세요.',auth:'로그인 상태를 확인한 뒤 다시 시도하세요.',badQuery:'검색어는 600자 이내로 입력하세요.',noLanguage:'선택한 언어의 본문이 없습니다.',competition:'대회',year:'연도',type:'구분',all:'전체',theory:'이론',experiment:'실험',reset:'초기화'},
   en:{problem:'Problem',sources:'Sources',findSource:'Find a source',allSources:'All sources',search:'Search',query:'Text, formula or problem number',topic:'Topic',allTopics:'All topics',stars:'Difficulty',allStars:'All difficulties',provisional:'Provisional',problems:'Problems',empty:'No problems match these filters.',emptySources:'No sources are registered.',loading:'Loading…',retry:'Try again',error:'Could not load the material. Please try again later.',notFound:'This material is not available in this category.',list:'Problem list',first:'First',next:'Next',back:'← Problem list',statement:'Statement',solutions:'Show solutions',hideSolutions:'Hide solutions',noSolutions:'No solution is stored yet.',sourceSolution:'Source solution',draft:'Supplementary solution draft',pending:'Review pending',sourceIssue:'Source issues recorded',recommendations:'Recommended problems',contexts:'Referenced problems',referenceFigures:'Reference figures',rawFigures:'Source captures',given:'Problem figure',pages:'Source pages',pdf:'Original PDF',source:'Source',limited:'Showing part of the results. Narrow the source or topic.',photo:'Find from photo',ocr:'Read photo and search',ocrNote:'Administrators only · Upstage OCR call',image:'Question photo',badImage:'Choose a PNG, JPEG or WebP image up to 8MB.',recognized:'Recognized text and equations',resubmit:'Search corrected text',noOcr:'This does not call OCR again.',candidates:'Candidate problems. Check the original formulas and numbers.',feedback:'Rate difficulty',feedbackNote:'These are self-reported solving records.',noFeedback:'No user ratings yet.',rate:'Choose a rating',outcome:'Solving outcome',minutes:'Time spent (minutes, optional)',not_attempted:'Not attempted',solved:'Solved',partial:'Partly solved',unsolved:'Unsolved',save:'Save rating',saved:'Rating saved.',login:'Sign in to leave a rating',invalidFeedback:'Check the rating and solving time.',auth:'Check your sign-in status and try again.',badQuery:'Enter a search query up to 600 characters.',noLanguage:'No statement in the selected language.',competition:'Competition',year:'Year',type:'Type',all:'All',theory:'Theory',experiment:'Experiment',reset:'Reset'}
 };
+Object.assign(WORDS.ko,{books:'교재',schools:'학교',allSchools:'학교 목록',schoolPapers:'강좌·문제지',officialMaterials:'공식 공개자료',officialLinks:'공식 자료 링크',noDigitalPapers:'현재 이 과목에 등록된 웹 문제는 없습니다.',otherMaterials:'기타 자료',unclassified:'학교 분류 미지정',noCover:'표지 이미지 없음',searchAllSchools:'검색은 이 과목의 모든 학교 자료에서 진행됩니다.'});
+Object.assign(WORDS.en,{books:'Books',schools:'Schools',allSchools:'All schools',schoolPapers:'Courses and papers',officialMaterials:'Official open materials',officialLinks:'Official material links',noDigitalPapers:'No digital problems are currently registered for this discipline.',otherMaterials:'Other materials',unclassified:'Institution not assigned',noCover:'Cover image unavailable',searchAllSchools:'Search covers all school materials in this discipline.'});
+WORDS.ko.titlePage='표제지';WORDS.en.titlePage='Title page';
+WORDS.ko.searchProblems='문항 검색';WORDS.en.searchProblems='Search problems';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sourceTitle=s=>s?.title||s?.published_title_en||s?.published_title_ko||s?.id||'';
 const titleOf=(q,lang)=>q?.[lang==='ko'?'title_ko':'title_en']||q?.[lang==='ko'?'title_en':'title_ko']||'';
@@ -55,6 +59,7 @@ export function mountArchiveLibrary(container,options={}){
       if(key==='source'&&SID.test(value)||key==='problem'&&QID.test(value)||key==='stars'&&/^[1-5]$/.test(value)||key==='topic'&&Object.hasOwn(TOPICS,value)||key==='competition'&&/^[a-z0-9_-]{1,80}$/.test(value)||key==='year'&&/^\d{4}$/.test(value)||key==='type'&&['theory','experiment'].includes(value))out.set(key,value);
       if(key==='q'&&value.length<=600&&!value.includes('\0')||key==='cursor'&&value.length<=2800&&!/[\x00-\x1f]/.test(value))out.set(key,value);
       if(key==='view'&&value==='web'&&config.kind==='contest')out.set(key,value);
+      if(key==='school'&&config.kind==='course'&&/^[a-z][a-z0-9-]{0,63}$/.test(value))out.set(key,value);
     }return out;
   }
   function scope(p=new URLSearchParams()){
@@ -100,13 +105,34 @@ export function mountArchiveLibrary(container,options={}){
   }
   function scheduleMathLayout(){if(disposed||mathLayoutFrame)return;mathLayoutFrame=win.requestAnimationFrame(()=>{mathLayoutFrame=0;fitInlineMath();});}
   function href(changes={},base=config.baseHash){const p=new URLSearchParams(params);for(const [k,v]of Object.entries(changes)){if(v===null||v===undefined||v==='')p.delete(k);else p.set(k,String(v));}return (base||`#/archive/${CATEGORIES[config.kind]||'books'}/${DISCIPLINES[config.collection]||'phys'}`)+(p.size?'?'+p:'');}
-  function navigate(hash){if(disposed)return;if(config.onNavigate)config.onNavigate(hash);else win.location.hash=hash;}
+  function navigate(hash,options={}){if(disposed)return;if(config.onNavigate)config.onNavigate(hash,options);else if(options.replace)win.location.replace(hash);else win.location.hash=hash;}
   function link(hash,label,className=''){const a=doc.createElement('a');a.href=hash;a.textContent=label;if(className)a.className=className;return a;}
   function matches(q){const kind=q?.source_kind||q?.source?.kind||q?.kind,collection=q?.collection||q?.discipline||q?.source?.collection;return kind===config.kind&&collection===config.collection;}
   // Membership belongs to the scoped endpoint: one source may contain both banks.
   function sourceMatches(s){return s?.kind===config.kind;}
   function badge(q){const n=q?.stars??q?.difficulty?.stars;if(!Number.isInteger(n)||n<1||n>5)return '';const pending=!['reviewed','community_calibrated'].includes(q.difficulty?.status);return `<span class="al-stars" aria-label="${esc(tr('stars'))} ${n}/5${pending?' · '+esc(tr('provisional')):''}">${'★'.repeat(n)}${'☆'.repeat(5-n)}${pending?` <small>${esc(tr('provisional'))}</small>`:''}</span>`;}
-  function sourceMeta(s){return [s?.primary_author,s?.institution,s?.edition_label,s?.year,s?.round].filter((x,i,a)=>x!=null&&x!==''&&a.indexOf(x)===i).join(' · ');}
+  function sourceMeta(s){const edition=s?.edition_label||(config.kind==='book'?config.bookMedia?.[s?.id]?.edition:'');return [s?.primary_author,s?.institution,edition,s?.year,s?.round].filter((x,i,a)=>x!=null&&x!==''&&a.indexOf(x)===i).join(' · ');}
+  function localized(value){return typeof value==='string'?value:value?.[config.lang]||value?.en||value?.ko||'';}
+  function safeMediaURL(value){try{if(typeof value!=='string'||!value)return '';const u=new URL(value,win.location.href);return u.protocol==='https:'||u.origin===win.location.origin?u.href:'';}catch{return '';}}
+  function officialURL(value){try{const u=new URL(value);return u.protocol==='https:'?u.href:'';}catch{return '';}}
+  function institutions(){return (Array.isArray(config.schoolMedia?.institutions)?config.schoolMedia.institutions:[]).filter(s=>/^[a-z][a-z0-9-]{0,63}$/.test(s?.id||''));}
+  function schoolFor(sourceId){return institutions().find(s=>Array.isArray(s.source_ids)&&s.source_ids.includes(sourceId));}
+  function schoolSources(school){return school.id==='other'?sources.filter(s=>!schoolFor(s.id)):sources.filter(s=>school.source_ids?.includes(s.id));}
+  function schoolMaterials(school){return (school?.materials?.[config.collection]||[]).filter(x=>officialURL(x?.url));}
+  function schoolGroups(){
+    const groups=institutions().filter(s=>schoolSources(s).length||schoolMaterials(s).length);
+    const other=sources.filter(s=>!schoolFor(s.id));if(other.length)groups.push({id:'other',name:{ko:tr('otherMaterials'),en:tr('otherMaterials')},source_ids:other.map(s=>s.id)});return groups;
+  }
+  function selectedSchool(){return config.kind==='course'&&params.has('school')?schoolGroups().find(s=>s.id===params.get('school')):null;}
+  function visibleSources(){const school=selectedSchool();return school?schoolSources(school):sources;}
+  function galleryLanding(){return config.kind!=='contest'&&!params.has('source')&&!['q','topic','stars','cursor'].some(k=>params.has(k));}
+  function updateThemeMedia(){for(const img of root.querySelectorAll('img[data-logo-light]')){const next=config.theme==='dark'&&img.dataset.logoDark?img.dataset.logoDark:img.dataset.logoLight;if(next&&img.getAttribute('src')!==next)img.src=next;}}
+  function sourceCount(s){return Number.isSafeInteger(s?.question_count)?s.question_count.toLocaleString()+' '+tr('problems'):'';}
+  function cardImage(source){
+    const media=config.bookMedia?.[source.id],url=safeMediaURL(media?.image_url);
+    return `<div class="al-book-cover">${url?`<img src="${esc(url)}" alt="${esc(media.alt||'')}" loading="lazy" decoding="async">`:`<span class="al-no-media">${esc(tr('noCover'))}</span>`}</div>${url&&media.provenanceKind==='source_title_page'?`<span class="al-media-kind">${esc(tr('titlePage'))}</span>`:''}`;
+  }
+  function officialMaterialsHTML(school){const items=schoolMaterials(school);return items.length?`<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(x=>`<li><a href="${esc(officialURL(x.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(x.label)||x.url)} ↗</a></li>`).join('')}</ul></section>`:'';}
   function ordered(list){const c=new Intl.Collator(config.lang,{numeric:true,sensitivity:'base'});return [...list].sort((a,b)=>config.kind==='contest'?(c.compare(a.competition||'',b.competition||'')||(b.year||0)-(a.year||0)||c.compare(sourceTitle(a),sourceTitle(b))):c.compare(sourceTitle(a),sourceTitle(b))||String(a.id).localeCompare(String(b.id)));}
   async function loadSources(unscoped=false){
     const list=[],seen=new Set(),cursors=new Set();let after=null;
@@ -127,18 +153,35 @@ export function mountArchiveLibrary(container,options={}){
   }
   function renderDirectory(){
     const slot=$('[data-source-list]');if(!slot)return;const query=($('[data-source-query]')?.value||'').trim().toLocaleLowerCase();
-    const list=sources.filter(s=>[sourceTitle(s),sourceMeta(s)].join(' ').toLocaleLowerCase().includes(query));
-    slot.innerHTML=list.length?list.map(s=>`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${Number.isSafeInteger(s.question_count)?`<small>${s.question_count.toLocaleString()} ${esc(tr('problems'))}</small>`:''}</a></li>`).join(''):`<li class="al-muted">${esc(tr('emptySources'))}</li>`;
+    if(config.kind==='course'&&!params.has('school')){
+      const groups=schoolGroups().filter(s=>[localized(s.name),...(s.aliases||[])].join(' ').toLocaleLowerCase().includes(query));slot.className='al-media-grid al-school-grid';
+      slot.innerHTML=groups.length?groups.map(s=>{const papers=schoolSources(s),light=safeMediaURL(s.logo_url),dark=safeMediaURL(s.dark_logo_url),logo=config.theme==='dark'&&dark?dark:light,count=papers.reduce((n,p)=>n+(Number.isSafeInteger(p.question_count)?p.question_count:0),0);return `<li><a class="al-media-card al-school-card" href="${esc(href({school:s.id,source:null,problem:null,cursor:null}))}"><div class="al-school-logo">${logo?`<img src="${esc(logo)}" data-logo-light="${esc(light)}" data-logo-dark="${esc(dark)}" class="${s.logo_monochrome?'al-logo-monochrome':''}" alt="" loading="lazy" decoding="async">`:''}</div><strong class="al-card-title">${esc(localized(s.name))}</strong><span class="al-card-meta">${papers.length?`${papers.length} ${esc(tr('schoolPapers'))}${count?' · '+count.toLocaleString()+' '+esc(tr('problems')):''}`:esc(tr('officialLinks'))}</span></a></li>`;}).join(''):`<li class="al-muted">${esc(tr('emptySources'))}</li>`;return;
+    }
+    const list=visibleSources().filter(s=>[sourceTitle(s),sourceMeta(s)].join(' ').toLocaleLowerCase().includes(query));
+    const books=config.kind==='book';slot.className=books?'al-media-grid al-book-grid':'al-paper-list';
+    slot.innerHTML=list.length?list.map(s=>books?`<li><a class="al-media-card al-book-card" href="${esc(href({source:s.id,problem:null,cursor:null}))}">${cardImage(s)}<strong class="al-card-title">${esc(sourceTitle(s))}</strong><span class="al-card-meta">${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`:`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join(''):`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
   }
   function filters(){
     const topics=new Set(sources.flatMap(s=>Array.isArray(s.subjects)?s.subjects:[]).filter(s=>Object.hasOwn(TOPICS,s)));
-    // Per-question SR/GR facets can be more specific than source-level tags.
     if(['physics','astronomy'].includes(config.collection))for(const key of ['classical_mechanics','electromagnetism','thermodynamics','statistical_mechanics','optics','oscillations_waves','quantum_mechanics','relativity','special_relativity','general_relativity','mathematical_methods'])topics.add(key);
-    if(config.collection==='astronomy')topics.add('astronomy_astrophysics');
-    if(params.has('topic'))topics.add(params.get('topic'));
-    const selected=params.get('source'),source=sources.find(s=>s.id===selected),query=params.get('q')||'';
+    if(config.collection==='astronomy')topics.add('astronomy_astrophysics');if(params.has('topic'))topics.add(params.get('topic'));
+    const source=sources.find(s=>s.id===params.get('source')),school=selectedSchool(),query=params.get('q')||'',landing=galleryLanding();
     const count=Number(status.questions),countText=Number.isSafeInteger(count)&&count>=0?`${count.toLocaleString()} ${tr('problems')}`:'';
-    $('[data-content]').innerHTML=`<div class="al-catalog"><div class="al-catalog-heading"><div><h2>${esc(source?sourceTitle(source):tr('sources'))}</h2><p class="al-muted">${esc(source?sourceMeta(source):countText)}</p></div>${selected?`<a href="${esc(href({source:null,problem:null,cursor:null}))}">${esc(tr('allSources'))}</a>`:''}</div><form data-search class="al-search"><label class="al-query"><span class="al-sr">${esc(tr('query'))}</span><input name="q" type="search" maxlength="600" value="${esc(query)}" placeholder="${esc(tr('query'))}"></label><button type="submit">${esc(tr('search'))}</button><label><span>${esc(tr('topic'))}</span><select name="topic"><option value="">${esc(tr('allTopics'))}</option>${[...topics].map(key=>`<option value="${key}"${params.get('topic')===key?' selected':''}>${esc(TOPICS[key][config.lang==='en'?1:0])}</option>`).join('')}</select></label><label><span>${esc(tr('stars'))}</span><select name="stars"><option value="">${esc(tr('allStars'))}</option>${[1,2,3,4,5].map(n=>`<option value="${n}"${params.get('stars')===String(n)?' selected':''}>${'★'.repeat(n)}${'☆'.repeat(5-n)}</option>`).join('')}</select></label>${source?`<label class="al-source-select"><span>${esc(tr('source'))}</span><select name="source">${sources.map(s=>`<option value="${s.id}"${s.id===selected?' selected':''}>${esc(sourceTitle(s))}</option>`).join('')}</select></label>`:''}<a class="al-reset" href="${esc(href({source:null,problem:null,q:null,topic:null,stars:null,cursor:null,competition:null,year:null,type:null}))}">${esc(tr('reset'))}</a></form>${!selected&&!query?`<section class="al-directory"><label class="al-source-find">${esc(tr('findSource'))}<input type="search" data-source-query maxlength="120"></label><ul data-source-list></ul></section>`:''}<section data-results aria-label="${esc(tr('list'))}"><p>${esc(tr('loading'))}</p></section><div data-admin-tools></div></div>`;
+    const heading=source?sourceTitle(source):school?localized(school.name):config.kind==='book'?tr('books'):config.kind==='course'?tr('schools'):tr('sources');
+    const back=source?`<a href="${esc(href({source:null,problem:null,cursor:null}))}">${esc(school?localized(school.name):tr('allSources'))}</a>`:school?`<a href="${esc(href({school:null,source:null,problem:null,cursor:null}))}">${esc(tr('allSchools'))}</a>`:'';
+    const directory=landing?`<section class="al-directory" data-directory><label class="al-source-find">${esc(tr(config.kind==='course'&&!school?'schools':'findSource'))}<input type="search" data-source-query maxlength="120"></label><ul data-source-list></ul>${school?officialMaterialsHTML(school):''}</section>`:'';
+    $('[data-content]').innerHTML=`<div class="al-catalog">
+      <div class="al-catalog-heading"><div>${source||school?`<h2>${esc(heading)}</h2>`:''}<p class="al-muted">${esc(source?sourceMeta(source):school?'':countText)}</p></div>${back}</div>
+      ${landing?`<details class="al-search-disclosure"><summary>${esc(tr('searchProblems'))}</summary>`:''}
+      <form data-search class="al-search">
+        <label class="al-query"><span class="al-sr">${esc(tr('query'))}</span><input name="q" type="search" maxlength="600" value="${esc(query)}" placeholder="${esc(tr('query'))}"></label><button type="submit">${esc(tr('search'))}</button>
+        <label><span>${esc(tr('topic'))}</span><select name="topic"><option value="">${esc(tr('allTopics'))}</option>${[...topics].map(key=>`<option value="${key}"${params.get('topic')===key?' selected':''}>${esc(TOPICS[key][config.lang==='en'?1:0])}</option>`).join('')}</select></label>
+        <label><span>${esc(tr('stars'))}</span><select name="stars"><option value="">${esc(tr('allStars'))}</option>${[1,2,3,4,5].map(n=>`<option value="${n}"${params.get('stars')===String(n)?' selected':''}>${'★'.repeat(n)}${'☆'.repeat(5-n)}</option>`).join('')}</select></label>
+        ${source?`<label class="al-source-select"><span>${esc(tr('source'))}</span><select name="source">${visibleSources().map(s=>`<option value="${s.id}"${s.id===source.id?' selected':''}>${esc(sourceTitle(s))}</option>`).join('')}</select></label>`:''}
+        <a class="al-reset" href="${esc(href({school:null,source:null,problem:null,q:null,topic:null,stars:null,cursor:null,competition:null,year:null,type:null}))}">${esc(tr('reset'))}</a>
+      </form>${school&&!source?`<p class="al-muted al-search-scope">${esc(tr('searchAllSchools'))}</p>`:''}${landing?'</details>':''}
+      ${directory}<section data-results${landing?' hidden':''} aria-label="${esc(tr('list'))}">${landing?'':`<p>${esc(tr('loading'))}</p>`}</section><div data-admin-tools></div>
+    </div>`;
     renderDirectory();renderAdminTools();
   }
   function searchParams(){
@@ -149,9 +192,9 @@ export function mountArchiveLibrary(container,options={}){
     else{p.set('sort','source');if(params.has('cursor')&&!/^o_/.test(params.get('cursor')))p.set('cursor',params.get('cursor'));}
     return p;
   }
-  function resultRows(items){return items.map(q=>{const changes={problem:q.id};if(params.has('source')&&q.source_id!==params.get('source')){changes.source=null;changes.cursor=null;}return `<li><a class="al-problem-row" href="${esc(href(changes))}"><span class="al-number">${esc(q.original_number||q.locator)}</span><span><strong>${esc(titleOf(q,config.lang)||q.source_title||'')}</strong>${q.source_title&&titleOf(q,config.lang)?`<small>${esc(q.source_title)}</small>`:''}<span class="al-snippet">${esc(snippet(q.snippet))}</span></span>${badge(q)}</a></li>`;}).join('');}
+  function resultRows(items){return items.map(q=>{const changes={problem:q.id};if(params.has('source')&&q.source_id!==params.get('source')){changes.source=null;changes.cursor=null;}if(params.has('school')&&(schoolFor(q.source_id)?.id||'other')!==params.get('school'))changes.school=null;return `<li><a class="al-problem-row" href="${esc(href(changes))}"><span class="al-number">${esc(q.original_number||q.locator)}</span><span><strong>${esc(titleOf(q,config.lang)||q.source_title||'')}</strong>${q.source_title&&titleOf(q,config.lang)?`<small>${esc(q.source_title)}</small>`:''}<span class="al-snippet">${esc(snippet(q.snippet))}</span></span>${badge(q)}</a></li>`;}).join('');}
   async function renderResults(){
-    const e=epoch,slot=$('[data-results]');if(!slot)return;
+    const e=epoch,slot=$('[data-results]');if(!slot)return;slot.hidden=false;if(candidateItems&&$('[data-directory]'))$('[data-directory]').hidden=true;
     try{
       const data=candidateItems?{items:candidateItems}:await api(PREFIX+'/search?'+searchParams());if(!current(e)||!slot.isConnected)return;
       if(!Array.isArray(data.items))throw fail('invalid_results');const items=data.items.filter(q=>QID.test(q?.id||'')&&matches(q));
@@ -186,6 +229,7 @@ export function mountArchiveLibrary(container,options={}){
     try{
       const {question:q}=await api(PREFIX+'/questions/'+id);if(!current(e))return;
       if(q?.id!==id||!matches(q))throw fail('invalid_question');
+      if(selectedSchool()&&!schoolSources(selectedSchool()).some(s=>s.id===q.source_id)){navigate(href({school:schoolFor(q.source_id)?.id||'other',source:q.source_id,cursor:null}),{replace:true});return;}
       const version=selectedVersion(q),groups=figureGroups(q),title=titleOf(q,config.lang);
       $('[data-content]').innerHTML=`<article class="al-reader" tabindex="-1"><nav class="al-reader-nav"><a href="${esc(href({problem:null}))}">${esc(tr('back'))}</a><a href="${esc(href({source:q.source_id,problem:null,cursor:null}))}">${esc(sourceTitle(q.source))}</a></nav><header><p class="al-muted">${esc(sourceMeta(q.source))}</p><h2>${title?`<small>${esc(tr(config.lang==='en'?'problem':'problems'))} ${esc(q.original_number)}</small>${esc(title)}`:`${esc(tr(config.lang==='en'?'problem':'problems'))} ${esc(q.original_number)}`}</h2><div class="al-meta">${badge(q)}<span>${esc(tr('pending'))}</span>${q.context?.unresolved_source?`<span>${esc(tr('sourceIssue'))}</span>`:''}</div></header><div class="al-prose" lang="${config.lang}">${archiveProse(version?.text||tr('noLanguage'))}</div><div class="al-figures" data-givens></div><div class="al-actions"><button data-panel="solutions" aria-expanded="false">${esc(tr('solutions'))}</button><button data-panel="recommendations" aria-expanded="false">${esc(tr('recommendations'))}</button>${q.context_links?.length?`<button data-panel="context" aria-expanded="false">${esc(tr('contexts'))} (${q.context_links.length})</button>`:''}${q.can_view_source===true?`<button data-pdf="${esc(q.source_id)}">${esc(tr('pdf'))}</button>`:''}</div><section data-panel-content aria-live="polite"></section>${groups.reference.length?`<details class="al-reference" data-reference><summary>${esc(tr('referenceFigures'))} (${groups.reference.length})</summary><div class="al-figures"></div></details>`:''}${groups.raw.length?`<details class="al-reference" data-raw><summary>${esc(tr('rawFigures'))} (${groups.raw.length})</summary><div class="al-figures"></div></details>`:''}${feedbackHTML()}</article>`;
       const rendered=math($('[data-content]'));loadFigures($('[data-givens]'),groups.inline,e);
@@ -217,7 +261,7 @@ export function mountArchiveLibrary(container,options={}){
         // Older context DTOs omit catalogue fields. The scoped endpoint verifies
         // every graph target, so absence of optional DTO fields is not a mismatch.
         const contexts=(data.contexts||[]).filter(q=>QID.test(q?.id||'')&&(!(q.source_kind||q.collection||q.discipline||q.source?.kind||q.source?.collection)||matches(q)));
-        slot.innerHTML=`<h3>${esc(tr('contexts'))}</h3>`+contexts.map((q,i)=>`<section class="al-context"><h4><a href="${esc(href({problem:q.id,source:null,cursor:null}))}">${esc(sourceTitle(q.source))} · ${esc(q.original_number)}</a></h4><div class="al-prose">${archiveProse(selectedVersion(q)?.text||tr('noLanguage'))}</div><div class="al-figures" data-context="${i}"></div></section>`).join('');
+        slot.innerHTML=`<h3>${esc(tr('contexts'))}</h3>`+contexts.map((q,i)=>`<section class="al-context"><h4><a href="${esc(href({problem:q.id,school:null,source:null,cursor:null}))}">${esc(sourceTitle(q.source))} · ${esc(q.original_number)}</a></h4><div class="al-prose">${archiveProse(selectedVersion(q)?.text||tr('noLanguage'))}</div><div class="al-figures" data-context="${i}"></div></section>`).join('');
         contexts.forEach((q,i)=>loadFigures(slot.querySelector('[data-context="'+i+'"]'),figureGroups(q).inline,e));
       }await math(slot);
     }catch(error){if(!isAbort(error)&&valid())slot.textContent=errorText(error);}
@@ -273,7 +317,10 @@ export function mountArchiveLibrary(container,options={}){
       if(!CATEGORIES[config.kind]||!DISCIPLINES[config.collection])throw fail('invalid_scope');
       const [s,list]=await Promise.all([api(PREFIX+'/status'),loadSources()]);if(!current(e)||job!==bootstrapRequest)return;status=s;sources=list;
       if(params.has('source')&&!sources.some(s=>s.id===params.get('source')))throw fail('source_not_found');
-      if(params.has('problem'))await renderReader(params.get('problem'));else{filters();await renderResults();}
+      if(config.kind==='course'&&params.has('school')&&!selectedSchool())throw fail('source_not_found');
+      if(config.kind==='course'&&params.has('school')&&!params.has('source')&&['q','topic','stars','cursor'].some(k=>params.has(k))){navigate(href({school:null}),{replace:true});return;}
+      if(params.has('source')&&selectedSchool()&&!schoolSources(selectedSchool()).some(s=>s.id===params.get('source')))throw fail('source_not_found');
+      if(params.has('problem'))await renderReader(params.get('problem'));else{filters();if(!galleryLanding())await renderResults();else message('');}
     }catch(error){if(!isAbort(error)&&current(e)&&job===bootstrapRequest){message(errorText(error),true);$('[data-content]').innerHTML=`<button data-retry>${esc(tr('retry'))}</button>`;}}
   }
   function onClick(event){
@@ -281,7 +328,7 @@ export function mountArchiveLibrary(container,options={}){
     const a=event.target.closest?.('a');if(!a||!root.contains(a)||!a.getAttribute('href')?.startsWith('#/archive/')||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
     event.preventDefault();navigate(a.getAttribute('href'));
   }
-  function onSubmit(event){if(!event.target.matches('[data-search]'))return;event.preventDefault();const form=new win.FormData(event.target),q=String(form.get('q')||'').trim();if(q.length>600||q.includes('\0')){message(tr('badQuery'),true);return;}navigate(href({q,topic:form.get('topic'),stars:form.get('stars'),source:form.has('source')?form.get('source'):params.get('source'),problem:null,cursor:null}));}
+  function onSubmit(event){if(!event.target.matches('[data-search]'))return;event.preventDefault();const form=new win.FormData(event.target),q=String(form.get('q')||'').trim();if(q.length>600||q.includes('\0')){message(tr('badQuery'),true);return;}const selected=form.has('source')?form.get('source'):params.get('source'),globalSchoolSearch=config.kind==='course'&&!selected&&(q||form.get('topic')||form.get('stars'));navigate(href({q,topic:form.get('topic'),stars:form.get('stars'),source:selected,school:globalSchoolSearch?null:params.get('school'),problem:null,cursor:null}));}
   function onChange(event){if(event.target.matches('[data-search] select'))event.target.form.requestSubmit();}
   function onInput(event){if(event.target.matches('[data-source-query]'))renderDirectory();}
   function authChanged(){const next=String(config.getToken?.()||'');if(next===token)return;abort();token=next;status={};sources=[];candidateItems=null;boot();}
@@ -291,6 +338,6 @@ export function mountArchiveLibrary(container,options={}){
   win.addEventListener('storage',authChanged);boot();
   return {
     dispose(){if(disposed)return;abort();disposed=true;mathResizeObserver?.disconnect();win.removeEventListener('resize',scheduleMathLayout);doc.fonts?.removeEventListener?.('loadingdone',scheduleMathLayout);if(mathLayoutFrame)win.cancelAnimationFrame(mathLayoutFrame);win.removeEventListener('storage',authChanged);root.removeEventListener('click',onClick);root.removeEventListener('submit',onSubmit);root.removeEventListener('change',onChange);root.removeEventListener('input',onInput);root.remove();},
-    update(next={}){if(disposed)return;const previous=config;config={...config,...next};const nextParams=cleanParams(config.params),newToken=String(config.getToken?.()||'');const dataChanged=['kind','collection','lang','baseHash','resolveLegacy'].some(k=>previous[k]!==config[k])||nextParams.toString()!==params.toString()||newToken!==token;if(dataChanged){abort();params=nextParams;token=newToken;status={};sources=[];candidateItems=null;boot();}else{root.dataset.theme=config.theme==='dark'?'dark':'light';authChanged();}}
+    update(next={}){if(disposed)return;const previous=config;config={...config,...next};const nextParams=cleanParams(config.params),newToken=String(config.getToken?.()||'');const dataChanged=['kind','collection','lang','baseHash','resolveLegacy'].some(k=>previous[k]!==config[k])||nextParams.toString()!==params.toString()||newToken!==token;if(dataChanged){abort();params=nextParams;token=newToken;status={};sources=[];candidateItems=null;boot();}else{root.dataset.theme=config.theme==='dark'?'dark':'light';updateThemeMedia();authChanged();}}
   };
 }

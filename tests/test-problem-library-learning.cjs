@@ -15,7 +15,7 @@ function app(hash='#/archive/books/phys'){
     get innerHTML(){return this._html;}
   }
   const node=id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id);};
-  const native={mountArchiveLibrary(container,options){calls.mounts.push({container,options});const result={dispose(){calls.disposed.push(container);},update(value){calls.updates.push(value);}};return result;}};
+  const native={bookMedia:{[SID]:{image_url:'archive-media/books/synthetic.webp'}},schoolMedia:{institutions:[{id:'kaist',name:{ko:'KAIST',en:'KAIST'},source_ids:[]}]},mountArchiveLibrary(container,options){calls.mounts.push({container,options});const result={dispose(){calls.disposed.push(container);},update(value){calls.updates.push(value);}};return result;}};
   context={window:{HL_RUNTIME:Runtime,HL_ARCHIVE_NATIVE:native},URL,URLSearchParams,console,innerHeight:850,
     location:new URL('https://haslalab.org/'+hash),history:{replaceState(_state,_title,url){context.location.href=new URL(url,context.location).href;}},
     document:{getElementById:id=>id==='archiveNative'||/^learn.*Frame$/.test(id)?nodes.get(id)||null:node(id),querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>new Element(),head:{append(){}},documentElement:{dataset:{theme:'light'}},body:node('body')},
@@ -26,7 +26,7 @@ function app(hash='#/archive/books/phys'){
   for(const f of ['archive-navigation.js','site-catalogue.js','site-design.js'])vm.runInContext(read(f),context,{filename:f});
   context.HLexam=context.window.HLexam;vm.runInContext(main.replace(/render\(\);\s*$/,''),context,{filename:'index-main.js'});
   const run=code=>vm.runInContext(code,context);context.arChip=()=>calls.accounts++;run('buildRails=()=>{};paintSiteTheme=()=>{};mountHaslaAdFit=()=>{}');
-  return{context,run,node,nodes,calls,handlers,observers,store};
+  return{context,run,node,nodes,calls,handlers,observers,store,native};
 }
 test('Learn retains Studio and sends reading to Archive without a bank tile or frame',()=>{
   const a=app();for(const language of ['ko','en']){
@@ -54,9 +54,17 @@ test('Books and Schools mount native category- and subject-bound readers without
     const a=app(`#/archive/${category}/${sub}?source=${SID}&problem=${QID}`);a.run('render()');await tick();
     const {options}=a.calls.mounts[0];assert.equal(options.kind,kind);assert.equal(options.collection,collection);assert.equal(options.params.get('source'),SID);assert.equal(options.params.get('problem'),QID);
     assert.equal(options.baseHash,`#/archive/${category}/${sub}`);assert.equal(options.apiOrigin,'https://haslalab-problem-bank.haslalab.workers.dev');assert.equal(typeof options.renderMath,'function');
+    assert.equal(options.bookMedia,a.native.bookMedia);assert.equal(options.schoolMedia,a.native.schoolMedia);
     assert.equal(options.getToken(),'SYNTHETIC_ACCOUNT_TOKEN');assert.doesNotMatch(a.node('view').innerHTML,/<iframe|SYNTHETIC_ACCOUNT_TOKEN|workers\.dev/);
     assert.match(a.node('nav').innerHTML,/<a href="#\/comps" class="on">/);assert.match(a.context.document.title,/아카이브/);
   }
+});
+
+test('school cards keep their selection in the native route and the main language switch',async()=>{
+  const a=app('#/archive/schools/math?school=kaist');a.run('render()');await tick();
+  assert.equal(a.calls.mounts[0].options.params.get('school'),'kaist');assert.equal(a.calls.mounts[0].options.collection,'mathematics');
+  assert.match(a.node('view').innerHTML,/<h1>학교<\/h1>/);assert.doesNotMatch(a.node('view').innerHTML,/학교 아카이브/);
+  a.run('setLang("en")');await tick();assert.equal(a.calls.mounts.at(-1).options.params.get('school'),'kaist');assert.match(a.node('view').innerHTML,/<h1>Schools<\/h1>/);
 });
 test('old Learn bank bookmarks resolve into Archive and never remount the retired app',async()=>{
   const a=app('#/learn/astronomy/library');a.run('render()');await tick();assert.equal(a.context.location.hash,'#/archive/books/astro');assert.equal(a.calls.mounts[0].options.collection,'astronomy');

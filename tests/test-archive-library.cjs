@@ -11,7 +11,7 @@ const deferred=()=>{let resolve;return{promise:new Promise(r=>resolve=r),resolve
 async function flush(){for(let n=0;n<8;n++)await new Promise(r=>setImmediate(r));}
 async function setup(t,{params='',route,options={},token=''}={}){
   const dom=new JSDOM('<!doctype html><body><div id="outside">Keep</div><main id="mount"></main></body>',{url:'https://haslalab.org/#/archive/books/phys',runScripts:'outside-only',pretendToBeVisual:true});
-  const w=dom.window,calls=[],navigations=[],revoked=[];let auth=token;
+  const w=dom.window,calls=[],navigations=[],navigationOptions=[],revoked=[];let auth=token;
   w.URL.createObjectURL=()=> 'blob:synthetic-'+calls.length;w.URL.revokeObjectURL=u=>revoked.push(u);
   w.fetch=async(url,init)=>{const u=new URL(url),call={url:u,init};calls.push(call);const result=await route?.(u,init,calls);
     if(result)return result;
@@ -26,9 +26,9 @@ async function setup(t,{params='',route,options={},token=''}={}){
     throw Error('Unexpected synthetic request '+url);
   };
   w.eval(code+'\nwindow.archiveTest={mountArchiveLibrary,archiveProse};');
-  const mount=w.document.getElementById('mount'),config={kind:'book',collection:'physics',lang:'ko',theme:'light',baseHash:'#/archive/books/phys',params:new URLSearchParams(params),getToken:()=>auth,onNavigate:h=>navigations.push(h),...options};
+  const mount=w.document.getElementById('mount'),config={kind:'book',collection:'physics',lang:'ko',theme:'light',baseHash:'#/archive/books/phys',params:new URLSearchParams(params),getToken:()=>auth,onNavigate:(h,o)=>{navigations.push(h);navigationOptions.push(o);},...options};
   const instance=w.archiveTest.mountArchiveLibrary(mount,config);t.after(()=>{instance.dispose();dom.window.close();});await flush();
-  return{w,mount,instance,calls,navigations,revoked,config,setToken:v=>auth=v};
+  return{w,mount,instance,calls,navigations,navigationOptions,revoked,config,setToken:v=>auth=v};
 }
 
 test('native directory keeps outside DOM intact, real titles/counts and all scoped endpoints',async t=>{
@@ -89,7 +89,7 @@ test('foreign-bank question is rejected before any statement is rendered',async 
 });
 
 test('dispose aborts pending requests, removes only own DOM and never paints a late response',async t=>{
-  const gate=deferred(),h=await setup(t,{route:u=>u.pathname.endsWith('/search')?gate.promise:null});
+  const gate=deferred(),h=await setup(t,{params:'source='+SID,route:u=>u.pathname.endsWith('/search')?gate.promise:null});
   const request=h.calls.find(c=>c.url.pathname.endsWith('/search'));h.instance.dispose();assert.equal(request.init.signal.aborted,true);gate.resolve(response({items:[item()]}));await flush();assert.equal(h.mount.children.length,0);assert.equal(h.w.document.getElementById('outside').textContent,'Keep');
 });
 
@@ -190,4 +190,70 @@ test('inline equations that fit desktop are contained after narrowing without re
   const wrapper=h.mount.querySelector('.al-inline-equation');assert(wrapper);assert.equal(wrapper.tabIndex,0);assert.equal(h.mount.querySelectorAll('.al-inline-equation').length,1);assert.equal(renders,1);
   available=900;h.w.dispatchEvent(new h.w.Event('resize'));await new Promise(r=>setTimeout(r,35));assert.equal(wrapper.hasAttribute('tabindex'),false);assert.equal(renders,1);
   h.instance.dispose();h.w.dispatchEvent(new h.w.Event('resize'));await new Promise(r=>setTimeout(r,25));assert.equal(h.mount.children.length,0);
+});
+
+const schools={institutions:[
+  {id:'mit',name:{ko:'매사추세츠 공과대학교',en:'MIT'},logo_url:'/assets/mit.svg',source_ids:[SID,SID2],materials:{physics:[]}},
+  {id:'snu',name:{ko:'서울대학교',en:'Seoul National University'},logo_url:'/assets/snu.svg',source_ids:[],materials:{physics:[{url:'https://ocw.example.edu/physics',label:{ko:'서울대 공식 물리 공개자료',en:'Official physics materials'}}],mathematics:[{url:'https://ocw.example.edu/math',label:{ko:'공식 수학 자료',en:'Official mathematics materials'}}]}},
+  {id:'kaist',name:{ko:'KAIST',en:'KAIST'},logo_url:'/assets/kaist.svg',dark_logo_url:'/assets/kaist-dark.svg',source_ids:[],materials:{physics:[{url:'https://kaist.example.edu/physics',label:{ko:'KAIST 공식 공개자료',en:'Official open materials'}}]}}
+]};
+const courseSources=[source(SID,{kind:'course',title:'Mechanics problem set 1'}),source(SID2,{kind:'course',title:'Mechanics problem set 2'}),source('src_'+'c'.repeat(64),{kind:'course',title:'Unclassified public paper'})];
+const schoolRoute=u=>u.pathname.endsWith('/sources')?response({sources:courseSources,has_more:false}):null;
+
+test('book landing displays verified cover cards and no unsolicited all-question feed',async t=>{
+  const h=await setup(t,{options:{bookMedia:{[SID]:{image_url:'/assets/published-cover.jpg',alt:'Verified published cover'}}}});
+  const card=h.mount.querySelector('.al-book-card');assert(card);assert.equal(card.querySelector('img').getAttribute('src'),'https://haslalab.org/assets/published-cover.jpg');assert.match(card.textContent,/A Published Book/);assert.match(card.textContent,/Author/);assert.match(card.getAttribute('href'),new RegExp('source='+SID));
+  assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);assert.equal(h.mount.querySelector('[data-results]').hidden,true);
+});
+
+test('missing book covers are an explicit placeholder rather than a fabricated image',async t=>{
+  const h=await setup(t);const card=h.mount.querySelector('.al-book-card');assert.equal(card.querySelector('img'),null);assert.match(card.textContent,/표지 이미지 없음/);assert.match(card.textContent,/A Published Book/);
+});
+
+test('school landing groups actual papers into institution logo cards and retains unmatched papers separately',async t=>{
+  const h=await setup(t,{options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
+  const cards=[...h.mount.querySelectorAll('.al-school-card')];assert.equal(cards.length,4);const mit=cards.find(a=>a.getAttribute('href').includes('school=mit'));assert(mit);assert.match(mit.textContent,/2 강좌·문제지/);assert.match(mit.textContent,/4 문제/);assert.equal(mit.querySelector('img').src,'https://haslalab.org/assets/mit.svg');assert.equal(cards.filter(a=>a.textContent.includes('기타 자료')).length,1);
+  assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);assert.equal(cards.filter(a=>a.textContent.includes('Mechanics problem set')).length,0);
+});
+
+test('selected school lists only its exact source IDs and keeps school filter out of API requests',async t=>{
+  const h=await setup(t,{params:'school=mit',options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
+  const cards=[...h.mount.querySelectorAll('[data-source-list] a')];assert.equal(cards.length,2);assert(cards.every(a=>a.href.includes('school=mit')&&a.href.includes('source=src_')));assert.doesNotMatch(h.mount.textContent,/Unclassified public paper/);
+  assert.equal(h.calls.some(c=>c.url.searchParams.has('school')),false);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);
+});
+
+test('SNU official-only entry exposes verified links without inventing digitized questions',async t=>{
+  const h=await setup(t,{params:'school=snu',options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
+  assert.match(h.mount.textContent,/현재 이 과목에 등록된 웹 문제는 없습니다/);const a=h.mount.querySelector('.al-official a');assert.equal(a.href,'https://ocw.example.edu/physics');assert.equal(a.target,'_blank');assert.match(a.rel,/noopener/);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);
+});
+
+test('school official materials respect selected discipline rather than leaking physics into astronomy',async t=>{
+  const h=await setup(t,{options:{kind:'course',collection:'astronomy',baseHash:'#/archive/schools/astro',schoolMedia:schools},route:u=>u.pathname.endsWith('/sources')?response({sources:[],has_more:false}):null});
+  assert.equal(h.mount.querySelectorAll('.al-school-card').length,0);assert.equal(h.mount.querySelectorAll('.al-official a').length,0);assert.doesNotMatch(h.mount.textContent,/서울대학교|KAIST/);
+});
+
+test('school-wide search explicitly leaves the local school filter instead of filtering a paginated global feed',async t=>{
+  const h=await setup(t,{params:'school=mit',options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
+  const form=h.mount.querySelector('[data-search]');form.elements.q.value='oscillation';form.dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));const url=h.navigations.at(-1);assert.match(url,/q=oscillation/);assert.doesNotMatch(url,/school=/);assert.match(h.mount.textContent,/모든 학교 자료/);
+});
+
+test('school source selection still uses canonical server browsing and retains deep-link school context',async t=>{
+  const h=await setup(t,{params:'school=mit&source='+SID,options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:u=>schoolRoute(u)||(u.pathname.endsWith('/search')?response({items:[item(Q,{source_kind:'course'})],has_more:false}):null)});
+  const request=h.calls.find(c=>c.url.pathname.endsWith('/search'));assert.equal(request.url.searchParams.get('source'),SID);assert.equal(request.url.searchParams.get('school'),null);const row=h.mount.querySelector('.al-problem-row');assert.match(row.href,/school=mit/);assert.match(row.href,/problem=q_/);
+});
+
+test('school logo switches to verified dark artwork without remounting gallery state',async t=>{
+  const h=await setup(t,{options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
+  const card=[...h.mount.querySelectorAll('.al-school-card')].find(a=>a.href.includes('school=kaist')),img=card.querySelector('img');assert.equal(img.src,'https://haslalab.org/assets/kaist.svg');h.instance.update({theme:'dark'});assert.equal(card.querySelector('img'),img);assert.equal(img.src,'https://haslalab.org/assets/kaist-dark.svg');
+});
+
+test('verified media edition is a fallback while source title and explicit source edition remain authoritative',async t=>{
+  const h=await setup(t,{options:{bookMedia:{[SID]:{image_url:'/assets/title-page.jpg',title:'Do not replace published title',edition:'2012 source edition',provenanceKind:'source_title_page'}}}});
+  const card=h.mount.querySelector('.al-book-card');assert.match(card.textContent,/A Published Book/);assert.doesNotMatch(card.textContent,/Do not replace published title/);assert.match(card.textContent,/2012 source edition/);assert.match(card.textContent,/표제지/);
+});
+
+test('automatic school search normalization replaces history while deliberate school-card navigation pushes',async t=>{
+  const h=await setup(t,{params:'school=mit&q=oscillation',options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
+  assert.match(h.navigations[0],/q=oscillation/);assert.doesNotMatch(h.navigations[0],/school=/);assert.equal(h.navigationOptions[0].replace,true);
+  const landing=await setup(t,{options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});landing.mount.querySelector('.al-school-card').click();assert.equal(landing.navigationOptions[0].replace,undefined);
 });
