@@ -1,0 +1,13 @@
+meta NOT subset; don't know how to subset; dropped
+Table version value is a float: 4096.0000; fix to use hex instead: 0x10000000
+C:\Users\andre\CodexWork\HaslaLab\translation-builds\izho2019-complete-solutions\natural\2019\TS\page07.pdf 230 ff291fc4a44e1747ded7aeb15bcc8cc366bf5f948d06074867db3e03593c25ec
+page07.pdf p1: 0 visible text loss candidates
+{"page": 7, "passed": false, "outside": 527, "original_native_ink_missing": 0, "native_control_missing": 0, "figures": 0, "body_unreplaced": 0}
+Traceback (most recent call last):
+  File "<string>", line 2, in <module>
+    with page_worker():q=audit(2019,'TS',7)
+                         ~~~~~^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\izho2019-complete-solutions\engine\izho_natural_spacing_qa.py", line 594, in audit
+    if not result['passed']:raise ValueError('Independent original-input native-ink/style/graphics audit failed')
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Independent original-input native-ink/style/graphics audit failed

@@ -1,0 +1,238 @@
+{
+  "source_bound_contract": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2019-complete-solutions\\publication-contracts\\source-bound-native-contract.json",
+  "source_bound_contract_sha256": "9ee25f55906d47e006b76b2940909416926b4e7d50570aa7945cec1f0c262751",
+  "actual_reviewed_full_PDF_sha256": "c7d834f413742293bcbd0a2fbf57ee17fc06f4fcd1566b507def840b470edeb5",
+  "positive_uses_actual_current_proofs_sources_controls_references_programs_and_negative_PDFs": true,
+  "copied_standalone_test_fixture_used": false,
+  "actual_artifacts_checked": 71,
+  "positive_passed": true,
+  "mutations": [
+    {
+      "name": "official-source pin rebased",
+      "rejected": true
+    },
+    {
+      "name": "full-PDF pin rebased",
+      "rejected": true
+    },
+    {
+      "name": "reviewed proof pin rebased",
+      "rejected": true
+    },
+    {
+      "name": "full source substituted for raw one-page control",
+      "rejected": true
+    },
+    {
+      "name": "native control hash rebased",
+      "rejected": true
+    },
+    {
+      "name": "immutable source base rebased",
+      "rejected": true
+    },
+    {
+      "name": "unknown phase kind",
+      "rejected": true
+    },
+    {
+      "name": "digit witness pin rebased",
+      "rejected": true
+    },
+    {
+      "name": "digit source/final GID coherently changed",
+      "rejected": true
+    },
+    {
+      "name": "digit source/final point coherently changed",
+      "rejected": true
+    },
+    {
+      "name": "digit original CID changed",
+      "rejected": true
+    },
+    {
+      "name": "digit original Tf changed",
+      "rejected": true
+    },
+    {
+      "name": "digit original Tm changed",
+      "rejected": true
+    },
+    {
+      "name": "digit source/final color coherently changed",
+      "rejected": true
+    },
+    {
+      "name": "digit actual X/dx rebased",
+      "rejected": true
+    },
+    {
+      "name": "digit actual ink loss",
+      "rejected": true
+    },
+    {
+      "name": "digit native renderer scale omitted",
+      "rejected": true
+    },
+    {
+      "name": "digit native shape pixel count forged",
+      "rejected": true
+    },
+    {
+      "name": "digit SVG12 loss",
+      "rejected": true
+    },
+    {
+      "name": "raw SVG diagnostic hidden",
+      "rejected": true
+    },
+    {
+      "name": "new raw SVG loss concealed",
+      "rejected": true
+    },
+    {
+      "name": "raw SVG location changed",
+      "rejected": true
+    },
+    {
+      "name": "digit-removal negative accepted",
+      "rejected": true
+    },
+    {
+      "name": "literal head omitted coherently",
+      "rejected": true
+    },
+    {
+      "name": "literal space normalized to arrow Unicode",
+      "rejected": true
+    },
+    {
+      "name": "literal head GID/CID rebased",
+      "rejected": true
+    },
+    {
+      "name": "literal head source point rebased",
+      "rejected": true
+    },
+    {
+      "name": "literal head Tf rebased",
+      "rejected": true
+    },
+    {
+      "name": "literal original head clip rebased",
+      "rejected": true
+    },
+    {
+      "name": "literal original head program rebased",
+      "rejected": true
+    },
+    {
+      "name": "literal head dx/source-final relation rebased",
+      "rejected": true
+    },
+    {
+      "name": "literal head native shape pixels forged",
+      "rejected": true
+    },
+    {
+      "name": "literal head actual RGB loss",
+      "rejected": true
+    },
+    {
+      "name": "literal head renderer omitted",
+      "rejected": true
+    },
+    {
+      "name": "native-program geometry source bbox rebased",
+      "rejected": true
+    },
+    {
+      "name": "head motion journal omitted",
+      "rejected": true
+    },
+    {
+      "name": "head journal GID/source-final rebased",
+      "rejected": true
+    },
+    {
+      "name": "head source ink incorrectly classified nonpainting",
+      "rejected": true
+    },
+    {
+      "name": "complete original arrow program omitted",
+      "rejected": true
+    },
+    {
+      "name": "original arrow source program hash rebased",
+      "rejected": true
+    },
+    {
+      "name": "actual arrow Form raw program hash rebased",
+      "rejected": true
+    },
+    {
+      "name": "original repeated-shaft clip rebased",
+      "rejected": true
+    },
+    {
+      "name": "original source CID in promoted Form changed",
+      "rejected": true
+    },
+    {
+      "name": "pre-motion RGB mismatch hidden",
+      "rejected": true
+    },
+    {
+      "name": "Word grading ancestor clip rebased",
+      "rejected": true
+    },
+    {
+      "name": "arrowhead-only negative accepted",
+      "rejected": true
+    },
+    {
+      "name": "arrowhead-removal negative actual ink evidence hidden",
+      "rejected": true
+    },
+    {
+      "name": "fraction-rule-only negative accepted",
+      "rejected": true
+    },
+    {
+      "name": "score-only negative accepted",
+      "rejected": true
+    },
+    {
+      "name": "actual artifact hash rebased",
+      "rejected": true
+    },
+    {
+      "name": "actual negative PDF artifact omitted",
+      "rejected": true
+    },
+    {
+      "name": "shared native guard rebased",
+      "rejected": true
+    },
+    {
+      "name": "actual exact-reviewed-page-proof bytes changed with original metadata",
+      "rejected": true
+    },
+    {
+      "name": "actual official-source-byte-identical-program bytes changed with original metadata",
+      "rejected": true
+    },
+    {
+      "name": "no actual ledger artifact resolver supplied",
+      "rejected": true
+    }
+  ],
+  "mutations_rejected": 55,
+  "total_positive_and_mutation_checks": 56,
+  "public_test_actual_ledger_binding_owned_by_parent": true,
+  "helper_sha256": "4f7021c80cfaf178b15f11b028628d866e52536bcb9fe90dad1572687374a4d1",
+  "pins_sha256": "0263b3bcecf1fd6f993ab1b6788454368a0dd982904fd434b30857115bfda3ea",
+  "mutation_cases_sha256": "ee9c55cb094b418036ebe52dea277572be3601af55e7d432d0c50344bdcd11b5",
+  "passed": true
+}

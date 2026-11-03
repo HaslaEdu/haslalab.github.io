@@ -1,0 +1,66 @@
+{
+  "output_sha256": "18316acf25994fb13e39381a168363d7238191103c79a5f2d38a3485de46b71a",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2019-complete-solutions\\natural\\2019\\TS\\page06.old-source.pdf",
+    "source_page": 1,
+    "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2019-complete-solutions\\natural\\2019\\TS\\page06.pdf",
+    "final_page": 1,
+    "source_sha256": "fb930b707a565b5ad61a9d09fc9781f1c196c4d3bfcd99bad656b5a023437929",
+    "output_sha256": "18316acf25994fb13e39381a168363d7238191103c79a5f2d38a3485de46b71a",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 739,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 739,
+      "expected_signature_count": 739,
+      "matched_outline_uses": 739,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 88790,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      141.0,
+      762.75,
+      141.25,
+      763.0
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "kind": "source2019-exact-original-digit3-native-program-v1",
+    "method": "One original source2019 TNR12pt digit3 in rubric reference(31). Exact original encoded33/F3/GID20/Tf12/Tmidentity at the measured actual destination has zero native-CID ink loss at4x/8x/12x; independent original-SVG8x/12x also zero loss. One raw4x unhinted SVG edge diagnostic is retained. Actual digit3-only removed-PDF is rejected at all native reference scales. Exact source/proof/witness/negative hashes, coordinates, CID, point and paint are closed; every global threshold and the proof are unchanged.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "native_original_CID_reference_missing_pixels": 0,
+    "native_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "svg_8x_missing_pixels": 0,
+    "svg_12x_missing_pixels": 0,
+    "original_font_resource": "/F3",
+    "original_encoded_CID": "33",
+    "original_GID": 20,
+    "original_native_trace_point": 12,
+    "original_Tf": 12,
+    "original_Tm_linear": [
+      1.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "witness": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2019-complete-solutions\\natural\\2019\\TS\\..\\..\\2019-page06-independent-native-digit3-witness\\witness.json",
+    "witness_sha256": "99942cab28db7fb97aec48058372a9da1fc439af8cd2997a5b8603e90cfec8e4",
+    "actual_removed_digit3_negative_summary_sha256": "80cb2128d2ea39566d5d99fde9e9afce988cbefb2b0f05dcdff73cb65a085894",
+    "proof_unmodified": true,
+    "path": "tools/ko/izho/2019/TS/natural-spacing/witnesses/page06-native-cid.json"
+  }
+}

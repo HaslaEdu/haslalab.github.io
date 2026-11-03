@@ -1,0 +1,91 @@
+{
+  "source_sha256": "5e83000f5d2abe161186a6f81e5b9cd306a0758d2969744edbfb68fcad413da8",
+  "source_page": 7,
+  "proof_sha256": "6a28bb2ee539cb0a7897c0a42fc077c1197769eaebd0b764bffd3d0f4fa24938",
+  "plan_sha256": "c9e28c223a93ee421f5fd454aa7fb1eec4377fabb5f828316615eaf4c1d6b625",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 3,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          41,
+          11
+        ]
+      ],
+      "baseline": 463.989990234375,
+      "source_center": 312.47765350341797,
+      "independent_original_source_centers": [
+        312.47765350341797
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 244.35098266601562,
+      "actual_nonspace_glyph_right": 380.60430908203125,
+      "actual_center": 312.47764587402344,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 14,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          41,
+          12
+        ]
+      ],
+      "baseline": 478.1499938964844,
+      "source_center": 312.4260025024414,
+      "independent_original_source_centers": [
+        312.4260025024414
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 263.8559875488281,
+      "actual_nonspace_glyph_right": 360.9960021972656,
+      "actual_center": 312.4259948730469,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 9,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          41,
+          6
+        ]
+      ],
+      "baseline": 430.72998046875,
+      "source_center": 89.54399871826172,
+      "independent_original_source_centers": [
+        89.54399871826172
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 77.95199584960938,
+      "actual_nonspace_glyph_right": 101.13600158691406,
+      "actual_center": 89.54399871826172,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          41,
+          11
+        ],
+        "source_text": "Problem 3. Laser (10.0 points) ",
+        "original_center": 312.47765350341797,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

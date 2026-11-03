@@ -1,0 +1,112 @@
+{
+  "source_sha256": "f338dd0093628b658df3f02ca40a34b97e6ecd8fa431cf8517f08aa4eb14ff49",
+  "source_page": 5,
+  "proof_sha256": "5eda10bec0250e1a4f6029e2ba62f7d7071571a8d59f8476410e0590a11dac03",
+  "plan_sha256": "2d4c3d1f9c61242f02b0fc27a4fb69f50856e48d4ea1e22c6ed5e44ba9f2e211",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 4,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 82.20001220703125,
+      "source_center": 264.4220199584961,
+      "independent_original_source_centers": [
+        264.4220199584961
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 239.73800659179688,
+      "actual_nonspace_glyph_right": 289.10601806640625,
+      "actual_center": 264.42201232910156,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          1,
+          1
+        ]
+      ],
+      "baseline": 82.20001220703125,
+      "source_center": 510.10601806640625,
+      "independent_original_source_centers": [
+        510.10601806640625
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 498.5140075683594,
+      "actual_nonspace_glyph_right": 521.697998046875,
+      "actual_center": 510.1060028076172,
+      "center_error_pt": -1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          15,
+          0
+        ]
+      ],
+      "baseline": 358.3699951171875,
+      "source_center": 312.47766876220703,
+      "independent_original_source_centers": [
+        312.47766876220703
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 228.99583435058594,
+      "actual_nonspace_glyph_right": 395.9595031738281,
+      "actual_center": 312.47766876220703,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 16,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          16,
+          0
+        ]
+      ],
+      "baseline": 372.6499938964844,
+      "source_center": 312.43798828125,
+      "independent_original_source_centers": [
+        312.43798828125
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 249.86996459960938,
+      "actual_nonspace_glyph_right": 375.0060119628906,
+      "actual_center": 312.43798828125,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 14,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          15,
+          0
+        ],
+        "source_text": "Problem 2. Physics in the mountains (10,0 points) ",
+        "original_center": 312.47766876220703,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

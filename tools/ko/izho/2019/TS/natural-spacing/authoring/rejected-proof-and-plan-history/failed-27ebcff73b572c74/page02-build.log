@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys;from pathlib import Path;sys.path[:0]=['C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2019-complete-solutions\\engine','D:/CodexBuilds/Hasla-publish-20261031/tools'];from pdf_memory_gate import page_worker;from izho_natural_spacing_rebuild import page_build;page_build(Path('C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2019-complete-solutions\\natural\\2019\\TS\\plans\\page02.json'))
+                                                                                                                                                                                                                                                                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\izho2019-complete-solutions\engine\izho_natural_spacing_rebuild.py", line 529, in page_build
+    with page_worker():return _page_build(plan,body_only)
+                              ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\izho2019-complete-solutions\engine\izho_natural_spacing_rebuild.py", line 505, in _page_build
+    try:raw,qa=compose_page(source,d['page'],native_control_output=out.with_suffix('.native-control.pdf'),native_move_options=move_options,native_atomic_tokens=explicit or None,stationary_native_glyphs=locked,include_image_only_native_math=d.get('include_image_only_native_math',False),baseline_tolerance_pt=d.get('baseline_tolerance_pt',.12),**compose_args)
+               ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\izho2019-complete-solutions\engine\pdf_korean_natural_composer.py", line 165, in compose_page
+    if cursor+adjust>rect[2]+.1 or start+adjust<rect[0]-.1:raise ValueError(('Natural fixed-size line overflows reviewed rectangle',line['baseline'],start+adjust,cursor+adjust,rect))
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: ('Natural fixed-size line overflows reviewed rectangle', 662.02001953125, 72.02400207519531, 496.2948651123047, [71.77400207519531, 651.82001953125, 490.5, 667.78001953125])

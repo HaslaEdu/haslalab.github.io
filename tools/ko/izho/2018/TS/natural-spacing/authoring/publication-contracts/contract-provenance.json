@@ -1,0 +1,117 @@
+{
+  "source_sha256": "f338dd0093628b658df3f02ca40a34b97e6ecd8fa431cf8517f08aa4eb14ff49",
+  "native_cases": {
+    "2": {
+      "kind": "source2018-page02-complete-original-formula6-native-Form-program-v1",
+      "proof_sha256": "9857b8537f255b30d92a914057aa30ae6aa2cd86c99cb3e8e3362711973d473d",
+      "witness_sha256": "9cc10f46fab80dc6849ddb52423d2b522adb14de57d904a79e92bf6c4480badb",
+      "reference_sha256": "3b969e96da3fa9c8decc2aabb8b4b716dc550c9650b2c991ef67e4f1eb0a44b0",
+      "raw_control_sha256": "751aa29f37c3c9fa4116bc9deee39ccb0d83c542f23296f451a9bbbfdcd462fa",
+      "raw_control_glyphs": 591,
+      "raw_missing_bbox": [
+        284.0,
+        433.75,
+        284.25,
+        434.0
+      ],
+      "native_glyphs": 21,
+      "crop": [
+        149,
+        411,
+        325,
+        448
+      ],
+      "source_expression_rect": [
+        178.6,
+        412.0,
+        351.42,
+        446.47
+      ],
+      "literal_Form_raw_sha256": "666a17a58619bd070f911acee1ef41eb56e506fe081cd31e05fb3dd0c6a39df5",
+      "witness_semantic_sha256": "040890914b5fa411f7f7740b439b949880a249540d11463d5f23de7f2c27921e",
+      "measurement_semantic_sha256": "57f4e1f5de652f24f85a3f9cc67a59dcdddc9c0ef5d2731ca33b03ad70dc34bf"
+    },
+    "5": {
+      "kind": "source2018-page05-complete-original-native-word-program-v1",
+      "proof_sha256": "5eda10bec0250e1a4f6029e2ba62f7d7071571a8d59f8476410e0590a11dac03",
+      "witness_sha256": "33d9264fc7728e2b18dd8f0316dfcf1534175fd15444d6b12e1fe8923d9d6513",
+      "reference_sha256": "3117ba2d9e586c7e39782e5fc0ae004a4b879c040395dc338c1ba67cfb57a2a2",
+      "raw_control_sha256": "438ad229f356fa4d6764e6bc04f87b9340187753e9ebf17c12a65719f15a506e",
+      "raw_control_glyphs": 369,
+      "raw_missing_bbox": [
+        147.5,
+        673.5,
+        147.75,
+        673.75
+      ],
+      "native_glyphs": 7,
+      "crop": [
+        109,
+        666,
+        178,
+        683
+      ],
+      "source_expression_rect": [
+        173.0,
+        669.0,
+        237.0,
+        681.0
+      ],
+      "literal_Form_raw_sha256": null,
+      "witness_semantic_sha256": "9401c68c7f0acc39735d2dd4668067cee32b72f94f78d01356c576de45bcbbd7",
+      "measurement_semantic_sha256": "d48ad5f46171ce438fee097036d5c9c0a0ecbd6a07ef392ca5543ab01c3fe96e"
+    },
+    "8": {
+      "kind": "source2018-page08-complete-original-native-word-program-v1",
+      "proof_sha256": "f8e82a5b7cd867118c7c2338aa902bc7ccaa15052f71a81a851b2aadf4af59b8",
+      "witness_sha256": "d6a9c737b50295ff26f4b6fcaa28237ed49c380d9776f2641fce53115a3a535e",
+      "reference_sha256": "5de2eecb2971e171deffe77facd56474795bd202d5c35464465248c843c29f7e",
+      "raw_control_sha256": "ae3555d697ac3de11a2dd95a4a44f4a78b3c8ac890d320f71cc78e67a46df44a",
+      "raw_control_glyphs": 769,
+      "raw_missing_bbox": [
+        141.0,
+        480.0,
+        141.25,
+        480.25
+      ],
+      "native_glyphs": 32,
+      "crop": [
+        130,
+        474,
+        302,
+        499
+      ],
+      "source_expression_rect": [
+        161.0,
+        474.0,
+        326.0,
+        498.0
+      ],
+      "literal_Form_raw_sha256": null,
+      "witness_semantic_sha256": "d5ef1c12d10e6f0ccb0edabef224ab0fa4262d53f11a4e12173a0561c7ed56af",
+      "measurement_semantic_sha256": "6aff73414331884f315268b19e1543ccdfa12909123e420ea2b05bf358c8e973"
+    }
+  },
+  "mathematical_native_glyphs_checked": [
+    21,
+    7,
+    32
+  ],
+  "all_original_CIDs_Tf_fullTm_font_GID_fractional_point_paint_Y_checked": true,
+  "all_six_native_renderer_scale_comparisons_and_all_three_SVG_scales_required": true,
+  "raw_control_and_full_original_source_pins_distinct": true,
+  "actual_bad_PDF_controls": 7,
+  "source_bitmap_label_native_reference_glyphs": 5,
+  "source_bitmap_label_witness_sha256": "db058ee8123ce19e77d393dcf60bce9cb85c628884f31f2704fd6a1680912a00",
+  "strict_contract_tests_passed": 84,
+  "no_repository_files_modified": true,
+  "files": {
+    "contract-provenance.json": "8f8d19ed800e25c4c6ae134ff53bae8197231fe2a7dbf8d2e25eaeda520d7a77",
+    "exact-source-fixtures.json": "222185264d440c519a7a2518069ab273423e85b7f375ffbed35c3c5e9fab1a17",
+    "integration-snippet.cjs": "2f6fdc9e9e9e6295abef2fe4e183828e4e83de3041b5a12dec122c0b3faf4736",
+    "izho-2018-actual-negative-controls.json": "4ec2eb70321a47baca6447b32293732d188779c954c13daa98c4dd563bf1bebb",
+    "izho-2018-native-programs.cjs": "1ca338ba52c17cf2217edffe3fa0c12113c79eedb45db0f0343dd30c567884c6",
+    "node-test-output.txt": "fc0b61869b1fa25797b51c15adf840a5375a9e39e22d143e277e26fb46691b6f",
+    "test-izho-2018-native-programs.cjs": "3b9f9a0f68e100f4e1b666e6dc90369d7514411a5148f891d0260e4dd6ab1a56"
+  }
+}

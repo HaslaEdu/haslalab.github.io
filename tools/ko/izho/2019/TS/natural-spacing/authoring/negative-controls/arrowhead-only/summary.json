@@ -1,0 +1,68 @@
+{
+  "positive_proof_sha256": "8ed92b19b64974e29fd3d78ca5f814e2610b6865ddce061e6b28ca91fe41c16e",
+  "positive_proof_unmodified": true,
+  "original_source_sha256": "5e83000f5d2abe161186a6f81e5b9cd306a0758d2969744edbfb68fcad413da8",
+  "controls": [
+    {
+      "kind": "shifted-1pt",
+      "bad_PDF_sha256": "cb93d14634792a3c7bf6a24c6b7c990d78678232ee0a26f7db4c3de83fdb868e",
+      "original_fonts_and_every_other_CID_unchanged": true,
+      "actual_head_geometry_and_original_program_rejected": true,
+      "missing_head_pixels_by_renderer": [
+        {
+          "renderer": "MuPDF RGB",
+          "scale": 4,
+          "original_encoded_head_dark_pixels": 628,
+          "missing_actual_original_head_pixels": 17,
+          "passed": false
+        },
+        {
+          "renderer": "MuPDF RGB",
+          "scale": 8,
+          "original_encoded_head_dark_pixels": 2822,
+          "missing_actual_original_head_pixels": 75,
+          "passed": false
+        },
+        {
+          "renderer": "independent external Poppler RGB",
+          "dpi": 144,
+          "original_encoded_head_dark_pixels": 56,
+          "missing_actual_original_head_pixels": 2,
+          "passed": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "kind": "removed",
+      "bad_PDF_sha256": "166ce0a40b0a039df7b577ee4c31edf9c404610e15c70fb66e6a063b0c55b515",
+      "original_fonts_and_every_other_CID_unchanged": true,
+      "actual_head_geometry_and_original_program_rejected": true,
+      "missing_head_pixels_by_renderer": [
+        {
+          "renderer": "MuPDF RGB",
+          "scale": 4,
+          "original_encoded_head_dark_pixels": 628,
+          "missing_actual_original_head_pixels": 43,
+          "passed": false
+        },
+        {
+          "renderer": "MuPDF RGB",
+          "scale": 8,
+          "original_encoded_head_dark_pixels": 2822,
+          "missing_actual_original_head_pixels": 191,
+          "passed": false
+        },
+        {
+          "renderer": "independent external Poppler RGB",
+          "dpi": 144,
+          "original_encoded_head_dark_pixels": 56,
+          "missing_actual_original_head_pixels": 4,
+          "passed": false
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true
+}

@@ -1,0 +1,70 @@
+{
+  "source_sha256": "f338dd0093628b658df3f02ca40a34b97e6ecd8fa431cf8517f08aa4eb14ff49",
+  "source_page": 8,
+  "proof_sha256": "f8e82a5b7cd867118c7c2338aa902bc7ccaa15052f71a81a851b2aadf4af59b8",
+  "plan_sha256": "ad809622dd84879f4df5b5e241ec29193923c0d9c2629785463debb054719e41",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          70,
+          7
+        ]
+      ],
+      "baseline": 688.5399780273438,
+      "source_center": 312.53765869140625,
+      "independent_original_source_centers": [
+        312.53765869140625
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 200.2130584716797,
+      "actual_nonspace_glyph_right": 424.86224365234375,
+      "actual_center": 312.5376510620117,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 20,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          71,
+          0
+        ]
+      ],
+      "baseline": 702.9400024414062,
+      "source_center": 312.4980010986328,
+      "independent_original_source_centers": [
+        312.4980010986328
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 245.42999267578125,
+      "actual_nonspace_glyph_right": 379.5660095214844,
+      "actual_center": 312.4980010986328,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 15,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          70,
+          7
+        ],
+        "source_text": "Problem 3. Optics of moving media (10.0 points) ",
+        "original_center": 312.53765869140625,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

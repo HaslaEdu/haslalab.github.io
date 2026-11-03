@@ -1,0 +1,58 @@
+{
+  "source_sha256": "f338dd0093628b658df3f02ca40a34b97e6ecd8fa431cf8517f08aa4eb14ff49",
+  "source_page": 7,
+  "proof_sha256": "f813d18debb86e344a0eceefe1873e9b1b82652efc9996c15e23714b75889884",
+  "plan_sha256": "888b66ccf16042ea716583cbf7bacdf0696d64ba25e011a7f095e079bca632a0",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          37,
+          2
+        ]
+      ],
+      "baseline": 517.8699951171875,
+      "source_center": 285.4219970703125,
+      "independent_original_source_centers": [
+        285.4219970703125
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 260.73797607421875,
+      "actual_nonspace_glyph_right": 310.10601806640625,
+      "actual_center": 285.4219970703125,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          37,
+          3
+        ]
+      ],
+      "baseline": 517.8699951171875,
+      "source_center": 508.30601501464844,
+      "independent_original_source_centers": [
+        508.30601501464844
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 496.7140197753906,
+      "actual_nonspace_glyph_right": 519.8980102539062,
+      "actual_center": 508.30601501464844,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 0,
+    "rows": [],
+    "passed": true
+  },
+  "passed": true
+}

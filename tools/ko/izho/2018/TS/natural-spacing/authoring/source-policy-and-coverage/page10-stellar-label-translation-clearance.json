@@ -1,0 +1,82 @@
+{
+  "source_sha256": "f338dd0093628b658df3f02ca40a34b97e6ecd8fa431cf8517f08aa4eb14ff49",
+  "source_page": 10,
+  "diagnostic_proof_sha256": "2d3ad11a4c039a52784714c36c65b1e80f8067060e6c1a4059fd6e0ca7196d61",
+  "source_measurements_sha256": "fab702bd9245d350476af87ee796233c10b1540c09343a1a9ae20fa7d5afdc4f",
+  "actual_font_reference_source": "Exact embedded Korean glyph outlines from the original-centre diagnostic proof, not bounding-box fitting",
+  "scale": 4,
+  "rows": [
+    {
+      "reviewed": true,
+      "source_label": "Star",
+      "text": "별",
+      "horizontal_dx_pt": 0.0,
+      "actual_original_center_preserved": true,
+      "source_point_size_unchanged": 13.328067150035261,
+      "source_baseline_unchanged": 106.84714714009662,
+      "italic_slant_unchanged": 16.332992553710938,
+      "reason": "Minimum quarter-point leftward label-only clearance for the wider Korean translation and its original measured italic role; actual new-font outline envelope must cover zero original nonlanguage pixels. Source image, geometry, mathematical labels, font point and baseline remain unchanged.",
+      "attempts": [
+        {
+          "horizontal_dx_pt": 0.0,
+          "original_nonlanguage_foreground_overlap_pixels": 0
+        }
+      ]
+    },
+    {
+      "reviewed": true,
+      "source_label": "Sun",
+      "text": "태양",
+      "horizontal_dx_pt": -1.25,
+      "actual_original_center_preserved": false,
+      "source_point_size_unchanged": 13.328067150035261,
+      "source_baseline_unchanged": 185.7635231882176,
+      "italic_slant_unchanged": 16.332992553710938,
+      "reason": "Minimum quarter-point leftward label-only clearance for the wider Korean translation and its original measured italic role; actual new-font outline envelope must cover zero original nonlanguage pixels. Source image, geometry, mathematical labels, font point and baseline remain unchanged.",
+      "attempts": [
+        {
+          "horizontal_dx_pt": 0.0,
+          "original_nonlanguage_foreground_overlap_pixels": 96
+        },
+        {
+          "horizontal_dx_pt": -0.25,
+          "original_nonlanguage_foreground_overlap_pixels": 66
+        },
+        {
+          "horizontal_dx_pt": -0.5,
+          "original_nonlanguage_foreground_overlap_pixels": 41
+        },
+        {
+          "horizontal_dx_pt": -0.75,
+          "original_nonlanguage_foreground_overlap_pixels": 22
+        },
+        {
+          "horizontal_dx_pt": -1.0,
+          "original_nonlanguage_foreground_overlap_pixels": 3
+        },
+        {
+          "horizontal_dx_pt": -1.25,
+          "original_nonlanguage_foreground_overlap_pixels": 0
+        }
+      ]
+    },
+    {
+      "reviewed": true,
+      "source_label": "Earth",
+      "text": "지구",
+      "horizontal_dx_pt": 0.0,
+      "actual_original_center_preserved": true,
+      "source_point_size_unchanged": 13.45686039377988,
+      "source_baseline_unchanged": 209.1946835353457,
+      "italic_slant_unchanged": 16.332992553710938,
+      "reason": "Minimum quarter-point leftward label-only clearance for the wider Korean translation and its original measured italic role; actual new-font outline envelope must cover zero original nonlanguage pixels. Source image, geometry, mathematical labels, font point and baseline remain unchanged.",
+      "attempts": [
+        {
+          "horizontal_dx_pt": 0.0,
+          "original_nonlanguage_foreground_overlap_pixels": 0
+        }
+      ]
+    }
+  ],
+  "passed": true
+}

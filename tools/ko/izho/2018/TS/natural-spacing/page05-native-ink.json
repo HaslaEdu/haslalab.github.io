@@ -1,0 +1,70 @@
+{
+  "output_sha256": "5eda10bec0250e1a4f6029e2ba62f7d7071571a8d59f8476410e0590a11dac03",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2018-complete-solutions\\natural\\2018\\TS\\page05.old-source.pdf",
+    "source_page": 1,
+    "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2018-complete-solutions\\natural\\2018\\TS\\page05.pdf",
+    "final_page": 1,
+    "source_sha256": "438ad229f356fa4d6764e6bc04f87b9340187753e9ebf17c12a65719f15a506e",
+    "output_sha256": "5eda10bec0250e1a4f6029e2ba62f7d7071571a8d59f8476410e0590a11dac03",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 369,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 369,
+      "expected_signature_count": 369,
+      "matched_outline_uses": 369,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 50733,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      147.5,
+      673.5,
+      147.75,
+      673.75
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "kind": "source2018-complete-original-native-program-v1",
+    "source_page": 5,
+    "method": "Exact whole original native mathematical program, every original CID/font/GID/fractional point/Tf/fullTm/paint/Y and complete fraction/clip geometry independently checked. Both native renderers4x/8x/12x have exact nonwhite RGB equality; all croppedSVG scales show zero missing ink and the crop contains the complete original actual ink envelope. Raw full-page1pixel diagnostic remains visible. No mathematical ink excluded, no threshold changed.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "exact_original_native_expression_glyphs": 7,
+    "exact_original_encoded_CIDs_checked": 7,
+    "native_original_reference_missing_pixels": 0,
+    "native_reference_nonwhite_RGB_errors": 0,
+    "native_reference_renderers": [
+      "MuPDF",
+      "Poppler"
+    ],
+    "native_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "cropped_SVG_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "cropped_SVG_native_ink_missing_pixels": 0,
+    "witness": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2018-complete-solutions\\natural\\2018-page05-original-native-word-program\\witness-with-exact-source-programs.json",
+    "witness_sha256": "33d9264fc7728e2b18dd8f0316dfcf1534175fd15444d6b12e1fe8923d9d6513",
+    "raw_control_source_sha256": "438ad229f356fa4d6764e6bc04f87b9340187753e9ebf17c12a65719f15a506e",
+    "full_original_source_sha256": "f338dd0093628b658df3f02ca40a34b97e6ecd8fa431cf8517f08aa4eb14ff49",
+    "proof_unmodified": true,
+    "mathematical_ink_excluded": false,
+    "actual_bad_PDF_controls": 7,
+    "path": "tools/ko/izho/2018/TS/natural-spacing/witnesses/page05-native-cid.json"
+  }
+}
