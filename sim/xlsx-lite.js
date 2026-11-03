@@ -576,11 +576,11 @@
         if (r1 + 1 > MAXR || wide) {
           const stats = [];
           for (let c = 0; c <= Math.min(c1, 40); c++) { let n = 0, mn = Infinity, mx = -Infinity, at = -1; for (let r = 0; r <= r1; r++) { const x = sh.cells[ref(c, r)]; if (x && typeof x.v === "number") { n++; if (x.v < mn) mn = x.v; if (x.v > mx) { mx = x.v; at = r; } } } if (n) stats.push(`${colName(c)}: ${n} numbers, min ${fmtNum(mn)}, max ${fmtNum(mx)} at row ${at + 1}`); }
-          if (stats.length) out.push("Columns: " + stats.join("; "));
+          if (stats.length) out.push("Columns (summary computed by the site, not written by the student): " + stats.join("; "));
           if (wide) {
             const peaks = [];
             for (let r = 0; r <= r1 && peaks.length < 80; r += Math.max(1, Math.ceil((r1 + 1) / 80))) { let mx = -Infinity, at = -1; for (let c = 1; c <= c1; c++) { const x = sh.cells[ref(c, r)]; if (x && typeof x.v === "number" && x.v > mx) { mx = x.v; at = c; } } if (at >= 0) { const h = sh.cells[ref(at, 0)], a0 = sh.cells[ref(0, r)]; peaks.push(`row ${r + 1}${a0 ? " (" + show(a0.v) + ")" : ""}: max ${fmtNum(mx)} in column ${colName(at)}${h && r ? " [" + show(h.v) + "]" : ""}`); } }
-            if (peaks.length) out.push("Row maxima: " + peaks.join("; "));
+            if (peaks.length) out.push("Row maxima (computed by the site, not written by the student): " + peaks.join("; "));
           }
         }
       }
