@@ -11,6 +11,7 @@ import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localiz
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 import { createDesktopOAuth } from './oauth-desktop.js';
+import {createAccountHandoff} from './account-handoff.js';
 import {isPendingUsername,usernameProfile,claimUsername,ensureUsernameClaimSchema,usernameProfileColumns,decorateUsernameProfile} from './username-setup.js';
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
 import { tokenUnits, tokenBalance, tokenSql, tokenSet } from './lab-tokens.js';
@@ -192,6 +193,7 @@ function needUser(u) { if (!u) throw new HttpError(401, "login_required"); if(ne
 const pubUser = u => ({ id: u.id, username: needsUsername(u)?null:u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null, ...(needsUsername(u)?{username_required:true}:{}),...(u.username_setup_available!==undefined?{username_setup_available:u.username_setup_available}:{}),...(u.unique_identifier?{unique_identifier:u.unique_identifier,username_kind:u.username_kind}:{}) });
 async function accountUser(env,id){const user=await env.DB.prepare('SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0').bind(id).first();return usernameProfile(env,user,env[DB_SCOPE]||env.DB)}
 const desktopOAuth=createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers:oauthProviders,newSession,pubUser,readUser:accountUser});
+const accountHandoff=createAccountHandoff({HttpError,now,limit,sha256,b64u,needUser,pubUser,readUser:accountUser});
 const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab, lab_reg: LAB_REG, jobs: { available: hasLabQueue(env), mode: 'queue' } });
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
@@ -212,11 +214,12 @@ async function handle(req, env, url, ctx) {
   const m = req.method;
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
-  const body = (m === "POST" || m === "PATCH") && !form ? /^\/api\/oauth\/(desktop|web)\/(start|exchange)$/.test(p)?await desktopOAuth.readBody(req,env):await req.json().catch(() => ({})) : {};
+  const body = (m === "POST" || m === "PATCH") && !form ? /^\/api\/auth\/handoff\/(start|exchange)$/.test(p)?await accountHandoff.readBody(req,env):/^\/api\/oauth\/(desktop|web)\/(start|exchange)$/.test(p)?await desktopOAuth.readBody(req,env):await req.json().catch(() => ({})) : {};
   const me = publicInvariant(m, p) || m === 'GET' && /^\/api\/users(?:\/[^/]+)?$/.test(p) ? null : await currentUser(req, env);
   let r;
 
   const desktopResult=await desktopOAuth.handle(req,env,url,body);if(desktopResult!==null)return desktopResult;
+  const handoffResult=await accountHandoff.handle(req,env,{path:p,body,me,scope:env[DB_SCOPE]||env.DB});if(handoffResult!==null)return handoffResult;
   if(needsUsername(me)&&!['/api/me','/api/me/username','/api/logout','/api/oauth/redeem'].includes(p))throw new HttpError(403,'username_required');
   if (p === "/api/health") return healthData(env, await labReady(env));
   if(p==='/api/oauth/providers'&&m==='GET')return {providers:oauthProviders(env)};
