@@ -41,3 +41,18 @@ test("the «tuned» provider: an OpenAI-compatible endpoint from TUNED_BASE/TUNE
   assert.ok(!JSON.stringify(seen[0].body).includes("image_url"), "no photo is sent");
   assert.deepEqual(out.raw, { items: [] });
 });
+
+import { auditedLines, vertexGradeLine, gradeAgainstAudit } from "./src/lab-train.js";
+test("an audited paper as a grading example: audit marks matched to the scheme's lines, a lettered id by its number, too little coverage left out", () => {
+  const scheme = { items: [{ id: "1.1.a", points: 0.4, what: "a" }, { id: "1.2", points: 0.6, what: "b" }, { id: "2.1", points: 1, what: "c" }] };
+  const lines = auditedLines(scheme, [{ id: "1.1.1", points: 0.4, got: 0.4 }, { id: "1.2", points: 0.6, got: 0 }, { id: "2.1", points: 1, got: 1.5 }]);
+  assert.deepEqual(lines.map(l => [l.item.id, l.got]), [["1.1.a", 0.4], ["1.2", 0], ["2.1", 1]], "a mark is held within the line's points");
+  assert.equal(auditedLines(scheme, [{ id: "1.2", points: 0.6, got: 0 }]), null, "one line of three stands for no paper");
+  assert.equal(auditedLines(scheme, [{ id: "1.2", points: 0.5, got: 0 }, { id: "2.1", points: 1, got: 1 }, { id: "1.1.a", points: 0.4, got: 0 }], 0.5).length, 2, "points that differ: another scheme's line");
+  const line = JSON.parse(vertexGradeLine("input", lines));
+  assert.equal(line.contents[0].parts[0].text, "input"); assert.equal(line.contents[1].role, "model");
+  assert.deepEqual(JSON.parse(line.contents[1].parts[0].text), { items: [{ id: "1.1.a", score: 0.4 }, { id: "1.2", score: 0 }, { id: "2.1", score: 1 }] });
+  assert.match(line.systemInstruction.parts[0].text, /official marker/);
+  const e = gradeAgainstAudit(lines, [{ id: "1.1.a", score: 0.4 }, { id: "1.2", score: 0.5 }]);
+  assert.equal(e.mis, 2); assert.equal(e.over, 1); assert.equal(e.under, 1); assert.equal(e.missing, 1); assert.equal(e.score, 0.9); assert.equal(e.ref, 1.4);
+});

@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam } from "./lab-train.js";
+import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
 import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
@@ -3302,6 +3302,46 @@ async function labBench(env, s, job) {
       const put = (name, list) => list.length ? gcsPut(env, t, `runs/${row.id}/${name}`, new TextEncoder().encode(list.map(x => x.line).join('\n') + '\n'), 'application/jsonl') : null;
       out = { pages: lines.length, train: await put('train.jsonl', sp.train), validation: await put('validation.jsonl', sp.validation),
         train_pages: sp.train.map(x => x.page_id), validation_pages: sp.validation.map(x => x.page_id) };
+    } else if (spec.stage === 'tune-grade-data' || spec.stage === 'tune-grade-eval') {
+      /* a Gemini grader tuned on audited papers (pilot, 2026-11-03): spec.tasks [{session, task, split: train|eval, items:
+         [{id, points, got}] (the audit's reference marks)}], spec.scheme the scheme the bench grades with.
+         tune-grade-data: the train tasks as Vertex tuning lines to gs://bucket/runs/<id>/grade-train.jsonl.
+         tune-grade-eval: the eval tasks graded by spec.grader {provider, model, thinking, endpoint} from the same input,
+         marked against the audit. */
+      const cases = [];
+      for (const c of (spec.tasks || []).slice(0, 60)) {
+        if (spec.stage === 'tune-grade-data' ? c.split !== 'train' : c.split !== 'eval') continue;
+        const ss = await env.DB.prepare('SELECT * FROM lab_sessions WHERE id=?').bind(c.session).first(); if (!ss) { cases.push({ ...c, items: undefined, skip: 'no_session' }); continue; }
+        const sch = await labScheme(env, labAs(ss, spec.scheme.provider, { model: spec.scheme.model, thinking: spec.scheme.thinking, check: spec.scheme.check }), c.task, null, true).catch(() => null);
+        const lines = sch && auditedLines(sch, c.items);
+        if (!lines) { cases.push({ session: c.session, task: c.task, skip: sch ? 'audit_covers_too_little' : 'no_scheme', scheme_items: sch?.items?.length || 0 }); continue; }
+        const pages = (await env.DB.prepare('SELECT no, kind, ocr, text FROM lab_pages WHERE session_id=? AND task=? ORDER BY no').bind(c.session, c.task).all()).results;
+        cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: gradeTrainInput({ items: lines.map(l => l.item) }, pages, { task: c.task, exam: `${ss.comp} ${ss.year}` }) });
+      }
+      const ready = cases.filter(c => c.lines);
+      if (spec.stage === 'tune-grade-data') {
+        const cfg = gcpConfig(env); if (!cfg.key || !cfg.bucket) throw new Error('gcp_not_configured');
+        const t = await gcpToken(env), body = ready.map(c => vertexGradeLine(c.input, c.lines)).join('\n') + '\n';
+        out = { tasks: ready.map(c => ({ session: c.session, task: c.task, lines: c.lines.length, chars: c.input.length })), skipped: cases.filter(c => c.skip),
+          train: ready.length ? await gcsPut(env, t, `runs/${row.id}/grade-train.jsonl`, new TextEncoder().encode(body), 'application/jsonl') : null };
+      } else {
+        const g = spec.grader || {}, ep = /^projects\/\d+\/locations\/[\w-]+\/endpoints\/\d+$/.test(g.endpoint || '') ? g.endpoint : null;
+        const extra = ep ? { geminiUrl: `https://${tunedHost(env, ep)}/v1/${ep}:generateContent`, geminiBearer: await gcpToken(env) } : {};
+        const schema = { type: 'object', properties: { items: { type: 'array', items: { type: 'object', properties: { id: { type: 'string' }, score: { type: 'number' } }, required: ['id', 'score'] } } }, required: ['items'] };
+        const results = [], sum = { items: 0, mis: 0, over: 0, under: 0, missing: 0 };
+        for (const c of ready) {
+          const t1 = Date.now();
+          try {
+            const r = await visionJSON(env, { provider: g.provider || 'gemini', stage: 'grade', policy: GRADE_TRAIN_SYSTEM, parts: [{ text: c.input }], schema, maxTokens: 16384,
+              model: g.model, thinking: g.thinking || 'off', timeoutMs: 240000, ...extra });
+            const e = gradeAgainstAudit(c.lines, r.raw?.items);
+            for (const k of Object.keys(sum)) sum[k] += e[k];
+            meterAdd(env, m, { step: 'grade', model: r.model || g.model, in: r.usage?.input_tokens, cached: r.usage?.cached_tokens ?? 0, out: r.usage?.output_tokens, ms: Date.now() - t1, ok: 1 });
+            results.push({ session: c.session, task: c.task, ...e, ms: Date.now() - t1, usage: r.usage ? { in: r.usage.input_tokens, out: r.usage.output_tokens } : null });
+          } catch (err) { results.push({ session: c.session, task: c.task, error: String(err?.code || err?.message || err).slice(0, 160) }); }
+        }
+        out = { grader: { ...g, endpoint: ep }, sum, results, skipped: cases.filter(c => c.skip) };
+      }
     } else if (spec.stage === 'tune-start') {
       const t = await gcpToken(env);
       if (!/^gs:\/\//.test(spec.train || '')) throw new Error('bad_train_uri');
