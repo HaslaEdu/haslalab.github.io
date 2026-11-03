@@ -285,3 +285,72 @@ export function applySchemeReview(scheme, review) {
   }
   return { scheme: { ...scheme, items: kept, parts }, applied };
 }
+
+/* A value the scheme marks by whether the candidate found it correctly from their own graph or data (IPhO 2017 E1 A4:
+   «h = (1.5 ± 0.1) cm. If h is correctly determined from graph A3: -0; if not: -0.1») has no answer key: the printed
+   number is the official example's, read off its own graph. Its window would mark every other candidate's correct
+   reading wrong (an h of 2.81 cm from a graph whose Y origin is elsewhere), so the item is judged by the grader, against
+   the candidate's own work, with the example kept in its text as a reference. */
+const OWN_DATA = /\b(?:correctly|properly)\s+(?:determined|found|obtained|read|calculated|derived|deduced|extracted|taken)\s+(?:from|using|off|out of)\s+(?:(?:the|your|his|her|their|own|candidate'?s?|student'?s?|same)\s+)*(?:graphs?|plots?|fits?|tables?|data|measurements?|readings?)\b/i;
+export function ownDataWindows(scheme) {
+  const applied = [];
+  if (!scheme || !Array.isArray(scheme.items)) return { scheme, applied };
+  const items = scheme.items.map(it => {
+    if (it?.type !== "value" || it.full_min == null || it.full_max == null || !OWN_DATA.test(String(it.what || ""))) return it;
+    applied.push(it.id);
+    const { full_min, full_max, partial, ...rest } = it;
+    return { ...rest, ref: null, tol: null, partial: [], own_data: true,
+      what: `${String(it.what || "").trim()} [Judge against the candidate's own graph or data: the official example's window ${full_min} to ${full_max}${it.unit ? " " + it.unit : ""} is a reference, not a key.]` };
+  });
+  return { scheme: { ...scheme, items }, applied };
+}
+
+/* the first and last row numbers written at the start of a table's lines («9 | 1.66 | 9.28»); null where none is */
+export function rowNumbers(text) {
+  const ns = String(text || "").split("\n").map(l => /^\s*\|?\s*(\d{1,3})\s*(?:[|,;:\t ]|$)/.exec(l)).filter(Boolean).map(m => +m[1]);
+  return ns.length ? { first: ns[0], last: ns[ns.length - 1] } : null;
+}
+
+/** the measurements a table holds with the parts of it continued on the following pages: a table read at the top of
+    the next page whose first row number carries on from this one's last (rows 1-8 on one page, 9-20 on the next, read
+    as two tables under two labels). pages: [{no, items}] in page order. */
+export function continuedRows(table, pageNo, pages) {
+  let rows = +table?.rows || 0, last = rowNumbers(table?.text)?.last ?? rows;
+  const order = [...pages].sort((a, b) => a.no - b.no);
+  let k = order.findIndex(p => p.no === pageNo);
+  for (let hops = 0; k >= 0 && hops < 4; hops++) {
+    const next = order[++k]; if (!next) break;
+    const t = (next.items || []).find(i => i.kind === "table" && rowNumbers(i.text)?.first === last + 1);
+    if (!t || !last) break;
+    rows += +t.rows || 0; last = rowNumbers(t.text)?.last ?? last + (+t.rows || 0);
+  }
+  return rows;
+}
+
+/* how well a read table or graph fits an item: the item's numbers with units («33 g», «150 mL») found in its text
+   (IPhO 2017 E1, three concentrations: the 33 g table, not the first table on the page, is the one A2.c marks) */
+export function fitsItem(what, text) {
+  const key = s => String(s || "").toLowerCase().replace(/\s+/g, "");
+  const t = key(text), marks = [...String(what || "").matchAll(/(\d+(?:[.,]\d+)?)\s*(g|kg|mg|ml|l|cm|mm|m|s|ms|v|mv|a|ma|hz|khz|k|°c|nm|µm|um)\b/gi)].map(m => key(m[0]));
+  return [...new Set(marks)].filter(x => t.includes(x)).length;
+}
+
+/* a read item's label as the scheme item it names: «A.3» names A3.c, «2.7a» names 2.7a; a bare «graph» names none */
+export const labelKey = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+export function labelNames(label, id) { const l = labelKey(label), i = labelKey(id); return l.length >= 2 && /\d/.test(l) && i.startsWith(l); }
+
+/** notes for the grader on tables continued over pages (rows 1-8 on p3 under one label, 9-20 on p4 under another):
+    pages [{no, items}]; one line per continued table */
+export function tableContinuations(pages) {
+  const order = [...pages].sort((a, b) => a.no - b.no), out = [];
+  for (const [k, p] of order.entries()) for (const t of (p.items || []).filter(i => i.kind === "table")) {
+    let last = rowNumbers(t.text)?.last ?? (+t.rows || 0), rows = +t.rows || 0; const seen = [];
+    for (let j = k + 1; j < order.length && j <= k + 4 && last; j++) {
+      const c = (order[j].items || []).find(i => i.kind === "table" && rowNumbers(i.text)?.first === last + 1);
+      if (!c) break;
+      seen.push(`p${order[j].no}${c.label ? ` («${String(c.label).slice(0, 40)}»)` : ""}`); rows += +c.rows || 0; last = rowNumbers(c.text)?.last ?? last + (+c.rows || 0);
+    }
+    if (seen.length) out.push(`The table${t.label ? ` «${String(t.label).slice(0, 40)}»` : ""} on p${p.no} continues on ${seen.join(", ")}, numbered on: one table of ${rows} rows.`);
+  }
+  return out.slice(0, 20);
+}
