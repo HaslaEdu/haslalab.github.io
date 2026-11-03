@@ -59,3 +59,38 @@ export function splitByExam(rows, share = 0.2) {
   const val = new Set(keys.filter(k => (hash(k) % 1000) / 1000 < share));
   return { train: rows.filter(r => !val.has(r.exam_key + ":" + r.task)), validation: rows.filter(r => val.has(r.exam_key + ":" + r.task)) };
 }
+
+/* An audited paper as a grading example: the audit's reference marks matched to the scheme's lines (ids compared without
+   punctuation; a lettered id «1.1.c» also as «1.1.3», the audits' numbering), only the lines the audit marks. null where
+   the audit covers too little of the scheme (another scheme version) to stand for the paper. */
+const idKey = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+export function auditedLines(scheme, audit, minShare = 0.8) {
+  const ref = new Map((audit || []).filter(x => x && Number.isFinite(+x.got)).map(x => [idKey(x.id), x]));
+  const lines = [];
+  for (const it of scheme?.items || []) {
+    let x = ref.get(idKey(it.id));
+    if (!x) { const m = /^(.*)\.([a-z])$/i.exec(String(it.id)); if (m) x = ref.get(idKey(`${m[1]}.${m[2].toLowerCase().charCodeAt(0) - 96}`)); }
+    if (x && Math.abs((+x.points || 0) - (+it.points || 0)) < 0.011) lines.push({ item: it, got: Math.max(0, Math.min(+it.points || 0, +x.got)) });
+  }
+  return (scheme?.items || []).length && lines.length >= minShare * scheme.items.length ? lines : null;
+}
+
+/** one Vertex AI supervised-tuning line for a Gemini grader: the scheme's lines and the pages in, the marks out */
+export function vertexGradeLine(input, lines, system = GRADE_TRAIN_SYSTEM) {
+  return JSON.stringify({ systemInstruction: { role: "system", parts: [{ text: system }] }, contents: [
+    { role: "user", parts: [{ text: input }] },
+    { role: "model", parts: [{ text: JSON.stringify({ items: lines.map(l => ({ id: String(l.item.id), score: +(+l.got).toFixed(3) })) }) }] }] });
+}
+
+/** marks against the audit: misgrades (|mark - reference| >= half the line's points) and the total's distance */
+export function gradeAgainstAudit(lines, items) {
+  const by = new Map((items || []).filter(x => x && x.id != null).map(x => [idKey(x.id), +x.score]));
+  let mis = 0, over = 0, under = 0, missing = 0, total = 0, ref = 0, points = 0; const wrong = [];
+  for (const l of lines) {
+    const p = +l.item.points || 0, v = by.get(idKey(l.item.id)), s = Number.isFinite(v) ? Math.max(0, Math.min(p, v)) : 0;
+    if (!Number.isFinite(v)) missing++;
+    total += s; ref += l.got; points += p;
+    if (Math.abs(s - l.got) >= 0.5 * p - 1e-9 && p > 0) { mis++; if (s > l.got) over++; else under++; wrong.push(`${l.item.id}:${s}/${l.got}`); }
+  }
+  return { items: lines.length, mis, over, under, missing, score: +total.toFixed(2), ref: +ref.toFixed(2), points: +points.toFixed(2), wrong: wrong.slice(0, 40) };
+}
