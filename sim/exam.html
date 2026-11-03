@@ -482,7 +482,10 @@ const errMsg = e => window.HLExamNetwork.ocrErrorMessage?.(e?.code,lang) || ({pr
 let SES = null, SKEW = 0, ME = null, BUSY = false, LABOK = null, REG = null;
 let VISION = null, selectedProvider = "gemini";
 function providerAvailable(id) { return VISION?.providers?.some(p=>p.id===id&&p.available===true) ?? id==="gemini"; }
-function gradingProvider() { return SES?.provider_locked ? SES.provider : $("gradingProvider")?.value || SES?.provider || selectedProvider; }
+/* the server's own default where the one chosen (or this page's "gemini" default) is not on offer: in the mixed pipeline
+   there is no choice to make, and with LAB_ONLY_PROVIDER only DeepSeek is available, so "Grade my work" said unavailable */
+function gradingProvider() { if (SES?.provider_locked) return SES.provider; const p = $("gradingProvider")?.value || SES?.provider || selectedProvider;
+  return providerAvailable(p) || !VISION?.default || !providerAvailable(VISION.default) ? p : VISION.default; }
 function providerHtml(session = SES) {
   if (VISION?.pipeline === "mixed") return `<p class="note" id="gradingPipeline" style="margin:14px 0">${lang==="ko"?"판독·검토 Gemini · 채점 DeepSeek (이론·실험 공통)":"Reading and moderation: Gemini · grading: DeepSeek (theory and experiments)"}</p>`;
   const chosen = session?.provider || selectedProvider;
