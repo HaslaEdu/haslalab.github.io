@@ -177,7 +177,7 @@ test('sources and detail exclude private origins, paths and secrets, preserving 
   const res=await f.call('/questions/'+Q1+'?lang=en'),body=await res.json();
   assert.equal(res.status,200);assert.equal(body.question.selected_version.text,statement);
   assert.equal(body.question.selected_version.role,'original');assert.equal(body.question.versions.find(v=>v.language==='ko').role,'translation');
-  assert.equal(body.question.context.unresolved_source,true);assert.deepEqual(body.question.context.scientific_review_notes,['Check boundary condition.']);
+  assert.equal(body.question.context.unresolved_source,true);assert.equal(body.question.context.scientific_review_notes,undefined);
   assert.equal(body.question.assets[0].url,'/api/problem-bank/assets/'+A1);assert.equal(body.publication_ready,false);
   assert.doesNotMatch(JSON.stringify(body),/WRONG RETAINED COPY|private-secret-key|D:\/private|drive\.google|topsecret/);
 });
@@ -464,4 +464,9 @@ test('photo and supplied-text identification respect contest scope before any pa
  const f=fixture(t);f.index.prepare('INSERT INTO bank_question_catalogue VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run(Q1,S1,'contest','ipho',2020,null,'theory','T1','Synthetic',null,'physics','ipho/2020/0/1',sha(statement),sha('meta'),'now');
  const body=JSON.stringify({text:statement,lang:'ko',kind:'contest',competition:'ipho',year:2020,type:'theory'});const response=await f.call('/identify',{user:null,method:'POST',headers:{'Content-Type':'application/json'},body});assert.equal(response.status,200);const data=await response.json();assert.deepEqual(data.items.map(x=>x.id),[Q1]);assert.equal(data.ocr_used,false);
  let calls=0;const form=new FormData();form.set('image',new Blob([PNG],{type:'image/png'}),'test.png');form.set('kind','contest');form.set('year','bad');const invalid=await f.call('/identify',{method:'POST',body:form,ocr:()=>{calls++;return statement;}});assert.equal(invalid.status,400);assert.equal(calls,0);
+});
+
+test('question disclosure excludes solution-derived editorial hints until solutions are explicitly requested',async t=>{
+ const f=fixture(t),hint='Synthetic solution method: optimize the tangent path.';f.b2.prepare('UPDATE bank_question_context SET context_json=? WHERE question_id=?').run(JSON.stringify({unresolved_source:true,topics:['mechanics'],scientific_review_notes:[hint,'D:/private/secret'],review_notes:[hint],coverage_notes:[hint],statement_notes:['Synthetic input unit is unspecified.','D:/private/secret']}),Q1);
+ for(const user of [null,member,admin]){const response=await f.call('/questions/'+Q1,{user}),body=await response.json();assert.doesNotMatch(JSON.stringify(body),/optimize the tangent path|D:\/private/);assert.deepEqual(body.question.context.statement_notes,['Synthetic input unit is unspecified.']);assert.equal(body.question.context.unresolved_source,true);const explicit=await (await f.call('/questions/'+Q1+'/solutions',{user})).json();assert.deepEqual(explicit.question_review.scientific_review_notes,[hint]);assert.doesNotMatch(JSON.stringify(explicit),/D:\/private/);}
 });

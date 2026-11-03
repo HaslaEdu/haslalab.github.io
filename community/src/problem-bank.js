@@ -175,7 +175,13 @@ async function versions(db,table,key,id) {
   return data.map(v=>({...v,...PRIVATE}));
 }
 function assetInfo(a) { return {id:a.id,role:a.role,mime_type:a.mime_type,sha256:a.sha256,spans:array(a.spans_json),url:PREFIX+'/assets/'+a.id}; }
-function questionInfo(q) { return {id:q.id,source_id:q.source_id,locator:q.locator,original_number:q.original_number,chapter:q.chapter,kind:q.kind,subjects:array(q.subjects_json),level:q.level,source_language:q.source_language,review_status:q.review_status,context:safeContext(q.context_json),...PRIVATE}; }
+function questionSafeContext(raw){
+ const full=safeContext(raw),out={};
+ for(const key of ['unresolved_source','source_image_checked','reference_context_digitized','source_author','institution','course','term','instructor','source_contributor','topics'])if(full[key]!=null)out[key]=full[key];
+ const input=parse(raw);if(Array.isArray(input.statement_notes))out.statement_notes=input.statement_notes.slice(0,30).map(x=>safeString(x)).filter(x=>x!==null);
+ return out;
+}
+function questionInfo(q) { return {id:q.id,source_id:q.source_id,locator:q.locator,original_number:q.original_number,chapter:q.chapter,kind:q.kind,subjects:array(q.subjects_json),level:q.level,source_language:q.source_language,review_status:q.review_status,context:questionSafeContext(q.context_json),...PRIVATE}; }
 
 function contextOptions(params) {
   const depth=integer(params.get('depth'),CONTEXT_DEPTH,CONTEXT_DEPTH);
@@ -366,7 +372,7 @@ async function solutions(env,id,lang,user) {
     const vs=await versions(db,'solution','solution',s.id),assets=await rows(db,'SELECT id,role,mime_type,sha256,spans_json FROM bank_solution_assets WHERE solution_id=? ORDER BY id LIMIT 150',[s.id]);
     items.push({id:s.id,question_id:id,kind:s.kind,authorship:s.authorship,source_id:s.source_id,solution_locator:s.solution_locator,review_status:s.review_status,context:safeContext(s.context_json),versions:vs,selected_version:vs.find(v=>v.language===lang)??null,assets:assets.filter(a=>user?.role==='admin'||a.role==='figure').map(assetInfo),...PRIVATE});
   }
-  return {question_id:id,question_source:sourceInfo(parent.route),solutions:items,...PRIVATE};
+  return {question_id:id,question_source:sourceInfo(parent.route),solutions:items,question_review:safeContext(parent.q.context_json),...PRIVATE};
 }
 function payloadBytes(value) {
   if(value instanceof ArrayBuffer)return new Uint8Array(value);
