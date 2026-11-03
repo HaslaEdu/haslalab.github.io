@@ -1,0 +1,6013 @@
+{
+  "passed": true,
+  "page": 5,
+  "year": 2025,
+  "proof_sha256": "6ffa129a60778800f7e3a773cb38baed2c2279633221e0e33026c74cd65a6ede",
+  "original_full_master_geometry": {
+    "passed": true,
+    "planned_glyphs": 388,
+    "actual_glyphs": 388,
+    "max_position_error_pt": 2.849102020263672e-05,
+    "position_tolerance_pt": 0.001,
+    "geometry_errors": [],
+    "original_full_font_gids_verified": 388,
+    "original_full_font_gid_errors": []
+  },
+  "actual_target_physical_shear": [],
+  "actual_stream_interrow_ink": {
+    "passed": true,
+    "method": "Actual target self-contained KO content streams with exact target font resources/W/Tm/TJ",
+    "rows": 16,
+    "stream_count": 509,
+    "all_target_KO_glyphs_accounted_for": true,
+    "each_extracted_row_glyph_trace_matches_target": true,
+    "threshold": 220,
+    "scale": 2,
+    "same_row_tolerance_pt": 0.001,
+    "close_row_selection_em": 1.1,
+    "tested_close_row_pairs": 9,
+    "pairs": [
+      {
+        "upper_baseline": 47.9580078125,
+        "lower_baseline": 60.24603271484375,
+        "gap_pt": 12.28802490234375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 116.7410888671875,
+        "lower_baseline": 128.29510498046875,
+        "gap_pt": 11.55401611328125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 144.3291015625,
+        "lower_baseline": 156.61407470703125,
+        "gap_pt": 12.28497314453125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 373.3840026855469,
+        "lower_baseline": 384.93798828125,
+        "gap_pt": 11.553985595703125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 616.4349975585938,
+        "lower_baseline": 628.718994140625,
+        "gap_pt": 12.28399658203125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 628.718994140625,
+        "lower_baseline": 640.93701171875,
+        "gap_pt": 12.218017578125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 656.9719848632812,
+        "lower_baseline": 669.2559814453125,
+        "gap_pt": 12.28399658203125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 686.6849975585938,
+        "lower_baseline": 699.6339721679688,
+        "gap_pt": 12.948974609375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_baseline": 699.6339721679688,
+        "lower_baseline": 711.8519897460938,
+        "gap_pt": 12.218017578125,
+        "contact_pixels_2x": 0
+      }
+    ],
+    "corrected_special_pair_multiscale": [],
+    "failures": [],
+    "negative_same_row_overlap_pixels": 4001,
+    "orthogonal_streams_excluded_from_horizontal_pairs": []
+  },
+  "actual_target_language_vs_native_ink": {
+    "passed": true,
+    "actual_KO_vs_original_remaining_ink_contact_pixels_2x": 0,
+    "method": "Actual final target streams split into KO-language-only and retained source/vector/white-mask control; no font re-embedding",
+    "original_font_resources_preserved_in_both_controls": true
+  },
+  "current_published_complete_document_lineage": {
+    "passed": true,
+    "published_document_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\references\\published-document.pdf",
+    "published_document_sha256": "754b6ecf1d74b178a279476b49ae608988f2507ddff3ffbbcf409545e52454b8",
+    "published_page_index": 4,
+    "P0_frozen_page_sha256": "5160220f112a5ee5991346705358f7be9540037933d25beb6b2995477997b62d",
+    "published_page_trace_exact": true,
+    "published_page_pixels_2x_exact": true
+  },
+  "direct_reference_comparisons": [
+    {
+      "passed": true,
+      "lineage": "P0_current_published",
+      "reference_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\references\\P0\\page05.pdf",
+      "reference_sha256": "5160220f112a5ee5991346705358f7be9540037933d25beb6b2995477997b62d",
+      "reference_layout_sha256": "73dac9453ffcbdab412e236d9cbf710775506d399dfd2e9fec8b309ba9d92dfe",
+      "actual_new_glyphs_compared": 388,
+      "unmodified_new_glyphs_exact": 388,
+      "native_glyphs_exact": true,
+      "source_and_new_font_program_binaries_exact": true,
+      "encoded_images_and_placements_exact": true,
+      "native_shifts_exact": true,
+      "pixel_scale": 2,
+      "total_changed_pixels": 0,
+      "changed_pixels_outside_explicit_glyph_union": 0,
+      "planned_words_point_sizes_styles_word_spaces_and_all_other_placement_fields_exact": true,
+      "title_centers": [],
+      "approved_intermediate_titles_preserved": false,
+      "changed_glyph_details": []
+    },
+    {
+      "passed": true,
+      "lineage": "P1_approved_intermediate",
+      "reference_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\references\\P1-approved\\page05.pdf",
+      "reference_sha256": "0b464a160ea27b737fc6d58fcb60e0a5993912b0da15d18c766c93184521b0c1",
+      "reference_layout_sha256": "4a124cfa4cf2d984172f7142d673a66d6d35aa9e9d7307e935e85e792cbd8358",
+      "actual_new_glyphs_compared": 388,
+      "unmodified_new_glyphs_exact": 388,
+      "native_glyphs_exact": true,
+      "source_and_new_font_program_binaries_exact": true,
+      "encoded_images_and_placements_exact": true,
+      "native_shifts_exact": true,
+      "pixel_scale": 2,
+      "total_changed_pixels": 0,
+      "changed_pixels_outside_explicit_glyph_union": 0,
+      "planned_words_point_sizes_styles_word_spaces_and_all_other_placement_fields_exact": true,
+      "title_centers": [],
+      "approved_intermediate_titles_preserved": true,
+      "changed_glyph_details": []
+    }
+  ],
+  "combined_approved_row_bbox_is_not_pure_translation": false,
+  "preexisting_AA_contact_KO_row_correction": null,
+  "actual_outline_and_encoded_W_audit_pending": false,
+  "actual_outline_and_encoded_W_audit": {
+    "passed": true,
+    "actual_CID_TJ_W_glyphs_verified": 388,
+    "actual_W_TJ_replay_max_origin_error_pt": 0.0,
+    "actual_master_outline_bounds_verified": 388,
+    "unique_original_master_subset_outlines_exact": 138,
+    "master_hmtx_and_gid_exact": true,
+    "actual_font_program_sha256": {
+      "KO_Natural_serif": "50c63dc9fe7198b69d92c69d614239e66d813a2ab53065e3110e0c19b0f27b4c"
+    },
+    "max_transformed_outline_error_pt": 2.848120368525997e-05,
+    "tolerance_pt": 0.001,
+    "errors": [],
+    "source_correct_physical_shear_glyphs": [],
+    "encoded_glyph_details": [
+      {
+        "character": "접",
+        "cid": 14951,
+        "gid": 14951,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          70.56671142578125,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          70.56671142578125,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "지",
+        "cid": 15382,
+        "gid": 15382,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          82.52191162109375,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          82.52191162109375,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "되",
+        "cid": 9838,
+        "gid": 9838,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          94.47711181640625,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          94.47711181640625,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "지",
+        "cid": 15382,
+        "gid": 15382,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          106.43231201171875,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          106.43231201171875,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "않",
+        "cid": 14240,
+        "gid": 14240,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          121.37631225585938,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          121.37631225585938,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          133.33151245117188,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          133.33151245117188,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "두",
+        "cid": 9894,
+        "gid": 9894,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          148.2755126953125,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          148.2755126953125,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "금",
+        "cid": 8286,
+        "gid": 8286,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.21951293945312,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          163.21951293945312,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "속",
+        "cid": 13283,
+        "gid": 13283,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.17471313476562,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          175.17471313476562,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          190.11871337890625,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          190.11871337890625,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "를",
+        "cid": 11218,
+        "gid": 11218,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          202.07391357421875,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          202.07391357421875,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "생",
+        "cid": 13107,
+        "gid": 13107,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          217.01791381835938,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          217.01791381835938,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          228.97311401367188,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          228.97311401367188,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          240.92831420898438,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          240.92831420898438,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          252.88351440429688,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          252.88351440429688,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          264.8387145996094,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          264.8387145996094,
+          47.9580078125
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "두",
+        "cid": 9894,
+        "gid": 9894,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          271.3183288574219,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          271.3183288574219,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          286.2623291015625,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          286.2623291015625,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          298.217529296875,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          298.217529296875,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "반",
+        "cid": 11886,
+        "gid": 11886,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          313.1615295410156,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          313.1615295410156,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "지",
+        "cid": 15382,
+        "gid": 15382,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          325.1167297363281,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          325.1167297363281,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "름",
+        "cid": 11226,
+        "gid": 11226,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          337.0719299316406,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          337.0719299316406,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          349.0271301269531,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          349.0271301269531,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          363.97113037109375,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          363.97113037109375,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          375.92633056640625,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          375.92633056640625,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ",",
+        "cid": 83,
+        "gid": 83,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          399.7769470214844,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          399.7769470214844,
+          47.9580078125
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "전",
+        "cid": 14938,
+        "gid": 14938,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          406.256591796875,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          406.256591796875,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          418.2117919921875,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          418.2117919921875,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "량",
+        "cid": 10783,
+        "gid": 10783,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          430.1669921875,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          430.1669921875,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          442.1221923828125,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          442.1221923828125,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          457.0661926269531,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          457.0661926269531,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          469.0213928222656,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          469.0213928222656,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          493.2306823730469,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          493.2306823730469,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "다",
+        "cid": 9530,
+        "gid": 9530,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          505.1858825683594,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          505.1858825683594,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          517.1410522460938,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          517.1410522460938,
+          47.9580078125
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "두",
+        "cid": 9894,
+        "gid": 9894,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          523.6207275390625,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          523.6207275390625,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          538.564697265625,
+          47.9580078125
+        ],
+        "replayed_origin": [
+          538.564697265625,
+          47.9580078125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "사",
+        "cid": 13058,
+        "gid": 13058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54095458984375,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          73.54095458984375,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49615478515625,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          85.49615478515625,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          97.45135498046875,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          97.45135498046875,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "척",
+        "cid": 16111,
+        "gid": 16111,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.39535522460938,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          112.39535522460938,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "력",
+        "cid": 10875,
+        "gid": 10875,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.35055541992188,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          124.35055541992188,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "을",
+        "cid": 14746,
+        "gid": 14746,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          136.30575561523438,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          136.30575561523438,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          151.249755859375,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          151.249755859375,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.2049560546875,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          163.2049560546875,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.16015625,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          175.16015625,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          187.1153564453125,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          187.1153564453125,
+          60.24603271484375
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "두",
+        "cid": 9894,
+        "gid": 9894,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          193.59498596191406,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          193.59498596191406,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          208.5389862060547,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          208.5389862060547,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          220.4941864013672,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          220.4941864013672,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "중",
+        "cid": 15207,
+        "gid": 15207,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          235.4381866455078,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          235.4381866455078,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "심",
+        "cid": 13634,
+        "gid": 13634,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          247.3933868408203,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          247.3933868408203,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "사",
+        "cid": 13058,
+        "gid": 13058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          262.3373718261719,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          262.3373718261719,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          274.2925720214844,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          274.2925720214844,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "거",
+        "cid": 7878,
+        "gid": 7878,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          289.236572265625,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          289.236572265625,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "리",
+        "cid": 11266,
+        "gid": 11266,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          301.1917724609375,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          301.1917724609375,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "는",
+        "cid": 9450,
+        "gid": 9450,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          313.14697265625,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          313.14697265625,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          354.65106201171875,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          354.65106201171875,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "다",
+        "cid": 9530,
+        "gid": 9530,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          366.60626220703125,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          366.60626220703125,
+          60.24603271484375
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          378.56146240234375,
+          60.24603271484375
+        ],
+        "replayed_origin": [
+          378.56146240234375,
+          60.24603271484375
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "무",
+        "cid": 11658,
+        "gid": 11658,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          70.56663513183594,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          70.56663513183594,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          82.52183532714844,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          82.52183532714844,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          94.47703552246094,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          94.47703552246094,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "정",
+        "cid": 14955,
+        "gid": 14955,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          109.42103576660156,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          109.42103576660156,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "사",
+        "cid": 13058,
+        "gid": 13058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          121.37623596191406,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          121.37623596191406,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          133.33143615722656,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          133.33143615722656,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "격",
+        "cid": 7935,
+        "gid": 7935,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          148.2754364013672,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          148.2754364013672,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          160.2306365966797,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          160.2306365966797,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          172.1858367919922,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          172.1858367919922,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "모",
+        "cid": 11518,
+        "gid": 11518,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          187.1298370361328,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          187.1298370361328,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "든",
+        "cid": 10038,
+        "gid": 10038,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          199.0850372314453,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          199.0850372314453,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "변",
+        "cid": 12054,
+        "gid": 12054,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          214.02903747558594,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          214.02903747558594,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          225.98423767089844,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          225.98423767089844,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "같",
+        "cid": 7791,
+        "gid": 7791,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          240.92823791503906,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          240.92823791503906,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          252.88343811035156,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          252.88343811035156,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "저",
+        "cid": 14934,
+        "gid": 14934,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          267.82745361328125,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          267.82745361328125,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "항",
+        "cid": 18371,
+        "gid": 18371,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          279.78265380859375,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          279.78265380859375,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "을",
+        "cid": 14746,
+        "gid": 14746,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          291.73785400390625,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          291.73785400390625,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "가",
+        "cid": 7766,
+        "gid": 7766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          306.68182373046875,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          306.68182373046875,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "진",
+        "cid": 15386,
+        "gid": 15386,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          318.63702392578125,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          318.63702392578125,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "다",
+        "cid": 9530,
+        "gid": 9530,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          330.59222412109375,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          330.59222412109375,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          342.54742431640625,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          342.54742431640625,
+          116.7410888671875
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "아",
+        "cid": 14234,
+        "gid": 14234,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          349.0270690917969,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          349.0270690917969,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "래",
+        "cid": 10734,
+        "gid": 10734,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          360.9822692871094,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          360.9822692871094,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "그",
+        "cid": 8270,
+        "gid": 8270,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          375.92626953125,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          375.92626953125,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "림",
+        "cid": 11282,
+        "gid": 11282,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          387.8814697265625,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          387.8814697265625,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "과",
+        "cid": 8018,
+        "gid": 8018,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          399.836669921875,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          399.836669921875,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "같",
+        "cid": 7791,
+        "gid": 7791,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          414.7806701660156,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          414.7806701660156,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          426.7358703613281,
+          116.7410888671875
+        ],
+        "replayed_origin": [
+          426.7358703613281,
+          116.7410888671875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54092407226562,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          73.54092407226562,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "완",
+        "cid": 14490,
+        "gid": 14490,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          88.48492431640625,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          88.48492431640625,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "전",
+        "cid": 14938,
+        "gid": 14938,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          100.44012451171875,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          100.44012451171875,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.39532470703125,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          112.39532470703125,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "저",
+        "cid": 14934,
+        "gid": 14934,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          127.33932495117188,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          127.33932495117188,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "항",
+        "cid": 18371,
+        "gid": 18371,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          139.29452514648438,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          139.29452514648438,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "격",
+        "cid": 7935,
+        "gid": 7935,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          154.238525390625,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          154.238525390625,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          166.1937255859375,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          166.1937255859375,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          178.14892578125,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          178.14892578125,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "서",
+        "cid": 13170,
+        "gid": 13170,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          190.1041259765625,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          190.1041259765625,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "저",
+        "cid": 14934,
+        "gid": 14934,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          205.04812622070312,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          205.04812622070312,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "항",
+        "cid": 18371,
+        "gid": 18371,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          217.00332641601562,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          217.00332641601562,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "네",
+        "cid": 9082,
+        "gid": 9082,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          231.94732666015625,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          231.94732666015625,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "개",
+        "cid": 7794,
+        "gid": 7794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          246.89132690429688,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          246.89132690429688,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "를",
+        "cid": 11218,
+        "gid": 11218,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          258.8465270996094,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          258.8465270996094,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "제",
+        "cid": 14962,
+        "gid": 14962,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          273.79052734375,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          273.79052734375,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "거",
+        "cid": 7878,
+        "gid": 7878,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          285.7457275390625,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          285.7457275390625,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          297.700927734375,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          297.700927734375,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "다",
+        "cid": 9530,
+        "gid": 9530,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          309.6561279296875,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          309.6561279296875,
+          128.29510498046875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          321.611328125,
+          128.29510498046875
+        ],
+        "replayed_origin": [
+          321.611328125,
+          128.29510498046875
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54092407226562,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          73.54092407226562,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "렇",
+        "cid": 10845,
+        "gid": 10845,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49612426757812,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          85.49612426757812,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "게",
+        "cid": 7906,
+        "gid": 7906,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          97.45132446289062,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          97.45132446289062,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "변",
+        "cid": 12054,
+        "gid": 12054,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.39532470703125,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          112.39532470703125,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "형",
+        "cid": 18539,
+        "gid": 18539,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.35052490234375,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          124.35052490234375,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "된",
+        "cid": 9842,
+        "gid": 9842,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          136.30572509765625,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          136.30572509765625,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "저",
+        "cid": 14934,
+        "gid": 14934,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          151.24972534179688,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          151.24972534179688,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "항",
+        "cid": 18371,
+        "gid": 18371,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.20492553710938,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          163.20492553710938,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "망",
+        "cid": 11315,
+        "gid": 11315,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.16012573242188,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          175.16012573242188,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          187.11532592773438,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          187.11532592773438,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "서",
+        "cid": 13170,
+        "gid": 13170,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          199.07052612304688,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          199.07052612304688,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "격",
+        "cid": 7935,
+        "gid": 7935,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          214.0145263671875,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          214.0145263671875,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          225.9697265625,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          225.9697265625,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          237.9249267578125,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          237.9249267578125,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "와",
+        "cid": 14486,
+        "gid": 14486,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          261.9668273925781,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          261.9668273925781,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "a",
+        "cid": 136,
+        "gid": 136,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          276.91082763671875,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          276.91082763671875,
+          144.3291015625
+        ],
+        "encoded_W": "541"
+      },
+      {
+        "character": ")",
+        "cid": 80,
+        "gid": 80,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          283.39044189453125,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          283.39044189453125,
+          144.3291015625
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "선",
+        "cid": 13174,
+        "gid": 13174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          290.88580322265625,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          290.88580322265625,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "분",
+        "cid": 12250,
+        "gid": 12250,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          302.84100341796875,
+          144.3291015625
+        ],
+        "replayed_origin": [
+          302.84100341796875,
+          144.3291015625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "및",
+        "cid": 11877,
+        "gid": 11877,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          93.58978271484375,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          93.58978271484375,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "b",
+        "cid": 137,
+        "gid": 137,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          108.53378295898438,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          108.53378295898438,
+          156.61407470703125
+        ],
+        "encoded_W": "576"
+      },
+      {
+        "character": ")",
+        "cid": 80,
+        "gid": 80,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          115.42203521728516,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          115.42203521728516,
+          156.61407470703125
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "선",
+        "cid": 13174,
+        "gid": 13174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          122.9173812866211,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          122.9173812866211,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "분",
+        "cid": 12250,
+        "gid": 12250,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          134.87258911132812,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          134.87258911132812,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "위",
+        "cid": 14682,
+        "gid": 14682,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          170.20022583007812,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          170.20022583007812,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          182.15542602539062,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          182.15542602539062,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          197.09942626953125,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          197.09942626953125,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "격",
+        "cid": 7935,
+        "gid": 7935,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          212.04342651367188,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          212.04342651367188,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          223.99862670898438,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          223.99862670898438,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          235.95382690429688,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          235.95382690429688,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "사",
+        "cid": 13058,
+        "gid": 13058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          250.8978271484375,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          250.8978271484375,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          262.85302734375,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          262.85302734375,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "저",
+        "cid": 14934,
+        "gid": 14934,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          277.7970275878906,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          277.7970275878906,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "항",
+        "cid": 18371,
+        "gid": 18371,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          289.7522277832031,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          289.7522277832031,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "을",
+        "cid": 14746,
+        "gid": 14746,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          301.7074279785156,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          301.7074279785156,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "해",
+        "cid": 18378,
+        "gid": 18378,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          316.65142822265625,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          316.65142822265625,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "석",
+        "cid": 13171,
+        "gid": 13171,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          328.60662841796875,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          328.60662841796875,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "적",
+        "cid": 14935,
+        "gid": 14935,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          340.56182861328125,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          340.56182861328125,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "으",
+        "cid": 14738,
+        "gid": 14738,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          352.51702880859375,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          352.51702880859375,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "로",
+        "cid": 10930,
+        "gid": 10930,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          364.47222900390625,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          364.47222900390625,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          379.4162292480469,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          379.4162292480469,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          391.3714294433594,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          391.3714294433594,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          403.3266296386719,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          403.3266296386719,
+          156.61407470703125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          415.2818298339844,
+          156.61407470703125
+        ],
+        "replayed_origin": [
+          415.2818298339844,
+          156.61407470703125
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "그",
+        "cid": 8270,
+        "gid": 8270,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          70.56669616699219,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          70.56669616699219,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "림",
+        "cid": 11282,
+        "gid": 11282,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          82.52189636230469,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          82.52189636230469,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "과",
+        "cid": 8018,
+        "gid": 8018,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          94.47709655761719,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          94.47709655761719,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "같",
+        "cid": 7791,
+        "gid": 7791,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          109.42109680175781,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          109.42109680175781,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          121.37629699707031,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          121.37629699707031,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "정",
+        "cid": 14955,
+        "gid": 14955,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          136.32029724121094,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          136.32029724121094,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "오",
+        "cid": 14458,
+        "gid": 14458,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          148.27549743652344,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          148.27549743652344,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          160.23069763183594,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          160.23069763183594,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "별",
+        "cid": 12058,
+        "gid": 12058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          172.18589782714844,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          172.18589782714844,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "모",
+        "cid": 11518,
+        "gid": 11518,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          187.12989807128906,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          187.12989807128906,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "양",
+        "cid": 14311,
+        "gid": 14311,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          199.08509826660156,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          199.08509826660156,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          211.04029846191406,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          211.04029846191406,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "도",
+        "cid": 9754,
+        "gid": 9754,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          225.9842987060547,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          225.9842987060547,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "선",
+        "cid": 13174,
+        "gid": 13174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          237.9394989013672,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          237.9394989013672,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "틀",
+        "cid": 17686,
+        "gid": 17686,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          252.8834991455078,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          252.8834991455078,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          264.83868408203125,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          264.83868408203125,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "일",
+        "cid": 14802,
+        "gid": 14802,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          279.78271484375,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          279.78271484375,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "정",
+        "cid": 14955,
+        "gid": 14955,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          291.7379150390625,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          291.7379150390625,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          303.693115234375,
+          373.3840026855469
+        ],
+        "replayed_origin": [
+          303.693115234375,
+          373.3840026855469
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "직",
+        "cid": 15383,
+        "gid": 15383,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54098510742188,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          73.54098510742188,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "류",
+        "cid": 11182,
+        "gid": 11182,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49618530273438,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          85.49618530273438,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "전",
+        "cid": 14938,
+        "gid": 14938,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          100.440185546875,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          100.440185546875,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "류",
+        "cid": 11182,
+        "gid": 11182,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.3953857421875,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          112.3953857421875,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "가",
+        "cid": 7766,
+        "gid": 7766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.3505859375,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          124.3505859375,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "흐",
+        "cid": 18854,
+        "gid": 18854,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          139.29458618164062,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          139.29458618164062,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "른",
+        "cid": 11214,
+        "gid": 11214,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          151.24978637695312,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          151.24978637695312,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "다",
+        "cid": 9530,
+        "gid": 9530,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.20498657226562,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          163.20498657226562,
+          384.93798828125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.16018676757812,
+          384.93798828125
+        ],
+        "replayed_origin": [
+          175.16018676757812,
+          384.93798828125
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54100036621094,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          73.54100036621094,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "기",
+        "cid": 8326,
+        "gid": 8326,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49620056152344,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          85.49620056152344,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "쌍",
+        "cid": 13667,
+        "gid": 13667,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          100.44020080566406,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          100.44020080566406,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "극",
+        "cid": 8271,
+        "gid": 8271,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.39540100097656,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          112.39540100097656,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.35060119628906,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          124.35060119628906,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "가",
+        "cid": 7766,
+        "gid": 7766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          136.30580139160156,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          136.30580139160156,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "전",
+        "cid": 14938,
+        "gid": 14938,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          151.2498016357422,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          151.2498016357422,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "류",
+        "cid": 11182,
+        "gid": 11182,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.2050018310547,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          163.2050018310547,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "도",
+        "cid": 9754,
+        "gid": 9754,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          178.1490020751953,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          178.1490020751953,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "선",
+        "cid": 13174,
+        "gid": 13174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          190.1042022705078,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          190.1042022705078,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "틀",
+        "cid": 17686,
+        "gid": 17686,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          205.04820251464844,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          205.04820251464844,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "과",
+        "cid": 8018,
+        "gid": 8018,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          217.00340270996094,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          217.00340270996094,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "같",
+        "cid": 7791,
+        "gid": 7791,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          231.94740295410156,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          231.94740295410156,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          243.90260314941406,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          243.90260314941406,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "평",
+        "cid": 17951,
+        "gid": 17951,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          258.84661865234375,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          258.84661865234375,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "면",
+        "cid": 11466,
+        "gid": 11466,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          270.80181884765625,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          270.80181884765625,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          282.75701904296875,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          282.75701904296875,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "있",
+        "cid": 14814,
+        "gid": 14814,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          297.70098876953125,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          297.70098876953125,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "고",
+        "cid": 7990,
+        "gid": 7990,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          309.65618896484375,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          309.65618896484375,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ",",
+        "cid": 83,
+        "gid": 83,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          321.61138916015625,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          321.61138916015625,
+          616.4349975585938
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "그",
+        "cid": 8270,
+        "gid": 8270,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          328.0910339355469,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          328.0910339355469,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          343.0350341796875,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          343.0350341796875,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "기",
+        "cid": 8326,
+        "gid": 8326,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          354.990234375,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          354.990234375,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "모",
+        "cid": 11518,
+        "gid": 11518,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          369.9342346191406,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          369.9342346191406,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "멘",
+        "cid": 11438,
+        "gid": 11438,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          381.8894348144531,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          381.8894348144531,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "트",
+        "cid": 17678,
+        "gid": 17678,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          393.8446350097656,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          393.8446350097656,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "는",
+        "cid": 9450,
+        "gid": 9450,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          405.7998352050781,
+          616.4349975585938
+        ],
+        "replayed_origin": [
+          405.7998352050781,
+          616.4349975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "그",
+        "cid": 8270,
+        "gid": 8270,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54100036621094,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          73.54100036621094,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "평",
+        "cid": 17951,
+        "gid": 17951,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          88.48500061035156,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          88.48500061035156,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "면",
+        "cid": 11466,
+        "gid": 11466,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          100.44020080566406,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          100.44020080566406,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.39540100097656,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          112.39540100097656,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "수",
+        "cid": 13422,
+        "gid": 13422,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          127.33940124511719,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          127.33940124511719,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "직",
+        "cid": 15383,
+        "gid": 15383,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          139.2946014404297,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          139.2946014404297,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          151.2498016357422,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          151.2498016357422,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "다",
+        "cid": 9530,
+        "gid": 9530,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.2050018310547,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          163.2050018310547,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.1602020263672,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          175.1602020263672,
+          628.718994140625
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "쌍",
+        "cid": 13667,
+        "gid": 13667,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          181.63983154296875,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          181.63983154296875,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "극",
+        "cid": 8271,
+        "gid": 8271,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          193.59503173828125,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          193.59503173828125,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          205.55023193359375,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          205.55023193359375,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          217.50543212890625,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          217.50543212890625,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "작",
+        "cid": 14823,
+        "gid": 14823,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          232.44943237304688,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          232.44943237304688,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "용",
+        "cid": 14591,
+        "gid": 14591,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          244.40463256835938,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          244.40463256835938,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          256.3598327636719,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          256.3598327636719,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "는",
+        "cid": 9450,
+        "gid": 9450,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          268.3150329589844,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          268.3150329589844,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "a",
+        "cid": 136,
+        "gid": 136,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          283.259033203125,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          283.259033203125,
+          628.718994140625
+        ],
+        "encoded_W": "541"
+      },
+      {
+        "character": ")",
+        "cid": 80,
+        "gid": 80,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          289.7386474609375,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          289.7386474609375,
+          628.718994140625
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "힘",
+        "cid": 18926,
+        "gid": 18926,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          297.2340087890625,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          297.2340087890625,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "과",
+        "cid": 8018,
+        "gid": 8018,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          309.189208984375,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          309.189208984375,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "b",
+        "cid": 137,
+        "gid": 137,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          324.1332092285156,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          324.1332092285156,
+          628.718994140625
+        ],
+        "encoded_W": "576"
+      },
+      {
+        "character": ")",
+        "cid": 80,
+        "gid": 80,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          331.0214538574219,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          331.0214538574219,
+          628.718994140625
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "토",
+        "cid": 17398,
+        "gid": 17398,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          338.5168151855469,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          338.5168151855469,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "크",
+        "cid": 17090,
+        "gid": 17090,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          350.4720153808594,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          350.4720153808594,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "를",
+        "cid": 11218,
+        "gid": 11218,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          362.4272155761719,
+          628.718994140625
+        ],
+        "replayed_origin": [
+          362.4272155761719,
+          628.718994140625
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "쌍",
+        "cid": 13667,
+        "gid": 13667,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54100036621094,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          73.54100036621094,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "극",
+        "cid": 8271,
+        "gid": 8271,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49620056152344,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          85.49620056152344,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          97.45140075683594,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          97.45140075683594,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          109.40660095214844,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          109.40660095214844,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "위",
+        "cid": 14682,
+        "gid": 14682,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.35060119628906,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          124.35060119628906,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "치",
+        "cid": 16558,
+        "gid": 16558,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          136.30580139160156,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          136.30580139160156,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          148.26100158691406,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          148.26100158691406,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "따",
+        "cid": 10118,
+        "gid": 10118,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.2050018310547,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          163.2050018310547,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.1602020263672,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          175.1602020263672,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          190.1042022705078,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          190.1042022705078,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          202.0594024658203,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          202.0594024658203,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          214.0146026611328,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          214.0146026611328,
+          640.93701171875
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          225.9698028564453,
+          640.93701171875
+        ],
+        "replayed_origin": [
+          225.9698028564453,
+          640.93701171875
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "별",
+        "cid": 12058,
+        "gid": 12058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54100036621094,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          73.54100036621094,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "과",
+        "cid": 8018,
+        "gid": 8018,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49620056152344,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          85.49620056152344,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "중",
+        "cid": 15207,
+        "gid": 15207,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          100.44020080566406,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          100.44020080566406,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "심",
+        "cid": 13634,
+        "gid": 13634,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.39540100097656,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          112.39540100097656,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.35060119628906,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          124.35060119628906,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "같",
+        "cid": 7791,
+        "gid": 7791,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          139.2946014404297,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          139.2946014404297,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          151.2498016357422,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          151.2498016357422,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "원",
+        "cid": 14630,
+        "gid": 14630,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          166.1938018798828,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          166.1938018798828,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "위",
+        "cid": 14682,
+        "gid": 14682,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          181.13780212402344,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          181.13780212402344,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          193.09300231933594,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          193.09300231933594,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "각",
+        "cid": 7767,
+        "gid": 7767,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          208.03700256347656,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          208.03700256347656,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          222.9810028076172,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          222.9810028076172,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          234.9362030029297,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          234.9362030029297,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "서",
+        "cid": 13170,
+        "gid": 13170,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          246.8914031982422,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          246.8914031982422,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "쌍",
+        "cid": 13667,
+        "gid": 13667,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          261.83538818359375,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          261.83538818359375,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "극",
+        "cid": 8271,
+        "gid": 8271,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          273.79058837890625,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          273.79058837890625,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          285.74578857421875,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          285.74578857421875,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          297.70098876953125,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          297.70098876953125,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "작",
+        "cid": 14823,
+        "gid": 14823,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          312.64501953125,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          312.64501953125,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "용",
+        "cid": 14591,
+        "gid": 14591,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          324.6002197265625,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          324.6002197265625,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          336.555419921875,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          336.555419921875,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "는",
+        "cid": 9450,
+        "gid": 9450,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          348.5106201171875,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          348.5106201171875,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "힘",
+        "cid": 18926,
+        "gid": 18926,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          363.45458984375,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          363.45458984375,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "벡",
+        "cid": 12023,
+        "gid": 12023,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          378.39862060546875,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          378.39862060546875,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "터",
+        "cid": 17286,
+        "gid": 17286,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          390.35382080078125,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          390.35382080078125,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "를",
+        "cid": 11218,
+        "gid": 11218,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          402.30902099609375,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          402.30902099609375,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "그",
+        "cid": 8270,
+        "gid": 8270,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          417.25299072265625,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          417.25299072265625,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "려",
+        "cid": 10874,
+        "gid": 10874,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          429.20819091796875,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          429.20819091796875,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          441.16339111328125,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          441.16339111328125,
+          656.9719848632812
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          453.11859130859375,
+          656.9719848632812
+        ],
+        "replayed_origin": [
+          453.11859130859375,
+          656.9719848632812
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "원",
+        "cid": 14630,
+        "gid": 14630,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54100036621094,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          73.54100036621094,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "은",
+        "cid": 14742,
+        "gid": 14742,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49620056152344,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          85.49620056152344,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "c",
+        "cid": 138,
+        "gid": 138,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          100.44020080566406,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          100.44020080566406,
+          669.2559814453125
+        ],
+        "encoded_W": "541"
+      },
+      {
+        "character": ")",
+        "cid": 80,
+        "gid": 80,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          106.9198226928711,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          106.9198226928711,
+          669.2559814453125
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "별",
+        "cid": 12058,
+        "gid": 12058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          114.41517639160156,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          114.41517639160156,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "바",
+        "cid": 11882,
+        "gid": 11882,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          129.3591766357422,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          129.3591766357422,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "깥",
+        "cid": 8379,
+        "gid": 8379,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          141.3143768310547,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          141.3143768310547,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          153.2695770263672,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          153.2695770263672,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "빨",
+        "cid": 12478,
+        "gid": 12478,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          168.2135772705078,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          168.2135772705078,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "간",
+        "cid": 7770,
+        "gid": 7770,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          180.1687774658203,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          180.1687774658203,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "원",
+        "cid": 14630,
+        "gid": 14630,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          195.11277770996094,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          195.11277770996094,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "또",
+        "cid": 10342,
+        "gid": 10342,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          210.05677795410156,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          210.05677795410156,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "는",
+        "cid": 9450,
+        "gid": 9450,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          222.01197814941406,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          222.01197814941406,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "d",
+        "cid": 139,
+        "gid": 139,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          236.9559783935547,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          236.9559783935547,
+          669.2559814453125
+        ],
+        "encoded_W": "576"
+      },
+      {
+        "character": ")",
+        "cid": 80,
+        "gid": 80,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          243.84422302246094,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          243.84422302246094,
+          669.2559814453125
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "별",
+        "cid": 12058,
+        "gid": 12058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          251.33958435058594,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          251.33958435058594,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "안",
+        "cid": 14238,
+        "gid": 14238,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          266.2835693359375,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          266.2835693359375,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "쪽",
+        "cid": 15635,
+        "gid": 15635,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          278.23876953125,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          278.23876953125,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          290.1939697265625,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          290.1939697265625,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "파",
+        "cid": 17762,
+        "gid": 17762,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          305.1379699707031,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          305.1379699707031,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "란",
+        "cid": 10710,
+        "gid": 10710,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          317.0931701660156,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          317.0931701660156,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "원",
+        "cid": 14630,
+        "gid": 14630,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          332.03717041015625,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          332.03717041015625,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "이",
+        "cid": 14794,
+        "gid": 14794,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          343.99237060546875,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          343.99237060546875,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "다",
+        "cid": 9530,
+        "gid": 9530,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          355.94757080078125,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          355.94757080078125,
+          669.2559814453125
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          367.90277099609375,
+          669.2559814453125
+        ],
+        "replayed_origin": [
+          367.90277099609375,
+          669.2559814453125
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "별",
+        "cid": 12058,
+        "gid": 12058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          86.28524780273438,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          86.28524780273438,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          98.24044799804688,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          98.24044799804688,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "볼",
+        "cid": 12114,
+        "gid": 12114,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          113.1844482421875,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          113.1844482421875,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "록",
+        "cid": 10931,
+        "gid": 10931,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          125.1396484375,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          125.1396484375,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          137.0948486328125,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          137.0948486328125,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "꼭",
+        "cid": 8579,
+        "gid": 8579,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          152.03884887695312,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          152.03884887695312,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "짓",
+        "cid": 15401,
+        "gid": 15401,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          163.99404907226562,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          163.99404907226562,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.94924926757812,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          175.94924926757812,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "과",
+        "cid": 8018,
+        "gid": 8018,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          187.90444946289062,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          187.90444946289062,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "오",
+        "cid": 14458,
+        "gid": 14458,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          202.84844970703125,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          202.84844970703125,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "목",
+        "cid": 11519,
+        "gid": 11519,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          214.80364990234375,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          214.80364990234375,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          226.75885009765625,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          226.75885009765625,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "꼭",
+        "cid": 8579,
+        "gid": 8579,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          241.70285034179688,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          241.70285034179688,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "짓",
+        "cid": 15401,
+        "gid": 15401,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          253.65805053710938,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          253.65805053710938,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          265.6132507324219,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          265.6132507324219,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "을",
+        "cid": 14746,
+        "gid": 14746,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          277.5684509277344,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          277.5684509277344,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "지",
+        "cid": 15382,
+        "gid": 15382,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          292.512451171875,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          292.512451171875,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "나",
+        "cid": 8942,
+        "gid": 8942,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          304.4676513671875,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          304.4676513671875,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "는",
+        "cid": 9450,
+        "gid": 9450,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          316.4228515625,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          316.4228515625,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "방",
+        "cid": 11903,
+        "gid": 11903,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          331.3668518066406,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          331.3668518066406,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "사",
+        "cid": 13058,
+        "gid": 13058,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          343.3220520019531,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          343.3220520019531,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "선",
+        "cid": 13174,
+        "gid": 13174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          355.2772521972656,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          355.2772521972656,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "(",
+        "cid": 79,
+        "gid": 79,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          367.2324523925781,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          367.2324523925781,
+          686.6849975585938
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          371.739013671875,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          371.739013671875,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "선",
+        "cid": 13174,
+        "gid": 13174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          383.6942138671875,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          383.6942138671875,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ")",
+        "cid": 80,
+        "gid": 80,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          395.6494140625,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          395.6494140625,
+          686.6849975585938
+        ],
+        "encoded_W": "376"
+      },
+      {
+        "character": "을",
+        "cid": 14746,
+        "gid": 14746,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          400.15594482421875,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          400.15594482421875,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "따",
+        "cid": 10118,
+        "gid": 10118,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          415.0999450683594,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          415.0999450683594,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          427.0551452636719,
+          686.6849975585938
+        ],
+        "replayed_origin": [
+          427.0551452636719,
+          686.6849975585938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "도",
+        "cid": 9754,
+        "gid": 9754,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54100036621094,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          73.54100036621094,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "선",
+        "cid": 13174,
+        "gid": 13174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49620056152344,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          85.49620056152344,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "틀",
+        "cid": 17686,
+        "gid": 17686,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          100.44020080566406,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          100.44020080566406,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          112.39540100097656,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          112.39540100097656,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "서",
+        "cid": 13170,
+        "gid": 13170,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.35060119628906,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          124.35060119628906,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "약",
+        "cid": 14291,
+        "gid": 14291,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          139.2946014404297,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          139.2946014404297,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "간",
+        "cid": 7770,
+        "gid": 7770,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          151.2498016357422,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          151.2498016357422,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "떨",
+        "cid": 10238,
+        "gid": 10238,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          166.1938018798828,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          166.1938018798828,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "어",
+        "cid": 14346,
+        "gid": 14346,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          178.1490020751953,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          178.1490020751953,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "진",
+        "cid": 15386,
+        "gid": 15386,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          190.1042022705078,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          190.1042022705078,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "지",
+        "cid": 15382,
+        "gid": 15382,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          205.04820251464844,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          205.04820251464844,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          217.00340270996094,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          217.00340270996094,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "부",
+        "cid": 12246,
+        "gid": 12246,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          228.95860290527344,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          228.95860290527344,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "터",
+        "cid": 17286,
+        "gid": 17286,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          240.91380310058594,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          240.91380310058594,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "무",
+        "cid": 11658,
+        "gid": 11658,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          255.85780334472656,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          255.85780334472656,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "한",
+        "cid": 18354,
+        "gid": 18354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          267.81298828125,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          267.81298828125,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "대",
+        "cid": 9558,
+        "gid": 9558,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          279.7681884765625,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          279.7681884765625,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "까",
+        "cid": 8354,
+        "gid": 8354,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          291.723388671875,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          291.723388671875,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "지",
+        "cid": 15382,
+        "gid": 15382,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          303.6785888671875,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          303.6785888671875,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "쌍",
+        "cid": 13667,
+        "gid": 13667,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          318.62261962890625,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          318.62261962890625,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "극",
+        "cid": 8271,
+        "gid": 8271,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          330.57781982421875,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          330.57781982421875,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "자",
+        "cid": 14822,
+        "gid": 14822,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          342.53302001953125,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          342.53302001953125,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "에",
+        "cid": 14374,
+        "gid": 14374,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          354.48822021484375,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          354.48822021484375,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "작",
+        "cid": 14823,
+        "gid": 14823,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          369.43218994140625,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          369.43218994140625,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "용",
+        "cid": 14591,
+        "gid": 14591,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          381.38739013671875,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          381.38739013671875,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          393.34259033203125,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          393.34259033203125,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "는",
+        "cid": 9450,
+        "gid": 9450,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          405.29779052734375,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          405.29779052734375,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "힘",
+        "cid": 18926,
+        "gid": 18926,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          420.2418212890625,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          420.2418212890625,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          432.197021484375,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          432.197021484375,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "크",
+        "cid": 17090,
+        "gid": 17090,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          447.1409912109375,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          447.1409912109375,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "기",
+        "cid": 8326,
+        "gid": 8326,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          459.09619140625,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          459.09619140625,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "를",
+        "cid": 11218,
+        "gid": 11218,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          471.0513916015625,
+          699.6339721679688
+        ],
+        "replayed_origin": [
+          471.0513916015625,
+          699.6339721679688
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "계",
+        "cid": 7962,
+        "gid": 7962,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          73.54100036621094,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          73.54100036621094,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "산",
+        "cid": 13062,
+        "gid": 13062,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          85.49620056152344,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          85.49620056152344,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          97.45140075683594,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          97.45140075683594,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "고",
+        "cid": 7990,
+        "gid": 7990,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          109.40660095214844,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          109.40660095214844,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "그",
+        "cid": 8270,
+        "gid": 8270,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          124.35060119628906,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          124.35060119628906,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "래",
+        "cid": 10734,
+        "gid": 10734,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          136.30580139160156,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          136.30580139160156,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "프",
+        "cid": 18266,
+        "gid": 18266,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          148.26100158691406,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          148.26100158691406,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "로",
+        "cid": 10930,
+        "gid": 10930,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          160.21620178222656,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          160.21620178222656,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "나",
+        "cid": 8942,
+        "gid": 8942,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          175.1602020263672,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          175.1602020263672,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "타",
+        "cid": 17174,
+        "gid": 17174,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          187.1154022216797,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          187.1154022216797,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "내",
+        "cid": 8970,
+        "gid": 8970,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          199.0706024169922,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          199.0706024169922,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          211.0258026123047,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          211.0258026123047,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          222.9810028076172,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          222.9810028076172,
+          711.8519897460938
+        ],
+        "encoded_W": "291"
+      },
+      {
+        "character": "그",
+        "cid": 8270,
+        "gid": 8270,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          229.46063232421875,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          229.46063232421875,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "함",
+        "cid": 18366,
+        "gid": 18366,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          244.40463256835938,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          244.40463256835938,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "수",
+        "cid": 13422,
+        "gid": 13422,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          256.3598327636719,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          256.3598327636719,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "의",
+        "cid": 14766,
+        "gid": 14766,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          268.3150329589844,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          268.3150329589844,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "점",
+        "cid": 14950,
+        "gid": 14950,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          283.259033203125,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          283.259033203125,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "근",
+        "cid": 8274,
+        "gid": 8274,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          295.2142333984375,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          295.2142333984375,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "형",
+        "cid": 18539,
+        "gid": 18539,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          307.16943359375,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          307.16943359375,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "도",
+        "cid": 9754,
+        "gid": 9754,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          319.1246337890625,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          319.1246337890625,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "구",
+        "cid": 8130,
+        "gid": 8130,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          334.0686340332031,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          334.0686340332031,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "하",
+        "cid": 18350,
+        "gid": 18350,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          346.0238342285156,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          346.0238342285156,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": "라",
+        "cid": 10706,
+        "gid": 10706,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          357.9790344238281,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          357.9790344238281,
+          711.8519897460938
+        ],
+        "encoded_W": "1000"
+      },
+      {
+        "character": ".",
+        "cid": 85,
+        "gid": 85,
+        "alias": "KO_Natural_serif",
+        "actual_origin": [
+          369.9342346191406,
+          711.8519897460938
+        ],
+        "replayed_origin": [
+          369.9342346191406,
+          711.8519897460938
+        ],
+        "encoded_W": "291"
+      }
+    ]
+  },
+  "actual_native_vector_coordinate_audit": {
+    "native_vector_paths_verified": 0,
+    "moved_whole_expression_paths_verified": 0,
+    "stationary_paths_including_vector_figures_verified": 0,
+    "coordinate_errors": [],
+    "form_native_vector_paths_verified": 30,
+    "stationary_form_invocations_verified": 1,
+    "all_original_figure_form_invocations_fixed": true,
+    "original_figure_form_count": 1,
+    "form_bbox_serialization_tolerance_pt": 0.0001,
+    "audit_code_sha256": "0c555a216e5a6c564efe257f3843e45cf5d0b85014e12d371c061fae5b1e5469",
+    "max_coordinate_tolerance_pt": 1e-07,
+    "added_raster_language_mask_paths": 0
+  },
+  "audit_runtime_snapshot": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2025-05-audit\\runtime-snapshot.json",
+  "audit_runtime_snapshot_sha256": "f7fe513c6be360e2e46aa417a86729407b922a0ce23f0aa423f460a932c7485d",
+  "audit_code_sha256": {
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\audit_final_page.py": "3adf6c4352e5ac869200fb00dccdc01f122ad72ae238a1aef0c12d7fb607339f",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_actual_paint.py": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_font_widths.py": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_guard.py": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_independent_qa.py": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_outline_qa.py": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_runtime.py": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4"
+  },
+  "preparation_sha256": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a"
+}
