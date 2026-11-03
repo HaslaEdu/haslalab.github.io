@@ -1,0 +1,112 @@
+{
+  "source_sha256": "2804ded48ad009bf58884b871f0f4817c64762b8a0f586e42056908fc4be10f1",
+  "source_page": 2,
+  "proof_sha256": "c0db244625fa296196c5275d82f6dc79fa9e102708b256f295336e9db4941ea0",
+  "plan_sha256": "906d522a33b76d9a51002102765b1f236d6b58e3c44fbd015dd7e88d37a7496d",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 4,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          12,
+          0
+        ]
+      ],
+      "baseline": 291.52996826171875,
+      "source_center": 312.49999237060547,
+      "independent_original_source_centers": [
+        312.49999237060547
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 262.2259216308594,
+      "actual_nonspace_glyph_right": 362.7740478515625,
+      "actual_center": 312.49998474121094,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          13,
+          1
+        ]
+      ],
+      "baseline": 320.57000732421875,
+      "source_center": 305.906005859375,
+      "independent_original_source_centers": [
+        305.906005859375
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 281.22198486328125,
+      "actual_nonspace_glyph_right": 330.59002685546875,
+      "actual_center": 305.906005859375,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          13,
+          2
+        ]
+      ],
+      "baseline": 320.57000732421875,
+      "source_center": 499.2460174560547,
+      "independent_original_source_centers": [
+        499.2460174560547
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 487.65399169921875,
+      "actual_nonspace_glyph_right": 510.8380126953125,
+      "actual_center": 499.2460021972656,
+      "center_error_pt": -1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          15,
+          15
+        ]
+      ],
+      "baseline": 425.80999755859375,
+      "source_center": 312.42867279052734,
+      "independent_original_source_centers": [
+        312.42867279052734
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 257.8960876464844,
+      "actual_nonspace_glyph_right": 366.96124267578125,
+      "actual_center": 312.4286651611328,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 9,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          15,
+          15
+        ],
+        "source_text": "Problem 1.С Pyramid ",
+        "original_center": 312.42867279052734,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

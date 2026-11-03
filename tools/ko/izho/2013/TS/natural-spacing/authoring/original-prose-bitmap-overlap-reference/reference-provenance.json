@@ -1,0 +1,78 @@
+{
+  "original_source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2013-complete-solutions\\2013\\source\\IZhO_2013_TS.pdf",
+  "original_source_sha256": "2804ded48ad009bf58884b871f0f4817c64762b8a0f586e42056908fc4be10f1",
+  "source_page": 2,
+  "original_prose_at": [
+    5,
+    1,
+    2
+  ],
+  "original_prose_text": "when all water is vaporized is found as: ",
+  "exact_erased_original_English_prose_glyph": {
+    "c": "p",
+    "font": "TimesNewRomanPSMT",
+    "size": 12.0,
+    "origin": [
+      325.2140197753906,
+      154.219970703125
+    ],
+    "bbox": [
+      325.2140197753906,
+      144.56143188476562,
+      331.2140197753906,
+      156.56143188476562
+    ],
+    "render_mode": 0,
+    "trace_gid": 83,
+    "color": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "opacity": 1.0,
+    "linewidth": null,
+    "direction": [
+      1.0,
+      0.0
+    ],
+    "stroke_color": null,
+    "stroke_opacity": null,
+    "wmode": 0,
+    "colorspace": 3
+  },
+  "control": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2013-complete-solutions\\2013\\reviewed-original-prose-bitmap-overlap\\page02-only-original-selected-English-p-erased.pdf",
+  "control_sha256": "a74efb85254802825d77694d6b9430b9ded1c33712ae6260eaf3452f4ef88969",
+  "shared_native_guard_sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+  "native_erasure_verification": {
+    "api": "native-inline-reposition-v1",
+    "page_number": 2,
+    "text_shift_mode": "tj",
+    "erased_glyphs": 1,
+    "shifted_top_level_glyphs": 0,
+    "shifted_form_instances": 0,
+    "shifted_direct_image_instances": 0,
+    "shifted_atomic_clip_groups": 0,
+    "shifted_reviewed_vector_paths": 0,
+    "unchanged_white_background_panels_ignored": 0,
+    "reviewed_stationary_vector_paths_unchanged": [],
+    "private_form_ancestor_copies": 0,
+    "font_programs_unchanged": true,
+    "original_form_streams_unchanged": true,
+    "original_image_streams_unchanged": true,
+    "native_vector_path_bytes_preserved": true,
+    "native_atomic_clip_bytes_preserved": true,
+    "output_sha256": "a74efb85254802825d77694d6b9430b9ded1c33712ae6260eaf3452f4ef88969",
+    "atomic_nonpainting_space_occurrence_shifts": [],
+    "expected_native_glyphs": 1596,
+    "unexpected_glyphs": 0,
+    "native_glyph_mismatches": [],
+    "position_tolerance_pt": 0.001,
+    "max_position_error_x_pt": 0.0,
+    "max_position_error_y_pt": 0.0,
+    "max_visible_position_error_x_pt": 0.0,
+    "max_visible_position_error_y_pt": 0.0,
+    "nonpainting_ascii_space_rounding": [],
+    "passed": true
+  },
+  "reason": "The descender of the selected English prose p in vaporized lies inside the transparent white top padding of the following original bitmap. Erase only that exact original English prose glyph in this independent reference control. All original bitmap programs/CTMs, font programs and every other original native glyph remain unchanged. Figure comparison must prove all13 affected source pixels become pure white in the control and every remaining bitmap-region pixel agrees exactly with the translated final PDF."
+}

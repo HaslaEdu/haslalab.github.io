@@ -1,0 +1,52 @@
+{
+  "original_source_sha256": "2804ded48ad009bf58884b871f0f4817c64762b8a0f586e42056908fc4be10f1",
+  "rows": [
+    {
+      "id": "actual-original-counter12pt-drift",
+      "page": 4,
+      "proof_sha256": "6b15df3d4e854775ac9eaec7cb7eed58b06d418039a4092e6a2d05cefa749983",
+      "mutant_sha256": "f4f6c52df9a0002d8e2f9190dab15e2d6db369dc2c23cdbe79833fec1dba1a76",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "original_native_font_GID_point_and_Y_retained": true
+    },
+    {
+      "id": "actual-original-counter-covered-metadata-unchanged",
+      "page": 4,
+      "proof_sha256": "6b15df3d4e854775ac9eaec7cb7eed58b06d418039a4092e6a2d05cefa749983",
+      "mutant_sha256": "59948e204b1e58ff9e22c9476d8d9908f3eec3a597a989148c6487762a7c82ad",
+      "actual_overlay_rect": [
+        532.0999877929687,
+        95.04142456054687,
+        546.4920532226563,
+        107.44142456054688
+      ],
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "changed_original_figure_pixels": 0,
+      "missing_actual_native_pixels": 385,
+      "missing_original_outline_pixels": 308,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed"
+    },
+    {
+      "id": "actual-original-math-bitmap-covered-beyond-English-descender-reference",
+      "page": 2,
+      "proof_sha256": "c0db244625fa296196c5275d82f6dc79fa9e102708b256f295336e9db4941ea0",
+      "mutant_sha256": "5fef1637cdfbbd02e08650ab3098127fd263fce72a2f13e54962b5de58c98f1b",
+      "actual_overlay_rect": [
+        314.4,
+        160.9,
+        315.4,
+        161.9
+      ],
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "changed_original_figure_pixels": 25,
+      "missing_actual_native_pixels": 0,
+      "missing_original_outline_pixels": 0,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed"
+    }
+  ],
+  "all_actual_bad_PDFs_rejected": true,
+  "passed": true
+}

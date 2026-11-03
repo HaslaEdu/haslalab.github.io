@@ -1,0 +1,144 @@
+{
+  "source_sha256": "2804ded48ad009bf58884b871f0f4817c64762b8a0f586e42056908fc4be10f1",
+  "source_page": 3,
+  "proof_sha256": "72f92e434d6b3a4b817a1bbc54d04fa1d86af6d624376c4bc72e46664af2ff7d",
+  "plan_sha256": "4f9436c2b46d238c150b2b972bca79be7f7188845481472401a13b2bbc0dbeba",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 5,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          5,
+          0
+        ]
+      ],
+      "baseline": 385.2499694824219,
+      "source_center": 312.4580078125,
+      "independent_original_source_centers": [
+        312.4580078125
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 261.8529052734375,
+      "actual_nonspace_glyph_right": 363.0631103515625,
+      "actual_center": 312.4580078125,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          6,
+          1
+        ]
+      ],
+      "baseline": 414.40997314453125,
+      "source_center": 305.906005859375,
+      "independent_original_source_centers": [
+        305.906005859375
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 281.22198486328125,
+      "actual_nonspace_glyph_right": 330.59002685546875,
+      "actual_center": 305.906005859375,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          6,
+          2
+        ]
+      ],
+      "baseline": 414.40997314453125,
+      "source_center": 499.2460174560547,
+      "independent_original_source_centers": [
+        499.2460174560547
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 487.65399169921875,
+      "actual_nonspace_glyph_right": 510.8380126953125,
+      "actual_center": 499.2460021972656,
+      "center_error_pt": -1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          7,
+          0
+        ]
+      ],
+      "baseline": 545.469970703125,
+      "source_center": 312.4776611328125,
+      "independent_original_source_centers": [
+        312.4776611328125
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 273.43939208984375,
+      "actual_nonspace_glyph_right": 351.51593017578125,
+      "actual_center": 312.4776611328125,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 8,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          8,
+          0
+        ]
+      ],
+      "baseline": 561.6699829101562,
+      "source_center": 312.45103454589844,
+      "independent_original_source_centers": [
+        312.45103454589844
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 270.0080871582031,
+      "actual_nonspace_glyph_right": 354.89398193359375,
+      "actual_center": 312.45103454589844,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          7,
+          0
+        ],
+        "source_text": "Problem 2 (10 points) ",
+        "original_center": 312.4776611328125,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          8,
+          0
+        ],
+        "source_text": "Square frame ",
+        "original_center": 312.45103454589844,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}
