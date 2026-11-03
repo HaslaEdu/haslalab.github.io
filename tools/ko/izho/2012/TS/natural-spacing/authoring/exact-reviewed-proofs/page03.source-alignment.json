@@ -1,0 +1,103 @@
+{
+  "source_sha256": "41a2fa97853ffdf4ee0bc3a2e665c79387741beeff41d6cc9df29591335410db",
+  "source_page": 3,
+  "proof_sha256": "5d1d727cbbdb57cd932beee41bd6b159a1cb076305627cd27c6720dd85fde694",
+  "plan_sha256": "7c79122b61a166e043820509440c1e9d037893e9fbab3a59d798ff162e3a82f0",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 3,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          6,
+          0
+        ]
+      ],
+      "baseline": 460.4399719238281,
+      "source_center": 333.2189712524414,
+      "independent_original_source_centers": [
+        333.2189712524414
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 275.8515319824219,
+      "actual_nonspace_glyph_right": 390.5863952636719,
+      "actual_center": 333.2189636230469,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 18,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          7,
+          1
+        ]
+      ],
+      "baseline": 488.8799743652344,
+      "source_center": 241.32003021240234,
+      "independent_original_source_centers": [
+        241.32003021240234
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 215.82003784179688,
+      "actual_nonspace_glyph_right": 266.8200378417969,
+      "actual_center": 241.32003784179688,
+      "center_error_pt": 7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          7,
+          2
+        ]
+      ],
+      "baseline": 488.8799743652344,
+      "source_center": 497.33995056152344,
+      "independent_original_source_centers": [
+        497.33995056152344
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 485.3399658203125,
+      "actual_nonspace_glyph_right": 509.3399658203125,
+      "actual_center": 497.3399658203125,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          6,
+          0
+        ],
+        "source_text": "Grading scheme of Problem 1B ",
+        "original_center": 333.2189712524414,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          10,
+          4
+        ],
+        "source_text": "Total ",
+        "source_actual_bold_paint": true,
+        "alignment": "left",
+        "original_left": 144.47999572753906,
+        "actual_left": 144.47999572753906,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

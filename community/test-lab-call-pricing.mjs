@@ -145,3 +145,10 @@ test("a sitting handed in only in part is reckoned as the whole sitting: (min + 
   const whole = fullSitting({ papers: 3, handed: 3, pages: 10, read: { usd: 0.1 }, work: { usd: 0.02 } });
   assert.deepEqual([whole.partial, whole.usd], [false, 0.12], "a complete sitting counts as it was");
 });
+
+test('the pair grader (GPT-6 Luna) is priced at OpenAI Standard rates, cached input apart; an unknown GPT model is not', () => {
+  const luna = priceLabCall({}, 'gpt-6-luna', { in: 100000, cached: 20000, out: 10000, usage_known: true });
+  assert.equal(luna.provider, 'openai'); assert.equal(luna.status, 'estimated');
+  assert.ok(Math.abs(luna.total_usd - (80000 * 0.10 + 20000 * 0.01 + 10000 * 0.50) / 1e6) < 1e-9);
+  assert.equal(priceLabCall({}, 'gpt-7-made-up', { in: 10, cached: 0, out: 1, usage_known: true }).total_usd, null);
+});

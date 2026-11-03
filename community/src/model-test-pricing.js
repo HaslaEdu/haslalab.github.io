@@ -7,6 +7,7 @@ const BASIS = 'paid_standard_token_estimate';
 const SOURCES = Object.freeze({
   gemini: 'https://ai.google.dev/gemini-api/docs/pricing',
   deepseek: 'https://api-docs.deepseek.com/quick_start/pricing/',
+  openai: 'https://openai.com/api/pricing/',
 });
 const SCOPE = 'Paid Standard API tier; text/image input and text output; output includes reasoning tokens.';
 const EXCLUDES = Object.freeze(['free_tier_and_credits', 'account_discounts', 'tax', 'currency_conversion', 'cache_storage', 'tools_and_grounding']);
@@ -38,6 +39,11 @@ const GEMINI_PROMOTIONS = Object.freeze({
   'gemini-3.6-flash': {
     until: '2027-01-01T00:00:00Z', before: rates(0.75, 0.075, 3.75), after: rates(1.50, 0.15, 7.50),
   },
+});
+// OpenAI Standard tier (the pair grader, GPT-6 Luna; Flex, Batch and Priority are out of scope)
+const OPENAI_FIXED = Object.freeze({
+  'gpt-6-luna': rates(0.10, 0.01, 0.50),
+  'gpt-6.1-terra': rates(1.00, 0.05, 5.00),
 });
 // The official table explicitly maps these retired aliases to the current Flash.
 const DEEPSEEK_MODELS = new Map([
@@ -86,6 +92,7 @@ function selectTariff(stage, model) {
       return { prices: before ? promo.before : promo.after, tariff: before ? 'standard_introductory' : 'standard_after_introductory' };
     }
   }
+  if (stage.provider === 'openai' && Object.hasOwn(OPENAI_FIXED, model)) return fixed(OPENAI_FIXED[model]);
   if (stage.provider === 'deepseek' && DEEPSEEK_MODELS.has(model)) {
     const priceRange = DEEPSEEK_RATES[DEEPSEEK_MODELS.get(model)], at = timestamp(stage.started_at);
     if (!at) return { priceRange, tariff: 'peak_or_off_peak', reason: 'request_time_unknown' };

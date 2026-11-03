@@ -66,6 +66,15 @@ LAB_GRADE_MODEL = "deepseek-flash"
 # DeepSeek thinking (low, high, max) stays off until the bench has measured it
 LAB_GRADE_THINKING = "off"
 LAB_MODERATE_PROVIDER = "none"
+# Pair grading on theory papers (the owner's decision, 2026-11-03): GPT-6 Luna marks the paper beside DeepSeek as a chat
+# would, and decides only the items the two mark a quarter of their points or more apart. Bench of that day, four
+# audited theory papers on Claude's gold reads: 12 misgrades (the same pair judged by DeepSeek 20, Luna alone 23, the
+# 3.8 Flash pipeline 12 at a higher price), ~$0.01-0.02 and ~2-3 min a task. Experiments stay with DeepSeek alone (LAB_PAIR_SCOPE "all" to change).
+LAB_PAIR_PROVIDER = "openai"
+LAB_PAIR_MODEL = "gpt-6-luna"
+LAB_PAIR_THINKING = "medium"
+# DeepSeek checks formulas, numbers and what is written with code before it marks (grade-tools.js): every bench above ran with it
+LAB_GRADE_TOOLS = "on"
 # Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
 # every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
 LAB_READ_MODEL = "gemini-3.8-flash"

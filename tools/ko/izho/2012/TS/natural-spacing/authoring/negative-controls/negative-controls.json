@@ -1,0 +1,61 @@
+{
+  "original_source_sha256": "41a2fa97853ffdf4ee0bc3a2e665c79387741beeff41d6cc9df29591335410db",
+  "rows": [
+    {
+      "id": "actual-original-counter12pt-drift",
+      "page": 6,
+      "proof_sha256": "9c32f07f4babf4d6eec3055ed4add7b8f72bc3db4d9319fe7715e19950641b7e",
+      "mutant_sha256": "0e23ad6d9d4caf07e1ca49c52b15f4dbd64ddb79c572e0e00358dad4100a5787",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "native_font_GIDs_point_sizes_and_paint_retained": true,
+      "rejection": "Independent actual source x/y equation-label audit rejected moved equation1."
+    },
+    {
+      "id": "actual-fraction-rule-motion-with-all7-native-glyphs-unchanged",
+      "page": 1,
+      "proof_sha256": "976bbe2df8d91eaf445eac235ef97b2bd66e6f722cb4df283a77cec40e5c00b7",
+      "mutant_sha256": "3dcca82f87819ef8da1f33214f59f3c85f999cbc368535a7a9f87176779c509e",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "all_original_native_fraction_glyphs_still_exact": true,
+      "rejection": "Actual final painted fraction-rule endpoints no longer share the unchanged native expression dx."
+    },
+    {
+      "id": "actual-nonlanguage-plot-damage",
+      "page": 3,
+      "proof_sha256": "5d1d727cbbdb57cd932beee41bd6b159a1cb076305627cd27c6720dd85fde694",
+      "mutant_sha256": "6a95a659f5a9a22050c048e95850355ed210649f009e74debe1e8e358f6b8ccc",
+      "actual_overlay_rect": [
+        85,
+        156,
+        86,
+        157
+      ],
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "changed_figure_pixels": 16,
+      "missing_actual_native_ink_pixels": 0,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed"
+    },
+    {
+      "id": "actual-original-counter-covered-with-font-metadata-unchanged",
+      "page": 6,
+      "proof_sha256": "9c32f07f4babf4d6eec3055ed4add7b8f72bc3db4d9319fe7715e19950641b7e",
+      "mutant_sha256": "d62b550aad4d0ae42184d3b2deab2492df344b799416c560d466a2611755695a",
+      "actual_overlay_rect": [
+        536.080029296875,
+        157.49793701171876,
+        553.1004516601563,
+        169.89793701171874
+      ],
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "changed_figure_pixels": 0,
+      "missing_actual_native_ink_pixels": 415,
+      "rejection": "Independent original-input native-ink/style/graphics audit failed"
+    }
+  ],
+  "all_actual_bad_PDFs_rejected": true,
+  "passed": true
+}

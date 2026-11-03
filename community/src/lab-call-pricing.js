@@ -6,7 +6,7 @@ export const LAB_PAGE_PRICES = Object.freeze({ 'upstage:document-parse': 0.01, '
 const token = value => Number.isSafeInteger(value) && value >= 0 ? value : null;
 const rate = value => typeof value === 'number' && Number.isFinite(value) && value >= 0;
 const sum = (a, b) => a !== null && b !== null ? token(a + b) : null;
-const modelId = value => typeof value === 'string' && /^(?:gemini|deepseek)-[a-z0-9._-]{1,100}$/i.test(value) ? value : null;
+const modelId = value => typeof value === 'string' && /^(?:gemini|deepseek|gpt)-[a-z0-9._-]{1,100}$/i.test(value) ? value : null;
 const dollars = value => Number.isFinite(value) ? +value.toFixed(6) : null;
 
 /** Normalize generateContent usage. Omitted optional protobuf zero counters are
@@ -54,7 +54,7 @@ function overrides(env) {
 }
 function stageOf(model, call) {
   const requested = modelId(model), resolved = modelId(call.resolved_model);
-  return { provider: call.provider || (requested?.startsWith('deepseek-') ? 'deepseek' : 'gemini'),
+  return { provider: call.provider || (requested?.startsWith('deepseek-') ? 'deepseek' : requested?.startsWith('gpt-') ? 'openai' : 'gemini'),
     model: requested, resolved_model: call.model_unknown || call.resolved_model != null && !resolved ? 'unverified-model' : resolved,
     started_at: call.started_at ?? null, input_tokens: token(call.in), cached_tokens: token(call.cached),
     output_tokens: token(call.out), usage_known: call.usage_known !== false };

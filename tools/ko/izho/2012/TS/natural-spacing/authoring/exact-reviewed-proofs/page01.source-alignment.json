@@ -1,0 +1,93 @@
+{
+  "source_sha256": "41a2fa97853ffdf4ee0bc3a2e665c79387741beeff41d6cc9df29591335410db",
+  "source_page": 1,
+  "proof_sha256": "976bbe2df8d91eaf445eac235ef97b2bd66e6f722cb4df283a77cec40e5c00b7",
+  "plan_sha256": "1a08f486e88ab1735720e07bcce0b98e7aae80fb87c1f31a12179fa4ce64fcd3",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 80.760009765625,
+      "source_center": 333.2640151977539,
+      "independent_original_source_centers": [
+        333.2640151977539
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 265.43402099609375,
+      "actual_nonspace_glyph_right": 401.093994140625,
+      "actual_center": 333.2640075683594,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 16,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 99.47998046875,
+      "source_center": 333.1306610107422,
+      "independent_original_source_centers": [
+        333.1306610107422
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 284.165771484375,
+      "actual_nonspace_glyph_right": 382.0955505371094,
+      "actual_center": 333.1306610107422,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 18,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 3,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "SOLUTIONS OF PROBLEMS OF THEORETICAL TOUR ",
+        "original_center": 333.2640151977539,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "Problem 1. (10 points) ",
+        "original_center": 333.1306610107422,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          2
+        ],
+        "source_text": "Problem 1A. 2012 ",
+        "source_actual_bold_paint": true,
+        "alignment": "left",
+        "original_left": 113.4000015258789,
+        "actual_left": 113.4000015258789,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}
