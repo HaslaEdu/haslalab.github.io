@@ -80,7 +80,10 @@ LAB_GRADE_TOOLS = "on"
 LAB_READ_MODEL = "gemini-3.8-flash"
 # DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
 # numbers it missed from 21 to 14 of 102 for $0.0002 more a page
-LAB_READ_TILES = "3"
+# off for Gemini 3.8 Flash (2026-11-03): with the three strips, page 369 of an ISPhO 2026 sitting looped to 70 s and
+# read in 14 s without them; of four pages that had failed at 127 s, two read without strips (14-24 s). The strips were
+# for DeepSeek Flash, which sees a page at ~1300 px
+LAB_READ_TILES = "0"
 # the paper's own symbols handed to the reader to tell look-alikes apart (I0 from Z0, gamma from Y): bench, DeepSeek Flash,
 # hard misreads fixed 5 -> 8 of 28, checked numbers missed 14 -> 13 of 102, for about $0.0001 a page
 LAB_READ_NOTATION = "on"
