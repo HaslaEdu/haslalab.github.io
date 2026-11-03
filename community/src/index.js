@@ -3313,7 +3313,8 @@ async function labBench(env, s, job) {
         if (spec.stage === 'tune-grade-data' ? c.split !== 'train' : c.split !== 'eval') continue;
         const ss = await env.DB.prepare('SELECT * FROM lab_sessions WHERE id=?').bind(c.session).first(); if (!ss) { cases.push({ ...c, items: undefined, skip: 'no_session' }); continue; }
         const sch = await labScheme(env, labAs(ss, spec.scheme.provider, { model: spec.scheme.model, thinking: spec.scheme.thinking, check: spec.scheme.check }), c.task, null, true).catch(() => null);
-        const lines = sch && auditedLines(sch, c.items);
+        /* an eval task without the audit's marks is graded on every scheme line; its marks come back to be compared offline */
+        const lines = sch && (Array.isArray(c.items) ? auditedLines(sch, c.items) : spec.stage === 'tune-grade-eval' ? sch.items.map(item => ({ item, got: null })) : null);
         if (!lines) { cases.push({ session: c.session, task: c.task, skip: sch ? 'audit_covers_too_little' : 'no_scheme', scheme_items: sch?.items?.length || 0 }); continue; }
         const pages = (await env.DB.prepare('SELECT no, kind, ocr, text FROM lab_pages WHERE session_id=? AND task=? ORDER BY no').bind(c.session, c.task).all()).results;
         cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: gradeTrainInput({ items: lines.map(l => l.item) }, pages, { task: c.task, exam: `${ss.comp} ${ss.year}` }) });
@@ -3334,8 +3335,9 @@ async function labBench(env, s, job) {
           try {
             const r = await visionJSON(env, { provider: g.provider || 'gemini', stage: 'grade', policy: GRADE_TRAIN_SYSTEM, parts: [{ text: c.input }], schema, maxTokens: 16384,
               model: g.model, thinking: g.thinking || 'off', timeoutMs: 240000, ...extra });
-            const e = gradeAgainstAudit(c.lines, r.raw?.items);
-            for (const k of Object.keys(sum)) sum[k] += e[k];
+            const marked = c.lines.every(l => l.got != null), e = marked ? gradeAgainstAudit(c.lines, r.raw?.items) : {};
+            if (marked) for (const k of Object.keys(sum)) sum[k] += e[k];
+            e.marks = (r.raw?.items || []).slice(0, 200).map(x => [String(x?.id), +x?.score]);
             meterAdd(env, m, { step: 'grade', model: r.model || g.model, in: r.usage?.input_tokens, cached: r.usage?.cached_tokens ?? 0, out: r.usage?.output_tokens, ms: Date.now() - t1, ok: 1 });
             results.push({ session: c.session, task: c.task, ...e, ms: Date.now() - t1, usage: r.usage ? { in: r.usage.input_tokens, out: r.usage.output_tokens } : null });
           } catch (err) { results.push({ session: c.session, task: c.task, error: String(err?.code || err?.message || err).slice(0, 160) }); }
