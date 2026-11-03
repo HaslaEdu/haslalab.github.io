@@ -104,3 +104,12 @@ test('a failed OCR retry can be requested again, while stale account/session res
   assert.equal(f.context.renders,undefined);assert.notEqual(f.context.SES.nickname,'PRIVATE_LATE_DATA');assert.equal(f.calls.length,1);
  }
 });
+test('with no choice on the page (mixed pipeline) and Gemini not on offer, Grade my work uses the server default, not this page\'s gemini',()=>{
+ const f=fixture();f.context.$=()=>null;
+ f.run('VISION={default:"deepseek",pipeline:"mixed",providers:[{id:"gemini",available:false},{id:"deepseek",available:true}]}');
+ assert.equal(f.run('gradingProvider()'),'deepseek');assert.equal(f.run('providerAvailable(gradingProvider())'),true);
+ f.run('VISION={default:"gemini",pipeline:"mixed",providers:[{id:"gemini",available:true},{id:"deepseek",available:true}]}');
+ assert.equal(f.run('gradingProvider()'),'gemini','an available choice stands');
+ f.context.SES={id:4,provider:'gemini',provider_locked:true};f.run('VISION={default:"deepseek",providers:[{id:"gemini",available:false},{id:"deepseek",available:true}]}');
+ assert.equal(f.run('gradingProvider()'),'gemini','a locked session keeps its provider');
+});
