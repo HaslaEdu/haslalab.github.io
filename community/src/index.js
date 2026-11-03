@@ -1480,7 +1480,9 @@ function labRoles(env, s, theory) {
       moderate: env.LAB_MODERATE_PROVIDER === "none" ? null : stage(env.LAB_MODERATE_PROVIDER, "gemini"), gradePdfs: env.LAB_GRADE_PDFS === "on",
       readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
       moderateBench: pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING), moderateScope: env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
-      pair: STAGE_PROVIDERS.includes(env.LAB_PAIR_PROVIDER) ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL || undefined, thinking: env.LAB_PAIR_THINKING || undefined } : undefined,
+      /* theory only unless LAB_PAIR_SCOPE "all": on experiments (IPhO 2013 E1/E2, 2017 E1, bench 2026-11-03) the pair's
+         moderation lowered marks the audits give in full, and DeepSeek alone came closer */
+      pair: STAGE_PROVIDERS.includes(env.LAB_PAIR_PROVIDER) && (theory || env.LAB_PAIR_SCOPE === "all") ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL || undefined, thinking: env.LAB_PAIR_THINKING || undefined } : undefined,
       readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
