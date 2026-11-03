@@ -6,10 +6,12 @@ import { anthropicMessage, anthropicUsage, anthropicFailure, anthropicModels } f
 
 export const VISION_MODELS = Object.freeze({ gemini: 'gemini-3.5-flash-lite', deepseek: 'deepseek-flash' });
 /* providers the lab pipeline's stages can be given (LAB_*_PROVIDER, the admin bench) beside the two a candidate can choose */
-const STAGE_MODELS = Object.freeze({ ...VISION_MODELS, openai: 'gpt-5-mini', anthropic: 'claude-sonnet-5-5', upstage: 'solar-pro4' });
+const STAGE_MODELS = Object.freeze({ ...VISION_MODELS, openai: 'gpt-5-mini', anthropic: 'claude-sonnet-5-5', upstage: 'solar-pro4', tuned: 'tuned' });
+/* «tuned»: a model trained on our own gradings (lab-train.js), served at any OpenAI-compatible endpoint (a DeepSeek open-weight
+   fine-tune at a host, or our own server): TUNED_BASE (https://…/v1), TUNED_API_KEY, TUNED_MODEL. Text only: photos are left out. */
 export const VISION_IMAGE_LIMIT = 14 * 1024 * 1024; // decoded; JSON+base64 must also fit Gemini's 20 MB request limit
 const BASE = { gemini: 'https://generativelanguage.googleapis.com/v1beta/models', deepseek: 'https://api.deepseek.com', openai: 'https://api.openai.com/v1', upstage: 'https://api.upstage.ai/v1' };
-const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY', openai: 'OPENAI_API_KEY', anthropic: 'ANTHROPIC_API_KEY', upstage: 'UPSTAGE_API_KEY' };
+const KEYS = { gemini: 'GEMINI_API_KEY', deepseek: 'DEEPSEEK_API_KEY', openai: 'OPENAI_API_KEY', anthropic: 'ANTHROPIC_API_KEY', upstage: 'UPSTAGE_API_KEY', tuned: 'TUNED_API_KEY' };
 const ALT_KEYS = { openai: ['OPENAI_KEY'], anthropic: ['CLAUDE_API_KEY', 'ANTHROPIC_KEY'] };
 /* a key pasted with a trailing newline or spaces is the same key */
 const keyOf = (env, provider) => [KEYS[provider], ...(ALT_KEYS[provider] || [])].map(k => typeof env[k] === 'string' ? env[k].trim() : '').find(Boolean) || null;
@@ -47,7 +49,7 @@ export function visionProvider(value) {
 export function requireVisionProvider(env,value) {
   if (!Object.hasOwn(STAGE_MODELS,value)) fail(400,'bad_provider');
   const provider=value;
-  if (!keyOf(env,provider)) fail(503,'provider_unavailable',{provider});
+  if (!keyOf(env,provider)||provider==='tuned'&&!(env.TUNED_BASE&&env.TUNED_MODEL)) fail(503,'provider_unavailable',{provider});
   return provider;
 }
 export function visionCapabilities(env) {
@@ -57,10 +59,10 @@ export function visionCapabilities(env) {
     available:!!env[KEYS[id]]&&(!only||id===only),...(!env[KEYS[id]]||only&&id!==only?{reason:'provider_unavailable'}:{})}))};
 }
 /* a model other than the provider's default, only for the admin model bench: the provider's own id pattern, never a URL part */
-const MODEL_ID = { openai: /^(?:gpt|o\d|chatgpt)[a-z0-9._-]{0,80}$/, anthropic: /^claude-[a-z0-9][a-z0-9._-]{0,80}$/, upstage: /^(?:solar|syn)-[a-z0-9][a-z0-9._-]{0,80}$/ };
+const MODEL_ID = { openai: /^(?:gpt|o\d|chatgpt)[a-z0-9._-]{0,80}$/, anthropic: /^claude-[a-z0-9][a-z0-9._-]{0,80}$/, upstage: /^(?:solar|syn)-[a-z0-9][a-z0-9._-]{0,80}$/, tuned: /^[A-Za-z0-9][A-Za-z0-9._:\/-]{0,120}$/ };
 export const benchModel=(provider,value)=>typeof value==='string'&&(MODEL_ID[provider]||new RegExp('^'+provider+'-[a-z0-9][a-z0-9._-]{0,80}$')).test(value)?value:null;
 function endpoint(env,provider,model=STAGE_MODELS[provider]) {
-  const value=env[provider==='gemini'?'GEMINI_BASE':provider==='openai'?'OPENAI_BASE':provider==='upstage'?'UPSTAGE_BASE':'DEEPSEEK_BASE'] || BASE[provider];
+  const value=env[provider==='gemini'?'GEMINI_BASE':provider==='openai'?'OPENAI_BASE':provider==='upstage'?'UPSTAGE_BASE':provider==='tuned'?'TUNED_BASE':'DEEPSEEK_BASE'] || BASE[provider];
   let url;try{url=new URL(value);}catch{fail(503,'provider_configuration');}
   const local=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
   if (url.username||url.password||url.search||url.hash||url.protocol!=='https:'&&!(local&&url.protocol==='http:')) fail(503,'provider_configuration');
@@ -111,7 +113,7 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
   model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null,openaiApi=null,serviceTier=null}={}) {
   provider=requireVisionProvider(env,provider);
-  const model=benchModel(provider,chosen)||STAGE_MODELS[provider],url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
+  const model=benchModel(provider,chosen)||(provider==='tuned'?String(env.TUNED_MODEL||'').trim():STAGE_MODELS[provider]),url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
   let usage=null,timer,aborted=false,providerStatus,providerCode,providerMessage;
   let rejectAbort;
@@ -120,14 +122,14 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const text=typeof input==='string'?input:JSON.stringify(input),rules=policy+'\n\n'+VISUAL_POLICY;
   const sequence=parts===undefined?[{text},...images]:parts;
   if(!Array.isArray(sequence)||sequence.length>160)fail(400,'vision_bad_image');
-  const media=sequence.filter(part=>typeof part?.text!=='string').map(part=>part?.inline_data||part);
+  const media=provider==='tuned'?[]:sequence.filter(part=>typeof part?.text!=='string').map(part=>part?.inline_data||part);
   const picture=imageParts(media,provider),content=[];let imageIndex=0;
   for(const part of sequence){if(typeof part?.text==='string')content.push(provider==='gemini'||provider==='anthropic'?{text:part.text}:{type:'text',text:part.text});
-    else {content.push(picture[imageIndex++],picture[imageIndex++]);}}
+    else if(provider!=='tuned'){content.push(picture[imageIndex++],picture[imageIndex++]);}}
   const count=Math.max(256,Math.min(32768,Number(maxTokens)||8192));
   /* function calling (grade-tools.js, OpenAI format): DeepSeek and OpenAI as given; Gemini with the same tools as
      functionDeclarations beside its response schema (Gemini 3). JSON comes back for the last answer */
-  const useTools=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&(provider==='deepseek'||provider==='openai'||provider==='upstage');
+  const useTools=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&(provider==='deepseek'||provider==='openai'||provider==='upstage'||provider==='tuned');
   const geminiCalls=Array.isArray(tools)&&tools.length>0&&typeof onTool==='function'&&provider==='gemini';
   /* Gemini's own tools (geminiTools, e.g. [{code_execution:{}}]: it crops and zooms into a photo itself) */
   const builtIn=provider==='gemini'&&Array.isArray(geminiTools)?geminiTools.filter(t=>t&&typeof t==='object').slice(0,4):[];
@@ -135,7 +137,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   const toolLog=[];
   const jsonRules=rules+'\nReturn exactly one JSON object, including every required field. The following example illustrates JSON structure only; copy no example values into the answer.\nJSON structure example:\n'+JSON.stringify(jsonExample(schema))+'\nJSON schema:\n'+JSON.stringify(schema||{});
   /* Upstage's Solar speaks OpenAI's chat completions (api.upstage.ai/v1), with max_tokens for the answer's room (bench only) */
-  const body=provider==='anthropic'?null:provider==='upstage'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_tokens:count,temperature:0}:
+  const body=provider==='anthropic'?null:provider==='upstage'||provider==='tuned'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_tokens:count,temperature:0}:
     provider==='openai'?{model,messages:[{role:'system',content:jsonRules},{role:'user',content}],...(useTools?{tools}:{response_format:{type:'json_object'}}),max_completion_tokens:count,
       /* none: GPT-5.4 takes function tools on chat completions only without reasoning */
       ...(['none','minimal','low','medium','high'].includes(level)?{reasoning_effort:level}:{}),...(serviceTier==='flex'?{service_tier:'flex'}:{})}:
