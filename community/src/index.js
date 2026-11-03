@@ -1709,6 +1709,9 @@ function compactRead(read) {
   } catch { return String(read); }
 }
 const GRADE_SCHEMA = { type: "object", properties: {
+  /* method choice (LAB_METHOD_CHOICE on, bench grade.methods): before the items, which alternative method of each
+     question the candidate wrote, with the line that shows it */
+  methods: { type: "array", items: { type: "object", properties: { part: { type: "string" }, used: { type: "string" }, page: N({ type: "integer" }), line: { type: "string" } }, required: ["part", "used", "line"] } },
   items: { type: "array", items: { type: "object", properties: {
     id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), unit: N({ type: "string" }), value_in_unit: N({ type: "number" }), unit_ok: { type: "boolean" },
     visual: N({type:'object',properties:{kind:{type:'string',enum:['value','graph','table','diagram']},box:{type:'array',items:{type:'number'}},description:{type:'string'},value:N({type:'number'}),rows:N({type:'integer'}),columns:{type:'array',items:{type:'string'}},graph:PAGE_SCHEMA.properties.items.items.properties.graph},required:['kind','box','description']}),
@@ -2289,6 +2292,17 @@ function weighChecks(it) {
   if (!(sum > 0)) return list.map(c => ({ ...c, points: pts / list.length }));
   return list.map(c => ({ ...c, points: +c.points > 0 ? +c.points : 0 }));
 }
+/* the grader's method choice, kept only where its line is on the task's pages: Map question -> method number */
+function labChosenMethods(scheme, raw, pages) {
+  const parts = new Set(scheme.items.map(it => /^(.+)\/(\d+)$/.exec(String(it.alt || ""))?.[1]).filter(Boolean)), all = pages.map(p => [p.ocr, p.text].join("\n")).join("\n");
+  const out = new Map();
+  for (const m of Array.isArray(raw?.methods) ? raw.methods : []) {
+    const used = /^(.+)\/(\d+)$/.exec(String(m?.used || ""));
+    if (!used || !parts.has(used[1]) || out.has(used[1]) || !quoteOnPage(String(m.line || ""), all)) continue;
+    out.set(used[1], +used[2]);
+  }
+  return out.size ? out : null;
+}
 function labScore(scheme, raw, pages, opts = {}) {
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
@@ -2400,7 +2414,7 @@ function labScore(scheme, raw, pages, opts = {}) {
   finalAnswerFull(items, scheme);                                                     // a part whose correct final answer earns its marks
   impliedSteps(items, scheme);                                                       // a step credited «even if done inherently»
   /* R15: of alternative methods for one question only the one that earns most counts */
-  { const alt = new Map(scheme.items.map(it => [it.id, it.alt])), { dropped } = oneMethod(items.map(i => ({ ...i, alt: alt.get(i.id) })), i => i.got);
+  { const alt = new Map(scheme.items.map(it => [it.id, it.alt])), { dropped } = oneMethod(items.map(i => ({ ...i, alt: alt.get(i.id) })), i => i.got, opts.methods);
     for (const i of items) if (dropped.has(i.id) && i.got > 0) { i.got = 0; i.decision = "not_met"; i.rules = [...new Set([...(i.rules || []), "R15"])]; } }
   const feedback = (Array.isArray(raw && raw.feedback) ? raw.feedback : []).filter(f => f && f.note && (f.page == null || byNo.has(f.page))).slice(0, 8)
     .map(f => ({ page: f.page ?? null, label: f.label ? String(f.label).slice(0, 20) : null, note: String(f.note).slice(0, 600), kind: f.kind === "good" ? "good" : "fix" }));
@@ -2605,6 +2619,8 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
      written with code before it marks, instead of guessing */
   const useTools = roles?.tools ?? env.LAB_GRADE_TOOLS === "on";
   const toolCtx = { scheme, pages: mine.map(p => ({ no: p.no, kind: p.kind, ocr: p.ocr ?? "", text: compactRead(p.read) })) };
+  const methodChoice = (roles?.methods ?? env.LAB_METHOD_CHOICE === "on") && scheme.items.some(it => /\/\d+$/.test(String(it.alt || "")));
+  if (methodChoice) parts.push({ text: "Alternative methods: some questions list several methods (items whose alt is «<question>/<n>»; another method is another way to the same result, never extra marks). Before grading any item, fill methods: for each such question, the method the candidate actually wrote (used: its alt, e.g. \"A1/2\"; \"none\" when neither is written), with line: the candidate's own line that only that method contains (an equation of that method's first step), copied character for character from the transcript, and its page. A final result both methods reach shows neither. Then grade that method's items, and give the other methods' items score 0." });
   if (useTools) parts.push({ text: "Tools: before marking an item with an official expr, call compare_expressions with the candidate's final expression; before marking a numerical item, call check_value with the candidate's number in the item's unit; before deciding that something is not written, call find_on_pages. Treat their answers as evidence about the transcript, and still apply the scheme's own partial rules. Call several tools at once where you can; then return the grading JSON." });
   /* with tools, a long paper can still end without an answer (DeepSeek, 97k tokens): grade it once more without them */
   const toolNote = useTools ? parts.at(-1) : null;
@@ -2684,7 +2700,9 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     } catch (e) { console.error("lab moderate", e?.code || e?.message); }               // a failed moderation keeps the first grading
   }
   await roles?.trace?.('score');
-  let sc = labScore(scheme, raw, mine, { theory, family });
+  /* the method the grader showed the candidate used, where its line is on the pages, decides R15 for its question */
+  const chosenMethods = methodChoice ? labChosenMethods(scheme, raw, mine) : null;
+  let sc = labScore(scheme, raw, mine, { theory, family, methods: chosenMethods });
   /* focused re-read (focus-read.js; LAB_FOCUS_READ on, bench grade.focus): a value the code marks wrong is read once more
      by Mathpix; a one-character misread (a digit, a power of ten) is replaced and the task scored again */
   const focusLog = roles?.bench ? [] : null;
@@ -2695,7 +2713,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
       const scale = Number.isFinite(+x.value_in_unit) && Number.isFinite(+x.value) && +x.value ? +x.value_in_unit / +x.value : null;
       return { ...x, value: f.value, ...(scale != null ? { value_in_unit: f.value * scale } : {}) }; }) };
     for (const f of focus) { const pg = mine.find(p => p.no === f.page); if (pg) pg.ocr = `${pg.ocr ?? ""}\n[focused re-read of ${f.id}: ${f.written} = ${f.value}]`; }
-    sc = labScore(scheme, raw, mine, { theory, family });
+    sc = labScore(scheme, raw, mine, { theory, family, methods: chosenMethods });
   }
   await roles?.trace?.('scored');
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
@@ -3104,6 +3122,7 @@ async function labBench(env, s, job) {
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
         gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, doubleGrade: spec.grade.double === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
         audit: spec.grade.audit === true ? true : undefined,
+        methods: spec.grade.methods === true ? true : undefined,
         lessons: typeof spec.grade.lessons === "string" && spec.grade.lessons.trim() ? spec.grade.lessons.trim().slice(0, 12000) : undefined,
         tiles: Number.isInteger(spec.grade.tiles) && spec.grade.tiles >= 2 && spec.grade.tiles <= 4 ? spec.grade.tiles : undefined,
         toolRounds: Number.isInteger(spec.grade.toolRounds) && spec.grade.toolRounds > 0 && spec.grade.toolRounds <= 6 ? spec.grade.toolRounds : undefined,
