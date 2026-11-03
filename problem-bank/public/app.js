@@ -84,12 +84,13 @@ function sourceMatches(source,{year=true}={}){
   return (!state.kind||source.kind===state.kind)&&(!$('collection').value||source.collection===$('collection').value)&&(!$('competition').value||source.competition===$('competition').value)&&(!year||!$('year').value||String(source.year)===$('year').value);
 }
 function sourceMeta(source){const author=source?.primary_author;return [author&&!sourceTitle(source).toLocaleLowerCase().includes(author.toLocaleLowerCase())?author:null,source?.edition_label,source?.year,source?.round].filter(x=>x!==null&&x!==undefined&&x!=='').join(' · ');}
+function competitionLabel(id){return ({ipho:'IPhO',apho:'APhO',eupho:'EuPhO',baupc:'BAUPC',physcup:'Physics Cup',nbpho:'NBPhO',ispho:'ISPhO'})[id]||String(id).toUpperCase();}
 function renderSources(){
   state.sources=orderedSources(state.sources);
   renderCollections();
   const competition=$('competition').value,year=$('year').value;
   const competitions=[...new Set(state.sources.filter(s=>s.kind==='contest'&&(!$('collection').value||s.collection===$('collection').value)).map(s=>s.competition).filter(Boolean))].sort();
-  $('competition').innerHTML='<option value="">'+esc(tr('allCompetitions'))+'</option>'+competitions.map(x=>`<option value="${esc(x)}">${esc(x.toUpperCase())}</option>`).join('');$('competition').value=competitions.includes(competition)?competition:'';
+  $('competition').innerHTML='<option value="">'+esc(tr('allCompetitions'))+'</option>'+competitions.map(x=>`<option value="${esc(x)}">${esc(competitionLabel(x))}</option>`).join('');$('competition').value=competitions.includes(competition)?competition:'';
   const years=[...new Set(state.sources.filter(s=>s.kind==='contest'&&sourceMatches(s,{year:false})).map(s=>s.year).filter(x=>Number.isInteger(x)))].sort((a,b)=>b-a);
   $('year').innerHTML='<option value="">'+esc(tr('allYears'))+'</option>'+years.map(x=>`<option value="${x}">${x}</option>`).join('');$('year').value=years.some(x=>String(x)===year)?year:'';
   const selected=$('source').value,sources=state.sources.filter(s=>sourceMatches(s));
