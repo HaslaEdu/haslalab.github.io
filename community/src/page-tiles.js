@@ -59,3 +59,13 @@ export function reencodeJpeg(bytes, quality) {
   catch { return null; }
   return image.width * image.height > MAX_PIXELS ? null : encode(image, quality);
 }
+
+/** a photo within `allowance` base64 bytes: as it is, or a JPEG encoded again at a lower quality; null if none fits
+    (a grading request's image budget is shared by its pages: a long experiment's last pages were left out) */
+export function fitPhoto(img, mime, allowance) {
+  const b = img instanceof Uint8Array ? img : new Uint8Array(img);
+  if (b.byteLength * 4 / 3 <= allowance) return b;
+  if (mime !== 'image/jpeg') return null;
+  for (const q of [60, 45, 32]) { const small = reencodeJpeg(b, q); if (small && small.byteLength * 4 / 3 <= allowance) return small; }
+  return null;
+}

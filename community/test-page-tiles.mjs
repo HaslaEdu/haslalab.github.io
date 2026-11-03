@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import jpeg from "jpeg-js";
-import { pageStrips, cropJpeg, reencodeJpeg } from "./src/page-tiles.js";
+import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto } from "./src/page-tiles.js";
 
 const page = (width, height) => {
   const data = new Uint8Array(width * height * 4);
@@ -55,4 +55,14 @@ test("a JPEG page encoded again at a lower quality is a smaller JPEG of the same
   assert.ok(smaller.length < bytes.length);
   assert.equal(reencodeJpeg(bytes, 10), null);
   assert.equal(reencodeJpeg(new Uint8Array([0x89, 0x50, 0x4e, 0x47]), 80), null);
+});
+
+test("a photo over its share of the image budget is encoded again smaller, not left out; a PNG over it, or one no quality fits, is null", () => {
+  const w = 900, h = 1200, data = new Uint8Array(w * h * 4);
+  for (let i = 0; i < data.length; i++) data[i] = (i * 2654435761 >>> 24) & 255;    // noise: a large JPEG
+  const big = new Uint8Array(jpeg.encode({ width: w, height: h, data }, 95).data);
+  assert.equal(fitPhoto(big, "image/jpeg", big.byteLength * 2), big, "within its share: as it is");
+  const small = fitPhoto(big, "image/jpeg", big.byteLength * 4 / 3 * 0.6);
+  assert.ok(small && small.byteLength * 4 / 3 <= big.byteLength * 4 / 3 * 0.6 && small[0] === 0xff && small[1] === 0xd8, "a smaller JPEG");
+  assert.equal(fitPhoto(big, "image/png", 10), null); assert.equal(fitPhoto(big, "image/jpeg", 10), null);
 });

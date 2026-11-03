@@ -674,13 +674,16 @@ test('experiments: a table read as two pages under one label counts all its rows
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','experiment') WHERE id=?").run(sid);
   const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
-  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2.7,items:[
     {id:'T',points:1,type:'table',sheet:'answer',what:'table of h(t)',checks:[{check:'rows_min',n:20,points:1}]},
-    {id:'G',points:1,type:'graph',sheet:'answer',what:'graph of h(t)',checks:[{check:'axes_labeled',points:0.3},{check:'fit_line',points:0.3},{check:'points_min',n:8,points:0.4}]}]}),'fixture',Math.floor(Date.now()/1000));
-  replies({items:[{id:'T',found:true,page:1,label:'T',score:1,rules:[],checks_met:['rows_min'],note:''},{id:'G',found:true,page:1,label:'G',score:1,rules:[],checks_met:['axes_labeled','fit_line','points_min'],note:''}],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+    {id:'G',points:1,type:'graph',sheet:'answer',what:'graph of h(t)',checks:[{check:'axes_labeled',points:0.3},{check:'fit_line',points:0.3},{check:'points_min',n:8,points:0.4}]},
+    {id:'H',points:0.7,type:'graph',sheet:'answer',what:'log-log graph',checks:[{check:'axes_labeled',points:0.3},{check:'fit_line',points:0.4}]}]}),'fixture',Math.floor(Date.now()/1000));
+  replies({items:[{id:'T',found:true,page:1,label:'T',score:1,rules:[],checks_met:['rows_min'],note:''},{id:'G',found:true,page:1,label:'G',score:1,rules:[],checks_met:['axes_labeled','fit_line','points_min'],note:''},
+    {id:'H',found:true,page:1,label:'H',score:0.7,rules:[],checks_met:['axes with units','straight line drawn'],note:''}],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
   const items=pageReading.items;
   pageReading.items=[{label:'T',kind:'table',text:'rows 1-8',rows:8,columns:['t (s)','h (cm)'],crossed_out:false},{label:'T',kind:'table',text:'rows 9-20',rows:12,columns:['t (s)','h (cm)'],crossed_out:false},
-    {label:'G',kind:'graph',text:'h against t',crossed_out:false,graph:{axes_labeled:true,axes_units:true,scale_ok:true,n_points:4,fit_line:false,slope_read:false,error_bars:false,title:false}}];
+    {label:'G',kind:'graph',text:'h against t',crossed_out:false,graph:{axes_labeled:true,axes_units:true,scale_ok:true,n_points:4,fit_line:false,slope_read:false,error_bars:false,title:false}},
+    {label:'H',kind:'graph',text:'ln F against ln H',crossed_out:false,graph:{axes_labeled:false,axes_units:false,scale_ok:true,n_points:17,fit_line:false,slope_read:false,error_bars:false,title:false}}];
   try{
     await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
     await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
@@ -688,6 +691,7 @@ test('experiments: a table read as two pages under one label counts all its rows
   const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
   assert.match(detail,/"id":"T"[^}]*"got":1[,}]/,'8 + 12 rows');
   assert.match(detail,/"id":"G"[^}]*"got":1[,}]/,'the fitted line and the eight points the grader saw in the photo, though the reader counted 4');
+  assert.match(detail,/"id":"H"[^}]*"got":0\.7[,}]/,'checks named in the grader\'s own words match none of the scheme\'s: the mark it gave from the photo stands');
 }));
 test('double grading: an item the two gradings mark differently is decided once more from the photos, and the scheme review fixes a one-point window before grading',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies,review})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';

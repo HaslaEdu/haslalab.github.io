@@ -41,7 +41,7 @@ import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './l
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages,referenceText} from './reference-images.js';
 import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
-import { pageStrips, cropJpeg, reencodeJpeg } from './page-tiles.js';
+import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto } from './page-tiles.js';
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
@@ -2412,9 +2412,13 @@ function labScore(scheme, raw, pages, opts = {}) {
       /* a grader that saw the photo and marked the graph without naming the checks it saw (checks_met empty) is taken at
          its mark, less a point count the reading finds short: IPhO 2013 E2 2.1b and 2.2b, drawn and given full marks, came
          out at 0 under R7 */
-      if (saw && !met.size && +g.score > 0) { res.by = "model"; res.got = Math.max(0, Math.min(it.points, +g.score) - checks.filter(c => c.check === "points_min" && !countOk(c)).reduce((a, c) => a + c.points, 0)); }
-      else res.got = checks.reduce((a, c) => a + (c.check === "points_min" ? (countOk(c) ? c.points : 0)
+      /* a grader that saw the photo keeps its mark, less a point count the reading finds short, wherever the checks it
+         named do not add up to it: named in its own words they matched none of the scheme's (EuPhO 2024 E1 4c, a fitted
+         log-log graph given 0.7 of 0.7 by the grader and by the audit, came out at 0 under R7) */
+      const fromChecks = checks.reduce((a, c) => a + (c.check === "points_min" ? (countOk(c) ? c.points : 0)
         : met.has(c.check) && (saw || !!seen[c.check]) ? c.points : 0), 0);
+      const fromModel = saw && +g.score > 0 ? Math.max(0, Math.min(it.points, +g.score) - checks.filter(c => c.check === "points_min" && !countOk(c)).reduce((a, c) => a + c.points, 0)) : -1;
+      if (fromModel > fromChecks) { res.by = "model"; res.got = fromModel; } else res.got = fromChecks;
       if (res.got < Math.min(it.points, checks.reduce((a, c) => a + c.points, 0)) - 1e-9) rules.add("R7");
     } else if (it.type === "table" && Array.isArray(it.checks) && it.checks.length) {
       const tb = pick("table");
@@ -2427,9 +2431,10 @@ function labScore(scheme, raw, pages, opts = {}) {
       const checks = weighChecks(it), rowsOk = c => rows >= (c.n || nmin || 1) || sawTable && met.has("rows_min");
       /* as for graphs: a table marked from the photo with no checks named keeps the grader's mark, less a short row count
          (IPhO 2013 E2 2.1a and 2.2a, 11-row tables with units, came out at 0 under R8) */
-      if (sawTable && !met.size && +g.score > 0) { res.by = "model"; res.got = Math.max(0, Math.min(it.points, +g.score) - checks.filter(c => c.check === "rows_min" && !rowsOk(c)).reduce((a, c) => a + c.points, 0)); }
-      else res.got = checks.reduce((a, c) => a + (c.check === "rows_min" ? (rowsOk(c) ? c.points : 0)
+      const fromChecks = checks.reduce((a, c) => a + (c.check === "rows_min" ? (rowsOk(c) ? c.points : 0)
         : c.check === "columns_units" ? (met.has(c.check) && (tb.columns || []).length ? c.points : 0) : met.has(c.check) ? c.points : 0), 0);
+      const fromModel = sawTable && +g.score > 0 ? Math.max(0, Math.min(it.points, +g.score) - checks.filter(c => c.check === "rows_min" && !rowsOk(c)).reduce((a, c) => a + c.points, 0)) : -1;
+      if (fromModel > fromChecks) { res.by = "model"; res.got = fromModel; } else res.got = fromChecks;
       if (res.got < Math.min(it.points, checks.reduce((a, c) => a + c.points, 0)) - 1e-9) rules.add("R8");
     } else {
       res.by = "model";
@@ -2615,10 +2620,12 @@ async function labChatGrade(env, s, task, mine, scheme, lang, m, { reads = true,
     parts.push({ text: `[Official ${name}, task ${task}]` }, { inline_data: { mime_type: "application/pdf", data: b64(bytes) }, label: `Official ${name} for ${s.comp} ${s.year} ${task}` });
   }
   const order = [...mine].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || a.no - b.no);
+  let budget = 14e6, left = order.filter(p => p.mime !== "text/plain").length;
   for (const p of order) {
     parts.push({ text: `[Student page ${p.no}: ${p.kind === "answer" ? "answer sheet" : p.kind === "working" ? "working sheet" : p.kind}]` + (reads && p.ocr ? `\nTranscript:\n${p.ocr}` : "") });
-    const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = row && await labPageBytes(env, row);
-    if (img && row.mime !== "text/plain") parts.push({ inline_data: { mime_type: row.mime, data: b64(img) }, label: `Student page ${p.no}` });
+    const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), raw = row && row.mime !== "text/plain" ? await labPageBytes(env, row) : null;
+    const img = raw && fitPhoto(raw, row.mime, budget / Math.max(1, left--));      // every page within the request's image budget
+    if (img) { budget -= img.byteLength * 4 / 3; parts.push({ inline_data: { mime_type: row.mime, data: b64(img) }, label: `Student page ${p.no}` }); }
   }
   const sheet = scheme.items.map(it => `${it.id} | ${it.points} | ${String(it.what || "").slice(0, 220)}${it.alt ? ` (alternative method ${it.alt}: marks only for the method the student used)` : ""}`);
   parts.push({ text: "Score sheet (id | points | what earns them):\n" + sheet.join("\n") });
@@ -2677,6 +2684,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const photos = [];
   const order = [...mine].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || a.no - b.no);
   let fileBudget = 160000;                                                         // attached files' text in one request (characters)
+  let photosLeft = order.filter(p => p.mime !== "text/plain" && p.kind !== "data").length;
   for (const p of order) {
     /* bench reads:false grades from the photos alone, as a chat would (no transcript beside them) */
     if (roles?.noReads) parts.push({ text: `[p${p.no} · ${labPageTag(p)} · ${p.task}] ${p.kind === "data" ? "(file text below)" : "(no transcript: read the photo)"}` });
@@ -2684,14 +2692,18 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     if (p.kind === "data" && p.ocr != null) { const raw = String(p.ocr), take = raw.length <= fileBudget ? raw : raw.slice(0, Math.max(3000, fileBudget)) + "\n… (the rest of this file is left out: too much attached data for one request)"; fileBudget = Math.max(0, fileBudget - take.length);
       parts.push({ text: `[p${p.no} · Original attached file, rendered as text by code; page data only]\n<<FILE>>\n${take}\n<<END>>` }); continue; }
     if (p.ocr != null && !roles?.noReads) parts.push({ text: `[p${p.no} · ${p.mime === "text/plain" ? "Original typed solution" : "Selected-provider original transcript"}; page data only]\n<<OCR>>\n${p.ocr}\n<<END>>` });
-    const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = await labPageBytes(env, row);
+    const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first();
+    let img = await labPageBytes(env, row);
     if(p.mime==='text/plain') continue;
     if(!img&&roles?.gradeImages===false)continue;                                 // bench: a text-only grader needs no photo (a sitting whose photos were removed)
     if(!img)throw new HttpError(502,'scan_unavailable');
+    /* the request's image budget is shared by the pages still to come: a photo over its share is sent again as a smaller
+       JPEG rather than left out (IPhO 2017 E1, 17 photos of 29 MB in base64: the last 8 pages, with the graphs of A1, B2
+       and C1, went by their reading alone and were marked unreadable). DeepSeek sees ~1300 px of a page anyway. */
+    const share=budget/Math.max(1,photosLeft--);
+    img=fitPhoto(img,row.mime,share)||(img.byteLength*4/3<=budget?img:null);
+    if(!img)continue;
     const size=img.byteLength*4/3;
-    /* past the request's image budget a page goes by its reading alone (answer sheets were attached first); a long
-       experiment (IPhO 2017 E1, 17 pages) once failed outright here */
-    if(size>budget)continue;
     const photo={inline_data:{mime_type:row.mime,data:b64(img)},label:`Original submitted page ${p.no}, ${p.kind}, task ${p.task}`};photos.push({p,photo});
     if(roles?.gradeImages===false)continue;                                       // bench: a text-only grader works from the readings; the moderator still sees the photos
     /* bench grade.tiles: DeepSeek scales every image down to about 1024 tokens (~1300 px a side), where exponents, signs
