@@ -469,6 +469,30 @@ test('an item the grader left out is graded once more, and a step found again in
   assert.match(detail,/"id":"S1"[^}]*"got":0\.7/,'found again in the photos');
   assert.match(detail,/"id":"M"[^}]*"got":0\.6/,'graded the second time');
 }));
+test('suspects: every item of a question with alternative methods, and the credited steps of a question whose result was marked down, are rechecked whatever their marks',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  env.LAB_SUSPECT_RECHECK='on';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:1.7,items:[
+    {id:'A1.1',points:0.3,type:'derivation',role:'step',sheet:'any',alt:'A1/1',what:'sin phi = D/b'},{id:'A1.2',points:0.3,type:'derivation',role:'step',sheet:'any',alt:'A1/2',what:'torque about another point'},
+    {id:'B8.1',points:0.2,type:'derivation',role:'step',sheet:'any',what:'y(t) = -d cos(omega t)'},{id:'B8.2',points:0.4,type:'derivation',role:'result',sheet:'any',what:'x(t)'},
+    {id:'C.1',points:0.5,type:'derivation',role:'step',sheet:'any',what:'energy'}]}),'fixture',Math.floor(Date.now()/1000));
+  const g=(id,score,quote)=>({id,found:score>0,page:1,label:id,rules:[],note:'',score,quote});
+  const rev={summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''};
+  replies({items:[g('A1.1',0.3,'Mg sin theta = f'),g('A1.2',0,''),g('B8.1',0.2,'y = (g/w^2 - d) cos wt'),g('B8.2',0,''),g('C.1',0.5,'E = const')],feedback:[],review:rev},
+    {items:[g('A1.1',0,''),g('A1.2',0.3,'r_1 f = b M g sin phi'),g('B8.1',0,'')]});
+  const text=pageReading.text;pageReading.text='Mg sin theta = f\nr_1 f = b M g sin phi\ny = (g/w^2 - d) cos wt\nE = const';
+  try{await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();}
+  finally{pageReading.text=text;}
+  const mod=calls.find(c=>c.text.includes('[TASK: moderate]'));assert.ok(mod,'a recheck is made');
+  const listed=JSON.parse(mod.text.split('<<ITEMS>>')[1].split('<<END>>')[0]).map(x=>x.id).sort();
+  assert.deepEqual(listed,['A1.1','A1.2','B8.1'],'both methods of A1, the credited step under the marked-down B8 result; not C.1');
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"A1\.2"[^}]*"got":0\.3[,}]/);assert.match(detail,/"id":"A1\.1"[^}]*"got":0[,}]/);assert.match(detail,/"id":"B8\.1"[^}]*"got":0[,}]/);
+}));
 test('method choice: the method the grader shows the candidate used, by a line on the page, counts for its question; a line not on the page changes nothing',async()=>{
   for(const [line,expect] of [['r_1 f = b M g sin phi','method 2'],['sin phi = D/b','best of']])await fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
     env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
