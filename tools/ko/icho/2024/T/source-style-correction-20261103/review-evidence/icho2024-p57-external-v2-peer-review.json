@@ -1,0 +1,239 @@
+{
+  "status": "READ_ONLY_CODE_AND_EXISTING_ACTUAL_RESULT_PEER_REVIEW_PASS",
+  "reviewer": "/root/icho_current",
+  "created_utc": "2026-11-03T11:04:19.707Z",
+  "scope": "Read-only source code, manuscript context, frozen metadata, JSON result and program-signature review. The peer did not parse any font/PDF, perform new font or glyph measurement, render, start a gate, or modify a producer/manuscript/frozen input.",
+  "prior_findings_report": {
+    "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/engine/publication-transition/icho2024-v7-native-atom-readonly-peer-review.json",
+    "sha256": "6049d0ff05792258c41a87c337ab1b8f764560f44d217d0108d02eb5f1ab991a"
+  },
+  "findings_closed": [
+    {
+      "id": "native-auditor-source-and-page-binding",
+      "resolution": "V2 asserts page57, exact immutable source SHA/path, actual source bytes SHA and q.output_sha256==actual target SHA before font/geometry inspection."
+    },
+    {
+      "id": "native-auditor-zero-count-claims",
+      "resolution": "V2 counts visible actual CJK d from emitted KO_Natural font faces on the original physical row, and actual source/target whitespace glyphs in the original d-to-first-subscript interval. Both are measured arrays/counts, not constants or one old slot ID."
+    }
+  ],
+  "source_native_atom": {
+    "profile_sha256": "f3efb347598737eb8505f8f529e044e15ee4307a8bdf5caaced7e88f2b09ff3d",
+    "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+    "glyphs": 6,
+    "original_d": {
+      "font": "NotoSans",
+      "gid": 71,
+      "size": 9.962599754333496,
+      "origin": [
+        99.84101104736328,
+        495.7949523925781
+      ]
+    },
+    "point_font_GID_baselines_color_direction_preserved_in_recorded_actual_traces": true,
+    "recomputed_recorded_dx_spread_pt": 0.00000762939453125,
+    "tolerance_pt": 0.001
+  },
+  "font_program_bindings": {
+    "resource_and_exact_program_bytes_bound_before_and_after": true,
+    "internal_PostScript_name_matches_recorded_actual_trace_family": true,
+    "LatinModernMath_only_literal_Identity_H_Encoding_suffix_is_removed": true,
+    "bindings": [
+      {
+        "trace_family": "NotoSans",
+        "source": {
+          "resource": "/F3",
+          "object_reference": [
+            1833,
+            0
+          ],
+          "BaseFont": "/WBPIWZ+NotoSans",
+          "descriptor_FontName": "/WBPIWZ+NotoSans",
+          "base_family": "NotoSans",
+          "descriptor_family": "NotoSans",
+          "Encoding": "/Identity-H",
+          "subtype": "/Type0",
+          "fontfile_kind": "/FontFile2",
+          "fontfile_subtype": "",
+          "internal_PostScript_names": [
+            "NotoSans"
+          ],
+          "embedded_program_sha256": "186a06d556fbf461b1fd7799d76ae932f78c515e8d47a62bf86dc941d6dea53e",
+          "embedded_program_bytes": 10368
+        },
+        "actual": {
+          "resource": "/F3",
+          "object_reference": [
+            123,
+            0
+          ],
+          "BaseFont": "/WBPIWZ+NotoSans",
+          "descriptor_FontName": "/WBPIWZ+NotoSans",
+          "base_family": "NotoSans",
+          "descriptor_family": "NotoSans",
+          "Encoding": "/Identity-H",
+          "subtype": "/Type0",
+          "fontfile_kind": "/FontFile2",
+          "fontfile_subtype": "",
+          "internal_PostScript_names": [
+            "NotoSans"
+          ],
+          "embedded_program_sha256": "186a06d556fbf461b1fd7799d76ae932f78c515e8d47a62bf86dc941d6dea53e",
+          "embedded_program_bytes": 10368
+        }
+      },
+      {
+        "trace_family": "LatinModernMath-Regular",
+        "source": {
+          "resource": "/F7",
+          "object_reference": [
+            1860,
+            0
+          ],
+          "BaseFont": "/UWHMCE+LatinModernMath-Regular-Identity-H",
+          "descriptor_FontName": "/UWHMCE+LatinModernMath-Regular",
+          "base_family": "LatinModernMath-Regular",
+          "descriptor_family": "LatinModernMath-Regular",
+          "Encoding": "/Identity-H",
+          "subtype": "/Type0",
+          "fontfile_kind": "/FontFile3",
+          "fontfile_subtype": "/CIDFontType0C",
+          "internal_PostScript_names": [
+            "LatinModernMath-Regular"
+          ],
+          "embedded_program_sha256": "7eee87a2a9a92e361674a0586bffdd483efa519fd45648ca496b5376b4597819",
+          "embedded_program_bytes": 2343
+        },
+        "actual": {
+          "resource": "/F7",
+          "object_reference": [
+            125,
+            0
+          ],
+          "BaseFont": "/UWHMCE+LatinModernMath-Regular-Identity-H",
+          "descriptor_FontName": "/UWHMCE+LatinModernMath-Regular",
+          "base_family": "LatinModernMath-Regular",
+          "descriptor_family": "LatinModernMath-Regular",
+          "Encoding": "/Identity-H",
+          "subtype": "/Type0",
+          "fontfile_kind": "/FontFile3",
+          "fontfile_subtype": "/CIDFontType0C",
+          "internal_PostScript_names": [
+            "LatinModernMath-Regular"
+          ],
+          "embedded_program_sha256": "7eee87a2a9a92e361674a0586bffdd483efa519fd45648ca496b5376b4597819",
+          "embedded_program_bytes": 2343
+        }
+      }
+    ]
+  },
+  "actual_count_results": {
+    "visible_new_Korean_d_at_original_orbital_row": 0,
+    "original_spaces_between_d_and_first_subscript": 0,
+    "actual_spaces_between_d_and_first_subscript": 0
+  },
+  "negative_review": {
+    "status": "PASS",
+    "actual_PDF_cases": 4,
+    "all_rejected": true,
+    "proof_hash_guard_not_the_rejection_reason": true,
+    "negative_layout_JSON_hashes_match_reported_values": true,
+    "fake_Q_output_sha256_equals_corrupted_PDF_hash_reported_by_test": true,
+    "claimed_good_native_group_unchanged_in_all_negative_layouts": true,
+    "cases": [
+      {
+        "name": "ordinary-space-width-separates-five-subscripts",
+        "expected_actual_check": "Actual native font/GID/point/common-dx mismatch",
+        "unrelated_slot_label": null,
+        "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+        "page": 57,
+        "fresh_output_hash": true,
+        "native_six_metadata_unchanged": true,
+        "layout_sha256": "7dcf6ae6b1f397f68c50cfbb87ff42ecfc6446f5de61570f919c6f481292e19d",
+        "concrete_actual_mismatch": "('Actual native font/GID/point/common-dx mismatch', {'c': '𝘹', 'gid': 3233, 'font': 'LatinModernMath-Regular', 'size': 6.973800182342529, 'origin': [105.98098754882812, 498.2559509277344], 'bbox': [105.98098754882812, 492.63507080078125, 109.19590759277344, 499.6088562011719], 'paint': 0, 'native_ink_bbox': [105.98098754882812, 495.1595837277344, 109.72591814882813, 498.2559509277344]}, [62.832969665527344, 498.2559509277344], [])"
+      },
+      {
+        "name": "retained-old-proof-redraws-CJK-d",
+        "expected_actual_check": "Actual native font/GID/point/common-dx mismatch",
+        "unrelated_slot_label": null,
+        "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+        "page": 57,
+        "fresh_output_hash": true,
+        "native_six_metadata_unchanged": true,
+        "layout_sha256": "2c457308187e5aadec69e02b51998995f08ec1d0a9d1670af78bc5277348aa45",
+        "concrete_actual_mismatch": "('Actual native font/GID/point/common-dx mismatch', {'c': 'd', 'gid': 71, 'font': 'NotoSans', 'size': 9.962599754333496, 'origin': [99.84101104736328, 495.7949523925781], 'bbox': [99.84101104736328, 487.9755554199219, 105.97034454345703, 497.9381408691406], 'paint': 0}, [56.6929931640625, 495.7949523925781], [])"
+      },
+      {
+        "name": "another-slot-adds-visible-Korean-font-d",
+        "expected_actual_check": "Actual new-Korean d at orbital row",
+        "unrelated_slot_label": "d",
+        "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+        "page": 57,
+        "fresh_output_hash": true,
+        "native_six_metadata_unchanged": true,
+        "layout_sha256": "f166390dcd8b170de4cab947898e1fab1e7b8b9e1e8cfacbea094daaa46e413d",
+        "concrete_actual_mismatch": "('Actual new-Korean d at orbital row', [{'c': 'd', 'gid': 69, 'font': 'NotoSansCJKkr-Regular', 'size': 9.962599754333496, 'origin': [520.0, 495.7949523925781], 'bbox': [520.0, 487.8138732910156, 526.1768188476562, 497.7764587402344], 'paint': 0, 'opacity': 1.0, 'color': [0.0, 0.0, 0.0], 'direction': [1.0, 0.0]}])"
+      },
+      {
+        "name": "another-slot-adds-ordinary-space-glyph",
+        "expected_actual_check": "Actual ordinary-space glyph inside d-to-subscript interval",
+        "unrelated_slot_label": " ",
+        "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+        "page": 57,
+        "fresh_output_hash": true,
+        "native_six_metadata_unchanged": true,
+        "layout_sha256": "5f93f5d352f1a3b7c7098c333325044f466ef8e874f098898f3d605f3e29cc7d",
+        "concrete_actual_mismatch": "('Actual ordinary-space glyph inside d-to-subscript interval', [{'c': ' ', 'gid': 1, 'font': 'NotoSansCJKkr-Regular', 'size': 9.962599754333496, 'origin': [62.8276481628418, 495.7949523925781], 'bbox': [62.8276481628418, 487.8138732910156, 65.05927276611328, 497.7764587402344], 'paint': 0, 'opacity': 1.0, 'color': [0.0, 0.0, 0.0], 'direction': [1.0, 0.0]}])"
+      }
+    ]
+  },
+  "protection_post_probe_report": {
+    "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/style-corrections/icho2024-20261103/experiments/v7/PROTECTED-INPUTS-POST-PROBE-REHASH.json",
+    "sha256": "269dc79568589bff6263ae38a8602786f8d8643deb78b6d22e430e59a0eeddff",
+    "status": "ALL_PROTECTED_ORIGINALS_AND_PRODUCER_INPUTS_REHASH_PASS",
+    "producer_sha256": "1218ee97ff057bb171c0185f103e913976162bada32dc3b9ec48266050e88982",
+    "frozen_v2_inputs": 161,
+    "frozen_v7_probe_inputs": 31,
+    "original_source_copy_files": 910,
+    "initial_working_copies": 171,
+    "owner_reported_all_inputs_unchanged": true
+  },
+  "limits": {
+    "no_new_PDF_or_font_measurement_by_peer": true,
+    "no_final62_generation_or_new_freeze_authorized_by_this_review": true,
+    "zero_space_count_scope_is_d_to_first_subscript_interval": true,
+    "additional_confirmed_blockers_found": []
+  },
+  "file_pins": [
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/style-corrections/icho2024-20261103/audit_p57_actual_native_atom_v2.py",
+      "sha256": "f3129c8888eedf9a9d51c82c5533e6f4bcb50a74d84c8cc44dff3f23da5b3207",
+      "bytes": 10260
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/style-corrections/icho2024-20261103/test_p57_actual_native_atom_v2.py",
+      "sha256": "aeaedd8612fdbda2aa813c8838f40fa3baf84229d2353ffd3f84cfe69c75f3f8",
+      "bytes": 5135
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/style-corrections/icho2024-20261103/experiments/v7/ACTUAL-NATIVE-AUDIT-FREEZE-V2.json",
+      "sha256": "00cc60df6f78d3f4e0bb39ce95218e2067cea5818a467368ff5f20ea398c0fbc",
+      "bytes": 2992
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/style-corrections/icho2024-20261103/experiments/v7/page57.actual-native-atom-v2.json",
+      "sha256": "56168e213fc3891276ddd05998301253089758f54543a9a9edbf469afb56abba",
+      "bytes": 11424
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/style-corrections/icho2024-20261103/experiments/v7/p57-actual-native-atom-v2-negative-regressions.json",
+      "sha256": "1b413a049bf7d1ca6dec89d20ca18bbaccd5cff7215873ae90e2f3b3600d5a0c",
+      "bytes": 4220
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/style-corrections/icho2024-20261103/experiments/v7/PROTECTED-INPUTS-POST-PROBE-REHASH.json",
+      "sha256": "269dc79568589bff6263ae38a8602786f8d8643deb78b6d22e430e59a0eeddff",
+      "bytes": 876
+    }
+  ]
+}

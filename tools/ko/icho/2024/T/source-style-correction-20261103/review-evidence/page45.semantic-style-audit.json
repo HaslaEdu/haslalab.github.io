@@ -1,0 +1,39 @@
+{
+  "page": 45,
+  "passed": true,
+  "proof_sha256": "6c3e54673f77b837f9f3c047cac62ae662e3b06e9429f1c9083541b2f7471269",
+  "source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+  "mapping_sha256": "ad5990b8ceb44b2dabbfc7a53ce8c344907d4b5b243f58e4e7cd88fba0dfde8a",
+  "approved_source_clause_manifest_sha256": "bc06cca28d8b2f3ed93b437a5c3ed12f37cc8dd40d096f174314e5e2dffa68b2",
+  "exact_approved_text_edits": 2,
+  "all_expected_Korean_nonspace_characters_preserved_once": 243,
+  "all_requested_font_roles_bound_to_actual_original_source_styles": true,
+  "exact_original_sizes_and_raw_prose_baseline_pool_membership_preserved": true,
+  "no_other_bold_or_italic_changes": true,
+  "semantic_mappings": [
+    {
+      "index": 52,
+      "source_English": "Draw",
+      "source_original_font": "NotoSans-Bold",
+      "source_pointsize": 9.962599754333496,
+      "source_original_baseline": 319.6519775390625,
+      "target_literal": "그려라",
+      "target_fragment_id": "p45:b5:l1:s0-0#style0",
+      "target_font_role": "sans-bold",
+      "actual_target_baseline": 319.6519775390625
+    },
+    {
+      "index": 53,
+      "source_English": "Select",
+      "source_original_font": "NotoSans-Bold",
+      "source_pointsize": 9.962599754333496,
+      "source_original_baseline": 369.18499755859375,
+      "target_literal": "골라라",
+      "target_fragment_id": "p45:b6:l1:s0-0#style0",
+      "target_font_role": "sans-bold",
+      "actual_target_baseline": 369.18499755859375
+    }
+  ],
+  "new_Korean_italic_placements": 0,
+  "program_sha256": "bbc753360d5c243a4ca31fede8047b67b212cecea704bfae275521e82b8082e4"
+}

@@ -1,0 +1,83 @@
+{
+  "page": 45,
+  "passed": true,
+  "proof_sha256": "6c3e54673f77b837f9f3c047cac62ae662e3b06e9429f1c9083541b2f7471269",
+  "reference_proof_sha256": "ef4dca93f8fa5d89de70f1d9260bbeeaaee2a826043b33479ec355a32d035822",
+  "protected_source_sha256": "959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a",
+  "source_bound_changed_row_baselines": [
+    319.6519775390625,
+    369.18499755859375,
+    381.1399841308594
+  ],
+  "source_bound_row_rects": [
+    [
+      114.19253540039062,
+      308.501953125,
+      270.1528097514978,
+      323.0710144042969
+    ],
+    [
+      114.19253540039062,
+      358.03497314453125,
+      436.5162711271961,
+      372.6040344238281
+    ],
+    [
+      114.19100189208984,
+      369.9899597167969,
+      392.8891595987206,
+      384.55902099609375
+    ]
+  ],
+  "anti_alias_support_pad_pt": 0.5,
+  "pixel_scale": 2,
+  "changed_pixels_total": 10409,
+  "changed_pixels_outside_named_source_rows": 0,
+  "visible_glyph_geometry_outside_rows_exactly_equal": true,
+  "source_font_programs_images_and_image_placements_preserved": true,
+  "kk": {
+    "passed": true,
+    "page": 45,
+    "proof_sha256": "6c3e54673f77b837f9f3c047cac62ae662e3b06e9429f1c9083541b2f7471269",
+    "scale": 2,
+    "threshold": 220,
+    "same_row_grouping_tolerance_pt": 0.001,
+    "close_row_selection_em": 2.0,
+    "tested_close_row_pairs": 4,
+    "pairs": [
+      {
+        "upper_source_baseline": 369.18499755859375,
+        "lower_source_baseline": 381.1399841308594,
+        "gap_pt": 11.954986572265625,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 606.7369995117188,
+        "lower_source_baseline": 618.6920166015625,
+        "gap_pt": 11.95501708984375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 618.6920166015625,
+        "lower_source_baseline": 637.6209716796875,
+        "gap_pt": 18.928955078125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 637.6209716796875,
+        "lower_source_baseline": 656.5499877929688,
+        "gap_pt": 18.92901611328125,
+        "contact_pixels_2x": 0
+      }
+    ],
+    "failures": [],
+    "actual_embedded_subset_fonts": true,
+    "unchanged_word_space_size_shear_paints": true,
+    "cached_row_renders": 6,
+    "old_pair_specific_row_renders": 8,
+    "cache_regression_grayscale_byte_comparisons": 0,
+    "intentional_same_row_overlap_negative_control_pixels": 4473,
+    "orthogonal_labels_excluded": []
+  },
+  "program_sha256": "da97a0ca5a5e425f2dbcb640f274ae48610c4ee55780837e9c71150c1c28e37e"
+}

@@ -1,0 +1,47 @@
+{
+  "status": "PREPARATION_ONLY_NO_PAGE_WORKERS_STARTED",
+  "working_files_differing_from_v2": [
+    {
+      "path": "working\\authoring\\icho2024_style_experiment_guard.py",
+      "before": "295f24e48b84d0acc5485ef1f40f00f04418c827671cebf946533e2ed6648995",
+      "after": "6364a11324f52ffdc3a01c49fee8b60b571c41fddadd3732d197d4dd3e4fc69f"
+    },
+    {
+      "path": "working\\overrides\\page07.overrides.json",
+      "before": "588529a91d7e67df62caac381e4e1dff2fa1acba7f6878a18b959ccd99999a89",
+      "after": "0cac9be99f80487dee18b98d37513f12b2034a5c35520b64bd6cf66bf06aa14c"
+    },
+    {
+      "path": "working\\overrides\\page57.overrides.json",
+      "before": "ab19ad86a69b744d895bddd23eb30477ee9c54179c272cc0c6ee88703439bc2a",
+      "after": "8b2f487644e82ec26ea5e305a2ec6b780794204dc583dd9fd075bb4b933e3fb6"
+    },
+    {
+      "path": "working\\plans\\page07.plan.json",
+      "before": "a40391d3467e6559e83515087dbc015feb1a806252e6fa8d56daaa399d4ef9e2",
+      "after": "609fd2121d73a83c443b2bfc7a50781b2304b7354f23a283273f39f4d1984e97"
+    },
+    {
+      "path": "working\\plans\\page57.plan.json",
+      "before": "ad7db4f93d81b9ccc15af9609ae16d57ee8a394cdeeb7533a9e13627db11fcda",
+      "after": "8771e023712294ac61f03065f615bca7585a6bc19c1575957225909b4698f464"
+    },
+    {
+      "path": "working\\style-engine\\prose_style_rules_icho2024.py",
+      "before": "5454d224aa03df3c58383de71d9f2d5d7ed4d2f7f264051f1024d1a58e938c5a",
+      "after": "ffb8a800850c540d804ba868d589418b4b3a31226f5643a1d577c80c4480626d"
+    }
+  ],
+  "exact_approved_slot_count": 54,
+  "only_two_added_approved_slots": [
+    "p7:b6:l1:s0-0:c0-33",
+    "p57:b11:l3:s0-0"
+  ],
+  "source_native_p57_d_restored_using_existing_skip_emptyextra_char_range": true,
+  "producer_composer_and_motion_byte_identical": true,
+  "all_python_files_AST_parse": true,
+  "single_page_gate_stdout_inherited_no_suspension": true,
+  "outside_gate_yield_seconds": 8,
+  "special_p57_auditor_mandatory_on_actual_new_final_proof": true,
+  "root_final62_generation_GO_pending": true
+}
