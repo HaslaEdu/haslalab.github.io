@@ -44,10 +44,12 @@ async function fixture(run){
   const t=Math.floor(Date.now()/1000),tokens={},queue=[],calls=[];
   for(const id of [1,2,3]){tokens[id]=('vision_test_'+id).padEnd(48,'x');sql.prepare("INSERT INTO users(id,username,nickname,pw,created_at,exam_tokens)VALUES(?,?,?,'unused',?,5)").run(id,'vision'+id,'Vision '+id,t);sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]),id,t,t+86400);}
   const env={DB,GEMINI_API_KEY:'local-gemini',DEEPSEEK_API_KEY:'local-deepseek',UPSTAGE_API_KEY:'must-never-be-used',LAB_KEEP_HOURS:'off',REFERENCE_PDFIUM_LOAD:async()=>renderer(),LAB_JOBS:{async sendBatch(items){queue.push(...items);}}};
+  const curatedSchemes={};
   let mathpixText='$v_0 = I_0 / M$ (mathpix)',failProvider=false,emptyWithTools=false,truncateReads=0,beforeProvider=async()=>{},limitModel=null,gradeReply=null,moderateReply=null,reviewReply=null,auditReply=null;
   const old={fetch:globalThis.fetch,caches:globalThis.caches};globalThis.caches={default:{async match(){},async put(){}}};
   globalThis.fetch=async(input,init={})=>{
     const url=String(input);
+    if(url.startsWith('https://haslalab.org/schemes/')){const k=url.slice('https://haslalab.org/schemes/'.length).replace(/\.json$/,'');return curatedSchemes[k]?Response.json(curatedSchemes[k]):new Response('not found',{status:404});}
     if(url.startsWith('https://github.com/')||url.startsWith('https://haslalab.org/pdfx/')||/https:\/\/www\.(kms|kmo)\.or\.kr\//.test(url))return new Response('%PDF-1.4\nSelected vision local reference fixture '+url);
     assert.ok(!url.includes('upstage'),'no production OCR request may reach Upstage');
     if(url.startsWith('https://api.mathpix.com/')){calls.push({provider:'mathpix',url,body:JSON.parse(init.body),parts:[],text:''});return Response.json({text:mathpixText,confidence:.9});}
@@ -82,7 +84,7 @@ async function fixture(run){
   const seedScheme=(sid,provider)=>{const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=[provider,VISION_MODELS[provider],REG_VERSION,entry.solution,entry.mark||''].join(':');sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:2,items:[{id:'G',points:2,type:'graph',sheet:'answer',what:'Label axes and fitted line with direction.',checks:[{check:'axes_labeled',points:1},{check:'fit_line',points:1}]}]}),'fixture:'+provider,t);};
   const problem=()=>{const r=sql.prepare("INSERT INTO problems(week,no,kind,subject,level,points,title_ko,title_en,body_ko,body_en,model_ko,model_en,rubric,opens_at,closes_at,created_at)VALUES('2098-W01',1,'essay','physics',1,2,'그래프','Graph','Graph task','Graph task','Direction','Direction',?,?,?,?)").run(JSON.stringify([{id:'G',name:'Direction',max:2,requirement:'Inspect actual graph direction.'}]),t-60,t+7200,t);return Number(r.lastInsertRowid);};
   const ocrPhoto=async(pid,provider,id=1)=>{const form=new FormData();form.append('image',new Blob([scan],{type:'image/jpeg'}),'graph.jpg');const response=await worker.fetch(new Request(`https://vision.local/api/ocr?mode=math&problem_id=${pid}${provider?'&provider='+provider:''}`,{method:'POST',headers:{Authorization:'Bearer '+tokens[id]},body:form}),env);return{status:response.status,data:await response.json()};};
-  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},emptyTools:()=>{emptyWithTools=true;},mathpix:t=>{mathpixText=t;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;},replies:(g,mod)=>{gradeReply=g;moderateReply=mod;},review:r=>{reviewReply=r;},audit:r=>{auditReply=r;}});}finally{Object.assign(globalThis,old);sql.close();}
+  try{await run({sql,env,api,start,upload,drain,calls,seedScheme,problem,ocrPhoto,beforeProvider:fn=>{beforeProvider=fn;},fail:()=>{failProvider=true;},emptyTools:()=>{emptyWithTools=true;},mathpix:t=>{mathpixText=t;},truncate:n=>{truncateReads=n;},limit:m=>{limitModel=m;},curated:(k,v)=>{curatedSchemes[k]=v;},replies:(g,mod)=>{gradeReply=g;moderateReply=mod;},review:r=>{reviewReply=r;},audit:r=>{auditReply=r;}});}finally{Object.assign(globalThis,old);sql.close();}
 }
 
 test('grading mode spends its token when the sitting opens: the provider is pinned then, and an unpaid start leaves nothing open',async()=>fixture(async({api,start,sql,calls})=>{
@@ -769,6 +771,21 @@ test('experiments: a graph\'s slope outside the range the scheme prints loses wh
   assert.match(detail,/"id":"B2\.b"[^}]*"got":0[,}]/,'12.7 against 8.8-10 (the other sign counts, the size does not)');
   assert.match(detail,/"id":"B2\.f"[^}]*"got":0\.3[,}]/,'11.3 within 11.3-12.8, with the sign of a -ln axis');
   assert.match(detail,/"id":"B2\.d"[^}]*"got":0[,}]/,'no value from the grader: the slope read with the graph, 16.0, decides');
+}));
+
+test('a curated marking scheme on the site (schemes/<exam>/<task>.json) is used before the machine-built one',async()=>fixture(async({api,start,upload,drain,sql,env,replies,curated,calls})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_MISSING_RECHECK='off';env.LAB_R13_RECHECK='off';env.LAB_EXPR_CHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:1,items:[{id:'M',points:1,type:'derivation',role:'result',sheet:'any',what:'machine line'}]}),'fixture',Math.floor(Date.now()/1000));
+  curated('ipho2025/T1',{points:1.5,items:[{id:'A.1',points:0.5,type:'derivation',role:'result',sheet:'any',what:'curated: speed of the electron'},{id:'A.2',points:1,type:'derivation',role:'result',sheet:'any',what:'curated: Bohr radius'}]});
+  replies({items:[{id:'A.1',found:true,page:1,score:0.5,rules:[],note:'',quote:''},{id:'A.2',found:true,page:1,score:0,rules:[],note:'',quote:''}],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"A\.1"[^}]*"got":0\.5[,}]/);assert.match(detail,/"id":"A\.2"/);assert.ok(!/"id":"M"/.test(detail),'the machine scheme is not used');
+  const grade=calls.find(c=>c.text.includes('[TASK: grade]'));assert.match(grade.text,/curated: Bohr radius/);
 }));
 
 test('double grading: an item the two gradings mark differently is decided once more from the photos, and the scheme review fixes a one-point window before grading',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies,review})=>{

@@ -1500,7 +1500,7 @@ const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI
   ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
-  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined, _schemeCheck: typeof bench?.check === 'boolean' ? bench.check : undefined, _media: ['high', 'medium', 'low'].includes(bench?.media) ? bench.media : undefined, _boxes: typeof bench?.boxes === 'boolean' ? bench.boxes : undefined, _api: bench?.api === 'responses' ? 'responses' : undefined, _endpoint: /^projects\/\d+\/locations\/[\w-]+\/endpoints\/\d+$/.test(bench?.endpoint || '') ? bench.endpoint : undefined, _vertex: bench?.vertex === true ? true : undefined, _tier: bench?.tier === 'flex' ? 'flex' : undefined }) };
+  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined, _schemeCheck: typeof bench?.check === 'boolean' ? bench.check : undefined, _media: ['high', 'medium', 'low'].includes(bench?.media) ? bench.media : undefined, _boxes: typeof bench?.boxes === 'boolean' ? bench.boxes : undefined, _api: bench?.api === 'responses' ? 'responses' : undefined, _endpoint: /^projects\/\d+\/locations\/[\w-]+\/endpoints\/\d+$/.test(bench?.endpoint || '') ? bench.endpoint : undefined, _vertex: bench?.vertex === true ? true : undefined, _curated: bench?.curated === false ? false : undefined, _tier: bench?.tier === 'flex' ? 'flex' : undefined }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -1963,10 +1963,31 @@ let labSchemeBuilds = Promise.resolve();
 const labSchemeTwoStage = (env, s) => labSrc(s)._scheme2 === true || env?.LAB_SCHEME_TWO_STAGE === "on";
 const labSchemeKey = (s, src, sx, env) => { const p = labProvider(s), th = labSrc(s)._thinking;
   return [p, (benchModel(p, labSrc(s)._model) || VISION_MODELS[p]) + (p === 'deepseek' && ['low', 'medium', 'high', 'max'].includes(th) ? '@' + th : '') + (labSchemeTwoStage(env, s) ? '#2' : ''), SCHEME_VERSION, src, sx.mark || ''].join(':'); };
+/* a marking scheme written by hand from the official one and checked line by line (schemes/<exam>/<task>.json on the
+   site, reviewed in the repository), used before any machine-built scheme: the machine's schemes carried most of the
+   experiments' misgrades (dropped deductions, a total of 8.8 for 8, an example's reading taken as a window).
+   LAB_CURATED_SCHEMES off, or bench scheme.curated false, skips it. */
+/* the papers that have curated schemes (schemes/<exam>/ in the repository; test-curated-schemes.mjs keeps the two in step):
+   no other paper's grading reaches out for one */
+const CURATED_SCHEMES = new Set(["ipho2025"]);
+async function labCuratedScheme(env, s, task) {
+  if (env.LAB_CURATED_SCHEMES === 'off' || labSrc(s)._curated === false || !CURATED_SCHEMES.has(String(s.exam_key))) return null;
+  if (!/^[a-z]{3,8}\d{4}$/.test(String(s.exam_key)) || !LAB_TASK_RE.test(String(task))) return null;
+  try {
+    const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}schemes/${s.exam_key}/${task}.json`, { signal: AbortSignal.timeout(15000), cf: { cacheTtl: 300, cacheEverything: true } });
+    if (!r.ok) return null;
+    const sc = await r.json();
+    if (!sc || !Array.isArray(sc.items) || !sc.items.length) return null;
+    const settled = ownDataWindows(settleScheme({ ...sc, curated: true })).scheme;
+    return settled.items.length ? settled : null;
+  } catch (e) { console.error('lab curated scheme', e?.message); return null; }
+}
 async function labScheme(env, s, task, m, strict = false) {
   const sx = labCanonicalSource(s,task)||{}, src=sx.sol;
   if(!src)return null;
   if(sx.referenceStatus==='independent')return {unscored:true,points:null,items:[],notes:'nonofficial_reference'};
+  const curated = await labCuratedScheme(env, s, task);
+  if (curated) return curated;
   const key = labSchemeKey(s,src,sx,env);
   const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   /* the scheme model refused (its quota) or failed: the fallback model reads the solution, kept under its own key */
@@ -3285,7 +3306,7 @@ async function labBench(env, s, job) {
   const row = await env.DB.prepare("SELECT * FROM lab_bench WHERE id=? AND session_id=? AND status='pending'").bind(job.page_id, s.id).first();
   if (!row) return { cancelled: true };
   const spec = JSON.parse(row.spec), m = meter(), t0 = Date.now();
-  const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking, twoStage: c.twoStage, check: c.check, api: c.api, tier: c.tier });
+  const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking, twoStage: c.twoStage, check: c.check, api: c.api, tier: c.tier, curated: c.curated });
   let out, failed = false;
   try {
     /* what GOOGLE_CLOUD_API_KEY can do (admin bench, {stage:'gcp', model?, project?, region?}): a Vertex express call, the
