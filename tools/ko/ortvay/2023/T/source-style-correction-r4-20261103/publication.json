@@ -1,0 +1,4307 @@
+{
+  "schema": "natural-source-native-joined-v1",
+  "status": "READY",
+  "file": "Ortvay_2023_T_KO.pdf",
+  "language": "ko",
+  "pages": 13,
+  "bytes": 7317117,
+  "sha256": "8083c11610dd74b6805cf7cd8f8892e7802c015735a668068dad3b4dd89e153d",
+  "source": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2023_T_EN.pdf",
+  "source_sha256": "c0a5117145c67edc2dfe8953dcc7865438f65e099fe6e73b2ec19616ab27b5f7",
+  "resolved_source_read_path": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2023_T_EN.pdf",
+  "source_path_resolver_sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9",
+  "no_font_shrink": true,
+  "no_math_rasterization": true,
+  "no_reserved_english_widths": true,
+  "inline_native_math_moved_as_whole_expressions": true,
+  "stationary_display_equations_and_figures": true,
+  "original_font_sizes_and_baselines_preserved": true,
+  "hidden_original_prose_has_empty_ActualText": true,
+  "no_added_editorial_notes": true,
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "39a41c67878f362ce7a809e39925977a940aa068123259a105f81a3d42036d54",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page01.qa.json",
+      "qa_sha256": "9207875732d76c868aa3408244553187dd9ca28ffe1c12bf185d1218ebb2cc79",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page01.plan.json",
+      "plan_sha256": "f838f5d9d228c6221b8e8b98a76bd80720e125b3a3c7ecb31779579b8e6aa770",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page01.effective-plan.json",
+      "effective_plan_sha256": "9606a9f51f18c206540c2a848f27c6987a4eca780bec415c2a41c95a9059c77e",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page01.overrides.json",
+      "overrides_sha256": "f10669073b50642c52bfcfee171d1eff3795940de3801336b968bc4418b57869",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 451,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 37,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 1,
+          "source_link_index": 0,
+          "uri": "https://youtu.be/ROnxjj5jPDs",
+          "display_fragment": "https://youtu.be/ROnxjj5jPDs",
+          "source_rect_pdf": [
+            380.681,
+            254.467,
+            554.886,
+            267.416
+          ],
+          "target_rect_pdf": [
+            292.0522165738907,
+            254.467,
+            466.2572165738907,
+            267.416
+          ],
+          "source_rect_mupdf": [
+            380.6809997558594,
+            524.583984375,
+            554.885986328125,
+            537.5330200195312
+          ],
+          "expected_target_rect_mupdf": [
+            292.0522163297501,
+            524.583984375,
+            466.2572029020157,
+            537.5330200195312
+          ],
+          "dx": -88.6287834261093,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 18,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  381.677978515625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  381.677978515625,
+                  525.1119384765625,
+                  387.82293701171875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 0,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  387.83489990234375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  387.83489990234375,
+                  525.1119384765625,
+                  393.9798583984375,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 1,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  393.9918212890625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  393.9918212890625,
+                  525.1119384765625,
+                  400.13677978515625,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 2,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  400.14874267578125,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  400.14874267578125,
+                  525.1119384765625,
+                  406.293701171875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 3,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  406.3056640625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  406.3056640625,
+                  525.1119384765625,
+                  412.45062255859375,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 4,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 13,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  412.46258544921875,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  412.46258544921875,
+                  525.1119384765625,
+                  418.6075439453125,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 5,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  418.6195068359375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  418.6195068359375,
+                  525.1119384765625,
+                  424.76446533203125,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 6,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  424.77642822265625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  424.77642822265625,
+                  525.1119384765625,
+                  430.92138671875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 7,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "y",
+                "gid": 34,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  430.933349609375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  430.933349609375,
+                  525.1119384765625,
+                  437.07830810546875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 8,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  437.09027099609375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  437.09027099609375,
+                  525.1119384765625,
+                  443.2352294921875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 9,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 31,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  443.2471923828125,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  443.2471923828125,
+                  525.1119384765625,
+                  449.39215087890625,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 10,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  449.40411376953125,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  449.40411376953125,
+                  525.1119384765625,
+                  455.549072265625,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 11,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 31,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  455.549072265625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  455.549072265625,
+                  525.1119384765625,
+                  461.69403076171875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 12,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  461.70599365234375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  461.70599365234375,
+                  525.1119384765625,
+                  467.8509521484375,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 13,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "b",
+                "gid": 9,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  467.8629150390625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  467.8629150390625,
+                  525.1119384765625,
+                  474.00787353515625,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 14,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  474.01983642578125,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  474.01983642578125,
+                  525.1119384765625,
+                  480.164794921875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 15,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  480.1767578125,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  480.1767578125,
+                  525.1119384765625,
+                  486.32171630859375,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 16,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "R",
+                "gid": 5,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  486.33367919921875,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  486.33367919921875,
+                  525.1119384765625,
+                  492.4786376953125,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 17,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "O",
+                "gid": 3,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  492.4906005859375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  492.4906005859375,
+                  525.1119384765625,
+                  498.63555908203125,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 18,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "n",
+                "gid": 23,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  498.64752197265625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  498.64752197265625,
+                  525.1119384765625,
+                  504.79248046875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 19,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "x",
+                "gid": 33,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  504.804443359375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  504.804443359375,
+                  525.1119384765625,
+                  510.94940185546875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 20,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "j",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  510.96136474609375,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  510.96136474609375,
+                  525.1119384765625,
+                  517.1063232421875,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 21,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "j",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  517.1182861328125,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  517.1182861328125,
+                  525.1119384765625,
+                  523.2632446289062,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 22,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "5",
+                "gid": 16,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  523.2752075195312,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  523.2752075195312,
+                  525.1119384765625,
+                  529.420166015625,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 23,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "j",
+                "gid": 20,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  529.43212890625,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  529.43212890625,
+                  525.1119384765625,
+                  535.5770874023438,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 24,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "P",
+                "gid": 4,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  535.5890502929688,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  535.5890502929688,
+                  525.1119384765625,
+                  541.7340087890625,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 25,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "D",
+                "gid": 1,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  541.7459716796875,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  541.7459716796875,
+                  525.1119384765625,
+                  547.8909301757812,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 26,
+              "dx": -88.6287834261093
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  547.9028930664062,
+                  533.8809814453125
+                ],
+                "bbox": [
+                  547.9028930664062,
+                  525.1119384765625,
+                  554.0478515625,
+                  537.067138671875
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 3,
+              "shift_glyph_index": 27,
+              "dx": -88.6287834261093
+            }
+          ],
+          "source_url_glyphs": 28,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 7.535782060585916e-07,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            292.0522155761719,
+            524.583984375,
+            466.2572021484375,
+            537.5330200195312
+          ],
+          "passed": true
+        },
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 1,
+          "source_link_index": 1,
+          "uri": "https://en.wikipedia.org/wiki/Tensegrity",
+          "display_fragment": "https://en.wikipedia.org/wiki/Tensegrity",
+          "source_rect_pdf": [
+            186.904,
+            237.662,
+            434.914,
+            250.611
+          ],
+          "target_rect_pdf": [
+            129.70057423496246,
+            237.662,
+            377.71057423496245,
+            250.611
+          ],
+          "source_rect_mupdf": [
+            186.9040069580078,
+            541.3890380859375,
+            434.91400146484375,
+            554.3380126953125
+          ],
+          "expected_target_rect_mupdf": [
+            129.70058119297028,
+            541.3890380859375,
+            377.7105756998062,
+            554.3380126953125
+          ],
+          "dx": -57.20342576503754,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 18,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  187.90097045898438,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  187.90097045898438,
+                  541.9168701171875,
+                  194.0459442138672,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 0,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  194.05789184570312,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  194.05789184570312,
+                  541.9168701171875,
+                  200.20286560058594,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 1,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  200.21481323242188,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  200.21481323242188,
+                  541.9168701171875,
+                  206.3597869873047,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 2,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  206.37173461914062,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  206.37173461914062,
+                  541.9168701171875,
+                  212.51670837402344,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 3,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  212.52865600585938,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  212.52865600585938,
+                  541.9168701171875,
+                  218.6736297607422,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 4,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 13,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  218.68557739257812,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  218.68557739257812,
+                  541.9168701171875,
+                  224.83055114746094,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 5,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  224.84249877929688,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  224.84249877929688,
+                  541.9168701171875,
+                  230.9874725341797,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 6,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  230.99942016601562,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  230.99942016601562,
+                  541.9168701171875,
+                  237.14439392089844,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 7,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  237.15634155273438,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  237.15634155273438,
+                  541.9168701171875,
+                  243.3013153076172,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 8,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "n",
+                "gid": 23,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  243.31326293945312,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  243.31326293945312,
+                  541.9168701171875,
+                  249.45823669433594,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 9,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  249.47018432617188,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  249.47018432617188,
+                  541.9168701171875,
+                  255.6151580810547,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 10,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  255.62710571289062,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  255.62710571289062,
+                  541.9168701171875,
+                  261.7720642089844,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 11,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  261.7720642089844,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  261.7720642089844,
+                  541.9168701171875,
+                  267.9170227050781,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 12,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  267.9289855957031,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  267.9289855957031,
+                  541.9168701171875,
+                  274.0739440917969,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 13,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  274.0859069824219,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  274.0859069824219,
+                  541.9168701171875,
+                  280.2308654785156,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 14,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  280.2428283691406,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  280.2428283691406,
+                  541.9168701171875,
+                  286.3877868652344,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 15,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  286.3997497558594,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  286.3997497558594,
+                  541.9168701171875,
+                  292.5447082519531,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 16,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "d",
+                "gid": 14,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  292.5566711425781,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  292.5566711425781,
+                  541.9168701171875,
+                  298.7016296386719,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 17,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  298.7135925292969,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  298.7135925292969,
+                  541.9168701171875,
+                  304.8585510253906,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 18,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 7,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  304.8705139160156,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  304.8705139160156,
+                  541.9168701171875,
+                  311.0154724121094,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 19,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  311.0274353027344,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  311.0274353027344,
+                  541.9168701171875,
+                  317.1723937988281,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 20,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  317.1843566894531,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  317.1843566894531,
+                  541.9168701171875,
+                  323.3293151855469,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 21,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  323.3412780761719,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  323.3412780761719,
+                  541.9168701171875,
+                  329.4862365722656,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 22,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "g",
+                "gid": 17,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  329.4981994628906,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  329.4981994628906,
+                  541.9168701171875,
+                  335.6431579589844,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 23,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  335.6551208496094,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  335.6551208496094,
+                  541.9168701171875,
+                  341.8000793457031,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 24,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  341.8120422363281,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  341.8120422363281,
+                  541.9168701171875,
+                  347.9570007324219,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 25,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  347.9689636230469,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  347.9689636230469,
+                  541.9168701171875,
+                  354.1139221191406,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 26,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "k",
+                "gid": 21,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  354.1258850097656,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  354.1258850097656,
+                  541.9168701171875,
+                  360.2708435058594,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 27,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  360.2828063964844,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  360.2828063964844,
+                  541.9168701171875,
+                  366.4277648925781,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 28,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  366.4397277832031,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  366.4397277832031,
+                  541.9168701171875,
+                  372.5846862792969,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 29,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "T",
+                "gid": 6,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  372.5966491699219,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  372.5966491699219,
+                  541.9168701171875,
+                  378.7416076660156,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 30,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  378.7535705566406,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  378.7535705566406,
+                  541.9168701171875,
+                  384.8985290527344,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 31,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "n",
+                "gid": 23,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  384.9104919433594,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  384.9104919433594,
+                  541.9168701171875,
+                  391.0554504394531,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 32,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  391.0674133300781,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  391.0674133300781,
+                  541.9168701171875,
+                  397.2123718261719,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 33,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  397.2243347167969,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  397.2243347167969,
+                  541.9168701171875,
+                  403.3692932128906,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 34,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "g",
+                "gid": 17,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  403.3692932128906,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  403.3692932128906,
+                  541.9168701171875,
+                  409.5142517089844,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 35,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  409.5262145996094,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  409.5262145996094,
+                  541.9168701171875,
+                  415.6711730957031,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 36,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  415.6831359863281,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  415.6831359863281,
+                  541.9168701171875,
+                  421.8280944824219,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 37,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  421.8400573730469,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  421.8400573730469,
+                  541.9168701171875,
+                  427.9850158691406,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 38,
+              "dx": -57.20342576503754
+            },
+            {
+              "source_glyph": {
+                "c": "y",
+                "gid": 34,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  427.9969787597656,
+                  550.6859130859375
+                ],
+                "bbox": [
+                  427.9969787597656,
+                  541.9168701171875,
+                  434.1419372558594,
+                  553.8720703125
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 4,
+              "shift_glyph_index": 39,
+              "dx": -57.20342576503754
+            }
+          ],
+          "source_url_glyphs": 40,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 1.0848045349121094e-05,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            129.70057678222656,
+            541.3890380859375,
+            377.7105712890625,
+            554.3380126953125
+          ],
+          "passed": true
+        }
+      ],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "proof_sha256": "c0f726811d64409b904970c8848ff9850ab3eeed56f5be2199f1fa49779fb9ff",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page02.qa.json",
+      "qa_sha256": "209b75fd357244b97eff312db3d9ddaf962f79abb3cfcbbf233402104189046c",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page02.plan.json",
+      "plan_sha256": "5ba4c4f101aaea20f19008437bc5d6b6e6059838761743640259c9456c9c27e1",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page02.effective-plan.json",
+      "effective_plan_sha256": "601445d047fb2ef64ea0d4df85069d1f5582f841652c2232f78677e6472ff3d3",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page02.overrides.json",
+      "overrides_sha256": "796d872ace7b4bc45e6323f51f2b4fbf654056395826ce02a4bcee675acd45de",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 748,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 61,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "proof_sha256": "6531568bdc47b13a6994b0b1957463809986f1483b5186fdcdcc16af6916efc4",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page03.qa.json",
+      "qa_sha256": "ebad4b5e1266062eb7f819cfee387739dbee9f5dc7314272bb0de5d53bcb4db4",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page03.plan.json",
+      "plan_sha256": "5385cdd4ee4feec186c96c85e87a1fe7c89c3739acb92268603a24d78ffd31b5",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page03.effective-plan.json",
+      "effective_plan_sha256": "5bddeb96cbd6b8f0d0194043bcdbf7b3592d51297c9924da996465f73bad7a2f",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page03.overrides.json",
+      "overrides_sha256": "76e460c3aaa5198e5ccafe2164c5496aa49f0adda156d5d4b498ff266ab83575",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 728,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 46,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "proof_sha256": "2b07f136828b4e050349c7bbeae1dad469f75ec7a449d48f1fefec0a98f039a6",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page04.qa.json",
+      "qa_sha256": "b3f2ef75382d3fbbc0ddc2264dba318c6a2a569d93928ddd07d2a416af66ff2d",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page04.plan.json",
+      "plan_sha256": "8df400fb1b11053425890b1275216b725572e482fa021006cfc65ca8d0998a30",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page04.effective-plan.json",
+      "effective_plan_sha256": "c7730a9c43d8b4fabf60b7b49c69a278acbfdcd51e36c9740bebf511f8e086d5",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page04.overrides.json",
+      "overrides_sha256": "e782fe30e4c95ade03c63ea9353fd31bff0570078daa3d09b0e6c0cd1ec2b541",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 945,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 62,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "proof_sha256": "505c373306b2c8c424a017ba47b2f4762a180f2bcd3bb31fed98ee0e38a212f1",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page05.qa.json",
+      "qa_sha256": "77501ef269301237b38ec50cad31b6f154361e596d9b7e0b0d6a5a71b7e0ffe8",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page05.plan.json",
+      "plan_sha256": "01e25bafe04463dbf4c494c8d4452052c95da97b21ff9eb903ce7a824459fe14",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page05.effective-plan.json",
+      "effective_plan_sha256": "d487428310dcb1ad7a4c3076c5d92deea3b35c15c408cf829b7b42378ff56d2e",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page05.overrides.json",
+      "overrides_sha256": "0da52275136450306550d3ef90eb68a044e3795115c8fc7aa1bc6f29568e0833",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 1119,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 65,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "proof_sha256": "38a3cca60fbbfec18b7db9192fdd775c806ba9ab0593cf63d6da346f62372236",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page06.qa.json",
+      "qa_sha256": "4db3c2c51f387095b63c2959abe4aad28a38741e051f49f42eb5388989652389",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page06.plan.json",
+      "plan_sha256": "91f767e096dc67eb43fd1ee80c944421dc754adc1404a2a5e4d4de2d4e8cf821",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page06.effective-plan.json",
+      "effective_plan_sha256": "2479a39f00c6de10091531ee0f10ed16639a1e95a94636091f0f1a11690b00e3",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page06.overrides.json",
+      "overrides_sha256": "2ffc84e43f0e62acd2837e7e3921545ea3225d20e09db254445626c582a1db04",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 752,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 83,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [
+        {
+          "schema": "reviewed-source-url-subset-v1",
+          "page": 6,
+          "source_link_index": 0,
+          "uri": "https://www.youtube.com/@TrainExperiments",
+          "display_fragment": "https://www.youtube.com/@TrainExperiments",
+          "source_rect_pdf": [
+            246.802,
+            738.397,
+            500.962,
+            751.346
+          ],
+          "target_rect_pdf": [
+            251.38850970458984,
+            738.397,
+            505.54850970458983,
+            751.346
+          ],
+          "source_rect_mupdf": [
+            246.802001953125,
+            40.65399169921875,
+            500.9620056152344,
+            53.60302734375
+          ],
+          "expected_target_rect_mupdf": [
+            251.38851165771484,
+            40.65399169921875,
+            505.5485153198242,
+            53.60302734375
+          ],
+          "dx": 4.586509704589844,
+          "glyph_references": [
+            {
+              "source_glyph": {
+                "c": "h",
+                "gid": 18,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  247.79800415039062,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  247.79800415039062,
+                  41.18192672729492,
+                  253.94297790527344,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 0,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  253.95492553710938,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  253.95492553710938,
+                  41.18192672729492,
+                  260.0998840332031,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 1,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  260.1118469238281,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  260.1118469238281,
+                  41.18192672729492,
+                  266.2568054199219,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 2,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  266.2687683105469,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  266.2687683105469,
+                  41.18192672729492,
+                  272.4137268066406,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 3,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  272.4256896972656,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  272.4256896972656,
+                  41.18192672729492,
+                  278.5706481933594,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 4,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": ":",
+                "gid": 13,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  278.5826110839844,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  278.5826110839844,
+                  41.18192672729492,
+                  284.7275695800781,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 5,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  284.7395324707031,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  284.7395324707031,
+                  41.18192672729492,
+                  290.8844909667969,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 6,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  290.8964538574219,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  290.8964538574219,
+                  41.18192672729492,
+                  297.0414123535156,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 7,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  297.0533752441406,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  297.0533752441406,
+                  41.18192672729492,
+                  303.1983337402344,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 8,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  303.2102966308594,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  303.2102966308594,
+                  41.18192672729492,
+                  309.3552551269531,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 9,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "w",
+                "gid": 32,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  309.3672180175781,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  309.3672180175781,
+                  41.18192672729492,
+                  315.5121765136719,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 10,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  315.5241394042969,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  315.5241394042969,
+                  41.18192672729492,
+                  321.6690979003906,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 11,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "y",
+                "gid": 34,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  321.6690979003906,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  321.6690979003906,
+                  41.18192672729492,
+                  327.8140563964844,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 12,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  327.8260192871094,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  327.8260192871094,
+                  41.18192672729492,
+                  333.9709777832031,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 13,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 31,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  333.9829406738281,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  333.9829406738281,
+                  41.18192672729492,
+                  340.1278991699219,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 14,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  340.1398620605469,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  340.1398620605469,
+                  41.18192672729492,
+                  346.2848205566406,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 15,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "u",
+                "gid": 31,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  346.2967834472656,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  346.2967834472656,
+                  41.18192672729492,
+                  352.4417419433594,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 16,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "b",
+                "gid": 9,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  352.4537048339844,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  352.4537048339844,
+                  41.18192672729492,
+                  358.5986633300781,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 17,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  358.6106262207031,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  358.6106262207031,
+                  41.18192672729492,
+                  364.7555847167969,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 18,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": ".",
+                "gid": 26,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  364.7675476074219,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  364.7675476074219,
+                  41.18192672729492,
+                  370.9125061035156,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 19,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "c",
+                "gid": 12,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  370.9244689941406,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  370.9244689941406,
+                  41.18192672729492,
+                  377.0694274902344,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 20,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "o",
+                "gid": 24,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  377.0813903808594,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  377.0813903808594,
+                  41.18192672729492,
+                  383.2263488769531,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 21,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "m",
+                "gid": 22,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  383.2383117675781,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  383.2383117675781,
+                  41.18192672729492,
+                  389.3832702636719,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 22,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "/",
+                "gid": 29,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  389.3952331542969,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  389.3952331542969,
+                  41.18192672729492,
+                  395.5401916503906,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 23,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "@",
+                "gid": 8,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  395.5521545410156,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  395.5521545410156,
+                  41.18192672729492,
+                  401.6971130371094,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 24,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "T",
+                "gid": 6,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  401.7090759277344,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  401.7090759277344,
+                  41.18192672729492,
+                  407.8540344238281,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 25,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  407.8659973144531,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  407.8659973144531,
+                  41.18192672729492,
+                  414.0109558105469,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 26,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "a",
+                "gid": 7,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  414.0229187011719,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  414.0229187011719,
+                  41.18192672729492,
+                  420.1678771972656,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 27,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  420.1798400878906,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  420.1798400878906,
+                  41.18192672729492,
+                  426.3247985839844,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 28,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "n",
+                "gid": 23,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  426.3367614746094,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  426.3367614746094,
+                  41.18192672729492,
+                  432.4817199707031,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 29,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "E",
+                "gid": 2,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  432.4936828613281,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  432.4936828613281,
+                  41.18192672729492,
+                  438.6386413574219,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 30,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "x",
+                "gid": 33,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  438.6506042480469,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  438.6506042480469,
+                  41.18192672729492,
+                  444.7955627441406,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 31,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "p",
+                "gid": 25,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  444.8075256347656,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  444.8075256347656,
+                  41.18192672729492,
+                  450.9524841308594,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 32,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  450.9644470214844,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  450.9644470214844,
+                  41.18192672729492,
+                  457.1094055175781,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 33,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "r",
+                "gid": 27,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  457.1213684082031,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  457.1213684082031,
+                  41.18192672729492,
+                  463.2663269042969,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 34,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "i",
+                "gid": 19,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  463.2663269042969,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  463.2663269042969,
+                  41.18192672729492,
+                  469.4112854003906,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 35,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "m",
+                "gid": 22,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  469.4232482910156,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  469.4232482910156,
+                  41.18192672729492,
+                  475.5682067871094,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 36,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "e",
+                "gid": 15,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  475.5801696777344,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  475.5801696777344,
+                  41.18192672729492,
+                  481.7251281738281,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 37,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "n",
+                "gid": 23,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  481.7370910644531,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  481.7370910644531,
+                  41.18192672729492,
+                  487.8820495605469,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 38,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "t",
+                "gid": 30,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  487.8940124511719,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  487.8940124511719,
+                  41.18192672729492,
+                  494.0389709472656,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 39,
+              "dx": 4.586509704589844
+            },
+            {
+              "source_glyph": {
+                "c": "s",
+                "gid": 28,
+                "font": "SFTT1200",
+                "size": 11.9552001953125,
+                "origin": [
+                  494.0509338378906,
+                  49.95098876953125
+                ],
+                "bbox": [
+                  494.0509338378906,
+                  41.18192672729492,
+                  500.1958923339844,
+                  53.13712692260742
+                ],
+                "color": [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              },
+              "native_shift_index": 0,
+              "shift_glyph_index": 40,
+              "dx": 4.586509704589844
+            }
+          ],
+          "source_url_glyphs": 41,
+          "native_url_glyphs_verified_in_proof": true,
+          "max_url_glyph_geometry_error_pt": 7.62939453125e-06,
+          "position_tolerance_pt": 0.001,
+          "only_horizontal_rect_translation": true,
+          "other_annotation_settings_preserved": true,
+          "actual_target_rect_mupdf": [
+            251.3885040283203,
+            40.65399169921875,
+            505.54852294921875,
+            53.60302734375
+          ],
+          "passed": true
+        }
+      ],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "proof_sha256": "16a31e59272ab978b6329c4ff9dd95f5eb88a33cefd31a81d4e9d2766e612863",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page07.qa.json",
+      "qa_sha256": "524357bc804544227506330add04f09c0ffac58d56db70f61193f9435dea9bd4",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page07.plan.json",
+      "plan_sha256": "bcf2b8780617fc9dc2b7d1727b5e7b23b6ab5a1af53f7d823133e6b1824a0c44",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page07.effective-plan.json",
+      "effective_plan_sha256": "7cd7973e06a654032e9bcf65af4c57f2a5f73ff0b5931612774444c88f060134",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page07.overrides.json",
+      "overrides_sha256": "81d2f29ddea725909f310b9df942c3380a886608f1811f5623ee9a5a4851b0f9",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 771,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 46,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "proof_sha256": "7856c2993aaba208741c6b2a4f17764d3a291a13640e90d706f29d6dc7960898",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page08.qa.json",
+      "qa_sha256": "152047a60c6ac81d07ff2c24870077feee019a4d3682d1b64a8742c4f41fdf91",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page08.plan.json",
+      "plan_sha256": "df582342de9492cf8cc6f59496cd300ed56ea8b2d4f366d68fb1a438e83119ca",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page08.effective-plan.json",
+      "effective_plan_sha256": "0f283e9d3d8e22dc5fe136d2914c374fa3d7a387ce23752b30165446e6efee2e",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 725,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 54,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "proof_sha256": "827e0f86635ffdc0a33d3bcd9815aab7283a4bea3eb16394e0650b574ad86a06",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page09.qa.json",
+      "qa_sha256": "b90def9fdb2e33718d2a4703c3f5d613e09d976d2c7827da4c434f6af78f8653",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page09.plan.json",
+      "plan_sha256": "085db449030dd5dc1df4e9462bbddd8846c6c75ea2033b44ca1ec5294ddda0c5",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page09.effective-plan.json",
+      "effective_plan_sha256": "5bc99809230b650253a0b096fa82031b3d4c396ca877ceee2b5623dcd89d7299",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page09.overrides.json",
+      "overrides_sha256": "38f369d3946848b02f43687ba97c545f9dd66ccdca99e0730a2803d37c9b24d0",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 673,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 45,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "proof_sha256": "452644b6311eda883d32772e76cc0347d66946d03638dbe8eb9d8105dbf11dd1",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page10.qa.json",
+      "qa_sha256": "46302cc20336f80691b2ae354bb9a23e012dede2a301a88cbfa73cc4ff8bcdbc",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page10.plan.json",
+      "plan_sha256": "a2d954e9b6129f12b19c8532a6eb91bbfd54e8e01a0dca11336e533d766f305f",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page10.effective-plan.json",
+      "effective_plan_sha256": "41d94ef3aea8ef62d768108688b4887776862090b09b66ca9d2e0f600767fc0d",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 984,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 56,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 11,
+      "proof_sha256": "be8e8e0c6697dadc8deb82c8855754fdbf50b979891a96e331dc0fd1d1a5a064",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page11.qa.json",
+      "qa_sha256": "82aff37dd8564636aa530aff5ff8dc89afba002654dbb96b5f7f5410b7992cba",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page11.plan.json",
+      "plan_sha256": "09d5647fb80cb804256ee27a7cd8f4052b8a288e6c81488459ad3cd590f9133b",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page11.effective-plan.json",
+      "effective_plan_sha256": "7e6da0fe9dbb89883dae6e74a78b88fd528674f5fd145e62e0e8f3aaf162afc6",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page11.overrides.json",
+      "overrides_sha256": "9589fe6da0057933c9c3455ee27956a621b284835dfd50776eafb71c21278fec",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 950,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 59,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 12,
+      "proof_sha256": "0ebe355c5fe2f297efa7403f2995295f95f57b10da399721eedc6fcff172ab3a",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page12.qa.json",
+      "qa_sha256": "c410a8ee0e20cf4dd310d9d8758043337e62465651656902c4a96e827ea6cf60",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page12.plan.json",
+      "plan_sha256": "22dac07bdc6c94649b3372ee1f8b8728d3ec474133d20050d18c4194b446da51",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page12.effective-plan.json",
+      "effective_plan_sha256": "7d631bfd42f1267d0d6aca66b0dabfb9aca27792c2054aca401cfb3628ac6aac",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page12.overrides.json",
+      "overrides_sha256": "95f1b9c81567d362b7c8eb112d3299e1fe5c403d8699054136e03d8c04a113e8",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 705,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 46,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    },
+    {
+      "page": 13,
+      "proof_sha256": "3fcaf0d3f0446fb88fc0f4bee4dd8df21282d05417b76bf5fafe6abe28bba9c3",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.pdf",
+      "qa_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page13.qa.json",
+      "qa_sha256": "4f48388d2fdf72aaaa271e8bb6c123a1b27f664fec09575c1f07522a381db76b",
+      "plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page13.plan.json",
+      "plan_sha256": "94b9110f6a29179e8a6acee861cb1896ba2cbd50101c58994a8095fe78e1dfd5",
+      "effective_plan_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page13.effective-plan.json",
+      "effective_plan_sha256": "5efc06a70b66d81909b2f07f41e09f2bd55b6116a4ad3d8b5c1015c17e3484f0",
+      "overrides_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/page13.overrides.json",
+      "overrides_sha256": "39dc76767b6e2ec53fa7fe20a4add599f55b4ff46e1b95fba3124964940a28de",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 1217,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 56,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/natural_plan_compose_ortvay2023_final.py",
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/scope-ortvay2023-scope.json",
+          "sha256": "f5abbe2635eda95c77d86534f8849db65fe04261cba13ecd5ceb995027081da2"
+        }
+      ]
+    }
+  ],
+  "visual_review_files": [
+    "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/visual-review-r4-normalized.json"
+  ],
+  "all_pages_visually_reviewed": true,
+  "visual_review_required": false,
+  "authoring_programs": [
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/verify_native_vectors_ortvay2023.py",
+      "sha256": "c62323e4a103cf41a55cf47f9a70c917d05e7f942349305d0d3fe9783d05f84d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/assemble_natural.py",
+      "sha256": "098286bc8fa1a3ac5805006b95484c5dd279a6fac4e1fc5c109e86e7f976954f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/publication_paths.py",
+      "sha256": "e9b50356e639b69bb8918e8bfd73ca7cb958b6a212a414b0c6606cb7d1ae6dca"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/prose_decoration_publication.py",
+      "sha256": "f1f9a8462157a03b43028cd9845e5ad3c65af35fede161e8274e2904b4e2e01c"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/icho2024_prose_decoration_publication.py",
+      "sha256": "bdae0842d1209973232272cae57daadff1400a464b5f02e34da6722aea4dd677"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source_path_resolver.py",
+      "sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/manifest.json",
+      "sha256": "6d348a4ed349e976e9d3a51623d0c4def115af01710e47ea94d65208de6f211a"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/ortvay2023_link_annotations.py",
+      "sha256": "b5db2cf1d3fa53dff7f05bf0d26351f07e0aeb083633f14280ebb361bb89e0ae"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/audit_ortvay2023_title_centers.py",
+      "sha256": "69d023cbef1a1535bf73666c7e0819b780459d58520e49ca72955335a29c986d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/record_ortvay2023_root_final_review.py",
+      "sha256": "2ef83b48ea8330bfc5d0c00b7f88dca98b10ff726ef21d5eeaab67786ea51959"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/audit_ortvay2023_korean_row_ink_cached.py",
+      "sha256": "8e8f60910e42c1c95b598b9dcc7e2b526c8738f25178c52a0a24c27438f40c7b"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/ortvay2023_write_guard.py",
+      "sha256": "e257f73b2985596b0236cfcb59bbe7425ff97b5bf83788181d85ae8bc253f599"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/ortvay_source_style_publication.py",
+      "sha256": "7970b1559ed4d964522ee11a4afe8448674af63dfa76a9e53da53f2a218c79a0"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/test_ortvay2023_links_r4.py",
+      "sha256": "f2d47d2f953ad45c658588a564760a1f2674f9144b4cdadab897abf1f1bf85d6"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/r4_private_link_regression.py",
+      "sha256": "8ee1ca973c4a19fbf3a25b61646cdc48ac7064e12e0dc893b12619b5ec7e0e30"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/test_ortvay2023_link_subsets.py",
+      "sha256": "de057be59059c457319e378e9bfad66e1025913843617efd9b98d9f8e2e12b07"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/aggregate_ortvay2023_links.py",
+      "sha256": "f12beb65ab05689d05198898af90e02282687791fc4e1948018f215fa3e61fb9"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2023/composer/natural_plan_compose_ortvay2023_final.py",
+      "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2023/composer/ortvay2023-frozen-engine/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2023/composer/ortvay2023-frozen-engine/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2023/composer/ortvay2023-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2023/composer/ortvay2023-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2023/composer/ortvay2023_write_guard.py",
+      "sha256": "7c2b8b32ab177f56dcabf416ce186edf652423eca11aa2e4452a951cbcbb48f6"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2023/composer/verify_native_vectors_ortvay2023.py",
+      "sha256": "c62323e4a103cf41a55cf47f9a70c917d05e7f942349305d0d3fe9783d05f84d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2024/composer/natural_plan_compose_ortvay2024_title_final.py",
+      "sha256": "84b6b98be3d97e59a8e16427497ba2dd81f27dd60845451a239162a348adf300"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2024/composer/ortvay2024-frozen-engine/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2024/composer/ortvay2024-frozen-engine/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2024/composer/ortvay2024-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2024/composer/ortvay2024-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2024/composer/verify_native_vectors_ortvay2024.py",
+      "sha256": "bc32adc3a83c29c271284291fb9fd62235a9eb31270d8951ce7db3db87a2df70"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2025/composer/natural_plan_compose_ortvay2025_title_final.py",
+      "sha256": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2025/composer/ortvay2025-frozen-engine/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2025/composer/ortvay2025-frozen-engine/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2025/composer/ortvay2025-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2025/composer/ortvay2025-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2025/composer/verify_native_vectors_ortvay2025.py",
+      "sha256": "0c555a216e5a6c564efe257f3843e45cf5d0b85014e12d371c061fae5b1e5469"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2026/composer/natural_plan_compose_ortvay2026_title_final.py",
+      "sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2026/composer/ortvay2026-frozen-engine/latex_native_motion.py",
+      "sha256": "35779452a46c04dce42459b1aa9bf57f84a5e818cf765ee3cb8f971dd1cf0b83"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2026/composer/ortvay2026-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2026/composer/ortvay2026-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6751a0ffe192aa52b0b36532607c8f28bbe5cdadc7c61624c5a17684d10ed51f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/2026/composer/verify_native_vectors.py",
+      "sha256": "6f3aaa8bdf14f123a0bc4790d7cf7b0780555bd93398ad79cfacb49ea349ad9c"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/audit_final_page.py",
+      "sha256": "3adf6c4352e5ac869200fb00dccdc01f122ad72ae238a1aef0c12d7fb607339f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/audit_prototype.py",
+      "sha256": "6e647b6dac61578cae9cfc9bdf54aa6c5dddce61b14797f0611b214f78bf169a"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/common/r4_actual_paint.py",
+      "sha256": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/common/r4_font_widths.py",
+      "sha256": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/common/r4_guard.py",
+      "sha256": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/common/r4_independent_qa.py",
+      "sha256": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/common/r4_outline_qa.py",
+      "sha256": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/common/r4_runtime.py",
+      "sha256": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/finalize_preparation.py",
+      "sha256": "465c30f55416da43164d63cbb32b76296f00d9e1a69741689cfde135206febf4"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/freeze_r4_runtime.py",
+      "sha256": "c89c8c709a8bd4e32190165498d354138eae80406673739b87e8149ae0a59e62"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/generate_final48.py",
+      "sha256": "f41ecb23f97e473716227a44570bb3df29ca87c3a6eaff3f44a23fb40e4a781b"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/run_final_page.py",
+      "sha256": "0037a4f84bbc808de3af420b6de0aec9aeb0d5fb0fcabc8268088a69cecd0e04"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/run_frozen_five.py",
+      "sha256": "b9caf64c267ca1aca86fef5cf657d22ac17fa49662ec46248f61f0c2671f3c41"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/run_prototype.py",
+      "sha256": "b9fdd18a2ff68e5332e4d082a543494886ee42f29fc3a6458c1a7dc6e35d545f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/source-style/test_prototype_negatives_v2_final.py",
+      "sha256": "67580be86aebddc9ca52a86c114b1a89bd23c01181c1219390ecfac4a82f5050"
+    }
+  ],
+  "strict_korean_glyph_geometry_audit": true,
+  "link_annotation_subset_regression": {
+    "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/link-annotation-subset-regression.json",
+    "sha256": "be9e7ff3d4836ed84e29d4d35badb31e1e1a1bd096296c7094bf504a5da78fb9",
+    "test_program_path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/authoring/test_ortvay2023_links_r4.py",
+    "test_program_sha256": "f2d47d2f953ad45c658588a564760a1f2674f9144b4cdadab897abf1f1bf85d6",
+    "helper_sha256": "b5db2cf1d3fa53dff7f05bf0d26351f07e0aeb083633f14280ebb361bb89e0ae"
+  },
+  "supplemental_evidence": [
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/READY.json",
+      "sha256": "4c028c47b13a2fa50d817fe1948af31e1e57cf2784a27c133a958a79cc23a3f2"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01-independent-qa.json",
+      "sha256": "56a47727fac321a07ee9511d799b4b3e4ccf9a1327df989a3b1f2373c62a84b4"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page02-independent-qa.json",
+      "sha256": "3ae105492e698bef679a2ba35c56db9690e7a5b262ed1a8b09279beac8845fa1"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03-independent-qa.json",
+      "sha256": "01bbefc36ce1d6e2f5f4b598b367f74ed3da0308a559d9902120a785e20eefc6"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page04-independent-qa.json",
+      "sha256": "52dbc97dbac85a247bfb67803c56eb6812fc7422e889ae1f8ce3cb5016d43e1a"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page05-independent-qa.json",
+      "sha256": "8474ffd85836ada95da2dbc3bf71880397b4a8083f1d505fb4b05c96286fb03b"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page06-independent-qa.json",
+      "sha256": "b28248aba02e33a957f7b6d77c92c402dfd05f17f13624525aaac108a9297a6f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page07-independent-qa.json",
+      "sha256": "b7f980b24f04e0dc143b10b2368ed4548d5baa960de3237415340c75cd692025"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page08-independent-qa.json",
+      "sha256": "c9e5cd1f6e5c9ab865d2f2bcf7fa1243375f709f0d6a909bff687c9869af49d8"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page09-independent-qa.json",
+      "sha256": "a36ff08fe032c08967034dad18d79bded65280781d8a5ebc1a3c4c690cf248b0"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page10-independent-qa.json",
+      "sha256": "d129f4ae4230ddb1e2cf14020755fdf644ed612e8eb6dff6b615e923f8803c50"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page11-independent-qa.json",
+      "sha256": "6f4a2d95c777e4f3bfa599e265ee7c74b904ab0d7723b5dc7bbf08c52afbbed5"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page12-independent-qa.json",
+      "sha256": "748d71d7a9df8f46231fc0e2a5425013b39dac4669f84d4ee70bae95adb53755"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page13-independent-qa.json",
+      "sha256": "b59bc4f875ef6a8852c42880653f4e453bb200776ea79db928d4580c7be6f87f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page01.result.json",
+      "sha256": "0108faf17e6c9d527f295f709f082628cf5b89786b37c3803f47652bd1a907e2"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page02.result.json",
+      "sha256": "b184a0a8d725e1da41c42fc4e0cfd4d43956e0f43fc421a44f528005573147a5"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page03.result.json",
+      "sha256": "eda7bd4e4d8db07b7f703c376165ba976400edf2453a7f4a1c13075988502b27"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page04.result.json",
+      "sha256": "a8b0b18ccf79b701de456d1cf3e39381e02bdea6fc38a50885117596340e5ecf"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page05.result.json",
+      "sha256": "861d14637c1bfae62f978b74786943b2dd3fbd3c83122b63d50083ebef0745dd"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page06.result.json",
+      "sha256": "9eb3243b83a72a96d2004db77d47bbd1d01495aa7bb07f4e5011087aa88f4ca0"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page07.result.json",
+      "sha256": "068670930c7a4a6e4fc4547d4c4c24d3866d4bf3f4d516c5dc48fd45f758784d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page08.result.json",
+      "sha256": "4e8365e70ea63a4a3cce2bc7bb6a2c87be78fff1f643a89a7d05d8d1de10e33f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page09.result.json",
+      "sha256": "eefc9d509d4a0ee976bfc9b304132f435e50f36e6b0abc2981f060b05f26fe9d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page10.result.json",
+      "sha256": "09bcf0144d06df2ef48fe2a63753ec34910f8e0ab178e4d301873630e29d5825"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page11.result.json",
+      "sha256": "a8c6facf43c8e46a245089b109f565d24c3549fd868b6784eb9d8ba1f968813e"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page12.result.json",
+      "sha256": "be873ebb719c9b776700a8e3e0cecce22b1d9bae0c01a472ffe8dd97f7861f3b"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page13.result.json",
+      "sha256": "0b8e2f8113e9592be0c18d3d9ec2ad940e5ada476394cf791f8b443495bda592"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/visual-review-r4-normalized.json",
+      "sha256": "a8e48f0b6dc94bfb3fbd57df02dc9036d9f0fcd7156148adf66ca4adba03d4d2"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page01.json",
+      "sha256": "d8c28f5fc0cf4ebce50a65610a7bc79403a5ba7817d1a9cfeb39048fb4845f32"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page02.json",
+      "sha256": "b6a4edd2b7769a78c9a4129d7978e69ad763f788e93fddbcc4b3073519fde8d8"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page03.json",
+      "sha256": "beda2cbf126d956981dabb17c8a6408f619d3c414290afca98d2435bf9266bd8"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page04.json",
+      "sha256": "a3f803976022fbf669a175ca9f126a70a6a355e2c78e86047400af064976d895"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page05.json",
+      "sha256": "10b7ddeb54c5b73a8b0d75c03249d1675ab44cfc1383bc12e30fa43876d90bc5"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page06.json",
+      "sha256": "8c8d8d97864231407ee308368e644edaafdb50bf3e595aa2c0d883084e605b4b"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page07.json",
+      "sha256": "e0ea7623bb2d809596b8bcdb39439dd8d84689b8c405593c874b5c14e39229ce"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page08.json",
+      "sha256": "d6c3d5c78b6fe64e06770bb5afced17a8e5bc6024cf885a1610f2ba628a21825"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page09.json",
+      "sha256": "c4281d022b564565a8147f93d3c29f677d712072f924594fdd100e17a4061e21"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page10.json",
+      "sha256": "d1f0d9812ec2788d0ba4c0dcb9265bd2940f7c20ed0a981143561d77cdadf943"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page11.json",
+      "sha256": "7ecca60e67a1a5fe415755d33388c67a21562261f028117b89f6de3ccca5670e"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page12.json",
+      "sha256": "f6e7128d23ec5448c8423b90295a3d0c16dd367050af6d180676e642100d7766"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page13.json",
+      "sha256": "ef58ccf3ca4fc08658d1e3a23e4e3d44f6057165086044777df91b858bcf6dfd"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/APPROVED-2026-P1-EXISTING-AA-CONTACT-ROW.json",
+      "sha256": "88e28a759dafc97838cd039fc07941a31ef3cdb8d805a1c55c9c2bf36045e9c7"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/EXPERIMENT-BATANG-PAINT-ADDENDUM-GO.json",
+      "sha256": "122a0e3a2e13aa31fbc144d4ebb93dc5ceb0639f935da791b10e69ed8546a633"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/EXPERIMENT-GO.json",
+      "sha256": "63a285f76924be1cfb8957352080a3bd393192869960ce16eec6f58bb1650514"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.effective-plan-9606a9f51f18c206.json",
+      "sha256": "9606a9f51f18c206540c2a848f27c6987a4eca780bec415c2a41c95a9059c77e"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.independent-qa-frozen-a8629abff6e4f74f.json",
+      "sha256": "a8629abff6e4f74f267e6a7c06a0a0bc34b6a73d7cbc22a428b5b09680a225e7"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.layout-2ff63b202ab904a0.json",
+      "sha256": "2ff63b202ab904a0f535eaf3ee642c35a1fd27d55d34ded9428002bfbaa3d26e"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03.effective-plan-c0dc1cdf26b6a4c9.json",
+      "sha256": "c0dc1cdf26b6a4c976087c39c28612ccc49d61b977289f357c1e868c181f4f54"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03.independent-qa-frozen-67f5d4b5175cf5ad.json",
+      "sha256": "67f5d4b5175cf5ad038042fa86170fc7401c45cb7ddb9dde7035416d310cfe6d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03.layout-9e3ce54e8f127d56.json",
+      "sha256": "9e3ce54e8f127d564473d0c6437ad08896bd659257d475adba38f7336b5a258d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.effective-plan-0f986b7def34607d.json",
+      "sha256": "0f986b7def34607dd0bbeaaa3ed16c269cc765cd6b20484c8c47d052fcad950e"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.independent-qa-frozen-d885c759538552d8.json",
+      "sha256": "d885c759538552d884fea8af71c5e65b7b772c1ca7cb9ee82c258ed5105c5336"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.layout-d2dd2829dc52b212.json",
+      "sha256": "d2dd2829dc52b21260b03303ade07da854942f4d8ce34ab34fe1e363620c21f2"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.effective-plan-54d02f7cd09458c7.json",
+      "sha256": "54d02f7cd09458c7f686620a26875323f3e08f0cccb14236f72aa0ea135f1fc5"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.independent-qa-frozen-11764faf2f977c01.json",
+      "sha256": "11764faf2f977c0157151d0464177b349b8ac2e726364ca660af1196a552a5ee"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.layout-9997963a4db69d69.json",
+      "sha256": "9997963a4db69d690716c0fbc57c909a70d71fa2babe59dabe2f0ad461227224"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03.effective-plan-442adc093c75e762.json",
+      "sha256": "442adc093c75e76260651f4954f7d6069d7b0931a294e6f83dd6d10d24570ca4"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03.independent-qa-frozen-81c52ca1933fc2c2.json",
+      "sha256": "81c52ca1933fc2c277a3ced4fb3e0e828d1f0354fe10982fe26e01ccade94867"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03.layout-ed0e58cd0a2018d9.json",
+      "sha256": "ed0e58cd0a2018d9f53fc531da538e656af2f0c1de1c129104c47cd803fc4a86"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.layout-0e12cd4b6ae501ea.json",
+      "sha256": "0e12cd4b6ae501eaf243cd8fc687dece1b7cab6a1a7c1aad040174309e7a72b3"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page01.renderer-W-diagnosis-v2.json",
+      "sha256": "657d16dd1290bb91a11c945358ea0f3cfbd9fe528c1dc981e841d57a3d47b58e"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01.layout-d6c0013ecad9aa6e.json",
+      "sha256": "d6c0013ecad9aa6e942003ac04e962faf92d2daa796266a9497cf2a79d017d42"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page01.row-contact-diagnosis.json",
+      "sha256": "fddc62cf29e0bbdf571337bbed1baa7ed0d1ec40d870560924ddeed7b57e0b85"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/page01.row-contact-source-comparison-supplement.json",
+      "sha256": "6d45c5303b8fb9d941ae53ccc44dd5373dc2e3ca6191ff8de96e1118e6907577"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/prototype-negative-controls-v2-final.json",
+      "sha256": "3f7ba16ab7121b9782faa5c6d8a17fd3982009d8e2d781faf1addaf6157a9147"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ROOT-2026-TWO-PROTOTYPE-REVIEW.json",
+      "sha256": "a50034d2dcb8fc26e498df1d73867f8e623f09badb269ef26d5a37686cdc7995"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ROOT-THREE-PROTOTYPE-REVIEW.json",
+      "sha256": "9715eda942e58dfb89fd50d9a984c57c465f306870fc5f6aa219195610e4d221"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/FINAL48-CONDITIONAL-AUTHORIZATION.json",
+      "sha256": "a870bf77eab9a138f0220c80da71f925415c3a1a219020b08c4dec722110f0ae"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/FINAL48-GO.invalid-status-retained.json",
+      "sha256": "f5f7a013f8d7f362f5c5cf6be29bc94c8440cac552ea271fd03d023b6b7d51ee"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/FINAL48-GO.json",
+      "sha256": "ced216c9aae3e80014d6ff149406143da59834ba8006f2c4d9ad6ad73e90b0ff"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/FIVE-FROZEN-PROTOTYPE-RESULTS.json",
+      "sha256": "04d9ca3ac6aa4039b707f09c3a96c5025187fe4424894ebd423949a3438fde2a"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/input-ledger.json",
+      "sha256": "500bab6a7ef21470c9e4dbf427a6046641a5603cb935c3588dee8d948e9c0656"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/PREPARATION-FROZEN.json",
+      "sha256": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/PROTOTYPE-RUNTIME-FROZEN.json",
+      "sha256": "27b5df6951f5ce45d390f51aa2d193bdd22c0740163846add788060e2972132b"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-e47ffbba1d83406c.json",
+      "sha256": "e47ffbba1d83406c320d065e755b5adf9a0d53607039afed26f968128d6c69ae"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-956527add4f8d418.json",
+      "sha256": "956527add4f8d41863bcc2a13f47a13a23ce88ab4afb377320bcc2323480bd5d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-80c171288bc351df.json",
+      "sha256": "80c171288bc351df862a9a55481d8ee757e3da68b57a919b85bfdc096f39b2df"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-b01e0e38dc76919c.json",
+      "sha256": "b01e0e38dc76919cc502f992e2b60d72bc100fb64252a8dbf0c6a827a6409e16"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-3eb213a1f0d201d5.json",
+      "sha256": "3eb213a1f0d201d5b57fe7eff467f4dbcbf66083d5ed8338dc7f6ef17c07750c"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-16eb1bac4e25fbb7.json",
+      "sha256": "16eb1bac4e25fbb71f8954d66172a828d89689b3af8e1f48a00811c56faa8ad1"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-b91c3d86f3b8744e.json",
+      "sha256": "b91c3d86f3b8744e1ca09f91d2f5e2178f82b68961b756cf3a3c11cb385612f2"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-9e9dedba232ea2c6.json",
+      "sha256": "9e9dedba232ea2c6da6c7904a720773fe581565cf5993183f08837eecfbca05c"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-319d7e95efea823d.json",
+      "sha256": "319d7e95efea823d57813c29a30ed9839ebcce67d8901d4224ac32c885c42510"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-e63067a4493e07e5.json",
+      "sha256": "e63067a4493e07e5f8359c037577adc3b12f64b9d565783eba46b99300178416"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-891827f3c8c2c71c.json",
+      "sha256": "891827f3c8c2c71cb4c14123919abfce74c9a9fdc75bd196b4095ac104add070"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-eab34e7adaebc46c.json",
+      "sha256": "eab34e7adaebc46ca20b3b4d0ff51d77f416c7ea8a2ebada462656241f63d773"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-feac30c478651ee9.json",
+      "sha256": "feac30c478651ee95a3acf192736549fee7de05d39a2d6684e0f1e9ae4a67e52"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-77b26ea214276f24.json",
+      "sha256": "77b26ea214276f24e22cfe6b03c1637675d20bede51f7c9ae59d22693bab3dac"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-cf54848102875ea0.json",
+      "sha256": "cf54848102875ea04dce25f0512ac4a700a3be13d19fb7617dfc1275f41c66c3"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-deae38c62a077fc5.json",
+      "sha256": "deae38c62a077fc5738b458407a3e0b7edaee8381e9970dc01fc23b5942b4bcb"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-8c9d2e4706453e9f.json",
+      "sha256": "8c9d2e4706453e9f8870bbd525f705af5b1ce4b984e303cbb63e945947f3cd1f"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-b8a9ef52781dad5c.json",
+      "sha256": "b8a9ef52781dad5cc8308c4488310c77e3b2d752b56ffd01c1e28214c6dcd2eb"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-ab642c16a11aa76a.json",
+      "sha256": "ab642c16a11aa76a5b76c588975b09ee1c02be0b40119ea8f6a823f8cdaf712d"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-7a295eaff4858549.json",
+      "sha256": "7a295eaff4858549a5773b2a63f66ca743359a145f46e7563712ba62fdba7f5b"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-be671acd38b553ab.json",
+      "sha256": "be671acd38b553abb8fb956abc9ba6a50e298b8405dc67213e74b6e341cac467"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-227122054c6f9a07.json",
+      "sha256": "227122054c6f9a075bda1d25c6543368bcfd3c1d26a93a498e408db49b1359b2"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-9f1d4245af5daa28.json",
+      "sha256": "9f1d4245af5daa28ed9caba734f44514e343ea66fb4956df6d62c714b3048409"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-e77186708dc757f7.json",
+      "sha256": "e77186708dc757f7b63635cf55a768df8197684553f0787a2b81e6e8f95ae5e9"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-c3a8568cde2f25a9.json",
+      "sha256": "c3a8568cde2f25a987a0a808f73cad54bb048cd14e69e69389760cd1f39b1688"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-runtime-snapshot-b103581147d5c232.json",
+      "sha256": "b103581147d5c2321444273f6ab9905668a43d91519b4e3b616f4a342c9a5de0"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay2023-fresh-link-regression.json",
+      "sha256": "be9e7ff3d4836ed84e29d4d35badb31e1e1a1bd096296c7094bf504a5da78fb9"
+    },
+    {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/root-final-page10-review.json",
+      "sha256": "b9eafd9a1baf5e7d342c294d8135a4e1029fd207e6c60100bd3be34a9c6ce3d5"
+    }
+  ],
+  "source_style_correction": {
+    "schema": "ortvay-source-style-publication-v1",
+    "year": 2023,
+    "source_sha256": "c0a5117145c67edc2dfe8953dcc7865438f65e099fe6e73b2ec19616ab27b5f7",
+    "original_published_sha256": "a0dd0bc102765652ef05d3ac9f3c1c1d855980cbda601227ee0c76771be08051",
+    "reference_publication": {
+      "path": "tools/ko/ortvay/2023/T/natural-spacing/publication.json",
+      "sha256": "c42b5f40a3b9089f63b9485846a05d803df5f815f4beee3856d9f8fd5b91af15"
+    },
+    "pages": [
+      {
+        "page": 1,
+        "proof_sha256": "39a41c67878f362ce7a809e39925977a940aa068123259a105f81a3d42036d54",
+        "layout_sha256": "9207875732d76c868aa3408244553187dd9ca28ffe1c12bf185d1218ebb2cc79",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page01-independent-qa.json",
+          "sha256": "56a47727fac321a07ee9511d799b4b3e4ccf9a1327df989a3b1f2373c62a84b4"
+        }
+      },
+      {
+        "page": 2,
+        "proof_sha256": "c0f726811d64409b904970c8848ff9850ab3eeed56f5be2199f1fa49779fb9ff",
+        "layout_sha256": "209b75fd357244b97eff312db3d9ddaf962f79abb3cfcbbf233402104189046c",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page02-independent-qa.json",
+          "sha256": "3ae105492e698bef679a2ba35c56db9690e7a5b262ed1a8b09279beac8845fa1"
+        }
+      },
+      {
+        "page": 3,
+        "proof_sha256": "6531568bdc47b13a6994b0b1957463809986f1483b5186fdcdcc16af6916efc4",
+        "layout_sha256": "ebad4b5e1266062eb7f819cfee387739dbee9f5dc7314272bb0de5d53bcb4db4",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page03-independent-qa.json",
+          "sha256": "01bbefc36ce1d6e2f5f4b598b367f74ed3da0308a559d9902120a785e20eefc6"
+        }
+      },
+      {
+        "page": 4,
+        "proof_sha256": "2b07f136828b4e050349c7bbeae1dad469f75ec7a449d48f1fefec0a98f039a6",
+        "layout_sha256": "b3f2ef75382d3fbbc0ddc2264dba318c6a2a569d93928ddd07d2a416af66ff2d",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page04-independent-qa.json",
+          "sha256": "52dbc97dbac85a247bfb67803c56eb6812fc7422e889ae1f8ce3cb5016d43e1a"
+        }
+      },
+      {
+        "page": 5,
+        "proof_sha256": "505c373306b2c8c424a017ba47b2f4762a180f2bcd3bb31fed98ee0e38a212f1",
+        "layout_sha256": "77501ef269301237b38ec50cad31b6f154361e596d9b7e0b0d6a5a71b7e0ffe8",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page05-independent-qa.json",
+          "sha256": "8474ffd85836ada95da2dbc3bf71880397b4a8083f1d505fb4b05c96286fb03b"
+        }
+      },
+      {
+        "page": 6,
+        "proof_sha256": "38a3cca60fbbfec18b7db9192fdd775c806ba9ab0593cf63d6da346f62372236",
+        "layout_sha256": "4db3c2c51f387095b63c2959abe4aad28a38741e051f49f42eb5388989652389",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page06-independent-qa.json",
+          "sha256": "b28248aba02e33a957f7b6d77c92c402dfd05f17f13624525aaac108a9297a6f"
+        }
+      },
+      {
+        "page": 7,
+        "proof_sha256": "16a31e59272ab978b6329c4ff9dd95f5eb88a33cefd31a81d4e9d2766e612863",
+        "layout_sha256": "524357bc804544227506330add04f09c0ffac58d56db70f61193f9435dea9bd4",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page07-independent-qa.json",
+          "sha256": "b7f980b24f04e0dc143b10b2368ed4548d5baa960de3237415340c75cd692025"
+        }
+      },
+      {
+        "page": 8,
+        "proof_sha256": "7856c2993aaba208741c6b2a4f17764d3a291a13640e90d706f29d6dc7960898",
+        "layout_sha256": "152047a60c6ac81d07ff2c24870077feee019a4d3682d1b64a8742c4f41fdf91",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page08-independent-qa.json",
+          "sha256": "c9e5cd1f6e5c9ab865d2f2bcf7fa1243375f709f0d6a909bff687c9869af49d8"
+        }
+      },
+      {
+        "page": 9,
+        "proof_sha256": "827e0f86635ffdc0a33d3bcd9815aab7283a4bea3eb16394e0650b574ad86a06",
+        "layout_sha256": "b90def9fdb2e33718d2a4703c3f5d613e09d976d2c7827da4c434f6af78f8653",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page09-independent-qa.json",
+          "sha256": "a36ff08fe032c08967034dad18d79bded65280781d8a5ebc1a3c4c690cf248b0"
+        }
+      },
+      {
+        "page": 10,
+        "proof_sha256": "452644b6311eda883d32772e76cc0347d66946d03638dbe8eb9d8105dbf11dd1",
+        "layout_sha256": "46302cc20336f80691b2ae354bb9a23e012dede2a301a88cbfa73cc4ff8bcdbc",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page10-independent-qa.json",
+          "sha256": "d129f4ae4230ddb1e2cf14020755fdf644ed612e8eb6dff6b615e923f8803c50"
+        }
+      },
+      {
+        "page": 11,
+        "proof_sha256": "be8e8e0c6697dadc8deb82c8855754fdbf50b979891a96e331dc0fd1d1a5a064",
+        "layout_sha256": "82aff37dd8564636aa530aff5ff8dc89afba002654dbb96b5f7f5410b7992cba",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page11-independent-qa.json",
+          "sha256": "6f4a2d95c777e4f3bfa599e265ee7c74b904ab0d7723b5dc7bbf08c52afbbed5"
+        }
+      },
+      {
+        "page": 12,
+        "proof_sha256": "0ebe355c5fe2f297efa7403f2995295f95f57b10da399721eedc6fcff172ab3a",
+        "layout_sha256": "c410a8ee0e20cf4dd310d9d8758043337e62465651656902c4a96e827ea6cf60",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page12-independent-qa.json",
+          "sha256": "748d71d7a9df8f46231fc0e2a5425013b39dac4669f84d4ee70bae95adb53755"
+        }
+      },
+      {
+        "page": 13,
+        "proof_sha256": "3fcaf0d3f0446fb88fc0f4bee4dd8df21282d05417b76bf5fafe6abe28bba9c3",
+        "layout_sha256": "4f48388d2fdf72aaaa271e8bb6c123a1b27f664fec09575c1f07522a381db76b",
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/ortvay-2023-page13-independent-qa.json",
+          "sha256": "b59bc4f875ef6a8852c42880653f4e453bb200776ea79db928d4580c7be6f87f"
+        }
+      }
+    ],
+    "ready": {
+      "path": "tools/ko/ortvay/2023/T/source-style-correction-r4-20261103/review-evidence/READY.json",
+      "sha256": "4c028c47b13a2fa50d817fe1948af31e1e57cf2784a27c133a958a79cc23a3f2"
+    }
+  },
+  "source_url": "https://ortvay.elte.hu/2023/E23.pdf",
+  "source_page_url": "https://ortvay.elte.hu/main.html"
+}

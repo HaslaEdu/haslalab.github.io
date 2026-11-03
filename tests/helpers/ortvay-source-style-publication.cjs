@@ -121,6 +121,10 @@ module.exports=function validatePublication(root,qa,item,read) {
       assert.ok(typeof digest==='string' && qa.authoring_programs.some(p=>p.sha256===digest),'Missing link regression program');
     assert.ok(regression.negative_regression_details.length>=({2023:18,2024:10,2025:9})[year]);
     for(const negative of regression.negative_regression_details) assert.equal(negative.rejected,true);
+    const legacyName=year===2025?'test_ortvay2025_link.py':`test_ortvay${year}_link_subsets.py`;
+    const legacyPins=Object.entries(regression.inputs_rehashed_after_run).filter(([file])=>file.replaceAll('\\','/').endsWith('/'+legacyName));
+    assert.equal(legacyPins.length,1);
+    assert.ok(qa.authoring_programs.some(p=>p.path.endsWith('/'+legacyName)&&p.sha256===legacyPins[0][1]),'Missing pinned regression input program');
     if(year===2023) {
       assert.deepEqual(regression.pages.map(row=>row.page),[1,6]);
       for(const row of regression.pages) {
@@ -142,6 +146,7 @@ module.exports=function validatePublication(root,qa,item,read) {
     assert.equal(pin.layout_sha256,page.qa_sha256);
     const audit=read(pin.independent_audit.path,pin.independent_audit.sha256);
     const body=read(page.qa_path,page.qa_sha256);
+    assert.equal(body.page,index+1);assert.equal(body.output_sha256,page.proof_sha256);
     validatePage(audit,body,year);
     authoredItalicCount+=body.r4_source_style_corrections.length;
     assert.equal(audit.current_published_complete_document_lineage.P0_frozen_page_sha256,previous.page_audits[index].proof_sha256);

@@ -1,8 +1,8 @@
 const assert=require('node:assert/strict');
 const SOURCE='959174ab5ddc8be71c251c8fe95a12c810ba730edbcbbef3b771197e32929a4a';
 const PUBLISHED='78d869b01f48bd1e050f2b8697900c757f4987331b1895026173e4b3258fe024';
-const APPROVED='9745a31abcc918a057a4fe2a6589003a8d6a7c2ad1c56b75ff394859352f0803';
-const FREEZE='ec90c4dd31ca726e6fced818b9245ca0dc147aac9be5a1bd452e9b554989b987';
+const APPROVED='bc06cca28d8b2f3ed93b437a5c3ed12f37cc8dd40d096f174314e5e2dffa68b2';
+const FREEZE='fd600ecbd54dc70bf25033bf9eebf4a065ac3256175ecfdf3ff70954361625e4';
 const MEASUREMENT='9f7397f1437c9c78b383d2f6624d1cee64472930f849cad6a7f972bd2625ecb4';
 const CURVE='8e032abc9060b2be0a2af658cb7b1a6e2edb333aa0b7a228e40bdd60c1705799';
 const MAP='ad5990b8ceb44b2dabbfc7a53ce8c344907d4b5b243f58e4e7cd88fba0dfde8a';
@@ -63,8 +63,16 @@ module.exports=function validatePublication(root,qa,item,read) {
   assert.equal(old.sha256,PUBLISHED);assert.equal(old.source_sha256,SOURCE);assert.equal(old.pages,62);
   assert.equal(style.freeze.sha256,FREEZE);const freeze=read(style.freeze.path,FREEZE);
   assert.equal(freeze.approved_source_clause_manifest_sha256,APPROVED);assert.equal(freeze.source_semantic_mapping_sha256,MAP);
+  for(const [file,digest]of Object.entries(freeze.current_program_and_input_sha256)) {
+    if(file.endsWith('.py')) {
+      const name=file.replaceAll('\\','/').split('/').at(-1);
+      assert.ok(qa.authoring_programs.some(p=>p.path.endsWith('/'+name)&&p.sha256===digest),'Missing frozen source-style program: '+name);
+    }
+  }
   assert.equal(style.approved_clauses.sha256,APPROVED);read(style.approved_clauses.path,APPROVED);
   assert.equal(style.inline_atom_profile.sha256,ATOM_PROFILE);read(style.inline_atom_profile.path,ATOM_PROFILE);
+  assert.equal(style.native_prefix_profile.sha256,'f3efb347598737eb8505f8f529e044e15ee4307a8bdf5caaced7e88f2b09ff3d');
+  const prefixProfile=read(style.native_prefix_profile.path,style.native_prefix_profile.sha256);
   const ready=read(style.ready.path,style.ready.sha256);
   assert.equal(ready.status,'YEAR_STRICT_SOURCE_STYLE_CORRECTION_READY_FOR_ROOT_ASSEMBLY_REVIEW');
   assert.equal(ready.year,2024);assert.equal(ready.pages,62);assert.equal(ready.source.sha256,SOURCE);
@@ -74,14 +82,19 @@ module.exports=function validatePublication(root,qa,item,read) {
   for(const[index,pin]of style.pages.entries()) {
     const page=qa.page_audits[index];assert.equal(pin.page,index+1);assert.equal(pin.proof_sha256,page.proof_sha256);assert.equal(pin.layout_sha256,page.qa_sha256);
     const body=read(page.qa_path,page.qa_sha256),pixel=read(pin.pixel_audit.path,pin.pixel_audit.sha256);
+    assert.equal(body.page,index+1);assert.equal(body.output_sha256,page.proof_sha256);
     const atom=pin.inline_atom_audit?read(pin.inline_atom_audit.path,pin.inline_atom_audit.sha256):undefined;
     if(atom)assert.equal(atom.layout_sha256,page.qa_sha256);
+    if(index===56) {
+      const prefix=read(pin.native_prefix_audit.path,pin.native_prefix_audit.sha256);
+      require('./icho2024-native-d-publication.cjs')(body,prefix,prefixProfile,page.qa_sha256,qa);
+    }
     validatePage(body,pixel,old.page_audits[index].proof_sha256,qa,atom);
     assert.equal(ready.page_results[index].proof.sha256,page.proof_sha256);assert.equal(ready.page_results[index].layout.sha256,page.qa_sha256);
     underlines+=body.independent_source_semantic_style_audit.semantic_mappings.length;
     italics+=body.independent_source_semantic_style_audit.new_Korean_italic_placements;
     edits+=body.independent_source_semantic_style_audit.exact_approved_text_edits;
   }
-  assert.equal(underlines,68);assert.equal(italics,9);assert.equal(edits,52);
+  assert.equal(underlines,68);assert.equal(italics,9);assert.equal(edits,54);
 };
 module.exports.validatePage=validatePage;

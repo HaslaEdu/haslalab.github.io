@@ -1,0 +1,635 @@
+{
+  "schema": "ortvay-r4-actual-visual-review-normalized-v1",
+  "source_sha256": "c0a5117145c67edc2dfe8953dcc7865438f65e099fe6e73b2ec19616ab27b5f7",
+  "source_path": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2023_T_EN.pdf",
+  "year": 2023,
+  "reviewer": "/root/plancks_all",
+  "created_utc": "2026-11-03T10:59:44.345447+00:00",
+  "pages": [
+    {
+      "page": 1,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.pdf",
+      "proof_sha256": "39a41c67878f362ce7a809e39925977a940aa068123259a105f81a3d42036d54",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.layout.json",
+      "layout_sha256": "9207875732d76c868aa3408244553187dd9ca28ffe1c12bf185d1218ebb2cc79",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.png",
+      "png_sha256": "80c4e634c4c21377c91a56777f553e298687b682cc37f9461be06e4851461fc4",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.effective-plan.json",
+      "effective_plan_sha256": "9606a9f51f18c206540c2a848f27c6987a4eca780bec415c2a41c95a9059c77e",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page01.json",
+        "sha256": "d8c28f5fc0cf4ebce50a65610a7bc79403a5ba7817d1a9cfeb39048fb4845f32"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.pdf",
+          "sha256": "39a41c67878f362ce7a809e39925977a940aa068123259a105f81a3d42036d54"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.layout.json",
+          "sha256": "9207875732d76c868aa3408244553187dd9ca28ffe1c12bf185d1218ebb2cc79"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.png",
+          "sha256": "80c4e634c4c21377c91a56777f553e298687b682cc37f9461be06e4851461fc4"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.independent-qa.json",
+          "sha256": "56a47727fac321a07ee9511d799b4b3e4ccf9a1327df989a3b1f2373c62a84b4"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page01.effective-plan.json",
+          "sha256": "9606a9f51f18c206540c2a848f27c6987a4eca780bec415c2a41c95a9059c77e"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-01-build\\runtime-snapshot.json",
+          "sha256": "956527add4f8d41863bcc2a13f47a13a23ce88ab4afb377320bcc2323480bd5d"
+        }
+      },
+      "review": "기존 제목4행 정렬, 텐세그리티 두 배치의 오른 기울임, 원래 도식과2개 native URL, alpha/beta·문항번호·출제자·쪽수 및 본문 글자/단어/행 간격을 읽었다. 빈 그림이나 잘린 수식·유령 영어·글자 접촉을 보지 못했다. source/P0/P1의 수치 검증과 직접 이미지 읽기는 별도 근거이다."
+    },
+    {
+      "page": 2,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.pdf",
+      "proof_sha256": "c0f726811d64409b904970c8848ff9850ab3eeed56f5be2199f1fa49779fb9ff",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.layout.json",
+      "layout_sha256": "209b75fd357244b97eff312db3d9ddaf962f79abb3cfcbbf233402104189046c",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.png",
+      "png_sha256": "87facc87134ed7157425ef4a29a055d0fd1f40ffbd976ea3bf2f9e83772bf216",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.effective-plan.json",
+      "effective_plan_sha256": "601445d047fb2ef64ea0d4df85069d1f5582f841652c2232f78677e6472ff3d3",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page02.json",
+        "sha256": "b6a4edd2b7769a78c9a4129d7978e69ad763f788e93fddbcc4b3073519fde8d8"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.pdf",
+          "sha256": "c0f726811d64409b904970c8848ff9850ab3eeed56f5be2199f1fa49779fb9ff"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.layout.json",
+          "sha256": "209b75fd357244b97eff312db3d9ddaf962f79abb3cfcbbf233402104189046c"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.png",
+          "sha256": "87facc87134ed7157425ef4a29a055d0fd1f40ffbd976ea3bf2f9e83772bf216"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.independent-qa.json",
+          "sha256": "3ae105492e698bef679a2ba35c56db9690e7a5b262ed1a8b09279beac8845fa1"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page02.effective-plan.json",
+          "sha256": "601445d047fb2ef64ea0d4df85069d1f5582f841652c2232f78677e6472ff3d3"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-02-build\\runtime-snapshot.json",
+          "sha256": "b01e0e38dc76919cc502f992e2b60d72bc100fb64252a8dbf0c6a827a6409e16"
+        }
+      },
+      "review": "문항3 태양광의 Ta/Tp 식·29.1/.16/14.6·효율 .35%와45도/184도·측정시각 및 출력수열 전체, 문항4 M/m/N/sigma와 a/b 조건 및 확률 질문, 출제자와쪽수2를 읽었다. 수식/아래첨자/수열 줄구분/본문 단어 간격과 행 구별이 정상이고 접촉이나 누락을 보지 못했다. 직접시각검수와P0/source수치감사는 별도 근거이다."
+    },
+    {
+      "page": 3,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.pdf",
+      "proof_sha256": "6531568bdc47b13a6994b0b1957463809986f1483b5186fdcdcc16af6916efc4",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.layout.json",
+      "layout_sha256": "ebad4b5e1266062eb7f819cfee387739dbee9f5dc7314272bb0de5d53bcb4db4",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.png",
+      "png_sha256": "ad50c5ca2d15b101efb01cf616057f1cfff8a8ce290655a86004115dd4f892f8",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.effective-plan.json",
+      "effective_plan_sha256": "5bddeb96cbd6b8f0d0194043bcdbf7b3592d51297c9924da996465f73bad7a2f",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page03.json",
+        "sha256": "beda2cbf126d956981dabb17c8a6408f619d3c414290afca98d2435bf9266bd8"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.pdf",
+          "sha256": "6531568bdc47b13a6994b0b1957463809986f1483b5186fdcdcc16af6916efc4"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.layout.json",
+          "sha256": "ebad4b5e1266062eb7f819cfee387739dbee9f5dc7314272bb0de5d53bcb4db4"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.png",
+          "sha256": "ad50c5ca2d15b101efb01cf616057f1cfff8a8ce290655a86004115dd4f892f8"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.independent-qa.json",
+          "sha256": "01bbefc36ce1d6e2f5f4b598b367f74ed3da0308a559d9902120a785e20eefc6"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page03.effective-plan.json",
+          "sha256": "5bddeb96cbd6b8f0d0194043bcdbf7b3592d51297c9924da996465f73bad7a2f"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-03-build\\runtime-snapshot.json",
+          "sha256": "16eb1bac4e25fbb71f8954d66172a828d89689b3af8e1f48a00811c56faa8ad1"
+        }
+      },
+      "review": "문항5–8을 실제 읽었다. 탁구채/공 운동과 비이탈·비미끄럼 조건, 원기둥 m/Theta/omega0/v0/mu 및 k=Theta/(mR²)와 v_infinity, 중력 지하철의 가정·왕복시간/최단시간 질문, 고리 R/M/m과 가속도a·수직평면·2차원 조건을 확인했다. 원래 모든 식/첨자/출제자·쪽수3와 문단 구분이 정상이며 글자 접촉·클리핑을 보지 못했다. source/P0 엄격 수치감사는 별도 결속한다."
+    },
+    {
+      "page": 4,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.pdf",
+      "proof_sha256": "2b07f136828b4e050349c7bbeae1dad469f75ec7a449d48f1fefec0a98f039a6",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.layout.json",
+      "layout_sha256": "b3f2ef75382d3fbbc0ddc2264dba318c6a2a569d93928ddd07d2a416af66ff2d",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.png",
+      "png_sha256": "843f24820bed530353032c7da4d7edd1da505ed86d2e53c54703c7d99a4e452c",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.effective-plan.json",
+      "effective_plan_sha256": "c7730a9c43d8b4fabf60b7b49c69a278acbfdcd51e36c9740bebf511f8e086d5",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page04.json",
+        "sha256": "a3f803976022fbf669a175ca9f126a70a6a355e2c78e86047400af064976d895"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.pdf",
+          "sha256": "2b07f136828b4e050349c7bbeae1dad469f75ec7a449d48f1fefec0a98f039a6"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.layout.json",
+          "sha256": "b3f2ef75382d3fbbc0ddc2264dba318c6a2a569d93928ddd07d2a416af66ff2d"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.png",
+          "sha256": "843f24820bed530353032c7da4d7edd1da505ed86d2e53c54703c7d99a4e452c"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.independent-qa.json",
+          "sha256": "52dbc97dbac85a247bfb67803c56eb6812fc7422e889ae1f8ce3cb5016d43e1a"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page04.effective-plan.json",
+          "sha256": "c7730a9c43d8b4fabf60b7b49c69a278acbfdcd51e36c9740bebf511f8e086d5"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-04-build\\runtime-snapshot.json",
+          "sha256": "9e9dedba232ea2c6da6c7904a720773fe581565cf5993183f08837eecfbca05c"
+        }
+      },
+      "review": "문항9–11을 실제 읽었다. g=9.81 m/s², 두저항법칙·같은종단속도V·1.2424초조건, 제한삼체의정전기유사모형 M/m·±Q·mu/q 및작음조건·Omega/라그랑주평형, G(t)=G0(1+alpha t)와alpha의두경우를 확인했다. 원래 모든 수식·첨자·단위·출제자·쪽수4와 문단/단어/행 간격이 정상이고 누락·접촉·클리핑을 보지 못했다. 직접PNG읽기와source/P0엄격감사는 별도이다."
+    },
+    {
+      "page": 5,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.pdf",
+      "proof_sha256": "505c373306b2c8c424a017ba47b2f4762a180f2bcd3bb31fed98ee0e38a212f1",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.layout.json",
+      "layout_sha256": "77501ef269301237b38ec50cad31b6f154361e596d9b7e0b0d6a5a71b7e0ffe8",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.png",
+      "png_sha256": "19164782f99db999558b6d89a455e91775e97a404f7b143b295ed0911e43f445",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.effective-plan.json",
+      "effective_plan_sha256": "d487428310dcb1ad7a4c3076c5d92deea3b35c15c408cf829b7b42378ff56d2e",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page05.json",
+        "sha256": "10b7ddeb54c5b73a8b0d75c03249d1675ab44cfc1383bc12e30fa43876d90bc5"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.pdf",
+          "sha256": "505c373306b2c8c424a017ba47b2f4762a180f2bcd3bb31fed98ee0e38a212f1"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.layout.json",
+          "sha256": "77501ef269301237b38ec50cad31b6f154361e596d9b7e0b0d6a5a71b7e0ffe8"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.png",
+          "sha256": "19164782f99db999558b6d89a455e91775e97a404f7b143b295ed0911e43f445"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.independent-qa.json",
+          "sha256": "8474ffd85836ada95da2dbc3bf71880397b4a8083f1d505fb4b05c96286fb03b"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page05.effective-plan.json",
+          "sha256": "d487428310dcb1ad7a4c3076c5d92deea3b35c15c408cf829b7b42378ff56d2e"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-05-build\\runtime-snapshot.json",
+          "sha256": "e63067a4493e07e5f8359c037577adc3b12f64b9d565783eba46b99300178416"
+        }
+      },
+      "review": "실제 최종 PNG를 original 해상도로 읽었다. 문항12 전하·자기단극자 CGS 힌트의 새 한국어 기울임 방향과 본문 연결이 읽히고, native E/B 및 수식·문항번호·출제자·페이지번호가 보존되어 있다. 문항13 직육면체 행성 조건(변 길이 10,000 km, 두께 2,000 km, 2020년, 27개)과 두 사람의 출발·궤적 설명이 보통 띄어쓰기로 읽힌다. 두 문항 사이와 출제자 영역의 여백·행 높이에 잘림이나 접촉이 보이지 않는다. 독립 실제 glyph/master outline/stream/native/허용영역 밖 비교가 PASS인 해당 proof에만 시각 검토를 결속한다. 새 조판이나 조건·문구 수정은 하지 않았다."
+    },
+    {
+      "page": 6,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.pdf",
+      "proof_sha256": "38a3cca60fbbfec18b7db9192fdd775c806ba9ab0593cf63d6da346f62372236",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.layout.json",
+      "layout_sha256": "4db3c2c51f387095b63c2959abe4aad28a38741e051f49f42eb5388989652389",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.png",
+      "png_sha256": "ca797de9a45732d5894db42e79484294a4685ed2e1069335692927100b8d7d34",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.effective-plan.json",
+      "effective_plan_sha256": "2479a39f00c6de10091531ee0f10ed16639a1e95a94636091f0f1a11690b00e3",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page06.json",
+        "sha256": "8c8d8d97864231407ee308368e644edaafdb50bf3e595aa2c0d883084e605b4b"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.pdf",
+          "sha256": "38a3cca60fbbfec18b7db9192fdd775c806ba9ab0593cf63d6da346f62372236"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.layout.json",
+          "sha256": "4db3c2c51f387095b63c2959abe4aad28a38741e051f49f42eb5388989652389"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.png",
+          "sha256": "ca797de9a45732d5894db42e79484294a4685ed2e1069335692927100b8d7d34"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.independent-qa.json",
+          "sha256": "b28248aba02e33a957f7b6d77c92c402dfd05f17f13624525aaac108a9297a6f"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page06.effective-plan.json",
+          "sha256": "2479a39f00c6de10091531ee0f10ed16639a1e95a94636091f0f1a11690b00e3"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-06-build\\runtime-snapshot.json",
+          "sha256": "eab34e7adaebc46ca20b3b4d0ff51d77f416c7ea8a2ebada462656241f63d773"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항14의 파란 YouTube URL과 a–e 물체 반응 조건, 새 한국어 기울임 방향, 기관차 가속 후 질문이 읽힌다. 문항15의 x(t), x(0), x(T), 미분과 적분식, 생산비용·매출·부등식 조건과 a–c 질문이 서로 잘 이어진다. 문항16의 꼬인 고무띠 두 native 그림과 T, a, n 연결이 보존되어 있고, 출제자와 페이지번호가 정상이다. 과도한 단어 사이 벌어짐, 행 접촉, 잘림이 보이지 않는다. source-bound 실제 glyph/outline/native/허용범위 밖 audit PASS인 이 proof에 결속한다."
+    },
+    {
+      "page": 7,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.pdf",
+      "proof_sha256": "16a31e59272ab978b6329c4ff9dd95f5eb88a33cefd31a81d4e9d2766e612863",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.layout.json",
+      "layout_sha256": "524357bc804544227506330add04f09c0ffac58d56db70f61193f9435dea9bd4",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.png",
+      "png_sha256": "ef6837e7423a3a7111aef406577d0a6b4f58b68e0be6f513ae7d3d451d082fb0",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.effective-plan.json",
+      "effective_plan_sha256": "7cd7973e06a654032e9bcf65af4c57f2a5f73ff0b5931612774444c88f060134",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page07.json",
+        "sha256": "e0ea7623bb2d809596b8bcdb39439dd8d84689b8c405593c874b5c14e39229ce"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.pdf",
+          "sha256": "16a31e59272ab978b6329c4ff9dd95f5eb88a33cefd31a81d4e9d2766e612863"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.layout.json",
+          "sha256": "524357bc804544227506330add04f09c0ffac58d56db70f61193f9435dea9bd4"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.png",
+          "sha256": "ef6837e7423a3a7111aef406577d0a6b4f58b68e0be6f513ae7d3d451d082fb0"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.independent-qa.json",
+          "sha256": "b7f980b24f04e0dc143b10b2368ed4548d5baa960de3237415340c75cd692025"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page07.effective-plan.json",
+          "sha256": "7cd7973e06a654032e9bcf65af4c57f2a5f73ff0b5931612774444c88f060134"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-07-build\\runtime-snapshot.json",
+          "sha256": "77b26ea214276f24e22cfe6b03c1637675d20bede51f7c9ae59d22693bab3dac"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항17의 맥주잔 원형 밑면·투영 설명, native 회색 회전체 그림과 R/r 조건, 두 소문항이 읽힌다. 문항18의 열린/닫힌 모세관과 가늘어지는 관 세 경우, r(z), 압력·밀도·표면장력·각도 수치와 단위가 본문과 자연스럽게 이어진다. 문항19의 젖은 천/열전달 질문과 조건, 세 출제자명 및 페이지번호가 보존되어 있다. 행 높이와 여백이 정상이고 단어 간 과한 벌어짐, 잘림, 접촉이 보이지 않는다. 독립 actual glyph/master/native 및 허용범위 밖 비교 PASS인 이 proof에만 결속한다."
+    },
+    {
+      "page": 8,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.pdf",
+      "proof_sha256": "7856c2993aaba208741c6b2a4f17764d3a291a13640e90d706f29d6dc7960898",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.layout.json",
+      "layout_sha256": "152047a60c6ac81d07ff2c24870077feee019a4d3682d1b64a8742c4f41fdf91",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.png",
+      "png_sha256": "60e58e0f7748a62b824599a67f402853244b74b7494d083780a7af547bd5f69a",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.effective-plan.json",
+      "effective_plan_sha256": "0f283e9d3d8e22dc5fe136d2914c374fa3d7a387ce23752b30165446e6efee2e",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page08.json",
+        "sha256": "d6c3d5c78b6fe64e06770bb5afced17a8e5bc6024cf885a1610f2ba628a21825"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.pdf",
+          "sha256": "7856c2993aaba208741c6b2a4f17764d3a291a13640e90d706f29d6dc7960898"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.layout.json",
+          "sha256": "152047a60c6ac81d07ff2c24870077feee019a4d3682d1b64a8742c4f41fdf91"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.png",
+          "sha256": "60e58e0f7748a62b824599a67f402853244b74b7494d083780a7af547bd5f69a"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.independent-qa.json",
+          "sha256": "c9e5cd1f6e5c9ab865d2f2bcf7fa1243375f709f0d6a909bff687c9869af49d8"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page08.effective-plan.json",
+          "sha256": "0f283e9d3d8e22dc5fe136d2914c374fa3d7a387ce23752b30165446e6efee2e"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-08-build\\runtime-snapshot.json",
+          "sha256": "deae38c62a077fc5738b458407a3e0b7edaee8381e9970dc01fc23b5942b4bcb"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항20의 A/B 상전이 조건과 클라우지우스–클라페이롱 원본 수식·비잠열, 문항21의 내부에너지와 운동방정식·엔트로피 조건이 누락이나 잘림 없이 읽힌다. 분수·점미분·벡터 F/D는 native 형태를 유지한다. 문항22의 굴절률 n(r), 표면 n0와 원거리 n=1, a/b 광선 조건과 진행 방향을 뒤집으라는 새 한국어 italic 힌트가 보통 간격으로 읽힌다. 출제자·문항번호·페이지번호 및 여백이 정상이며 행 접촉이나 과한 띄어쓰기 흔적이 보이지 않는다. 독립 actual glyph/master/native/허용범위 밖 audit PASS인 이 proof에 결속한다."
+    },
+    {
+      "page": 9,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.pdf",
+      "proof_sha256": "827e0f86635ffdc0a33d3bcd9815aab7283a4bea3eb16394e0650b574ad86a06",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.layout.json",
+      "layout_sha256": "b90def9fdb2e33718d2a4703c3f5d613e09d976d2c7827da4c434f6af78f8653",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.png",
+      "png_sha256": "190c6b41d1164c34358e027b52014188ddb733069d67b1283c8eee487777c3fc",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.effective-plan.json",
+      "effective_plan_sha256": "5bc99809230b650253a0b096fa82031b3d4c396ca877ceee2b5623dcd89d7299",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page09.json",
+        "sha256": "c4281d022b564565a8147f93d3c29f677d712072f924594fdd100e17a4061e21"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.pdf",
+          "sha256": "827e0f86635ffdc0a33d3bcd9815aab7283a4bea3eb16394e0650b574ad86a06"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.layout.json",
+          "sha256": "b90def9fdb2e33718d2a4703c3f5d613e09d976d2c7827da4c434f6af78f8653"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.png",
+          "sha256": "190c6b41d1164c34358e027b52014188ddb733069d67b1283c8eee487777c3fc"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.independent-qa.json",
+          "sha256": "a36ff08fe032c08967034dad18d79bded65280781d8a5ebc1a3c4c690cf248b0"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page09.effective-plan.json",
+          "sha256": "5bc99809230b650253a0b096fa82031b3d4c396ca877ceee2b5623dcd89d7299"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-09-build\\runtime-snapshot.json",
+          "sha256": "b8a9ef52781dad5cc8308c4488310c77e3b2d752b56ffd01c1e28214c6dcd2eb"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항23의 native 6×6 저항 행렬, 행렬 R/단위Ω, 인접행렬 복원 질문과 소수를 쓰지 말라는 한국어 italic 힌트가 뚜렷하다. 문항24의 질량·자기모멘트·전류 및 작은 진동/안정성 조건이 읽힌다. 문항25의 원통 자석·자화·일정 각속도 조건, 문항26의 두 고리·반지름·저항·중력·유도전류·근사/정확해 비교와 장시간 거동 질문이 읽힌다. 모든 문항번호·출제자·페이지번호와 여백이 정상이고 본문 잘림이나 글자 접촉, 과한 단어 간격이 보이지 않는다. strict actual/master/native/허용범위 밖 audit PASS인 이 proof에 결속한다."
+    },
+    {
+      "page": 10,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.pdf",
+      "proof_sha256": "452644b6311eda883d32772e76cc0347d66946d03638dbe8eb9d8105dbf11dd1",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.layout.json",
+      "layout_sha256": "46302cc20336f80691b2ae354bb9a23e012dede2a301a88cbfa73cc4ff8bcdbc",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.png",
+      "png_sha256": "8a16f9616c9c804404d67c16566f7cadff7af1112d00d972cdab54686bdd1510",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.effective-plan.json",
+      "effective_plan_sha256": "41d94ef3aea8ef62d768108688b4887776862090b09b66ca9d2e0f600767fc0d",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page10.json",
+        "sha256": "d1f0d9812ec2788d0ba4c0dcb9265bd2940f7c20ed0a981143561d77cdadf943"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.pdf",
+          "sha256": "452644b6311eda883d32772e76cc0347d66946d03638dbe8eb9d8105dbf11dd1"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.layout.json",
+          "sha256": "46302cc20336f80691b2ae354bb9a23e012dede2a301a88cbfa73cc4ff8bcdbc"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.png",
+          "sha256": "8a16f9616c9c804404d67c16566f7cadff7af1112d00d972cdab54686bdd1510"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.independent-qa.json",
+          "sha256": "d129f4ae4230ddb1e2cf14020755fdf644ed612e8eb6dff6b615e923f8803c50"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page10.effective-plan.json",
+          "sha256": "41d94ef3aea8ef62d768108688b4887776862090b09b66ca9d2e0f600767fc0d"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-10-build\\runtime-snapshot.json",
+          "sha256": "7a295eaff4858549a5773b2a63f66ca743359a145f46e7563712ba62fdba7f5b"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항27의 긴 정육면체 행성/자기장 지도 지문과 native HPLD/CW2, 새 한국어 italic 제목어, 계산·극좌표 성분을 요구하는 끝 질문까지 읽힌다. 일반 띄어쓰기와 문단 여백을 유지하며 마지막 줄/출제자 사이 잘림이나 접촉이 없다. 문항28의 (1+1) 차원, native 스칼라장과 작용 적분식·고유시간·결합상수·질량/광속·미분식 질문이 본문과 잘 연결된다. 수식·문항/페이지번호·출제자와 원래 행 높이가 정상이며, strict actual/master/native/허용범위 밖 audit PASS인 이 proof에만 결속한다."
+    },
+    {
+      "page": 11,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.pdf",
+      "proof_sha256": "be8e8e0c6697dadc8deb82c8855754fdbf50b979891a96e331dc0fd1d1a5a064",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.layout.json",
+      "layout_sha256": "82aff37dd8564636aa530aff5ff8dc89afba002654dbb96b5f7f5410b7992cba",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.png",
+      "png_sha256": "efc185770aae382898bf6b9ea5f4bf8818f17fa04e72fb36ee616580b3cbd1cd",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.effective-plan.json",
+      "effective_plan_sha256": "7e6da0fe9dbb89883dae6e74a78b88fd528674f5fd145e62e0e8f3aaf162afc6",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page11.json",
+        "sha256": "7ecca60e67a1a5fe415755d33388c67a21562261f028117b89f6de3ccca5670e"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.pdf",
+          "sha256": "be8e8e0c6697dadc8deb82c8855754fdbf50b979891a96e331dc0fd1d1a5a064"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.layout.json",
+          "sha256": "82aff37dd8564636aa530aff5ff8dc89afba002654dbb96b5f7f5410b7992cba"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.png",
+          "sha256": "efc185770aae382898bf6b9ea5f4bf8818f17fa04e72fb36ee616580b3cbd1cd"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.independent-qa.json",
+          "sha256": "6f4a2d95c777e4f3bfa599e265ee7c74b904ab0d7723b5dc7bbf08c52afbbed5"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page11.effective-plan.json",
+          "sha256": "7e6da0fe9dbb89883dae6e74a78b88fd528674f5fd145e62e0e8f3aaf162afc6"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-11-build\\runtime-snapshot.json",
+          "sha256": "227122054c6f9a075bda1d25c6543368bcfd3c1d26a93a498e408db49b1359b2"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항29의 정적 Lorentz 스칼라장, 결합상수·Φ(z)·mgz·초기 z=H/속도0·z(t)와 최대속도·고전 극한 질문이 본문과 잘 이어진다. 두 질문 사이 여백과 native 그리스문자/수식이 정상이다. 문항30의 피카드/엔터프라이즈 긴 서술, 총질량과 연료 질량·일정 u=c/n·고유시간 소비율·중간 가속/감속·식량소비·고유시간 속력·체중·도착시각과 L≫c²/g 조건까지 읽혔다. 원본 문자·문항/출제자·페이지번호가 보이며 과한 단어 간격/잘림/접촉은 보이지 않는다. strict actual/master/native/허용범위 밖 audit PASS인 이 proof에 결속한다."
+    },
+    {
+      "page": 12,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.pdf",
+      "proof_sha256": "0ebe355c5fe2f297efa7403f2995295f95f57b10da399721eedc6fcff172ab3a",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.layout.json",
+      "layout_sha256": "c410a8ee0e20cf4dd310d9d8758043337e62465651656902c4a96e827ea6cf60",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.png",
+      "png_sha256": "e289638fbbf6b244faea7c14c3fe9707e5779b2b709f572edbcc6a863769fbb1",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.effective-plan.json",
+      "effective_plan_sha256": "7d631bfd42f1267d0d6aca66b0dabfb9aca27792c2054aca401cfb3628ac6aac",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page12.json",
+        "sha256": "f6e7128d23ec5448c8423b90295a3d0c16dd367050af6d180676e642100d7766"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.pdf",
+          "sha256": "0ebe355c5fe2f297efa7403f2995295f95f57b10da399721eedc6fcff172ab3a"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.layout.json",
+          "sha256": "c410a8ee0e20cf4dd310d9d8758043337e62465651656902c4a96e827ea6cf60"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.png",
+          "sha256": "e289638fbbf6b244faea7c14c3fe9707e5779b2b709f572edbcc6a863769fbb1"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.independent-qa.json",
+          "sha256": "748d71d7a9df8f46231fc0e2a5425013b39dac4669f84d4ee70bae95adb53755"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page12.effective-plan.json",
+          "sha256": "7d631bfd42f1267d0d6aca66b0dabfb9aca27792c2054aca401cfb3628ac6aac"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-12-build\\runtime-snapshot.json",
+          "sha256": "e77186708dc757f7b63635cf55a768df8197684553f0787a2b81e6e8f95ae5e9"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항31의 B1→B2 계단 그래프와 축·시간T·빈/찬 원 표시가 보존되어 있고, 고전/양자 a·b 질문과 바닥상태·들뜸확률·기대에너지 및 충분히 넓은 영역에 관한 주가 읽힌다. 문항32의 SU(2), 단일항/삼중항, 세 native ket 식과 분수/루트/화살표, 얽힘 판단을 요구하는 두 사람의 주장 및 마지막 질문이 선명하다. 새 한국어 italic 방향, 일반 단어 간격·수식 주변 연결·문항번호·출제자·페이지번호가 정상이며 잘림이나 접촉이 보이지 않는다. strict actual/master/native/허용범위 밖 audit PASS인 이 proof에 결속한다."
+    },
+    {
+      "page": 13,
+      "reviewed": true,
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.pdf",
+      "proof_sha256": "3fcaf0d3f0446fb88fc0f4bee4dd8df21282d05417b76bf5fafe6abe28bba9c3",
+      "layout_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.layout.json",
+      "layout_sha256": "4f48388d2fdf72aaaa271e8bb6c123a1b27f664fec09575c1f07522a381db76b",
+      "png_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.png",
+      "png_sha256": "6ae66d9f406386837a9ca4b9faf1137b7352c39d80fa72ff0680eebd40b8afb6",
+      "effective_plan_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.effective-plan.json",
+      "effective_plan_sha256": "5efc06a70b66d81909b2f07f41e09f2bd55b6116a4ad3d8b5c1015c17e3484f0",
+      "composer": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "composer_sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+      "visual_review": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\visual-reads\\page13.json",
+        "sha256": "ef58ccf3ca4fc08658d1e3a23e4e3d44f6057165086044777df91b858bcf6dfd"
+      },
+      "artifact_pins": {
+        "proof": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.pdf",
+          "sha256": "3fcaf0d3f0446fb88fc0f4bee4dd8df21282d05417b76bf5fafe6abe28bba9c3"
+        },
+        "layout": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.layout.json",
+          "sha256": "4f48388d2fdf72aaaa271e8bb6c123a1b27f664fec09575c1f07522a381db76b"
+        },
+        "png": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.png",
+          "sha256": "6ae66d9f406386837a9ca4b9faf1137b7352c39d80fa72ff0680eebd40b8afb6"
+        },
+        "independent_audit": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.independent-qa.json",
+          "sha256": "b59bc4f875ef6a8852c42880653f4e453bb200776ea79db928d4580c7be6f87f"
+        },
+        "effective_plan": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\proofs\\ortvay\\2023\\page13.effective-plan.json",
+          "sha256": "5efc06a70b66d81909b2f07f41e09f2bd55b6116a4ad3d8b5c1015c17e3484f0"
+        },
+        "runtime_snapshot": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\runtime-snapshots\\final-2023-13-build\\runtime-snapshot.json",
+          "sha256": "b103581147d5c2321444273f6ab9905668a43d91519b4e3b616f4a342c9a5de0"
+        }
+      },
+      "review": "최종 PNG를 original 해상도로 실제 읽었다. 문항33의 초음속 구급차 원형 주행 이야기·청각 관측·가속/감속 서술과 a–d 네 질문 끝까지 읽혔다. 질문 d의 두 대에 해당하는 새 한국어 italic 강조도 오른 방향으로 기울고 문장 속 간격이 자연스럽다. 긴 인용문·문항표지·출제자·페이지번호와 하단 기존 native monospaced footer가 보인다. 행 높이·문단 여백이 정상이고 잘림, 겹침, 과한 띄어쓰기가 보이지 않는다. 이 proof는 strict actual/master/native와 허용범위 밖 비교 PASS에 결속된다."
+    }
+  ],
+  "normalization_only_original_actual_read_manifests_unchanged": true
+}
