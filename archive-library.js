@@ -11,7 +11,9 @@ const WORDS={
 Object.assign(WORDS.ko,{books:'교재',schools:'학교',allSchools:'학교 목록',schoolPapers:'강좌·문제지',officialMaterials:'공식 공개자료',officialLinks:'공식 자료 링크',noDigitalPapers:'현재 이 과목에 등록된 웹 문제는 없습니다.',otherMaterials:'기타 자료',unclassified:'학교 분류 미지정',noCover:'표지 이미지 없음',searchAllSchools:'검색은 이 과목의 모든 학교 자료에서 진행됩니다.'});
 Object.assign(WORDS.en,{books:'Books',schools:'Schools',allSchools:'All schools',schoolPapers:'Courses and papers',officialMaterials:'Official open materials',officialLinks:'Official material links',noDigitalPapers:'No digital problems are currently registered for this discipline.',otherMaterials:'Other materials',unclassified:'Institution not assigned',noCover:'Cover image unavailable',searchAllSchools:'Search covers all school materials in this discipline.'});
 WORDS.ko.titlePage='표제지';WORDS.en.titlePage='Title page';
-WORDS.ko.searchProblems='문항 검색';WORDS.en.searchProblems='Search problems';
+WORDS.ko.searchProblems='자료·문항 검색';WORDS.en.searchProblems='Search materials and problems';
+Object.assign(WORDS.ko,{edition:'판본',originalLanguage:'원문',imageType:'이미지',cover:'표지',materials:'수록 자료',materialType:'구분',officialLinksCount:'공식 링크',notDigitized:'미수록'});
+Object.assign(WORDS.en,{edition:'Edition',originalLanguage:'Original',imageType:'Image',cover:'Cover',materials:'Papers',materialType:'Type',officialLinksCount:'Official links',notDigitized:'Not stored'});
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sourceTitle=s=>s?.title||s?.published_title_en||s?.published_title_ko||s?.id||'';
 const titleOf=(q,lang)=>q?.[lang==='ko'?'title_ko':'title_en']||q?.[lang==='ko'?'title_en':'title_ko']||'';
@@ -130,7 +132,18 @@ export function mountArchiveLibrary(container,options={}){
   function sourceCount(s){return Number.isSafeInteger(s?.question_count)?s.question_count.toLocaleString()+' '+tr('problems'):'';}
   function cardImage(source){
     const media=config.bookMedia?.[source.id],url=safeMediaURL(media?.image_url);
-    return `<div class="al-book-cover">${url?`<img src="${esc(url)}" alt="${esc(media.alt||'')}" loading="lazy" decoding="async">`:`<span class="al-no-media">${esc(tr('noCover'))}</span>`}</div>${url&&media.provenanceKind==='source_title_page'?`<span class="al-media-kind">${esc(tr('titlePage'))}</span>`:''}`;
+    return url?`<img class="clogo al-card-cover" src="${esc(url)}" alt="${esc(media.alt||'')}" loading="lazy" decoding="async">`:`<span class="clogo al-card-cover-placeholder" aria-label="${esc(tr('noCover'))}">—</span>`;
+  }
+  function metadata(fields){return '<dl>'+fields.map(([label,value,attribute])=>`<div><dt>${esc(label)}</dt><dd${attribute?' '+attribute:''}>${esc(value)}</dd></div>`).join('')+'</dl>';}
+  function bookCard(source){
+    const media=config.bookMedia?.[source.id],title=source.published_title_en||source.published_title_ko||source.title||media?.title||sourceTitle(source),edition=source.edition_label||media?.edition||'—';
+    const image=media?.image_url?tr(media.provenanceKind==='source_title_page'?'titlePage':'cover'):tr('noCover');
+    return `<a class="comp al-book-card" href="${esc(href({source:source.id,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(source.primary_author||title)}</div>${cardImage(source)}</div><div class="full">${esc(title)}</div>${metadata([[tr('originalLanguage'),source.source_language?.toUpperCase()||'—'],[tr('edition'),edition],[tr('imageType'),image],[tr('problems'),Number.isSafeInteger(source.question_count)?source.question_count:'—','data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
+  }
+  function schoolCard(school){
+    const papers=schoolSources(school),light=safeMediaURL(school.logo_url),dark=safeMediaURL(school.dark_logo_url),logo=config.theme==='dark'&&dark?dark:light;
+    const count=papers.reduce((n,p)=>n+(Number.isSafeInteger(p.question_count)?p.question_count:0),0),short=school.aliases?.find(x=>/^[A-Z]{2,6}$/.test(x))||school.name?.en?.replace(/\s+University$/,'')||localized(school.name);
+    return `<a class="comp al-school-card" href="${esc(href({school:school.id,source:null,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}</div>${logo?`<img class="clogo al-card-school-logo${school.logo_monochrome?' al-logo-monochrome':''}" src="${esc(logo)}" data-logo-light="${esc(light)}" data-logo-dark="${esc(dark)}" alt="" loading="lazy" decoding="async">`:''}</div><div class="full">${esc(school.id==='other'?tr('unclassified'):localized(school.name))}</div>${metadata([[tr('materials'),papers.length||'—','data-card-papers'],[tr('materialType'),tr(papers.length?'schoolPapers':'officialLinks')],[tr('officialLinksCount'),schoolMaterials(school).length],[tr('problems'),papers.length?count:tr('notDigitized'),'data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
   function officialMaterialsHTML(school){const items=schoolMaterials(school);return items.length?`<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(x=>`<li><a href="${esc(officialURL(x.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(x.label)||x.url)} ↗</a></li>`).join('')}</ul></section>`:'';}
   function ordered(list){const c=new Intl.Collator(config.lang,{numeric:true,sensitivity:'base'});return [...list].sort((a,b)=>config.kind==='contest'?(c.compare(a.competition||'',b.competition||'')||(b.year||0)-(a.year||0)||c.compare(sourceTitle(a),sourceTitle(b))):c.compare(sourceTitle(a),sourceTitle(b))||String(a.id).localeCompare(String(b.id)));}
@@ -154,12 +167,12 @@ export function mountArchiveLibrary(container,options={}){
   function renderDirectory(){
     const slot=$('[data-source-list]');if(!slot)return;const query=($('[data-source-query]')?.value||'').trim().toLocaleLowerCase();
     if(config.kind==='course'&&!params.has('school')){
-      const groups=schoolGroups().filter(s=>[localized(s.name),...(s.aliases||[])].join(' ').toLocaleLowerCase().includes(query));slot.className='al-media-grid al-school-grid';
-      slot.innerHTML=groups.length?groups.map(s=>{const papers=schoolSources(s),light=safeMediaURL(s.logo_url),dark=safeMediaURL(s.dark_logo_url),logo=config.theme==='dark'&&dark?dark:light,count=papers.reduce((n,p)=>n+(Number.isSafeInteger(p.question_count)?p.question_count:0),0);return `<li><a class="al-media-card al-school-card" href="${esc(href({school:s.id,source:null,problem:null,cursor:null}))}"><div class="al-school-logo">${logo?`<img src="${esc(logo)}" data-logo-light="${esc(light)}" data-logo-dark="${esc(dark)}" class="${s.logo_monochrome?'al-logo-monochrome':''}" alt="" loading="lazy" decoding="async">`:''}</div><strong class="al-card-title">${esc(localized(s.name))}</strong><span class="al-card-meta">${papers.length?`${papers.length} ${esc(tr('schoolPapers'))}${count?' · '+count.toLocaleString()+' '+esc(tr('problems')):''}`:esc(tr('officialLinks'))}</span></a></li>`;}).join(''):`<li class="al-muted">${esc(tr('emptySources'))}</li>`;return;
+      const groups=schoolGroups().filter(s=>[localized(s.name),...(s.aliases||[])].join(' ').toLocaleLowerCase().includes(query));slot.className='comps';slot.dataset.lang=config.lang;
+      slot.innerHTML=groups.length?groups.map(schoolCard).join(''):`<div class="subjempty">${esc(tr('emptySources'))}</div>`;return;
     }
-    const list=visibleSources().filter(s=>[sourceTitle(s),sourceMeta(s)].join(' ').toLocaleLowerCase().includes(query));
-    const books=config.kind==='book';slot.className=books?'al-media-grid al-book-grid':'al-paper-list';
-    slot.innerHTML=list.length?list.map(s=>books?`<li><a class="al-media-card al-book-card" href="${esc(href({source:s.id,problem:null,cursor:null}))}">${cardImage(s)}<strong class="al-card-title">${esc(sourceTitle(s))}</strong><span class="al-card-meta">${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`:`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join(''):`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
+    const list=visibleSources().filter(s=>[sourceTitle(s),sourceMeta(s)].join(' ').toLocaleLowerCase().includes(query)),books=config.kind==='book';slot.className=books?'comps':'al-paper-list';
+    if(books)slot.dataset.lang=config.lang;else slot.removeAttribute('data-lang');
+    slot.innerHTML=list.length?list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
   }
   function filters(){
     const topics=new Set(sources.flatMap(s=>Array.isArray(s.subjects)?s.subjects:[]).filter(s=>Object.hasOwn(TOPICS,s)));
@@ -169,9 +182,9 @@ export function mountArchiveLibrary(container,options={}){
     const count=Number(status.questions),countText=Number.isSafeInteger(count)&&count>=0?`${count.toLocaleString()} ${tr('problems')}`:'';
     const heading=source?sourceTitle(source):school?localized(school.name):config.kind==='book'?tr('books'):config.kind==='course'?tr('schools'):tr('sources');
     const back=source?`<a href="${esc(href({source:null,problem:null,cursor:null}))}">${esc(school?localized(school.name):tr('allSources'))}</a>`:school?`<a href="${esc(href({school:null,source:null,problem:null,cursor:null}))}">${esc(tr('allSchools'))}</a>`:'';
-    const directory=landing?`<section class="al-directory" data-directory><label class="al-source-find">${esc(tr(config.kind==='course'&&!school?'schools':'findSource'))}<input type="search" data-source-query maxlength="120"></label><ul data-source-list></ul>${school?officialMaterialsHTML(school):''}</section>`:'';
+    const directory=landing?`<section class="al-directory" data-directory>${config.kind==='book'||!school?'<div data-source-list></div>':'<ul data-source-list></ul>'}${school?officialMaterialsHTML(school):''}</section>`:'';
     $('[data-content]').innerHTML=`<div class="al-catalog">
-      <div class="al-catalog-heading"><div>${source||school?`<h2>${esc(heading)}</h2>`:''}<p class="al-muted">${esc(source?sourceMeta(source):school?'':countText)}</p></div>${back}</div>
+      ${source||school||!landing?`<div class="al-catalog-heading"><div>${source||school?`<h2>${esc(heading)}</h2>`:''}<p class="al-muted">${esc(source?sourceMeta(source):school?'':countText)}</p></div>${back}</div>`:''}
       ${landing?`<details class="al-search-disclosure"><summary>${esc(tr('searchProblems'))}</summary>`:''}
       <form data-search class="al-search">
         <label class="al-query"><span class="al-sr">${esc(tr('query'))}</span><input name="q" type="search" maxlength="600" value="${esc(query)}" placeholder="${esc(tr('query'))}"></label><button type="submit">${esc(tr('search'))}</button>
@@ -179,7 +192,7 @@ export function mountArchiveLibrary(container,options={}){
         <label><span>${esc(tr('stars'))}</span><select name="stars"><option value="">${esc(tr('allStars'))}</option>${[1,2,3,4,5].map(n=>`<option value="${n}"${params.get('stars')===String(n)?' selected':''}>${'★'.repeat(n)}${'☆'.repeat(5-n)}</option>`).join('')}</select></label>
         ${source?`<label class="al-source-select"><span>${esc(tr('source'))}</span><select name="source">${visibleSources().map(s=>`<option value="${s.id}"${s.id===source.id?' selected':''}>${esc(sourceTitle(s))}</option>`).join('')}</select></label>`:''}
         <a class="al-reset" href="${esc(href({school:null,source:null,problem:null,q:null,topic:null,stars:null,cursor:null,competition:null,year:null,type:null}))}">${esc(tr('reset'))}</a>
-      </form>${school&&!source?`<p class="al-muted al-search-scope">${esc(tr('searchAllSchools'))}</p>`:''}${landing?'</details>':''}
+      </form>${school&&!source?`<p class="al-muted al-search-scope">${esc(tr('searchAllSchools'))}</p>`:''}${landing?`<label class="al-source-find">${esc(tr(config.kind==='course'&&!school?'schools':'findSource'))}<input type="search" data-source-query maxlength="120"></label></details>`:''}
       ${directory}<section data-results${landing?' hidden':''} aria-label="${esc(tr('list'))}">${landing?'':`<p>${esc(tr('loading'))}</p>`}</section><div data-admin-tools></div>
     </div>`;
     renderDirectory();renderAdminTools();

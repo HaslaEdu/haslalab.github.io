@@ -56,6 +56,7 @@ test('Books and Schools mount native category- and subject-bound readers without
     assert.equal(options.baseHash,`#/archive/${category}/${sub}`);assert.equal(options.apiOrigin,'https://haslalab-problem-bank.haslalab.workers.dev');assert.equal(typeof options.renderMath,'function');
     assert.equal(options.bookMedia,a.native.bookMedia);assert.equal(options.schoolMedia,a.native.schoolMedia);
     assert.equal(options.getToken(),'SYNTHETIC_ACCOUNT_TOKEN');assert.doesNotMatch(a.node('view').innerHTML,/<iframe|SYNTHETIC_ACCOUNT_TOKEN|workers\.dev/);
+    assert.match(a.node('view').innerHTML,/<div class="shell">/);assert.match(a.node('view').innerHTML,/<nav class="subjs"/);assert.match(a.node('view').innerHTML,/data-logo-key="ipho"/);assert.doesNotMatch(a.node('view').innerHTML,/archive-shell|archive-disciplines/);
     assert.match(a.node('nav').innerHTML,/<a href="#\/comps" class="on">/);assert.match(a.context.document.title,/아카이브/);
   }
 });
@@ -63,8 +64,8 @@ test('Books and Schools mount native category- and subject-bound readers without
 test('school cards keep their selection in the native route and the main language switch',async()=>{
   const a=app('#/archive/schools/math?school=kaist');a.run('render()');await tick();
   assert.equal(a.calls.mounts[0].options.params.get('school'),'kaist');assert.equal(a.calls.mounts[0].options.collection,'mathematics');
-  assert.match(a.node('view').innerHTML,/<h1>학교<\/h1>/);assert.doesNotMatch(a.node('view').innerHTML,/학교 아카이브/);
-  a.run('setLang("en")');await tick();assert.equal(a.calls.mounts.at(-1).options.params.get('school'),'kaist');assert.match(a.node('view').innerHTML,/<h1>Schools<\/h1>/);
+  assert.match(a.node('view').innerHTML,/<h1>학교를 고르세요<\/h1>/);assert.doesNotMatch(a.node('view').innerHTML,/학교 아카이브/);
+  a.run('setLang("en")');await tick();assert.equal(a.calls.mounts.at(-1).options.params.get('school'),'kaist');assert.match(a.node('view').innerHTML,/<h1>Choose a school<\/h1>/);
 });
 test('old Learn bank bookmarks resolve into Archive and never remount the retired app',async()=>{
   const a=app('#/learn/astronomy/library');a.run('render()');await tick();assert.equal(a.context.location.hash,'#/archive/books/astro');assert.equal(a.calls.mounts[0].options.collection,'astronomy');

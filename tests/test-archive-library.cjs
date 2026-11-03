@@ -33,14 +33,14 @@ async function setup(t,{params='',route,options={},token=''}={}){
 
 test('native directory keeps outside DOM intact, real titles/counts and all scoped endpoints',async t=>{
   const h=await setup(t);assert.equal(h.w.document.getElementById('outside').textContent,'Keep');assert(!h.mount.querySelector('iframe'));
-  assert.match(h.mount.textContent,/A Published Book/);assert.match(h.mount.textContent,/Author/);assert.match(h.mount.textContent,/2 문제/);
+  assert.match(h.mount.textContent,/A Published Book/);assert.match(h.mount.textContent,/Author/);assert.equal(h.mount.querySelector('[data-card-questions]').textContent,'2');
   for(const c of h.calls){assert.equal(c.url.searchParams.get('kind'),'book');assert.equal(c.url.searchParams.get('collection'),'physics');assert.equal(c.init.credentials,'omit');}
   const a=h.mount.querySelector('[data-source-list] a');assert.equal(a.getAttribute('href'),'#/archive/books/phys?source='+SID);
 });
 
 test('scoped directory follows every page, deduplicates and sorts actual published titles naturally',async t=>{
   const h=await setup(t,{route:u=>u.pathname.endsWith('/sources')?response(u.searchParams.has('after')?{sources:[source(SID),source(SID2,{title:'Book 2'})],has_more:false}:{sources:[source(SID,{title:'Book 10'})],has_more:true,next_cursor:SID}):null});
-  assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/sources')).length,2);const rows=[...h.mount.querySelectorAll('[data-source-list] a strong')].map(x=>x.textContent);assert.deepEqual(rows,['Book 2','Book 10']);
+  assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/sources')).length,2);const rows=[...h.mount.querySelectorAll('[data-source-list] a .full')].map(x=>x.textContent);assert.deepEqual(rows,['Book 2','Book 10']);
 });
 
 test('scoped sources retain mixed-bank membership supplied by server, without re-filtering presentation collection',async t=>{
@@ -212,7 +212,7 @@ test('missing book covers are an explicit placeholder rather than a fabricated i
 
 test('school landing groups actual papers into institution logo cards and retains unmatched papers separately',async t=>{
   const h=await setup(t,{options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
-  const cards=[...h.mount.querySelectorAll('.al-school-card')];assert.equal(cards.length,4);const mit=cards.find(a=>a.getAttribute('href').includes('school=mit'));assert(mit);assert.match(mit.textContent,/2 강좌·문제지/);assert.match(mit.textContent,/4 문제/);assert.equal(mit.querySelector('img').src,'https://haslalab.org/assets/mit.svg');assert.equal(cards.filter(a=>a.textContent.includes('기타 자료')).length,1);
+  const cards=[...h.mount.querySelectorAll('.al-school-card')];assert.equal(cards.length,4);const mit=cards.find(a=>a.getAttribute('href').includes('school=mit'));assert(mit);assert.equal(mit.querySelector('[data-card-papers]').textContent,'2');assert.equal(mit.querySelector('[data-card-questions]').textContent,'4');assert.equal(mit.querySelector('img').src,'https://haslalab.org/assets/mit.svg');assert.equal(cards.filter(a=>a.textContent.includes('기타 자료')).length,1);
   assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);assert.equal(cards.filter(a=>a.textContent.includes('Mechanics problem set')).length,0);
 });
 
@@ -256,4 +256,14 @@ test('automatic school search normalization replaces history while deliberate sc
   const h=await setup(t,{params:'school=mit&q=oscillation',options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
   assert.match(h.navigations[0],/q=oscillation/);assert.doesNotMatch(h.navigations[0],/school=/);assert.equal(h.navigationOptions[0].replace,true);
   const landing=await setup(t,{options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});landing.mount.querySelector('.al-school-card').click();assert.equal(landing.navigationOptions[0].replace,undefined);
+});
+
+test('books and schools literally reuse original competition DOM without poster grid or layout overrides',async t=>{
+  const book=await setup(t,{options:{bookMedia:{[SID]:{image_url:'/assets/cover.jpg'}}}}),school=await setup(t,{options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:schoolRoute});
+  for(const h of [book,school]){
+    const grid=h.mount.querySelector('div.comps[data-lang="ko"]');assert(grid);assert([...grid.children].every(x=>x.matches('a.comp')));assert.equal(h.mount.querySelector('.al-catalog-heading'),null);
+    for(const card of grid.children){assert(card.querySelector('.chead > .abbr'));assert(card.querySelector('.full'));assert.equal(card.querySelectorAll('dl > div').length,4);assert([...card.querySelectorAll('dl > div')].every(d=>d.querySelector('dt')&&d.querySelector('dd')));assert(card.querySelector('span.go'));}
+    assert(h.mount.querySelector('.al-search-disclosure [data-source-query]'));assert.equal(h.mount.querySelector('.al-directory > .al-source-find'),null);
+  }
+  const css=fs.readFileSync(path.resolve(__dirname,'../archive-library.css'),'utf8');assert.doesNotMatch(css,/al-media-grid|al-media-card|\.al-book-cover|\.al-school-logo/);assert.doesNotMatch(css,/\.comps\s*\{[^}]*grid-template-columns/);
 });
