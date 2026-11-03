@@ -6,6 +6,7 @@
  */
 
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam } from "./lab-train.js";
+import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
 import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
@@ -3210,6 +3211,46 @@ async function labBench(env, s, job) {
   try {
     /* what GOOGLE_CLOUD_API_KEY can do (admin bench, {stage:'gcp', model?, project?, region?}): a Vertex express call, the
        tuning-jobs list (needs OAuth unless Google allows the key), a bucket list; statuses and Google's words, never the key */
+    /* Vertex AI tuning of a Gemini page reader (vertex-tuning.js), as bench stages:
+         tune-check  the service account's token, the bucket and the tuning API (statuses only)
+         tune-upload Claude's gold pages: photos to gs://bucket/lab-pages/, train/validation JSONL to gs://bucket/runs/<id>/
+         tune-start  {baseModel, train, validation, epochs}: a supervised tuning job
+         tune-status {job}: its state, and the tuned model's endpoint when done */
+    if (spec.stage === 'tune-check') {
+      const cfg = gcpConfig(env); out = { present: cfg.present, project: cfg.project || null, bucket: cfg.bucket || null, region: cfg.region };
+      if (cfg.key) {
+        try { const t = await gcpToken(env); out.token = 'ok';
+          const get = async u => { const r = await fetch(u, { headers: { Authorization: 'Bearer ' + t } }); return { status: r.status, body: (await r.text()).slice(0, 300) }; };
+          if (cfg.bucket) out.bucket_list = await get(`https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(cfg.bucket)}/o?maxResults=1`);
+          if (cfg.project) out.tuning_list = await get(`https://${cfg.region}-aiplatform.googleapis.com/v1/projects/${cfg.project}/locations/${cfg.region}/tuningJobs?pageSize=1`);
+        } catch (e) { out.token = String(e?.message || e).slice(0, 200); }
+      }
+    } else if (spec.stage === 'tune-upload') {
+      const cfg = gcpConfig(env); if (!cfg.key || !cfg.bucket) throw new Error('gcp_not_configured');
+      const t = await gcpToken(env);
+      const rows = (await env.DB.prepare(`SELECT b.id, s.exam_key, p.task, p.id page_id, json_extract(b.output,'$.ocr') ocr FROM lab_bench b
+        JOIN lab_pages p ON p.id=json_extract(b.spec,'$.page_id') JOIN lab_sessions s ON s.id=p.session_id
+        WHERE b.status='done' AND json_extract(b.spec,'$.label') LIKE 'GOLD%' ORDER BY b.id`).all()).results;
+      const seen = new Set(), lines = [];
+      for (const r of rows) {
+        if (seen.has(r.page_id)) continue; seen.add(r.page_id);                       // a page transcribed twice: the first
+        const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=?').bind(r.page_id).first(), bytes = page && await labPageBytes(env, page);
+        if (!bytes || !r.ocr) continue;
+        const mime = page.mime === 'image/png' ? 'image/png' : 'image/jpeg';
+        const uri = await gcsPut(env, t, `lab-pages/${r.page_id}.${mime === 'image/png' ? 'png' : 'jpg'}`, bytes, mime);
+        lines.push({ ...r, line: vertexReadLine({ fileUri: uri, mime, transcript: r.ocr }) });
+      }
+      const share = Number.isFinite(+spec.validation) ? Math.max(0, Math.min(0.5, +spec.validation)) : 0.2, sp = splitByExam(lines, share);
+      const put = (name, list) => list.length ? gcsPut(env, t, `runs/${row.id}/${name}`, new TextEncoder().encode(list.map(x => x.line).join('\n') + '\n'), 'application/jsonl') : null;
+      out = { pages: lines.length, train: await put('train.jsonl', sp.train), validation: await put('validation.jsonl', sp.validation),
+        train_pages: sp.train.map(x => x.page_id), validation_pages: sp.validation.map(x => x.page_id) };
+    } else if (spec.stage === 'tune-start') {
+      const t = await gcpToken(env);
+      if (!/^gs:\/\//.test(spec.train || '')) throw new Error('bad_train_uri');
+      out = await startTuning(env, t, { baseModel: String(spec.baseModel || 'gemini-3.1-flash-lite'), train: spec.train, validation: spec.validation || null, epochs: spec.epochs, name: spec.name });
+    } else if (spec.stage === 'tune-status') {
+      out = await tuningStatus(env, await gcpToken(env), spec.job);
+    } else
     if (spec.stage === 'gcp') {
       const k = String(env.GOOGLE_CLOUD_API_KEY || '').trim(); if (!k) throw new Error('no_google_cloud_key');
       const probe = async (method, u, body) => { const t = Date.now(); try { const r = await fetch(u, { method, headers: { 'x-goog-api-key': k, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}), redirect: 'manual', signal: AbortSignal.timeout(60000) });
