@@ -1,0 +1,63 @@
+{
+  "reference_positive_proof": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\natural\\2007\\en\\page10.pdf",
+  "reference_positive_sha256": "de68bb91d74b66bd5ee1ef8f67481e8dd3e566e10625d12e28debed44b552d90",
+  "all_rejected": true,
+  "controls": [
+    {
+      "control": "Actually erase one original native E in display equation(1), without retyping any mathematics.",
+      "fixture": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\evidence\\negative-controls-v2\\page10-EN-rejected-erased-original-electric-field-E.pdf",
+      "fixture_sha256": "ea3b8d85a3807fdd49510dfc33e4a391f97bfcda5c6ed99a5a0be7f165e5d2d8",
+      "must_reject": true,
+      "rejected": true,
+      "native_physical_glyph": {
+        "c": "E",
+        "font": "Times New Roman Italic+FPEF",
+        "size": 10.5600004196167,
+        "origin": [
+          189.84768676757812,
+          294.0067138671875
+        ],
+        "bbox": [
+          189.84768676757812,
+          285.94439697265625,
+          196.29815673828125,
+          296.50439453125
+        ],
+        "render_mode": 0,
+        "trace_gid": 24,
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 1.0,
+        "linewidth": null,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "stroke_color": null,
+        "stroke_opacity": null,
+        "wmode": 0,
+        "colorspace": 3
+      },
+      "report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\evidence\\negative-controls-v2\\page10-EN-rejected-erased-original-electric-field-E.rejection.json"
+    },
+    {
+      "control": "Actually paint additional embedded SimSun prose through retained original native E; native CID/font/point/Y remain present.",
+      "fixture": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\evidence\\negative-controls-v2\\page10-EN-rejected-new-prose-over-original-electric-field-E.pdf",
+      "fixture_sha256": "0eee9f57664c9efa782092c509da0a60362dc22be16b348c44e7bf2293a182ac",
+      "must_reject": true,
+      "rejected": true,
+      "collision_pixels": 42,
+      "report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\evidence\\negative-controls-v2\\page10-EN-rejected-new-prose-over-original-electric-field-E.rejection.json"
+    },
+    {
+      "control": "Real rejected proof: native A moved but its original fullwidth comma remained at the old source x. The complete-expression relative-geometry audit must reject it.",
+      "rejected": true,
+      "proof_sha256": "6ae8ff6de8d27965800ae28d4ab70e3299d812faa62c98d6293b658230fec75a",
+      "report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\evidence\\negative-controls-v2\\real-rejected-page05-KO-original-comma-geometry.audit.json",
+      "report_sha256": "dca070a8af058bb8a183b8ea385e744e83a8d4372c50499009e97412fe085869"
+    }
+  ]
+}
