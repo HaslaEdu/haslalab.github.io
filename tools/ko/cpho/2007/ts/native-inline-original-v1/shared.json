@@ -1,0 +1,1036 @@
+{
+  "schema": "cpho2007-native-inline-original-v1",
+  "source_sha256": "2e30b56ab9274363686cbf5bc1ef7532dcf579e0703de2c01098b003ab70cdd9",
+  "source_original_pdf": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/inputs/CPhO_2007_Chinese_original.pdf",
+    "sha256": "2e30b56ab9274363686cbf5bc1ef7532dcf579e0703de2c01098b003ab70cdd9",
+    "bytes": 505784,
+    "frozen_path": "authoring-frozen/inputs/CPhO_2007_Chinese_original.pdf"
+  },
+  "frozen_master_manifest": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/snapshot-manifest.json",
+    "sha256": "10803de2bf7546f9e3cf998edde220f561eee73317f38e58c1f91eda51befaf4",
+    "bytes": 121697
+  },
+  "source_ready": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/source-ready.json",
+    "sha256": "84ef18623536aa27bffbd6765502de38627f33c5c429037fe243b776de8cf7e8",
+    "bytes": 3482
+  },
+  "visual_review": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/full144-visual-review-complete.json",
+    "sha256": "01a8fa22ae1761edf1b549996df284c5592cd262fa532e4788965bf33bc2d68f",
+    "bytes": 28238,
+    "frozen_path": "authoring-frozen/authoring/full144-visual-review-complete.json"
+  },
+  "source_slots": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/inputs/original-all20-source-slots.json",
+    "sha256": "f343edd02822c86d52aec4a98f7e63a66ecc2d68cc1b2270b63e6b69254e3078",
+    "bytes": 4748950,
+    "frozen_path": "authoring-frozen/inputs/original-all20-source-slots.json"
+  },
+  "external_font_source_pins": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/external-font-source-pins.json",
+    "sha256": "c7d519b18066453086d94c9a3878c21656ce5f3a3ce2a9489ba0d5e102bbd54e",
+    "bytes": 1215,
+    "frozen_path": "authoring-frozen/external-font-source-pins.json"
+  },
+  "atomic_inline": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/tools/ko/cpho/2007/natural/atomic-inline.json",
+    "sha256": "b90b30a0803adfb6b7517f4cf216fa32fd87a3a6bf24829c83d22ba501070948",
+    "bytes": 243276,
+    "frozen_path": "authoring-frozen/tools/ko/cpho/2007/natural/atomic-inline.json"
+  },
+  "assembly_summary": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/verification/summary.json",
+    "sha256": "c404055c210e2f0c42f506968c8e055ce319c09473f0fc64603b9956d527d5ce",
+    "bytes": 11050,
+    "frozen_path": "verification/summary.json"
+  },
+  "authoring_closure": [
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho2007_complete_vector_motion.py",
+      "sha256": "5202b58d476b8ced40401c3a3c0606142cf9e34bc88ae975b4ded4c0e0c8dc90",
+      "bytes": 5762,
+      "frozen_path": "authoring-frozen/engine/cpho2007_complete_vector_motion.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho2007_ts_initial_native_baseline.py",
+      "sha256": "6544690e5f2c46ed728161665a9724fb3593fa02ab8928b5623d112ad6b03773",
+      "bytes": 24376,
+      "frozen_path": "authoring-frozen/engine/cpho2007_ts_initial_native_baseline.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho2007_ts_runtime.py",
+      "sha256": "e739b0b8536c0f73d284f3c5f040754b0cfaa22f1ca411e9682aaf3f3f36e8eb",
+      "bytes": 11966,
+      "frozen_path": "authoring-frozen/engine/cpho2007_ts_runtime.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_cjk_translate.py",
+      "sha256": "55a9d2bf4a2d0a41f7437a340155ef74b40a83943e486822869b824b6737db78",
+      "bytes": 20877,
+      "frozen_path": "authoring-frozen/engine/cpho_cjk_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_atoms.py",
+      "sha256": "870c7e161ecca3281bf55d7a72b0628349d50dc83e3f4122eeed9fd7789adb35",
+      "bytes": 4874,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_atoms.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_english_fonts.py",
+      "sha256": "597bafebb1984e52da37ab08cd69ae267651efaa7a9f5c4013c730ad8e2c7435",
+      "bytes": 6217,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_english_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_full_qa.py",
+      "sha256": "4bc4858bb868f319027916242ffe0b5eb694c810ab6a8ff13cddeb895e13968e",
+      "bytes": 14962,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_full_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_inventory.py",
+      "sha256": "cdcca3d9fab790d135f7eecf2f40d9341f8113406bd523f7fef61f7dd311e121",
+      "bytes": 9855,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_inventory.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_prose_edits.py",
+      "sha256": "07024e5aaed75ba2b9250ee008fbc79cbb4edb27c0c569197d8e93bcd9a665ca",
+      "bytes": 5881,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_prose_edits.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_rotated_labels.py",
+      "sha256": "ead27cdda4415053bd7b43e037e3806d099c04f5a1eff9b567644a1719a95429",
+      "bytes": 2458,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_rotated_labels.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_spacing.py",
+      "sha256": "1d51a1cf55022647f61ddb16adf041b3e2b5ee01e652eabda6d549504eca0b75",
+      "bytes": 20506,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_spacing.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_spacing_qa.py",
+      "sha256": "4d0307faf55ff1a99b09bef2651afcc16c61305db913140393dc9cc4d09fdd6b",
+      "bytes": 2351,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_spacing_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_original_latin_fonts.py",
+      "sha256": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2",
+      "bytes": 4600,
+      "frozen_path": "authoring-frozen/engine/cpho_original_latin_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_original_style.py",
+      "sha256": "df7fc81dfb538b33d3906c01edfc0d3253a246e7a79d8a5e334aa705de8db603",
+      "bytes": 11723,
+      "frozen_path": "authoring-frozen/engine/cpho_original_style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/haslalab_runtime_paths.py",
+      "sha256": "4e0cbff73a5fd8e219db9a987b6b0fcf25e81adb12aaf7ecf41b3d6ee25c8afa",
+      "bytes": 778,
+      "frozen_path": "authoring-frozen/engine/haslalab_runtime_paths.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/initial_prose_reading_order.py",
+      "sha256": "b4e7441f1c2edc773dbcc1285af0b92c8a1d842a0ecc897decad9952c653aa32",
+      "bytes": 4423,
+      "frozen_path": "authoring-frozen/engine/initial_prose_reading_order.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_early_fixed_style.py",
+      "sha256": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+      "bytes": 27794,
+      "frozen_path": "authoring-frozen/engine/izho_early_fixed_style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_extract_word.py",
+      "sha256": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e",
+      "bytes": 6369,
+      "frozen_path": "authoring-frozen/engine/izho_extract_word.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_math_clean.py",
+      "sha256": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65",
+      "bytes": 3681,
+      "frozen_path": "authoring-frozen/engine/izho_math_clean.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_native_atomic_tokens.py",
+      "sha256": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+      "bytes": 10189,
+      "frozen_path": "authoring-frozen/engine/izho_native_atomic_tokens.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_native_math_audit.py",
+      "sha256": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8",
+      "bytes": 3484,
+      "frozen_path": "authoring-frozen/engine/izho_native_math_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_natural_spacing.py",
+      "sha256": "86a53ff3052324c20c32cca0e7afcb5e4d5f24b604219e5975ef8d7fbc8d358e",
+      "bytes": 15695,
+      "frozen_path": "authoring-frozen/engine/izho_natural_spacing.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_natural_spacing_qa.py",
+      "sha256": "4f14f08c77a693c384d8179edd84d5f8245bdbe1beb5e3c5d34b7daf4b74f943",
+      "bytes": 19208,
+      "frozen_path": "authoring-frozen/engine/izho_natural_spacing_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_natural_spacing_rebuild.py",
+      "sha256": "b916e1810476db5343bd539149494d958cd87c5de711bbbbef0e11675619630e",
+      "bytes": 24096,
+      "frozen_path": "authoring-frozen/engine/izho_natural_spacing_rebuild.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_new_prose_outline_qa.py",
+      "sha256": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+      "bytes": 14366,
+      "frozen_path": "authoring-frozen/engine/izho_new_prose_outline_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/izho_translate.py",
+      "sha256": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e",
+      "bytes": 24613,
+      "frozen_path": "authoring-frozen/engine/izho_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_grading_columns_stationary.py",
+      "sha256": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+      "bytes": 2455,
+      "frozen_path": "authoring-frozen/engine/pdf_grading_columns_stationary.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_hangul_visibility.py",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+      "bytes": 3356,
+      "frozen_path": "authoring-frozen/engine/pdf_hangul_visibility.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_korean_natural_composer.py",
+      "sha256": "e9c55906b77d7cbcaceb4cd494b494a734736937bbd01475999e41f34b0f8242",
+      "bytes": 17633,
+      "frozen_path": "authoring-frozen/engine/pdf_korean_natural_composer.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_layout_translate.py",
+      "sha256": "257c68b0a1538d05f88a1a93323889ec6f2ebfed901c8bbe9ba9dd98d4ba487a",
+      "bytes": 10531,
+      "frozen_path": "authoring-frozen/engine/pdf_layout_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_memory_gate.py",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+      "bytes": 1237,
+      "frozen_path": "authoring-frozen/engine/pdf_memory_gate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_moved_native_ink.py",
+      "sha256": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+      "bytes": 10333,
+      "frozen_path": "authoring-frozen/engine/pdf_moved_native_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_geometry_motion.py",
+      "sha256": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+      "bytes": 5092,
+      "frozen_path": "authoring-frozen/engine/pdf_native_geometry_motion.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_glyph_promote.py",
+      "sha256": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+      "bytes": 8538,
+      "frozen_path": "authoring-frozen/engine/pdf_native_glyph_promote.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_glyph_raster_witness.py",
+      "sha256": "8c7d6fc1856d1161e710beb66c69e8bd38dfebd33ab5ae88b6e61994620e139e",
+      "bytes": 3366,
+      "frozen_path": "authoring-frozen/engine/pdf_native_glyph_raster_witness.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_inline_reposition.py",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559,
+      "frozen_path": "authoring-frozen/engine/pdf_native_inline_reposition.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_inline_reposition_regression.py",
+      "sha256": "430a9e7f39f73358aa3b346b2df61ea812bc4ed0df43ccef897db19850cb75c0",
+      "bytes": 12407,
+      "frozen_path": "authoring-frozen/engine/pdf_native_inline_reposition_regression.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_script_motion_audit.py",
+      "sha256": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+      "bytes": 6661,
+      "frozen_path": "authoring-frozen/engine/pdf_native_script_motion_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_new_hangul_graphics_overlap.py",
+      "sha256": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620",
+      "bytes": 1782,
+      "frozen_path": "authoring-frozen/engine/pdf_new_hangul_graphics_overlap.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_new_prose_native_text_overlap.py",
+      "sha256": "74457c2a358dfd0d8187a4c19f4c8b634794eaf3e66a61e7a74484884e168e69",
+      "bytes": 4731,
+      "frozen_path": "authoring-frozen/engine/pdf_new_prose_native_text_overlap.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_graphics_ink.py",
+      "sha256": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
+      "bytes": 6650,
+      "frozen_path": "authoring-frozen/engine/pdf_original_graphics_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_image_ink.py",
+      "sha256": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+      "bytes": 7449,
+      "frozen_path": "authoring-frozen/engine/pdf_original_image_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_style_audit.py",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+      "bytes": 8492,
+      "frozen_path": "authoring-frozen/engine/pdf_original_style_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_style_fonts.py",
+      "sha256": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+      "bytes": 2603,
+      "frozen_path": "authoring-frozen/engine/pdf_original_style_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178,
+      "frozen_path": "authoring-frozen/engine/pdf_original_text_ops.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_text_motion_ink.py",
+      "sha256": "2e76d46973af939d9fe5511e699cc98dbea8b37d837e2adc5dcd209d13100ca3",
+      "bytes": 2947,
+      "frozen_path": "authoring-frozen/engine/pdf_text_motion_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/engine/test_pdf_native_image_motion.py",
+      "sha256": "d9cd33cb8b941f0cfbdf2e354a74eabbf04858b34b6bc45331e6c37a40df582b",
+      "bytes": 4017,
+      "frozen_path": "authoring-frozen/engine/test_pdf_native_image_motion.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/audit-cpho2007-ts-exact-radicals-page06.py",
+      "sha256": "b3442a038626d5dea55b3612a078cc25fe41672f190336dcb1c609404a3b8191",
+      "bytes": 564,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2007-ts-exact-radicals-page06.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page05.py",
+      "sha256": "aaed256f47ca34d7d641c03cffbdc3ac27db5df93913aa01d3b0c947479a466c",
+      "bytes": 3108,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page05.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page06.py",
+      "sha256": "23aa86018acffd9e0cca8c5e7dffe170332f39b7ac399c58a34a64b49c6f74b2",
+      "bytes": 3706,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page06.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page07.py",
+      "sha256": "1e6ef74a2b178444a33add486df88f447b313bf36cc0cd44a9228096f43bc86b",
+      "bytes": 4210,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page07.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page08.py",
+      "sha256": "2bf1c05938500ae038e1b7c71e96f8fb2eb2aa1431e971da78802123c2d7bec9",
+      "bytes": 2673,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page08.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page09.py",
+      "sha256": "2fec1cb6c0b8f17bafa56a5feabbb943ad7a175b9e13586072f55c7213629882",
+      "bytes": 2889,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page09.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page10.py",
+      "sha256": "152eb1ef3c98070f86800824cf75b3e36a4530d1c07f82c3209bf737be14734d",
+      "bytes": 2375,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page10.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page11.py",
+      "sha256": "cda36730edf0a6a5dea24949c33ec511a33ac3cc207a52445a0c48683c6252c6",
+      "bytes": 1380,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page11.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page12.py",
+      "sha256": "eaf19b59c33bd3288dee1273de0097b2ef5ecb9aa79eb5294a8aad0dba85bb3a",
+      "bytes": 3140,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page12.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page13.py",
+      "sha256": "a448de147cd363c654b9780f48f5ef5bfef185396e770465306af7bfb10fc3f9",
+      "bytes": 2710,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page13.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page14.py",
+      "sha256": "a10198ae69672f5f65574d629925339d040cdb9c2e0e0dd9932cc5e6930599c1",
+      "bytes": 2825,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page14.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page15.py",
+      "sha256": "5e66f9479551fa4327091335e0ea32ddce42bf3c3691c0146f40990059316b15",
+      "bytes": 3472,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page15.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page16.py",
+      "sha256": "98a4e9f99beca36828aca10c124c7ab750d9e46b424ad958b4e4a15ad0ba1045",
+      "bytes": 2393,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page16.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page17.py",
+      "sha256": "886ced530e34a3848e61833bc4394e7c1caecb4bf884c86fc2748b1101f71630",
+      "bytes": 2348,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page17.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page18.py",
+      "sha256": "ced079171b892a32945a75323ee55a7bda1a7c225bed35c2f40209d54efe1296",
+      "bytes": 2395,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page18.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2007-ts-page19.py",
+      "sha256": "f515cda071ae734a674eefbc29130efae64b1c31dacfef2efae3356f86c0c4b8",
+      "bytes": 1416,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2007-ts-page19.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/build-cpho2007-ts-original-blank20.py",
+      "sha256": "2d5ea26fc1c1453932805dc86c74e1c1bbcb565b626268fe7f81b61026bffe3c",
+      "bytes": 2549,
+      "frozen_path": "authoring-frozen/drivers/build-cpho2007-ts-original-blank20.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/build-cpho2007-ts-private-batch.py",
+      "sha256": "3bf8ab8d6b260a6c6f7e0830fcff4cec8733623645c2e781502be7a387ab925f",
+      "bytes": 1708,
+      "frozen_path": "authoring-frozen/drivers/build-cpho2007-ts-private-batch.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/build-cpho2007-ts-private-page.py",
+      "sha256": "5df40dcf3a349ea99de675d8ae58a774bd572240bde0aa98e1a98c82c2414b0c",
+      "bytes": 1065,
+      "frozen_path": "authoring-frozen/drivers/build-cpho2007-ts-private-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/cpho2007-ts-prose-width-advisory.py",
+      "sha256": "329d4e4de450bb25be8cc6289a6c7a25ba6a43950c6398a286961b8e9d794c69",
+      "bytes": 3745,
+      "frozen_path": "authoring-frozen/drivers/cpho2007-ts-prose-width-advisory.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/cpho2007_ts_authoring.py",
+      "sha256": "a72240850d2764fc058807ad00f985c95d903ac4c818d7ae6423671ec2657129",
+      "bytes": 2273,
+      "frozen_path": "authoring-frozen/drivers/cpho2007_ts_authoring.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/finalize-cpho2007-ts-native-editions.py",
+      "sha256": "49b7b9d72437769f0139fef58e5d256f9225aa0ed0df9511be823fbda3586a8c",
+      "bytes": 9906,
+      "frozen_path": "authoring-frozen/drivers/finalize-cpho2007-ts-native-editions.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2007-ts-complete-inline-expressions.py",
+      "sha256": "79de85e15d053ff9536b7ad51e4efb1d657b9d67f7a52eadb25dcb14969bb802",
+      "bytes": 4601,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2007-ts-complete-inline-expressions.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2007-ts-native-runtime.py",
+      "sha256": "e4697fc2d848c5276c4c4f91bd23678cc4dfa759e61b41e78e3e53cc707678ea",
+      "bytes": 2031,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2007-ts-native-runtime.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2007-ts-native-source.py",
+      "sha256": "f1526f6bf0aa8336d86675156f799c65a47cdc33abb5d3e5a8d4dccb12f9f940",
+      "bytes": 4240,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2007-ts-native-source.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2007-ts-retained-prose-punctuation-atoms.py",
+      "sha256": "3d06bff21a9f6ef51fe184b3abb13005a745bf6d5145faebeef91004e4330ad0",
+      "bytes": 2788,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2007-ts-retained-prose-punctuation-atoms.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/preserve-cpho2007-ts-page.py",
+      "sha256": "b0be8fbd772aa6d03bdc9bf84b5a2ba766ea95a6c4d72f8161f4aad1794c91aa",
+      "bytes": 1697,
+      "frozen_path": "authoring-frozen/drivers/preserve-cpho2007-ts-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/preserve-cpho2007-ts-page05-before-review-rebuild.py",
+      "sha256": "d7f373699803c14aa515e261f96124c1c9987665563911a51943549bc7c1f9d3",
+      "bytes": 1864,
+      "frozen_path": "authoring-frozen/drivers/preserve-cpho2007-ts-page05-before-review-rebuild.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/record-cpho2007-ts-final-visual-review.py",
+      "sha256": "0489fd223472f86dd957c38d1d04ec25923b89ac89d31ac1f0a1811e23035805",
+      "bytes": 3362,
+      "frozen_path": "authoring-frozen/drivers/record-cpho2007-ts-final-visual-review.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/render-cpho2007-ts-passed-proofs-144.py",
+      "sha256": "3fd25442fa633cabeecdf748f1554d7dd7ca89a83dad74a25f6e76ff73e62b6e",
+      "bytes": 1937,
+      "frozen_path": "authoring-frozen/drivers/render-cpho2007-ts-passed-proofs-144.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/validate-cpho2007-ts-exact-radical-controls.py",
+      "sha256": "b12c67b19d79215d730b51c04f2024bbb34a38d2d2a3925c5c4301194497e953",
+      "bytes": 2628,
+      "frozen_path": "authoring-frozen/drivers/validate-cpho2007-ts-exact-radical-controls.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/validate-cpho2007-ts-negative-controls.py",
+      "sha256": "37949a0acb168a1d5390377aa84889b633b19ebdfd529036ae23638ed130694e",
+      "bytes": 3977,
+      "frozen_path": "authoring-frozen/drivers/validate-cpho2007-ts-negative-controls.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/drivers/verify-cpho2007-ts-combined-page.py",
+      "sha256": "22d916a30d3ef1f96da7202a73b3fe03de412d305b9340a78a235625c63712f2",
+      "bytes": 4192,
+      "frozen_path": "authoring-frozen/drivers/verify-cpho2007-ts-combined-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/complete-inline-expressions-candidate.json",
+      "sha256": "b90b30a0803adfb6b7517f4cf216fa32fd87a3a6bf24829c83d22ba501070948",
+      "bytes": 243276,
+      "frozen_path": "authoring-frozen/authoring/complete-inline-expressions-candidate.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/complete-inline-expressions-evidence.json",
+      "sha256": "6d5bc10707faafcbfd6e24b26d649d91355d2226a1330037fd54f1deee36328f",
+      "bytes": 789300,
+      "frozen_path": "authoring-frozen/authoring/complete-inline-expressions-evidence.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/complete-inline-expressions-review.txt",
+      "sha256": "1fcfe530dcc2f0d6319fe9ffbad0b5e570c9e9bde88caf084bf1eba194086c66",
+      "bytes": 38850,
+      "frozen_path": "authoring-frozen/authoring/complete-inline-expressions-review.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/full144-visual-review-complete.json",
+      "sha256": "01a8fa22ae1761edf1b549996df284c5592cd262fa532e4788965bf33bc2d68f",
+      "bytes": 28238,
+      "frozen_path": "authoring-frozen/authoring/full144-visual-review-complete.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page05-bilingual-prose.json",
+      "sha256": "ce495c14ff719435ae9b9662bad94ed8348279d33e471f34e59576f6c181acf2",
+      "bytes": 15843,
+      "frozen_path": "authoring-frozen/authoring/page05-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page05-original-source-slots.json",
+      "sha256": "2f12694f1dabd07aac94d55b5bd020c0b70c81eb95845c1f32cd7f0d4716b3c6",
+      "bytes": 229252,
+      "frozen_path": "authoring-frozen/authoring/page05-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page05-source-reading.txt",
+      "sha256": "d82b721b4773cec5860641c858b28e535e8016a00ef5b654d2d2e7590339d584",
+      "bytes": 5722,
+      "frozen_path": "authoring-frozen/authoring/page05-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page05.tsv",
+      "sha256": "81249c665052b67007fa85cecae251109b6387f7b00d020e3af9d3e6613aaa78",
+      "bytes": 2107,
+      "frozen_path": "authoring-frozen/authoring/page05.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page06-bilingual-prose.json",
+      "sha256": "795059dcaef328daf68e909ae766b7f0bed8ec879531f1315b8cbec7f1d0f2db",
+      "bytes": 21699,
+      "frozen_path": "authoring-frozen/authoring/page06-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page06-original-source-slots.json",
+      "sha256": "4f1384b71d71dcf804d89cca999d217d62564dc33dac5c55328286487f7ec0aa",
+      "bytes": 281019,
+      "frozen_path": "authoring-frozen/authoring/page06-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page06-source-reading.txt",
+      "sha256": "5189313892820e2c4ac50ad4af178ada4540adfe213787827874b26b9249b869",
+      "bytes": 7450,
+      "frozen_path": "authoring-frozen/authoring/page06-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page06.tsv",
+      "sha256": "63092b14a023034b088c4968624f0235f70880a86ad8fa475ed978240f341f0c",
+      "bytes": 2641,
+      "frozen_path": "authoring-frozen/authoring/page06.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page07-bilingual-prose.json",
+      "sha256": "cab9af4fa7d49758292bf4dffb02453355c72dbe1af4ead5239d41cb0784131e",
+      "bytes": 17410,
+      "frozen_path": "authoring-frozen/authoring/page07-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page07-original-source-slots.json",
+      "sha256": "facf7786ac060398f93c6652c079d337f5ed02245bb0e9307637e9ea7e5086a3",
+      "bytes": 306732,
+      "frozen_path": "authoring-frozen/authoring/page07-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page07-source-reading.txt",
+      "sha256": "f9d8c4592a22866e8f066bcd82d701e1b7a159ecef5a378a74f640ee1f8ebb5a",
+      "bytes": 6923,
+      "frozen_path": "authoring-frozen/authoring/page07-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page07.tsv",
+      "sha256": "cd8d68801f8d136f6b1dcd31332e56187dc56187a3475494e68c68d5b579ca56",
+      "bytes": 2974,
+      "frozen_path": "authoring-frozen/authoring/page07.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page08-bilingual-prose.json",
+      "sha256": "6affe06d438219e99bd5fd6b8dc3c136f03ef5087d4d40b9e32ca3de87a9d748",
+      "bytes": 10637,
+      "frozen_path": "authoring-frozen/authoring/page08-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page08-original-source-slots.json",
+      "sha256": "3fd162f09a8e122f4ace2a4b8ffb4aee745294445b0343dffafb35ba8a9de2f0",
+      "bytes": 188032,
+      "frozen_path": "authoring-frozen/authoring/page08-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page08-source-reading.txt",
+      "sha256": "26d7d48bd3f63fca6e17002d3a55693cb80911bb095aa0ff20cf4e6387d92c68",
+      "bytes": 4114,
+      "frozen_path": "authoring-frozen/authoring/page08-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page08.tsv",
+      "sha256": "876cfd761fa201096bbb4f8c9cb81bb73421adb9c8ff6411f7b03f513c5fa29a",
+      "bytes": 1857,
+      "frozen_path": "authoring-frozen/authoring/page08.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page09-bilingual-prose.json",
+      "sha256": "1d523cf608035d6a0d0af43110f82083da82e77a1624c990fe982fac1d708c8d",
+      "bytes": 11333,
+      "frozen_path": "authoring-frozen/authoring/page09-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page09-original-source-slots.json",
+      "sha256": "e0b328a291e7e209b730d24cc990834a133c17de3002bb5a3ed18485794b2c8a",
+      "bytes": 194101,
+      "frozen_path": "authoring-frozen/authoring/page09-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page09-source-reading.txt",
+      "sha256": "61786ae52c0a52f4d8b4a4482dea4b081b10df4d1575777f3eeec9413ebecafe",
+      "bytes": 4416,
+      "frozen_path": "authoring-frozen/authoring/page09-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page09.tsv",
+      "sha256": "436696b980168bc09749df354ef686c00a8b77dae85803d9bf0b89221afcc12b",
+      "bytes": 2054,
+      "frozen_path": "authoring-frozen/authoring/page09.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page10-bilingual-prose.json",
+      "sha256": "6546627bac7424d0489812b900752d17f588c9e8377fbaee08c265b5be8bf446",
+      "bytes": 10041,
+      "frozen_path": "authoring-frozen/authoring/page10-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page10-original-source-slots.json",
+      "sha256": "009b7efab663ea9672d597027a2875f865e34c4cf4b2520a156b79c997e0117c",
+      "bytes": 156858,
+      "frozen_path": "authoring-frozen/authoring/page10-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page10-source-reading.txt",
+      "sha256": "94005a29841708fd3cb7456e65c8e4bde1a1f914ddb796e3cb66d8cc49ea09b7",
+      "bytes": 3837,
+      "frozen_path": "authoring-frozen/authoring/page10-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page10.tsv",
+      "sha256": "ba173fbfe740ba3e10365d2164f1c4b914a7833015fb9244ca4f335b3bee0f0c",
+      "bytes": 1602,
+      "frozen_path": "authoring-frozen/authoring/page10.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page11-bilingual-prose.json",
+      "sha256": "b4076be75f52f0ab2433811f0007485f8949e2d7e41989f544cd9d1b6739aef0",
+      "bytes": 4672,
+      "frozen_path": "authoring-frozen/authoring/page11-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page11-original-source-slots.json",
+      "sha256": "dbd4490900c650287e63842d2309f553aa151b748b1a64ceefd0b35f437f255d",
+      "bytes": 65668,
+      "frozen_path": "authoring-frozen/authoring/page11-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page11-source-reading.txt",
+      "sha256": "8c58f16b501b86bef6dc3d41680c05f2c7fe8980222be0b0fc9ca850da0eec04",
+      "bytes": 1577,
+      "frozen_path": "authoring-frozen/authoring/page11-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page11.tsv",
+      "sha256": "00803ca127cbff73d92c2a09fecb912c1fd154792f091b1672915789b4f01bd8",
+      "bytes": 676,
+      "frozen_path": "authoring-frozen/authoring/page11.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page12-bilingual-prose.json",
+      "sha256": "96a800d565ffe030bdf5b318335f7506aed1a8c452a59eaee43c9a8ba6135bcd",
+      "bytes": 15707,
+      "frozen_path": "authoring-frozen/authoring/page12-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page12-original-source-slots.json",
+      "sha256": "31f01ffa2d6301689ac31df7c940d5554f98da10e2edc61587bdfcbc8a3ded3d",
+      "bytes": 228309,
+      "frozen_path": "authoring-frozen/authoring/page12-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page12-source-reading.txt",
+      "sha256": "43963e10a5dd7db65cb621452d2a453feb8f3d0229f9ceb3a2939ddf93751e51",
+      "bytes": 5949,
+      "frozen_path": "authoring-frozen/authoring/page12-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page12.tsv",
+      "sha256": "ffa1b26bead31a3aa50a4f36797d655fecadaaa185791933ddac0b57c2b8ac3e",
+      "bytes": 2211,
+      "frozen_path": "authoring-frozen/authoring/page12.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page13-bilingual-prose.json",
+      "sha256": "a53e0087fa4f003e3ee40600d2d38e1a682f0e988ae6e449bf37acaa8383c0a7",
+      "bytes": 11211,
+      "frozen_path": "authoring-frozen/authoring/page13-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page13-original-source-slots.json",
+      "sha256": "a67e12d3c350165f00f59cc272587701b9b8a468f100cb6ae696647f0d86067a",
+      "bytes": 164091,
+      "frozen_path": "authoring-frozen/authoring/page13-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page13-source-reading.txt",
+      "sha256": "b2c003ed1fbe9959c935e6b232081b22145be67e040c81e4891d6bca4e15b01e",
+      "bytes": 4091,
+      "frozen_path": "authoring-frozen/authoring/page13-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page13.tsv",
+      "sha256": "557fcec295ac6ac7ab7e9c5da7ee215cf6dc9d358db27c64d4f489ad1be7523f",
+      "bytes": 1623,
+      "frozen_path": "authoring-frozen/authoring/page13.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page14-bilingual-prose.json",
+      "sha256": "ca01bfe8ca0d3dd5633d443e689eb7c275bbb376f78974c47981571e400cdb70",
+      "bytes": 11372,
+      "frozen_path": "authoring-frozen/authoring/page14-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page14-original-source-slots.json",
+      "sha256": "672fc86d19eb8bf3d916010e5625d4800bd726da3b497b799f6450d1537b960c",
+      "bytes": 174951,
+      "frozen_path": "authoring-frozen/authoring/page14-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page14-source-reading.txt",
+      "sha256": "5700ea37de9dc2c902995eeb79c6668f3bb0c5bde59c4e37cf7d3e19daf060fd",
+      "bytes": 4343,
+      "frozen_path": "authoring-frozen/authoring/page14-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page14.tsv",
+      "sha256": "b15b20f87a1ae2c19dcce8b499e9b7a6b9f9ab33135c21bf4c7a88d3cb995ded",
+      "bytes": 1950,
+      "frozen_path": "authoring-frozen/authoring/page14.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page15-bilingual-prose.json",
+      "sha256": "50812afc933c76ea3114edc4f621dd058508f163d7d2796fd0a2a4049e152619",
+      "bytes": 16727,
+      "frozen_path": "authoring-frozen/authoring/page15-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page15-original-source-slots.json",
+      "sha256": "f8ea1002df790323b2a06407a35d7c4069c11fd4ab00f0c94c886339f880c812",
+      "bytes": 233942,
+      "frozen_path": "authoring-frozen/authoring/page15-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page15-source-reading.txt",
+      "sha256": "45a8e65c95412bafa05719affe359471c1a38a3dbfca1acf5eef13df2374d66d",
+      "bytes": 6180,
+      "frozen_path": "authoring-frozen/authoring/page15-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page15.tsv",
+      "sha256": "264a1f2376b4c2233a72164e9ca384f21218189ae8a86bae153af728a83c157d",
+      "bytes": 2385,
+      "frozen_path": "authoring-frozen/authoring/page15.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page16-bilingual-prose.json",
+      "sha256": "8bf19c09828188daca81fd8f5d1b30f7d212a5afe218b215c0ae7bd7be0b3627",
+      "bytes": 11457,
+      "frozen_path": "authoring-frozen/authoring/page16-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page16-original-source-slots.json",
+      "sha256": "023c87525abc3a50efd1b5de2d36740d304d61e8e2fdb2ad5f11001cd9ff48fe",
+      "bytes": 148716,
+      "frozen_path": "authoring-frozen/authoring/page16-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page16-source-reading.txt",
+      "sha256": "95d0ac7f22658784c4662cdbe8315649c1e15e4071fdf802dca05b6e39124ba5",
+      "bytes": 4077,
+      "frozen_path": "authoring-frozen/authoring/page16-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page16.tsv",
+      "sha256": "b0d325b9b79ea8d57a2f9a538c39e8f5dbd8caf3b908df3e572f9306f82b28ee",
+      "bytes": 1616,
+      "frozen_path": "authoring-frozen/authoring/page16.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page17-bilingual-prose.json",
+      "sha256": "59265f61cbbd9e5ebe751e6646555071caf1a8dbd366ab877f40b409e64add42",
+      "bytes": 9059,
+      "frozen_path": "authoring-frozen/authoring/page17-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page17-original-source-slots.json",
+      "sha256": "be812285a520ccdd842b1bda8e35645e50049c96a69febab6146642b37fa7216",
+      "bytes": 130960,
+      "frozen_path": "authoring-frozen/authoring/page17-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page17-source-reading.txt",
+      "sha256": "d587a28c1b0e34f35de833716bc05ed93b00abe79b31ef63ebfbf9c85fa4fd1a",
+      "bytes": 3354,
+      "frozen_path": "authoring-frozen/authoring/page17-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page17.tsv",
+      "sha256": "175eac644cd20693250faf497e80cfb37015725234a4cda805f2d787079433e0",
+      "bytes": 1585,
+      "frozen_path": "authoring-frozen/authoring/page17.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page18-bilingual-prose.json",
+      "sha256": "62ca6fdefa32d2a0b0d004bfc5da45f6c218a78a8e0e228c47535902c6f88fd0",
+      "bytes": 9715,
+      "frozen_path": "authoring-frozen/authoring/page18-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page18-original-source-slots.json",
+      "sha256": "8ac687b8710405114ab5b1f16941c2ff4fe5660d59d6ecb9c7f3bf5231655949",
+      "bytes": 153090,
+      "frozen_path": "authoring-frozen/authoring/page18-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page18-source-reading.txt",
+      "sha256": "ba8e8cdc728136b179c341e96d24f75f2cb43ef852e9ca219edfa0df48819d04",
+      "bytes": 3699,
+      "frozen_path": "authoring-frozen/authoring/page18-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page18.tsv",
+      "sha256": "af01f829f2730593d3064b0fc53dbfd75f52e6782718298f4323e5f729d46414",
+      "bytes": 1576,
+      "frozen_path": "authoring-frozen/authoring/page18.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page19-bilingual-prose.json",
+      "sha256": "907286c5a9e1cfd2cc12239c27608c89859343ef6614da91f07659f17ebd09b0",
+      "bytes": 4984,
+      "frozen_path": "authoring-frozen/authoring/page19-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page19-original-source-slots.json",
+      "sha256": "4096db238bd4e0ca0dee3aceda44b7af0bee04f2465e1cfb3dd980accdf5f206",
+      "bytes": 72632,
+      "frozen_path": "authoring-frozen/authoring/page19-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page19-source-reading.txt",
+      "sha256": "87240da8de7b12adafe7c41cd7095a50a1152038254de9cd125ea461f672a219",
+      "bytes": 1800,
+      "frozen_path": "authoring-frozen/authoring/page19-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page19.tsv",
+      "sha256": "845c8c45250b2158849c2bb14f09507b73539dd33080e90a4dd79736942e3d0c",
+      "bytes": 825,
+      "frozen_path": "authoring-frozen/authoring/page19.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page20-bilingual-prose.json",
+      "sha256": "f026942c57676da678770167291ca3f45a2b6a739cf6913542a89833928525f5",
+      "bytes": 543,
+      "frozen_path": "authoring-frozen/authoring/page20-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page20-original-source-slots.json",
+      "sha256": "f28d731080de69a89c01821322d18150105c573c64e58d09b848e3b44468b9bf",
+      "bytes": 188,
+      "frozen_path": "authoring-frozen/authoring/page20-original-source-slots.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page20-source-reading.txt",
+      "sha256": "138ffa79bd478d234b712d6699b9af8fd041d00937ff25ec46bbdbd108dac30e",
+      "bytes": 9,
+      "frozen_path": "authoring-frozen/authoring/page20-source-reading.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/page20.tsv",
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2,
+      "frozen_path": "authoring-frozen/authoring/page20.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/authoring/retained-original-prose-punctuation-evidence.json",
+      "sha256": "0e1b8c5f18a706c4205c8f8e3f391ede09ae5d2c2ac00683b98e62c6d8010661",
+      "bytes": 89687,
+      "frozen_path": "authoring-frozen/authoring/retained-original-prose-punctuation-evidence.json"
+    }
+  ],
+  "supplemental_style_manifest": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/supplemental-style-manifest.json",
+    "sha256": "8597f825fb701558f06d640af149f14e02402ca0a5d478421141e524d224d7cd",
+    "bytes": 5592
+  },
+  "supplemental_style_driver": {
+    "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/supplemental-authoring/audit-cpho2007-publication-actual-style.py",
+    "sha256": "886644716e7cbede38471c3bd5300c764fdfccf02bbd0f66ccc7ab142f33cd2a",
+    "bytes": 7286
+  },
+  "negative_manifests": [
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/negative-control-manifest.json",
+      "sha256": "32646338e7a6eb9d08546925dcc72690f2bbfd89c4a8a615add8ee1ac916f432",
+      "bytes": 2941,
+      "frozen_path": "authoring-frozen/negative-controls/negative-control-manifest.json"
+    },
+    {
+      "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/page06-exact-radical-negative-control-manifest.json",
+      "sha256": "4ee6cf74255691759d18cc63d08a1c7074c3912ca924ae920658e1cd61983ee1",
+      "bytes": 22990,
+      "frozen_path": "authoring-frozen/negative-controls/page06-exact-radical-negative-control-manifest.json"
+    }
+  ],
+  "negative_controls": [
+    {
+      "type": "erased-native-E",
+      "fixture": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/page10-EN-rejected-erased-original-electric-field-E.pdf",
+        "sha256": "ea3b8d85a3807fdd49510dfc33e4a391f97bfcda5c6ed99a5a0be7f165e5d2d8",
+        "bytes": 211745,
+        "frozen_path": "authoring-frozen/negative-controls/page10-EN-rejected-erased-original-electric-field-E.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/page10-EN-rejected-erased-original-electric-field-E.rejection.json",
+        "sha256": "e26a0dd855bffa44227b229cda6655be199ba1f92c25d0a106329308045c32f4",
+        "bytes": 1325,
+        "frozen_path": "authoring-frozen/negative-controls/page10-EN-rejected-erased-original-electric-field-E.rejection.json"
+      }
+    },
+    {
+      "type": "prose-over-native-E",
+      "fixture": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/page10-EN-rejected-new-prose-over-original-electric-field-E.pdf",
+        "sha256": "0eee9f57664c9efa782092c509da0a60362dc22be16b348c44e7bf2293a182ac",
+        "bytes": 211568,
+        "frozen_path": "authoring-frozen/negative-controls/page10-EN-rejected-new-prose-over-original-electric-field-E.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/page10-EN-rejected-new-prose-over-original-electric-field-E.rejection.json",
+        "sha256": "9c36ae3018e6545530114dc6d333894a17d8ed86493c7940b46b744836e82f63",
+        "bytes": 2111,
+        "frozen_path": "authoring-frozen/negative-controls/page10-EN-rejected-new-prose-over-original-electric-field-E.rejection.json"
+      }
+    },
+    {
+      "type": "native-comma-geometry",
+      "fixture": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/real-rejected-page05-KO-original-comma-geometry.pdf",
+        "sha256": "6ae8ff6de8d27965800ae28d4ab70e3299d812faa62c98d6293b658230fec75a",
+        "bytes": 1954869,
+        "frozen_path": "authoring-frozen/negative-controls/real-rejected-page05-KO-original-comma-geometry.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/real-rejected-page05-KO-original-comma-geometry.audit.json",
+        "sha256": "dca070a8af058bb8a183b8ea385e744e83a8d4372c50499009e97412fe085869",
+        "bytes": 29277,
+        "frozen_path": "authoring-frozen/negative-controls/real-rejected-page05-KO-original-comma-geometry.audit.json"
+      }
+    },
+    {
+      "type": "radical-stroke-style",
+      "fixture": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/page06-KO-rejected-original-radical-stroke-color.pdf",
+        "sha256": "aa91cdc8ca4efef53b80b6d0bef38df4b5e5e5f9489e9c1cc6123b0a6496260f",
+        "bytes": 1240400,
+        "frozen_path": "authoring-frozen/negative-controls/page06-KO-rejected-original-radical-stroke-color.pdf"
+      }
+    },
+    {
+      "type": "unselected-graphic",
+      "fixture": {
+        "path": "tools/ko/cpho/2007/ts/native-inline-original-v1/frozen/authoring-frozen/negative-controls/page06-KO-rejected-unselected-graphic-dot.pdf",
+        "sha256": "e51e04e1f9f043fe6a8258934dd48369814eacfc7f12162176c6ff43dd1780c1",
+        "bytes": 1252578,
+        "frozen_path": "authoring-frozen/negative-controls/page06-KO-rejected-unselected-graphic-dot.pdf"
+      }
+    }
+  ],
+  "proof_png_policy": "The exact original/full144 reviewed proof PNG hashes remain in the pinned 612-leaf master manifest and hash-pinned visual review; public export includes the corresponding exact native proof PDFs without duplicate PNG copies."
+}

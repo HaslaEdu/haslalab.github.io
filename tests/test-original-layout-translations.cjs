@@ -68,6 +68,10 @@ for (const item of published) {
     require('./helpers/official-korean-publication.cjs')(root, qa, item);
     continue;
   }
+  if (item.audit_schema === 'cpho2007-native-inline-original-v1') {
+    require('./helpers/cpho2007-native-inline-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'native-original-preserved-v1') {
     require('./helpers/native-original-publication.cjs')(root, qa, item);
     continue;

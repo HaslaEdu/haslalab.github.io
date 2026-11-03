@@ -1,0 +1,737 @@
+{
+  "reference_positive_proof": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\natural\\2007\\ko\\page06.pdf",
+  "reference_positive_sha256": "fbdfdcfeb65a93851700eaafb4e71ed617f1e5aa3dcc95cb2ce2da113cffee68",
+  "all_rejected": true,
+  "controls": [
+    {
+      "control": "Actually recolor one original native radical stroke while preserving its original path operands and geometry.",
+      "fixture": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\evidence\\negative-controls-v2\\page06-KO-rejected-original-radical-stroke-color.pdf",
+      "fixture_sha256": "aa91cdc8ca4efef53b80b6d0bef38df4b5e5e5f9489e9c1cc6123b0a6496260f",
+      "rejected": true,
+      "reason": "('Original radical stroke style changed', {'type': 's', 'width': 0.7199999690055847, 'color': (0.0, 0.0, 0.0), 'fill': None, 'dashes': '[] 0', 'lineCap': (1, 1, 1), 'lineJoin': 1.0, 'closePath': False, 'stroke_opacity': 1.0, 'fill_opacity': None, 'even_odd': None}, {'type': 's', 'width': 0.7199999690055847, 'color': (1.0, 0.0, 0.0), 'fill': None, 'dashes': '[] 0', 'lineCap': (1, 1, 1), 'lineJoin': 1.0, 'closePath': False, 'stroke_opacity': 1.0, 'fill_opacity': None, 'even_odd': None})"
+    },
+    {
+      "control": "Actually add an unrelated graphic in the top margin, beyond every selected native radical path.",
+      "fixture": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2007\\TS\\evidence\\negative-controls-v2\\page06-KO-rejected-unselected-graphic-dot.pdf",
+      "fixture_sha256": "e51e04e1f9f043fe6a8258934dd48369814eacfc7f12162176c6ff43dd1780c1",
+      "rejected": true,
+      "nonselected_graphics_changed_pixels": 16,
+      "report": {
+        "method": "Exact original radical path objects: identical native path operands/paint/stroke style, declared horizontal dx, and actual selected-only stroke controls; all other non-text pixels must remain identical.",
+        "selected_native_math_groups": [
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              327.84,
+              520.3199926757812,
+              329.03999999999996,
+              521.0399926757813
+            ],
+            "dx": -64.07808828353882,
+            "operator_indices": [
+              915,
+              916,
+              917
+            ],
+            "target_operator_indices": [
+              917,
+              918,
+              919
+            ],
+            "path_program_sha256": "7249dbf5c0f66b888866761c73bc1bf4ed189e61db5fccd786b4befdbc924f28",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              329.03999999999996,
+              520.3199926757812,
+              332.15999999999997,
+              527.0399926757813
+            ],
+            "dx": -64.07808828353882,
+            "operator_indices": [
+              927,
+              928,
+              929
+            ],
+            "target_operator_indices": [
+              932,
+              933,
+              934
+            ],
+            "path_program_sha256": "a93fec4c38c4252f0a4cf4697d8fd0caa9f8b339a986a56e8b52840e339ac52c",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              332.15999999999997,
+              515.0399926757813,
+              334.32,
+              527.0399926757813
+            ],
+            "dx": -64.07808828353882,
+            "operator_indices": [
+              939,
+              940,
+              941
+            ],
+            "target_operator_indices": [
+              947,
+              948,
+              949
+            ],
+            "path_program_sha256": "61806cbfafd2bac6cb3d01c0060d4e3225933502f6e0f40473dab3880e3b1a75",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              334.32,
+              515.0399926757813,
+              339.59999999999997,
+              515.0399926757813
+            ],
+            "dx": -64.07808828353882,
+            "operator_indices": [
+              951,
+              952,
+              953
+            ],
+            "target_operator_indices": [
+              962,
+              963,
+              964
+            ],
+            "path_program_sha256": "3708b31b28f00e1881d074a9bf9d204c8ca8030c59107b10796f8277800d2c26",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              175.68,
+              738.7199926757813,
+              176.88,
+              739.4399926757812
+            ],
+            "dx": -43.67615628242493,
+            "operator_indices": [
+              1392,
+              1393,
+              1394
+            ],
+            "target_operator_indices": [
+              1406,
+              1407,
+              1408
+            ],
+            "path_program_sha256": "7c87674401811d3e5137b9ac82286c12673b8995032950c2620feb64ab394bb9",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              176.88,
+              738.7199926757813,
+              180.0,
+              745.4399926757812
+            ],
+            "dx": -43.67615628242493,
+            "operator_indices": [
+              1404,
+              1405,
+              1406
+            ],
+            "target_operator_indices": [
+              1421,
+              1422,
+              1423
+            ],
+            "path_program_sha256": "60fff5285609b324bfe0a337cd0efda2b4b4a9463a7c6d0a36e96fa2ef630263",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              180.0,
+              733.4399926757812,
+              182.16,
+              745.4399926757812
+            ],
+            "dx": -43.67615628242493,
+            "operator_indices": [
+              1416,
+              1417,
+              1418
+            ],
+            "target_operator_indices": [
+              1436,
+              1437,
+              1438
+            ],
+            "path_program_sha256": "18d35073723ae435f93abd9deae2c636b0d0a5c4e1f437bfef70bb96486008a9",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              182.16,
+              733.4399926757812,
+              187.68,
+              733.4399926757812
+            ],
+            "dx": -43.67615628242493,
+            "operator_indices": [
+              1428,
+              1429,
+              1430
+            ],
+            "target_operator_indices": [
+              1451,
+              1452,
+              1453
+            ],
+            "path_program_sha256": "ee5e0288c31c7c71b25586bf2bf9ab0f201ef2e19ecfcd60550f3d28be3744ee",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              136.79999999999998,
+              761.9999926757813,
+              138.0,
+              762.7199926757813
+            ],
+            "dx": -0.7180798053741455,
+            "operator_indices": [
+              1489,
+              1490,
+              1491
+            ],
+            "target_operator_indices": [
+              1515,
+              1516,
+              1517
+            ],
+            "path_program_sha256": "067cecc727ebe7762f04f4fb1b98c12c9c43e9a7c563b664b211a3d6e01e4916",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              138.0,
+              761.9999926757813,
+              141.12,
+              768.7199926757813
+            ],
+            "dx": -0.7180798053741455,
+            "operator_indices": [
+              1501,
+              1502,
+              1503
+            ],
+            "target_operator_indices": [
+              1530,
+              1531,
+              1532
+            ],
+            "path_program_sha256": "0c766913549c1f4b0447d70c660537ca8cf87b94bfc3fceea4dad949f9e2df22",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              141.12,
+              756.7199926757813,
+              143.28,
+              768.7199926757813
+            ],
+            "dx": -0.7180798053741455,
+            "operator_indices": [
+              1513,
+              1514,
+              1515
+            ],
+            "target_operator_indices": [
+              1545,
+              1546,
+              1547
+            ],
+            "path_program_sha256": "7ad5074ab91ec887f1bb76069602376b280f2a8e52148a0851ce1716aa5c9316",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              143.28,
+              756.7199926757813,
+              148.79999999999998,
+              756.7199926757813
+            ],
+            "dx": -0.7180798053741455,
+            "operator_indices": [
+              1525,
+              1526,
+              1527
+            ],
+            "target_operator_indices": [
+              1560,
+              1561,
+              1562
+            ],
+            "path_program_sha256": "3c600824c506ac03b0d9b3653b4f22c906f9cf0524e6af3c8507e07b40209d8f",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              308.88,
+              761.9999926757813,
+              310.08,
+              762.7199926757813
+            ],
+            "dx": -9.6226905632019,
+            "operator_indices": [
+              1568,
+              1569,
+              1570
+            ],
+            "target_operator_indices": [
+              1606,
+              1607,
+              1608
+            ],
+            "path_program_sha256": "034e021b2ba48e321b667a353ec7594c86add36328d7975a2e854ea774ba93fa",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              310.08,
+              761.9999926757813,
+              313.2,
+              768.7199926757813
+            ],
+            "dx": -9.6226905632019,
+            "operator_indices": [
+              1580,
+              1581,
+              1582
+            ],
+            "target_operator_indices": [
+              1621,
+              1622,
+              1623
+            ],
+            "path_program_sha256": "f3b9b1665c561ef3aae4fb70ec4ce64deba728e181630fd60cdb1a73d6feba66",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              313.2,
+              756.7199926757813,
+              315.36,
+              768.7199926757813
+            ],
+            "dx": -9.6226905632019,
+            "operator_indices": [
+              1592,
+              1593,
+              1594
+            ],
+            "target_operator_indices": [
+              1636,
+              1637,
+              1638
+            ],
+            "path_program_sha256": "08e6c4f4e0309f47755fa66f97c3b8b6f54e34200f19698b57434c5cde065af3",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          },
+          {
+            "kind": "exact original radical stroke object",
+            "rect": [
+              315.36,
+              756.7199926757813,
+              320.88,
+              756.7199926757813
+            ],
+            "dx": -9.6226905632019,
+            "operator_indices": [
+              1604,
+              1605,
+              1606
+            ],
+            "target_operator_indices": [
+              1651,
+              1652,
+              1653
+            ],
+            "path_program_sha256": "2048d79aa250406d79a4a54451352c7703619040f1d74b455fd076aee81d6c50",
+            "path_operands_and_paint_unchanged": true,
+            "stroke_style": {
+              "type": "s",
+              "width": 0.7199999690055847,
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "fill": null,
+              "dashes": "[] 0",
+              "lineCap": [
+                1,
+                1,
+                1
+              ],
+              "lineJoin": 1.0,
+              "closePath": false,
+              "stroke_opacity": 1.0,
+              "fill_opacity": null,
+              "even_odd": null
+            },
+            "stroke_style_unchanged": true
+          }
+        ],
+        "changed_actual_inline_math_graphical_pixels": 3127,
+        "changed_nonselected_native_graphical_pixels": 16,
+        "original_native_math_actual_graphics_pixels": 1718,
+        "new_native_math_actual_graphics_pixels": 1715,
+        "actual_selected_path_paint_objects_only": true,
+        "no_metric_bbox_cropping": true,
+        "no_rectangle_or_threshold_exception": true
+      }
+    }
+  ]
+}
