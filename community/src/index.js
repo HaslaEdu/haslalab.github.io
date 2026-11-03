@@ -1471,18 +1471,24 @@ const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic", "upstage",
 const stage = (value, fallback) => STAGE_PROVIDERS.includes(value) ? value : fallback;
 function labRoles(env, s, theory) {
   const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
+  /* pair grading (theory only unless LAB_PAIR_SCOPE "all"): on experiments its moderation lowered marks the audits give
+     in full (IPhO 2013 E1/E2, 2017 E1, bench 2026-11-03), where DeepSeek alone came closer */
+  const pair = STAGE_PROVIDERS.includes(env.LAB_PAIR_PROVIDER) && (theory || env.LAB_PAIR_SCOPE === "all")
+    ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL || undefined, thinking: env.LAB_PAIR_THINKING || undefined } : undefined;
+  /* with no moderator of its own, the pair's grader decides the items the two mark apart, and only those (bench
+     2026-11-03, four audited theory papers: DeepSeek + GPT-6 Luna, Luna judging, 12 misgrades; Luna alone 23) */
+  const pairJudge = pair && env.LAB_MODERATE_PROVIDER === "none";
   if (env.LAB_PIPELINE === "mixed" && env.GEMINI_API_KEY && env.DEEPSEEK_API_KEY && !contestMeta(s))
     /* theory and experiments alike (data analysis and observation papers too): Gemini reads, DeepSeek grades from the
        scheme, the readings and the photos, Gemini moderates what DeepSeek marked down */
     return { read: stage(env.LAB_READ_PROVIDER, "gemini"), grade: stage(env.LAB_GRADE_PROVIDER, "deepseek"), gradeBench: pick(env.LAB_GRADE_MODEL, env.LAB_GRADE_THINKING),
       /* LAB_MODERATE_PROVIDER "none": the grader's marks stand (the 2026-11-01 bench: Gemini 3.8 Flash alone graded closer to
          the audits than DeepSeek moderated by Flash Lite); LAB_GRADE_PDFS "on" hands the grader the papers too (no gain measured) */
-      moderate: env.LAB_MODERATE_PROVIDER === "none" ? null : stage(env.LAB_MODERATE_PROVIDER, "gemini"), gradePdfs: env.LAB_GRADE_PDFS === "on",
+      moderate: pairJudge ? pair.provider : env.LAB_MODERATE_PROVIDER === "none" ? null : stage(env.LAB_MODERATE_PROVIDER, "gemini"), gradePdfs: env.LAB_GRADE_PDFS === "on",
       readBench: pick(env.LAB_READ_MODEL, env.LAB_READ_THINKING),
-      moderateBench: pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING), moderateScope: env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
-      /* theory only unless LAB_PAIR_SCOPE "all": on experiments (IPhO 2013 E1/E2, 2017 E1, bench 2026-11-03) the pair's
-         moderation lowered marks the audits give in full, and DeepSeek alone came closer */
-      pair: STAGE_PROVIDERS.includes(env.LAB_PAIR_PROVIDER) && (theory || env.LAB_PAIR_SCOPE === "all") ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL || undefined, thinking: env.LAB_PAIR_THINKING || undefined } : undefined,
+      moderateBench: pairJudge ? pick(pair.model, pair.thinking) : pick(env.LAB_MODERATE_MODEL, env.LAB_MODERATE_THINKING),
+      moderateScope: pairJudge ? "pair" : env.LAB_MODERATE_SCOPE === "all" ? "all" : "down",
+      pair,
       readHint: env.LAB_READ_NOTATION === "on", proof: env.LAB_PROOF_MODEL ? "gemini" : null,
       proofBench: env.LAB_PROOF_MODEL ? { model: env.LAB_PROOF_MODEL, thinking: env.LAB_PROOF_THINKING || undefined } : undefined };
   const p = labProvider(s); return { read: p, grade: p, moderate: null };
