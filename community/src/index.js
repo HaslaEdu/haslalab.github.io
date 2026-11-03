@@ -1780,6 +1780,11 @@ async function meterSave(env, sid, task, pageId, m) {
   } catch (e) { console.error("lab meter", e && e.message); }        // before migration 0009 there is nowhere to keep it; grading goes on
 }
 
+/* the API host of a tuned model's endpoint: a multi-region location (us, eu) answers at its regional endpoint
+   aiplatform.<loc>.rep.googleapis.com (tune-ping, 2026-11-03: the global host said 404, us-aiplatform «invalid hostname»),
+   a region at <region>-aiplatform.googleapis.com; GCP_TUNED_HOST overrides */
+const tunedHost = (env, endpoint) => { const set = String(env.GCP_TUNED_HOST || '').trim(); if (/^[a-z0-9.-]+\.googleapis\.com$/.test(set)) return set;
+  const loc = String(endpoint).split('/')[3] || 'us'; return /^[a-z]+$/.test(loc) ? `aiplatform.${loc}.rep.googleapis.com` : `${loc}-aiplatform.googleapis.com`; };
 async function labVision(env, s, parts, schema, max, m, step, temperature = 0, extra = {}) {
   const provider = requireVisionProvider(env, labProvider(s)), src = labSrc(s);
   /* _model/_thinking exist only on the admin model bench's copies of a sitting (labAs with a bench choice) */
@@ -1787,7 +1792,7 @@ async function labVision(env, s, parts, schema, max, m, step, temperature = 0, e
   /* bench only: OpenAI's Responses API and its flex tier (half price, slower) */
   const openai = provider === 'openai' ? { openaiApi: src._api === 'responses' ? 'responses' : null, serviceTier: src._tier === 'flex' ? 'flex' : null }
     /* bench read.endpoint: a page reader tuned on Vertex AI, through GCP_TUNED_HOST (the endpoint's API host) */
-    : provider === 'gemini' && src._endpoint ? { geminiUrl: `https://${String(env.GCP_TUNED_HOST || 'aiplatform.googleapis.com').trim()}/v1/${src._endpoint}:generateContent`, geminiBearer: await gcpToken(env) } : {};
+    : provider === 'gemini' && src._endpoint ? { geminiUrl: `https://${tunedHost(env, src._endpoint)}/v1/${src._endpoint}:generateContent`, geminiBearer: await gcpToken(env) } : {};
   const sequence=[];
   for(const part of parts){
     if(part.text){sequence.push({text:part.text});continue;}
@@ -2387,9 +2392,12 @@ function labScore(scheme, raw, pages, opts = {}) {
        of three on the page), else one on another page of the task: labelled with the item's question, or with no item's
        label at all, nearest after the cited page (a graph drawn on the page after its table, cited by the table's page) */
     const fitBest = list => list.reduce((b, i) => !b || fitsItem(it.what, i.text) > fitsItem(it.what, b.text) ? i : b, null);
-    const elsewhere = kind => {
-      const cand = pages.filter(p => p !== pg).flatMap(p => readOf(p).filter(ok(kind)).map(i => ({ i, d: p.no > pg.no ? p.no - pg.no : pg.no - p.no + .5 })));
-      const own = cand.filter(c => labelNames(c.i.label, it.id)), loose = cand.filter(c => !scheme.items.some(x => labelNames(c.i.label, x.id)));
+    /* a page another item of the kind was marked from holds that item's table or graph, not this one's: APhO 2018 E1 5,
+       no graph drawn, took question 4's graph from the next page */
+    const claimed = kind => new Set(scheme.items.filter(x => x.id !== it.id && x.type === kind).map(x => got.get(x.id)?.page).filter(n => n != null));
+    const elsewhere = kind => { const taken = claimed(kind);
+      const cand = pages.filter(p => p !== pg).flatMap(p => readOf(p).filter(ok(kind)).map(i => ({ i, no: p.no, d: p.no > pg.no ? p.no - pg.no : pg.no - p.no + .5 })));
+      const own = cand.filter(c => labelNames(c.i.label, it.id)), loose = cand.filter(c => c.d <= 1.5 && !taken.has(c.no) && !scheme.items.some(x => labelNames(c.i.label, x.id)));   // the page next to it only
       return [...own.sort((a, b) => a.d - b.d), ...loose.sort((a, b) => a.d - b.d)][0]?.i || null; };
     const pick = kind => live.find(i => ok(kind)(i) && i.label === it.id) || others.find(i => ok(kind)(i) && i.label === it.id)
       || fitBest(live.filter(i => ok(kind)(i) && !i.box)) || live.find(ok(kind)) || elsewhere(kind);

@@ -720,6 +720,30 @@ test('experiments: of three tables on a page the one with the item\'s concentrat
   assert.match(detail,/"id":"A4\.a"[^}]*"got":0\.1[,}]/,'h from the candidate\'s own graph, outside the example\'s 1.4-1.6 cm');
 }));
 
+test('experiments: a graph cited by its table\'s page is taken from the next page, unless another item was marked from that page',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='deepseek';env.LAB_MODERATE_PROVIDER='none';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','experiment') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  const graph=what=>({points:1,type:'graph',sheet:'answer',what,checks:[{check:'fit_line',points:1}]});
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
+    {id:'A1',...graph('graph of I against h')},{id:'C1',...graph('graph of U against I')},{id:'B1',...graph('graph of P against I')}]}),'fixture',Math.floor(Date.now()/1000));
+  replies({items:[{id:'A1',found:true,page:1,score:1,rules:[],checks_met:[],note:''},{id:'C1',found:true,page:2,score:1,rules:[],checks_met:['fit_line'],note:''},
+    {id:'B1',found:true,page:3,score:1,rules:[],checks_met:[],note:''}],feedback:[],review:{summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''}});
+  for(let k=0;k<4;k++)await upload(a.token);
+  await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  const g={axes_labeled:true,axes_units:true,scale_ok:true,n_points:10,fit_line:true,slope_read:true,error_bars:false,title:false};
+  const reads={1:[{label:'table',kind:'table',text:'1 | 0.1\n10 | 0.9',rows:10,columns:['h','I'],crossed_out:false}],2:[{label:'graph',kind:'graph',text:'U against I',graph:g,crossed_out:false}],
+    3:[{label:'table',kind:'table',text:'1 | 2\n10 | 3',rows:10,columns:['P','I'],crossed_out:false}],4:[{label:'graph',kind:'graph',text:'P against I',graph:g,crossed_out:false}]};
+  for(const [no,items] of Object.entries(reads))sql.prepare("UPDATE lab_pages SET read=json_set(read,'$.items',json(?)) WHERE session_id=? AND no=?").run(JSON.stringify(items),sid,+no);
+  await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"B1"[^}]*"got":1[,}]/,'the graph on the page after its table');
+  assert.match(detail,/"id":"C1"[^}]*"got":1[,}]/);
+  assert.match(detail,/"id":"A1"[^}]*"got":0[,}]/,'the next page holds C1\'s graph, and no graph of its own is anywhere near');
+}));
+
 test('double grading: an item the two gradings mark differently is decided once more from the photos, and the scheme review fixes a one-point window before grading',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies,review})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
