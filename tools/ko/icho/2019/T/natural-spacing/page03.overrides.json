@@ -1,0 +1,110 @@
+{
+  "__layout_scope__": {
+    "fixed_native_rects": [
+      [
+        493.5,
+        33,
+        533,
+        51
+      ],
+      [
+        503,
+        778,
+        538,
+        805
+      ],
+      [
+        400,
+        185,
+        525,
+        430
+      ]
+    ],
+    "review_basis": "Original fixed candidate-code and footer-page-number columns remain at exact source coordinates, font and size. Body expressions continue to use natural Korean advances.",
+    "prose_column_rects": [
+      [
+        70,
+        185,
+        395,
+        430
+      ]
+    ],
+    "source_toc_column_review": "The original separate weight column at402.43pt and page-reference column at494.5pt remain fixed, including all original GIDs/fonts/point sizes; translated titles use only the original left title column."
+  },
+  "__slot_edits__": {
+    "p3:b15:l0:s0-0:c10-30": {
+      "skip": true,
+      "skip_reason": "Original scientific unit/formula-prefix/bracket/approximation glyphs retain exact source GIDs/fonts/point sizes and native advances; only source-bound surrounding Korean prose is emitted by the extra fragments."
+    },
+    "p3:b15:l0:s0-0:c31-41": {
+      "skip": true,
+      "skip_reason": "Original scientific unit/formula-prefix/bracket/approximation glyphs retain exact source GIDs/fonts/point sizes and native advances; only source-bound surrounding Korean prose is emitted by the extra fragments."
+    }
+  },
+  "__extra_slots__": [
+    {
+      "id": "p3:b15:l0:s0-0:c10-30:unit-prose-0",
+      "page": 3,
+      "at": [
+        15,
+        0,
+        0,
+        0
+      ],
+      "source": ": Ring motion in a ",
+      "rect": [
+        70.8239974975586,
+        356.9179992675781,
+        277.25,
+        370.2019958496094
+      ],
+      "point": [
+        70.8239974975586,
+        367.6099853515625
+      ],
+      "font": "Times New Roman",
+      "font_role": "serif",
+      "size": 12.0,
+      "dir": [
+        1.0,
+        0.0
+      ],
+      "text": ": ",
+      "char_start": 10,
+      "char_end": 29
+    },
+    {
+      "id": "p3:b15:l0:s0-0:c31-41:unit-prose-1",
+      "page": 3,
+      "at": [
+        15,
+        0,
+        0,
+        0
+      ],
+      "source": "catenane ",
+      "rect": [
+        70.8239974975586,
+        356.9179992675781,
+        277.25,
+        370.2019958496094
+      ],
+      "point": [
+        70.8239974975586,
+        367.6099853515625
+      ],
+      "font": "Times New Roman",
+      "font_role": "serif",
+      "size": 12.0,
+      "dir": [
+        1.0,
+        0.0
+      ],
+      "text": "카테네인에서 고리의 운동",
+      "char_start": 32,
+      "char_end": 41,
+      "join_left": true
+    }
+  ],
+  "additional_native_unit_preservation_review": "Missed mL units and formula-boundary2K/bracket/approximation glyphs retain original native programs and exact physical typography; do not edit the frozen shared matcher or change any source or translated sentence."
+}

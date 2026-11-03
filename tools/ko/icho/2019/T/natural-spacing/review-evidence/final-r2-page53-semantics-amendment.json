@@ -1,0 +1,59 @@
+{
+  "year": 2019,
+  "page": 53,
+  "created_utc": "2026-11-02T23:37:28.809Z",
+  "base_freeze_path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-code-freeze-r2.json",
+  "base_freeze_sha256": "81156ebe66c0872dd0301e5a22d0b72f8e29dd8ba56ed3eae60b87d3422ba49a",
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "changed_input": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/page53.overrides.json",
+  "before_sha256": "f9dbcdcc857426d6cbc9583cbf119d10c1b1399676f200077f2ec7281676cbca",
+  "after_sha256": "6ca52a5b419eaa7a87683abddd19e900156582edfceccce4da5af3b302d96ceb",
+  "before_copy": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page53-semantics-amendment/page53.overrides.before.json",
+  "only_source_bound_Korean_prose_text_changed": true,
+  "slot_edits": {
+    "p53:b3:l0:s3-3": "",
+    "p53:b3:l0:s5-5": "-이노시톨에서 유래한 우세 화합물의 분자식을. 이 시료에서",
+    "p53:b3:l1:s0-0": "관찰된 양성자 수와 일치해야 하며, 측정 자료는"
+  },
+  "semantic_review": [
+    {
+      "slot_id": "p53:b3:l0:s3-3",
+      "source": " the molecular formula of the predominant compound derived from ",
+      "before": "다음 출발 물질로부터 유래한 우세한 화합물의 분자식을:",
+      "after": "",
+      "at": [
+        3,
+        0,
+        3,
+        3
+      ]
+    },
+    {
+      "slot_id": "p53:b3:l0:s5-5",
+      "source": "-inositol in this ",
+      "before": "-이노시톨. 이 시료에서",
+      "after": "-이노시톨에서 유래한 우세 화합물의 분자식을. 이 시료에서",
+      "at": [
+        3,
+        0,
+        5,
+        5
+      ]
+    },
+    {
+      "slot_id": "p53:b3:l1:s0-0",
+      "source": "sample that is consistent with the number of protons observed in the ",
+      "before": "관찰된 양성자 수와 일치해야 하며, 관찰한 것은",
+      "after": "관찰된 양성자 수와 일치해야 하며, 측정 자료는",
+      "at": [
+        3,
+        1,
+        0,
+        0
+      ]
+    }
+  ],
+  "approved_by": "/root",
+  "approval_basis": "Root actually read source53 and current candidate53, explicitly approved moving the source-bound Korean pre-myo prose to after the original native myo and replacing 관찰한 것은 with 측정 자료는. Keep complete Korean word 이 시료에서 across the original row pool; no duplicated 서 or spurious word gap.",
+  "scope": "myo-inositol is the starting material, not an apparent provided answer. The requested predominant-compound molecular formula must agree with observed proton number in this sample 1H NMR. Same69 production Python programs and other196 R2 frozen files; native myo/1H/formulas, source rows/point sizes/baselines, source cuts, font roles, emphasis and all figures unchanged. Page53 has not yet been generated in the R2 whole run."
+}

@@ -1,0 +1,67 @@
+{
+  "page": 2,
+  "proof_sha256": "906b4b22a0d629766a5eaa7279eb40078457a34da56075a6a2adceb8f5b94fa7",
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "measurement_code_sha256": "3d05fcd726e16e98ee473a78d20a6f965cc68494bf70b20c1a813711c6390138",
+  "passed": true,
+  "rows": [
+    {
+      "source_line": [
+        19,
+        0
+      ],
+      "source_center_x": 306.6896514892578,
+      "actual_target_glyph_box_center_x": 306.6896667480469,
+      "center_error_pt": 1.52587890625e-05,
+      "source_baseline": 620.5899658203125,
+      "actual_target_baselines": [
+        620.5899658203125
+      ],
+      "source_point_sizes": [
+        14.039999961853027
+      ],
+      "actual_target_point_sizes": [
+        14.039999961853027
+      ]
+    }
+  ],
+  "center_tolerance_pt": 0.001,
+  "method": "Read actual output glyph boxes rather than authored placement claims; compare the complete nonspace Korean run with the measured original full nonspace source run. Source drop-cap size distinctions and exact baselines are retained.",
+  "source_half_fraction": {
+    "source": {
+      "c": "½",
+      "gid": 155,
+      "font": "Times New Roman",
+      "size": 11.039999961853027,
+      "origin": [
+        137.03567504882812,
+        446.4499816894531
+      ],
+      "bbox": [
+        137.03567504882812,
+        437.5641174316406,
+        145.315673828125,
+        448.6041259765625
+      ]
+    },
+    "actual": {
+      "c": "½",
+      "gid": 155,
+      "font": "Times New Roman",
+      "size": 11.039999961853027,
+      "origin": [
+        182.61984252929688,
+        446.4499816894531
+      ],
+      "bbox": [
+        182.61984252929688,
+        437.5641174316406,
+        190.89984130859375,
+        448.6041259765625
+      ]
+    },
+    "original_gid_font_point_size_and_baseline_exact": true,
+    "translation": "½분 이상",
+    "no_numerical_conversion": true
+  }
+}

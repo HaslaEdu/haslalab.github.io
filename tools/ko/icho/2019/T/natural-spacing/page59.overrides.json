@@ -1,0 +1,97 @@
+{
+  "__layout_scope__": {
+    "fixed_native_rects": [
+      [
+        493.5,
+        33,
+        533,
+        51
+      ],
+      [
+        503,
+        778,
+        538,
+        805
+      ]
+    ],
+    "review_basis": "Original fixed candidate-code and footer-page-number columns remain at exact source coordinates, font and size. Body expressions continue to use natural Korean advances.",
+    "fixed_table_rects": [
+      [
+        71.00399875640869,
+        91.59999593098958,
+        524.3400472005209,
+        606.3099975585938
+      ]
+    ],
+    "fixed_table_cells": [
+      [
+        71.00399875640869,
+        91.59999593098958,
+        297.65000915527344,
+        266.17999267578125
+      ],
+      [
+        71.00399875640869,
+        266.17999267578125,
+        297.65000915527344,
+        433.96998596191406
+      ],
+      [
+        71.00399875640869,
+        433.96998596191406,
+        297.65000915527344,
+        606.3099975585938
+      ],
+      [
+        297.65000915527344,
+        91.59999593098958,
+        524.3400472005209,
+        266.17999267578125
+      ],
+      [
+        297.65000915527344,
+        266.17999267578125,
+        524.3400472005209,
+        433.96998596191406
+      ],
+      [
+        297.65000915527344,
+        433.96998596191406,
+        524.3400472005209,
+        606.3099975585938
+      ]
+    ],
+    "original_table_scope_review": "Original source table grids/cell boundaries remain unchanged. Native symbols in cells without prose stay stationary; only the reviewed full inline group inside its own prose-bearing cell may use natural advances. The first page6 detected structure is a spectral plot rather than a table and is excluded."
+  },
+  "__slot_edits__": {
+    "p59:b2:l0:s3-3": {
+      "text": " 다음 화합물들 "
+    },
+    "p59:b2:l0:s7-7": {
+      "text": "의 구조를 올바른 입체 화학과 함께."
+    }
+  },
+  "__prose_vector_decorations__": [
+    {
+      "id": "p59-source-underline-p59:b2:l0:s2-2",
+      "slot_id": "p59:b2:l0:s2-2",
+      "target_text": "그려라",
+      "source_baseline": 80.760009765625,
+      "operator_indices": [
+        106,
+        107
+      ],
+      "paint_operator": "f*",
+      "source_rect": [
+        90.624,
+        81.95998291015621,
+        117.024,
+        83.03998291015625
+      ],
+      "source_text": "Draw",
+      "review": "Source-bound English prose underline and corresponding Korean emphasis reviewed. Pin the exact original source hash/path/English GIDs and baseline; preserve original construction bytes, black fill/paint, y and thickness. Only the prose decoration receives explicit horizontal scale/translation to cover the actual emitted Korean word/phrase ink (plus explicitly declared unchanged native numeral/notation). Mathematical rules, table borders and other figure paths retain the independent1e-7 coordinate check.",
+      "previous_review_before_full_phrase_fit": "Source-bound underline and its Korean counterpart reviewed; exact original vector program, colour, physical width and vertical coordinates remain unchanged; only horizontal placement follows the corresponding Korean emphasis.",
+      "fit_source_prose_underline_to_translated_phrase": true
+    }
+  ]
+}

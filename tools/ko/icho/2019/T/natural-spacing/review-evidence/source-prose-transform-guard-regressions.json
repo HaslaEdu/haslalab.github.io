@@ -1,0 +1,45 @@
+{
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "layout_proof_sha256": "c463ac833f5809ffba1dce6f26e98e15c695559aeed6daab4ce10bfbc0a13721",
+  "program_sha256": "1e9217ab5ea6d59a70ac576f2dab7d93dabc4ac6675d20a0734c60c8b605185a",
+  "native_motion_sha256": "a97770b4a8f3130e31a19b09f1f2a5735536dc377760eb9a55166b51428a5a92",
+  "tests": [
+    {
+      "case": "exact-source-positive-motion",
+      "passed": true,
+      "original_native_GID_font_size_y_and_path_bytes_preserved": true
+    },
+    {
+      "case": "wrong-original-source-SHA",
+      "passed": true,
+      "rejection": "Moving prose decoration exact source hash guard failed"
+    },
+    {
+      "case": "wrong-original-English-GID",
+      "passed": true,
+      "rejection": "Moving prose decoration exact source prose GID/font/geometry guard failed"
+    },
+    {
+      "case": "wrong-original-path-bounds",
+      "passed": true,
+      "rejection": "Moving prose decoration exact native path guard failed"
+    },
+    {
+      "case": "wrong-original-English-baseline",
+      "passed": true,
+      "rejection": "Moving prose decoration original underline geometry/baseline guard failed"
+    },
+    {
+      "case": "mathematical-glyphs-cannot-authorize-prose-decoration",
+      "passed": true,
+      "rejection": "Moving prose decoration requires actual English prose, not a mathematical token"
+    },
+    {
+      "case": "custom-outline-reader-cannot-mutate-output",
+      "passed": true,
+      "rejection": "An explicit outline inspector is read-only and cannot alter native motion"
+    }
+  ],
+  "all_passed": true,
+  "writes": "Only this JSON report; original source/frozen/other-year PDFs unchanged."
+}

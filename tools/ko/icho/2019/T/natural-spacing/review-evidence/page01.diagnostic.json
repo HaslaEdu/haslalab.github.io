@@ -1,0 +1,579 @@
+{
+  "page": 1,
+  "plan": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\2019\\page01.ko.json",
+  "plan_sha256": "d6444fe56bc7fad4b3b5a3736dab0f3f6e39850a8d48a26ce996e26ad2be7cc0",
+  "composer": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\natural_plan_compose_icho2019.py",
+  "frozen_helpers": {
+    "latex_native_motion": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\latex_native_motion.py",
+    "pdf_latex_text_ops": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\pdf_latex_text_ops.py",
+    "native_ink_bounds": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\native_ink_bounds.py",
+    "native_proof": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\native_proof.py"
+  },
+  "rasterization": false,
+  "source_font_substitution": false,
+  "passed": true,
+  "output": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\icho\\2019-final\\page01.pdf",
+  "output_sha256": "a72abcc67fc84cc10a08b3812f0a52cc9923d06b46cb6cd2e4c972e3d40eed52",
+  "native_geometry": {
+    "missing": [],
+    "extra": 0,
+    "max_delta_pt": 1.7375564596022741e-06
+  },
+  "korean_geometry": {
+    "planned_glyphs": 27,
+    "actual_glyphs": 27,
+    "missing_or_notdef_glyphs": [],
+    "geometry_errors": [],
+    "max_position_error_pt": 1.4742946632395615e-05,
+    "position_tolerance_pt": 0.001,
+    "passed": true
+  },
+  "vector_geometry": {
+    "native_vector_paths_verified": 0,
+    "moved_whole_expression_paths_verified": 0,
+    "stationary_paths_including_vector_figures_verified": 0,
+    "coordinate_errors": [],
+    "form_native_vector_paths_verified": 0,
+    "stationary_form_invocations_verified": 0,
+    "reviewed_prose_only_form_stream_edits_verified": 0,
+    "reviewed_outlined_vector_language_Form_edits_verified": 0,
+    "form_bbox_serialization_tolerance_pt": 0.0001,
+    "audit_code_sha256": "ee70dcf61cfca4a7b2a61f31b253a575e90013c57154e6cd7612517ef0b11b04",
+    "max_coordinate_tolerance_pt": 1e-07,
+    "added_raster_language_mask_paths": 0
+  },
+  "actual_new_korean_inter_row_ink_audit": {
+    "page": 1,
+    "proof_sha256": "a72abcc67fc84cc10a08b3812f0a52cc9923d06b46cb6cd2e4c972e3d40eed52",
+    "passed": true,
+    "tested_row_pairs": 4,
+    "pairs": [
+      {
+        "upper_source_baseline": 45.8399658203125,
+        "lower_source_baseline": 102.6199951171875,
+        "gap_pt": 56.780029296875,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 102.6199951171875,
+        "lower_source_baseline": 147.739990234375,
+        "gap_pt": 45.1199951171875,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 147.739990234375,
+        "lower_source_baseline": 378.52996826171875,
+        "gap_pt": 230.78997802734375,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 378.52996826171875,
+        "lower_source_baseline": 792.2160034179688,
+        "gap_pt": 413.68603515625,
+        "contact_pixels_2x": 0
+      }
+    ],
+    "failures": [],
+    "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+    "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+  },
+  "actual_prose_underline_coverage_and_style_audit": {
+    "page": 1,
+    "passed": true,
+    "proof_sha256": "a72abcc67fc84cc10a08b3812f0a52cc9923d06b46cb6cd2e4c972e3d40eed52",
+    "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+    "measurement_code_sha256": "79729dd00f2f9c5f14b8ef9657ee4ebd186c0cb2043c64b7806bd2a0b4aeeda4",
+    "actual_curve_reader_sha256": "13c5fb97d4faa712dba8361565fd30cae3b886e7ec37b83ab55a7425e2e0fa3c",
+    "full_Korean_font_pins": {
+      "sans": {
+        "path": "D:\\CodexBuilds\\Hasla-publish-20261031\\tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf",
+        "sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "postscript_face": "NotoSansCJKkr-Regular"
+      }
+    },
+    "underline_rows": [],
+    "underline_coverage_tolerance_pt": 0.001,
+    "source_native_vector_tolerance_pt": 1e-07,
+    "protected_native_ink_contact_pixels": 0,
+    "authored_word_style_samples": [
+      {
+        "slot_id": "p1:b0:l0:s0-0:c0-11",
+        "actual_glyph": {
+          "c": "수",
+          "gid": 53267,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            445.6300048828125,
+            45.8399658203125
+          ],
+          "bbox": [
+            445.6300048828125,
+            36.995765686035156,
+            455.78680419921875,
+            48.0357666015625
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Calibri",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p1:b0:l0:s0-0:c0-11",
+        "actual_glyph": {
+          "c": "번",
+          "gid": 51843,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            468.41656494140625,
+            45.8399658203125
+          ],
+          "bbox": [
+            468.41656494140625,
+            36.995765686035156,
+            478.5733642578125,
+            48.0357666015625
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Calibri",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p1:b2:l0:s0-0:dropcap",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54639,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 33.959999084472656,
+          "origin": [
+            269.785400390625,
+            102.6199951171875
+          ],
+          "bbox": [
+            269.785400390625,
+            75.41447448730469,
+            301.0285949707031,
+            109.37447357177734
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.033960000000000004,
+          0.0,
+          0.0,
+          -0.033960000000000004
+        ]
+      },
+      {
+        "slot_id": "p1:b2:l0:s1-1",
+        "actual_glyph": {
+          "c": "론",
+          "gid": 50779,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 27.0,
+          "origin": [
+            301.02862548828125,
+            102.6199951171875
+          ],
+          "bbox": [
+            301.02862548828125,
+            80.99015808105469,
+            325.8686218261719,
+            107.99015808105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.027,
+          0.0,
+          0.0,
+          -0.027
+        ]
+      },
+      {
+        "slot_id": "p1:b3:l0:s0-0:dropcap",
+        "actual_glyph": {
+          "c": "시",
+          "gid": 53463,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 33.959999084472656,
+          "origin": [
+            269.8738708496094,
+            147.739990234375
+          ],
+          "bbox": [
+            269.8738708496094,
+            120.53446960449219,
+            301.1170654296875,
+            154.4944610595703
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.033960000000000004,
+          0.0,
+          0.0,
+          -0.033960000000000004
+        ]
+      },
+      {
+        "slot_id": "p1:b3:l0:s1-1:dropcap",
+        "actual_glyph": {
+          "c": "험",
+          "gid": 58323,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 27.0,
+          "origin": [
+            301.1170959472656,
+            147.739990234375
+          ],
+          "bbox": [
+            301.1170959472656,
+            126.11015319824219,
+            325.95709228515625,
+            153.1101531982422
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.027,
+          0.0,
+          0.0,
+          -0.027
+        ]
+      },
+      {
+        "slot_id": "p1:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "함",
+          "gid": 58211,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 20.040000915527344,
+          "origin": [
+            216.39796447753906,
+            378.52996826171875
+          ],
+          "bbox": [
+            216.39796447753906,
+            362.475830078125,
+            234.8347625732422,
+            382.5158386230469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.02004,
+          0.0,
+          0.0,
+          -0.02004
+        ]
+      },
+      {
+        "slot_id": "p1:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "과",
+          "gid": 47863,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 20.040000915527344,
+          "origin": [
+            257.7605285644531,
+            378.52996826171875
+          ],
+          "bbox": [
+            257.7605285644531,
+            362.475830078125,
+            276.19732666015625,
+            382.5158386230469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.02004,
+          0.0,
+          0.0,
+          -0.02004
+        ]
+      },
+      {
+        "slot_id": "p1:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "만",
+          "gid": 51143,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 20.040000915527344,
+          "origin": [
+            317.5599060058594,
+            378.52996826171875
+          ],
+          "bbox": [
+            317.5599060058594,
+            362.475830078125,
+            335.9967041015625,
+            382.5158386230469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.02004,
+          0.0,
+          0.0,
+          -0.02004
+        ]
+      },
+      {
+        "slot_id": "p1:b1:l0:s0-0:c0-5",
+        "actual_glyph": {
+          "c": "제",
+          "gid": 54807,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            70.8239974975586,
+            792.2160034179688
+          ],
+          "bbox": [
+            70.8239974975586,
+            783.371826171875,
+            80.98079681396484,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p1:b1:l0:s0-0:c9-29",
+        "actual_glyph": {
+          "c": "–",
+          "gid": 721,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            134.09423828125,
+            792.2160034179688
+          ],
+          "bbox": [
+            134.09423828125,
+            783.371826171875,
+            140.0116729736328,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p1:b1:l0:s0-0:c9-29",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54639,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            142.48463439941406,
+            792.2160034179688
+          ],
+          "bbox": [
+            142.48463439941406,
+            783.371826171875,
+            152.6414337158203,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p1:b1:l0:s0-0:c9-29",
+        "actual_glyph": {
+          "c": "시",
+          "gid": 53463,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            165.2711944580078,
+            792.2160034179688
+          ],
+          "bbox": [
+            165.2711944580078,
+            783.371826171875,
+            175.42799377441406,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      }
+    ],
+    "actual_shear_tangent_tolerance": 1e-09,
+    "scope": "Actual emitted first glyph of every Korean prose word verifies the real PDF shear/font GID and original physical point/baseline. Every emphasized glyph curve is independently read from actual output font programs under actual PDF matrices; source-English prose underline x extents must cover exactly the emitted phrase ink. Native source/math programs and coordinate checks are unchanged."
+  },
+  "actual_template_geometry_audit": {
+    "page": 1,
+    "proof_sha256": "a72abcc67fc84cc10a08b3812f0a52cc9923d06b46cb6cd2e4c972e3d40eed52",
+    "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+    "measurement_code_sha256": "3d05fcd726e16e98ee473a78d20a6f965cc68494bf70b20c1a813711c6390138",
+    "passed": true,
+    "rows": [
+      {
+        "source_line": [
+          2,
+          0
+        ],
+        "source_center_x": 297.82701110839844,
+        "actual_target_glyph_box_center_x": 297.82701110839844,
+        "center_error_pt": 0.0,
+        "source_baseline": 102.6199951171875,
+        "actual_target_baselines": [
+          102.6199951171875
+        ],
+        "source_point_sizes": [
+          27.0,
+          33.959999084472656
+        ],
+        "actual_target_point_sizes": [
+          27.0,
+          33.959999084472656
+        ]
+      },
+      {
+        "source_line": [
+          3,
+          0
+        ],
+        "source_center_x": 297.9154815673828,
+        "actual_target_glyph_box_center_x": 297.9154815673828,
+        "center_error_pt": 0.0,
+        "source_baseline": 147.739990234375,
+        "actual_target_baselines": [
+          147.739990234375
+        ],
+        "source_point_sizes": [
+          27.0,
+          33.959999084472656
+        ],
+        "actual_target_point_sizes": [
+          27.0,
+          33.959999084472656
+        ]
+      },
+      {
+        "source_line": [
+          5,
+          1
+        ],
+        "source_center_x": 297.87059020996094,
+        "actual_target_glyph_box_center_x": 297.87059783935547,
+        "center_error_pt": 7.62939453125e-06,
+        "source_baseline": 378.52996826171875,
+        "actual_target_baselines": [
+          378.52996826171875
+        ],
+        "source_point_sizes": [
+          20.040000915527344
+        ],
+        "actual_target_point_sizes": [
+          20.040000915527344
+        ]
+      }
+    ],
+    "center_tolerance_pt": 0.001,
+    "method": "Read actual output glyph boxes rather than authored placement claims; compare the complete nonspace Korean run with the measured original full nonspace source run. Source drop-cap size distinctions and exact baselines are retained."
+  },
+  "elapsed_seconds": 5.764888199999405
+}

@@ -1,0 +1,72 @@
+{
+  "page": 1,
+  "proof_sha256": "a72abcc67fc84cc10a08b3812f0a52cc9923d06b46cb6cd2e4c972e3d40eed52",
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "measurement_code_sha256": "3d05fcd726e16e98ee473a78d20a6f965cc68494bf70b20c1a813711c6390138",
+  "passed": true,
+  "rows": [
+    {
+      "source_line": [
+        2,
+        0
+      ],
+      "source_center_x": 297.82701110839844,
+      "actual_target_glyph_box_center_x": 297.82701110839844,
+      "center_error_pt": 0.0,
+      "source_baseline": 102.6199951171875,
+      "actual_target_baselines": [
+        102.6199951171875
+      ],
+      "source_point_sizes": [
+        27.0,
+        33.959999084472656
+      ],
+      "actual_target_point_sizes": [
+        27.0,
+        33.959999084472656
+      ]
+    },
+    {
+      "source_line": [
+        3,
+        0
+      ],
+      "source_center_x": 297.9154815673828,
+      "actual_target_glyph_box_center_x": 297.9154815673828,
+      "center_error_pt": 0.0,
+      "source_baseline": 147.739990234375,
+      "actual_target_baselines": [
+        147.739990234375
+      ],
+      "source_point_sizes": [
+        27.0,
+        33.959999084472656
+      ],
+      "actual_target_point_sizes": [
+        27.0,
+        33.959999084472656
+      ]
+    },
+    {
+      "source_line": [
+        5,
+        1
+      ],
+      "source_center_x": 297.87059020996094,
+      "actual_target_glyph_box_center_x": 297.87059783935547,
+      "center_error_pt": 7.62939453125e-06,
+      "source_baseline": 378.52996826171875,
+      "actual_target_baselines": [
+        378.52996826171875
+      ],
+      "source_point_sizes": [
+        20.040000915527344
+      ],
+      "actual_target_point_sizes": [
+        20.040000915527344
+      ]
+    }
+  ],
+  "center_tolerance_pt": 0.001,
+  "method": "Read actual output glyph boxes rather than authored placement claims; compare the complete nonspace Korean run with the measured original full nonspace source run. Source drop-cap size distinctions and exact baselines are retained."
+}

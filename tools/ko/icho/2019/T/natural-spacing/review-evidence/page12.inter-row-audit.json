@@ -1,0 +1,59 @@
+{
+  "page": 12,
+  "proof_sha256": "eb641838ae71e7387fadb374247f55cd7e0e59a01d8c45e236d20a96d1c4e50c",
+  "passed": true,
+  "tested_row_pairs": 8,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 150.739990234375,
+      "gap_pt": 104.9000244140625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 150.739990234375,
+      "lower_source_baseline": 398.3299865722656,
+      "gap_pt": 247.58999633789062,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 398.3299865722656,
+      "lower_source_baseline": 418.8499755859375,
+      "gap_pt": 20.519989013671875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 418.8499755859375,
+      "lower_source_baseline": 433.3699951171875,
+      "gap_pt": 14.52001953125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 433.3699951171875,
+      "lower_source_baseline": 448.0099792480469,
+      "gap_pt": 14.639984130859375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 448.0099792480469,
+      "lower_source_baseline": 462.52996826171875,
+      "gap_pt": 14.519989013671875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 462.52996826171875,
+      "lower_source_baseline": 477.0699768066406,
+      "gap_pt": 14.540008544921875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 477.0699768066406,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 315.1460266113281,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

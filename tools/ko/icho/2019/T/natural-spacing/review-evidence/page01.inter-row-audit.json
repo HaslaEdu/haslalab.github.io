@@ -1,0 +1,35 @@
+{
+  "page": 1,
+  "proof_sha256": "a72abcc67fc84cc10a08b3812f0a52cc9923d06b46cb6cd2e4c972e3d40eed52",
+  "passed": true,
+  "tested_row_pairs": 4,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 102.6199951171875,
+      "gap_pt": 56.780029296875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 102.6199951171875,
+      "lower_source_baseline": 147.739990234375,
+      "gap_pt": 45.1199951171875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 147.739990234375,
+      "lower_source_baseline": 378.52996826171875,
+      "gap_pt": 230.78997802734375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 378.52996826171875,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 413.68603515625,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

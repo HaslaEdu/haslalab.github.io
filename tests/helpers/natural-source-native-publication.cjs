@@ -21,6 +21,7 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     'original_font_sizes_and_baselines_preserved', 'hidden_original_prose_has_empty_ActualText',
     'no_added_editorial_notes', 'all_pages_visually_reviewed']) assert.equal(qa[key], true, key);
   assert.equal(qa.page_audits.length, item.pages);
+  if(item.file==='IChO_2019_T_KO.pdf') require('./icho2019-final-publication.cjs')(qa,item,read);
   for (const program of qa.authoring_programs) {
     assert.equal(hash(fs.readFileSync(path.join(root, program.path))), program.sha256);
   }
@@ -81,7 +82,8 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       assert.equal(qa.authoring_programs.find(p => p.path.endsWith('/ortvay2023_link_annotations.py')).sha256, pin.helper_sha256);
       assert.deepEqual(regression.pages.map(row => row.page), [1, 6]);
       assert.equal(regression.links.length, 3);
-      assert.equal(regression.negative_regressions.length, 6);
+      if (qa.source_style_correction) assert.ok(regression.negative_regressions.length >= 6);
+      else assert.equal(regression.negative_regressions.length, 6);
       for (const row of regression.pages) {
         const page = qa.page_audits[row.page - 1];
         assert.equal(row.proof_sha256, page.proof_sha256);
@@ -89,8 +91,14 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
         assert.equal(row.changed_pixels, 0);
         assert.equal(row.all_visible_glyph_geometry_identical, true);
         assert.equal(row.all_nonrect_annotation_settings_identical_after_save, true);
-        assert.equal(row.negative_regressions.length, 3);
-        assert.deepEqual(page.link_annotation_geometry_audits, row.links);
+        if (qa.source_style_correction) assert.ok(row.negative_regressions.length >= 3);
+        else assert.equal(row.negative_regressions.length, 3);
+        const helperRows=qa.source_style_correction?row.links.map(link=>{
+          const {independent_native_url_glyph_audit,...helper}=link;
+          assert.ok(independent_native_url_glyph_audit);
+          return helper;
+        }):row.links;
+        assert.deepEqual(page.link_annotation_geometry_audits, helperRows);
       }
       assert.deepEqual(regression.links, regression.pages.flatMap(row => row.links));
     } else {
@@ -98,8 +106,14 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       assert.equal(regression.proof_sha256, qa.page_audits[1].proof_sha256);
       assert.equal(qa.authoring_programs.find(p => p.path.endsWith('/ortvay2024_link_annotations.py')).sha256, pin.helper_sha256);
       assert.equal(regression.links.length, 6);
-      assert.equal(regression.negative_regressions.length, 3);
-      assert.deepEqual(qa.page_audits[1].link_annotation_geometry_audits, regression.links);
+      if (qa.layout_correction || qa.source_style_correction) assert.ok(regression.negative_regressions.length >= 3);
+      else assert.equal(regression.negative_regressions.length, 3);
+      const helperRows = (qa.layout_correction || qa.source_style_correction) ? regression.links.map(row => {
+        const { independent_native_url_glyph_audit, ...helper } = row;
+        assert.ok(independent_native_url_glyph_audit);
+        return helper;
+      }) : regression.links;
+      assert.deepEqual(qa.page_audits[1].link_annotation_geometry_audits, helperRows);
     }
   }
   if (qa.source_path_resolver_sha256) {
@@ -128,7 +142,11 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
   const reviews = fs.readdirSync(folder).filter(f => /^visual-review.*\.json$/.test(f)).flatMap(f => {
     const review = JSON.parse(fs.readFileSync(path.join(folder, f), 'utf8'));
     assert.equal(review.source_sha256, qa.source_sha256);
-    return review.pages;
+    return review.pages.map(row => {
+      if (!Object.hasOwn(row, 'compositor_sha256')) return row;
+      if (Object.hasOwn(row, 'composer_sha256')) assert.equal(row.composer_sha256, row.compositor_sha256);
+      return { ...row, composer_sha256: row.compositor_sha256 };
+    });
   });
   for (const [index, page] of qa.page_audits.entries()) {
     assert.equal(page.page, index + 1);
@@ -209,7 +227,14 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     if (qa.strict_korean_glyph_geometry_audit) {
       const audit = body.new_korean_glyph_and_geometry_audit;
       assert.equal(audit.passed, true);
-      assert.deepEqual(audit.missing_or_notdef_glyphs, []);
+      if (Object.hasOwn(audit, 'missing_or_notdef_glyphs')) {
+        assert.deepEqual(audit.missing_or_notdef_glyphs, []);
+      }
+      if (qa.layout_correction) {
+        assert.deepEqual(audit.original_full_font_gid_errors, []);
+        assert.equal(audit.original_full_font_gids_verified, audit.actual_glyphs);
+        assert.deepEqual(body.title_correction_independent_audit.korean_actual_glyph_geometry, audit);
+      } else assert.ok(Object.hasOwn(audit, 'missing_or_notdef_glyphs'));
       assert.deepEqual(audit.geometry_errors, []);
       assert.equal(audit.planned_glyphs, audit.actual_glyphs);
       assert.ok(audit.max_position_error_pt <= 0.001 && audit.position_tolerance_pt <= 0.001);
@@ -241,12 +266,7 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
       assert.deepEqual(type3.target, type3.source);
     }
     for (const contact of body.intentional_prose_decoration_contacts || []) {
-      assert.equal(contact.x_translation_only, true);
-      assert.equal(contact.source_path_bytes_and_paint_and_y_preserved, true);
-      const decoration = body.prose_vector_decorations.find(d => d.id === contact.id);
-      assert.ok(decoration);
-      assert.equal(contact.source_path_index, decoration.source_path_index);
-      assert.equal(contact.observed_contact_pixels, contact.contact_pixels_pdf_pt.length);
+      require('./prose-decoration-publication.cjs')(body, contact, qa);
     }
     for (const key of ['no_reserved_english_widths', 'no_font_shrink', 'source_font_programs_preserved',
       'original_image_encoded_bytes_and_filters_preserved', 'source_image_placements_preserved',
@@ -262,8 +282,8 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     assert.equal(body.motion_qa.erased_glyphs, 0);
     assert.deepEqual(body.actual_native_vector_coordinate_audit.coordinate_errors, []);
     if (body.actual_native_vector_coordinate_audit.audit_code_sha256) {
-      assert.equal(body.actual_native_vector_coordinate_audit.audit_code_sha256,
-        qa.authoring_programs.find(p => /\/verify_native_vectors(?:_[a-z]+\d+)?\.py$/.test(p.path)).sha256);
+      assert.ok(qa.authoring_programs.some(p => /\/verify_native_vectors(?:_[a-z]+\d+(?:_style)?)?\.py$/.test(p.path)
+        && p.sha256 === body.actual_native_vector_coordinate_audit.audit_code_sha256));
     }
     assert.ok(body.actual_native_vector_coordinate_audit.max_coordinate_tolerance_pt <= 0.000001);
     assert.equal(body.new_korean_intrusion_on_native_ink_pixels, 0);
@@ -283,5 +303,13 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
     assert.equal(review.layout_sha256, page.qa_sha256);
     assert.equal(review.effective_plan_sha256, page.effective_plan_sha256);
     assert.equal(review.composer_sha256, page.composer_sha256);
+  }
+  if (qa.layout_correction) require('./natural-correction-publication.cjs')(root, qa, item, read);
+  if (qa.source_style_correction) {
+    if(qa.source_style_correction.schema==='ortvay-source-style-publication-v1') require('./ortvay-source-style-publication.cjs')(root, qa, item, read);
+    else {
+      assert.equal(qa.source_style_correction.schema,'icho2024-source-style-publication-v1');
+      require('./icho-source-style-publication.cjs')(root, qa, item, read);
+    }
   }
 };

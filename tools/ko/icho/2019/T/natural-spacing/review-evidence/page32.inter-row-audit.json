@@ -1,0 +1,53 @@
+{
+  "page": 32,
+  "proof_sha256": "aff9ecbb64a8fef1a575f47a2fa8d7a6572a7345314942aa1d7895a3400df526",
+  "passed": true,
+  "tested_row_pairs": 7,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 80.760009765625,
+      "gap_pt": 34.9200439453125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 80.760009765625,
+      "lower_source_baseline": 95.65997314453125,
+      "gap_pt": 14.89996337890625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 95.65997314453125,
+      "lower_source_baseline": 117.6199951171875,
+      "gap_pt": 21.96002197265625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 117.6199951171875,
+      "lower_source_baseline": 381.8899841308594,
+      "gap_pt": 264.2699890136719,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 381.8899841308594,
+      "lower_source_baseline": 400.3699951171875,
+      "gap_pt": 18.480010986328125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 400.3699951171875,
+      "lower_source_baseline": 427.1299743652344,
+      "gap_pt": 26.759979248046875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 427.1299743652344,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 365.0860290527344,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

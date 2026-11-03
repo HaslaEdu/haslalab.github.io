@@ -1,0 +1,81 @@
+{
+  "year": 2019,
+  "reviewer": "/root/icho_current",
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "freeze_sha256": "81156ebe66c0872dd0301e5a22d0b72f8e29dd8ba56ed3eae60b87d3422ba49a",
+  "passed": true,
+  "pages": [
+    {
+      "page": 1,
+      "pdf_sha256": "a72abcc67fc84cc10a08b3812f0a52cc9923d06b46cb6cd2e4c972e3d40eed52",
+      "png_sha256": "e18140bc2bacede769bc33ba8a11f81bf1df3039b501c5718ac4fe16f5bf08d9",
+      "layout_sha256": "ba17d1ab380edec29435e1bc4f869adac063528da4422465a48b11c835a63baa",
+      "source_png_sha256": "ce445450f17fe8ac763e054d9143332e2acf119d20f800d867262fbc2a25f428",
+      "source_bold_slots": [],
+      "actual_authored_bold": [],
+      "inline_instruction_bold_occurrences": 0,
+      "passed": true
+    },
+    {
+      "page": 2,
+      "pdf_sha256": "906b4b22a0d629766a5eaa7279eb40078457a34da56075a6a2adceb8f5b94fa7",
+      "png_sha256": "46f73a6d76758deeb85ad7154601679e0f47056aef690319458e0cbc0f5d0d67",
+      "layout_sha256": "0a1b29c0625c5694b0e6a40dc68ae19b797a8fdc207a7c3bc862fa4c75cbd653",
+      "source_png_sha256": "39b3178aa5edcba0dc391a94449cf9862c6378cdf767e5228de17661ba64edcb",
+      "source_bold_slots": [
+        {
+          "id": "p2:b2:l0:s0-0",
+          "source": "General instructions ",
+          "text": "일반 지침"
+        },
+        {
+          "id": "p2:b19:l0:s0-0",
+          "source": "GOOD LUCK! ",
+          "text": "행운을 빈다!"
+        }
+      ],
+      "actual_authored_bold": [
+        {
+          "id": "p2:b2:l0:s0-0",
+          "text": "일반 지침",
+          "source_font": "Arial,Bold",
+          "point_size": 15.960000038146973,
+          "baseline": 85.55999755859375
+        },
+        {
+          "id": "p2:b19:l0:s0-0",
+          "text": "행운을 빈다!",
+          "source_font": "Arial,Bold",
+          "point_size": 14.039999961853027,
+          "baseline": 620.5899658203125
+        }
+      ],
+      "inline_instruction_bold_occurrences": 0,
+      "passed": true
+    }
+  ],
+  "review": "Source cover1 has no instruction prose. Original and final2 PNGs actually re-read: the source has no non-underlined inline bold must/Do not/only/stop. Only Arial,Bold General instructions and GOOD LUCK! are bold, translated to 일반 지침 and 행운을 빈다. All body instructions retain regular source-style weight; no inherited-bold noun misplacement exists. No code/input/proof edited.",
+  "semantic_checks": [
+    {
+      "source": "Use only the pen and calculator provided.",
+      "target": "제공된 펜과 계산기만 사용하라.",
+      "passed": true
+    },
+    {
+      "source": "All results and answers must be clearly written in pen in the respective designed areas",
+      "target": "모든 결과와 답은 시험지의 해당 지정 영역 안에 펜으로 명확하게 작성해야 한다.",
+      "passed": true
+    },
+    {
+      "source": "You must stop your work immediately when the Stop command is announced.",
+      "target": "Stop 명령이 주어지면 즉시 시험을 중단해야 한다.",
+      "passed": true
+    },
+    {
+      "source": "Failure to stop writing by ½ minute or longer will lead to nullification",
+      "target": "명령 후 계속 필기한 시간이 ½분 이상이면 이론 시험이 무효 처리된다.",
+      "passed": true
+    }
+  ],
+  "unchanged_semantic_underline143": true
+}

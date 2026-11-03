@@ -1,0 +1,111 @@
+{
+  "__layout_scope__": {
+    "fixed_native_rects": [
+      [
+        493.5,
+        33,
+        533,
+        51
+      ],
+      [
+        503,
+        778,
+        538,
+        805
+      ]
+    ],
+    "review_basis": "Original fixed candidate-code and footer-page-number columns remain at exact source coordinates, font and size. Body expressions continue to use natural Korean advances."
+  },
+  "__slot_edits__": {
+    "p23:b2:l0:s3-3:c0-29": {
+      "text": " 크로뮴산 은이 침전하기 시작할 때의 염화 이온 잔류 농도 [",
+      "skip": true,
+      "skip_reason": "Original scientific unit/formula-prefix/bracket/approximation glyphs retain exact source GIDs/fonts/point sizes and native advances; only source-bound surrounding Korean prose is emitted by the extra fragments."
+    },
+    "p23:b2:l0:s7-7": {
+      "text": "."
+    },
+    "p23:b2:l1:s0-0": {
+      "text": "",
+      "translation_intentionally_empty": true
+    }
+  },
+  "__prose_vector_decorations__": [
+    {
+      "id": "p23-source-underline-p23:b2:l0:s2-2",
+      "slot_id": "p23:b2:l0:s2-2",
+      "target_text": "계산하라",
+      "source_baseline": 80.760009765625,
+      "operator_indices": [
+        108,
+        109
+      ],
+      "paint_operator": "f*",
+      "source_rect": [
+        90.624,
+        81.95998291015621,
+        135.264,
+        83.03998291015625
+      ],
+      "source_text": "Calculate",
+      "review": "Source-bound English prose underline and corresponding Korean emphasis reviewed. Pin the exact original source hash/path/English GIDs and baseline; preserve original construction bytes, black fill/paint, y and thickness. Only the prose decoration receives explicit horizontal scale/translation to cover the actual emitted Korean word/phrase ink (plus explicitly declared unchanged native numeral/notation). Mathematical rules, table borders and other figure paths retain the independent1e-7 coordinate check.",
+      "previous_review_before_full_phrase_fit": "Source-bound underline and its Korean counterpart reviewed; exact original vector program, colour, physical width and vertical coordinates remain unchanged; only horizontal placement follows the corresponding Korean emphasis.",
+      "fit_source_prose_underline_to_translated_phrase": true
+    },
+    {
+      "id": "p23-source-underline-p23:b2:l1:s1-1",
+      "slot_id": "p23:b2:l1:s1-1",
+      "target_text": "근거를 제시하라",
+      "source_baseline": 95.41998291015625,
+      "operator_indices": [
+        157,
+        158
+      ],
+      "paint_operator": "f*",
+      "source_rect": [
+        142.7,
+        96.61998291015618,
+        174.38,
+        97.69998291015622
+      ],
+      "source_text": "Justify",
+      "review": "Source-bound English prose underline and corresponding Korean emphasis reviewed. Pin the exact original source hash/path/English GIDs and baseline; preserve original construction bytes, black fill/paint, y and thickness. Only the prose decoration receives explicit horizontal scale/translation to cover the actual emitted Korean word/phrase ink (plus explicitly declared unchanged native numeral/notation). Mathematical rules, table borders and other figure paths retain the independent1e-7 coordinate check.",
+      "previous_review_before_full_phrase_fit": "Source-bound underline and its Korean counterpart reviewed; exact original vector program, colour, physical width and vertical coordinates remain unchanged; only horizontal placement follows the corresponding Korean emphasis.",
+      "fit_source_prose_underline_to_translated_phrase": true
+    }
+  ],
+  "__extra_slots__": [
+    {
+      "id": "p23:b2:l0:s3-3:c0-29:unit-prose-0",
+      "page": 23,
+      "at": [
+        2,
+        0,
+        3,
+        3
+      ],
+      "source": " the residual concentration ",
+      "rect": [
+        135.25999450683594,
+        70.92337036132812,
+        277.7796936035156,
+        83.1446533203125
+      ],
+      "point": [
+        135.25999450683594,
+        80.760009765625
+      ],
+      "font": "Times New Roman",
+      "font_role": "serif",
+      "size": 11.039999961853027,
+      "dir": [
+        1.0,
+        0.0
+      ],
+      "text": " 크로뮴산 은이 침전하기 시작할 때의 염화 이온 잔류 농도 ",
+      "char_start": 0,
+      "char_end": 28
+    }
+  ],
+  "additional_native_unit_preservation_review": "Missed mL units and formula-boundary2K/bracket/approximation glyphs retain original native programs and exact physical typography; do not edit the frozen shared matcher or change any source or translated sentence."
+}

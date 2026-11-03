@@ -1,0 +1,29 @@
+{
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "source_original_pdf_unchanged": true,
+  "positive_pdf_sha256": "0036c97e6afce56461bbc4db804f1bf1103d3fa12dbd8f59b1be162b677bfcb3",
+  "auditor_sha256": "ee70dcf61cfca4a7b2a61f31b253a575e90013c57154e6cd7612517ef0b11b04",
+  "tests": [
+    {
+      "case": "actual-original-path-positive",
+      "passed": true
+    },
+    {
+      "case": "English-alpha-is-not-exact-zero",
+      "passed": true,
+      "rejected": "Actual state/whole-Form source reconstruction assertion"
+    },
+    {
+      "case": "scientific-prefix-cannot-be-made-invisible",
+      "passed": true,
+      "rejected": "Actual Form has edits outside the exact source-English opacity/native-prefix x wrappers"
+    },
+    {
+      "case": "other-original-Form-bytes-cannot-change",
+      "passed": true,
+      "rejected": "Actual Form has edits outside the exact source-English opacity/native-prefix x wrappers"
+    }
+  ],
+  "all_passed": true,
+  "scope": "Private copied PDFs only. No original, authoring output, frozen2024 or other-year file modified."
+}

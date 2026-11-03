@@ -1,0 +1,189 @@
+{
+  "__layout_scope__": {
+    "fixed_native_rects": [
+      [
+        493.5,
+        33,
+        533,
+        51
+      ],
+      [
+        503,
+        778,
+        538,
+        805
+      ]
+    ],
+    "review_basis": "Original fixed candidate-code and footer-page-number columns remain at exact source coordinates, font and size. Body expressions continue to use natural Korean advances.",
+    "reviewed_native_vector_attachments": [
+      {
+        "id": "p2-original-yellow-60-highlight",
+        "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+        "glyphs": [
+          {
+            "c": "6",
+            "gid": 23,
+            "font": "Times New Roman",
+            "size": 11.039999961853027,
+            "origin": [
+              262.1300048828125,
+              114.739990234375
+            ],
+            "bbox": [
+              262.1300048828125,
+              105.85413360595703,
+              267.6499938964844,
+              116.89413452148438
+            ],
+            "paint": 0
+          },
+          {
+            "c": "0",
+            "gid": 17,
+            "font": "Times New Roman",
+            "size": 11.039999961853027,
+            "origin": [
+              267.6499938964844,
+              114.739990234375
+            ],
+            "bbox": [
+              267.6499938964844,
+              105.85413360595703,
+              273.16998291015625,
+              116.89413452148438
+            ],
+            "paint": 0
+          }
+        ],
+        "vector_path": {
+          "operator_indices": [
+            67,
+            68
+          ],
+          "rect": [
+            262.13,
+            104.05998291015624,
+            273.17,
+            117.49998291015629
+          ],
+          "ancestor_clip_rects": [],
+          "paint_operator": "f*"
+        },
+        "rendered_source_rect": [
+          262.1300048828125,
+          104.05999755859375,
+          273.1700134277344,
+          117.5
+        ],
+        "fill": [
+          1.0,
+          1.0,
+          0.0
+        ],
+        "review": "Original yellow rectangle highlights exactly the native page count60; translate its original glyph and complete pure vector path together without resizing, restyling or repainting."
+      }
+    ],
+    "centered_source_lines": [
+      [
+        19,
+        0
+      ]
+    ],
+    "reviewed_source_centered_message": [
+      {
+        "source_line": [
+          19,
+          0
+        ],
+        "source_text": "GOODLUCK!",
+        "source_full_nonspace_run_rect": [
+          261.5299987792969,
+          607.8837890625,
+          351.84930419921875,
+          623.5383911132812
+        ],
+        "source_center_x": 306.6896514892578,
+        "original_baselines": [
+          620.5899658203125
+        ],
+        "original_point_sizes": [
+          14.039999961853027
+        ],
+        "basis": "Center this original message itself, independently of the cover center and page center; source baseline/point size unchanged."
+      }
+    ]
+  },
+  "__slot_edits__": {
+    "p2:b13:l1:s0-0": {
+      "text": "Stop 명령이 주어지면 즉시 시험을 중단해야 한다. 명령 후"
+    },
+    "p2:b13:l2:s0-0": {
+      "skip": true,
+      "skip_reason": "Original fraction½ remains at its source font and exact point size; only the adjacent source-bound prose fragments are translated."
+    }
+  },
+  "__extra_slots__": [
+    {
+      "id": "p2:b13:l2:s0-0:before-native-half",
+      "page": 2,
+      "at": [
+        13,
+        2,
+        0,
+        0
+      ],
+      "source": "writing by ",
+      "rect": [
+        88.8239974975586,
+        436.61334228515625,
+        446.2300109863281,
+        448.8346252441406
+      ],
+      "point": [
+        88.8239974975586,
+        446.4499816894531
+      ],
+      "font": "Times New Roman",
+      "font_role": "serif",
+      "size": 11.039999961853027,
+      "dir": [
+        1.0,
+        0.0
+      ],
+      "text": "계속 필기한 시간이",
+      "char_start": 0,
+      "char_end": 11
+    },
+    {
+      "id": "p2:b13:l2:s0-0:after-native-half",
+      "page": 2,
+      "at": [
+        13,
+        2,
+        0,
+        0
+      ],
+      "source": " minute or longer will lead to nullification of your theoretical exam. ",
+      "rect": [
+        88.8239974975586,
+        436.61334228515625,
+        446.2300109863281,
+        448.8346252441406
+      ],
+      "point": [
+        88.8239974975586,
+        446.4499816894531
+      ],
+      "font": "Times New Roman",
+      "font_role": "serif",
+      "size": 11.039999961853027,
+      "dir": [
+        1.0,
+        0.0
+      ],
+      "text": "분 이상이면 이론 시험이 무효 처리된다.",
+      "char_start": 12,
+      "char_end": 83
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "year": 2019,
+  "reviewer": "/root/plancks_all",
+  "created_utc": "2026-11-02T23:10:30.943867+00:00",
+  "scope": "Original source PNG and latest final-code PNG actually read at original resolution for pages29–35; corrected29/31/33 reread after their declared override amendment. No claim to review of all60 pages.",
+  "prior_text_support_disclosure": "Reviewer previously supplied length/order text edits on32–36; final rendering/QA was performed by another agent. This is a separate direct source-versus-final visual read, not a claim of author-independent translation review.",
+  "freeze_sha256": "2b1039c267a1f354376f6147c256c182c4cb93640d4e8a176fd48ccba618c61d",
+  "frozen_runtime_python_files_rehashed": 69,
+  "current_runtime_python_files_matching_base_freeze": 67,
+  "current_unfrozen_helper_trials": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\vector_language_icho2019.py",
+      "base_freeze_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "current_trial_sha256": "96bbc1925cd49ba9375f4934710fe54e0e377856f2269d7cc98d5eea51ce2ec3"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\verify_native_vectors_icho2019.py",
+      "base_freeze_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91",
+      "current_trial_sha256": "7f81a55fed6a582d016cc7d3fbce0fff5313232894e028fb5c3917029ebae7d1"
+    }
+  ],
+  "reviewed_proof_runtime_lineage": "These seven proofs were generated with R1 base freeze2b1039 plus the declared three override amendments. Their recorded vector-helper and vector-auditor SHA values match R1. Two current helper trial edits are outside this visual approval. R2 must be frozen and all60 pages generated with the same R2 code and actual QA; identical PNGs may be rebound by an explicit independent manifest, changed graphics must be reread.",
+  "peer_override_amendment_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\final-peer-prose-field-amendment.json",
+  "peer_override_amendment_sha256": "e6635121c5074b192c26361f9a278c08e1b8c7707291e685156795028510e004",
+  "previous_four_page_report_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\final-peer-visual-review-pages29-35-pending-amendment.json",
+  "previous_four_page_report_sha256": "f590c5374b0d038c8e674a924e61674876739f4dddcfe6a87d736a2c36a75ea3",
+  "passed": true,
+  "pages": [
+    {
+      "page": 29,
+      "reviewer": "/root/plancks_all",
+      "passed": true,
+      "source_png_sha256": "0e0c66555f931157e6aa04740a1e6f4ced5ada105d2428eda3c7000af18930f4",
+      "pdf_sha256": "d7d20f82a92abe4b5a37ac6c45aa812b2fc14b4106a0a607974e6e0af00a53eb",
+      "png_sha256": "c4c1ae341c3a99a5fb7531ee77fe8a41c146ef64fb10dfaa4574e8061a50a681",
+      "layout_sha256": "41aa6210e5228f9348669f06ececfca3ff3bceeb9334ff18825819683de6ef1e",
+      "render_sha256": "5d6363a3ac283669169967d5b8796b3212483c80fc9b2c09a11c009e4848fcc0",
+      "diagnostic_sha256": "a09a140d0ad193d8d95e7f39a4cb99d011e3722a27830f1ee2100e121dac4c85",
+      "notes": "원문 및 수정 전 최종을 먼저 읽고, 수정 후 새 최종 PNG를 original 해상도로 다시 읽었다. Q8 중복 평형 표현이 제거되어 ‘계산하라: 평형 상수 K° (반응 6).’로 명확히 읽힌다. 원문의 평형 상수/반응(6) 의미, 원래 K°·6/괄호 글리프, m(I2)= 및 g, 큰 답안틀과 footer를 보존했다. 새 글자 간격과 수식 연결 정상이다.",
+      "actual_proof_recorded_vector_language_helper_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "actual_proof_recorded_native_vector_auditor_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91"
+    },
+    {
+      "page": 30,
+      "reviewer": "/root/plancks_all",
+      "passed": true,
+      "source_png_sha256": "773ccdfb03ea047651cfcf2ae8f0f55133cae1119895cf136d66cf6eff27d754",
+      "pdf_sha256": "e7992c74dd0315c865bd06d09a6061b08ae5cad46bb7c7ea83d0da520062f29c",
+      "png_sha256": "043bb39e9930f66b3c77e67d5d62e6d967bbf030c433671659f3c03631f7485b",
+      "layout_sha256": "9c29d7da5178df26607e698a93fb446655679eb877d844764fe5fbe24e7ed965",
+      "render_sha256": "e1d0796c200e9cbbafa2d1002031b7997e9c7b9de32e97793e514fb65350e570",
+      "diagnostic_sha256": "d6102044d63c9f7b0c8508c3a4bc5c2cb3a8db7ab61bd862cf2a207699621567",
+      "notes": "원문과 최종 PNG를 original 해상도로 실제 대조했다. T5의 8%·총점41·문항별 배점, 아조벤젠 식과 trans/cis 답안틀, d_trans/d_cis, 구조 M/N/O/P/Q와 모든 치환기, 위치 선택성·첫 단계의 차가운 염산 수용액/NaNO2 조건을 확인했다. 밑줄 지시와 한글 글자·단어 간격 및 답안 공간이 읽기 정상이다.",
+      "actual_proof_recorded_vector_language_helper_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "actual_proof_recorded_native_vector_auditor_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91"
+    },
+    {
+      "page": 31,
+      "reviewer": "/root/plancks_all",
+      "passed": true,
+      "source_png_sha256": "bd159bd2d5f6a02642d772d5ef56a94fd8ca6adebab7f182d38a38cbf6f89ed2",
+      "pdf_sha256": "869df5facc73583c65209edc6aada574a638ea97d920c011a69b83993b896bc8",
+      "png_sha256": "e831465066879a90cf762364d7aaa8358ca1ee6f570d5c104fbdd73f4406eebc",
+      "layout_sha256": "c3fa645c6ad987a3855b73249f8ac783db5795ed21bad955bda787cf97125ea0",
+      "render_sha256": "7ae94672ee996d1eda334b5ca7695722862e23b526a437219ead852fc2632767",
+      "diagnostic_sha256": "e5fb3e0ebabff1c045cf8b7e4e707cf673a28010e1d9d926c7ed512b531cd343",
+      "notes": "원문 및 수정 전 최종을 읽고, 수정 후 새 최종 PNG를 original 해상도로 다시 읽었다. 상단 ‘반응물:’과 ‘및’이 다시 두 별도 답안 필드를 구분하며, 원래 and 중심에 대응하는 중간 위치에 및이 놓여 첫/둘째 빈 응답 영역이 복원되었다. C·M_trans·CM_trans 포접 그림과 K_t, 초기농도 조건, 흡광도/흡수계수/광경로/무시 가능한 C 흡광도 조건 및 ΔA=α[CM_trans] 증명 지시와 답안틀을 확인했다. 본문 간격·수식 첨자 정상이다.",
+      "actual_proof_recorded_vector_language_helper_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "actual_proof_recorded_native_vector_auditor_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91"
+    },
+    {
+      "page": 32,
+      "reviewer": "/root/plancks_all",
+      "passed": true,
+      "source_png_sha256": "130aff2605d439d3b59c3c8d9eb2612981034a78ebab259a6b15734a1ab22ce1",
+      "pdf_sha256": "872fc678c33bf57f8ce5f9afa4fda2d479093befdc801070df6ed0ef6f086182",
+      "png_sha256": "c6d063b12abe020a5951ed8ae59b4fd1191af4ce02f49009bd8f2f6c5e55ec38",
+      "layout_sha256": "a33f5f360e3a80f5a7067aba0e774921531074989559ca73e6492fbeeb5b14f4",
+      "render_sha256": "0fe154eff974f88ef4ab96264ba9efef893b77859aeb6e7e85d4d8d2720f6eec",
+      "diagnostic_sha256": "2bd67e274e211f73c80aa2b0c5209cd1c2cf5f0fbb74581dbb6ad375daaebba1",
+      "notes": "원문과 최종 PNG를 original 해상도로 실제 대조했다. C가 M_trans보다 크게 과량인 조건, [C]0 >> [M_trans]0, [C]≈[C]0, ΔA의 분수식과 β·K_t·[C]0 및 β 표현의 상수/초기농도 조건을 확인했다. 두 증명 답안틀과 β= 위치를 보존했고 간격·수식 연결에 접촉을 보지 못했다.",
+      "actual_proof_recorded_vector_language_helper_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "actual_proof_recorded_native_vector_auditor_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91"
+    },
+    {
+      "page": 33,
+      "reviewer": "/root/plancks_all",
+      "passed": true,
+      "source_png_sha256": "184692091c57649b55104530b53a72fdce86b42193a1292926e9fd00f18ebaeb",
+      "pdf_sha256": "87a0d87684ab78c06fb7609f187b22c9b2eb489829f3da31412401006841d9f2",
+      "png_sha256": "27bf5619dcdc9baec8aee9d7c6c2432a721616efd903c8bce40e639ef55ee2d8",
+      "layout_sha256": "1264bf3983720bca44c5b6a16d24d5c2fdce2fd15583fc6bd1b276d6f865761a",
+      "render_sha256": "ccf7d82d728bb0376e7a5b86eebb0e1b54a7a6e9ee1e93d18e87dfc1acddbd31",
+      "diagnostic_sha256": "2865381246d7fae755f289c28b0a8588f4acdb42fe50af2c6cb7716f58fe3d33",
+      "notes": "원문 및 수정 전 최종을 읽고, 수정 후 새 최종 PNG를 original 해상도로 다시 읽었다. 원래 K_t 뒤의 빠진 조사 를이 복원되어 ‘결정하라: K_t를 다음 실험 곡선(그림3)을 이용하여 값을 구하라.’로 읽힌다. 원래 Y(100,4.2)·Z(1000,17.2), 1/ΔA 및 1/[C]0(L/mol) 축·곡선·격자, 그림3 설명, 계산 답안틀과 K_t=를 대조했다. 겹침이나 비정상 자간을 보지 못했다.",
+      "actual_proof_recorded_vector_language_helper_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "actual_proof_recorded_native_vector_auditor_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91"
+    },
+    {
+      "page": 34,
+      "reviewer": "/root/plancks_all",
+      "passed": true,
+      "source_png_sha256": "86beaa22f2b495a8b986e3208f66150376ef95e7720fcc95c2ae48b284b4e660",
+      "pdf_sha256": "ac6bcd8e6a28338569476e0f2953c45879e47843b62224bf5a3ee1907266ae90",
+      "png_sha256": "35c4b4a9001c7d1590348937518c8edd35b68ec8b06d3936fa3333220f6d795e",
+      "layout_sha256": "47f0ab8e9bf91ea23232e4f0224a64ab6fd4e770820f7114959313226cb70d75",
+      "render_sha256": "c7e23a97d5f4c6a457c66e0c919bc35f648808aa8d1e5f25b6b7701416dd7ffa",
+      "diagnostic_sha256": "efec587ffddd5aae519d49008a5ca5517e4a6d38fd4802915cc341e164e1ee8a",
+      "notes": "원문과 최종 PNG를 original 해상도로 실제 대조했다. 문항7–9의 속도론/K_c, 빛 조사로 알려진 M_cis 양 생성, 자유/포접 M_cis의 열 이성질화, C가 없을 때 1차·k1, 모든 착물 평형이 이성질화보다 빠르다는 조건을 확인했다. 화학구조·반응망·k1/k2/K_t/K_c, r의 두 정의식, k_obs 식과 γ/δ 표현 지시 및 답안틀을 대조했다. 글자 간격·오른쪽 italic·첨자 읽기 정상이다.",
+      "actual_proof_recorded_vector_language_helper_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "actual_proof_recorded_native_vector_auditor_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91"
+    },
+    {
+      "page": 35,
+      "reviewer": "/root/plancks_all",
+      "passed": true,
+      "source_png_sha256": "acc81d6a904b160010f4e9d785795dd1c8c111d89cdf4a124657cf407be1555b",
+      "pdf_sha256": "7fd46f34f9d8df6b5d4821d564e7a7d314258cc0d05cd1934ebe03abdc7d5935",
+      "png_sha256": "16fe9d3bbaa9f00f391d7fa11f67a964977ed337432ae925c76a51ddf50312bf",
+      "layout_sha256": "621a5a3ea439f2f4fb1aa25d52cebd4b790933ab587530080a99af301519b778",
+      "render_sha256": "4708b03b9e8469a0fe1b15a009a4d7060e7fe1bd64afa43e437071e9ba18ca6e",
+      "diagnostic_sha256": "6747d0962193eff07e847ad412796b20eec25702cbc6b3a73d095fb5cee98fc0",
+      "notes": "원문과 최종 PNG를 original 해상도로 실제 대조하고 실제 PDF 추출문자/layout도 확인했다. γ/δ 답란, [C]0 >> [M_cis]0 및 반감기 식, 네 선택지, 회귀 자료의 여덟 수치쌍과 mol L^-1/s를 대조했다. CM_cis 및 CM_trans 두 항목 모두 원문 very stable과 번역 ‘가 매우 안정함’이 정확히 일치한다. 확대 미리보기에서 제기했던 불안정 오독은 철회했으며 수정 근거로 삼으면 안 된다. 간격·격자·표 정렬 정상이다.",
+      "actual_proof_recorded_vector_language_helper_sha256": "a78a103d7f8d72fcdd8d2dd4759466f4a1162821a6839c22b39813c607722c38",
+      "actual_proof_recorded_native_vector_auditor_sha256": "73ee1284228dd6326773e96b9687340d6705c69987905f2f2c9b607a045e9d91"
+    }
+  ],
+  "any_PDF_PNG_layout_plan_override_or_engine_modified_by_this_reviewer": false
+}

@@ -1,0 +1,59 @@
+{
+  "page": 10,
+  "proof_sha256": "ff5acaea10046909fffb6cf22dc9499f76c5be6e17c432c0cea56de1dd4d0851",
+  "passed": true,
+  "tested_row_pairs": 8,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 80.760009765625,
+      "gap_pt": 34.9200439453125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 80.760009765625,
+      "lower_source_baseline": 136.5799560546875,
+      "gap_pt": 55.8199462890625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 136.5799560546875,
+      "lower_source_baseline": 151.0999755859375,
+      "gap_pt": 14.52001953125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 151.0999755859375,
+      "lower_source_baseline": 466.6099853515625,
+      "gap_pt": 315.510009765625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 466.6099853515625,
+      "lower_source_baseline": 543.6699829101562,
+      "gap_pt": 77.05999755859375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 543.6699829101562,
+      "lower_source_baseline": 620.8299560546875,
+      "gap_pt": 77.15997314453125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 620.8299560546875,
+      "lower_source_baseline": 635.469970703125,
+      "gap_pt": 14.6400146484375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 635.469970703125,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 156.74603271484375,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

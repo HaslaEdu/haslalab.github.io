@@ -1,0 +1,23 @@
+{
+  "page": 42,
+  "proof_sha256": "636f34729f0a41e2a365314db68e47cfd31d2e4b363ba91e311b52310f14ace1",
+  "passed": true,
+  "tested_row_pairs": 2,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 737.97998046875,
+      "gap_pt": 692.1400146484375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 737.97998046875,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 54.23602294921875,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

@@ -1,0 +1,65 @@
+{
+  "page": 43,
+  "proof_sha256": "85e983f144301361702cbc8d507485214f8b47389d1d67f45fd480c25054ff63",
+  "passed": true,
+  "tested_row_pairs": 9,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 80.760009765625,
+      "gap_pt": 34.9200439453125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 80.760009765625,
+      "lower_source_baseline": 95.41998291015625,
+      "gap_pt": 14.65997314453125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 95.41998291015625,
+      "lower_source_baseline": 367.8499755859375,
+      "gap_pt": 272.42999267578125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 367.8499755859375,
+      "lower_source_baseline": 394.3699951171875,
+      "gap_pt": 26.52001953125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 394.3699951171875,
+      "lower_source_baseline": 477.42999267578125,
+      "gap_pt": 83.05999755859375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 477.42999267578125,
+      "lower_source_baseline": 491.9499816894531,
+      "gap_pt": 14.519989013671875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 491.9499816894531,
+      "lower_source_baseline": 506.469970703125,
+      "gap_pt": 14.519989013671875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 506.469970703125,
+      "lower_source_baseline": 767.615966796875,
+      "gap_pt": 261.14599609375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 767.615966796875,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 24.60003662109375,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

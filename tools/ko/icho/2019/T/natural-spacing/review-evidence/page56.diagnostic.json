@@ -1,0 +1,2892 @@
+{
+  "page": 56,
+  "plan": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\2019\\page56.ko.json",
+  "plan_sha256": "c31d247c62e6e02085c371ce6178c3ad019c6769744d331d1e2b94dd6eaeb3a3",
+  "composer": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\natural_plan_compose_icho2019.py",
+  "frozen_helpers": {
+    "latex_native_motion": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\latex_native_motion.py",
+    "pdf_latex_text_ops": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\pdf_latex_text_ops.py",
+    "native_ink_bounds": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\native_ink_bounds.py",
+    "native_proof": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\historical\\icho\\composer-2019\\engine\\native_proof.py"
+  },
+  "rasterization": false,
+  "source_font_substitution": false,
+  "passed": true,
+  "output": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\proofs\\icho\\2019-final\\page56.pdf",
+  "output_sha256": "a7980d12b1caa421c67bfcb694324f1e94c2c0f29b4fa36bcca8164b54da5189",
+  "native_geometry": {
+    "missing": [],
+    "extra": 0,
+    "max_delta_pt": 1.680015566307702e-05
+  },
+  "korean_geometry": {
+    "planned_glyphs": 246,
+    "actual_glyphs": 246,
+    "missing_or_notdef_glyphs": [],
+    "geometry_errors": [],
+    "max_position_error_pt": 1.88780977055103e-05,
+    "position_tolerance_pt": 0.001,
+    "passed": true
+  },
+  "vector_geometry": {
+    "native_vector_paths_verified": 101,
+    "moved_whole_expression_paths_verified": 6,
+    "stationary_paths_including_vector_figures_verified": 95,
+    "coordinate_errors": [],
+    "form_native_vector_paths_verified": 0,
+    "stationary_form_invocations_verified": 0,
+    "reviewed_prose_only_form_stream_edits_verified": 0,
+    "reviewed_outlined_vector_language_Form_edits_verified": 0,
+    "form_bbox_serialization_tolerance_pt": 0.0001,
+    "audit_code_sha256": "ee70dcf61cfca4a7b2a61f31b253a575e90013c57154e6cd7612517ef0b11b04",
+    "max_coordinate_tolerance_pt": 1e-07,
+    "added_raster_language_mask_paths": 0
+  },
+  "actual_new_korean_inter_row_ink_audit": {
+    "page": 56,
+    "proof_sha256": "a7980d12b1caa421c67bfcb694324f1e94c2c0f29b4fa36bcca8164b54da5189",
+    "passed": true,
+    "tested_row_pairs": 12,
+    "pairs": [
+      {
+        "upper_source_baseline": 45.8399658203125,
+        "lower_source_baseline": 80.760009765625,
+        "gap_pt": 34.9200439453125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 80.760009765625,
+        "lower_source_baseline": 265.5799560546875,
+        "gap_pt": 184.8199462890625,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 265.5799560546875,
+        "lower_source_baseline": 356.4499816894531,
+        "gap_pt": 90.87002563476562,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 356.4499816894531,
+        "lower_source_baseline": 370.969970703125,
+        "gap_pt": 14.519989013671875,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 370.969970703125,
+        "lower_source_baseline": 385.489990234375,
+        "gap_pt": 14.52001953125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 385.489990234375,
+        "lower_source_baseline": 400.0099792480469,
+        "gap_pt": 14.519989013671875,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 400.0099792480469,
+        "lower_source_baseline": 547.1500244140625,
+        "gap_pt": 147.14004516601562,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 547.1500244140625,
+        "lower_source_baseline": 560.949951171875,
+        "gap_pt": 13.7999267578125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 560.949951171875,
+        "lower_source_baseline": 574.75,
+        "gap_pt": 13.800048828125,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 574.75,
+        "lower_source_baseline": 588.6699829101562,
+        "gap_pt": 13.91998291015625,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 588.6699829101562,
+        "lower_source_baseline": 614.949951171875,
+        "gap_pt": 26.27996826171875,
+        "contact_pixels_2x": 0
+      },
+      {
+        "upper_source_baseline": 614.949951171875,
+        "lower_source_baseline": 792.2160034179688,
+        "gap_pt": 177.26605224609375,
+        "contact_pixels_2x": 0
+      }
+    ],
+    "failures": [],
+    "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+    "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+  },
+  "actual_prose_underline_coverage_and_style_audit": {
+    "page": 56,
+    "passed": true,
+    "proof_sha256": "a7980d12b1caa421c67bfcb694324f1e94c2c0f29b4fa36bcca8164b54da5189",
+    "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+    "measurement_code_sha256": "79729dd00f2f9c5f14b8ef9657ee4ebd186c0cb2043c64b7806bd2a0b4aeeda4",
+    "actual_curve_reader_sha256": "13c5fb97d4faa712dba8361565fd30cae3b886e7ec37b83ab55a7425e2e0fa3c",
+    "full_Korean_font_pins": {
+      "serif-bold": {
+        "path": "D:\\CodexBuilds\\Hasla-publish-20261031\\tools\\ko\\fonts\\NotoSerifCJKkr-Bold.otf",
+        "sha256": "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+        "postscript_face": "NotoSerifCJKkr-Bold"
+      },
+      "serif": {
+        "path": "D:\\CodexBuilds\\Hasla-publish-20261031\\tools\\ko\\fonts\\NotoSerifCJKkr-Regular.otf",
+        "sha256": "77b4b741f864d27f15e90f275b17106dde90b2ad28f82bab72dc95805db5fb42",
+        "postscript_face": "NotoSerifCJKkr-Regular"
+      },
+      "sans": {
+        "path": "D:\\CodexBuilds\\Hasla-publish-20261031\\tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf",
+        "sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+        "postscript_face": "NotoSansCJKkr-Regular"
+      }
+    },
+    "underline_rows": [
+      {
+        "id": "p56-source-underline-p56:b2:l0:s2-2",
+        "actual_emphasized_glyph_curve_union_bbox": [
+          87.68207345947266,
+          71.287689765625,
+          119.42635755813234,
+          81.996489765625
+        ],
+        "actual_underline_bbox": [
+          87.68207304358631,
+          81.95998291015621,
+          119.42635281731592,
+          83.03998291015625
+        ],
+        "actual_horizontal_ink_coverage_error_pt": 4.74081642209967e-06,
+        "original_y_thickness_black_fill_and_paint_preserved": true,
+        "source_rect": [
+          90.624,
+          81.95998291015621,
+          117.024,
+          83.03998291015625
+        ],
+        "actual_native_path_index": 0,
+        "source_English_glyph_path_guards_verified": true,
+        "all_Korean_used_glyph_GIDs_outlines_and_hmtx_match_pinned_full_font": true
+      },
+      {
+        "id": "p56-source-underline-p56:b3:l0:s2-2",
+        "actual_emphasized_glyph_curve_union_bbox": [
+          87.68207345947266,
+          256.1076360546875,
+          119.42635755813234,
+          266.7943560546875
+        ],
+        "actual_underline_bbox": [
+          87.68207304362596,
+          266.77998291015626,
+          119.42635281736756,
+          267.8599829101563
+        ],
+        "actual_horizontal_ink_coverage_error_pt": 4.7407647798536345e-06,
+        "original_y_thickness_black_fill_and_paint_preserved": true,
+        "source_rect": [
+          90.624,
+          266.77998291015626,
+          118.22399999999999,
+          267.8599829101563
+        ],
+        "actual_native_path_index": 1,
+        "source_English_glyph_path_guards_verified": true,
+        "all_Korean_used_glyph_GIDs_outlines_and_hmtx_match_pinned_full_font": true
+      },
+      {
+        "id": "p56-source-underline-p56:b5:l3:s0-0",
+        "actual_emphasized_glyph_curve_union_bbox": [
+          90.85584054931641,
+          390.53765924804685,
+          122.60012464797609,
+          401.24645924804685
+        ],
+        "actual_underline_bbox": [
+          90.85584054851813,
+          401.20998291015627,
+          122.60012032225072,
+          402.28998291015625
+        ],
+        "actual_horizontal_ink_coverage_error_pt": 4.3257253707906784e-06,
+        "original_y_thickness_black_fill_and_paint_preserved": true,
+        "source_rect": [
+          90.624,
+          401.20998291015627,
+          115.22399999999999,
+          402.28998291015625
+        ],
+        "actual_native_path_index": 20,
+        "source_English_glyph_path_guards_verified": true,
+        "all_Korean_used_glyph_GIDs_outlines_and_hmtx_match_pinned_full_font": true
+      },
+      {
+        "id": "p56-source-underline-p56:b5:l3:s2-2",
+        "actual_emphasized_glyph_curve_union_bbox": [
+          323.66133051223267,
+          390.53765924804685,
+          365.8113291767847,
+          401.2243792480469
+        ],
+        "actual_underline_bbox": [
+          323.6613430812301,
+          401.20998291015627,
+          365.81133527727917,
+          402.28998291015625
+        ],
+        "actual_horizontal_ink_coverage_error_pt": 1.2568997419748484e-05,
+        "original_y_thickness_black_fill_and_paint_preserved": true,
+        "source_rect": [
+          299.69,
+          401.20998291015627,
+          318.65,
+          402.28998291015625
+        ],
+        "actual_native_path_index": 21,
+        "source_English_glyph_path_guards_verified": true,
+        "all_Korean_used_glyph_GIDs_outlines_and_hmtx_match_pinned_full_font": true
+      },
+      {
+        "id": "p56-missing-prose-underline-990",
+        "actual_emphasized_glyph_curve_union_bbox": [
+          299.20849405273435,
+          605.477631171875,
+          330.95277815139406,
+          616.164351171875
+        ],
+        "actual_underline_bbox": [
+          299.20848546260413,
+          616.1499829101563,
+          330.9527652363454,
+          617.2299829101562
+        ],
+        "actual_horizontal_ink_coverage_error_pt": 1.2915048671402474e-05,
+        "original_y_thickness_black_fill_and_paint_preserved": true,
+        "source_rect": [
+          239.09,
+          616.1499829101563,
+          270.41,
+          617.2299829101562
+        ],
+        "actual_native_path_index": 58,
+        "source_English_glyph_path_guards_verified": true,
+        "all_Korean_used_glyph_GIDs_outlines_and_hmtx_match_pinned_full_font": true
+      },
+      {
+        "id": "p56-missing-prose-underline-992",
+        "actual_emphasized_glyph_curve_union_bbox": [
+          337.77810874023436,
+          605.532831171875,
+          426.7331868984375,
+          616.142271171875
+        ],
+        "actual_underline_bbox": [
+          337.7781062348387,
+          616.1499429101563,
+          426.7331837805278,
+          616.6299829101563
+        ],
+        "actual_horizontal_ink_coverage_error_pt": 3.1179097277345136e-06,
+        "original_y_thickness_black_fill_and_paint_preserved": true,
+        "source_rect": [
+          372.19,
+          616.1499429101563,
+          470.494,
+          616.6299829101563
+        ],
+        "actual_native_path_index": 59,
+        "source_English_glyph_path_guards_verified": true,
+        "all_Korean_used_glyph_GIDs_outlines_and_hmtx_match_pinned_full_font": true
+      }
+    ],
+    "underline_coverage_tolerance_pt": 0.001,
+    "source_native_vector_tolerance_pt": 1e-07,
+    "protected_native_ink_contact_pixels": 0,
+    "authored_word_style_samples": [
+      {
+        "slot_id": "p56:b0:l0:s0-0:c0-11",
+        "actual_glyph": {
+          "c": "수",
+          "gid": 53267,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            445.6300048828125,
+            45.8399658203125
+          ],
+          "bbox": [
+            445.6300048828125,
+            36.995765686035156,
+            455.78680419921875,
+            48.0357666015625
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Calibri",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b0:l0:s0-0:c0-11",
+        "actual_glyph": {
+          "c": "번",
+          "gid": 51843,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            468.41656494140625,
+            45.8399658203125
+          ],
+          "bbox": [
+            468.41656494140625,
+            36.995765686035156,
+            478.5733642578125,
+            48.0357666015625
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Calibri",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b2:l0:s2-2",
+        "actual_glyph": {
+          "c": "그",
+          "gid": 48050,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 11.039999961853027,
+          "origin": [
+            87.45023345947266,
+            80.760009765625
+          ],
+          "bbox": [
+            87.45023345947266,
+            71.91725158691406,
+            98.11487579345703,
+            82.9572525024414
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman,Bold",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b2:l0:s3-3:unit-prose-0",
+        "actual_glyph": {
+          "c": "주",
+          "gid": 54966,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            125.96879577636719,
+            80.760009765625
+          ],
+          "bbox": [
+            125.96879577636719,
+            71.91725158691406,
+            136.63343811035156,
+            82.9572525024414
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b2:l0:s3-3:unit-prose-0",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            182.1182403564453,
+            80.760009765625
+          ],
+          "bbox": [
+            182.1182403564453,
+            71.91725158691406,
+            192.7828826904297,
+            82.9572525024414
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b2:l0:s3-3:unit-prose-0",
+        "actual_glyph": {
+          "c": "부",
+          "gid": 52026,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            206.2737579345703,
+            80.760009765625
+          ],
+          "bbox": [
+            206.2737579345703,
+            71.91725158691406,
+            216.9384002685547,
+            82.9572525024414
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b2:l0:s3-3:unit-prose-0",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54574,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            251.75856018066406,
+            80.760009765625
+          ],
+          "bbox": [
+            251.75856018066406,
+            71.91725158691406,
+            262.4231872558594,
+            82.9572525024414
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b2:l0:s3-3:unit-prose-1:unit-prose-1",
+        "actual_glyph": {
+          "c": "구",
+          "gid": 47910,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            334.8897705078125,
+            80.760009765625
+          ],
+          "bbox": [
+            334.8897705078125,
+            71.91725158691406,
+            345.5544128417969,
+            82.9572525024414
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b2:l0:s5-5",
+        "actual_glyph": {
+          "c": "및",
+          "gid": 51657,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            381.6662292480469,
+            80.760009765625
+          ],
+          "bbox": [
+            381.6662292480469,
+            71.91725158691406,
+            392.33087158203125,
+            82.9572525024414
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s2-2",
+        "actual_glyph": {
+          "c": "골",
+          "gid": 47778,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 11.039999961853027,
+          "origin": [
+            87.45023345947266,
+            265.5799560546875
+          ],
+          "bbox": [
+            87.45023345947266,
+            256.7372131347656,
+            98.11487579345703,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman,Bold",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s3-3",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            125.96879577636719,
+            265.5799560546875
+          ],
+          "bbox": [
+            125.96879577636719,
+            256.7372131347656,
+            136.63343811035156,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s3-3",
+        "actual_glyph": {
+          "c": "반",
+          "gid": 51666,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            150.1243133544922,
+            265.5799560546875
+          ],
+          "bbox": [
+            150.1243133544922,
+            256.7372131347656,
+            160.78895568847656,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s3-3",
+        "actual_glyph": {
+          "c": "조",
+          "gid": 54826,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            174.2798309326172,
+            265.5799560546875
+          ],
+          "bbox": [
+            174.2798309326172,
+            256.7372131347656,
+            184.94447326660156,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s5-5",
+        "actual_glyph": {
+          "c": "으",
+          "gid": 54518,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            206.40623474121094,
+            265.5799560546875
+          ],
+          "bbox": [
+            206.40623474121094,
+            256.7372131347656,
+            217.0708770751953,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s5-5",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            230.561767578125,
+            265.5799560546875
+          ],
+          "bbox": [
+            230.561767578125,
+            256.7372131347656,
+            241.22640991210938,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s5-5",
+        "actual_glyph": {
+          "c": "생",
+          "gid": 52887,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            254.71728515625,
+            265.5799560546875
+          ],
+          "bbox": [
+            254.71728515625,
+            256.7372131347656,
+            265.3819274902344,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s5-5",
+        "actual_glyph": {
+          "c": "얻",
+          "gid": 54133,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            300.20208740234375,
+            265.5799560546875
+          ],
+          "bbox": [
+            300.20208740234375,
+            256.7372131347656,
+            310.8667297363281,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b3:l0:s5-5",
+        "actual_glyph": {
+          "c": "경",
+          "gid": 47735,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            324.35760498046875,
+            265.5799560546875
+          ],
+          "bbox": [
+            324.35760498046875,
+            256.7372131347656,
+            335.0222473144531,
+            267.7771911621094
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s2-2",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            87.45023345947266,
+            356.4499816894531
+          ],
+          "bbox": [
+            87.45023345947266,
+            347.60723876953125,
+            98.11487579345703,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s2-2",
+        "actual_glyph": {
+          "c": "물",
+          "gid": 51446,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            111.60575103759766,
+            356.4499816894531
+          ],
+          "bbox": [
+            111.60575103759766,
+            347.60723876953125,
+            122.27039337158203,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s2-2",
+        "actual_glyph": {
+          "c": "브",
+          "gid": 52166,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            146.42591857910156,
+            356.4499816894531
+          ],
+          "bbox": [
+            146.42591857910156,
+            347.60723876953125,
+            157.09056091308594,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s2-2",
+        "actual_glyph": {
+          "c": "없",
+          "gid": 54144,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            191.9107208251953,
+            356.4499816894531
+          ],
+          "bbox": [
+            191.9107208251953,
+            347.60723876953125,
+            202.5753631591797,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s4-4",
+        "actual_glyph": {
+          "c": ",",
+          "gid": 13,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            235.86094665527344,
+            356.4499816894531
+          ],
+          "bbox": [
+            235.86094665527344,
+            347.60723876953125,
+            239.4710235595703,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s4-4",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            242.29727172851562,
+            356.4499816894531
+          ],
+          "bbox": [
+            242.29727172851562,
+            347.60723876953125,
+            252.9619140625,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s4-4",
+        "actual_glyph": {
+          "c": "물",
+          "gid": 51446,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            266.4527893066406,
+            356.4499816894531
+          ],
+          "bbox": [
+            266.4527893066406,
+            347.60723876953125,
+            277.117431640625,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s4-4",
+        "actual_glyph": {
+          "c": "외",
+          "gid": 54322,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            290.6083068847656,
+            356.4499816894531
+          ],
+          "bbox": [
+            290.6083068847656,
+            347.60723876953125,
+            301.27294921875,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s6-6",
+        "actual_glyph": {
+          "c": ",",
+          "gid": 13,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            334.55853271484375,
+            356.4499816894531
+          ],
+          "bbox": [
+            334.55853271484375,
+            347.60723876953125,
+            338.1686096191406,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s6-6",
+        "actual_glyph": {
+          "c": "또",
+          "gid": 50122,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            340.9948425292969,
+            356.4499816894531
+          ],
+          "bbox": [
+            340.9948425292969,
+            347.60723876953125,
+            351.65948486328125,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s6-6",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            354.4857482910156,
+            356.4499816894531
+          ],
+          "bbox": [
+            354.4857482910156,
+            347.60723876953125,
+            365.150390625,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s6-6",
+        "actual_glyph": {
+          "c": "입",
+          "gid": 54591,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            378.6412658691406,
+            356.4499816894531
+          ],
+          "bbox": [
+            378.6412658691406,
+            347.60723876953125,
+            389.305908203125,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l0:s6-6",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54574,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            402.7967834472656,
+            356.4499816894531
+          ],
+          "bbox": [
+            402.7967834472656,
+            347.60723876953125,
+            413.46142578125,
+            358.647216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "얻",
+          "gid": 54133,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            90.6240005493164,
+            370.969970703125
+          ],
+          "bbox": [
+            90.6240005493164,
+            362.1272277832031,
+            101.28864288330078,
+            373.1672058105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "합",
+          "gid": 58147,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            139.71888732910156,
+            370.969970703125
+          ],
+          "bbox": [
+            139.71888732910156,
+            362.1272277832031,
+            150.38352966308594,
+            373.1672058105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "반",
+          "gid": 51666,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            163.87440490722656,
+            370.969970703125
+          ],
+          "bbox": [
+            163.87440490722656,
+            362.1272277832031,
+            174.53904724121094,
+            373.1672058105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "입",
+          "gid": 54591,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            209.3592071533203,
+            370.969970703125
+          ],
+          "bbox": [
+            209.3592071533203,
+            362.1272277832031,
+            220.0238494873047,
+            373.1672058105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "선",
+          "gid": 52954,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            233.5147247314453,
+            370.969970703125
+          ],
+          "bbox": [
+            233.5147247314453,
+            362.1272277832031,
+            244.1793670654297,
+            373.1672058105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "변",
+          "gid": 51834,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            278.99951171875,
+            370.969970703125
+          ],
+          "bbox": [
+            278.99951171875,
+            362.1272277832031,
+            289.6641540527344,
+            373.1672058105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l1:s0-0",
+        "actual_glyph": {
+          "c": "않",
+          "gid": 54020,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            313.8196716308594,
+            370.969970703125
+          ],
+          "bbox": [
+            313.8196716308594,
+            362.1272277832031,
+            324.48431396484375,
+            373.1672058105469
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "후",
+          "gid": 58494,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            90.6240005493164,
+            385.489990234375
+          ],
+          "bbox": [
+            90.6240005493164,
+            376.6472473144531,
+            101.28864288330078,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "단",
+          "gid": 49314,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            114.7795181274414,
+            385.489990234375
+          ],
+          "bbox": [
+            114.7795181274414,
+            376.6472473144531,
+            125.44416046142578,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "당",
+          "gid": 49331,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            149.5996856689453,
+            385.489990234375
+          ],
+          "bbox": [
+            149.5996856689453,
+            376.6472473144531,
+            160.2643280029297,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "수",
+          "gid": 53202,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            173.7552032470703,
+            385.489990234375
+          ],
+          "bbox": [
+            173.7552032470703,
+            376.6472473144531,
+            184.4198455810547,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            197.9107208251953,
+            385.489990234375
+          ],
+          "bbox": [
+            197.9107208251953,
+            376.6472473144531,
+            208.5753631591797,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "물",
+          "gid": 51446,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            222.0662384033203,
+            385.489990234375
+          ],
+          "bbox": [
+            222.0662384033203,
+            376.6472473144531,
+            232.7308807373047,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "합",
+          "gid": 58147,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            256.88641357421875,
+            385.489990234375
+          ],
+          "bbox": [
+            256.88641357421875,
+            376.6472473144531,
+            267.5510559082031,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "때",
+          "gid": 49926,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            281.04193115234375,
+            385.489990234375
+          ],
+          "bbox": [
+            281.04193115234375,
+            376.6472473144531,
+            291.7065734863281,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "같",
+          "gid": 47571,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            305.19744873046875,
+            385.489990234375
+          ],
+          "bbox": [
+            305.19744873046875,
+            376.6472473144531,
+            315.8620910644531,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l2:s0-0",
+        "actual_glyph": {
+          "c": "가",
+          "gid": 47546,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            340.0176086425781,
+            385.489990234375
+          ],
+          "bbox": [
+            340.0176086425781,
+            376.6472473144531,
+            350.6822509765625,
+            387.6872253417969
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s0-0",
+        "actual_glyph": {
+          "c": "그",
+          "gid": 48050,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 11.039999961853027,
+          "origin": [
+            90.6240005493164,
+            400.0099792480469
+          ],
+          "bbox": [
+            90.6240005493164,
+            391.167236328125,
+            101.28864288330078,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman,Bold",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s1-1:unit-prose-0",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54574,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            129.14256286621094,
+            400.0099792480469
+          ],
+          "bbox": [
+            129.14256286621094,
+            391.167236328125,
+            139.8072052001953,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s1-1:unit-prose-0",
+        "actual_glyph": {
+          "c": "입",
+          "gid": 54591,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            142.63343811035156,
+            400.0099792480469
+          ],
+          "bbox": [
+            142.63343811035156,
+            391.167236328125,
+            153.29808044433594,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s1-1:unit-prose-0",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54574,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            166.78895568847656,
+            400.0099792480469
+          ],
+          "bbox": [
+            166.78895568847656,
+            391.167236328125,
+            177.45359802246094,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s1-1:unit-prose-1:unit-prose-1",
+        "actual_glyph": {
+          "c": "구",
+          "gid": 47910,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            239.2555389404297,
+            400.0099792480469
+          ],
+          "bbox": [
+            239.2555389404297,
+            391.167236328125,
+            249.92018127441406,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s1-1:unit-prose-1:unit-prose-1",
+        "actual_glyph": {
+          "c": "나",
+          "gid": 48722,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            274.07568359375,
+            400.0099792480469
+          ],
+          "bbox": [
+            274.07568359375,
+            391.167236328125,
+            284.7403259277344,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s2-2",
+        "actual_glyph": {
+          "c": "제",
+          "gid": 54742,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 11.039999961853027,
+          "origin": [
+            323.1705627441406,
+            400.0099792480469
+          ],
+          "bbox": [
+            323.1705627441406,
+            391.167236328125,
+            333.835205078125,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman,Bold",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s3-3",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            372.3537902832031,
+            400.0099792480469
+          ],
+          "bbox": [
+            372.3537902832031,
+            391.167236328125,
+            383.0184326171875,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s3-3",
+        "actual_glyph": {
+          "c": "물",
+          "gid": 51446,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            396.5093078613281,
+            400.0099792480469
+          ],
+          "bbox": [
+            396.5093078613281,
+            391.167236328125,
+            407.1739501953125,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b5:l3:s3-3",
+        "actual_glyph": {
+          "c": "관",
+          "gid": 47802,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            441.9941101074219,
+            400.0099792480469
+          ],
+          "bbox": [
+            441.9941101074219,
+            391.167236328125,
+            452.65875244140625,
+            402.20721435546875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b6:l9:s2-2",
+        "actual_glyph": {
+          "c": "거",
+          "gid": 47658,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 12.0,
+          "origin": [
+            84.58935546875,
+            547.1500244140625
+          ],
+          "bbox": [
+            84.58935546875,
+            537.538330078125,
+            96.18135833740234,
+            549.538330078125
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.012,
+          0.0,
+          0.0,
+          -0.012
+        ]
+      },
+      {
+        "slot_id": "p56:b6:l9:s2-2",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54574,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 12.0,
+          "origin": [
+            122.4373550415039,
+            547.1500244140625
+          ],
+          "bbox": [
+            122.4373550415039,
+            537.538330078125,
+            134.02935791015625,
+            549.538330078125
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.012,
+          0.0,
+          0.0,
+          -0.012
+        ]
+      },
+      {
+        "slot_id": "p56:b6:l10:s2-2",
+        "actual_glyph": {
+          "c": "에",
+          "gid": 54154,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 12.0,
+          "origin": [
+            84.58935546875,
+            560.949951171875
+          ],
+          "bbox": [
+            84.58935546875,
+            551.3382568359375,
+            96.18135833740234,
+            563.3382568359375
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.012,
+          0.0,
+          0.0,
+          -0.012
+        ]
+      },
+      {
+        "slot_id": "p56:b6:l11:s2-2",
+        "actual_glyph": {
+          "c": "부",
+          "gid": 52026,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 12.0,
+          "origin": [
+            84.58935546875,
+            574.75
+          ],
+          "bbox": [
+            84.58935546875,
+            565.1383056640625,
+            96.18135833740234,
+            577.1383056640625
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.012,
+          0.0,
+          0.0,
+          -0.012
+        ]
+      },
+      {
+        "slot_id": "p56:b6:l11:s2-2",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54574,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 12.0,
+          "origin": [
+            134.02935791015625,
+            574.75
+          ],
+          "bbox": [
+            134.02935791015625,
+            565.1383056640625,
+            145.62135314941406,
+            577.1383056640625
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.012,
+          0.0,
+          0.0,
+          -0.012
+        ]
+      },
+      {
+        "slot_id": "p56:b6:l12:s2-2",
+        "actual_glyph": {
+          "c": "회",
+          "gid": 58438,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 12.0,
+          "origin": [
+            84.58935546875,
+            588.6699829101562
+          ],
+          "bbox": [
+            84.58935546875,
+            579.0582885742188,
+            96.18135833740234,
+            591.0582885742188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.012,
+          0.0,
+          0.0,
+          -0.012
+        ]
+      },
+      {
+        "slot_id": "p56:b6:l12:s2-2",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54574,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 12.0,
+          "origin": [
+            134.02935791015625,
+            588.6699829101562
+          ],
+          "bbox": [
+            134.02935791015625,
+            579.0582885742188,
+            145.62135314941406,
+            591.0582885742188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.012,
+          0.0,
+          0.0,
+          -0.012
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s2-2",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            87.45023345947266,
+            614.949951171875
+          ],
+          "bbox": [
+            87.45023345947266,
+            606.107177734375,
+            98.11487579345703,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s2-2",
+        "actual_glyph": {
+          "c": "물",
+          "gid": 51446,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            111.60575103759766,
+            614.949951171875
+          ],
+          "bbox": [
+            111.60575103759766,
+            606.107177734375,
+            122.27039337158203,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s4-4",
+        "actual_glyph": {
+          "c": "를",
+          "gid": 50998,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            141.28128051757812,
+            614.949951171875
+          ],
+          "bbox": [
+            141.28128051757812,
+            606.107177734375,
+            151.9459228515625,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s4-4",
+        "actual_glyph": {
+          "c": "다",
+          "gid": 49310,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            154.77215576171875,
+            614.949951171875
+          ],
+          "bbox": [
+            154.77215576171875,
+            606.107177734375,
+            165.43679809570312,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s4-4",
+        "actual_glyph": {
+          "c": "물",
+          "gid": 51446,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            178.92767333984375,
+            614.949951171875
+          ],
+          "bbox": [
+            178.92767333984375,
+            606.107177734375,
+            189.59231567382812,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s4-4",
+        "actual_glyph": {
+          "c": "합",
+          "gid": 58147,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            235.07711791992188,
+            614.949951171875
+          ],
+          "bbox": [
+            235.07711791992188,
+            606.107177734375,
+            245.74176025390625,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s4-4",
+        "actual_glyph": {
+          "c": "때",
+          "gid": 49926,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            269.89727783203125,
+            614.949951171875
+          ],
+          "bbox": [
+            269.89727783203125,
+            606.107177734375,
+            280.5619201660156,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s5-5:c1-9",
+        "actual_glyph": {
+          "c": ",",
+          "gid": 13,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 11.039999961853027,
+          "origin": [
+            292.51824951171875,
+            614.949951171875
+          ],
+          "bbox": [
+            292.51824951171875,
+            606.107177734375,
+            296.2166442871094,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman,Bold",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s5-5:c1-9",
+        "actual_glyph": {
+          "c": "골",
+          "gid": 47778,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 11.039999961853027,
+          "origin": [
+            298.9766540527344,
+            614.949951171875
+          ],
+          "bbox": [
+            298.9766540527344,
+            606.107177734375,
+            309.64129638671875,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman,Bold",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s6-6",
+        "actual_glyph": {
+          "c": "보",
+          "gid": 51886,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            337.4952087402344,
+            614.949951171875
+          ],
+          "bbox": [
+            337.4952087402344,
+            606.107177734375,
+            348.15985107421875,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s6-6",
+        "actual_glyph": {
+          "c": "또",
+          "gid": 50122,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            372.31536865234375,
+            614.949951171875
+          ],
+          "bbox": [
+            372.31536865234375,
+            606.107177734375,
+            382.9800109863281,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s6-6",
+        "actual_glyph": {
+          "c": "지",
+          "gid": 55162,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            396.47088623046875,
+            614.949951171875
+          ],
+          "bbox": [
+            396.47088623046875,
+            606.107177734375,
+            407.1355285644531,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s6-6",
+        "actual_glyph": {
+          "c": "제",
+          "gid": 54742,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            441.9556884765625,
+            614.949951171875
+          ],
+          "bbox": [
+            441.9556884765625,
+            606.107177734375,
+            452.6203308105469,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b7:l0:s6-6",
+        "actual_glyph": {
+          "c": "단",
+          "gid": 49314,
+          "font": "NotoSerifCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            466.1112060546875,
+            614.949951171875
+          ],
+          "bbox": [
+            466.1112060546875,
+            606.107177734375,
+            476.7758483886719,
+            617.147216796875
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Times New Roman",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b1:l0:s0-0:c0-5",
+        "actual_glyph": {
+          "c": "제",
+          "gid": 54807,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            70.8239974975586,
+            792.2160034179688
+          ],
+          "bbox": [
+            70.8239974975586,
+            783.371826171875,
+            80.98079681396484,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b1:l0:s0-0:c9-29",
+        "actual_glyph": {
+          "c": "–",
+          "gid": 721,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            134.09423828125,
+            792.2160034179688
+          ],
+          "bbox": [
+            134.09423828125,
+            783.371826171875,
+            140.0116729736328,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b1:l0:s0-0:c9-29",
+        "actual_glyph": {
+          "c": "이",
+          "gid": 54639,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            142.48463439941406,
+            792.2160034179688
+          ],
+          "bbox": [
+            142.48463439941406,
+            783.371826171875,
+            152.6414337158203,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      },
+      {
+        "slot_id": "p56:b1:l0:s0-0:c9-29",
+        "actual_glyph": {
+          "c": "시",
+          "gid": 53463,
+          "font": "NotoSansCJKkr-Regular",
+          "size": 11.039999961853027,
+          "origin": [
+            165.2711944580078,
+            792.2160034179688
+          ],
+          "bbox": [
+            165.2711944580078,
+            783.371826171875,
+            175.42799377441406,
+            794.4118041992188
+          ],
+          "paint": 0
+        },
+        "original_source_font": "Arial",
+        "original_source_descriptor_ItalicAngle": 0.0,
+        "authored_pdf_shear_angle": -0.0,
+        "actual_pdf_shear_tangent": 0.0,
+        "expected_pdf_shear_tangent": -0.0,
+        "actual_font_linear_matrix_page_coordinates": [
+          0.01104,
+          0.0,
+          0.0,
+          -0.01104
+        ]
+      }
+    ],
+    "actual_shear_tangent_tolerance": 1e-09,
+    "scope": "Actual emitted first glyph of every Korean prose word verifies the real PDF shear/font GID and original physical point/baseline. Every emphasized glyph curve is independently read from actual output font programs under actual PDF matrices; source-English prose underline x extents must cover exactly the emitted phrase ink. Native source/math programs and coordinate checks are unchanged."
+  },
+  "elapsed_seconds": 30.61427790000016
+}

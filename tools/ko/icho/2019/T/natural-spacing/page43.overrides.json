@@ -1,0 +1,282 @@
+{
+  "__layout_scope__": {
+    "fixed_native_rects": [
+      [
+        493.5,
+        33,
+        533,
+        51
+      ],
+      [
+        503,
+        778,
+        538,
+        805
+      ]
+    ],
+    "review_basis": "Original fixed candidate-code and footer-page-number columns remain at exact source coordinates, font and size. Body expressions continue to use natural Korean advances.",
+    "centered_source_lines": [
+      [
+        3,
+        1
+      ],
+      [
+        7,
+        1
+      ]
+    ],
+    "source_caption_alignment_review": [
+      {
+        "source_line": [
+          3,
+          1
+        ],
+        "source_text": "Fig. 2 – SEC chromatograms of 3a, 3b and 3c as a function of the elution volume, Ve. ",
+        "source_baseline": 367.8499755859375,
+        "source_point_sizes": [
+          6.960000038146973,
+          11.039999961853027
+        ],
+        "source_nonspace_rect": [
+          109.58000183105469,
+          358.0133361816406,
+          485.7400207519531,
+          370.913330078125
+        ],
+        "source_center_x": 297.6600112915039,
+        "italic_prose": true,
+        "source_fonts": [
+          "Times New Roman",
+          "Times New Roman,BoldItalic",
+          "Times New Roman,Italic"
+        ]
+      },
+      {
+        "source_line": [
+          7,
+          1
+        ],
+        "source_text": "Fig. 3 – SEC chromatogram of the mixture of standards.  ",
+        "source_baseline": 767.615966796875,
+        "source_point_sizes": [
+          11.039999961853027
+        ],
+        "source_nonspace_rect": [
+          173.05999755859375,
+          757.779296875,
+          422.19921875,
+          770.0006103515625
+        ],
+        "source_center_x": 297.6296081542969,
+        "italic_prose": true,
+        "source_fonts": [
+          "Times New Roman,Italic"
+        ]
+      }
+    ],
+    "source_caption_alignment_basis": "Each reviewed original Fig./Scheme/Table caption retains its own measured full nonspace source-glyph run center, including native variables and subscripts. Wrapped rows use their own original source centers. Page41 Fig1 follows the left NMR plot center and Table2 follows the separate right table; no page-center replacement is used.",
+    "reviewed_prose_line_token_moves": [
+      {
+        "id": "p43-whole-caption-italic-predicate-after-native-Ve",
+        "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+        "source_line": [
+          3,
+          1
+        ],
+        "source_baseline": 367.8499755859375,
+        "moves": [
+          {
+            "slot_id": "p43-caption-after-native-Ve",
+            "after_slot_id": "p43-caption-regular-source-period-empty",
+            "source_guards": {
+              "slot_id": ", ",
+              "after_slot_id": "."
+            }
+          }
+        ],
+        "review": "The complete original caption prose is italic; only its separate final full stop has regular font metadata. Bind the translated Korean predicate to the actual italic comma at the end of the same original caption phrase, and move this prose-only atom after the original native V_e via the empty regular full-stop source anchor. Original native math GID/font/point size/baseline and all source-font programs remain unchanged. This is semantic-caption source style preservation, not arbitrary style overriding."
+      }
+    ]
+  },
+  "__slot_edits__": {
+    "p43:b2:l0:s0-0": {
+      "text": "화합물"
+    },
+    "p43:b2:l0:s2-2": {
+      "text": "과"
+    },
+    "p43:b2:l0:s4-4": {
+      "text": "의 반응에서 공중합체"
+    },
+    "p43:b2:l1:s0-0:c17-61": {
+      "text": "에서 각각 생성되었다. 크기 배제 크로마토그래피("
+    },
+    "p43:b2:l1:s0-0:c64-100": {
+      "text": ")의 결과는 그림 "
+    },
+    "p43:b3:l1:s0-0:c6-9": {
+      "text": " – "
+    },
+    "p43:b3:l1:s6-6:c0-38": {
+      "text": "를 용리 부피",
+      "optical_gap_left_pt": 0.5,
+      "optical_gap_review": "0.5pt actual-ink clearance after the original italic native c/bracket; below one ordinary source-size space, unchanged source glyphs/fonts/GIDs/sizes/baselines.",
+      "char_end": 36,
+      "source": " as a function of the elution volume"
+    },
+    "p43:b4:l0:s3-3:c22-43": {
+      "text": "의 신호와 공중합체:"
+    },
+    "p43:b6:l0:s0-0:c0-88": {
+      "text": "크로마토그램 보정에 몰 질량이 알려진 표준 고분자 혼합물을 썼다("
+    },
+    "p43:b6:l1:s2-2:c0-25": {
+      "text": "). 결과는 그림 "
+    },
+    "p43:b3:l1:s0-0:c12-30": {
+      "text": " 크로마토그램:"
+    },
+    "p43:b6:l2:s0-0": {
+      "text": "몰 질량의 로그값은 용리 부피"
+    },
+    "p43:b2:l0:s6-6:c9-13": {
+      "skip": true,
+      "skip_reason": "Original scientific phase aq or hour unit h: retain exact original GID/font/point/baseline and encoded source glyph rather than retyping Latin."
+    }
+  },
+  "__prose_vector_decorations__": [
+    {
+      "id": "p43-source-underline-p43:b4:l0:s2-2",
+      "slot_id": "p43:b4:l0:s2-2",
+      "target_text": "대응시켜라",
+      "source_baseline": 394.3699951171875,
+      "operator_indices": [
+        425,
+        426
+      ],
+      "paint_operator": "f*",
+      "source_rect": [
+        90.624,
+        395.5699829101563,
+        121.22399999999999,
+        396.64998291015627
+      ],
+      "source_text": "Match",
+      "review": "Source-bound English prose underline and corresponding Korean emphasis reviewed. Pin the exact original source hash/path/English GIDs and baseline; preserve original construction bytes, black fill/paint, y and thickness. Only the prose decoration receives explicit horizontal scale/translation to cover the actual emitted Korean word/phrase ink (plus explicitly declared unchanged native numeral/notation). Mathematical rules, table borders and other figure paths retain the independent1e-7 coordinate check.",
+      "previous_review_before_full_phrase_fit": "Source-bound underline and its Korean counterpart reviewed; exact original vector program, colour, physical width and vertical coordinates remain unchanged; only horizontal placement follows the corresponding Korean emphasis.",
+      "fit_source_prose_underline_to_translated_phrase": true
+    },
+    {
+      "id": "p43-missing-prose-underline-954",
+      "target_fragments": [
+        {
+          "slot_id": "p43:b6:l2:s0-0",
+          "target_text": "몰 질량의 로그값은 용리 부피"
+        }
+      ],
+      "source_fragments": [
+        {
+          "slot_id": "p43:b6:l2:s0-0",
+          "source_text": "The log value of the molar mass is a linear function of the elution volume, "
+        }
+      ],
+      "source_text": "The log value of the molar mass is a linear function of the elution volume, ",
+      "source_rect": [
+        70.824,
+        507.6699729101563,
+        406.874,
+        508.14998291015627
+      ],
+      "source_baseline": 506.469970703125,
+      "operator_indices": [
+        954,
+        955
+      ],
+      "paint_operator": "f*",
+      "native_source_glyphs": [],
+      "review": "Source-bound English prose underline and corresponding Korean emphasis reviewed. Pin the exact original source hash/path/English GIDs and baseline; preserve original construction bytes, black fill/paint, y and thickness. Only the prose decoration receives explicit horizontal scale/translation to cover the actual emitted Korean word/phrase ink (plus explicitly declared unchanged native numeral/notation). Mathematical rules, table borders and other figure paths retain the independent1e-7 coordinate check.",
+      "fit_source_prose_underline_to_translated_phrase": true,
+      "previous_review_before_full_phrase_fit": "Original English prose underline, exact original source hash/path/English GIDs and source baseline verified. Only horizontal placement follows the source-bound Korean emphasized phrase; original y, thickness, black fill and native mathematical glyphs remain unchanged. Explicit prose-only horizontal contraction to translated phrase width prevents intersection with the unchanged original V_e subscript; original construction bytes and the original/target width and transform matrix are retained in QA. The natural Korean predicate follows the native V_e using a source-period-bound prose fragment. The prose underline spans the translated sentence with source-glyph-guarded ink breaks at the unchanged native expression; neither V nor its subscript is redrawn or resized. The natural Korean predicate follows the native V_e using the source full stop fragment and its separate original punctuation underline. Neither V nor its subscript is redrawn or resized."
+    },
+    {
+      "id": "p43-source-log-punctuation-underline",
+      "target_fragments": [
+        {
+          "slot_id": "p43-log-after-native-Ve",
+          "target_text": "의 선형 함수이다."
+        }
+      ],
+      "source_fragments": [
+        {
+          "slot_id": "p43:b6:l2:s0-0",
+          "source_text": "The log value of the molar mass is a linear function of the elution volume, "
+        },
+        {
+          "slot_id": "p43-log-after-native-Ve",
+          "source_text": ". "
+        }
+      ],
+      "source_text": "Original underlined log sentence including its full stop",
+      "source_rect": [
+        409.99,
+        507.6699729101563,
+        412.75,
+        508.14998291015627
+      ],
+      "source_baseline": 506.469970703125,
+      "operator_indices": [
+        958,
+        959
+      ],
+      "paint_operator": "f*",
+      "fit_source_prose_underline_to_translated_phrase": true,
+      "source_prose_punctuation_underline": true,
+      "review": "Source-bound English prose underline and corresponding Korean emphasis reviewed. Pin the exact original source hash/path/English GIDs and baseline; preserve original construction bytes, black fill/paint, y and thickness. Only the prose decoration receives explicit horizontal scale/translation to cover the actual emitted Korean word/phrase ink (plus explicitly declared unchanged native numeral/notation). Mathematical rules, table borders and other figure paths retain the independent1e-7 coordinate check.",
+      "previous_review_before_full_phrase_fit": "The original separate full-stop underline belongs to the same underlined English log sentence. Preserve its construction bytes, y, thickness, colour and paint; explicit horizontal prose-decoration expansion covers the Korean predicate after the native V_e. The source full stop and exact English sentence GIDs independently guard this punctuation path."
+    }
+  ],
+  "__extra_slots__": [
+    {
+      "id": "p43-caption-after-native-Ve",
+      "at": [
+        3,
+        1,
+        6,
+        6
+      ],
+      "source": ", ",
+      "text": "의 함수로 나타냈다.",
+      "font_role": "serif",
+      "join_left": true,
+      "optical_gap_left_pt": 0.5,
+      "optical_gap_review": "0.5pt optical clearance after the original italic subscript e; less than an ordinary source-size word space, with exact original source glyphs/fonts/sizes/baselines unchanged.",
+      "char_start": 36,
+      "char_end": 38
+    },
+    {
+      "id": "p43-log-after-native-Ve",
+      "at": [
+        6,
+        2,
+        3,
+        3
+      ],
+      "source": ". ",
+      "text": "의 선형 함수이다.",
+      "font_role": "serif",
+      "join_left": true
+    },
+    {
+      "id": "p43-caption-regular-source-period-empty",
+      "at": [
+        3,
+        1,
+        8,
+        8
+      ],
+      "source": ".",
+      "text": "",
+      "font_role": "serif"
+    }
+  ]
+}

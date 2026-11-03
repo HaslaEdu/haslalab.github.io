@@ -1,0 +1,119 @@
+{
+  "page": 39,
+  "proof_sha256": "7da8027bde8349bad6708fdaaadacc74502856873e0097059393331479681e06",
+  "passed": true,
+  "tested_row_pairs": 18,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 82.32000732421875,
+      "gap_pt": 36.48004150390625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 82.32000732421875,
+      "lower_source_baseline": 84.0,
+      "gap_pt": 1.67999267578125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 84.0,
+      "lower_source_baseline": 97.70001220703125,
+      "gap_pt": 13.70001220703125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 97.70001220703125,
+      "lower_source_baseline": 113.29998779296875,
+      "gap_pt": 15.5999755859375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 113.29998779296875,
+      "lower_source_baseline": 144.739990234375,
+      "gap_pt": 31.44000244140625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 144.739990234375,
+      "lower_source_baseline": 173.17999267578125,
+      "gap_pt": 28.44000244140625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 173.17999267578125,
+      "lower_source_baseline": 187.70001220703125,
+      "gap_pt": 14.52001953125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 187.70001220703125,
+      "lower_source_baseline": 202.219970703125,
+      "gap_pt": 14.51995849609375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 202.219970703125,
+      "lower_source_baseline": 235.94000244140625,
+      "gap_pt": 33.72003173828125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 235.94000244140625,
+      "lower_source_baseline": 306.64996337890625,
+      "gap_pt": 70.7099609375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 306.64996337890625,
+      "lower_source_baseline": 321.16998291015625,
+      "gap_pt": 14.52001953125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 321.16998291015625,
+      "lower_source_baseline": 335.6899719238281,
+      "gap_pt": 14.519989013671875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 335.6899719238281,
+      "lower_source_baseline": 364.6099853515625,
+      "gap_pt": 28.920013427734375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 364.6099853515625,
+      "lower_source_baseline": 472.6299743652344,
+      "gap_pt": 108.01998901367188,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 472.6299743652344,
+      "lower_source_baseline": 499.1499938964844,
+      "gap_pt": 26.52001953125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 499.1499938964844,
+      "lower_source_baseline": 688.6599731445312,
+      "gap_pt": 189.50997924804688,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 688.6599731445312,
+      "lower_source_baseline": 703.2999877929688,
+      "gap_pt": 14.6400146484375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 703.2999877929688,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 88.916015625,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

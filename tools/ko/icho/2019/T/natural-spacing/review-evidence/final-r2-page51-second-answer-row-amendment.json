@@ -1,0 +1,25 @@
+{
+  "year": 2019,
+  "page": 51,
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "base_freeze_sha256": "81156ebe66c0872dd0301e5a22d0b72f8e29dd8ba56ed3eae60b87d3422ba49a",
+  "parent_checkbox_amendment": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-source-checkbox-columns-amendment.json",
+  "parent_checkbox_amendment_sha256": "22eebd85186fae16a0c31ad8d3b23e8e67d5f015e2efd7eddbf730a0694faee7",
+  "created_utc": "2026-11-03T09:45:29.505Z",
+  "changed_input": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/page51.overrides.json",
+  "before_copy": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page51-second-answer-row-amendment/page51.overrides.before.json",
+  "before_sha256": "f28cebe289a2f6254602dd8d844d6af915863b108db066b04a9bd8a3edd08c0c",
+  "after_sha256": "abf877baf40e8a306edde9896d70fb7efc92a86061850c7638fa874d1c810756",
+  "fixed_prose_baselines_before": [
+    144.8599853515625,
+    186.3800048828125
+  ],
+  "fixed_prose_baselines_after": [
+    144.8599853515625,
+    165.6199951171875,
+    186.3800048828125
+  ],
+  "only_inserted_source_baseline": 165.6199951171875,
+  "previous_intermediate_override_was_not_rendered": true,
+  "review_basis": "Root directly read source51 and found the second answer-row CuIN5 moved from source x92.424 to70.824. Add that original row baseline to the same frozen fixed-row branch, aligning both original CuIN4/5 formula answer rows. The existing semantic phrase edits and all other keys remain exact. Source GID0 rotation icon is outside this row and untouched."
+}

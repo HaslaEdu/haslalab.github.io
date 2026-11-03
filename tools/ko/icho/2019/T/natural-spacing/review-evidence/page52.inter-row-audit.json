@@ -1,0 +1,131 @@
+{
+  "page": 52,
+  "proof_sha256": "be48ca61dab38161668f48abe2ab2290b082e341cfbdab5d83ace2ae90d661c5",
+  "passed": true,
+  "tested_row_pairs": 20,
+  "pairs": [
+    {
+      "upper_source_baseline": 45.8399658203125,
+      "lower_source_baseline": 82.32000732421875,
+      "gap_pt": 36.48004150390625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 82.32000732421875,
+      "lower_source_baseline": 86.27996826171875,
+      "gap_pt": 3.9599609375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 86.27996826171875,
+      "lower_source_baseline": 97.5799560546875,
+      "gap_pt": 11.29998779296875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 97.5799560546875,
+      "lower_source_baseline": 112.94000244140625,
+      "gap_pt": 15.36004638671875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 112.94000244140625,
+      "lower_source_baseline": 144.5,
+      "gap_pt": 31.55999755859375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 144.5,
+      "lower_source_baseline": 172.82000732421875,
+      "gap_pt": 28.32000732421875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 172.82000732421875,
+      "lower_source_baseline": 187.3399658203125,
+      "gap_pt": 14.51995849609375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 187.3399658203125,
+      "lower_source_baseline": 273.42471607810336,
+      "gap_pt": 86.08475025779086,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 273.42471607810336,
+      "lower_source_baseline": 274.0271389740151,
+      "gap_pt": 0.6024228959117295,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 274.0271389740151,
+      "lower_source_baseline": 304.3699951171875,
+      "gap_pt": 30.342856143172412,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 304.3699951171875,
+      "lower_source_baseline": 319.010009765625,
+      "gap_pt": 14.6400146484375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 319.010009765625,
+      "lower_source_baseline": 352.72998046875,
+      "gap_pt": 33.719970703125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 352.72998046875,
+      "lower_source_baseline": 379.2499694824219,
+      "gap_pt": 26.519989013671875,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 379.2499694824219,
+      "lower_source_baseline": 529.989990234375,
+      "gap_pt": 150.74002075195312,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 529.989990234375,
+      "lower_source_baseline": 556.3900146484375,
+      "gap_pt": 26.4000244140625,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 556.3900146484375,
+      "lower_source_baseline": 710.02001953125,
+      "gap_pt": 153.6300048828125,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 710.02001953125,
+      "lower_source_baseline": 724.5399780273438,
+      "gap_pt": 14.51995849609375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 724.5399780273438,
+      "lower_source_baseline": 739.1799926757812,
+      "gap_pt": 14.6400146484375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 739.1799926757812,
+      "lower_source_baseline": 753.6959838867188,
+      "gap_pt": 14.5159912109375,
+      "contact_pixels_2x": 0
+    },
+    {
+      "upper_source_baseline": 753.6959838867188,
+      "lower_source_baseline": 792.2160034179688,
+      "gap_pt": 38.52001953125,
+      "contact_pixels_2x": 0
+    }
+  ],
+  "failures": [],
+  "measurement_code_sha256": "75e1aca01c719bfdbffed285d0a3946948cb8fdfedbf8b404eb84710ea2e4191",
+  "method": "Exact embedded subset buffers paint glyphs at full-precision positions and angles, original point sizes and baselines; every adjacent row pair plus nonadjacent pairs below1.1em tested at2x threshold220. Cache each row over the union of exact pair clips on the unchanged global pixel grid."
+}

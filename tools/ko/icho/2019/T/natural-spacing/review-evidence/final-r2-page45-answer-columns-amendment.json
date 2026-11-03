@@ -1,0 +1,59 @@
+{
+  "year": 2019,
+  "page": 45,
+  "source_sha256": "5821bab3b65b216cc74df99d7ec643389d212c15b4d88c95a7da22de8baf97d8",
+  "base_freeze_sha256": "81156ebe66c0872dd0301e5a22d0b72f8e29dd8ba56ed3eae60b87d3422ba49a",
+  "created_utc": "2026-11-03T09:31:04.453Z",
+  "changed_input": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/page45.overrides.json",
+  "before_copy": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.overrides.before.json",
+  "before_sha256": "4b1b8bb64c0ef6e20eefacbc26f00b7ce1961bcfbe6dedeb5938ea5663a0de50",
+  "after_sha256": "43139afd2899b6ac43fb2842e37d4473aa856ad44c6a3890a48affef8c485f26",
+  "changed_scope_keys": {
+    "fixed_prose_baselines": [
+      735.219970703125,
+      759.0960083007812
+    ],
+    "source_two_column_choice_review": "Original A/B answer rows have two separate choice columns. At each of these exact original baselines, independently anchor every original checkbox/native glyph and each translated hydrophobic/hydrophilic label at its source x. Source checkbox Wingdings GID133/12pt in the right column stays x=283.25pt; no natural paragraph advance may collapse the response columns. All text, other scope fields, fonts, point sizes, baselines and production programs remain unchanged."
+  },
+  "text_and_other_keys_unchanged": true,
+  "production_Python_files_unchanged": 69,
+  "source_observation": {
+    "right_checkbox_original_x": 283.25,
+    "previous_erroneous_dx": -90.01664447784424,
+    "source_baselines": [
+      735.219970703125,
+      759.0960083007812
+    ]
+  },
+  "before_artifacts": [
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.before.pdf",
+      "sha256": "d12ab2702bdb4426b394c42e6b317b784052c67dca96dad28c46ed0ffe483de2"
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.before.png",
+      "sha256": "388d7bd2cebaacc503befbc8fb32e824f5511ab269a84630b9b2c8ca3b2fae02"
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.before.layout.json",
+      "sha256": "0db595a7577575c6421ee8930d3b901b01914a2abfc64600aaf709584f2772a0"
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.before.render.json",
+      "sha256": "733f40bd48cc8cf4ba3cd8e8d864d1a675596569cb2797aae08599f4d7c020f6"
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.before.inter-row-audit.json",
+      "sha256": "f58ce55f8f0783e29ce4f760e3c62c26869db4234801bbf8bd739ef84626368e"
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.before.underline-style-audit.json",
+      "sha256": "4fbcfcb6b2894f0ae8b401999420b053bc603762516bdf25fe9b60170f85a32b"
+    },
+    {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/historical/icho/composer-2019/final-r2-page45-answer-columns-amendment/page45.before.graphic-label-geometry.json",
+      "sha256": "2b56df185b7bcdd80ba16efe46f0ecd5dd3d3d79361c0e5e750fb1a933b3b0d8"
+    }
+  ],
+  "review_basis": "Fresh actual source/final page45 image reading found original two-column answer format collapsed by natural inline packing. Narrow source-baseline fixed-cell anchoring through existing frozen producer restores the original response layout. No science, formula, text, style, font or producer code changes."
+}
