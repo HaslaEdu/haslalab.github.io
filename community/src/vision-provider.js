@@ -202,10 +202,12 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
     let j=await post(),meter=meterOf(j);
     const add=(a,b)=>a==null||b==null?null:a+b;
     for(let round=0;useTools&&round<=maxToolRounds;round++){
-      const calls=(j.output||[]).filter(o=>o?.type==='function_call').slice(0,16);
+      const calls=(j.output||[]).filter(o=>o?.type==='function_call');
       if(!calls.length)break;
       rbody.input.push(...(j.output||[]).filter(o=>o?.type==='reasoning'||o?.type==='function_call'));
-      for(const call of calls){let args={};try{args=JSON.parse(call.arguments||'{}');}catch{}
+      /* every call sent back needs its answer (a 400 otherwise): past 24 in one turn, the rest are answered unrun */
+      for(const [k,call] of calls.entries()){let args={};try{args=JSON.parse(call.arguments||'{}');}catch{}
+        if(k>=24){rbody.input.push({type:'function_call_output',call_id:call.call_id,output:'not run: too many calls in one turn'});continue;}
         let out;try{out=String(await onTool(call.name,args)).slice(0,2000);}catch{out='tool failed';}
         toolLog.push({name:String(call.name||'').slice(0,40),args,out:out.slice(0,300)});
         rbody.input.push({type:'function_call_output',call_id:call.call_id,output:out});}

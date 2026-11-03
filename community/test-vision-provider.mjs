@@ -204,6 +204,11 @@ test('OpenAI Responses API (bench): reasoning with tools, the reasoning items se
  assert.equal(back[2].call_id,'c1');assert.equal(back[2].output,'seen');
  assert.deepEqual(out.raw,{text:'ok'});assert.equal(out.usage.input_tokens,230);assert.equal(out.usage.cached_tokens,100);assert.equal(out.usage.output_tokens,30);
  assert.equal(out.tools.length,1);
+ const many=[];let m=0;
+ await visionJSON({OPENAI_API_KEY:'o'},{provider:'openai',model:'gpt-6-luna',openaiApi:'responses',parts:[{text:'x'}],tools:[{type:'function',function:{name:'f',parameters:{type:'object',properties:{}}}}],onTool:()=>'ok',
+  fetchImpl:async(url,init)=>{many.push(JSON.parse(init.body));return Response.json(m++===0?{status:'completed',output:Array.from({length:30},(_,i)=>({type:'function_call',call_id:'k'+i,name:'f',arguments:'{}'})),usage:{input_tokens:1,output_tokens:1}}:
+   {status:'completed',output:[{type:'message',content:[{type:'output_text',text:'{"text":"ok"}'}]}],usage:{input_tokens:1,output_tokens:1}});}});
+ assert.equal(many[1].input.filter(x=>x.type==='function_call_output').length,30,'every call of a turn gets its answer, past the cap unrun');
  await assert.rejects(visionJSON({OPENAI_API_KEY:'o'},{provider:'openai',model:'gpt-6-luna',openaiApi:'responses',parts:[{text:'x'}],
   fetchImpl:async()=>Response.json({status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output:[],usage:{input_tokens:1,output_tokens:1}})}),e=>e.code==='vision_response_truncated');
 });
