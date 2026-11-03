@@ -302,6 +302,22 @@ test('bench grade.chat: the papers, photos and transcripts with a short instruct
   assert.equal(out.score,3,'each line capped at its points, then added');assert.deepEqual(out.items.map(i=>[i.id,i.got]),[['S',1],['R',2]]);
   assert.equal(out.analysis,'A: correct.');
 }));
+test('bench stage gcp: what GOOGLE_CLOUD_API_KEY can do (an express call, the tuning-jobs list, buckets), statuses only, never the key',async()=>fixture(async({start,drain,sql,env})=>{
+  const a=(await start('deepseek')).data,sid=a.session.id,key='AIza'+'k'.repeat(35);env.GOOGLE_CLOUD_API_KEY=key;
+  sql.exec(`CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`);
+  const b=sql.prepare('INSERT INTO lab_bench(session_id,spec)VALUES(?,?)').run(sid,JSON.stringify({stage:'gcp',project:'my-proj-1'})).lastInsertRowid;
+  const j=sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,page_id,status,available_at,created_at,updated_at)VALUES(?,'bench',?,?,'pending',0,0,0)").run('bench:'+b,sid,b).lastInsertRowid;
+  const seen=[],old=globalThis.fetch;
+  globalThis.fetch=async(url,init)=>{const u=String(url);if(!/googleapis\.com/.test(u))return old(url,init);seen.push({u,key:init?.headers?.['x-goog-api-key']});
+    return new Response(JSON.stringify({error:{message:'API keys are not supported by this API. Got '+key}}),{status:401});};
+  try{await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:Number(j)}}]);await drain();}finally{globalThis.fetch=old;}
+  const row=sql.prepare('SELECT status,output FROM lab_bench WHERE id=?').get(b),out=JSON.parse(row.output);
+  assert.equal(row.status,'done',row.output);
+  assert.deepEqual(seen.map(x=>x.u),['https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-3.1-flash-lite:generateContent',
+    'https://us-central1-aiplatform.googleapis.com/v1/projects/my-proj-1/locations/us-central1/tuningJobs','https://storage.googleapis.com/storage/v1/b?project=my-proj-1']);
+  assert.ok(seen.every(x=>x.key===key),'the key goes in the header');
+  assert.equal(out.tuning.status,401);assert.ok(!row.output.includes(key),'and never into the result');
+}));
 test('theory pages are read with the paper\'s notation and proofread: only the passages the proofreader corrects change',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-flash-lite';env.LAB_READ_NOTATION='on';env.LAB_PROOF_MODEL='gemini-3.1-pro-preview';env.LAB_PROOF_THINKING='low';
   const saved={...pageReading};Object.assign(pageReading,{text:'A.2 a_c = 9.31 mm\nA.3 K = 1.04 \\cdot 10^{-4}',items:[{label:'A.2',kind:'value',text:'a_c = 9.31 mm',crossed_out:false,value:9.31,unit:'mm'}]});

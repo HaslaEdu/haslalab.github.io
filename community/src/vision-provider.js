@@ -111,14 +111,9 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null,openaiApi=null,serviceTier=null,geminiVertex=false}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null,openaiApi=null,serviceTier=null}={}) {
   provider=requireVisionProvider(env,provider);
-  const model=benchModel(provider,chosen)||(provider==='tuned'?String(env.TUNED_MODEL||'').trim():STAGE_MODELS[provider]),started=Date.now();
-  /* bench read/grade api 'vertex': the same Gemini model through Vertex AI's express endpoint, with GOOGLE_CLOUD_API_KEY
-     (Vertex serves from its own capacity: AI Studio answered «high demand» to a third of 3.8 Flash's page reads) */
-  const vertex=provider==='gemini'&&geminiVertex===true,cloudKey=typeof env.GOOGLE_CLOUD_API_KEY==='string'?env.GOOGLE_CLOUD_API_KEY.trim():'';
-  if(vertex&&!cloudKey)fail(503,'provider_unavailable',{provider});
-  const url=provider==='anthropic'?null:vertex?'https://aiplatform.googleapis.com/v1/publishers/google/models/'+model+':generateContent':endpoint(env,provider,model);
+  const model=benchModel(provider,chosen)||(provider==='tuned'?String(env.TUNED_MODEL||'').trim():STAGE_MODELS[provider]),url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
   let usage=null,timer,aborted=false,providerStatus,providerCode,providerMessage;
   let rejectAbort;
@@ -173,7 +168,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   signal?.addEventListener('abort',abort,{once:true});
   const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{aborted=true;controller.abort();reject(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));},Math.max(1,Math.min(300000,timeoutMs)));});
   const send=payload=>fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json',
-      ...(provider==='gemini'?{'x-goog-api-key':vertex?cloudKey:keyOf(env,provider)}:{Authorization:'Bearer '+keyOf(env,provider)})},
+      ...(provider==='gemini'?{'x-goog-api-key':keyOf(env,provider)}:{Authorization:'Bearer '+keyOf(env,provider)})},
       // workerd rejects redirect:'error' before sending any request. Manual
       // keeps credentials on this origin; every non-2xx response fails below.
       body:payload,signal:controller.signal,redirect:'manual'});
