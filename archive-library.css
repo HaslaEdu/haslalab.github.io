@@ -24,6 +24,9 @@
 /* A source opens to its contents; a selected chapter stays beside the list. */
 .archive-reading>.phead,.archive-reading>.subjs{display:none}
 .archive-reading #archiveNative{padding-top:22px}
+.archive-reading .al{--al-bg:var(--paper,#FBFCFD);background:var(--al-bg);padding:24px 24px 36px;border:1px solid var(--al-line);border-radius:6px}
+.archive-reading .al[data-theme=dark]{--al-bg:var(--paper,#111017)}
+.al [data-results],.al .al-contents-index,.al [data-panel-content]{padding:0;margin-block:0}
 .al .al-catalog-heading{padding-bottom:22px;border-bottom:1px solid var(--al-line);margin-bottom:24px}
 .al .al-list-count{font-size:13px;color:var(--al-muted);margin:10px 0 0}
 .al .al-list-count>span{padding:0 8px}
@@ -35,12 +38,13 @@
 .al .al-source-search .al-source-select{display:none}
 .al .al-toc{position:sticky;top:88px;min-width:0;font-size:14px;line-height:1.55}
 .al .al-toc details>summary{display:none}
-.al .al-toc nav{max-height:calc(100vh - 140px);overflow-y:auto;overscroll-behavior:contain;padding-right:5px}
-.al .al-toc h3{font-size:13px;color:var(--al-muted);margin:0 0 12px;letter-spacing:0}
+.al .al-toc nav{display:block;gap:0;margin:0;order:initial;width:100%;min-width:0;max-height:calc(100vh - 140px);overflow-y:auto;overscroll-behavior:contain;padding-right:5px}
+.al .al-toc h3{display:block;width:100%;white-space:normal;font-size:13px;color:var(--al-muted);margin:0 0 12px;letter-spacing:0}
 .al .al-toc ol,.al .al-contents-index ol{list-style:none;margin:0;padding:0}
 .al .al-toc li{margin:0}
-.al .al-toc a{display:flex;align-items:start;justify-content:space-between;gap:12px;padding:10px 12px;text-decoration:none;border-left:2px solid transparent;min-height:42px;overflow-wrap:anywhere}
-.al .al-toc a small{font-size:11px;line-height:22px;flex-shrink:0}
+.al .al-toc a{display:flex;flex:initial;align-items:start;justify-content:space-between;gap:10px;padding:10px 12px;font:inherit;letter-spacing:normal;white-space:normal;text-align:left;text-decoration:none;border-left:2px solid transparent;border-bottom:0;min-height:42px;overflow-wrap:anywhere}
+.al .al-toc a>span{flex:1 1 auto;min-width:0}
+.al .al-toc a small{font-size:11px;line-height:22px;flex:0 0 auto}
 .al .al-toc a[aria-current=page]{border-color:var(--al-accent);color:var(--al-accent);background:color-mix(in srgb,var(--al-accent) 8%,transparent);font-weight:600}
 .al .al-contents-index{max-width:860px;margin:0 auto}
 .al .al-contents-index h3{font-size:20px;margin:10px 0}
@@ -71,8 +75,10 @@
 .al .al-reading-layout:not(.has-toc)>[data-reader-toc]{display:none}
 .al .al-reader{max-width:830px}
 .al .al-reader h2{font-size:26px;line-height:1.5;letter-spacing:-.02em}
-.al .al-reader header{padding-bottom:22px;margin-bottom:25px;border-bottom:1px solid var(--al-line)}
+.al .al-reader header{position:static;top:auto;z-index:auto;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;padding-bottom:22px;margin-bottom:25px;border-bottom:1px solid var(--al-line)}
 .al .al-reader-nav{margin-bottom:22px;padding-bottom:12px;font-size:12px;align-items:center}
+.al .al-reader-nav,.al .al-pager{margin-left:0;order:initial;width:100%}
+.al .al-reader-nav>a,.al .al-pager>a{font-family:inherit;letter-spacing:normal;border-bottom:0}
 .al .al-reader h2 small{font-family:var(--mono,monospace);font-size:12px;color:var(--al-muted);font-weight:400;letter-spacing:0}
 .al .al-prose{font-size:17px;line-height:1.95}
 .al .al-edition{color:var(--al-muted);font-size:11px}
@@ -83,6 +89,7 @@
 }
 @media(max-width:760px){
   .archive-reading #archiveNative{padding-top:12px}
+  .archive-reading .al{padding:14px 14px 24px}
   .al .al-source-layout,.al .al-reading-layout.has-toc{grid-template-columns:minmax(0,1fr);gap:20px}
   .al .al-toc{position:static}
   .al .al-toc details{border:1px solid var(--al-line);border-radius:4px}
