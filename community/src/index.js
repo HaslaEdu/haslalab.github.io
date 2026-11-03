@@ -2033,11 +2033,14 @@ async function labScheme(env, s, task, m, strict = false) {
   const key = labSchemeKey(s,src,sx,env);
   const cached = () => env.DB.prepare("SELECT scheme FROM lab_schemes WHERE exam_key=? AND task=? AND source=?").bind(s.exam_key, task, key).first();
   /* the scheme model refused (its quota) or failed: the fallback model reads the solution, kept under its own key */
+  /* a refused request too (DeepSeek answered 400 on IPhO 2024 T2 twice, and the paper could not be graded): without a
+     Gemini fallback model the pair grader's model (GPT-6 Luna) reads the solution instead */
   const build = () => labSchemeBuild(env, s, task, m).catch(error => {
-    const fb = env.LAB_SCHEME_FALLBACK_MODEL;
-    if (strict || !fb || labSrc(s)._model === fb || !['vision_provider_rate_limited', 'vision_provider_failed', 'vision_model_unavailable'].includes(error?.code)) throw error;
-    console.error('lab scheme fallback', error.code, fb);
-    return labSchemeBuild(env, labAs(s, 'gemini', { model: fb, thinking: env.LAB_SCHEME_FALLBACK_THINKING || 'low' }), task, m);
+    const fb = env.LAB_SCHEME_FALLBACK_MODEL, pair = env.LAB_PAIR_PROVIDER && env.LAB_PAIR_PROVIDER !== 'none' && env.LAB_PAIR_MODEL ? { provider: env.LAB_PAIR_PROVIDER, model: env.LAB_PAIR_MODEL, thinking: env.LAB_PAIR_THINKING || undefined } : null;
+    if (strict || !['vision_provider_rate_limited', 'vision_provider_failed', 'vision_model_unavailable', 'vision_request_rejected'].includes(error?.code)) throw error;
+    if (fb && labSrc(s)._model !== fb) { console.error('lab scheme fallback', error.code, fb); return labSchemeBuild(env, labAs(s, 'gemini', { model: fb, thinking: env.LAB_SCHEME_FALLBACK_THINKING || 'low' }), task, m); }
+    if (pair && labProvider(s) !== pair.provider) { console.error('lab scheme fallback', error.code, pair.model); return labSchemeBuild(env, labAs(s, pair.provider, { model: pair.model, thinking: pair.thinking }), task, m); }
+    throw error;
   });
   const reviewed = sc => sc && !sc.unscored && Array.isArray(sc.items) && sc.items.length && (typeof labSrc(s)._schemeCheck === "boolean" ? labSrc(s)._schemeCheck : env.LAB_SCHEME_CHECK === "on")
     ? labSchemeReviewed(env, s, task, key, sc, m).catch(e => { console.error("lab scheme review", e?.code || e?.message); return sc; }) : sc;
@@ -2101,7 +2104,8 @@ async function labSchemeBuild(env, s, task, m) {
   if (kept) {                                    // schemes kept before tidySchemeItems existed are tidied as they are read
     const sc = JSON.parse(kept.scheme);
     if (Array.isArray(sc.items) && sc.items.length) settleScheme(sc);
-    return sc;
+    /* a paper kept as «no official points» before derived schemes existed is built again (below) */
+    if (!(sc.unscored && sc.notes === "no_official_points" && !eotvos)) return sc;
   }
   const res = await labCanonicalPdf(env,src);
   if (!res) return null;                                              // there is no such solution
@@ -2174,7 +2178,33 @@ async function labSchemeBuild(env, s, task, m) {
   });
   const sc = out.raw;
   if (eotvos && (!sc || sc.points_verified !== true || !Array.isArray(sc.items) || !sc.items.length)) return { unscored: true, points: null, items: [], notes: "no_official_points" };
-  /* a solution that prints no marks (IPhO 2011's experiments): read as such and kept, not tried again on every grading */
+  /* a solution that prints no marks (IPhO 2011's experiments): a scheme is made as the markers would have made it, from
+     the points the problem paper prints, the solution, and another year's official scheme of the same competition as the
+     model of how its markers split such questions. It is marked derived, so the report can say it is not official. */
+  if (!eotvos && sc && Array.isArray(sc.items) && !sc.items.length) {
+    const derived = await (async () => {
+      const paper = sx.paper ? await labCanonicalPdf(env, sx.paper).catch(() => null) : null;
+      const ex = await env.DB.prepare(`SELECT exam_key, task, scheme FROM lab_schemes WHERE exam_key LIKE ? AND exam_key<>? AND substr(task,1,1)=? AND source NOT LIKE 'review:%' AND source NOT LIKE 'l10n:%'
+        AND scheme LIKE '%"items":[{%' AND scheme NOT LIKE '%"derived":true%' ORDER BY created_at DESC LIMIT 1`).bind(s.comp + "%", s.exam_key, task.slice(0, 1)).first();
+      const sample = ex ? (JSON.parse(ex.scheme).items || []).slice(0, 45).map(i => ({ id: i.id, points: i.points, type: i.type, what: String(i.what || "").slice(0, 160) })) : [];
+      const extra = [{ text: [`[No official marking scheme] The solution of ${task} of ${s.comp.toUpperCase()} ${s.year} prints no marks. Build the scheme its markers would have used, and do not return an empty list.`,
+        "The total and the points of every question are those printed in the problem paper below (e.g. «(1.2 points)»): copy them exactly. Where the paper prints none for a question, give it a share in proportion to its work so that the whole adds up to the paper's printed total (10 points if none is printed). Never give a question more than the paper prints.",
+        "Within each question, split its points into items the way the example scheme splits comparable questions: final results, required measurements, tables (columns, number of readings), graphs (axes, plotted points, fit), uncertainties. For a value item give the solution's value as ref, and an accepted interval where the solution shows the spread of good results.",
+        "In notes, say that the scheme is derived from the paper's points and the solution."].join("\n") }];
+      if (paper) extra.push({ text: `[Problem paper of ${task}: its printed points govern]` }, ...await layer(paper, "problem paper"), { inline_data: { mime_type: "application/pdf", data: b64(paper) }, label: `Problem paper ${s.comp} ${s.year} ${task}` });
+      if (sample.length) extra.push({ text: `[Example only: the official scheme of ${ex.exam_key} ${ex.task}, another paper. A model of how marks are split, never of its content or points.]\n` + JSON.stringify(sample) });
+      const again = await ask([...asked, ...extra]).catch(e => { console.error("lab scheme derived", e?.code || e?.message); return null; });
+      const d = again?.raw;
+      return d && Array.isArray(d.items) && d.items.length ? { ...d, derived: true, notes: [d.notes, "derived: no official marking scheme; points from the problem paper"].filter(Boolean).join(" · ") } : null;
+    })();
+    if (derived) {
+      settleScheme(derived);
+      if (derived.items.length) {
+        await env.DB.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)").bind(s.exam_key, task, key, JSON.stringify(derived), out.model || null, now()).run();
+        return derived;
+      }
+    }
+  }
   if (sc && Array.isArray(sc.items) && !sc.items.length) {
     const none = { unscored: true, points: null, items: [], notes: "no_official_points" };
     await env.DB.prepare("INSERT OR REPLACE INTO lab_schemes(exam_key,task,source,scheme,model,created_at) VALUES(?,?,?,?,?,?)").bind(s.exam_key, task, key, JSON.stringify(none), out.model || null, now()).run();
@@ -2519,7 +2549,15 @@ function labScore(scheme, raw, pages, opts = {}) {
         if (w >= Math.min(it.full_min, it.full_max) && w <= Math.max(it.full_min, it.full_max)) pts = it.points;
         else for (const p of it.partial || []) if (w >= Math.min(p.min, p.max) && w <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
       } else if (valueMatches(it, w)) pts = it.points;                                   // R12 in code: the official value and its tolerance
-      else rules.add("R12");
+      else {
+        /* the grader's reported number can drop the mantissa of what is written (1.04·10⁻²³ on the page, 1e-23 reported:
+           APhO 2022 T1 F.1 lost its whole 1 pt). Where the grader itself gave the item marks and a number on that page,
+           in the item's unit, is within the official tolerance, that number is the answer. */
+        const pageNums = numbersIn([pg.ocr, ...readOf(pg).map(i => [i.text, i.value].filter(x => x != null).join(" "))].join("\n"));
+        const onPage = +g.score >= .5 * it.points ? pageNums.find(x => valueMatches(it, units?.same ? x * units.factor : x)) : undefined;
+        if (onPage !== undefined) { pts = it.points; res.value = onPage; }
+        else rules.add("R12");
+      }
       if (unitSlip && pts > 0) { pts = Math.max(0, pts - (Number.isFinite(+it.unit_penalty) ? +it.unit_penalty : 0.1)); rules.add("R3"); }
       res.got = pts;
     } else if (it.type === "graph" && Array.isArray(it.checks) && it.checks.length) {
@@ -2902,16 +2940,16 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   if (roles?.implicit ?? env.LAB_IMPLIED_STEPS === "on") parts.push({ text: "Implied steps (for derivation steps this takes precedence over R9 and R13): a step item is shown when the candidate's work contains it in any notation, or when a correct later line or result of the same question could not have been written without it; it is then implied and gets its marks, with the page and line of that later work as its evidence. Give a step 0 only when the candidate's work contradicts it, or when nothing written depends on it. A final answer (an item with role result) must still be written to get marks." });
   const ecf = roles?.ecf ?? env.LAB_ECF_RULE === "on";
   if (ecf) parts.push({ text: "carried_from: on an item whose only fault is a wrong result taken over from an earlier item of the same problem (used correctly here), give that earlier item's id; mark the item as the regulation's IP1 says and code checks it. Otherwise leave it out." });
-  const gradeCall = (ps, note) => labVision(env, s, note ? [...ps, note] : ps, GRADE_SCHEMA, 16384, m, "grade", 0, useTools ? { tools: GRADE_TOOLS, onTool: (name, args) => runGradeTool(name, args, toolCtx), maxToolRounds: roles?.toolRounds || +env.LAB_GRADE_TOOL_ROUNDS || 3 } : {})
+  const gradeCall = (ps0, note, ss = s) => { const ps = ss === s ? ps0 : ps0.filter(p => p !== toolNote); return labVision(env, ss, note ? [...ps, note] : ps, GRADE_SCHEMA, 16384, m, "grade", 0, useTools && ss === s ? { tools: GRADE_TOOLS, onTool: (name, args) => runGradeTool(name, args, toolCtx), maxToolRounds: roles?.toolRounds || +env.LAB_GRADE_TOOL_ROUNDS || 3 } : {})
     .catch(error => { if (!useTools || !['vision_response_empty', 'vision_invalid_response', 'vision_response_truncated'].includes(error?.code)) throw error;
-      console.error("lab grade tools", error.code); const plain = ps.filter(p => p !== toolNote); return labVision(env, s, note ? [...plain, note] : plain, GRADE_SCHEMA, 16384, m, "grade", 0); });
+      console.error("lab grade tools", error.code); const plain = ps.filter(p => p !== toolNote); return labVision(env, ss, note ? [...plain, note] : plain, GRADE_SCHEMA, 16384, m, "grade", 0); }); };
   /* split grading (LAB_GRADE_SPLIT on, bench grade.split): the paper's questions in groups of at most ~30 items, each
      group graded in its own call over the same prefix (scheme, pages: the provider's cache), two at a time. One call
      over 80 items let the grader slip on the late ones; the first group also writes the feedback and the review. */
   const split = (roles?.split ?? env.LAB_GRADE_SPLIT === "on") ? labItemGroups(scheme, 30) : null;
-  const gradeOnce = () => !split || split.length < 2 ? gradeCall(parts) : (async () => {
+  const gradeOnce = (ss = s) => !split || split.length < 2 ? gradeCall(parts, null, ss) : (async () => {
     const outs = new Array(split.length);
-    for (let k = 0; k < split.length; k += 2) await Promise.all(split.slice(k, k + 2).map((ids, j) => gradeCall(parts, { text: `Grade now only these scheme items, and return an item for every one of them: ${ids.join(", ")}. ${k + j === 0 ? "Also write the feedback and the review for the whole paper." : "Leave feedback empty and give the review an empty summary, empty habits and handwriting {rating:\"readable\",notes:\"\"}: another call writes them."}` }).then(o => { outs[k + j] = o; })));
+    for (let k = 0; k < split.length; k += 2) await Promise.all(split.slice(k, k + 2).map((ids, j) => gradeCall(parts, { text: `Grade now only these scheme items, and return an item for every one of them: ${ids.join(", ")}. ${k + j === 0 ? "Also write the feedback and the review for the whole paper." : "Leave feedback empty and give the review an empty summary, empty habits and handwriting {rating:\"readable\",notes:\"\"}: another call writes them."}` }, ss).then(o => { outs[k + j] = o; })));
     const want = split.map(ids => new Set(ids));
     return { ...outs[0], raw: { ...outs[0].raw, items: outs.flatMap((o, k) => (o.raw?.items || []).filter(x => want[k].has(String(x?.id)))) }, tools: outs.flatMap(o => o.tools || []) };
   })();
@@ -2919,11 +2957,19 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
      first (two at once, each with every photo, ran a Worker isolate out of memory); an item the two mark differently is
      decided once more from the photos (the recheck call), not by either */
   const double = roles?.doubleGrade ?? env.LAB_DOUBLE_GRADE === "on";
-  const out = await gradeOnce();
+  /* a first grader that refuses the request (DeepSeek answered 400 on IPhO 2024 T2: the paper failed to grade) or returns
+     nothing usable: the pair grader, of another family, marks the paper alone through the same score sheet and checks */
+  let out, alone = false;
+  try { out = await gradeOnce(); }
+  catch (error) {
+    if (!roles?.pair || !["vision_request_rejected", "vision_invalid_response", "vision_response_empty", "vision_response_truncated"].includes(error?.code)) throw error;
+    console.error("lab grade: the first grader failed, the pair grader marks alone", error.code);
+    out = await gradeOnce(labAs(s, roles.pair.provider, roles.pair)); alone = true;
+  }
   /* pair grading (LAB_PAIR_PROVIDER, bench grade.pair): a second grader of another family marks the paper as a chat would
      (labChatGrade: GPT-6 Luna); where the two agree the marks stand (bench: agreed marks were wrong on 3 of 191 items, all
      disputed audit items), where they differ by a quarter of an item or more it is decided once more (the recheck) */
-  const pairOut = !double && roles?.pair ? await labChatGrade(env, labAs(s, roles.pair.provider, roles.pair), task, mine, scheme, lang, m).catch(e => { console.error("lab pair grading", e?.code || e?.message); return null; }) : null;
+  const pairOut = !double && !alone && roles?.pair ? await labChatGrade(env, labAs(s, roles.pair.provider, roles.pair), task, mine, scheme, lang, m).catch(e => { console.error("lab pair grading", e?.code || e?.message); return null; }) : null;
   const out2 = double ? await gradeOnce().catch(e => { console.error("lab second grading", e?.code || e?.message); return null; })
     : pairOut ? { raw: { items: pairOut.items.filter(i => i.raw != null).map(i => ({ id: i.id, score: i.got, found: true, note: i.note || "", quote: "" })) } } : null;
   await roles?.trace?.('graded');
