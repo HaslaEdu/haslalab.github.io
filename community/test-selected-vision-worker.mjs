@@ -590,6 +590,7 @@ test('pair grading: a second grader marks the paper as a chat would; agreed mark
   const grades=calls.filter(c=>c.text.includes('[TASK: grade]'));assert.ok(grades.some(c=>/strict invigilator-grader/.test(c.text)),'the grader');
   assert.ok(grades.some(c=>/A teacher hands you one student's paper/.test(c.text)),'and the pair, marking as a chat would');
   const mod=calls.find(c=>c.text.includes('[TASK: moderate]'));assert.ok(mod,'the item they disagree on is rechecked');
+  assert.equal(mod.provider,'deepseek','with no moderator of its own, the pair\'s grader decides');assert.equal(calls.filter(c=>c.text.includes('[TASK: moderate]')).length,1,'only what the two disagree on');
   assert.match(mod.text,/"id":"R"[^\n]*"second"/);assert.ok(!/"id":"P"[^\n]*"second"/.test(mod.text),'an agreed item is not');
   const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
   assert.match(detail,/"id":"R"[^}]*"got":0\.6[,}]/,'the recheck decides');assert.match(detail,/"id":"P"[^}]*"got":0\.4[,}]/);
