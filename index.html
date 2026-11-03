@@ -986,7 +986,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 </style>
 <link rel="stylesheet" href="site-design.css?v=3c1c7baa824c">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=86f71e245d0a">
+<link rel="stylesheet" href="archive-library.css?v=bc4e3a9629a7">
 </head>
 <body class="hl-site">
 
@@ -4925,7 +4925,7 @@ function archiveMountKey(route){return [route.kind,route.collection,route.baseHa
 function updateArchiveReadingChrome(route){const node=document.getElementById('archiveNative'),shell=node?.closest('.shell');if(!shell)return;const reading=route.params.has('source')||route.params.has('problem');shell.classList.toggle('archive-reading',reading);for(const element of shell.querySelectorAll(':scope > .phead,:scope > .subjs'))element.hidden=reading;}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=696ebe246861"),import("./archive-book-media.js?v=1af258b84432"),import("./archive-school-media.js?v=356121d191a3")]).then(([reader,books,schools])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA})).catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=3ab93528b1e2"),import("./archive-book-media.js?v=a581e709baaa"),import("./archive-school-media.js?v=356121d191a3")]).then(([reader,books,schools])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){

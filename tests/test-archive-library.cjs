@@ -341,3 +341,14 @@ test('distinct edition variants with the same printed number remain separate and
   const h=await setup(t,{params:'source='+SID+'&chapter=1',route:u=>u.pathname.endsWith('/search')?response({items:[item(Q,{original_number:'3.17'}),item(Q2,{source_id:SID2,display_source_id:SID,original_number:'3.17',edition_label:'2012 edition',edition_original_number:'3.17'})]}):null});
   const rows=h.mount.querySelectorAll('.al-problem-row');assert.equal(rows.length,2);assert(rows[1].href.includes('source='+SID));assert(rows[1].href.includes('chapter=1'));assert.match(rows[1].textContent,/2012 edition/);assert.notEqual(rows[0].href,rows[1].href);
 });
+test('book contents use source-specific bilingual chapter names with one chapter prefix',async t=>{
+  const bookMedia={[SID]:{chapter_titles:{'1':{ko:'맥스웰 방정식',en:'The Maxwell Equations'},F:{ko:'곡선좌표',en:'Curvilinear coordinates'}}}};
+  const h=await setup(t,{params:'source='+SID,options:{bookMedia},route:u=>u.pathname.endsWith('/contents')?response({source_id:SID,source:source(),chapters:[{chapter:'1',title:'1',question_count:1},{chapter:'F',title:'F',question_count:1}]}):null});
+  const labels=()=>[...h.mount.querySelectorAll('.al-contents-index li a>span')].map(x=>x.textContent);
+  assert.deepEqual(labels(),['제1장 · 맥스웰 방정식','부록 F · 곡선좌표']);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);
+  h.instance.update({lang:'en'});await flush();assert.deepEqual(labels(),['Chapter 1 · The Maxwell Equations','Appendix F · Curvilinear coordinates']);
+});
+test('chapter name lookup remains bound to its source instead of leaking another book title',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=1',options:{bookMedia:{[SID2]:{chapter_titles:{'1':{ko:'다른 교재 제목',en:'Unrelated chapter'}}}}}});
+  assert.doesNotMatch(h.mount.textContent,/다른 교재 제목|Unrelated chapter/);assert.equal(h.mount.querySelector('.al-results-heading h3').textContent,'제1장');
+});

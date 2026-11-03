@@ -40,3 +40,11 @@ test('schools group all verified course papers once and add SNU/KAIST official p
     }
   }
 });
+test('stored chapter titles cover four source-profile books in Korean and English without repeated chapter numbers',()=>{
+  const media=config('archive-book-media.js','ARCHIVE_BOOK_MEDIA');
+  for(const [file,count,example]of [['zangwill-modern-electrodynamics-2013.webp',24,'Mathematical Preliminaries'],['jackson-classical-electrodynamics-3.webp',16,'Introduction to Electrostatics'],['purcell-morin-electricity-magnetism-3.webp',14,'Electrostatics: charges and fields'],['carroll-ostlie-modern-astrophysics-2.webp',30,'The Celestial Sphere']]){
+    const item=Object.values(media).find(x=>x.image_url.endsWith('/'+file));assert(item);assert.equal(Object.keys(item.chapter_titles).length,count);assert.equal(item.chapter_titles['1'].en,example);
+    for(const [chapter,title]of Object.entries(item.chapter_titles)){assert(title.ko&&title.en);assert.doesNotMatch(title.en,new RegExp('^'+chapter+'\\s+'));assert.doesNotMatch(title.ko,/^제\d+장/);}
+  }
+  const old=Object.values(media).find(x=>x.image_url.endsWith('/zangwill-modern-electrodynamics-2012.webp')),current=Object.values(media).find(x=>x.image_url.endsWith('/zangwill-modern-electrodynamics-2013.webp'));assert.deepEqual(old.chapter_titles,current.chapter_titles);
+});

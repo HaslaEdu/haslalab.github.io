@@ -35,6 +35,7 @@
 .al .al-source-search .al-source-select{display:none}
 .al .al-toc{position:sticky;top:88px;min-width:0;font-size:14px;line-height:1.55}
 .al .al-toc details>summary{display:none}
+.al .al-toc nav{max-height:calc(100vh - 140px);overflow-y:auto;overscroll-behavior:contain;padding-right:5px}
 .al .al-toc h3{font-size:13px;color:var(--al-muted);margin:0 0 12px;letter-spacing:0}
 .al .al-toc ol,.al .al-contents-index ol{list-style:none;margin:0;padding:0}
 .al .al-toc li{margin:0}

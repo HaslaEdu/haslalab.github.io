@@ -192,7 +192,11 @@ export function mountArchiveLibrary(container,options={}){
     if(data.chapters.some(c=>typeof c.chapter!=='string'||c.chapter.length>240||/[\x00-\x1f\x7f]/.test(c.chapter)||!Number.isSafeInteger(c.question_count)||c.question_count<0))throw fail('invalid_contents');
     return data;
   }
-  function chapterTitle(chapter){const value=chapter?.chapter===''?'':chapter?.title||chapter?.chapter||'';return value?/^\d+$/.test(value)?(config.lang==='en'?'Chapter '+value:'제 '+value+'장'):value:tr('unchaptered');}
+  function chapterTitle(chapter){
+    const key=String(chapter?.chapter??''),named=config.bookMedia?.[contents?.source_id]?.chapter_titles?.[key],title=localized(named);
+    if(key&&title){const prefix=/^\d+$/.test(key)?(config.lang==='en'?'Chapter '+key:'제'+key+'장'):/^[A-Z]$/.test(key)?(config.lang==='en'?'Appendix '+key:'부록 '+key):key;return prefix+' · '+title;}
+    const value=key===''?'':chapter?.title||key;return value?/^\d+$/.test(value)?(config.lang==='en'?'Chapter '+value:'제'+value+'장'):value:tr('unchaptered');
+  }
   function chapterLinks(){return (contents?.chapters||[]).map(chapter=>`<li><a href="${esc(href({source:contents.source_id,chapter:chapter.chapter,problem:null,cursor:null,q:null,topic:null,stars:null}))}"${params.has('chapter')&&params.get('chapter')===chapter.chapter?' aria-current="page"':''}><span>${esc(chapterTitle(chapter))}</span><small>${chapter.question_count.toLocaleString()}</small></a></li>`).join('');}
   function tocHTML(index=false){
     const rows=chapterLinks();if(index)return `<section class="al-contents-index"><h3>${esc(tr('contents'))}</h3><p class="al-muted">${esc(tr('chooseChapter'))}</p><ol>${rows}</ol></section>`;
