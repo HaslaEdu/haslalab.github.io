@@ -91,3 +91,22 @@ test("the cards offer the tables; the simulators carry Excel; files are handed i
   assert.match(worker, /DELETE FROM lab_pages WHERE session_id=\? AND task=\? AND mime='text\/plain' AND kind='answer'/);
   assert.match(worker, /FROM lab_pages WHERE session_id=\? AND kind<>'data'"\)\.bind\(s\.id\)\.first\(\);/);
 });
+
+test("the file box offers only the problems whose paper has files handed in, year by year, and shows a needed one first", () => {
+  const vm = require("vm"), html = read("sim/exam.html");
+  const begin = html.indexOf("const FILE_TASKS"), end = html.indexOf("function bindFilesBox", begin);
+  const run = (c, y, tasks, review = true) => { const ctx = { EX: { c, y, tasks }, KEY: c + y, lang: "ko", REVIEW: review, esc: String };
+    vm.createContext(ctx); vm.runInContext(html.slice(begin, end), ctx); return ctx; };
+  const t26 = run("ispho", 2026, ["T1", "T2", "T3"]);
+  assert.deepStrictEqual(t26.fileTasks(), ["T2"], "2026 theory: only T2 (its Part D data, optional)");
+  assert.strictEqual(t26.filesNeeded(), false); assert.strictEqual(t26.filesNoteHtml(), "");
+  assert.ok(!/id="fileTask"/.test(t26.filesBoxHtml()) && /T2/.test(t26.filesBoxHtml()), "one problem: no choice to make");
+  const t25 = run("ispho", 2025, ["T1", "T2", "T3"]);
+  assert.deepStrictEqual(t25.fileTasks(), ["T1"]); assert.strictEqual(t25.filesNeeded(), true);
+  assert.match(t25.filesBoxHtml(), /class="files need"[^>]* open/); assert.match(t25.filesBoxHtml(), /B3 · C2 · C6/);
+  assert.match(t25.filesNoteHtml(), /T1: 엑셀 파일 B3/);
+  assert.deepStrictEqual(run("ispho", 2026, ["E1"]).fileTasks(), [], "2026 E1 hands in no files");
+  assert.strictEqual(run("ispho", 2026, ["E1"]).filesBoxHtml(), "");
+  assert.deepStrictEqual(run("ispho", 2024, ["E1"]).fileTasks(), ["E1"]);
+  assert.deepStrictEqual(run("ipho", 2025, ["T1", "T2"]).fileTasks(), ["T1", "T2"], "elsewhere every problem may have files");
+});
