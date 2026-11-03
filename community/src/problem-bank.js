@@ -1,6 +1,7 @@
 // Public digital statements; original PDFs/crops and paid OCR retain role gates.
 // existing adapter; this module has no provider credentials or model implementation.
 // The dedicated search database contains canonical statement drafts, not solutions.
+import {BANK_CATALOGUE_SCHEMA,BANK_DISCIPLINES,BANK_SOURCE_KINDS,BANK_PAPER_TYPES,catalogueFields,safeBankCatalogue,sourceKind,encodeSourceCursor,decodeSourceCursor} from './problem-bank-catalogue.js';
 import {BANK_SUBJECTS,BANK_FACETS_SCHEMA,difficultyInfo,starsFromRubric,recommendProblems,BANK_METHOD} from './problem-bank-model.js';
 export const PROBLEM_BANK_SEARCH_SCHEMA = `
 CREATE TABLE IF NOT EXISTS bank_search_documents(
@@ -19,7 +20,8 @@ CREATE TRIGGER IF NOT EXISTS bank_search_ad AFTER DELETE ON bank_search_document
 CREATE TRIGGER IF NOT EXISTS bank_search_au AFTER UPDATE ON bank_search_documents BEGIN
  INSERT INTO bank_search_fts(bank_search_fts,rowid,search_text) VALUES('delete',old.id,old.search_text);
  INSERT INTO bank_search_fts(rowid,search_text) VALUES(new.id,new.search_text); END;
-${BANK_FACETS_SCHEMA}`;
+${BANK_FACETS_SCHEMA}
+${BANK_CATALOGUE_SCHEMA}`;
 
 const PREFIX = '/api/problem-bank';
 const HEX = '[a-f0-9]{64}', QID = new RegExp('^q_' + HEX + '$'), SID = new RegExp('^src_' + HEX + '$');
@@ -106,10 +108,15 @@ function options(params) {
   const source=params.get('source')||null; if(source) validId(source,SID,'invalid_source');
   const subject=params.get('subject')||null; if(subject&&!SUBJECTS.has(subject)) fail(400,'invalid_subject');
   const limit=integer(params.get('limit'),20,30); if(!limit) fail(400,'invalid_pagination');
-  const collection=params.get('collection')||null;if(collection&&!['physics','astronomy'].includes(collection))fail(400,'invalid_collection');
+  const collection=params.get('collection')||null;if(collection&&!BANK_DISCIPLINES.includes(collection))fail(400,'invalid_collection');
   const stars=params.get('stars')?integer(params.get('stars'),null,5):null;if(stars===0)fail(400,'invalid_stars');
-  const cursor=params.get('cursor')||null;if(cursor)validId(cursor,QID,'invalid_cursor');
-  return {lang,source,subject,collection,stars,cursor,limit,offset:integer(params.get('offset'),0,300)};
+  const sort=params.get('sort')||'canonical';if(!['canonical','source'].includes(sort))fail(400,'invalid_sort');
+  const cursor=params.get('cursor')||null;let sourceCursor=null;if(cursor){if(sort==='source'){try{sourceCursor=decodeSourceCursor(cursor);}catch{fail(400,'invalid_cursor');}}else validId(cursor,QID,'invalid_cursor');}
+  const kind=params.get('kind')||null;if(kind&&!BANK_SOURCE_KINDS.includes(kind))fail(400,'invalid_source_kind');
+  const competition=params.get('competition')||null;if(competition&&!/^[a-z][a-z0-9_-]{1,49}$/.test(competition))fail(400,'invalid_competition');
+  const year=params.has('year')?integer(params.get('year'),null,2199):null;if(year!==null&&year<1800)fail(400,'invalid_year');
+  const type=params.get('type')||null;if(type&&!BANK_PAPER_TYPES.includes(type))fail(400,'invalid_problem_type');
+  return {lang,source,subject,collection,stars,cursor,sourceCursor,sort,kind,competition,year,type,limit,offset:integer(params.get('offset'),0,300)};
 }
 function safeString(value,max=2000) {
   if(typeof value!=='string'||value.length>max||/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(value)) return null;
@@ -130,10 +137,14 @@ function safeContext(raw) {
   return out;
 }
 function sourceInfo(route) {
-  const s=parse(route.source_json); const id=route.source_id;
-  return {id,title:safeString(route.display_title)??safeString(s.title)??'Source',published_title_en:safeString(route.published_title_en),published_title_ko:safeString(route.published_title_ko),primary_author:safeString(route.primary_author),edition_label:safeString(route.edition_label),collection:route.library_collection||'physics',page_count:s.page_count,subjects:array(s.subjects??s.subjects_json).filter(x=>SUBJECTS.has(x)),level:s.level,
+  const s=parse(route.source_json); const id=route.source_id,c=safeBankCatalogue(s.catalogue);
+  return {id,kind:sourceKind(s),...catalogueFields(c,{kind:sourceKind(s)}),title:safeString(route.display_title)??safeString(s.title)??'Source',published_title_en:safeString(route.published_title_en),published_title_ko:safeString(route.published_title_ko),primary_author:safeString(route.primary_author),edition_label:safeString(route.edition_label),collection:c.discipline||route.library_collection||'physics',page_count:s.page_count,subjects:array(s.subjects??s.subjects_json).filter(x=>SUBJECTS.has(x)),level:s.level,
     source_language:s.source_language,expected_question_count:s.expected_question_count??null,extraction_complete:s.extraction_complete===true,
     license_identifier:safeString(s.origin?.license_identifier,240),...PRIVATE};
+}
+function questionCatalogue(q,route){
+ const source=parse(route.source_json),parent=safeBankCatalogue(source.catalogue),child=safeBankCatalogue(parse(q.context_json).catalogue);
+ return catalogueFields({discipline:sourceInfo(route).collection,...parent,...child},{kind:sourceKind(source)});
 }
 async function sourceRoute(env,sourceId) {
   const join=await presentationJoin(env);
@@ -259,35 +270,40 @@ async function search(env,text,opts,{exclude=null}={}) {
   const db=binding(env,'BANK_SEARCH'),query=ftsQuery(text),args=[],where=['d.language=?']; args.push(opts.lang);
   if(query&&opts.cursor)fail(400,'invalid_cursor');
   if(opts.cursor&&opts.offset)fail(400,'invalid_pagination');
-  const facets=await optionalTable(env,'BANK_SEARCH','bank_question_facets'),join=facets?' LEFT JOIN bank_question_facets f ON f.question_id=d.question_id ':'';
+  const facets=await optionalTable(env,'BANK_SEARCH','bank_question_facets'),catalogue=await optionalTable(env,'BANK_SEARCH','bank_question_catalogue');
+  const join=(facets?' LEFT JOIN bank_question_facets f ON f.question_id=d.question_id ':'')+(catalogue?' LEFT JOIN bank_question_catalogue c ON c.question_id=d.question_id AND c.source_id=d.source_id ':'');
+  if(opts.kind||opts.competition||opts.year||opts.type||opts.sort==='source'){if(!catalogue)fail(503,'problem_bank_catalogue_unavailable');
+   for(const [value,column] of [[opts.kind,'source_kind'],[opts.competition,'competition'],[opts.year,'year'],[opts.type,'problem_type']])if(value!==null&&value!==undefined){where.push('c.'+column+'=?');args.push(value);}
+  }
   if(opts.source){where.push('d.source_id=?');args.push(opts.source);}
   if(opts.subject){where.push(`EXISTS(SELECT 1 FROM json_each(${facets?'COALESCE(f.subjects_json,d.subjects_json)':'d.subjects_json'}) sj WHERE sj.value=?)`);args.push(opts.subject);}
-  if(opts.collection||opts.stars){if(!facets)fail(503,'problem_bank_classification_unavailable');if(opts.collection){where.push('f.collection=?');args.push(opts.collection);}if(opts.stars){where.push('f.stars=?');args.push(opts.stars);}}
-  if(opts.cursor){where.push('d.question_id>?');args.push(opts.cursor);}
+  if(opts.collection||opts.stars){if(!facets)fail(503,'problem_bank_classification_unavailable');if(opts.collection){where.push(catalogue?'COALESCE(c.discipline,f.collection)=?':'f.collection=?');args.push(opts.collection);}if(opts.stars){where.push('f.stars=?');args.push(opts.stars);}}
+  if(opts.sourceCursor){where.push('(COALESCE(c.sort_key,d.question_id)>? OR (COALESCE(c.sort_key,d.question_id)=? AND d.question_id>?))');args.push(opts.sourceCursor.key,opts.sourceCursor.key,opts.sourceCursor.id);}
+  else if(opts.cursor){where.push('d.question_id>?');args.push(opts.cursor);}
   if(exclude){where.push('d.question_id!=?');args.push(exclude);}
   const cap=query?Math.min(430,opts.offset+opts.limit+100):opts.offset+opts.limit+1;
-  let sql=`SELECT d.question_id,d.source_id,d.locator,d.original_number,d.chapter,${facets?'COALESCE(f.subjects_json,d.subjects_json)':'d.subjects_json'} AS subjects_json,d.level,d.language,d.source_title,d.review_status,d.unresolved_source,d.text_sha256,substr(d.text,1,12000) AS text${facets?',f.stars,f.difficulty_status,f.confidence,f.reason_codes_json,f.collection':''}`;
+  let sql=`SELECT d.question_id,d.source_id,d.locator,d.original_number,d.chapter,${facets?'COALESCE(f.subjects_json,d.subjects_json)':'d.subjects_json'} AS subjects_json,d.level,d.language,d.source_title,d.review_status,d.unresolved_source,d.text_sha256,substr(d.text,1,12000) AS text${facets?',f.stars,f.difficulty_status,f.confidence,f.reason_codes_json,f.collection':''}${catalogue?',c.source_kind,c.competition,c.year,c.round,c.problem_type,c.problem_code,c.title_en,c.title_ko,c.discipline,c.sort_key':''}`;
   if(query){sql+=`,bm25(bank_search_fts) AS fts_rank FROM bank_search_fts JOIN bank_search_documents d ON d.id=bank_search_fts.rowid ${join} WHERE bank_search_fts MATCH ? AND `;args.unshift(query);}
   else sql+=`,0 AS fts_rank FROM bank_search_documents d ${join} WHERE `;
-  sql+=where.join(' AND ')+(query?' ORDER BY fts_rank,d.question_id':' ORDER BY d.question_id')+' LIMIT ?';args.push(cap);
+  sql+=where.join(' AND ')+(query?' ORDER BY fts_rank,d.question_id':opts.sort==='source'?' ORDER BY COALESCE(c.sort_key,d.question_id),d.question_id':' ORDER BY d.question_id')+' LIMIT ?';args.push(cap);
   const candidates=await rows(db,sql,args),f=features(text);
   const scored=candidates.map(x=>{
     const w=new Set(words(x.text)),n=new Set(numbers(x.text));
     const nm=f.numeric.filter(t=>n.has(t)).length,wm=f.words.filter(t=>w.has(t)||(hangulPrefix(t)&&[...w].some(word=>word.startsWith(t)))).length;
     const score=query?Number((12*(f.numeric.length?nm/f.numeric.length:0)+nm+5*(f.words.length?wm/f.words.length:0)+Math.min(1,Math.max(0,-Number(x.fts_rank||0)))).toFixed(6)):0;
-    return {id:x.question_id,source_id:x.source_id,source_title:x.source_title,locator:x.locator,original_number:x.original_number,chapter:x.chapter,subjects:array(x.subjects_json),level:x.level,language:x.language,snippet:x.text.slice(0,360),score,matched_numeric_factors:nm,review_status:x.review_status,unresolved_source:!!x.unresolved_source,text_sha256:x.text_sha256,...facetInfo(x),...PRIVATE};
-  }).sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
+    return {id:x.question_id,source_id:x.source_id,source_title:x.source_title,locator:x.locator,original_number:x.original_number,chapter:x.chapter,subjects:array(x.subjects_json),level:x.level,language:x.language,snippet:x.text.slice(0,360),score,matched_numeric_factors:nm,review_status:x.review_status,unresolved_source:!!x.unresolved_source,text_sha256:x.text_sha256,...facetInfo(x),...catalogueFields({kind:x.source_kind,competition:x.competition,year:x.year,round:x.round,problem_type:x.problem_type,problem_code:x.problem_code,title_en:x.title_en,title_ko:x.title_ko,discipline:x.discipline}),...PRIVATE};
+  });if(query)scored.sort((a,b)=>b.score-a.score||a.id.localeCompare(b.id));
   // Search rows are derived data. Only current registry routes admit results.
   const sources=[...new Set(scored.map(x=>x.source_id))];
-  const admitted=new Set(),titles=new Map(),sourceJoin=await presentationJoin(env);
+  const admitted=new Set(),titles=new Map(),sourceMetadata=new Map(),sourceJoin=await presentationJoin(env);
   for(let start=0;start<sources.length;start+=80){
     const ids=sources.slice(start,start+80);
-    const found=await rows(binding(env,'BANK_REGISTRY'),`SELECT r.source_id,r.database_name${sourceJoin?',p.display_title':''} FROM bank_source_routes r ${sourceJoin} WHERE r.source_id IN (${ids.map(()=>'?').join(',')})`,ids);
-    for(const row of found) if(DATABASES[row.database_name]){admitted.add(row.source_id);const title=safeString(row.display_title);if(title!==null)titles.set(row.source_id,title);}
+    const found=await rows(binding(env,'BANK_REGISTRY'),`SELECT r.source_id,r.database_name,r.source_json${sourceJoin?',p.display_title':''} FROM bank_source_routes r ${sourceJoin} WHERE r.source_id IN (${ids.map(()=>'?').join(',')})`,ids);
+    for(const row of found) if(DATABASES[row.database_name]){admitted.add(row.source_id);sourceMetadata.set(row.source_id,sourceInfo(row));const title=safeString(row.display_title);if(title!==null)titles.set(row.source_id,title);}
   }
-  const valid=scored.filter(x=>admitted.has(x.source_id)).map(x=>({...x,source_title:titles.get(x.source_id)??safeString(x.source_title)??'Source'}));
+  const valid=scored.filter(x=>admitted.has(x.source_id)).map(x=>{const source=sourceMetadata.get(x.source_id);return {...x,source_title:titles.get(x.source_id)??safeString(x.source_title)??'Source',source_kind:x.source_kind??source.kind,competition:x.competition??source.competition,year:x.year??source.year,round:x.round??source.round,problem_type:x.problem_type??source.problem_type,discipline:x.discipline??x.collection??source.collection,collection:x.discipline??x.collection??source.collection};});
   const items=valid.slice(opts.offset,opts.offset+opts.limit),has_more=valid.length>opts.offset+opts.limit;
-  return {items,limit:opts.limit,offset:opts.offset,has_more,next_cursor:!query&&has_more&&items.length?items.at(-1).id:null,limited_results:!!query&&candidates.length===cap,method:query?'bounded_text_similarity':'canonical_cursor_browse',...PRIVATE};
+  return {items,limit:opts.limit,offset:opts.offset,has_more,next_cursor:!query&&has_more&&items.length?(opts.sort==='source'?encodeSourceCursor(candidates.find(c=>c.question_id===items.at(-1).id)?.sort_key??items.at(-1).id,items.at(-1).id):items.at(-1).id):null,limited_results:!!query&&candidates.length===cap,method:query?'bounded_text_similarity':'canonical_cursor_browse',...PRIVATE};
 }
 
 async function boundedJson(req) {
@@ -307,7 +323,7 @@ async function identifyInput(req,ocr) {
   const type=req.headers.get('content-type')??'';
   if(/^application\/json(?:\s*;|\s*$)/i.test(type)) {
     const body=await boundedJson(req);
-    if(Object.keys(body).some(k=>!['text','lang','subject','source','collection','stars','limit'].includes(k)))fail(400,'text_identification_only');
+    if(Object.keys(body).some(k=>!['text','lang','subject','source','collection','stars','kind','competition','year','type','limit'].includes(k)))fail(400,'text_identification_only');
     if(typeof body.text!=='string'||body.text.trim().length<5||body.text.length>12000||body.text.includes('\0'))fail(400,'invalid_identification_text');
     return {body,text:body.text,ocr_used:false};
   }
@@ -322,13 +338,13 @@ async function identifyInput(req,ocr) {
   }finally{reader.releaseLock();}
   const bytes=new Uint8Array(total);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.length;}
   let form;try{form=await new Response(bytes,{headers:{'Content-Type':type}}).formData();}catch{fail(400,'invalid_scan');}
-  const allowed=new Set(['image','lang','subject','source','collection','stars','limit']);
+  const allowed=new Set(['image','lang','subject','source','collection','stars','kind','competition','year','type','limit']);
   for(const [key] of form)if(!allowed.has(key)||form.getAll(key).length!==1)fail(400,'invalid_scan');
   const image=form.get('image');
   if(!image||typeof image.arrayBuffer!=='function'||image.size<1||image.size>MAX_SCAN)fail(400,'invalid_scan');
   if(!['image/png','image/jpeg','image/webp'].includes(image.type))fail(415,'unsupported_scan_type');
   const imageBytes=new Uint8Array(await image.arrayBuffer());if(!rasterSignature(imageBytes,image.type))fail(400,'invalid_scan');
-  const body={};for(const key of ['lang','subject','source','collection','stars','limit'])if(form.has(key)){if(typeof form.get(key)!=='string')fail(400,'invalid_scan');body[key]=form.get(key);}
+  const body={};for(const key of ['lang','subject','source','collection','stars','kind','competition','year','type','limit'])if(form.has(key)){if(typeof form.get(key)!=='string')fail(400,'invalid_scan');body[key]=form.get(key);}
   // Validate filters before spending the caller-authorized OCR request.
   const params=new URLSearchParams(body);options(params);
   let result;
@@ -459,7 +475,7 @@ export async function problemBankRoute(req,env,url,{user,ocr}={}) {
     if(req.method==='POST'&&suffix==='/identify'){
       if(!/^application\/json(?:;|$)/i.test(req.headers.get('Content-Type')||'')){if(!user)fail(401,'login_required');if(user.role!=='admin')fail(403,'admin_required');}
       const input=await identifyInput(req,ocr),{body}=input;
-      const params=new URLSearchParams();for(const k of ['lang','subject','source','collection','stars','limit'])if(body[k]!=null)params.set(k,String(body[k]));
+      const params=new URLSearchParams();for(const k of ['lang','subject','source','collection','stars','kind','competition','year','type','limit'])if(body[k]!=null)params.set(k,String(body[k]));
       const preferred=options(params),other=preferred.lang==='ko'?'en':'ko';
       const results=await Promise.all([search(env,input.text,preferred),search(env,input.text,{...preferred,lang:other})]);
       const combined=new Map();
@@ -480,15 +496,18 @@ export async function problemBankRoute(req,env,url,{user,ocr}={}) {
       return json({...counts,...registered,user:user?{id:user.id,role:user.role,nickname:user.nickname??''}:null,access:'public',review_status:'pending',ocr_available:enabled,identification:enabled?'text_or_scan':'supplied_text_only',...PRIVATE});
     }
     if(suffix==='/sources'){
-      const join=await presentationJoin(env),data=await rows(binding(env,'BANK_REGISTRY'),`SELECT r.source_id,r.source_json,r.database_name${presentationFields(join)} FROM bank_source_routes r ${join} ORDER BY r.source_id LIMIT 500`);
-      return json({sources:data.filter(r=>DATABASES[r.database_name]).map(sourceInfo),...PRIVATE});
+      const after=url.searchParams.get('after')||null;if(after)validId(after,SID,'invalid_source_cursor');
+      const limit=integer(url.searchParams.get('source_limit'),200,500);if(!limit)fail(400,'invalid_pagination');
+      const join=await presentationJoin(env),data=await rows(binding(env,'BANK_REGISTRY'),`SELECT r.source_id,r.source_json,r.database_name${presentationFields(join)} FROM bank_source_routes r ${join} ${after?'WHERE r.source_id>?':''} ORDER BY r.source_id LIMIT ?`,after?[after,limit+1]:[limit+1]);
+      const page=data.slice(0,limit),has_more=data.length>limit;
+      return json({sources:page.filter(r=>DATABASES[r.database_name]).map(sourceInfo),has_more,next_cursor:has_more?page.at(-1).source_id:null,...PRIVATE});
     }
     if(suffix==='/search'){
       const q=url.searchParams.get('q')??'';if(q.length>600||q.includes('\0'))fail(400,'invalid_search_query');
       return json(await search(env,q,opts));
     }
     if(suffix==='/recommendations'){
-      const target=opts.stars??3,pool=await search(env,'',{...opts,stars:null,limit:30,offset:0,cursor:null});
+      const target=opts.stars??3,pool=await search(env,'',{...opts,stars:null,limit:30,offset:0,cursor:null,sourceCursor:null});
       return json({items:recommendProblems(pool.items.filter(i=>!i.unresolved_source),{targetStars:target,limit:opts.limit,preferredSubjects:opts.subject?[opts.subject]:[]}),target_stars:target,method:'target_difficulty_and_source_diversity',...PRIVATE});
     }
     const a=suffix.match(/^\/assets\/([^/]+)$/);if(a)return await asset(env,a[1],user);
@@ -501,14 +520,14 @@ export async function problemBankRoute(req,env,url,{user,ocr}={}) {
       const found=await locateQuestion(env,q[1]),vs=await versions(found.db,'question','question',q[1]);
       if(q[2]==='recommendations'){
         const current=await facet(env,q[1]),subjects=current?array(current.subjects_json):array(found.q.subjects_json),subject=opts.subject??subjects.find(x=>SUBJECTS.has(x))??null;
-        const [related,nearby]=await Promise.all([search(env,(vs.find(v=>v.language===opts.lang)?.text??'').slice(0,600),{...opts,stars:null,cursor:null,offset:0,limit:30,subject},{exclude:q[1]}),search(env,'',{...opts,stars:null,cursor:null,offset:0,limit:30,subject,collection:opts.collection??current?.collection??null},{exclude:q[1]})]);
+        const [related,nearby]=await Promise.all([search(env,(vs.find(v=>v.language===opts.lang)?.text??'').slice(0,600),{...opts,stars:null,cursor:null,sourceCursor:null,offset:0,limit:30,subject},{exclude:q[1]}),search(env,'',{...opts,stars:null,cursor:null,sourceCursor:null,offset:0,limit:30,subject,collection:opts.collection??current?.collection??null},{exclude:q[1]})]);
         const pool=[...new Map([...related.items,...nearby.items].filter(i=>!i.unresolved_source).map(i=>[i.id,i])).values()];
         const seen=user&&pool.length&&await optionalTable(env,'BANK_REGISTRY','bank_question_feedback')?(await rows(binding(env,'BANK_REGISTRY'),`SELECT question_id FROM bank_question_feedback WHERE user_id=? AND outcome='solved' AND question_id IN (${pool.map(()=>'?').join(',')})`,[user.id,...pool.map(i=>i.id)])).map(r=>r.question_id):[];
         return json({question_id:q[1],items:recommendProblems(pool,{targetStars:opts.stars??current?.stars??3,limit:opts.limit,seen:[q[1],...seen],preferredSubjects:subjects,previousSource:found.q.source_id}),method:'subject_difficulty_novelty_diversity',...PRIVATE});
       }
       const assets=await rows(found.db,'SELECT id,role,mime_type,sha256,spans_json FROM bank_assets WHERE question_id=? ORDER BY asset_id LIMIT 150',[q[1]]);
       const context_links=await directContextLinks(await contextGraph(env,found),q[1]);
-      return json({question:{...questionInfo(found.q),...facetInfo(await facet(env,q[1]),sourceInfo(found.route).collection),source:sourceInfo(found.route),versions:vs,selected_version:vs.find(v=>v.language===opts.lang)??null,assets:await scopedAssets(env,assets,user,q[1]),figures:await figureVariants(env,q[1]),can_view_source:user?.role==='admin',context_links},...PRIVATE});
+      return json({question:{...questionInfo(found.q),...facetInfo(await facet(env,q[1]),sourceInfo(found.route).collection),...questionCatalogue(found.q,found.route),source:sourceInfo(found.route),versions:vs,selected_version:vs.find(v=>v.language===opts.lang)??null,assets:await scopedAssets(env,assets,user,q[1]),figures:await figureVariants(env,q[1]),can_view_source:user?.role==='admin',context_links},...PRIVATE});
     }
     fail(404,'problem_bank_route_not_found');
   } catch(error) {

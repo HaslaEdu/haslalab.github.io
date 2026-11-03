@@ -10,13 +10,17 @@ Object.assign(COPY.ko,{retryLoad:'다시 불러오기',siteLogin:'하슬라랩�
 Object.assign(COPY.ko,{publicLibrary:'물리 · 천문 문제',guest:'게스트',collection:'문제 모음',allCollections:'물리·천문 전체',physics:'물리학',astronomy:'천문학',stars:'난이도',allStars:'난이도 전체',provisional:'잠정',difficulty:'난이도',photoAdmin:'사진 인식은 관리자 계정에서 사용할 수 있습니다.',sourceCrops:'원문 캡처',referenceFigures:'참고 그림',givenFigures:'문제 그림',limitedResults:'검색 결과 일부를 표시합니다. 교재나 분야로 범위를 좁혀 주세요.'});
 Object.assign(COPY.en,{publicLibrary:'Physics · Astronomy',guest:'Guest',collection:'Collection',allCollections:'Physics and astronomy',physics:'Physics',astronomy:'Astronomy',stars:'Difficulty',allStars:'All difficulties',provisional:'Provisional',difficulty:'Difficulty',photoAdmin:'Photo recognition is available to administrators.',sourceCrops:'Source captures',referenceFigures:'Reference figures',givenFigures:'Problem figures',limitedResults:'Showing part of the search results. Narrow the source or subject to find more.'});
 Object.assign(SUBJECTS,{special_relativity:['특수상대론','Special relativity'],general_relativity:['일반상대론','General relativity']});
+Object.assign(SUBJECTS,{mathematics:['수학','Mathematics'],chemistry:['화학','Chemistry'],biology:['생물학','Biology'],earth_science:['지구과학','Earth science'],informatics:['정보과학','Informatics']});
+const DISCIPLINES={physics:['물리학','Physics'],astronomy:['천문학','Astronomy'],mathematics:SUBJECTS.mathematics,chemistry:SUBJECTS.chemistry,biology:SUBJECTS.biology,earth_science:SUBJECTS.earth_science,informatics:SUBJECTS.informatics};
 Object.assign(COPY.ko,{feedback:'난이도 평가',feedbackNote:'사용자가 직접 남긴 풀이 기록입니다.',feedbackEmpty:'아직 사용자 평가가 없습니다.',feedbackSave:'평가 저장',feedbackSaved:'평가를 저장했습니다.',feedbackLogin:'로그인하고 평가 남기기',feedbackOutcome:'풀이 상태',feedbackMinutes:'풀이 시간(분, 선택)',not_attempted:'아직 풀지 않음',solved:'풀었음',partial:'일부 해결',unsolved:'해결하지 못함',chooseRating:'별점 선택',invalidFeedback:'별점과 풀이 시간을 확인하세요.',loginNeeded:'로그인한 뒤 이용할 수 있습니다.'});
 Object.assign(COPY.en,{feedback:'Rate difficulty',feedbackNote:'These are self-reported solving records.',feedbackEmpty:'No user ratings yet.',feedbackSave:'Save rating',feedbackSaved:'Rating saved.',feedbackLogin:'Sign in to leave a rating',feedbackOutcome:'Solving outcome',feedbackMinutes:'Time spent (minutes, optional)',not_attempted:'Not attempted',solved:'Solved',partial:'Partly solved',unsolved:'Unsolved',chooseRating:'Choose a rating',invalidFeedback:'Check the rating and solving time.',loginNeeded:'Sign in to use this feature.'});
 COPY.ko.recommendations='추천 문제';COPY.en.recommendations='Recommended problems';
+Object.assign(COPY.ko,{skipContent:'본문으로',browseArchive:'자료별 탐색',allProblems:'전체 문제',contests:'대회',books:'교재',courses:'강좌',sourceDirectory:'자료 목록',findSource:'자료 이름 찾기',resetFilters:'초기화',competition:'대회',allCompetitions:'전체 대회',year:'연도',allYears:'전체 연도',problemType:'구분',allTypes:'이론·실험 전체',theory:'이론',experiment:'실험',problemList:'문제 목록',backToList:'← 문제 목록',problem:'문제',statement:'문제',hideSolutions:'풀이 닫기',emptySources:'조건에 맞는 자료가 없습니다.',source:'자료',allSources:'전체 자료',allCollections:'전체 과목'});
+Object.assign(COPY.en,{skipContent:'Skip to content',browseArchive:'BROWSE',allProblems:'All problems',contests:'Competitions',books:'Books',courses:'Courses',sourceDirectory:'Sources',findSource:'Find a source',resetFilters:'Reset',competition:'Competition',allCompetitions:'All competitions',year:'Year',allYears:'All years',problemType:'Type',allTypes:'Theory and experiment',theory:'Theory',experiment:'Experiment',problemList:'Problems',backToList:'← Problem list',problem:'Problem',statement:'Statement',hideSolutions:'Hide solutions',emptySources:'No sources match these filters.',source:'Source',allSources:'All sources',allCollections:'All disciplines'});
 const DIFFICULTY_REASONS={source_level:['교재·강좌 수준','Source level'],calculus:['미적분','Calculus'],linear_algebra:['선형대수','Linear algebra'],differential_equations:['미분방정식','Differential equations'],advanced_mathematics:['고급 수학','Advanced mathematics'],approximation:['근사 방법','Approximation methods'],concept_integration:['여러 개념의 결합','Combining concepts'],nontrivial_reasoning:['여러 단계의 추론','Multi-step reasoning'],reference_context_pending:['참고 자료 검토 중','Reference context under review']};
-const state={token:EMBED?sharedToken():sessionStorage.getItem('hlBankToken')||'',lang:(EMBED&&launch.searchParams.get('lang'))||localStorage.getItem('hlBankLang')||'ko',theme:(EMBED&&['light','dark'].includes(launch.searchParams.get('theme'))?launch.searchParams.get('theme'):localStorage.getItem('hlBankTheme'))||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),user:null,sources:[],question:null,offset:0,hasMore:false,mode:'text',request:0,identifyRequest:0,detailRequest:0,relatedRequest:0,bootstrapRequest:0,bootstrapErrorCode:null,session:0,controllers:new Set(),urls:[]};
+const state={token:EMBED?sharedToken():sessionStorage.getItem('hlBankToken')||'',lang:launch.searchParams.get('lang')||localStorage.getItem('hlBankLang')||'ko',theme:(EMBED&&['light','dark'].includes(launch.searchParams.get('theme'))?launch.searchParams.get('theme'):localStorage.getItem('hlBankTheme'))||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),user:null,sources:[],question:null,offset:0,hasMore:false,mode:'text',request:0,identifyRequest:0,detailRequest:0,relatedRequest:0,bootstrapRequest:0,bootstrapErrorCode:null,session:0,controllers:new Set(),urls:[]};
 if(!COPY[state.lang])state.lang='ko';
-Object.assign(state,{ocrAvailable:false,cursor:null,nextCursor:null,cursorHistory:[],pageSize:0,limitedResults:false,feedbackRequest:0});
+Object.assign(state,{ocrAvailable:false,cursor:null,nextCursor:null,cursorHistory:[],pageSize:0,limitedResults:false,feedbackRequest:0,kind:'',solutionsOpen:false,initialQuestion:/^q_[a-f0-9]{64}$/.test(launch.searchParams.get('problem')||'')?launch.searchParams.get('problem'):null});
 const tr=k=>COPY[state.lang][k]||k;
 function applyTheme(){document.documentElement.dataset.theme=state.theme;$('favicon').href='./favicon-'+state.theme+'.svg';$('theme').setAttribute('aria-label',state.lang==='ko'?'테마 전환':'Toggle theme');}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -44,12 +48,75 @@ function translate(){
   document.documentElement.lang=state.lang;applyTheme();
   document.title=tr('title')+' · HaslaLab';$('language').value=state.lang;$('query').placeholder=tr('placeholder');$('logout').textContent=tr('logout');
   if(EMBED)$('siteLogin').href='../../?lang='+state.lang+'#/login';
+  $('accountLogin').href=EMBED?new URL('../../?lang='+state.lang+'#/login',launch).href:'https://haslalab.org/?lang='+state.lang+'#/login';
+  $('sourceQuery').placeholder=tr('findSource');
   document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=tr(el.dataset.i18n));
   if(state.bootstrapErrorCode)$('bootstrapMessage').textContent=errorText({code:state.bootstrapErrorCode});
   const selected=$('subject').value;$('subject').innerHTML='<option value="">'+esc(tr('allSubjects'))+'</option>'+Object.entries(SUBJECTS).map(([key,n])=>`<option value="${key}">${esc(n[state.lang==='ko'?0:1])}</option>`).join('');$('subject').value=selected;
   renderSources();
 }
-function renderSources(){const selected=$('source').value;$('source').innerHTML='<option value="">'+esc(tr('allSources'))+'</option>'+state.sources.map(s=>`<option value="${esc(s.id)}">${esc(s.title)}</option>`).join('');$('source').value=selected;}
+function sourceTitle(source){return source?.title||source?.published_title_en||source?.published_title_ko||source?.id||'';}
+function orderedSources(sources){
+  const collator=new Intl.Collator(state.lang==='ko'?'ko':'en',{numeric:true,sensitivity:'base'}),rank={contest:0,book:1,course:2};
+  return [...sources].sort((a,b)=>{
+    const kind=(rank[a.kind]??3)-(rank[b.kind]??3);if(kind)return kind;
+    if(a.kind==='contest'&&b.kind==='contest'){const competition=collator.compare(a.competition||'',b.competition||'');if(competition)return competition;const year=(Number.isInteger(b.year)?b.year:0)-(Number.isInteger(a.year)?a.year:0);if(year)return year;}
+    return collator.compare(sourceTitle(a),sourceTitle(b))||String(a.id).localeCompare(String(b.id));
+  });
+}
+async function loadSources(current=()=>true){
+  const sources=[],ids=new Set(),cursors=new Set();let after=null;
+  const invalid=()=>Object.assign(new Error('Invalid source pagination'),{code:'problem_bank_sources_invalid'});
+  for(let page=0;page<100;page++){
+    if(!current())throw new DOMException('Stale source request','AbortError');
+    const data=await api(after?'/api/problem-bank/sources?'+new URLSearchParams({after,source_limit:'200'}):'/api/problem-bank/sources');
+    if(!current())throw new DOMException('Stale source request','AbortError');
+    if(!Array.isArray(data.sources)||data.sources.length>500)throw invalid();
+    for(const source of data.sources){if(!source||!/^src_[a-f0-9]{64}$/.test(source.id||''))throw invalid();if(!ids.has(source.id)){ids.add(source.id);sources.push(source);if(sources.length>20000)throw invalid();}}
+    if(data.has_more!==true)return orderedSources(sources);
+    if(!/^src_[a-f0-9]{64}$/.test(data.next_cursor||'')||cursors.has(data.next_cursor))throw invalid();
+    cursors.add(data.next_cursor);after=data.next_cursor;
+  }
+  throw invalid();
+}
+function renderCollections(){const selected=$('collection').value,keys=new Set(['physics','astronomy',...state.sources.map(s=>s.collection||s.discipline).filter(x=>Object.hasOwn(DISCIPLINES,x))]);$('collection').innerHTML='<option value="">'+esc(tr('allCollections'))+'</option>'+[...keys].map(key=>`<option value="${key}">${esc(DISCIPLINES[key][state.lang==='ko'?0:1])}</option>`).join('');$('collection').value=keys.has(selected)?selected:'';}
+function sourceMatches(source,{year=true}={}){
+  return (!state.kind||source.kind===state.kind)&&(!$('collection').value||source.collection===$('collection').value)&&(!$('competition').value||source.competition===$('competition').value)&&(!year||!$('year').value||String(source.year)===$('year').value);
+}
+function sourceMeta(source){const author=source?.primary_author;return [author&&!sourceTitle(source).toLocaleLowerCase().includes(author.toLocaleLowerCase())?author:null,source?.edition_label,source?.year,source?.round].filter(x=>x!==null&&x!==undefined&&x!=='').join(' · ');}
+function renderSources(){
+  state.sources=orderedSources(state.sources);
+  renderCollections();
+  const competition=$('competition').value,year=$('year').value;
+  const competitions=[...new Set(state.sources.filter(s=>s.kind==='contest'&&(!$('collection').value||s.collection===$('collection').value)).map(s=>s.competition).filter(Boolean))].sort();
+  $('competition').innerHTML='<option value="">'+esc(tr('allCompetitions'))+'</option>'+competitions.map(x=>`<option value="${esc(x)}">${esc(x.toUpperCase())}</option>`).join('');$('competition').value=competitions.includes(competition)?competition:'';
+  const years=[...new Set(state.sources.filter(s=>s.kind==='contest'&&sourceMatches(s,{year:false})).map(s=>s.year).filter(x=>Number.isInteger(x)))].sort((a,b)=>b-a);
+  $('year').innerHTML='<option value="">'+esc(tr('allYears'))+'</option>'+years.map(x=>`<option value="${x}">${x}</option>`).join('');$('year').value=years.some(x=>String(x)===year)?year:'';
+  const selected=$('source').value,sources=state.sources.filter(s=>sourceMatches(s));
+  $('source').innerHTML='<option value="">'+esc(tr('allSources'))+'</option>'+sources.map(s=>`<option value="${esc(s.id)}">${esc(sourceTitle(s))}</option>`).join('');$('source').value=sources.some(s=>s.id===selected)?selected:'';
+  $('contestFilters').hidden=state.kind!=='contest';
+  $('yearNav').hidden=state.kind!=='contest'||!years.length;
+  $('yearNav').innerHTML=years.map(x=>`<button type="button" data-year="${x}" class="${String(x)===$('year').value?'selected':''}"${String(x)===$('year').value?' aria-current="true"':''}>${x}</button>`).join('');
+  $('yearNav').querySelectorAll('[data-year]').forEach(button=>button.addEventListener('click',()=>{$('source').value='';$('year').value=button.dataset.year;renderSources();search(true);}));
+  $('kindNav').querySelectorAll('[data-kind]').forEach(button=>{const selected=button.dataset.kind===state.kind;button.classList.toggle('selected',selected);button.setAttribute('aria-current',selected?'page':'false');});
+  const source=state.sources.find(s=>s.id===$('source').value);
+  $('browseHeading').textContent=source?sourceTitle(source):tr({contest:'contests',book:'books',course:'courses'}[state.kind]||'allProblems');
+  $('browseMeta').textContent=source?sourceMeta(source):'';
+  renderSourceList(sources);
+}
+function renderSourceList(sources=state.sources.filter(s=>sourceMatches(s))){
+  const query=$('sourceQuery').value.trim().toLocaleLowerCase();
+  const shown=orderedSources(sources).filter(s=>[sourceTitle(s),s.primary_author,s.competition,s.year].filter(Boolean).join(' ').toLocaleLowerCase().includes(query));
+  $('sourceList').innerHTML=shown.length?shown.map(s=>`<button type="button" data-source="${esc(s.id)}" class="${s.id===$('source').value?'selected':''}"${s.id===$('source').value?' aria-current="page"':''}>${esc(sourceTitle(s))}${sourceMeta(s)?`<small>${esc(sourceMeta(s))}</small>`:''}</button>`).join(''):`<p class="muted">${esc(tr('emptySources'))}</p>`;
+  $('sourceList').querySelectorAll('[data-source]').forEach(button=>button.addEventListener('click',()=>{$('source').value=button.dataset.source;renderSources();search(true);}));
+}
+function chooseKind(kind){
+  if(!['','contest','book','course'].includes(kind))return;
+  state.kind=kind;for(const key of ['source','competition','year','type'])$(key).value='';$('sourceQuery').value='';renderSources();return search(true);
+}
+function closeQuestion(){const id=state.question;state.detailRequest++;state.relatedRequest++;state.question=null;state.solutionsOpen=false;releaseImages();$('detail').textContent='';$('readerView').hidden=true;$('catalogView').hidden=false;updateQuestionLink(null);[...$('results').querySelectorAll('[data-question]')].find(x=>x.dataset.question===id)?.focus?.();}
+function updateQuestionLink(id){if(!window.history?.replaceState)return;const url=new URL(window.location.href);if(id)url.searchParams.set('problem',id);else url.searchParams.delete('problem');if(!EMBED)url.searchParams.set('lang',state.lang);window.history.replaceState(null,'',url);}
+function questionTitle(question){return question[state.lang==='ko'?'title_ko':'title_en']||question[state.lang==='ko'?'title_en':'title_ko']||'';}
 function math(root){if(window.renderMathInElement)renderMathInElement(root,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'$',right:'$',display:false},{left:'\\(',right:'\\)',display:false}],throwOnError:false,trust:false,strict:'ignore',maxExpand:1000,maxSize:30});}
 // HTML is never accepted from a statement. All content is escaped before a small
 // Markdown subset (headings, paragraphs, tables) and trusted KaTeX are applied.
@@ -85,14 +152,14 @@ async function showLibrary(){
   $('loginPanel').hidden=true;$('library').hidden=false;
   state.ocrAvailable=false;$('photoMode').disabled=true;$('photoAccess').hidden=false;
   try{
-    const [status,data]=await Promise.all([api('/api/problem-bank/status'),api('/api/problem-bank/sources')]);if(!current())return false;
+    const [status,sources]=await Promise.all([api('/api/problem-bank/status'),loadSources(current)]);if(!current())return false;
     if(Object.hasOwn(status,'user'))state.user=status.user||null;
-    $('logout').hidden=!state.user;$('account').textContent=state.user?(state.user.nickname||state.user.username):tr('guest');
-    state.sources=data.sources;renderSources();
+    $('logout').hidden=!state.user;$('accountLogin').hidden=!!state.user;$('account').textContent=state.user?(state.user.nickname||state.user.username):tr('guest');
+    state.sources=sources;renderSources();
     $('counts').textContent=state.lang==='ko'?`${Number(status.questions).toLocaleString()}문항 · 한영 본문 ${Number(status.language_bodies).toLocaleString()}개 · 검토 대기 자료`:`${Number(status.questions).toLocaleString()} questions · ${Number(status.language_bodies).toLocaleString()} language versions · review pending`;
     state.ocrAvailable=status.ocr_available===true&&state.user?.role==='admin';$('photoMode').disabled=!state.ocrAvailable;$('photoAccess').hidden=state.ocrAvailable;
     if(!state.ocrAvailable){state.mode='text';$('photoForm').hidden=true;$('recognizedPanel').hidden=true;}
-    await search(true);return current();
+    await search(true);if(current()&&state.initialQuestion){const id=state.initialQuestion;state.initialQuestion=null;await selectQuestion(id);}return current();
   }catch(error){if(error.name!=='AbortError'&&current())bootstrapError(error);return false;}
   finally{if(current())$('retryBootstrap').disabled=false;}
 }
@@ -101,7 +168,8 @@ function signOut(remote=true,reload=true){
   for(const controller of state.controllers)controller.abort();state.controllers.clear();
   state.token='';state.user=null;state.sources=[];state.question=null;state.offset=0;state.hasMore=false;state.ocrAvailable=false;state.cursor=null;state.nextCursor=null;state.cursorHistory=[];if(!EMBED)sessionStorage.removeItem('hlBankToken');releaseImages();
   bootstrapError();$('retryBootstrap').disabled=false;
-  $('library').hidden=false;$('loginPanel').hidden=true;$('logout').hidden=true;$('account').textContent=tr('guest');$('loginForm').reset();$('photoForm').reset();$('photoMode').disabled=true;$('photoAccess').hidden=false;
+  $('library').hidden=false;$('loginPanel').hidden=true;$('logout').hidden=true;$('accountLogin').hidden=false;$('account').textContent=tr('guest');$('loginForm').reset();$('photoForm').reset();$('photoMode').disabled=true;$('photoAccess').hidden=false;
+  $('readerView').hidden=true;$('catalogView').hidden=false;$('readerBreadcrumb').textContent='';state.solutionsOpen=false;state.initialQuestion=null;updateQuestionLink(null);
   for(const id of ['results','detail','counts','resultCount','message','loginMessage'])$(id).textContent='';
   $('query').value='';$('recognized').value='';$('recognizedPanel').hidden=true;$('subject').value='';$('source').value='';renderSources();$('previous').disabled=true;$('next').disabled=true;
   state.mode='text';$('photoForm').hidden=true;$('photoForm').querySelector('button').disabled=false;$('retryText').disabled=false;
@@ -111,7 +179,7 @@ function signOut(remote=true,reload=true){
   if(remote&&token&&!EMBED)fetch('/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:'{}',cache:'no-store',credentials:'omit'}).catch(()=>{});
   if(reload)showLibrary();
 }
-function params(){const p=new URLSearchParams({lang:state.lang,limit:'20'});if($('query').value.trim())p.set('offset',String(state.offset));else if(state.cursor)p.set('cursor',state.cursor);for(const key of ['subject','source','collection','stars'])if($(key).value)p.set(key,$(key).value);return p;}
+function params(){const p=new URLSearchParams({lang:state.lang,limit:'20'});if($('query').value.trim())p.set('offset',String(state.offset));else{if(state.cursor)p.set('cursor',state.cursor);if(['source','competition','year'].some(key=>$(key).value))p.set('sort','source');}for(const key of ['subject','source','collection','stars','competition','year','type'])if($(key).value)p.set(key,$(key).value);if(state.kind)p.set('kind',state.kind);return p;}
 function difficultyBadge(item){
   const n=item.stars??item.difficulty?.stars;if(!Number.isInteger(n)||n<1||n>5)return '';
   const provisional=!['reviewed','community_calibrated'].includes(item.difficulty?.status);
@@ -126,16 +194,16 @@ function previewText(text){
   if(open.length)cut=Math.min(cut,open[0]);return value.slice(0,cut).trim();
 }
 function renderResults(items){
-  $('results').innerHTML=items.length?items.map(x=>`<button class="result${state.question===x.id?' active':''}" data-question="${esc(x.id)}"><span class="source">${esc(x.source_title)}</span><strong>${esc(x.original_number)}${x.unresolved_source?' · '+esc(tr('unresolved')):''}</strong>${difficultyBadge(x)}<span class="snippet">${esc(previewText(x.snippet))}</span></button>`).join(''):`<p style="padding:18px" class="muted">${esc(tr('empty'))}</p>`;
+  $('results').innerHTML=items.length?items.map(x=>`<button class="result${state.question===x.id?' active':''}" data-question="${esc(x.id)}"><span class="number">${esc(x.original_number)}</span><span class="result-body"><span class="source">${esc(x.source_title)}${[x.year,x.round,x.problem_type?tr(x.problem_type):''].filter(Boolean).map(v=>' · '+esc(v)).join('')}</span>${questionTitle(x)?`<strong class="row-title">${esc(questionTitle(x))}</strong>`:''}<span class="snippet">${esc(previewText(x.snippet))}</span>${x.unresolved_source?`<span class="row-status">${esc(tr('unresolved'))}</span>`:''}</span>${difficultyBadge(x)}</button>`).join(''):`<p class="empty-state">${esc(tr('empty'))}</p>`;
   const textSearch=!!$('query').value.trim();$('resultCount').textContent=items.length?`${state.offset+1}–${state.offset+items.length}`:'0';$('previous').disabled=textSearch?state.offset===0:state.cursorHistory.length===0;$('next').disabled=!state.hasMore||(textSearch&&state.offset>=300);$('resultLimit').textContent=state.limitedResults?tr('limitedResults'):'';
   $('results').querySelectorAll('[data-question]').forEach(el=>el.addEventListener('click',()=>selectQuestion(el.dataset.question)));math($('results'));
 }
 async function search(reset=false){if(reset){state.offset=0;state.cursor=null;state.nextCursor=null;state.cursorHistory=[];}const request=++state.request;message('loading');
-  try{const p=params();p.set('q',$('query').value);const data=await api('/api/problem-bank/search?'+p);if(request!==state.request)return;state.nextCursor=/^q_[a-f0-9]{64}$/.test(data.next_cursor||'')?data.next_cursor:null;state.hasMore=!!data.has_more&&($('query').value.trim()||!!state.nextCursor);state.pageSize=data.items.length;state.limitedResults=!!data.limited_results;renderResults(data.items);message('');}
+  try{const p=params();p.set('q',$('query').value);const data=await api('/api/problem-bank/search?'+p);if(request!==state.request)return;state.nextCursor=typeof data.next_cursor==='string'&&data.next_cursor.length>0&&data.next_cursor.length<=2048?data.next_cursor:null;state.hasMore=!!data.has_more&&($('query').value.trim()||!!state.nextCursor);state.pageSize=data.items.length;state.limitedResults=!!data.limited_results;renderResults(data.items);message('');}
   catch(e){if(e.name!=='AbortError'&&request===state.request){$('message').textContent=errorText(e);$('message').classList.add('error');}}
 }
 async function identify(text,file){const request=++state.request,job=++state.identifyRequest;message('working');$('photoForm').querySelector('button').disabled=true;$('retryText').disabled=true;
-  try{if(file&&!state.ocrAvailable){message('photoAdmin',true);return;}let body;if(file){body=new FormData();body.set('image',file);for(const key of ['lang','subject','source','collection','stars','limit']){const value=params().get(key);if(value)body.set(key,value);}}else body={text,lang:state.lang,subject:$('subject').value||undefined,source:$('source').value||undefined,collection:$('collection').value||undefined,stars:$('stars').value||undefined,limit:20};
+  try{if(file&&!state.ocrAvailable){message('photoAdmin',true);return;}let body;if(file){body=new FormData();body.set('image',file);for(const key of ['lang','subject','source','collection','stars','kind','competition','year','type','limit']){const value=params().get(key);if(value)body.set(key,value);}}else body={text,lang:state.lang,subject:$('subject').value||undefined,source:$('source').value||undefined,collection:$('collection').value||undefined,stars:$('stars').value||undefined,kind:state.kind||undefined,competition:$('competition').value||undefined,year:$('year').value||undefined,type:$('type').value||undefined,limit:20};
     const data=await api('/api/problem-bank/identify',{method:'POST',body});if(request!==state.request)return;state.offset=0;state.hasMore=false;state.cursor=null;state.nextCursor=null;state.cursorHistory=[];state.limitedResults=false;if(data.recognized_text){$('recognized').value=data.recognized_text;$('recognizedPanel').hidden=false;}renderResults(data.candidates||data.items);message('ocrWarning');
   }catch(e){if(e.name!=='AbortError'&&request===state.request){$('message').textContent=errorText(e);$('message').classList.add('error');}}finally{if(job===state.identifyRequest){$('photoForm').querySelector('button').disabled=false;$('retryText').disabled=false;}}
 }
@@ -179,9 +247,11 @@ async function saveFeedback(id,form,view=state.detailRequest){
   catch(error){if(error.name!=='AbortError'&&current())$('feedbackMessage').textContent=errorText(error);}
   finally{if(state.question===id&&state.detailRequest===view)button.disabled=false;}
 }
-async function selectQuestion(id){const view=++state.detailRequest;state.relatedRequest++;state.question=id;releaseImages();$('detail').innerHTML=`<p class="muted">${esc(tr('loading'))}</p>`;document.querySelectorAll('.result').forEach(el=>el.classList.toggle('active',el.dataset.question===id));
+async function selectQuestion(id){const view=++state.detailRequest;state.relatedRequest++;state.question=id;state.solutionsOpen=false;releaseImages();$('catalogView').hidden=true;$('readerView').hidden=false;$('readerView').scrollIntoView?.({block:'start',behavior:'instant'});$('readerBreadcrumb').textContent='';$('detail').innerHTML=`<p class="muted">${esc(tr('loading'))}</p>`;updateQuestionLink(id);document.querySelectorAll('.result').forEach(el=>el.classList.toggle('active',el.dataset.question===id));
   try{const {question:q}=await api(`/api/problem-bank/questions/${id}?lang=${state.lang}`);if(state.question!==id||view!==state.detailRequest)return;
-    const version=q.selected_version,groups=figureGroups(q);$('detail').innerHTML=`<p class="source-title">${esc(q.source.title)}</p><h2>${esc(q.original_number)}</h2><div class="meta"><span class="badge">${esc(tr('review'))}</span>${difficultyBadge(q)}${q.context?.unresolved_source?`<span class="badge">${esc(tr('unresolved'))}</span>`:''}${(q.subjects||[]).map(s=>`<span class="muted">${esc(SUBJECTS[s]?.[state.lang==='ko'?0:1]||s)}</span>`).join('')}</div><div class="prose">${prose(version?.text||tr('noLang'))}</div><div id="questionFigures" class="figures inline-figures"></div><div class="actions"><button id="showSolutions">${esc(tr('solutions'))}</button><button id="showRecommendations">${esc(tr('recommendations'))}</button>${q.can_view_source===true?`<button id="sourcePdf">${esc(tr('pdf'))}</button>`:''}</div><div class="figures">${groups.reference.length?`<details id="referenceFigures"><summary>${esc(tr('referenceFigures'))} (${groups.reference.length})</summary><div id="referenceFigureImages"></div></details>`:''}${groups.raw.length?`<details id="sourceFigures"><summary>${esc(tr('sourceCrops'))} (${groups.raw.length})</summary><div id="sourceFigureImages"></div></details>`:''}</div><div id="related"></div>`;
+    const version=q.selected_version,groups=figureGroups(q),title=questionTitle(q);$('readerBreadcrumb').textContent=sourceTitle(q.source)+' · '+q.original_number;
+    $('detail').innerHTML=`<div class="detail-head"><p class="source-title">${esc(sourceTitle(q.source))}${[q.year,q.round,q.problem_type?tr(q.problem_type):''].filter(Boolean).map(v=>' · '+esc(v)).join('')}</p><h2 class="question-title">${title?`<small>${esc(tr('problem'))} ${esc(q.original_number)}</small>${esc(title)}`:`${esc(tr('problem'))} ${esc(q.original_number)}`}</h2><div class="meta">${difficultyBadge(q)}<span class="badge">${esc(tr('review'))}</span>${q.context?.unresolved_source?`<span class="badge">${esc(tr('unresolved'))}</span>`:''}${(q.subjects||[]).map(s=>`<span class="muted">${esc(SUBJECTS[s]?.[state.lang==='ko'?0:1]||s)}</span>`).join('')}</div></div><h3 class="statement-label">${esc(tr('statement'))}</h3><div class="prose" lang="${state.lang}">${prose(version?.text||tr('noLang'))}</div><div id="questionFigures" class="figures inline-figures"></div><div class="actions"><button id="showSolutions" aria-expanded="false" aria-controls="related">${esc(tr('solutions'))}</button><button id="showRecommendations">${esc(tr('recommendations'))}</button>${q.can_view_source===true?`<button id="sourcePdf">${esc(tr('pdf'))}</button>`:''}</div><div class="figures">${groups.reference.length?`<details id="referenceFigures"><summary>${esc(tr('referenceFigures'))} (${groups.reference.length})</summary><div id="referenceFigureImages"></div></details>`:''}${groups.raw.length?`<details id="sourceFigures"><summary>${esc(tr('sourceCrops'))} (${groups.raw.length})</summary><div id="sourceFigureImages"></div></details>`:''}</div><div id="related"></div>`;
+    $('detail').focus?.({preventScroll:true});
     math($('detail'));loadFigures($('questionFigures'),groups.inline,id,view);$('showSolutions').addEventListener('click',()=>showSolutions(id));$('showRecommendations').addEventListener('click',()=>showRecommendations(id));if(q.can_view_source===true)$('sourcePdf').addEventListener('click',async()=>{try{const blob=await api(`/api/problem-bank/sources/${q.source_id}/pdf`);if(state.question!==id||view!==state.detailRequest)return;const url=URL.createObjectURL(blob);state.urls.push(url);const link=document.createElement('a');link.href=url;const filename=(q.source.title||'source').replace(/[\\/:*?"<>|]/g,'_').slice(0,180);link.download=/\.pdf$/i.test(filename)?filename:filename+'.pdf';link.click();}catch(e){if(e.name!=='AbortError'&&state.question===id&&view===state.detailRequest)$('message').textContent=errorText(e);}});
     if(q.context_links?.length){const button=document.createElement('button');button.textContent=(state.lang==='ko'?'참조 문제':'Referenced questions')+' ('+q.context_links.length+')';button.addEventListener('click',()=>showContexts(id));$('detail').querySelector('.actions').append(button);}
     if(groups.reference.length)lazyFigures($('referenceFigures'),$('referenceFigureImages'),groups.reference,id,view);
@@ -196,15 +266,18 @@ async function selectQuestion(id){const view=++state.detailRequest;state.related
 }
 async function showSolutions(id){
   const related=$('related'),view=state.detailRequest,action=++state.relatedRequest;
+  if(state.solutionsOpen){setSolutionsOpen(false);related.textContent='';return;}
+  setSolutionsOpen(true);
   const current=()=>state.question===id&&view===state.detailRequest&&action===state.relatedRequest&&related.isConnected;
   related.innerHTML=`<p>${esc(tr('loading'))}</p>`;
   try{const data=await api(`/api/problem-bank/questions/${id}/solutions?lang=${state.lang}`);if(!current())return;
     const assets=data.solutions.map(s=>(s.assets||[]).filter(a=>a.role==='figure'||state.user?.role==='admin'));
-    related.innerHTML='<section class="solutions"><h3>'+esc(tr('solutions'))+'</h3>'+(data.solutions.length?data.solutions.map((s,i)=>`<section class="solution-entry"><p><span class="badge">${esc(tr(s.authorship==='source_transcription'?'sourceSolution':'originalDraft'))}</span> <span class="muted">${esc(tr('review'))} · ${esc(s.kind)}</span></p><div class="prose">${prose(s.selected_version?.text||tr('noLang'))}</div>${assets[i].length?`<details data-solution-figures="${i}"><summary>${esc(tr('figures'))} (${assets[i].length})</summary><div></div></details>`:''}</section>`).join(''):`<p>${esc(tr('noSolutions'))}</p>` )+'</section>';math(related);
+    related.innerHTML='<section class="solutions"><h3>'+esc(tr('solutions'))+'</h3>'+(data.solutions.length?data.solutions.map((s,i)=>`<section class="solution-entry"><p><span class="badge">${esc(tr(s.authorship==='source_transcription'?'sourceSolution':'originalDraft'))}</span> <span class="muted">${esc(tr('review'))} · ${esc(s.kind)}</span></p><div class="prose" lang="${state.lang}">${prose(s.selected_version?.text||tr('noLang'))}</div>${assets[i].length?`<details data-solution-figures="${i}"><summary>${esc(tr('figures'))} (${assets[i].length})</summary><div></div></details>`:''}</section>`).join(''):`<p>${esc(tr('noSolutions'))}</p>` )+'</section>';math(related);
     related.querySelectorAll('[data-solution-figures]').forEach(el=>{let loaded=false;el.addEventListener('toggle',()=>{if(el.open&&!loaded&&current()){loaded=true;loadFigures(el.querySelector('div'),assets[+el.dataset.solutionFigures],id,view);}});});
   }catch(e){if(e.name!=='AbortError'&&current())related.textContent=errorText(e);}
 }
 async function showRecommendations(id){
+  setSolutionsOpen(false);
   const related=$('related'),view=state.detailRequest,action=++state.relatedRequest;
   const current=()=>state.question===id&&view===state.detailRequest&&action===state.relatedRequest&&related.isConnected;
   related.textContent=tr('loading');
@@ -213,19 +286,21 @@ async function showRecommendations(id){
   }catch(e){if(e.name!=='AbortError'&&current())related.textContent=errorText(e);}
 }
 async function showContexts(id){
+  setSolutionsOpen(false);
   const related=$('related'),view=state.detailRequest,action=++state.relatedRequest;
   const current=()=>state.question===id&&view===state.detailRequest&&action===state.relatedRequest&&related.isConnected;
   related.textContent=tr('loading');
   try{
     const data=await api(`/api/problem-bank/questions/${id}/context?lang=${state.lang}`);if(!current())return;
     const groups=data.contexts.map(figureGroups);
-    related.innerHTML='<section class="solutions"><h3>'+(state.lang==='ko'?'참조 문제':'Referenced questions')+'</h3>'+data.contexts.map((q,i)=>`<section class="solution-entry"><p class="muted">${esc(q.source.title)} · ${esc(q.original_number)}</p>${difficultyBadge(q)}<div class="prose">${prose(q.selected_version?.text||tr('noLang'))}</div><div class="inline-figures" data-context-inline="${i}"></div><button data-open-reference="${esc(q.id)}">${state.lang==='ko'?'이 문제 열기':'Open question'}</button>${groups[i].reference.length?`<details data-context-figures="${i}"><summary>${esc(tr('referenceFigures'))} (${groups[i].reference.length})</summary><div></div></details>`:''}${groups[i].raw.length?`<details data-context-raw="${i}"><summary>${esc(tr('sourceCrops'))} (${groups[i].raw.length})</summary><div></div></details>`:''}</section>`).join('')+(data.truncated?`<p class="muted">${state.lang==='ko'?'참조 문제 일부만 표시됩니다. 각 문제에서 다음 참조를 확인할 수 있습니다.':'Some references are omitted here. Open a question to inspect further references.'}</p>`:'')+'</section>';
+    related.innerHTML='<section class="solutions"><h3>'+(state.lang==='ko'?'참조 문제':'Referenced questions')+'</h3>'+data.contexts.map((q,i)=>`<section class="solution-entry"><p class="muted">${esc(q.source.title)} · ${esc(q.original_number)}</p>${difficultyBadge(q)}<div class="prose" lang="${state.lang}">${prose(q.selected_version?.text||tr('noLang'))}</div><div class="inline-figures" data-context-inline="${i}"></div><button data-open-reference="${esc(q.id)}">${state.lang==='ko'?'이 문제 열기':'Open question'}</button>${groups[i].reference.length?`<details data-context-figures="${i}"><summary>${esc(tr('referenceFigures'))} (${groups[i].reference.length})</summary><div></div></details>`:''}${groups[i].raw.length?`<details data-context-raw="${i}"><summary>${esc(tr('sourceCrops'))} (${groups[i].raw.length})</summary><div></div></details>`:''}</section>`).join('')+(data.truncated?`<p class="muted">${state.lang==='ko'?'참조 문제 일부만 표시됩니다. 각 문제에서 다음 참조를 확인할 수 있습니다.':'Some references are omitted here. Open a question to inspect further references.'}</p>`:'')+'</section>';
     math(related);related.querySelectorAll('[data-open-reference]').forEach(el=>el.addEventListener('click',()=>selectQuestion(el.dataset.openReference)));
     groups.forEach((group,i)=>loadFigures(related.querySelector(`[data-context-inline="${i}"]`),group.inline,id,view));
     related.querySelectorAll('[data-context-figures]').forEach(el=>{let loaded=false;el.addEventListener('toggle',()=>{if(el.open&&!loaded&&current()){loaded=true;loadFigures(el.querySelector('div'),groups[+el.dataset.contextFigures].reference,id,view);}});});
     related.querySelectorAll('[data-context-raw]').forEach(el=>{let loaded=false;el.addEventListener('toggle',()=>{if(el.open&&!loaded&&current()){loaded=true;loadFigures(el.querySelector('div'),groups[+el.dataset.contextRaw].raw,id,view);}});});
   }catch(e){if(e.name!=='AbortError'&&current())related.textContent=errorText(e);}
 }
+function setSolutionsOpen(open){state.solutionsOpen=open;$('showSolutions').textContent=tr(open?'hideSolutions':'solutions');$('showSolutions').setAttribute('aria-expanded',String(open));}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();state.bootstrapRequest++;bootstrapError();const button=e.currentTarget.querySelector('button');button.disabled=true;$('loginMessage').textContent=tr('working');try{const form=new FormData(e.currentTarget),data=await api('/auth/login',{method:'POST',body:{username:form.get('username'),password:form.get('password')}});state.token=data.token;state.user=data.user;sessionStorage.setItem('hlBankToken',data.token);$('loginForm').reset();$('loginMessage').textContent='';await showLibrary();}catch(e){if(e.name!=='AbortError')$('loginMessage').textContent=e.status===401?tr('badLogin'):errorText(e);}finally{button.disabled=false;}});
 $('retryBootstrap').addEventListener('click',restoreSession);
 $('logout').addEventListener('click',()=>signOut());$('theme').addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';localStorage.setItem('hlBankTheme',state.theme);applyTheme();});
@@ -239,16 +314,23 @@ function changePage(direction){
   return search();
 }
 $('previous').addEventListener('click',()=>changePage(-1));$('next').addEventListener('click',()=>changePage(1));
-for(const key of ['collection','stars','subject','source'])$(key).addEventListener('change',()=>search(true));
+for(const key of ['collection','stars','subject','source'])$(key).addEventListener('change',()=>{renderSources();search(true);});
+for(const key of ['competition','year','type'])$(key).addEventListener('change',()=>{$('source').value='';if(key==='competition')$('year').value='';renderSources();search(true);});
+$('kindNav').querySelectorAll('[data-kind]').forEach(button=>button.addEventListener('click',()=>chooseKind(button.dataset.kind)));
+$('sourceQuery').addEventListener('input',()=>renderSourceList());
+$('backToList').addEventListener('click',closeQuestion);
+$('accountLogin').addEventListener('click',rememberLearningReturn);
+$('clearFilters').addEventListener('click',()=>{for(const key of ['query','subject','source','stars','competition','year','type','sourceQuery'])$(key).value='';$('collection').value=['physics','astronomy'].includes(launch.searchParams.get('collection'))?launch.searchParams.get('collection'):'';state.kind='';renderSources();search(true);});
 for(const mode of ['text','photo'])$(mode+'Mode').addEventListener('click',()=>{if(mode==='photo'&&!state.ocrAvailable)return;state.mode=mode;$('photoForm').hidden=mode!=='photo';for(const key of ['text','photo']){$(key+'Mode').classList.toggle('selected',key===mode);$(key+'Mode').setAttribute('aria-selected',String(key===mode));}});
 $('photoForm').addEventListener('submit',e=>{e.preventDefault();const file=$('photo').files[0];if(!file||!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>8*1024*1024){message('imageSize',true);return;}identify(null,file);});$('retryText').addEventListener('click',()=>identify($('recognized').value));
 if(EMBED){
   document.documentElement.dataset.embedded='true';$('loginForm').hidden=true;$('siteLogin').hidden=false;
   $('siteLogin').addEventListener('click',rememberLearningReturn);
-  window.addEventListener('message',event=>{if(event.origin!==launch.origin||event.source!==window.parent||event.data?.type!=='hl-bank-settings')return;if(['light','dark'].includes(event.data.theme)){state.theme=event.data.theme;applyTheme();}const changedCollection=['physics','astronomy'].includes(event.data.collection)&&$('collection').value!==event.data.collection;if(changedCollection)$('collection').value=event.data.collection;if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang)setLanguage(event.data.lang);else if(changedCollection)search(true);});
+  window.addEventListener('message',event=>{if(event.origin!==launch.origin||event.source!==window.parent||event.data?.type!=='hl-bank-settings')return;if(['light','dark'].includes(event.data.theme)){state.theme=event.data.theme;applyTheme();}const changedCollection=['physics','astronomy'].includes(event.data.collection)&&$('collection').value!==event.data.collection;if(changedCollection){$('collection').value=event.data.collection;renderSources();}if(['ko','en'].includes(event.data.lang)&&event.data.lang!==state.lang)setLanguage(event.data.lang);else if(changedCollection)search(true);});
   window.addEventListener('storage',event=>{if(event.key!==null&&event.key!=='hlCmTok')return;const token=sharedToken();if(token===state.token)return;signOut(false,false);state.token=token;restoreSession();});
   const size=()=>{const height=Math.ceil(document.querySelector('main').getBoundingClientRect().height)+24;if(Number.isFinite(height))window.parent.postMessage({type:'hl-bank-height',height},launch.origin);};
   if(typeof ResizeObserver==='function')new ResizeObserver(size).observe(document.body);
   size();
 }
+if(matchMedia('(max-width: 600px)').matches)$('sourceBrowser').open=false;
 translate();if(['physics','astronomy'].includes(launch.searchParams.get('collection')))$('collection').value=launch.searchParams.get('collection');restoreSession();

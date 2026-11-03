@@ -1,12 +1,12 @@
 // Initial estimates are deliberately separate from reviewed ratings and outcomes.
 // Source/statement identities stay in the canonical ingestion tables.
 export const BANK_METHOD='rubric-v1';
-export const BANK_SUBJECTS=['classical_mechanics','electromagnetism','thermodynamics','optics','quantum_mechanics','relativity','special_relativity','general_relativity','statistical_mechanics','oscillations_waves','mathematical_methods','astronomy_astrophysics','mixed'];
+export const BANK_SUBJECTS=['classical_mechanics','electromagnetism','thermodynamics','optics','quantum_mechanics','relativity','special_relativity','general_relativity','statistical_mechanics','oscillations_waves','mathematical_methods','astronomy_astrophysics','mathematics','chemistry','biology','earth_science','informatics','mixed'];
 export const BANK_REGISTRY_SCHEMA=`
 CREATE TABLE IF NOT EXISTS bank_source_presentations(
  source_id TEXT PRIMARY KEY,title_en TEXT NOT NULL,title_ko TEXT NOT NULL,display_title TEXT NOT NULL,
  primary_author TEXT NOT NULL DEFAULT '',credit_role TEXT NOT NULL DEFAULT '',edition_label TEXT,
- collection TEXT NOT NULL CHECK(collection IN ('physics','astronomy')),source_sha256 TEXT NOT NULL,
+ collection TEXT NOT NULL CHECK(collection IN ('physics','astronomy','mathematics','chemistry','biology','earth_science','informatics')),source_sha256 TEXT NOT NULL,
  proof_json TEXT NOT NULL CHECK(json_valid(proof_json)),updated_at TEXT NOT NULL);
 CREATE TABLE IF NOT EXISTS bank_asset_display_policy(
  asset_id TEXT PRIMARY KEY,question_id TEXT NOT NULL,sha256 TEXT NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS bank_difficulty_reviews(
 `;
 export const BANK_FACETS_SCHEMA=`
 CREATE TABLE IF NOT EXISTS bank_question_facets(
- question_id TEXT PRIMARY KEY,source_id TEXT NOT NULL,collection TEXT NOT NULL CHECK(collection IN ('physics','astronomy')),
+ question_id TEXT PRIMARY KEY,source_id TEXT NOT NULL,collection TEXT NOT NULL CHECK(collection IN ('physics','astronomy','mathematics','chemistry','biology','earth_science','informatics')),
  subjects_json TEXT NOT NULL CHECK(json_valid(subjects_json)),stars INTEGER NOT NULL CHECK(stars BETWEEN 1 AND 5),
  difficulty_status TEXT NOT NULL CHECK(difficulty_status IN ('provisional','reviewed','community_calibrated')),
  confidence TEXT NOT NULL CHECK(confidence IN ('low','medium','high')),reason_codes_json TEXT NOT NULL CHECK(json_valid(reason_codes_json)),

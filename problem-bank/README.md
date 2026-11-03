@@ -33,6 +33,16 @@ Export the current canonical routed statement bodies privately, verifying actual
 
 R2 object keys use `sources/<sha256>.pdf` or `figures/<sha256>.png|svg`. Admit a figure only after source/question/parent-asset identity, exact crop bounds, givens-only visual approval and full remote SHA readback. Raster crops retain original labels; they are not falsely described as vector redraws. SVG extraction must reject scripts, events, external references and off-crop hidden text. Keep the bucket's public development URL disabled. This bucket is separate from temporary student answer scans.
 
+## Contest catalogue and reader
+
+The public catalogue uses compact source navigation and a separate reading view. Answers remain an explicit request. Source types (`contest`, `book`, `course`), competition, year, round, theory/experiment type and bilingual titles are typed metadata, separate from source identity and difficulty. A PDF containing six independent questions stays a six-question source even when only two are digitized. A catalogue title or PDF link is not a digitized question.
+
+`tools/problem-bank/catalogue.mjs` exports private, insert-only `bank_question_catalogue` rows from validated source/question identities and exact English text hashes. Book order follows canonical section/chapter locators; contest order follows competition, year, round, paper type and natural problem codes. Empty-query `sort=source` uses opaque `sc_` keyset cursors; ranked text search keeps its existing pagination. `/sources` returns up to 200 sources by default (maximum 500), with `has_more` and an SID `next_cursor` passed back as `after`. The UI loads bounded pages and never infers contest metadata from filenames.
+
+Stored HaslaLab PDF assets may use an explicit `repository_asset` origin: canonical repository URL, actual archive path and `sha256:<actual PDF bytes>` revision. A Git byte commit is recorded only when verified. This typed origin never fabricates a Drive ID or license. Source-PDF page bounds, separate question/solution assets, complete byte readback and pending scientific review remain required. Raw PDFs, native extraction, translations and private exports stay outside the public checkout.
+
+All seven archive disciplines are supported. Existing two-discipline CHECK constraints need a lossless migration before other-discipline rows are admitted. `tools/problem-bank/collection-migration.mjs` plans the fixed-table expansion; snapshot every existing row/schema/index, apply its SQL atomically and compare every field after migration. It does not reclassify prior records or alter question bodies. Whole-corpus download/native preprocessing is tracked separately from individual bilingual question completion.
+
 ## Validation and deployment
 
 ```powershell

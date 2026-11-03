@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {DatabaseSync} from 'node:sqlite';import {createHash} from 'node:crypto';
+import {sourceId,questionId} from './store.mjs';import {catalogueRecords,catalogueSql} from './catalogue.mjs';import {BANK_CATALOGUE_SCHEMA} from '../../community/src/problem-bank-catalogue.js';
+const sha=x=>createHash('sha256').update(x).digest('hex'),source={drive_id:'synthetic-book',revision:'one',subjects:['classical_mechanics'],collection:'physics'};source.id=sourceId(source);
+const q=(locator,number,catalogue)=>({id:questionId(source,locator),source_id:source.id,locator,original_number:number,context:catalogue?{catalogue}:{},versions:[{language:'en',text:'Synthetic '+locator,text_sha256:sha('Synthetic '+locator)}]});
+test('derived catalogue retains exact identities and orders reset local numbers by canonical sections',()=>{
+ const qs=[q('section-09/problem-01','1'),q('section-05/problem-02','2'),q('section-05/problem-01','1')],rows=catalogueRecords({sources:[source],questions:qs}),db=new DatabaseSync(':memory:');try{db.exec(BANK_CATALOGUE_SCHEMA);db.exec(catalogueSql(rows));assert.deepEqual(db.prepare('SELECT question_id FROM bank_question_catalogue ORDER BY sort_key,question_id').all().map(x=>x.question_id),[qs[2].id,qs[1].id,qs[0].id]);assert.ok(rows.every(x=>x.source_kind==='book'&&x.year===null&&x.discipline==='physics'));assert.throws(()=>db.exec(catalogueSql(rows)));}finally{db.close();}
+});
+test('contest entries retain bilingual titles and natural T2/T10 ordering across source file identities',()=>{
+ const c={kind:'contest',competition:'synthetic',year:2020,problem_type:'theory',discipline:'physics'};const s={...source,catalogue:c};const qs=[q('theory/T10','T10',{...c,problem_code:'T10',title_en:'Synthetic ten',title_ko:'가상 10'}),q('theory/T2','T2',{...c,problem_code:'T2',title_en:'Synthetic two',title_ko:'가상 2'})];const rows=catalogueRecords({sources:[s],questions:qs});assert.ok(rows[1].sort_key<rows[0].sort_key);assert.equal(rows[0].title_ko,'가상 10');assert.equal(rows[0].source_kind,'contest');
+});
+test('catalogue export rejects mismatched identities, duplicate locators, malformed scope and stale English hashes',()=>{
+ const first=q('section-05/problem-01','1');assert.throws(()=>catalogueRecords({sources:[source],questions:[first,first]}));assert.throws(()=>catalogueRecords({sources:[source],questions:[{...first,id:questionId(source,'other')}]}));assert.throws(()=>catalogueRecords({sources:[source],questions:[{...first,versions:[{language:'en',text:'changed',text_sha256:sha('old')}]}]}));assert.throws(()=>catalogueRecords({sources:[{...source,catalogue:{kind:'contest'}}],questions:[first]}));
+});

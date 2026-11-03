@@ -416,3 +416,52 @@ test('unexpected database errors return no SQL or private diagnostics',async()=>
   const req=new Request(base+'/status'),res=await problemBankRoute(req,env,new URL(req.url),{user:admin});
   assert.equal(res.status,503);assert.equal((await res.json()).error,'problem_bank_unavailable');
 });
+
+test('contest catalogue filters keep source, year and theory/experiment boundaries in both languages',async t=>{
+ const f=fixture(t);for(const [id,s] of [[Q1,S1],[Q2,S1],[Q3,S2]])seedFacet(f,id,s);
+ const source=JSON.parse(f.main.prepare('SELECT source_json FROM bank_source_routes WHERE source_id=?').get(S1).source_json);source.catalogue={kind:'contest',competition:'ipho',year:2020,discipline:'physics'};f.main.prepare('UPDATE bank_source_routes SET source_json=? WHERE source_id=?').run(JSON.stringify(source),S1);
+ const insert=f.index.prepare('INSERT INTO bank_question_catalogue VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+ for(const [id,s,kind,year,type,code] of [[Q1,S1,'contest',2020,'theory','T1'],[Q2,S1,'contest',2020,'experiment','E1'],[Q3,S2,'book',null,null,'3']]){
+  const c={kind,competition:kind==='contest'?'ipho':null,year,problem_type:type,problem_code:code,discipline:'physics',title_en:'Synthetic '+code,title_ko:'가상 '+code};
+  insert.run(id,s,kind,c.competition,year,null,type,code,c.title_en,c.title_ko,'physics',code.padStart(10,'0'),sha('basis'),sha('metadata'),'now');
+  if(id===Q1)f.b2.prepare('UPDATE bank_question_context SET context_json=? WHERE question_id=?').run(JSON.stringify({catalogue:c}),id);
+ }
+ for(const lang of ['en','ko']){
+  let result=await (await f.call('/search?kind=contest&competition=ipho&year=2020&type=theory&lang='+lang,{user:null})).json();assert.deepEqual(result.items.map(x=>x.id),[Q1]);assert.equal(result.items[0].source_kind,'contest');assert.equal(result.items[0].title_ko,'가상 T1');assert.equal(result.items[0].problem_type,'theory');
+  result=await (await f.call('/search?kind=contest&type=experiment&lang='+lang,{user:null})).json();assert.deepEqual(result.items.map(x=>x.id),[Q2]);
+  result=await (await f.call('/search?kind=book&lang='+lang,{user:null})).json();assert.deepEqual(result.items.map(x=>x.id),[Q3]);
+ }
+ const sourceResult=await (await f.call('/sources',{user:null})).json();assert.equal(sourceResult.sources.find(x=>x.id===S1).kind,'contest');
+ const detail=await (await f.call('/questions/'+Q1,{user:null})).json();assert.equal(detail.question.kind,'problem');assert.equal(detail.question.source_kind,'contest');assert.equal(detail.question.title_en,'Synthetic T1');assert.equal(detail.question.year,2020);assert.equal(detail.question.solutions,undefined);
+});
+
+test('invalid catalogue filters fail before querying and absent additive metadata never invents contests',async t=>{
+ const f=fixture(t);for(const path of ['?kind=unknown','?year=abc','?year=0','?year=2200','?competition=ipho%27%20OR%201','?type=written'])assert.equal((await f.call('/search'+path,{user:null})).status,400);
+ const detail=await (await f.call('/questions/'+Q1,{user:null})).json();assert.equal(detail.question.source_kind,'book');assert.equal(detail.question.competition,null);
+ f.index.exec('DROP TABLE bank_question_catalogue');assert.equal((await f.call('/search?kind=contest',{user:null})).status,503);assert.equal((await f.call('/search',{user:null})).status,200);
+});
+
+test('natural source order crosses the legacy offset boundary with opaque stable cursors',async t=>{
+ const f=fixture(t),ordered=[];const insert=f.index.prepare('INSERT INTO bank_question_catalogue VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+ for(let number=1;number<=331;number++){
+  const loc='ordered-'+number,id=qid(S1,loc),text='Synthetic ordered statement '+number;f.question(f.b2,id,S1,loc,text);f.doc(id,S1,loc,text);
+  const key='ordered/2020/theory/'+String(number).padStart(12,'0');insert.run(id,S1,'contest','ordered',2020,null,'theory','T'+number,null,null,'physics',key,sha(text),sha(key),'now');ordered.push(id);
+ }
+ const collected=[];let cursor=null,pages=0;
+ do{const response=await f.call('/search?lang=en&kind=contest&competition=ordered&sort=source&limit=30'+(cursor?'&cursor='+encodeURIComponent(cursor):''),{user:null});assert.equal(response.status,200);const data=await response.json();collected.push(...data.items.map(x=>x.id));cursor=data.next_cursor;if(cursor)assert.match(cursor,/^sc_/);pages++;assert.ok(pages<20);}while(cursor);
+ assert.deepEqual(collected,ordered);assert.equal(new Set(collected).size,331);
+ for(const query of ['sort=bad','sort=source&cursor=sc_!!!','sort=source&cursor='+Q1,'cursor=sc_abc'])assert.equal((await f.call('/search?'+query,{user:null})).status,400);
+});
+
+test('source navigation paginates beyond five hundred registered sources without losing entries',async t=>{
+ const f=fixture(t);for(let n=10;n<611;n++)f.main.prepare('INSERT INTO bank_source_routes VALUES(?,?,?)').run(sid(n),JSON.stringify({title:'Synthetic registered source '+n,subjects:['classical_mechanics'],page_count:1,source_language:'en'}),'haslalab-problem-bank-02');
+ const all=[];let after=null,pages=0;do{const response=await f.call('/sources?source_limit=200'+(after?'&after='+after:''),{user:null});assert.equal(response.status,200);const data=await response.json();all.push(...data.sources.map(x=>x.id));after=data.next_cursor;if(after)assert.match(after,/^src_/);pages++;assert.ok(pages<8);}while(after);
+ assert.equal(all.length,603);assert.equal(new Set(all).size,603);assert.deepEqual(all,[...all].sort());
+ for(const query of ['after=bad','source_limit=0','source_limit=501'])assert.equal((await f.call('/sources?'+query,{user:null})).status,400);
+});
+
+test('photo and supplied-text identification respect contest scope before any paid OCR call',async t=>{
+ const f=fixture(t);f.index.prepare('INSERT INTO bank_question_catalogue VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').run(Q1,S1,'contest','ipho',2020,null,'theory','T1','Synthetic',null,'physics','ipho/2020/0/1',sha(statement),sha('meta'),'now');
+ const body=JSON.stringify({text:statement,lang:'ko',kind:'contest',competition:'ipho',year:2020,type:'theory'});const response=await f.call('/identify',{user:null,method:'POST',headers:{'Content-Type':'application/json'},body});assert.equal(response.status,200);const data=await response.json();assert.deepEqual(data.items.map(x=>x.id),[Q1]);assert.equal(data.ocr_used,false);
+ let calls=0;const form=new FormData();form.set('image',new Blob([PNG],{type:'image/png'}),'test.png');form.set('kind','contest');form.set('year','bad');const invalid=await f.call('/identify',{method:'POST',body:form,ocr:()=>{calls++;return statement;}});assert.equal(invalid.status,400);assert.equal(calls,0);
+});

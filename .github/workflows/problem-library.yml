@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node --test community/test-problem-bank.mjs community/test-problem-bank-model.mjs problem-bank/test-worker.mjs tools/problem-bank/test-search-index.mjs tests/test-problem-library-learning.cjs tests/test-learn-coming-soon.cjs
+      - run: node --test community/test-problem-bank.mjs community/test-problem-bank-model.mjs problem-bank/test-worker.mjs problem-bank/test-public-ui.mjs tools/problem-bank/test-search-index.mjs tools/problem-bank/test-store.mjs tools/problem-bank/test-solutions.mjs tools/problem-bank/test-url-origin.mjs tools/problem-bank/test-repository-origin.mjs tools/problem-bank/test-catalogue.mjs tools/problem-bank/test-collection-migration.mjs tests/test-problem-library-learning.cjs tests/test-learn-coming-soon.cjs
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

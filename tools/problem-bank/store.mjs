@@ -3,8 +3,9 @@ import {createHash,randomUUID} from 'node:crypto';
 import {readFile,open,rename,unlink,mkdir,realpath,lstat} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
+import {normalizeBankCatalogue} from '../../community/src/problem-bank-catalogue.js';
 
-export const SUBJECTS=['classical_mechanics','electromagnetism','thermodynamics','optics','quantum_mechanics','relativity','statistical_mechanics','oscillations_waves','mathematical_methods','astronomy_astrophysics','mixed'];
+export const SUBJECTS=['classical_mechanics','electromagnetism','thermodynamics','optics','quantum_mechanics','relativity','statistical_mechanics','oscillations_waves','mathematical_methods','astronomy_astrophysics','mathematics','chemistry','biology','earth_science','informatics','mixed'];
 export const LEVELS=['high_school','olympiad','undergraduate','graduate','mixed'];
 export const SCHEMA_PATH=fileURLToPath(new URL('./schema.sql',import.meta.url));
 const PUBLIC_ROOT=fileURLToPath(new URL('../../',import.meta.url));
@@ -50,11 +51,21 @@ function urlOrigin(raw){
   }
   return origin;
 }
+function repositoryOrigin(raw){
+  object(raw,'source.origin');choice(raw.kind,['repository_asset'],'source.origin.kind');
+  const origin={kind:'repository_asset',repository_url:sourceUrl(raw.repository_url),repository_path:privateKey(raw.repository_path,'origin.repository_path')};
+  if(raw.commit!=null){if(typeof raw.commit!=='string'||!/^([a-f0-9]{40}|[a-f0-9]{64})$/.test(raw.commit))fail('origin.commit: expected exact Git commit');origin.commit=raw.commit;}
+  if(raw.official_source_url!=null)origin.official_source_url=sourceUrl(raw.official_source_url);
+  if(raw.rights!=null){object(raw.rights,'origin.rights');choice(raw.rights.status,['not_established','user_provided','licensed'],'origin.rights.status');origin.rights={status:raw.rights.status};if(raw.rights.note!=null)origin.rights.note=text(raw.rights.note,'origin.rights.note',2000);}
+  return origin;
+}
+function originKey(origin){return origin.kind==='repository_asset'?'repository_asset:'+origin.repository_url+'#'+origin.repository_path:origin.url;}
 export function sourceId(source){
   const revision=text(source.revision,'revision',240);
   if(source.origin!=null){
     if(source.drive_id!=null)fail('Source identity cannot combine Drive and URL origins');
-    object(source.origin,'source.origin');choice(source.origin.kind,['url'],'source.origin.kind');
+    object(source.origin,'source.origin');choice(source.origin.kind,['url','repository_asset'],'source.origin.kind');
+    if(source.origin.kind==='repository_asset')return 'src_'+sha('repository_asset\0'+sourceUrl(source.origin.repository_url)+'\0'+privateKey(source.origin.repository_path,'origin.repository_path')+'\0'+revision);
     return 'src_'+sha('url\0'+sourceUrl(source.origin.url)+'\0'+revision);
   }
   return 'src_'+sha(text(source.drive_id,'drive_id',240)+'\0'+revision);
@@ -134,10 +145,11 @@ export function normalizeImport(manifest,questionFile={version:1,questions:[]},{
       source_language:language(raw.source_language,'source_language'),private_object_key:raw.private_object_key==null?null:privateKey(raw.private_object_key,'source.private_object_key'),
       local_path:raw.local_path==null?null:text(raw.local_path,'local_path',3000),expected_question_count:raw.expected_question_count==null?null:positive(raw.expected_question_count,'expected_question_count'),extraction_complete:raw.extraction_complete===true};
     if(raw.origin!=null){
-      source.origin=urlOrigin(raw.origin);
+      source.origin=raw.origin.kind==='repository_asset'?repositoryOrigin(raw.origin):urlOrigin(raw.origin);
       if(source.revision!=='sha256:'+source.sha256)fail('URL source revision must identify the actual PDF SHA-256');
       if(source.origin.archive_member&&source.origin.archive_member.member_sha256!==source.sha256)fail('Archive member SHA-256 must identify the actual source PDF');
     }
+    if(raw.catalogue!=null)source.catalogue=normalizeBankCatalogue(raw.catalogue,{source:true});
     if(raw.extraction_complete!=null&&typeof raw.extraction_complete!=='boolean')fail('extraction_complete: expected boolean');
     if(source.extraction_complete&&source.expected_question_count==null)fail('Complete extraction requires expected_question_count');
     if(sourceMap.has(id)&&JSON.stringify(sourceMap.get(id))!==JSON.stringify(source))fail('Conflicting duplicate source revision');sourceMap.set(id,source);
@@ -149,6 +161,7 @@ export function normalizeImport(manifest,questionFile={version:1,questions:[]},{
       level:choice(raw.level??source.level,LEVELS,'question.level'),spans:spans(raw.spans,source,'question.spans'),review_status:review(raw.review_status)};
     q.source_language=language(raw.source_language??source.source_language,'question.source_language');
     q.context=object(raw.context??{},'question.context');
+    if(q.context.catalogue!=null)q.context={...q.context,catalogue:normalizeBankCatalogue(q.context.catalogue)};
     if(JSON.stringify(q.context).length>20000)fail('Question context exceeds storage limit');
     if(q.context.unresolved_source!=null&&typeof q.context.unresolved_source!=='boolean')fail('unresolved_source must be boolean');
     const {review_status,...metadata}=q;q.metadata_hash=sha(JSON.stringify(metadata));q.versions=[];q.assets=[];
@@ -180,7 +193,7 @@ export function* importStatementIterator(normalized,{timestamp=new Date().toISOS
     // The legacy SQL column is an opaque identity key. A URL origin stores its
     // actual URL here; it never fabricates a Drive file ID. Public provenance
     // remains explicitly typed in bank_source_origins and normalized sources.
-    [s.id,s.drive_id??s.origin?.url,s.revision,s.title,s.mime_type,s.sha256,s.page_count,JSON.stringify(s.subjects),s.level,s.source_language,s.private_object_key,s.local_path,s.expected_question_count,+s.extraction_complete,timestamp,timestamp]);
+    [s.id,s.drive_id??originKey(s.origin),s.revision,s.title,s.mime_type,s.sha256,s.page_count,JSON.stringify(s.subjects),s.level,s.source_language,s.private_object_key,s.local_path,s.expected_question_count,+s.extraction_complete,timestamp,timestamp]);
     if(s.origin)yield statement(`INSERT INTO bank_source_origins(source_id,origin_json,updated_at) VALUES(?,?,?)
       ON CONFLICT(source_id) DO UPDATE SET origin_json=excluded.origin_json,updated_at=excluded.updated_at`,[s.id,JSON.stringify(s.origin),timestamp]);
   }
