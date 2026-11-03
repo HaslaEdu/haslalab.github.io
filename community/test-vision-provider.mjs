@@ -213,6 +213,15 @@ test('OpenAI Responses API (bench): reasoning with tools, the reasoning items se
   fetchImpl:async()=>Response.json({status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output:[],usage:{input_tokens:1,output_tokens:1}})}),e=>e.code==='vision_response_truncated');
 });
 
+test('Gemini through Vertex AI express (bench api vertex): the publisher-model endpoint with GOOGLE_CLOUD_API_KEY; without the key it is unavailable',async()=>{
+ const seen=[];const fetchImpl=async(url,init)=>{seen.push({url,key:init.headers['x-goog-api-key']});return Response.json({modelVersion:'gemini-3.8-flash',candidates:[{finishReason:'STOP',content:{parts:[{text:'{"text":"x"}'}]}}],usageMetadata:{promptTokenCount:5,candidatesTokenCount:2}});};
+ await visionJSON({GEMINI_API_KEY:'studio',GOOGLE_CLOUD_API_KEY:' cloud\n'},{provider:'gemini',model:'gemini-3.8-flash',geminiVertex:true,fetchImpl,parts:[{text:'x'}]});
+ assert.equal(seen[0].url,'https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-3.8-flash:generateContent');assert.equal(seen[0].key,'cloud');
+ await visionJSON({GEMINI_API_KEY:'studio'},{provider:'gemini',model:'gemini-3.8-flash',fetchImpl,parts:[{text:'x'}]});
+ assert.match(seen[1].url,/generativelanguage\.googleapis\.com/);assert.equal(seen[1].key,'studio','AI Studio as before');
+ await assert.rejects(visionJSON({GEMINI_API_KEY:'studio'},{provider:'gemini',geminiVertex:true,fetchImpl,parts:[{text:'x'}]}),e=>e.code==='provider_unavailable');
+});
+
 test('Upstage Solar goes through its OpenAI-compatible endpoint with max_tokens, and is a stage provider only',async()=>{
  const { visionProvider } = await import('./src/vision-provider.js');
  const seen=[];const fetchImpl=async(url,init)=>{seen.push({url,body:JSON.parse(init.body),auth:init.headers.Authorization});return Response.json({model:'solar-mini4',choices:[{finish_reason:'stop',message:{content:'{"text":"x"}'}}],usage:{prompt_tokens:10,completion_tokens:5}});};
