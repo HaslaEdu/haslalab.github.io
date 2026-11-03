@@ -94,6 +94,10 @@ LAB_FOCUS_READ = "on"
 # answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
 # reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
 LAB_KEEP_HOURS = "off"
+# weekly Google Drive backup (src/drive-backup.js): Sunday 18:00 UTC, a gzipped SQL dump (newest 8 kept) and each answer
+# photo once, removed from Drive when the site lets it go. Needs the secrets GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET and
+# GDRIVE_REFRESH_TOKEN (scope drive.file); without them nothing runs. "off" stops it.
+BACKUP_DRIVE = "on"
 # empty: Gemini thinks at the level the bench measured (minimal); "off" would leave it to the model
 LAB_READ_THINKING = ""
 # 3.8 Flash on AI Studio: 7 of 17 production reads failed at 126-128 s (a page looping on itself; the same on Vertex),
