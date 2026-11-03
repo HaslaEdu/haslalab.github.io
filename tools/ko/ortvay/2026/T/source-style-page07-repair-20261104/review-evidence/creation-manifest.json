@@ -1,0 +1,226 @@
+{
+  "cases": [
+    {
+      "case": "positive_nested_q_Q_restore",
+      "expected": "PASS",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\positive_nested_q_Q_restore.pdf",
+        "sha256": "6ff59a51bc016ad2f6526d5712d39af10c61df24bdba9b15cd9c90a3849c66b0"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "positive_noncommuting_CM",
+      "expected": "PASS",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\positive_noncommuting_CM.pdf",
+        "sha256": "5ee7ca23665ce731c43f22fb3be3b669b7818f6db78e4cd7372939dc437ca975"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "positive_rotation_in_Tm",
+      "expected": "PASS",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\positive_rotation_in_Tm.pdf",
+        "sha256": "12053499948c046790010f2ec25ee2d5f192cb17a6786c1e7488667a99046fdd"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "negative_body_left_shear",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.pdf",
+        "sha256": "2062385ac5e56ecaa46656fe2110865166b61b6e533c60c5d8a0ddecfcc67d86"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_body_left_shear.pdf",
+        "sha256": "c9c2eb2067ebd9745c909ccb902b498aefb0d04e2a4525b7d9fdd957cb5e2ac6"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 789
+      }
+    },
+    {
+      "case": "negative_wrong_right_shear13",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.pdf",
+        "sha256": "2062385ac5e56ecaa46656fe2110865166b61b6e533c60c5d8a0ddecfcc67d86"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_wrong_right_shear13.pdf",
+        "sha256": "1f10b5c569f03004791efa55b516102c130675ca164632c3c6ee1ffea14179d5"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 789
+      }
+    },
+    {
+      "case": "negative_wrong_rotation89",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_wrong_rotation89.pdf",
+        "sha256": "6d4c9bc794ad69fc274860cf74214d74df5ffef39ce2b0a61e4af2f2247062a8"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "negative_rotated_hidden_left_shear",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_rotated_hidden_left_shear.pdf",
+        "sha256": "cf9e64fbe02fedbc5760b18463bf756e8882b8bf3fcce6cd9b8e85bfc3da3b6d"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "negative_Tm_shift_point01",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_Tm_shift_point01.pdf",
+        "sha256": "0927ac42bddfcc832643ba44a64e3f38af1d32d38d1a60eba55e765db97f5151"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "negative_scale1point001",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_scale1point001.pdf",
+        "sha256": "fdf3aa188ccfd35297fb1e2a2c97e33374b577d3f0a754b66db9be61fea4daef"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "negative_drop_vertical_label",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_drop_vertical_label.pdf",
+        "sha256": "6e73b2da61b9ad8757bff1e35c591932ce3fc2c53e0be01f1b3badb614004412"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 856
+      }
+    },
+    {
+      "case": "negative_unplanned_body_rotation",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page07.pdf",
+        "sha256": "9bd90013ed69e0ffa3a9c89beed6667b2e404c8bdd0098538ad5379062711f49"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_unplanned_body_rotation.pdf",
+        "sha256": "262861c4f9750ffb1e115ca02452e005d491f679d814bb4c8b30371c0d8db9b7"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": false,
+        "streams": 857
+      }
+    },
+    {
+      "case": "negative_inherited_entry_CTM",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.pdf",
+        "sha256": "2062385ac5e56ecaa46656fe2110865166b61b6e533c60c5d8a0ddecfcc67d86"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_inherited_entry_CTM.pdf",
+        "sha256": "216a7de2f850de046ad6843814f7c7df6f7f34a4b235a9a17a76f62c32278dec"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": true,
+        "message": "('Noncanonical inherited KO entry CTM', 128, {'ctm': [1.0, 0.0, 0.0, 1.0, 0.009999999776482582, 0.0], 'fill_alpha': 1.0, 'stroke_alpha': 1.0, 'unsafe_styles': {}, 'clip': False, 'text': {'Tc': 0.0, 'Tw': 0.0, 'Ts': 0.0, 'Tz': 100.0, 'Tr': 0.0}})"
+      }
+    },
+    {
+      "case": "negative_inherited_half_opacity",
+      "expected": "REJECT",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.pdf",
+        "sha256": "2062385ac5e56ecaa46656fe2110865166b61b6e533c60c5d8a0ddecfcc67d86"
+      },
+      "target": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_inherited_half_opacity.pdf",
+        "sha256": "5d79a34dcd26d4de6c9f73140920a83e1370e43b20b57729c9422b524ebed5f6"
+      },
+      "only_named_KO_stream_and_declared_prefix_changed": true,
+      "entry_parser": {
+        "rejected": true,
+        "message": "('Noncanonical inherited KO opacity', 128, {'ctm': [1.0, 0.0, 0.0, 1.0, 0.0, 0.0], 'fill_alpha': 0.5, 'stroke_alpha': 0.5, 'unsafe_styles': {}, 'clip': False, 'text': {'Tc': 0.0, 'Tw': 0.0, 'Ts': 0.0, 'Tz': 100.0, 'Tr': 0.0}})"
+      }
+    }
+  ],
+  "source_proofs_never_modified": true
+}

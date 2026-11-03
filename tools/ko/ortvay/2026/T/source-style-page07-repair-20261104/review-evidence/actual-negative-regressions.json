@@ -1,0 +1,237 @@
+{
+  "schema": "ortvay-2026-page07-actual-repair-negative-regressions-v1",
+  "status": "ALL_REQUIRED_ACTUAL_PDF_AND_BINDING_NEGATIVES_REJECTED",
+  "numeric_spec": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\root-2026p7-review-20261104\\NUMERIC-REPAIR-SPEC.json",
+    "sha256": "b552b2f0cc95c1f0e8aae8bfdfc34fddae4037ce88703eca33f7fe61c914b24c"
+  },
+  "repair_code_input_freeze": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\REPAIR-CODE-INPUT-FROZEN.json",
+    "sha256": "772c5a7536811f041ad4e0d9bc8d179072e08e472942dfead7ee95bedd43cb50"
+  },
+  "root_GO": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\ROOT-GO.json",
+    "sha256": "345cb2fe09b90a178c9f87176cfc7fc3307a957d8c45087359f746e01e89a730"
+  },
+  "actual_positive": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\independent-qa.json",
+    "sha256": "1e8469d2b135a2b27f700c9ed0ba44b92031cc45fb7524cad4989ac6c82a861e"
+  },
+  "cases": [
+    {
+      "name": "old_failed_P1_no_shift",
+      "candidate_proof": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\old_failed_P1_no_shift\\page07.pdf",
+        "sha256": "02d2992e8d68c67017886c3b551a55cd7cb8f4e20608de4662d14c4871386780"
+      },
+      "candidate_layout": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\old_failed_P1_no_shift\\page07.layout.json",
+        "sha256": "921a62fdb4343e754db6970c84add0cf07681c8fc9948d1fb33eac74c3c039b3"
+      },
+      "fresh_layout_output_sha_matches_candidate_pdf": true,
+      "rejected": true,
+      "expected_guard": "exact_Decimal_Tm_e_delta",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "Exact approved Decimal Tm e delta required",
+        "stage": "audit_page07_repair.py:verify:190"
+      },
+      "binding_only": false
+    },
+    {
+      "name": "dx_3.1875_two_x_contact",
+      "candidate_proof": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\dx_3.1875_two_x_contact\\page07.pdf",
+        "sha256": "c49a80bb614fd48416016a75f0b43c745523a815d6923a9b8b7f959fb9040ae1"
+      },
+      "candidate_layout": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\dx_3.1875_two_x_contact\\page07.layout.json",
+        "sha256": "1c94c9ad762fa34f4d4270f0d57113527daff5055d56a92478f91a32ea063c7a"
+      },
+      "fresh_layout_output_sha_matches_candidate_pdf": true,
+      "rejected": true,
+      "expected_guard": "exact_Decimal_Tm_e_delta",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "Exact approved Decimal Tm e delta required",
+        "stage": "audit_page07_repair.py:verify:190"
+      },
+      "binding_only": false
+    },
+    {
+      "name": "wrong_upper_row_moved",
+      "candidate_proof": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\wrong_upper_row_moved\\page07.pdf",
+        "sha256": "efa533c9f12c2ef58046c545c6dce5853d3bba6b2b63ec511ed9dc3ae3414aff"
+      },
+      "candidate_layout": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\wrong_upper_row_moved\\page07.layout.json",
+        "sha256": "9829822c970e6c6e50f410fce939ad8f28b7218ca2b6266ad104467508bcec25"
+      },
+      "fresh_layout_output_sha_matches_candidate_pdf": true,
+      "rejected": true,
+      "expected_guard": "nonselected_effective_object_or_stream_exact",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "('Nonselected effective object changed', 278)",
+        "stage": "audit_page07_repair.py:object_delta:73"
+      },
+      "binding_only": false
+    },
+    {
+      "name": "only_three_of_four_glyphs_shifted",
+      "candidate_proof": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\only_three_of_four_glyphs_shifted\\page07.pdf",
+        "sha256": "2fde230537bd0b161d9af3dcbd23599ee55a03770863e7474d1130045f3e21f8"
+      },
+      "candidate_layout": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\only_three_of_four_glyphs_shifted\\page07.layout.json",
+        "sha256": "827a783b7369b4324350b254181ef47585e015fe115d4ec87a5f322859d9f3c9"
+      },
+      "fresh_layout_output_sha_matches_candidate_pdf": true,
+      "rejected": true,
+      "expected_guard": "exact_Decimal_Tm_e_delta",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "Exact approved Decimal Tm e delta required",
+        "stage": "audit_page07_repair.py:verify:190"
+      },
+      "binding_only": false
+    },
+    {
+      "name": "other_KO_glyph_moved",
+      "candidate_proof": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\other_KO_glyph_moved\\page07.pdf",
+        "sha256": "baf0ab36a23bcff01ba544f0d4ce9afaf7b8ed5ea8cefd5368c288d1fe58b506"
+      },
+      "candidate_layout": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\other_KO_glyph_moved\\page07.layout.json",
+        "sha256": "76dc1f6e011a3d40a4ef8b5ff335a633d0262f95413a2a60b4d014d643a44923"
+      },
+      "fresh_layout_output_sha_matches_candidate_pdf": true,
+      "rejected": true,
+      "expected_guard": "nonselected_effective_object_or_stream_exact",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "('Nonselected effective object changed', 7)",
+        "stage": "audit_page07_repair.py:object_delta:73"
+      },
+      "binding_only": false
+    },
+    {
+      "name": "original_native_glyph_changed",
+      "candidate_proof": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\original_native_glyph_changed\\page07.pdf",
+        "sha256": "1e1bb887f9cfce4bc4ee352fae5de6452e201a54af5ccf1c810caebcbb4125ea"
+      },
+      "candidate_layout": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\original_native_glyph_changed\\page07.layout.json",
+        "sha256": "10827ff6d5d2e0fb16c55b5abbe33114dce787d247d89f9cc4450a43879022d6"
+      },
+      "fresh_layout_output_sha_matches_candidate_pdf": true,
+      "rejected": true,
+      "expected_guard": "native_effective_object_or_stream_exact",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "('Nonselected effective object changed', 5)",
+        "stage": "audit_page07_repair.py:object_delta:73"
+      },
+      "binding_only": false,
+      "actual_mutation": "Native retained content stream black mark inside selected-row ink support; native content change, not a text retyping operation.",
+      "mutation_details": {
+        "native_stream_xref": 5,
+        "inside_actual_selected_row_mask_pixel_8x": [
+          791,
+          3337
+        ],
+        "original_row_pixel_intensity": 0
+      }
+    },
+    {
+      "name": "font_program_or_W_changed",
+      "candidate_proof": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\font_program_or_W_changed\\page07.pdf",
+        "sha256": "5160dadbe86624832cc023a232ac01acf8f729d323113637df91cb57c0fe1196"
+      },
+      "candidate_layout": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\font_program_or_W_changed\\page07.layout.json",
+        "sha256": "e9b2fb0d4a2deebe4db7a88f709cc18938ac95cb3ff38c04ef87c76e907c58c1"
+      },
+      "fresh_layout_output_sha_matches_candidate_pdf": true,
+      "rejected": true,
+      "expected_guard": "font_resource_effective_object_exact",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "('Nonselected effective object changed', 578)",
+        "stage": "audit_page07_repair.py:object_delta:73"
+      },
+      "binding_only": false
+    },
+    {
+      "name": "wrong_or_stale_repair_root_GO",
+      "rejected": true,
+      "binding_only": true,
+      "expected_guard": "wrong_or_stale_repair_root_GO",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "Repair authoring marker differs from exact source/code/GO/spec binding",
+        "stage": "audit_page07_repair.py:validate_marker:21"
+      }
+    },
+    {
+      "name": "wrong_runtime_program_sha",
+      "rejected": true,
+      "binding_only": true,
+      "expected_guard": "wrong_runtime_program_sha",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "Repair authoring marker differs from exact source/code/GO/spec binding",
+        "stage": "audit_page07_repair.py:validate_marker:21"
+      }
+    },
+    {
+      "name": "wrong_copy_origin_or_copy_SHA",
+      "rejected": true,
+      "binding_only": true,
+      "expected_guard": "wrong_copy_origin_or_copy_SHA",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "('Stale pinned input', WindowsPath('D:/CodexBuilds/Hasla-poi-natural-20261102/layout-corrections/ortvay-title-20261103/revisions/source-style-widths-r4-20261103/page-repairs/2026-page07-postprocess-v1-20261104/page07/page07.pdf'))",
+        "stage": "postprocess_page07.py:checked:34"
+      }
+    },
+    {
+      "name": "wrong_page_origin_mapping",
+      "rejected": true,
+      "binding_only": true,
+      "expected_guard": "wrong_page_origin_mapping",
+      "actual_error": {
+        "exception_type": "AssertionError",
+        "message": "assert original['year']==review['year']==2026 and original['page']==review['page']==page",
+        "stage": "continue_and_bridge_2026.py:origin_row:84"
+      }
+    }
+  ],
+  "positive_files_rehashed_unchanged": {
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\repair-runtime-snapshot.json": "e24a4ca4c467fc0666fe060eb76540b13ae072ae131fad934d5b4074cd0bb322",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.pdf": "150acab43780142cfb168b23629ddda84eebab82c9d39bc9257e533837da8a25",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.authoring-draft.json": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\postprocess-receipt.json": "99096ae7725e3a2815a4273f5f7e56c02fa63c7e5ed9fd019d83791289a3a9d0",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.layout.json": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.effective-plan.json": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\independent-qa.json": "1e8469d2b135a2b27f700c9ed0ba44b92031cc45fb7524cad4989ac6c82a861e",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.png": "12c80c5ce1fc606c0ee10a738a063083624f8cfae7f74e8849cbe38ce46558fc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\runtime-sources\\additional\\postprocess_page07.py": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\runtime-sources\\additional\\audit_page07_repair.py": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\runtime-sources\\additional\\continue_and_bridge_2026.py": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+  },
+  "valid_candidate_read_only_control": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\valid-candidate-read-only\\VALID-CANDIDATE-PASS.json",
+    "sha256": "a88dfc7f60de6d7902f2f0363a12d461cb38d7d45f9afdf2ca7e527c31e8b0f5"
+  },
+  "no_missing_file_or_import_failure_counted": true,
+  "program": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\audit_page07_repair.py",
+    "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a"
+  }
+}

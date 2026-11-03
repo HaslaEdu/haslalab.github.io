@@ -1,0 +1,45 @@
+{
+  "status": "ACTUAL_FINAL_PNG_ORIGINAL_RESOLUTION_READ_PASS",
+  "reviewer": "/root/plancks_all",
+  "year": 2026,
+  "page": 4,
+  "reviewed_utc": "2026-11-03T15:31:36.461210+00:00",
+  "artifacts": {
+    "proof": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.pdf",
+      "sha256": "6dcbefe71f1bbced31a50bb9551479ec0b928eeaaae7f583b3df9b6e9644613e"
+    },
+    "layout": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.layout.json",
+      "sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9"
+    },
+    "png": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\page04.png",
+      "sha256": "10114c5bde0f24c6fe6806936c94429f8c71843a55dc7876f8cc1f92ad319a68"
+    },
+    "independent_audit": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\independent-qa.json",
+      "sha256": "bb89ad1c676391d84ccd29ccc68420c727f62b050fc0507c6db8a559dba3b23c"
+    },
+    "effective_plan": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.effective-plan.json",
+      "sha256": "a3b8a1d02a60cbd44f7295de75bc4c75188e2341a40bead745ca624be04243cc"
+    },
+    "runtime_snapshot": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\ctm-production-runtime-v1\\2026\\page04\\build\\runtime-snapshot.json",
+      "sha256": "5e302f8f44a5517ce48d5d2a5e128845ffe599de62d5b62e18b33312ca785ad2"
+    }
+  },
+  "machine_result": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\result.json",
+    "sha256": "fed3bd724679fe9719ba87806bc858831290bc437c12f94a6b0783fe09ca6368"
+  },
+  "composer": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\natural_plan_compose_ortvay2026_title_final.py",
+    "sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8"
+  },
+  "notes": [
+    "최종 PNG를 original 해상도로 실제 읽었다. 문항9의 두루마리 휴지, 문항10의 두 물체 산란/퍼텐셜/변위 식, 문항11의 반원기둥과 h/a 조건, 문항12의 두 눈 사진·시간순 질문이 정상 배치되어 있다.",
+    "일반 한국어 단어/행 간격과 native 변수·수식·사진/작성자/페이지번호가 유지되며 과도한 중간 공백·잘림·접촉이 보이지 않는다. 동일 frozenQA6/rootGO의 fullCTM·opacity·exactW/Tm·master outline/native/P0 엄격 PASS에 실제 읽기를 결속한다."
+  ]
+}

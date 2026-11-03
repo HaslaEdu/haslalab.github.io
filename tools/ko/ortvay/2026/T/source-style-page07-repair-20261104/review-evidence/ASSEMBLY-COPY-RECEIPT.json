@@ -1,0 +1,771 @@
+{
+  "schema": "ortvay-mixed-origin-proof-copy-receipt-v1",
+  "status": "ALL10_ORIGIN_TO_ASSEMBLY_COPIES_BYTE_IDENTICAL",
+  "year": 2026,
+  "pages": 10,
+  "assembly_proof_dir": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs",
+  "base_profile": {
+    "qa_profile_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\AMENDMENT-FROZEN.json",
+      "sha256": "a02844e98ef9a0e332f10312ec66a48fac5d87338e2d414c6ec24338f3c652a7"
+    },
+    "qa_profile_root_go": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\ROOT-GO.json",
+      "sha256": "8f56f0f8a6db8400c0d9ee2a9b6c62026f2e50984e7b669e5e1c12f4282ea0d4"
+    },
+    "qa_profile_actual_regressions": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\BATCH-RESULTS.json",
+      "sha256": "13a4269f16d8697cccd951840be944fadb6cb6c206516ec71c45ba1b946f02ea"
+    },
+    "qa_profile_post_freeze_guard": {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/layout-corrections/ortvay-title-20261103/revisions/source-style-widths-r4-20261103/qa-amendments/full-ctm-rotation-v1-20261103/runs/frozen-guard01/p7_rotated_label/audit.json",
+      "sha256": "26ff348ad46c4c38dcc61b2c4ca8176e833737ba5831f60874cb84233e2ae61d"
+    },
+    "code_input_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\CODE-INPUT-FROZEN.json",
+      "sha256": "ad9b4855ac822214da7ecca0955af9abb3a1fecae4dbb33827ecb9ee59554079"
+    },
+    "original_code_input_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PREPARATION-FROZEN.json",
+      "sha256": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a"
+    },
+    "original_runtime_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PROTOTYPE-RUNTIME-FROZEN.json",
+      "sha256": "27b5df6951f5ce45d390f51aa2d193bdd22c0740163846add788060e2972132b"
+    }
+  },
+  "page_repair_profile": {
+    "schema": "ortvay-one-page-postprocess-profile-v1",
+    "year": 2026,
+    "page": 7,
+    "numeric_spec": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\root-2026p7-review-20261104\\NUMERIC-REPAIR-SPEC.json",
+      "sha256": "b552b2f0cc95c1f0e8aae8bfdfc34fddae4037ce88703eca33f7fe61c914b24c"
+    },
+    "repair_code_input_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\REPAIR-CODE-INPUT-FROZEN.json",
+      "sha256": "772c5a7536811f041ad4e0d9bc8d179072e08e472942dfead7ee95bedd43cb50"
+    },
+    "root_GO": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\ROOT-GO.json",
+      "sha256": "345cb2fe09b90a178c9f87176cfc7fc3307a957d8c45087359f746e01e89a730"
+    },
+    "base_failed_proof": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.pdf",
+      "sha256": "fccac3dc419fcb1bf1ee6aa3ed42d38ea1565e9416ddba3e7f7ec3e457cb169f"
+    },
+    "base_failed_layout": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.layout.json",
+      "sha256": "98454b83b490e8f2e42dc01b08d66b6d8788706643a9e5c31bb902e2e5783e79"
+    },
+    "failed_metadata": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\FAILED.json",
+      "sha256": "1e4619352ef7c57505cb0c72b4173ed0ede971434b3d8148236ba235fea83e06"
+    },
+    "base_failed_runtime_snapshot": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\production-runtime-snapshot.json",
+      "sha256": "7f8d0cd7f032cb633f082ea9e2b7eeae2bf7bc58ae72954243cc2a05d5ab117e"
+    },
+    "base_original_build_snapshot": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\ctm-production-runtime-v1\\2026\\page07\\build\\runtime-snapshot.json",
+      "sha256": "98a4bfcf985e35346dd32e5c1389975e070a686b722b5b81d41175f193437efa"
+    },
+    "repair_runtime_snapshot": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\repair-runtime-snapshot.json",
+      "sha256": "e24a4ca4c467fc0666fe060eb76540b13ae072ae131fad934d5b4074cd0bb322"
+    },
+    "additional_runtime_files": [
+      {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\postprocess_page07.py",
+        "sha256": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18",
+        "role": "exact_lower_row_postprocessor",
+        "relative_path": "page-repair/postprocess_page07.py"
+      },
+      {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\audit_page07_repair.py",
+        "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a",
+        "role": "independent_actual_repair_auditor",
+        "relative_path": "page-repair/audit_page07_repair.py"
+      },
+      {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\continue_and_bridge_2026.py",
+        "sha256": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30",
+        "role": "mixed_origin_machine_read_copy_ready_bridge",
+        "relative_path": "page-repair/continue_and_bridge_2026.py"
+      }
+    ],
+    "actual_positive": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\independent-qa.json",
+      "sha256": "1e8469d2b135a2b27f700c9ed0ba44b92031cc45fb7524cad4989ac6c82a861e"
+    },
+    "actual_negative_regressions": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions\\actual-negative-regressions.json",
+      "sha256": "6274032a233e69a081232f64805370a148fe0175ad096d0514f67a1d65ecbe6f"
+    }
+  },
+  "copies": [
+    {
+      "page": 1,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page01.pdf",
+        "sha256": "914327972df78a665aafd0f9e8d3397eaeaca8c0cc8d49beab8487cc3a989210"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page01.pdf",
+        "sha256": "914327972df78a665aafd0f9e8d3397eaeaca8c0cc8d49beab8487cc3a989210"
+      },
+      "byte_equal": true,
+      "bytes": 1684142,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page01\\result.json",
+        "sha256": "60626d76d08964fa1ecf7f29e314a666324f2dd0c21b10e554dbe96035d8c7d0"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page01\\visual-read.json",
+        "sha256": "3ac7d054395cde85863adebc3739dc61a54626cb037fd7034a0330892b9c4287"
+      }
+    },
+    {
+      "page": 1,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page01.layout.json",
+        "sha256": "60d2d4d82b482e97d5970335908898f142abffa49d74e4169199c1997000634d"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page01.layout.json",
+        "sha256": "60d2d4d82b482e97d5970335908898f142abffa49d74e4169199c1997000634d"
+      },
+      "byte_equal": true,
+      "bytes": 1056235,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page01\\result.json",
+        "sha256": "60626d76d08964fa1ecf7f29e314a666324f2dd0c21b10e554dbe96035d8c7d0"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page01\\visual-read.json",
+        "sha256": "3ac7d054395cde85863adebc3739dc61a54626cb037fd7034a0330892b9c4287"
+      }
+    },
+    {
+      "page": 1,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page01.effective-plan.json",
+        "sha256": "54d02f7cd09458c7f686620a26875323f3e08f0cccb14236f72aa0ea135f1fc5"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page01.effective-plan.json",
+        "sha256": "54d02f7cd09458c7f686620a26875323f3e08f0cccb14236f72aa0ea135f1fc5"
+      },
+      "byte_equal": true,
+      "bytes": 22786,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page01\\result.json",
+        "sha256": "60626d76d08964fa1ecf7f29e314a666324f2dd0c21b10e554dbe96035d8c7d0"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page01\\visual-read.json",
+        "sha256": "3ac7d054395cde85863adebc3739dc61a54626cb037fd7034a0330892b9c4287"
+      }
+    },
+    {
+      "page": 2,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page02.pdf",
+        "sha256": "ae26ca545a2e9eb4bd4a5a1591f666aa43c48f353deb31e6795899c0127ce118"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page02.pdf",
+        "sha256": "ae26ca545a2e9eb4bd4a5a1591f666aa43c48f353deb31e6795899c0127ce118"
+      },
+      "byte_equal": true,
+      "bytes": 547706,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page02\\result.json",
+        "sha256": "34b1c70dc2c94a29220f4113b537b076b3fe87687dd5df10f2ed238cac4e4fc9"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page02\\visual-read.json",
+        "sha256": "5fedda5767e79da3e89f1de5d33e9c7ab903e72e9baa4582fc8e85e2ee10c590"
+      }
+    },
+    {
+      "page": 2,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page02.layout.json",
+        "sha256": "095d1b5a534b8e768d9116312b654238e7cd61b91b281579a3b532b532966acb"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page02.layout.json",
+        "sha256": "095d1b5a534b8e768d9116312b654238e7cd61b91b281579a3b532b532966acb"
+      },
+      "byte_equal": true,
+      "bytes": 1434895,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page02\\result.json",
+        "sha256": "34b1c70dc2c94a29220f4113b537b076b3fe87687dd5df10f2ed238cac4e4fc9"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page02\\visual-read.json",
+        "sha256": "5fedda5767e79da3e89f1de5d33e9c7ab903e72e9baa4582fc8e85e2ee10c590"
+      }
+    },
+    {
+      "page": 2,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page02.effective-plan.json",
+        "sha256": "543353da0c9053cd3e8487fad26cc7f0a5d9c831bfbe9b8cb40b66ce83fb3e3b"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page02.effective-plan.json",
+        "sha256": "543353da0c9053cd3e8487fad26cc7f0a5d9c831bfbe9b8cb40b66ce83fb3e3b"
+      },
+      "byte_equal": true,
+      "bytes": 20738,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page02\\result.json",
+        "sha256": "34b1c70dc2c94a29220f4113b537b076b3fe87687dd5df10f2ed238cac4e4fc9"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page02\\visual-read.json",
+        "sha256": "5fedda5767e79da3e89f1de5d33e9c7ab903e72e9baa4582fc8e85e2ee10c590"
+      }
+    },
+    {
+      "page": 3,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page03.pdf",
+        "sha256": "97cb1ec873447e43f531af5099187e011ae37febfa6081d8b92e84dfefaa0bf2"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page03.pdf",
+        "sha256": "97cb1ec873447e43f531af5099187e011ae37febfa6081d8b92e84dfefaa0bf2"
+      },
+      "byte_equal": true,
+      "bytes": 2916766,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page03\\result.json",
+        "sha256": "9ca670b1eb4b9a6b12bc3aaab50f1f9a2497d7e412e1eb37082aeeabc255f213"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page03\\visual-read.json",
+        "sha256": "b736f39455eac7debebc2907bedb8dfc9bdbb543b0143d930255cd764ce6c5c2"
+      }
+    },
+    {
+      "page": 3,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page03.layout.json",
+        "sha256": "dcc101faadee70c367c60aa77940919a45cf4b8694d99ccc5c52a63a95acf257"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page03.layout.json",
+        "sha256": "dcc101faadee70c367c60aa77940919a45cf4b8694d99ccc5c52a63a95acf257"
+      },
+      "byte_equal": true,
+      "bytes": 811340,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page03\\result.json",
+        "sha256": "9ca670b1eb4b9a6b12bc3aaab50f1f9a2497d7e412e1eb37082aeeabc255f213"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page03\\visual-read.json",
+        "sha256": "b736f39455eac7debebc2907bedb8dfc9bdbb543b0143d930255cd764ce6c5c2"
+      }
+    },
+    {
+      "page": 3,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page03.effective-plan.json",
+        "sha256": "442adc093c75e76260651f4954f7d6069d7b0931a294e6f83dd6d10d24570ca4"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page03.effective-plan.json",
+        "sha256": "442adc093c75e76260651f4954f7d6069d7b0931a294e6f83dd6d10d24570ca4"
+      },
+      "byte_equal": true,
+      "bytes": 19809,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page03\\result.json",
+        "sha256": "9ca670b1eb4b9a6b12bc3aaab50f1f9a2497d7e412e1eb37082aeeabc255f213"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page03\\visual-read.json",
+        "sha256": "b736f39455eac7debebc2907bedb8dfc9bdbb543b0143d930255cd764ce6c5c2"
+      }
+    },
+    {
+      "page": 4,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.pdf",
+        "sha256": "6dcbefe71f1bbced31a50bb9551479ec0b928eeaaae7f583b3df9b6e9644613e"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page04.pdf",
+        "sha256": "6dcbefe71f1bbced31a50bb9551479ec0b928eeaaae7f583b3df9b6e9644613e"
+      },
+      "byte_equal": true,
+      "bytes": 1296151,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\result.json",
+        "sha256": "fed3bd724679fe9719ba87806bc858831290bc437c12f94a6b0783fe09ca6368"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\visual-read.json",
+        "sha256": "d54d86800488d2b92acb2c49a72d0077b7fe75b032a885da0147b090dc8628b0"
+      }
+    },
+    {
+      "page": 4,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.layout.json",
+        "sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page04.layout.json",
+        "sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9"
+      },
+      "byte_equal": true,
+      "bytes": 1047658,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\result.json",
+        "sha256": "fed3bd724679fe9719ba87806bc858831290bc437c12f94a6b0783fe09ca6368"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\visual-read.json",
+        "sha256": "d54d86800488d2b92acb2c49a72d0077b7fe75b032a885da0147b090dc8628b0"
+      }
+    },
+    {
+      "page": 4,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.effective-plan.json",
+        "sha256": "a3b8a1d02a60cbd44f7295de75bc4c75188e2341a40bead745ca624be04243cc"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page04.effective-plan.json",
+        "sha256": "a3b8a1d02a60cbd44f7295de75bc4c75188e2341a40bead745ca624be04243cc"
+      },
+      "byte_equal": true,
+      "bytes": 25261,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\result.json",
+        "sha256": "fed3bd724679fe9719ba87806bc858831290bc437c12f94a6b0783fe09ca6368"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page04\\visual-read.json",
+        "sha256": "d54d86800488d2b92acb2c49a72d0077b7fe75b032a885da0147b090dc8628b0"
+      }
+    },
+    {
+      "page": 5,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page05.pdf",
+        "sha256": "b507aac48ecb8fb0a87fba6f9931f30a53e0872fd31d5d62c72449805b635935"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page05.pdf",
+        "sha256": "b507aac48ecb8fb0a87fba6f9931f30a53e0872fd31d5d62c72449805b635935"
+      },
+      "byte_equal": true,
+      "bytes": 812921,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page05\\result.json",
+        "sha256": "a4eeb6ef8dee6baa45a6bedb7eb9143ba70ead73c6eb233a228ce235ee457961"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page05\\visual-read.json",
+        "sha256": "69908618481d9f137b09c0e3e74d1681956ad6277a4996bd55616cbd7833aaaa"
+      }
+    },
+    {
+      "page": 5,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page05.layout.json",
+        "sha256": "298ad95edc8c8e10c0dcf4f8e603dd46058e5d6ef360616f5e97550f73ccdce9"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page05.layout.json",
+        "sha256": "298ad95edc8c8e10c0dcf4f8e603dd46058e5d6ef360616f5e97550f73ccdce9"
+      },
+      "byte_equal": true,
+      "bytes": 1676640,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page05\\result.json",
+        "sha256": "a4eeb6ef8dee6baa45a6bedb7eb9143ba70ead73c6eb233a228ce235ee457961"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page05\\visual-read.json",
+        "sha256": "69908618481d9f137b09c0e3e74d1681956ad6277a4996bd55616cbd7833aaaa"
+      }
+    },
+    {
+      "page": 5,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page05.effective-plan.json",
+        "sha256": "4362707bdf1d415032c4c266969d06818c9a96993b1399c231601f42b47ac506"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page05.effective-plan.json",
+        "sha256": "4362707bdf1d415032c4c266969d06818c9a96993b1399c231601f42b47ac506"
+      },
+      "byte_equal": true,
+      "bytes": 31781,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page05\\result.json",
+        "sha256": "a4eeb6ef8dee6baa45a6bedb7eb9143ba70ead73c6eb233a228ce235ee457961"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page05\\visual-read.json",
+        "sha256": "69908618481d9f137b09c0e3e74d1681956ad6277a4996bd55616cbd7833aaaa"
+      }
+    },
+    {
+      "page": 6,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page06.pdf",
+        "sha256": "f8f5f2047e0089a0af650cdd05282f46ce4354f7db1b6078583f28629af220a9"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page06.pdf",
+        "sha256": "f8f5f2047e0089a0af650cdd05282f46ce4354f7db1b6078583f28629af220a9"
+      },
+      "byte_equal": true,
+      "bytes": 533117,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page06\\result.json",
+        "sha256": "0404e781044a590468b860caeba12f8233015a28c3d7e9a93164b60b14412bb5"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page06\\visual-read.json",
+        "sha256": "c3ff924dccf9898979ac8ebf5c012e08cb70ff76bfc3194e434d7d47673999f2"
+      }
+    },
+    {
+      "page": 6,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page06.layout.json",
+        "sha256": "3af9532edd2ef2b8feefa14d0ac8fe3ddeb44569df20cc041abc69a5bd5af421"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page06.layout.json",
+        "sha256": "3af9532edd2ef2b8feefa14d0ac8fe3ddeb44569df20cc041abc69a5bd5af421"
+      },
+      "byte_equal": true,
+      "bytes": 699013,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page06\\result.json",
+        "sha256": "0404e781044a590468b860caeba12f8233015a28c3d7e9a93164b60b14412bb5"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page06\\visual-read.json",
+        "sha256": "c3ff924dccf9898979ac8ebf5c012e08cb70ff76bfc3194e434d7d47673999f2"
+      }
+    },
+    {
+      "page": 6,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page06.effective-plan.json",
+        "sha256": "f63ee530d4156dd4dad4d1eb31527c402b24bf7454683db682465940c87f3697"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page06.effective-plan.json",
+        "sha256": "f63ee530d4156dd4dad4d1eb31527c402b24bf7454683db682465940c87f3697"
+      },
+      "byte_equal": true,
+      "bytes": 17022,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page06\\result.json",
+        "sha256": "0404e781044a590468b860caeba12f8233015a28c3d7e9a93164b60b14412bb5"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page06\\visual-read.json",
+        "sha256": "c3ff924dccf9898979ac8ebf5c012e08cb70ff76bfc3194e434d7d47673999f2"
+      }
+    },
+    {
+      "page": 7,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.pdf",
+        "sha256": "150acab43780142cfb168b23629ddda84eebab82c9d39bc9257e533837da8a25"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page07.pdf",
+        "sha256": "150acab43780142cfb168b23629ddda84eebab82c9d39bc9257e533837da8a25"
+      },
+      "byte_equal": true,
+      "bytes": 538986,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\result.json",
+        "sha256": "fc27c19aa397b72013dd0b6ed968a8817631c90056944b81774ab41a3470390c"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\visual-read.json",
+        "sha256": "e272914e370f59c759151f39c388f5ff4ef55e234284b33a99034f52812715fb"
+      }
+    },
+    {
+      "page": 7,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.layout.json",
+        "sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page07.layout.json",
+        "sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c"
+      },
+      "byte_equal": true,
+      "bytes": 813407,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\result.json",
+        "sha256": "fc27c19aa397b72013dd0b6ed968a8817631c90056944b81774ab41a3470390c"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\visual-read.json",
+        "sha256": "e272914e370f59c759151f39c388f5ff4ef55e234284b33a99034f52812715fb"
+      }
+    },
+    {
+      "page": 7,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.effective-plan.json",
+        "sha256": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page07.effective-plan.json",
+        "sha256": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa"
+      },
+      "byte_equal": true,
+      "bytes": 22118,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\result.json",
+        "sha256": "fc27c19aa397b72013dd0b6ed968a8817631c90056944b81774ab41a3470390c"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\visual-read.json",
+        "sha256": "e272914e370f59c759151f39c388f5ff4ef55e234284b33a99034f52812715fb"
+      }
+    },
+    {
+      "page": 8,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page08.pdf",
+        "sha256": "00898ad4f609a6c89c6c0d92bc68d782a365d67fa9efabfaf742bb5cb7461e74"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page08.pdf",
+        "sha256": "00898ad4f609a6c89c6c0d92bc68d782a365d67fa9efabfaf742bb5cb7461e74"
+      },
+      "byte_equal": true,
+      "bytes": 587325,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page08\\result.json",
+        "sha256": "eb7ae3e725c737a57e11d889c984a5e46db768f215bc0c610f4f05fe17706bfc"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page08\\visual-read.json",
+        "sha256": "8a2b8a021695ea5b5078f620b35e003977272bd85399f3b5361dbf4ef3867b22"
+      }
+    },
+    {
+      "page": 8,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page08.layout.json",
+        "sha256": "7bd3749629c73e180e540b58b9cdf520ec0bd3f573fcef700e3807e773885f9f"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page08.layout.json",
+        "sha256": "7bd3749629c73e180e540b58b9cdf520ec0bd3f573fcef700e3807e773885f9f"
+      },
+      "byte_equal": true,
+      "bytes": 817032,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page08\\result.json",
+        "sha256": "eb7ae3e725c737a57e11d889c984a5e46db768f215bc0c610f4f05fe17706bfc"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page08\\visual-read.json",
+        "sha256": "8a2b8a021695ea5b5078f620b35e003977272bd85399f3b5361dbf4ef3867b22"
+      }
+    },
+    {
+      "page": 8,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page08.effective-plan.json",
+        "sha256": "4691fcf5c33ff548dd9bdca0f87e12997f7cf4f3fdfff4932f4f265bc29fcd65"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page08.effective-plan.json",
+        "sha256": "4691fcf5c33ff548dd9bdca0f87e12997f7cf4f3fdfff4932f4f265bc29fcd65"
+      },
+      "byte_equal": true,
+      "bytes": 23776,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page08\\result.json",
+        "sha256": "eb7ae3e725c737a57e11d889c984a5e46db768f215bc0c610f4f05fe17706bfc"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page08\\visual-read.json",
+        "sha256": "8a2b8a021695ea5b5078f620b35e003977272bd85399f3b5361dbf4ef3867b22"
+      }
+    },
+    {
+      "page": 9,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page09.pdf",
+        "sha256": "a38c6fe4c5bb4178320bd2c99958805cb3fd18e96bfeca5d238567468fdf4090"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page09.pdf",
+        "sha256": "a38c6fe4c5bb4178320bd2c99958805cb3fd18e96bfeca5d238567468fdf4090"
+      },
+      "byte_equal": true,
+      "bytes": 605863,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page09\\result.json",
+        "sha256": "d25440b00fe02d5a42f6539bb43842cb9140a7dabbcb18e161f6faab4b0dddfb"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page09\\visual-read.json",
+        "sha256": "f6ababe73f9b209a9fdbf59e690e60ba09f56800c24c2f27deaab3b5c13853e4"
+      }
+    },
+    {
+      "page": 9,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page09.layout.json",
+        "sha256": "37a67ef45e7071e76b001eac70e525ebbb4c6f7cf86275ddc10356204a9b9126"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page09.layout.json",
+        "sha256": "37a67ef45e7071e76b001eac70e525ebbb4c6f7cf86275ddc10356204a9b9126"
+      },
+      "byte_equal": true,
+      "bytes": 899447,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page09\\result.json",
+        "sha256": "d25440b00fe02d5a42f6539bb43842cb9140a7dabbcb18e161f6faab4b0dddfb"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page09\\visual-read.json",
+        "sha256": "f6ababe73f9b209a9fdbf59e690e60ba09f56800c24c2f27deaab3b5c13853e4"
+      }
+    },
+    {
+      "page": 9,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page09.effective-plan.json",
+        "sha256": "f72ebf4c133e1eb7dfab3c868c3d9544ed46c349e3df497c6b266ac5c30f68a9"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page09.effective-plan.json",
+        "sha256": "f72ebf4c133e1eb7dfab3c868c3d9544ed46c349e3df497c6b266ac5c30f68a9"
+      },
+      "byte_equal": true,
+      "bytes": 23686,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page09\\result.json",
+        "sha256": "d25440b00fe02d5a42f6539bb43842cb9140a7dabbcb18e161f6faab4b0dddfb"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page09\\visual-read.json",
+        "sha256": "f6ababe73f9b209a9fdbf59e690e60ba09f56800c24c2f27deaab3b5c13853e4"
+      }
+    },
+    {
+      "page": 10,
+      "key": "proof",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page10.pdf",
+        "sha256": "5ecaecca4c995a768dd4bb13414d600da2113fa649ced88522619e2af6a0ca3d"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page10.pdf",
+        "sha256": "5ecaecca4c995a768dd4bb13414d600da2113fa649ced88522619e2af6a0ca3d"
+      },
+      "byte_equal": true,
+      "bytes": 798598,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page10\\result.json",
+        "sha256": "b1790cbcae5d6f06237c5dc829a5c59667e4fb347d160a39631680be13641e82"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page10\\visual-read.json",
+        "sha256": "654ecc1899bb86b3f577fd27c33a1303ffe1a079d13c948400aa02aaf110fc70"
+      }
+    },
+    {
+      "page": 10,
+      "key": "layout",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page10.layout.json",
+        "sha256": "e79bb12e55db05b5a51cb4da9fb2eca0f73ccc26e9206da7c8d586ddc79f40d0"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page10.layout.json",
+        "sha256": "e79bb12e55db05b5a51cb4da9fb2eca0f73ccc26e9206da7c8d586ddc79f40d0"
+      },
+      "byte_equal": true,
+      "bytes": 1591691,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page10\\result.json",
+        "sha256": "b1790cbcae5d6f06237c5dc829a5c59667e4fb347d160a39631680be13641e82"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page10\\visual-read.json",
+        "sha256": "654ecc1899bb86b3f577fd27c33a1303ffe1a079d13c948400aa02aaf110fc70"
+      }
+    },
+    {
+      "page": 10,
+      "key": "effective_plan",
+      "origin": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page10.effective-plan.json",
+        "sha256": "ae95688baa2110a70f1ee11e94f233e54debc14ef3f81887743e9f17b61ffa9f"
+      },
+      "copied": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page10.effective-plan.json",
+        "sha256": "ae95688baa2110a70f1ee11e94f233e54debc14ef3f81887743e9f17b61ffa9f"
+      },
+      "byte_equal": true,
+      "bytes": 33438,
+      "origin_machine": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page10\\result.json",
+        "sha256": "b1790cbcae5d6f06237c5dc829a5c59667e4fb347d160a39631680be13641e82"
+      },
+      "origin_visual_read": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page10\\visual-read.json",
+        "sha256": "654ecc1899bb86b3f577fd27c33a1303ffe1a079d13c948400aa02aaf110fc70"
+      }
+    }
+  ],
+  "body_embedded_paths_rewritten": false,
+  "intended_READY_output_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\READY.json",
+  "intended_normalized_visual_output_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\visual-review-mixed-normalized.json"
+}

@@ -1,0 +1,1979 @@
+{
+  "schema": "natural-source-native-joined-v1",
+  "status": "READY",
+  "file": "Ortvay_2026_T_KO.pdf",
+  "language": "ko",
+  "pages": 10,
+  "bytes": 10332903,
+  "sha256": "c49c4967846ef5b09f88801493eaf0b80f4826778f509416668feb994b84381d",
+  "source": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2026_T_EN.pdf",
+  "source_sha256": "ea61fafa8228c3ed2a890e5c2f65ed8853f41d2c39e60d8b0957edfeac4dfba3",
+  "resolved_source_read_path": "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2026_T_EN.pdf",
+  "source_path_resolver_sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9",
+  "no_font_shrink": true,
+  "no_math_rasterization": true,
+  "no_reserved_english_widths": true,
+  "inline_native_math_moved_as_whole_expressions": true,
+  "stationary_display_equations_and_figures": true,
+  "original_font_sizes_and_baselines_preserved": true,
+  "hidden_original_prose_has_empty_ActualText": true,
+  "no_added_editorial_notes": true,
+  "page_audits": [
+    {
+      "page": 1,
+      "proof_sha256": "914327972df78a665aafd0f9e8d3397eaeaca8c0cc8d49beab8487cc3a989210",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page01.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page01.qa.json",
+      "qa_sha256": "60d2d4d82b482e97d5970335908898f142abffa49d74e4169199c1997000634d",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page01.plan.json",
+      "plan_sha256": "c9ccd67c1f62a919176903d14b89b6befe5420f6ed40f17e240c341e771165b3",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page01.effective-plan.json",
+      "effective_plan_sha256": "54d02f7cd09458c7f686620a26875323f3e08f0cccb14236f72aa0ea135f1fc5",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 575,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 36,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "proof_sha256": "ae26ca545a2e9eb4bd4a5a1591f666aa43c48f353deb31e6795899c0127ce118",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page02.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page02.qa.json",
+      "qa_sha256": "095d1b5a534b8e768d9116312b654238e7cd61b91b281579a3b532b532966acb",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page02.plan.json",
+      "plan_sha256": "89755d2e50ed2566607737cd8213e16c98767186e98240209cf21c59ba817ea0",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page02.effective-plan.json",
+      "effective_plan_sha256": "543353da0c9053cd3e8487fad26cc7f0a5d9c831bfbe9b8cb40b66ce83fb3e3b",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 646,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 31,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 3,
+      "proof_sha256": "97cb1ec873447e43f531af5099187e011ae37febfa6081d8b92e84dfefaa0bf2",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page03.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page03.qa.json",
+      "qa_sha256": "dcc101faadee70c367c60aa77940919a45cf4b8694d99ccc5c52a63a95acf257",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page03.plan.json",
+      "plan_sha256": "2e935afbd9057adf0617f98f6532a1dc2fadcbc2e8b57d89d8f76db42b700f18",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page03.effective-plan.json",
+      "effective_plan_sha256": "442adc093c75e76260651f4954f7d6069d7b0931a294e6f83dd6d10d24570ca4",
+      "overrides_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page03.overrides.json",
+      "overrides_sha256": "318680c3bb9da87d6e164f795da3c0f788f87af6004ee48d06ca5ca73065d2a4",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 406,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 28,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "proof_sha256": "6dcbefe71f1bbced31a50bb9551479ec0b928eeaaae7f583b3df9b6e9644613e",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page04.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page04.qa.json",
+      "qa_sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page04.plan.json",
+      "plan_sha256": "6e873b50edb57907e4cd0acd6df82802d7d295c4eb83d6751f28695a56046a9b",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page04.effective-plan.json",
+      "effective_plan_sha256": "a3b8a1d02a60cbd44f7295de75bc4c75188e2341a40bead745ca624be04243cc",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 570,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 41,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "proof_sha256": "b507aac48ecb8fb0a87fba6f9931f30a53e0872fd31d5d62c72449805b635935",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page05.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page05.qa.json",
+      "qa_sha256": "298ad95edc8c8e10c0dcf4f8e603dd46058e5d6ef360616f5e97550f73ccdce9",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page05.plan.json",
+      "plan_sha256": "6e15ceafe55081cb14450d463aeb8ff3172011828cf93839701b3bd17cf4ef3c",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page05.effective-plan.json",
+      "effective_plan_sha256": "4362707bdf1d415032c4c266969d06818c9a96993b1399c231601f42b47ac506",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 1052,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 50,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "proof_sha256": "f8f5f2047e0089a0af650cdd05282f46ce4354f7db1b6078583f28629af220a9",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page06.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page06.qa.json",
+      "qa_sha256": "3af9532edd2ef2b8feefa14d0ac8fe3ddeb44569df20cc041abc69a5bd5af421",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page06.plan.json",
+      "plan_sha256": "b2b4b137f76054bab008cd832aaa83a806ccd32547eafc160dd170036b1790b0",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page06.effective-plan.json",
+      "effective_plan_sha256": "f63ee530d4156dd4dad4d1eb31527c402b24bf7454683db682465940c87f3697",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 324,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 28,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "proof_sha256": "150acab43780142cfb168b23629ddda84eebab82c9d39bc9257e533837da8a25",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page07.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page07.qa.json",
+      "qa_sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page07.plan.json",
+      "plan_sha256": "40cee39b05e850149c1da749950b1f411557bb7d718d8f4572d366fcfb1e76a6",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page07.effective-plan.json",
+      "effective_plan_sha256": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 393,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 37,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "proof_sha256": "00898ad4f609a6c89c6c0d92bc68d782a365d67fa9efabfaf742bb5cb7461e74",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page08.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page08.qa.json",
+      "qa_sha256": "7bd3749629c73e180e540b58b9cdf520ec0bd3f573fcef700e3807e773885f9f",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page08.plan.json",
+      "plan_sha256": "77dfb1d05d25aae0b218f6c7a41bb1fd9f40577a644a4f0e60bdbeedae536305",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page08.effective-plan.json",
+      "effective_plan_sha256": "4691fcf5c33ff548dd9bdca0f87e12997f7cf4f3fdfff4932f4f265bc29fcd65",
+      "overrides_path": null,
+      "overrides_sha256": null,
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 409,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 32,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 9,
+      "proof_sha256": "a38c6fe4c5bb4178320bd2c99958805cb3fd18e96bfeca5d238567468fdf4090",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page09.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page09.qa.json",
+      "qa_sha256": "37a67ef45e7071e76b001eac70e525ebbb4c6f7cf86275ddc10356204a9b9126",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page09.plan.json",
+      "plan_sha256": "1c21298e710f7732f040c4126106fe87dd536bbc264dd4b91335824141a1df46",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page09.effective-plan.json",
+      "effective_plan_sha256": "f72ebf4c133e1eb7dfab3c868c3d9544ed46c349e3df497c6b266ac5c30f68a9",
+      "overrides_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page09.overrides.json",
+      "overrides_sha256": "ab00e64e0107f3ddb50fa46ff230b520d03d5d7db3ec5f0e33957d292df862e7",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 505,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 40,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    },
+    {
+      "page": 10,
+      "proof_sha256": "5ecaecca4c995a768dd4bb13414d600da2113fa649ced88522619e2af6a0ca3d",
+      "proof_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page10.pdf",
+      "qa_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page10.qa.json",
+      "qa_sha256": "e79bb12e55db05b5a51cb4da9fb2eca0f73ccc26e9206da7c8d586ddc79f40d0",
+      "plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page10.plan.json",
+      "plan_sha256": "a5dadc79b6d3c2b601397d0c101b9e6917d9ef1ed36f53c211a79b1e58e0e4d8",
+      "effective_plan_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page10.effective-plan.json",
+      "effective_plan_sha256": "ae95688baa2110a70f1ee11e94f233e54debc14ef3f81887743e9f17b61ffa9f",
+      "overrides_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/page10.overrides.json",
+      "overrides_sha256": "2d424080bb1f894be2e8187db38d8e5bd1a92d18959eefed520453de573ec833",
+      "final_vs_reviewed_proof_changed_pixels": 0,
+      "final_vs_reviewed_proof_all_glyph_geometry_identical": true,
+      "page_box_preserved": true,
+      "visible_hangul_characters": 967,
+      "missing_hangul_glyphs": 0,
+      "original_font_programs_preserved": true,
+      "original_image_encoded_streams_and_filters_preserved": true,
+      "original_image_geometry_preserved": true,
+      "original_prose_baseline_audit": {
+        "passed": true,
+        "placements": 53,
+        "max_selected_source_prose_baseline_delta_pt": 0.0,
+        "max_actual_source_char_baseline_delta_pt": 0.0,
+        "tolerance_pt": 0.001,
+        "method": "Compare every planned Korean placement to exact original selected-prose origins and independently to original rawdict character origins; merged compositor row anchors are not used."
+      },
+      "link_annotation_adjustments": [],
+      "link_annotation_geometry_audits": [],
+      "composer_path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/natural_plan_compose_ortvay2026_title_final.py",
+      "composer_sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+      "source_scopes": [
+        {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/scope-ortvay-figure-scope-2026.json",
+          "sha256": "fef77377e9e95f77e908cce411ac091f5776bc67655986156860dcbc7b5f4685"
+        }
+      ]
+    }
+  ],
+  "visual_review_files": [
+    "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/visual-review-mixed-normalized.json"
+  ],
+  "all_pages_visually_reviewed": true,
+  "visual_review_required": false,
+  "authoring_programs": [
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/latex_native_motion.py",
+      "sha256": "35779452a46c04dce42459b1aa9bf57f84a5e818cf765ee3cb8f971dd1cf0b83"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/pdf_latex_text_ops.py",
+      "sha256": "6751a0ffe192aa52b0b36532607c8f28bbe5cdadc7c61624c5a17684d10ed51f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/verify_native_vectors.py",
+      "sha256": "6f3aaa8bdf14f123a0bc4790d7cf7b0780555bd93398ad79cfacb49ea349ad9c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/assemble_natural.py",
+      "sha256": "098286bc8fa1a3ac5805006b95484c5dd279a6fac4e1fc5c109e86e7f976954f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/publication_paths.py",
+      "sha256": "e9b50356e639b69bb8918e8bfd73ca7cb958b6a212a414b0c6606cb7d1ae6dca"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/prose_decoration_publication.py",
+      "sha256": "f1f9a8462157a03b43028cd9845e5ad3c65af35fede161e8274e2904b4e2e01c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/icho2024_prose_decoration_publication.py",
+      "sha256": "bdae0842d1209973232272cae57daadff1400a464b5f02e34da6722aea4dd677"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source_path_resolver.py",
+      "sha256": "7177b3bc4317065e110d6b4d093585328fe1a6a28cf475064d6f47ea7df005e9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/ortvay2026_repaired_publication.py",
+      "sha256": "916e70775b307d6afbda091be508f29163b7b43f45a386812cab43c0da95954e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/ortvay_source_style_publication.py",
+      "sha256": "8f2313a69fc8adfd7a6bb2f876fb81b50fac550f81366dfe7881c0cdd13f1117"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/ortvay_full_ctm_publication.py",
+      "sha256": "1af9cfaa488f5fcd06c877316e2f26a383ae1abf71e41e2ae6a658ae1ca1415c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/build_ortvay2026_repaired_publication_config.py",
+      "sha256": "f9ccc2ec7910c88a3e7c2efd0913b85e6e961d2e4279048720a75e87c2c84c77"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/postprocess_page07.py",
+      "sha256": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/audit_page07_repair.py",
+      "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/continue_and_bridge_2026.py",
+      "sha256": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2023/composer/natural_plan_compose_ortvay2023_final.py",
+      "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2023/composer/ortvay2023-frozen-engine/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2023/composer/ortvay2023-frozen-engine/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2023/composer/ortvay2023-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2023/composer/ortvay2023-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2023/composer/ortvay2023_write_guard.py",
+      "sha256": "7c2b8b32ab177f56dcabf416ce186edf652423eca11aa2e4452a951cbcbb48f6"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2023/composer/verify_native_vectors_ortvay2023.py",
+      "sha256": "c62323e4a103cf41a55cf47f9a70c917d05e7f942349305d0d3fe9783d05f84d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2024/composer/natural_plan_compose_ortvay2024_title_final.py",
+      "sha256": "84b6b98be3d97e59a8e16427497ba2dd81f27dd60845451a239162a348adf300"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2024/composer/ortvay2024-frozen-engine/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2024/composer/ortvay2024-frozen-engine/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2024/composer/ortvay2024-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2024/composer/ortvay2024-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2024/composer/verify_native_vectors_ortvay2024.py",
+      "sha256": "bc32adc3a83c29c271284291fb9fd62235a9eb31270d8951ce7db3db87a2df70"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2025/composer/natural_plan_compose_ortvay2025_title_final.py",
+      "sha256": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2025/composer/ortvay2025-frozen-engine/latex_native_motion.py",
+      "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2025/composer/ortvay2025-frozen-engine/native_ink_bounds.py",
+      "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2025/composer/ortvay2025-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2025/composer/ortvay2025-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2025/composer/verify_native_vectors_ortvay2025.py",
+      "sha256": "0c555a216e5a6c564efe257f3843e45cf5d0b85014e12d371c061fae5b1e5469"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2026/composer/natural_plan_compose_ortvay2026_title_final.py",
+      "sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2026/composer/ortvay2026-frozen-engine/latex_native_motion.py",
+      "sha256": "35779452a46c04dce42459b1aa9bf57f84a5e818cf765ee3cb8f971dd1cf0b83"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2026/composer/ortvay2026-frozen-engine/native_proof.py",
+      "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2026/composer/ortvay2026-frozen-engine/pdf_latex_text_ops.py",
+      "sha256": "6751a0ffe192aa52b0b36532607c8f28bbe5cdadc7c61624c5a17684d10ed51f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/2026/composer/verify_native_vectors.py",
+      "sha256": "6f3aaa8bdf14f123a0bc4790d7cf7b0780555bd93398ad79cfacb49ea349ad9c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/audit_final_page.py",
+      "sha256": "3adf6c4352e5ac869200fb00dccdc01f122ad72ae238a1aef0c12d7fb607339f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/audit_prototype.py",
+      "sha256": "6e647b6dac61578cae9cfc9bdf54aa6c5dddce61b14797f0611b214f78bf169a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/common/r4_actual_paint.py",
+      "sha256": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/common/r4_font_widths.py",
+      "sha256": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/common/r4_guard.py",
+      "sha256": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/common/r4_independent_qa.py",
+      "sha256": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/common/r4_outline_qa.py",
+      "sha256": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/common/r4_runtime.py",
+      "sha256": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/finalize_preparation.py",
+      "sha256": "465c30f55416da43164d63cbb32b76296f00d9e1a69741689cfde135206febf4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/freeze_r4_runtime.py",
+      "sha256": "c89c8c709a8bd4e32190165498d354138eae80406673739b87e8149ae0a59e62"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/generate_final48.py",
+      "sha256": "f41ecb23f97e473716227a44570bb3df29ca87c3a6eaff3f44a23fb40e4a781b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/production-continuation/full-ctm-v1-20261103/continue_and_finalize.py",
+      "sha256": "baf8c139979721a1e0209b51c0a443a7f9dff24cb1be6dff5e770e2cf6c708e4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/qa-amendments/full-ctm-rotation-v1-20261103/amended_actual_paint.py",
+      "sha256": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/qa-amendments/full-ctm-rotation-v1-20261103/amended_independent_qa.py",
+      "sha256": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/qa-amendments/full-ctm-rotation-v1-20261103/amended_outline_qa.py",
+      "sha256": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/qa-amendments/full-ctm-rotation-v1-20261103/make_actual_controls.py",
+      "sha256": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/qa-amendments/full-ctm-rotation-v1-20261103/run_amended_audit.py",
+      "sha256": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/qa-amendments/full-ctm-rotation-v1-20261103/transform_guard.py",
+      "sha256": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/run_final_page.py",
+      "sha256": "0037a4f84bbc808de3af420b6de0aec9aeb0d5fb0fcabc8268088a69cecd0e04"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/run_frozen_five.py",
+      "sha256": "b9caf64c267ca1aca86fef5cf657d22ac17fa49662ec46248f61f0c2671f3c41"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/run_prototype.py",
+      "sha256": "b9fdd18a2ff68e5332e4d082a543494886ee42f29fc3a6458c1a7dc6e35d545f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/source-style/test_prototype_negatives_v2_final.py",
+      "sha256": "67580be86aebddc9ca52a86c114b1a89bd23c01181c1219390ecfac4a82f5050"
+    }
+  ],
+  "strict_korean_glyph_geometry_audit": false,
+  "supplemental_evidence": [
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-41cf76bcca8a97af.json",
+      "sha256": "41cf76bcca8a97afdbd85db47492ec846e327317cdab74a9053b231e17480ad4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.effective-plan-54d02f7cd09458c7.json",
+      "sha256": "54d02f7cd09458c7f686620a26875323f3e08f0cccb14236f72aa0ea135f1fc5"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.layout-60d2d4d82b482e97.json",
+      "sha256": "60d2d4d82b482e97d5970335908898f142abffa49d74e4169199c1997000634d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page02.effective-plan.json",
+      "sha256": "543353da0c9053cd3e8487fad26cc7f0a5d9c831bfbe9b8cb40b66ce83fb3e3b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page02.layout.json",
+      "sha256": "095d1b5a534b8e768d9116312b654238e7cd61b91b281579a3b532b532966acb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03.effective-plan-442adc093c75e762.json",
+      "sha256": "442adc093c75e76260651f4954f7d6069d7b0931a294e6f83dd6d10d24570ca4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03.layout-dcc101faadee70c3.json",
+      "sha256": "dcc101faadee70c367c60aa77940919a45cf4b8694d99ccc5c52a63a95acf257"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page04.effective-plan.json",
+      "sha256": "a3b8a1d02a60cbd44f7295de75bc4c75188e2341a40bead745ca624be04243cc"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page04.layout.json",
+      "sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page05.effective-plan.json",
+      "sha256": "4362707bdf1d415032c4c266969d06818c9a96993b1399c231601f42b47ac506"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page05.layout.json",
+      "sha256": "298ad95edc8c8e10c0dcf4f8e603dd46058e5d6ef360616f5e97550f73ccdce9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page06.effective-plan.json",
+      "sha256": "f63ee530d4156dd4dad4d1eb31527c402b24bf7454683db682465940c87f3697"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page06.layout.json",
+      "sha256": "3af9532edd2ef2b8feefa14d0ac8fe3ddeb44569df20cc041abc69a5bd5af421"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-98454b83b490e8f2.json",
+      "sha256": "98454b83b490e8f2e42dc01b08d66b6d8788706643a9e5c31bb902e2e5783e79"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page08.effective-plan.json",
+      "sha256": "4691fcf5c33ff548dd9bdca0f87e12997f7cf4f3fdfff4932f4f265bc29fcd65"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page08.layout.json",
+      "sha256": "7bd3749629c73e180e540b58b9cdf520ec0bd3f573fcef700e3807e773885f9f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page09.effective-plan.json",
+      "sha256": "f72ebf4c133e1eb7dfab3c868c3d9544ed46c349e3df497c6b266ac5c30f68a9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page09.layout.json",
+      "sha256": "37a67ef45e7071e76b001eac70e525ebbb4c6f7cf86275ddc10356204a9b9126"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page10.effective-plan.json",
+      "sha256": "ae95688baa2110a70f1ee11e94f233e54debc14ef3f81887743e9f17b61ffa9f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page10.layout.json",
+      "sha256": "e79bb12e55db05b5a51cb4da9fb2eca0f73ccc26e9206da7c8d586ddc79f40d0"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/APPROVED-2026-P1-EXISTING-AA-CONTACT-ROW.json",
+      "sha256": "88e28a759dafc97838cd039fc07941a31ef3cdb8d805a1c55c9c2bf36045e9c7"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/EXPERIMENT-BATANG-PAINT-ADDENDUM-GO.json",
+      "sha256": "122a0e3a2e13aa31fbc144d4ebb93dc5ceb0639f935da791b10e69ed8546a633"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/EXPERIMENT-GO.json",
+      "sha256": "63a285f76924be1cfb8957352080a3bd393192869960ce16eec6f58bb1650514"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.effective-plan-9606a9f51f18c206.json",
+      "sha256": "9606a9f51f18c206540c2a848f27c6987a4eca780bec415c2a41c95a9059c77e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.independent-qa-frozen-a8629abff6e4f74f.json",
+      "sha256": "a8629abff6e4f74f267e6a7c06a0a0bc34b6a73d7cbc22a428b5b09680a225e7"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.layout-2ff63b202ab904a0.json",
+      "sha256": "2ff63b202ab904a0f535eaf3ee642c35a1fd27d55d34ded9428002bfbaa3d26e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03.effective-plan-c0dc1cdf26b6a4c9.json",
+      "sha256": "c0dc1cdf26b6a4c976087c39c28612ccc49d61b977289f357c1e868c181f4f54"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03.independent-qa-frozen-67f5d4b5175cf5ad.json",
+      "sha256": "67f5d4b5175cf5ad038042fa86170fc7401c45cb7ddb9dde7035416d310cfe6d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03.layout-9e3ce54e8f127d56.json",
+      "sha256": "9e3ce54e8f127d564473d0c6437ad08896bd659257d475adba38f7336b5a258d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.effective-plan-0f986b7def34607d.json",
+      "sha256": "0f986b7def34607dd0bbeaaa3ed16c269cc765cd6b20484c8c47d052fcad950e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.independent-qa-frozen-d885c759538552d8.json",
+      "sha256": "d885c759538552d884fea8af71c5e65b7b772c1ca7cb9ee82c258ed5105c5336"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.layout-d2dd2829dc52b212.json",
+      "sha256": "d2dd2829dc52b21260b03303ade07da854942f4d8ce34ab34fe1e363620c21f2"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.independent-qa-frozen-11764faf2f977c01.json",
+      "sha256": "11764faf2f977c0157151d0464177b349b8ac2e726364ca660af1196a552a5ee"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.layout-9997963a4db69d69.json",
+      "sha256": "9997963a4db69d690716c0fbc57c909a70d71fa2babe59dabe2f0ad461227224"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03.independent-qa-frozen-81c52ca1933fc2c2.json",
+      "sha256": "81c52ca1933fc2c277a3ced4fb3e0e828d1f0354fe10982fe26e01ccade94867"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03.layout-ed0e58cd0a2018d9.json",
+      "sha256": "ed0e58cd0a2018d9f53fc531da538e656af2f0c1de1c129104c47cd803fc4a86"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.layout-0e12cd4b6ae501ea.json",
+      "sha256": "0e12cd4b6ae501eaf243cd8fc687dece1b7cab6a1a7c1aad040174309e7a72b3"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page01.renderer-W-diagnosis-v2.json",
+      "sha256": "657d16dd1290bb91a11c945358ea0f3cfbd9fe528c1dc981e841d57a3d47b58e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01.layout-d6c0013ecad9aa6e.json",
+      "sha256": "d6c0013ecad9aa6e942003ac04e962faf92d2daa796266a9497cf2a79d017d42"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page01.row-contact-diagnosis.json",
+      "sha256": "fddc62cf29e0bbdf571337bbed1baa7ed0d1ec40d870560924ddeed7b57e0b85"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page01.row-contact-source-comparison-supplement.json",
+      "sha256": "6d45c5303b8fb9d941ae53ccc44dd5373dc2e3ca6191ff8de96e1118e6907577"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-636c2a7d9693058b.json",
+      "sha256": "636c2a7d9693058b0bb9896499320bb23922b311eaac2db64a22413945ea3dac"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-80182fd6ecdc0dae.json",
+      "sha256": "80182fd6ecdc0dae1cf4c59fdbf9868984899e83bc58f90ea447c32a628431e2"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-7a28c4cd72d6ba37.json",
+      "sha256": "7a28c4cd72d6ba373e9c9e532dd39f5a92ad28aea3575625ba0a419847a7eab9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-3881d3306718eba7.json",
+      "sha256": "3881d3306718eba7079b157305abdd6c8a991b01b64455cce7b38556c7448bfe"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-055454b10c58e01a.json",
+      "sha256": "055454b10c58e01a041df25aefc0e99d8ae3b488a09e5139c5b16d1d8dfdf00b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-38dbac62505f6a79.json",
+      "sha256": "38dbac62505f6a79e5ced0149534ed4d07055d5ffa3cf6c581013ee5b69835d4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-81fef937d918dcb9.json",
+      "sha256": "81fef937d918dcb9db5dbf84853a505c972e2c438f0c58812e144404ae5c5f7b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-5e302f8f44a5517c.json",
+      "sha256": "5e302f8f44a5517ce48d5d2a5e128845ffe599de62d5b62e18b33312ca785ad2"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-6e45269d01800d90.json",
+      "sha256": "6e45269d01800d906e57ff2663c5b4d9c79c0263bf4e7d634fefcafb3cf2cc86"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-d4e07bfc8859515d.json",
+      "sha256": "d4e07bfc8859515d108b6b4a652270454f6573f54db05fc33cffbd2985a2770d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-361528d496ddf1ae.json",
+      "sha256": "361528d496ddf1ae400732f1474e1d9d31c265253993b9590b7adb3dbe93eedd"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-661ca779348d073e.json",
+      "sha256": "661ca779348d073ef2e06b10c61df2ea2722c588482cd55ea11633a87565f6a7"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-98a4bfcf985e3534.json",
+      "sha256": "98a4bfcf985e35346dd32e5c1389975e070a686b722b5b81d41175f193437efa"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-78af25b3bdf57aea.json",
+      "sha256": "78af25b3bdf57aea0474e21d17e22a14bb742548045c0e32fff9742ddb1c550c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-946a47a2bcd5f9d6.json",
+      "sha256": "946a47a2bcd5f9d69a14c1f6cee860a2124752e4a0730554dff5615d4d75b9e3"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-5811bad5586bbe7d.json",
+      "sha256": "5811bad5586bbe7ddc7b0088b5ae8f522aedc179bc80dba97dfb89a52c3fa748"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-3ce689d89a0cc4a5.json",
+      "sha256": "3ce689d89a0cc4a5ffbf78e1467ad344817a221a985f444954a5ace326a3735b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-92995276378b1786.json",
+      "sha256": "92995276378b17868134063ba1d5beaa5f308bdfff4e6e8e2a49430bdf66ce3a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-da5ff5d834aa56d2.json",
+      "sha256": "da5ff5d834aa56d22e6d0fbe1ad515d1e5939f40e7c01f4f30d4eea9a13f3178"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-diagnosis-e700ae049dca2d5c.json",
+      "sha256": "e700ae049dca2d5c52a22215d7e254df3b9b29cdf403302b2466f2fa6101197b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-diagnosis-12d93dbe1c3a42a7.json",
+      "sha256": "12d93dbe1c3a42a70c5e24c1105c4f367b7a8efe472e10453dc8d13cff60eed3"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/NUMERIC-REPAIR-SPEC.json",
+      "sha256": "b552b2f0cc95c1f0e8aae8bfdfc34fddae4037ce88703eca33f7fe61c914b24c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/prototype-negative-controls-v2-final.json",
+      "sha256": "3f7ba16ab7121b9782faa5c6d8a17fd3982009d8e2d781faf1addaf6157a9147"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/UNCHANGED-NINE-PAGES-READ-HANDOFF.json",
+      "sha256": "1f449999106262b64622bfb090f7ae69e6bbbd1d86e87f97a42ee9e9cee8a100"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ROOT-2026-TWO-PROTOTYPE-REVIEW.json",
+      "sha256": "a50034d2dcb8fc26e498df1d73867f8e623f09badb269ef26d5a37686cdc7995"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ROOT-THREE-PROTOTYPE-REVIEW.json",
+      "sha256": "9715eda942e58dfb89fd50d9a984c57c465f306870fc5f6aa219195610e4d221"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/FINAL48-CONDITIONAL-AUTHORIZATION.json",
+      "sha256": "a870bf77eab9a138f0220c80da71f925415c3a1a219020b08c4dec722110f0ae"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/FINAL48-GO.invalid-status-retained.json",
+      "sha256": "f5f7a013f8d7f362f5c5cf6be29bc94c8440cac552ea271fd03d023b6b7d51ee"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/FINAL48-GO.json",
+      "sha256": "ced216c9aae3e80014d6ff149406143da59834ba8006f2c4d9ad6ad73e90b0ff"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/FIVE-FROZEN-PROTOTYPE-RESULTS.json",
+      "sha256": "04d9ca3ac6aa4039b707f09c3a96c5025187fe4424894ebd423949a3438fde2a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-input-ledger-500bab6a7ef21470.json",
+      "sha256": "500bab6a7ef21470c9e4dbf427a6046641a5603cb935c3588dee8d948e9c0656"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ASSEMBLY-COPY-RECEIPT.json",
+      "sha256": "db16d36e3b05c272bfbddda5339655510eef90154282acf8790a708f7b4dda4a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page07.effective-plan.json",
+      "sha256": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-03f33a2a6d382fd9.json",
+      "sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/READY.json",
+      "sha256": "0df67946fad87e3086f8f955b6199f6e8d6d9e5a7db7c7f4a7eddd2b2c3541ad"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/visual-review-mixed-normalized.json",
+      "sha256": "04e113a41624dedb79b591b2020b2c6c683608a52aa731b34709cd0689222a4b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-NATIVE-REPLAY-7f7c7e5cd5846614.json",
+      "sha256": "7f7c7e5cd5846614926b900530e32f8467fde54184aaa112ba5f5d78a14b558e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page07.layout.input.json",
+      "sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-5b2ce22e6fadfbf6.json",
+      "sha256": "5b2ce22e6fadfbf65c1b4f766883a4d20db09dd6778afaba26f8e467554fb555"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-NATIVE-REPLAY-8e0c6b98e1947bc0.json",
+      "sha256": "8e0c6b98e1947bc09f91ab393051f2221475e6bd43854fbf85af9a919a728d2e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07-independent-audit.json",
+      "sha256": "1e8469d2b135a2b27f700c9ed0ba44b92031cc45fb7524cad4989ac6c82a861e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/page07.authoring-draft.json",
+      "sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/postprocess-receipt.json",
+      "sha256": "99096ae7725e3a2815a4273f5f7e56c02fa63c7e5ed9fd019d83791289a3a9d0"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/repair-runtime-snapshot.json",
+      "sha256": "e24a4ca4c467fc0666fe060eb76540b13ae072ae131fad934d5b4074cd0bb322"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07-machine-result.json",
+      "sha256": "fc27c19aa397b72013dd0b6ed968a8817631c90056944b81774ab41a3470390c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07-visual-review.json",
+      "sha256": "e272914e370f59c759151f39c388f5ff4ef55e234284b33a99034f52812715fb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/actual-negative-regressions.json",
+      "sha256": "6274032a233e69a081232f64805370a148fe0175ad096d0514f67a1d65ecbe6f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-1c94c9ad762fa34f.json",
+      "sha256": "1c94c9ad762fa34f4d4270f0d57113527daff5055d56a92478f91a32ea063c7a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-e9b2fb0d4a2deebe.json",
+      "sha256": "e9b2fb0d4a2deebe4db7a88f709cc18938ac95cb3ff38c04ef87c76e907c58c1"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-921a62fdb4343e75.json",
+      "sha256": "921a62fdb4343e754db6970c84add0cf07681c8fc9948d1fb33eac74c3c039b3"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-827a783b7369b432.json",
+      "sha256": "827a783b7369b4324350b254181ef47585e015fe115d4ec87a5f322859d9f3c9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-10827ff6d5d2e0fb.json",
+      "sha256": "10827ff6d5d2e0fb16c55b5abbe33114dce787d247d89f9cc4450a43879022d6"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-76dc1f6e011a3d40.json",
+      "sha256": "76dc1f6e011a3d40a4ef8b5ff335a633d0262f95413a2a60b4d014d643a44923"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/VALID-CANDIDATE-PASS.json",
+      "sha256": "a88dfc7f60de6d7902f2f0363a12d461cb38d7d45f9afdf2ca7e527c31e8b0f5"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07.layout-9829822c970e6c6e.json",
+      "sha256": "9829822c970e6c6e50f410fce939ad8f28b7218ca2b6266ad104467508bcec25"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/REPAIR-CODE-INPUT-FROZEN.json",
+      "sha256": "772c5a7536811f041ad4e0d9bc8d179072e08e472942dfead7ee95bedd43cb50"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-ROOT-GO-345cb2fe09b90a17.json",
+      "sha256": "345cb2fe09b90a178c9f87176cfc7fc3307a957d8c45087359f746e01e89a730"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/PREPARATION-FROZEN.json",
+      "sha256": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/CODE-INPUT-FROZEN.json",
+      "sha256": "ad9b4855ac822214da7ecca0955af9abb3a1fecae4dbb33827ecb9ee59554079"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01-independent-audit.json",
+      "sha256": "ac98c0a4ae709164007e6c58ac3a41f54057333a196988a096528f37b9a0b0a2"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-6b15131b995ba249.json",
+      "sha256": "6b15131b995ba2494e609d96fcb15d12ebb1c18e7cd2efdd9b155529bf4feab9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01-machine-result.json",
+      "sha256": "60626d76d08964fa1ecf7f29e314a666324f2dd0c21b10e554dbe96035d8c7d0"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01-visual-review.json",
+      "sha256": "3ac7d054395cde85863adebc3739dc61a54626cb037fd7034a0330892b9c4287"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page02-independent-audit.json",
+      "sha256": "b14b24ee84899f7b79e0fe1d36a994f6443ebd3d3094761bdbaa8f5d6756da30"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-dcf2b903fa18204d.json",
+      "sha256": "dcf2b903fa18204d0eb5f96bff19e345c5d154321117c009b6b0f02f17aa0d42"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page02-machine-result.json",
+      "sha256": "34b1c70dc2c94a29220f4113b537b076b3fe87687dd5df10f2ed238cac4e4fc9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page02-visual-review.json",
+      "sha256": "5fedda5767e79da3e89f1de5d33e9c7ab903e72e9baa4582fc8e85e2ee10c590"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03-independent-audit.json",
+      "sha256": "801cc157bb0083bfca4014e0906e04c27fb145976a4e85405b15f9f35d984c4a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-55272357ad49ae24.json",
+      "sha256": "55272357ad49ae2435befc3a57cb2e76fdccd9e998d1388abaf63c0cf2552478"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03-machine-result.json",
+      "sha256": "9ca670b1eb4b9a6b12bc3aaab50f1f9a2497d7e412e1eb37082aeeabc255f213"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03-visual-review.json",
+      "sha256": "b736f39455eac7debebc2907bedb8dfc9bdbb543b0143d930255cd764ce6c5c2"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page04-independent-audit.json",
+      "sha256": "bb89ad1c676391d84ccd29ccc68420c727f62b050fc0507c6db8a559dba3b23c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-5c537c04e75b2e9a.json",
+      "sha256": "5c537c04e75b2e9ac4f70b58b5b26c56f3be0fc9f135f71cdaba3b94323d9418"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page04-machine-result.json",
+      "sha256": "fed3bd724679fe9719ba87806bc858831290bc437c12f94a6b0783fe09ca6368"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page04-visual-review.json",
+      "sha256": "d54d86800488d2b92acb2c49a72d0077b7fe75b032a885da0147b090dc8628b0"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page05-independent-audit.json",
+      "sha256": "4c724b183ba69db4ceb70d6361d0246a5072fa1bd5f8b613785fd5d376dae7fe"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-bed2951c882e2e06.json",
+      "sha256": "bed2951c882e2e060e5f141abd9fc6734346f602f1e1b00f4fecc069cbba80fd"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page05-machine-result.json",
+      "sha256": "a4eeb6ef8dee6baa45a6bedb7eb9143ba70ead73c6eb233a228ce235ee457961"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page05-visual-review.json",
+      "sha256": "69908618481d9f137b09c0e3e74d1681956ad6277a4996bd55616cbd7833aaaa"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page06-independent-audit.json",
+      "sha256": "d28d6f5319d4152044e1253b26f7b908a954645276175404af87f48f56ed3cbd"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-416b3ae68b6f5e7d.json",
+      "sha256": "416b3ae68b6f5e7d57d76819069d4f9c5ec12e6ff0a73ff51eef768c93d42476"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page06-machine-result.json",
+      "sha256": "0404e781044a590468b860caeba12f8233015a28c3d7e9a93164b60b14412bb5"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page06-visual-review.json",
+      "sha256": "c3ff924dccf9898979ac8ebf5c012e08cb70ff76bfc3194e434d7d47673999f2"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/FAILED.json",
+      "sha256": "1e4619352ef7c57505cb0c72b4173ed0ede971434b3d8148236ba235fea83e06"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-7f8d0cd7f032cb63.json",
+      "sha256": "7f8d0cd7f032cb633f082ea9e2b7eeae2bf7bc58ae72954243cc2a05d5ab117e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page08-independent-audit.json",
+      "sha256": "a1963990e877962df23dc75b63bab25d2bb5ad447fe2d75a8ed4fbca6d149124"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-1a11ea6b20ba6e5b.json",
+      "sha256": "1a11ea6b20ba6e5b493507e878036a3c4f5020558bd4f692b676ee46105d234d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page08-machine-result.json",
+      "sha256": "eb7ae3e725c737a57e11d889c984a5e46db768f215bc0c610f4f05fe17706bfc"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page08-visual-review.json",
+      "sha256": "8a2b8a021695ea5b5078f620b35e003977272bd85399f3b5361dbf4ef3867b22"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page09-independent-audit.json",
+      "sha256": "b740f23d1b65d9a5d9c7e742536c9a9db08a19fd724a01de80c5e120ca7564bf"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-9bdbae2b6fe20cbc.json",
+      "sha256": "9bdbae2b6fe20cbcb8c3977b9931963c821b01c34684d563ed74c6319b9926e9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page09-machine-result.json",
+      "sha256": "d25440b00fe02d5a42f6539bb43842cb9140a7dabbcb18e161f6faab4b0dddfb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page09-visual-review.json",
+      "sha256": "f6ababe73f9b209a9fdbf59e690e60ba09f56800c24c2f27deaab3b5c13853e4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page10-independent-audit.json",
+      "sha256": "f9311d08d82986d4b84d0f2c51752119c39f9d93b324aae2f4ac1f2834a4330b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-production-runtime-snapshot-8af2502e88837c9d.json",
+      "sha256": "8af2502e88837c9db6443ff37b25a82488fbccac49ad7f21c2e2dd9113811527"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page10-machine-result.json",
+      "sha256": "b1790cbcae5d6f06237c5dc829a5c59667e4fb347d160a39631680be13641e82"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page10-visual-review.json",
+      "sha256": "654ecc1899bb86b3f577fd27c33a1303ffe1a079d13c948400aa02aaf110fc70"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-ROOT-GO-8f56f0f8a6db8400.json",
+      "sha256": "8f56f0f8a6db8400c0d9ee2a9b6c62026f2e50984e7b669e5e1c12f4282ea0d4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/PROTOTYPE-RUNTIME-FROZEN.json",
+      "sha256": "27b5df6951f5ce45d390f51aa2d193bdd22c0740163846add788060e2972132b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/creation-manifest.json",
+      "sha256": "a0fca628671e2fffa713eefbaa38415b8a39b8e1f3435f1430411931a96fa180"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/native-layout-sidecar-copies.json",
+      "sha256": "5b06562599269d09f6e0fd5a3a5a604c991fc8ecbcfc7e4a554867e5ff087f41"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/AMENDMENT-FROZEN.json",
+      "sha256": "a02844e98ef9a0e332f10312ec66a48fac5d87338e2d414c6ec24338f3c652a7"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/CASES.json",
+      "sha256": "5b985a7054fa5e079176cf00951957cb062d201f189eaa7445c84c9c05c05c93"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/FROZEN-BASE-SOURCES.json",
+      "sha256": "192b3031cc98c8b60e450f4913a0f6517422bb4392eb0bc47eed04661a44d5d3"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/matrix-regressions.json",
+      "sha256": "5bb48abf654c7c44ab97745a8f065720db18fd8fcd14c768c4815e07073f26e8"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-26ff348ad46c4c38.json",
+      "sha256": "26ff348ad46c4c38dcc61b2c4ca8176e833737ba5831f60874cb84233e2ae61d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-56d1e5a60e3ee9da.json",
+      "sha256": "56d1e5a60e3ee9daaa69af4e0c16688167f2a61ba73e014b62e8c990dd7a2a4b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-5d0db6118817c0af.json",
+      "sha256": "5d0db6118817c0af049c47cd8e640f71012b70f905c2137c4685f74657e539bb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-c654c98bc77cc626.json",
+      "sha256": "c654c98bc77cc626130c8451fcd8eeca4980d5904e3ad0687ba56754a70e75a7"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-cb23ecb47420a7cf.json",
+      "sha256": "cb23ecb47420a7cf97e01ac83edc46169b663f5b56a221aadfd3ab733d3b9229"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-35ec54c1a0b31011.json",
+      "sha256": "35ec54c1a0b310116483a45c9f814a51a5d0b308654d0c43c8e28dba2d2d308e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-25d93443be22bbac.json",
+      "sha256": "25d93443be22bbac7a5db021472e45f0d2dd29fb4df4cf60665ed86ba74de83c"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-ccab6ebfe661eb4a.json",
+      "sha256": "ccab6ebfe661eb4ab7c6596eaa80de2fb5b9fbc4c9f6eab203966d1140922311"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-a399863220d9b0a1.json",
+      "sha256": "a399863220d9b0a190e9e932123f33398e83b622a85ed5243e6e25198c8e27f6"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-0c0547a64e216921.json",
+      "sha256": "0c0547a64e21692106c303d0453d4a7520b44f9ed41abb2903bc7f62b5c621ad"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-c003bbf154c68de9.json",
+      "sha256": "c003bbf154c68de96335fa1873424a8482ef6ea4aa1352b832dff2897d1a09cd"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-aa359c4e342c4e08.json",
+      "sha256": "aa359c4e342c4e083cdeb073b418ad31f5baf535d3a32b91620ffc1b49bc4f62"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/BATCH-RESULTS.json",
+      "sha256": "13a4269f16d8697cccd951840be944fadb6cb6c206516ec71c45ba1b946f02ea"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-6970fccfe348378b.json",
+      "sha256": "6970fccfe348378b36023a0cc42aad2c64b5ef83ac022f9e6e908ec9721b61b0"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-0ac1353ca080066b.json",
+      "sha256": "0ac1353ca080066b6be8732a02b09ca47c6a34abb5f558e792ff913fb5167e6f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-646288acce35e977.json",
+      "sha256": "646288acce35e977840c6dc862f9b57711de27ddf35b2c4dd3159b74a4781abe"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-b11ec4bdc2f9cd99.json",
+      "sha256": "b11ec4bdc2f9cd99698dfcb05dd0de28403b979c5eeefaf8c71c5aa4c15678ab"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-0e22d226d7c50b59.json",
+      "sha256": "0e22d226d7c50b594ee654033d87b3033fb11ed96f442dd6f54ce4fb824b8571"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-0fc2ab9dc97dad45.json",
+      "sha256": "0fc2ab9dc97dad45a1b3b63c281d5a6f687761e6cfd1caa97ea9661c91430151"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-8eba25a5257f26fb.json",
+      "sha256": "8eba25a5257f26fbc5884d491f9af4c071cf25e26cb50af97c4ca0c75986b8ed"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-939ef3ac27dded00.json",
+      "sha256": "939ef3ac27dded009f814ff3ed92f8bc32e9c778c4576b2b3bf9dffdbc5539f1"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-5e8739db8401cab8.json",
+      "sha256": "5e8739db8401cab8a3c4031b8fc884de3fcecb063795d794099f9ffa985314db"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-16a35041d494f282.json",
+      "sha256": "16a35041d494f282f78eec8ae1973865fedd0fbb0ab1248ebfce5ea585fa8712"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-fa95c32004c8c18f.json",
+      "sha256": "fa95c32004c8c18f2094cf91c805458a3536b435a5f6533585ee76a67e6cc005"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-83c03c1fc3ae4e8b.json",
+      "sha256": "83c03c1fc3ae4e8bc0b9c25b1763783b21529a1980d9200365c7d741504eca44"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-afc4c7f4703ce544.json",
+      "sha256": "afc4c7f4703ce544dcf3f192004b1dae2912c43fe18ba8028c17f3d63a7a4a9a"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-c62db03d65fa38b6.json",
+      "sha256": "c62db03d65fa38b676053aaf727d5177540d9c877fe85b03859467f5a38dcf3b"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-ab278c9a84276d53.json",
+      "sha256": "ab278c9a84276d531ecc8cd462a42d5998810b45b5e796435201bdec7a192ab6"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-04a1e2071f03e94f.json",
+      "sha256": "04a1e2071f03e94ff8da5d8b318e12294f5bea2e37af5ac824348cea1bb4eca4"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-3cf58f3f4c471e81.json",
+      "sha256": "3cf58f3f4c471e81864eac6cdb29eafd35f2474d82f3d2fc6fe7e57ccb4d2b82"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-d55655903f42f501.json",
+      "sha256": "d55655903f42f5013104d97337f8445e1706edbb2e6474ed97cef4c391510342"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-REJECTED-d45e4b98b8e7887f.json",
+      "sha256": "d45e4b98b8e7887f1fb6ef385037150e0728ebc3b7155ae1cec18e3f32005adc"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-2ec5f2aef5624d8d.json",
+      "sha256": "2ec5f2aef5624d8d72c48a87c6ead36faeb2a62cbf86b72d1b6b29d85fc08e73"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-dd2a587f5a13fd31.json",
+      "sha256": "dd2a587f5a13fd313a8b11639976b944f2e15f872802d3f7223029147c49ae2f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-980d812751d75c71.json",
+      "sha256": "980d812751d75c7152b2c6be5193ae3287959bad5cdc751c0d336ee10b0c768e"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-dee99b232b0e3791.json",
+      "sha256": "dee99b232b0e3791f46990b09c4b6364e1f49e53b8d36265ce7c6699960cc545"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-db3e0e5e92d722d7.json",
+      "sha256": "db3e0e5e92d722d7d236addea8134771581046f45d3c7fbfa1f537a9cdf50aeb"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-ba9ea84ad595ceb7.json",
+      "sha256": "ba9ea84ad595ceb7e946ed2f602be6e43a6c030a6c70dea6fc1c06212202aff9"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-d26ff790469ccdbd.json",
+      "sha256": "d26ff790469ccdbdf2120b327f1042aada57b36f87790c400b47ee7ab99a1782"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-5a1fabbcbef640d2.json",
+      "sha256": "5a1fabbcbef640d2c105a4f958aa00a687a1ecd5b6154b6fac48ae78c47c3af2"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-snapshot-9691861880f15009.json",
+      "sha256": "9691861880f15009ff2656eafded364d51240b5646eb9736c893e740772be183"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-INPUT-LEDGER-775dcf0d2466d1a9.json",
+      "sha256": "775dcf0d2466d1a9c01620b5212b5c9b38b87aae2db303ee29dff6c039005d2d"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/PROPOSAL-REVIEW-HANDOFF.json",
+      "sha256": "faf41148c0c414354c606b3bc9d6b18ae60e718536d91c6b18fc8e9fa1d0fd33"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-runtime-snapshot-c2ea09bac7cdc585.json",
+      "sha256": "c2ea09bac7cdc5858515c9f44a5fe44841683f2505af6af31194de398d6fcc8f"
+    },
+    {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/Ortvay_2026_T_KO.qa.json",
+      "sha256": "29bc75b72b40348bfe1e96d741f15d727fa5c2aaf3d98b824e8a1b0cf9750611"
+    }
+  ],
+  "source_style_correction": {
+    "schema": "ortvay2026-source-style-page-repair-publication-v1",
+    "year": 2026,
+    "source_sha256": "ea61fafa8228c3ed2a890e5c2f65ed8853f41d2c39e60d8b0957edfeac4dfba3",
+    "original_published_sha256": "075b32d0a3cba93748a289dafda2e150f5de0803356c055b2b252dddf79955a6",
+    "reference_publication": {
+      "path": "tools/ko/ortvay/2026/T/natural-spacing/publication.json",
+      "sha256": "73ea2d01204e7492397402c4c200a36b3bd485822889530e1a12a8f3b542665d"
+    },
+    "pages": [
+      {
+        "page": 1,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "914327972df78a665aafd0f9e8d3397eaeaca8c0cc8d49beab8487cc3a989210",
+        "layout_sha256": "60d2d4d82b482e97d5970335908898f142abffa49d74e4169199c1997000634d",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page01.pdf",
+            "sha256": "914327972df78a665aafd0f9e8d3397eaeaca8c0cc8d49beab8487cc3a989210"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page01.layout.json",
+            "sha256": "60d2d4d82b482e97d5970335908898f142abffa49d74e4169199c1997000634d"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page01.effective-plan.json",
+            "sha256": "54d02f7cd09458c7f686620a26875323f3e08f0cccb14236f72aa0ea135f1fc5"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page01.pdf",
+            "sha256": "914327972df78a665aafd0f9e8d3397eaeaca8c0cc8d49beab8487cc3a989210"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page01.layout.json",
+            "sha256": "60d2d4d82b482e97d5970335908898f142abffa49d74e4169199c1997000634d"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page01.effective-plan.json",
+            "sha256": "54d02f7cd09458c7f686620a26875323f3e08f0cccb14236f72aa0ea135f1fc5"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01-independent-audit.json",
+          "sha256": "ac98c0a4ae709164007e6c58ac3a41f54057333a196988a096528f37b9a0b0a2"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01-machine-result.json",
+          "sha256": "60626d76d08964fa1ecf7f29e314a666324f2dd0c21b10e554dbe96035d8c7d0"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page01-visual-review.json",
+          "sha256": "3ac7d054395cde85863adebc3739dc61a54626cb037fd7034a0330892b9c4287"
+        }
+      },
+      {
+        "page": 2,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "ae26ca545a2e9eb4bd4a5a1591f666aa43c48f353deb31e6795899c0127ce118",
+        "layout_sha256": "095d1b5a534b8e768d9116312b654238e7cd61b91b281579a3b532b532966acb",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page02.pdf",
+            "sha256": "ae26ca545a2e9eb4bd4a5a1591f666aa43c48f353deb31e6795899c0127ce118"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page02.layout.json",
+            "sha256": "095d1b5a534b8e768d9116312b654238e7cd61b91b281579a3b532b532966acb"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page02.effective-plan.json",
+            "sha256": "543353da0c9053cd3e8487fad26cc7f0a5d9c831bfbe9b8cb40b66ce83fb3e3b"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page02.pdf",
+            "sha256": "ae26ca545a2e9eb4bd4a5a1591f666aa43c48f353deb31e6795899c0127ce118"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page02.layout.json",
+            "sha256": "095d1b5a534b8e768d9116312b654238e7cd61b91b281579a3b532b532966acb"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page02.effective-plan.json",
+            "sha256": "543353da0c9053cd3e8487fad26cc7f0a5d9c831bfbe9b8cb40b66ce83fb3e3b"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page02-independent-audit.json",
+          "sha256": "b14b24ee84899f7b79e0fe1d36a994f6443ebd3d3094761bdbaa8f5d6756da30"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page02-machine-result.json",
+          "sha256": "34b1c70dc2c94a29220f4113b537b076b3fe87687dd5df10f2ed238cac4e4fc9"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page02-visual-review.json",
+          "sha256": "5fedda5767e79da3e89f1de5d33e9c7ab903e72e9baa4582fc8e85e2ee10c590"
+        }
+      },
+      {
+        "page": 3,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "97cb1ec873447e43f531af5099187e011ae37febfa6081d8b92e84dfefaa0bf2",
+        "layout_sha256": "dcc101faadee70c367c60aa77940919a45cf4b8694d99ccc5c52a63a95acf257",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page03.pdf",
+            "sha256": "97cb1ec873447e43f531af5099187e011ae37febfa6081d8b92e84dfefaa0bf2"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page03.layout.json",
+            "sha256": "dcc101faadee70c367c60aa77940919a45cf4b8694d99ccc5c52a63a95acf257"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page03.effective-plan.json",
+            "sha256": "442adc093c75e76260651f4954f7d6069d7b0931a294e6f83dd6d10d24570ca4"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page03.pdf",
+            "sha256": "97cb1ec873447e43f531af5099187e011ae37febfa6081d8b92e84dfefaa0bf2"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page03.layout.json",
+            "sha256": "dcc101faadee70c367c60aa77940919a45cf4b8694d99ccc5c52a63a95acf257"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page03.effective-plan.json",
+            "sha256": "442adc093c75e76260651f4954f7d6069d7b0931a294e6f83dd6d10d24570ca4"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03-independent-audit.json",
+          "sha256": "801cc157bb0083bfca4014e0906e04c27fb145976a4e85405b15f9f35d984c4a"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03-machine-result.json",
+          "sha256": "9ca670b1eb4b9a6b12bc3aaab50f1f9a2497d7e412e1eb37082aeeabc255f213"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page03-visual-review.json",
+          "sha256": "b736f39455eac7debebc2907bedb8dfc9bdbb543b0143d930255cd764ce6c5c2"
+        }
+      },
+      {
+        "page": 4,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "6dcbefe71f1bbced31a50bb9551479ec0b928eeaaae7f583b3df9b6e9644613e",
+        "layout_sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.pdf",
+            "sha256": "6dcbefe71f1bbced31a50bb9551479ec0b928eeaaae7f583b3df9b6e9644613e"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.layout.json",
+            "sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page04.effective-plan.json",
+            "sha256": "a3b8a1d02a60cbd44f7295de75bc4c75188e2341a40bead745ca624be04243cc"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page04.pdf",
+            "sha256": "6dcbefe71f1bbced31a50bb9551479ec0b928eeaaae7f583b3df9b6e9644613e"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page04.layout.json",
+            "sha256": "14b3c2429a517dff236e52aad908e19e1cb253f131c0ce25365a00e5a39a44a9"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page04.effective-plan.json",
+            "sha256": "a3b8a1d02a60cbd44f7295de75bc4c75188e2341a40bead745ca624be04243cc"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page04-independent-audit.json",
+          "sha256": "bb89ad1c676391d84ccd29ccc68420c727f62b050fc0507c6db8a559dba3b23c"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page04-machine-result.json",
+          "sha256": "fed3bd724679fe9719ba87806bc858831290bc437c12f94a6b0783fe09ca6368"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page04-visual-review.json",
+          "sha256": "d54d86800488d2b92acb2c49a72d0077b7fe75b032a885da0147b090dc8628b0"
+        }
+      },
+      {
+        "page": 5,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "b507aac48ecb8fb0a87fba6f9931f30a53e0872fd31d5d62c72449805b635935",
+        "layout_sha256": "298ad95edc8c8e10c0dcf4f8e603dd46058e5d6ef360616f5e97550f73ccdce9",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page05.pdf",
+            "sha256": "b507aac48ecb8fb0a87fba6f9931f30a53e0872fd31d5d62c72449805b635935"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page05.layout.json",
+            "sha256": "298ad95edc8c8e10c0dcf4f8e603dd46058e5d6ef360616f5e97550f73ccdce9"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page05.effective-plan.json",
+            "sha256": "4362707bdf1d415032c4c266969d06818c9a96993b1399c231601f42b47ac506"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page05.pdf",
+            "sha256": "b507aac48ecb8fb0a87fba6f9931f30a53e0872fd31d5d62c72449805b635935"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page05.layout.json",
+            "sha256": "298ad95edc8c8e10c0dcf4f8e603dd46058e5d6ef360616f5e97550f73ccdce9"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page05.effective-plan.json",
+            "sha256": "4362707bdf1d415032c4c266969d06818c9a96993b1399c231601f42b47ac506"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page05-independent-audit.json",
+          "sha256": "4c724b183ba69db4ceb70d6361d0246a5072fa1bd5f8b613785fd5d376dae7fe"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page05-machine-result.json",
+          "sha256": "a4eeb6ef8dee6baa45a6bedb7eb9143ba70ead73c6eb233a228ce235ee457961"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page05-visual-review.json",
+          "sha256": "69908618481d9f137b09c0e3e74d1681956ad6277a4996bd55616cbd7833aaaa"
+        }
+      },
+      {
+        "page": 6,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "f8f5f2047e0089a0af650cdd05282f46ce4354f7db1b6078583f28629af220a9",
+        "layout_sha256": "3af9532edd2ef2b8feefa14d0ac8fe3ddeb44569df20cc041abc69a5bd5af421",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page06.pdf",
+            "sha256": "f8f5f2047e0089a0af650cdd05282f46ce4354f7db1b6078583f28629af220a9"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page06.layout.json",
+            "sha256": "3af9532edd2ef2b8feefa14d0ac8fe3ddeb44569df20cc041abc69a5bd5af421"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page06.effective-plan.json",
+            "sha256": "f63ee530d4156dd4dad4d1eb31527c402b24bf7454683db682465940c87f3697"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page06.pdf",
+            "sha256": "f8f5f2047e0089a0af650cdd05282f46ce4354f7db1b6078583f28629af220a9"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page06.layout.json",
+            "sha256": "3af9532edd2ef2b8feefa14d0ac8fe3ddeb44569df20cc041abc69a5bd5af421"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page06.effective-plan.json",
+            "sha256": "f63ee530d4156dd4dad4d1eb31527c402b24bf7454683db682465940c87f3697"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page06-independent-audit.json",
+          "sha256": "d28d6f5319d4152044e1253b26f7b908a954645276175404af87f48f56ed3cbd"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page06-machine-result.json",
+          "sha256": "0404e781044a590468b860caeba12f8233015a28c3d7e9a93164b60b14412bb5"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page06-visual-review.json",
+          "sha256": "c3ff924dccf9898979ac8ebf5c012e08cb70ff76bfc3194e434d7d47673999f2"
+        }
+      },
+      {
+        "page": 7,
+        "qa_lineage": "external_full_ctm_v1_plus_exact_row_postprocess",
+        "proof_sha256": "150acab43780142cfb168b23629ddda84eebab82c9d39bc9257e533837da8a25",
+        "layout_sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.pdf",
+            "sha256": "150acab43780142cfb168b23629ddda84eebab82c9d39bc9257e533837da8a25"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.layout.json",
+            "sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07\\page07.effective-plan.json",
+            "sha256": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page07.pdf",
+            "sha256": "150acab43780142cfb168b23629ddda84eebab82c9d39bc9257e533837da8a25"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page07.layout.json",
+            "sha256": "03f33a2a6d382fd9452619dc19d820aafcefaebf9d6ba9b73772fa2766ef318c"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page07.effective-plan.json",
+            "sha256": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07-independent-audit.json",
+          "sha256": "1e8469d2b135a2b27f700c9ed0ba44b92031cc45fb7524cad4989ac6c82a861e"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07-machine-result.json",
+          "sha256": "fc27c19aa397b72013dd0b6ed968a8817631c90056944b81774ab41a3470390c"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07-visual-review.json",
+          "sha256": "e272914e370f59c759151f39c388f5ff4ef55e234284b33a99034f52812715fb"
+        }
+      },
+      {
+        "page": 8,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "00898ad4f609a6c89c6c0d92bc68d782a365d67fa9efabfaf742bb5cb7461e74",
+        "layout_sha256": "7bd3749629c73e180e540b58b9cdf520ec0bd3f573fcef700e3807e773885f9f",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page08.pdf",
+            "sha256": "00898ad4f609a6c89c6c0d92bc68d782a365d67fa9efabfaf742bb5cb7461e74"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page08.layout.json",
+            "sha256": "7bd3749629c73e180e540b58b9cdf520ec0bd3f573fcef700e3807e773885f9f"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page08.effective-plan.json",
+            "sha256": "4691fcf5c33ff548dd9bdca0f87e12997f7cf4f3fdfff4932f4f265bc29fcd65"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page08.pdf",
+            "sha256": "00898ad4f609a6c89c6c0d92bc68d782a365d67fa9efabfaf742bb5cb7461e74"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page08.layout.json",
+            "sha256": "7bd3749629c73e180e540b58b9cdf520ec0bd3f573fcef700e3807e773885f9f"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page08.effective-plan.json",
+            "sha256": "4691fcf5c33ff548dd9bdca0f87e12997f7cf4f3fdfff4932f4f265bc29fcd65"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page08-independent-audit.json",
+          "sha256": "a1963990e877962df23dc75b63bab25d2bb5ad447fe2d75a8ed4fbca6d149124"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page08-machine-result.json",
+          "sha256": "eb7ae3e725c737a57e11d889c984a5e46db768f215bc0c610f4f05fe17706bfc"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page08-visual-review.json",
+          "sha256": "8a2b8a021695ea5b5078f620b35e003977272bd85399f3b5361dbf4ef3867b22"
+        }
+      },
+      {
+        "page": 9,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "a38c6fe4c5bb4178320bd2c99958805cb3fd18e96bfeca5d238567468fdf4090",
+        "layout_sha256": "37a67ef45e7071e76b001eac70e525ebbb4c6f7cf86275ddc10356204a9b9126",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page09.pdf",
+            "sha256": "a38c6fe4c5bb4178320bd2c99958805cb3fd18e96bfeca5d238567468fdf4090"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page09.layout.json",
+            "sha256": "37a67ef45e7071e76b001eac70e525ebbb4c6f7cf86275ddc10356204a9b9126"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page09.effective-plan.json",
+            "sha256": "f72ebf4c133e1eb7dfab3c868c3d9544ed46c349e3df497c6b266ac5c30f68a9"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page09.pdf",
+            "sha256": "a38c6fe4c5bb4178320bd2c99958805cb3fd18e96bfeca5d238567468fdf4090"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page09.layout.json",
+            "sha256": "37a67ef45e7071e76b001eac70e525ebbb4c6f7cf86275ddc10356204a9b9126"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page09.effective-plan.json",
+            "sha256": "f72ebf4c133e1eb7dfab3c868c3d9544ed46c349e3df497c6b266ac5c30f68a9"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page09-independent-audit.json",
+          "sha256": "b740f23d1b65d9a5d9c7e742536c9a9db08a19fd724a01de80c5e120ca7564bf"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page09-machine-result.json",
+          "sha256": "d25440b00fe02d5a42f6539bb43842cb9140a7dabbcb18e161f6faab4b0dddfb"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page09-visual-review.json",
+          "sha256": "f6ababe73f9b209a9fdbf59e690e60ba09f56800c24c2f27deaab3b5c13853e4"
+        }
+      },
+      {
+        "page": 10,
+        "qa_lineage": "external_full_ctm_v1",
+        "proof_sha256": "5ecaecca4c995a768dd4bb13414d600da2113fa649ced88522619e2af6a0ca3d",
+        "layout_sha256": "e79bb12e55db05b5a51cb4da9fb2eca0f73ccc26e9206da7c8d586ddc79f40d0",
+        "origin_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page10.pdf",
+            "sha256": "5ecaecca4c995a768dd4bb13414d600da2113fa649ced88522619e2af6a0ca3d"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page10.layout.json",
+            "sha256": "e79bb12e55db05b5a51cb4da9fb2eca0f73ccc26e9206da7c8d586ddc79f40d0"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page10.effective-plan.json",
+            "sha256": "ae95688baa2110a70f1ee11e94f233e54debc14ef3f81887743e9f17b61ffa9f"
+          }
+        },
+        "assembly_artifacts": {
+          "proof": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page10.pdf",
+            "sha256": "5ecaecca4c995a768dd4bb13414d600da2113fa649ced88522619e2af6a0ca3d"
+          },
+          "layout": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page10.layout.json",
+            "sha256": "e79bb12e55db05b5a51cb4da9fb2eca0f73ccc26e9206da7c8d586ddc79f40d0"
+          },
+          "effective_plan": {
+            "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104\\proofs\\page10.effective-plan.json",
+            "sha256": "ae95688baa2110a70f1ee11e94f233e54debc14ef3f81887743e9f17b61ffa9f"
+          }
+        },
+        "independent_audit": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page10-independent-audit.json",
+          "sha256": "f9311d08d82986d4b84d0f2c51752119c39f9d93b324aae2f4ac1f2834a4330b"
+        },
+        "machine_result": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page10-machine-result.json",
+          "sha256": "b1790cbcae5d6f06237c5dc829a5c59667e4fb347d160a39631680be13641e82"
+        },
+        "visual_review": {
+          "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page10-visual-review.json",
+          "sha256": "654ecc1899bb86b3f577fd27c33a1303ffe1a079d13c948400aa02aaf110fc70"
+        }
+      }
+    ],
+    "qa_amendment": {
+      "numeric_spec": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/NUMERIC-REPAIR-SPEC.json",
+        "sha256": "b552b2f0cc95c1f0e8aae8bfdfc34fddae4037ce88703eca33f7fe61c914b24c"
+      },
+      "repair_freeze": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/REPAIR-CODE-INPUT-FROZEN.json",
+        "sha256": "772c5a7536811f041ad4e0d9bc8d179072e08e472942dfead7ee95bedd43cb50"
+      },
+      "repair_GO": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-ROOT-GO-345cb2fe09b90a17.json",
+        "sha256": "345cb2fe09b90a178c9f87176cfc7fc3307a957d8c45087359f746e01e89a730"
+      },
+      "copy_receipt": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ASSEMBLY-COPY-RECEIPT.json",
+        "sha256": "db16d36e3b05c272bfbddda5339655510eef90154282acf8790a708f7b4dda4a"
+      },
+      "positive": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-page07-independent-audit.json",
+        "sha256": "1e8469d2b135a2b27f700c9ed0ba44b92031cc45fb7524cad4989ac6c82a861e"
+      },
+      "negatives": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/actual-negative-regressions.json",
+        "sha256": "6274032a233e69a081232f64805370a148fe0175ad096d0514f67a1d65ecbe6f"
+      },
+      "postprocessor": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/postprocess_page07.py",
+        "sha256": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18"
+      },
+      "auditor": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/audit_page07_repair.py",
+        "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a"
+      },
+      "bridge": {
+        "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/authoring/continue_and_bridge_2026.py",
+        "sha256": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+      }
+    },
+    "ready": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/READY.json",
+      "sha256": "0df67946fad87e3086f8f955b6199f6e8d6d9e5a7db7c7f4a7eddd2b2c3541ad"
+    },
+    "qa_profile_freeze": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/AMENDMENT-FROZEN.json",
+      "sha256": "a02844e98ef9a0e332f10312ec66a48fac5d87338e2d414c6ec24338f3c652a7"
+    },
+    "qa_profile_root_go": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-ROOT-GO-8f56f0f8a6db8400.json",
+      "sha256": "8f56f0f8a6db8400c0d9ee2a9b6c62026f2e50984e7b669e5e1c12f4282ea0d4"
+    },
+    "qa_profile_actual_regressions": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/BATCH-RESULTS.json",
+      "sha256": "13a4269f16d8697cccd951840be944fadb6cb6c206516ec71c45ba1b946f02ea"
+    },
+    "qa_profile_post_freeze_guard": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/ortvay-2026-audit-26ff348ad46c4c38.json",
+      "sha256": "26ff348ad46c4c38dcc61b2c4ca8176e833737ba5831f60874cb84233e2ae61d"
+    },
+    "code_input_freeze": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/CODE-INPUT-FROZEN.json",
+      "sha256": "ad9b4855ac822214da7ecca0955af9abb3a1fecae4dbb33827ecb9ee59554079"
+    },
+    "original_code_input_freeze": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/PREPARATION-FROZEN.json",
+      "sha256": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a"
+    },
+    "original_runtime_freeze": {
+      "path": "tools/ko/ortvay/2026/T/source-style-page07-repair-20261104/review-evidence/PROTOTYPE-RUNTIME-FROZEN.json",
+      "sha256": "27b5df6951f5ce45d390f51aa2d193bdd22c0740163846add788060e2972132b"
+    }
+  },
+  "source_url": "https://ortvay.elte.hu/2026/E26.pdf",
+  "source_page_url": "https://ortvay.elte.hu/main.html"
+}

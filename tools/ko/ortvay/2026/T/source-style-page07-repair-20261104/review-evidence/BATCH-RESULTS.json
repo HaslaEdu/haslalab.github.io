@@ -1,0 +1,194 @@
+{
+  "passed": true,
+  "phase": "prototype03",
+  "cases": 19,
+  "positive": 9,
+  "negative": 10,
+  "external_code_sha256": {
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+  },
+  "cases_manifest_sha256": "5b985a7054fa5e079176cf00951957cb062d201f189eaa7445c84c9c05c05c93",
+  "controller": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\experiments\\scheduling\\run_ortvay_ctm_amendment_cases.py",
+    "sha256": "c35c4e8aa43608f37f7c7834505a3a04fb17cbd53e3b71814bf4ad70d19f8007"
+  },
+  "page_results": [
+    {
+      "case": "p7_rotated_label",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\p7_rotated_label\\audit.json",
+        "sha256": "dd2a587f5a13fd313a8b11639976b944f2e15f872802d3f7223029147c49ae2f"
+      }
+    },
+    {
+      "case": "2023p1_italic",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\2023p1_italic\\audit.json",
+        "sha256": "5d0db6118817c0af049c47cd8e640f71012b70f905c2137c4685f74657e539bb"
+      }
+    },
+    {
+      "case": "2024p3_italic",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\2024p3_italic\\audit.json",
+        "sha256": "cb23ecb47420a7cf97e01ac83edc46169b663f5b56a221aadfd3ab733d3b9229"
+      }
+    },
+    {
+      "case": "2025p1_combined_row_italic",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\2025p1_combined_row_italic\\audit.json",
+        "sha256": "25d93443be22bbac7a5db021472e45f0d2dd29fb4df4cf60665ed86ba74de83c"
+      }
+    },
+    {
+      "case": "2026p1_precise_W_Tm",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\2026p1_precise_W_Tm\\audit.json",
+        "sha256": "a399863220d9b0a190e9e932123f33398e83b622a85ed5243e6e25198c8e27f6"
+      }
+    },
+    {
+      "case": "2026p3_italic",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\2026p3_italic\\audit.json",
+        "sha256": "c003bbf154c68de96335fa1873424a8482ef6ea4aa1352b832dff2897d1a09cd"
+      }
+    },
+    {
+      "case": "positive_nested_q_Q_restore",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\positive_nested_q_Q_restore\\audit.json",
+        "sha256": "dee99b232b0e3791f46990b09c4b6364e1f49e53b8d36265ce7c6699960cc545"
+      }
+    },
+    {
+      "case": "positive_noncommuting_CM",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\positive_noncommuting_CM\\audit.json",
+        "sha256": "ba9ea84ad595ceb7e946ed2f602be6e43a6c030a6c70dea6fc1c06212202aff9"
+      }
+    },
+    {
+      "case": "positive_rotation_in_Tm",
+      "expected": "PASS",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\positive_rotation_in_Tm\\audit.json",
+        "sha256": "5a1fabbcbef640d2c105a4f958aa00a687a1ecd5b6154b6fac48ae78c47c3af2"
+      }
+    },
+    {
+      "case": "negative_body_left_shear",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_body_left_shear\\REJECTED.json",
+        "sha256": "6970fccfe348378b36023a0cc42aad2c64b5ef83ac022f9e6e908ec9721b61b0"
+      }
+    },
+    {
+      "case": "negative_wrong_right_shear13",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_wrong_right_shear13\\REJECTED.json",
+        "sha256": "3cf58f3f4c471e81864eac6cdb29eafd35f2474d82f3d2fc6fe7e57ccb4d2b82"
+      }
+    },
+    {
+      "case": "negative_wrong_rotation89",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_wrong_rotation89\\REJECTED.json",
+        "sha256": "d45e4b98b8e7887f1fb6ef385037150e0728ebc3b7155ae1cec18e3f32005adc"
+      }
+    },
+    {
+      "case": "negative_rotated_hidden_left_shear",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_rotated_hidden_left_shear\\REJECTED.json",
+        "sha256": "5e8739db8401cab8a3c4031b8fc884de3fcecb063795d794099f9ffa985314db"
+      }
+    },
+    {
+      "case": "negative_Tm_shift_point01",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_Tm_shift_point01\\REJECTED.json",
+        "sha256": "afc4c7f4703ce544dcf3f192004b1dae2912c43fe18ba8028c17f3d63a7a4a9a"
+      }
+    },
+    {
+      "case": "negative_scale1point001",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_scale1point001\\REJECTED.json",
+        "sha256": "fa95c32004c8c18f2094cf91c805458a3536b435a5f6533585ee76a67e6cc005"
+      }
+    },
+    {
+      "case": "negative_drop_vertical_label",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_drop_vertical_label\\REJECTED.json",
+        "sha256": "646288acce35e977840c6dc862f9b57711de27ddf35b2c4dd3159b74a4781abe"
+      }
+    },
+    {
+      "case": "negative_unplanned_body_rotation",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_unplanned_body_rotation\\REJECTED.json",
+        "sha256": "ab278c9a84276d531ecc8cd462a42d5998810b45b5e796435201bdec7a192ab6"
+      }
+    },
+    {
+      "case": "negative_inherited_entry_CTM",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_inherited_entry_CTM\\REJECTED.json",
+        "sha256": "0e22d226d7c50b594ee654033d87b3033fb11ed96f442dd6f54ce4fb824b8571"
+      }
+    },
+    {
+      "case": "negative_inherited_half_opacity",
+      "expected": "REJECT",
+      "matched_expected": true,
+      "result": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_inherited_half_opacity\\REJECTED.json",
+        "sha256": "8eba25a5257f26fbc5884d491f9af4c071cf25e26cb50af97c4ca0c75986b8ed"
+      }
+    }
+  ],
+  "no_producer_or_publication_resume": true
+}

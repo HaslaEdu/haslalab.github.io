@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "negative_controls": 15,
+  "results": [
+    {
+      "name": "wrong_positive_source_descriptor_angle",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "name": "wrong_source_style_font_role",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "name": "original_source_slot_changed",
+      "rejected": true,
+      "reason": "Original source slot/target words changed"
+    },
+    {
+      "name": "wrong_original_source_SHA",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "name": "unapproved_sixth_experiment_case",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "name": "final48_without_fresh_root_GO",
+      "rejected": true,
+      "reason": "Full48-page generation still requires fresh root GO"
+    },
+    {
+      "name": "actual_P0_negative_physical_shear_rejected_by_master_outline",
+      "rejected": true,
+      "reason": "[{'character': '물', 'gid': 51446, 'expected_ink_bbox': (74.42432640517363, 685.9750667114258, 85.42557892220641, 696.6331276855469), 'actual_ink_bbox': (72.01837338867631, 685.97506686875, 83.0249162899461, 696.63312766875), 'delta': 2.405953016497321, 'actual_stream': {'origin': [72.91798400878906, 695.60498046875], 'gid': 51446, 'cid': 51446, 'matrix': [1.0, 0.0, -0.24932800233364105, -1.0, 72.91798400878906, 695.60498046875], 'size': 11.9552, 'xref': 757, 'W': '966'}}, {'character': '음', 'gid': 54534, 'expected_ink_bbox': (85.81903589320315, 686.0527755126953, 96.81930271421672, 696.8602764892578), 'actual_ink_bbox': (83.72206457373628, 686.05277566875, 94.72890863801834, 696.86027646875), 'delta': 2.096971319466874, 'actual_stream': {'origin': [84.46670532226562, 695.60498046875], 'gid': 54534, 'cid': 54534, 'matrix': [1.0, 0.0, -0.24932800233364105, -1.0, 72.91798400878906, 695.60498046875], 'size': 11.9552, 'xref': 757, 'W': '966'}}, {'character': ':', 'gid': 27, 'expected_ink_bbox': (97.34946329648515, 689.5795595703125, 100.04701527745847, 695.7843084716797), 'actual_ink_bbox': (95.89157609109161, 689.57955966875, 98.58926896447821, 695.78430846875), 'delta': 1.457887205393547, 'actual_stream': {'origin': [96.01542663574219, 695.60498046875], 'gid': 27, 'cid': 27, 'matrix': [1.0, 0.0, -0.24932800233364105, -1.0, 72.91798400878906, 695.60498046875], 'size': 11.9552, 'xref': 757, 'W': '327'}}]"
+    },
+    {
+      "name": "wrong_full_master_GID",
+      "rejected": true,
+      "reason": "{'geometry_errors': [], 'gid_errors': [{'expected_gid': 8327, 'actual': {'cp': 44592, 'gid': 8326, 'font': 'Batang', 'size': 11.9552001953125, 'origin': (70.06166076660156, 49.95098876953125), 'bbox': (70.06166076660156, 39.68315887451172, 82.01686096191406, 51.63835906982422), 'color': (0.0, 0.0, 0.0), 'paint': 0, 'dir': (1.0, 0.0)}}], 'extra': [], 'maximum': 1.52587890625e-05}"
+    },
+    {
+      "name": "new_glyph_origin_over_0_001pt",
+      "rejected": true,
+      "reason": "{'geometry_errors': [{'identity': (44592, 'batang', 11.9552), 'expected': [70.06366076660156, 49.95098876953125], 'actual': (70.06166076660156, 49.95098876953125), 'delta': 0.001999999999995339}], 'gid_errors': [], 'extra': [], 'maximum': 0.001999999999995339}"
+    },
+    {
+      "name": "exact_W_only_still_fails_actual_master_geometry",
+      "rejected": true,
+      "reason": "{'geometry_errors': [{'identity': (46, 'batang', 11.9552), 'expected': [65.58276391029358, 201.97100830078125], 'actual': (65.58631134033203, 201.97100830078125), 'delta': 0.0035474300384521484}, {'identity': (49, 'batang', 11.9552), 'expected': [92.61796593666077, 226.4739990234375], 'actual': (92.62151336669922, 226.4739990234375), 'delta': 0.0035474300384521484}, {'identity': (48, 'batang', 11.9552), 'expected': [99.73971605300903, 226.4739990234375], 'actual': (99.74681091308594, 226.4739990234375), 'delta': 0.007094860076904297}, {'identity': (48, 'batang', 11.9552), 'expected': [106.8614661693573, 226.4739990234375], 'actual': (106.87210845947266, 226.4739990234375), 'delta': 0.010642290115356445}, {'identity': (48, 'batang', 11.9552), 'expected': [113.98321628570557, 226.4739990234375], 'actual': (113.99740600585938, 226.4739990234375), 'delta': 0.014189720153808594}, {'identity': (48, 'batang', 11.9552), 'expected': [121.10496640205383, 226.4739990234375], 'actual': (121.1227035522461, 226.4739990234375), 'delta': 0.017737150192260742}, {'identity': (54924, 'batang', 11.9552), 'expected': [128.2267165184021, 226.4739990234375], 'actual': (128.2480010986328, 226.4739990234375), 'delta': 0.02128458023071289}, {'identity': (48, 'batang', 11.9552), 'expected': [239.95646834373474, 226.4739990234375], 'actual': (239.96002197265625, 226.4739990234375), 'delta': 0.003553628921508789}, {'identity': (48264, 'batang', 11.9552), 'expected': [247.078218460083, 226.4739990234375], 'actual': (247.0853271484375, 226.4739990234375), 'delta': 0.0071086883544921875}, {'identity': (49, 'batang', 11.9552), 'expected': [92.61796593666077, 238.02801513671875], 'actual': (92.62151336669922, 238.02801513671875), 'delta': 0.0035474300384521484}], 'gid_errors': [], 'extra': [], 'maximum': 0.02128458023071289}"
+    },
+    {
+      "name": "wrong_bound_CID_to_GID_mapping",
+      "rejected": true,
+      "reason": "Ambiguous actual CID-to-GID/Unicode mapping: 32/71/[]"
+    },
+    {
+      "name": "wrong_master_UPEM_2048",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "name": "wrong_approved_master_SHA",
+      "rejected": true,
+      "reason": ""
+    },
+    {
+      "name": "actual_missing_approved_contact_row_dx",
+      "rejected": true,
+      "reason": "{'geometry_errors': [{'identity': (50556, 'batang', 11.9552), 'expected': [72.97850036621094, 683.5799560546875], 'actual': (73.54100036621094, 683.5799560546875), 'delta': 0.5625}, {'identity': (45432, 'batang', 11.9552), 'expected': [84.93370056152344, 683.5799560546875], 'actual': (85.49620056152344, 683.5799560546875), 'delta': 0.5625}, {'identity': (49884, 'batang', 11.9552), 'expected': [96.88890075683594, 683.5799560546875], 'actual': (97.45140075683594, 683.5799560546875), 'delta': 0.5625}, {'identity': (50616, 'batang', 11.9552), 'expected': [111.83290100097656, 683.5799560546875], 'actual': (112.39540100097656, 683.5799560546875), 'delta': 0.5625}, {'identity': (45909, 'batang', 11.9552), 'expected': [123.78810119628906, 683.5799560546875], 'actual': (124.35060119628906, 683.5799560546875), 'delta': 0.5625}, {'identity': (51221, 'batang', 11.9552), 'expected': [138.7321014404297, 683.5799560546875], 'actual': (139.2946014404297, 683.5799560546875), 'delta': 0.5625}, {'identity': (49345, 'batang', 11.9552), 'expected': [150.6873016357422, 683.5799560546875], 'actual': (151.2498016357422, 683.5799560546875), 'delta': 0.5625}, {'identity': (50640, 'batang', 11.9552), 'expected': [162.6425018310547, 683.5799560546875], 'actual': (163.2050018310547, 683.5799560546875), 'delta': 0.5625}, {'identity': (49436, 'batang', 11.9552), 'expected': [174.5977020263672, 683.5799560546875], 'actual': (175.1602020263672, 683.5799560546875), 'delta': 0.5625}, {'identity': (45716, 'batang', 11.9552), 'expected': [186.5529022216797, 683.5799560546875], 'actual': (187.1154022216797, 683.5799560546875), 'delta': 0.5625}], 'gid_errors': [], 'extra': [], 'maximum': 0.562514066696167}"
+    },
+    {
+      "name": "actual_out_of_scope_origin_movement_0_01pt",
+      "rejected": true,
+      "reason": "{'geometry_errors': [{'identity': (44592, 'batang', 11.9552), 'expected': [70.06166076660156, 49.95098876953125], 'actual': (70.07166290283203, 49.95098876953125), 'delta': 0.01000213623046875}], 'gid_errors': [], 'extra': [], 'maximum': 0.01000213623046875}"
+    }
+  ],
+  "actual_bad_render_controls_not_synthetic_bounds": true,
+  "source_and_existing_proofs_unchanged": true,
+  "all_original_pins_verified": true,
+  "code_sha256": "67580be86aebddc9ca52a86c114b1a89bd23c01181c1219390ecfac4a82f5050"
+}
