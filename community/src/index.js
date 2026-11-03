@@ -1492,7 +1492,7 @@ const labSchemer = (env, s, roles) => env.LAB_PIPELINE === "mixed" && env.GEMINI
   ? labAs(s, stage(env.LAB_SCHEME_PROVIDER, "gemini"), { model: env.LAB_SCHEME_MODEL, thinking: env.LAB_SCHEME_THINKING }) : labAs(s, roles.grade);
 /* bench: {model, thinking} for the admin model bench; given (even {}), the copy carries exactly that choice and nothing inherited */
 const labAs = (s, provider, bench) => bench === undefined && (!provider || provider === labProvider(s)) ? s
-  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined, _schemeCheck: typeof bench?.check === 'boolean' ? bench.check : undefined, _media: ['high', 'medium', 'low'].includes(bench?.media) ? bench.media : undefined, _boxes: typeof bench?.boxes === 'boolean' ? bench.boxes : undefined, _api: bench?.api === 'responses' ? 'responses' : undefined, _tier: bench?.tier === 'flex' ? 'flex' : undefined }) };
+  : { ...s, sources: JSON.stringify({ ...labSrc(s), ...(provider ? { _provider: provider } : {}), _model: bench?.model || undefined, _thinking: bench?.thinking || undefined, _temperature: Number.isFinite(bench?.temperature) ? bench.temperature : undefined, _tiles: Number.isInteger(bench?.tiles) ? bench.tiles : undefined, _confusions: typeof bench?.confusions === 'boolean' ? bench.confusions : undefined, _scheme2: bench?.twoStage === true ? true : undefined, _schemeCheck: typeof bench?.check === 'boolean' ? bench.check : undefined, _media: ['high', 'medium', 'low'].includes(bench?.media) ? bench.media : undefined, _boxes: typeof bench?.boxes === 'boolean' ? bench.boxes : undefined, _api: bench?.api === 'responses' ? 'responses' : undefined, _endpoint: /^projects\/\d+\/locations\/[\w-]+\/endpoints\/\d+$/.test(bench?.endpoint || '') ? bench.endpoint : undefined, _tier: bench?.tier === 'flex' ? 'flex' : undefined }) };
 /* "lab", "theory" or "mixed" (experiments and a theory paper sat together, as NBPhO's one booklet has them) */
 const labSourceKind = s => { const tk = JSON.parse(s.tasks), th = tk.filter(k => labTheory(s, k)).length; return !th ? "lab" : th === tk.length ? "theory" : "mixed"; };
 const labCanonicalMixed = s => {
@@ -1777,7 +1777,9 @@ async function labVision(env, s, parts, schema, max, m, step, temperature = 0, e
   /* _model/_thinking exist only on the admin model bench's copies of a sitting (labAs with a bench choice) */
   const model = benchModel(provider, src._model) || VISION_MODELS[provider], thinking = typeof src._thinking === 'string' ? src._thinking : undefined;
   /* bench only: OpenAI's Responses API and its flex tier (half price, slower) */
-  const openai = provider === 'openai' ? { openaiApi: src._api === 'responses' ? 'responses' : null, serviceTier: src._tier === 'flex' ? 'flex' : null } : {};
+  const openai = provider === 'openai' ? { openaiApi: src._api === 'responses' ? 'responses' : null, serviceTier: src._tier === 'flex' ? 'flex' : null }
+    /* bench read.endpoint: a page reader tuned on Vertex AI, through GCP_TUNED_HOST (the endpoint's API host) */
+    : provider === 'gemini' && src._endpoint ? { geminiUrl: `https://${String(env.GCP_TUNED_HOST || 'aiplatform.googleapis.com').trim()}/v1/${src._endpoint}:generateContent`, geminiBearer: await gcpToken(env) } : {};
   const sequence=[];
   for(const part of parts){
     if(part.text){sequence.push({text:part.text});continue;}
@@ -3260,6 +3262,13 @@ async function labBench(env, s, job) {
       const t = await gcpToken(env);
       if (!/^gs:\/\//.test(spec.train || '')) throw new Error('bad_train_uri');
       out = await startTuning(env, t, { baseModel: String(spec.baseModel || 'gemini-3.1-flash-lite'), train: spec.train, validation: spec.validation || null, epochs: spec.epochs, name: spec.name });
+    } else if (spec.stage === 'tune-ping') {                                       // which API host serves a tuned endpoint
+      const t = await gcpToken(env), ep = String(spec.endpoint || '');
+      if (!/^projects\/\d+\/locations\/[\w-]+\/endpoints\/\d+$/.test(ep)) throw new Error('bad_endpoint');
+      const loc = ep.split('/')[3], hosts = [...new Set(['aiplatform.googleapis.com', `${loc}-aiplatform.googleapis.com`, `aiplatform.${loc}.rep.googleapis.com`, ...(spec.hosts || [])])].filter(h => /^[a-z0-9.-]+\.googleapis\.com$/.test(h));
+      out = { hosts: {} };
+      for (const h of hosts) { try { const r = await fetch(`https://${h}/v1/${ep}:generateContent`, { method: 'POST', headers: { Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'Reply with the word ok.' }] }] }), signal: AbortSignal.timeout(60000) });
+        out.hosts[h] = { status: r.status, body: (await r.text()).slice(0, 200) }; } catch (e) { out.hosts[h] = { error: String(e?.message || e).slice(0, 120) }; } }
     } else if (spec.stage === 'tune-status') {
       out = await tuningStatus(env, await gcpToken(env), spec.job);
     } else
@@ -3302,7 +3311,7 @@ async function labBench(env, s, job) {
     } else if (spec.stage === 'read') {
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
       const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
-      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, temperature: spec.read.temperature, tiles: spec.read.tiles, confusions: typeof spec.read.confusions === 'boolean' ? spec.read.confusions : undefined, media: spec.read.media, boxes: typeof spec.read.boxes === 'boolean' ? spec.read.boxes : undefined }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
+      const roles = { read: spec.read.provider, readBench: { model: spec.read.model, thinking: spec.read.thinking, endpoint: spec.read.endpoint, temperature: spec.read.temperature, tiles: spec.read.tiles, confusions: typeof spec.read.confusions === 'boolean' ? spec.read.confusions : undefined, media: spec.read.media, boxes: typeof spec.read.boxes === 'boolean' ? spec.read.boxes : undefined }, readHint: !!spec.read.hint, mathpix: spec.read.mathpix || 'off',
         proof: spec.proof?.provider || null, proofBench: spec.proof ? { model: spec.proof.model, thinking: spec.proof.thinking } : undefined };
       /* read.requality: the page encoded again at that JPEG quality first (would a smaller upload read as well?) */
       const again = Number.isFinite(spec.read.requality) ? reencodeJpeg(bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), spec.read.requality) : null;

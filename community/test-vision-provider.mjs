@@ -293,3 +293,13 @@ test('Gemini code execution: the answer is the last text after the notes between
    usageMetadata:{promptTokenCount:10,candidatesTokenCount:2,totalTokenCount:12}});}});
  assert.deepEqual(body.tools,[{code_execution:{}}]);assert.deepEqual(result.raw,{value:'0.31'});
 });
+
+test('Gemini tuned on Vertex AI (bench): the endpoint URL with the service-account token, no API key; a URL off the pattern is ignored',async()=>{
+ const seen=[];const fetchImpl=async(url,init)=>{seen.push({url,headers:init.headers});return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:'{"text":"ok"}'}]}}],usageMetadata:{promptTokenCount:10,candidatesTokenCount:2}});};
+ const ep='https://aiplatform.googleapis.com/v1/projects/315/locations/us/endpoints/567:generateContent';
+ const out=await visionJSON({GEMINI_API_KEY:'g'},{provider:'gemini',geminiUrl:ep,geminiBearer:'tok',fetchImpl,parts:[{text:'x'}]});
+ assert.equal(seen[0].url,ep);assert.equal(seen[0].headers.Authorization,'Bearer tok');assert.equal(seen[0].headers['x-goog-api-key'],undefined);
+ assert.deepEqual(out.raw,{text:'ok'});
+ await visionJSON({GEMINI_API_KEY:'g'},{provider:'gemini',geminiUrl:'https://evil.example.com/v1/projects/1/locations/us/endpoints/2:generateContent',geminiBearer:'tok',fetchImpl,parts:[{text:'x'}]});
+ assert.doesNotMatch(seen[1].url,/evil/);assert.equal(seen[1].headers['x-goog-api-key'],'g');assert.equal(seen[1].headers.Authorization,undefined);
+});
