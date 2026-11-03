@@ -353,10 +353,12 @@ a.ritem:hover{border-color:var(--rail);transform:translateY(-2px);box-shadow:0 1
 .subjs a:hover{border-color:var(--rail)}
 .subjs a[aria-current="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
 .subjs img{height:34px;width:auto;max-width:72px;object-fit:contain}
+.subjs.archive-library-subjects{grid-template-columns:repeat(7,minmax(0,1fr))}
+.subjs .archive-subject-art{width:64px;height:56px;max-width:64px;filter:none}
 .subjs b{font-size:13.5px;color:var(--ink)}.subjs small{font-family:var(--mono);font-size:11px;color:var(--graphite)}
 .subjs a.none{opacity:.55}
 .subjempty{padding:28px 20px;border:1px dashed var(--grid-bold);border-radius:10px;color:var(--graphite);font-size:14px;text-align:center}
-@media(max-width:900px){.subjs{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:900px){.subjs,.subjs.archive-library-subjects{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:480px){.subjs{display:flex;overflow-x:auto;scrollbar-width:none}.subjs a{flex:0 0 92px}}
 /* three columns get too cramped for the figures before the single-column
    breakpoint arrives, so drop to two on the way down */
@@ -986,7 +988,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 </style>
 <link rel="stylesheet" href="site-design.css?v=3c1c7baa824c">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=bfa352a79aba">
+<link rel="stylesheet" href="archive-library.css?v=9afa7e19caab">
 </head>
 <body class="hl-site">
 
@@ -4900,19 +4902,20 @@ function archiveCategories(category,subject){
 }
 function archiveSubjects(category,subject){
   const d=UI[lang],list=category==="contests"?SUBJ:SUBJ.filter(x=>x.k!=="sci");
-  return `<nav class="subjs" aria-label="${d.subjLabel}">${list.map(x=>{
+  return `<nav class="subjs${category==="contests"?"":" archive-library-subjects"}" aria-label="${d.subjLabel}">${list.map(x=>{
     const count=category==="contests"?x.comps.filter(k=>DATA[k]).length:null;
     const note=count===null?(category==="books"?(lang==="ko"?"교재 보기":"Books"):(lang==="ko"?"학교 보기":"Schools")):(count?d.subjN(count):d.subjSoon);
-    return `<a href="${archiveHref(category,x.k)}"${x.k===subject?' aria-current="true"':""} class="${count===0?"none":""}"><img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)"><b>${x[lang]}</b><small>${note}</small></a>`;
+    const picture=category==="contests"?`<img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)">`:`<img class="archive-subject-art" data-subject-art="${x.k}" src="archive-media/subjects/${x.k}.svg?v=1" alt="" loading="lazy" decoding="async">`;
+    return `<a href="${archiveHref(category,x.k)}"${x.k===subject?' aria-current="true"':""} class="${count===0?"none":""}">${picture}<b>${x[lang]}</b><small>${note}</small></a>`;
   }).join("")}</nav>`;
 }
 function viewArchiveDigital(route){
   const ko=lang==="ko",book=route.category==="books",school=route.category==="schools";
-  const reading=route.params.has("source")||route.params.has("problem");
+  const reading=route.params.has("source")||route.params.has("problem")||school&&route.params.has("school");
   const name=route.resolveLegacy?(ko?"아카이브":"Archive"):book?(ko?"교재를 고르세요":"Choose a book"):school?(ko?"학교를 고르세요":"Choose a school"):UI[lang].hComps;
   const eyebrow=book?(ko?"수록 교재":"Covered books"):school?(ko?"수록 학교":"Covered schools"):UI[lang].ebComps;
   const description=book?(ko?"분야와 교재를 고르고, 문항과 풀이를 여세요.":"Pick a field and a book, then open its problems and solutions."):school?(ko?"분야와 학교를 고르고, 강의 자료와 문항을 여세요.":"Pick a field and a school, then open its course materials and problems."):UI[lang].pComps;
-  return `<div class="shell${reading?' archive-reading':''}">${archiveCategories(route.category,route.sub)}<div class="phead"${reading?' hidden':''}>${route.resolveLegacy?"":`<p class="eyebrow">${eyebrow}</p>`}<h1>${name}</h1>${route.resolveLegacy?"":`<div class="sub">${description}</div>`}</div>${route.resolveLegacy?"":archiveSubjects(route.category,route.sub).replace('<nav class="subjs"','<nav class="subjs"'+(reading?' hidden':''))}<div id="archiveNative"><p class="archive-loading" role="status">${ko?"자료를 불러오는 중…":"Loading archive…"}</p></div></div>`;
+  return `<div class="shell${reading?' archive-reading':''}" data-archive-kind="${route.kind}">${archiveCategories(route.category,route.sub)}<div class="phead"${reading?' hidden':''}>${route.resolveLegacy?"":`<p class="eyebrow">${eyebrow}</p>`}<h1>${name}</h1>${route.resolveLegacy?"":`<div class="sub">${description}</div>`}</div>${route.resolveLegacy?"":archiveSubjects(route.category,route.sub).replace('<nav ','<nav '+(reading?'hidden ':''))}<div id="archiveNative"><p class="archive-loading" role="status">${ko?"자료를 불러오는 중…":"Loading archive…"}</p></div></div>`;
 }
 function archiveUsesNative(route){
   return !!route&&(route.resolveLegacy||route.category!=="contests"||route.params.get("view")==="web"||["source","problem","competition","year","type","q","topic","stars","cursor"].some(key=>route.params.has(key)));
@@ -4922,10 +4925,10 @@ function disposeArchiveLibrary(){
   try{archiveController?.dispose();}catch(e){}archiveController=null;archiveMountState=null;
 }
 function archiveMountKey(route){return [route.kind,route.collection,route.baseHash,route.resolveLegacy,lang].join('|');}
-function updateArchiveReadingChrome(route){const node=document.getElementById('archiveNative'),shell=node?.closest('.shell');if(!shell)return;const reading=route.params.has('source')||route.params.has('problem');shell.classList.toggle('archive-reading',reading);for(const element of shell.querySelectorAll(':scope > .phead,:scope > .subjs'))element.hidden=reading;}
+function updateArchiveReadingChrome(route){const node=document.getElementById('archiveNative'),shell=node?.closest('.shell');if(!shell)return;const reading=route.params.has('source')||route.params.has('problem')||route.kind==='course'&&route.params.has('school');shell.dataset.archiveKind=route.kind;shell.classList.toggle('archive-reading',reading);for(const element of shell.querySelectorAll(':scope > .phead,:scope > .subjs'))element.hidden=reading;}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=3ab93528b1e2"),import("./archive-book-media.js?v=a581e709baaa"),import("./archive-school-media.js?v=356121d191a3")]).then(([reader,books,schools])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA})).catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=e5d884ae246e"),import("./archive-book-media.js?v=763f45138054"),import("./archive-school-media.js?v=356121d191a3"),import("./archive-reference-media.js?v=5e0538ed8abd")]).then(([reader,books,schools,references])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA,bookReferences:references.ARCHIVE_BOOK_REFERENCES})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){
@@ -4945,7 +4948,7 @@ function mountArchiveNative(route,generation){
   loadArchiveModule().then(module=>{
     if(!current())return;
     archiveMountState={key:archiveMountKey(route),container};
-    archiveController=module.mountArchiveLibrary(container,{kind:route.kind,collection:route.collection,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",baseHash:route.baseHash,params:route.params,resolveLegacy:route.resolveLegacy,bookMedia:module.bookMedia,schoolMedia:module.schoolMedia,apiOrigin:"https://haslalab-problem-bank.haslalab.workers.dev",getToken:()=>cmTok(),getUser:()=>cm.me,renderMath:archiveMath,
+    archiveController=module.mountArchiveLibrary(container,{kind:route.kind,collection:route.collection,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",baseHash:route.baseHash,params:route.params,resolveLegacy:route.resolveLegacy,bookMedia:module.bookMedia,schoolMedia:module.schoolMedia,bookReferences:module.bookReferences,apiOrigin:"https://haslalab-problem-bank.haslalab.workers.dev",getToken:()=>cmTok(),getUser:()=>cm.me,renderMath:archiveMath,
       onNavigate:(href,options={})=>{if(document.getElementById("archiveNative")!==container||typeof href!=="string"||!href.startsWith("#/archive/")||/[\r\n]/.test(href))return;if(route.resolveLegacy||options.replace){history.replaceState(null,"",href);render();}else location.hash=href;},
       onLogin:()=>{if(document.getElementById("archiveNative")!==container)return;try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}location.hash="#/login";}
     });

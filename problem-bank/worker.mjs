@@ -67,7 +67,7 @@ function ocrAdapter(env){
   return async(image,request)=>{
     const body=new FormData();body.set('image',image,image.name||'question.png');
     const headers=safeHeaders(request);headers.delete('Content-Type');
-    const response=await env.COMMUNITY.fetch(new Request('https://haslalab-community.haslalab.workers.dev/api/ocr?mode=math',{method:'POST',headers,body,redirect:'manual',signal:AbortSignal.timeout(80000)}));
+    const response=await env.COMMUNITY.fetch(new Request('https://haslalab-community.haslalab.workers.dev/api/problem-bank/ocr?mode=math',{method:'POST',headers,body,redirect:'manual',signal:AbortSignal.timeout(80000)}));
     if(!response.ok){const error=new Error('ocr_failed');error.status=response.status;throw error;}
     const data=await limitedJson(response);return {text:data.text,confidence:data.confidence};
   };

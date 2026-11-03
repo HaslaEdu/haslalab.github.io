@@ -57,7 +57,7 @@ test('Books and Schools mount native category- and subject-bound readers without
     assert.equal(options.bookMedia,a.native.bookMedia);assert.equal(options.schoolMedia,a.native.schoolMedia);
     assert.equal(options.getToken(),'SYNTHETIC_ACCOUNT_TOKEN');assert.doesNotMatch(a.node('view').innerHTML,/<iframe|SYNTHETIC_ACCOUNT_TOKEN|workers\.dev/);
     const shell=a.nodes.get('archiveNative').closest('.shell');assert(shell.classList.contains('archive-reading'));assert.equal(shell.querySelector(':scope > .phead').hidden,true);assert.equal(shell.querySelector(':scope > .subjs').hidden,true);
-    assert.match(a.node('view').innerHTML,/<nav class="subjs"/);assert.match(a.node('view').innerHTML,/data-logo-key="ipho"/);assert.doesNotMatch(a.node('view').innerHTML,/archive-shell|archive-disciplines/);
+    assert.equal(shell.dataset.archiveKind,kind);assert.match(a.node('view').innerHTML,/<nav[^>]*class="subjs archive-library-subjects"/);assert.match(a.node('view').innerHTML,new RegExp('data-subject-art="'+sub+'"'));assert.doesNotMatch(a.node('view').innerHTML,/data-logo-key="ipho"|archive-shell|archive-disciplines/);
     assert.match(a.node('nav').innerHTML,/<a href="#\/comps" class="on">/);assert.match(a.context.document.title,/아카이브/);
   }
 });

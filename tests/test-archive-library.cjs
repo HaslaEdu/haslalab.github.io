@@ -275,8 +275,8 @@ test('guest landing loads only source metadata and never status or question bodi
 
 test('selecting a book opens its table of contents without loading any chapter questions',async t=>{
   const h=await setup(t,{params:'source='+SID});assert.equal(h.calls.length,1);assert(h.calls[0].url.pathname.endsWith('/contents'));
-  assert(h.mount.querySelector('.al-contents-index'));assert.equal(h.mount.querySelectorAll('.al-contents-index li').length,2);
-  assert.match(h.mount.querySelector('.al-contents-index a').href,/chapter=1/);assert.equal(h.mount.querySelector('.al-problem-row'),null);
+  assert(h.mount.querySelector('.al-source-layout .al-toc'));assert.equal(h.mount.querySelectorAll('.al-toc li').length,2);
+  assert.match(h.mount.querySelector('.al-toc a').href,/chapter=1/);assert.equal(h.mount.querySelector('.al-problem-row'),null);assert(h.mount.querySelector('.al-source-main [data-search]'));assert(h.mount.querySelector('.al-list-instruction'));
 });
 
 test('chapter browsing is exact, bounded and summary-only including the empty chapter',async t=>{
@@ -344,11 +344,136 @@ test('distinct edition variants with the same printed number remain separate and
 test('book contents use source-specific bilingual chapter names with one chapter prefix',async t=>{
   const bookMedia={[SID]:{chapter_titles:{'1':{ko:'맥스웰 방정식',en:'The Maxwell Equations'},F:{ko:'곡선좌표',en:'Curvilinear coordinates'}}}};
   const h=await setup(t,{params:'source='+SID,options:{bookMedia},route:u=>u.pathname.endsWith('/contents')?response({source_id:SID,source:source(),chapters:[{chapter:'1',title:'1',question_count:1},{chapter:'F',title:'F',question_count:1}]}):null});
-  const labels=()=>[...h.mount.querySelectorAll('.al-contents-index li a>span')].map(x=>x.textContent);
+  const labels=()=>[...h.mount.querySelectorAll('.al-toc li a>span')].map(x=>x.textContent);
   assert.deepEqual(labels(),['제1장 · 맥스웰 방정식','부록 F · 곡선좌표']);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);
   h.instance.update({lang:'en'});await flush();assert.deepEqual(labels(),['Chapter 1 · The Maxwell Equations','Appendix F · Curvilinear coordinates']);
 });
 test('chapter name lookup remains bound to its source instead of leaking another book title',async t=>{
   const h=await setup(t,{params:'source='+SID+'&chapter=1',options:{bookMedia:{[SID2]:{chapter_titles:{'1':{ko:'다른 교재 제목',en:'Unrelated chapter'}}}}}});
   assert.doesNotMatch(h.mount.textContent,/다른 교재 제목|Unrelated chapter/);assert.equal(h.mount.querySelector('.al-results-heading h3').textContent,'제1장');
+});
+test('source-bound chapter order ranks known parts and preserves unknown API order and exact keys',async t=>{
+  const chapterList=[{chapter:'unknown-z',title:'Unlisted Z',question_count:1},{chapter:'rigid-body-dynamics',question_count:2},{chapter:'dynamics-of-a-point-mass',question_count:3},{chapter:'unknown-a',title:'Unlisted A',question_count:1}];
+  const metadata={chapter_order:['dynamics-of-a-point-mass','rigid-body-dynamics'],chapter_titles:{'dynamics-of-a-point-mass':{ko:'질점의 운동',en:'Dynamics of a point mass'},'rigid-body-dynamics':{ko:'강체의 운동',en:'Rigid-body dynamics'}}};
+  const h=await setup(t,{params:'source='+SID,options:{bookMedia:{[SID]:metadata}},route:u=>u.pathname.endsWith('/contents')?response({source_id:SID,source:source(),chapters:chapterList}):null});
+  const links=[...h.mount.querySelectorAll('.al-toc li a')],chapterOf=link=>new URLSearchParams(link.hash.split('?')[1]).get('chapter');
+  assert.deepEqual(links.map(chapterOf),['dynamics-of-a-point-mass','rigid-body-dynamics','unknown-z','unknown-a']);assert.deepEqual(links.slice(0,2).map(a=>a.querySelector('span').textContent),['질점의 운동','강체의 운동']);assert.equal(h.calls.length,1);
+  assert.deepEqual(chapterList.map(c=>c.chapter),['unknown-z','rigid-body-dynamics','dynamics-of-a-point-mass','unknown-a'],'shared response data must not be reordered in place');
+  h.instance.update({lang:'en'});await flush();assert.equal(h.mount.querySelector('.al-toc li a>span').textContent,'Dynamics of a point mass');
+});
+test('chapter ordering metadata from another source cannot reorder the current book',async t=>{
+  const h=await setup(t,{params:'source='+SID,options:{bookMedia:{[SID2]:{chapter_order:['2','1']}}}});assert.deepEqual([...h.mount.querySelectorAll('.al-toc li a>span')].map(x=>x.textContent),['제1장','제2장']);assert.equal(h.calls.length,1);
+});
+
+test('flat books open a bounded first page without contents or a repeated source request',async t=>{
+  const h=await setup(t,{options:{bookMedia:{[SID]:{short_title:'PUZZLING',full_title:'200 Puzzling Physics Problems',browse_mode:'flat'}}}});
+  h.instance.update({params:new URLSearchParams('source='+SID)});await flush();
+  assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/sources')).length,1);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/contents')),false);
+  const search=h.calls.find(c=>c.url.pathname.endsWith('/search'));assert.equal(search.url.searchParams.get('limit'),'20');assert.equal(search.url.searchParams.get('source'),SID);assert.equal(search.url.searchParams.has('chapter'),false);
+  assert.equal(h.mount.querySelector('.al-toc'),null);assert(h.mount.querySelector('.al-problem-row'));assert.match(h.mount.querySelector('h2').textContent,/PUZZLING/);
+});
+
+test('direct flat-book links verify source metadata and never fetch a fabricated table of contents',async t=>{
+  const h=await setup(t,{params:'source='+SID,options:{bookMedia:{[SID]:{browse_mode:'flat'}}}});assert.equal(h.calls.length,2);
+  assert.deepEqual(h.calls.map(c=>c.url.pathname.split('/').at(-1)),['sources','search']);assert.equal(h.mount.querySelector('.al-toc'),null);
+});
+test('flat-book statements skip contents and return to their paged list without an invented chapter',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&problem='+Q,options:{bookMedia:{[SID]:{browse_mode:'flat'}}},route:u=>u.pathname.endsWith('/'+Q)?response({question:question({chapter:'old-classification'})}):null});
+  assert.equal(h.calls.length,1);assert.equal(h.mount.querySelector('.al-toc'),null);assert.equal(h.mount.querySelector('.al-reading-layout').classList.contains('has-toc'),false);assert.doesNotMatch(h.mount.querySelector('.al-reader-nav a').href,/chapter=/);
+});
+
+test('part selection loads one chapter page and folding contents is local and remembered per source',async t=>{
+  const h=await setup(t,{params:'source='+SID}),choose=h.mount.querySelector('.al-toc a');choose.click();
+  const target=new URL(h.navigations.at(-1),'https://haslalab.org/').hash.split('?')[1];h.instance.update({params:new URLSearchParams(target)});await flush();
+  assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/contents')).length,1);assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/search')).length,1);
+  const before=h.calls.length,toggle=h.mount.querySelector('[data-toggle-toc]');toggle.click();assert.equal(toggle.getAttribute('aria-expanded'),'false');assert.equal(h.mount.querySelector('.al-toc nav').hidden,true);assert(h.mount.querySelector('.al-source-layout').classList.contains('is-toc-collapsed'));assert.equal(h.calls.length,before);
+  h.instance.update({params:new URLSearchParams('source='+SID+'&chapter=2')});await flush();assert.equal(h.mount.querySelector('[data-toggle-toc]').getAttribute('aria-expanded'),'false');
+  h.instance.update({params:new URLSearchParams('source='+SID2)});await flush();assert.equal(h.mount.querySelector('[data-toggle-toc]').getAttribute('aria-expanded'),'true');
+  h.instance.update({params:new URLSearchParams('source='+SID)});await flush();assert.equal(h.mount.querySelector('[data-toggle-toc]').getAttribute('aria-expanded'),'false');
+  const count=h.calls.length;h.mount.querySelector('[data-toggle-toc]').click();assert.equal(h.calls.length,count);assert.equal(h.mount.querySelector('.al-toc nav').hidden,false);
+});
+
+test('text typing and scope selection issue no requests until explicit submit and clear old cursors',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=1&cursor=sc_previous'}),input=h.mount.querySelector('[data-search] [name=q]'),scope=h.mount.querySelector('[data-search-scope]');
+  const count=h.calls.length;input.value='uniform field';input.dispatchEvent(new h.w.Event('input',{bubbles:true}));scope.value='book';scope.dispatchEvent(new h.w.Event('change',{bubbles:true}));await flush();assert.equal(h.calls.length,count);
+  h.mount.querySelector('[data-search]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));const target=h.navigations.at(-1);assert.match(target,/source=src_/);assert.match(target,/q=uniform\+field/);assert.doesNotMatch(target,/chapter=|cursor=/);
+  h.instance.update({params:new URLSearchParams(target.split('?')[1])});await flush();const search=h.calls.filter(c=>c.url.pathname.endsWith('/search')).at(-1);assert.equal(search.url.searchParams.get('source'),SID);assert.equal(search.url.searchParams.get('q'),'uniform field');assert.equal(search.url.searchParams.has('chapter'),false);assert.equal(search.url.searchParams.get('offset'),'0');
+});
+
+test('text search keeps the selected chapter when its visible scope is selected',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=2'});assert.equal(h.mount.querySelector('[data-search-scope]').value,'chapter');
+  const form=h.mount.querySelector('[data-search]');form.elements.q.value='charge';form.dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));assert.match(h.navigations.at(-1),/chapter=2/);
+});
+
+test('OCR tab is visible but guest and ordinary accounts cannot submit provider calls',async t=>{
+  for(const token of ['', 'synthetic-user']){
+    const h=await setup(t,{params:'source='+SID,token,route:u=>u.pathname.endsWith('/status')?response({user:{role:'user'},ocr_available:false}):null});
+    const before=h.calls.length;h.mount.querySelector('[data-search-mode=ocr]').click();assert.equal(h.mount.querySelector('[data-search-pane=ocr]').hidden,false);assert(h.mount.querySelector('[data-photo] fieldset').disabled);assert.match(h.mount.textContent,/관리자만/);
+    const file=h.mount.querySelector('[data-photo] input');Object.defineProperty(file,'files',{value:[new h.w.File(['x'],'question.png',{type:'image/png'})]});h.mount.querySelector('[data-photo]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();assert.equal(h.calls.length,before);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/identify')),false);
+  }
+});
+
+test('admin OCR multipart uses the selected book and the allowed fields without chapter or summary',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=1&stars=2&topic=classical_mechanics&cursor=sc_old',token:'synthetic-admin',route:u=>u.pathname.endsWith('/status')?response({user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?response({candidates:[item()],recognized_text:'Recognized test text'}):null});
+  h.mount.querySelector('[data-search-mode=ocr]').click();const scope=h.mount.querySelector('[data-search-scope]');assert.equal(scope.value,'book');assert.equal(scope.disabled,true);
+  const input=h.mount.querySelector('[data-photo] input');Object.defineProperty(input,'files',{value:[new h.w.File(['x'],'question.png',{type:'image/png'})]});h.mount.querySelector('[data-photo]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  const call=h.calls.find(c=>c.url.pathname.endsWith('/identify'));assert(call);const body=call.init.body,keys=[...body.keys()],allowed=new Set(['lang','subject','source','collection','stars','kind','competition','year','type','limit','image']);assert(keys.every(key=>allowed.has(key)));assert.equal(body.get('source'),SID);assert.equal(body.get('kind'),'book');assert.equal(body.get('collection'),'physics');assert.equal(body.get('chapter'),null);assert.equal(body.get('summary'),null);assert.equal(body.get('cursor'),null);
+});
+test('unchanged text submission after OCR restores text results from cache without relying on hashchange',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=1',token:'synthetic-admin',route:u=>u.pathname.endsWith('/status')?response({user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/search')?response({items:[item(Q,{title_ko:'정상 검색 결과'})]}):u.pathname.endsWith('/identify')?response({candidates:[item(Q2,{title_ko:'사진 인식 후보'}),item('q_'+'4'.repeat(64),{source_id:SID2,title_ko:'다른 교재 후보'})]}):null});
+  h.mount.querySelector('[data-search-mode=ocr]').click();const input=h.mount.querySelector('[data-photo] input');Object.defineProperty(input,'files',{value:[new h.w.File(['x'],'question.png',{type:'image/png'})]});h.mount.querySelector('[data-photo]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  assert.match(h.mount.querySelector('[data-results]').textContent,/사진 인식 후보/);assert.doesNotMatch(h.mount.querySelector('[data-results]').textContent,/다른 교재 후보/);
+  const count=h.calls.length;h.mount.querySelector('[data-toggle-toc]').click();assert.equal(h.calls.length,count);h.mount.querySelector('[data-search-mode=text]').click();
+  h.mount.querySelector('[data-search]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();assert.match(h.mount.querySelector('[data-results]').textContent,/정상 검색 결과/);assert.doesNotMatch(h.mount.querySelector('[data-results]').textContent,/사진 인식 후보/);assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/search')).length,1);assert.equal(h.navigations.length,0);
+  h.mount.querySelector('[data-search]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();assert.equal(h.calls.length,count);
+});
+test('invalid text submissions keep valid OCR results, and a different source clears those candidates',async t=>{
+  const h=await setup(t,{params:'source='+SID,token:'synthetic-admin',route:u=>u.pathname.endsWith('/status')?response({user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?response({candidates:[item(Q2,{title_ko:'유효한 사진 후보'})]}):null});
+  const photo=h.mount.querySelector('[data-photo] input');Object.defineProperty(photo,'files',{value:[new h.w.File(['x'],'q.png',{type:'image/png'})]});h.mount.querySelector('[data-photo]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();const count=h.calls.length;
+  const form=h.mount.querySelector('[data-search]');form.elements.q.value='x'.repeat(601);form.dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();assert.match(h.mount.querySelector('[data-results]').textContent,/유효한 사진 후보/);assert.equal(h.calls.length,count);
+  h.instance.update({params:new URLSearchParams('source='+SID2)});await flush();assert.doesNotMatch(h.mount.textContent,/유효한 사진 후보/);assert(h.mount.querySelector('.al-list-instruction'));assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);
+});
+test('a late OCR success or error cannot replace a newer unchanged-URL text search',async t=>{
+  for(const status of [200,500]){
+    const gate=deferred(),h=await setup(t,{params:'source='+SID+'&chapter=1',token:'synthetic-admin',route:u=>u.pathname.endsWith('/status')?response({user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/search')?response({items:[item(Q,{title_ko:'최신 텍스트 결과'})]}):u.pathname.endsWith('/identify')?gate.promise:null});
+    const photo=h.mount.querySelector('[data-photo] input');Object.defineProperty(photo,'files',{value:[new h.w.File(['x'],'q.png',{type:'image/png'})]});h.mount.querySelector('[data-photo]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();
+    h.mount.querySelector('[data-search-mode=text]').click();h.mount.querySelector('[data-search]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();assert.match(h.mount.querySelector('[data-results]').textContent,/최신 텍스트 결과/);
+    gate.resolve(response(status===200?{candidates:[item(Q2,{title_ko:'늦은 사진 후보'})]}:{error:'old_ocr_failure'},status));await flush();
+    assert.match(h.mount.querySelector('[data-results]').textContent,/최신 텍스트 결과/);assert.doesNotMatch(h.mount.textContent,/늦은 사진 후보|old_ocr_failure/);assert.equal(h.mount.querySelector('[data-message]').textContent,'');assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/identify')).length,1);assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/search')).length,1);assert.equal(h.mount.querySelector('[data-photo] button').disabled,false);
+  }
+});
+test('invalid text leaves an already pending OCR action valid',async t=>{
+  const gate=deferred(),h=await setup(t,{params:'source='+SID,token:'synthetic-admin',route:u=>u.pathname.endsWith('/status')?response({user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?gate.promise:null});
+  const photo=h.mount.querySelector('[data-photo] input');Object.defineProperty(photo,'files',{value:[new h.w.File(['x'],'q.png',{type:'image/png'})]});h.mount.querySelector('[data-photo]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  const form=h.mount.querySelector('[data-search]');form.elements.q.value='x'.repeat(601);form.dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));gate.resolve(response({candidates:[item(Q2,{title_ko:'원래 사진 요청 결과'})]}));await flush();assert.match(h.mount.querySelector('[data-results]').textContent,/원래 사진 요청 결과/);assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/identify')).length,1);
+});
+test('only an explicit image identify upload receives the scan timeout and it is never retried',async t=>{
+  const scan=deferred(),corrected=deferred(),h=await setup(t,{params:'source='+SID,token:'synthetic-admin',route:(u,init)=>u.pathname.endsWith('/status')?response({user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?(typeof init.body==='string'?corrected.promise:scan.promise):null});
+  const originalSet=h.w.setTimeout.bind(h.w),originalClear=h.w.clearTimeout.bind(h.w),timers=new Map();let next=100000;
+  h.w.setTimeout=(fn,delay,...args)=>{if(delay<20000)return originalSet(fn,delay,...args);const id=++next;timers.set(id,{fn,delay});return id;};h.w.clearTimeout=id=>{if(!timers.delete(id))originalClear(id);};
+  const input=h.mount.querySelector('[data-photo] input');Object.defineProperty(input,'files',{value:[new h.w.File(['x'],'q.png',{type:'image/png'})]});const form=h.mount.querySelector('[data-photo]');form.dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();
+  const call=h.calls.find(c=>c.url.pathname.endsWith('/identify'));assert.deepEqual([...timers.values()].map(timer=>timer.delay),[120000]);for(const timer of timers.values())if(timer.delay<=20000)timer.fn();assert.equal(call.init.signal.aborted,false);
+  form.dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/identify')).length,1);
+  scan.resolve(response({candidates:[item()],recognized_text:'Recognized test text'}));await flush();assert.equal(timers.size,0);h.mount.querySelector('[data-resubmit]').click();await flush();assert.deepEqual([...timers.values()].map(timer=>timer.delay),[20000]);
+  corrected.resolve(response({candidates:[item()]}));await flush();assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/identify')&&c.init.body instanceof h.w.FormData).length,1);assert.equal(timers.size,0);
+  h.w.setTimeout=originalSet;h.w.clearTimeout=originalClear;
+});
+
+test('search tabs support keyboard selection without clearing text or fetching data',async t=>{
+  const h=await setup(t,{params:'source='+SID}),input=h.mount.querySelector('[name=q]');input.value='unsent text';const count=h.calls.length;
+  h.mount.querySelector('[data-search-mode=text]').dispatchEvent(new h.w.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true,cancelable:true}));assert.equal(h.mount.querySelector('[data-search-mode=ocr]').getAttribute('aria-selected'),'true');
+  h.mount.querySelector('[data-search-mode=ocr]').dispatchEvent(new h.w.KeyboardEvent('keydown',{key:'Home',bubbles:true,cancelable:true}));assert.equal(input.value,'unsent text');assert.equal(h.mount.querySelector('[data-search-pane=text]').hidden,false);assert.equal(h.calls.length,count);
+});
+
+test('book aliases and volume topics are prominent while full published titles remain searchable',async t=>{
+  const h=await setup(t,{options:{bookMedia:{[SID]:{short_title:'PNS',topic_label:{ko:'역학',en:'Mechanics'},topic_prominent:true,full_title:'Problems and Solutions on Mechanics'}}}});
+  const card=h.mount.querySelector('.al-book-card');assert.match(card.querySelector('.abbr').textContent,/PNS/);assert.equal(card.querySelector('.al-card-topic.prominent').textContent,'역학');assert.equal(card.querySelector('.full').textContent,'Problems and Solutions on Mechanics');
+  const filter=h.mount.querySelector('[data-source-query]');filter.value='PNS';filter.dispatchEvent(new h.w.Event('input',{bubbles:true}));assert.equal(h.mount.querySelectorAll('.al-book-card').length,1);filter.value='Problems and Solutions on Mechanics';filter.dispatchEvent(new h.w.Event('input',{bubbles:true}));assert.equal(h.mount.querySelectorAll('.al-book-card').length,1);
+});
+
+test('official book references use real external links without phantom question identities or counts',async t=>{
+  const references=[{id:'goldstein',title:{ko:'골드슈타인',en:'Goldstein'},full_title:{ko:'Classical Mechanics Goldstein',en:'Classical Mechanics Goldstein'},short_title:'GOLDSTEIN',author:'Goldstein',collection:'physics',href:'https://www.pearson.com/book',availability:'digitization_pending',resource_kind:'textbook'},{id:'kzhou',title:{ko:'K. Zhou 문제자료',en:'K. Zhou handouts'},short_title:'KZHOU',collection:'physics',href:'https://knzhou.github.io/teaching/',availability:'official_online',resource_kind:'handouts'},{id:'bad',title:'Bad',collection:'physics',href:'javascript:alert(1)'},{id:'astro-only',title:'Astro',collection:'astronomy',href:'https://example.edu/'}];
+  const h=await setup(t,{options:{bookReferences:references}}),cards=h.mount.querySelectorAll('.al-reference-card');assert.equal(cards.length,2);assert.match(cards[0].textContent,/웹문항 준비 중/);assert.match(cards[1].textContent,/공식 문제자료/);
+  for(const card of cards){assert.equal(card.target,'_blank');assert.match(card.rel,/noopener/);assert.equal(new URL(card.href).protocol,'https:');assert.equal(card.querySelector('[data-card-questions]'),null);assert.equal(card.querySelector('img'),null);assert(!card.href.includes('source=src_'));}
+  assert.equal(h.mount.querySelectorAll('[data-card-questions]').length,1);const filter=h.mount.querySelector('[data-source-query]');filter.value='Goldstein';filter.dispatchEvent(new h.w.Event('input',{bubbles:true}));assert.equal(h.mount.querySelectorAll('.al-reference-card').length,1);assert.equal(h.mount.querySelectorAll('.al-book-card').length,0);assert.equal(h.calls.length,1);
 });

@@ -18,7 +18,7 @@ function fixture({user=ADMIN,meStatus=200,loginUser=ADMIN,loginToken=TOKEN,ocrSt
     if(url.pathname==='/api/me')return Response.json({user:{...user,tokenHash:'upstream-private-hash',api_key:'upstream-private-key'}},{status:meStatus});
     if(url.pathname==='/api/login')return Response.json({token:loginToken,user:{...loginUser,tokenHash:'upstream-private-hash'}});
     if(url.pathname==='/api/logout')return Response.json({ok:true});
-    if(url.pathname==='/api/ocr')return Response.json(ocrStatus===200?{text:'A body moves with acceleration 2 m per second squared.',confidence:.92}:{error:'secret-upstream-detail'},{status:ocrStatus});
+    if(url.pathname==='/api/problem-bank/ocr')return Response.json(ocrStatus===200?{text:'A body moves with acceleration 2 m per second squared.',confidence:.92}:{error:'secret-upstream-detail'},{status:ocrStatus});
     throw Error('unexpected upstream path');
   }},ASSETS:{async fetch(){return new Response('<!doctype html><h1>Public login shell</h1>',{headers:{'Content-Type':'text/html','Cache-Control':'public, max-age=120','Vary':'Accept-Encoding'}});}},
   LIBRARY:{async get(key,options){calls.r2.push({key,options});
@@ -177,7 +177,7 @@ test('figure route verifies actual full bytes even when R2 size and metadata cla
 test('OCR uses only the authenticated existing service with a reconstructed bounded file form',async()=>{
   const f=fixture(),form=new FormData();form.set('image',new Blob([PNG],{type:'image/png'}),'question.png');form.set('lang','en');
   const res=await f.call('/api/problem-bank/identify',{method:'POST',body:form});assert.equal(res.status,200);const out=await res.json();assert.equal(out.ocr_used,true);assert.ok(out.recognized_text.length>5);assert.equal(out.identification_status,'candidates_only');
-  assert.deepEqual(f.calls.community.map(x=>new URL(x.url).pathname),['/api/me','/api/ocr']);const req=f.calls.community[1];assert.equal(new URL(req.url).search,'?mode=math');assert.equal(req.redirect,'manual');assert.equal(req.headers.get('Authorization'),'Bearer '+TOKEN);const sent=await req.formData();assert.deepEqual([...sent.keys()],['image']);assert.equal(sent.get('image').type,'image/png');
+  assert.deepEqual(f.calls.community.map(x=>new URL(x.url).pathname),['/api/me','/api/problem-bank/ocr']);const req=f.calls.community[1];assert.equal(new URL(req.url).search,'?mode=math');assert.equal(req.redirect,'manual');assert.equal(req.headers.get('Authorization'),'Bearer '+TOKEN);const sent=await req.formData();assert.deepEqual([...sent.keys()],['image']);assert.equal(sent.get('image').type,'image/png');
 });
 test('OCR disabled, non-admin calls and invalid input cannot reach a paid adapter',async()=>{
   for(const user of [USER]){const f=fixture({user}),form=new FormData();form.set('image',new Blob([PNG],{type:'image/png'}),'scan.png');assert.equal((await f.call('/api/problem-bank/identify',{method:'POST',body:form})).status,403);assert.equal(f.calls.community.length,1);}

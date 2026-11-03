@@ -5,8 +5,34 @@ export const ARCHIVE_BOOK_MEDIA = Object.freeze({
     "image_url": "archive-media/books/pns-optics.webp",
     "alt": "Problems and Solutions on Optics — cover",
     "title": "Problems and Solutions on Optics",
+    "full_title": "Problems and Solutions on Optics",
+    "short_title": "PNS",
+    "topic_label": {
+      "ko": "광학",
+      "en": "Optics"
+    },
+    "topic_prominent": true,
     "edition": "",
-    "provenanceKind": "source_cover"
+    "provenanceKind": "source_cover",
+    "chapter_titles": {
+      "geometrical-optics": {
+        "ko": "기하광학",
+        "en": "Geometrical Optics"
+      },
+      "wave-optics": {
+        "ko": "파동광학",
+        "en": "Wave Optics"
+      },
+      "quantum-optics": {
+        "ko": "양자광학",
+        "en": "Quantum Optics"
+      }
+    },
+    "chapter_order": [
+      "geometrical-optics",
+      "wave-optics",
+      "quantum-optics"
+    ]
   },
   "src_26d491efb0712ab4caf4c8f26b5d629f0ada40e907c0987167724dd8192ec348": {
     "image_url": "archive-media/books/kalda-handouts.webp",
@@ -19,6 +45,9 @@ export const ARCHIVE_BOOK_MEDIA = Object.freeze({
     "image_url": "archive-media/books/200-puzzling-physics-problems.webp",
     "alt": "200 Puzzling Physics Problems — cover",
     "title": "200 Puzzling Physics Problems",
+    "full_title": "200 Puzzling Physics Problems",
+    "short_title": "PUZZLING",
+    "browse_mode": "flat",
     "edition": "",
     "provenanceKind": "source_cover",
     "sourceUrl": "https://www.cambridge.org/core/books/200-puzzling-physics-problems/BBD12C169F5FAFDA285F155D62A04D12"
@@ -27,23 +56,129 @@ export const ARCHIVE_BOOK_MEDIA = Object.freeze({
     "image_url": "archive-media/books/guide-to-physics-problems-1.webp",
     "alt": "A Guide to Physics Problems — Part 1 — cover",
     "title": "A Guide to Physics Problems — Part 1",
+    "full_title": "A Guide to Physics Problems — Part 1",
+    "short_title": "GTP 1",
+    "topic_label": {
+      "ko": "역학·상대론·전자기학",
+      "en": "Mechanics, Relativity, and Electrodynamics"
+    },
     "edition": "Part 1",
     "provenanceKind": "source_cover",
-    "sourceUrl": "https://link.springer.com/book/10.1007/b100132"
+    "sourceUrl": "https://link.springer.com/book/10.1007/b100132",
+    "chapter_titles": {
+      "Mechanics": {
+        "ko": "역학",
+        "en": "Mechanics"
+      },
+      "Relativity": {
+        "ko": "상대론",
+        "en": "Relativity"
+      },
+      "Electrodynamics": {
+        "ko": "전자기학",
+        "en": "Electrodynamics"
+      }
+    },
+    "chapter_order": [
+      "Mechanics",
+      "Relativity",
+      "Electrodynamics"
+    ]
   },
   "src_9fec99556c517e72e7363f442fdb56f88dc085db074c71a36820c88f135720ac": {
     "image_url": "archive-media/books/guide-to-physics-problems-2.webp",
     "alt": "A Guide to Physics Problems — Part 2 — cover",
     "title": "A Guide to Physics Problems — Part 2",
+    "full_title": "A Guide to Physics Problems — Part 2",
+    "short_title": "GTP 2",
+    "topic_label": {
+      "ko": "열역학·통계물리·양자역학",
+      "en": "Thermodynamics, Statistical Physics, and Quantum Mechanics"
+    },
     "edition": "Part 2",
-    "provenanceKind": "source_cover"
+    "provenanceKind": "source_cover",
+    "chapter_titles": {
+      "Thermodynamics and Statistical Physics": {
+        "ko": "열역학과 통계물리",
+        "en": "Thermodynamics and Statistical Physics"
+      },
+      "Quantum Mechanics": {
+        "ko": "양자역학",
+        "en": "Quantum Mechanics"
+      }
+    },
+    "chapter_order": [
+      "Thermodynamics and Statistical Physics",
+      "Quantum Mechanics"
+    ]
   },
   "src_577e282a4b86a188c1f0d24842aa5fc79cdc3f3ce27483457a440cb1cfe32de3": {
     "image_url": "archive-media/books/pns-thermodynamics.webp",
     "alt": "Problems and Solutions on Thermodynamics and Statistical Mechanics — cover",
     "title": "Problems and Solutions on Thermodynamics and Statistical Mechanics",
+    "full_title": "Problems and Solutions on Thermodynamics and Statistical Mechanics",
+    "short_title": "PNS",
+    "topic_label": {
+      "ko": "열역학·통계역학",
+      "en": "Thermodynamics and Statistical Mechanics"
+    },
+    "topic_prominent": true,
     "edition": "",
-    "provenanceKind": "source_cover"
+    "provenanceKind": "source_cover",
+    "chapter_titles": {
+      "thermodynamic-states-and-first-law": {
+        "ko": "열역학적 상태와 제1법칙",
+        "en": "Thermodynamic States and the First Law"
+      },
+      "second-law-and-entropy": {
+        "ko": "제2법칙과 엔트로피",
+        "en": "The Second Law and Entropy"
+      },
+      "thermodynamic-functions-and-equilibrium": {
+        "ko": "열역학 함수와 평형",
+        "en": "Thermodynamic Functions and Equilibrium"
+      },
+      "phase-change-and-equilibrium": {
+        "ko": "상변화와 상평형",
+        "en": "Phase Changes and Equilibrium"
+      },
+      "nonequilibrium-thermodynamics": {
+        "ko": "비평형 열역학",
+        "en": "Nonequilibrium Thermodynamics"
+      },
+      "probability-and-statistical-entropy": {
+        "ko": "확률과 통계적 엔트로피",
+        "en": "Probability and Statistical Entropy"
+      },
+      "maxwell-boltzmann-statistics": {
+        "ko": "맥스웰–볼츠만 통계",
+        "en": "Maxwell–Boltzmann Statistics"
+      },
+      "bose-einstein-and-fermi-dirac-statistics": {
+        "ko": "보스–아인슈타인·페르미–디랙 통계",
+        "en": "Bose–Einstein and Fermi–Dirac Statistics"
+      },
+      "ensembles": {
+        "ko": "앙상블",
+        "en": "Ensembles"
+      },
+      "kinetic-theory-of-gases": {
+        "ko": "기체 분자운동론",
+        "en": "Kinetic Theory of Gases"
+      }
+    },
+    "chapter_order": [
+      "thermodynamic-states-and-first-law",
+      "second-law-and-entropy",
+      "thermodynamic-functions-and-equilibrium",
+      "phase-change-and-equilibrium",
+      "nonequilibrium-thermodynamics",
+      "probability-and-statistical-entropy",
+      "maxwell-boltzmann-statistics",
+      "bose-einstein-and-fermi-dirac-statistics",
+      "ensembles",
+      "kinetic-theory-of-gases"
+    ]
   },
   "src_d42bac37ef6dfcdc4a3355f458a0f9a31a7181166241404e9f16f228e830c998": {
     "image_url": "archive-media/books/schroeder-thermal-physics.webp",
@@ -56,6 +191,9 @@ export const ARCHIVE_BOOK_MEDIA = Object.freeze({
     "image_url": "archive-media/books/200-more-puzzling-physics-problems.webp",
     "alt": "200 More Puzzling Physics Problems — cover",
     "title": "200 More Puzzling Physics Problems",
+    "full_title": "200 More Puzzling Physics Problems",
+    "short_title": "MORE PUZZLING",
+    "browse_mode": "flat",
     "edition": "",
     "provenanceKind": "source_cover",
     "sourceUrl": "https://www.cambridge.org/core/books/200-more-puzzling-physics-problems/B4DC45F5A40D4B792653B407975F3A41"
@@ -94,8 +232,134 @@ export const ARCHIVE_BOOK_MEDIA = Object.freeze({
     "image_url": "archive-media/books/pns-electromagnetism.webp",
     "alt": "Problems and Solutions on Electromagnetism — cover",
     "title": "Problems and Solutions on Electromagnetism",
+    "full_title": "Problems and Solutions on Electromagnetism",
+    "short_title": "PNS",
+    "topic_label": {
+      "ko": "전자기학",
+      "en": "Electromagnetism"
+    },
+    "topic_prominent": true,
     "edition": "",
-    "provenanceKind": "source_cover"
+    "provenanceKind": "source_cover",
+    "chapter_titles": {
+      "basic-laws-of-electrostatics": {
+        "ko": "정전기학의 기본 법칙",
+        "en": "Basic Laws of Electrostatics"
+      },
+      "electrostatic-field-in-conductors": {
+        "ko": "도체의 정전기장",
+        "en": "Electrostatic Fields in Conductors"
+      },
+      "dielectric-media": {
+        "ko": "유전체 매질",
+        "en": "Dielectric Media"
+      },
+      "electrostatic-solution-methods": {
+        "ko": "정전기 문제의 풀이법",
+        "en": "Methods for Solving Electrostatic Problems"
+      },
+      "miscellaneous-electrostatics": {
+        "ko": "정전기학 종합문제",
+        "en": "Miscellaneous Electrostatic Problems"
+      },
+      "magnetic-field-of-currents": {
+        "ko": "전류가 만드는 자기장",
+        "en": "Magnetic Fields of Currents"
+      },
+      "electromagnetic-induction": {
+        "ko": "전자기 유도",
+        "en": "Electromagnetic Induction"
+      },
+      "electromagnetic-action-on-currents-and-particles": {
+        "ko": "전류와 입자에 작용하는 전자기력",
+        "en": "Electromagnetic Forces on Currents and Particles"
+      },
+      "miscellaneous-magnetostatics": {
+        "ko": "정자기학 종합문제",
+        "en": "Miscellaneous Magnetostatic Problems"
+      },
+      "basic-circuit-analysis": {
+        "ko": "기초 회로 해석",
+        "en": "Basic Circuit Analysis"
+      },
+      "electric-and-magnetic-circuits": {
+        "ko": "전기회로와 자기회로",
+        "en": "Electric and Magnetic Circuits"
+      },
+      "analog-circuits": {
+        "ko": "아날로그 회로",
+        "en": "Analog Circuits"
+      },
+      "digital-circuits": {
+        "ko": "디지털 회로",
+        "en": "Digital Circuits"
+      },
+      "nuclear-electronics": {
+        "ko": "핵 계측 전자공학",
+        "en": "Nuclear Electronics"
+      },
+      "miscellaneous-circuit-analysis": {
+        "ko": "회로 해석 종합문제",
+        "en": "Miscellaneous Circuit Analysis"
+      },
+      "plane-electromagnetic-waves": {
+        "ko": "평면 전자기파",
+        "en": "Plane Electromagnetic Waves"
+      },
+      "reflection-and-refraction": {
+        "ko": "반사와 굴절",
+        "en": "Reflection and Refraction"
+      },
+      "wave-propagation-in-media": {
+        "ko": "매질에서의 파동 전파",
+        "en": "Wave Propagation in Media"
+      },
+      "electromagnetic-radiation": {
+        "ko": "전자기 복사",
+        "en": "Electromagnetic Radiation"
+      },
+      "lorentz-transformation": {
+        "ko": "로런츠 변환",
+        "en": "Lorentz Transformation"
+      },
+      "electromagnetic-field-of-charged-particles": {
+        "ko": "하전입자의 전자기장",
+        "en": "Electromagnetic Fields of Charged Particles"
+      },
+      "charged-particle-motion": {
+        "ko": "하전입자의 운동",
+        "en": "Motion of Charged Particles"
+      },
+      "scattering-and-dispersion": {
+        "ko": "산란과 분산",
+        "en": "Scattering and Dispersion"
+      }
+    },
+    "chapter_order": [
+      "basic-laws-of-electrostatics",
+      "electrostatic-field-in-conductors",
+      "dielectric-media",
+      "electrostatic-solution-methods",
+      "miscellaneous-electrostatics",
+      "magnetic-field-of-currents",
+      "electromagnetic-induction",
+      "electromagnetic-action-on-currents-and-particles",
+      "miscellaneous-magnetostatics",
+      "basic-circuit-analysis",
+      "electric-and-magnetic-circuits",
+      "analog-circuits",
+      "digital-circuits",
+      "nuclear-electronics",
+      "miscellaneous-circuit-analysis",
+      "plane-electromagnetic-waves",
+      "reflection-and-refraction",
+      "wave-propagation-in-media",
+      "electromagnetic-radiation",
+      "lorentz-transformation",
+      "electromagnetic-field-of-charged-particles",
+      "charged-particle-motion",
+      "scattering-and-dispersion"
+    ]
   },
   "src_e26a00395a94b7aeab5c38b1d4cf6bca66b4c468fc97e731dd3c3939225f4163": {
     "image_url": "archive-media/books/zeilik-astronomy-4-ko.webp",
@@ -108,15 +372,117 @@ export const ARCHIVE_BOOK_MEDIA = Object.freeze({
     "image_url": "archive-media/books/pns-quantum-mechanics.webp",
     "alt": "Problems and Solutions on Quantum Mechanics — title-page excerpt",
     "title": "Problems and Solutions on Quantum Mechanics",
+    "full_title": "Problems and Solutions on Quantum Mechanics",
+    "short_title": "PNS",
+    "topic_label": {
+      "ko": "양자역학",
+      "en": "Quantum Mechanics"
+    },
+    "topic_prominent": true,
     "edition": "1998",
-    "provenanceKind": "source_title_page"
+    "provenanceKind": "source_title_page",
+    "chapter_titles": {
+      "basic-principles-and-one-dimensional-motion": {
+        "ko": "기본 원리와 1차원 운동",
+        "en": "Basic Principles and One-Dimensional Motion"
+      },
+      "central-potentials": {
+        "ko": "중심 퍼텐셜",
+        "en": "Central Potentials"
+      },
+      "spin-and-angular-momentum": {
+        "ko": "스핀과 각운동량",
+        "en": "Spin and Angular Momentum"
+      },
+      "motion-in-electromagnetic-fields": {
+        "ko": "전자기장 속 운동",
+        "en": "Motion in Electromagnetic Fields"
+      },
+      "perturbation-theory": {
+        "ko": "섭동 이론",
+        "en": "Perturbation Theory"
+      },
+      "scattering-and-quantum-transitions": {
+        "ko": "산란과 양자 전이",
+        "en": "Scattering and Quantum Transitions"
+      },
+      "many-particle-systems": {
+        "ko": "다입자계",
+        "en": "Many-Particle Systems"
+      },
+      "miscellaneous-quantum-topics": {
+        "ko": "양자역학 종합문제",
+        "en": "Miscellaneous Quantum Topics"
+      }
+    },
+    "chapter_order": [
+      "basic-principles-and-one-dimensional-motion",
+      "central-potentials",
+      "spin-and-angular-momentum",
+      "motion-in-electromagnetic-fields",
+      "perturbation-theory",
+      "scattering-and-quantum-transitions",
+      "many-particle-systems",
+      "miscellaneous-quantum-topics"
+    ]
   },
   "src_c5975cf2e9d7176bfb0b62bf656dc81861324b52d43733472b969ddf60c96460": {
     "image_url": "archive-media/books/pns-mechanics.webp",
     "alt": "Problems and Solutions on Mechanics — cover",
     "title": "Problems and Solutions on Mechanics",
+    "full_title": "Problems and Solutions on Mechanics",
+    "short_title": "PNS",
+    "topic_label": {
+      "ko": "역학",
+      "en": "Mechanics"
+    },
+    "topic_prominent": true,
     "edition": "",
-    "provenanceKind": "source_cover"
+    "provenanceKind": "source_cover",
+    "chapter_titles": {
+      "dynamics-of-a-point-mass": {
+        "ko": "질점의 동역학",
+        "en": "Dynamics of a Point Mass"
+      },
+      "dynamics-of-point-mass-systems": {
+        "ko": "질점계의 동역학",
+        "en": "Dynamics of Systems of Point Masses"
+      },
+      "rigid-body-dynamics": {
+        "ko": "강체의 동역학",
+        "en": "Rigid-Body Dynamics"
+      },
+      "deformable-body-dynamics": {
+        "ko": "변형체의 동역학",
+        "en": "Dynamics of Deformable Bodies"
+      },
+      "lagrange-equations": {
+        "ko": "라그랑주 방정식",
+        "en": "Lagrange Equations"
+      },
+      "small-oscillations": {
+        "ko": "미소 진동",
+        "en": "Small Oscillations"
+      },
+      "hamilton-canonical-equations": {
+        "ko": "해밀턴 정준방정식",
+        "en": "Hamilton Canonical Equations"
+      },
+      "special-relativity": {
+        "ko": "특수 상대론",
+        "en": "Special Relativity"
+      }
+    },
+    "chapter_order": [
+      "dynamics-of-a-point-mass",
+      "dynamics-of-point-mass-systems",
+      "rigid-body-dynamics",
+      "deformable-body-dynamics",
+      "lagrange-equations",
+      "small-oscillations",
+      "hamilton-canonical-equations",
+      "special-relativity"
+    ]
   },
   "src_b9011ed2840d2e5d8abf9af058f823c48f67728975675115f51b138945899880": {
     "image_url": "archive-media/books/jackson-classical-electrodynamics-3.webp",

@@ -10,18 +10,18 @@ export const UPSTAGE_PAGE_USD = { standard: 0.01, enhanced: 0.03 };
 const key = env => (typeof env.UPSTAGE_API_KEY === 'string' ? env.UPSTAGE_API_KEY.trim() : '') || null;
 
 /** one Document Parse call on one image: { markdown, text, model, pages, ms, usd } */
-export async function upstageParse(env, bytes, mime = 'image/jpeg', { mode = 'enhanced', model = 'document-parse', fetchImpl = globalThis.fetch, timeoutMs = 120000 } = {}) {
+export async function upstageParse(env, bytes, mime = 'image/jpeg', { mode = 'enhanced', model = 'document-parse', fetchImpl = globalThis.fetch, timeoutMs = 120000, maxAttempts = 3 } = {}) {
   const k = key(env); if (!k) { const e = new Error('provider_unavailable'); e.code = 'provider_unavailable'; throw e; }
   const form = new FormData();
-  form.append('document', new Blob([bytes], { type: mime }), mime === 'image/png' ? 'page.png' : 'page.jpg');
+  form.append('document', new Blob([bytes], { type: mime }), mime === 'image/png' ? 'page.png' : mime === 'image/webp' ? 'page.webp' : 'page.jpg');
   form.append('model', model);
   if (mode !== 'standard') form.append('mode', mode);                              // older models refuse the field; standard is the default
   form.append('ocr', 'force');                                                     // a photo has no text layer
   form.append('output_formats', '["markdown","text"]');
-  const t0 = Date.now();
+  const t0 = Date.now(), attempts = Number.isInteger(maxAttempts) ? Math.max(1, Math.min(3, maxAttempts)) : 3;
   for (let attempt = 0; ; attempt++) {
     const r = await fetchImpl(UPSTAGE + '/document-digitization', { method: 'POST', headers: { Authorization: 'Bearer ' + k }, body: form, signal: AbortSignal.timeout(timeoutMs) });
-    if ((r.status === 429 || r.status >= 500) && attempt < 2) { await new Promise(done => setTimeout(done, 1500 * (attempt + 1))); continue; }
+    if ((r.status === 429 || r.status >= 500) && attempt + 1 < attempts) { await new Promise(done => setTimeout(done, 1500 * (attempt + 1))); continue; }
     if (!r.ok) { const e = new Error('upstage_' + r.status); e.code = r.status === 429 ? 'vision_provider_rate_limited' : 'vision_request_rejected'; e.provider_message = (await r.text().catch(() => '')).slice(0, 300); throw e; }
     const j = await r.json();
     const pages = +j?.usage?.pages || 1;

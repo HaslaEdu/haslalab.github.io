@@ -48,3 +48,48 @@ test('stored chapter titles cover four source-profile books in Korean and Englis
   }
   const old=Object.values(media).find(x=>x.image_url.endsWith('/zangwill-modern-electrodynamics-2012.webp')),current=Object.values(media).find(x=>x.image_url.endsWith('/zangwill-modern-electrodynamics-2013.webp'));assert.deepEqual(old.chapter_titles,current.chapter_titles);
 });
+test('PNS volumes keep distinct bilingual subjects prominent while retaining their published titles',()=>{
+  const media=config('archive-book-media.js','ARCHIVE_BOOK_MEDIA');
+  const volumes=Object.values(media).filter(item=>item.short_title==='PNS');
+  assert.equal(volumes.length,5);
+  const subjects=new Set();
+  for(const item of volumes){
+    assert.equal(item.topic_prominent,true);assert(item.topic_label.ko&&item.topic_label.en);
+    assert.equal(item.full_title,item.title);assert.match(item.full_title,/^Problems and Solutions on /);
+    assert(item.title.includes(item.topic_label.en),'the displayed subject must belong to this volume');
+    assert(!subjects.has(item.topic_label.ko));subjects.add(item.topic_label.ko);
+  }
+  assert.deepEqual([...subjects].sort(),['광학','양자역학','역학','열역학·통계역학','전자기학'].sort());
+});
+test('GTP and Puzzling shortcuts retain discoverable full titles and only Puzzling bypasses the contents step',()=>{
+  const media=config('archive-book-media.js','ARCHIVE_BOOK_MEDIA');
+  const abbreviated=Object.values(media).filter(item=>item.short_title);
+  assert.equal(abbreviated.length,9);
+  for(const item of abbreviated)assert.equal(item.full_title,item.title,'a shortcut must not erase the published title');
+  const gtp=abbreviated.filter(item=>/^GTP /.test(item.short_title));
+  assert.deepEqual(gtp.map(item=>item.short_title),['GTP 1','GTP 2']);
+  assert.equal(gtp[0].topic_label.en,'Mechanics, Relativity, and Electrodynamics');
+  assert.equal(gtp[1].topic_label.en,'Thermodynamics, Statistical Physics, and Quantum Mechanics');
+  const flat=Object.entries(media).filter(([,item])=>item.browse_mode==='flat');
+  assert.deepEqual(flat.map(([,item])=>item.short_title).sort(),['MORE PUZZLING','PUZZLING']);
+  assert.deepEqual(flat.map(([id])=>id).sort(),['src_4827842a539dbd74390bdaf67e03ffb4720bfd0e41415009a903f3d261e1bd6c','src_efbf5a08177fd3dfcb26a44ab215d896df275b7905bdd0276ac60b3235d97be0'].sort());
+  assert(flat.every(([,item])=>!item.chapter_titles),'flat navigation must not fabricate a table of contents');
+});
+test('PNS and GTP classifications retain their actual source keys and printed problem order with human bilingual labels',()=>{
+  const media=config('archive-book-media.js','ARCHIVE_BOOK_MEDIA');
+  const books=Object.values(media).filter(item=>item.short_title==='PNS'||/^GTP /.test(item.short_title||''));
+  assert.equal(books.length,7);assert.equal(books.reduce((n,item)=>n+item.chapter_order.length,0),57);
+  for(const item of books){
+    assert.equal(new Set(item.chapter_order).size,item.chapter_order.length);
+    assert.deepEqual([...item.chapter_order].sort(),Object.keys(item.chapter_titles).sort());
+    for(const key of item.chapter_order){const title=item.chapter_titles[key];assert(title.ko&&title.en);assert.doesNotMatch(title.ko,/^[a-z]+(?:-[a-z]+)+$/);assert.doesNotMatch(title.en,/^[a-z]+(?:-[a-z]+)+$/);}
+  }
+  const mechanics=books.find(item=>item.title==='Problems and Solutions on Mechanics');
+  assert.deepEqual(Array.from(mechanics.chapter_order),['dynamics-of-a-point-mass','dynamics-of-point-mass-systems','rigid-body-dynamics','deformable-body-dynamics','lagrange-equations','small-oscillations','hamilton-canonical-equations','special-relativity']);
+  assert.equal(mechanics.chapter_titles['dynamics-of-a-point-mass'].ko,'질점의 동역학');
+  assert.deepEqual(Array.from(books.find(item=>item.short_title==='GTP 1').chapter_order),['Mechanics','Relativity','Electrodynamics']);
+  assert.deepEqual(Array.from(books.find(item=>item.short_title==='GTP 2').chapter_order),['Thermodynamics and Statistical Physics','Quantum Mechanics']);
+  const gtp=books.find(item=>item.short_title==='GTP 2');
+  assert.equal(gtp.chapter_titles['Thermodynamics and Statistical Physics'].ko,'열역학과 통계물리');
+  assert.equal(gtp.chapter_titles['Quantum Mechanics'].ko,'양자역학');
+});

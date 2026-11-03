@@ -5,7 +5,7 @@ const DISCIPLINES={physics:'phys',astronomy:'astro',mathematics:'math',chemistry
 const CATEGORIES={contest:'contests',book:'books',course:'schools'};
 // Reuse only this tab's bounded read results. A changed identity invalidates
 // every entry; solutions, feedback, raw assets and PDFs never enter this cache.
-const ARCHIVE_READS=new WeakMap(),READ_LIMIT=80;
+const ARCHIVE_READS=new WeakMap(),ARCHIVE_VIEWS=new WeakMap(),READ_LIMIT=80;
 function archiveReadSession(win,identity){
   let session=ARCHIVE_READS.get(win);
   if(!session||session.identity!==identity){
@@ -26,6 +26,10 @@ Object.assign(WORDS.ko,{edition:'판본',originalLanguage:'원문',imageType:'�
 Object.assign(WORDS.en,{edition:'Edition',originalLanguage:'Original',imageType:'Image',cover:'Cover',materials:'Papers',materialType:'Type',officialLinksCount:'Official links',notDigitized:'Not stored'});
 Object.assign(WORDS.ko,{contents:'목차',chapter:'장·구분',chooseChapter:'목차에서 장·구분을 선택하세요.',unchaptered:'문제 목록',perPage:'페이지당 20문제',number:'번호',problemTitle:'문제',chapterContents:'장·구분별 문제',backContents:'목차',allChapters:'모든 장에서 검색',page:'페이지',previous:'이전',problem:'문제'});
 Object.assign(WORDS.en,{contents:'Contents',chapter:'Chapter / section',chooseChapter:'Choose a chapter or section.',unchaptered:'Problems',perPage:'20 problems per page',number:'No.',problemTitle:'Problem',chapterContents:'Chapters and sections',backContents:'Contents',allChapters:'Search all chapters',page:'Page',previous:'Previous'});
+Object.assign(WORDS.ko,{hideContents:'목차 접기',showContents:'목차 펼치기',textSearch:'텍스트 검색',photoSearch:'사진 · OCR',searchBook:'이 교재 전체',searchPaper:'이 자료 전체',searchPart:'선택한 장·구분',searchScope:'검색 범위',ocrRestricted:'사진 검색은 현재 관리자만 사용할 수 있습니다.',ocrChecking:'사진 검색 권한을 확인하고 있습니다.',choosePartNote:'왼쪽 목차에서 장·구분을 선택하면 문제 목록을 불러옵니다.',filters:'상세 조건',sourceClassification:'자료 분류'});
+Object.assign(WORDS.en,{hideContents:'Collapse contents',showContents:'Expand contents',textSearch:'Text search',photoSearch:'Photo / OCR',searchBook:'This entire book',searchPaper:'This entire paper',searchPart:'Selected chapter / section',searchScope:'Search scope',ocrRestricted:'Photo search is currently available to administrators only.',ocrChecking:'Checking photo-search permissions.',choosePartNote:'Choose a chapter or section from the contents to load its problem list.',filters:'Filters',sourceClassification:'Source classification'});
+Object.assign(WORDS.ko,{author:'저자',access:'접근 상태',officialOnline:'공식 온라인판',officialProblems:'공식 문제자료',digitizationPending:'웹문항 준비 중',textbook:'교재',handouts:'문제 자료',lectures:'강의 교재',externalMaterial:'공식 외부 자료'});
+Object.assign(WORDS.en,{author:'Author',access:'Availability',officialOnline:'Official online edition',officialProblems:'Official problem material',digitizationPending:'Digital problems pending',textbook:'Textbook',handouts:'Problem material',lectures:'Lecture text',externalMaterial:'Official external material'});
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sourceTitle=s=>s?.title||s?.published_title_en||s?.published_title_ko||s?.id||'';
 const titleOf=(q,lang)=>q?.[lang==='ko'?'title_ko':'title_en']||q?.[lang==='ko'?'title_en':'title_ko']||'';
@@ -61,12 +65,19 @@ export function mountArchiveLibrary(container,options={}){
   if(!container?.ownerDocument)throw new TypeError('Archive container required');
   const doc=container.ownerDocument,win=doc.defaultView||window;
   let config={kind:'book',collection:'physics',lang:'ko',theme:'light',apiOrigin:'https://haslalab-problem-bank.haslalab.workers.dev',params:new URLSearchParams(),...options};
-  let disposed=false,epoch=0,panelRequest=0,bootstrapRequest=0,readerRequest=0,activeQuestion=null,identifyBusy=false,mathLayoutFrame=0,sources=[],status={},statusChecked=false,contents=null,urls=new Set(),controllers=new Set(),metadataControllers=new Set();
+  let disposed=false,epoch=0,panelRequest=0,bootstrapRequest=0,readerRequest=0,identifyRequest=0,activeQuestion=null,identifyBusy=false,mathLayoutFrame=0,sources=[],status={},statusChecked=false,contents=null,urls=new Set(),controllers=new Set(),metadataControllers=new Set();
   let token=String(config.getToken?.()||''),params=cleanParams(config.params),candidateItems=null;
   const root=doc.createElement('section');root.className='al';container.replaceChildren(root);
   const $=selector=>root.querySelector(selector),tr=key=>WORDS[config.lang==='en'?'en':'ko'][key]||key;
   const current=e=>!disposed&&e===epoch&&String(config.getToken?.()||'')===token;
   const isAbort=e=>e?.name==='AbortError';
+  function sourceMedia(id=params.get('source')){return config.kind==='book'?config.bookMedia?.[id]||{}:{};}
+  function isFlat(id=params.get('source')){return config.kind==='book'&&sourceMedia(id).browse_mode==='flat';}
+  function viewState(id=params.get('source')||contents?.source_id){
+    let states=ARCHIVE_VIEWS.get(win);if(!states){states=new Map();ARCHIVE_VIEWS.set(win,states);}
+    const key=[config.kind,config.collection,id||''].join('|');if(!states.has(key)){if(states.size>=200)states.delete(states.keys().next().value);states.set(key,{tocOpen:win.innerWidth>760,searchMode:'text',searchScope:null});}return states.get(key);
+  }
+  function selectedSearchScope(){return params.has('chapter')?(viewState().searchScope||'chapter'):'book';}
   function cleanParams(input){
     const p=new URLSearchParams(input||''),out=new URLSearchParams();
     for(const [key,value]of p){
@@ -91,7 +102,7 @@ export function mountArchiveLibrary(container,options={}){
     let entry=cacheable?session.entries.get(key):null;
     if(entry&&entry.expires<=Date.now()){session.entries.delete(key);entry=null;}
     if(!entry){
-      const c=new win.AbortController();(metadata?metadataControllers:controllers).add(c);const timeout=win.setTimeout(()=>c.abort(),20000);
+      const c=new win.AbortController();(metadata?metadataControllers:controllers).add(c);const scanning=method==='POST'&&u.pathname===PREFIX+'/identify'&&body instanceof win.FormData,timeout=win.setTimeout(()=>c.abort(),scanning?120000:20000);
       entry={controller:c,owner:root,expires:Infinity,pending:true};
       entry.promise=(async()=>{try{
       const headers={};if(authenticated)headers.Authorization='Bearer '+token;
@@ -166,7 +177,8 @@ export function mountArchiveLibrary(container,options={}){
   function bookCard(source){
     const media=config.bookMedia?.[source.id],title=source.published_title_en||source.published_title_ko||source.title||media?.title||sourceTitle(source),edition=source.edition_label||media?.edition||'—';
     const image=media?.image_url?tr(media.provenanceKind==='source_title_page'?'titlePage':'cover'):tr('noCover');
-    return `<a class="comp al-book-card" href="${esc(href({source:source.id,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(source.primary_author||title)}</div>${cardImage(source)}</div><div class="full">${esc(title)}</div>${metadata([[tr('originalLanguage'),source.source_language?.toUpperCase()||'—'],[tr('edition'),edition],[tr('imageType'),image],[tr('problems'),Number.isSafeInteger(source.question_count)?source.question_count:'—','data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
+    const short=localized(media?.short_title)||source.primary_author||title,topic=localized(media?.topic_label);
+    return `<a class="comp al-book-card" href="${esc(href({source:source.id,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}${topic?`<span class="al-card-topic${media.topic_prominent?' prominent':''}">${esc(topic)}</span>`:''}</div>${cardImage(source)}</div><div class="full">${esc(media?.full_title||title)}</div>${metadata([[tr('originalLanguage'),source.source_language?.toUpperCase()||'—'],[tr('edition'),edition],[tr('imageType'),image],[tr('problems'),Number.isSafeInteger(source.question_count)?source.question_count:'—','data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
   function schoolCard(school){
     const papers=schoolSources(school),light=safeMediaURL(school.logo_url),dark=safeMediaURL(school.dark_logo_url),logo=config.theme==='dark'&&dark?dark:light;
@@ -174,6 +186,11 @@ export function mountArchiveLibrary(container,options={}){
     return `<a class="comp al-school-card" href="${esc(href({school:school.id,source:null,problem:null,cursor:null}))}"><div class="chead"><div class="abbr">${esc(short)}</div>${logo?`<img class="clogo al-card-school-logo${school.logo_monochrome?' al-logo-monochrome':''}" src="${esc(logo)}" data-logo-light="${esc(light)}" data-logo-dark="${esc(dark)}" alt="" loading="lazy" decoding="async">`:''}</div><div class="full">${esc(school.id==='other'?tr('unclassified'):localized(school.name))}</div>${metadata([[tr('materials'),papers.length||'—','data-card-papers'],[tr('materialType'),tr(papers.length?'schoolPapers':'officialLinks')],[tr('officialLinksCount'),schoolMaterials(school).length],[tr('problems'),papers.length?count:tr('notDigitized'),'data-card-questions']])}<span class="go" aria-hidden="true">→</span></a>`;
   }
   function officialMaterialsHTML(school){const items=schoolMaterials(school);return items.length?`<section class="al-official"><h3>${esc(tr('officialMaterials'))}</h3><ul>${items.map(x=>`<li><a href="${esc(officialURL(x.url))}" target="_blank" rel="noopener noreferrer">${esc(localized(x.label)||x.url)} ↗</a></li>`).join('')}</ul></section>`:'';}
+  function referenceBooks(){return (Array.isArray(config.bookReferences)?config.bookReferences:[]).filter(item=>item?.collection===config.collection&&typeof item.id==='string'&&!SID.test(item.id)&&officialURL(item.href));}
+  function referenceCard(item){
+    const title=localized(item.full_title||item.title),topic=localized(item.topic_label),availability=tr(item.availability==='digitization_pending'?'digitizationPending':item.resource_kind==='handouts'?'officialProblems':'officialOnline');
+    return `<a class="comp al-reference-card" data-reference-id="${esc(item.id)}" href="${esc(officialURL(item.href))}" target="_blank" rel="noopener noreferrer"><div class="chead"><div class="abbr">${esc(item.short_title||localized(item.title))}${topic?`<span class="al-card-topic">${esc(topic)}</span>`:''}</div><span class="clogo al-reference-spine" aria-label="${esc(tr('noCover'))}">${esc(tr('externalMaterial'))}</span></div><div class="full">${esc(title)}</div>${metadata([[tr('author'),item.author||'—'],[tr('topic'),topic||'—'],[tr('materialType'),tr(item.resource_kind||'textbook')],[tr('access'),availability]])}<span class="go" aria-hidden="true">↗</span></a>`;
+  }
   function ordered(list){const c=new Intl.Collator(config.lang,{numeric:true,sensitivity:'base'});return [...list].sort((a,b)=>config.kind==='contest'?(c.compare(a.competition||'',b.competition||'')||(b.year||0)-(a.year||0)||c.compare(sourceTitle(a),sourceTitle(b))):c.compare(sourceTitle(a),sourceTitle(b))||String(a.id).localeCompare(String(b.id)));}
   async function loadSources(unscoped=false){
     const list=[],seen=new Set(),cursors=new Set();let after=null;
@@ -190,21 +207,29 @@ export function mountArchiveLibrary(container,options={}){
     const data=await api(PREFIX+'/sources/'+id+'/contents');
     if(!SID.test(data.source_id||'')||!data.source||data.source.id!==data.source_id||!sourceMatches(data.source)||!Array.isArray(data.chapters)||data.chapters.length>2000)throw fail('invalid_contents');
     if(data.chapters.some(c=>typeof c.chapter!=='string'||c.chapter.length>240||/[\x00-\x1f\x7f]/.test(c.chapter)||!Number.isSafeInteger(c.question_count)||c.question_count<0))throw fail('invalid_contents');
-    return data;
+    const order=config.bookMedia?.[data.source_id]?.chapter_order;if(!Array.isArray(order)||!order.length)return data;
+    const ranks=new Map();for(const key of order)if(typeof key==='string'&&!ranks.has(key))ranks.set(key,ranks.size);
+    const chapters=data.chapters.map((chapter,index)=>({chapter,index})).sort((a,b)=>(ranks.get(a.chapter.chapter)??ranks.size)-(ranks.get(b.chapter.chapter)??ranks.size)||a.index-b.index).map(item=>item.chapter);
+    return {...data,chapters};
   }
   function chapterTitle(chapter){
     const key=String(chapter?.chapter??''),named=config.bookMedia?.[contents?.source_id]?.chapter_titles?.[key],title=localized(named);
-    if(key&&title){const prefix=/^\d+$/.test(key)?(config.lang==='en'?'Chapter '+key:'제'+key+'장'):/^[A-Z]$/.test(key)?(config.lang==='en'?'Appendix '+key:'부록 '+key):key;return prefix+' · '+title;}
+    if(key&&title){const prefix=/^\d+$/.test(key)?(config.lang==='en'?'Chapter '+key:'제'+key+'장'):/^[A-Z]$/.test(key)?(config.lang==='en'?'Appendix '+key:'부록 '+key):'';return prefix?prefix+' · '+title:title;}
     const value=key===''?'':chapter?.title||key;return value?/^\d+$/.test(value)?(config.lang==='en'?'Chapter '+value:'제'+value+'장'):value:tr('unchaptered');
   }
   function chapterLinks(){return (contents?.chapters||[]).map(chapter=>`<li><a href="${esc(href({source:contents.source_id,chapter:chapter.chapter,problem:null,cursor:null,q:null,topic:null,stars:null}))}"${params.has('chapter')&&params.get('chapter')===chapter.chapter?' aria-current="page"':''}><span>${esc(chapterTitle(chapter))}</span><small>${chapter.question_count.toLocaleString()}</small></a></li>`).join('');}
   function tocHTML(index=false){
     const rows=chapterLinks();if(index)return `<section class="al-contents-index"><h3>${esc(tr('contents'))}</h3><p class="al-muted">${esc(tr('chooseChapter'))}</p><ol>${rows}</ol></section>`;
-    const selected=contents?.chapters.find(c=>c.chapter===params.get('chapter'));
-    return `<aside class="al-toc"><details${win.innerWidth>760?' open':''}><summary>${esc(tr('contents'))}${selected?' · '+esc(chapterTitle(selected)):''}</summary><nav aria-label="${esc(tr('chapterContents'))}"><h3>${esc(tr('contents'))}</h3><ol>${rows}</ol></nav></details></aside>`;
+    const open=viewState(contents?.source_id).tocOpen,id='al-parts-'+String(contents?.source_id||'source').slice(-12);
+    return `<aside class="al-toc"><div class="al-toc-heading"><h3>${esc(tr('contents'))}</h3><button type="button" data-toggle-toc aria-expanded="${open}" aria-controls="${id}">${esc(tr(open?'hideContents':'showContents'))}</button></div><nav id="${id}"${open?'':' hidden'} aria-label="${esc(tr('chapterContents'))}"><ol>${rows}</ol></nav></aside>`;
+  }
+  function updateTOCState(){
+    const state=viewState(contents?.source_id);for(const layout of root.querySelectorAll('.al-source-layout,.al-reading-layout'))layout.classList.toggle('is-toc-collapsed',!state.tocOpen);
+    for(const button of root.querySelectorAll('[data-toggle-toc]')){button.setAttribute('aria-expanded',String(state.tocOpen));button.textContent=tr(state.tocOpen?'hideContents':'showContents');const target=doc.getElementById(button.getAttribute('aria-controls'));if(target&&root.contains(target))target.hidden=!state.tocOpen;}
+    scheduleMathLayout();
   }
   function release(){for(const u of urls)win.URL.revokeObjectURL(u);urls.clear();}
-  function abort(){epoch++;panelRequest++;readerRequest++;bootstrapRequest++;identifyBusy=false;const session=archiveReadSession(win,token);for(const c of controllers){c.abort();for(const [key,entry]of session.entries)if(entry.controller===c)session.entries.delete(key);}controllers.clear();release();activeQuestion=null;}
+  function abort(){epoch++;panelRequest++;readerRequest++;identifyRequest++;bootstrapRequest++;identifyBusy=false;const session=archiveReadSession(win,token);for(const c of controllers){c.abort();for(const [key,entry]of session.entries)if(entry.controller===c)session.entries.delete(key);}controllers.clear();release();activeQuestion=null;}
   function renderShell(){
     root.dataset.theme=config.theme==='dark'?'dark':'light';root.lang=config.lang;
     root.innerHTML=`<p class="al-status" data-message role="status" aria-live="polite">${esc(tr('loading'))}</p><div data-content></div>`;
@@ -215,15 +240,36 @@ export function mountArchiveLibrary(container,options={}){
       const groups=schoolGroups().filter(s=>[localized(s.name),...(s.aliases||[])].join(' ').toLocaleLowerCase().includes(query));slot.className='comps';slot.dataset.lang=config.lang;
       slot.innerHTML=groups.length?groups.map(schoolCard).join(''):`<div class="subjempty">${esc(tr('emptySources'))}</div>`;return;
     }
-    const list=visibleSources().filter(s=>[sourceTitle(s),sourceMeta(s)].join(' ').toLocaleLowerCase().includes(query)),books=config.kind==='book';slot.className=books?'comps':'al-paper-list';
+    const list=visibleSources().filter(s=>[sourceTitle(s),sourceMeta(s),localized(sourceMedia(s.id).short_title),localized(sourceMedia(s.id).topic_label),sourceMedia(s.id).full_title].join(' ').toLocaleLowerCase().includes(query)),books=config.kind==='book';slot.className=books?'comps':'al-paper-list';
     if(books)slot.dataset.lang=config.lang;else slot.removeAttribute('data-lang');
-    slot.innerHTML=list.length?list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
+    const references=books?referenceBooks().filter(item=>[localized(item.title),localized(item.full_title),item.short_title,item.author,localized(item.topic_label)].join(' ').toLocaleLowerCase().includes(query)):[];
+    slot.innerHTML=list.length||references.length?list.map(s=>books?bookCard(s):`<li><a href="${esc(href({source:s.id,problem:null,cursor:null}))}"><strong>${esc(sourceTitle(s))}</strong><span>${esc(sourceMeta(s))}</span>${sourceCount(s)?`<small>${esc(sourceCount(s))}</small>`:''}</a></li>`).join('')+references.map(referenceCard).join(''):books?`<div class="subjempty">${esc(tr('emptySources'))}</div>`:`<li class="al-muted">${esc(config.kind==='course'&&selectedSchool()?tr('noDigitalPapers'):tr('emptySources'))}</li>`;
+  }
+  function setSearchMode(mode){
+    if(!['text','ocr'].includes(mode))return;viewState().searchMode=mode;
+    for(const button of root.querySelectorAll('[data-search-mode]')){const active=button.dataset.searchMode===mode;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;}
+    for(const pane of root.querySelectorAll('[data-search-pane]'))pane.hidden=pane.dataset.searchPane!==mode;
+    const scopeSelect=$('[data-search-scope]');if(scopeSelect){scopeSelect.disabled=mode==='ocr';scopeSelect.value=mode==='ocr'?'book':selectedSearchScope();}
+  }
+  function renderSourceWorkspace(source,topics){
+    const media=sourceMedia(source.id),short=localized(media.short_title),topic=localized(media.topic_label),full=media.full_title||sourceTitle(source),flat=isFlat(source.id),hasSearch=['q','topic','stars','cursor'].some(key=>params.has(key));
+    const heading=short?[short,topic].filter(Boolean).join(' · '):full,school=selectedSchool(),state=viewState(source.id),inChapter=params.has('chapter'),scopeValue=selectedSearchScope();
+    const count=sourceCount({...source,question_count:source.question_count??contents?.question_count}),toc=flat?'':tocHTML();
+    $('[data-content]').innerHTML=`<div class="al-catalog al-source-workspace"><div class="al-catalog-heading"><div><h2>${esc(heading)}</h2>${short?`<p class="al-full-title">${esc(full)}</p>`:''}<p class="al-muted">${esc(sourceMeta(source))}</p><p class="al-list-count">${esc([count,tr('perPage')].filter(Boolean).join(' · '))}</p></div><a href="${esc(href({source:null,chapter:null,problem:null,cursor:null,q:null,topic:null,stars:null}))}">${esc(school?localized(school.name):tr('allSources'))}</a></div>
+      <div class="al-source-layout${flat?' is-flat':state.tocOpen?'':' is-toc-collapsed'}" data-source-layout>${toc}<div class="al-source-main">
+        <section class="al-find-panel" aria-label="${esc(tr('searchProblems'))}"><div class="al-find-heading"><div class="al-search-modes" role="tablist" aria-label="${esc(tr('searchProblems'))}"><button type="button" id="al-text-tab" data-search-mode="text" role="tab" aria-selected="true" aria-controls="al-text-pane">${esc(tr('textSearch'))}</button><button type="button" id="al-ocr-tab" data-search-mode="ocr" role="tab" aria-selected="false" aria-controls="al-ocr-pane" tabindex="-1">${esc(tr('photoSearch'))}</button></div><label class="al-scope-control">${esc(tr('searchScope'))}<select data-search-scope><option value="book"${scopeValue==='book'?' selected':''}>${esc(tr(config.kind==='book'?'searchBook':'searchPaper'))}</option>${inChapter?`<option value="chapter"${scopeValue==='chapter'?' selected':''}>${esc(tr('searchPart'))}</option>`:''}</select></label></div>
+        <div id="al-text-pane" data-search-pane="text" role="tabpanel" aria-labelledby="al-text-tab"><form data-search data-source-search-form class="al-source-search-form"><div class="al-text-line"><label class="al-query"><span class="al-sr">${esc(tr('query'))}</span><input name="q" type="search" maxlength="600" value="${esc(params.get('q')||'')}" placeholder="${esc(tr('query'))}"></label><button type="submit">${esc(tr('search'))}</button></div><input type="hidden" name="source" value="${esc(source.id)}"><details class="al-filter-panel"><summary>${esc(tr('filters'))}</summary><div class="al-filter-fields"><label>${esc(tr('topic'))}<select name="topic"><option value="">${esc(tr('allTopics'))}</option>${[...topics].map(key=>`<option value="${key}"${params.get('topic')===key?' selected':''}>${esc(TOPICS[key][config.lang==='en'?1:0])}</option>`).join('')}</select></label><label>${esc(tr('stars'))}<select name="stars"><option value="">${esc(tr('allStars'))}</option>${[1,2,3,4,5].map(n=>`<option value="${n}"${params.get('stars')===String(n)?' selected':''}>${'★'.repeat(n)}${'☆'.repeat(5-n)}</option>`).join('')}</select></label><a href="${esc(href({q:null,topic:null,stars:null,cursor:null,problem:null}))}">${esc(tr('reset'))}</a></div></details></form></div>
+        <div id="al-ocr-pane" data-search-pane="ocr" role="tabpanel" aria-labelledby="al-ocr-tab" hidden><div class="al-ocr-controls" data-admin-tools data-workspace-ocr></div></div></section>
+        <section data-results aria-label="${esc(tr('list'))}">${!flat&&!inChapter&&!hasSearch?`<div class="al-list-instruction"><h3>${esc(tr('chooseChapter'))}</h3><p>${esc(tr('choosePartNote'))}</p></div>`:`<p>${esc(tr('loading'))}</p>`}</section>
+      </div></div></div>`;
+    setSearchMode(state.searchMode);renderAdminTools();updateTOCState();
   }
   function filters(){
     const topics=new Set(sources.flatMap(s=>Array.isArray(s.subjects)?s.subjects:[]).filter(s=>Object.hasOwn(TOPICS,s)));
     if(['physics','astronomy'].includes(config.collection))for(const key of ['classical_mechanics','electromagnetism','thermodynamics','statistical_mechanics','optics','oscillations_waves','quantum_mechanics','relativity','special_relativity','general_relativity','mathematical_methods'])topics.add(key);
     if(config.collection==='astronomy')topics.add('astronomy_astrophysics');if(params.has('topic'))topics.add(params.get('topic'));
     const source=sources.find(s=>s.id===params.get('source')),school=selectedSchool(),query=params.get('q')||'',landing=galleryLanding();
+    if(source&&config.kind!=='contest'){renderSourceWorkspace(source,topics);return;}
     const count=sources.reduce((n,s)=>n+(Number(s.question_count)||0),0),countText=`${count.toLocaleString()} ${tr('problems')}`;
     const heading=source?sourceTitle(source):school?localized(school.name):config.kind==='book'?tr('books'):config.kind==='course'?tr('schools'):tr('sources');
     const back=source?`<a href="${esc(href({source:null,problem:null,cursor:null}))}">${esc(school?localized(school.name):tr('allSources'))}</a>`:school?`<a href="${esc(href({school:null,source:null,problem:null,cursor:null}))}">${esc(tr('allSchools'))}</a>`:'';
@@ -261,7 +307,7 @@ export function mountArchiveLibrary(container,options={}){
       if(!Array.isArray(data.items))throw fail('invalid_results');const items=data.items.filter(q=>QID.test(q?.id||'')&&matches(q));
       const query=params.get('q')?.trim(),offset=Number(searchParams().get('offset')||0),next=query&&offset<300&&data.has_more?'o_'+(offset+20):!query&&data.has_more&&typeof data.next_cursor==='string'&&data.next_cursor.length<=2800?data.next_cursor:null;
       const chapter=contents?.chapters.find(c=>c.chapter===params.get('chapter'));
-      slot.innerHTML=`<div class="al-results-heading"><h3>${esc(params.has('chapter')?chapterTitle(chapter||{chapter:params.get('chapter')}):tr('list'))}</h3><span>${esc(tr('perPage'))}</span></div>${candidateItems?`<p class="al-muted">${esc(tr('candidates'))}</p>`:''}${items.length?`<div class="al-list-labels" aria-hidden="true"><span>${esc(tr('number'))}</span><span>${esc(tr('problemTitle'))}</span><span>${esc(tr('stars'))}</span></div><ol class="al-results">${resultRows(items)}</ol>`:`<p class="al-empty">${esc(tr('empty'))}</p>`}${data.limited_results?`<p class="al-muted">${esc(tr('limited'))}</p>`:''}<nav class="al-pager" aria-label="${esc(tr('list'))}">${params.has('cursor')?`<a href="${esc(href({cursor:null,problem:null}))}">← ${esc(tr('first'))}</a>`:''}${next?`<a href="${esc(href({cursor:next,problem:null}))}">${esc(tr('next'))} →</a>`:''}</nav>`;await math(slot);if(current(e)&&slot.isConnected)message('');
+      slot.innerHTML=`<div class="al-results-heading"><h3>${esc(candidateItems?tr('candidates'):params.has('chapter')?chapterTitle(chapter||{chapter:params.get('chapter')}):tr('list'))}</h3><span>${esc(tr('perPage'))}</span></div>${items.length?`<div class="al-list-labels" aria-hidden="true"><span>${esc(tr('number'))}</span><span>${esc(tr('problemTitle'))}</span><span>${esc(tr('stars'))}</span></div><ol class="al-results">${resultRows(items)}</ol>`:`<p class="al-empty">${esc(tr('empty'))}</p>`}${data.limited_results?`<p class="al-muted">${esc(tr('limited'))}</p>`:''}<nav class="al-pager" aria-label="${esc(tr('list'))}">${params.has('cursor')?`<a href="${esc(href({cursor:null,problem:null}))}">← ${esc(tr('first'))}</a>`:''}${next?`<a href="${esc(href({cursor:next,problem:null}))}">${esc(tr('next'))} →</a>`:''}</nav>`;await math(slot);if(current(e)&&slot.isConnected)message('');
     }catch(error){if(!isAbort(error)&&current(e)&&slot.isConnected){slot.innerHTML=`<p class="al-error">${esc(errorText(error))}</p>`;}}
   }
   function figureGroups(q){
@@ -315,14 +361,14 @@ export function mountArchiveLibrary(container,options={}){
       if(q?.id!==id||!matches(q))throw fail('invalid_question');
       if(!inSelectedSchool(q.source_id)){navigate(href({school:schoolFor(q.source_id)?.id||'other',source:q.source_id,cursor:null}),{replace:true});return;}
       const version=selectedVersion(q),groups=figureGroups(q),title=titleOf(q,config.lang);
-      const displaySource=q.display_source_id||q.source_id,backChanges={problem:null},fromSearch=!params.has('source')&&['q','topic','stars','cursor'].some(key=>params.has(key));if(!params.has('source')&&!fromSearch)backChanges.source=displaySource;if(!fromSearch&&!params.has('chapter')&&typeof q.chapter==='string')backChanges.chapter=q.chapter;
-      $('[data-content]').innerHTML=`<div class="al-reading-layout${config.kind!=='contest'?' has-toc':''}"><div data-reader-toc></div><article class="al-reader" tabindex="-1"><nav class="al-reader-nav"><a href="${esc(href(backChanges))}">${esc(tr('back'))}</a><a href="${esc(href({source:displaySource,chapter:null,problem:null,cursor:null,q:null,topic:null,stars:null}))}">${esc(sourceTitle(q.source))}</a></nav><header><p class="al-muted">${esc(sourceMeta(q.source))}</p><h2>${title?`<small>${esc(tr('problem'))} ${esc(q.original_number)}</small>${esc(title)}`:`${esc(tr('problem'))} ${esc(q.original_number)}`}</h2><div class="al-meta">${badge(q)}<span>${esc(tr('pending'))}</span>${q.edition_label?`<span class="al-edition">${esc(q.edition_label)}${q.edition_original_number?' · '+esc(q.edition_original_number):''}</span>`:''}${q.context?.unresolved_source?`<span>${esc(tr('sourceIssue'))}</span>`:''}</div></header><div class="al-prose" lang="${config.lang}">${archiveProse(version?.text||tr('noLanguage'))}</div><div class="al-figures" data-givens></div><div class="al-actions"><button data-panel="solutions" aria-expanded="false">${esc(tr('solutions'))}</button><button data-panel="recommendations" aria-expanded="false">${esc(tr('recommendations'))}</button>${q.context_links?.length?`<button data-panel="context" aria-expanded="false">${esc(tr('contexts'))} (${q.context_links.length})</button>`:''}${q.can_view_source===true?`<button data-pdf="${esc(q.source_id)}">${esc(tr('pdf'))}</button>`:''}</div><section data-panel-content aria-live="polite"></section>${groups.reference.length?`<details class="al-reference" data-reference><summary>${esc(tr('referenceFigures'))} (${groups.reference.length})</summary><div class="al-figures"></div></details>`:''}${groups.raw.length?`<details class="al-reference" data-raw><summary>${esc(tr('rawFigures'))} (${groups.raw.length})</summary><div class="al-figures"></div></details>`:''}${feedbackHTML()}</article></div>`;
+      const displaySource=q.display_source_id||q.source_id,backChanges={problem:null},fromSearch=!params.has('source')&&['q','topic','stars','cursor'].some(key=>params.has(key));if(!params.has('source')&&!fromSearch)backChanges.source=displaySource;if(!fromSearch&&!params.has('chapter')&&!isFlat(displaySource)&&typeof q.chapter==='string')backChanges.chapter=q.chapter;
+      $('[data-content]').innerHTML=`<div class="al-reading-layout${config.kind!=='contest'&&!isFlat(displaySource)?' has-toc':''}"><div data-reader-toc></div><article class="al-reader" tabindex="-1"><nav class="al-reader-nav"><a href="${esc(href(backChanges))}">${esc(tr('back'))}</a><a href="${esc(href({source:displaySource,chapter:null,problem:null,cursor:null,q:null,topic:null,stars:null}))}">${esc(sourceTitle(q.source))}</a></nav><header><p class="al-muted">${esc(sourceMeta(q.source))}</p><h2>${title?`<small>${esc(tr('problem'))} ${esc(q.original_number)}</small>${esc(title)}`:`${esc(tr('problem'))} ${esc(q.original_number)}`}</h2><div class="al-meta">${badge(q)}<span>${esc(tr('pending'))}</span>${q.edition_label?`<span class="al-edition">${esc(q.edition_label)}${q.edition_original_number?' · '+esc(q.edition_original_number):''}</span>`:''}${q.context?.unresolved_source?`<span>${esc(tr('sourceIssue'))}</span>`:''}</div></header><div class="al-prose" lang="${config.lang}">${archiveProse(version?.text||tr('noLanguage'))}</div><div class="al-figures" data-givens></div><div class="al-actions"><button data-panel="solutions" aria-expanded="false">${esc(tr('solutions'))}</button><button data-panel="recommendations" aria-expanded="false">${esc(tr('recommendations'))}</button>${q.context_links?.length?`<button data-panel="context" aria-expanded="false">${esc(tr('contexts'))} (${q.context_links.length})</button>`:''}${q.can_view_source===true?`<button data-pdf="${esc(q.source_id)}">${esc(tr('pdf'))}</button>`:''}</div><section data-panel-content aria-live="polite"></section>${groups.reference.length?`<details class="al-reference" data-reference><summary>${esc(tr('referenceFigures'))} (${groups.reference.length})</summary><div class="al-figures"></div></details>`:''}${groups.raw.length?`<details class="al-reference" data-raw><summary>${esc(tr('rawFigures'))} (${groups.raw.length})</summary><div class="al-figures"></div></details>`:''}${feedbackHTML()}</article></div>`;
       const rendered=math($('[data-content]'));loadFigures($('[data-givens]'),groups.inline,e);
       for(const [name,assets]of [['reference',groups.reference],['raw',groups.raw]]){const el=$('[data-'+name+']');if(el)lazyFigures(el,el.querySelector('.al-figures'),assets,e);}
       wireFeedback(id,e);
       $('[data-pdf]')?.addEventListener('click',()=>downloadPDF(q.source_id,q.source,e));
       $('[data-content]').querySelectorAll('[data-panel]').forEach(button=>button.addEventListener('click',()=>showPanel(button.dataset.panel,id,e)));
-      if(config.kind!=='contest')loadContents(displaySource).then(data=>{if(!current(e)||request!==readerRequest)return;contents=data;const toc=$('[data-reader-toc]');if(toc){toc.innerHTML=tocHTML();toc.closest('.al-reading-layout').classList.add('has-toc');}},()=>{});
+      if(config.kind!=='contest'&&!isFlat(displaySource))loadContents(displaySource).then(data=>{if(!current(e)||request!==readerRequest)return;contents=data;const toc=$('[data-reader-toc]');if(toc){toc.innerHTML=tocHTML();toc.closest('.al-reading-layout').classList.add('has-toc');updateTOCState();}},()=>{});
       await rendered;if(current(e)&&request===readerRequest){$('[data-content] article')?.focus?.({preventScroll:true});message('');}
     }catch(error){if(!isAbort(error)&&current(e)){message(errorText(error),true);$('[data-content]').replaceChildren(link(href({problem:null}),tr('back')));}}
   }
@@ -366,21 +412,22 @@ export function mountArchiveLibrary(container,options={}){
     finally{if(current(e)&&button.isConnected)button.disabled=false;}
   }
   function renderAdminTools(){
-    const slot=$('[data-admin-tools]');if(!slot||status.user?.role!=='admin'||status.ocr_available!==true)return;
-    slot.innerHTML=`<details class="al-photo"><summary>${esc(tr('photo'))}</summary><p class="al-muted">${esc(tr('ocrNote'))}</p><form data-photo><label>${esc(tr('image'))}<input type="file" name="image" accept="image/png,image/jpeg,image/webp" required></label><button>${esc(tr('ocr'))}</button></form><div data-recognized hidden><label>${esc(tr('recognized'))}<textarea rows="5" maxlength="12000"></textarea></label><button data-resubmit>${esc(tr('resubmit'))}</button><p class="al-muted">${esc(tr('noOcr'))}</p></div></details>`;
+    const slot=$('[data-admin-tools]');if(!slot)return;const workspace=slot.hasAttribute('data-workspace-ocr'),allowed=status.user?.role==='admin'&&status.ocr_available===true,key=[status.user?.role||'',allowed,statusChecked,!!token].join('|');
+    if(!workspace&&!allowed){slot.replaceChildren();return;}if(slot.dataset.permissions===key)return;slot.dataset.permissions=key;
+    slot.innerHTML=`${workspace?'<div class="al-photo">':`<details class="al-photo"><summary>${esc(tr('photo'))}</summary>`}<p class="al-muted">${esc(tr(allowed?'ocrNote':token&&!statusChecked?'ocrChecking':'ocrRestricted'))}</p><form data-photo><fieldset${allowed?'':' disabled'}><label>${esc(tr('image'))}<input type="file" name="image" accept="image/png,image/jpeg,image/webp" required></label><button>${esc(tr('ocr'))}</button></fieldset></form><div data-recognized hidden><label>${esc(tr('recognized'))}<textarea rows="5" maxlength="12000"></textarea></label><button data-resubmit${allowed?'':' disabled'}>${esc(tr('resubmit'))}</button><p class="al-muted">${esc(tr('noOcr'))}</p></div>${workspace?'</div>':'</details>'}`;
     slot.querySelector('[data-photo]').addEventListener('submit',event=>{event.preventDefault();const file=event.currentTarget.elements.image.files[0];if(!file||!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>8*1024*1024){message(tr('badImage'),true);return;}identify(null,file);});
     slot.querySelector('[data-resubmit]').addEventListener('click',()=>identify(slot.querySelector('textarea').value));
   }
   async function identify(text,file){
-    const e=epoch,slot=$('[data-admin-tools]');if(!slot||identifyBusy)return;if(file&&(status.user?.role!=='admin'||status.ocr_available!==true))return;
+    const e=epoch,slot=$('[data-admin-tools]');if(!slot||identifyBusy||status.user?.role!=='admin'||status.ocr_available!==true)return;
     if(!file&&(typeof text!=='string'||text.trim().length<5||text.length>12000||text.includes('\0')))return;
-    identifyBusy=true;const buttons=[...slot.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);message(tr('loading'));
+    identifyBusy=true;const request=++identifyRequest,valid=()=>current(e)&&identifyRequest===request&&slot.isConnected;const buttons=[...slot.querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);message(tr('loading'));
     try{
-      const p=scope(searchParams());for(const key of ['q','sort','cursor','offset'])p.delete(key);let body;
+      const p=scope(searchParams()),allowed=new Set(['lang','subject','source','collection','stars','kind','competition','year','type','limit']);for(const key of [...p.keys()])if(!allowed.has(key))p.delete(key);let body;
       if(file){body=new win.FormData();for(const [k,v]of p)body.set(k,v);body.set('image',file);}else body={...Object.fromEntries(p),text};
-      const data=await api(PREFIX+'/identify',{method:'POST',body});if(!current(e))return;candidateItems=(data.candidates||data.items||[]).filter(q=>QID.test(q?.id||'')&&matches(q));
-      if(typeof data.recognized_text==='string'){slot.querySelector('[data-recognized]').hidden=false;slot.querySelector('textarea').value=data.recognized_text.slice(0,12000);}await renderResults();message(tr('candidates'));
-    }catch(error){if(!isAbort(error)&&current(e))message(errorText(error),true);}
+      const data=await api(PREFIX+'/identify',{method:'POST',body});if(!valid())return;candidateItems=(data.candidates||data.items||[]).filter(q=>QID.test(q?.id||'')&&matches(q)&&(!params.has('source')||(q.display_source_id||q.source_id)===params.get('source')));
+      if(typeof data.recognized_text==='string'){slot.querySelector('[data-recognized]').hidden=false;slot.querySelector('textarea').value=data.recognized_text.slice(0,12000);}await renderResults();if(valid())message(tr('candidates'));
+    }catch(error){if(!isAbort(error)&&valid())message(errorText(error),true);}
     finally{if(current(e)){identifyBusy=false;buttons.forEach(b=>{if(b.isConnected)b.disabled=false;});}}
   }
   async function resolveLegacy(){
@@ -404,34 +451,52 @@ export function mountArchiveLibrary(container,options={}){
       if(params.has('problem')){await renderReader(params.get('problem'));return;}
       if(config.kind==='course'&&params.has('school')&&!params.has('source')&&['q','topic','stars','cursor'].some(k=>params.has(k))){navigate(href({school:null}),{replace:true});return;}
       if(params.has('source')&&config.kind!=='contest'){
-        contents=await loadContents(params.get('source'));if(!current(e)||job!==bootstrapRequest)return;
-        if(contents.source_id!==params.get('source')){navigate(href({source:contents.source_id,chapter:params.has('chapter')?params.get('chapter'):null}),{replace:true});return;}
-        sources=[contents.source];
-        if(!inSelectedSchool(contents.source_id))throw fail('source_not_found');
-        if(params.has('chapter')&&!contents.chapters.some(c=>c.chapter===params.get('chapter')))throw fail('source_not_found');
+        if(isFlat()){
+          if(!sources.some(source=>source.id===params.get('source')))sources=await loadSources();if(!current(e)||job!==bootstrapRequest)return;
+          if(!sources.some(source=>source.id===params.get('source')))throw fail('source_not_found');contents=null;
+          if(params.has('chapter')){navigate(href({chapter:null,cursor:null}),{replace:true});return;}
+        }else{
+          contents=await loadContents(params.get('source'));if(!current(e)||job!==bootstrapRequest)return;
+          if(contents.source_id!==params.get('source')){navigate(href({source:contents.source_id,chapter:params.has('chapter')?params.get('chapter'):null}),{replace:true});return;}
+          sources=[contents.source];
+          if(!inSelectedSchool(contents.source_id))throw fail('source_not_found');
+          if(params.has('chapter')&&!contents.chapters.some(c=>c.chapter===params.get('chapter')))throw fail('source_not_found');
+        }
       }else if(galleryLanding()||config.kind==='contest'){
         sources=await loadSources();if(!current(e)||job!==bootstrapRequest)return;
       }
       if(config.kind==='course'&&params.has('school')&&!selectedSchool())throw fail('source_not_found');
       if(config.kind==='contest'&&params.has('source')&&!sources.some(s=>s.id===params.get('source')))throw fail('source_not_found');
-      filters();if(!galleryLanding()&&(config.kind==='contest'||!params.has('source')||params.has('chapter')||['q','topic','stars','cursor'].some(k=>params.has(k))))await renderResults();else message('');
+      filters();if(!galleryLanding()&&(config.kind==='contest'||isFlat()||!params.has('source')||params.has('chapter')||['q','topic','stars','cursor'].some(k=>params.has(k))))await renderResults();else message('');
     }catch(error){if(!isAbort(error)&&current(e)&&job===bootstrapRequest){message(errorText(error),true);$('[data-content]').innerHTML=`<button data-retry>${esc(tr('retry'))}</button>`;}}
   }
   function onClick(event){
+    const toggle=event.target.closest?.('[data-toggle-toc]');if(toggle&&root.contains(toggle)){viewState(contents?.source_id).tocOpen=!viewState(contents?.source_id).tocOpen;updateTOCState();return;}
+    const mode=event.target.closest?.('[data-search-mode]');if(mode&&root.contains(mode)){setSearchMode(mode.dataset.searchMode);return;}
     const retry=event.target.closest?.('[data-retry]');if(retry){abort();archiveReadSession(win,token).entries.clear();boot();return;}
     const a=event.target.closest?.('a');if(!a||!root.contains(a)||!a.getAttribute('href')?.startsWith('#/archive/')||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
-    event.preventDefault();navigate(a.getAttribute('href'));
+    event.preventDefault();if(a.closest('.al-toc')&&a.getAttribute('href').includes('chapter=')){viewState(contents?.source_id).searchScope='chapter';if(win.innerWidth<=760)viewState(contents?.source_id).tocOpen=false;}navigate(a.getAttribute('href'));
   }
-  function onSubmit(event){if(!event.target.matches('[data-search]'))return;event.preventDefault();const form=new win.FormData(event.target),q=String(form.get('q')||'').trim();if(q.length>600||q.includes('\0')){message(tr('badQuery'),true);return;}const selected=form.has('source')?form.get('source'):params.get('source'),globalSchoolSearch=config.kind==='course'&&!selected&&(q||form.get('topic')||form.get('stars'));navigate(href({q,topic:form.get('topic'),stars:form.get('stars'),source:selected,school:globalSchoolSearch?null:params.get('school'),problem:null,cursor:null}));}
-  function onChange(event){if(event.target.matches('[data-search] select'))event.target.form.requestSubmit();}
+  function onSubmit(event){
+    if(!event.target.matches('[data-search]'))return;event.preventDefault();const form=new win.FormData(event.target),q=String(form.get('q')||'').trim();
+    if(q.length>600||q.includes('\0')){message(tr('badQuery'),true);return;}
+    const selected=form.has('source')?form.get('source'):params.get('source'),globalSchoolSearch=config.kind==='course'&&!selected&&(q||form.get('topic')||form.get('stars')),changes={q,topic:form.get('topic'),stars:form.get('stars'),source:selected,school:globalSchoolSearch?null:params.get('school'),problem:null,cursor:null};
+    if(event.target.hasAttribute('data-source-search-form')&&selectedSearchScope()==='book')changes.chapter=null;
+    const target=href(changes);identifyRequest++;candidateItems=null;
+    if(target!==href()){navigate(target);return;}
+    const waitingForChapter=params.has('source')&&config.kind!=='contest'&&!isFlat()&&!params.has('chapter')&&!['q','topic','stars','cursor'].some(key=>params.has(key));
+    if(galleryLanding()||waitingForChapter){filters();message('');}else{message(tr('loading'));renderResults();}
+  }
+  function onChange(event){if(event.target.matches('[data-search-scope]')){if(!event.target.disabled)viewState().searchScope=event.target.value;return;}if(event.target.matches('[data-search] select')&&!event.target.closest('[data-source-search-form]'))event.target.form.requestSubmit();}
+  function onKeyDown(event){const tab=event.target.closest?.('[data-search-mode]');if(!tab||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const mode=event.key==='Home'?'text':event.key==='End'?'ocr':tab.dataset.searchMode==='text'?'ocr':'text';setSearchMode(mode);$('[data-search-mode="'+mode+'"]')?.focus();}
   function onInput(event){if(event.target.matches('[data-source-query]'))renderDirectory();}
   function authChanged(){const next=String(config.getToken?.()||'');if(next===token)return;abort();token=next;archiveReadSession(win,token);status={};statusChecked=false;sources=[];contents=null;candidateItems=null;boot();}
-  root.addEventListener('click',onClick);root.addEventListener('submit',onSubmit);root.addEventListener('change',onChange);root.addEventListener('input',onInput);
+  root.addEventListener('click',onClick);root.addEventListener('submit',onSubmit);root.addEventListener('change',onChange);root.addEventListener('input',onInput);root.addEventListener('keydown',onKeyDown);
   const mathResizeObserver=typeof win.ResizeObserver==='function'?new win.ResizeObserver(scheduleMathLayout):null;
   mathResizeObserver?.observe(root);win.addEventListener('resize',scheduleMathLayout);doc.fonts?.addEventListener?.('loadingdone',scheduleMathLayout);
   win.addEventListener('storage',authChanged);boot();
   return {
-    dispose(){if(disposed)return;abort();disposed=true;for(const c of metadataControllers)c.abort();metadataControllers.clear();const session=archiveReadSession(win,token);for(const [key,entry]of session.entries)if(entry.pending&&entry.owner===root){entry.controller?.abort();session.entries.delete(key);}mathResizeObserver?.disconnect();win.removeEventListener('resize',scheduleMathLayout);doc.fonts?.removeEventListener?.('loadingdone',scheduleMathLayout);if(mathLayoutFrame)win.cancelAnimationFrame(mathLayoutFrame);win.removeEventListener('storage',authChanged);root.removeEventListener('click',onClick);root.removeEventListener('submit',onSubmit);root.removeEventListener('change',onChange);root.removeEventListener('input',onInput);root.remove();},
+    dispose(){if(disposed)return;abort();disposed=true;for(const c of metadataControllers)c.abort();metadataControllers.clear();const session=archiveReadSession(win,token);for(const [key,entry]of session.entries)if(entry.pending&&entry.owner===root){entry.controller?.abort();session.entries.delete(key);}mathResizeObserver?.disconnect();win.removeEventListener('resize',scheduleMathLayout);doc.fonts?.removeEventListener?.('loadingdone',scheduleMathLayout);if(mathLayoutFrame)win.cancelAnimationFrame(mathLayoutFrame);win.removeEventListener('storage',authChanged);root.removeEventListener('click',onClick);root.removeEventListener('submit',onSubmit);root.removeEventListener('change',onChange);root.removeEventListener('input',onInput);root.removeEventListener('keydown',onKeyDown);root.remove();},
     update(next={}){if(disposed)return;const previous=config;config={...config,...next};const nextParams=cleanParams(config.params),newToken=String(config.getToken?.()||'');const scopeChanged=['kind','collection','lang','baseHash','resolveLegacy'].some(k=>previous[k]!==config[k])||newToken!==token,dataChanged=scopeChanged||nextParams.toString()!==params.toString();if(dataChanged){abort();params=nextParams;token=newToken;archiveReadSession(win,token);if(scopeChanged){status={};statusChecked=false;sources=[];contents=null;}candidateItems=null;boot();}else{root.dataset.theme=config.theme==='dark'?'dark':'light';updateThemeMedia();authChanged();}}
   };
 }

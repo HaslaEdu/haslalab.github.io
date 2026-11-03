@@ -16,6 +16,11 @@
 /* Card grid, spacing, borders and breakpoints come from the original .comps/.comp rules. */
 .al .al-directory{padding:0;margin:0}
 .al .comps{font-size:15px;line-height:1.62}.al a.comp:hover{color:inherit}
+.al .comps>.comp{min-width:0;max-width:100%}
+.al .comp .chead,.al .comp .full,.al .comp dl,.al .comp dl>div{min-width:0}
+.al .comp .full,.al .comp dd{white-space:normal;overflow-wrap:anywhere}
+.al .comps .comp.al-reference-card dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+.al .comps .comp.al-reference-card dl>div:last-child{grid-column:auto}
 .al .comp .chead .abbr{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}
 .al .comp .al-card-cover{height:72px;max-width:60px}.al .comp .al-card-school-logo{height:52px;max-width:104px}
 .al .comp .al-card-cover-placeholder{width:48px;height:64px;display:grid;place-items:center;border:1px dashed var(--al-line);font-size:13px;color:var(--al-muted)}
@@ -110,4 +115,71 @@
   .al .al-row-arrow{display:none}
   .al .al-reader h2{font-size:23px}
   .al .al-prose{font-size:16px;line-height:1.9}
+}
+
+/* Book and school reading uses the available page width; page chrome stays shared. */
+.archive-reading[data-archive-kind=book],.archive-reading[data-archive-kind=course]{max-width:1760px;width:100%}
+.al .al-source-workspace .al-source-layout,.al .al-reading-layout.has-toc{grid-template-columns:clamp(240px,19vw,300px) minmax(0,1fr);gap:32px;max-width:none;width:100%;align-items:start}
+.al .al-source-layout.is-flat{display:block}
+.al .al-source-layout.is-toc-collapsed,.al .al-reading-layout.has-toc.is-toc-collapsed{grid-template-columns:minmax(0,1fr);gap:16px}
+.al .is-toc-collapsed .al-toc{position:static}
+.al .al-toc-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+.al .al-toc-heading>h3{width:auto;flex:1 1 auto;margin:0;white-space:normal}
+.al .al-toc-heading>button{flex:0 0 auto;font-size:11px;min-height:34px;padding:6px 8px;border-color:var(--al-line)}
+.al .is-toc-collapsed .al-toc-heading{justify-content:start;margin-bottom:0}
+.al .is-toc-collapsed .al-toc-heading>h3{display:none}
+.al .al-source-workspace .al-full-title{font-size:14px;max-width:85ch;color:var(--al-muted);margin:8px 0}
+.al .al-card-topic{display:block;font-family:var(--sans,inherit);font-size:16px;font-weight:500;line-height:1.45;letter-spacing:0;margin-top:6px;color:var(--al-muted)}
+.al .al-card-topic.prominent{font-size:22px;font-weight:650;color:var(--al-ink)}
+.al .al-reference-spine{display:grid;place-items:center;flex-shrink:0;width:54px;height:72px;padding:8px 5px;border:1px solid var(--al-line);border-left:4px solid var(--al-accent);font-size:9px;line-height:1.5;text-align:center;color:var(--al-muted)}
+.al .al-find-panel{padding:0;margin:0 0 28px;min-width:0}
+.al .al-find-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 20px;border-bottom:1px solid var(--al-line)}
+.al .al-search-modes{display:flex;gap:4px;min-width:0}
+.al .al-search-modes [role=tab]{border:0;border-bottom:2px solid transparent;border-radius:0;padding:10px 14px;font-size:14px;color:var(--al-muted);white-space:nowrap}
+.al .al-search-modes [aria-selected=true]{border-bottom-color:var(--al-accent);color:var(--al-ink);font-weight:600}
+.al .al-scope-control{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--al-muted);padding:5px 0}
+.al .al-scope-control select{min-height:34px;max-width:230px;padding:6px 8px;font-size:12px;color:var(--al-ink)}
+.al [data-search-pane]{min-height:126px}
+.al .al-source-search-form{padding:16px 0 0;margin:0}
+.al .al-text-line{display:flex;gap:10px;align-items:end}
+.al .al-text-line .al-query{min-width:0;flex:1 1 auto}
+.al .al-text-line input{font-size:16px;width:100%}
+.al .al-text-line>button{flex:0 0 auto;background:var(--al-ink);color:var(--paper,#fff);padding-inline:24px}
+.al .al-filter-panel{margin:8px 0 0}
+.al .al-filter-panel>summary{min-height:32px;font-size:12px;padding:6px 0;color:var(--al-muted)}
+.al .al-filter-fields{display:flex;flex-wrap:wrap;align-items:end;gap:14px;padding:10px 0}
+.al .al-filter-fields>label{display:flex;flex-direction:column;gap:5px;font-size:12px}
+.al .al-filter-fields select{font-size:13px;min-width:150px}
+.al .al-filter-fields>a{padding:10px 0;font-size:12px}
+.al .al-ocr-controls{min-height:126px}
+.al .al-ocr-controls .al-photo{border:0;padding:16px 0 0;margin:0}
+.al .al-ocr-controls .al-photo>p{font-size:12px;margin:0 0 12px}
+.al .al-photo fieldset{display:flex;flex-wrap:wrap;align-items:end;gap:14px;min-width:0;margin:0;padding:0;border:0}
+.al .al-photo fieldset:disabled{opacity:.65}
+.al .al-photo fieldset:disabled button{cursor:not-allowed}
+.al .al-list-instruction{padding:30px 0 70px;max-width:600px}
+.al .al-list-instruction h3{font-size:18px;margin:0 0 12px}
+.al .al-list-instruction p{font-size:14px;color:var(--al-muted)}
+.al .al-row-title>strong{max-width:92ch}
+@media(max-width:1000px){
+  .al .al-source-workspace .al-source-layout,.al .al-reading-layout.has-toc{grid-template-columns:240px minmax(0,1fr);gap:24px}
+  .al .al-source-layout.is-toc-collapsed,.al .al-reading-layout.has-toc.is-toc-collapsed{grid-template-columns:minmax(0,1fr)}
+  .al .al-find-heading{gap:4px 12px}
+}
+@media(max-width:760px){
+  .archive-reading[data-archive-kind=book],.archive-reading[data-archive-kind=course]{padding-inline:14px}
+  .al .al-source-workspace .al-source-layout,.al .al-reading-layout.has-toc{grid-template-columns:minmax(0,1fr);gap:18px}
+  .al .al-toc{position:static}
+  .al .al-toc-heading{margin:0 0 8px}
+  .al .al-toc nav{max-height:280px;border:1px solid var(--al-line);border-radius:4px;padding:7px 0}
+  .al .al-scope-control{width:100%;justify-content:space-between}
+  .al .al-search-modes [role=tab]{padding-inline:10px;font-size:13px}
+  .al .al-text-line{gap:8px}
+  .al .al-text-line>button{padding-inline:16px}
+  .al .al-filter-fields>label{flex:1 1 120px;min-width:0}
+  .al .al-filter-fields select{width:100%;min-width:0}
+  .al .al-list-instruction{padding:18px 0 40px}
+  .al .al-list-instruction h3{font-size:16px}
+  .al .al-photo fieldset{display:block;width:100%}
+  .al .al-photo fieldset label{margin-bottom:10px}
 }
