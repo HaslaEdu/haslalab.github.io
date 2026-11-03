@@ -38,6 +38,7 @@ import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvide
 import {referenceImages,referenceText} from './reference-images.js';
 import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips, cropJpeg, reencodeJpeg } from './page-tiles.js';
+import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './focus-read.js';
@@ -3089,6 +3090,18 @@ async function labBench(env, s, job) {
       const read = { mathpix: mathpixRead, simpletex: simpletexRead }[spec.engine]; if (!read) throw new Error('bench_engine');
       const r = await read(env, bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), page.mime, { signal: AbortSignal.timeout(90000) });
       out = { page_id: page.id, engine: spec.engine, ocr: r.text, confidence: r.confidence, handwritten: r.handwritten ?? null };
+    } else if (spec.stage === 'upstage') {
+      /* Upstage Document Parse as the page reader: {stage:'upstage', page_id, mode:'standard'|'enhanced', tuned, strips, arbiter}.
+         tuned: the page whole and as strips, their disagreements picked by Solar (upstage-ocr.js) */
+      const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
+      const bytes = page && await labPageBytes(env, page); if (!bytes) throw new Error('missing_image');
+      const img = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes), mode = spec.mode === 'standard' ? 'standard' : 'enhanced', log = [];
+      let md, extra = {};
+      if (spec.tuned) { const r = await upstageTunedRead(env, img, page.mime, { mode, strips: Number.isInteger(spec.strips) ? Math.min(4, Math.max(2, spec.strips)) : 3, arbiter: spec.arbiter === false ? null : (typeof spec.arbiter === 'string' ? spec.arbiter : 'solar-pro4'), visionJSON, log });
+        md = r.markdown; extra = { whole: r.whole, strips: r.strips, disagreements: r.disagreements, picked: r.picked, pieces: r.pieces }; }
+      else { const r = await upstageParse(env, img, page.mime, { mode }); log.push({ step: 'ocr', provider: 'upstage', model: r.model, ms: r.ms, usd: r.usd, ok: 1 }); md = r.markdown; }
+      for (const c of log) m.calls.push({ in: null, out: null, cached: null, ...c });
+      out = { page_id: page.id, ocr: md, legible: 'good', read: JSON.stringify({ legible: 'good', items: [], confidence: null, header: { page: null, sheet: page.kind, task: page.task }, structure_status: 'done', ocr: { engine: 'upstage', model: mode, format: 'markdown-latex' } }), ...extra };
     } else if (spec.stage === 'focus') {
       /* the zoomed re-read alone, on given values: {stage:'focus', page_id, items:[{id, value}], focus:{model, mode, thinking}} */
       const page = await env.DB.prepare('SELECT * FROM lab_pages WHERE id=? AND session_id=?').bind(spec.page_id, s.id).first();
