@@ -162,3 +162,11 @@ test('the schema is the one the module creates at run time',()=>{
   const sql=new DatabaseSync(':memory:');sql.exec('CREATE TABLE users(id INTEGER PRIMARY KEY)');sql.exec(CONSENT_SQL);sql.exec(CONSENT_SQL);
   assert.deepEqual(sql.prepare('PRAGMA table_info(user_consents)').all().map(c=>c.name),['user_id','terms_version','age_ok','train_ok','country','agreed_at','train_at']);sql.close();
 });
+
+test("the country comes from request.cf, or from Cloudflare's CF-IPCountry header behind the edge gateway", async () => {
+  const { requestCountry } = await import("./src/consent.js");
+  assert.equal(requestCountry({ cf: { country: "KR" }, headers: new Headers() }), "KR");
+  assert.equal(requestCountry({ headers: new Headers({ "CF-IPCountry": "KR" }) }), "KR");
+  assert.equal(requestCountry({ headers: new Headers({ "CF-IPCountry": "T1" }) }), null);
+  assert.equal(requestCountry({ headers: new Headers() }), null);
+});

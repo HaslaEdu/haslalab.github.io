@@ -13,7 +13,9 @@ export const TRAIN_KEEP_SEC=365*86400;
 const ready=new WeakMap();
 // env.DB is wrapped per request for timing; the scope is the raw binding, so the CREATE runs once per isolate
 export function ensureConsentSchema(db,scope=db){if(!ready.has(scope))ready.set(scope,db.prepare(CONSENT_SQL).run().catch(error=>{ready.delete(scope);throw error}));return ready.get(scope)}
-export const requestCountry=req=>{const c=req?.cf?.country;return typeof c==='string'&&/^[A-Z]{2}$/.test(c)?c:null};
+/* request.cf on a direct request; behind the edge gateway's service binding the copied CF-IPCountry header
+   (set by Cloudflare's edge, not by the client) carries it */
+export const requestCountry=req=>{const c=req?.cf?.country||req?.headers?.get?.('CF-IPCountry');return typeof c==='string'&&/^[A-Z]{2}$/.test(c)?c:null};
 export const ageRequired=country=>country==='KR';
 export const consentInfo=req=>{const country=requestCountry(req);return {version:TERMS_VERSION,country,age_required:ageRequired(country)}};
 /* body.consent = {terms:true, privacy:true, age14:bool, train:bool}. Only literal true counts as agreement,
