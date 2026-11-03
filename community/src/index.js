@@ -3182,6 +3182,17 @@ async function labBench(env, s, job) {
   const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking, twoStage: c.twoStage, check: c.check, api: c.api, tier: c.tier });
   let out, failed = false;
   try {
+    /* what GOOGLE_CLOUD_API_KEY can do (admin bench, {stage:'gcp', model?, project?, region?}): a Vertex express call, the
+       tuning-jobs list (needs OAuth unless Google allows the key), a bucket list; statuses and Google's words, never the key */
+    if (spec.stage === 'gcp') {
+      const k = String(env.GOOGLE_CLOUD_API_KEY || '').trim(); if (!k) throw new Error('no_google_cloud_key');
+      const probe = async (method, u, body) => { const t = Date.now(); try { const r = await fetch(u, { method, headers: { 'x-goog-api-key': k, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}), redirect: 'manual', signal: AbortSignal.timeout(60000) });
+        const txt = (await r.text()).slice(0, 600); return { status: r.status, ms: Date.now() - t, body: txt.replace(/AIza[0-9A-Za-z_-]{20,}/g, '[key]') }; } catch (e) { return { error: String(e?.message || e).slice(0, 200) }; } };
+      const model = /^gemini-[a-z0-9.-]{1,40}$/.test(spec.model || '') ? spec.model : 'gemini-3.1-flash-lite', project = /^[a-z][a-z0-9-]{4,62}$/.test(spec.project || '') ? spec.project : '-', region = /^[a-z]+-[a-z]+\d$/.test(spec.region || '') ? spec.region : 'us-central1';
+      out = { generate: await probe('POST', `https://aiplatform.googleapis.com/v1/publishers/google/models/${model}:generateContent`, { contents: [{ role: 'user', parts: [{ text: 'Reply with the word ok.' }] }] }),
+        tuning: await probe('GET', `https://${region}-aiplatform.googleapis.com/v1/projects/${project}/locations/${region}/tuningJobs`),
+        ...(project !== '-' ? { buckets: await probe('GET', `https://storage.googleapis.com/storage/v1/b?project=${project}`) } : {}) };
+    } else
     if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic', 'upstage'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
     /* a dedicated math-OCR service reads a page: {stage:'ocr', engine:'mathpix'|'simpletex', page_id} */
     else if (spec.stage === 'ocr') {
