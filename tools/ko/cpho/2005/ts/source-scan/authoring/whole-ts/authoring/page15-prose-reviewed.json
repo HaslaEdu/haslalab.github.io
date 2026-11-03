@@ -1,0 +1,101 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 15,
+  "printed_solution_page": 12,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Preserve graph4 and all II1/II2/energy labels. The original condition z<D physically crosses the column boundary (z< at left bottom, D at right top): final rowplans must retain the two original mathematical fragments at their original baselines, never invent/retype a replacement D or silently move it vertically. Repeated field derivation remains complete.",
+  "fields": [
+    {
+      "id": "figure-caption",
+      "source": "图4",
+      "ko": "그림 [[4]]",
+      "en": "Figure [[4]]"
+    },
+    {
+      "id": "single-peak-kinetic",
+      "source": "在图4中与z轴平行且与曲线II1的峰相切的直线代表初动能Ek0，由（7）式和曲线II1便可画出Ek（z）的图线，如图4中的曲线II2所示。",
+      "ko": "그림 [[4]]에서 [[z]]축과 평행하며 곡선 [[II1]]의 봉우리에 접하는 직선이 [[Ek0]]를 나타낸다. 식 [[(7)]]과 [[II1]]에서 운동 에너지 곡선 [[II2]]를 얻는다.",
+      "en": "In Figure [[4]], the horizontal line tangent to the peak of [[II1]] represents [[Ek0]]. Equation [[(7)]] and [[II1]] give the kinetic-energy curve [[II2]]."
+    },
+    {
+      "id": "part-two",
+      "source": "2.粒子位于原点并获得沿z轴的小速度后的运动情况亦与电势图线的形状密切有关。下面也分两种情况讨论：",
+      "ko": "2. 원점의 입자에 [[z]]축 방향의 작은 속도를 주었을 때의 운동도 전위 곡선의 형태에 달려 있다. 두 경우로 나누어 보자.",
+      "en": "2. The motion after a particle at the origin acquires a small axial velocity also depends on the potential profile. Again consider two cases:"
+    },
+    {
+      "id": "double-peak-stable",
+      "source": "（i）若D>R/√2，即两个环之间的距离比较大，电势V（z）的图线具有两个峰，粒子电势能W（z）的图线亦具有两个峰，即图3中的曲线I1，z=0处是谷底，电势能具有极小值。",
+      "ko": "(i) [[D>R/√2]]이면 [[V(z)]]와 [[W(z)]]는 그림 [[3]]의 [[I1]]처럼 두 봉우리를 갖는다. [[z=0]]은 위치 에너지가 극소인 골짜기 바닥이다.",
+      "en": "(i) For [[D>R/√2]], [[V(z)]] and [[W(z)]] have the two-peak profile [[I1]] of Figure [[3]]. The valley at [[z=0]] is a potential-energy minimum."
+    },
+    {
+      "id": "escape-or-trapped",
+      "source": "当粒子获得沿z轴的速度后，若其初动能大于两侧电势能的峰高的大小，则粒子将越过势能峰，运动到无限远处。若其初动能小于两侧电势能的峰值，粒子只能在二峰之间往返运动。",
+      "ko": "입자에 [[z]]축 방향 속도를 주었을 때 초기 운동 에너지가 양쪽 장벽 높이보다 크면 장벽을 넘어 무한히 멀리 간다. 장벽보다 작으면 두 봉우리 사이에서 왕복한다.",
+      "en": "If the initial kinetic energy exceeds the barrier height on either side, the particle escapes to infinity. Below the barrier height, it remains between the peaks and moves back and forth."
+    },
+    {
+      "id": "small-oscillations",
+      "source": "若其初动能远小于势能的峰值，则粒子以z=0为平衡位置做简谐振动。为此研究两个带电圆环产生的电场的场强在z轴上的分布情况。",
+      "ko": "초기 운동 에너지가 장벽 높이보다 매우 작으면 [[z=0]]을 평형점으로 단진동한다. 이를 위해 두 고리가 만드는 축 위 전기장을 구하자.",
+      "en": "For kinetic energy much smaller than the barrier height, the particle undergoes simple harmonic motion about [[z=0]]. To analyze this, find the axial electric field of the two rings."
+    },
+    {
+      "id": "field-superposition",
+      "source": "z轴上任一点坐标为z处的场强由圆环1产生的场强E1与圆环2产生的场强E2叠加而成。",
+      "ko": "좌표 [[z]]에서의 전기장은 고리 [[1]], [[2]]의 전기장 [[E1]], [[E2]]를 더한 값이다.",
+      "en": "At coordinate [[z]], the total field is the sum of [[E1]], [[E2]] from rings [[1]], [[2]]."
+    },
+    {
+      "id": "ring-one-point",
+      "source": "圆环1的中心位于z=D处，在z<D的范围内取坐标为z的考察点，环1在考察点的场强是由环上所有电荷产生的场叠加而成的，根据对称性，可知该处的场强必沿z轴。",
+      "ko": "고리 [[1]]의 중심은 [[z=D]]이다. [[z<D]]인 점에서 모든 미소 전하의 전기장을 더하면, 대칭성에 따라 합성 전기장은 [[z]]축 방향이다.",
+      "en": "Ring [[1]] is centered at [[z=D]]. At a point [[z<D]], summing the fields of all its charges gives an axial field by symmetry."
+    },
+    {
+      "id": "element-field",
+      "source": "环上任一小段上的电荷Qi产生的场强沿z轴的分量为",
+      "ko": "고리 위 미소 전하 [[Qi]]가 만드는 전기장의 [[z]]성분은",
+      "en": "The axial field component due to a small ring charge [[Qi]] is"
+    },
+    {
+      "id": "geometry",
+      "source": "式中r是考察点到圆环上任一点的距离，θ是r与z轴的夹角",
+      "ko": "[[r]]은 고리 위 점에서 관찰점까지의 거리이고, [[θ]]는 연결선과 [[z]]축 사이의 각이다.",
+      "en": "Here [[r]] is the distance from a ring element to the observation point, and [[θ]] is the angle of that connecting direction to [[z]]."
+    },
+    {
+      "id": "ring-one-total",
+      "source": "整个圆环1产生的场强",
+      "ko": "고리 [[1]] 전체의 전기장은",
+      "en": "The total field of ring [[1]] is"
+    },
+    {
+      "id": "ring-two-total",
+      "source": "同理得圆环2在z处的场强",
+      "ko": "마찬가지로 고리 [[2]]의 전기장은",
+      "en": "Similarly, the field of ring [[2]] is"
+    },
+    {
+      "id": "total-field",
+      "source": "z处的总场强",
+      "ko": "좌표 [[z]]에서 전체 전기장은",
+      "en": "The total field at [[z]] is"
+    },
+    {
+      "id": "near-origin",
+      "source": "由于考察点都在原点附近，上式中的坐标z是一个小量，注意到",
+      "ko": "관찰점이 원점 근처에 있으므로 [[z]]는 작은 양이다. 따라서",
+      "en": "Near the origin, [[z]] is small. Hence"
+    },
+    {
+      "id": "substitution",
+      "source": "代入（8）式得",
+      "ko": "식 [[(8)]]에 대입하면",
+      "en": "Substituting into [[(8)]] gives"
+    }
+  ]
+}

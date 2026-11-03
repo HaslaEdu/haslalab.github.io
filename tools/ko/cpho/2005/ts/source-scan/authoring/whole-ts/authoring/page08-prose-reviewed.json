@@ -1,0 +1,89 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 8,
+  "printed_solution_page": 5,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Original work integrals, efficiency values, photon frequency nu0, momentum/energy expressions and relativistic-mass formulas must remain original bitmap paints.",
+  "fields": [
+    {
+      "id": "recovery-force",
+      "source": "由（1）～（7）式和（11）、（12）式，并将（3）式中的外力F改用F′表示，可得",
+      "ko": "식 [[(1)]]~[[(7)]], [[(11)]], [[(12)]]를 사용하고 식 [[(3)]]의 외력을 [[F]] 대신 [[F′]]로 나타내면",
+      "en": "Using equations [[(1)]]–[[(7)]], [[(11)]], [[(12)]], and denoting the external force in [[(3)]] by [[F′]] instead of [[F]], gives"
+    },
+    {
+      "id": "linear-force",
+      "source": "在k1、k2、α、μ和x10、x20已确定的情况下，（10）和（13）式中的第一项和第二项Δx2的系数均为常量，这表明F或F′与Δx2成线性关系。可以把F（或F′）看成是由一个恒力F0（或F0′）和一个与Δx2成正比的变力KΔx2（或K′Δx2）叠加而成的，即",
+      "ko": "[[k1]], [[k2]], [[α]], [[μ]], [[x10]], [[x20]]이 정해지면 식 [[(10)]], [[(13)]]의 상수항과 [[Δx2]]의 계수가 모두 일정하다. 따라서 [[F]], [[F′]]는 [[Δx2]]의 선형 함수이다. 각 힘은 일정한 힘 [[F0]] 또는 [[F0′]]와 [[Δx2]]에 비례하는 힘 [[KΔx2]] 또는 [[K′Δx2]]의 합으로 쓸 수 있다.",
+      "en": "For fixed [[k1]], [[k2]], [[α]], [[μ]], [[x10]], [[x20]], the constant terms and coefficients of [[Δx2]] in [[(10)]], [[(13)]] are constant. Thus [[F]], [[F′]] depend linearly on [[Δx2]]: each is a sum of a constant force, [[F0]] or [[F0′]], and a force proportional to [[Δx2]], [[KΔx2]] or [[K′Δx2]]. Hence"
+    },
+    {
+      "id": "coefficients",
+      "source": "式中",
+      "ko": "여기서",
+      "en": "where"
+    },
+    {
+      "id": "compression-work",
+      "source": "在Δx2由零增加到Δxm的过程中，力F做的功为",
+      "ko": "[[Δx2]]가 영에서 [[Δxm]]까지 증가하는 동안 [[F]]가 한 일은",
+      "en": "As [[Δx2]] increases from zero to [[Δxm]], the work done by [[F]] is"
+    },
+    {
+      "id": "recovery-work",
+      "source": "在Δx2由Δxm减小到零的过程中，力F′做的功为",
+      "ko": "[[Δx2]]가 [[Δxm]]에서 영까지 감소하는 동안 [[F′]]가 한 일은",
+      "en": "As [[Δx2]] decreases from [[Δxm]] to zero, the work done by [[F′]] is"
+    },
+    {
+      "id": "absorption",
+      "source": "由（20）、（21）式及吸收率的定义可得",
+      "ko": "식 [[(20)]], [[(21)]]과 흡수율의 정의에서",
+      "en": "Equations [[(20)]], [[(21)]] and the definition of absorption give"
+    },
+    {
+      "id": "efficiency-value",
+      "source": "注意到（16）～（19）式，代入有关数据，可算出",
+      "ko": "식 [[(16)]]~[[(19)]]에 주어진 값을 대입하여 계산하면",
+      "en": "Using [[(16)]]–[[(19)]] and substituting the data gives"
+    },
+    {
+      "id": "section",
+      "source": "五、",
+      "ko": "5.",
+      "en": "5."
+    },
+    {
+      "id": "excited-energy",
+      "source": "1.激发态核的能量为",
+      "ko": "1. 들뜬 상태 핵의 에너지는",
+      "en": "1. The energy of the excited nucleus is"
+    },
+    {
+      "id": "emission-momentum",
+      "source": "在发射光子的过程中系统动量守恒，用p表示发射光子后核的动量，ν0表示光子的频率，取光子运动方向为正方向，有",
+      "ko": "광자 방출 과정에서 계의 운동량은 보존된다. 방출 후 핵의 운동량을 [[p]], 광자의 진동수를 [[ν0]]라 하고 광자의 진행 방향을 양으로 잡으면",
+      "en": "Momentum is conserved during photon emission. Let [[p]] be the nucleus’s momentum after emission and [[ν0]] the photon frequency, with the photon’s direction taken as positive. Then"
+    },
+    {
+      "id": "recoil-momentum",
+      "source": "基态核因反冲具有的动量为",
+      "ko": "반동하는 바닥상태 핵의 운동량은",
+      "en": "The recoil momentum of the ground-state nucleus is"
+    },
+    {
+      "id": "emission-energy",
+      "source": "因发射过程中的能量守恒，有",
+      "ko": "방출 과정에서 에너지도 보존되므로",
+      "en": "Energy conservation during emission gives"
+    },
+    {
+      "id": "relativistic-mass",
+      "source": "式中m表示基态核的动质量，若用v表示基态核因反冲具有的速度，则基态核的动量和动质量可表示成",
+      "ko": "[[m]]은 바닥상태 핵의 상대론적 질량이다. 반동 속도를 [[v]]라 하면 핵의 운동량과 상대론적 질량은",
+      "en": "Here [[m]] is the relativistic mass of the ground-state nucleus. If its recoil velocity is [[v]], its momentum and relativistic mass are"
+    }
+  ]
+}

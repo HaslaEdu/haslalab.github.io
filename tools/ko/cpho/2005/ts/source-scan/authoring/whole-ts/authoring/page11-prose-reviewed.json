@@ -1,0 +1,113 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 11,
+  "printed_solution_page": 8,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Preserve the original radially varying resistivity rho=rho0*rj and its printed resistance formula; do not replace it by the usual constant-resistivity logarithmic formula. All formulas/parameters remain original raster atoms.",
+  "fields": [
+    {
+      "id": "resistance-heading",
+      "source": "（ii）环形圆盘电阻的计算",
+      "ko": "(ii) 고리 원판의 저항 계산",
+      "en": "(ii) Resistance of the annular disk"
+    },
+    {
+      "id": "narrow-rings",
+      "source": "因环形圆盘中的电流沿着盘的半径，故可将圆盘分成很多不同半径r0（=a1）、r1、r2、…rj、…rn（=a2）的窄圆环，第j个圆环的宽度为Δrj=rj−rj−1，其电阻为",
+      "ko": "전류가 반지름 방향으로 흐르므로 원판을 반지름 [[r0(=a1),r1,r2,…,rj,…,rn(=a2)]]인 여러 좁은 고리로 나누자. [[j]]번째 고리의 폭은 [[Δrj=rj−rj−1]]이고 저항은",
+      "en": "Since the current is radial, divide the disk into narrow rings of radii [[r0(=a1),r1,r2,…,rj,…,rn(=a2)]]. Ring [[j]] has width [[Δrj=rj−rj−1]] and resistance"
+    },
+    {
+      "id": "series-rings",
+      "source": "整个圆盘的电阻R是由各窄圆环电阻串联而成，即",
+      "ko": "원판 전체의 저항 [[R]]은 각 고리 저항의 직렬 합이므로",
+      "en": "The narrow-ring resistances are in series, so the disk resistance [[R]] is"
+    },
+    {
+      "id": "no-load-heading",
+      "source": "（iii）空载达到稳定时的角速度",
+      "ko": "(iii) 무부하 정상 각속도",
+      "en": "(iii) No-load steady angular velocity"
+    },
+    {
+      "id": "no-load-emf",
+      "source": "当电动机空载达到稳定时，流过圆盘的电流i=0，这时的圆盘的转动角速度为ω0，由（2）式可知盘中的感应电动势",
+      "ko": "무부하 정상 상태에서는 원판 전류가 [[i=0]]이고 각속도는 [[ω0]]이다. 식 [[(2)]]에서 유도 기전력은",
+      "en": "At no-load steady state, the disk current is [[i=0]] and its angular velocity is [[ω0]]. From [[(2)]], the induced emf is"
+    },
+    {
+      "id": "all-current-shunt",
+      "source": "而恒流源的电流I全部流经电阻R0，由（1）式得",
+      "ko": "정전류원의 전류 [[I]]는 모두 [[R0]]로 흐르므로 식 [[(1)]]에서",
+      "en": "All the source current [[I]] flows through [[R0]], so [[(1)]] gives"
+    },
+    {
+      "id": "no-load-result",
+      "source": "由（4）、（5）式得电动机在空载达到稳定时的角速度",
+      "ko": "식 [[(4)]], [[(5)]]에서 무부하 정상 각속도는",
+      "en": "Equations [[(4)]], [[(5)]] give the no-load steady angular velocity"
+    },
+    {
+      "id": "maximum-power-heading",
+      "source": "（iv）输出最大的机械功率的计算",
+      "ko": "(iv) 최대 기계적 출력 계산",
+      "en": "(iv) Maximum mechanical output power"
+    },
+    {
+      "id": "loaded-current",
+      "source": "当有机械负载时，若圆盘的角速度为ω，此时流过圆盘的电流为i，则由（1）式和（2）式可得",
+      "ko": "부하가 있을 때 원판의 각속도가 [[ω]], 전류가 [[i]]라 하면 식 [[(1)]], [[(2)]]에서",
+      "en": "With a mechanical load, let the disk angular velocity be [[ω]] and its current [[i]]. Equations [[(1)]], [[(2)]] give"
+    },
+    {
+      "id": "ring-power",
+      "source": "第j个小圆环所受磁力的功率为",
+      "ko": "[[j]]번째 작은 고리에 작용하는 자기력의 일률은",
+      "en": "The magnetic power acting on narrow ring [[j]] is"
+    },
+    {
+      "id": "total-power",
+      "source": "整个圆环受磁力的功率为",
+      "ko": "고리 원판 전체에 작용하는 자기력의 일률은",
+      "en": "The total magnetic power on the annular disk is"
+    },
+    {
+      "id": "steady-output",
+      "source": "当电动机的转动达到稳定时，电动机输出的机械功率也就是磁力的功率，将（7）式代入（9）式，得",
+      "ko": "정상 회전 상태에서 기계적 출력은 자기력의 일률과 같다. 식 [[(7)]]을 [[(9)]]에 대입하면",
+      "en": "In steady rotation, the mechanical output equals the magnetic power. Substituting [[(7)]] into [[(9)]] gives"
+    },
+    {
+      "id": "coefficients",
+      "source": "其中",
+      "ko": "여기서",
+      "en": "where"
+    },
+    {
+      "id": "complete-square",
+      "source": "（10）式可改写成",
+      "ko": "식 [[(10)]]을 다시 쓰면",
+      "en": "Equation [[(10)]] can be written as"
+    },
+    {
+      "id": "power-maximum",
+      "source": "当〈式13〉时，输出的机械功率P最大。由（11）式和（6）式得",
+      "ko": "[[condition13]]일 때 기계적 출력 [[P]]가 최대이다. 식 [[(11)]], [[(6)]]에서",
+      "en": "The mechanical output [[P]] is maximal for [[condition13]]. From [[(11)]], [[(6)]],"
+    },
+    {
+      "id": "current-at-maximum",
+      "source": "2.当电动机输出的机械功率最大时，圆盘转动的角速度为ω=ω0/2，设这时流经环形圆盘的电流为i′，由（1）式、（2）式和（6）式得",
+      "ko": "2. 최대 기계적 출력에서 각속도는 [[ω=ω0/2]]이다. 이때 원판 전류를 [[i′]]라 하면 식 [[(1)]], [[(2)]], [[(6)]]에서",
+      "en": "2. At maximum mechanical output, [[ω=ω0/2]]. Let the disk current then be [[i′]]. Equations [[(1)]], [[(2)]], [[(6)]] give"
+    },
+    {
+      "id": "joule-heating",
+      "source": "圆盘的电阻消耗的热功率",
+      "ko": "원판 저항에서 소모되는 열 일률은",
+      "en": "The resistive heating power in the disk is"
+    }
+  ]
+}

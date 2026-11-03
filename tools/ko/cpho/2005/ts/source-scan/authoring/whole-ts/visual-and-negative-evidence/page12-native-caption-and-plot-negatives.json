@@ -1,0 +1,59 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "source_page": 12,
+  "actual_PDF_mutations": true,
+  "results": [
+    {
+      "language": "ko",
+      "good_sha256": "728458a9c9e9d079a8b3a9e6bee6b89246bf241a16f318b5e621884466b5d800",
+      "actual_caption_math_font_point_baseline_shape_and_original_center_checked": true,
+      "native_caption_digit_omitted": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\TS\\proofs\\ko\\page12.negative-omitted-native-caption.pdf",
+        "sha256": "5cd875c5879f157231373f47fb296f2451ce6f420da399607fb6bd56d26a4e38",
+        "good_RGB_errors": 0,
+        "mutant_RGB_errors": 814,
+        "rejected": true
+      },
+      "extra_plot_dot": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\TS\\proofs\\ko\\page12.negative-extra-plot-dot.pdf",
+        "sha256": "c82798ad33319096b8f9c654c2be27eb05d83a4c88804c01fe8752c80db49c87",
+        "original_source_plot_rect": [
+          515,
+          215,
+          695,
+          345
+        ],
+        "good_RGB_errors": 0,
+        "mutant_RGB_errors": 16,
+        "rejected": true
+      }
+    },
+    {
+      "language": "en",
+      "good_sha256": "a9d96564d837c458a185887afa17d5e36f166ff2362bc8237b5f4320a7c1cbe7",
+      "actual_caption_math_font_point_baseline_shape_and_original_center_checked": true,
+      "native_caption_digit_omitted": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\TS\\proofs\\en\\page12.negative-omitted-native-caption.pdf",
+        "sha256": "36886d83cc4ddd77421761d079412da2294dcaf823d226c51106faaf9ccf5196",
+        "good_RGB_errors": 0,
+        "mutant_RGB_errors": 814,
+        "rejected": true
+      },
+      "extra_plot_dot": {
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\TS\\proofs\\en\\page12.negative-extra-plot-dot.pdf",
+        "sha256": "9dcfd7a6630faa58ff4a7a25244ddc23e484f74326f25c14bb4816492b360138",
+        "original_source_plot_rect": [
+          515,
+          215,
+          695,
+          345
+        ],
+        "good_RGB_errors": 0,
+        "mutant_RGB_errors": 16,
+        "rejected": true
+      }
+    }
+  ],
+  "passed": true,
+  "publication_ready": false
+}

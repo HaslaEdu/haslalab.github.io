@@ -1,0 +1,800 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "geometry": {
+    "resistance-heading": [
+      92,
+      [
+        90,
+        58,
+        232,
+        76
+      ]
+    ],
+    "radial-current": [
+      92,
+      [
+        89,
+        76.5,
+        404,
+        94
+      ]
+    ],
+    "ring-radii": [
+      66,
+      [
+        63,
+        94,
+        405,
+        114
+      ]
+    ],
+    "ring-width": [
+      65,
+      [
+        62,
+        111.5,
+        271,
+        133
+      ]
+    ],
+    "series-resistance": [
+      66,
+      [
+        64,
+        165,
+        338,
+        184
+      ]
+    ],
+    "no-load-heading": [
+      91,
+      [
+        89,
+        215.5,
+        258,
+        234
+      ]
+    ],
+    "no-load-first": [
+      92,
+      [
+        89,
+        234.5,
+        403,
+        253
+      ]
+    ],
+    "no-load-second": [
+      65,
+      [
+        63,
+        252,
+        360,
+        272
+      ]
+    ],
+    "shunt-current": [
+      66,
+      [
+        64,
+        298,
+        320,
+        318
+      ]
+    ],
+    "no-load-result": [
+      65,
+      [
+        62,
+        345.5,
+        342,
+        365
+      ]
+    ],
+    "maximum-power-heading": [
+      90,
+      [
+        88,
+        401,
+        273,
+        420
+      ]
+    ],
+    "loaded-first": [
+      91,
+      [
+        88,
+        419.5,
+        409,
+        439
+      ]
+    ],
+    "loaded-second": [
+      65,
+      [
+        62,
+        439,
+        240,
+        458
+      ]
+    ],
+    "ring-power": [
+      90,
+      [
+        87,
+        494,
+        272,
+        513
+      ]
+    ],
+    "total-power": [
+      440,
+      [
+        438,
+        63,
+        580,
+        81
+      ]
+    ],
+    "steady-first": [
+      468,
+      [
+        466,
+        111,
+        784,
+        131
+      ]
+    ],
+    "steady-second": [
+      439,
+      [
+        437,
+        131.5,
+        650,
+        151
+      ]
+    ],
+    "coefficients": [
+      439,
+      [
+        435,
+        169,
+        468,
+        190
+      ]
+    ],
+    "eq10": [
+      440,
+      [
+        438,
+        226,
+        533,
+        244
+      ]
+    ],
+    "maximum-condition": [
+      440,
+      [
+        438,
+        289,
+        455,
+        308
+      ]
+    ],
+    "maximum-result": [
+      440,
+      [
+        438,
+        313,
+        715,
+        333
+      ]
+    ],
+    "maximum-current-first": [
+      465,
+      [
+        462,
+        363,
+        784,
+        379.12
+      ]
+    ],
+    "maximum-current-second": [
+      440,
+      [
+        438,
+        389,
+        784,
+        415
+      ]
+    ],
+    "maximum-current-third": [
+      440,
+      [
+        437,
+        415,
+        490,
+        435
+      ]
+    ],
+    "joule-heating": [
+      440,
+      [
+        437,
+        466,
+        582,
+        486
+      ]
+    ]
+  },
+  "protected": [
+    [
+      128,
+      133.5,
+      336,
+      165
+    ],
+    [
+      89,
+      185,
+      405,
+      215
+    ],
+    [
+      150,
+      273,
+      404,
+      297.5
+    ],
+    [
+      189,
+      319,
+      405,
+      334.35
+    ],
+    [
+      176,
+      366,
+      405,
+      400
+    ],
+    [
+      153,
+      459,
+      409,
+      493
+    ],
+    [
+      164,
+      513,
+      409,
+      534.146
+    ],
+    [
+      437,
+      82,
+      783,
+      111
+    ],
+    [
+      550,
+      151.5,
+      783,
+      170
+    ],
+    [
+      461,
+      190.5,
+      783,
+      224
+    ],
+    [
+      526,
+      244.5,
+      783,
+      278.5
+    ],
+    [
+      565,
+      279.5,
+      783,
+      313
+    ],
+    [
+      566,
+      333.5,
+      783,
+      363
+    ],
+    [
+      565,
+      436,
+      783,
+      465.5
+    ],
+    [
+      538,
+      486.5,
+      783,
+      520.121
+    ]
+  ],
+  "math_specs": [
+    {
+      "id": "roman-ii",
+      "search_rect": [
+        90,
+        57,
+        116,
+        77
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "radii",
+      "search_rect": [
+        117,
+        93,
+        299,
+        115
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "ring-j",
+      "search_rect": [
+        366,
+        94,
+        377,
+        115
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "delta-r",
+      "search_rect": [
+        128,
+        116.125,
+        209.5,
+        133
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "disk-R",
+      "search_rect": [
+        155,
+        164,
+        166.5,
+        185
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "roman-iii",
+      "search_rect": [
+        89,
+        215,
+        116,
+        235
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "i-zero",
+      "search_rect": [
+        325,
+        233,
+        357,
+        254
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "omega0",
+      "search_rect": [
+        165,
+        251,
+        182,
+        273
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "no-load-eq2",
+      "search_rect": [
+        200,
+        251,
+        220,
+        273
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "I-source",
+      "search_rect": [
+        153,
+        297,
+        165,
+        319
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "R0",
+      "search_rect": [
+        239,
+        297,
+        255,
+        319
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "shunt-eq1",
+      "search_rect": [
+        272,
+        297,
+        293,
+        319
+      ],
+      "image_path": [
+        273
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "eq4-5",
+      "search_rect": [
+        74,
+        344,
+        120,
+        366
+      ],
+      "image_path": [
+        282
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "roman-iv",
+      "search_rect": [
+        87,
+        400,
+        115,
+        421
+      ],
+      "image_path": [
+        282
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "omega-loaded",
+      "search_rect": [
+        286,
+        418,
+        301,
+        440
+      ],
+      "image_path": [
+        282
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "current-i",
+      "search_rect": [
+        90,
+        438,
+        98.5,
+        459
+      ],
+      "image_path": [
+        282
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "loaded-eq1",
+      "search_rect": [
+        129.5,
+        438,
+        151,
+        459
+      ],
+      "image_path": [
+        282
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "loaded-eq2",
+      "search_rect": [
+        177.5,
+        438,
+        197,
+        459
+      ],
+      "image_path": [
+        282
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "j-power",
+      "search_rect": [
+        102,
+        493,
+        112,
+        514
+      ],
+      "image_path": [
+        282
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "steady-eq7",
+      "search_rect": [
+        533,
+        131,
+        553,
+        153
+      ],
+      "image_path": [
+        291
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "steady-eq9",
+      "search_rect": [
+        593,
+        131,
+        612.5,
+        153
+      ],
+      "image_path": [
+        291
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "eq10",
+      "search_rect": [
+        437,
+        225,
+        465,
+        245
+      ],
+      "image_path": [
+        291
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "power-P",
+      "search_rect": [
+        548,
+        312,
+        563,
+        334
+      ],
+      "image_path": [
+        291
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "power-eq11",
+      "search_rect": [
+        609,
+        312,
+        639,
+        334
+      ],
+      "image_path": [
+        291
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "power-eq6",
+      "search_rect": [
+        663,
+        312,
+        686,
+        334
+      ],
+      "image_path": [
+        291
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "part-two",
+      "search_rect": [
+        462,
+        362,
+        477,
+        382
+      ],
+      "image_path": [
+        291
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "omega-half",
+      "search_rect": [
+        438,
+        389,
+        483,
+        417
+      ],
+      "image_path": [
+        300
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "i-prime",
+      "search_rect": [
+        658,
+        391,
+        673,
+        417
+      ],
+      "image_path": [
+        300
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "current-eq1",
+      "search_rect": [
+        691,
+        391,
+        711,
+        417
+      ],
+      "image_path": [
+        300
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "current-eq2",
+      "search_rect": [
+        733.5,
+        391,
+        753,
+        417
+      ],
+      "image_path": [
+        300
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "current-eq6",
+      "search_rect": [
+        437,
+        414,
+        459,
+        436
+      ],
+      "image_path": [
+        300
+      ],
+      "center_hint": null
+    }
+  ],
+  "right_edges": {},
+  "ko_math_gaps": {
+    "resistance-heading": {
+      "roman-ii": 0.75
+    },
+    "ring-radii": {
+      "radii": 0.75,
+      "ring-j": 0.75
+    },
+    "ring-width": {
+      "delta-r": 0.75
+    },
+    "series-resistance": {
+      "disk-R": 0.75
+    },
+    "no-load-heading": {
+      "roman-iii": 0.75
+    },
+    "no-load-first": {
+      "i-zero": 0.75
+    },
+    "no-load-second": {
+      "omega0": 0.75,
+      "no-load-eq2": 0.75
+    },
+    "shunt-current": {
+      "I-source": 0.75,
+      "R0": 0.75,
+      "shunt-eq1": 0.75
+    },
+    "no-load-result": {
+      "eq4-5": 0.75
+    },
+    "maximum-power-heading": {
+      "roman-iv": 0.75
+    },
+    "loaded-first": {
+      "omega-loaded": 0.75
+    },
+    "loaded-second": {
+      "current-i": 0.75,
+      "loaded-eq1": 0.75,
+      "loaded-eq2": 0.75
+    },
+    "ring-power": {
+      "j-power": 0.75
+    },
+    "steady-second": {
+      "steady-eq7": 0.75,
+      "steady-eq9": 0.75
+    },
+    "eq10": {
+      "eq10": 0.75
+    },
+    "maximum-result": {
+      "power-P": 0.75,
+      "power-eq11": 0.75,
+      "power-eq6": 0.75
+    },
+    "maximum-current-first": {
+      "part-two": 0.75
+    },
+    "maximum-current-second": {
+      "omega-half": 0.75,
+      "i-prime": 0.75,
+      "current-eq1": 0.75,
+      "current-eq2": 0.75
+    },
+    "maximum-current-third": {
+      "current-eq6": 0.75
+    }
+  },
+  "reviewed": false
+}

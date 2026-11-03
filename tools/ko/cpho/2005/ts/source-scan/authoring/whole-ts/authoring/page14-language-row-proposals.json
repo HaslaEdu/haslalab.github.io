@@ -1,0 +1,168 @@
+{
+  "rows": [
+    {
+      "id": "origin-first",
+      "source_ocr_hint": 1,
+      "ko": "관찰점이 원점 근처이므로 좌표 [[small-z1]]는 작은 양이다.",
+      "en": "Near the origin, coordinate [[small-z1]] is small. Note that"
+    },
+    {
+      "id": "origin-second",
+      "source_ocr_hint": 3,
+      "ko": "[[small-z2]]가 매우 작을 때",
+      "en": "for very small [[small-z2]],"
+    },
+    {
+      "id": "substitution",
+      "source_ocr_hint": 17,
+      "ko": "식 [[prime4]]에 대입하면",
+      "en": "Substitution in [[prime4]] gives"
+    },
+    {
+      "id": "inward-first",
+      "source_ocr_hint": 24,
+      "ko": "[[inward-condition]]이면 [[field-E]]는 [[minus-z]]에 비례한다. [[z-positive]]에서 음, [[z-negative]]에서",
+      "en": "[[inward-condition]]: [[field-E]] and [[minus-z]] are proportional. [[z-positive]], [[z-negative]]:"
+    },
+    {
+      "id": "inward-second",
+      "source_ocr_hint": 25,
+      "ko": "양이므로 전기장은 원점을 향한다. [[stable-zero]]은",
+      "en": "negative, positive: the fields point inward. [[stable-zero]] is"
+    },
+    {
+      "id": "inward-third",
+      "source_ocr_hint": 26,
+      "ko": "대전 입자의 안정 평형점이며 전위 [[stable-V]]는 곡선 [[curve-I]]이다.",
+      "en": "stable for the charged particle; [[stable-V]] has profile [[curve-I]]."
+    },
+    {
+      "id": "outward-first",
+      "source_ocr_hint": 27,
+      "ko": "[[outward-condition]]이면 전기장은 양쪽 바깥을 향한다. 따라서 [[unstable-zero]]은",
+      "en": "For [[outward-condition]], nearby fields point outward. Thus [[unstable-zero]] is"
+    },
+    {
+      "id": "outward-second",
+      "source_ocr_hint": 28,
+      "ko": "대전 입자의 불안정 평형점이며 전위 [[unstable-V]]는 곡선 [[curve-II]]이다.",
+      "en": "unstable for the particle; [[unstable-V]] has profile [[curve-II]]."
+    },
+    {
+      "id": "initial-first",
+      "source_ocr_hint": 32,
+      "ko": "입자가 [[initial-z]]에서 초기 속도로 [[initial-axis]]축을 따라 두 고리를",
+      "en": "A charged particle starts at [[initial-z]], moving along [[initial-axis]]"
+    },
+    {
+      "id": "initial-second",
+      "source_ocr_hint": 34,
+      "ko": "향한다. 초기 운동 에너지는 [[Ek0-initial]], 좌표 [[at-z]]에서의 값은 [[Ek-initial]]이며",
+      "en": "to the rings. Initial kinetic energy: [[Ek0-initial]]; at [[at-z]]: [[Ek-initial]]."
+    },
+    {
+      "id": "initial-third",
+      "source_ocr_hint": 36,
+      "ko": "대전 입자의 에너지 보존으로",
+      "en": "Energy conservation gives"
+    },
+    {
+      "id": "profile-first",
+      "source_ocr_hint": 40,
+      "ko": "[[profile-z]]에서 운동 에너지는 일정한 값에서 정전기적 위치 에너지를",
+      "en": "At [[profile-z]], kinetic energy equals a constant minus potential"
+    },
+    {
+      "id": "profile-second",
+      "source_ocr_hint": 44,
+      "ko": "뺀 값이다. [[profile-Ek]]의 곡선은 [[profile-W]]로 정해진다.",
+      "en": "energy; thus the [[profile-Ek]] profile follows from [[profile-W]]."
+    },
+    {
+      "id": "two-cases",
+      "source_ocr_hint": 2,
+      "ko": "두 경우로 나누어 보자.",
+      "en": "Consider two cases:"
+    },
+    {
+      "id": "two-peak-first",
+      "source_ocr_hint": 5,
+      "ko": "[[case-i]] [[wide-condition]]로 두 고리 사이 거리가 크면 전위",
+      "en": "[[case-i]] For wider separation, [[wide-condition]], potential"
+    },
+    {
+      "id": "two-peak-second",
+      "source_ocr_hint": 7,
+      "ko": "[[two-V]]는 두 봉우리와 한 골짜기를 갖고, 위치 에너지 [[two-W]]도",
+      "en": "[[two-V]] and potential energy [[two-W]] have two peaks and a valley;"
+    },
+    {
+      "id": "two-peak-third",
+      "source_ocr_hint": 9,
+      "ko": "같은 형태이다. 그림 [[figure3-a]]의 [[curve-I1-a]]과 같다. 입자가 두 고리를 막",
+      "en": "see curve [[curve-I1-a]] in Fig. [[figure3-a]]. To just pass both rings,"
+    },
+    {
+      "id": "threshold-first",
+      "source_ocr_hint": 12,
+      "ko": "통과하므로 초기 운동 에너지 [[threshold-Ek0]]는 [[threshold-W]]의 최댓값,",
+      "en": "initial kinetic energy [[threshold-Ek0]] equals the maximum of [[threshold-W]],"
+    },
+    {
+      "id": "threshold-second",
+      "source_ocr_hint": 16,
+      "ko": "즉 봉우리 높이와 같다. 그림 [[figure3-b]]에서 [[horizontal-z]]축과 평행하며 [[tangent-W]]의",
+      "en": "the peak height. In Fig [[figure3-b]], parallel to [[horizontal-z]] and tangent to [[tangent-W]]"
+    },
+    {
+      "id": "threshold-third",
+      "source_ocr_hint": 18,
+      "ko": "두 봉우리에 접하는 직선이 [[line-Ek0]]이다. 식 [[energy-eq7]]과 곡선 [[curve-I1-b]]에서",
+      "en": "at both peaks, the line is [[line-Ek0]]. From [[energy-eq7]] and [[curve-I1-b]] comes"
+    },
+    {
+      "id": "threshold-fourth",
+      "source_ocr_hint": 19,
+      "ko": "[[curve-Ek]]를 그리면 그림 [[figure3-c]]의 곡선 [[curve-I2]]가 된다.",
+      "en": "the [[curve-Ek]] profile, curve [[curve-I2]] in Fig. [[figure3-c]]."
+    },
+    {
+      "id": "caption",
+      "source_ocr_hint": 29,
+      "ko": "그림 [[caption3]]",
+      "en": "Figure [[caption3]]"
+    },
+    {
+      "id": "single-first",
+      "source_ocr_hint": 31,
+      "ko": "[[case-ii]] [[narrow-condition]]로 두 고리가 가까우면 전위 [[single-V]]의",
+      "en": "[[case-ii]] For closer rings, [[narrow-condition]], potential [[single-V]] has"
+    },
+    {
+      "id": "single-second",
+      "source_ocr_hint": 33,
+      "ko": "곡선에는 [[single-zero1]]에서 봉우리 하나만 있다. 위치 에너지 [[single-W]]도",
+      "en": "one peak, at [[single-zero1]]; the potential energy [[single-W]] likewise has"
+    },
+    {
+      "id": "single-third",
+      "source_ocr_hint": 35,
+      "ko": "[[single-zero2]]에서 봉우리 하나만 있다. 그림 [[figure4]]의 곡선 [[curve-II1]]과 같다.",
+      "en": "one peak at [[single-zero2]], as in curve [[curve-II1]], Fig. [[figure4]]."
+    },
+    {
+      "id": "peak-height",
+      "source_ocr_hint": 39,
+      "ko": "전위 봉우리의 높이는",
+      "en": "The potential peak height is"
+    },
+    {
+      "id": "continuation",
+      "source_ocr_hint": 45,
+      "ko": "입자가 두 고리를 막 통과하므로 초기 운동 에너지는",
+      "en": "To just pass both rings, its initial kinetic energy is"
+    }
+  ],
+  "reviewed": false,
+  "scope": "Explicit human-authored bilingual source-line translations; no mathematical retyping."
+}

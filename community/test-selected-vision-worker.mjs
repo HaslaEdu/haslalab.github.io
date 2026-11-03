@@ -302,6 +302,22 @@ test('bench grade.chat: the papers, photos and transcripts with a short instruct
   assert.equal(out.score,3,'each line capped at its points, then added');assert.deepEqual(out.items.map(i=>[i.id,i.got]),[['S',1],['R',2]]);
   assert.equal(out.analysis,'A: correct.');
 }));
+test('bench stage gcp: what GOOGLE_CLOUD_API_KEY can do (an express call, the tuning-jobs list, buckets), statuses only, never the key',async()=>fixture(async({start,drain,sql,env})=>{
+  const a=(await start('deepseek')).data,sid=a.session.id,key='AIza'+'k'.repeat(35);env.GOOGLE_CLOUD_API_KEY=key;
+  sql.exec(`CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`);
+  const b=sql.prepare('INSERT INTO lab_bench(session_id,spec)VALUES(?,?)').run(sid,JSON.stringify({stage:'gcp',project:'my-proj-1'})).lastInsertRowid;
+  const j=sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,page_id,status,available_at,created_at,updated_at)VALUES(?,'bench',?,?,'pending',0,0,0)").run('bench:'+b,sid,b).lastInsertRowid;
+  const seen=[],old=globalThis.fetch;
+  globalThis.fetch=async(url,init)=>{const u=String(url);if(!/googleapis\.com/.test(u))return old(url,init);seen.push({u,key:init?.headers?.['x-goog-api-key']});
+    return new Response(JSON.stringify({error:{message:'API keys are not supported by this API. Got '+key}}),{status:401});};
+  try{await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:Number(j)}}]);await drain();}finally{globalThis.fetch=old;}
+  const row=sql.prepare('SELECT status,output FROM lab_bench WHERE id=?').get(b),out=JSON.parse(row.output);
+  assert.equal(row.status,'done',row.output);
+  assert.deepEqual(seen.map(x=>x.u),['https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-3.1-flash-lite:generateContent',
+    'https://us-central1-aiplatform.googleapis.com/v1/projects/my-proj-1/locations/us-central1/tuningJobs','https://storage.googleapis.com/storage/v1/b?project=my-proj-1']);
+  assert.ok(seen.every(x=>x.key===key),'the key goes in the header');
+  assert.equal(out.tuning.status,401);assert.ok(!row.output.includes(key),'and never into the result');
+}));
 test('theory pages are read with the paper\'s notation and proofread: only the passages the proofreader corrects change',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-flash-lite';env.LAB_READ_NOTATION='on';env.LAB_PROOF_MODEL='gemini-3.1-pro-preview';env.LAB_PROOF_THINKING='low';
   const saved={...pageReading};Object.assign(pageReading,{text:'A.2 a_c = 9.31 mm\nA.3 K = 1.04 \\cdot 10^{-4}',items:[{label:'A.2',kind:'value',text:'a_c = 9.31 mm',crossed_out:false,value:9.31,unit:'mm'}]});
@@ -532,6 +548,32 @@ test('IP1 in code: an item whose only fault is a result carried from an earlier 
   const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
   assert.match(detail,/"id":"B8\.4"[^}]*"got":0\.2[,}]/,'carried from B8.2, which lost its marks: not docked again');
   assert.match(detail,/"id":"B8\.6"[^}]*"got":0[,}]/,'B8.5 lost nothing: no carried error to excuse');
+}));
+test('training data: with LAB_TRAIN_CAPTURE on a graded paper is kept unverified; an admin checks or corrects it, and only verified rows are exported',async()=>fixture(async({api,start,upload,drain,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  env.LAB_TRAIN_CAPTURE='on';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:1,items:[
+    {id:'S',points:0.4,type:'derivation',role:'step',sheet:'any',what:'Newton for the orbit'},{id:'R',points:0.6,type:'derivation',role:'result',sheet:'any',what:'velocity'}]}),'fixture',Math.floor(Date.now()/1000));
+  const g=(id,score)=>({id,found:true,page:1,label:id,rules:[],note:'',score,quote:''}),rev={summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''};
+  replies({items:[g('S',0.4),g('R',0)],feedback:[],review:rev},null);
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const row=sql.prepare("SELECT * FROM lab_train WHERE session_id=?").get(sid);
+  assert.ok(row,'kept');assert.equal(row.verified,0);assert.equal(row.source,'model');
+  assert.match(row.input,/S \| 0\.4 \| Newton for the orbit/);const detail=JSON.parse(sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail),final=Object.fromEntries((detail.tasks?.T1?.items||detail.T1?.items||[]).map(i=>[i.id,i.got]));
+  assert.deepEqual(JSON.parse(row.target).items,[{id:'S',score:final.S??0},{id:'R',score:0}],'the target is the final marks, after the code\'s rules');
+  assert.equal((await api('/admin/lab/train')).status,403,'admins only');
+  sql.prepare("UPDATE users SET role='admin' WHERE id=1").run();
+  assert.equal((await api('/admin/lab/train/export?kind=grade')).data.lines,0,'nothing unverified goes out');
+  const fixed=await api(`/admin/lab/train/${row.id}`,{body:{items:[{id:'R',score:0.6}],note:'teacher: R is right'}});assert.equal(fixed.data.verified,true);
+  const out=(await api('/admin/lab/train/export?kind=grade')).data;assert.equal(out.lines,1);
+  const line=JSON.parse(out.jsonl);assert.deepEqual(line.messages.map(m=>m.role),['system','user','assistant']);
+  assert.deepEqual(JSON.parse(line.messages[2].content).items,[{id:'S',score:final.S??0},{id:'R',score:0.6}],'the correction is what is learnt');
+  const list=(await api('/admin/lab/train')).data;assert.equal(list.capture,true);assert.ok(list.counts.some(c=>c.verified===1&&c.n===1));
+  assert.equal((await api('/admin/lab/train/export?kind=read&bucket=https://x')).status,400,'a gs:// bucket for the photos');
 }));
 test('suspects: every item of a question with alternative methods, and the credited steps of a question whose result was marked down, are rechecked whatever their marks',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';

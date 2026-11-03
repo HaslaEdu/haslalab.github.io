@@ -1,0 +1,113 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 13,
+  "printed_solution_page": 10,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Keep both alternative derivations, the separating rule, all printed primed equation numbers, and original Qi/DeltaQi symbols exactly as printed. Preserve field-direction signs and z±D expressions as source bitmap groups.",
+  "fields": [
+    {
+      "id": "second-order",
+      "source": "略去高次项并代入（1）式，注意到（2）式，有",
+      "ko": "고차항을 무시하여 식 [[(1)]]에 대입하고 [[(2)]]를 사용하면",
+      "en": "Neglecting higher-order terms and substituting into [[(1)]], with [[(2)]], gives"
+    },
+    {
+      "id": "case-introduction",
+      "source": "由此可得，若",
+      "ko": "따라서 다음 조건에서",
+      "en": "It follows that, if"
+    },
+    {
+      "id": "double-peak",
+      "source": "〈式4〉则V（0）为极小值，V（z）为双峰曲线，如图2中曲线I的形状。",
+      "ko": "[[condition4]]이면 [[V(0)]]이 극솟값이며, [[V(z)]]는 그림 [[2]]의 [[I]]처럼 이중 봉우리 곡선이다.",
+      "en": "For [[condition4]], [[V(0)]] is a minimum and [[V(z)]] has the two-peak profile [[I]] in Figure [[2]]."
+    },
+    {
+      "id": "other-case",
+      "source": "若",
+      "ko": "반면",
+      "en": "If"
+    },
+    {
+      "id": "single-peak",
+      "source": "〈式5〉则V（0）为极大值，V（z）为单峰曲线，如图2中曲线II的形状。",
+      "ko": "[[condition5]]이면 [[V(0)]]이 극댓값이며, [[V(z)]]는 그림 [[2]]의 [[II]]처럼 봉우리 하나를 갖는다.",
+      "en": "For [[condition5]], [[V(0)]] is a maximum and [[V(z)]] has the single-peak profile [[II]] in Figure [[2]]."
+    },
+    {
+      "id": "alternative-heading",
+      "source": "确定电势图线形状所对应条件的另一种分析方法：",
+      "ko": "전위 곡선의 형태 조건을 구하는 다른 방법:",
+      "en": "Another derivation of the profile conditions:"
+    },
+    {
+      "id": "stable-equilibrium",
+      "source": "若电势V（z）的图线具有图2中曲线I的形状，则在z=0处是曲线的谷底，电势为极小值，该处是带电粒子的稳定平衡位置。",
+      "ko": "[[V(z)]]가 그림 [[2]]의 곡선 [[I]]이면 [[z=0]]은 골짜기이자 전위의 극솟값이며, 입자의 안정 평형점이다.",
+      "en": "For profile [[I]] in Figure [[2]], [[z=0]] is a potential minimum and a stable equilibrium for the charged particle."
+    },
+    {
+      "id": "inward-field",
+      "source": "该处附近的场强的特点是：当z>0时，场强应指向原点，即场强沿z轴的负方向；当z<0时，场强亦应指向原点，即场强沿z轴的正方向。",
+      "ko": "이 근처에서는 [[z>0]]일 때 전기장이 원점, 즉 [[z]]축 음의 방향을 향한다. [[z<0]]이면 역시 원점, 즉 [[z]]축 양의 방향을 향한다.",
+      "en": "Nearby, the field points towards the origin: in the negative [[z]] direction for [[z>0]], and in the positive [[z]] direction for [[z<0]]."
+    },
+    {
+      "id": "unstable-equilibrium",
+      "source": "若电势V（z）的图线具有图2中曲线II的形状，则在z=0处是曲线的峰，电势为极大值，该处是带电粒子的不稳定平衡位置。",
+      "ko": "곡선 [[II]]이면 [[z=0]]은 전위가 극대인 봉우리이므로 불안정 평형점이다.",
+      "en": "For profile [[II]], [[z=0]] is a potential maximum and an unstable equilibrium."
+    },
+    {
+      "id": "outward-field",
+      "source": "该处附近的场强的特点是：当z>0时，场强应指向z轴的正方向；当z<0时，场强应指向z轴的负方向。",
+      "ko": "이때는 [[z>0]]에서 [[z]]축 양의 방향, [[z<0]]에서 [[z]]축 음의 방향으로 전기장이 향한다.",
+      "en": "The field then points in the positive [[z]] direction for [[z>0]], and in the negative [[z]] direction for [[z<0]]."
+    },
+    {
+      "id": "field-condition",
+      "source": "原点附近的场强具有哪一种特点的条件，也就是电势图线具有哪一种形状所对应的条件。为此先应研究两个圆环产生的电场的场强在z轴上的分布情况。",
+      "ko": "원점 근처의 전기장이 어느 성질을 갖는지 결정하는 조건이 곧 전위 곡선의 형태를 결정한다. 이를 위해 두 원형 고리가 만드는 [[z]]축 위의 전기장을 구하자.",
+      "en": "The conditions for these field directions determine the potential profile. Therefore first find the field of the two rings along the [[z]] axis."
+    },
+    {
+      "id": "field-superposition",
+      "source": "z轴上任一点坐标为z处的场强由圆环1产生的场强E1与圆环2产生的场强E2叠加而成。",
+      "ko": "[[z]]축의 좌표 [[z]]에서 전기장은 고리 [[1]], [[2]]의 전기장 [[E1]], [[E2]]를 더한 값이다.",
+      "en": "At coordinate [[z]], the axial field is the sum of [[E1]], [[E2]] due to rings [[1]], [[2]]."
+    },
+    {
+      "id": "ring-one-element",
+      "source": "圆环1的中心位于z=D处，在z<D的范围内取坐标为z的考察点，环1在考察点的场强是由环上所有电荷产生的场叠加而成的，根据对称性，可知该处的场强必沿z轴。环上任一小段上的电荷Qi产生的场强沿z轴的分量为",
+      "ko": "고리 [[1]]의 중심은 [[z=D]]에 있다. [[z<D]]인 점 [[z]]에서 각 미소 전하의 전기장을 더하면, 대칭성에 따라 합성 전기장은 [[z]]축 방향이다. 고리 위 미소 전하 [[Qi]]의 전기장이 갖는 [[z]]성분은",
+      "en": "Ring [[1]] is centered at [[z=D]]. At a point [[z<D]], summing the fields of all ring charges gives an axial field by symmetry. The axial component due to a small ring charge [[Qi]] is"
+    },
+    {
+      "id": "geometry",
+      "source": "式中〈几何公式〉r是考察的点到细环上任一点的距离，θ是r与z轴的夹角",
+      "ko": "여기서 [[geometry]]이며, [[r]]은 고리 위 점에서 관찰점까지의 거리, [[θ]]는 이 연결선과 [[z]]축 사이의 각이다.",
+      "en": "Here [[geometry]], with [[r]] the distance from a ring element to the observation point and [[θ]] the angle of that connecting direction to [[z]]."
+    },
+    {
+      "id": "ring-one-total",
+      "source": "整个圆环1产生的场强",
+      "ko": "고리 [[1]] 전체가 만드는 전기장은",
+      "en": "The total field of ring [[1]] is"
+    },
+    {
+      "id": "ring-two-total",
+      "source": "同理得圆环2在z处的场强",
+      "ko": "같은 방법으로 고리 [[2]]의 전기장은",
+      "en": "Similarly, the field of ring [[2]] is"
+    },
+    {
+      "id": "total-field",
+      "source": "z处的总场强",
+      "ko": "좌표 [[z]]에서 전체 전기장은",
+      "en": "The total field at [[z]] is"
+    }
+  ]
+}

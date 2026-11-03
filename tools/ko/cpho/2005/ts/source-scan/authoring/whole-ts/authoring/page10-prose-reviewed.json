@@ -1,0 +1,95 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 10,
+  "printed_solution_page": 7,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Original circuit schematic/current arrows, all Doppler expressions, sector-area/flux expressions and motor emf formulas remain original source paints.",
+  "fields": [
+    {
+      "id": "eq-8",
+      "source": "注意到（8）式，得",
+      "ko": "식 [[(8)]]에서",
+      "en": "Using equation [[(8)]],"
+    },
+    {
+      "id": "receding-range",
+      "source": "由（21）式可以看出，背离仪器运动且速度小于u的激发态核，它们发出的光子的波长都比λ2小。速度大小分布在u与零之间的激发态核发出的光子的波长分布在λ2与λ0之间。由此可知",
+      "ko": "식 [[(21)]]에서 검출기로부터 멀어지는 속력이 [[u]]보다 작으면 방출 광자의 파장은 [[λ2]]보다 작다. 속력이 [[u]]에서 영 사이인 핵이 방출하는 광자의 파장은 [[λ2]]와 [[λ0]] 사이에 분포한다. 따라서",
+      "en": "Equation [[(21)]] shows that nuclei receding more slowly than [[u]] emit wavelengths shorter than [[λ2]]. Recession speeds from [[u]] to zero give wavelengths between [[λ2]] and [[λ0]]. Hence"
+    },
+    {
+      "id": "section",
+      "source": "六、",
+      "ko": "6.",
+      "en": "6."
+    },
+    {
+      "id": "current-split",
+      "source": "1.接通电路后，恒流源提供恒定的电流I的一部分流经R0，另一部分流经圆盘。环形电刷、柱形金属轴决定了盘中的电流沿着盘的半径。",
+      "ko": "1. 회로를 연결하면 정전류원이 공급하는 일정한 전류 [[I]]의 일부는 [[R0]]를, 나머지는 원판을 흐른다. 고리 모양 브러시와 원통형 금속 축 때문에 원판의 전류는 반지름 방향으로 흐른다.",
+      "en": "1. After connection, the constant current [[I]] splits between [[R0]] and the disk. The annular brush and cylindrical metal shaft make the disk current flow radially."
+    },
+    {
+      "id": "motor-back-emf",
+      "source": "盘中因有沿着半径的电流而受磁场力矩作用，磁场力矩使盘克服负载所加的机械力矩而做加速转动。当圆盘在磁场中转动时，由于电磁感应，盘中出现感应电动势（反电动势），其等效电路如图所示。",
+      "ko": "반지름 방향 전류에 자기 토크가 작용하므로 원판은 부하의 기계적 토크를 이기고 회전을 가속한다. 원판이 자기장 속에서 회전하면 유도 기전력, 즉 역기전력이 생기며 등가 회로는 그림과 같다.",
+      "en": "The radial current produces a magnetic torque that accelerates the disk against the mechanical load torque. Rotation in the magnetic field induces a back emf; the equivalent circuit is shown."
+    },
+    {
+      "id": "circuit-equation",
+      "source": "图中R为圆盘的电阻，E为感应电动势，i为通过圆盘的总电流。圆盘所在支路的电路方程为",
+      "ko": "[[R]]은 원판의 저항, [[E]]는 유도 기전력, [[i]]는 원판을 지나는 총전류이다. 원판이 있는 가지의 회로 방정식은",
+      "en": "Here [[R]] is the disk resistance, [[E]] the induced emf, and [[i]] the total disk current. The circuit equation for the disk branch is"
+    },
+    {
+      "id": "or",
+      "source": "或",
+      "ko": "또는",
+      "en": "or"
+    },
+    {
+      "id": "load-steady-state",
+      "source": "随着圆盘角速度的增大，感应电动势E亦增大，由（1）式可知通过圆盘的电流i将变小。当电流小到某一值时，磁场的磁力矩与负载的机械力矩平衡，转动达到稳定，盘做匀角速转动。此时的角速度就是有负载时达到稳定状态的角速度ω。",
+      "ko": "원판의 각속도가 커지면 [[E]]도 커지고, 식 [[(1)]]에 따라 [[i]]는 작아진다. 전류가 일정한 값까지 줄면 자기 토크와 부하 토크가 같아져 원판은 일정한 각속도로 회전한다. 이것이 부하가 있을 때의 정상 각속도 [[ω]]이다.",
+      "en": "As angular velocity increases, [[E]] increases and [[i]] decreases by [[(1)]]. At a certain current, magnetic and load torques balance and the disk reaches steady rotation. This is the loaded steady angular velocity [[ω]]."
+    },
+    {
+      "id": "no-load-steady-state",
+      "source": "如果没有机械负载，即处在空载状态，由于载力矩为零，故达到稳定时磁力矩亦必须等于零。在没有负载力矩作用的条件下，圆盘转动的角速度可达到很大，因而感应电动势亦很大，致使圆盘中的电流为零，磁力矩亦为零。这时，圆盘的角速度便是空载达到稳定时的角速度ω0。",
+      "ko": "기계적 부하가 없는 무부하 상태에서는 부하 토크가 영이므로 정상 상태의 자기 토크도 영이다. 부하 토크가 없으면 원판의 각속도가 크게 증가하고 역기전력도 커져, 결국 원판 전류와 자기 토크가 영이 된다. 이때의 각속도가 무부하 정상 각속도 [[ω0]]이다.",
+      "en": "Without a mechanical load, the load torque vanishes, so the steady magnetic torque must also vanish. The disk accelerates to a high angular velocity, increasing the back emf until the disk current and magnetic torque become zero. Its angular velocity is then the no-load steady value [[ω0]]."
+    },
+    {
+      "id": "emf-heading",
+      "source": "（i）环形圆盘中感应电动势的计算",
+      "ko": "(i) 고리 원판의 유도 기전력 계산",
+      "en": "(i) Induced emf in the annular disk"
+    },
+    {
+      "id": "radial-spoke",
+      "source": "圆盘在磁场中转动时，它的每根半径都做切割磁感线的运动。把圆盘看作是由无数根径向辐条组成的，当盘的角速度为ω时，圆盘某根“辐条”在Δt时间内转过的角度为Δθ，“辐条”扫过的面积为",
+      "ko": "원판이 자기장 속에서 회전하면 각 반지름이 자기력선을 가로지른다. 원판을 무수히 많은 반지름 방향의 살로 생각하자. 각속도가 [[ω]]일 때 한 살이 [[Δt]] 동안 [[Δθ]]만큼 회전하며 쓸어 간 넓이는",
+      "en": "Each radius cuts the magnetic field lines as the disk rotates. Regard the disk as infinitely many radial spokes. At angular velocity [[ω]], a spoke turns through [[Δθ]] in time [[Δt]], sweeping an area"
+    },
+    {
+      "id": "magnetic-flux",
+      "source": "磁通量为",
+      "ko": "자기 선속은",
+      "en": "The magnetic flux is"
+    },
+    {
+      "id": "faraday",
+      "source": "由电磁感应定律可知，“辐条”中的感应电动势的大小为",
+      "ko": "전자기 유도 법칙에 따라 살에 생기는 유도 기전력의 크기는",
+      "en": "By Faraday’s law, the induced emf magnitude along a spoke is"
+    },
+    {
+      "id": "parallel-spokes",
+      "source": "每根辐条相当于一电源，这些电源是并联的，它们的电动势又相等，故圆盘中的电动势的大小仍为",
+      "ko": "각 살은 전원 하나에 해당하고, 이들은 기전력이 같은 병렬 전원이므로 원판의 기전력도",
+      "en": "Each spoke acts as a source. These equal-emf sources are in parallel, so the emf across the disk remains"
+    }
+  ]
+}

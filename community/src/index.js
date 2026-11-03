@@ -5,6 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
+import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam } from "./lab-train.js";
 import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
@@ -1445,7 +1446,7 @@ const labTheory = (s, task) => { const src = labSrc(s); return task ? !!(src[tas
    3.5-flash-lite about twice that; the 3.x Flash models looped to the output cap on 10-30% of pages. */
 /* each stage's provider (LAB_READ_PROVIDER, LAB_GRADE_PROVIDER, LAB_MODERATE_PROVIDER, LAB_SCHEME_PROVIDER): Gemini, DeepSeek,
    OpenAI or Anthropic, whichever the model bench picks for it */
-const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic", "upstage"];
+const STAGE_PROVIDERS = ["gemini", "deepseek", "openai", "anthropic", "upstage", "tuned"];
 const stage = (value, fallback) => STAGE_PROVIDERS.includes(value) ? value : fallback;
 function labRoles(env, s, theory) {
   const pick = (model, thinking) => model ? { model, thinking: thinking || undefined } : undefined;
@@ -2912,6 +2913,16 @@ async function labZoomFocus(env, s, disputed, photos, m, log, mine = []) {
 }
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
+/* training data (lab-train.js; LAB_TRAIN_CAPTURE on): each graded theory paper as (scheme + transcripts → marks), unverified
+   until an admin checks it. Off by default: the candidates' answers are kept only where the terms allow it. */
+async function labTrainCapture(env, s, task, mine, scheme, res) {
+  if (env.LAB_TRAIN_CAPTURE !== "on" || res?.status !== "graded" || !Array.isArray(res.items)) return;
+  try {
+    await env.DB.prepare(LAB_TRAIN_SQL).run();
+    await env.DB.prepare("INSERT INTO lab_train(kind,session_id,task,exam_key,input,target,source) VALUES('grade',?,?,?,?,?,'model')")
+      .bind(s.id, task, s.exam_key || null, gradeTrainInput(scheme, mine, { task, exam: s.exam_key || "" }), gradeTrainTarget(scheme, res.items)).run();
+  } catch (e) { console.error("lab train capture", e?.message); }                  // grading never fails for it
+}
 async function labGradeTask(env, s, task, pages, rb, lang) {
   const m = meter(), t0 = Date.now();
   const res = await labGradeTask1(env, s, task, pages, rb, lang, m);
@@ -2939,7 +2950,9 @@ async function labGradeTask1(env, s, task, pages, rb, lang, m) {
       if (labReview(s) && paper) { try { return await labQualitative(env, s, task, mine, paper, lang, m); } catch (error) { console.error("lab qualitative", error?.message); return { status: "error", why: "review_failed", points: null, score: null, pages: mine.length }; } }
       return { status: "pending", why: "no_solution", points: null, pages: mine.length };
     }
-    try { return await labLocalize(env, grader, task, scheme, await labGradeVision(env, grader, task, mine, scheme, lang, m, roles), lang, m); }
+    try { const res = await labLocalize(env, grader, task, scheme, await labGradeVision(env, grader, task, mine, scheme, lang, m, roles), lang, m);
+      await labTrainCapture(env, s, task, mine, scheme, res);
+      return res; }
     catch (e) { console.error("lab grade", e && e.message); return { status: "error", ...(e?.code ? { why: e.code } : {}), points: scheme.points, pages: mine.length }; }
   }
   return {status:'pending',why:'provider_required',score:null,pages:mine.length};
@@ -3169,6 +3182,17 @@ async function labBench(env, s, job) {
   const as = c => labAs(s, c.provider, { model: c.model, thinking: c.thinking, twoStage: c.twoStage, check: c.check, api: c.api, tier: c.tier });
   let out, failed = false;
   try {
+    /* what GOOGLE_CLOUD_API_KEY can do (admin bench, {stage:'gcp', model?, project?, region?}): a Vertex express call, the
+       tuning-jobs list (needs OAuth unless Google allows the key), a bucket list; statuses and Google's words, never the key */
+    if (spec.stage === 'gcp') {
+      const k = String(env.GOOGLE_CLOUD_API_KEY || '').trim(); if (!k) throw new Error('no_google_cloud_key');
+      const probe = async (method, u, body) => { const t = Date.now(); try { const r = await fetch(u, { method, headers: { 'x-goog-api-key': k, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}), redirect: 'manual', signal: AbortSignal.timeout(60000) });
+        const txt = (await r.text()).slice(0, 600); return { status: r.status, ms: Date.now() - t, body: txt.replace(/AIza[0-9A-Za-z_-]{20,}/g, '[key]') }; } catch (e) { return { error: String(e?.message || e).slice(0, 200) }; } };
+      const model = /^gemini-[a-z0-9.-]{1,40}$/.test(spec.model || '') ? spec.model : 'gemini-3.1-flash-lite', project = /^[a-z][a-z0-9-]{4,62}$/.test(spec.project || '') ? spec.project : '-', region = /^[a-z]+-[a-z]+\d$/.test(spec.region || '') ? spec.region : 'us-central1';
+      out = { generate: await probe('POST', `https://aiplatform.googleapis.com/v1/publishers/google/models/${model}:generateContent`, { contents: [{ role: 'user', parts: [{ text: 'Reply with the word ok.' }] }] }),
+        tuning: await probe('GET', `https://${region}-aiplatform.googleapis.com/v1/projects/${project}/locations/${region}/tuningJobs`),
+        ...(project !== '-' ? { buckets: await probe('GET', `https://storage.googleapis.com/storage/v1/b?project=${project}`) } : {}) };
+    } else
     if (spec.stage === 'models') out = { keys: providerKeys(env), ocr: ocrEngineKeys(env), ...Object.fromEntries(await Promise.all(['gemini', 'deepseek', 'openai', 'anthropic', 'upstage'].map(async p => [p, await listProviderModels(env, p).catch(e => 'error:' + (e.code || e.message))]))) };
     /* a dedicated math-OCR service reads a page: {stage:'ocr', engine:'mathpix'|'simpletex', page_id} */
     else if (spec.stage === 'ocr') {
@@ -4243,6 +4267,63 @@ async function lab(p, m, body, me, req, env, url) {
         env.DB.prepare(`UPDATE users SET ${tokenSet(`MAX(0,${balance}+?)`,half)} WHERE id=?`).bind(units,u.id),
       ]);
       return { tokens: await labTokens(env, u.id) };
+    }
+    /* training data (lab-train.js): what is kept, an admin's check or correction, and the JSONL a fine-tune is made from */
+    if (p.startsWith("/api/admin/lab/train")) {
+      await env.DB.prepare(LAB_TRAIN_SQL).run();
+      if (p === "/api/admin/lab/train" && m === "GET") {
+        const counts = (await env.DB.prepare("SELECT kind, source, verified, COUNT(*) n FROM lab_train GROUP BY kind, source, verified").all()).results;
+        const recent = (await env.DB.prepare("SELECT id, kind, session_id, task, exam_key, source, verified, note, created_at, verified_at FROM lab_train ORDER BY id DESC LIMIT 50").all()).results;
+        return { counts, recent, capture: env.LAB_TRAIN_CAPTURE === "on" };
+      }
+      /* a grading made a training example by hand: a session's task with the marks an admin (or a teacher) settled */
+      if (p === "/api/admin/lab/train" && m === "POST") {
+        const s = await env.DB.prepare("SELECT * FROM lab_sessions WHERE id=?").bind(+body.session_id || 0).first();
+        if (!s) throw new HttpError(404, "not_found");
+        const task = String(body.task || ""); if (!JSON.parse(s.tasks).includes(task)) bad("bad_task");
+        const items = Array.isArray(body.items) ? body.items : null; if (!items?.length) bad("bad_items");
+        const scheme = await labScheme(env, labSchemer(env, s, labRoles(env, s, labTheory(s, task))), task, null);
+        if (!scheme?.items?.length) throw new HttpError(409, "no_scheme");
+        const mine = (await labPagesOf(env, s.id)).filter(x => x.task === task);
+        const row = await env.DB.prepare("INSERT INTO lab_train(kind,session_id,task,exam_key,input,target,source,verified,note,verified_at) VALUES('grade',?,?,?,?,?,?,1,?,unixepoch()) RETURNING id")
+          .bind(s.id, task, s.exam_key || null, gradeTrainInput(scheme, mine, { task, exam: s.exam_key || "" }), gradeTrainTarget(scheme, items), String(body.source || "admin").slice(0, 20), String(body.note || "").slice(0, 500)).first();
+        return { id: row.id };
+      }
+      const one = p.match(/^\/api\/admin\/lab\/train\/(\d+)$/);
+      if (one && m === "POST") {                                                      // checked: kept as is, or corrected
+        const row = await env.DB.prepare("SELECT * FROM lab_train WHERE id=?").bind(+one[1]).first();
+        if (!row) throw new HttpError(404, "not_found");
+        let target = row.target;
+        if (Array.isArray(body.items)) { const t = JSON.parse(row.target); const by = new Map(body.items.map(i => [String(i.id), +i.score]));
+          target = JSON.stringify({ items: t.items.map(i => by.has(i.id) && Number.isFinite(by.get(i.id)) ? { ...i, score: by.get(i.id) } : i) }); }
+        await env.DB.prepare("UPDATE lab_train SET verified=?, target=?, note=COALESCE(?,note), verified_at=unixepoch() WHERE id=?")
+          .bind(body.verified === false ? 0 : 1, target, body.note == null ? null : String(body.note).slice(0, 500), row.id).run();
+        return { id: row.id, verified: body.verified !== false };
+      }
+      if (p === "/api/admin/lab/train/export" && m === "GET") {
+        const kind = url.searchParams.get("kind") === "read" ? "read" : "grade", part = url.searchParams.get("split") || "all";
+        let rows;
+        if (kind === "grade") rows = (await env.DB.prepare("SELECT id, exam_key, task, input, target FROM lab_train WHERE kind='grade' AND verified=1 ORDER BY id").all()).results;
+        else {                                                                         // Claude's gold transcriptions in the bench
+          const bucket = String(url.searchParams.get("bucket") || "").replace(/\/+$/, "");
+          if (!/^gs:\/\/[a-z0-9._-]{3,222}(\/[\w.-]+)*$/.test(bucket)) bad("bad_bucket");
+          rows = (await env.DB.prepare(`SELECT b.id, s.exam_key, p.task, p.id page_id, p.mime, json_extract(b.output,'$.ocr') ocr FROM lab_bench b
+            JOIN lab_pages p ON p.id=json_extract(b.spec,'$.page_id') JOIN lab_sessions s ON s.id=p.session_id
+            WHERE b.status='done' AND json_extract(b.spec,'$.label') LIKE 'GOLD%' ORDER BY b.id`).all()).results
+            .map(r => ({ ...r, uri: `${bucket}/lab-pages/${r.page_id}.${r.mime === "image/png" ? "png" : "jpg"}` }));
+        }
+        const sp = splitByExam(rows), pick = part === "train" ? sp.train : part === "validation" ? sp.validation : rows;
+        const jsonl = pick.map(r => kind === "grade" ? chatLine(r.input, r.target) : vertexReadLine({ fileUri: r.uri, mime: r.mime || "image/jpeg", transcript: r.ocr })).join("\n");
+        return { kind, split: part, lines: pick.length, train: sp.train.length, validation: sp.validation.length,
+          ...(kind === "read" ? { photos: pick.map(r => ({ page_id: r.page_id, uri: r.uri })) } : {}), jsonl };
+      }
+      const photo = p.match(/^\/api\/admin\/lab\/train\/photo\/(\d+)$/);
+      if (photo && m === "GET") {                                                      // the page photo, to upload to the tuning bucket
+        const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(+photo[1]).first();
+        const bytes = row && await labPageBytes(env, row); if (!bytes) throw new HttpError(404, "not_found");
+        return new Response(bytes, { headers: { "Content-Type": row.mime || "image/jpeg", "Cache-Control": "no-store" } });
+      }
+      throw new HttpError(404, "not_found");
     }
     if (p === "/api/admin/lab/queue" && m === "GET")
       return { sessions: (await env.DB.prepare(`SELECT s.id,s.exam_key,s.tasks,s.status,s.detail,s.created_at,s.submitted_at,u.nickname,

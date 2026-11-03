@@ -1,0 +1,114 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 5,
+  "printed_solution_page": 2,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only; original baseline row fitting and exact bitmap-math atom ROIs remain to be authored. All display equations and diagram remain source paints.",
+  "fields": [
+    {
+      "id": "angle-equality",
+      "source": "〈原比值〉小于1，故存在某一入射角i′可使〈原等式〉，当入射光以此入射角入射时，由（7）式可知单色光①、②在平板中经历的时间相同。",
+      "ko": "[[threshold<1]]이므로 [[equality]]를 만족하는 입사각 [[i′]]가 존재한다. 이 각도로 입사하면 식 [[(7)]]에 따라 단색광 [[①]], [[②]]가 판을 통과하는 시간이 같다.",
+      "en": "Since [[threshold<1]], an incidence angle [[i′]] satisfying [[equality]] exists. At this angle, equation [[(7)]] gives equal transit times through the slab for [[①]], [[②]]."
+    },
+    {
+      "id": "section",
+      "source": "二、",
+      "ko": "2.",
+      "en": "2."
+    },
+    {
+      "id": "coordinate",
+      "source": "取一水平向右的坐标轴Ox，原点O与小物块A的初始位置重合，如图所示。",
+      "ko": "그림처럼 오른쪽을 향하는 수평 좌표축 [[Ox]]를 잡고, 원점 [[O]]를 작은 물체 [[A]]의 처음 위치에 둔다.",
+      "en": "Choose a horizontal axis [[Ox]] to the right, with origin [[O]] at the initial position of block [[A]], as shown."
+    },
+    {
+      "id": "release",
+      "source": "挂上B刚释放B时，弹簧尚未被拉长，弹力为零。",
+      "ko": "[[B]]를 매달아 막 놓는 순간, 용수철은 아직 늘어나지 않아 탄성력이 [[0]]이다.",
+      "en": "When [[B]] is attached and released, the spring is unstretched and its force is zero."
+    },
+    {
+      "id": "system",
+      "source": "现把A和B作为一个系统，在处理系统的运动时，可把A、B看作位于同一水平直线上，作用于B的重力mg看作是水平向右的外力。",
+      "ko": "[[A]], [[B]]를 하나의 계로 보자. 운동을 다룰 때 두 물체가 같은 수평선 위에 있고 [[B]]의 중력 [[mg]]가 오른쪽으로 작용하는 외력이라고 볼 수 있다.",
+      "en": "Treat [[A]], [[B]] as one system. Their motion can be represented along one horizontal line, with [[B]]’s weight [[mg]] acting as an external force to the right."
+    },
+    {
+      "id": "initial-friction",
+      "source": "根据题给的数据可知，系统受到的向右的力mg大于最大摩擦力μMg，所以A、B一起加速运动。",
+      "ko": "주어진 값에서 오른쪽 힘 [[mg]]가 최대 마찰력 [[μMg]]보다 크므로 [[A]], [[B]]는 함께 가속한다.",
+      "en": "The given data imply that [[mg]] exceeds the maximum friction [[μMg]], so [[A]], [[B]] accelerate together.",
+      "source_review_note": "Original bitmap and source row5-28 visibly print muMg, without the static-friction subscript0. Retain its source glyphs and maximum-friction wording; do not silently correct the printed solution."
+    },
+    {
+      "id": "first-motion",
+      "source": "当A的坐标为x时，系统的加速度为a，则有",
+      "ko": "[[A]]의 좌표가 [[x]]이고 계의 가속도가 [[a]]이면",
+      "en": "When [[A]] has coordinate [[x]] and the system has acceleration [[a]],"
+    },
+    {
+      "id": "first-equilibrium",
+      "source": "当a=0时，作用在A和B组成的系统的合力为零，系统处于平衡状态。平衡时，A的坐标x1可由（1）式及题给的数据求得",
+      "ko": "[[a=0]]일 때 계의 알짜힘이 [[0]]이므로 평형이다. 식 [[(1)]]과 주어진 값에서 평형 위치 [[x1]]은",
+      "en": "For [[a=0]], the net force on the system vanishes. Equation [[(1)]] and the given data give the equilibrium coordinate [[x1]] of [[A]]:"
+    },
+    {
+      "id": "overshoot",
+      "source": "此时系统虽达到平衡，但具有速度，故A将继续向右运动直到速度变为零。",
+      "ko": "이때 계는 평형 위치에 도달하지만 속도가 있으므로 [[A]]는 속도가 [[0]]이 될 때까지 계속 오른쪽으로 움직인다.",
+      "en": "At equilibrium the system still has velocity, so [[A]] continues to the right until its velocity becomes zero."
+    },
+    {
+      "id": "right-shm",
+      "source": "在系统从开始运动到速度变为零的过程中，因为mg、μMg皆为恒力，而弹力为线性恢复力，所以系统的运动是以x=x1为平衡位置的简谐振动，振动的周期",
+      "ko": "운동 시작부터 속도가 [[0]]이 될 때까지 [[mg]], [[μMg]]는 일정하고 용수철 힘은 선형 복원력이므로, 계는 [[x=x1]]을 평형 위치로 하는 단순 조화 운동을 한다. 주기는",
+      "en": "From release to the first zero velocity, [[mg]], [[μMg]] are constant and the spring provides a linear restoring force. The system therefore undergoes simple harmonic motion about [[x=x1]], with period"
+    },
+    {
+      "id": "right-amplitude-time",
+      "source": "振幅为x1。从开始运动到速度变为零所经历的时间",
+      "ko": "진폭은 [[x1]]이다. 운동 시작부터 속도가 [[0]]이 될 때까지 걸린 시간은",
+      "en": "The amplitude is [[x1]]. The time from release to zero velocity is"
+    },
+    {
+      "id": "right-turning-point",
+      "source": "从A开始向右运动到系统的速度变为零，A移动的距离为2x1，弹簧的伸长量亦为2x1。此时系统AB受的弹力和mg的合力为2kx1−mg，由题给的数据可知",
+      "ko": "[[A]]가 오른쪽 운동을 시작하여 계의 속도가 [[0]]이 될 때까지 이동한 거리는 [[2x1]]이고, 용수철도 [[2x1]]만큼 늘어난다. 이때 [[AB]]에 작용하는 용수철 힘과 [[mg]]의 합력은 [[2kx1−mg]]이다. 주어진 값에서",
+      "en": "By the first zero velocity, [[A]] has moved [[2x1]], also the spring extension. The resultant of spring force and [[mg]] on [[AB]] is [[2kx1−mg]]. The given data give"
+    },
+    {
+      "id": "left-motion",
+      "source": "因此系统不能停止，A开始向左做加速运动。在向左运动的过程中，当A的坐标为x时，设系统加速度为a，有",
+      "ko": "따라서 계는 멈춰 있을 수 없고 [[A]]는 왼쪽으로 가속한다. 왼쪽으로 움직이는 동안 [[A]]의 좌표가 [[x]]이고 가속도가 [[a]]이면",
+      "en": "The system cannot remain at rest, and [[A]] starts accelerating to the left. During the leftward motion, let [[x]] be [[A]]’s coordinate and [[a]] the acceleration. Then"
+    },
+    {
+      "id": "second-equilibrium",
+      "source": "当加速度为零时，系统平衡，由（6）式可求得平衡时A的坐标",
+      "ko": "가속도가 [[0]]이면 계는 평형이다. 식 [[(6)]]에서 [[A]]의 평형 좌표는",
+      "en": "Zero acceleration gives equilibrium. From equation [[(6)]], the equilibrium coordinate of [[A]] is"
+    },
+    {
+      "id": "left-shm",
+      "source": "A在x=x2处时，因系统具有向左的速度而继续向左运动到速度变为零。系统从静止开始向左运动到速度又变为零的运动是以x=x2为平衡位置的简谐振动，周期仍为T，振幅为2x1−x2，经历的时间",
+      "ko": "[[x=x2]]에서도 계는 왼쪽 속도가 있으므로 속도가 [[0]]이 될 때까지 계속 왼쪽으로 움직인다. 정지 상태에서 왼쪽으로 출발하여 다시 속도가 [[0]]이 될 때까지의 운동은 [[x=x2]]를 평형 위치로 하는 단순 조화 운동이다. 주기는 여전히 [[T]], 진폭은 [[2x1−x2]]이며, 걸린 시간은",
+      "en": "At [[x=x2]], the system still has leftward velocity and continues until this becomes zero. From rest to the next zero velocity, the leftward motion is simple harmonic about [[x=x2]], with the same period [[T]] and amplitude [[2x1−x2]]. Its duration is"
+    },
+    {
+      "id": "second-turning-point",
+      "source": "当AB的速度变为零时，A的坐标",
+      "ko": "[[AB]]의 속도가 [[0]]이 될 때 [[A]]의 좌표는",
+      "en": "When [[AB]] again has zero velocity, [[A]]’s coordinate is"
+    },
+    {
+      "id": "extension",
+      "source": "x′也就是此时弹簧的伸长量。因为此时",
+      "ko": "[[x′]]는 이때 용수철의 늘어난 길이이기도 하다. 이때",
+      "en": "Here [[x′]] is also the spring extension. At this point,"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 12,
+  "printed_solution_page": 9,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Retain original potential graphs and Roman I/II labels, z-axis, maxima/valley geometry, all original equations and the original printed caption availability; do not add an unprinted Figure1 caption.",
+  "fields": [
+    {
+      "id": "motor-final-result",
+      "source": "将（3）式代入（16）式得",
+      "ko": "식 [[(3)]]을 [[(16)]]에 대입하면",
+      "en": "Substituting [[(3)]] into [[(16)]] gives"
+    },
+    {
+      "id": "section",
+      "source": "七、",
+      "ko": "7.",
+      "en": "7."
+    },
+    {
+      "id": "particle-energy",
+      "source": "1.带电粒子仅受静电力作用，在运动过程中能量守恒，粒子的动能与静电势能之和是一个恒量。粒子的静电势能取决于粒子所在处的电势，为此应先研究带电圆环产生的静电场的电势。",
+      "ko": "1. 입자는 정전기력만 받으므로 역학적 에너지가 보존된다. 즉 운동 에너지와 정전기적 위치 에너지의 합이 일정하다. 위치 에너지는 그 지점의 전위에 달려 있으므로, 먼저 대전된 원형 고리의 전위를 구하자.",
+      "en": "1. Only electrostatic forces act, so the particle’s kinetic and electrostatic potential energies have a constant sum. Its potential energy depends on the local electric potential; first consider the potentials due to the charged rings."
+    },
+    {
+      "id": "axial-symmetry",
+      "source": "由于电场分布是轴对称的，初速度沿z轴方向的粒子永远在z轴上运动，故只要研究z轴上的电势即可。",
+      "ko": "전기장이 축대칭이므로 초기 속도가 [[z]]축 방향인 입자는 계속 [[z]]축 위에서 움직인다. 따라서 축 위의 전위만 구하면 된다.",
+      "en": "Axial symmetry keeps a particle with initial velocity along [[z]] on that axis. It is therefore sufficient to find the axial potential."
+    },
+    {
+      "id": "individual-potentials",
+      "source": "两个带电圆环单独产生的电场在z轴上的电势分别为",
+      "ko": "두 대전 고리가 각각 만드는 [[z]]축 위의 전위는",
+      "en": "The separate axial potentials of the two charged rings are"
+    },
+    {
+      "id": "individual-graphs",
+      "source": "V1（z）、V2（z）的图线如图1所示，V1（z）在z=D处有极大值，V2（z）在z=−D处有极大值。",
+      "ko": "[[V1(z)]], [[V2(z)]]의 곡선은 그림 [[1]]과 같다. [[V1(z)]]는 [[z=D]]에서, [[V2(z)]]는 [[z=−D]]에서 극댓값을 갖는다.",
+      "en": "Their graphs are shown in Figure [[1]]. [[V1(z)]] has a maximum at [[z=D]], and [[V2(z)]] at [[z=−D]]."
+    },
+    {
+      "id": "total-potential",
+      "source": "两个圆环产生的电场在坐标为z处的电势",
+      "ko": "두 고리가 함께 만드는 좌표 [[z]]에서의 전위는",
+      "en": "The total potential at coordinate [[z]] is"
+    },
+    {
+      "id": "superposition",
+      "source": "电势V（z）随z变化的图线由V1（z）的图线与V2（z）的图线叠加而成。",
+      "ko": "[[V(z)]]의 곡선은 [[V1(z)]], [[V2(z)]]를 더하여 얻는다.",
+      "en": "The graph of [[V(z)]] is the sum of the graphs of [[V1(z)]], [[V2(z)]]."
+    },
+    {
+      "id": "large-separation",
+      "source": "若D较大，即两个圆环间的距离较大，V（z）的图线如图2中的曲线I所示：它有两个极大值和一个极小值，即两个峰和一个谷，峰对称地分布在坐标原点两侧处，谷底在z=0处。",
+      "ko": "[[D]]가 커서 두 고리가 멀리 떨어져 있으면 그림 [[2]]의 곡선 [[I]]처럼 두 극댓값과 한 극솟값이 생긴다. 두 봉우리는 원점의 양쪽에 대칭으로 놓이고, 골짜기의 바닥은 [[z=0]]이다.",
+      "en": "For large separation [[D]], curve [[I]] in Figure [[2]] has two maxima and one minimum. The two peaks lie symmetrically about the origin, with the valley at [[z=0]]."
+    },
+    {
+      "id": "small-separation",
+      "source": "随着两个圆环间的距离变小，即D变小，两个峰相互靠近，谷底上升。当D小到某一值时，两峰消失，谷底上升为峰。当D继续变小时，曲线仍只有一个峰，位于z=0处，如图2中曲线II所示。",
+      "ko": "[[D]]가 작아지면 두 봉우리는 가까워지고 골짜기는 높아진다. 어느 값에 이르면 두 봉우리가 사라지고 골짜기가 봉우리로 바뀐다. [[D]]가 더 작아져도 그림 [[2]]의 곡선 [[II]]처럼 [[z=0]]에 봉우리 하나만 남는다.",
+      "en": "As [[D]] decreases, the peaks approach and the valley rises. At a certain separation, the two peaks disappear and the valley becomes a peak. For still smaller [[D]], only one peak remains at [[z=0]], as in curve [[II]] of Figure [[2]]."
+    },
+    {
+      "id": "figure-caption",
+      "source": "图2",
+      "ko": "그림 [[2]]",
+      "en": "Figure [[2]]"
+    },
+    {
+      "id": "near-origin",
+      "source": "z=0处是峰还是谷，只需分析V（z）在z=0附近的行为即可确定。由（1）式，z=0处的电势",
+      "ko": "[[z=0]]이 봉우리인지 골짜기인지는 원점 근처의 [[V(z)]]를 조사하면 알 수 있다. 식 [[(1)]]에서 [[z=0]]의 전위는",
+      "en": "Whether [[z=0]] is a peak or a valley follows from [[V(z)]] near the origin. From [[(1)]], the potential at [[z=0]] is"
+    },
+    {
+      "id": "small-z-expansion",
+      "source": "注意到当z很小时有",
+      "ko": "[[z]]가 매우 작으면",
+      "en": "For sufficiently small [[z]],"
+    }
+  ]
+}

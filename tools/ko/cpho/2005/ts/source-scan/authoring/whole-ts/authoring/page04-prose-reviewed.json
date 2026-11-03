@@ -1,0 +1,113 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 4,
+  "printed_solution_page": 1,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Final row breaks, exact source-only font calibration, erase ROIs, mathematical atom membership and original baselines must be authored and visually reviewed before composition. No publication claimed.",
+  "fields": [
+    {
+      "id": "title",
+      "source": "参考解答",
+      "ko": "참고 해설",
+      "en": "Solutions"
+    },
+    {
+      "id": "section",
+      "source": "一、",
+      "ko": "1.",
+      "en": "1."
+    },
+    {
+      "id": "definitions",
+      "source": "1.令d表示平板的厚度，v1和v2分别表示①和②在平板中的速度的大小，r1和r2分别表示它们的折射角，t1和t2分别表示它们穿过平板所用的时间，则有",
+      "ko": "1. 판의 두께를 [[d]], [[①]], [[②]]가 판 안에서 갖는 속력을 각각 [[v1]], [[v2]], 굴절각을 [[r1]], [[r2]], 판 통과 시간을 [[t1]], [[t2]]라 하면",
+      "en": "1. For [[①]], [[②]], let [[d]] be the slab thickness; [[v1]], [[v2]] the speeds; [[r1]], [[r2]] the refraction angles; and [[t1]], [[t2]] the transit times. Then"
+    },
+    {
+      "id": "vacuum-speed",
+      "source": "用c表示光在真空中的速度（近似等于光在空气中的速度），有",
+      "ko": "진공 속 빛의 속력을 [[c]]라 하자. 공기 중에서도 거의 같으므로",
+      "en": "Let [[c]] be the speed of light in vacuum, approximately its speed in air. Then"
+    },
+    {
+      "id": "snell",
+      "source": "由折射定律有",
+      "ko": "굴절 법칙에 따라",
+      "en": "By Snell’s law,"
+    },
+    {
+      "id": "equations-1-3",
+      "source": "由（1）、（2）、（3）式得",
+      "ko": "식 [[(1)]], [[(2)]], [[(3)]]에서",
+      "en": "Equations [[(1)]], [[(2)]], [[(3)]] give"
+    },
+    {
+      "id": "condition-lt",
+      "source": "当〈原式不等式〉时，t1<t2",
+      "ko": "[[condition-lt]]이면 [[t1<t2]]",
+      "en": "If [[condition-lt]], [[t1<t2]]"
+    },
+    {
+      "id": "condition-gt",
+      "source": "当〈原式不等式〉时，t1>t2",
+      "ko": "[[condition-gt]]이면 [[t1>t2]]",
+      "en": "If [[condition-gt]], [[t1>t2]]"
+    },
+    {
+      "id": "condition-eq",
+      "source": "〈原式等式〉时，t1=t2",
+      "ko": "[[condition-eq]]이면 [[t1=t2]]",
+      "en": "If [[condition-eq]], [[t1=t2]]"
+    },
+    {
+      "id": "simplified",
+      "source": "化简后得：当",
+      "ko": "정리하면 다음과 같다.",
+      "en": "Simplifying gives:"
+    },
+    {
+      "id": "sin-greater",
+      "source": "〈式5〉时，t1<t2，单色光①所用的时间较短；当",
+      "ko": "[[(5)]]이면 [[t1<t2]]로 단색광 [[①]]의 통과 시간이 짧다.",
+      "en": "If [[(5)]], [[t1<t2]]: monochromatic light [[①]] crosses sooner."
+    },
+    {
+      "id": "sin-less",
+      "source": "〈式6〉时，t1>t2，单色光②所用的时间较短；当",
+      "ko": "[[(6)]]이면 [[t1>t2]]로 단색광 [[②]]의 통과 시간이 짧다.",
+      "en": "If [[(6)]], [[t1>t2]]: monochromatic light [[②]] crosses sooner."
+    },
+    {
+      "id": "sin-equal",
+      "source": "〈式7〉时，t1=t2，两种单色光所用的时间相等。",
+      "ko": "[[(7)]]이면 [[t1=t2]]로 두 단색광의 통과 시간이 같다.",
+      "en": "If [[(7)]], [[t1=t2]]: both monochromatic lights take equal time."
+    },
+    {
+      "id": "indices-first",
+      "source": "2.当n1=1.55，n2=1.52时可得",
+      "ko": "2. [[n1=1.55]], [[n2=1.52]]이면",
+      "en": "2. For [[n1=1.55]], [[n2=1.52]],"
+    },
+    {
+      "id": "always-second",
+      "source": "因sin i最大为1，由（5）式、（6）式可知，一定是单色光②所用的时间较短，不管入射角是多大。",
+      "ko": "[[sin i]]의 최댓값은 [[1]]이다. 식 [[(5)]], [[(6)]]에 따라 입사각에 관계없이 단색광 [[②]]의 통과 시간이 짧다.",
+      "en": "Since [[sin i]] cannot exceed [[1]], equations [[(5)]], [[(6)]] show that light [[②]] crosses sooner at every angle of incidence."
+    },
+    {
+      "id": "indices-second",
+      "source": "当n1=1.40，n2=1.38时可得",
+      "ko": "[[n1=1.40]], [[n2=1.38]]이면",
+      "en": "For [[n1=1.40]], [[n2=1.38]],"
+    },
+    {
+      "id": "large-small-angle",
+      "source": "由（5）、（6）式可知，当入射角i较大时，单色光①所用的时间较短；当入射角i较小时，单色光②所用的时间较短。因为",
+      "ko": "식 [[(5)]], [[(6)]]에 따라 입사각 [[i]]가 크면 단색광 [[①]]의 통과 시간이 짧고, 작으면 단색광 [[②]]의 통과 시간이 짧다. 그 이유는",
+      "en": "Equations [[(5)]], [[(6)]] show that light [[①]] crosses sooner for large incidence angle [[i]], and light [[②]] for small [[i]]. Since"
+    }
+  ]
+}

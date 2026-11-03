@@ -1,0 +1,25 @@
+{
+  "fault": "Delete exactly one actual original native bitmap mathematical invocation from the final PDF; retain all new prose and other mathematics.",
+  "results": [
+    {
+      "language": "ko",
+      "atom": "negative-coefficient-wide-condition",
+      "good_sha256": "bdaf71f4b0201d82dda41397c5696b2e7e7ccf87b625afad6e297fdf686225dd",
+      "mutant_sha256": "8a78ca936de6f19899f1ea45dfcadbb45cee0570cd3ef8d140d8e3067f450c29",
+      "good_actual_RGB_errors": 0,
+      "mutant_actual_RGB_errors": 13454,
+      "rejected": true
+    },
+    {
+      "language": "en",
+      "atom": "negative-coefficient-wide-condition",
+      "good_sha256": "60299c65c0397f818559f205d1204c8f2e4fe1abb12fde82f052261b00670c4c",
+      "mutant_sha256": "259a92a34fd3aca456bef7dfac190a8fd5066721a7a0dba5e0e796e7a2094800",
+      "good_actual_RGB_errors": 0,
+      "mutant_actual_RGB_errors": 13514,
+      "rejected": true
+    }
+  ],
+  "passed": true,
+  "publication_ready": false
+}
