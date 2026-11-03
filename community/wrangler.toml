@@ -55,7 +55,11 @@ DEEPSEEK_OCR_MODEL = "deepseek-flash"
 # and a moderation of every item scored lower; handing the grader the papers as well (LAB_GRADE_PDFS) gained nothing.
 LAB_PIPELINE = "mixed"
 LAB_SCHEME_PROVIDER = "deepseek"
-LAB_READ_PROVIDER = "deepseek"
+# Theory pages are read by Gemini 3.8 Flash (the owner's decision, 2026-11-03). Reading bench of that day, 40 checks on
+# 9 handwritten pages (Claude's gold transcriptions): 3.8 Flash 97% at ~$0.014 a page; 3.1 Flash-Lite 72%, Upstage
+# enhanced 68%, DeepSeek Flash 65%. 3.8 Flash answered «high demand» to a third of the reads: those pages go to
+# 3.1 Flash-Lite at once (LAB_READ_FALLBACK_MODEL) instead of failing.
+LAB_READ_PROVIDER = "gemini"
 LAB_ONLY_PROVIDER = "deepseek"
 LAB_GRADE_PROVIDER = "deepseek"
 LAB_GRADE_MODEL = "deepseek-flash"
@@ -64,7 +68,7 @@ LAB_GRADE_THINKING = "off"
 LAB_MODERATE_PROVIDER = "none"
 # Theory page reading and moderation models (model bench, 2026-11-01, 18 handwritten IPhO 2023/2025 pages): 3.1 Pro read
 # every checked number and symbol right (3.1-flash-lite missed 6 of 102); DeepSeek grades; Flash-Lite moderates.
-LAB_READ_MODEL = "deepseek-flash"
+LAB_READ_MODEL = "gemini-3.8-flash"
 # DeepSeek Flash sees a page through ~2.2k tokens: three overlapping zoomed strips beside it (jpeg-js) cut the checked
 # numbers it missed from 21 to 14 of 102 for $0.0002 more a page
 LAB_READ_TILES = "3"
@@ -79,7 +83,8 @@ LAB_FOCUS_READ = "on"
 # answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
 # reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
 LAB_KEEP_HOURS = "off"
-LAB_READ_THINKING = "off"
+# empty: Gemini thinks at the level the bench measured (minimal); "off" would leave it to the model
+LAB_READ_THINKING = ""
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
 LAB_SCHEME_WARM = "on"
@@ -90,7 +95,7 @@ LAB_BENCH_SLOTS = "8"
 LAB_SCHEME_MODEL = "deepseek-flash"
 LAB_SCHEME_THINKING = "off"
 # when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
-LAB_READ_FALLBACK_MODEL = ""
+LAB_READ_FALLBACK_MODEL = "gemini-3.1-flash-lite"
 LAB_SCHEME_FALLBACK_MODEL = ""
 
 # answer photos (lab_pages.r2_key): new uploads go here instead of D1; kept after grading (LAB_KEEP_HOURS off)
