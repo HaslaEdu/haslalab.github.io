@@ -3,7 +3,7 @@
 const B=(process.env.API||"http://127.0.0.1:8787")+"/api";
 const call=async(m,p,body,tok)=>{const r=await fetch(B+p,{method:m,headers:{"Content-Type":"application/json",Origin:"http://localhost:8765",...(tok?{Authorization:"Bearer "+tok}:{})},body:body?JSON.stringify(body):undefined});return [r.status,await r.json()];};
 const ok=(c,msg)=>console.log((c?"PASS ":"FAIL ")+msg);
-const sign=async(u,n)=>(await call("POST","/signup",{username:u,nickname:n,password:"password1"}))[1].token;
+const sign=async(u,n)=>(await call("POST","/signup",{username:u,nickname:n,password:"password1",consent:{terms:true,privacy:true,age14:true}}))[1].token;
 const A=await sign("arenaA","아레나A"), Bt=await sign("arenaB","아레나B");
 let [s,j]=await call("GET","/weekly?lang=ko");
 ok(s===200&&j.problems.length===3&&j.week==="2026-W44","weekly list "+j.week);

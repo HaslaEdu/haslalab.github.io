@@ -1037,6 +1037,7 @@ async function arMe(root, alive,overview) {
         <button class="cmbtn sm" type="button" data-del ${cm.me.avatar ? "" : "hidden"}>${CMT[lang].avatarDel}</button><span class="arinfo cmerr"></span></div></div>
       <h3 style="margin-top:14px">${T.linkH}</h3><div id="arIds" class="arids"></div></div>
     <div class="arpanel" id="arSecurity"></div>
+    <div class="arpanel" id="arTrain"></div>
     <div class="arpanel" id="arLabMe"></div>
     <div class="arpanel"><h3>${T.recent}</h3>${j.subs.length ? `<table class="cmtbl artbl"><tbody>${j.subs.map((s) => `<tr><td style="width:96px">${esc(arPeriodLabel(s))}</td>
       <td class="t"><a href="#/monthly/p/${s.problem_id}">${s.no}. ${esc(lang === "en" ? s.title_en : s.title_ko)}</a></td>
@@ -1059,6 +1060,8 @@ async function arMe(root, alive,overview) {
   const security=root.querySelector('#arSecurity');
   if(typeof cmAccountSecurity==='function')cmAccountSecurity(security,{lazy:true});
   else if(security)security.innerHTML=`<p class="arinfo">${lang==='en'?'Open the recovery page or refresh to manage account security.':'계정 보안 설정은 새로고침한 뒤 이용하거나 복구 페이지를 열어 주세요.'}</p><a class="cmbtn" href="account.html?lang=${lang==='en'?'en':'ko'}#/forgot-password">${lang==='en'?'Reset password':'비밀번호 재설정'}</a>`;
+  /* the optional training consent (index.html); an older cached page without it just drops the panel */
+  const train=root.querySelector('#arTrain');if(typeof cmTrainToggle==='function')cmTrainToggle(train,overview.user||{});else if(train)train.remove();
   if ((ar.health || {}).lab) {const x=overview; const el = root.querySelector("#arLabMe"); if (!el) return; const L = LBT[lang === "en" ? "en" : "ko"];
     el.innerHTML = `<h3>⏱ ${L.h}</h3><p style="margin:0 0 8px">${L.tokens(x.tokens)}${x.active ? ` · <b>${L.st[x.active.status]}</b>: ${esc(x.active.comp.toUpperCase())} ${x.active.year}` : ""}</p><a class="cmbtn sm" href="#/lab">${L.all}</a>`; }
   else { const el = root.querySelector("#arLabMe"); if (el) el.remove(); }

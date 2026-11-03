@@ -11,7 +11,7 @@ const call = async (m, p, body, tok) => { const r = await fetch(B + p, { method:
 let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const rnd = Math.random().toString(36).slice(2, 7);
-const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1" }))[1].token;
+const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
 const sql = q => execSync(`npx wrangler d1 execute haslalab-community --local --command "${q}"`, { cwd: new URL(".", import.meta.url).pathname, stdio: "ignore" });
 const tokens = async tok => (await call("GET", "/lab/tokens", null, tok))[1];
 /* a webhook as Paddle sends it: the raw body signed with HMAC-SHA256 over "ts:body" */

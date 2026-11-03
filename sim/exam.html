@@ -288,7 +288,9 @@ const T = {
     detail: "자세히 보기 (기준별 점수 · 근거 · 첨삭)", solution: "풀이", again: "다시 응시하기",
     closed: "스캔 시간이 끝났습니다. 보낸 쪽으로 채점합니다.",
     bad: "주소가 올바르지 않습니다. 대회 목록에서 실전 모드를 다시 여세요.",
-    err: {network: "서버에 연결하지 못했습니다.", closed: "답안 접수가 종료되었습니다.", login_required: "로그인이 필요합니다.", no_tokens: "채점에 필요한 실전 토큰이 부족합니다.", price_changed: "채점 비용이 갱신되었습니다. 새 비용을 확인한 뒤 다시 신청해 주세요.", running: "먼저 시험을 끝내세요.", no_answers: "채점할 답안을 먼저 저장하거나 스캔해 주세요."},
+    err: {network: "서버에 연결하지 못했습니다.", closed: "답안 접수가 종료되었습니다.", login_required: "로그인이 필요합니다.", no_tokens: "채점에 필요한 실전 토큰이 부족합니다.", price_changed: "채점 비용이 갱신되었습니다. 새 비용을 확인한 뒤 다시 신청해 주세요.", running: "먼저 시험을 끝내세요.", no_answers: "채점할 답안을 먼저 저장하거나 스캔해 주세요.", consent_required: "이용약관·개인정보 처리방침에 동의해야 채점할 수 있습니다. 하슬라랩 사이트에서 동의한 뒤 다시 시도해 주세요."},
+    consentReq: "새 이용약관과 개인정보 처리방침(2026-11-03 시행)에 동의해야 시험을 시작하고 채점을 받을 수 있습니다. 하슬라랩 사이트를 열면 동의 창이 나옵니다.", consentGo: "동의하러 가기",
+    aiNote: "AI 채점 결과(참고용)",
   },
   en: {
     exam: "Exam mode", practice: "Practice mode", left: "Time left", scanLeft: "Scanning closes in",
@@ -347,7 +349,9 @@ const T = {
     detail: "Full report (scores per criterion, evidence, comments)", solution: "Solution", again: "Sit it again",
     closed: "Scanning has closed. The pages that arrived are being graded.",
     bad: "This address is not complete. Open exam mode again from the competition list.",
-    err: {network: "Could not reach the server.", closed: "Answer submission has closed.", login_required: "Please sign in.", no_tokens: "You do not have enough exam tokens.", price_changed: "The fee changed. Check the updated fee and request grading again.", running: "Finish the exam first.", no_answers: "Save typed answers or upload your work before grading."},
+    err: {network: "Could not reach the server.", closed: "Answer submission has closed.", login_required: "Please sign in.", no_tokens: "You do not have enough exam tokens.", price_changed: "The fee changed. Check the updated fee and request grading again.", running: "Finish the exam first.", no_answers: "Save typed answers or upload your work before grading.", consent_required: "Please accept the Terms and Privacy Policy before grading. Agree on the HaslaLab site, then try again."},
+    consentReq: "Please accept the new Terms and Privacy Policy (effective 3 November 2026) to start an exam or get grading. Opening the HaslaLab site shows the agreement.", consentGo: "Go to the agreement",
+    aiNote: "AI-graded (for reference)",
   },
 };
 
@@ -606,8 +610,8 @@ const PEN_NOTE = {
 };
 /* what happens to the photographed pages: kept on HaslaLab's server after grading, to improve the reading and grading */
 const KEEP_NOTE = {
-  ko: "제출한 답안 사진과 판독·채점 결과는 채점이 끝난 뒤에도 하슬라랩 서버에 보관되며, 판독·채점 품질을 높이는 데(AI 모델 개선·학습 포함) 쓰입니다. 답안지에 이름 등 개인정보는 쓰지 마세요.",
-  en: "Your answer photos, with what was read and the marks, are kept on HaslaLab's server after grading and used to improve reading and grading (including improving and training AI models). Do not write your name or other personal details on the sheets.",
+  ko: "제출한 답안 사진과 판독·채점 결과는 채점과 결과 확인을 위해 하슬라랩 서버에 보관되고, 계정을 삭제하면 지워집니다. AI 채점 개선(학습)에는 따로 동의한 경우에만 최대 1년 쓰이며, 내 정보에서 언제든 철회할 수 있습니다. 채점은 AI가 하는 참고용 결과입니다. 답안지에 이름 등 개인정보는 쓰지 마세요. <a href=\"../privacy.html\" target=\"_blank\" rel=\"noopener\">개인정보 처리방침</a>",
+  en: "Your answer photos, with what was read and the marks, are kept on HaslaLab's server for grading and for you to review, and are deleted when you delete your account. They are used to improve the AI grading (training) for up to 1 year only if you agreed to that separately, which you can withdraw at any time from your profile. Grading is done by AI and is for reference only. Do not write your name or other personal details on the sheets. <a href=\"../privacy.html#en\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>",
 };
 async function introView() {
   if (REVIEW) return reviewIntroView();
@@ -617,6 +621,7 @@ async function introView() {
   else if (LABOK === null && tok()) gate = `<div class="note w">${t().err.network}</div>`;
   else if (!tok() || !ME) gate = `<div class="note w">${t().loginReq}</div>
       <div class="row"><a href="../#/login" target="_blank" rel="noopener"><button class="pri">${t().login} ↗</button></a><span style="font-size:12.5px;color:var(--muted)">${t().loginWait}</span></div>`;
+  else if (ME.consent_required) gate = `<div class="note w">${t().consentReq}</div><div class="row"><a href="../#/me" target="_blank" rel="noopener"><button class="pri">${t().consentGo} ↗</button></a></div>`;
   else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>
       <div class="row">${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}</div>`;
   else gate = `<div class="agree"><b style="font-size:13px">${t().agreeH}</b>${t().agrees.map((x, i) => `<label><input type="checkbox" data-ag="${i}"> ${x}</label>`).join("")}
@@ -662,6 +667,7 @@ function reviewIntroView() {
   if (LABOK === false) gate = `<div class="note w">${t().noServer}</div>`;
   else if (LABOK === null && tok()) gate = `<div class="note w">${t().err.network}</div>`;
   else if (!tok() || !ME) gate = `<div class="note w">${t().loginReq}</div><a href="../#/login" target="_blank" rel="noopener"><button class="pri">${t().login} ↗</button></a><p>${t().loginWait}</p>`;
+  else if (ME.consent_required) gate = `<div class="note w">${t().consentReq}</div><div class="row"><a href="../#/me" target="_blank" rel="noopener"><button class="pri">${t().consentGo} ↗</button></a></div>`;
   else if (ME.other) gate = `<div class="note w">${t().otherActive((ME.other.comp || "").toUpperCase() + " " + ME.other.year)}</div>${ME.other.entry ? `<a href="exam.html${esc(ME.other.entry)}&lang=${lang}"><button class="pri">${t().goOther}</button></a>` : ""}`;
   else gate = `<p>${t().tokens(ME.tokens)}</p><button class="pri" id="go">${t().start}</button>`;
   $("main").innerHTML = `<div class="page"><section class="card"><span class="badge">${t().exam}</span><h1>${esc(label())} · ${esc(EX.tasks.join(" + "))}</h1>
@@ -1213,7 +1219,7 @@ function doneView() {
       <tr><th>${t().rcStatus}</th><td>${t().statusOf[s.status] || esc(s.status)}${!comparison && s.status === "graded" && s.score != null && s.points != null ? ` · <b>${s.score} / ${s.points}</b>` : ""}${s.status === "grading" && s.queue ? `<div class="queueInfo" style="font-size:12.5px;color:var(--muted);margin-top:3px">${queueText(s.queue)}</div>` : ""}</td></tr>
     </tbody></table>
     ${s.status === "ended" ? `<div class="note w">${t().endedNote}</div>${providerHtml()}<div class="row noprint"><button class="pri" id="payLater">${t().payBtn}</button><span style="font-size:12.5px;color:var(--muted)">${ME && ME.tokens != null ? t().tokens(ME.tokens) : ""}</span></div>`
-      : `<div class="result"><table><tbody>${rows}</tbody></table></div>`}
+      : `<div class="result"><div class="ainote" style="font-size:12px;color:var(--muted);margin:0 0 6px">${t().aiNote}</div><table><tbody>${rows}</tbody></table></div>`}
     ${retryOcr?`<div class="note noprint"><p>${lang==="ko"?"보관된 답안 사진에서 실패한 쪽을 같은 제공자로 다시 판독합니다.":"Read failed pages again from the saved answer photos with the same provider."}</p><button class="pri" id="retryOcr">${lang==="ko"?"실패한 판독 다시 시도 · 추가 토큰 없음":"Retry failed reading · no additional exam token"}</button><p id="retryOcrMsg" role="status"></p></div>`:""}
     <div id="medal"></div>
     <div class="row noprint"><a href="../#/lab/${s.id}"><button class="pri">${t().detail}</button></a>${["grading", "pending", "error"].includes(s.status) ? `<button id="cancelGrade">${lang === "ko" ? "채점 취소" : "Cancel grading"}</button>` : ""}<button id="prn">${t().print}</button>

@@ -342,7 +342,10 @@ localStorage.setItem("hlCmApi", "http://127.0.0.1:8787")
 
 | 메서드 | 경로 | 설명 |
 |---|---|---|
-| POST | `/api/signup` | `{username, nickname, password}` → `{token, user}` |
+| POST | `/api/signup` | `{username, nickname, password, consent}` → `{token, user}`. `consent = {terms:true, privacy:true, age14, train}`; 없으면 400 `consent_required`, 한국(`cf.country=KR`)에서 `age14`가 없으면 400 `age_required` |
+| GET | `/api/consent/info` | `{version, country, age_required}`: 가입·동의 화면에 만 14세 확인란을 보일지 |
+| GET · POST | `/api/me/consent` | 현재 동의 상태 · `{consent}`로 현재 버전(`TERMS_VERSION`, `src/consent.js`)에 동의. 동의 전에는 `/api/me`의 `user.consent_required`가 `true`이고 채점(시작·신청)은 403 `consent_required` |
+| POST | `/api/me/consent/train` | `{train}`(true 또는 false) 학습 활용 선택 동의 · 철회(철회하면 그 사용자의 `lab_train` 행 삭제) |
 | POST | `/api/login` | `{username, password}` → `{token, user}` |
 | POST | `/api/logout` | 현재 토큰 폐기 |
 | GET | `/api/me` | 로그인한 사용자 |
