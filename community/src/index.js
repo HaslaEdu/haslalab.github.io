@@ -3314,7 +3314,7 @@ async function labBench(env, s, job) {
         const ss = await env.DB.prepare('SELECT * FROM lab_sessions WHERE id=?').bind(c.session).first(); if (!ss) { cases.push({ ...c, items: undefined, skip: 'no_session' }); continue; }
         const sch = await labScheme(env, labAs(ss, spec.scheme.provider, { model: spec.scheme.model, thinking: spec.scheme.thinking, check: spec.scheme.check }), c.task, null, true).catch(() => null);
         /* an eval task without the audit's marks is graded on every scheme line; its marks come back to be compared offline */
-        const lines = sch && (Array.isArray(c.items) ? auditedLines(sch, c.items) : spec.stage === 'tune-grade-eval' ? sch.items.map(item => ({ item, got: null })) : null);
+        const lines = sch && (Array.isArray(c.items) ? auditedLines(sch, c.items, Number.isFinite(+spec.minShare) ? Math.max(0.2, Math.min(1, +spec.minShare)) : 0.8) : spec.stage === 'tune-grade-eval' ? sch.items.map(item => ({ item, got: null })) : null);
         if (!lines) { cases.push({ session: c.session, task: c.task, skip: sch ? 'audit_covers_too_little' : 'no_scheme', scheme_items: sch?.items?.length || 0 }); continue; }
         const pages = (await env.DB.prepare('SELECT no, kind, ocr, text FROM lab_pages WHERE session_id=? AND task=? ORDER BY no').bind(c.session, c.task).all()).results;
         cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: gradeTrainInput({ items: lines.map(l => l.item) }, pages, { task: c.task, exam: `${ss.comp} ${ss.year}` }) });
