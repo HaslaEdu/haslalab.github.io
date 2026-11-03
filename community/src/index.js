@@ -2304,6 +2304,16 @@ function labChosenMethods(scheme, raw, pages) {
   }
   return out.size ? out : null;
 }
+/* the items a recheck should see whatever the grader marked them (see suspects in labGradeVision) */
+function labSuspects(scheme, raw) {
+  const by = new Map((raw?.items || []).filter(Boolean).map(x => [String(x.id), +x.score || 0]));
+  const head = id => String(id).split(/[./]/).slice(0, -1).join(".");
+  const out = new Set();
+  for (const it of scheme.items) if (/\/\d+$/.test(String(it.alt || ""))) out.add(it.id);
+  const down = new Set(scheme.items.filter(it => it.role === "result" && (by.get(it.id) ?? 0) < +it.points - 1e-9).map(it => head(it.id)));
+  for (const it of scheme.items) if (it.role === "step" && down.has(head(it.id)) && (by.get(it.id) ?? 0) > 0) out.add(it.id);
+  return [...out].slice(0, 40);
+}
 function labScore(scheme, raw, pages, opts = {}) {
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
@@ -2672,6 +2682,14 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     if (flagged.length > 60) flagged.length = 60;
   }
   for (const q of quoteMissing) { const f = flagged.find(x => x.id === q.id); if (f) f.quote_missing = true; else flagged.push(q); }
+  /* suspects (LAB_SUSPECT_RECHECK on, bench grade.suspect): items whose structure invites the grader's repeated mistakes
+     go to the recheck whatever it marked them: every item of a question with alternative methods (a method the
+     candidate never wrote credited, the one written zeroed: IPhO 2016 T1 A1), and the credited steps of a question
+     whose result the grader marked down (steps of a wrong derivation credited: B8). With a thinking moderator
+     (bench moderate.thinking) only these are thought over, not the whole paper. */
+  const suspects = (roles?.suspect ?? env.LAB_SUSPECT_RECHECK === "on") ? labSuspects(scheme, raw) : [];
+  for (const id of suspects) if (!flagged.some(f => f.id === id)) flagged.push({ id, got: +((raw.items || []).find(x => String(x?.id) === id)?.score) || 0, suspect: true });
+  if (flagged.length > 60) flagged.length = 60;
   if (out2?.raw?.items) {
     const firstBy = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
     for (const y of out2.raw.items) {
@@ -2689,7 +2707,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   if (flagged.length) {
     try {
       /* without a moderator the grader's own model looks at the items the expression check doubts */
-      const mod = await labModerate(env, roles?.moderate ? labAs(s, roles.moderate, roles.moderateBench) : s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles?.moderateScope === "all" || checks.length > 0, tone, lessons);
+      const mod = await labModerate(env, roles?.moderate ? labAs(s, roles.moderate, roles.moderateBench) : s, task, mine, scheme, raw, flagged, photos, lang, m, family, kind, theory, roles?.moderateScope === "all" || checks.length > 0 || suspects.length > 0, tone, lessons);
       const ids = new Set(flagged.map(f => f.id)), byId = new Map((mod.raw.items || []).filter(x => x && ids.has(String(x.id))).map(x => [String(x.id), x]));
       const kept = (raw.items || []).filter(x => !byId.has(String(x?.id)));
       /* a step whose quote code could not find, looked for again in the photos and found: its marks stand (R13 checked it
@@ -3136,6 +3154,7 @@ async function labBench(env, s, job) {
         gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, doubleGrade: spec.grade.double === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
         audit: spec.grade.audit === true ? true : undefined,
         methods: spec.grade.methods === true ? true : undefined,
+        suspect: spec.grade.suspect === true ? true : undefined,
         lessons: typeof spec.grade.lessons === "string" && spec.grade.lessons.trim() ? spec.grade.lessons.trim().slice(0, 12000) : undefined,
         tiles: Number.isInteger(spec.grade.tiles) && spec.grade.tiles >= 2 && spec.grade.tiles <= 4 ? spec.grade.tiles : undefined,
         toolRounds: Number.isInteger(spec.grade.toolRounds) && spec.grade.toolRounds > 0 && spec.grade.toolRounds <= 6 ? spec.grade.toolRounds : undefined,
