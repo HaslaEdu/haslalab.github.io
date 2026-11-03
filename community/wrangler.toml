@@ -94,6 +94,12 @@ LAB_FOCUS_READ = "on"
 LAB_KEEP_HOURS = "off"
 # empty: Gemini thinks at the level the bench measured (minimal); "off" would leave it to the model
 LAB_READ_THINKING = ""
+# 3.8 Flash on AI Studio: 7 of 17 production reads failed at 126-128 s (a page looping on itself; the same on Vertex),
+# a whole page takes 16-41 s. A read is cut at 70 s and 10k tokens and goes to the fallback model; a page Google is too
+# busy for (429/503) is read by the same model through Vertex AI first (the service account's project)
+LAB_READ_TIMEOUT_MS = "70000"
+LAB_READ_MAX_TOKENS = "10240"
+LAB_READ_VERTEX = "on"
 LAB_MODERATE_MODEL = "gemini-3.1-flash-lite"
 # build a paper's marking scheme as soon as a sitting is paid for, not when its first candidate is graded
 LAB_SCHEME_WARM = "on"
