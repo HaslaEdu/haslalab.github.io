@@ -899,6 +899,50 @@ test('an admin puts a purged page photo back from a saved copy: into R2, the pag
   const row=sql.prepare('SELECT r2_key,purged_at,mime FROM lab_pages WHERE id=?').get(pid);
   assert.ok(row.r2_key&&store.has(row.r2_key)&&row.purged_at===null&&row.mime==='image/jpeg');
 }));
+test('bench migrate-r2: photos kept in the row move to R2, read back the same, the row lets go of them, and a second run moves nothing',async()=>fixture(async({api,start,upload,drain,sql,env})=>{
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  await upload(a.token);await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();   // into D1: no bucket yet
+  const t=Math.floor(Date.now()/1000);
+  sql.prepare("INSERT INTO lab_pages(session_id,no,task,kind,mime,data,created_at)VALUES(?,9,'T1','data','text/plain',?,?)").run(sid,Buffer.from('a typed table'),t);
+  const pages=sql.prepare("SELECT id,data FROM lab_pages WHERE session_id=? AND mime='image/jpeg' ORDER BY id").all(sid).map(r=>({id:r.id,data:Buffer.from(r.data)}));
+  assert.equal(pages.length,2);
+  const store=new Map(),puts=[];env.LAB_PAGES={async put(k,v,o){puts.push(k);store.set(k,{v:new Uint8Array(v).slice(),o});},async get(k){const x=store.get(k);return x?{arrayBuffer:async()=>x.v.slice().buffer}:null;},async delete(k){for(const x of [].concat(k))store.delete(x);}};
+  sql.exec(`CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`);
+  const bench=async spec=>{const b=sql.prepare('INSERT INTO lab_bench(session_id,spec)VALUES(?,?)').run(sid,JSON.stringify(spec)).lastInsertRowid;
+    const j=sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,page_id,status,available_at,created_at,updated_at)VALUES(?,'bench',?,?,'pending',0,0,0)").run('bench:'+b,sid,b).lastInsertRowid;
+    await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:Number(j)}}]);await drain();const r=sql.prepare('SELECT * FROM lab_bench WHERE id=?').get(b);assert.equal(r.status,'done',r.output);return JSON.parse(r.output);};
+  sql.prepare("UPDATE users SET role='admin' WHERE id=1").run();
+  const rows=()=>sql.prepare("SELECT id,r2_key,length(data) n FROM lab_pages WHERE session_id=? ORDER BY id").all(sid);
+  const before=JSON.stringify(rows());
+  const dry=await bench({stage:'migrate-r2',dry:true});
+  assert.deepEqual(dry.moved,pages.map(p=>p.id),'a dry run names the photos it would move');assert.equal(dry.bytes,pages.reduce((n,p)=>n+p.data.length,0));
+  assert.equal(dry.remaining,2);assert.equal(puts.length,0,'and writes nothing to R2');assert.equal(JSON.stringify(rows()),before,'or to the rows');
+  const one=await bench({stage:'migrate-r2',limit:1});
+  assert.deepEqual(one.moved,[pages[0].id]);assert.equal(one.remaining,1,'limit is kept');
+  /* a photo whose row changes between the copy and the statement keeps its bytes */
+  const real=env.LAB_PAGES.get;env.LAB_PAGES.get=async k=>{sql.prepare("UPDATE lab_pages SET data=? WHERE id=?").run(Buffer.concat([pages[1].data,Buffer.from([0])]),pages[1].id);env.LAB_PAGES.get=real;return real(k);};
+  const raced=await bench({stage:'migrate-r2'});
+  assert.deepEqual(raced.moved,[]);assert.equal(raced.skipped[0].reason,'changed');assert.ok(sql.prepare('SELECT length(data) n FROM lab_pages WHERE id=?').get(pages[1].id).n>0,'nothing cleared');
+  sql.prepare("UPDATE lab_pages SET data=? WHERE id=?").run(pages[1].data,pages[1].id);
+  /* a copy that does not read back the same is never trusted */
+  env.LAB_PAGES.get=async k=>{const x=store.get(k);const v=x.v.slice();v[v.length-1]^=1;return{arrayBuffer:async()=>v.buffer};};
+  const bad=await bench({stage:'migrate-r2'});assert.deepEqual(bad.skipped.map(s=>s.reason),['verify_failed']);assert.equal(bad.remaining,1);
+  env.LAB_PAGES.get=real;
+  const rest=await bench({stage:'migrate-r2',limit:30});
+  assert.deepEqual(rest.moved,[pages[1].id]);assert.equal(rest.remaining,0);assert.equal(rest.bytes,pages[1].data.length);
+  for(const p of pages){
+    const row=sql.prepare('SELECT * FROM lab_pages WHERE id=?').get(p.id);
+    assert.equal(row.r2_key,`lab/${sid}/migrated-${p.id}.jpeg`,'the key an upload gets, fixed by the page');assert.equal(row.data.length,0,'the row no longer holds the photo');
+    assert.equal(store.get(row.r2_key).o.httpMetadata.contentType,'image/jpeg');
+    assert.deepEqual(Buffer.from(store.get(row.r2_key).v),p.data,'R2 holds the very bytes');
+    const img=await worker.fetch(new Request(`https://vision.local/api/admin/lab/train/photo/${p.id}`,{headers:{Authorization:'Bearer '+('vision_test_1').padEnd(48,'x'),'Cache-Control':'no-cache'}}),env);
+    assert.equal(img.status,200);assert.deepEqual(Buffer.from(await img.arrayBuffer()),p.data,'and labPageBytes still gives the same photo');
+  }
+  assert.equal(sql.prepare("SELECT length(data) n FROM lab_pages WHERE mime='text/plain'").get().n,13,'a typed page is left in the row');
+  const n=puts.length,again=await bench({stage:'migrate-r2'});
+  assert.deepEqual(again.moved,[]);assert.equal(again.remaining,0);assert.equal(puts.length,n,'a second run moves nothing');
+}));
 test('LAB_ONLY_PROVIDER: a sitting asked for Gemini runs on DeepSeek, and the start page offers DeepSeek alone',async()=>fixture(async({api,start,sql,env})=>{
   env.LAB_ONLY_PROVIDER='deepseek';
   const a=(await start('gemini')).data,sid=a.session.id;

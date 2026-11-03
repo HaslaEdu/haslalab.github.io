@@ -2580,6 +2580,41 @@ async function labPageBytes(env, row) {
   const d = row.data, n = d ? (d.byteLength ?? d.length) : 0;          // D1 hands a BLOB back as an ArrayBuffer or as an array of bytes
   return n ? new Uint8Array(d) : null;
 }
+/* the photos still kept in the row from before the bucket (admin bench {stage:'migrate-r2', limit?, dry?}): each is put into
+   R2 under lab/<session>/, read back and compared (length and SHA-256), and only then does the row take the key and let go
+   of its bytes, in one statement that changes nothing if the row is no longer what was copied. The key is fixed by the
+   page (lab/<session>/migrated-<id>.<ext>, as a restored photo's is), so a run cut off between the copy and the statement
+   leaves no stray object: the next run writes the same one again. */
+const LAB_INLINE_PHOTO = "length(data)>0 AND r2_key IS NULL AND mime<>'text/plain'";
+async function labMigrateR2(env, spec) {
+  const dry = spec.dry === true, limit = Number.isInteger(spec.limit) ? Math.max(1, Math.min(30, spec.limit)) : 10;
+  if (!dry && !env.LAB_PAGES) throw new Error('r2_unavailable');
+  const hex = async b => [...new Uint8Array(await crypto.subtle.digest('SHA-256', b))].map(x => x.toString(16).padStart(2, '0')).join('');
+  const left = async () => (await env.DB.prepare(`SELECT COUNT(*) n FROM lab_pages WHERE ${LAB_INLINE_PHOTO}`).first()).n;
+  /* the ids first, then one photo at a time: thirty photos of a megabyte each are never all in memory together */
+  const list = (await env.DB.prepare(`SELECT id, session_id, mime, length(data) n FROM lab_pages WHERE ${LAB_INLINE_PHOTO} ORDER BY id LIMIT ?`).bind(limit).all()).results;
+  const moved = [], skipped = [];
+  let bytes = 0;
+  for (const p of list) {
+    const row = await env.DB.prepare(`SELECT id, session_id, mime, data FROM lab_pages WHERE id=? AND ${LAB_INLINE_PHOTO}`).bind(p.id).first();
+    const img = row ? await labPageBytes(env, { data: row.data }) : null;
+    if (!img) { skipped.push({ id: p.id, reason: 'changed' }); continue; }
+    /* the bytes must be the image the row says they are: the key's extension and R2's content type come from it */
+    if (imageType(img) !== row.mime) { skipped.push({ id: p.id, reason: 'mime_mismatch', mime: row.mime, found: imageType(img) }); continue; }
+    if (dry) { moved.push(p.id); bytes += img.byteLength; continue; }
+    const key = `lab/${row.session_id}/migrated-${row.id}.${row.mime.split('/')[1]}`, sum = await hex(img);
+    try {
+      await env.LAB_PAGES.put(key, img, { httpMetadata: { contentType: row.mime } });
+      const back = await env.LAB_PAGES.get(key), copy = back && new Uint8Array(await back.arrayBuffer());
+      if (!copy || copy.byteLength !== img.byteLength || await hex(copy) !== sum) { skipped.push({ id: p.id, reason: 'verify_failed' }); continue; }
+    } catch (e) { skipped.push({ id: p.id, reason: 'r2_error', detail: String(e?.message || e).slice(0, 120) }); continue; }
+    /* the row lets go of its bytes only if it still holds exactly the bytes copied */
+    const res = await env.DB.prepare(`UPDATE lab_pages SET r2_key=?, data=X'' WHERE id=? AND r2_key IS NULL AND mime=? AND data=?`).bind(key, row.id, row.mime, img).run();
+    if (!res.meta?.changes) { skipped.push({ id: p.id, reason: 'changed', key }); continue; }
+    moved.push(p.id); bytes += img.byteLength;
+  }
+  return { dry, moved, skipped, bytes, remaining: await left() };
+}
 /* the R2 photos of the pages a statement is about to delete */
 async function labR2Drop(env, where, ...args) {
   if (!env.LAB_PAGES) return;
@@ -3299,7 +3334,7 @@ async function labRefreshQueuedTotal(env, id) {
 /* The admin model bench. A lab_jobs row of kind 'bench' whose page_id names a lab_bench row runs one stage of the real
    pipeline on a sitting with the models that row names, and keeps what came out in lab_bench: never in the sitting, its pages
    or its metering. Nothing on the API starts one; only someone who can write the database can.
-   spec: {stage:'models'} · {stage:'read',page_id,read:{provider,model,thinking}}
+   spec: {stage:'models'} · {stage:'read',page_id,read:{provider,model,thinking}} · {stage:'migrate-r2',limit?,dry?} (any paid sitting)
          · {stage:'grade',task,grade:{provider,model,thinking,images},moderate:{…}|null,reads:{page_id:bench_id},lang,scheme:{provider,model,thinking}?} */
 const LAB_BENCH_SQL = `CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`;
@@ -3388,6 +3423,8 @@ async function labBench(env, s, job) {
         }
         out = { grader: { ...g, endpoint: ep }, sum, results, skipped: cases.filter(c => c.skip) };
       }
+    } else if (spec.stage === 'migrate-r2') {
+      out = await labMigrateR2(env, spec);
     } else if (spec.stage === 'tune-start') {
       const t = await gcpToken(env);
       if (!/^gs:\/\//.test(spec.train || '')) throw new Error('bad_train_uri');
