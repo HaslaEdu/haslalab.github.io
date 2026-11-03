@@ -1,0 +1,156 @@
+{
+  "rows": [
+    {
+      "id": "resistance-heading",
+      "source_ocr_hint": 1,
+      "ko": "[[roman-ii]] 고리 원판의 저항 계산",
+      "en": "[[roman-ii]] Resistance of the annular disk"
+    },
+    {
+      "id": "radial-current",
+      "source_ocr_hint": 3,
+      "ko": "반지름 방향 전류이므로 원판을 좁은 고리들로 나누자.",
+      "en": "Radial current: divide the disk into many narrow rings."
+    },
+    {
+      "id": "ring-radii",
+      "source_ocr_hint": 6,
+      "ko": "반지름은 [[radii]]이며 [[ring-j]]번째",
+      "en": "Radii: [[radii]]. Ring [[ring-j]] has"
+    },
+    {
+      "id": "ring-width",
+      "source_ocr_hint": 7,
+      "ko": "폭은 [[delta-r]]이며 저항은",
+      "en": "width [[delta-r]], and resistance"
+    },
+    {
+      "id": "series-resistance",
+      "source_ocr_hint": 14,
+      "ko": "전체 저항 [[disk-R]]은 각 고리 저항의 직렬 합이다. 즉",
+      "en": "Rings are in series; disk resistance [[disk-R]] is"
+    },
+    {
+      "id": "no-load-heading",
+      "source_ocr_hint": 23,
+      "ko": "[[roman-iii]] 무부하 정상 각속도",
+      "en": "[[roman-iii]] No-load steady angular velocity"
+    },
+    {
+      "id": "no-load-first",
+      "source_ocr_hint": 25,
+      "ko": "무부하 정상 상태에서 원판 전류는 [[i-zero]]이고,",
+      "en": "No-load steady state: disk current [[i-zero]],"
+    },
+    {
+      "id": "no-load-second",
+      "source_ocr_hint": 26,
+      "ko": "각속도는 [[omega0]]이다. 식 [[no-load-eq2]]에서 원판의 유도 기전력은",
+      "en": "angular velocity [[omega0]]. By [[no-load-eq2]], the disk’s induced emf is"
+    },
+    {
+      "id": "shunt-current",
+      "source_ocr_hint": 33,
+      "ko": "정전류원 전류 [[I-source]]는 모두 [[R0]]로 흐르므로 식 [[shunt-eq1]]에서",
+      "en": "All source current [[I-source]] flows in [[R0]]; [[shunt-eq1]] gives"
+    },
+    {
+      "id": "no-load-result",
+      "source_ocr_hint": 39,
+      "ko": "식 [[eq4-5]]에서 무부하 정상 각속도는",
+      "en": "From [[eq4-5]], the no-load steady angular velocity is"
+    },
+    {
+      "id": "maximum-power-heading",
+      "source_ocr_hint": 45,
+      "ko": "[[roman-iv]] 최대 기계적 출력 계산",
+      "en": "[[roman-iv]] Maximum mechanical output power"
+    },
+    {
+      "id": "loaded-first",
+      "source_ocr_hint": 47,
+      "ko": "부하가 있을 때 각속도를 [[omega-loaded]], 원판 전류를",
+      "en": "Mechanical load: angular velocity [[omega-loaded]], disk current"
+    },
+    {
+      "id": "loaded-second",
+      "source_ocr_hint": 48,
+      "ko": "[[current-i]]라 하면 식 [[loaded-eq1]], [[loaded-eq2]]에서",
+      "en": "[[current-i]]. By [[loaded-eq1]] and [[loaded-eq2]],"
+    },
+    {
+      "id": "ring-power",
+      "source_ocr_hint": 58,
+      "ko": "[[j-power]]번째 고리에 작용하는 자기력의 일률은",
+      "en": "Magnetic power on ring [[j-power]] is"
+    },
+    {
+      "id": "total-power",
+      "source_ocr_hint": 2,
+      "ko": "원판 전체에 작용하는 자기력의 일률은",
+      "en": "Total magnetic power on the disk is"
+    },
+    {
+      "id": "steady-first",
+      "source_ocr_hint": 8,
+      "ko": "정상 회전 상태에서 기계적 출력은 자기력의 일률이다.",
+      "en": "Steady rotation: mechanical output equals"
+    },
+    {
+      "id": "steady-second",
+      "source_ocr_hint": 10,
+      "ko": "식 [[steady-eq7]]을 [[steady-eq9]]에 대입하면",
+      "en": "magnetic power. Substitute [[steady-eq7]] into [[steady-eq9]]:"
+    },
+    {
+      "id": "coefficients",
+      "source_ocr_hint": 15,
+      "ko": "여기서",
+      "en": "where"
+    },
+    {
+      "id": "eq10",
+      "source_ocr_hint": 24,
+      "ko": "식 [[eq10]]을 다시 쓰면",
+      "en": "Rewrite [[eq10]] as"
+    },
+    {
+      "id": "maximum-condition",
+      "source_ocr_hint": null,
+      "ko": "다음 조건에서",
+      "en": "When"
+    },
+    {
+      "id": "maximum-result",
+      "source_ocr_hint": 37,
+      "ko": "기계적 출력 [[power-P]]가 최대이다. 식 [[power-eq11]], [[power-eq6]]에서",
+      "en": "The output [[power-P]] is maximal. [[power-eq11]], [[power-eq6]] give"
+    },
+    {
+      "id": "maximum-current-first",
+      "source_ocr_hint": 42,
+      "ko": "[[part-two]] 최대 기계적 출력에서 원판의 각속도는",
+      "en": "[[part-two]] At maximum output, disk angular velocity is"
+    },
+    {
+      "id": "maximum-current-second",
+      "source_ocr_hint": null,
+      "ko": "[[omega-half]]이다. 원판 전류를 [[i-prime]]라 하면 식 [[current-eq1]], [[current-eq2]],",
+      "en": "[[omega-half]]. Let disk current be [[i-prime]]. By [[current-eq1]], [[current-eq2]],"
+    },
+    {
+      "id": "maximum-current-third",
+      "source_ocr_hint": 46,
+      "ko": "[[current-eq6]]에서",
+      "en": "[[current-eq6]],"
+    },
+    {
+      "id": "joule-heating",
+      "source_ocr_hint": 55,
+      "ko": "원판 저항에서 소모되는 열 일률은",
+      "en": "The disk’s resistive heating power is"
+    }
+  ],
+  "reviewed": false,
+  "scope": "Explicit human-authored bilingual source-line translations; no mathematical retyping."
+}

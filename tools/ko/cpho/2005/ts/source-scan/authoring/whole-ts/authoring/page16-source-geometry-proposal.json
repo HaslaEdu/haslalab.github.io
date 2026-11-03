@@ -1,0 +1,288 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "geometry": {
+    "negative-coefficient": [
+      70,
+      [
+        68.5,
+        99,
+        330,
+        127
+      ]
+    ],
+    "electric-force": [
+      71,
+      [
+        69,
+        167,
+        257,
+        185
+      ]
+    ],
+    "restoring-first": [
+      72,
+      [
+        70,
+        222,
+        405,
+        241
+      ]
+    ],
+    "restoring-second": [
+      71,
+      [
+        68.5,
+        242,
+        135,
+        257.47
+      ]
+    ],
+    "narrow-first": [
+      90,
+      [
+        87,
+        303,
+        406,
+        334
+      ]
+    ],
+    "narrow-second": [
+      62,
+      [
+        60,
+        335,
+        406,
+        354
+      ]
+    ],
+    "narrow-third": [
+      62,
+      [
+        59.5,
+        354,
+        406,
+        373
+      ]
+    ],
+    "escape-first": [
+      62,
+      [
+        59.5,
+        374,
+        406,
+        392
+      ]
+    ],
+    "escape-second": [
+      62,
+      [
+        59.5,
+        393,
+        405,
+        411
+      ]
+    ],
+    "escape-third": [
+      62,
+      [
+        60,
+        412,
+        182,
+        427.42
+      ]
+    ]
+  },
+  "protected": [
+    [
+      166,
+      58.72,
+      303,
+      97
+    ],
+    [
+      163,
+      130,
+      310,
+      165
+    ],
+    [
+      149,
+      263.17,
+      406,
+      305.5
+    ],
+    [
+      135,
+      185.5,
+      265,
+      221.5
+    ],
+    [
+      265,
+      177,
+      338,
+      221.5
+    ]
+  ],
+  "math_specs": [
+    {
+      "id": "wide-condition",
+      "search_rect": [
+        82,
+        99,
+        135,
+        128
+      ],
+      "image_path": [
+        708
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "negative-term",
+      "search_rect": [
+        140,
+        102,
+        197,
+        120
+      ],
+      "image_path": [
+        708
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "case-ii",
+      "search_rect": [
+        85,
+        309,
+        114,
+        328
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "narrow-condition",
+      "search_rect": [
+        130,
+        302,
+        184,
+        335
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "potential-V",
+      "search_rect": [
+        375,
+        311,
+        405,
+        329
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "peak-zero1",
+      "search_rect": [
+        178,
+        336,
+        209,
+        354
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "potential-W",
+      "search_rect": [
+        332,
+        336,
+        364,
+        355
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "peak-zero2",
+      "search_rect": [
+        151,
+        355,
+        183,
+        373
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "figure4",
+      "search_rect": [
+        239,
+        355,
+        249,
+        373
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    },
+    {
+      "id": "curve-II1",
+      "search_rect": [
+        300,
+        355,
+        319,
+        374
+      ],
+      "image_path": [
+        717
+      ],
+      "center_hint": null
+    }
+  ],
+  "right_edges": {},
+  "ko_math_gaps": {
+    "negative-coefficient": {
+      "wide-condition": 0.75,
+      "negative-term": 0.75
+    },
+    "electric-force": {},
+    "restoring-first": {},
+    "restoring-second": {},
+    "narrow-first": {
+      "case-ii": 0.75,
+      "narrow-condition": 0.75,
+      "potential-V": 0.75
+    },
+    "narrow-second": {
+      "peak-zero1": 0.75,
+      "potential-W": 0.75
+    },
+    "narrow-third": {
+      "peak-zero2": 0.75,
+      "figure4": 0.75,
+      "curve-II1": 0.75
+    },
+    "escape-first": {},
+    "escape-second": {},
+    "escape-third": {}
+  },
+  "center_slots": {},
+  "reviewed": false
+}

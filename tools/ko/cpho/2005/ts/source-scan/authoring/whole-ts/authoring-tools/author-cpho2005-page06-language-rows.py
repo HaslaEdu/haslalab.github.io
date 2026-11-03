@@ -1,0 +1,45 @@
+from pathlib import Path
+import json
+B=Path('D:/CodexBuilds/Hasla-original-style-20261031/cpho2005/TS')
+rows=[];samples=[]
+def row(id,hint,ko,en,sample,window):
+ rows.append(dict(id=id,source_ocr_hint=hint,ko=ko,en=en))
+ samples.append(dict(id=id,source_region='left' if window[0]<420 else 'right',source_text=sample,source_measurement_window=window))
+row('comparison',1,'따라서','Hence','可见',[65,65,93,81])
+row('final-rest',7,'따라서 [[A-rest]]는 [[x-rest]]에서 멈추고 계는 정지한다.','Thus [[A-rest]] stops at [[x-rest]]; the system rests.','系统静止',[214,99,266,117])
+row('total-distance-first',9,'[[B-release]]를 놓은 순간부터 계가 마지막으로 정지할 때까지 [[A-distance]]가','From release of [[B-release]] to final rest, [[A-distance]] travels','系统最后',[151,118,204,136])
+row('total-distance-second',12,'이동한 총거리는','a total distance','的总路程为',[66,138,130,155])
+row('friction-work',16,'마찰에 대항한 총일은','Total work against friction','克服摩擦力',[66,174,131,191])
+row('substitution',22,'주어진 값을 대입하면','Substitution gives','有关数据',[91,212,144,231])
+row('total-time',28,'처음부터 마지막 정지까지 걸린 시간은','Time from release to final rest is','最后停止',[140,249,193,267])
+row('section-three',33,'3.','3.','三、',[96,298,119,316])
+row('cooling-B',37,'천천히 냉각할 때 조건에 따라 [[B-cooling]] 속 기체의','By the given conditions, slow cooling in [[B-cooling]]','温度缓慢',[110,314,160,333])
+row('volume-alpha',40,'부피가 줄어든다. 최종 부피가 초기보다 작으므로 [[alpha]]는','reduces the volume below its initial value. Thus [[alpha]] is','体积将变',[62,345.5,114,365])
+row('alpha-one',43,'[[one]]보다 작다.','less than [[one]].','于',[63,365,77,382])
+row('same-gas',45,'[[A-gas]], [[B-gas]]의 기체는 종류와 몰수가 같은 이상 기체이다.','[[A-gas]], [[B-gas]] hold equal moles of the same ideal gas.','两气缸中',[139,383,190,401])
+row('same-energy',47,'초기·최종 온도가 각각 같으므로 내부 에너지 변화도 같다.','Same initial/final temps: equal internal energy changes.','温度相等',[88,401,140,419])
+row('first-law-heat',49,'열역학 제1법칙에서 [[A-heat]], [[B-heat]] 기체의 방출열 [[QA]], [[QB]]의','[[A-heat]], [[B-heat]] release heats [[QA]], [[QB]]; by the first law,','热力学第',[75,420,126,439])
+row('first-law-work',52,'차이는 외부가 기체에 한 일 [[WA]], [[WB]]의 차이이다. 즉','their difference equals that of work on gases, [[WA]], [[WB]].','外界对它',[113,439,166,458])
+row('B-piston',57,'[[B-piston]]를 천천히 냉각하면 피스톤도 천천히 내려가므로','Slow cooling in [[B-piston]] makes the piston descend slowly;','温度缓慢',[211,478,262,496])
+row('B-displacement',59,'매 순간 평형으로 본다. 피스톤이 [[x-descent]]만큼 내려가면','regard it as always balanced. For a descent [[x-descent]],','活塞时时',[101,497,153,515])
+row('B-pressure',62,'[[B-pressure]] 속 기체의 압력은','the gas pressure in [[B-pressure]] is','气体的压',[87,515,139,532])
+row('B-volume',6,'[[B-volume]] 속 기체의 부피가 초기 [[VB]]에서 최종 [[alphaVB]]로 바뀔 때','As the gas volume in [[B-volume]] changes from [[VB]] to [[alphaVB]],','气体的体',[477,84,528,102])
+row('piston-distance',8,'피스톤이 내려간 거리는','the downward displacement is','向下移动',[439,104,491,121])
+row('forces',14,'대기압에 의한 힘 [[p0S]]와 중력 [[mg]]는 일정하고 탄성력 [[kx]]는','Air force [[p0S]], weight [[mg]]: constant; spring tension [[kx]]','大气压力',[438,151,491,170])
+row('force-distance',17,'피스톤의 하강 거리에 비례한다. 외부가 기체에 한 일은','is proportional to piston descent. Work on the gas is','距离成正',[438,170,490,188])
+row('B-initial',23,'이상 기체 상태 방정식에서 [[B-initial]]의 초기 상태는','For the initial gas in [[B-initial]], the ideal gas law gives','理想气体',[451,218,504,236])
+row('equations',31,'식 [[eq3]], [[eq4]], [[eq5]]에서','From [[eq3]], [[eq4]], [[eq5]],','式得',[523,269,549,286])
+row('A-pressure',39,'[[A-pressure]] 속 기체가 천천히 냉각될 때 압력은','For the gas in [[A-pressure]] under slow cooling, pressure is','温度缓慢',[572,333,625,352])
+row('A-work-first',46,'[[pA]]는 일정하므로 등압 과정이다. [[VA1]], [[VA2]]는 [[A-volumes]]의','[[pA]] is constant: isobaric. In [[A-volumes]], [[VA1]], [[VA2]] are volumes','气体经历',[498,381,553,402])
+row('A-work-second',48,'기체의 초기·최종 부피이다. 외부가 [[A-work]]의 기체에 한 일은','initially and finally. Work on the gas in [[A-work]] is','气体初态',[441,401,491,421])
+row('because',None,'다음이 성립하므로','Since','因',[441,442,457,459])
+row('final-temperature',58,'최종 온도가 [[T2]]이면','At final temperature [[T2]],','末态的温',[455,478,507,497])
+row('continuation',63,'[[A-continuation]], [[B-continuation]] 기체는 초기 압력과 온도가 같고, 몰수도','[[A-continuation]], [[B-continuation]]: same initial pressure, temperature; gas moles','气体初态',[528,514,578,533])
+for name,data in [('authoring/page06-language-row-proposals.json',dict(rows=rows,reviewed=False,scope='Manually authored bilingual source-line prose; native bitmap variables have explicit placeholders.')),
+ ('page06-row-baseline-proposals.json',dict(rows=samples,scope='Explicit human-read CJK-only source type measurement windows. No erase masks and no mathematical transcription.'))]:
+ (B/name).write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n','utf8')
+for old,new in [('calibrate-cpho2005-page05-per-row-type.py','calibrate-cpho2005-page06-per-row-type.py'),('calibrate-cpho2005-page05-row-weights.py','calibrate-cpho2005-page06-row-weights.py')]:
+ if Path('D:/CodexBuilds',new).exists():continue
+ s=Path('D:/CodexBuilds',old).read_text('utf8').replace('page05','page06').replace('source[4]','source[5]').replace('original[4]','original[5]').replace('page=5','page=6').replace("'section-two'","'section-three'").replace("'axis-direction'","'cooling-B'").replace('二','三')
+ Path('D:/CodexBuilds',new).write_text(s,'utf8')
+print('PAGE06_LANGUAGE_ROWS_AND_SOURCE_SAMPLE_WINDOWS',len(rows))

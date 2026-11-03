@@ -1,0 +1,4808 @@
+{
+  "source_page": 8,
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "manual_rois_reviewed": false,
+  "publication_ready": false,
+  "source_only_type_calibration": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\TS\\page08-per-row-source-type-proposals.json",
+  "source_only_weight_calibration": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2005\\TS\\page08-row-weight-calibration.json",
+  "rows": [
+    {
+      "id": "recovery-force-first",
+      "source_ocr_hint": 1,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.525,
+      "baseline": 70.25,
+      "left": 62,
+      "right": 409.95,
+      "ko": "식 [[eq1-7]], [[eq11-12]]를 쓰고 식 [[eq3]]의 외력을 [[F-old]] 대신 [[F-prime]]로",
+      "en": "Use [[eq1-7]], [[eq11-12]], replacing [[F-old]] in [[eq3]] by [[F-prime]],",
+      "source_atom_ids": [
+        "eq1-7",
+        "eq11-12",
+        "eq3",
+        "F-old",
+        "F-prime"
+      ],
+      "atoms": [
+        {
+          "id": "eq1-7",
+          "rect": [
+            74.75,
+            60.25,
+            130.25,
+            73.5
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "eq11-12",
+          "rect": [
+            159.75,
+            59.875,
+            213.375,
+            73.0
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "eq3",
+          "rect": [
+            262.5,
+            59.75,
+            280.0,
+            72.75
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "F-old",
+          "rect": [
+            351.375,
+            60.5,
+            360.375,
+            70.875
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "F-prime",
+          "rect": [
+            390.625,
+            59.375,
+            402.5,
+            70.375
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          60,
+          56.5,
+          405,
+          76.5
+        ]
+      ],
+      "printed_regular_stroke": 0.975,
+      "printed_bold_stroke": 0.975,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.975,
+          "bold": 0.975
+        },
+        "ko": {
+          "regular": 0.8,
+          "bold": 0.8
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "recovery-force-first",
+        "source_region": "left",
+        "source_text": "式中的外",
+        "source_measurement_window": [
+          282,
+          57,
+          337,
+          76
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.525,
+          "source_origin": [
+            283.75,
+            70.25
+          ],
+          "source_baseline": 70.25,
+          "source_baseline_angle_degrees": -0.5,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7949497103691101
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              283.75,
+              70.25
+            ],
+            "source_baseline": 70.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7949497103691101
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              283.75,
+              70.25
+            ],
+            "source_baseline": 70.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7904828190803528
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              283.75,
+              70.25
+            ],
+            "source_baseline": 70.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7863167524337769
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.45,
+            "source_origin": [
+              284.0,
+              70.25
+            ],
+            "source_baseline": 70.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7851764559745789
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              283.75,
+              70.25
+            ],
+            "source_baseline": 70.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7849765419960022
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              283.75,
+              70.0
+            ],
+            "source_baseline": 70.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7849337458610535
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.45,
+            "source_origin": [
+              284.0,
+              70.0
+            ],
+            "source_baseline": 70.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7822409868240356
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              283.75,
+              70.0
+            ],
+            "source_baseline": 70.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7813084125518799
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              283.75,
+              70.0
+            ],
+            "source_baseline": 70.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7806110978126526
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              283.75,
+              70.25
+            ],
+            "source_baseline": 70.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7805497646331787
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "recovery-force-first",
+      "math_after_gaps_by_language": {
+        "ko": {
+          "eq11-12": 0.5,
+          "F-prime": 0.75
+        },
+        "en": {
+          "eq1-7": 0.55,
+          "eq11-12": 0.55,
+          "F-prime": 0.55
+        }
+      }
+    },
+    {
+      "id": "recovery-force-second",
+      "source_ocr_hint": 3,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.2,
+      "baseline": 89.75,
+      "left": 62,
+      "right": 409.95,
+      "ko": "나타내면",
+      "en": "to obtain",
+      "source_atom_ids": [],
+      "atoms": [],
+      "erase_rects": [
+        [
+          60,
+          76.5,
+          121,
+          94
+        ]
+      ],
+      "printed_regular_stroke": 0.85,
+      "printed_bold_stroke": 0.85,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.85,
+          "bold": 0.85
+        },
+        "ko": {
+          "regular": 0.55,
+          "bold": 0.55
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "recovery-force-second",
+        "source_region": "left",
+        "source_text": "表示",
+        "source_measurement_window": [
+          61,
+          77,
+          87,
+          94
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.2,
+          "source_origin": [
+            62.25,
+            89.75
+          ],
+          "source_baseline": 89.75,
+          "source_baseline_angle_degrees": -0.5,
+          "spread": [
+            1,
+            2
+          ],
+          "iou": 0.7741246819496155
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.2,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7741246819496155
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.15,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7735042572021484
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.225,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7728047966957092
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.125,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7716972827911377
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.275,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7715498805046082
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.3,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7709923386573792
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.25,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7700807452201843
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.175,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7689377665519714
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.175,
+            "source_origin": [
+              62.25,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7657859325408936
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              62.0,
+              89.75
+            ],
+            "source_baseline": 89.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7642174959182739
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "recovery-force-second",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "linear-fixed",
+      "source_ocr_hint": 15,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.8,
+      "baseline": 179.5,
+      "left": 62,
+      "right": 409.95,
+      "ko": "[[fixed-k-alpha-mu]], [[fixed-x]]가 정해지면 식 [[eq10]], [[eq13]]의 첫",
+      "en": "Fixed [[fixed-k-alpha-mu]], [[fixed-x]]: in [[eq10]], [[eq13]], the first term",
+      "source_atom_ids": [
+        "fixed-k-alpha-mu",
+        "fixed-x",
+        "eq10",
+        "eq13"
+      ],
+      "atoms": [
+        {
+          "id": "fixed-k-alpha-mu",
+          "rect": [
+            78.5,
+            169.875,
+            137.625,
+            183.375
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "fixed-x",
+          "rect": [
+            153.375,
+            173.375,
+            191.375,
+            182.625
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "eq10",
+          "rect": [
+            288.625,
+            168.5,
+            312.375,
+            181.5
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "eq13",
+          "rect": [
+            328.25,
+            168.125,
+            351.75,
+            181.375
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          60,
+          165,
+          407,
+          184.5
+        ]
+      ],
+      "printed_regular_stroke": 0.9,
+      "printed_bold_stroke": 0.9,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.9,
+          "bold": 0.9
+        },
+        "ko": {
+          "regular": 0.75,
+          "bold": 0.75
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "linear-fixed",
+        "source_region": "left",
+        "source_text": "已确定的",
+        "source_measurement_window": [
+          191,
+          165,
+          243,
+          185
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.8,
+          "source_origin": [
+            192.25,
+            179.5
+          ],
+          "source_baseline": 179.5,
+          "source_baseline_angle_degrees": -0.5,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7647873163223267
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.8,
+            "source_origin": [
+              192.25,
+              179.5
+            ],
+            "source_baseline": 179.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7647873163223267
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.8,
+            "source_origin": [
+              192.25,
+              179.5
+            ],
+            "source_baseline": 179.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7595736384391785
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              192.5,
+              179.5
+            ],
+            "source_baseline": 179.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7568365335464478
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.8,
+            "source_origin": [
+              192.25,
+              179.25
+            ],
+            "source_baseline": 179.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7561023831367493
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              192.5,
+              179.5
+            ],
+            "source_baseline": 179.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.755306601524353
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.8,
+            "source_origin": [
+              192.25,
+              179.75
+            ],
+            "source_baseline": 179.75,
+            "source_baseline_angle_degrees": -1,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7547206878662109
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.775,
+            "source_origin": [
+              192.5,
+              179.5
+            ],
+            "source_baseline": 179.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7538885474205017
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.825,
+            "source_origin": [
+              192.25,
+              179.5
+            ],
+            "source_baseline": 179.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7516211271286011
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              192.5,
+              179.75
+            ],
+            "source_baseline": 179.75,
+            "source_baseline_angle_degrees": -1,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7498040795326233
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              192.5,
+              179.25
+            ],
+            "source_baseline": 179.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7496081590652466
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "linear-fixed",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "fixed-k-alpha-mu": 0.55,
+          "fixed-x": 0.55,
+          "eq10": 0.55,
+          "eq13": 0.55
+        }
+      }
+    },
+    {
+      "id": "linear-coefficients",
+      "source_ocr_hint": 17,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.475,
+      "baseline": 198.25,
+      "left": 62,
+      "right": 409.95,
+      "ko": "항과 [[dx-coefficient]]의 계수는 일정하다. 따라서 [[F-linear]], [[Fp-linear]]는 [[dx-linear]]의 선형",
+      "en": "and the [[dx-coefficient]] coefficient are fixed; [[F-linear]], [[Fp-linear]]: linear in [[dx-linear]],",
+      "source_atom_ids": [
+        "dx-coefficient",
+        "F-linear",
+        "Fp-linear",
+        "dx-linear"
+      ],
+      "atoms": [
+        {
+          "id": "dx-coefficient",
+          "rect": [
+            141.25,
+            189.125,
+            162.25,
+            201.875
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "F-linear",
+          "rect": [
+            301.25,
+            188.5,
+            310.5,
+            199.125
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "Fp-linear",
+          "rect": [
+            326.625,
+            188.25,
+            338.0,
+            199.25
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "dx-linear",
+          "rect": [
+            356.75,
+            188.125,
+            377.875,
+            200.75
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          60,
+          184.5,
+          407,
+          203.5
+        ]
+      ],
+      "printed_regular_stroke": 0.825,
+      "printed_bold_stroke": 0.825,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.825,
+          "bold": 0.825
+        },
+        "ko": {
+          "regular": 0.65,
+          "bold": 0.65
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "linear-coefficients",
+        "source_region": "left",
+        "source_text": "的系数均",
+        "source_measurement_window": [
+          163,
+          185,
+          217,
+          205
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.475,
+          "source_origin": [
+            164.5,
+            198.25
+          ],
+          "source_baseline": 198.25,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7882857918739319
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              164.5,
+              198.25
+            ],
+            "source_baseline": 198.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7882857918739319
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              164.5,
+              198.5
+            ],
+            "source_baseline": 198.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7882857918739319
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              164.5,
+              198.25
+            ],
+            "source_baseline": 198.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7835224270820618
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              164.5,
+              198.75
+            ],
+            "source_baseline": 198.75,
+            "source_baseline_angle_degrees": -1,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7833178639411926
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              164.25,
+              198.75
+            ],
+            "source_baseline": 198.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7825925946235657
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              164.5,
+              198.5
+            ],
+            "source_baseline": 198.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7821966409683228
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              164.25,
+              198.5
+            ],
+            "source_baseline": 198.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7819325923919678
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              164.5,
+              198.25
+            ],
+            "source_baseline": 198.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7804605960845947
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              164.25,
+              198.5
+            ],
+            "source_baseline": 198.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7798300981521606
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              164.5,
+              198.5
+            ],
+            "source_baseline": 198.5,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7788087129592896
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "linear-coefficients",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "F-linear": 0.55,
+          "Fp-linear": 0.55,
+          "dx-linear": 0.55
+        }
+      }
+    },
+    {
+      "id": "linear-constant",
+      "source_ocr_hint": 20,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.6,
+      "baseline": 217.5,
+      "left": 62,
+      "right": 409.95,
+      "ko": "함수이다. [[F-sum]] 또는 [[Fp-sum]]는 일정한 힘 [[F0]], [[F0p]]와",
+      "en": "so [[F-sum]] or [[Fp-sum]] is a sum of a constant force, [[F0]] or [[F0p]],",
+      "source_atom_ids": [
+        "F-sum",
+        "Fp-sum",
+        "F0",
+        "F0p"
+      ],
+      "atoms": [
+        {
+          "id": "F-sum",
+          "rect": [
+            149.5,
+            207.875,
+            158.5,
+            218.75
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "Fp-sum",
+          "rect": [
+            180.5,
+            207.75,
+            191.75,
+            218.75
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "F0",
+          "rect": [
+            306.25,
+            207.625,
+            320.0,
+            220.25
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "F0p",
+          "rect": [
+            341.875,
+            207.0,
+            357.625,
+            220.0
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          60,
+          203.5,
+          407,
+          223
+        ]
+      ],
+      "printed_regular_stroke": 0.925,
+      "printed_bold_stroke": 0.925,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.925,
+          "bold": 0.925
+        },
+        "ko": {
+          "regular": 0.65,
+          "bold": 0.65
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "linear-constant",
+        "source_region": "left",
+        "source_text": "看成是由",
+        "source_measurement_window": [
+          200,
+          204,
+          253,
+          224
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.6,
+          "source_origin": [
+            201.25,
+            217.5
+          ],
+          "source_baseline": 217.5,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            1,
+            2
+          ],
+          "iou": 0.7854456305503845
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              201.25,
+              217.5
+            ],
+            "source_baseline": 217.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7854456305503845
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              201.25,
+              217.5
+            ],
+            "source_baseline": 217.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7824773192405701
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              201.25,
+              217.5
+            ],
+            "source_baseline": 217.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7742680907249451
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              201.25,
+              217.5
+            ],
+            "source_baseline": 217.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7731141448020935
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.65,
+            "source_origin": [
+              201.0,
+              217.5
+            ],
+            "source_baseline": 217.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7730061411857605
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.7,
+            "source_origin": [
+              201.0,
+              217.5
+            ],
+            "source_baseline": 217.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7718744277954102
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              201.25,
+              217.75
+            ],
+            "source_baseline": 217.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7717857956886292
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              201.25,
+              217.25
+            ],
+            "source_baseline": 217.25,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7716417908668518
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              201.25,
+              217.75
+            ],
+            "source_baseline": 217.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7711069583892822
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.625,
+            "source_origin": [
+              201.0,
+              217.5
+            ],
+            "source_baseline": 217.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7711045145988464
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "linear-constant",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "F0p": 0.55
+        }
+      }
+    },
+    {
+      "id": "linear-variable",
+      "source_ocr_hint": 22,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.725,
+      "baseline": 237.0,
+      "left": 62,
+      "right": 409.95,
+      "ko": "[[dx-proportional]]에 비례하는 힘 [[Kdx]], [[Kpdx]]의 합이다. 즉",
+      "en": "and a force proportional to [[dx-proportional]], [[Kdx]] or [[Kpdx]]. Thus",
+      "source_atom_ids": [
+        "dx-proportional",
+        "Kdx",
+        "Kpdx"
+      ],
+      "atoms": [
+        {
+          "id": "dx-proportional",
+          "rect": [
+            78.125,
+            227.625,
+            99.25,
+            240.125
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "Kdx",
+          "rect": [
+            181.875,
+            227.25,
+            211.0,
+            239.75
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "Kpdx",
+          "rect": [
+            233.75,
+            226.5,
+            267.875,
+            239.5
+          ],
+          "image_path": [
+            259
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          60,
+          223,
+          362,
+          243
+        ]
+      ],
+      "printed_regular_stroke": 0.7,
+      "printed_bold_stroke": 0.7,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.7,
+          "bold": 0.7
+        },
+        "ko": {
+          "regular": 0.625,
+          "bold": 0.625
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "linear-variable",
+        "source_region": "left",
+        "source_text": "成正比的",
+        "source_measurement_window": [
+          100,
+          224,
+          154,
+          243
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.725,
+          "source_origin": [
+            101.75,
+            237.0
+          ],
+          "source_baseline": 237.0,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.758169949054718
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              101.75,
+              237.0
+            ],
+            "source_baseline": 237.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.758169949054718
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.7,
+            "source_origin": [
+              102.0,
+              237.0
+            ],
+            "source_baseline": 237.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.753898024559021
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              101.75,
+              236.75
+            ],
+            "source_baseline": 236.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7529930472373962
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              101.75,
+              237.0
+            ],
+            "source_baseline": 237.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7504194378852844
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.775,
+            "source_origin": [
+              101.75,
+              237.0
+            ],
+            "source_baseline": 237.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7502095699310303
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              101.75,
+              237.0
+            ],
+            "source_baseline": 237.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7465240359306335
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.7,
+            "source_origin": [
+              102.0,
+              236.75
+            ],
+            "source_baseline": 236.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7458088994026184
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              101.75,
+              236.75
+            ],
+            "source_baseline": 236.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7449342012405396
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.775,
+            "source_origin": [
+              101.75,
+              236.75
+            ],
+            "source_baseline": 236.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7447296977043152
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.85,
+            "source_origin": [
+              101.5,
+              237.0
+            ],
+            "source_baseline": 237.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7444328665733337
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "linear-variable",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "dx-proportional": 0.55,
+          "Kpdx": 0.55
+        }
+      }
+    },
+    {
+      "id": "coefficients",
+      "source_ocr_hint": 31,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.45,
+      "baseline": 293.75,
+      "left": 62,
+      "right": 409.95,
+      "ko": "여기서",
+      "en": "where",
+      "source_atom_ids": [],
+      "atoms": [],
+      "erase_rects": [
+        [
+          60,
+          280.5,
+          92,
+          299.5
+        ]
+      ],
+      "printed_regular_stroke": 0.75,
+      "printed_bold_stroke": 0.75,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.75,
+          "bold": 0.75
+        },
+        "ko": {
+          "regular": 0.75,
+          "bold": 0.75
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "coefficients",
+        "source_region": "left",
+        "source_text": "式中",
+        "source_measurement_window": [
+          61,
+          281,
+          90,
+          299
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.45,
+          "source_origin": [
+            62.75,
+            293.75
+          ],
+          "source_baseline": 293.75,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.8176825642585754
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.45,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8176825642585754
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.425,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8163265585899353
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.812636137008667
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8086283206939697
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.425,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8083470463752747
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.4,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8081812858581543
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.45,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8077553510665894
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8055105209350586
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8028169274330139
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.4,
+            "source_origin": [
+              62.75,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.8012114763259888
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "coefficients",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "compression-work",
+      "source_ocr_hint": 58,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.625,
+      "baseline": 455.0,
+      "left": 65,
+      "right": 409.95,
+      "ko": "[[dx-compression]]가 영에서 [[dxm-compression]]까지 증가할 때 [[F-work]]가 한 일은",
+      "en": "As [[dx-compression]] grows from zero to [[dxm-compression]], the work by [[F-work]] is",
+      "source_atom_ids": [
+        "dx-compression",
+        "dxm-compression",
+        "F-work"
+      ],
+      "atoms": [
+        {
+          "id": "dx-compression",
+          "rect": [
+            80.0,
+            445.75,
+            101.125,
+            458.125
+          ],
+          "image_path": [
+            268
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "dxm-compression",
+          "rect": [
+            169.625,
+            445.75,
+            192.875,
+            457.875
+          ],
+          "image_path": [
+            268
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "F-work",
+          "rect": [
+            269.875,
+            445.125,
+            278.75,
+            455.625
+          ],
+          "image_path": [
+            268
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          63,
+          443,
+          333,
+          460.5
+        ]
+      ],
+      "printed_regular_stroke": 0.775,
+      "printed_bold_stroke": 0.775,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.775,
+          "bold": 0.775
+        },
+        "ko": {
+          "regular": 0.65,
+          "bold": 0.65
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "compression-work",
+        "source_region": "left",
+        "source_text": "由零增加",
+        "source_measurement_window": [
+          103,
+          442,
+          155,
+          460
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.625,
+          "source_origin": [
+            103.5,
+            455.0
+          ],
+          "source_baseline": 455.0,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            1,
+            2
+          ],
+          "iou": 0.773015558719635
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.625,
+            "source_origin": [
+              103.5,
+              455.0
+            ],
+            "source_baseline": 455.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.773015558719635
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              103.75,
+              455.0
+            ],
+            "source_baseline": 455.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.771960437297821
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.675,
+            "source_origin": [
+              103.5,
+              455.0
+            ],
+            "source_baseline": 455.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7710011601448059
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              103.75,
+              455.0
+            ],
+            "source_baseline": 455.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.770567774772644
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.65,
+            "source_origin": [
+              103.5,
+              455.0
+            ],
+            "source_baseline": 455.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.769804835319519
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.625,
+            "source_origin": [
+              103.5,
+              454.75
+            ],
+            "source_baseline": 454.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7696143984794617
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              103.75,
+              454.75
+            ],
+            "source_baseline": 454.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7680402398109436
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              103.25,
+              455.0
+            ],
+            "source_baseline": 455.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7675613760948181
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.65,
+            "source_origin": [
+              103.5,
+              454.75
+            ],
+            "source_baseline": 454.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7667621970176697
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              103.25,
+              455.0
+            ],
+            "source_baseline": 455.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7664386034011841
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "compression-work",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "dxm-compression": 0.55
+        }
+      }
+    },
+    {
+      "id": "recovery-work",
+      "source_ocr_hint": 2,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.625,
+      "baseline": 79.0,
+      "left": 439,
+      "right": 784.85,
+      "ko": "[[dx-recovery]]가 [[dxm-recovery]]에서 영까지 감소할 때 [[Fp-work]]가 한 일은",
+      "en": "As [[dx-recovery]] falls from [[dxm-recovery]] to zero, the work by [[Fp-work]] is",
+      "source_atom_ids": [
+        "dx-recovery",
+        "dxm-recovery",
+        "Fp-work"
+      ],
+      "atoms": [
+        {
+          "id": "dx-recovery",
+          "rect": [
+            453.75,
+            69.125,
+            474.375,
+            81.625
+          ],
+          "image_path": [
+            277
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "dxm-recovery",
+          "rect": [
+            491.875,
+            69.375,
+            514.875,
+            82.0
+          ],
+          "image_path": [
+            277
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "Fp-work",
+          "rect": [
+            641.125,
+            69.875,
+            652.375,
+            80.5
+          ],
+          "image_path": [
+            277
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          437,
+          64.5,
+          709,
+          84.5
+        ]
+      ],
+      "printed_regular_stroke": 0.9,
+      "printed_bold_stroke": 0.9,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.9,
+          "bold": 0.9
+        },
+        "ko": {
+          "regular": 0.675,
+          "bold": 0.675
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "recovery-work",
+        "source_region": "right",
+        "source_text": "减小到零",
+        "source_measurement_window": [
+          515,
+          66,
+          570,
+          84
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.625,
+          "source_origin": [
+            517.5,
+            79.0
+          ],
+          "source_baseline": 79.0,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7525931596755981
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.625,
+            "source_origin": [
+              517.5,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7525931596755981
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.65,
+            "source_origin": [
+              517.5,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.744753897190094
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.625,
+            "source_origin": [
+              517.5,
+              78.75
+            ],
+            "source_baseline": 78.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7437416315078735
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              517.75,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7437079548835754
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              517.75,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7432250380516052
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              517.75,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7409396171569824
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.65,
+            "source_origin": [
+              517.5,
+              78.75
+            ],
+            "source_baseline": 78.75,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7396348714828491
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.625,
+            "source_origin": [
+              517.5,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7387438416481018
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              517.75,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7386059165000916
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              517.5,
+              79.0
+            ],
+            "source_baseline": 79.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7380496859550476
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "recovery-work",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "absorption",
+      "source_ocr_hint": 8,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.75,
+      "baseline": 134.75,
+      "left": 440,
+      "right": 784.85,
+      "ko": "식 [[eq20-21]]과 흡수율의 정의에서",
+      "en": "From [[eq20-21]] and the definition of absorption,",
+      "source_atom_ids": [
+        "eq20-21"
+      ],
+      "atoms": [
+        {
+          "id": "eq20-21",
+          "rect": [
+            451.875,
+            123.625,
+            505.25,
+            137.0
+          ],
+          "image_path": [
+            286
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          438,
+          121.5,
+          637,
+          141
+        ]
+      ],
+      "printed_regular_stroke": 0.725,
+      "printed_bold_stroke": 0.725,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.725,
+          "bold": 0.725
+        },
+        "ko": {
+          "regular": 0.55,
+          "bold": 0.55
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "absorption",
+        "source_region": "right",
+        "source_text": "式及吸收",
+        "source_measurement_window": [
+          507,
+          122,
+          560,
+          140
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.75,
+          "source_origin": [
+            508.75,
+            134.75
+          ],
+          "source_baseline": 134.75,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            1,
+            2
+          ],
+          "iou": 0.7833195328712463
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              508.75,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7833195328712463
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              508.75,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7797401547431946
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              508.75,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7763265371322632
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.725,
+            "source_origin": [
+              508.75,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7762993574142456
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.775,
+            "source_origin": [
+              508.75,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7738631963729858
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.775,
+            "source_origin": [
+              508.75,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7737064361572266
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.7,
+            "source_origin": [
+              508.75,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7722936272621155
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              508.75,
+              134.5
+            ],
+            "source_baseline": 134.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7715871930122375
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.75,
+            "source_origin": [
+              508.75,
+              134.5
+            ],
+            "source_baseline": 134.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.771468997001648
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              509.0,
+              134.75
+            ],
+            "source_baseline": 134.75,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7702205777168274
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "absorption",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "efficiency",
+      "source_ocr_hint": 16,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.6,
+      "baseline": 185.0,
+      "left": 439,
+      "right": 784.85,
+      "ko": "식 [[eq16-19]]를 쓰고 주어진 값을 대입하면",
+      "en": "Using [[eq16-19]] and substituting the given data yields",
+      "source_atom_ids": [
+        "eq16-19"
+      ],
+      "atoms": [
+        {
+          "id": "eq16-19",
+          "rect": [
+            476.75,
+            173.875,
+            543.0,
+            187.0
+          ],
+          "image_path": [
+            286
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          437,
+          171.5,
+          686,
+          190
+        ]
+      ],
+      "printed_regular_stroke": 0.675,
+      "printed_bold_stroke": 0.675,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.675,
+          "bold": 0.675
+        },
+        "ko": {
+          "regular": 0.525,
+          "bold": 0.525
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "efficiency",
+        "source_region": "right",
+        "source_text": "代入有关",
+        "source_measurement_window": [
+          565,
+          170,
+          622,
+          192
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.6,
+          "source_origin": [
+            565.5,
+            185.0
+          ],
+          "source_baseline": 185.0,
+          "source_baseline_angle_degrees": 0.5,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7419859170913696
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              565.5,
+              185.0
+            ],
+            "source_baseline": 185.0,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7419859170913696
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              565.5,
+              185.0
+            ],
+            "source_baseline": 185.0,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7406535744667053
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              565.5,
+              185.0
+            ],
+            "source_baseline": 185.0,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.739500105381012
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              565.5,
+              185.0
+            ],
+            "source_baseline": 185.0,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.73549884557724
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              565.5,
+              185.25
+            ],
+            "source_baseline": 185.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7336448431015015
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              565.5,
+              184.75
+            ],
+            "source_baseline": 184.75,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7330222725868225
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              565.5,
+              185.25
+            ],
+            "source_baseline": 185.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7318406701087952
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              565.5,
+              185.25
+            ],
+            "source_baseline": 185.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7316572666168213
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              565.5,
+              184.75
+            ],
+            "source_baseline": 184.75,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7303195595741272
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              565.5,
+              185.0
+            ],
+            "source_baseline": 185.0,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.7294015884399414
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "efficiency",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "section-five",
+      "source_ocr_hint": 21,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 11.575,
+      "baseline": 220.5,
+      "left": 464,
+      "right": 784.85,
+      "ko": "5.",
+      "en": "5.",
+      "source_atom_ids": [],
+      "atoms": [],
+      "erase_rects": [
+        [
+          462,
+          208.5,
+          485,
+          225.5
+        ]
+      ],
+      "printed_regular_stroke": 1.025,
+      "printed_bold_stroke": 1.025,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 1.025,
+          "bold": 1.025
+        },
+        "ko": {
+          "regular": 0.95,
+          "bold": 0.95
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "section-five",
+        "source_region": "right",
+        "source_text": "五、",
+        "source_measurement_window": [
+          462,
+          209,
+          484,
+          225
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 11.575,
+          "source_origin": [
+            464.25,
+            220.5
+          ],
+          "source_baseline": 220.5,
+          "source_baseline_angle_degrees": 0.5,
+          "spread": [
+            1,
+            2
+          ],
+          "iou": 0.7007434964179993
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 11.575,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7007434964179993
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.575,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6987951993942261
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.55,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6986940503120422
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.525,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6978484392166138
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.5,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6962617039680481
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.6,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.6954458951950073
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.5,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6949626803398132
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.525,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6949626803398132
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.575,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6944444179534912
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 11.55,
+            "source_origin": [
+              464.25,
+              220.5
+            ],
+            "source_baseline": 220.5,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6942379474639893
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "section-five",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "excited-energy",
+      "source_ocr_hint": 23,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.575,
+      "baseline": 239.25,
+      "left": 464,
+      "right": 784.85,
+      "ko": "[[part-one]] 들뜬 상태 핵의 에너지는",
+      "en": "[[part-one]] The energy of the excited nucleus is",
+      "source_atom_ids": [
+        "part-one"
+      ],
+      "atoms": [
+        {
+          "id": "part-one",
+          "rect": [
+            464.375,
+            230.0,
+            473.375,
+            239.875
+          ],
+          "image_path": [
+            286
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          462,
+          227,
+          579,
+          244.5
+        ]
+      ],
+      "printed_regular_stroke": 0.825,
+      "printed_bold_stroke": 0.825,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.825,
+          "bold": 0.825
+        },
+        "ko": {
+          "regular": 0.525,
+          "bold": 0.525
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "excited-energy",
+        "source_region": "right",
+        "source_text": "激发态核",
+        "source_measurement_window": [
+          473,
+          227,
+          526,
+          245
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.575,
+          "source_origin": [
+            475.5,
+            239.25
+          ],
+          "source_baseline": 239.25,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7287243604660034
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              475.5,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7287243604660034
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              475.5,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7272232174873352
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              475.5,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7269600033760071
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.65,
+            "source_origin": [
+              475.25,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7258561253547668
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              475.5,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.7252124547958374
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.625,
+            "source_origin": [
+              475.25,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7240817546844482
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.7,
+            "source_origin": [
+              475.25,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7240633964538574
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              475.5,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.7233999371528625
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.675,
+            "source_origin": [
+              475.25,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7229241728782654
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              475.5,
+              239.25
+            ],
+            "source_baseline": 239.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7226316928863525
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "excited-energy",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "emission-first",
+      "source_ocr_hint": 30,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.375,
+      "baseline": 275.5,
+      "left": 439,
+      "right": 784.85,
+      "ko": "방출 중 운동량은 보존된다. 핵의 방출 후 운동량을 [[p-recoil]],",
+      "en": "Emission conserves momentum. Recoiling nucleus: [[p-recoil]];",
+      "source_atom_ids": [
+        "p-recoil"
+      ],
+      "atoms": [
+        {
+          "id": "p-recoil",
+          "rect": [
+            650.125,
+            269.875,
+            657.75,
+            279.875
+          ],
+          "image_path": [
+            286
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          437,
+          263.5,
+          780,
+          281.5
+        ]
+      ],
+      "printed_regular_stroke": 0.675,
+      "printed_bold_stroke": 0.675,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.675,
+          "bold": 0.675
+        },
+        "ko": {
+          "regular": 0.65,
+          "bold": 0.65
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "emission-first",
+        "source_region": "right",
+        "source_text": "发射光子",
+        "source_measurement_window": [
+          448,
+          264,
+          501,
+          282
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.375,
+          "source_origin": [
+            451.25,
+            275.5
+          ],
+          "source_baseline": 275.5,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7607564926147461
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              451.25,
+              275.5
+            ],
+            "source_baseline": 275.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7607564926147461
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.4,
+            "source_origin": [
+              451.25,
+              275.5
+            ],
+            "source_baseline": 275.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7575329542160034
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.425,
+            "source_origin": [
+              451.25,
+              275.5
+            ],
+            "source_baseline": 275.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7568710446357727
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              451.0,
+              275.5
+            ],
+            "source_baseline": 275.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7548221945762634
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.325,
+            "source_origin": [
+              451.5,
+              275.25
+            ],
+            "source_baseline": 275.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7532314658164978
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.4,
+            "source_origin": [
+              451.25,
+              275.25
+            ],
+            "source_baseline": 275.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7525052428245544
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              451.25,
+              275.25
+            ],
+            "source_baseline": 275.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.751811146736145
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.35,
+            "source_origin": [
+              451.5,
+              275.25
+            ],
+            "source_baseline": 275.25,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7512309551239014
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              451.0,
+              275.5
+            ],
+            "source_baseline": 275.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7511584758758545
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              451.0,
+              275.5
+            ],
+            "source_baseline": 275.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.7505186796188354
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "emission-first",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "p-recoil": 0.55
+        }
+      }
+    },
+    {
+      "id": "emission-second",
+      "source_ocr_hint": 32,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.475,
+      "baseline": 293.75,
+      "left": 439,
+      "right": 784.85,
+      "ko": "광자 진동수를 [[nu0]], 광자 진행 방향을 양으로 잡으면",
+      "en": "photon frequency: [[nu0]]. Positive axis: photon propagation.",
+      "source_atom_ids": [
+        "nu0"
+      ],
+      "atoms": [
+        {
+          "id": "nu0",
+          "rect": [
+            470.625,
+            287.625,
+            481.375,
+            296.625
+          ],
+          "image_path": [
+            286
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          437,
+          281.5,
+          737,
+          300
+        ]
+      ],
+      "printed_regular_stroke": 0.85,
+      "printed_bold_stroke": 0.85,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.85,
+          "bold": 0.85
+        },
+        "ko": {
+          "regular": 0.55,
+          "bold": 0.55
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "emission-second",
+        "source_region": "right",
+        "source_text": "表示光子",
+        "source_measurement_window": [
+          483,
+          282,
+          537,
+          300
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.475,
+          "source_origin": [
+            484.0,
+            293.75
+          ],
+          "source_baseline": 293.75,
+          "source_baseline_angle_degrees": -0.5,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7276606559753418
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              484.0,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7276606559753418
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.525,
+            "source_origin": [
+              484.0,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.726258397102356
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.5,
+            "source_origin": [
+              484.0,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7246341109275818
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              484.0,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7208786010742188
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              484.0,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.718151330947876
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              484.0,
+              293.5
+            ],
+            "source_baseline": 293.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7152761220932007
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              484.25,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7149975299835205
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.425,
+            "source_origin": [
+              484.25,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7142146825790405
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.45,
+            "source_origin": [
+              484.0,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7123662829399109
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.35,
+            "source_origin": [
+              484.5,
+              293.75
+            ],
+            "source_baseline": 293.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7117632627487183
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "emission-second",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "nu0": 0.55
+        }
+      }
+    },
+    {
+      "id": "recoil-momentum",
+      "source_ocr_hint": 39,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.35,
+      "baseline": 341.5,
+      "left": 439,
+      "right": 784.85,
+      "ko": "반동하는 바닥상태 핵의 운동량은",
+      "en": "The recoil momentum of the ground-state nucleus is",
+      "source_atom_ids": [],
+      "atoms": [],
+      "erase_rects": [
+        [
+          437,
+          330,
+          591,
+          347.5
+        ]
+      ],
+      "printed_regular_stroke": 0.875,
+      "printed_bold_stroke": 0.875,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.875,
+          "bold": 0.875
+        },
+        "ko": {
+          "regular": 0.65,
+          "bold": 0.65
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "recoil-momentum",
+        "source_region": "right",
+        "source_text": "基态核因",
+        "source_measurement_window": [
+          438,
+          331,
+          491,
+          347
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.35,
+          "source_origin": [
+            438.5,
+            341.5
+          ],
+          "source_baseline": 341.5,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            1,
+            2
+          ],
+          "iou": 0.7343173623085022
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.35,
+            "source_origin": [
+              438.5,
+              341.5
+            ],
+            "source_baseline": 341.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7343173623085022
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.325,
+            "source_origin": [
+              438.5,
+              341.5
+            ],
+            "source_baseline": 341.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7342309355735779
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              438.25,
+              341.5
+            ],
+            "source_baseline": 341.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7285950779914856
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.225,
+            "source_origin": [
+              438.75,
+              341.5
+            ],
+            "source_baseline": 341.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7260805368423462
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.35,
+            "source_origin": [
+              438.5,
+              341.75
+            ],
+            "source_baseline": 341.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7250871658325195
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.325,
+            "source_origin": [
+              438.5,
+              341.75
+            ],
+            "source_baseline": 341.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7237396836280823
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              438.25,
+              341.75
+            ],
+            "source_baseline": 341.75,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7228849530220032
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.3,
+            "source_origin": [
+              438.5,
+              341.5
+            ],
+            "source_baseline": 341.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7222425937652588
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.325,
+            "source_origin": [
+              438.5,
+              341.5
+            ],
+            "source_baseline": 341.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7182993292808533
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.25,
+            "source_origin": [
+              438.75,
+              341.5
+            ],
+            "source_baseline": 341.5,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7175866365432739
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "recoil-momentum",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "emission-energy",
+      "source_ocr_hint": 47,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.575,
+      "baseline": 389.5,
+      "left": 439,
+      "right": 784.85,
+      "ko": "방출 과정에서 에너지가 보존되므로",
+      "en": "Energy conservation during emission gives",
+      "source_atom_ids": [],
+      "atoms": [],
+      "erase_rects": [
+        [
+          437,
+          376.5,
+          598,
+          394.75
+        ]
+      ],
+      "printed_regular_stroke": 0.75,
+      "printed_bold_stroke": 0.75,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.75,
+          "bold": 0.75
+        },
+        "ko": {
+          "regular": 0.525,
+          "bold": 0.525
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "emission-energy",
+        "source_region": "right",
+        "source_text": "因发射过",
+        "source_measurement_window": [
+          437,
+          377,
+          492,
+          396
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.575,
+          "source_origin": [
+            437.75,
+            389.5
+          ],
+          "source_baseline": 389.5,
+          "source_baseline_angle_degrees": 0.5,
+          "spread": [
+            1,
+            1
+          ],
+          "iou": 0.6953229308128357
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              437.75,
+              389.5
+            ],
+            "source_baseline": 389.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.6953229308128357
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              437.75,
+              389.5
+            ],
+            "source_baseline": 389.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6911212205886841
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.475,
+            "source_origin": [
+              437.75,
+              389.25
+            ],
+            "source_baseline": 389.25,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.6894060969352722
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              437.75,
+              389.25
+            ],
+            "source_baseline": 389.25,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.6893031597137451
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              437.75,
+              389.5
+            ],
+            "source_baseline": 389.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.6885828375816345
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              437.5,
+              389.25
+            ],
+            "source_baseline": 389.25,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.6881275773048401
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.575,
+            "source_origin": [
+              437.75,
+              389.5
+            ],
+            "source_baseline": 389.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.687463104724884
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.6,
+            "source_origin": [
+              437.75,
+              389.5
+            ],
+            "source_baseline": 389.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.6872655749320984
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.55,
+            "source_origin": [
+              437.75,
+              389.25
+            ],
+            "source_baseline": 389.25,
+            "source_baseline_angle_degrees": 1,
+            "spread": [
+              1,
+              1
+            ],
+            "iou": 0.6869738698005676
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.45,
+            "source_origin": [
+              438.0,
+              389.5
+            ],
+            "source_baseline": 389.5,
+            "source_baseline_angle_degrees": 0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.6867178082466125
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "emission-energy",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    },
+    {
+      "id": "relativistic-first",
+      "source_ocr_hint": 55,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.225,
+      "baseline": 432.25,
+      "left": 440,
+      "right": 784.85,
+      "ko": "[[mass-m]]은 바닥상태 핵의 상대론적 질량이다. 반동 속도를 [[speed-v]]라 하면",
+      "en": "Ground-state nucleus: mass [[mass-m]], recoil speed [[speed-v]].",
+      "source_atom_ids": [
+        "mass-m",
+        "speed-v"
+      ],
+      "atoms": [
+        {
+          "id": "mass-m",
+          "rect": [
+            468.25,
+            426.0,
+            478.25,
+            432.875
+          ],
+          "image_path": [
+            295
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        },
+        {
+          "id": "speed-v",
+          "rect": [
+            627.875,
+            426.75,
+            634.5,
+            433.625
+          ],
+          "image_path": [
+            295
+          ],
+          "reviewed": true,
+          "reason": "Manual source/atlas review: complete original mathematical bitmap object and native equation/digit/list punctuation. Source image encoded program, original y and unit scale retained; all four crop borders independently clear at8x."
+        }
+      ],
+      "erase_rects": [
+        [
+          438,
+          418.5,
+          777,
+          437
+        ]
+      ],
+      "printed_regular_stroke": 0.75,
+      "printed_bold_stroke": 0.75,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.75,
+          "bold": 0.75
+        },
+        "ko": {
+          "regular": 0.55,
+          "bold": 0.55
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "relativistic-first",
+        "source_region": "right",
+        "source_text": "表示基态",
+        "source_measurement_window": [
+          478,
+          419,
+          532,
+          438
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.225,
+          "source_origin": [
+            481.5,
+            432.25
+          ],
+          "source_baseline": 432.25,
+          "source_baseline_angle_degrees": -0.5,
+          "spread": [
+            1,
+            2
+          ],
+          "iou": 0.7163470983505249
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.225,
+            "source_origin": [
+              481.5,
+              432.25
+            ],
+            "source_baseline": 432.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7163470983505249
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.325,
+            "source_origin": [
+              481.25,
+              432.25
+            ],
+            "source_baseline": 432.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.71552574634552
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.35,
+            "source_origin": [
+              481.25,
+              432.25
+            ],
+            "source_baseline": 432.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7151265740394592
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.25,
+            "source_origin": [
+              481.5,
+              432.25
+            ],
+            "source_baseline": 432.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7102822065353394
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.275,
+            "source_origin": [
+              481.5,
+              432.25
+            ],
+            "source_baseline": 432.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7102563977241516
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.3,
+            "source_origin": [
+              481.25,
+              432.25
+            ],
+            "source_baseline": 432.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7091303467750549
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.225,
+            "source_origin": [
+              481.5,
+              432.0
+            ],
+            "source_baseline": 432.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7062291502952576
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.325,
+            "source_origin": [
+              481.25,
+              432.0
+            ],
+            "source_baseline": 432.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.706101655960083
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.35,
+            "source_origin": [
+              481.25,
+              432.0
+            ],
+            "source_baseline": 432.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7054233551025391
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              481.0,
+              432.25
+            ],
+            "source_baseline": 432.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7026341557502747
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "relativistic-first",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {
+          "mass-m": 0.55,
+          "speed-v": 0.55
+        }
+      }
+    },
+    {
+      "id": "relativistic-second",
+      "source_ocr_hint": 57,
+      "reviewed": false,
+      "source_prose_face": "SimSun",
+      "size": 12.3,
+      "baseline": 450.0,
+      "left": 440,
+      "right": 784.85,
+      "ko": "바닥상태 핵의 운동량과 상대론적 질량은",
+      "en": "Its momentum and relativistic mass are",
+      "source_atom_ids": [],
+      "atoms": [],
+      "erase_rects": [
+        [
+          438,
+          437,
+          660,
+          455
+        ]
+      ],
+      "printed_regular_stroke": 0.725,
+      "printed_bold_stroke": 0.725,
+      "printed_stroke_by_language": {
+        "en": {
+          "regular": 0.725,
+          "bold": 0.725
+        },
+        "ko": {
+          "regular": 0.55,
+          "bold": 0.55
+        }
+      },
+      "source_CJK_type_evidence": {
+        "id": "relativistic-second",
+        "source_region": "right",
+        "source_text": "基态核的",
+        "source_measurement_window": [
+          482,
+          438,
+          537,
+          455
+        ],
+        "best": {
+          "face": "SimSun",
+          "source_point_size": 12.3,
+          "source_origin": [
+            483.25,
+            450.0
+          ],
+          "source_baseline": 450.0,
+          "source_baseline_angle_degrees": 0,
+          "spread": [
+            2,
+            1
+          ],
+          "iou": 0.7247299551963806
+        },
+        "top10": [
+          {
+            "face": "SimSun",
+            "source_point_size": 12.3,
+            "source_origin": [
+              483.25,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7247299551963806
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              483.0,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7200154066085815
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.3,
+            "source_origin": [
+              483.25,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7173459529876709
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              483.0,
+              450.25
+            ],
+            "source_baseline": 450.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7160446047782898
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.325,
+            "source_origin": [
+              483.25,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7160115242004395
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.4,
+            "source_origin": [
+              483.0,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7157652378082275
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.225,
+            "source_origin": [
+              483.25,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7157145738601685
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.375,
+            "source_origin": [
+              483.0,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              1,
+              2
+            ],
+            "iou": 0.7156398296356201
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.3,
+            "source_origin": [
+              483.25,
+              450.25
+            ],
+            "source_baseline": 450.25,
+            "source_baseline_angle_degrees": -0.5,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.714806318283081
+          },
+          {
+            "face": "SimSun",
+            "source_point_size": 12.425,
+            "source_origin": [
+              483.0,
+              450.0
+            ],
+            "source_baseline": 450.0,
+            "source_baseline_angle_degrees": 0,
+            "spread": [
+              2,
+              1
+            ],
+            "iou": 0.7141221165657043
+          }
+        ],
+        "reviewed": false,
+        "no_translated_text_used": true
+      },
+      "source_print_weight_evidence_id": "relativistic-second",
+      "math_after_gaps_by_language": {
+        "ko": {},
+        "en": {}
+      }
+    }
+  ],
+  "protected_source_display_and_figure_rects": [
+    [
+      100,
+      95,
+      409,
+      164.75
+    ],
+    [
+      130,
+      244,
+      409,
+      278.5
+    ],
+    [
+      100,
+      300,
+      409,
+      367.95
+    ],
+    [
+      112,
+      375.6,
+      409,
+      442.5
+    ],
+    [
+      150,
+      461,
+      409,
+      486.6
+    ],
+    [
+      523,
+      85.5,
+      784,
+      113.02
+    ],
+    [
+      465,
+      142,
+      784,
+      171
+    ],
+    [
+      563,
+      190.5,
+      784,
+      208
+    ],
+    [
+      548,
+      244.75,
+      784,
+      262.5
+    ],
+    [
+      565,
+      300.25,
+      784,
+      329
+    ],
+    [
+      565,
+      348,
+      784,
+      375
+    ],
+    [
+      522,
+      395,
+      784,
+      413.55
+    ],
+    [
+      574,
+      456,
+      784,
+      476
+    ],
+    [
+      560,
+      477,
+      784,
+      521.846
+    ]
+  ]
+}

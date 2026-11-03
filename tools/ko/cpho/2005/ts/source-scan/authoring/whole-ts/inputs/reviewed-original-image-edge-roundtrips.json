@@ -1,0 +1,92 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "cases": [
+    {
+      "source_page": 14,
+      "image_path": [
+        334
+      ],
+      "atom": "profile-second-profile-W",
+      "rect": [
+        278.75,
+        510,
+        359.75,
+        525
+      ],
+      "original_nominal_image_bbox": [
+        56.7,
+        400.79600732421875,
+        409.95,
+        523.7960073242187
+      ],
+      "original_ancestor_clips": [
+        [
+          56.7,
+          400.79600732421875,
+          409.95,
+          523.7960073242187
+        ]
+      ],
+      "original_clip_group_raw_sha256": "95afb094b3e55d93b74ef02521c8dad78177bc57782659acbe9b611d10ba6488",
+      "original_image_program_sha256": "2e687bcb124c654f1b6e57a11639ab85efe96f091e92a2f5e3cb4e1628b1c5ea",
+      "actual_original_source_roundtrips": [
+        {
+          "changed_pixels": 0,
+          "scale": 4,
+          "actual_clipped_source_rgb_sha256": "fe2155cc5fd4ad0d71b3403deb527bc035006508521c64a2d87793ce5cfb658a"
+        },
+        {
+          "changed_pixels": 0,
+          "scale": 8,
+          "actual_clipped_source_rgb_sha256": "b2347999f31017ac438261bd123bfdd0f26f94c0e6f997ac902ae340073a4e22"
+        }
+      ],
+      "original_inner_clip_and_image_program_unchanged": true,
+      "outer_crop_only_includes_original_paper_padding": true
+    },
+    {
+      "source_page": 15,
+      "image_path": [
+        343
+      ],
+      "atom": "substitution-eq8",
+      "rect": [
+        467.375,
+        509.75,
+        484.375,
+        521.75
+      ],
+      "original_nominal_image_bbox": [
+        431.6,
+        232.12200732421877,
+        784.85,
+        520.8720073242188
+      ],
+      "original_ancestor_clips": [
+        [
+          431.6,
+          232.12200732421877,
+          784.85,
+          520.8720073242188
+        ]
+      ],
+      "original_clip_group_raw_sha256": "f1e5a76ddbf61b53ba97271e6dade929234ffe1770bdb3cc770470c9d90c32be",
+      "original_image_program_sha256": "4b746249a1acddc9a70ca652c41a787e9cd0399621a805eb82c7c548e9ba3503",
+      "actual_original_source_roundtrips": [
+        {
+          "changed_pixels": 0,
+          "scale": 4,
+          "actual_clipped_source_rgb_sha256": "f97ee232fd63c83777c3975d5fc74ed78044b0258e8cbe7d38202f1526e5fac0"
+        },
+        {
+          "changed_pixels": 0,
+          "scale": 8,
+          "actual_clipped_source_rgb_sha256": "0109121fad8c2281f4694433eaf813cb04327d2fcb6467c549c81d648de39349"
+        }
+      ],
+      "original_inner_clip_and_image_program_unchanged": true,
+      "outer_crop_only_includes_original_paper_padding": true
+    }
+  ],
+  "passed": true
+}

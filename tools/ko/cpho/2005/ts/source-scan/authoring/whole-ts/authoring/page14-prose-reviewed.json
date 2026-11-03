@@ -1,0 +1,95 @@
+{
+  "source_sha256": "9867b5116f1feb921515844332d43ed08a7c790292d5eecd89c70aacdf698b4f",
+  "physical_page": 14,
+  "printed_solution_page": 11,
+  "translation_semantics_reviewed_against_original_page_image": true,
+  "layout_ready": false,
+  "source_math_and_numbers_must_be_original_bitmap_atoms": true,
+  "note": "Paragraph translations only. Keep original higher-order expansion, field signs, primed numbering, energy equation(7), graph3/grid and all I1/I2/II1 labels as original paints; do not redraw threshold graphs.",
+  "fields": [
+    {
+      "id": "near-origin-expansion",
+      "source": "由于考察点都在原点附近，上式中的坐标z是一个小量，注意到当z很小时有",
+      "ko": "관찰점이 원점 근처에 있으므로 [[z]]는 작은 양이다. [[z]]가 매우 작을 때",
+      "en": "For observation points near the origin, [[z]] is small. For sufficiently small [[z]],"
+    },
+    {
+      "id": "substitute-field",
+      "source": "代入（4′）式得",
+      "ko": "식 [[(4′)]]에 대입하면",
+      "en": "Substituting into [[(4′)]] gives"
+    },
+    {
+      "id": "inward-condition",
+      "source": "若D>R/√2，E与−z成正比，当z>0时，场强为负，当z<0时，场强为正，表示原点附近的场强方向都指向原点，故z=0处为带电粒子的稳定平衡位置，电势V（z）的图线是曲线I。",
+      "ko": "[[D>R/√2]]이면 [[E]]는 [[−z]]에 비례한다. [[z>0]]에서는 전기장이 음이고 [[z<0]]에서는 양이므로 항상 원점을 향한다. 따라서 [[z=0]]은 안정 평형점이며 전위 곡선은 [[I]]이다.",
+      "en": "For [[D>R/√2]], [[E]] is proportional to [[−z]]: it is negative for [[z>0]] and positive for [[z<0]]. The field points towards the origin, so [[z=0]] is stable and the potential has profile [[I]]."
+    },
+    {
+      "id": "outward-condition",
+      "source": "若D<R/√2，在原点附近的场强方向都从原点指向两侧，故z=0处为带电粒子的不稳定平衡位置，电势V（z）的图线是曲线II。",
+      "ko": "[[D<R/√2]]이면 원점 근처의 전기장이 양쪽 바깥을 향한다. 따라서 [[z=0]]은 불안정 평형점이고 전위 곡선은 [[II]]이다.",
+      "en": "For [[D<R/√2]], the nearby field points away from the origin. Thus [[z=0]] is unstable and the potential has profile [[II]]."
+    },
+    {
+      "id": "initial-energy",
+      "source": "若带电粒子在z=−∞处以某一初速沿z轴射向两个圆环，以Ek0表示其初动能，Ek（z）表示粒子运动到坐标为z处时的动能，则由能量守恒有",
+      "ko": "입자가 [[z=−∞]]에서 [[z]]축을 따라 두 고리를 향해 출발한다고 하자. 초기 운동 에너지를 [[Ek0]], 좌표 [[z]]에서의 운동 에너지를 [[Ek(z)]]라 하면 에너지 보존으로",
+      "en": "Let the charged particle approach the rings along [[z]] from [[z=−∞]], with initial kinetic energy [[Ek0]]. If its kinetic energy at [[z]] is [[Ek(z)]], energy conservation gives"
+    },
+    {
+      "id": "energy-profile",
+      "source": "因粒子在坐标z处的动能等于一常量减去粒子在该处的静电势能，可见Ek（z）的图线取决于静电势能W（z）=qV（z）的图线。",
+      "ko": "[[Ek(z)]]는 일정한 값에서 정전기적 위치 에너지를 뺀 값이므로, 그 곡선은 [[W(z)=qV(z)]]의 곡선으로 결정된다.",
+      "en": "Since [[Ek(z)]] is a constant minus the electrostatic potential energy, its profile follows from [[W(z)=qV(z)]]."
+    },
+    {
+      "id": "cases",
+      "source": "下面分两种情况进行讨论：",
+      "ko": "두 경우로 나누어 보자.",
+      "en": "Consider two cases:"
+    },
+    {
+      "id": "two-peak-energy",
+      "source": "（i）若D>R/√2，即两个圆环之间的距离比较大，电势V（z）的图线具有两个峰和一个谷，粒子电势能W（z）的图线亦具有两个峰和一个谷，如图3中的曲线I1所示。",
+      "ko": "(i) [[D>R/√2]]로 두 고리가 멀리 떨어져 있으면 [[V(z)]]와 [[W(z)]] 모두 봉우리 둘과 골짜기 하나를 갖는다. 그림 [[3]]의 [[I1]]과 같다.",
+      "en": "(i) For the larger separation [[D>R/√2]], both [[V(z)]] and [[W(z)]] have two peaks and a valley, as in [[I1]] of Figure [[3]]."
+    },
+    {
+      "id": "threshold-two-peaks",
+      "source": "已知该粒子刚能通过两个圆环，故粒子的初动能Ek0应等于电势能W（z）的最大值，即等于峰高。",
+      "ko": "입자가 두 고리를 막 통과하는 한계이므로 [[Ek0]]는 [[W(z)]]의 최댓값, 즉 봉우리 높이와 같다.",
+      "en": "For the particle to just pass both rings, [[Ek0]] equals the maximum of [[W(z)]], the peak height."
+    },
+    {
+      "id": "kinetic-graph",
+      "source": "在图3中与z轴平行并与电势能W（z）的图线的双峰相切的直线代表初动能Ek0，由（7）式和曲线I1便可画出Ek（z）的图线，如图3中的曲线I2所示。",
+      "ko": "그림 [[3]]에서 [[z]]축과 평행하며 두 봉우리에 접하는 직선이 [[Ek0]]를 나타낸다. 식 [[(7)]]과 [[I1]]에서 [[Ek(z)]]를 그리면 곡선 [[I2]]가 된다.",
+      "en": "In Figure [[3]], the horizontal line tangent to both peaks represents [[Ek0]]. Equation [[(7)]] and [[I1]] then give the kinetic-energy curve [[I2]]."
+    },
+    {
+      "id": "figure-caption",
+      "source": "图3",
+      "ko": "그림 [[3]]",
+      "en": "Figure [[3]]"
+    },
+    {
+      "id": "single-peak-energy",
+      "source": "（ii）若D<R/√2，即两个圆环间的距离比较小，电势V（z）的图线只有位于z=0处的一个峰，粒子的电势能W（z）的图线亦只有位于z=0处的一个峰，如图4中的曲线II1所示。",
+      "ko": "(ii) [[D<R/√2]]로 두 고리가 가까우면 [[V(z)]]와 [[W(z)]]는 [[z=0]]에서 봉우리 하나만 갖는다. 그림 [[4]]의 [[II1]]과 같다.",
+      "en": "(ii) For the smaller separation [[D<R/√2]], [[V(z)]] and [[W(z)]] each have one peak at [[z=0]], as in [[II1]] of Figure [[4]]."
+    },
+    {
+      "id": "peak-value",
+      "source": "电势图线的峰高",
+      "ko": "전위 봉우리의 높이는",
+      "en": "The potential peak height is"
+    },
+    {
+      "id": "threshold-continuation",
+      "source": "已知粒子刚能通过这两个圆环，故粒子的初动能〈续下页〉",
+      "ko": "입자가 두 고리를 막 통과하므로 초기 운동 에너지는",
+      "en": "Since the particle just passes both rings, its initial kinetic energy is"
+    }
+  ]
+}
