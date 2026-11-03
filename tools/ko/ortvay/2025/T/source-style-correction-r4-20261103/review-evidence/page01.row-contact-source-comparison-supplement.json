@@ -1,0 +1,198 @@
+{
+  "original_report_path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\attempt-proto07\\2026\\page01.row-contact-diagnosis.json",
+  "original_report_sha256": "fddc62cf29e0bbdf571337bbed1baa7ed0d1ec40d870560924ddeed7b57e0b85",
+  "counts": {
+    "P0_current_published": {
+      "2": 2,
+      "4": 1,
+      "8": 0
+    },
+    "exact_W_only": {
+      "2": 2,
+      "4": 1,
+      "8": 0
+    },
+    "precise_new_Batang_Tm": {
+      "2": 2,
+      "4": 1,
+      "8": 0
+    }
+  },
+  "coordinates": {
+    "P0_current_published": {
+      "2": [
+        [
+          326.0,
+          673.5
+        ],
+        [
+          326.5,
+          673.5
+        ]
+      ],
+      "4": [
+        [
+          325.75,
+          673.5
+        ]
+      ],
+      "8": []
+    },
+    "exact_W_only": {
+      "2": [
+        [
+          326.0,
+          673.5
+        ],
+        [
+          326.5,
+          673.5
+        ]
+      ],
+      "4": [
+        [
+          325.75,
+          673.5
+        ]
+      ],
+      "8": []
+    },
+    "precise_new_Batang_Tm": {
+      "2": [
+        [
+          326.0,
+          673.5
+        ],
+        [
+          326.5,
+          673.5
+        ]
+      ],
+      "4": [
+        [
+          325.75,
+          673.5
+        ]
+      ],
+      "8": []
+    }
+  },
+  "strict_bbox_intersection_contact_neighbors": {
+    "P0_current_published": [
+      {
+        "character": "g",
+        "gid": 142,
+        "font": "Batang",
+        "size": 11.9552001953125,
+        "origin": [
+          324.0047912597656,
+          672.0259399414062
+        ],
+        "bbox": [
+          324.0047912597656,
+          661.7581176757812,
+          330.9747619628906,
+          673.7133178710938
+        ]
+      },
+      {
+        "character": "에",
+        "gid": 14374,
+        "font": "Batang",
+        "size": 11.9552001953125,
+        "origin": [
+          317.3733825683594,
+          683.5799560546875
+        ],
+        "bbox": [
+          317.3733825683594,
+          673.3121337890625,
+          329.3285827636719,
+          685.267333984375
+        ]
+      }
+    ],
+    "exact_W_only": [
+      {
+        "character": "g",
+        "gid": 142,
+        "font": "Batang",
+        "size": 11.9552001953125,
+        "origin": [
+          324.0047912597656,
+          672.0259399414062
+        ],
+        "bbox": [
+          324.0047912597656,
+          661.7581176757812,
+          330.9747619628906,
+          673.7133178710938
+        ]
+      },
+      {
+        "character": "에",
+        "gid": 14374,
+        "font": "Batang",
+        "size": 11.9552001953125,
+        "origin": [
+          317.3733825683594,
+          683.5799560546875
+        ],
+        "bbox": [
+          317.3733825683594,
+          673.3121337890625,
+          329.3285827636719,
+          685.267333984375
+        ]
+      }
+    ],
+    "precise_new_Batang_Tm": [
+      {
+        "character": "g",
+        "gid": 142,
+        "font": "Batang",
+        "size": 11.9552001953125,
+        "origin": [
+          324.0047912597656,
+          672.0259399414062
+        ],
+        "bbox": [
+          324.0047912597656,
+          661.7581176757812,
+          330.9747619628906,
+          673.7133178710938
+        ]
+      },
+      {
+        "character": "에",
+        "gid": 14374,
+        "font": "Batang",
+        "size": 11.9552001953125,
+        "origin": [
+          317.3733825683594,
+          683.5799560546875
+        ],
+        "bbox": [
+          317.3733825683594,
+          673.3121337890625,
+          329.3285827636719,
+          685.267333984375
+        ]
+      }
+    ]
+  },
+  "candidate": {
+    "dx_pt": -0.5625,
+    "contact_pixels_by_scale": {
+      "2": 0,
+      "4": 0,
+      "8": 0
+    },
+    "next_lower_pair_contact_pixels_by_scale": {
+      "2": 0,
+      "4": 0,
+      "8": 0
+    }
+  },
+  "finding": "P0, exact-W-only and precise-Tm all have identical2x2/4x1/8x0 raster contact; newly corrected advance is not its cause. Candidate is a pre-existing low-resolution contact improvement and requires that explicit scope decision."
+}

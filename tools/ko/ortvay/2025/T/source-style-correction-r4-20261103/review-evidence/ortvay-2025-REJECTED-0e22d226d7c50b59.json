@@ -1,0 +1,34 @@
+{
+  "status": "EXTERNAL_AMENDMENT_QA_REJECTED_NOT_READY",
+  "case": "negative_inherited_entry_CTM",
+  "year": 2025,
+  "page": 1,
+  "stage": "original_full_master_glyph_geometry",
+  "exception_type": "AssertionError",
+  "message": "{'geometry_errors': [{'identity': (48708, 'notoserifcjkkrregular', 11.9552), 'expected': [113.1454086303711, 231.3990478515625], 'actual': (113.1553955078125, 231.3990478515625), 'delta': 0.00998687744140625}, {'identity': (53444, 'notoserifcjkkrregular', 11.9552), 'expected': [124.69413226417237, 231.3990478515625], 'actual': (124.70413208007812, 231.3990478515625), 'delta': 0.009999815905757714}, {'identity': (49457, 'notoserifcjkkrregular', 11.9552), 'expected': [136.24285589797364, 231.3990478515625], 'actual': (136.25283813476562, 231.3990478515625), 'delta': 0.009982236791984178}], 'gid_errors': [], 'extra': [], 'maximum': 0.009999815905757714}",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py\", line 73, in main\n    with f.open(target) as doc:matched,geometry=match_expected(expected_glyphs(e,q,year),doc[0])\n                                                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py\", line 52, in match_expected\n    assert not errors and not gid_errors and not extras,dict(geometry_errors=errors[:10],gid_errors=gid_errors[:10],extra=extras[:10],maximum=maximum)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'geometry_errors': [{'identity': (48708, 'notoserifcjkkrregular', 11.9552), 'expected': [113.1454086303711, 231.3990478515625], 'actual': (113.1553955078125, 231.3990478515625), 'delta': 0.00998687744140625}, {'identity': (53444, 'notoserifcjkkrregular', 11.9552), 'expected': [124.69413226417237, 231.3990478515625], 'actual': (124.70413208007812, 231.3990478515625), 'delta': 0.009999815905757714}, {'identity': (49457, 'notoserifcjkkrregular', 11.9552), 'expected': [136.24285589797364, 231.3990478515625], 'actual': (136.25283813476562, 231.3990478515625), 'delta': 0.009982236791984178}], 'gid_errors': [], 'extra': [], 'maximum': 0.009999815905757714}\n",
+  "target": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\actual-pdf-controls\\negative_inherited_entry_CTM.pdf",
+    "sha256": "216a7de2f850de046ad6843814f7c7df6f7f34a4b235a9a17a76f62c32278dec"
+  },
+  "layout": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\proofs\\ortvay\\2025\\page01.layout.json",
+    "sha256": "047382c1a6e2e0b429982ef36bea3127913149a3261ab53ccd2d77255b9426ba"
+  },
+  "snapshot": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\negative_inherited_entry_CTM\\snapshot.json",
+    "sha256": "0fc2ab9dc97dad45a1b3b63c281d5a6f687761e6cfd1caa97ea9661c91430151"
+  },
+  "external_code_sha256": {
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+  },
+  "original_runtime_source_snapshot": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\ctm-amendment-runtime-v1\\runs\\prototype03\\negative_inherited_entry_CTM\\runtime-snapshot.json",
+    "sha256": "396e9f7146c910ad7e198cdbe9a7ad8013d10a5936ea8ba398e26516d056967d"
+  }
+}
