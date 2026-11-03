@@ -491,7 +491,7 @@ test('split grading: a long paper is graded in groups of whole questions over th
 test('IP1 in code: an item whose only fault is a result carried from an earlier item that lost marks is not marked down again',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
-  env.LAB_ECF_RULE='on';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';
+  env.LAB_ECF_RULE='on';env.LAB_IMPLIED_STEPS='on';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';
   const a=(await start('deepseek')).data,sid=a.session.id;
   sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
   const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
@@ -502,6 +502,7 @@ test('IP1 in code: an item whose only fault is a result carried from an earlier 
   replies({items:[g('B8.2',0),g('B8.4',0.1,{carried_from:'B8.2',rules:['IP2']}),g('B8.5',0.3),g('B8.6',0,{carried_from:'B8.5'})],feedback:[],review:rev},null);
   await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
   assert.match(calls.find(c=>c.text.includes('[TASK: grade]')).text,/carried_from:/,'the grader is asked for it');
+  assert.match(calls.find(c=>c.text.includes('[TASK: grade]')).text,/Implied steps \(for derivation steps this takes precedence over R9 and R13\)/,'the implied-step rule, with its precedence, goes to the grader when on');
   const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
   assert.match(detail,/"id":"B8\.4"[^}]*"got":0\.2[,}]/,'carried from B8.2, which lost its marks: not docked again');
   assert.match(detail,/"id":"B8\.6"[^}]*"got":0[,}]/,'B8.5 lost nothing: no carried error to excuse');
