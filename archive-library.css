@@ -20,3 +20,86 @@
 .al .comp .al-card-cover{height:72px;max-width:60px}.al .comp .al-card-school-logo{height:52px;max-width:104px}
 .al .comp .al-card-cover-placeholder{width:48px;height:64px;display:grid;place-items:center;border:1px dashed var(--al-line);font-size:13px;color:var(--al-muted)}
 .al .al-search-disclosure .al-source-find{padding:0 0 16px}
+
+/* A source opens to its contents; a selected chapter stays beside the list. */
+.archive-reading>.phead,.archive-reading>.subjs{display:none}
+.archive-reading #archiveNative{padding-top:22px}
+.al .al-catalog-heading{padding-bottom:22px;border-bottom:1px solid var(--al-line);margin-bottom:24px}
+.al .al-list-count{font-size:13px;color:var(--al-muted);margin:10px 0 0}
+.al .al-list-count>span{padding:0 8px}
+.al .al-source-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:36px;align-items:start}
+.al .al-source-main{min-width:0}
+.al .al-source-search{border-bottom:1px solid var(--al-line);margin:0 0 24px}
+.al .al-source-search>summary{font-size:13px;color:var(--al-muted);padding:9px 0}
+.al .al-source-search .al-search{border:0;padding:12px 0 20px}
+.al .al-source-search .al-source-select{display:none}
+.al .al-toc{position:sticky;top:88px;min-width:0;font-size:14px;line-height:1.55}
+.al .al-toc details>summary{display:none}
+.al .al-toc h3{font-size:13px;color:var(--al-muted);margin:0 0 12px;letter-spacing:0}
+.al .al-toc ol,.al .al-contents-index ol{list-style:none;margin:0;padding:0}
+.al .al-toc li{margin:0}
+.al .al-toc a{display:flex;align-items:start;justify-content:space-between;gap:12px;padding:10px 12px;text-decoration:none;border-left:2px solid transparent;min-height:42px;overflow-wrap:anywhere}
+.al .al-toc a small{font-size:11px;line-height:22px;flex-shrink:0}
+.al .al-toc a[aria-current=page]{border-color:var(--al-accent);color:var(--al-accent);background:color-mix(in srgb,var(--al-accent) 8%,transparent);font-weight:600}
+.al .al-contents-index{max-width:860px;margin:0 auto}
+.al .al-contents-index h3{font-size:20px;margin:10px 0}
+.al .al-contents-index>p{font-size:14px;margin:0 0 25px}
+.al .al-contents-index ol{border-top:1px solid var(--al-line)}
+.al .al-contents-index li{border-bottom:1px solid var(--al-line)}
+.al .al-contents-index a{display:flex;justify-content:space-between;align-items:center;gap:28px;min-height:62px;padding:15px 6px;text-decoration:none;font-size:16px}
+.al .al-contents-index a small{font-size:13px;font-variant-numeric:tabular-nums}
+.al .al-results-heading{display:flex;gap:20px;justify-content:space-between;align-items:baseline;margin:0 0 24px}
+.al .al-results-heading h3{font-size:21px;margin:0}
+.al .al-results-heading>span{font-size:12px;color:var(--al-muted);white-space:nowrap}
+.al .al-list-labels,.al .al-problem-row{display:grid;grid-template-columns:64px minmax(0,1fr) 120px 18px;gap:16px}
+.al .al-list-labels{font-size:11px;color:var(--al-muted);padding:0 8px 10px;letter-spacing:.03em}
+.al .al-list-labels>span:nth-child(3){text-align:right}
+.al .al-results{margin:0}
+.al .al-problem-row{align-items:center;min-height:66px;padding:16px 8px}
+.al .al-problem-row:hover{background:color-mix(in srgb,var(--al-accent) 5%,transparent)}
+.al .al-number{font-size:13px;color:var(--al-muted);line-height:1.5;word-break:normal}
+.al .al-row-title{min-width:0;line-height:1.65}
+.al .al-row-title>strong{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;font-weight:500;overflow-wrap:anywhere}
+.al .al-row-title>small{font-size:11px;margin:4px 0 0}
+.al .al-problem-row>.al-stars{text-align:right;font-size:11px;letter-spacing:1px}
+.al .al-problem-row>.al-stars small{display:block;font-size:10px;letter-spacing:0;margin:3px 0 0}
+.al .al-row-arrow{color:var(--al-muted);font-size:15px;text-align:right}
+.al .al-reading-layout{display:grid;grid-template-columns:minmax(0,1fr);max-width:830px;margin:0 auto}
+.al .al-reading-layout.has-toc{grid-template-columns:210px minmax(0,830px);gap:42px;max-width:1100px}
+.al .al-reading-layout.has-toc>.al-reader{width:100%}
+.al .al-reading-layout:not(.has-toc)>[data-reader-toc]{display:none}
+.al .al-reader{max-width:830px}
+.al .al-reader h2{font-size:26px;line-height:1.5;letter-spacing:-.02em}
+.al .al-reader header{padding-bottom:22px;margin-bottom:25px;border-bottom:1px solid var(--al-line)}
+.al .al-reader-nav{margin-bottom:22px;padding-bottom:12px;font-size:12px;align-items:center}
+.al .al-reader h2 small{font-family:var(--mono,monospace);font-size:12px;color:var(--al-muted);font-weight:400;letter-spacing:0}
+.al .al-prose{font-size:17px;line-height:1.95}
+.al .al-edition{color:var(--al-muted);font-size:11px}
+@media(max-width:1000px){
+  .al .al-source-layout{grid-template-columns:175px minmax(0,1fr);gap:24px}
+  .al .al-reading-layout.has-toc{grid-template-columns:170px minmax(0,1fr);gap:26px}
+  .al .al-list-labels,.al .al-problem-row{grid-template-columns:52px minmax(0,1fr) 92px 14px;gap:12px}
+}
+@media(max-width:760px){
+  .archive-reading #archiveNative{padding-top:12px}
+  .al .al-source-layout,.al .al-reading-layout.has-toc{grid-template-columns:minmax(0,1fr);gap:20px}
+  .al .al-toc{position:static}
+  .al .al-toc details{border:1px solid var(--al-line);border-radius:4px}
+  .al .al-toc details>summary{display:block;padding:10px 12px;font-size:13px}
+  .al .al-toc nav{padding:0 0 10px;max-height:300px;overflow:auto;border-top:1px solid var(--al-line)}
+  .al .al-toc nav h3{display:none}
+  .al .al-catalog-heading{flex-direction:column-reverse;gap:10px;padding-bottom:18px;margin-bottom:20px}
+  .al .al-catalog-heading>a{padding:0;font-size:12px}
+  .al .al-catalog-heading h2{font-size:21px}
+  .al .al-list-count{font-size:12px}
+  .al .al-results-heading{align-items:start;gap:12px;margin-bottom:22px}
+  .al .al-results-heading h3{font-size:19px}
+  .al .al-results-heading>span{font-size:10px;padding-top:6px}
+  .al .al-list-labels,.al .al-problem-row{grid-template-columns:43px minmax(0,1fr) 72px;gap:10px;padding-inline:2px}
+  .al .al-problem-row{min-height:70px;align-items:start}
+  .al .al-problem-row>.al-stars{grid-column:auto;line-height:1.8;font-size:9px;letter-spacing:0}
+  .al .al-row-title>strong{font-size:14px}
+  .al .al-row-arrow{display:none}
+  .al .al-reader h2{font-size:23px}
+  .al .al-prose{font-size:16px;line-height:1.9}
+}

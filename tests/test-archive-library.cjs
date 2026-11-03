@@ -17,6 +17,7 @@ async function setup(t,{params='',route,options={},token=''}={}){
     if(result)return result;
     if(u.pathname.endsWith('/status'))return response({questions:2,language_bodies:4,user:null,ocr_available:false});
     if(u.pathname.endsWith('/sources'))return response({sources:[source()],has_more:false});
+    if(u.pathname.endsWith('/contents')){const id=u.pathname.split('/').at(-2);return response({source_id:id,source:source(id,{kind:options.kind||'book',collection:options.collection||'physics'}),question_count:2,chapters:[{chapter:'1',title:'1',question_count:1},{chapter:'2',title:'2',question_count:1}]});}
     if(u.pathname.endsWith('/search'))return response({items:[item()],has_more:false});
     if(u.pathname.endsWith('/solutions'))return response({solutions:[]});
     if(u.pathname.endsWith('/feedback'))return response({count:0});
@@ -89,7 +90,7 @@ test('foreign-bank question is rejected before any statement is rendered',async 
 });
 
 test('dispose aborts pending requests, removes only own DOM and never paints a late response',async t=>{
-  const gate=deferred(),h=await setup(t,{params:'source='+SID,route:u=>u.pathname.endsWith('/search')?gate.promise:null});
+  const gate=deferred(),h=await setup(t,{params:'source='+SID+'&chapter=1',route:u=>u.pathname.endsWith('/search')?gate.promise:null});
   const request=h.calls.find(c=>c.url.pathname.endsWith('/search'));h.instance.dispose();assert.equal(request.init.signal.aborted,true);gate.resolve(response({items:[item()]}));await flush();assert.equal(h.mount.children.length,0);assert.equal(h.w.document.getElementById('outside').textContent,'Keep');
 });
 
@@ -122,7 +123,7 @@ test('legacy question lookup is metadata-only before canonical redirect, ignorin
 });
 
 test('admin OCR is gated by verified status, includes scope and never forwards browse cursors',async t=>{
-  const h=await setup(t,{params:'cursor=sc_old&stars=2',route:u=>u.pathname.endsWith('/status')?response({questions:2,user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?response({candidates:[item()],recognized_text:'Recognized synthetic text'}):null});
+  const h=await setup(t,{token:'synthetic-admin',params:'cursor=sc_old&stars=2',route:u=>u.pathname.endsWith('/status')?response({questions:2,user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?response({candidates:[item()],recognized_text:'Recognized synthetic text'}):null});
   const file=new h.w.File(['x'],'image.png',{type:'image/png'}),input=h.mount.querySelector('[data-photo] input');Object.defineProperty(input,'files',{value:[file]});h.mount.querySelector('[data-photo]').dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();
   const call=h.calls.find(c=>c.url.pathname.endsWith('/identify'));assert.equal(call.init.body.get('collection'),'physics');assert.equal(call.init.body.get('kind'),'book');assert.equal(call.init.body.get('cursor'),null);assert.equal(call.init.body.get('sort'),null);assert.match(h.mount.querySelector('textarea').value,/Recognized/);
   h.mount.querySelector('[data-resubmit]').click();await flush();const retry=h.calls.filter(c=>c.url.pathname.endsWith('/identify'))[1];assert.equal(typeof retry.init.body,'string');assert.equal(JSON.parse(retry.init.body).text,'Recognized synthetic text');
@@ -144,7 +145,7 @@ test('recommendations omit both current problem and foreign scope, and clear an 
 });
 
 test('admin explicit solution captures retain the sa_ namespace and remain lazy',async t=>{
-  const asset='sa_'+'e'.repeat(64),h=await setup(t,{params:'problem='+Q,route:u=>u.pathname.endsWith('/status')?response({questions:2,user:{role:'admin'},ocr_available:false}):u.pathname.endsWith('/solutions')?response({solutions:[{authorship:'source_transcription',selected_version:{language:'ko',text:'Synthetic source solution.'},assets:[{id:asset,role:'solution_crop',url:'/api/problem-bank/assets/'+asset}]}]}):u.pathname.endsWith('/'+asset)?response(new Blob(['png'],{type:'image/png'}),200,'image/png'):null});
+  const asset='sa_'+'e'.repeat(64),h=await setup(t,{token:'synthetic-admin',params:'problem='+Q,route:u=>u.pathname.endsWith('/status')?response({questions:2,user:{role:'admin'},ocr_available:false}):u.pathname.endsWith('/solutions')?response({solutions:[{authorship:'source_transcription',selected_version:{language:'ko',text:'Synthetic source solution.'},assets:[{id:asset,role:'solution_crop',url:'/api/problem-bank/assets/'+asset}]}]}):u.pathname.endsWith('/'+asset)?response(new Blob(['png'],{type:'image/png'}),200,'image/png'):null});
   h.mount.querySelector('[data-panel="solutions"]').click();await flush();assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/'+asset)),false);const d=h.mount.querySelector('[data-solution-figures]');d.open=true;d.dispatchEvent(new h.w.Event('toggle'));await flush();assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/'+asset)),true);assert.equal(d.querySelectorAll('img').length,1);
 });
 
@@ -155,7 +156,7 @@ test('manual difficulty feedback validates inputs and writes only the explicit s
 });
 
 test('repeated submit while an admin OCR request is pending does not issue a second provider request',async t=>{
-  const gate=deferred(),h=await setup(t,{route:u=>u.pathname.endsWith('/status')?response({questions:2,user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?gate.promise:null});
+  const gate=deferred(),h=await setup(t,{token:'synthetic-admin',route:u=>u.pathname.endsWith('/status')?response({questions:2,user:{role:'admin'},ocr_available:true}):u.pathname.endsWith('/identify')?gate.promise:null});
   const input=h.mount.querySelector('[data-photo] input');Object.defineProperty(input,'files',{value:[new h.w.File(['x'],'image.png',{type:'image/png'})]});const form=h.mount.querySelector('[data-photo]');
   for(let i=0;i<2;i++)form.dispatchEvent(new h.w.Event('submit',{bubbles:true,cancelable:true}));await flush();assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/identify')).length,1);
   gate.resolve(response({candidates:[item()]}));await flush();
@@ -238,7 +239,7 @@ test('school-wide search explicitly leaves the local school filter instead of fi
 });
 
 test('school source selection still uses canonical server browsing and retains deep-link school context',async t=>{
-  const h=await setup(t,{params:'school=mit&source='+SID,options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:u=>schoolRoute(u)||(u.pathname.endsWith('/search')?response({items:[item(Q,{source_kind:'course'})],has_more:false}):null)});
+  const h=await setup(t,{params:'school=mit&source='+SID+'&chapter=1',options:{kind:'course',baseHash:'#/archive/schools/phys',schoolMedia:schools},route:u=>schoolRoute(u)||(u.pathname.endsWith('/search')?response({items:[item(Q,{source_kind:'course'})],has_more:false}):null)});
   const request=h.calls.find(c=>c.url.pathname.endsWith('/search'));assert.equal(request.url.searchParams.get('source'),SID);assert.equal(request.url.searchParams.get('school'),null);const row=h.mount.querySelector('.al-problem-row');assert.match(row.href,/school=mit/);assert.match(row.href,/problem=q_/);
 });
 
@@ -266,4 +267,77 @@ test('books and schools literally reuse original competition DOM without poster 
     assert(h.mount.querySelector('.al-search-disclosure [data-source-query]'));assert.equal(h.mount.querySelector('.al-directory > .al-source-find'),null);
   }
   const css=fs.readFileSync(path.resolve(__dirname,'../archive-library.css'),'utf8');assert.doesNotMatch(css,/al-media-grid|al-media-card|\.al-book-cover|\.al-school-logo/);assert.doesNotMatch(css,/\.comps\s*\{[^}]*grid-template-columns/);
+});
+
+test('guest landing loads only source metadata and never status or question bodies',async t=>{
+  const h=await setup(t);assert.equal(h.calls.length,1);assert(h.calls[0].url.pathname.endsWith('/sources'));
+});
+
+test('selecting a book opens its table of contents without loading any chapter questions',async t=>{
+  const h=await setup(t,{params:'source='+SID});assert.equal(h.calls.length,1);assert(h.calls[0].url.pathname.endsWith('/contents'));
+  assert(h.mount.querySelector('.al-contents-index'));assert.equal(h.mount.querySelectorAll('.al-contents-index li').length,2);
+  assert.match(h.mount.querySelector('.al-contents-index a').href,/chapter=1/);assert.equal(h.mount.querySelector('.al-problem-row'),null);
+});
+
+test('chapter browsing is exact, bounded and summary-only including the empty chapter',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=',route:u=>u.pathname.endsWith('/contents')?response({source_id:SID,source:source(),chapters:[{chapter:'',title:'Technical fallback name',question_count:2}]}):null});
+  const request=h.calls.find(c=>c.url.pathname.endsWith('/search'));assert(request);assert.equal(request.url.searchParams.get('chapter'),'');assert.equal(request.url.searchParams.get('limit'),'20');assert.equal(request.url.searchParams.get('summary'),'1');
+  assert.match(h.mount.querySelector('.al-results-heading').textContent,/문제 목록/);assert.doesNotMatch(h.mount.textContent,/Technical fallback name/);
+  assert.equal(h.mount.querySelector('.al-snippet'),null);assert(h.mount.querySelector('.al-source-layout .al-toc'));
+});
+
+test('an unknown chapter fails before requesting a cross-chapter page',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=not-present'});assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/search')),false);assert(h.mount.querySelector('[data-retry]'));
+});
+
+test('archive navigation reuses source, contents, chapter and detail reads while solutions stay closed',async t=>{
+  const h=await setup(t),root=h.mount.querySelector('.al'),go=async params=>{h.instance.update({params:new URLSearchParams(params)});await flush();};
+  await go('source='+SID);await go('source='+SID+'&chapter=1');await go('source='+SID+'&chapter=1&problem='+Q);
+  await go('source='+SID+'&chapter=1');await go('');await go('source='+SID+'&chapter=1&problem='+Q);
+  assert.equal(h.mount.querySelector('.al'),root);
+  for(const suffix of ['/sources','/contents','/search','/'+Q])assert.equal(h.calls.filter(c=>c.url.pathname.endsWith(suffix)).length,1,suffix);
+  assert.equal(h.calls.length,4);assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/solutions')),false);
+  assert.equal(h.mount.querySelector('[data-panel="solutions"]').getAttribute('aria-expanded'),'false');
+});
+
+test('a direct statement renders while contents and authenticated capabilities are pending',async t=>{
+  const status=deferred(),toc=deferred(),h=await setup(t,{params:'problem='+Q,token:'synthetic-user',route:u=>u.pathname.endsWith('/status')?status.promise:u.pathname.endsWith('/contents')?toc.promise:null});
+  assert.match(h.mount.querySelector('.al-prose').textContent,/synthetic statement/);
+  assert.equal(h.calls.some(c=>c.url.pathname.endsWith('/sources')),false);
+  const detail=h.calls.find(c=>c.url.pathname.endsWith('/'+Q));assert.equal(detail.init.headers.Authorization,undefined);
+  const capability=h.calls.find(c=>c.url.pathname.endsWith('/status'));assert.equal(capability.url.searchParams.get('capabilities'),'1');assert.equal(capability.init.headers.Authorization,'Bearer synthetic-user');
+  status.resolve(response({user:{role:'user'},ocr_available:false}));toc.resolve(response({source_id:SID,source:source(),chapters:[]}));await flush();assert(h.mount.querySelector('[data-feedback-form]'));
+});
+
+test('rapid chapter navigation joins an in-flight table of contents request',async t=>{
+  const gate=deferred(),h=await setup(t,{params:'source='+SID,route:u=>u.pathname.endsWith('/contents')?gate.promise:null});
+  h.instance.update({params:new URLSearchParams('source='+SID+'&chapter=2')});await flush();
+  gate.resolve(response({source_id:SID,source:source(),chapters:[{chapter:'1',question_count:1},{chapter:'2',question_count:1}]}));await flush();
+  assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/contents')).length,1);const request=h.calls.find(c=>c.url.pathname.endsWith('/search'));assert.equal(request.url.searchParams.get('chapter'),'2');
+});
+
+test('changing identity invalidates cached chapter and statement data',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=1'});assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/search')).length,1);
+  h.setToken('synthetic-user');h.instance.update({params:new URLSearchParams('source='+SID+'&chapter=1')});await flush();
+  assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/contents')).length,2);assert.equal(h.calls.filter(c=>c.url.pathname.endsWith('/search')).length,2);
+  for(const c of h.calls.filter(c=>c.url.pathname.endsWith('/contents')||c.url.pathname.endsWith('/search')))assert.equal(c.init.headers.Authorization,undefined);
+});
+
+test('detected administrator demotion removes protected controls and cached administrator details',async t=>{
+  let role='admin';const h=await setup(t,{params:'problem='+Q,token:'synthetic-admin',options:{getUser:()=>({role:'admin'})},route:(u,init)=>u.pathname.endsWith('/status')?response({user:{role},ocr_available:role==='admin'}):u.pathname.endsWith('/'+Q)?response({question:question({can_view_source:role==='admin'&&!!init.headers.Authorization})}):null});
+  assert(h.mount.querySelector('[data-pdf]'));const now=h.w.Date.now();h.w.Date.now=()=>now+31000;role='user';h.instance.update({params:new URLSearchParams('problem='+Q+'&stars=2')});await flush();
+  assert.equal(h.mount.querySelector('[data-pdf]'),null);assert.equal(h.mount.querySelector('[data-raw]'),null);
+  const calls=h.calls.filter(c=>c.url.pathname.endsWith('/'+Q));assert.equal(calls.at(-1).init.headers.Authorization,undefined);
+});
+
+test('old book and question aliases redirect to the admitted canonical records',async t=>{
+  const sourceAlias=await setup(t,{params:'source='+SID2,route:u=>u.pathname.endsWith('/contents')?response({source_id:SID,source:source(),chapters:[]}):null});
+  assert.equal(sourceAlias.navigations[0],'#/archive/books/phys?source='+SID);assert.equal(sourceAlias.navigationOptions[0].replace,true);
+  const legacy=await setup(t,{params:'problem='+Q2,options:{resolveLegacy:true},route:u=>u.pathname.endsWith('/'+Q2)?response({question:question({canonical_id:Q,display_source_id:SID})}):null});
+  assert.match(legacy.navigations[0],new RegExp('problem='+Q));assert.match(legacy.navigations[0],new RegExp('source='+SID));assert.equal(legacy.calls.length,1);
+});
+
+test('distinct edition variants with the same printed number remain separate and labelled',async t=>{
+  const h=await setup(t,{params:'source='+SID+'&chapter=1',route:u=>u.pathname.endsWith('/search')?response({items:[item(Q,{original_number:'3.17'}),item(Q2,{source_id:SID2,display_source_id:SID,original_number:'3.17',edition_label:'2012 edition',edition_original_number:'3.17'})]}):null});
+  const rows=h.mount.querySelectorAll('.al-problem-row');assert.equal(rows.length,2);assert(rows[1].href.includes('source='+SID));assert(rows[1].href.includes('chapter=1'));assert.match(rows[1].textContent,/2012 edition/);assert.notEqual(rows[0].href,rows[1].href);
 });

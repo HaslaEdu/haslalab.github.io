@@ -41,3 +41,8 @@ test('legacy resolver accepts only known safe hints and leaves the actual destin
   assert.equal(r.resolveLegacy,true);assert.equal(r.params.get('kind'),'contest');assert.equal(r.params.get('collection'),'astronomy');assert.equal(r.params.get('lang'),'en');assert.equal(r.params.has('return'),false);
   assert.equal(A.legacy('#/archive/contests/phys'),null);
 });
+test('chapter routes preserve an exact empty or nonempty chapter only with one admitted source',()=>{
+  for(const chapter of ['', '1', 'Electrostatics & fields'])assert.equal(A.parse(A.href('books','phys',{source,chapter})).params.get('chapter'),chapter);
+  assert.equal(A.clean({chapter:'1'}).has('chapter'),false);assert.equal(A.clean({source,chapter:'bad\u0000chapter'}).has('chapter'),false);
+  assert.equal(A.clean('source='+source+'&chapter=1&chapter=2').has('chapter'),false);
+});

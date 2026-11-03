@@ -129,7 +129,12 @@ export const worker={async fetch(request,env){
     else if(url.pathname.startsWith('/api/')){
       const pdf=url.pathname.match(/^\/api\/problem-bank\/sources\/(src_[a-f0-9]{64})\/pdf$/),fig=url.pathname.match(/^\/api\/problem-bank\/figures\/(f_[a-f0-9]{64})$/);
       const restricted=!!pdf||request.method==='POST'&&(/\/(?:feedback|difficulty-review)$/.test(url.pathname)||url.pathname==='/api/problem-bank/identify'&&!/^application\/json(?:;|$)/i.test(request.headers.get('Content-Type')||''));let user=null;
-      try{user=await currentUser(request,env);}catch(error){if(restricted)throw error;}
+      // These projections are identical for every role. In particular a public
+      // figure has already passed the registry's givens-only approval gate.
+      // Authenticate personalized reads and private/raw assets on every request
+      // so permission changes and logout still take effect immediately.
+      const invariantRead=request.method==='GET'&&(!!fig||/^\/api\/problem-bank\/(?:sources|search)$/.test(url.pathname)||/^\/api\/problem-bank\/sources\/src_[a-f0-9]{64}\/contents$/.test(url.pathname));
+      if(!invariantRead)try{user=await currentUser(request,env);}catch(error){if(restricted)throw error;}
       if(pdf&&request.method==='GET'&&user?.role!=='admin')response=json({error:user?'admin_required':'login_required'},user?403:401);
       else{
         response=pdf&&request.method==='GET'?await sourcePdf(request,env,pdf[1]):fig&&request.method==='GET'?await figure(env,fig[1]):await problemBankRoute(request,env,url,{user,ocr:ocrAdapter(env)});

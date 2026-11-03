@@ -17,6 +17,7 @@
     const year=one('year');if(/^\d{4}$/.test(year||'')&&Number(year)>=1800&&Number(year)<=2199)out.set('year',year);
     const topic=one('topic')||one('subject');if(topics.has(topic))out.set('topic',topic);
     const school=one('school');if(school&&/^[a-z0-9][a-z0-9-]{0,63}$/.test(school))out.set('school',school);
+    const chapter=one('chapter');if(chapter!==null&&out.has('source')&&chapter.length<=240&&!/[\u0000-\u001f\u007f]/.test(chapter))out.set('chapter',chapter);
     const cursor=one('cursor');if(cursor&&cursor.length<=2800&&/^(?:q_[a-f0-9]{64}|sc_[A-Za-z0-9_-]+|o_(?:0|[1-9]\d{0,2}))$/.test(cursor))out.set('cursor',cursor);
     if(one('view')==='web')out.set('view','web');
     if(legacy){

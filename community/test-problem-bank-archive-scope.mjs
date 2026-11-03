@@ -5,6 +5,7 @@ import {readFileSync} from 'node:fs';
 import {createHash,webcrypto} from 'node:crypto';
 import {problemBankRoute,problemBankIndexText,PROBLEM_BANK_SEARCH_SCHEMA} from './src/problem-bank.js';
 import {BANK_REGISTRY_SCHEMA} from './src/problem-bank-model.js';
+import {BANK_SOURCE_ALIASES,BANK_QUESTION_ALIASES} from './src/problem-bank-source-aliases.js';
 
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const sha=x=>createHash('sha256').update(x).digest('hex');
@@ -23,8 +24,8 @@ function fixture(t){
   bank.exec(schema);bank.exec(solutionSchema);search.exec(PROBLEM_BANK_SEARCH_SCHEMA);registry.exec(BANK_REGISTRY_SCHEMA);
   registry.exec('CREATE TABLE bank_source_routes(source_id TEXT PRIMARY KEY,source_json TEXT,database_name TEXT); CREATE TABLE bank_solution_routes(solution_id TEXT PRIMARY KEY,question_id TEXT,database_name TEXT); CREATE TABLE bank_context_graph_edges(question_id TEXT,target_question_id TEXT,relation TEXT,metadata_json TEXT,proof_json TEXT,updated_at TEXT);');
   const env={BANK_REGISTRY:new D1(registry),BANK2:new D1(bank),BANK_SEARCH:new D1(search)};
-  function source(name,kind,collection,{registered=true,database='haslalab-problem-bank-02'}={}){
-    const id=sid(name),metadata={id,title:name,subjects:['classical_mechanics'],source_language:'en',page_count:2,level:'undergraduate',expected_question_count:99,extraction_complete:false,catalogue:{kind,discipline:collection,...(kind==='contest'?{competition:'ipho',year:2000}:{})},local_path:'D:/private/secret.pdf',origin:{kind:kind==='course'?'url':'drive',url:'https://private.test/source'}};
+  function source(name,kind,collection,{registered=true,database='haslalab-problem-bank-02',id:providedId}={}){
+    const id=providedId??sid(name),metadata={id,title:name,subjects:['classical_mechanics'],source_language:'en',page_count:2,level:'undergraduate',expected_question_count:99,extraction_complete:false,catalogue:{kind,discipline:collection,...(kind==='contest'?{competition:'ipho',year:2000}:{})},local_path:'D:/private/secret.pdf',origin:{kind:kind==='course'?'url':'drive',url:'https://private.test/source'}};
     bank.prepare('INSERT INTO book_sources(id,drive_id,revision,title,mime_type,sha256,page_count,subjects_json,level,source_language,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)').run(id,id,'v1',name,'application/pdf',sha(name),2,'["classical_mechanics"]','undergraduate','en','now','now');
     if(registered)registry.prepare('INSERT INTO bank_source_routes VALUES(?,?,?)').run(id,JSON.stringify(metadata),database);
     return {id,kind,collection};
@@ -56,7 +57,7 @@ function fixture(t){
   };
   const body=async path=>{const response=await call(path);assert.equal(response.status,200,await response.clone().text());return response.json();};
   const edge=(from,to,label)=>registry.prepare('INSERT INTO bank_context_graph_edges VALUES(?,?,?,?,?,?)').run(from,to,'required_shared_input',JSON.stringify({label}),'{}','now');
-  return {registry,bank,search,env,qs,books,astro,school,call,body,edge};
+  return {registry,bank,search,env,qs,books,astro,school,call,body,edge,question,source};
 }
 const scope='kind=book&collection=physics';
 
@@ -154,4 +155,70 @@ test('photo identification rejects a conflicting archive scope before invoking t
   const form=new FormData();form.set('image',new File([png],'question.png',{type:'image/png'}));form.set('kind','course');
   const response=await f.call('/identify?'+scope,{method:'POST',body:form,user:{id:1,role:'admin'},ocr:()=>{calls++;return 'gravitational field';}});
   assert.equal(response.status,400);assert.equal((await response.json()).error,'archive_scope_mismatch');assert.equal(calls,0);
+});
+
+test('source contents expose only scoped chapter metadata in natural order, including unchaptered questions',async t=>{
+  const f=fixture(t);
+  f.search.prepare('UPDATE bank_search_documents SET chapter=? WHERE question_id=?').run('Chapter 10',f.qs.b1);
+  f.search.prepare('UPDATE bank_search_documents SET chapter=? WHERE question_id=?').run('Chapter 2',f.qs.b2);
+  const unchaptered=f.question(f.books,'without-chapter');
+  const out=await f.body('/sources/'+f.books.id+'/contents?'+scope+'&lang=en');
+  assert.equal(out.source_id,f.books.id);assert.equal(out.source.id,f.books.id);assert.equal(out.question_count,3);
+  assert.deepEqual(out.chapters,[{chapter:'',title:'Uncategorized',question_count:1},{chapter:'Chapter 2',title:'Chapter 2',question_count:1},{chapter:'Chapter 10',title:'Chapter 10',question_count:1}]);
+  assert.doesNotMatch(JSON.stringify(out),/gravitational field|Explicit solution|snippet|selected_version|D:\/private|source_json|database_name/);
+  assert.equal((await f.call('/sources/'+f.astro.id+'/contents?'+scope)).status,404);
+  assert.equal((await f.call('/sources/'+sid('absent')+'/contents?'+scope)).status,404);
+  const loose=await f.body('/search?'+scope+'&source='+f.books.id+'&chapter=&sort=source&lang=en');
+  assert.deepEqual(loose.items.map(x=>x.id),[unchaptered]);
+});
+
+test('chapter browsing stays bounded and cursor pagination never crosses chapter or bank scope',async t=>{
+  const f=fixture(t),ids=[];
+  for(let n=1;n<=35;n++){const id=f.question(f.books,'c2-'+n);ids.push(id);f.search.prepare('UPDATE bank_search_documents SET chapter=? WHERE question_id=?').run('2',id);}
+  const base='/search?'+scope+'&source='+f.books.id+'&chapter=2&sort=source&limit=20&lang=en';
+  const one=await f.body(base);assert.equal(one.items.length,20);assert.equal(one.has_more,true);assert.ok(one.next_cursor);
+  const two=await f.body(base+'&cursor='+encodeURIComponent(one.next_cursor));assert.equal(two.items.length,15);assert.equal(two.has_more,false);assert.equal(two.next_cursor,null);
+  const seen=[...one.items,...two.items].map(x=>x.id);assert.equal(new Set(seen).size,35);assert.deepEqual([...seen].sort(),ids.sort());assert.ok([...one.items,...two.items].every(x=>x.chapter==='2'&&x.source_id===f.books.id));
+  for(const bad of ['/search?chapter=2','/search?source='+f.books.id+'&chapter='+encodeURIComponent('x\u0000y'),'/search?source='+f.books.id+'&chapter='+'a'.repeat(241)]){
+    const before=Object.values(f.env).reduce((n,db)=>n+db.calls.length,0);assert.equal((await f.call(bad)).status,400);assert.equal(Object.values(f.env).reduce((n,db)=>n+db.calls.length,0),before);
+  }
+});
+
+test('detail reuses one schema snapshot per binding and combines admission with the facet read',async t=>{
+  const f=fixture(t),out=await f.body('/questions/'+f.qs.b1+'?'+scope+'&lang=en');assert.equal(out.question.id,f.qs.b1);
+  const queries=Object.values(f.env).flatMap(db=>db.calls).map(call=>call.sql);
+  assert.ok(queries.length<=10,'bounded detail SQL count: '+queries.length);
+  assert.equal(f.env.BANK_REGISTRY.calls.filter(call=>call.sql.includes('sqlite_master')).length,1);
+  assert.equal(f.env.BANK_SEARCH.calls.filter(call=>call.sql.includes('sqlite_master')).length,1);
+  assert.ok(!queries.some(sql=>/^SELECT \* FROM bank_question_facets/.test(sql)));
+  assert.doesNotMatch(JSON.stringify(out),/Explicit solution/);
+});
+
+test('capability-only status verifies current role without scanning source or question tables',async t=>{
+  const f=fixture(t),response=await f.call('/status?capabilities=1',{user:{id:7,role:'admin',nickname:'Admin'},ocr:()=>assert.fail('must not invoke OCR')});
+  assert.equal(response.status,200);const out=await response.json();assert.equal(out.user.role,'admin');assert.equal(out.ocr_available,true);assert.equal(out.access,'public');assert.equal(out.questions,undefined);
+  assert.ok(Object.values(f.env).every(db=>db.calls.length===0));
+  assert.equal((await f.call('/status?capabilities=all')).status,400);assert.ok(Object.values(f.env).every(db=>db.calls.length===0));
+});
+
+test('Zangwill editions form one source, hide only duplicate questions and retain geometry and old-only problems',async t=>{
+  const f=fixture(t),baseline=await f.body('/status'),[older,current]=Object.entries(BANK_SOURCE_ALIASES)[0];
+  const one=f.source('Modern Electrodynamics 2013','book','physics',{id:current}),old=f.source('Modern Electrodynamics 2012','book','physics',{id:older});
+  const add=(source,locator,chapter)=>{const id=f.question(source,locator);f.search.prepare('UPDATE bank_search_documents SET chapter=? WHERE question_id=?').run(chapter,id);f.bank.prepare('UPDATE bank_questions SET chapter=? WHERE id=?').run(chapter,id);return id;};
+  const original=add(one,'chapter-01/problem-01','1'),oldOriginal=add(old,'chapter-01/problem-01','1');
+  const geometry=add(one,'chapter-02/problem-13','2'),oldGeometry=add(old,'chapter-02/problem-13','2');
+  const shifted=add(one,'chapter-03/problem-17','3'),oldShifted=add(old,'chapter-03/problem-18','3'),extra=add(old,'chapter-03/problem-17','3');
+  assert.equal(BANK_QUESTION_ALIASES[oldOriginal],original);assert.equal(BANK_QUESTION_ALIASES[oldShifted],shifted);assert.equal(BANK_QUESTION_ALIASES[oldGeometry],undefined);assert.equal(BANK_QUESTION_ALIASES[extra],undefined);
+  const status=await f.body('/status');assert.equal(status.questions,baseline.questions+5);assert.equal(status.language_bodies,baseline.language_bodies+10);assert.equal(status.sources_registered,baseline.sources_registered+1);assert.equal(status.sources_with_documents,baseline.sources_with_documents+1);
+  for(const path of ['/sources','/sources?'+scope]){const out=await f.body(path);assert.equal(out.sources.filter(s=>s.id===current).length,1);assert.equal(out.sources.some(s=>s.id===older),false);assert.deepEqual(out.sources.find(s=>s.id===current).aliases,[older]);}
+  const scoped=await f.body('/sources?'+scope);assert.equal(scoped.sources.find(s=>s.id===current).question_count,5);
+  for(const id of [current,older]){const out=await f.body('/sources/'+id+'/contents?'+scope+'&lang=en');assert.equal(out.source_id,current);assert.equal(out.question_count,5);assert.deepEqual(out.chapters.map(c=>[c.chapter,c.question_count]),[['1',1],['2',2],['3',2]]);}
+  const base='/search?'+scope+'&source='+older+'&sort=source&summary=1&lang=en&limit=2';
+  const seen=[];let cursor=null;do{const page=await f.body(base+(cursor?'&cursor='+encodeURIComponent(cursor):''));assert.ok(page.items.length<=2);seen.push(...page.items);cursor=page.next_cursor;}while(cursor);
+  assert.deepEqual(seen.map(q=>q.chapter),['1','2','2','3','3']);assert.deepEqual(seen.map(q=>q.id).sort(),[original,geometry,oldGeometry,shifted,extra].sort());assert.ok(seen.every(q=>q.display_source_id===current));
+  for(const id of [oldGeometry,extra]){const item=seen.find(q=>q.id===id);assert.equal(item.edition_label,'2012 source');assert.match(item.edition_original_number,/^(?:2\.13|3\.17)$/);const detail=await f.body('/questions/'+id+'?'+scope+'&lang=en');assert.equal(detail.question.display_source_id,current);assert.equal(detail.question.source_id,older);assert.equal(detail.question.canonical_id,undefined);assert.doesNotMatch(JSON.stringify(detail),/Explicit solution/);}
+  const legacy=await f.body('/questions/'+oldOriginal+'?'+scope);assert.equal(legacy.question.id,oldOriginal);assert.equal(legacy.question.canonical_id,original);
+  f.registry.prepare('DELETE FROM bank_source_routes WHERE source_id=?').run(older);
+  const contents=await f.body('/sources/'+current+'/contents?'+scope);assert.equal(contents.question_count,3);
+  const remaining=await f.body('/search?'+scope+'&source='+current+'&chapter=3&sort=source&lang=en');assert.deepEqual(remaining.items.map(q=>q.id),[shifted]);
 });

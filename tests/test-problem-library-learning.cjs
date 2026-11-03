@@ -1,24 +1,24 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const {createRequire}=require('node:module'),{JSDOM}=createRequire(path.resolve(__dirname,'../community/package.json'))('jsdom');
 const Runtime=require('../site-runtime.js');
 const read=file=>fs.readFileSync(path.join(__dirname,'..',file),'utf8');
 const main=[...read('index.html').matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('const REL ='))[1];
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 const QID='q_'+'a'.repeat(64),SID='src_'+'b'.repeat(64);
 function app(hash='#/archive/books/phys'){
-  const nodes=new Map(),handlers={},observers=[],store=new Map([['hlCmTok','SYNTHETIC_ACCOUNT_TOKEN']]);
+  const dom=new JSDOM('<!doctype html><html><body></body></html>'),document=dom.window.document;
+  const find=document.getElementById.bind(document),handlers={},observers=[],store=new Map([['hlCmTok','SYNTHETIC_ACCOUNT_TOKEN']]);
+  const nodes={has:id=>!!find(id),get:id=>find(id)};
   const calls={mounts:[],disposed:[],updates:[],accounts:0};let context;
-  class Element{
-    constructor(id=''){this.id=id;this.dataset={};this.style={};this.classList={toggle(){},add(){},remove(){}};this.listeners={};this.isConnected=true;this._html='';}
-    setAttribute(){}addEventListener(name,fn){this.listeners[name]=fn;}querySelectorAll(){return[];}querySelector(){return null;}
-    set innerHTML(v){this._html=String(v);if(this.id==='view'){const old=nodes.get('archiveNative');if(old)old.isConnected=false;nodes.delete('archiveNative');if(this._html.includes('id="archiveNative"'))nodes.set('archiveNative',new Element('archiveNative'));}}
-    get innerHTML(){return this._html;}
-  }
-  const node=id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id);};
+  const node=id=>{let element=find(id);if(!element){element=document.createElement('div');element.id=id;document.body.append(element);}return element;};
+  // Exercise real parent/child, closest(), hidden and removal behavior while
+  // retaining the existing parent application's synthetic service boundaries.
+  document.getElementById=id=>id==='archiveNative'||/^learn.*Frame$/.test(id)?find(id):node(id);
   const native={bookMedia:{[SID]:{image_url:'archive-media/books/synthetic.webp'}},schoolMedia:{institutions:[{id:'kaist',name:{ko:'KAIST',en:'KAIST'},source_ids:[]}]},mountArchiveLibrary(container,options){calls.mounts.push({container,options});const result={dispose(){calls.disposed.push(container);},update(value){calls.updates.push(value);}};return result;}};
   context={window:{HL_RUNTIME:Runtime,HL_ARCHIVE_NATIVE:native},URL,URLSearchParams,console,innerHeight:850,
     location:new URL('https://haslalab.org/'+hash),history:{replaceState(_state,_title,url){context.location.href=new URL(url,context.location).href;}},
-    document:{getElementById:id=>id==='archiveNative'||/^learn.*Frame$/.test(id)?nodes.get(id)||null:node(id),querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>new Element(),head:{append(){}},documentElement:{dataset:{theme:'light'}},body:node('body')},
+    document,
     localStorage:{getItem:key=>store.get(key)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)},sessionStorage:{getItem:()=>null,setItem(){}},
     addEventListener(name,fn){(handlers[name]??=[]).push(fn);},matchMedia:()=>({matches:false}),setTimeout(){},clearTimeout(){},requestAnimationFrame(){},cancelAnimationFrame(){},scrollTo(){},
     MutationObserver:class{constructor(callback){this.callback=callback;observers.push(this);}observe(target){this.target=target;}},fetch:async()=>{throw Error('Parent must delegate data reads to its scoped native reader');}};
@@ -56,7 +56,8 @@ test('Books and Schools mount native category- and subject-bound readers without
     assert.equal(options.baseHash,`#/archive/${category}/${sub}`);assert.equal(options.apiOrigin,'https://haslalab-problem-bank.haslalab.workers.dev');assert.equal(typeof options.renderMath,'function');
     assert.equal(options.bookMedia,a.native.bookMedia);assert.equal(options.schoolMedia,a.native.schoolMedia);
     assert.equal(options.getToken(),'SYNTHETIC_ACCOUNT_TOKEN');assert.doesNotMatch(a.node('view').innerHTML,/<iframe|SYNTHETIC_ACCOUNT_TOKEN|workers\.dev/);
-    assert.match(a.node('view').innerHTML,/<div class="shell">/);assert.match(a.node('view').innerHTML,/<nav class="subjs"/);assert.match(a.node('view').innerHTML,/data-logo-key="ipho"/);assert.doesNotMatch(a.node('view').innerHTML,/archive-shell|archive-disciplines/);
+    const shell=a.nodes.get('archiveNative').closest('.shell');assert(shell.classList.contains('archive-reading'));assert.equal(shell.querySelector(':scope > .phead').hidden,true);assert.equal(shell.querySelector(':scope > .subjs').hidden,true);
+    assert.match(a.node('view').innerHTML,/<nav class="subjs"/);assert.match(a.node('view').innerHTML,/data-logo-key="ipho"/);assert.doesNotMatch(a.node('view').innerHTML,/archive-shell|archive-disciplines/);
     assert.match(a.node('nav').innerHTML,/<a href="#\/comps" class="on">/);assert.match(a.context.document.title,/아카이브/);
   }
 });
@@ -77,8 +78,21 @@ test('old Learn bank bookmarks resolve into Archive and never remount the retire
 test('contest web questions remain available alongside the full paper gallery',async()=>{
   const a=app('#/archive/contests/phys');a.run('render()');await tick();assert.equal(a.calls.mounts.length,0);assert.match(a.node('view').innerHTML,/view=web/);
   a.context.location.hash='#/archive/contests/phys?view=web';a.run('render()');await tick();assert.equal(a.calls.mounts.at(-1).options.kind,'contest');
-  a.context.location.hash='#/archive/contests/phys?problem='+QID;a.run('render()');await tick();assert.equal(a.calls.mounts.at(-1).options.params.get('problem'),QID);
-  a.context.location.hash='#/archive/contests/phys?type=experiment';a.run('render()');await tick();assert.equal(a.calls.mounts.at(-1).options.params.get('type'),'experiment');
+  const container=a.nodes.get('archiveNative');
+  a.context.location.hash='#/archive/contests/phys?problem='+QID;a.run('render()');await tick();assert.equal(a.calls.updates.at(-1).params.get('problem'),QID);
+  a.context.location.hash='#/archive/contests/phys?type=experiment';a.run('render()');await tick();assert.equal(a.calls.updates.at(-1).params.get('type'),'experiment');
+  assert.equal(a.calls.mounts.length,1);assert.equal(a.calls.disposed.length,0);assert.equal(a.nodes.get('archiveNative'),container);
+  a.context.location.hash='#/archive/contests/phys';a.run('render()');await tick();assert.equal(a.calls.disposed.length,1);assert.equal(a.nodes.has('archiveNative'),false);assert(a.node('view').querySelector('a.comp[href="#/ipho"]'));assert(a.node('view').querySelector('[data-logo-key="ipho"]'));
+});
+test('source, chapter, question and back navigation reuse one reader while hiding only reading chrome',async()=>{
+  const a=app();a.run('render()');await tick();const container=a.nodes.get('archiveNative'),shell=container.closest('.shell'),head=shell.querySelector(':scope > .phead'),subjects=shell.querySelector(':scope > .subjs');
+  assert.equal(head.hidden,false);assert.equal(subjects.hidden,false);
+  for(const query of ['source='+SID,'source='+SID+'&chapter=1','source='+SID+'&chapter=1&problem='+QID,'source='+SID+'&chapter=1']){
+    a.context.location.hash='#/archive/books/phys?'+query;a.run('render()');await tick();
+    assert.equal(a.nodes.get('archiveNative'),container);assert.equal(a.calls.mounts.length,1);assert.equal(a.calls.disposed.length,0);assert.equal(head.hidden,true);assert.equal(subjects.hidden,true);assert(shell.classList.contains('archive-reading'));
+    assert.equal(a.calls.updates.at(-1).params.get('source'),SID);assert.equal(a.calls.updates.at(-1).params.get('chapter'),query.includes('chapter=1')?'1':null);
+  }
+  a.context.location.hash='#/archive/books/phys';a.run('render()');await tick();assert.equal(a.nodes.get('archiveNative'),container);assert.equal(head.hidden,false);assert.equal(subjects.hidden,false);assert.equal(shell.classList.contains('archive-reading'),false);assert.equal(a.calls.mounts.length,1);
 });
 test('language changes preserve the outer source/problem URL and use the same site account',async()=>{
   const a=app('#/archive/books/astro?source='+SID+'&problem='+QID);a.node('acct').innerHTML='EXISTING_ACCOUNT';a.run('render()');await tick();

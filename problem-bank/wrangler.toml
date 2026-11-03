@@ -4,6 +4,10 @@ compatibility_date = "2026-11-02"
 workers_dev = true
 keep_vars = true
 
+# Place the API near its D1 backends when measured round trips make that faster.
+[placement]
+mode = "smart"
+
 [assets]
 directory = "./public"
 binding = "ASSETS"

@@ -986,7 +986,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 </style>
 <link rel="stylesheet" href="site-design.css?v=3c1c7baa824c">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
-<link rel="stylesheet" href="archive-library.css?v=caacf5cbd468">
+<link rel="stylesheet" href="archive-library.css?v=86f71e245d0a">
 </head>
 <body class="hl-site">
 
@@ -1128,7 +1128,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
-<script src="archive-navigation.js?v=cd23758edf22"></script>
+<script src="archive-navigation.js?v=417d67db4880"></script>
 <script src="site-catalogue.js?v=c97bc342ef67"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
@@ -4908,21 +4908,24 @@ function archiveSubjects(category,subject){
 }
 function viewArchiveDigital(route){
   const ko=lang==="ko",book=route.category==="books",school=route.category==="schools";
+  const reading=route.params.has("source")||route.params.has("problem");
   const name=route.resolveLegacy?(ko?"아카이브":"Archive"):book?(ko?"교재를 고르세요":"Choose a book"):school?(ko?"학교를 고르세요":"Choose a school"):UI[lang].hComps;
   const eyebrow=book?(ko?"수록 교재":"Covered books"):school?(ko?"수록 학교":"Covered schools"):UI[lang].ebComps;
   const description=book?(ko?"분야와 교재를 고르고, 문항과 풀이를 여세요.":"Pick a field and a book, then open its problems and solutions."):school?(ko?"분야와 학교를 고르고, 강의 자료와 문항을 여세요.":"Pick a field and a school, then open its course materials and problems."):UI[lang].pComps;
-  return `<div class="shell">${archiveCategories(route.category,route.sub)}<div class="phead">${route.resolveLegacy?"":`<p class="eyebrow">${eyebrow}</p>`}<h1>${name}</h1>${route.resolveLegacy?"":`<div class="sub">${description}</div>`}</div>${route.resolveLegacy?"":archiveSubjects(route.category,route.sub)}<div id="archiveNative"><p class="archive-loading" role="status">${ko?"자료를 불러오는 중…":"Loading archive…"}</p></div></div>`;
+  return `<div class="shell${reading?' archive-reading':''}">${archiveCategories(route.category,route.sub)}<div class="phead"${reading?' hidden':''}>${route.resolveLegacy?"":`<p class="eyebrow">${eyebrow}</p>`}<h1>${name}</h1>${route.resolveLegacy?"":`<div class="sub">${description}</div>`}</div>${route.resolveLegacy?"":archiveSubjects(route.category,route.sub).replace('<nav class="subjs"','<nav class="subjs"'+(reading?' hidden':''))}<div id="archiveNative"><p class="archive-loading" role="status">${ko?"자료를 불러오는 중…":"Loading archive…"}</p></div></div>`;
 }
 function archiveUsesNative(route){
   return !!route&&(route.resolveLegacy||route.category!=="contests"||route.params.get("view")==="web"||["source","problem","competition","year","type","q","topic","stars","cursor"].some(key=>route.params.has(key)));
 }
-let archiveController=null,archiveModulePromise=null,archiveMathPromise=null;
+let archiveController=null,archiveMountState=null,archiveModulePromise=null,archiveMathPromise=null;
 function disposeArchiveLibrary(){
-  try{archiveController?.dispose();}catch(e){}archiveController=null;
+  try{archiveController?.dispose();}catch(e){}archiveController=null;archiveMountState=null;
 }
+function archiveMountKey(route){return [route.kind,route.collection,route.baseHash,route.resolveLegacy,lang].join('|');}
+function updateArchiveReadingChrome(route){const node=document.getElementById('archiveNative'),shell=node?.closest('.shell');if(!shell)return;const reading=route.params.has('source')||route.params.has('problem');shell.classList.toggle('archive-reading',reading);for(const element of shell.querySelectorAll(':scope > .phead,:scope > .subjs'))element.hidden=reading;}
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=084415bbc248"),import("./archive-book-media.js?v=1af258b84432"),import("./archive-school-media.js?v=356121d191a3")]).then(([reader,books,schools])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA})).catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=Promise.all([import("./archive-library.js?v=696ebe246861"),import("./archive-book-media.js?v=1af258b84432"),import("./archive-school-media.js?v=356121d191a3")]).then(([reader,books,schools])=>({...reader,bookMedia:books.ARCHIVE_BOOK_MEDIA,schoolMedia:schools.ARCHIVE_SCHOOL_MEDIA})).catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){
@@ -4941,10 +4944,12 @@ function mountArchiveNative(route,generation){
   const current=()=>generation===siteRenderSeq&&document.getElementById("archiveNative")===container;
   loadArchiveModule().then(module=>{
     if(!current())return;
-    archiveController=module.mountArchiveLibrary(container,{kind:route.kind,collection:route.collection,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",baseHash:route.baseHash,params:route.params,resolveLegacy:route.resolveLegacy,bookMedia:module.bookMedia,schoolMedia:module.schoolMedia,apiOrigin:"https://haslalab-problem-bank.haslalab.workers.dev",getToken:()=>cmTok(),renderMath:archiveMath,
-      onNavigate:(href,options={})=>{if(!current()||typeof href!=="string"||!href.startsWith("#/archive/")||/[\r\n]/.test(href))return;if(route.resolveLegacy||options.replace){history.replaceState(null,"",href);render();}else location.hash=href;},
-      onLogin:()=>{if(!current())return;try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}location.hash="#/login";}
+    archiveMountState={key:archiveMountKey(route),container};
+    archiveController=module.mountArchiveLibrary(container,{kind:route.kind,collection:route.collection,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",baseHash:route.baseHash,params:route.params,resolveLegacy:route.resolveLegacy,bookMedia:module.bookMedia,schoolMedia:module.schoolMedia,apiOrigin:"https://haslalab-problem-bank.haslalab.workers.dev",getToken:()=>cmTok(),getUser:()=>cm.me,renderMath:archiveMath,
+      onNavigate:(href,options={})=>{if(document.getElementById("archiveNative")!==container||typeof href!=="string"||!href.startsWith("#/archive/")||/[\r\n]/.test(href))return;if(route.resolveLegacy||options.replace){history.replaceState(null,"",href);render();}else location.hash=href;},
+      onLogin:()=>{if(document.getElementById("archiveNative")!==container)return;try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}location.hash="#/login";}
     });
+    updateArchiveReadingChrome(route);
   }).catch(()=>{if(!current())return;container.innerHTML=`<p role="alert">${lang==="ko"?"자료를 불러오지 못했습니다.":"Could not load the archive."}</p><button type="button" id="archiveRetry">${lang==="ko"?"다시 불러오기":"Retry"}</button>`;document.getElementById("archiveRetry").onclick=()=>mountArchiveNative(route,generation);});
 }
 if(typeof MutationObserver==="function")new MutationObserver(()=>archiveController?.update?.({theme:document.documentElement.dataset.theme==="dark"?"dark":"light"})).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
@@ -9795,6 +9800,10 @@ function render(){
     return render();
   }
   const archiveRoute=window.HL_ARCHIVE?.parse(location.hash);
+  if(archiveController&&archiveUsesNative(archiveRoute)&&archiveMountState?.key===archiveMountKey(archiveRoute)&&document.getElementById('archiveNative')===archiveMountState.container){
+    archiveController.update({params:archiveRoute.params,lang,theme:document.documentElement.dataset.theme==='dark'?'dark':'light'});
+    updateArchiveReadingChrome(archiveRoute);document.documentElement.lang=lang;setDocTitle('archive',archiveRoute.category);paintPageChrome('comps');paintSiteTheme();if(typeof arChip==='function')arChip();else cmAccountChip();return;
+  }
   disposeArchiveLibrary();
   const legacyRuPhO=RUPHO_ARCHIVE?.canonical(location.hash);
   if(legacyRuPhO){ history.replaceState(null,"",legacyRuPhO); }

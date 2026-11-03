@@ -134,6 +134,19 @@ test('unknown or unapproved figure IDs never reach R2 or authenticate the guest'
   }
 });
 
+test('role-invariant source/search/figure GET reads never await authentication, even with a stale bearer',async()=>{
+  const f=fixture({figureRow:figureRecord()});f.env.COMMUNITY.fetch=async()=>assert.fail('invariant public reads must not authenticate');
+  for(const path of ['/api/problem-bank/sources','/api/problem-bank/search','/api/problem-bank/figures/'+FID]){
+    const res=await f.call(path);assert.equal(res.status,200,path);
+  }
+  assert.equal(f.calls.community.length,0);assert.equal(f.calls.figureReads,1);
+});
+
+test('capability-only bank status authenticates the current bearer but never queries D1',async()=>{
+  const f=fixture();f.env.BANK_REGISTRY.prepare=()=>assert.fail('capability status must not scan D1');
+  const response=await f.call('/api/problem-bank/status?capabilities=1');assert.equal(response.status,200);const out=await response.json();assert.equal(out.user.role,'admin');assert.equal(out.ocr_available,true);assert.equal(out.questions,undefined);assert.equal(f.calls.community.length,1);
+});
+
 test('figure registry key, type, hash and length mismatches are rejected before reading storage',async()=>{
   for(const change of [
     {object_key:'../../private.pdf'},{object_key:'sources/'+sha(PNG)+'.pdf'},{object_key:'figures/'+sha('other')+'.png'},

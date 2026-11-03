@@ -197,7 +197,7 @@ test('missing additive context schema returns empty references without runtime w
   assert.equal(body.visibility,'public');assert.equal(body.publication_ready,false);
   assert.equal(res.headers.get('cache-control'),'private, no-store');
   const queries=Object.values(f.env).flatMap(db=>db.calls).map(c=>c.sql);
-  assert.ok(queries.some(sql=>sql.includes('sqlite_master')&&sql.includes('bank_context_graph_edges')));
+  assert.ok(queries.some(sql=>sql.includes('sqlite_master')&&sql.includes("type='table'")));
   assert.ok(!queries.some(sql=>/FROM bank_context_graph_edges|CREATE|INSERT|UPDATE|DELETE/.test(sql)));
 });
 
