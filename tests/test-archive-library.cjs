@@ -176,3 +176,18 @@ test('a valid long source cursor above 2048 bytes round-trips from URL through r
   const h=await setup(t,{params:'cursor='+cursor,route:u=>u.pathname.endsWith('/search')?response({items:[item()],has_more:true,next_cursor:cursor}):null});
   assert.equal(h.calls.find(c=>c.url.pathname.endsWith('/search')).url.searchParams.get('cursor'),cursor);assert.equal(new URL(h.mount.querySelector('.al-pager a:last-child').href).hash.split('?')[1],new URLSearchParams({cursor}).toString());
 });
+
+test('inline equations that fit desktop are contained after narrowing without rerender or small-math tab stops',async t=>{
+  let available=900,renders=0;
+  const h=await setup(t,{params:'problem='+Q,options:{renderMath:async el=>{
+    renders++;const prose=el.querySelector('.al-prose');prose.getBoundingClientRect=()=>({width:available});
+    for(const width of [500,30]){const math=el.ownerDocument.createElement('span');math.className='katex';math.textContent='Synthetic math';math.getBoundingClientRect=()=>({width});prose.append(math);}
+  }}});
+  assert.equal(h.mount.querySelectorAll('.al-inline-equation').length,0);
+  Object.defineProperty(h.w.HTMLElement.prototype,'scrollWidth',{configurable:true,get(){return this.classList.contains('al-inline-equation')?500:0;}});
+  Object.defineProperty(h.w.HTMLElement.prototype,'clientWidth',{configurable:true,get(){return this.classList.contains('al-inline-equation')?available:0;}});
+  available=284;h.w.dispatchEvent(new h.w.Event('resize'));await new Promise(r=>setTimeout(r,35));
+  const wrapper=h.mount.querySelector('.al-inline-equation');assert(wrapper);assert.equal(wrapper.tabIndex,0);assert.equal(h.mount.querySelectorAll('.al-inline-equation').length,1);assert.equal(renders,1);
+  available=900;h.w.dispatchEvent(new h.w.Event('resize'));await new Promise(r=>setTimeout(r,35));assert.equal(wrapper.hasAttribute('tabindex'),false);assert.equal(renders,1);
+  h.instance.dispose();h.w.dispatchEvent(new h.w.Event('resize'));await new Promise(r=>setTimeout(r,25));assert.equal(h.mount.children.length,0);
+});

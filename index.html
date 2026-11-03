@@ -4912,7 +4912,7 @@ function disposeArchiveLibrary(){
 }
 function loadArchiveModule(){
   if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
-  if(!archiveModulePromise)archiveModulePromise=import("./archive-library.js?v=aad1f96080e1").catch(e=>{archiveModulePromise=null;throw e;});
+  if(!archiveModulePromise)archiveModulePromise=import("./archive-library.js?v=fe4a3d901eeb").catch(e=>{archiveModulePromise=null;throw e;});
   return archiveModulePromise;
 }
 function archiveMath(element){

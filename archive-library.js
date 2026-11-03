@@ -43,7 +43,7 @@ export function mountArchiveLibrary(container,options={}){
   if(!container?.ownerDocument)throw new TypeError('Archive container required');
   const doc=container.ownerDocument,win=doc.defaultView||window;
   let config={kind:'book',collection:'physics',lang:'ko',theme:'light',apiOrigin:'https://haslalab-problem-bank.haslalab.workers.dev',params:new URLSearchParams(),...options};
-  let disposed=false,epoch=0,panelRequest=0,bootstrapRequest=0,activeQuestion=null,identifyBusy=false,sources=[],status={},urls=new Set(),controllers=new Set();
+  let disposed=false,epoch=0,panelRequest=0,bootstrapRequest=0,activeQuestion=null,identifyBusy=false,mathLayoutFrame=0,sources=[],status={},urls=new Set(),controllers=new Set();
   let token=String(config.getToken?.()||''),params=cleanParams(config.params),candidateItems=null;
   const root=doc.createElement('section');root.className='al';container.replaceChildren(root);
   const $=selector=>root.querySelector(selector),tr=key=>WORDS[config.lang==='en'?'en':'ko'][key]||key;
@@ -82,12 +82,23 @@ export function mountArchiveLibrary(container,options={}){
     try{
       if(typeof config.renderMath==='function')await config.renderMath(el);else if(typeof win.renderMathInElement==='function')win.renderMathInElement(el,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false},{left:'$',right:'$',display:false}],throwOnError:false,trust:false,strict:'ignore',maxExpand:1000,maxSize:30});
       if(!current(e)||!el.isConnected)return;
-      for(const node of el.querySelectorAll('.katex')){
-        if(node.closest('.katex-display,.al-inline-equation'))continue;const prose=node.closest('.al-prose');
-        if(prose&&node.getBoundingClientRect().width>prose.getBoundingClientRect().width){const wrapper=doc.createElement('span');wrapper.className='al-inline-equation';wrapper.tabIndex=0;wrapper.setAttribute('aria-label',config.lang==='en'?'Equation':'수식');node.before(wrapper);wrapper.append(node);}
-      }
+      fitInlineMath();
     }catch{/* The readable escaped source remains available if the optional renderer fails. */}
   }
+  // Recheck layout without re-rendering equations when the archive narrows or
+  // real fonts replace fallback metrics after the initial KaTeX render.
+  function fitInlineMath(){
+    if(disposed||!root.isConnected)return;
+    for(const node of root.querySelectorAll('.al-prose .katex')){
+      if(node.closest('.katex-display,.al-inline-equation'))continue;const prose=node.closest('.al-prose');
+      if(node.getBoundingClientRect().width>prose.getBoundingClientRect().width){const wrapper=doc.createElement('span');wrapper.className='al-inline-equation';node.before(wrapper);wrapper.append(node);}
+    }
+    for(const wrapper of root.querySelectorAll('.al-inline-equation')){
+      if(wrapper.scrollWidth>wrapper.clientWidth+1){wrapper.tabIndex=0;wrapper.setAttribute('role','group');wrapper.setAttribute('aria-label',config.lang==='en'?'Equation':'수식');}
+      else for(const key of ['tabindex','role','aria-label'])wrapper.removeAttribute(key);
+    }
+  }
+  function scheduleMathLayout(){if(disposed||mathLayoutFrame)return;mathLayoutFrame=win.requestAnimationFrame(()=>{mathLayoutFrame=0;fitInlineMath();});}
   function href(changes={},base=config.baseHash){const p=new URLSearchParams(params);for(const [k,v]of Object.entries(changes)){if(v===null||v===undefined||v==='')p.delete(k);else p.set(k,String(v));}return (base||`#/archive/${CATEGORIES[config.kind]||'books'}/${DISCIPLINES[config.collection]||'phys'}`)+(p.size?'?'+p:'');}
   function navigate(hash){if(disposed)return;if(config.onNavigate)config.onNavigate(hash);else win.location.hash=hash;}
   function link(hash,label,className=''){const a=doc.createElement('a');a.href=hash;a.textContent=label;if(className)a.className=className;return a;}
@@ -275,9 +286,11 @@ export function mountArchiveLibrary(container,options={}){
   function onInput(event){if(event.target.matches('[data-source-query]'))renderDirectory();}
   function authChanged(){const next=String(config.getToken?.()||'');if(next===token)return;abort();token=next;status={};sources=[];candidateItems=null;boot();}
   root.addEventListener('click',onClick);root.addEventListener('submit',onSubmit);root.addEventListener('change',onChange);root.addEventListener('input',onInput);
+  const mathResizeObserver=typeof win.ResizeObserver==='function'?new win.ResizeObserver(scheduleMathLayout):null;
+  mathResizeObserver?.observe(root);win.addEventListener('resize',scheduleMathLayout);doc.fonts?.addEventListener?.('loadingdone',scheduleMathLayout);
   win.addEventListener('storage',authChanged);boot();
   return {
-    dispose(){if(disposed)return;abort();disposed=true;win.removeEventListener('storage',authChanged);root.removeEventListener('click',onClick);root.removeEventListener('submit',onSubmit);root.removeEventListener('change',onChange);root.removeEventListener('input',onInput);root.remove();},
+    dispose(){if(disposed)return;abort();disposed=true;mathResizeObserver?.disconnect();win.removeEventListener('resize',scheduleMathLayout);doc.fonts?.removeEventListener?.('loadingdone',scheduleMathLayout);if(mathLayoutFrame)win.cancelAnimationFrame(mathLayoutFrame);win.removeEventListener('storage',authChanged);root.removeEventListener('click',onClick);root.removeEventListener('submit',onSubmit);root.removeEventListener('change',onChange);root.removeEventListener('input',onInput);root.remove();},
     update(next={}){if(disposed)return;const previous=config;config={...config,...next};const nextParams=cleanParams(config.params),newToken=String(config.getToken?.()||'');const dataChanged=['kind','collection','lang','baseHash','resolveLegacy'].some(k=>previous[k]!==config[k])||nextParams.toString()!==params.toString()||newToken!==token;if(dataChanged){abort();params=nextParams;token=newToken;status={};sources=[];candidateItems=null;boot();}else{root.dataset.theme=config.theme==='dark'?'dark':'light';authChanged();}}
   };
 }
