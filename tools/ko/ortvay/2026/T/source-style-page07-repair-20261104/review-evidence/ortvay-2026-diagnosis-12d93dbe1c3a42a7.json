@@ -1,0 +1,1786 @@
+{
+  "status": "READ_ONLY_POSITIVE_ROW_TRIALS_COMPLETE_NO_REPAIR_EXECUTED",
+  "year": 2026,
+  "page": 7,
+  "code": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\diagnose_positive_trials.py",
+    "sha256": "7b6773d3ddc303edbdefd6682b8a154c6852d41920a2cfd9b6aa38d96824a330"
+  },
+  "v1": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v1\\diagnosis.json",
+    "sha256": "e700ae049dca2d5c52a22215d7e254df3b9b29cdf403302b2466f2fa6101197b"
+  },
+  "unchanged_inputs_before": {
+    "C:\\Windows\\Fonts\\batang.ttc": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+    "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2026_T_EN.pdf": "ea61fafa8228c3ed2a890e5c2f65ed8853f41d2c39e60d8b0957edfeac4dfba3",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.effective-plan.json": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.layout.json": "98454b83b490e8f2e42dc01b08d66b6d8788706643a9e5c31bb902e2e5783e79",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.pdf": "fccac3dc419fcb1bf1ee6aa3ed42d38ea1565e9416ddba3e7f7ec3e457cb169f",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\references\\P0\\page07.layout.json": "1c171f3d42cafbcd8757ccf2f022eda3eb0bf6e292b3a9f942e46e205bcec08c",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\references\\P0\\page07.pdf": "722f5614d421d0d8d25a7b1e973addac0ed90a8bc20bc35645f291a5a02d5733",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\rules.json": "c65eefa1b953ad74855821f9753a44ddc80527ffe82cfbe2b92444149cebcb33",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_actual_paint.py": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_font_widths.py": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_guard.py": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_independent_qa.py": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_outline_qa.py": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_runtime.py": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v1\\diagnose.py": "1548f8a45650c44488c2030352773d52a31aa1e6c513cb94beaad6354e8915ac",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v1\\diagnosis.json": "e700ae049dca2d5c52a22215d7e254df3b9b29cdf403302b2466f2fa6101197b",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\diagnose_positive_trials.py": "7b6773d3ddc303edbdefd6682b8a154c6852d41920a2cfd9b6aa38d96824a330",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PREPARATION-FROZEN.json": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\CODE-INPUT-FROZEN.json": "ad9b4855ac822214da7ecca0955af9abb3a1fecae4dbb33827ecb9ee59554079",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\continue_and_finalize.py": "baf8c139979721a1e0209b51c0a443a7f9dff24cb1be6dff5e770e2cf6c708e4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\outer-logs\\2026-page07.log": "1ea0cde447dd19ecec4bcc5ab3647da99060ccaf4dcd21c6197f0472665c60b8",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\build.log": "265a8d7acda6136e3adfd7b97542e3a55de66e0b7c5bc662f1fd38b9ef36e1dd",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\page07.png": "a8a4ea1f4a45d54411788181b551405ccbd1c437f389291cbf408e02f422fefc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\ROOT-GO.json": "8f56f0f8a6db8400c0d9ee2a9b6c62026f2e50984e7b669e5e1c12f4282ea0d4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PROTOTYPE-RUNTIME-FROZEN.json": "27b5df6951f5ce45d390f51aa2d193bdd22c0740163846add788060e2972132b",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+  },
+  "unchanged_inputs_after": {
+    "C:\\Windows\\Fonts\\batang.ttc": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+    "D:\\CodexBuilds\\Hasla-plancks-ortvay-icho-20261102\\source\\ortvay\\Ortvay_2026_T_EN.pdf": "ea61fafa8228c3ed2a890e5c2f65ed8853f41d2c39e60d8b0957edfeac4dfba3",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.effective-plan.json": "23e3f2e1b94a42b259e3781c48b73818f4964c55932f392b77b6de24b8a58eaa",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.layout.json": "98454b83b490e8f2e42dc01b08d66b6d8788706643a9e5c31bb902e2e5783e79",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.pdf": "fccac3dc419fcb1bf1ee6aa3ed42d38ea1565e9416ddba3e7f7ec3e457cb169f",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\references\\P0\\page07.layout.json": "1c171f3d42cafbcd8757ccf2f022eda3eb0bf6e292b3a9f942e46e205bcec08c",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\references\\P0\\page07.pdf": "722f5614d421d0d8d25a7b1e973addac0ed90a8bc20bc35645f291a5a02d5733",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\rules.json": "c65eefa1b953ad74855821f9753a44ddc80527ffe82cfbe2b92444149cebcb33",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_actual_paint.py": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_font_widths.py": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_guard.py": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_independent_qa.py": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_outline_qa.py": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_runtime.py": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v1\\diagnose.py": "1548f8a45650c44488c2030352773d52a31aa1e6c513cb94beaad6354e8915ac",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v1\\diagnosis.json": "e700ae049dca2d5c52a22215d7e254df3b9b29cdf403302b2466f2fa6101197b",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\diagnose_positive_trials.py": "7b6773d3ddc303edbdefd6682b8a154c6852d41920a2cfd9b6aa38d96824a330",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PREPARATION-FROZEN.json": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\CODE-INPUT-FROZEN.json": "ad9b4855ac822214da7ecca0955af9abb3a1fecae4dbb33827ecb9ee59554079",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\continue_and_finalize.py": "baf8c139979721a1e0209b51c0a443a7f9dff24cb1be6dff5e770e2cf6c708e4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\outer-logs\\2026-page07.log": "1ea0cde447dd19ecec4bcc5ab3647da99060ccaf4dcd21c6197f0472665c60b8",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\build.log": "265a8d7acda6136e3adfd7b97542e3a55de66e0b7c5bc662f1fd38b9ef36e1dd",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\page07.png": "a8a4ea1f4a45d54411788181b551405ccbd1c437f389291cbf408e02f422fefc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\ROOT-GO.json": "8f56f0f8a6db8400c0d9ee2a9b6c62026f2e50984e7b669e5e1c12f4282ea0d4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PROTOTYPE-RUNTIME-FROZEN.json": "27b5df6951f5ce45d390f51aa2d193bdd22c0740163846add788060e2972132b",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+  },
+  "source_and_P0_current_and_runtime_bytes_unchanged": true,
+  "no_serialized_PDF_or_producer_or_QA_or_input_writes": true,
+  "source_column": [
+    73.541015625,
+    124.33867645263672
+  ],
+  "baseline_pair": [
+    410.8339538574219,
+    421.5059509277344
+  ],
+  "point_size": 11.9552001953125,
+  "fixed_thresholds": {
+    "KO": 220,
+    "native": 180
+  },
+  "fixed_scales": [
+    2,
+    4,
+    8
+  ],
+  "original_contact_by_scale": {
+    "2": 4,
+    "4": 4,
+    "8": 8
+  },
+  "positive_dx_grid_pt": 0.0625,
+  "positive_dx_range_pt": [
+    1.5625,
+    4.75
+  ],
+  "original_optical_guard_max_pt": 4.782080078125,
+  "trials": [
+    {
+      "dx": 1.5625,
+      "contact_pixels_by_scale": {
+        "2": 7,
+        "4": 7,
+        "8": 24
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        75.68677917619546,
+        411.55885076522827,
+        113.36249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 1.625,
+      "contact_pixels_by_scale": {
+        "2": 7,
+        "4": 8,
+        "8": 25
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        75.74927917619546,
+        411.55885076522827,
+        113.42499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 1.6875,
+      "contact_pixels_by_scale": {
+        "2": 7,
+        "4": 8,
+        "8": 25
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        75.81177917619546,
+        411.55885076522827,
+        113.48749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 1.75,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 8,
+        "8": 27
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        75.87427917619546,
+        411.55885076522827,
+        113.54999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 1.8125,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 8,
+        "8": 27
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        75.93677917619546,
+        411.55885076522827,
+        113.61249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 1.875,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 9,
+        "8": 28
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        75.99927917619546,
+        411.55885076522827,
+        113.67499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 1.9375,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 9,
+        "8": 28
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.06177917619546,
+        411.55885076522827,
+        113.73749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.0,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 9,
+        "8": 28
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.12427917619546,
+        411.55885076522827,
+        113.79999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.0625,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 9,
+        "8": 28
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.18677917619546,
+        411.55885076522827,
+        113.86249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.125,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 8,
+        "8": 27
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.24927917619546,
+        411.55885076522827,
+        113.92499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.1875,
+      "contact_pixels_by_scale": {
+        "2": 6,
+        "4": 8,
+        "8": 27
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.31177917619546,
+        411.55885076522827,
+        113.98749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.25,
+      "contact_pixels_by_scale": {
+        "2": 5,
+        "4": 8,
+        "8": 26
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.37427917619546,
+        411.55885076522827,
+        114.04999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.3125,
+      "contact_pixels_by_scale": {
+        "2": 5,
+        "4": 8,
+        "8": 26
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.43677917619546,
+        411.55885076522827,
+        114.11249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.375,
+      "contact_pixels_by_scale": {
+        "2": 4,
+        "4": 7,
+        "8": 23
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.49927917619546,
+        411.55885076522827,
+        114.17499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.4375,
+      "contact_pixels_by_scale": {
+        "2": 4,
+        "4": 7,
+        "8": 23
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.56177917619546,
+        411.55885076522827,
+        114.23749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.5,
+      "contact_pixels_by_scale": {
+        "2": 3,
+        "4": 6,
+        "8": 18
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.62427917619546,
+        411.55885076522827,
+        114.29999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.5625,
+      "contact_pixels_by_scale": {
+        "2": 3,
+        "4": 6,
+        "8": 18
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.68677917619546,
+        411.55885076522827,
+        114.36249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.625,
+      "contact_pixels_by_scale": {
+        "2": 3,
+        "4": 4,
+        "8": 13
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.74927917619546,
+        411.55885076522827,
+        114.42499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.6875,
+      "contact_pixels_by_scale": {
+        "2": 3,
+        "4": 4,
+        "8": 13
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.81177917619546,
+        411.55885076522827,
+        114.48749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.75,
+      "contact_pixels_by_scale": {
+        "2": 2,
+        "4": 3,
+        "8": 8
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.87427917619546,
+        411.55885076522827,
+        114.54999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.8125,
+      "contact_pixels_by_scale": {
+        "2": 2,
+        "4": 3,
+        "8": 8
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.93677917619546,
+        411.55885076522827,
+        114.61249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.875,
+      "contact_pixels_by_scale": {
+        "2": 2,
+        "4": 1,
+        "8": 4
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        76.99927917619546,
+        411.55885076522827,
+        114.67499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 2.9375,
+      "contact_pixels_by_scale": {
+        "2": 2,
+        "4": 1,
+        "8": 4
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.06177917619546,
+        411.55885076522827,
+        114.73749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 3.0,
+      "contact_pixels_by_scale": {
+        "2": 1,
+        "4": 1,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.12427917619546,
+        411.55885076522827,
+        114.79999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 3.0625,
+      "contact_pixels_by_scale": {
+        "2": 1,
+        "4": 1,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.18677917619546,
+        411.55885076522827,
+        114.86249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 3.125,
+      "contact_pixels_by_scale": {
+        "2": 1,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.24927917619546,
+        411.55885076522827,
+        114.92499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 3.1875,
+      "contact_pixels_by_scale": {
+        "2": 1,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.31177917619546,
+        411.55885076522827,
+        114.98749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": false
+    },
+    {
+      "dx": 3.25,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.37427917619546,
+        411.55885076522827,
+        115.04999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.3125,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.43677917619546,
+        411.55885076522827,
+        115.11249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.375,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.49927917619546,
+        411.55885076522827,
+        115.17499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.4375,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.56177917619546,
+        411.55885076522827,
+        115.23749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.5,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.62427917619546,
+        411.55885076522827,
+        115.29999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.5625,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.68677917619546,
+        411.55885076522827,
+        115.36249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.625,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.74927917619546,
+        411.55885076522827,
+        115.42499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.6875,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.81177917619546,
+        411.55885076522827,
+        115.48749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.75,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.87427917619546,
+        411.55885076522827,
+        115.54999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.8125,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.93677917619546,
+        411.55885076522827,
+        115.61249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.875,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        77.99927917619546,
+        411.55885076522827,
+        115.67499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 3.9375,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.06177917619546,
+        411.55885076522827,
+        115.73749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.0,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.12427917619546,
+        411.55885076522827,
+        115.79999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.0625,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.18677917619546,
+        411.55885076522827,
+        115.86249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.125,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.24927917619546,
+        411.55885076522827,
+        115.92499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.1875,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.31177917619546,
+        411.55885076522827,
+        115.98749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.25,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.37427917619546,
+        411.55885076522827,
+        116.04999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.3125,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.43677917619546,
+        411.55885076522827,
+        116.11249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.375,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.49927917619546,
+        411.55885076522827,
+        116.17499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.4375,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.56177917619546,
+        411.55885076522827,
+        116.23749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.5,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.62427917619546,
+        411.55885076522827,
+        116.29999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.5625,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.68677917619546,
+        411.55885076522827,
+        116.36249125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.625,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.74927917619546,
+        411.55885076522827,
+        116.42499125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.6875,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.81177917619546,
+        411.55885076522827,
+        116.48749125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    },
+    {
+      "dx": 4.75,
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "inside_original_source_text_column": true,
+      "shifted_master_ink_bbox": [
+        78.87427917619546,
+        411.55885076522827,
+        116.54999125003815,
+        422.8371392147882
+      ],
+      "zero_at_all_fixed_scales_and_native": true
+    }
+  ],
+  "first_all_scale_zero_grid_trial": {
+    "dx": 3.25,
+    "contact_pixels_by_scale": {
+      "2": 0,
+      "4": 0,
+      "8": 0
+    },
+    "native_contact_by_scale": {
+      "2": 0,
+      "4": 0,
+      "8": 0
+    },
+    "inside_original_source_text_column": true,
+    "shifted_master_ink_bbox": [
+      77.37427917619546,
+      411.55885076522827,
+      115.04999125003815,
+      422.8371392147882
+    ],
+    "zero_at_all_fixed_scales_and_native": true
+  },
+  "first_three_consecutive_zero_grid_center": {
+    "dx": 3.3125,
+    "contact_pixels_by_scale": {
+      "2": 0,
+      "4": 0,
+      "8": 0
+    },
+    "native_contact_by_scale": {
+      "2": 0,
+      "4": 0,
+      "8": 0
+    },
+    "inside_original_source_text_column": true,
+    "shifted_master_ink_bbox": [
+      77.43677917619546,
+      411.55885076522827,
+      115.11249125003815,
+      422.8371392147882
+    ],
+    "zero_at_all_fixed_scales_and_native": true
+  },
+  "adjacent_controls": [
+    {
+      "dx": 3.1875,
+      "actual_replay_translation_only_max_error_pt": 0.0,
+      "actual_master_trace": [
+        {
+          "character": "논",
+          "gid": 9170,
+          "size": 11.9552001953125,
+          "old_origin": [
+            73.541015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            76.728515625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            77.31177917619546,
+            412.4344757795334,
+            88.06918626481837,
+            421.8095009326935
+          ],
+          "actual_trial_master_ink_bbox": [
+            77.31177917619546,
+            412.4344757795334,
+            88.06918626481837,
+            421.8095009326935
+          ]
+        },
+        {
+          "character": "하",
+          "gid": 18350,
+          "size": 11.9552001953125,
+          "old_origin": [
+            85.4962158203125,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            88.6837158203125,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            89.47528083324433,
+            411.61722576618195,
+            100.25364100933075,
+            422.8371392147882
+          ],
+          "actual_trial_master_ink_bbox": [
+            89.47528083324433,
+            411.61722576618195,
+            100.25364100933075,
+            422.8371392147882
+          ]
+        },
+        {
+          "character": "라",
+          "gid": 10706,
+          "size": 11.9552001953125,
+          "old_origin": [
+            97.451416015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            100.638916015625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            101.60839006992487,
+            411.55885076522827,
+            112.17498370409012,
+            422.82619886596996
+          ],
+          "actual_trial_master_ink_bbox": [
+            101.60839006992487,
+            411.55885076522827,
+            112.17498370409012,
+            422.82619886596996
+          ]
+        },
+        {
+          "character": ".",
+          "gid": 85,
+          "size": 11.9552001953125,
+          "old_origin": [
+            109.4066162109375,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            112.5941162109375,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            113.66821622848511,
+            420.3151009082794,
+            114.98749125003815,
+            421.69275093078613
+          ],
+          "actual_trial_master_ink_bbox": [
+            113.66821622848511,
+            420.3151009082794,
+            114.98749125003815,
+            421.69275093078613
+          ]
+        }
+      ],
+      "contact_pixels_by_scale": {
+        "2": 1,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "unchanged_font_program_sha256": {
+        "KO_Natural_serif": "1c3573df739af5cb0c9c8ebd26a613c4932edaa85429625ca742cfcc1ca7b2ae"
+      },
+      "crops": {
+        "2": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.1875-rows-2x.png",
+          "sha256": "bdbea322488e51fd34ef7e2cad202ec6923da357a2922d70e3a11b966bcd6169"
+        },
+        "4": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.1875-rows-4x.png",
+          "sha256": "cec54972a33ce245f182f276fa2c02fb5506e4e66e76102b5f5e2f5c1f976c77"
+        },
+        "8": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.1875-rows-8x.png",
+          "sha256": "507f4f50b06f44d4000e3d7c7b4a115ec6709392792253c72506a4f6075eab7c"
+        }
+      },
+      "explicit_trial_only_not_production_approval": true
+    },
+    {
+      "dx": 3.25,
+      "actual_replay_translation_only_max_error_pt": 0.0,
+      "actual_master_trace": [
+        {
+          "character": "논",
+          "gid": 9170,
+          "size": 11.9552001953125,
+          "old_origin": [
+            73.541015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            76.791015625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            77.37427917619546,
+            412.4344757795334,
+            88.13168626481837,
+            421.8095009326935
+          ],
+          "actual_trial_master_ink_bbox": [
+            77.37427917619546,
+            412.4344757795334,
+            88.13168626481837,
+            421.8095009326935
+          ]
+        },
+        {
+          "character": "하",
+          "gid": 18350,
+          "size": 11.9552001953125,
+          "old_origin": [
+            85.4962158203125,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            88.7462158203125,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            89.53778083324433,
+            411.61722576618195,
+            100.31614100933075,
+            422.8371392147882
+          ],
+          "actual_trial_master_ink_bbox": [
+            89.53778083324433,
+            411.61722576618195,
+            100.31614100933075,
+            422.8371392147882
+          ]
+        },
+        {
+          "character": "라",
+          "gid": 10706,
+          "size": 11.9552001953125,
+          "old_origin": [
+            97.451416015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            100.701416015625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            101.67089006992487,
+            411.55885076522827,
+            112.23748370409012,
+            422.82619886596996
+          ],
+          "actual_trial_master_ink_bbox": [
+            101.67089006992487,
+            411.55885076522827,
+            112.23748370409012,
+            422.82619886596996
+          ]
+        },
+        {
+          "character": ".",
+          "gid": 85,
+          "size": 11.9552001953125,
+          "old_origin": [
+            109.4066162109375,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            112.6566162109375,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            113.73071622848511,
+            420.3151009082794,
+            115.04999125003815,
+            421.69275093078613
+          ],
+          "actual_trial_master_ink_bbox": [
+            113.73071622848511,
+            420.3151009082794,
+            115.04999125003815,
+            421.69275093078613
+          ]
+        }
+      ],
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "unchanged_font_program_sha256": {
+        "KO_Natural_serif": "1c3573df739af5cb0c9c8ebd26a613c4932edaa85429625ca742cfcc1ca7b2ae"
+      },
+      "crops": {
+        "2": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.2500-rows-2x.png",
+          "sha256": "4e0923dc52b6e130a224b910562bde1c4ec247a5413db205b1717b00c2e79951"
+        },
+        "4": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.2500-rows-4x.png",
+          "sha256": "99564a052d5b0d1be534ad2ed9437ba84dcf28f54e1ba9f8390a0b4fbeafe4ff"
+        },
+        "8": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.2500-rows-8x.png",
+          "sha256": "43670c556a9ebb2cc59c918194b43e7610f9345d21ca38d2dead7b3e785bea5f"
+        }
+      },
+      "explicit_trial_only_not_production_approval": true
+    },
+    {
+      "dx": 3.3125,
+      "actual_replay_translation_only_max_error_pt": 0.0,
+      "actual_master_trace": [
+        {
+          "character": "논",
+          "gid": 9170,
+          "size": 11.9552001953125,
+          "old_origin": [
+            73.541015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            76.853515625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            77.43677917619546,
+            412.4344757795334,
+            88.19418626481837,
+            421.8095009326935
+          ],
+          "actual_trial_master_ink_bbox": [
+            77.43677917619546,
+            412.4344757795334,
+            88.19418626481837,
+            421.8095009326935
+          ]
+        },
+        {
+          "character": "하",
+          "gid": 18350,
+          "size": 11.9552001953125,
+          "old_origin": [
+            85.4962158203125,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            88.8087158203125,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            89.60028083324433,
+            411.61722576618195,
+            100.37864100933075,
+            422.8371392147882
+          ],
+          "actual_trial_master_ink_bbox": [
+            89.60028083324433,
+            411.61722576618195,
+            100.37864100933075,
+            422.8371392147882
+          ]
+        },
+        {
+          "character": "라",
+          "gid": 10706,
+          "size": 11.9552001953125,
+          "old_origin": [
+            97.451416015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            100.763916015625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            101.73339006992487,
+            411.55885076522827,
+            112.29998370409012,
+            422.82619886596996
+          ],
+          "actual_trial_master_ink_bbox": [
+            101.73339006992487,
+            411.55885076522827,
+            112.29998370409012,
+            422.82619886596996
+          ]
+        },
+        {
+          "character": ".",
+          "gid": 85,
+          "size": 11.9552001953125,
+          "old_origin": [
+            109.4066162109375,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            112.7191162109375,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            113.79321622848511,
+            420.3151009082794,
+            115.11249125003815,
+            421.69275093078613
+          ],
+          "actual_trial_master_ink_bbox": [
+            113.79321622848511,
+            420.3151009082794,
+            115.11249125003815,
+            421.69275093078613
+          ]
+        }
+      ],
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "unchanged_font_program_sha256": {
+        "KO_Natural_serif": "1c3573df739af5cb0c9c8ebd26a613c4932edaa85429625ca742cfcc1ca7b2ae"
+      },
+      "crops": {
+        "2": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.3125-rows-2x.png",
+          "sha256": "e2bbc822cf73b8d9b8c8c23c88f54b063ffb54fb120485f82d41126133c88231"
+        },
+        "4": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.3125-rows-4x.png",
+          "sha256": "9a1e26760e1907aa6697c4225861d52ef4102346a14520f0d6a737d55d794833"
+        },
+        "8": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.3125-rows-8x.png",
+          "sha256": "1c9f87db687c4aca4a2cee057f52af159ead6ca9a2b0660b22e8d15e30677af1"
+        }
+      },
+      "explicit_trial_only_not_production_approval": true
+    },
+    {
+      "dx": 3.375,
+      "actual_replay_translation_only_max_error_pt": 0.0,
+      "actual_master_trace": [
+        {
+          "character": "논",
+          "gid": 9170,
+          "size": 11.9552001953125,
+          "old_origin": [
+            73.541015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            76.916015625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            77.49927917619546,
+            412.4344757795334,
+            88.25668626481837,
+            421.8095009326935
+          ],
+          "actual_trial_master_ink_bbox": [
+            77.49927917619546,
+            412.4344757795334,
+            88.25668626481837,
+            421.8095009326935
+          ]
+        },
+        {
+          "character": "하",
+          "gid": 18350,
+          "size": 11.9552001953125,
+          "old_origin": [
+            85.4962158203125,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            88.8712158203125,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            89.66278083324433,
+            411.61722576618195,
+            100.44114100933075,
+            422.8371392147882
+          ],
+          "actual_trial_master_ink_bbox": [
+            89.66278083324433,
+            411.61722576618195,
+            100.44114100933075,
+            422.8371392147882
+          ]
+        },
+        {
+          "character": "라",
+          "gid": 10706,
+          "size": 11.9552001953125,
+          "old_origin": [
+            97.451416015625,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            100.826416015625,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            101.79589006992487,
+            411.55885076522827,
+            112.36248370409012,
+            422.82619886596996
+          ],
+          "actual_trial_master_ink_bbox": [
+            101.79589006992487,
+            411.55885076522827,
+            112.36248370409012,
+            422.82619886596996
+          ]
+        },
+        {
+          "character": ".",
+          "gid": 85,
+          "size": 11.9552001953125,
+          "old_origin": [
+            109.4066162109375,
+            421.5059509277344
+          ],
+          "actual_trial_origin": [
+            112.7816162109375,
+            421.5059509277344
+          ],
+          "expected_trial_master_ink_bbox": [
+            113.85571622848511,
+            420.3151009082794,
+            115.17499125003815,
+            421.69275093078613
+          ],
+          "actual_trial_master_ink_bbox": [
+            113.85571622848511,
+            420.3151009082794,
+            115.17499125003815,
+            421.69275093078613
+          ]
+        }
+      ],
+      "contact_pixels_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "native_contact_by_scale": {
+        "2": 0,
+        "4": 0,
+        "8": 0
+      },
+      "unchanged_font_program_sha256": {
+        "KO_Natural_serif": "1c3573df739af5cb0c9c8ebd26a613c4932edaa85429625ca742cfcc1ca7b2ae"
+      },
+      "crops": {
+        "2": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.3750-rows-2x.png",
+          "sha256": "a4ce00f388720f9a610af4a6ff4795fed8b0889f685c4aa06cf050c5d87e15d9"
+        },
+        "4": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.3750-rows-4x.png",
+          "sha256": "66aa04a4de27041b53b658b4acd7ff34ae915a8e889473f555574da96c1223de"
+        },
+        "8": {
+          "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\2026-page07-readonly-v2\\trial-dx-3.3750-rows-8x.png",
+          "sha256": "25a4f693cb9d71a80163912aeaee123031bdc46a371ae3a17ad4e298ba09d79f"
+        }
+      },
+      "explicit_trial_only_not_production_approval": true
+    }
+  ],
+  "trial_not_absolute_continuous_minimum": true,
+  "p8_unstarted": true
+}

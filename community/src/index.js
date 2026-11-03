@@ -7,6 +7,7 @@
 
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
+import { backupTick } from "./drive-backup.js";
 import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
@@ -671,6 +672,8 @@ export default {
       .then(()=>settleMonthlyRewards(env.DB,{timestamp:Math.floor((event.scheduledTime??Date.now())/1000),key:env.DB}))
       .then(result=>{if(result.published.length)invalidatePublicReads(env);}),labSweepJobs(env)];
     if(Math.floor((event.scheduledTime??Date.now())/60000)%15===0)work.push(labPurge(env),purgeVisionPhotos(env));
+    /* the weekly Google Drive backup (drive-backup.js): starts Sunday 18:00 UTC, then one short step a minute until done */
+    work.push(backupTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('backup',String(e?.message||e).slice(0,200))));
     ctx.waitUntil(Promise.allSettled(work));
   },
   async queue(batch, env) { await consumeLabJobs(batch, env, LAB_JOB_HANDLERS); },
@@ -3337,7 +3340,7 @@ async function labRefreshQueuedTotal(env, id) {
 /* The admin model bench. A lab_jobs row of kind 'bench' whose page_id names a lab_bench row runs one stage of the real
    pipeline on a sitting with the models that row names, and keeps what came out in lab_bench: never in the sitting, its pages
    or its metering. Nothing on the API starts one; only someone who can write the database can.
-   spec: {stage:'models'} · {stage:'read',page_id,read:{provider,model,thinking}} · {stage:'migrate-r2',limit?,dry?} (any paid sitting)
+   spec: {stage:'models'} · {stage:'read',page_id,read:{provider,model,thinking}} · {stage:'migrate-r2',limit?,dry?} · {stage:'backup',status?} (any paid sitting)
          · {stage:'grade',task,grade:{provider,model,thinking,images},moderate:{…}|null,reads:{page_id:bench_id},lang,scheme:{provider,model,thinking}?} */
 const LAB_BENCH_SQL = `CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`;
@@ -3428,6 +3431,10 @@ async function labBench(env, s, job) {
       }
     } else if (spec.stage === 'migrate-r2') {
       out = await labMigrateR2(env, spec);
+    } else if (spec.stage === 'backup') {
+      /* start a Drive backup now (the cron takes it on from the next minute), or {status:true}: the last runs */
+      out = spec.status === true ? { runs: (await env.DB.prepare('SELECT id,started_at,phase,done_at,error,stats FROM backup_runs ORDER BY id DESC LIMIT 5').all().catch(() => ({ results: [] }))).results }
+        : await backupTick(env, { force: true });
     } else if (spec.stage === 'tune-start') {
       const t = await gcpToken(env);
       if (!/^gs:\/\//.test(spec.train || '')) throw new Error('bad_train_uri');

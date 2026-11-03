@@ -1,0 +1,144 @@
+{
+  "source_sha256": "c1bc32cc38c3f3b65121439f41feee3a8bcb48dcce1a41e14b16ba177eccbcde",
+  "source_page": 1,
+  "proof_sha256": "07f52f56e81b8c61a61d7cc672daf996c62b70b27e5838b50374627fea445e27",
+  "plan_sha256": "c53bcc3396d04b67a92661bf70ef8edb853c81514687227b60c41307d088a158",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 5,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 86.89996337890625,
+      "source_center": 312.32716369628906,
+      "independent_original_source_centers": [
+        312.32716369628906
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 263.7173156738281,
+      "actual_nonspace_glyph_right": 360.9370422363281,
+      "actual_center": 312.3271789550781,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          0
+        ]
+      ],
+      "baseline": 105.3800048828125,
+      "source_center": 312.4830017089844,
+      "independent_original_source_centers": [
+        312.4830017089844
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 296.9497375488281,
+      "actual_nonspace_glyph_right": 328.01629638671875,
+      "actual_center": 312.48301696777344,
+      "center_error_pt": 1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          3,
+          1
+        ]
+      ],
+      "baseline": 133.489990234375,
+      "source_center": 312.5179977416992,
+      "independent_original_source_centers": [
+        312.5179977416992
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 267.5059814453125,
+      "actual_nonspace_glyph_right": 357.5299987792969,
+      "actual_center": 312.5179901123047,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 10,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          4,
+          0
+        ]
+      ],
+      "baseline": 147.40997314453125,
+      "source_center": 312.31602478027344,
+      "independent_original_source_centers": [
+        312.31602478027344
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 291.6700134277344,
+      "actual_nonspace_glyph_right": 332.9620361328125,
+      "actual_center": 312.31602478027344,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 5,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          5,
+          1
+        ]
+      ],
+      "baseline": 647.949951171875,
+      "source_center": 312.36199951171875,
+      "independent_original_source_centers": [
+        312.36199951171875
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 287.677978515625,
+      "actual_nonspace_glyph_right": 337.0460205078125,
+      "actual_center": 312.36199951171875,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 4,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "SOLUTIONS TO THE PROBLEMS OF THE THEORETICAL ",
+        "original_center": 312.32716369628906,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          2,
+          0
+        ],
+        "source_text": "COMPETITION ",
+        "original_center": 312.4830017089844,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

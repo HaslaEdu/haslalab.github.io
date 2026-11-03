@@ -1,0 +1,138 @@
+{
+  "passed": true,
+  "scope": "Analytic matrix convention regressions only; does not authorize any new production rotation",
+  "rotations": [
+    {
+      "planned_degrees": 0,
+      "actual_matrix": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "rotation_removed": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "page_baseline_direction": [
+        1,
+        0
+      ],
+      "horizontal": true,
+      "passed": true
+    },
+    {
+      "planned_degrees": 90,
+      "actual_matrix": [
+        0,
+        1,
+        -1,
+        0
+      ],
+      "rotation_removed": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "page_baseline_direction": [
+        0,
+        -1
+      ],
+      "horizontal": false,
+      "passed": true
+    },
+    {
+      "planned_degrees": 180,
+      "actual_matrix": [
+        -1,
+        0,
+        0,
+        -1
+      ],
+      "rotation_removed": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "page_baseline_direction": [
+        -1,
+        0
+      ],
+      "horizontal": true,
+      "passed": true
+    },
+    {
+      "planned_degrees": 270,
+      "actual_matrix": [
+        0,
+        -1,
+        1,
+        0
+      ],
+      "rotation_removed": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "page_baseline_direction": [
+        0,
+        1
+      ],
+      "horizontal": false,
+      "passed": true
+    }
+  ],
+  "noncommuting": {
+    "first_cm": [
+      2,
+      0,
+      0,
+      1
+    ],
+    "second_cm": [
+      0,
+      1,
+      -0.5,
+      0
+    ],
+    "correct_PDF_row_vector_CTM": [
+      0,
+      1,
+      -1.0,
+      0.0
+    ],
+    "wrong_order": [
+      0.0,
+      2,
+      -0.5,
+      0
+    ],
+    "passed": true
+  },
+  "body_physical14": {
+    "expected": [
+      1,
+      0,
+      0.24932800284318068,
+      1
+    ],
+    "negative_left": [
+      1,
+      0,
+      -0.24932800284318068,
+      1
+    ],
+    "wrong_right13": [
+      1,
+      0,
+      0.23086819112556312,
+      1
+    ],
+    "left_and_wrong_right_rejected_at_1e_6": true
+  }
+}

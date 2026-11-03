@@ -1,0 +1,734 @@
+{
+  "schema": "ortvay-2026-page07-repair-code-input-freeze-v1",
+  "status": "PAGE07_REPAIR_CODE_INPUT_FROZEN_FOR_ROOT_REVIEW",
+  "production_authorized": false,
+  "numeric_spec": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\final-failures\\root-2026p7-review-20261104\\NUMERIC-REPAIR-SPEC.json",
+    "sha256": "b552b2f0cc95c1f0e8aae8bfdfc34fddae4037ce88703eca33f7fe61c914b24c"
+  },
+  "preserved_input_ledger": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\INPUT-LEDGER.json",
+    "sha256": "775dcf0d2466d1a9c01620b5212b5c9b38b87aae2db303ee29dff6c039005d2d"
+  },
+  "preserved_input_count": 3283,
+  "preserved_inputs_rehashed_unchanged": true,
+  "base_profile": {
+    "qa_profile_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\AMENDMENT-FROZEN.json",
+      "sha256": "a02844e98ef9a0e332f10312ec66a48fac5d87338e2d414c6ec24338f3c652a7"
+    },
+    "qa_profile_root_go": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\ROOT-GO.json",
+      "sha256": "8f56f0f8a6db8400c0d9ee2a9b6c62026f2e50984e7b669e5e1c12f4282ea0d4"
+    },
+    "qa_profile_actual_regressions": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\runs\\prototype03\\BATCH-RESULTS.json",
+      "sha256": "13a4269f16d8697cccd951840be944fadb6cb6c206516ec71c45ba1b946f02ea"
+    },
+    "qa_profile_post_freeze_guard": {
+      "path": "D:/CodexBuilds/Hasla-poi-natural-20261102/layout-corrections/ortvay-title-20261103/revisions/source-style-widths-r4-20261103/qa-amendments/full-ctm-rotation-v1-20261103/runs/frozen-guard01/p7_rotated_label/audit.json",
+      "sha256": "26ff348ad46c4c38dcc61b2c4ca8176e833737ba5831f60874cb84233e2ae61d"
+    },
+    "code_input_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\CODE-INPUT-FROZEN.json",
+      "sha256": "ad9b4855ac822214da7ecca0955af9abb3a1fecae4dbb33827ecb9ee59554079"
+    },
+    "original_code_input_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PREPARATION-FROZEN.json",
+      "sha256": "ff8c247d3e072c9a031e7e68589958b2f3eebfb8764722dde61c5681ec46d47a"
+    },
+    "original_runtime_freeze": {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\PROTOTYPE-RUNTIME-FROZEN.json",
+      "sha256": "27b5df6951f5ce45d390f51aa2d193bdd22c0740163846add788060e2972132b"
+    }
+  },
+  "base_runtime_counts": {
+    "original": 39,
+    "QA": 6,
+    "production": 1,
+    "total": 46
+  },
+  "base_runtime_programs": {
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\latex_native_motion.py": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\native_ink_bounds.py": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\native_proof.py": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\pdf_latex_text_ops.py": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023_write_guard.py": "7c2b8b32ab177f56dcabf416ce186edf652423eca11aa2e4452a951cbcbb48f6",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\verify_native_vectors_ortvay2023.py": "c62323e4a103cf41a55cf47f9a70c917d05e7f942349305d0d3fe9783d05f84d",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\natural_plan_compose_ortvay2024_title_final.py": "84b6b98be3d97e59a8e16427497ba2dd81f27dd60845451a239162a348adf300",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\latex_native_motion.py": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\native_ink_bounds.py": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\native_proof.py": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\pdf_latex_text_ops.py": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\verify_native_vectors_ortvay2024.py": "bc32adc3a83c29c271284291fb9fd62235a9eb31270d8951ce7db3db87a2df70",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\natural_plan_compose_ortvay2025_title_final.py": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\latex_native_motion.py": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\native_ink_bounds.py": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\native_proof.py": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\pdf_latex_text_ops.py": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\verify_native_vectors_ortvay2025.py": "0c555a216e5a6c564efe257f3843e45cf5d0b85014e12d371c061fae5b1e5469",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\natural_plan_compose_ortvay2026_title_final.py": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\ortvay2026-frozen-engine\\latex_native_motion.py": "35779452a46c04dce42459b1aa9bf57f84a5e818cf765ee3cb8f971dd1cf0b83",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\ortvay2026-frozen-engine\\native_proof.py": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\ortvay2026-frozen-engine\\pdf_latex_text_ops.py": "6751a0ffe192aa52b0b36532607c8f28bbe5cdadc7c61624c5a17684d10ed51f",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\verify_native_vectors.py": "6f3aaa8bdf14f123a0bc4790d7cf7b0780555bd93398ad79cfacb49ea349ad9c",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\audit_final_page.py": "3adf6c4352e5ac869200fb00dccdc01f122ad72ae238a1aef0c12d7fb607339f",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\audit_prototype.py": "6e647b6dac61578cae9cfc9bdf54aa6c5dddce61b14797f0611b214f78bf169a",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_actual_paint.py": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_font_widths.py": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_guard.py": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_independent_qa.py": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_outline_qa.py": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_runtime.py": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\finalize_preparation.py": "465c30f55416da43164d63cbb32b76296f00d9e1a69741689cfde135206febf4",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\freeze_r4_runtime.py": "c89c8c709a8bd4e32190165498d354138eae80406673739b87e8149ae0a59e62",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\generate_final48.py": "f41ecb23f97e473716227a44570bb3df29ca87c3a6eaff3f44a23fb40e4a781b",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\run_final_page.py": "0037a4f84bbc808de3af420b6de0aec9aeb0d5fb0fcabc8268088a69cecd0e04",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\run_frozen_five.py": "b9caf64c267ca1aca86fef5cf657d22ac17fa49662ec46248f61f0c2671f3c41",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\run_prototype.py": "b9fdd18a2ff68e5332e4d082a543494886ee42f29fc3a6458c1a7dc6e35d545f",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\test_prototype_negatives_v2_final.py": "67580be86aebddc9ca52a86c114b1a89bd23c01181c1219390ecfac4a82f5050",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\continue_and_finalize.py": "baf8c139979721a1e0209b51c0a443a7f9dff24cb1be6dff5e770e2cf6c708e4"
+  },
+  "retained_base_runtime_sources": [
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2023\\composer\\natural_plan_compose_ortvay2023_final.py",
+        "sha256": "50f7b1fef9c0a8a5758ffd1fa64b9b29607bd43d0966a6c71a45e83b1e8bdf76"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\latex_native_motion.py",
+        "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2023\\composer\\ortvay2023-frozen-engine\\latex_native_motion.py",
+        "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\native_ink_bounds.py",
+        "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2023\\composer\\ortvay2023-frozen-engine\\native_ink_bounds.py",
+        "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2023\\composer\\ortvay2023-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2023\\composer\\ortvay2023-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\ortvay2023_write_guard.py",
+        "sha256": "7c2b8b32ab177f56dcabf416ce186edf652423eca11aa2e4452a951cbcbb48f6"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2023\\composer\\ortvay2023_write_guard.py",
+        "sha256": "7c2b8b32ab177f56dcabf416ce186edf652423eca11aa2e4452a951cbcbb48f6"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2023\\composer\\verify_native_vectors_ortvay2023.py",
+        "sha256": "c62323e4a103cf41a55cf47f9a70c917d05e7f942349305d0d3fe9783d05f84d"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2023\\composer\\verify_native_vectors_ortvay2023.py",
+        "sha256": "c62323e4a103cf41a55cf47f9a70c917d05e7f942349305d0d3fe9783d05f84d"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\natural_plan_compose_ortvay2024_title_final.py",
+        "sha256": "84b6b98be3d97e59a8e16427497ba2dd81f27dd60845451a239162a348adf300"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2024\\composer\\natural_plan_compose_ortvay2024_title_final.py",
+        "sha256": "84b6b98be3d97e59a8e16427497ba2dd81f27dd60845451a239162a348adf300"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\latex_native_motion.py",
+        "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2024\\composer\\ortvay2024-frozen-engine\\latex_native_motion.py",
+        "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\native_ink_bounds.py",
+        "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2024\\composer\\ortvay2024-frozen-engine\\native_ink_bounds.py",
+        "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2024\\composer\\ortvay2024-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\ortvay2024-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2024\\composer\\ortvay2024-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2024\\composer\\verify_native_vectors_ortvay2024.py",
+        "sha256": "bc32adc3a83c29c271284291fb9fd62235a9eb31270d8951ce7db3db87a2df70"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2024\\composer\\verify_native_vectors_ortvay2024.py",
+        "sha256": "bc32adc3a83c29c271284291fb9fd62235a9eb31270d8951ce7db3db87a2df70"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\natural_plan_compose_ortvay2025_title_final.py",
+        "sha256": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2025\\composer\\natural_plan_compose_ortvay2025_title_final.py",
+        "sha256": "696517ec9c2a65b9f1514e88d348f0741f892c6e50c7a2b47c1edc54b8b0c5b5"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\latex_native_motion.py",
+        "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2025\\composer\\ortvay2025-frozen-engine\\latex_native_motion.py",
+        "sha256": "500d7c8f4d85109f514bd89dc51abce7836f8b72a285e3f0abfc4d5e14811feb"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\native_ink_bounds.py",
+        "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2025\\composer\\ortvay2025-frozen-engine\\native_ink_bounds.py",
+        "sha256": "93a730627dba288e579767dcec1c1af01edd5daa6387f449baad2ebd009bbb46"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2025\\composer\\ortvay2025-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\ortvay2025-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2025\\composer\\ortvay2025-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6aefe1a38b403e84ac5411c2514b8279bf4a280a96ee7b965c0eea2fb78f5ccf"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2025\\composer\\verify_native_vectors_ortvay2025.py",
+        "sha256": "0c555a216e5a6c564efe257f3843e45cf5d0b85014e12d371c061fae5b1e5469"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2025\\composer\\verify_native_vectors_ortvay2025.py",
+        "sha256": "0c555a216e5a6c564efe257f3843e45cf5d0b85014e12d371c061fae5b1e5469"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\natural_plan_compose_ortvay2026_title_final.py",
+        "sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2026\\composer\\natural_plan_compose_ortvay2026_title_final.py",
+        "sha256": "922e6656add888a3789742aaf372606aed5fa5137056d35d013fbded3e1efda8"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\ortvay2026-frozen-engine\\latex_native_motion.py",
+        "sha256": "35779452a46c04dce42459b1aa9bf57f84a5e818cf765ee3cb8f971dd1cf0b83"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2026\\composer\\ortvay2026-frozen-engine\\latex_native_motion.py",
+        "sha256": "35779452a46c04dce42459b1aa9bf57f84a5e818cf765ee3cb8f971dd1cf0b83"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\ortvay2026-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2026\\composer\\ortvay2026-frozen-engine\\native_proof.py",
+        "sha256": "06c0d8be3931ddb19d164f60e461ff53c4736141082715d3fc57cde458b3cbab"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\ortvay2026-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6751a0ffe192aa52b0b36532607c8f28bbe5cdadc7c61624c5a17684d10ed51f"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2026\\composer\\ortvay2026-frozen-engine\\pdf_latex_text_ops.py",
+        "sha256": "6751a0ffe192aa52b0b36532607c8f28bbe5cdadc7c61624c5a17684d10ed51f"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\composer\\verify_native_vectors.py",
+        "sha256": "6f3aaa8bdf14f123a0bc4790d7cf7b0780555bd93398ad79cfacb49ea349ad9c"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\2026\\composer\\verify_native_vectors.py",
+        "sha256": "6f3aaa8bdf14f123a0bc4790d7cf7b0780555bd93398ad79cfacb49ea349ad9c"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\audit_final_page.py",
+        "sha256": "3adf6c4352e5ac869200fb00dccdc01f122ad72ae238a1aef0c12d7fb607339f"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\audit_final_page.py",
+        "sha256": "3adf6c4352e5ac869200fb00dccdc01f122ad72ae238a1aef0c12d7fb607339f"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\audit_prototype.py",
+        "sha256": "6e647b6dac61578cae9cfc9bdf54aa6c5dddce61b14797f0611b214f78bf169a"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\audit_prototype.py",
+        "sha256": "6e647b6dac61578cae9cfc9bdf54aa6c5dddce61b14797f0611b214f78bf169a"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_actual_paint.py",
+        "sha256": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\common\\r4_actual_paint.py",
+        "sha256": "5a69cac2714c58af6f5b0f49a8e675fc0f4f7f9d455744219f27efdb42108fb3"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_font_widths.py",
+        "sha256": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\common\\r4_font_widths.py",
+        "sha256": "f80b6f6ac62189424147115f2449e4786f9e451e72461fe3923747c8df0af40d"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_guard.py",
+        "sha256": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\common\\r4_guard.py",
+        "sha256": "6311e4c33ebad2ad2bd2468469308a1c78d6f79cebd3e5e492b3aa4923c114d8"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_independent_qa.py",
+        "sha256": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\common\\r4_independent_qa.py",
+        "sha256": "62ac714512dcc83f23ea9a93aec72a4b8f19625d062e4c6dbd2d949f8df66234"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_outline_qa.py",
+        "sha256": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\common\\r4_outline_qa.py",
+        "sha256": "9298708413c0e1c6e561007e548a24c68cc0ca02442ef663ebc5065185d18000"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\common\\r4_runtime.py",
+        "sha256": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\common\\r4_runtime.py",
+        "sha256": "4c054aec1e2609db5b830f4f51c915583ecf7747ed6650c160483c51f7aaefc4"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\finalize_preparation.py",
+        "sha256": "465c30f55416da43164d63cbb32b76296f00d9e1a69741689cfde135206febf4"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\finalize_preparation.py",
+        "sha256": "465c30f55416da43164d63cbb32b76296f00d9e1a69741689cfde135206febf4"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\freeze_r4_runtime.py",
+        "sha256": "c89c8c709a8bd4e32190165498d354138eae80406673739b87e8149ae0a59e62"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\freeze_r4_runtime.py",
+        "sha256": "c89c8c709a8bd4e32190165498d354138eae80406673739b87e8149ae0a59e62"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\generate_final48.py",
+        "sha256": "f41ecb23f97e473716227a44570bb3df29ca87c3a6eaff3f44a23fb40e4a781b"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\generate_final48.py",
+        "sha256": "f41ecb23f97e473716227a44570bb3df29ca87c3a6eaff3f44a23fb40e4a781b"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\run_final_page.py",
+        "sha256": "0037a4f84bbc808de3af420b6de0aec9aeb0d5fb0fcabc8268088a69cecd0e04"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\run_final_page.py",
+        "sha256": "0037a4f84bbc808de3af420b6de0aec9aeb0d5fb0fcabc8268088a69cecd0e04"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\run_frozen_five.py",
+        "sha256": "b9caf64c267ca1aca86fef5cf657d22ac17fa49662ec46248f61f0c2671f3c41"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\run_frozen_five.py",
+        "sha256": "b9caf64c267ca1aca86fef5cf657d22ac17fa49662ec46248f61f0c2671f3c41"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\run_prototype.py",
+        "sha256": "b9fdd18a2ff68e5332e4d082a543494886ee42f29fc3a6458c1a7dc6e35d545f"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\run_prototype.py",
+        "sha256": "b9fdd18a2ff68e5332e4d082a543494886ee42f29fc3a6458c1a7dc6e35d545f"
+      }
+    },
+    {
+      "role": "original39",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\test_prototype_negatives_v2_final.py",
+        "sha256": "67580be86aebddc9ca52a86c114b1a89bd23c01181c1219390ecfac4a82f5050"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\test_prototype_negatives_v2_final.py",
+        "sha256": "67580be86aebddc9ca52a86c114b1a89bd23c01181c1219390ecfac4a82f5050"
+      }
+    },
+    {
+      "role": "QA6",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py",
+        "sha256": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_actual_paint.py",
+        "sha256": "4204aa9f9af765326c15899e080a73e61c607bb5fe9c0642a355033c7798b2bc"
+      }
+    },
+    {
+      "role": "QA6",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py",
+        "sha256": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_independent_qa.py",
+        "sha256": "622f31965a4ff5dcc69e669ef2850ae319ce39230df6874250aadf0bb4d56d57"
+      }
+    },
+    {
+      "role": "QA6",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py",
+        "sha256": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\qa-amendments\\full-ctm-rotation-v1-20261103\\amended_outline_qa.py",
+        "sha256": "d011e7ae87a76810cde9f5c0b86b159918aeb9878e263b08865ad645d1411712"
+      }
+    },
+    {
+      "role": "QA6",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py",
+        "sha256": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\qa-amendments\\full-ctm-rotation-v1-20261103\\make_actual_controls.py",
+        "sha256": "9d6f6be5b5ba92e2325e91ca03a2a87f56abebf2880d0d74e824050114d32ce7"
+      }
+    },
+    {
+      "role": "QA6",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py",
+        "sha256": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\qa-amendments\\full-ctm-rotation-v1-20261103\\run_amended_audit.py",
+        "sha256": "3c9d0da1d146311d9d19f589a067ecfc3ad647c8440faea7b8475ef2641d39d1"
+      }
+    },
+    {
+      "role": "QA6",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py",
+        "sha256": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\qa-amendments\\full-ctm-rotation-v1-20261103\\transform_guard.py",
+        "sha256": "102534cb59f178acd5c3fec670ef048633b03fd82b0fef4a064042bb1b7ca770"
+      }
+    },
+    {
+      "role": "production1",
+      "source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\continue_and_finalize.py",
+        "sha256": "baf8c139979721a1e0209b51c0a443a7f9dff24cb1be6dff5e770e2cf6c708e4"
+      },
+      "retained": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\retained-runtime-sources\\production-continuation\\full-ctm-v1-20261103\\continue_and_finalize.py",
+        "sha256": "baf8c139979721a1e0209b51c0a443a7f9dff24cb1be6dff5e770e2cf6c708e4"
+      }
+    }
+  ],
+  "base_failed_proof": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.pdf",
+    "sha256": "fccac3dc419fcb1bf1ee6aa3ed42d38ea1565e9416ddba3e7f7ec3e457cb169f"
+  },
+  "base_failed_layout": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\2026\\proofs\\ortvay\\2026\\page07.layout.json",
+    "sha256": "98454b83b490e8f2e42dc01b08d66b6d8788706643a9e5c31bb902e2e5783e79"
+  },
+  "base_failed_runtime_snapshot": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\production-runtime-snapshot.json",
+    "sha256": "7f8d0cd7f032cb633f082ea9e2b7eeae2bf7bc58ae72954243cc2a05d5ab117e"
+  },
+  "base_original_build_snapshot": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\ctm-production-runtime-v1\\2026\\page07\\build\\runtime-snapshot.json",
+    "sha256": "98a4bfcf985e35346dd32e5c1389975e070a686b722b5b81d41175f193437efa"
+  },
+  "failed_metadata": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\production-continuation\\full-ctm-v1-20261103\\pages\\2026\\page07\\FAILED.json",
+    "sha256": "1e4619352ef7c57505cb0c72b4173ed0ede971434b3d8148236ba235fea83e06"
+  },
+  "additional_runtime_files": [
+    {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\postprocess_page07.py",
+      "sha256": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18",
+      "role": "exact_lower_row_postprocessor",
+      "relative_path": "page-repair/postprocess_page07.py"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\audit_page07_repair.py",
+      "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a",
+      "role": "independent_actual_repair_auditor",
+      "relative_path": "page-repair/audit_page07_repair.py"
+    },
+    {
+      "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\continue_and_bridge_2026.py",
+      "sha256": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30",
+      "role": "mixed_origin_machine_read_copy_ready_bridge",
+      "relative_path": "page-repair/continue_and_bridge_2026.py"
+    }
+  ],
+  "code_sha256": {
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\postprocess_page07.py": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\audit_page07_repair.py": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\continue_and_bridge_2026.py": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+  },
+  "retained_additional_runtime_sources": [
+    {
+      "proposal_source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\postprocess_page07.py",
+        "sha256": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18"
+      },
+      "production_source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\postprocess_page07.py",
+        "sha256": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18"
+      },
+      "retained_copy": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\frozen-program-sources\\postprocess_page07.py",
+        "sha256": "a5fa7d43b45cd15936636f7a3874b7c7ab4111de8911cbe79750db1efa0c4e18"
+      }
+    },
+    {
+      "proposal_source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\audit_page07_repair.py",
+        "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a"
+      },
+      "production_source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\audit_page07_repair.py",
+        "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a"
+      },
+      "retained_copy": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\frozen-program-sources\\audit_page07_repair.py",
+        "sha256": "6e179cc00718cd6dc470bc4ff961585ec88729d180714bd3d2315182d356759a"
+      }
+    },
+    {
+      "proposal_source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\continue_and_bridge_2026.py",
+        "sha256": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+      },
+      "production_source": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\continue_and_bridge_2026.py",
+        "sha256": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+      },
+      "retained_copy": {
+        "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\frozen-program-sources\\continue_and_bridge_2026.py",
+        "sha256": "d2b41f4696976c87e663dcea6058a5105871aa319636e1a52598bec62cd94d30"
+      }
+    }
+  ],
+  "unchanged_nine_pages": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\experiments\\resume-original-2026-pages08-10-20261104\\UNCHANGED-NINE-PAGES-READ-HANDOFF.json",
+    "sha256": "1f449999106262b64622bfb090f7ae69e6bbbd1d86e87f97a42ee9e9cee8a100"
+  },
+  "code_review_handoff": {
+    "path": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\repair-proposals\\2026-page07-postprocess-v1-20261104\\PROPOSAL-REVIEW-HANDOFF.json",
+    "sha256": "faf41148c0c414354c606b3bc9d6b18ae60e718536d91c6b18fc8e9fa1d0fd33"
+  },
+  "allowed_operation": {
+    "year": 2026,
+    "page": 7,
+    "slot_id": "p7:b5:l6:s0-0",
+    "text": "논하라.",
+    "baseline": 421.5059509277344,
+    "point_size": 11.9552001953125,
+    "dx": 3.3125,
+    "selected_original_stream_xrefs": [
+      317,
+      318,
+      319,
+      320
+    ],
+    "only_four_original_KO_Tm_e_operands_may_change": true,
+    "all_other_failed_P1_actual_glyphs_including_spaces_and_effective_objects_exact": true
+  },
+  "permitted_output_directory": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07",
+  "mixed_bridge_directory": "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104",
+  "allowed_output_namespaces": [
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\page07",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\audit-scratch",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\page-repairs\\2026-page07-postprocess-v1-20261104\\regressions",
+    "D:\\CodexBuilds\\Hasla-poi-natural-20261102\\layout-corrections\\ortvay-title-20261103\\revisions\\source-style-widths-r4-20261103\\mixed-year-bridges\\2026-postprocess-v1-20261104"
+  ],
+  "existing_source_or_runtime_programs_may_change": false,
+  "original_proofs_or_global_lifecycle_may_change": false,
+  "root_GO_not_created": true,
+  "PDF_or_font_parse_render_or_repair_executions": 0,
+  "review_condition": "Root must independently rehash/review and write ROOT-GO.json. This freeze alone never authorizes any PDF operation."
+}

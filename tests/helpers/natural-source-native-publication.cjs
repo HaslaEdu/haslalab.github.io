@@ -314,7 +314,11 @@ module.exports = function validateNaturalSourceNative(root, qa, item) {
   }
   if (qa.layout_correction) require('./natural-correction-publication.cjs')(root, qa, item, read);
   if (qa.source_style_correction) {
-    if(qa.source_style_correction.schema==='ortvay-source-style-publication-v1') require('./ortvay-source-style-publication.cjs')(root, qa, item, read);
+    if(qa.source_style_correction.schema==='ortvay2026-source-style-page-repair-publication-v1') {
+      assert.equal(item.file,'Ortvay_2026_T_KO.pdf');
+      require('./ortvay2026-repaired-publication.cjs')(root, qa, item, read);
+    }
+    else if(qa.source_style_correction.schema==='ortvay-source-style-publication-v1') require('./ortvay-source-style-publication.cjs')(root, qa, item, read);
     else {
       assert.equal(qa.source_style_correction.schema,'icho2024-source-style-publication-v1');
       require('./icho-source-style-publication.cjs')(root, qa, item, read);

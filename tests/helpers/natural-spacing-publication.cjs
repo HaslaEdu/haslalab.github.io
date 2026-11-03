@@ -88,9 +88,16 @@ module.exports = function validate(root, record, item) {
     } else if (ledger.original_native_cid_profile) {
       const profile = ledger.original_native_cid_profile;
       assert.equal(profile.original_4x_svg_dark_pixel_delta, raw.newly_missing_native_ink_pixels);
-      if (profile.kind === '2018-original-native-Cambria-digit-phase-v1') assert.equal(profile.native_reference_nonwhite_RGB_errors, 0);
+      if (profile.kind === 'source2015-complete-original-equation16-native-program-v1') {
+        assert.equal(profile.original_native_reference_missing_pixels, 0);
+        assert.equal(profile.native_reference_nonwhite_RGB_errors, 0);
+        assert.deepEqual(profile.native_reference_renderers, ['MuPDF','Poppler']);
+        assert.deepEqual(profile.native_reference_scales, [4,8,12]);
+        assert.deepEqual(profile.cropped_SVG_reference_scales, [4,8,12]);
+        assert.equal(profile.cropped_SVG_native_ink_missing_pixels, 0);
+      } else if (profile.kind === '2018-original-native-Cambria-digit-phase-v1') assert.equal(profile.native_reference_nonwhite_RGB_errors, 0);
       else assert.equal(profile.native_original_CID_reference_missing_pixels, 0);
-      if (profile.kind !== 'original-native-CID-reference-all') {
+      if (!['original-native-CID-reference-all','source2015-complete-original-equation16-native-program-v1'].includes(profile.kind)) {
         assert.equal(profile.svg_8x_missing_pixels, 0);
         assert.equal(profile.svg_12x_missing_pixels, 0);
       }
@@ -100,6 +107,8 @@ module.exports = function validate(root, record, item) {
       assert.equal(witness.proof_unmodified, true);
       if (profile.kind === '2018-original-native-Cambria-digit-phase-v1') {
         require('./izho-2018-native-cid-witness.cjs')(profile,witness,raw,page,item);
+      } else if (profile.kind === 'source2015-complete-original-equation16-native-program-v1') {
+        require('./izho-2015-native-equation16.cjs')(profile,witness,raw,page,item);
       } else if (profile.kind === 'original-native-CID-reference-all') {
         assert.equal(witness.kind, 'all-original-instruction-native-CIDs-v1');
         assert.equal(witness.delivered_pdf_modified, false);

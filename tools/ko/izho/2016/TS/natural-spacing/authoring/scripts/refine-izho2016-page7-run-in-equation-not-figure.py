@@ -1,0 +1,6 @@
+from pathlib import Path
+import json,hashlib
+B=Path('D:/CodexBuilds/Hasla-original-style-20261031/izho2016-complete-solutions');F=B/'natural/2016/TS';P=F/'plans/page07.json';p=json.loads(P.read_text('utf8'));sha=lambda v:hashlib.sha256(v.read_bytes()).hexdigest();history=P.parent/'history'/sha(P);history.mkdir(parents=True,exist_ok=True);(history/P.name).write_bytes(P.read_bytes())
+bad=[r for r in p['excluded_figure_rects']if 740<r[1]<750 and 755<r[3]<760 and 240<r[0]<250];assert len(bad)==1;p['excluded_figure_rects']=[r for r in p['excluded_figure_rects']if r not in bad];p['frozen_display_math_rects']=[r for r in p['frozen_display_math_rects']if r not in bad]
+p['reviewed_source_run_in_formula_not_graphic']=dict(removed_false_figure_rects=bad,source_at=[38,0,0],reason='Full original2016 page7 at144dpi: f(q)dq atx246..313,y754.9 is the end of the SAME rubric equation7 dt=R/(U0-q/C(q))dq=f(q)dq, followed by prose with the function. It is neither a source picture nor a separate displayed formula. The complete explicit native mathematical atom retains every original CID and fraction rule with one dx. The actual original vector-diagram bitmap remains fixed and fully pixel-audited.')
+P.write_text(json.dumps(p,ensure_ascii=False,indent=2)+'\n','utf8');print('IZHO2016_SOURCE7_COMPLETE_RUN_IN_EQUATION_OWNERSHIP_RESTORED',flush=True)
