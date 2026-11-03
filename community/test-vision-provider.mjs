@@ -303,3 +303,12 @@ test('Gemini tuned on Vertex AI (bench): the endpoint URL with the service-accou
  await visionJSON({GEMINI_API_KEY:'g'},{provider:'gemini',geminiUrl:'https://evil.example.com/v1/projects/1/locations/us/endpoints/2:generateContent',geminiBearer:'tok',fetchImpl,parts:[{text:'x'}]});
  assert.doesNotMatch(seen[1].url,/evil/);assert.equal(seen[1].headers['x-goog-api-key'],'g');assert.equal(seen[1].headers.Authorization,undefined);
 });
+
+test('Gemini through Vertex AI (a publisher model URL) takes the bearer token too; another model family is not accepted',async()=>{
+ const seen=[];const fetchImpl=async(url,init)=>{seen.push({url,headers:init.headers});return Response.json({candidates:[{finishReason:'STOP',content:{parts:[{text:'{"text":"ok"}'}]}}],usageMetadata:{promptTokenCount:10,candidatesTokenCount:2}});};
+ const v='https://aiplatform.googleapis.com/v1/projects/p-1/locations/global/publishers/google/models/gemini-3.8-flash:generateContent';
+ await visionJSON({GEMINI_API_KEY:'g'},{provider:'gemini',model:'gemini-3.8-flash',geminiUrl:v,geminiBearer:'tok',fetchImpl,parts:[{text:'x'}]});
+ assert.equal(seen[0].url,v);assert.equal(seen[0].headers.Authorization,'Bearer tok');
+ await visionJSON({GEMINI_API_KEY:'g'},{provider:'gemini',geminiUrl:'https://aiplatform.googleapis.com/v1/projects/p-1/locations/global/publishers/anthropic/models/claude-x:generateContent',geminiBearer:'tok',fetchImpl,parts:[{text:'x'}]});
+ assert.doesNotMatch(seen[1].url,/aiplatform/);
+});

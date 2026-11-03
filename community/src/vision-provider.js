@@ -115,7 +115,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   provider=requireVisionProvider(env,provider);
   const model=benchModel(provider,chosen)||(provider==='tuned'?String(env.TUNED_MODEL||'').trim():STAGE_MODELS[provider]),started=Date.now();
   /* a Gemini tuned on Vertex AI (vertex-tuning.js): its endpoint's generateContent with the service account's token */
-  const tunedGemini=provider==='gemini'&&typeof geminiUrl==='string'&&/^https:\/\/[a-z0-9.-]+\.googleapis\.com\/v1\/projects\/[\w-]+\/locations\/[\w-]+\/endpoints\/\d+:generateContent$/.test(geminiUrl)&&!!geminiBearer;
+  const tunedGemini=provider==='gemini'&&typeof geminiUrl==='string'&&/^https:\/\/[a-z0-9.-]+\.googleapis\.com\/v1\/projects\/[\w-]+\/locations\/[\w-]+\/(?:endpoints\/\d+|publishers\/google\/models\/gemini-[a-z0-9.-]+):generateContent$/.test(geminiUrl)&&!!geminiBearer;
   const url=provider==='anthropic'?null:tunedGemini?geminiUrl:endpoint(env,provider,model);
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
   let usage=null,timer,aborted=false,providerStatus,providerCode,providerMessage;
