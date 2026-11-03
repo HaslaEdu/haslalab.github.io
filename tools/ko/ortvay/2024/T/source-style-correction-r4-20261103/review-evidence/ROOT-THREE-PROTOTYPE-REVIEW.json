@@ -1,0 +1,42 @@
+{
+  "schema": "ortvay-r4-root-prototype-read-v1",
+  "reviewer": "/root",
+  "created_utc": "2026-11-02T23:29:37.247592+00:00",
+  "scope": "Three current prototype PNGs actually read at original resolution. P0/P1 and source-native bindings are separate independent audits. Final runtime/final48 generation still pending.",
+  "passed": true,
+  "pages": [
+    {
+      "year": 2023,
+      "page": 1,
+      "passed": true,
+      "reviewer": "/root",
+      "pdf_sha256": "de074cbc0dcaaf678c5c436f9920aa528f777ac6184409d3b63e89057bd7e30d",
+      "png_sha256": "80c4e634c4c21377c91a56777f553e298687b682cc37f9461be06e4851461fc4",
+      "layout_sha256": "f837d756d8f822b1e677ff7f85fad96696134c9cc90bfd5e9ef93b2b03d5283d",
+      "independent_audit_sha256": "47bf0f9368295301e79517ede95ca0ab43034ee841fa5177ac1706489d273398",
+      "notes": "본문·그림·native 수식·URL·원래 올바른 제목 정렬을 읽고 확인함. 텐세그리티 두 배치의 새 한국어가 오른쪽으로 기울고 주변 글자/행간에 접촉이 없음."
+    },
+    {
+      "year": 2024,
+      "page": 3,
+      "passed": true,
+      "reviewer": "/root",
+      "pdf_sha256": "5e3b91046787575885a207b8fbb32d80f6ceecfa732197d36e8c9ed1945fa884",
+      "png_sha256": "1f3edeaf443e64ddea102543a5afbfdab9f5190f53678596a7830f3f2ce0736c",
+      "layout_sha256": "aae59869c129d7737b8ec230865826b9e324122a97b7d138ffb2bdbf9d248401",
+      "independent_audit_sha256": "24e72bcd7505940a424427840e8d807411a255a25ce4c2437d8b89948c300c67",
+      "notes": "문항5–7 본문과 세 원래 그림·수식·수치·출제자/쪽수를 읽음. 물음의 한국어 오른쪽 기울임, 원래 고정 행/그림과의 여백과 일반 간격 정상."
+    },
+    {
+      "year": 2025,
+      "page": 1,
+      "passed": true,
+      "reviewer": "/root",
+      "pdf_sha256": "42caea0f7fb22c1e61058ecf9e116fbc825fc38010b817fed67ad62f4be4cdc3",
+      "png_sha256": "ccc38c455397b8c079dcf8de8af5121fd9ff3d7f97465dbae776fc61ca644983",
+      "layout_sha256": "5ca1653994cebc105b5a8c6c64cdbd41ea433476f84184952b24faeb146f5e0b",
+      "independent_audit_sha256": "3f672b8e1fbd662219b2d2bb4902c1e4b261ba59e0a1758c2a70553d8b705656",
+      "notes": "4행 제목과 문항1–3·충돌 그림·원래 수식/수치를 읽음. 비탄성 오른쪽 기울임, 승인된 첫 문항 행 수평+.75pt 후 간격/접촉 정상. 수식·그림·다른 본문 변형은 독립 P0/P1 감사에 따로 결속함."
+    }
+  ]
+}
