@@ -2176,7 +2176,10 @@ async function labReadPage(env,s,buf,mime,notation,m) {
   const media=src._media||env.LAB_READ_MEDIA||'';   // Gemini's image tokens per picture (LAB_READ_MEDIA high, bench read.media)
   /* Gemini spends its thinking from the same output budget and transcribes longer (2-3k tokens a page against
      DeepSeek's 1.1k): 6k cut 11 of 72 Gemini reads of an IPhO 2025 sitting short, so it gets 16k */
-  const gemini=labProvider(s)==='gemini',cap=gemini?32768:6144;
+  /* a 3.8 Flash read that falls into repeating itself ran on to Google's cut-off: 7 of 17 production reads failed at
+     126-128 s (Vertex the same), where a whole page took 16-41 s and at most 5.2k tokens; LAB_READ_MAX_TOKENS ends such a
+     loop early (default 10k) */
+  const gemini=labProvider(s)==='gemini',cap=gemini?Math.max(4096,Math.min(32768,+env.LAB_READ_MAX_TOKENS||10240)):6144;
   /* Gemini (Google's guidance and WildHandBench: most of its handwriting errors are plausible text it made up): the
      image first and the instruction after it, each line once, copied as written, the unreadable marked */
   const geminiNote='Transcribe each written line exactly once, in page order; never repeat a line or a block. Copy what is written, character for character: do not correct, complete or improve anything, even an obvious mistake. Mark what cannot be read as [illegible] instead of guessing.';
@@ -2184,7 +2187,10 @@ async function labReadPage(env,s,buf,mime,notation,m) {
   const read=temperature=>labVision(env,s,gemini?[pagePart,...zoom,{text:prompt+'\n'+geminiNote}]:[{text:prompt},pagePart,...zoom],PAGE_SCHEMA,cap,m,'ocr',temperature,
     ['high','medium','low'].includes(media)?{mediaResolution:'MEDIA_RESOLUTION_'+media.toUpperCase()}:{});
   const warm=Number.isFinite(src._temperature)?src._temperature:Number.isFinite(+env.LAB_READ_TEMPERATURE)&&env.LAB_READ_TEMPERATURE!==undefined&&env.LAB_READ_TEMPERATURE!==''?+env.LAB_READ_TEMPERATURE:0;
-  const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated')return read(Math.max(warm,0.8));throw error;});
+  /* a read cut short is read again warmer, where the model takes a temperature at all (Gemini 3.6 Flash and newer
+     ignore it: the same loop again, so the caller's fallback reads it instead) */
+  const readModel=String(src._model||VISION_MODELS[labProvider(s)]||''),warmable=!gemini||/^gemini-(2\.|3-flash-preview|3\.1-|3\.5-flash-lite)/.test(readModel);
+  const out=await read(warm).catch(error=>{if(error?.code==='vision_response_truncated'&&warmable)return read(Math.max(warm,0.8));throw error;});
   const raw=out.raw;
   if(typeof raw?.text!=='string'||raw.text.length>160000||!Array.isArray(raw.items)||!LEG.includes(raw.legible)) {
     const call=m?.calls?.at(-1);if(call?.step==='ocr'){call.ok=0;call.error='vision_response_schema';}
@@ -2255,7 +2261,10 @@ async function labReadChecked(env, s, roles, task, buf, mime, m, kind = null) {
   /* a page AI Studio is too busy for is read by the same model through Vertex AI first (LAB_READ_VERTEX on, with the
      service account), and only then by the fallback model, which reads less exactly (3.1 Flash-Lite 72% of the checks
      against 3.8 Flash's 97%) */
-  const viaVertex = error => roles && roles.read === 'gemini' && env.LAB_READ_VERTEX === 'on' && gcpConfig(env).key && busy.includes(error?.code)
+  /* Vertex only for Google being busy (a refusal or a failed call); a page that timed out or ran to its token cap is
+     the model looping on it, which the same model on Vertex repeats (bench 2026-11-03: 127 s on both) */
+  const congested = ['vision_provider_rate_limited', 'vision_provider_failed', 'vision_model_unavailable'];
+  const viaVertex = error => roles && roles.read === 'gemini' && env.LAB_READ_VERTEX === 'on' && gcpConfig(env).key && congested.includes(error?.code)
     ? (console.error('lab read vertex', error.code), labReadPage(env, labAs(s, 'gemini', { ...(roles.readBench || {}), model: roles.readBench?.model || env.LAB_READ_MODEL, vertex: true }), buf, mime, notation, m)) : Promise.reject(error);
   const read = await labReadPage(env, roles ? labAs(s, roles.read, roles.readBench) : s, buf, mime, notation, m).catch(viaVertex).catch(error => {
     const fb = env.LAB_READ_FALLBACK_MODEL;

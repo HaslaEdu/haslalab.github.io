@@ -214,7 +214,7 @@ test('a page read caught in a repetition loop is capped and read once more, warm
   await api(`/lab/sessions/${sid}/pay`,{body:{provider:'gemini'}});await drain();
   const reads=calls.filter(c=>c.text.includes('[TASK: read page]'));
   assert.equal(reads.length,2);
-  assert.deepEqual(reads.map(c=>c.body.generationConfig.maxOutputTokens),[32768,32768],'Gemini: its thinking shares the output budget');
+  assert.deepEqual(reads.map(c=>c.body.generationConfig.maxOutputTokens),[10240,10240],'Gemini: its thinking shares the output budget, and a loop ends at 10k (LAB_READ_MAX_TOKENS)');
   assert.deepEqual(reads.map(c=>c.body.generationConfig.temperature),[0,0.8]);
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
@@ -945,6 +945,22 @@ test('LAB_READ_VERTEX: a page AI Studio is too busy for is read by the same mode
   assert.match(reads[0].url,/generativelanguage\.googleapis\.com\/.*gemini-3\.8-flash:/,'AI Studio first');
   assert.equal(reads[1].url,'https://aiplatform.googleapis.com/v1/projects/proj-9/locations/global/publishers/google/models/gemini-3.8-flash:generateContent','then the same model on Vertex AI');
   assert.ok(!reads.some(c=>/gemini-3\.1-flash-lite/.test(c.url)),'the less exact fallback model is not needed');
+  assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
+}));
+
+test('a 3.8 Flash read that runs to its token cap (looping) goes to the fallback model at once: no warmer retry it ignores, not Vertex',async()=>fixture(async({api,start,upload,drain,calls,sql,env,truncate})=>{
+  const kp=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);
+  const der=new Uint8Array(await crypto.subtle.exportKey('pkcs8',kp.privateKey)),pem='-----BEGIN PRIVATE KEY-----\n'+Buffer.from(der).toString('base64').match(/.{1,64}/g).join('\n')+'\n-----END PRIVATE KEY-----\n';
+  env.GCP_SA_KEY=JSON.stringify({client_email:'reader@proj-9.iam.gserviceaccount.com',private_key:pem,project_id:'proj-9'});
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.8-flash';env.LAB_READ_THINKING='';env.LAB_READ_FALLBACK_MODEL='gemini-3.1-flash-lite';env.LAB_READ_VERTEX='on';
+  truncate(1);
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  const reads=calls.filter(c=>c.text.includes('[TASK: read page]'));
+  assert.equal(reads.length,2);assert.match(reads[0].url,/generativelanguage.*gemini-3\.8-flash:/);
+  assert.equal(reads[0].body.generationConfig.maxOutputTokens,10240,'a loop ends at 10k tokens, not 32k');
+  assert.match(reads[1].url,/gemini-3\.1-flash-lite:/,'straight to the fallback');
   assert.equal(sql.prepare('SELECT ocr_status FROM lab_pages WHERE session_id=?').get(sid).ocr_status,'done');
 }));
 
