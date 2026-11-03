@@ -25,12 +25,14 @@ function browser(){
 }
 function question(id='q_test'){return {question:{id,source_id:sources[0].id,source:sources[0],original_number:'2.1',selected_version:{text:'A synthetic body with $x=2$.'},subjects:[],context:{},assets:[]}};}
 
-test('archive HTML has unique stable controls, real labels and a collapsed reading view',()=>{
+test('retired public entry links to the archive without loading the old catalogue or authentication UI',()=>{
   const html=readFileSync(new URL('./public/index.html',import.meta.url),'utf8'),ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);
   assert.equal(new Set(ids).size,ids.length);
-  for(const id of ['kindNav','sourceList','competition','year','type','catalogView','readerView','backToList','accountLogin'])assert(ids.includes(id));
-  assert.match(html,/id="readerView"[^>]*hidden/);
-  assert.equal((html.match(/<option\b/g)||[]).length,(html.match(/<\/option>/g)||[]).length);
+  assert(ids.includes('archiveLink'));
+  assert.match(html,/id="archiveLink"[^>]*href="https:\/\/haslalab\.org\/#\/archive\/books\/phys"/);
+  assert.match(html,/<script[^>]*src="\.\/archive-redirect\.js[^"\s]*"[^>]*defer/);
+  assert.match(html,/<meta name="referrer" content="no-referrer">/);
+  assert.doesNotMatch(html,/<(?:form|iframe)\b|type="password"|src="[^\"]*(?:app\.js|katex)|id="(?:library|loginPanel|readerView)"/);
   assert(!html.includes('q_'+ '1'.repeat(64)));
 });
 test('source navigation never guesses kinds or invents corpus counts from titles',()=>{

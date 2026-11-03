@@ -118,6 +118,45 @@ function options(params) {
   const type=params.get('type')||null;if(type&&!BANK_PAPER_TYPES.includes(type))fail(400,'invalid_problem_type');
   return {lang,source,subject,collection,stars,cursor,sourceCursor,sort,kind,competition,year,type,limit,offset:integer(params.get('offset'),0,300)};
 }
+const hasArchiveScope=opts=>!!(opts?.kind||opts?.collection);
+// Keep archive membership identical to search membership. Source presentation
+// labels alone cannot classify a question from a source with mixed subjects.
+async function archiveScopeFilter(env,opts) {
+  const facets=await optionalTable(env,'BANK_SEARCH','bank_question_facets'),catalogue=await optionalTable(env,'BANK_SEARCH','bank_question_catalogue');
+  if(opts.kind&&!catalogue)fail(503,'problem_bank_catalogue_unavailable');
+  if(opts.collection&&!facets)fail(503,'problem_bank_classification_unavailable');
+  const join=(facets?' LEFT JOIN bank_question_facets f ON f.question_id=d.question_id ':'')+(catalogue?' LEFT JOIN bank_question_catalogue c ON c.question_id=d.question_id AND c.source_id=d.source_id ':'');
+  const where=[],args=[];
+  if(opts.kind){where.push('c.source_kind=?');args.push(opts.kind);}
+  if(opts.collection){where.push(catalogue?'COALESCE(c.discipline,f.collection)=?':'f.collection=?');args.push(opts.collection);}
+  return {join,where,args};
+}
+async function admitArchiveScope(env,found,opts) {
+  if(!hasArchiveScope(opts))return found;
+  const {join,where,args}=await archiveScopeFilter(env,opts);
+  const admitted=await first(binding(env,'BANK_SEARCH'),`SELECT 1 AS admitted FROM bank_search_documents d ${join} WHERE d.question_id=? AND d.source_id=? AND ${where.join(' AND ')} LIMIT 1`,[found.q.id,found.q.source_id,...args]);
+  if(!admitted)fail(404,'question_not_found');
+  return found;
+}
+async function archiveSourceCounts(env,opts) {
+  const {join,where,args}=await archiveScopeFilter(env,opts);
+  const counts=await rows(binding(env,'BANK_SEARCH'),`SELECT d.source_id,count(DISTINCT d.question_id) AS question_count,count(*) AS language_bodies,count(DISTINCT CASE WHEN d.unresolved_source=1 THEN d.question_id END) AS unresolved_questions FROM bank_search_documents d ${join} WHERE ${where.join(' AND ')} GROUP BY d.source_id ORDER BY d.source_id LIMIT 20001`,args);
+  // Admission comes from the registry, never a retained or unrouted shard copy.
+  const routes=await rows(binding(env,'BANK_REGISTRY'),'SELECT source_id,database_name FROM bank_source_routes ORDER BY source_id LIMIT 20001');
+  if(counts.length>20000||routes.length>20000)fail(503,'problem_bank_sources_unavailable');
+  const admitted=new Set(routes.filter(r=>SID.test(r.source_id??'')&&DATABASES[r.database_name]).map(r=>r.source_id));
+  return counts.filter(r=>admitted.has(r.source_id));
+}
+async function archiveSources(env,opts,after,limit) {
+  const counts=await archiveSourceCounts(env,opts),page=counts.filter(r=>!after||r.source_id>after).slice(0,limit+1),has_more=page.length>limit;
+  const selected=page.slice(0,limit),join=await presentationJoin(env),metadata=new Map();
+  for(let start=0;start<selected.length;start+=80){
+    const batch=selected.slice(start,start+80);
+    for(const row of await rows(binding(env,'BANK_REGISTRY'),`SELECT r.source_id,r.source_json,r.database_name${presentationFields(join)} FROM bank_source_routes r ${join} WHERE r.source_id IN (${batch.map(()=>'?').join(',')})`,batch.map(r=>r.source_id)))metadata.set(row.source_id,row);
+  }
+  const sources=selected.map(count=>{const route=metadata.get(count.source_id);if(!route||!DATABASES[route.database_name])fail(503,'problem_bank_integrity_error');return {...sourceInfo(route),question_count:count.question_count,language_bodies:count.language_bodies};});
+  return {sources,has_more,next_cursor:has_more?selected.at(-1).source_id:null,...PRIVATE};
+}
 function safeString(value,max=2000) {
   if(typeof value!=='string'||value.length>max||/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(value)) return null;
   // Metadata is a strict allowlist; notes with private paths, origins or secrets are omitted.
@@ -152,7 +191,7 @@ async function sourceRoute(env,sourceId) {
   if(!route) fail(404,'source_not_found');
   return {route,db:routeDb(env,route.database_name)};
 }
-async function locateQuestion(env,id) {
+async function locateQuestion(env,id,scope=null) {
   validId(id,QID);
   const matches=await rows(binding(env,'BANK_SEARCH'),'SELECT DISTINCT source_id FROM bank_search_documents WHERE question_id=? LIMIT 2',[id]);
   if(!matches.length) fail(404,'question_not_found');
@@ -161,7 +200,7 @@ async function locateQuestion(env,id) {
   const q=await first(db,`SELECT q.*,c.source_language,c.context_json FROM bank_questions q LEFT JOIN bank_question_context c ON c.question_id=q.id WHERE q.id=? AND q.source_id=?`,[id,route.source_id]);
   if(!q) fail(404,'question_not_found');
   if(q.id!=='q_'+await digest(q.source_id+'\0'+q.locator)) fail(503,'problem_bank_integrity_error');
-  return {q,route,db};
+  return admitArchiveScope(env,{q,route,db},scope);
 }
 async function versions(db,table,key,id) {
   const tableName=table==='solution'?'bank_solution_versions':'bank_question_versions';
@@ -189,7 +228,7 @@ function contextOptions(params) {
   if(!depth||!limit)fail(400,'invalid_pagination');
   return {depth,limit};
 }
-async function contextGraph(env,parent,limit=CONTEXT_NODES) {
+async function contextGraph(env,parent,limit=CONTEXT_NODES,scope=null) {
   const db=binding(env,'BANK_REGISTRY');
   // Imports own this additive table. Older registries remain readable without
   // creating schema or changing canonical question/context metadata at runtime.
@@ -218,7 +257,7 @@ async function contextGraph(env,parent,limit=CONTEXT_NODES) {
       // Invalid/stale references also consume this bounded lookup budget.
       if(lookups>=limit){truncated=true;return null;}
       lookups++;
-      try{const found=await locateQuestion(env,id);admitted.set(id,found);return found;}
+      try{const found=await locateQuestion(env,id,scope);admitted.set(id,found);return found;}
       catch(error){
         if(error instanceof BankError&&error.status===404){admitted.set(id,null);unavailable++;return null;}
         throw error;
@@ -247,10 +286,10 @@ function contextCycles(adjacency) {
   for(const id of adjacency.keys())if(!color.has(id))visit(id);
   return cycles;
 }
-async function questionContext(env,id,lang,{depth,limit},user) {
-  const parent=await locateQuestion(env,id);
+async function questionContext(env,id,lang,{depth,limit},user,scope=null) {
+  const parent=await locateQuestion(env,id,scope);
   await versions(parent.db,'question','question',id);
-  const graph=await contextGraph(env,parent,limit),visited=new Set([id]);
+  const graph=await contextGraph(env,parent,limit,scope),visited=new Set([id]);
   const queue=[{id,depth:0}],contexts=[],byId=new Map(),adjacency=new Map();
   for(let cursor=0;cursor<queue.length;cursor++){
     const current=queue[cursor],links=[];
@@ -325,10 +364,18 @@ async function boundedJson(req) {
   } catch(e){if(e instanceof BankError)throw e;fail(400,'invalid_json');}finally{reader.releaseLock();}
 }
 
-async function identifyInput(req,ocr) {
+function identifyBodyScope(body,scope) {
+  const scoped={...body};
+  for(const key of ['kind','collection'])if(scope?.[key]){
+    if(body[key]!=null&&body[key]!==scope[key])fail(400,'archive_scope_mismatch');
+    scoped[key]=scope[key];
+  }
+  return scoped;
+}
+async function identifyInput(req,ocr,scope=null) {
   const type=req.headers.get('content-type')??'';
   if(/^application\/json(?:\s*;|\s*$)/i.test(type)) {
-    const body=await boundedJson(req);
+    const body=identifyBodyScope(await boundedJson(req),scope);
     if(Object.keys(body).some(k=>!['text','lang','subject','source','collection','stars','kind','competition','year','type','limit'].includes(k)))fail(400,'text_identification_only');
     if(typeof body.text!=='string'||body.text.trim().length<5||body.text.length>12000||body.text.includes('\0'))fail(400,'invalid_identification_text');
     return {body,text:body.text,ocr_used:false};
@@ -350,7 +397,8 @@ async function identifyInput(req,ocr) {
   if(!image||typeof image.arrayBuffer!=='function'||image.size<1||image.size>MAX_SCAN)fail(400,'invalid_scan');
   if(!['image/png','image/jpeg','image/webp'].includes(image.type))fail(415,'unsupported_scan_type');
   const imageBytes=new Uint8Array(await image.arrayBuffer());if(!rasterSignature(imageBytes,image.type))fail(400,'invalid_scan');
-  const body={};for(const key of ['lang','subject','source','collection','stars','kind','competition','year','type','limit'])if(form.has(key)){if(typeof form.get(key)!=='string')fail(400,'invalid_scan');body[key]=form.get(key);}
+  const fields={};for(const key of ['lang','subject','source','collection','stars','kind','competition','year','type','limit'])if(form.has(key)){if(typeof form.get(key)!=='string')fail(400,'invalid_scan');fields[key]=form.get(key);}
+  const body=identifyBodyScope(fields,scope);
   // Validate filters before spending the caller-authorized OCR request.
   const params=new URLSearchParams(body);options(params);
   let result;
@@ -360,8 +408,8 @@ async function identifyInput(req,ocr) {
   return {body,text,ocr_used:true,ocr_confidence:typeof result?.confidence==='number'&&Number.isFinite(result.confidence)?result.confidence:null};
 }
 
-async function solutions(env,id,lang,user) {
-  const parent=await locateQuestion(env,id);
+async function solutions(env,id,lang,user,scope=null) {
+  const parent=await locateQuestion(env,id,scope);
   const routes=await rows(binding(env,'BANK_REGISTRY'),'SELECT solution_id,question_id,database_name FROM bank_solution_routes WHERE question_id=? ORDER BY solution_id LIMIT 101',[id]);
   if(routes.length>100) fail(503,'problem_bank_integrity_error');
   const items=[];
@@ -434,24 +482,24 @@ async function asset(env,id,user) {
   return new Response(bytes,{headers:{'Content-Type':metadata.mime_type,'Content-Length':String(bytes.length),'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; sandbox",'ETag':'"'+metadata.sha256+'"'}});
 }
 
-async function feedback(env,id,user){
-  await locateQuestion(env,id);
+async function feedback(env,id,user,scope=null){
+  await locateQuestion(env,id,scope);
   if(!await optionalTable(env,'BANK_REGISTRY','bank_question_feedback'))return {question_id:id,count:0,mean_stars:null,own:null,evidence:'self_report'};
   const db=binding(env,'BANK_REGISTRY'),summary=await first(db,'SELECT count(*) AS count,avg(stars) AS mean_stars FROM bank_question_feedback WHERE question_id=?',[id]);
   const own=user?await first(db,'SELECT stars,outcome,minutes FROM bank_question_feedback WHERE question_id=? AND user_id=?',[id,user.id]):null;
   return {question_id:id,...summary,own,evidence:'self_report'};
 }
-async function writeFeedback(req,env,id,user){
+async function writeFeedback(req,env,id,user,scope=null){
   if(!user)fail(401,'login_required');
   const body=await requestJson(req,2048);
   if(!body||Object.keys(body).some(k=>!['stars','outcome','minutes'].includes(k))||!Number.isInteger(body.stars)||body.stars<1||body.stars>5||!['not_attempted','solved','partial','unsolved'].includes(body.outcome)||body.minutes!=null&&(!Number.isInteger(body.minutes)||body.minutes<1||body.minutes>1440))fail(400,'invalid_feedback');
-  await locateQuestion(env,id);
+  await locateQuestion(env,id,scope);
   if(!await optionalTable(env,'BANK_REGISTRY','bank_question_feedback')||!await optionalTable(env,'BANK_REGISTRY','bank_feedback_limits'))fail(503,'feedback_unavailable');
   const db=binding(env,'BANK_REGISTRY'),day=new Date().toISOString().slice(0,10),now=new Date().toISOString();
   const admitted=await first(db,'INSERT INTO bank_feedback_limits(user_id,day,n) VALUES(?,?,1) ON CONFLICT(user_id,day) DO UPDATE SET n=n+1 WHERE n<100 RETURNING n',[user.id,day]);
   if(!admitted)fail(429,'feedback_rate_limited');
   await db.prepare("INSERT INTO bank_question_feedback(question_id,user_id,stars,outcome,minutes,evidence,updated_at) VALUES(?,?,?,?,?,'self_report',?) ON CONFLICT(question_id,user_id) DO UPDATE SET stars=excluded.stars,outcome=excluded.outcome,minutes=excluded.minutes,updated_at=excluded.updated_at").bind(id,user.id,body.stars,body.outcome,body.minutes??null,now).run();
-  return feedback(env,id,user);
+  return feedback(env,id,user,scope);
 }
 async function requestJson(req,max){
   if(!/^application\/json(?:;|$)/i.test(req.headers.get('Content-Type')||''))fail(415,'json_required');
@@ -459,12 +507,12 @@ async function requestJson(req,max){
   try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>max){await reader.cancel();fail(413,'request_too_large');}chunks.push(value);}}finally{reader.releaseLock();}
   const bytes=new Uint8Array(size);let offset=0;for(const c of chunks){bytes.set(c,offset);offset+=c.length;}try{const body=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));if(!body||typeof body!=='object'||Array.isArray(body))fail(400,'invalid_json');return body;}catch(e){if(e instanceof BankError)throw e;fail(400,'invalid_json');}
 }
-async function reviewDifficulty(req,env,id,user){
+async function reviewDifficulty(req,env,id,user,scope=null){
   if(!user)fail(401,'login_required');if(user.role!=='admin')fail(403,'admin_required');
   const body=await requestJson(req,4096);
   if(Object.keys(body).some(k=>!['rubric','basis_text_sha256','all_required_context_read'].includes(k))||body.all_required_context_read!==true||!HASH.test(body.basis_text_sha256||''))fail(400,'invalid_difficulty_review');
   let rated;try{rated=starsFromRubric(body.rubric);}catch{fail(400,'invalid_difficulty_review');}
-  const found=await locateQuestion(env,id),vs=await versions(found.db,'question','question',id),basis=vs.find(v=>v.language==='en');
+  const found=await locateQuestion(env,id,scope),vs=await versions(found.db,'question','question',id),basis=vs.find(v=>v.language==='en');
   if(!basis||basis.text_sha256!==body.basis_text_sha256)fail(409,'difficulty_basis_changed');
   if(!await facet(env,id)||!await optionalTable(env,'BANK_REGISTRY','bank_difficulty_reviews'))fail(503,'difficulty_review_unavailable');
   const now=new Date().toISOString(),rubric=JSON.stringify(body.rubric);
@@ -480,7 +528,7 @@ export async function problemBankRoute(req,env,url,{user,ocr}={}) {
     const suffix=url.pathname.slice(PREFIX.length),opts=options(url.searchParams);
     if(req.method==='POST'&&suffix==='/identify'){
       if(!/^application\/json(?:;|$)/i.test(req.headers.get('Content-Type')||'')){if(!user)fail(401,'login_required');if(user.role!=='admin')fail(403,'admin_required');}
-      const input=await identifyInput(req,ocr),{body}=input;
+      const input=await identifyInput(req,ocr,opts),{body}=input;
       const params=new URLSearchParams();for(const k of ['lang','subject','source','collection','stars','kind','competition','year','type','limit'])if(body[k]!=null)params.set(k,String(body[k]));
       const preferred=options(params),other=preferred.lang==='ko'?'en':'ko';
       const results=await Promise.all([search(env,input.text,preferred),search(env,input.text,{...preferred,lang:other})]);
@@ -493,17 +541,25 @@ export async function problemBankRoute(req,env,url,{user,ocr}={}) {
       return json({...results[0],items,candidates:items,recognized_text:input.text,requested_language:preferred.lang,searched_languages:[preferred.lang,other],has_more:all.length>preferred.limit||results.some(r=>r.has_more),ocr_used:input.ocr_used,ocr_confidence:input.ocr_confidence??null,identification_status:'candidates_only',automatic_match_confirmed:false});
     }
     const write=suffix.match(/^\/questions\/([^/]+)\/(feedback|difficulty-review)$/);
-    if(req.method==='POST'&&write){validId(write[1],QID);return json(await (write[2]==='feedback'?writeFeedback(req,env,write[1],user):reviewDifficulty(req,env,write[1],user)));}
+    if(req.method==='POST'&&write){validId(write[1],QID);return json(await (write[2]==='feedback'?writeFeedback(req,env,write[1],user,opts):reviewDifficulty(req,env,write[1],user,opts)));}
     if(req.method!=='GET')fail(405,'method_not_allowed');
     if(suffix==='/status'){
-      const counts=await first(binding(env,'BANK_SEARCH'),`SELECT count(DISTINCT question_id) AS questions,count(*) AS language_bodies,count(DISTINCT source_id) AS sources_with_documents,count(DISTINCT CASE WHEN unresolved_source=1 THEN question_id END) AS unresolved_questions FROM bank_search_documents`);
-      const registered=await first(binding(env,'BANK_REGISTRY'),'SELECT count(*) AS sources_registered FROM bank_source_routes');
+      let counts,registered;
+      if(hasArchiveScope(opts)){
+        const sources=await archiveSourceCounts(env,opts);
+        counts=sources.reduce((total,s)=>({questions:total.questions+s.question_count,language_bodies:total.language_bodies+s.language_bodies,sources_with_documents:total.sources_with_documents+1,unresolved_questions:total.unresolved_questions+s.unresolved_questions}),{questions:0,language_bodies:0,sources_with_documents:0,unresolved_questions:0});
+        registered={sources_registered:sources.length};
+      }else{
+        counts=await first(binding(env,'BANK_SEARCH'),`SELECT count(DISTINCT question_id) AS questions,count(*) AS language_bodies,count(DISTINCT source_id) AS sources_with_documents,count(DISTINCT CASE WHEN unresolved_source=1 THEN question_id END) AS unresolved_questions FROM bank_search_documents`);
+        registered=await first(binding(env,'BANK_REGISTRY'),'SELECT count(*) AS sources_registered FROM bank_source_routes');
+      }
       const enabled=user?.role==='admin'&&typeof ocr==='function';
       return json({...counts,...registered,user:user?{id:user.id,role:user.role,nickname:user.nickname??''}:null,access:'public',review_status:'pending',ocr_available:enabled,identification:enabled?'text_or_scan':'supplied_text_only',...PRIVATE});
     }
     if(suffix==='/sources'){
       const after=url.searchParams.get('after')||null;if(after)validId(after,SID,'invalid_source_cursor');
       const limit=integer(url.searchParams.get('source_limit'),200,500);if(!limit)fail(400,'invalid_pagination');
+      if(hasArchiveScope(opts))return json(await archiveSources(env,opts,after,limit));
       const join=await presentationJoin(env),data=await rows(binding(env,'BANK_REGISTRY'),`SELECT r.source_id,r.source_json,r.database_name${presentationFields(join)} FROM bank_source_routes r ${join} ${after?'WHERE r.source_id>?':''} ORDER BY r.source_id LIMIT ?`,after?[after,limit+1]:[limit+1]);
       const page=data.slice(0,limit),has_more=data.length>limit;
       return json({sources:page.filter(r=>DATABASES[r.database_name]).map(sourceInfo),has_more,next_cursor:has_more?page.at(-1).source_id:null,...PRIVATE});
@@ -520,19 +576,20 @@ export async function problemBankRoute(req,env,url,{user,ocr}={}) {
     const q=suffix.match(/^\/questions\/([^/]+)(?:\/(solutions|recommendations|context|feedback))?$/);
     if(q){
       validId(q[1],QID);
-      if(q[2]==='solutions')return json(await solutions(env,q[1],opts.lang,user));
-      if(q[2]==='context')return json(await questionContext(env,q[1],opts.lang,contextOptions(url.searchParams),user));
-      if(q[2]==='feedback')return json(await feedback(env,q[1],user));
-      const found=await locateQuestion(env,q[1]),vs=await versions(found.db,'question','question',q[1]);
+      if(q[2]==='solutions')return json(await solutions(env,q[1],opts.lang,user,opts));
+      if(q[2]==='context')return json(await questionContext(env,q[1],opts.lang,contextOptions(url.searchParams),user,opts));
+      if(q[2]==='feedback')return json(await feedback(env,q[1],user,opts));
+      const found=await locateQuestion(env,q[1],opts),vs=await versions(found.db,'question','question',q[1]);
       if(q[2]==='recommendations'){
         const current=await facet(env,q[1]),subjects=current?array(current.subjects_json):array(found.q.subjects_json),subject=opts.subject??subjects.find(x=>SUBJECTS.has(x))??null;
-        const [related,nearby]=await Promise.all([search(env,(vs.find(v=>v.language===opts.lang)?.text??'').slice(0,600),{...opts,stars:null,cursor:null,sourceCursor:null,offset:0,limit:30,subject},{exclude:q[1]}),search(env,'',{...opts,stars:null,cursor:null,sourceCursor:null,offset:0,limit:30,subject,collection:opts.collection??current?.collection??null},{exclude:q[1]})]);
+        const scoped={...opts,stars:null,cursor:null,sourceCursor:null,offset:0,limit:30,subject},nearbyScope={...scoped,collection:opts.collection??current?.collection??null};
+        const [related,nearby]=await Promise.all([search(env,(vs.find(v=>v.language===opts.lang)?.text??'').slice(0,600),hasArchiveScope(opts)?nearbyScope:scoped,{exclude:q[1]}),search(env,'',nearbyScope,{exclude:q[1]})]);
         const pool=[...new Map([...related.items,...nearby.items].filter(i=>!i.unresolved_source).map(i=>[i.id,i])).values()];
         const seen=user&&pool.length&&await optionalTable(env,'BANK_REGISTRY','bank_question_feedback')?(await rows(binding(env,'BANK_REGISTRY'),`SELECT question_id FROM bank_question_feedback WHERE user_id=? AND outcome='solved' AND question_id IN (${pool.map(()=>'?').join(',')})`,[user.id,...pool.map(i=>i.id)])).map(r=>r.question_id):[];
         return json({question_id:q[1],items:recommendProblems(pool,{targetStars:opts.stars??current?.stars??3,limit:opts.limit,seen:[q[1],...seen],preferredSubjects:subjects,previousSource:found.q.source_id}),method:'subject_difficulty_novelty_diversity',...PRIVATE});
       }
       const assets=await rows(found.db,'SELECT id,role,mime_type,sha256,spans_json FROM bank_assets WHERE question_id=? ORDER BY asset_id LIMIT 150',[q[1]]);
-      const context_links=await directContextLinks(await contextGraph(env,found),q[1]);
+      const context_links=await directContextLinks(await contextGraph(env,found,CONTEXT_NODES,opts),q[1]);
       return json({question:{...questionInfo(found.q),...facetInfo(await facet(env,q[1]),sourceInfo(found.route).collection),...questionCatalogue(found.q,found.route),source:sourceInfo(found.route),versions:vs,selected_version:vs.find(v=>v.language===opts.lang)??null,assets:await scopedAssets(env,assets,user,q[1]),figures:await figureVariants(env,q[1]),can_view_source:user?.role==='admin',context_links},...PRIVATE});
     }
     fail(404,'problem_bank_route_not_found');

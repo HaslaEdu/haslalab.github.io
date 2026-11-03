@@ -96,7 +96,7 @@ const HOME_STUDIO_TEXT = {
     features:[
       {mode:"generate",title:"문제 제작",description:"원하는 주제를 적거나 원본 사진을 올려, 난이도와 문제 수를 선택해 새 문제를 만드세요.",detail:"사진 없이도 가능 · 1~3문제",action:"문제 만들기"},
       {mode:"digitize",title:"문제 디지털화",description:"문제 사진의 글과 수식을 옮기고 그림을 함께 정리하세요. 원본과 결과를 나란히 확인할 수 있어요.",detail:"원본 사진 필요 · 글·수식·그림",action:"사진으로 시작하기"},
-      {mode:"search",title:"문제 검색",description:"문제은행에서 글과 수식으로 문제를 찾고, 한국어·영어 본문을 확인해 보세요.",detail:"분야별 검색 · 한국어와 영어",action:"문제 검색하기"}
+      {mode:"search",title:"문제 검색",description:"아카이브에서 글과 수식으로 문제를 찾고, 한국어·영어 본문을 확인해 보세요.",detail:"분야별 검색 · 한국어와 영어",action:"문제 검색하기"}
     ]
   },
   en: {
@@ -105,7 +105,7 @@ const HOME_STUDIO_TEXT = {
     features:[
       {mode:"generate",title:"Create a problem",description:"Describe a topic or upload a source image, then choose the difficulty and number of new problems.",detail:"An image is optional · 1–3 problems",action:"Create a problem"},
       {mode:"digitize",title:"Digitize a problem",description:"Turn a problem photo into text and equations with its figures. Compare the source and result side by side.",detail:"Source image required · Text, math & figures",action:"Start with a photo"},
-      {mode:"search",title:"Search problems",description:"Find problems by text or equation in the problem library and read their Korean or English statements.",detail:"Subject filters · Korean and English",action:"Search problems"}
+      {mode:"search",title:"Search problems",description:"Find problems by text or equation in the archive and read their Korean or English statements.",detail:"Subject filters · Korean and English",action:"Search problems"}
     ]
   }
 };

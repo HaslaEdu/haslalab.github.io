@@ -321,9 +321,18 @@ section{padding:58px 0}
 .learn-pending{max-width:760px;margin:0 0 48px;padding:32px;border:1px dashed var(--grid-bold);border-radius:12px}
 .learn-pending h2{margin:0;font-size:1.35rem}
 .learn-tool-copy{color:var(--graphite);font-size:13px;line-height:1.8;margin:14px 0 0;max-width:600px}
-.learn-studio,.learn-library{padding-bottom:36px}
-.learn-studio .phead,.learn-library .phead{margin-bottom:24px}
-.learn-studio-frame,.learn-library-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
+.learn-studio{padding-bottom:36px}
+.learn-studio .phead{margin-bottom:24px}
+.learn-studio-frame{display:block;width:100%;height:1050px;min-height:600px;border:0;background:transparent}
+.archive-shell{max-width:1680px}
+.archive-categories{display:flex;gap:24px;flex-wrap:wrap;border-bottom:1px solid var(--grid-bold);margin:0 0 26px}
+.archive-categories a{display:block;padding:12px 4px;color:var(--graphite);font-size:16px;border-bottom:2px solid transparent}
+.archive-categories a[aria-current="page"]{color:var(--accent,var(--rail));border-bottom-color:var(--accent,var(--rail));font-weight:600}
+.archive-disciplines{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 25px}
+.archive-disciplines a{padding:7px 12px;border:1px solid var(--grid-bold);border-radius:4px;color:var(--graphite);font-size:14px}
+.archive-disciplines a[aria-current="page"]{color:var(--accent,var(--rail));border-color:var(--accent,var(--rail))}
+.archive-loading{padding:25px 0;color:var(--graphite)}
+@media(pointer:coarse){.archive-categories a,.archive-disciplines a{min-height:44px}}
 @media(max-width:600px){.learn-pending{padding:24px}.phead h1 .learn-state{margin-left:8px}}
 .lsec{margin:0 0 38px}
 .lsec>h2{font-size:1.25rem;margin:0 0 6px}
@@ -981,6 +990,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 </style>
 <link rel="stylesheet" href="site-design.css?v=3c1c7baa824c">
 <link rel="stylesheet" href="account-security.css?v=e5cfbf05017c">
+<link rel="stylesheet" href="archive-library.css?v=cdd19492eecf">
 </head>
 <body class="hl-site">
 
@@ -1122,10 +1132,11 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="examdur.js?v=9a7cae160dd1"></script>
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
+<script src="archive-navigation.js?v=22f1a14056b5"></script>
 <script src="site-catalogue.js?v=3bb58bc75f51"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=3b50617f7063"></script>
+<script src="site-design.js?v=093476a8bf6d"></script>
 <script src="account-ui.js?v=21f0796b6bed"></script>
 <script>
 "use strict";
@@ -4849,13 +4860,15 @@ function viewComps(sub,limit=Infinity){
   const list=cur.comps.filter(k=>DATA[k]).slice(0,limit);
   return `
   <div class="shell">
+    ${archiveCategories("contests",cur.k)}
     <div class="phead">
       <p class="eyebrow">${d.ebComps}</p>
       <h1>${d.hComps}</h1>
       <div class="sub">${d.pComps}</div>
     </div>
     <nav class="subjs" aria-label="${d.subjLabel}">${SUBJ.map(x=>{ const n=x.comps.filter(k=>DATA[k]).length;
-      return `<a href="#/comps/${x.k}"${x===cur?' aria-current="true"':""} class="${n?"":"none"}"><img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)"><b>${x[lang]}</b><small>${n?d.subjN(n):d.subjSoon}</small></a>`; }).join("")}</nav>
+      return `<a href="${archiveHref("contests",x.k)}"${x===cur?' aria-current="true"':""} class="${n?"":"none"}"><img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)"><b>${x[lang]}</b><small>${n?d.subjN(n):d.subjSoon}</small></a>`; }).join("")}</nav>
+    ${cur.k==="sci"?"":`<p class="learn-tool-copy"><a href="${archiveHref("contests",cur.k,new URLSearchParams({view:"web"}))}">${lang==="ko"?"웹 문항 찾아보기 →":"Browse web problems →"}</a></p>`}
     ${adFitBanner("secondary")}
     ${list.length?"":`<div class="subjempty">${d.subjEmpty(cur[lang],cur.soon)}</div>`}
     <div class="comps" data-lang="${lang}">
@@ -4877,6 +4890,54 @@ function viewComps(sub,limit=Infinity){
   </div>
   ${adFitBanner("primary")}`;
 }
+
+/* Archive category navigation and the native digital reader share the site's
+   existing account, language and theme. Canonical source records stay intact. */
+function archiveHref(category="contests",subject="",params=""){
+  return window.HL_ARCHIVE?.href(category,subject,params)||"#/archive/"+category+(subject?"/"+subject:"");
+}
+function archiveCategories(category,subject){
+  return `<nav class="archive-categories" aria-label="${lang==="ko"?"아카이브 자료 구분":"Archive categories"}">${[["contests","대회","Contests"],["books","교재","Books"],["schools","학교","Schools"]].map(([key,ko,en])=>`<a href="${archiveHref(key,subject==="sci"&&key!=="contests"?"phys":subject)}"${key===category?' aria-current="page"':""}>${lang==="ko"?ko:en}</a>`).join("")}</nav>`;
+}
+function viewArchiveDigital(route){
+  const name=route.resolveLegacy?(lang==="ko"?"아카이브":"Archive"):route.category==="books"?(lang==="ko"?"교재 아카이브":"Book archive"):route.category==="schools"?(lang==="ko"?"학교 아카이브":"School archive"):(lang==="ko"?"대회 아카이브":"Competition archive");
+  return `<div class="shell archive-shell">${archiveCategories(route.category,route.sub)}<div class="phead"><h1>${name}</h1></div>${route.resolveLegacy?"":`<nav class="archive-disciplines" aria-label="${UI[lang].subjLabel}">${SUBJ.filter(x=>window.HL_ARCHIVE?.subjects[x.k]).map(x=>`<a href="${archiveHref(route.category,x.k)}"${x.k===route.sub?' aria-current="page"':""}>${x[lang]}</a>`).join("")}</nav>`}<div id="archiveNative"><p class="archive-loading" role="status">${lang==="ko"?"자료를 불러오는 중…":"Loading archive…"}</p></div></div>`;
+}
+function archiveUsesNative(route){
+  return !!route&&(route.resolveLegacy||route.category!=="contests"||route.params.get("view")==="web"||["source","problem","competition","year","type","q","topic","stars","cursor"].some(key=>route.params.has(key)));
+}
+let archiveController=null,archiveModulePromise=null,archiveMathPromise=null;
+function disposeArchiveLibrary(){
+  try{archiveController?.dispose();}catch(e){}archiveController=null;
+}
+function loadArchiveModule(){
+  if(window.HL_ARCHIVE_NATIVE)return Promise.resolve(window.HL_ARCHIVE_NATIVE);
+  if(!archiveModulePromise)archiveModulePromise=import("./archive-library.js?v=aad1f96080e1").catch(e=>{archiveModulePromise=null;throw e;});
+  return archiveModulePromise;
+}
+function archiveMath(element){
+  if(!element)return Promise.resolve();
+  if(!archiveMathPromise)archiveMathPromise=new Promise((resolve,reject)=>{
+    if(typeof window.renderMathInElement==="function"){resolve();return;}
+    const base="problem-bank/public/vendor/katex/";
+    if(!document.querySelector('link[data-archive-math]')){const css=document.createElement("link");css.rel="stylesheet";css.href=base+"katex.min.css";css.dataset.archiveMath="1";document.head.append(css);}
+    const add=(src,done)=>{const script=document.createElement("script");script.src=base+src;script.onload=done;script.onerror=()=>{script.remove();reject(new Error("math_unavailable"));};document.head.append(script);};
+    if(window.katex)add("contrib/auto-render.min.js",resolve);else add("katex.min.js",()=>add("contrib/auto-render.min.js",resolve));
+  }).catch(e=>{archiveMathPromise=null;throw e;});
+  return archiveMathPromise.then(()=>{if(element.isConnected&&window.renderMathInElement)window.renderMathInElement(element,{delimiters:[{left:"$$",right:"$$",display:true},{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false},{left:"$",right:"$",display:false}],throwOnError:false,trust:false,strict:"ignore",maxExpand:1000,maxSize:30});});
+}
+function mountArchiveNative(route,generation){
+  const container=document.getElementById("archiveNative");if(!container)return;
+  const current=()=>generation===siteRenderSeq&&document.getElementById("archiveNative")===container;
+  loadArchiveModule().then(module=>{
+    if(!current())return;
+    archiveController=module.mountArchiveLibrary(container,{kind:route.kind,collection:route.collection,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",baseHash:route.baseHash,params:route.params,resolveLegacy:route.resolveLegacy,apiOrigin:"https://haslalab-problem-bank.haslalab.workers.dev",getToken:()=>cmTok(),renderMath:archiveMath,
+      onNavigate:(href,options={})=>{if(!current()||typeof href!=="string"||!href.startsWith("#/archive/")||/[\r\n]/.test(href))return;if(route.resolveLegacy||options.replace){history.replaceState(null,"",href);render();}else location.hash=href;},
+      onLogin:()=>{if(!current())return;try{sessionStorage.setItem("hlCmBack",location.hash);}catch(e){}location.hash="#/login";}
+    });
+  }).catch(()=>{if(!current())return;container.innerHTML=`<p role="alert">${lang==="ko"?"자료를 불러오지 못했습니다.":"Could not load the archive."}</p><button type="button" id="archiveRetry">${lang==="ko"?"다시 불러오기":"Retry"}</button>`;document.getElementById("archiveRetry").onclick=()=>mountArchiveNative(route,generation);});
+}
+if(typeof MutationObserver==="function")new MutationObserver(()=>archiveController?.update?.({theme:document.documentElement.dataset.theme==="dark"?"dark":"light"})).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 
 /* ── learn: subject routes remain available while materials are prepared.
    Resource metadata is retained below, but is not published as ready content.
@@ -4975,7 +5036,7 @@ function viewLearn(){
     <div class="comps" data-lang="${lang}">
       ${Object.entries(LEARN).map(([key,L])=>{
         return `<a class="comp lsubj" href="#/learn/${key}">
-          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"문제 제작소 · 문제은행":"Problem Studio · Library"):key==="astronomy"?(lang==="ko"?"문제은행":"Problem library"):d.learnSoon}</span></div>
+          <div class="chead"><div class="abbr">${L.name[lang]}</div><span class="learn-state">${key==="physics"?(lang==="ko"?"문제 제작소":"Problem Studio"):key==="astronomy"?(lang==="ko"?"아카이브":"Archive"):d.learnSoon}</span></div>
           <span class="go">→</span>
         </a>`;}).join("")}
     </div>
@@ -4986,28 +5047,11 @@ function viewLearn(){
 function viewLearnSubject(key){
   const d=UI[lang], L=LEARN[key];
   if(!L) return viewLearn();
-  return `
-  <div class="shell">
-    <div class="phead">
-      <p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p>
-      <h1>${L.name[lang]}</h1>
-    </div>
-    ${key==="physics"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio">
-      <div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div>
-      <p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만들거나 문제은행을 검색해 보세요.":"Turn physics problem photos into text and equations, create new problems from a topic, or search the problem library."}</p>
-      <span class="go">→</span>
-    </a><a class="comp lsubj" href="#/learn/physics/library" data-learn-tool="library">
-      <div class="chead"><div class="abbr">${lang==="ko"?"문제은행":"Problem library"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div>
-      <p class="learn-tool-copy">${lang==="ko"?"한국어·영어 문제를 분야와 난이도로 찾아봅니다. 풀이는 따로 열어 볼 수 있습니다.":"Browse Korean and English problems by subject and difficulty. Open solutions separately."}</p>
-      <span class="go">→</span>
-    </a></div>`:key==="astronomy"?`<div class="comps"><a class="comp lsubj" href="#/learn/astronomy/library" data-learn-tool="library">
-      <div class="chead"><div class="abbr">${lang==="ko"?"문제은행":"Problem library"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div>
-      <p class="learn-tool-copy">${lang==="ko"?"천문학·천체물리학 문제를 한국어와 영어로 찾아봅니다.":"Browse astronomy and astrophysics problems in Korean and English."}</p><span class="go">→</span>
-    </a></div>`:`<section class="learn-pending" role="status">
-      <h2>${d.learnSoon}</h2>
-    </section>`}
-  </div>
-  ${adFitBanner("primary")}`;
+  const archive=archiveHref("books",key==="astronomy"?"astro":"phys");
+  return `<div class="shell"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1></div>
+    ${key==="physics"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio"><div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div><p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만듭니다.":"Turn physics problem photos into text and equations, and create new problems from a topic."}</p><span class="go">→</span></a></div>`:""}
+    ${["physics","astronomy"].includes(key)?`<p class="learn-tool-copy"><a href="${archive}">${lang==="ko"?"대회·교재·학교 자료는 아카이브에서 찾아볼 수 있습니다.":"Find competition, book and school materials in the archive."}</a></p>`:`<section class="learn-pending" role="status"><h2>${d.learnSoon}</h2></section>`}
+  </div>${adFitBanner("primary")}`;
 }
 
 function learnStudioHeading(){
@@ -5047,7 +5091,7 @@ addEventListener("resize",syncLearnStudio);
 
 function learnSearchHeading(){
   const ko=lang==='ko',label=ko?'문제 검색':'Search problems';
-  return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p><h1>${label}</h1><p class="learn-tool-copy">${ko?'문제은행의 글·수식 검색 · 한국어와 영어':'Search the problem library by text and equations · Korean and English'}</p>`;
+  return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/physics">${LEARN.physics.name[lang]}</a> / ${label}</p><h1>${label}</h1><p class="learn-tool-copy">${ko?'아카이브 글·수식 검색 · 한국어와 영어':'Search archive materials by text and equations · Korean and English'}</p>`;
 }
 function viewLearnSearch(){
   const label=lang==='ko'?'문제 검색':'Search problems';
@@ -5066,30 +5110,6 @@ addEventListener('message',event=>{
 if(typeof MutationObserver==='function')new MutationObserver(syncLearnSearch).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 addEventListener('resize',syncLearnSearch);
 
-function learnLibraryHeading(subject="physics"){
-  const ko=lang==="ko",label=ko?"문제은행":"Problem library";
-  return `<p class="eyebrow"><a href="#/learn">${UI[lang].navLearn}</a> / <a href="#/learn/${subject}">${LEARN[subject].name[lang]}</a> / ${label}</p>
-    <h1>${label}</h1><p class="learn-tool-copy">${ko?"문제 검색 · 한국어/영어 본문 · 풀이":"Problem search · Korean/English statements · Solutions"}</p>`;
-}
-function viewLearnLibrary(subject="physics"){
-  const label=lang==="ko"?"문제은행":"Problem library";
-  const query=new URLSearchParams({embed:"1",collection:subject,lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",v:"20261103-public-figures-math"});
-  return `<div class="shell learn-library"><div class="phead">${learnLibraryHeading(subject)}</div>
-    <iframe id="learnLibraryFrame" class="learn-library-frame" data-library-subject="${subject}" src="problem-bank/public/index.html?${query}" title="${label}" referrerpolicy="same-origin"></iframe></div>`;
-}
-function syncLearnLibrary(){
-  const frame=document.getElementById("learnLibraryFrame");
-  if(!frame?.contentWindow)return;
-  frame.contentWindow.postMessage({type:"hl-bank-settings",lang,theme:document.documentElement.dataset.theme==="dark"?"dark":"light",viewportHeight:innerHeight},location.origin);
-}
-addEventListener("message",event=>{
-  const frame=document.getElementById("learnLibraryFrame");
-  if(!frame||event.origin!==location.origin||event.source!==frame.contentWindow)return;
-  if(event.data?.type==="hl-bank-height"&&Number.isFinite(event.data.height))
-    frame.style.height=Math.max(600,Math.min(30000,Math.ceil(event.data.height)))+"px";
-});
-if(typeof MutationObserver==="function")new MutationObserver(syncLearnLibrary).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
-addEventListener("resize",syncLearnLibrary);
 
 function viewAbout(){
   const d=UI[lang];
@@ -8826,7 +8846,7 @@ function cmTok(v){
     if(v===undefined)return localStorage.getItem("hlCmTok")||"";
     const prior=localStorage.getItem("hlCmTok")||"";
     if(v)localStorage.setItem("hlCmTok",v);else localStorage.removeItem("hlCmTok");
-    if(prior!==(v||"")){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;}
+    if(prior!==(v||"")){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;if(archiveController)Promise.resolve().then(()=>archiveController?.update?.({}));}
   }catch(e){return "";}
 }
 async function cmApi(method, path, body,options={}){
@@ -9697,12 +9717,17 @@ const SITE = "HaslaLab";
 function setDocTitle(first, second){
   const d=UI[lang], parts=[];
   if(first==="about")            parts.push(d.hAbout);
+  else if(first==="archive"){
+    const route=window.HL_ARCHIVE?.parse(location.hash),category=route?.category;
+    const label=category==="books"?(lang==="ko"?"교재":"Books"):category==="schools"?(lang==="ko"?"학교":"Schools"):(lang==="ko"?"대회":"Contests");
+    parts.push((lang==="ko"?"아카이브":"Archive")+" — "+label);
+  }
   else if(first==="comps")       parts.push(d.hComps);
   else if(first==="community")   parts.push(d.navComm);
   else if(["monthly","weekly","rank","me","login","signup"].includes(first)) parts.push(d.navWeekly);
   else if(first==="lab")         parts.push(lang==="ko"?"실전 모드":"Exam mode");
   else if(first==="learn"&&second==="physics"&&location.hash.split("?")[0]==="#/learn/physics/search") parts.push(lang==="ko"?"학습 — 물리 — 문제 검색":"Learn — Physics — Search problems");
-  else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):["#/learn/physics/library","#/learn/astronomy/library"].includes(location.hash.split("?")[0])?`${d.navLearn} — ${LEARN[second].name[lang]} — ${lang==="ko"?"문제은행":"Problem library"}`:second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
+  else if(first==="learn")       parts.push(location.hash.split("?")[0]==="#/learn/physics/studio"?(lang==="ko"?"학습 — 물리 — 문제 제작소":"Learn — Physics — Problem Studio"):second&&LEARN[second] ? `${d.navLearn} \u2014 ${LEARN[second].name[lang]}` : d.hLearn);
   else if(first && DATA[first]){
     const c=first==="rupho"&&RUPHO_ARCHIVE?compOf(RUPHO_ARCHIVE.route(location.hash).key):DATA[first];
     const route=location.hash.split("?")[0].split("/"),mode=route.at(-1);
@@ -9754,7 +9779,13 @@ function paintPageChrome(active){
 
 function render(){
   const generation=++siteRenderSeq;
-  if(/^#\/archive(?:\/|\?|$)/.test(location.hash)){ location.hash=location.hash.replace("#/archive","#/comps"); return; }
+  const archiveRedirect=window.HL_ARCHIVE?.legacy(location.hash);
+  if(archiveRedirect){
+    try{history.replaceState(null,"",archiveRedirect);}catch(e){location.hash=archiveRedirect;return;}
+    return render();
+  }
+  const archiveRoute=window.HL_ARCHIVE?.parse(location.hash);
+  disposeArchiveLibrary();
   const legacyRuPhO=RUPHO_ARCHIVE?.canonical(location.hash);
   if(legacyRuPhO){ history.replaceState(null,"",legacyRuPhO); }
   if(animId){cancelAnimationFrame(animId);animId=null;}
@@ -9767,14 +9798,6 @@ function render(){
     currentSearch.title=lang==='ko'?'문제 검색':'Search problems';
     document.documentElement.lang=lang;setDocTitle(first,second);paintPageChrome('learn');paintSiteTheme();syncLearnSearch();
     if(typeof arChip==='function')arChip();else cmAccountChip();return;
-  }
-  const currentLibrary=document.getElementById("learnLibraryFrame");
-  if(first==="learn"&&["physics","astronomy"].includes(second)&&third==="library"&&currentLibrary?.dataset.librarySubject===second&&document.querySelector(".learn-library .phead")){
-    document.querySelector(".learn-library .phead").innerHTML=learnLibraryHeading(second);
-    currentLibrary.title=lang==="ko"?"문제은행":"Problem library";
-    document.documentElement.lang=lang;setDocTitle(first,second);paintPageChrome("learn");paintSiteTheme();syncLearnLibrary();
-    if(typeof arChip==="function")arChip();else cmAccountChip();
-    return;
   }
   const currentStudio=document.getElementById("learnStudioFrame");
   if(first==="learn"&&second==="physics"&&third==="studio"&&currentStudio&&document.querySelector(".learn-studio .phead")){
@@ -9798,7 +9821,8 @@ function render(){
 
   let html, active;
   if(first==="about"){            html=viewAbout();  active="about"; }
-  else if(first==="learn"){       html=second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():["physics","astronomy"].includes(second)&&third==="library"?viewLearnLibrary(second):second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="learn"){       html=second==="physics"&&third==="search"?viewLearnSearch():second==="physics"&&third==="studio"?viewLearnStudio():second?viewLearnSubject(second):viewLearn(); active="learn"; }
+  else if(first==="archive"){     html=archiveUsesNative(archiveRoute)?viewArchiveDigital(archiveRoute):viewComps(archiveRoute?.sub||second);active="comps"; }
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
@@ -9814,10 +9838,9 @@ function render(){
 
   buildRails();
   paintSiteTheme();
+  if(archiveUsesNative(archiveRoute))mountArchiveNative(archiveRoute,generation);
   const studioFrame=document.getElementById("learnStudioFrame");
   if(studioFrame)studioFrame.addEventListener("load",()=>{studioFrame.dataset.studioReady="true";syncLearnStudio();},{once:true});
-  const libraryFrame=document.getElementById("learnLibraryFrame");
-  if(libraryFrame)libraryFrame.addEventListener("load",syncLearnLibrary,{once:true});
   const searchFrame=document.getElementById('learnSearchFrame');
   if(searchFrame)searchFrame.addEventListener('load',syncLearnSearch,{once:true});
   if(active==="home"){ startHero(); mountHomeActivity(); }
@@ -9825,11 +9848,11 @@ function render(){
   if(active==="comps" && studyMode) xmMount(first==="rupho"&&RUPHO_ARCHIVE?RUPHO_ARCHIVE.route(location.hash).key:first);
   if(active==="weekly"||first==="lab") arMount();
   if(typeof arChip==="function")arChip();else cmAccountChip();
-  if(first==="comps"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }
+  if(first==="comps"||first==="archive"){ const t=document.querySelector(".subjs a[aria-current]"); if(t){ const n=t.parentNode; n.scrollLeft+=t.getBoundingClientRect().left-n.getBoundingClientRect().left-(n.clientWidth-t.offsetWidth)/2; } }
 }
 
 addEventListener("hashchange",()=>{ render(); scrollTo({top:0,behavior:"instant"}); });
-addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;if(document.getElementById("learnStudioFrame")||document.getElementById("learnLibraryFrame")||document.getElementById("learnSearchFrame")){if(typeof arChip==="function")arChip();else cmAccountChip();}else render();}});
+addEventListener("storage",e=>{if(e.key==="hlCmTok"||e.key==="hlCmApi"){cmInvalidate();cm.me=null;cm.meChecked=false;cm.meScope="";cmMeP=null;cmBootstrapP=null;cmOverviewP=null;cmHealthP=null;if(document.getElementById("learnStudioFrame")||document.getElementById("learnSearchFrame")){if(typeof arChip==="function")arChip();else cmAccountChip();}else render();}});
 initSiteDesign();
 render();
 </script>

@@ -2,106 +2,90 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const Runtime=require('../site-runtime.js');
 const read=file=>fs.readFileSync(path.join(__dirname,'..',file),'utf8');
-const main=[...read('index.html').matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].find(match=>match[1].includes('const REL ='))[1];
-
-function app(){
-  const nodes=new Map(),handlers={},observers=[],messages=[],calls={accounts:0};
+const main=[...read('index.html').matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('const REL ='))[1];
+const tick=()=>new Promise(resolve=>setImmediate(resolve));
+const QID='q_'+'a'.repeat(64),SID='src_'+'b'.repeat(64);
+function app(hash='#/archive/books/phys'){
+  const nodes=new Map(),handlers={},observers=[],store=new Map([['hlCmTok','SYNTHETIC_ACCOUNT_TOKEN']]);
+  const calls={mounts:[],disposed:[],updates:[],accounts:0};let context;
   class Element{
-    constructor(id=''){this.id=id;this.dataset={};this.style={};this.classList={toggle(){},add(){},remove(){}};this.listeners={};this.writes=0;this._html='';this.textContent='';}
+    constructor(id=''){this.id=id;this.dataset={};this.style={};this.classList={toggle(){},add(){},remove(){}};this.listeners={};this.isConnected=true;this._html='';}
     setAttribute(){}addEventListener(name,fn){this.listeners[name]=fn;}querySelectorAll(){return[];}querySelector(){return null;}
-    set innerHTML(value){this._html=String(value);this.writes++;
-      if(this.id==='view'){
-        nodes.delete('learnLibraryFrame');nodes.delete('learnStudioFrame');
-        const match=this._html.match(/<iframe id="(learnLibraryFrame|learnStudioFrame)"[^>]*src="([^"]+)"/);
-        if(match){const frame=new Element(match[1]);frame.src=match[2];frame.dataset.librarySubject=/data-library-subject="([^"]+)"/.exec(this._html)?.[1];frame.contentWindow={postMessage(data,origin){messages.push({data:JSON.parse(JSON.stringify(data)),origin});}};nodes.set(match[1],frame);}
-      }
-    }
+    set innerHTML(v){this._html=String(v);if(this.id==='view'){const old=nodes.get('archiveNative');if(old)old.isConnected=false;nodes.delete('archiveNative');if(this._html.includes('id="archiveNative"'))nodes.set('archiveNative',new Element('archiveNative'));}}
     get innerHTML(){return this._html;}
   }
   const node=id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id);};
-  const frameId=id=>id==='learnLibraryFrame'||id==='learnStudioFrame';
-  const context={window:{HL_RUNTIME:Runtime},URL,URLSearchParams,console,innerHeight:850,
-    location:new URL('https://haslalab.org/#/learn/physics/library'),history:{replaceState(){}},
-    document:{getElementById:id=>frameId(id)?nodes.get(id)||null:node(id),querySelector:selector=>selector==='.learn-library .phead'&&nodes.has('learnLibraryFrame')?node('libraryHeading'):selector==='.learn-studio .phead'&&nodes.has('learnStudioFrame')?node('studioHeading'):null,querySelectorAll:()=>[],documentElement:{dataset:{theme:'light'}},body:node('body')},
-    localStorage:{getItem:key=>key==='hlCmTok'?'SYNTHETIC_PARENT_TOKEN':null,setItem(){}},sessionStorage:{getItem:()=>null,setItem(){}},
-    addEventListener(name,fn){(handlers[name]??=[]).push(fn);},matchMedia:()=>({matches:false}),
-    setTimeout(){},clearTimeout(){},requestAnimationFrame(){},cancelAnimationFrame(){},scrollTo(){},
-    MutationObserver:class{constructor(callback){this.callback=callback;observers.push(this);}observe(target,options){this.target=target;this.options=options;}disconnect(){}},
-    fetch:async()=>{throw Error('Learning parent must not fetch private bank content or credentials');}};
+  const native={mountArchiveLibrary(container,options){calls.mounts.push({container,options});const result={dispose(){calls.disposed.push(container);},update(value){calls.updates.push(value);}};return result;}};
+  context={window:{HL_RUNTIME:Runtime,HL_ARCHIVE_NATIVE:native},URL,URLSearchParams,console,innerHeight:850,
+    location:new URL('https://haslalab.org/'+hash),history:{replaceState(_state,_title,url){context.location.href=new URL(url,context.location).href;}},
+    document:{getElementById:id=>id==='archiveNative'||/^learn.*Frame$/.test(id)?nodes.get(id)||null:node(id),querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>new Element(),head:{append(){}},documentElement:{dataset:{theme:'light'}},body:node('body')},
+    localStorage:{getItem:key=>store.get(key)||null,setItem:(k,v)=>store.set(k,String(v)),removeItem:k=>store.delete(k)},sessionStorage:{getItem:()=>null,setItem(){}},
+    addEventListener(name,fn){(handlers[name]??=[]).push(fn);},matchMedia:()=>({matches:false}),setTimeout(){},clearTimeout(){},requestAnimationFrame(){},cancelAnimationFrame(){},scrollTo(){},
+    MutationObserver:class{constructor(callback){this.callback=callback;observers.push(this);}observe(target){this.target=target;}},fetch:async()=>{throw Error('Parent must delegate data reads to its scoped native reader');}};
   vm.createContext(context);
-  // Learning routes require no contest datasets or exam scripts.
-  for(const file of ['site-catalogue.js','site-design.js'])vm.runInContext(read(file),context,{filename:file});
-  context.HLexam=context.window.HLexam;
-  vm.runInContext(main.replace(/render\(\);\s*$/,''),context,{filename:'index-main.js'});
-  const run=code=>vm.runInContext(code,context);
-  context.arChip=()=>calls.accounts++;
-  run('buildRails=()=>{};paintSiteTheme=()=>{};mountHaslaAdFit=()=>{}');
-  return{context,run,node,nodes,handlers,observers,messages,calls};
+  for(const f of ['archive-navigation.js','site-catalogue.js','site-design.js'])vm.runInContext(read(f),context,{filename:f});
+  context.HLexam=context.window.HLexam;vm.runInContext(main.replace(/render\(\);\s*$/,''),context,{filename:'index-main.js'});
+  const run=code=>vm.runInContext(code,context);context.arChip=()=>calls.accounts++;run('buildRails=()=>{};paintSiteTheme=()=>{};mountHaslaAdFit=()=>{}');
+  return{context,run,node,nodes,calls,handlers,observers,store};
 }
-
-test('physics and astronomy offer the native public library without adding another login',()=>{
-  const a=app();
-  for(const language of ['ko','en']){
-    a.run(`lang=${JSON.stringify(language)}`);
-    const physics=a.run('viewLearnSubject("physics")');
-    assert.match(physics,/href="#\/learn\/physics\/studio"/);assert.match(physics,/href="#\/learn\/physics\/library"/);
-    assert.match(physics,language==='ko'?/문제은행/:/Problem library/);
-    assert.match(physics,language==='ko'?/사용 가능/:/Available/);
-    assert.match(a.run('viewLearnSubject("astronomy")'),/href="#\/learn\/astronomy\/library"/);
-    assert.doesNotMatch(physics,/<form|type="password"|workers\.dev/);
-    assert.doesNotMatch(a.run('viewLearnSubject("chemistry")'),/learn\/physics\/library/);
-    assert.deepEqual(Runtime.routeNeeds('#/learn/physics/library'),[]);
+test('Learn retains Studio and sends reading to Archive without a bank tile or frame',()=>{
+  const a=app();for(const language of ['ko','en']){
+    a.run('lang='+JSON.stringify(language));
+    for(const subject of ['physics','astronomy']){
+      const html=a.run(`viewLearnSubject(${JSON.stringify(subject)})`);assert.doesNotMatch(html,/문제은행|Problem library|data-learn-tool="library"|<iframe/);
+      assert.match(html,new RegExp('href="#/archive/books/'+(subject==='physics'?'phys':'astro')+'"'));
+    }
+    assert.match(a.run('viewLearnSubject("physics")'),/href="#\/learn\/physics\/studio"/);
+    assert.doesNotMatch(a.run('viewLearn()'),/문제은행|Problem library/);
+  }
+  assert.doesNotMatch(read('index.html'),/learnLibraryFrame|function viewLearnLibrary|hl-bank-settings/);
+});
+test('Archive has three categories and keeps the original competition gallery and logos',()=>{
+  const a=app();for(const language of ['ko','en']){
+    a.run('lang='+JSON.stringify(language));const html=a.run('viewComps("phys",2)');
+    for(const category of ['contests','books','schools'])assert.match(html,new RegExp('href="#/archive/'+category+'/phys"'));
+    assert.match(html,/data-logo-key="ipho"/);assert.match(html,/class="comp" href="#\/ipho"/);assert.equal((html.match(/class="comp" href=/g)||[]).length,2);
+    assert.match(html,language==='ko'?/>학교<|>교재</:/>Schools<|>Books</);
+  }
+  assert.deepEqual(Runtime.routeNeeds('#/archive/books/phys'),[]);assert.deepEqual(Runtime.routeNeeds('#/archive/schools/astro'),[]);
+});
+test('Books and Schools mount native category- and subject-bound readers without frames',async()=>{
+  for(const [category,kind] of [['books','book'],['schools','course']])for(const [sub,collection] of [['phys','physics'],['astro','astronomy']]){
+    const a=app(`#/archive/${category}/${sub}?source=${SID}&problem=${QID}`);a.run('render()');await tick();
+    const {options}=a.calls.mounts[0];assert.equal(options.kind,kind);assert.equal(options.collection,collection);assert.equal(options.params.get('source'),SID);assert.equal(options.params.get('problem'),QID);
+    assert.equal(options.baseHash,`#/archive/${category}/${sub}`);assert.equal(options.apiOrigin,'https://haslalab-problem-bank.haslalab.workers.dev');assert.equal(typeof options.renderMath,'function');
+    assert.equal(options.getToken(),'SYNTHETIC_ACCOUNT_TOKEN');assert.doesNotMatch(a.node('view').innerHTML,/<iframe|SYNTHETIC_ACCOUNT_TOKEN|workers\.dev/);
+    assert.match(a.node('nav').innerHTML,/<a href="#\/comps" class="on">/);assert.match(a.context.document.title,/아카이브/);
   }
 });
-
-test('the embedded library is same-origin and receives the current language and theme in its initial URL',()=>{
-  const a=app();
-  for(const language of ['ko','en'])for(const theme of ['light','dark']){
-    a.run(`lang=${JSON.stringify(language)}`);a.context.document.documentElement.dataset.theme=theme;
-    const html=a.run('viewLearnLibrary()'),src=/id="learnLibraryFrame"[^>]*src="([^"]+)"/.exec(html)[1],url=new URL(src,a.context.location);
-    assert.equal(url.origin,a.context.location.origin);assert.equal(url.pathname,'/problem-bank/public/index.html');
-    assert.equal(url.searchParams.get('embed'),'1');assert.equal(url.searchParams.get('lang'),language);assert.equal(url.searchParams.get('theme'),theme);
-    assert.doesNotMatch(url.href,/token|Bearer|username|password/i);assert.match(html,/referrerpolicy="same-origin"/);
-  }
+test('old Learn bank bookmarks resolve into Archive and never remount the retired app',async()=>{
+  const a=app('#/learn/astronomy/library');a.run('render()');await tick();assert.equal(a.context.location.hash,'#/archive/books/astro');assert.equal(a.calls.mounts[0].options.collection,'astronomy');
+  const b=app('#/learn/physics/library?problem='+QID);b.run('render()');await tick();
+  assert.match(b.context.location.hash,/^#\/archive\/open\?/);const first=b.calls.mounts[0].options;assert.equal(first.resolveLegacy,true);
+  first.onNavigate('#/archive/schools/astro?problem='+QID);await tick();
+  assert.equal(b.context.location.hash,'#/archive/schools/astro?problem='+QID);assert.equal(b.calls.mounts.at(-1).options.kind,'course');assert.equal(b.calls.mounts.at(-1).options.collection,'astronomy');assert.equal(b.calls.disposed.length,1);
 });
-
-test('the router mounts the native bank once and language, theme and auth-chip updates preserve its state',()=>{
-  const a=app();a.node('acct').innerHTML='NATIVE ACCOUNT';a.run('render()');
-  const frame=a.nodes.get('learnLibraryFrame'),src=frame.src,writes=a.node('view').writes;
-  assert.ok(frame);assert.equal(typeof frame.listeners.load,'function');assert.match(a.context.document.title,/문제은행/);
-  frame.searchState={query:'saved search',selectedQuestion:'synthetic-qid'};
-  frame.listeners.load();assert.equal(a.messages.at(-1).data.type,'hl-bank-settings');
-  a.run('setLang("en")');
-  assert.equal(a.nodes.get('learnLibraryFrame'),frame);assert.equal(a.node('view').writes,writes);assert.equal(frame.src,src);
-  assert.equal(frame.title,'Problem library');assert.match(a.context.document.title,/Problem library/);assert.match(a.node('nav').innerHTML,/<a href="#\/learn" class="on">/);
-  a.context.document.documentElement.dataset.theme='dark';
-  for(const observer of a.observers)if(observer.target===a.context.document.documentElement)observer.callback([]);
-  for(const fn of a.handlers.resize)fn();
-  for(const fn of a.handlers.storage)fn({key:'hlCmTok'});
-  assert.equal(a.nodes.get('learnLibraryFrame'),frame);assert.equal(a.node('view').writes,writes);assert.deepEqual(frame.searchState,{query:'saved search',selectedQuestion:'synthetic-qid'});
-  assert.equal(a.node('acct').innerHTML,'NATIVE ACCOUNT');assert.ok(a.calls.accounts>=3);
-  assert.deepEqual(a.messages.at(-1),{origin:'https://haslalab.org',data:{type:'hl-bank-settings',lang:'en',theme:'dark',viewportHeight:850}});
-  for(const message of a.messages){assert.equal(message.origin,'https://haslalab.org');assert.deepEqual(Object.keys(message.data).sort(),['lang','theme','type','viewportHeight']);assert.doesNotMatch(JSON.stringify(message),/SYNTHETIC_PARENT_TOKEN|Bearer|password|username/);}
+test('contest web questions remain available alongside the full paper gallery',async()=>{
+  const a=app('#/archive/contests/phys');a.run('render()');await tick();assert.equal(a.calls.mounts.length,0);assert.match(a.node('view').innerHTML,/view=web/);
+  a.context.location.hash='#/archive/contests/phys?view=web';a.run('render()');await tick();assert.equal(a.calls.mounts.at(-1).options.kind,'contest');
+  a.context.location.hash='#/archive/contests/phys?problem='+QID;a.run('render()');await tick();assert.equal(a.calls.mounts.at(-1).options.params.get('problem'),QID);
+  a.context.location.hash='#/archive/contests/phys?type=experiment';a.run('render()');await tick();assert.equal(a.calls.mounts.at(-1).options.params.get('type'),'experiment');
 });
-
-test('height messages require the current iframe window and exact origin and accept only bounded finite numeric sizes',()=>{
-  const a=app();a.run('render()');const frame=a.nodes.get('learnLibraryFrame');frame.style.height='1050px';
-  const send=overrides=>{for(const fn of a.handlers.message)fn({origin:a.context.location.origin,source:frame.contentWindow,data:{type:'hl-bank-height',height:901.2},...overrides});};
-  for(const overrides of [{origin:'https://evil.invalid'},{source:{}},{data:{type:'hl-bank-height',height:'900'}},{data:{type:'hl-bank-height',height:Infinity}},{data:{type:'hl-bank-height',height:NaN}},{data:{type:'hl-studio-height',height:900}}]){send(overrides);assert.equal(frame.style.height,'1050px');}
-  send();assert.equal(frame.style.height,'902px');send({data:{type:'hl-bank-height',height:1}});assert.equal(frame.style.height,'600px');
-  send({data:{type:'hl-bank-height',height:1e9}});assert.equal(frame.style.height,'30000px');
-  a.nodes.delete('learnLibraryFrame');send({data:{type:'hl-bank-height',height:1000}});assert.equal(frame.style.height,'30000px');
+test('language changes preserve the outer source/problem URL and use the same site account',async()=>{
+  const a=app('#/archive/books/astro?source='+SID+'&problem='+QID);a.node('acct').innerHTML='EXISTING_ACCOUNT';a.run('render()');await tick();
+  a.run('setLang("en")');await tick();const current=a.calls.mounts.at(-1).options;
+  assert.equal(current.lang,'en');assert.equal(current.collection,'astronomy');assert.equal(current.params.get('problem'),QID);assert.equal(current.params.get('source'),SID);assert.equal(a.node('acct').innerHTML,'EXISTING_ACCOUNT');assert.equal(a.context.location.search,'?lang=en');
+  a.context.document.documentElement.dataset.theme='dark';for(const o of a.observers)if(o.target===a.context.document.documentElement)o.callback([]);
+  assert.equal(a.calls.updates.at(-1).theme,'dark');assert.equal(a.calls.mounts.length,2);
 });
-
-test('navigating away releases the embedded bank rather than preserving it in another learning page',()=>{
-  const a=app();a.run('render()');const old=a.nodes.get('learnLibraryFrame');
-  a.context.location.hash='#/learn/physics';a.run('render()');assert.equal(a.nodes.has('learnLibraryFrame'),false);
-  a.context.location.hash='#/learn/physics/library';a.run('render()');assert.notEqual(a.nodes.get('learnLibraryFrame'),old);
+test('native login uses the existing return location and auth changes do not copy tokens into URLs',async()=>{
+  const a=app();a.run('render()');await tick();const options=a.calls.mounts[0].options;
+  a.run('cmTok("NEW_SYNTHETIC_TOKEN")');await tick();assert.equal(options.getToken(),'NEW_SYNTHETIC_TOKEN');assert.equal(a.calls.updates.length,1);
+  options.onLogin();assert.equal(a.context.location.hash,'#/login');assert.doesNotMatch(a.context.location.href,/SYNTHETIC|Bearer|token=/);
 });
-
-test('switching physics to astronomy remounts the correct collection and preserves its own heading on language changes',()=>{
-  const a=app();a.run('render()');const old=a.nodes.get('learnLibraryFrame');
-  a.context.location.hash='#/learn/astronomy/library';a.run('render()');const frame=a.nodes.get('learnLibraryFrame');
-  assert.notEqual(frame,old);assert.equal(new URL(frame.src,a.context.location).searchParams.get('collection'),'astronomy');assert.match(a.node('view').innerHTML,/천문/);
-  a.run('setLang("en")');assert.equal(a.nodes.get('learnLibraryFrame'),frame);assert.match(a.node('libraryHeading').innerHTML,/Astronomy/);
+test('navigation disposes the old reader and cannot be undone by stale module resolution',async()=>{
+  const a=app();a.run('render()');a.context.location.hash='#/archive/schools/astro';a.run('render()');await tick();
+  assert.equal(a.calls.mounts.length,1);const options=a.calls.mounts[0].options;assert.equal(options.kind,'course');assert.equal(options.collection,'astronomy');
+  a.context.location.hash='#/about';a.run('render()');await tick();assert.equal(a.calls.disposed.length,1);assert.equal(a.nodes.has('archiveNative'),false);
+  options.onNavigate('#/archive/books/phys');assert.equal(a.context.location.hash,'#/about');
 });

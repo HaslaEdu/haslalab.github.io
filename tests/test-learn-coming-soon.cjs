@@ -48,8 +48,9 @@ test('physics publishes only its internal studio while other subjects keep place
       assert.match(html,language==='ko'?/문제 제작소/:/Problem Studio/);
       assert.ok(links(html).includes('#/learn/physics/studio'));
       assert.doesNotMatch(html,/learn-pending/);
-    }else if(key==='astronomy')assert.ok(links(html).includes('#/learn/astronomy/library'));else assert.match(html,language==='ko'?/준비중/:/Coming soon/);
-    assert.ok(links(html).every(href=>href.startsWith('#/learn')));
+    }else if(key==='astronomy')assert.ok(links(html).includes('#/archive/books/astro'));else assert.match(html,language==='ko'?/준비중/:/Coming soon/);
+    assert.ok(links(html).every(href=>href.startsWith('#/learn')||href.startsWith('#/archive/books/')));
+    assert.doesNotMatch(html,/data-learn-tool="library"|learn\/astronomy\/library|learn\/physics\/library/);
     assert.doesNotMatch(html,/IPhO|APhO|EuPhO|IChO|IBO|IMO|IOAA|IESO|IJSO|in preparation|when ready|준비하고 있습니다|준비가 끝나면/);
     assert.doesNotMatch(html,/<a[^>]*class="ritem"|<dd>|https?:\/\/(?:openstax|ocw\.mit|stellarium|bio\.libretexts)/);
     if(keys.includes(key)){
