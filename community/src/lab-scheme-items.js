@@ -122,14 +122,16 @@ export const schemeTotal = scheme => +scheme.total > 0 ? +(+scheme.total).toFixe
    alt «<part>/<method>»; for each part with more than one method, only the best method's items are kept (by value:
    the marks earned, or the points when the paper's maximum is reckoned; a tie keeps the lower method number). */
 const ALT = /^(.+)\/(\d+)$/;
-export function oneMethod(items, value = i => i.points) {
+/* chosen: Map part -> method number the grader showed the candidate used (by a line found on the pages); that method
+   counts for its part whatever the others earned */
+export function oneMethod(items, value = i => i.points, chosen = null) {
   const parts = new Map();
   for (const it of items || []) {
     const m = ALT.exec(String(it.alt || "")); if (!m) continue;
     const g = parts.get(m[1]) || new Map(); g.set(+m[2], (g.get(+m[2]) || 0) + (+value(it) || 0)); parts.set(m[1], g);
   }
   const best = new Map();
-  for (const [part, g] of parts) if (g.size > 1) best.set(part, [...g].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0][0]);
+  for (const [part, g] of parts) if (g.size > 1) best.set(part, chosen?.has(part) && g.has(chosen.get(part)) ? chosen.get(part) : [...g].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0][0]);
   const dropped = new Set();
   for (const it of items || []) { const m = ALT.exec(String(it.alt || "")); if (m && best.has(m[1]) && best.get(m[1]) !== +m[2]) dropped.add(it.id); }
   return { kept: (items || []).filter(it => !dropped.has(it.id)), dropped };
