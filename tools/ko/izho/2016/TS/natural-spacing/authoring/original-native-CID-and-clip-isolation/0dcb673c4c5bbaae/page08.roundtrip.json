@@ -1,0 +1,162 @@
+{
+  "source_sha256": "19f23f790b5dd43bf2303f4b597da862c5d17a0267320fee3cca7f5f015a1df8",
+  "pre_isolation_base_sha256": "0dcb673c4c5bbaae848c0a0ad22c07b4fdf683e9eb84a443cd2dfac6dcbdc7c6",
+  "isolated_page_sha256": "8bb3edb46d6f93b19bedfe8ccc10e6f148d3b5fd5569bd53420a3c14175c33f8",
+  "new_immutable_base_sha256": "177ece6843cdeab71c5671e76b0345c1347acc029d14a45ab72b69e428ad9c89",
+  "roundtrip_checks": [
+    {
+      "renderer": "MuPDF RGB",
+      "scale": 4,
+      "changed_pixels": 0
+    },
+    {
+      "renderer": "MuPDF RGB",
+      "scale": 8,
+      "changed_pixels": 0
+    },
+    {
+      "renderer": "independent external Poppler RGB",
+      "dpi": 144,
+      "changed_pixels": 0
+    }
+  ],
+  "existing_float32_associations": [
+    {
+      "original_input": {
+        "c": "f",
+        "font": "Cambria Math",
+        "size": 8.520000457763672,
+        "origin": [
+          316.75006103515625,
+          354.7699890136719
+        ],
+        "bbox": [
+          316.75006103515625,
+          348.1395263671875,
+          319.76202392578125,
+          356.6595458984375
+        ],
+        "render_mode": 0,
+        "trace_gid": 2916,
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 1.0,
+        "linewidth": null,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "stroke_color": null,
+        "stroke_opacity": null,
+        "wmode": 0,
+        "colorspace": 3
+      },
+      "exact_new_input": {
+        "c": "f",
+        "font": "Cambria Math",
+        "size": 8.520000457763672,
+        "origin": [
+          316.7500305175781,
+          354.7699890136719
+        ],
+        "bbox": [
+          316.7500305175781,
+          348.1395263671875,
+          319.7619934082031,
+          356.6595458984375
+        ],
+        "render_mode": 0,
+        "trace_gid": 2916,
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 1.0,
+        "linewidth": null,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "stroke_color": null,
+        "stroke_opacity": null,
+        "wmode": 0,
+        "colorspace": 3
+      },
+      "existing_native_position_tolerance_pt": 0.0001,
+      "maximum_delta_pt": 3.0517578125e-05
+    },
+    {
+      "original_input": {
+        "c": "0",
+        "font": "Cambria Math",
+        "size": 12.0,
+        "origin": [
+          361.27001953125,
+          352.3699951171875
+        ],
+        "bbox": [
+          361.27001953125,
+          343.0313415527344,
+          367.91455078125,
+          355.0313415527344
+        ],
+        "render_mode": 0,
+        "trace_gid": 882,
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 1.0,
+        "linewidth": null,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "stroke_color": null,
+        "stroke_opacity": null,
+        "wmode": 0,
+        "colorspace": 3
+      },
+      "exact_new_input": {
+        "c": "0",
+        "font": "Cambria Math",
+        "size": 12.0,
+        "origin": [
+          361.2699890136719,
+          352.3699951171875
+        ],
+        "bbox": [
+          361.2699890136719,
+          343.0313415527344,
+          367.9145202636719,
+          355.0313415527344
+        ],
+        "render_mode": 0,
+        "trace_gid": 882,
+        "color": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "opacity": 1.0,
+        "linewidth": null,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "stroke_color": null,
+        "stroke_opacity": null,
+        "wmode": 0,
+        "colorspace": 3
+      },
+      "existing_native_position_tolerance_pt": 0.0001,
+      "maximum_delta_pt": 3.0517578125e-05
+    }
+  ],
+  "report": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2016-complete-solutions\\2016\\native-reference-isolation\\0dcb673c4c5bbaae\\page08.roundtrip.json"
+}

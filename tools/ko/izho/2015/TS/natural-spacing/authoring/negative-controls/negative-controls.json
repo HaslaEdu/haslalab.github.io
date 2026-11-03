@@ -1,0 +1,81 @@
+{
+  "rows": [
+    {
+      "id": "fraction-bar-only-motion",
+      "source_page": 5,
+      "proof_sha256": "f95df4bd99365e5a6c63c938dbd45200acb9d420c1bed13e97ffc3b3b9333688",
+      "mutant_sha256": "712ccd0fe11a69262d8e3b38bb5c9c4ebe0d3625c208b5fc178ce46bb59e10f1",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "mutation": {
+        "actual_native_fraction_rule_alone_shifted_pt": 6.0,
+        "source_rule": {
+          "operator_indices": [
+            2747,
+            2748
+          ],
+          "rect": [
+            216.31,
+            247.9899829101562,
+            227.614,
+            248.7099829101562
+          ],
+          "paint_operator": "f*"
+        },
+        "all_math_glyphs_and_motion_metadata_unchanged": true
+      }
+    },
+    {
+      "id": "actual-fraction-numerator-only-drift",
+      "source_page": 5,
+      "proof_sha256": "f95df4bd99365e5a6c63c938dbd45200acb9d420c1bed13e97ffc3b3b9333688",
+      "mutant_sha256": "e29a3b4babc533c85633950f0f2610c2d1b7d06b99b0657f1b2bd6297a1effee",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "mutation": {
+        "actual_original_fraction_numerator_glyphs_shifted_pt": -6.0,
+        "whole_expression_relative_geometry_broken": true,
+        "mathematical_fonts_GIDs_points_paint_Y_unchanged": true
+      }
+    },
+    {
+      "id": "actual-native-Form-mathematical-point-damage",
+      "source_page": 1,
+      "proof_sha256": "07f52f56e81b8c61a61d7cc672daf996c62b70b27e5838b50374627fea445e27",
+      "mutant_sha256": "b71fb88ecca84012197f443787903f9732dbcbe994c2ae19d4392bb72854cc61",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "mutation": {
+        "literal_original_Form_program_modified": true,
+        "actual_original_Tf_increment": 1.5,
+        "original_Tf": 7.536,
+        "original_Tm_linear_unchanged": true,
+        "mathematical_point_style_corrupted": true
+      }
+    },
+    {
+      "id": "actual-native-displayed-counter-drift",
+      "source_page": 9,
+      "proof_sha256": "441a31e72d7ebd8651039befc31973951a8bd268b72f3655c463be2068eaa3d3",
+      "mutant_sha256": "05a8c88ca61946d6479a93b6a42a99843dbfe4562d53bc89ea97ae15bc64d04c",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "mutation": {
+        "actual_native_display_counter_drift_pt": -12.0,
+        "original_fonts_GIDs_points_paint_Y_unchanged": true
+      }
+    },
+    {
+      "id": "actual-native-math-covered-metadata-unchanged",
+      "source_page": 5,
+      "proof_sha256": "f95df4bd99365e5a6c63c938dbd45200acb9d420c1bed13e97ffc3b3b9333688",
+      "mutant_sha256": "46cd55599c297bf7663e3541e04dc38b64b59bf4bb8abfbf32a7a029a9f251d7",
+      "negative_rejected": true,
+      "delivered_proof_unmodified": true,
+      "all_original_glyph_font_GID_point_Y_metadata_unchanged": true,
+      "missing_actual_native_ink_pixels": 161
+    }
+  ],
+  "passed": true,
+  "all_actual_bad_PDFs_rejected": true
+}

@@ -1,0 +1,65 @@
+{
+  "output_sha256": "c23df8d2bd30a7d6cf91edab4344d742f79c95835f40656c6e6d03d6ebee8494",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2015-complete-solutions\\natural\\2015\\TS\\page04.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2015-complete-solutions\\natural\\2015\\TS\\page04.pdf",
+    "final_page": 1,
+    "source_sha256": "be5d302f81073c438d3a4ec302119a6a04bb1c5c4319e86a5fa0419eaaccadcd",
+    "output_sha256": "c23df8d2bd30a7d6cf91edab4344d742f79c95835f40656c6e6d03d6ebee8494",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 528,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 528,
+      "expected_signature_count": 528,
+      "matched_outline_uses": 528,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 72127,
+    "inherited_stationary_source_occluded_pixels": 49,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      368.75,
+      763.5,
+      369.0,
+      763.75
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "kind": "source2015-complete-original-equation16-native-program-v1",
+    "method": "One full-page unhinted SVG edge sample is independently checked against all40 exact original equation16 encoded CIDs, original clips/rules/fonts/fractional points/paint and stationary source coordinates. Exact original native-program reference RGB matches the delivered PDF in BOTH MuPDF and Poppler at4x/8x/12x; same-integer cropped SVG4x/8x/12x also shows zero missing ink. Raw full-page1pixel diagnostic retained; no mathematical ink or physical source glyph is excluded and no global threshold is changed.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "exact_original_native_expression_glyphs": 40,
+    "original_native_reference_missing_pixels": 0,
+    "native_reference_nonwhite_RGB_errors": 0,
+    "native_reference_renderers": [
+      "MuPDF",
+      "Poppler"
+    ],
+    "native_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "cropped_SVG_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "cropped_SVG_native_ink_missing_pixels": 0,
+    "witness": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2015-complete-solutions\\natural\\2015\\TS\\..\\..\\2015-page04-original-equation16-program\\witness-with-exact-CID-programs.json",
+    "witness_sha256": "9af9ef1e30b4bad1f914eaaa5f00bfad7be51a1ce1cc5e4c82a276e44a457147",
+    "proof_unmodified": true,
+    "mathematical_ink_excluded": false,
+    "path": "tools/ko/izho/2015/TS/natural-spacing/witnesses/page04-native-cid.json"
+  }
+}

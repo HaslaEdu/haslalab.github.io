@@ -1,0 +1,49 @@
+{
+  "source_sha256": "19f23f790b5dd43bf2303f4b597da862c5d17a0267320fee3cca7f5f015a1df8",
+  "source_page": 5,
+  "proof_sha256": "e3c95e6dc89b32d69f54edd98d9ceba7a601c685f37d6bc49c00c9047d9b665f",
+  "plan_sha256": "8337f8b989e7d502096217781462c33a9a2948cce7cb139e72b878e5700bcfac",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 1,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          22,
+          0
+        ]
+      ],
+      "baseline": 373.3699951171875,
+      "source_center": 312.47765350341797,
+      "independent_original_source_centers": [
+        312.47765350341797
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 222.18307495117188,
+      "actual_nonspace_glyph_right": 402.772216796875,
+      "actual_center": 312.47764587402344,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 17,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          22,
+          0
+        ],
+        "source_text": "Problem 3. Nonlinear capacitor (10,0 points) ",
+        "original_center": 312.47765350341797,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

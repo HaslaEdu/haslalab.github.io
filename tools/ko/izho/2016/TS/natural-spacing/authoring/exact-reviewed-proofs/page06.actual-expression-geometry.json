@@ -1,0 +1,81 @@
+{
+  "source_sha256": "19f23f790b5dd43bf2303f4b597da862c5d17a0267320fee3cca7f5f015a1df8",
+  "proof_sha256": "d3c42af57534a7906adb9165451bbd160b96dbc5985f13d3831146810eaf6767",
+  "plan_sha256": "c2bd7929c306c1797709b19e62d81f9b37d2b56bfc6e8ff435805a66174f577d",
+  "source_page": 6,
+  "method": "Read actual final native CID/GID/font/point/paint/Y/X and every complete original source graphical path inside each human-reviewed expression bounds. Declared motion is only a coordinate locator; actual final path geometry and actual final native text must independently match the original transformed by exactly that one dx. Original score/separate-display glyphs independently checked at exact original x/y. No PDF changes or threshold changes.",
+  "groups": [
+    {
+      "label": "Full original2016 source page visually read: inline I~cos omega t=sin(omega t-pi/2) complete fraction. Complete original encoded native expression, including all scripts and every original contained vector fraction/root rule, moves by one common dx. Source font/GID/fractional Tf/Tm/paint/Y and relative geometry preserved; selected authored English prose excluded explicitly. No scaling or math retyping.",
+      "source_rect": [
+        423,
+        600,
+        552,
+        631
+      ],
+      "original_native_glyphs": 19,
+      "declared_dx": -196.65162658691406,
+      "actual_native_CID_font_GID_point_paint_Y_and_X_errors": [],
+      "declared_glyph_dx_spread": 0.0,
+      "actual_original_paths": [
+        {
+          "source_rect": [
+            538.2999877929688,
+            615.7899780273438,
+            544.0599975585938,
+            616.6300048828125
+          ],
+          "expected_dx": -196.65162658691406,
+          "expected_final_rect": [
+            341.6483612060547,
+            615.7899780273438,
+            347.4083709716797,
+            616.6300048828125
+          ],
+          "actual_complete_path_matches": 1,
+          "passed": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "label": "Full original2016 source page visually read: inline phi=-pi/2 complete fraction. Complete original encoded native expression, including all scripts and every original contained vector fraction/root rule, moves by one common dx. Source font/GID/fractional Tf/Tm/paint/Y and relative geometry preserved; selected authored English prose excluded explicitly. No scaling or math retyping.",
+      "source_rect": [
+        82,
+        638,
+        130,
+        664
+      ],
+      "original_native_glyphs": 6,
+      "declared_dx": 54.959999084472656,
+      "actual_native_CID_font_GID_point_paint_Y_and_X_errors": [],
+      "declared_glyph_dx_spread": 0.0,
+      "actual_original_paths": [
+        {
+          "source_rect": [
+            117.9800033569336,
+            648.9400024414062,
+            123.74000549316406,
+            649.7799682617188
+          ],
+          "expected_dx": 54.959999084472656,
+          "expected_final_rect": [
+            172.94000244140625,
+            648.9400024414062,
+            178.70000457763672,
+            649.7799682617188
+          ],
+          "actual_complete_path_matches": 1,
+          "passed": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "complete_groups_checked": 2,
+  "native_glyphs_checked": 25,
+  "actual_source_graphical_paths_checked": 2,
+  "stationary_score_and_display_glyphs_checked": 0,
+  "stationary_glyph_errors": [],
+  "passed": true
+}

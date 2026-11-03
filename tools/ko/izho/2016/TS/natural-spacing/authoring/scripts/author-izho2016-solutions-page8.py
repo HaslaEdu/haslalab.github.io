@@ -1,0 +1,10 @@
+from izho2016_authoring import begin,around,finish
+p=begin(8)
+for at,ref in [('4,2,0','(9)'),('7,0,0','(10)'),('10,0,0','(11)'),('14,1,0','(12)'),('16,6,0','(14)'),('18,10,0','(17)'),('21,1,0','(18)'),('23,0,0','(20)'),('33,3,0','(22)'),('36,4,0','(23)'),('41,4,0','(24)'),('44,4,0','(25)'),('44,7,0','(26)'),('44,10,0','(27)')]:around(p,at,['식 ',' '],[ref])
+around(p,'4,0,0',['식 ',': 다음 관계를 얻음 '],['(8)'])
+for at,ref in [('13,0,0','(11)'),('16,3,0','(12)'),('18,4,0','(14)')]:around(p,at,['식 ','의 수치 '],[ref])
+for at,ref in [('33,0,0','(21)'),('41,1,0','(23)'),('44,1,0','(24)')]:around(p,at,['식 ',': 올바른 수치 '],[ref])
+around(p,'18,7,0',['식 ', ' 및 ',' 또는 동등한 식 '],['(15)','(16)'])
+p.add('36,1,0','올바른 벡터도 또는 임피던스 ')
+p.add('44,12,0','합계 ')
+finish(p,[],'Full original2016 page8 read at144dpi. This entire page is the continuation of the original Problem3 rubric, with distinct content, points and bold grouped subtotal columns. Preserve native page-top continuation fraction R/(U0-q/C(q)) at its original position and every original grid, grade, sum10,0 and source formula. Translate all source English including every Equation label, numerical-value criterion, vector-diagram criterion and Total. Every same-row label+formula including square roots, nested denominator fractions and eff subscripts must pack as one or more complete original CID/rule/clip units with preserved relative geometry, never an English-width blank. Preserve original Cyrillic unitglyphs as encoded native mathematical unit text. No display counters appear on this page.')
