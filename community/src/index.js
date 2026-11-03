@@ -2575,6 +2575,38 @@ async function labAuditSteps(env, s, task, mine, scheme, raw, m, family, kind, t
   }
   return { raw: { ...raw, items }, log };
 }
+/* bench grade.chat: grading as a teacher would ask for it in a chat window (GPT-6 Luna in ChatGPT misgraded little):
+   the official papers, the photos and their transcripts, a short instruction, the model's own analysis, then one score
+   sheet on the scheme's lines. No grading rules, no checks in code: the code only adds the marks up. */
+const CHAT_SCHEMA = { type: "object", properties: { analysis: { type: "string" }, items: { type: "array", items: { type: "object", properties: {
+  id: { type: "string" }, score: { type: "number" }, note: { type: "string" } }, required: ["id", "score"] } } }, required: ["items"] };
+async function labChatGrade(env, s, task, mine, scheme, lang, m, { reads = true, pdfs = true } = {}) {
+  const parts = [{ text: [`[TASK: grade] You are an experienced ${s.comp.toUpperCase()} marker. A teacher hands you one student's paper for task ${task} of the ${s.comp.toUpperCase()} ${s.year} exam and asks you to grade it.`,
+    "Attached are the official problem, solution and marking scheme, then the student's answer sheets and working sheets (each photo with a transcript of it; the photo decides where they differ).",
+    "Grade the student's work against the official marking scheme the way the official markers would: give the marks for what the student actually achieved, credit correct work written in another form or another valid way, and give no marks for what is not there or is wrong.",
+    `First write your analysis, briefly, question by question. Then fill in the score sheet given at the end: one entry for every line, with the score you give (from 0 up to the line's points) and a short note in ${lang === "en" ? "English" : "Korean"}.`].join("\n") }];
+  const canonical = pdfs ? labCanonicalSource(s, task) : null;
+  if (canonical) for (const [name, source] of [["problem", canonical.paper], ["solution", canonical.sol], ["marking scheme", canonical.mark]]) {
+    if (!source) continue;
+    const bytes = await labCanonicalPdf(env, source); if (!bytes) throw new HttpError(502, "reference_unavailable");
+    parts.push({ text: `[Official ${name}, task ${task}]` }, { inline_data: { mime_type: "application/pdf", data: b64(bytes) }, label: `Official ${name} for ${s.comp} ${s.year} ${task}` });
+  }
+  const order = [...mine].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || a.no - b.no);
+  for (const p of order) {
+    parts.push({ text: `[Student page ${p.no}: ${p.kind === "answer" ? "answer sheet" : p.kind === "working" ? "working sheet" : p.kind}]` + (reads && p.ocr ? `\nTranscript:\n${p.ocr}` : "") });
+    const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), img = row && await labPageBytes(env, row);
+    if (img && row.mime !== "text/plain") parts.push({ inline_data: { mime_type: row.mime, data: b64(img) }, label: `Student page ${p.no}` });
+  }
+  const sheet = scheme.items.map(it => `${it.id} | ${it.points} | ${String(it.what || "").slice(0, 220)}${it.alt ? ` (alternative method ${it.alt}: marks only for the method the student used)` : ""}`);
+  parts.push({ text: "Score sheet (id | points | what earns them):\n" + sheet.join("\n") });
+  const r = await labVision(env, s, parts, CHAT_SCHEMA, 32768, m, "grade", 0);
+  const by = new Map((Array.isArray(r.raw?.items) ? r.raw.items : []).filter(x => x && x.id != null).map(x => [String(x.id), x]));
+  const rv = it => Math.max(0, Math.min(+it.points || 0, +by.get(String(it.id))?.score || 0));
+  const total = cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv);
+  return { score: +Math.min(scheme.points, total).toFixed(2), points: scheme.points, grader: r.model, scheme_items: scheme.items.length, scheme_points: scheme.points,
+    analysis: String(r.raw?.analysis || "").slice(0, 6000), missing: scheme.items.filter(it => !by.has(String(it.id))).map(it => it.id),
+    items: scheme.items.map(it => ({ id: it.id, got: rv(it), raw: by.has(String(it.id)) ? +by.get(String(it.id)).score : null, points: it.points, note: String(by.get(String(it.id))?.note || "").slice(0, 300) })) };
+}
 async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null) {
   // Typed solutions need their own structured evidence before the numeric/graph/table checks in labScore.
   for (const p of mine) if (p.mime === "text/plain" && (!p.read || JSON.parse(p.read).structure_status !== "done")) {
@@ -3186,6 +3218,8 @@ async function labBench(env, s, job) {
       /* spec.scheme names the model that builds the marking scheme (kept under that model's own key, no fallback) */
       const prod = labRoles(env, s, true), scheme = spec.scheme ? await labScheme(env, as(spec.scheme), spec.task, m, true) : await labScheme(env, labSchemer(env, s, prod), spec.task, null);
       if (spec.scheme && (!scheme || scheme.unscored)) throw new Error('bench_no_scheme');
+      if (spec.grade.chat === true) out = await labChatGrade(env, as(spec.grade), spec.task, mine, scheme, spec.lang === 'en' ? 'en' : 'ko', m, { reads: spec.grade.reads !== false, pdfs: spec.grade.pdfs !== false });
+      else {
       const roles = { read: prod.read, readBench: prod.readBench, grade: spec.grade.provider, moderate: spec.moderate?.provider || null, bench: true,
         moderateBench: spec.moderate ? { model: spec.moderate.model, thinking: spec.moderate.thinking, api: spec.moderate.api, tier: spec.moderate.tier } : undefined, moderateScope: spec.moderate?.scope === "all" ? "all" : "down",
         gradeImages: spec.grade.images !== false, pdfs: !!spec.grade.pdfs, noReads: spec.grade.reads === false, exprCheck: spec.grade.expr !== false, tools: spec.grade.tools === true ? true : undefined, doubleGrade: spec.grade.double === true ? true : undefined, focusRead: spec.grade.focus === true ? true : undefined, focusEngine: spec.grade.focusEngine === 'gemini' || spec.grade.focusEngine === 'mathpix' ? spec.grade.focusEngine : undefined, tone: spec.grade.tone === "neutral" ? "neutral" : spec.grade.tone === "strict" ? "strict" : undefined,
@@ -3203,6 +3237,7 @@ async function labBench(env, s, job) {
       const rawBy = new Map((res.raw_items || []).map(x => [x.id, x.score])), rv = it => Math.max(0, Math.min(+it.points || 0, rawBy.get(String(it.id)) ?? 0));
       out = { expr_checks: res.expr_checks, tool_calls: res.tool_calls, focus_reads: res.focus_reads, audit: res.audit, raw_items: res.raw_items, score: res.score, raw_score: cappedSum(oneMethod(scheme.items, rv).kept, scheme.parts, scheme.total, rv), points: res.points, grader: res.grader, scheme_items: scheme.items.length, scheme_points: scheme.points,
         items: res.items.map(i => ({ id: i.id, got: i.got, raw: rawBy.get(String(i.id)) ?? null, points: i.points, value: i.value ?? null, moderated: !!i.moderated, by: i.by, rules: i.rules || [], note: i.note || '' })) };
+      }
     } else throw new Error('bench_stage');
   } catch (e) { failed = true; out = { error: String(e?.code || e?.message || 'bench_failed').slice(0, 200), ...(e?.provider_message ? { detail: String(e.provider_message).slice(0, 240) } : {}) }; }
   const calls = m.calls.map(c => ({ step: c.step, model: c.model, in: c.in, cached: c.cached, out: c.out, usd: c.usd, ms: c.ms, ok: c.ok, error: c.error || null }));

@@ -276,6 +276,32 @@ test('the admin model bench runs a stage with other models and keeps the result 
   assert.equal(sql.prepare('SELECT read FROM lab_pages WHERE id=?').get(page.id).read,page.read,'its pages too');
   assert.equal(sql.prepare('SELECT count(*) n FROM lab_calls').get().n,metered,'and its metering');
 }));
+test('bench grade.chat: the papers, photos and transcripts with a short instruction, one score sheet, and only the sum in code',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:3,items:[
+    {id:'S',points:1,type:'derivation',role:'step',sheet:'any',what:'Newton\'s law for the orbit'},{id:'R',points:2,type:'derivation',role:'result',sheet:'answer',what:'Expression of the velocity'}]}),'fixture',Math.floor(Date.now()/1000));
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();
+  const page=sql.prepare('SELECT id FROM lab_pages WHERE session_id=?').get(sid);
+  sql.exec(`CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)`);
+  const bench=async spec=>{const b=sql.prepare('INSERT INTO lab_bench(session_id,spec)VALUES(?,?)').run(sid,JSON.stringify(spec)).lastInsertRowid;
+    const j=sql.prepare("INSERT INTO lab_jobs(job_key,kind,session_id,page_id,status,available_at,created_at,updated_at)VALUES(?,'bench',?,?,'pending',0,0,0)").run('bench:'+b,sid,b).lastInsertRowid;
+    await env.LAB_JOBS.sendBatch([{body:{v:1,jobId:Number(j)}}]);await drain();return sql.prepare('SELECT * FROM lab_bench WHERE id=?').get(b);};
+  const read=await bench({stage:'read',page_id:page.id,read:{provider:'gemini',model:'gemini-3.6-flash',thinking:'low'}});
+  replies({analysis:'A: correct.',items:[{id:'S',score:1,note:'implied'},{id:'R',score:5,note:'too many'}]},null);
+  calls.length=0;
+  const graded=await bench({stage:'grade',task:'T1',grade:{provider:'gemini',model:'gemini-3.8-flash',thinking:'low',chat:true},reads:{[page.id]:Number(read.id)}});
+  assert.equal(graded.status,'done',graded.output);
+  assert.equal(calls.length,1,'one call, no recheck');
+  const c=calls[0];assert.match(c.text,/A teacher hands you one student's paper/);assert.match(c.text,/S \| 1 \| Newton's law for the orbit/,'the score sheet');
+  assert.ok(!/R13|R9/.test(c.text),'no grading rules');assert.ok(JSON.stringify(c.body).includes('application/pdf'),'the official papers go with it');
+  const out=JSON.parse(graded.output);
+  assert.equal(out.score,3,'each line capped at its points, then added');assert.deepEqual(out.items.map(i=>[i.id,i.got]),[['S',1],['R',2]]);
+  assert.equal(out.analysis,'A: correct.');
+}));
 test('theory pages are read with the paper\'s notation and proofread: only the passages the proofreader corrects change',async()=>fixture(async({api,start,upload,drain,calls,sql,env})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-flash-lite';env.LAB_READ_NOTATION='on';env.LAB_PROOF_MODEL='gemini-3.1-pro-preview';env.LAB_PROOF_THINKING='low';
   const saved={...pageReading};Object.assign(pageReading,{text:'A.2 a_c = 9.31 mm\nA.3 K = 1.04 \\cdot 10^{-4}',items:[{label:'A.2',kind:'value',text:'a_c = 9.31 mm',crossed_out:false,value:9.31,unit:'mm'}]});
