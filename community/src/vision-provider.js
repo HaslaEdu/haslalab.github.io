@@ -111,9 +111,12 @@ export const TRANSCRIPT_POLICY='Transcribe student handwriting exactly, preservi
 
 /** One bounded selected-provider call; errors retain any known paid usage. */
 export async function visionJSON(env,{provider,stage='grade',policy='',input={},images=[],parts,schema,maxTokens=8192,temperature=0,
-  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null,openaiApi=null,serviceTier=null}={}) {
+  model:chosen,thinking,timeoutMs=110000,signal,fetchImpl=globalThis.fetch,tools=null,onTool=null,maxToolRounds=3,mediaResolution=null,busyRetries=[],geminiTools=null,openaiApi=null,serviceTier=null,geminiUrl=null,geminiBearer=null}={}) {
   provider=requireVisionProvider(env,provider);
-  const model=benchModel(provider,chosen)||(provider==='tuned'?String(env.TUNED_MODEL||'').trim():STAGE_MODELS[provider]),url=provider==='anthropic'?null:endpoint(env,provider,model),started=Date.now();
+  const model=benchModel(provider,chosen)||(provider==='tuned'?String(env.TUNED_MODEL||'').trim():STAGE_MODELS[provider]),started=Date.now();
+  /* a Gemini tuned on Vertex AI (vertex-tuning.js): its endpoint's generateContent with the service account's token */
+  const tunedGemini=provider==='gemini'&&typeof geminiUrl==='string'&&/^https:\/\/[a-z0-9.-]+\.googleapis\.com\/v1\/projects\/[\w-]+\/locations\/[\w-]+\/endpoints\/\d+:generateContent$/.test(geminiUrl)&&!!geminiBearer;
+  const url=provider==='anthropic'?null:tunedGemini?geminiUrl:endpoint(env,provider,model);
   const level=thinking||env.GEMINI_THINKING_LEVEL||'minimal';
   let usage=null,timer,aborted=false,providerStatus,providerCode,providerMessage;
   let rejectAbort;
@@ -168,7 +171,7 @@ export async function visionJSON(env,{provider,stage='grade',policy='',input={},
   signal?.addEventListener('abort',abort,{once:true});
   const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{aborted=true;controller.abort();reject(new VisionProviderError(504,'vision_provider_timeout',{provider,stage}));},Math.max(1,Math.min(300000,timeoutMs)));});
   const send=payload=>fetchImpl(url,{method:'POST',headers:{'Content-Type':'application/json',
-      ...(provider==='gemini'?{'x-goog-api-key':keyOf(env,provider)}:{Authorization:'Bearer '+keyOf(env,provider)})},
+      ...(tunedGemini?{Authorization:'Bearer '+geminiBearer}:provider==='gemini'?{'x-goog-api-key':keyOf(env,provider)}:{Authorization:'Bearer '+keyOf(env,provider)})},
       // workerd rejects redirect:'error' before sending any request. Manual
       // keeps credentials on this origin; every non-2xx response fails below.
       body:payload,signal:controller.signal,redirect:'manual'});
