@@ -47,7 +47,7 @@ assert.deepEqual(PaperLanguages.bundle([{paper:'IChO_2008_T_EN.pdf',containsSolu
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const hrefStart = html.indexOf('function theoryHref(');
 const hrefEnd = html.indexOf('/* a problem card', hrefStart);
-const context = {PaperLanguages,URLSearchParams,lang:'en',THY_WHOLE:new Set(['ispho']),
+const context = {PaperLanguages,URLSearchParams,lang:'en',THY_WHOLE:new Set(),KO_TYPESET:new Set(['ispho']),
   thyOf:(key,year)=>catalogue[key][year],compOf:()=>({abbr:'Test'}),yearPair:()=>false};
 vm.createContext(context);
 vm.runInContext(html.slice(hrefStart,hrefEnd), context);

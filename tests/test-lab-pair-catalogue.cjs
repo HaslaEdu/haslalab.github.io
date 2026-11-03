@@ -45,10 +45,10 @@ test('age/stage profiles never pair a theory paper with another stage or an unre
 test('generated backend pairs preserve complete IPhO sittings and omit known partial or already combined years',async()=>{
   const {LAB_PAIR_CATALOGUE:catalogue}=await import('../community/src/lab-pair-catalog.js');
   assert.deepEqual(catalogue.ipho['2025'],[{id:'default',theory:[['T1','T2','T3']],lab:[['E1','E2']]}]);
-  assert.deepEqual(catalogue.ispho['2026'],[{id:'default',theory:[['T']],lab:[['E1']]}]);
-  // T1 (solved on the organisers' program) is a theory problem sat with its paper: 2024 and 2025 are complete sets,
-  // 2023 has no experiment
-  for(const year of ['2024','2025'])assert.deepEqual(catalogue.ispho[year],[{id:'default',theory:[['T']],lab:[['E1']]}]);
+  assert.deepEqual(catalogue.ispho['2026'],[{id:'default',theory:[['T1','T2','T3']],lab:[['E1']]}]);
+  // ISPhO's theory is sat problem by problem (T1, T2, T3, each cut from the booklet), T1 solved on the organisers'
+  // program among them: 2024 and 2025 are complete sets, 2023 has no experiment
+  for(const year of ['2024','2025'])assert.deepEqual(catalogue.ispho[year],[{id:'default',theory:[['T1','T2','T3']],lab:[['E1']]}]);
   assert.equal(catalogue.ispho['2023'],undefined,'ISPhO 2023 has no experiment round');
   assert.equal(catalogue.nbpho,undefined,'NBPhO already combines its theory and experiment');
   assert.equal(catalogue.ioaa,undefined,'individual observation/data analysis/team simulators are not the complete practical round');

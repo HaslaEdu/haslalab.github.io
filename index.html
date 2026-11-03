@@ -1133,7 +1133,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=cd23758edf22"></script>
-<script src="site-catalogue.js?v=c7f3f96d2d2d"></script>
+<script src="site-catalogue.js?v=c97bc342ef67"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=093476a8bf6d"></script>
@@ -4602,8 +4602,12 @@ for(const y of (DATA.nbpho||{years:[]}).years){ const t=thyOf("nbpho",y.y); if(!
 hydrateCatalogue();
 /* the theory exams of a year: each age group (Ta, Tb) or round (Ti) and a multiple-choice paper on its own; the
    problems T1, T2, … sat together (four at most at a time), else the whole paper T — only parts with a solution */
-/* ISPhO: the exam sits the whole paper as it was handed out (its cover, instructions and every problem), not its problems cut apart */
-const THY_WHOLE=new Set(["ispho"]);
+/* competitions whose theory is sat as the whole paper (its cover, instructions and every problem), never its problems cut
+   apart. ISPhO left it (the owner, 2026-11-03): its problems T1, T2, T3 are sat and graded one by one, each with its own
+   paper, answer sheets and solution cut from the official booklets, like IPhO's */
+const THY_WHOLE=new Set([]);
+/* in Korean, the translated paper typeset as the original (ISPhO's per-problem Korean papers) rather than the English one */
+const KO_TYPESET=new Set(["ispho"]);
 // These Eötvös years have both a published Hungarian paper and an archived solution report.
 const EOTVOS_TIMED=new Set([2014,2015,2016,2020]);
 /* a theory problem solved on a simulator (ISPhO 2023–2025 T1: the organisers' program, ported to the site): a year's
@@ -5373,8 +5377,8 @@ function theoryHref(key,yr,parts){
   const t=thyOf(key,yr.y), f=x=>t.f[x]||{}, all=parts.map(x=>(x==="T"&&!t.f.T1?(t.p||[]):(t.p||[]).filter(q=>q[0]===x)).map(q=>q[1]).join(" / ").slice(0,300));
   const bundle=PaperLanguages.bundle(parts.map(f),lang);
   const q=new URLSearchParams({m:"t",c:key,y:yr.y,n:compOf(key).abbr,e:parts.join(","),t:all.join("|"),
-    /* ISPhO: in Korean the whole translated paper, typeset as the original */
-    p:parts.map(x=>THY_WHOLE.has(key)&&lang==="ko"&&(f(x).ko||{}).paper||f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),
+    /* ISPhO: in Korean the translated paper, typeset as the original */
+    p:parts.map(x=>KO_TYPESET.has(key)&&lang==="ko"&&(f(x).ko||{}).paper||f(x).paper||"").join("|"),s:parts.map(x=>f(x).sol||"").join("|"),k:parts.map(x=>f(x).mark||"").join("|"),
     /* the sheets the candidate writes on: in Korean the translated answer sheets and working sheet, where there are */
     a:parts.map(x=>lang==="ko"&&(f(x).ko||{}).answer||f(x).answer||"").join("|"),...(lang==="ko"&&t.wk?{w:t.wk}:t.we?{w:t.we}:{}),lang});
   if(bundle.language){
