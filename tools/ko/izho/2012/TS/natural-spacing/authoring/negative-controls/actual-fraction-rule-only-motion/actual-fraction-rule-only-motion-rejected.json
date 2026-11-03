@@ -1,0 +1,46 @@
+{
+  "source_sha256": "41a2fa97853ffdf4ee0bc3a2e665c79387741beeff41d6cc9df29591335410db",
+  "source_base_sha256": "fa7e8d1212e641d77d2555fdf743ef590f6eedc458f8458650f155fe536fbcd0",
+  "proof_sha256": "3dcca82f87819ef8da1f33214f59f3c85f999cbc368535a7a9f87176779c509e",
+  "method": "Independent actual final-PDF original native font/GID/point/y matching AND actual painted fraction-rule endpoint/paint-operator matching at the same common horizontal dx. Do not infer rule movement from glyph metadata or from the motion journal alone.",
+  "groups": [
+    {
+      "label": "Complete original a=17/29 g",
+      "original_native_glyphs": 7,
+      "source_native_font_gid_point_y_and_actual_dx_matched": true,
+      "glyph_errors": [],
+      "actual_native_common_dx": -44.63648986816406,
+      "actual_native_relative_dx_spread_pt": 1.52587890625e-05,
+      "original_fraction_rules": [
+        {
+          "original": {
+            "operator_indices": [
+              1028,
+              1029,
+              1030
+            ],
+            "rect": [
+              246.61712872832,
+              685.0387313281562,
+              259.82294792832,
+              685.0387313281562
+            ],
+            "paint_operator": "S"
+          },
+          "expected_actual_rect": [
+            201.98063886015595,
+            685.0387313281562,
+            215.18645806015593,
+            685.0387313281562
+          ],
+          "actual_matching_painted_paths": [],
+          "passed": false
+        }
+      ],
+      "passed": false
+    }
+  ],
+  "reviewed_complete_expressions": 1,
+  "original_fraction_rules_checked": 1,
+  "passed": false
+}

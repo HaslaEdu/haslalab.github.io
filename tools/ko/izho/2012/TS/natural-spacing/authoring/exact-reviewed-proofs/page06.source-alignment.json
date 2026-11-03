@@ -1,0 +1,81 @@
+{
+  "source_sha256": "41a2fa97853ffdf4ee0bc3a2e665c79387741beeff41d6cc9df29591335410db",
+  "source_page": 6,
+  "proof_sha256": "9c32f07f4babf4d6eec3055ed4add7b8f72bc3db4d9319fe7715e19950641b7e",
+  "plan_sha256": "18089cf1b81eccf8db3d787dba1a09dce452322faa0920fdc8d4d5b10b9b9f67",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 80.760009765625,
+      "source_center": 318.9966735839844,
+      "independent_original_source_centers": [
+        318.9966735839844
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 296.6230773925781,
+      "actual_nonspace_glyph_right": 341.3702697753906,
+      "actual_center": 318.9966735839844,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 6,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          1,
+          1
+        ]
+      ],
+      "baseline": 102.47998046875,
+      "source_center": 318.9725112915039,
+      "independent_original_source_centers": [
+        318.9725112915039
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 243.83163452148438,
+      "actual_nonspace_glyph_right": 394.1133728027344,
+      "actual_center": 318.9725036621094,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 22,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 2,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "Problem 2  ",
+        "original_center": 318.9966735839844,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          1,
+          1
+        ],
+        "source_text": "Adventures of a piston (10 points) ",
+        "original_center": 318.9725112915039,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

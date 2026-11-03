@@ -1,0 +1,94 @@
+{
+  "source_sha256": "41a2fa97853ffdf4ee0bc3a2e665c79387741beeff41d6cc9df29591335410db",
+  "source_page": 2,
+  "proof_sha256": "0d2a574e37eb9f716f85c050df968caf271ed7ad87a16922554ba8044331fe56",
+  "plan_sha256": "c7d59dbf35b3f8e652795c82cdc7224503e3a61c78321c034d58afe7061304d6",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 2,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          1,
+          0
+        ]
+      ],
+      "baseline": 78.8399658203125,
+      "source_center": 318.9689407348633,
+      "independent_original_source_centers": [
+        318.9689407348633
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 260.2532958984375,
+      "actual_nonspace_glyph_right": 377.6845703125,
+      "actual_center": 318.96893310546875,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 20,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          2,
+          2
+        ]
+      ],
+      "baseline": 107.27996826171875,
+      "source_center": 490.67999267578125,
+      "independent_original_source_centers": [
+        490.67999267578125
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 478.67999267578125,
+      "actual_nonspace_glyph_right": 502.67999267578125,
+      "actual_center": 490.67999267578125,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 2,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 3,
+    "rows": [
+      {
+        "source_at": [
+          1,
+          0
+        ],
+        "source_text": "Grading scheme of Problem 1A. ",
+        "original_center": 318.9689407348633,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      },
+      {
+        "source_at": [
+          4,
+          10
+        ],
+        "source_text": "Total ",
+        "source_actual_bold_paint": true,
+        "alignment": "left",
+        "original_left": 144.47999572753906,
+        "actual_left": 144.47999572753906,
+        "passed": true
+      },
+      {
+        "source_at": [
+          6,
+          0
+        ],
+        "source_text": "Task 1.B. And diodes ",
+        "source_actual_bold_paint": true,
+        "alignment": "left",
+        "original_left": 113.4000015258789,
+        "actual_left": 113.4000015258789,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}
