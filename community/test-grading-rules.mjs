@@ -100,7 +100,7 @@ test("theory, every competition: a result item is earned by the answer alone, a 
 test("IPhO-style theory: a part given only as a total, and a unit slip, follow the official schemes", () => {
   const ip9 = rulesFor("ipho", "theory").find(r => r.id === "IP9");
   assert.ok(ip9, "IP9 for IPhO-style theory");
-  assert.match(ip9.en, /at most half/); assert.match(ip9.en, /at most two thirds/);
+  assert.match(ip9.en, /about half for the set-up alone/); assert.match(ip9.en, /never the whole part/); assert.match(ip9.en, /at most two thirds/);
   assert.ok(!rulesFor("ipho", "experiment").some(r => r.id === "IP9"));
   const r3 = rulesFor("ipho", "theory").find(r => r.id === "R3");
   assert.match(r3.en, /loses 0\.1 pt, never the whole item/);
