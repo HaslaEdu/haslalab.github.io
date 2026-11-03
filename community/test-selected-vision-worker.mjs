@@ -469,6 +469,43 @@ test('an item the grader left out is graded once more, and a step found again in
   assert.match(detail,/"id":"S1"[^}]*"got":0\.7/,'found again in the photos');
   assert.match(detail,/"id":"M"[^}]*"got":0\.6/,'graded the second time');
 }));
+test('split grading: a long paper is graded in groups of whole questions over the same prefix, and the groups\' items come back together',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  env.LAB_GRADE_SPLIT='on';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  const A=Array.from({length:20},(_,k)=>({id:'A.'+(k+1),points:0.1,type:'derivation',role:'result',sheet:'any',what:'a'+k})),B=Array.from({length:20},(_,k)=>({id:'B.'+(k+1),points:0.1,type:'derivation',role:'result',sheet:'any',what:'b'+k}));
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:4,items:[...A,...B]}),'fixture',Math.floor(Date.now()/1000));
+  const g=id=>({id,found:true,page:1,label:id,rules:[],note:'',score:0.1,quote:''}),rev={summary:'s',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''};
+  replies([{items:[...A.map(x=>g(x.id)),g('B.1')],feedback:[{note:'good',kind:'good'}],review:rev},{items:B.map(x=>g(x.id)),feedback:[],review:rev}],null);
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  const grades=calls.filter(c=>c.text.includes('[TASK: grade]'));
+  assert.equal(grades.length,2,'two groups of 20');
+  assert.match(grades[0].text,/Grade now only these scheme items[^\n]*A\.1, A\.2/);assert.match(grades[1].text,/Grade now only these scheme items[^\n]*B\.1, B\.2/);
+  assert.ok(!/Grade now only these scheme items[^\n]*B\.1/.test(grades[0].text),'a group holds whole questions');
+  const detail=JSON.parse(sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail);
+  assert.equal(JSON.stringify(detail).match(/"got":0\.1/g).length>=40,true,'every item of both groups is graded');
+}));
+test('IP1 in code: an item whose only fault is a result carried from an earlier item that lost marks is not marked down again',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
+  env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
+  env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';
+  env.LAB_ECF_RULE='on';env.LAB_R13_RECHECK='off';env.LAB_MISSING_RECHECK='off';
+  const a=(await start('deepseek')).data,sid=a.session.id;
+  sql.prepare("UPDATE lab_sessions SET sources=json_set(sources,'$.T1.kind','theory') WHERE id=?").run(sid);
+  const entry=MODEL_TEST_EXAMS.find(entry=>entry.comp==='ipho'&&entry.year===2025&&entry.task==='T1'),key=['gemini',VISION_MODELS.gemini,REG_VERSION,entry.solution,entry.mark||''].join(':');
+  sql.prepare('INSERT INTO lab_schemes(exam_key,task,source,scheme,model,created_at)VALUES(?,?,?,?,?,?)').run('ipho2025','T1',key,JSON.stringify({points:1,items:[
+    {id:'B8.2',points:0.2,type:'derivation',role:'result',sheet:'any',what:'amplitude'},{id:'B8.4',points:0.2,type:'derivation',role:'result',sheet:'any',what:'Coriolis force'},
+    {id:'B8.5',points:0.3,type:'derivation',role:'result',sheet:'any',what:'x(t)'},{id:'B8.6',points:0.3,type:'derivation',role:'result',sheet:'any',what:'period'}]}),'fixture',Math.floor(Date.now()/1000));
+  const g=(id,score,extra={})=>({id,found:true,page:1,label:id,rules:[],note:'',score,quote:'',...extra}),rev={summary:'',strengths:[],habits:[],handwriting:{rating:'clear',notes:''},presentation:''};
+  replies({items:[g('B8.2',0),g('B8.4',0.1,{carried_from:'B8.2',rules:['IP2']}),g('B8.5',0.3),g('B8.6',0,{carried_from:'B8.5'})],feedback:[],review:rev},null);
+  await upload(a.token);await api(`/lab/sessions/${sid}/pay`,{body:{provider:'deepseek'}});await drain();await api(`/lab/sessions/${sid}/submit`,{body:{provider:'deepseek'}});await drain();
+  assert.match(calls.find(c=>c.text.includes('[TASK: grade]')).text,/carried_from:/,'the grader is asked for it');
+  const detail=sql.prepare('SELECT detail FROM lab_sessions WHERE id=?').get(sid).detail;
+  assert.match(detail,/"id":"B8\.4"[^}]*"got":0\.2[,}]/,'carried from B8.2, which lost its marks: not docked again');
+  assert.match(detail,/"id":"B8\.6"[^}]*"got":0[,}]/,'B8.5 lost nothing: no carried error to excuse');
+}));
 test('suspects: every item of a question with alternative methods, and the credited steps of a question whose result was marked down, are rechecked whatever their marks',async()=>fixture(async({api,start,upload,drain,calls,sql,env,replies})=>{
   env.LAB_PIPELINE='mixed';env.LAB_READ_MODEL='gemini-3.1-pro-preview';env.LAB_READ_THINKING='low';
   env.LAB_GRADE_PROVIDER='gemini';env.LAB_GRADE_MODEL='gemini-3.8-flash';env.LAB_GRADE_THINKING='low';env.LAB_MODERATE_PROVIDER='none';

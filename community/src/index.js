@@ -1717,7 +1717,7 @@ const GRADE_SCHEMA = { type: "object", properties: {
     id: { type: "string" }, found: { type: "boolean" }, page: N({ type: "integer" }), label: N({ type: "string" }), value: N({ type: "number" }), unit: N({ type: "string" }), value_in_unit: N({ type: "number" }), unit_ok: { type: "boolean" },
     visual: N({type:'object',properties:{kind:{type:'string',enum:['value','graph','table','diagram']},box:{type:'array',items:{type:'number'}},description:{type:'string'},value:N({type:'number'}),rows:N({type:'integer'}),columns:{type:'array',items:{type:'string'}},graph:PAGE_SCHEMA.properties.items.items.properties.graph},required:['kind','box','description']}),
     checks_met: { type: "array", items: { type: "string" } }, score: { type: "number" }, expr: N({ type: "string" }),
-    rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: { type: "string" },
+    rules: { type: "array", items: { type: "string" } }, note: { type: "string" }, quote: { type: "string" }, carried_from: N({ type: "string" }),
   }, required: ["id", "found", "page", "score", "rules", "note", "quote"] } },
   feedback: { type: "array", items: { type: "object", properties: { page: N({ type: "integer" }), label: N({ type: "string" }), note: { type: "string" }, kind: { type: "string", enum: ["good", "fix"] } }, required: ["note", "kind"] } },
   review: { type: "object", properties: {
@@ -2314,6 +2314,15 @@ function labSuspects(scheme, raw) {
   for (const it of scheme.items) if (it.role === "step" && down.has(head(it.id)) && (by.get(it.id) ?? 0) > 0) out.add(it.id);
   return [...out].slice(0, 40);
 }
+/* the scheme's items in groups for split grading: whole questions (an id's first part: A1 of A1.3, B of B.2.a; a question's
+   alternative methods stay together), consecutive questions joined while a group stays under max items */
+function labItemGroups(scheme, max = 30) {
+  const qs = [];
+  for (const it of scheme.items) { const q = String(it.id).split(/[./\s]/)[0]; const last = qs.at(-1); if (last && last.q === q) last.ids.push(it.id); else qs.push({ q, ids: [it.id] }); }
+  const out = [];
+  for (const { ids } of qs) { const last = out.at(-1); if (last && last.length + ids.length <= max) last.push(...ids); else out.push([...ids]); }
+  return out;
+}
 function labScore(scheme, raw, pages, opts = {}) {
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
@@ -2424,6 +2433,17 @@ function labScore(scheme, raw, pages, opts = {}) {
   });
   finalAnswerFull(items, scheme);                                                     // a part whose correct final answer earns its marks
   impliedSteps(items, scheme);                                                       // a step credited «even if done inherently»
+  /* IP1 in code (LAB_ECF_RULE on, bench grade.ecf): an item whose only fault the grader names as a result carried over
+     from an earlier item that already lost marks is not marked down again (IPhO 2016 T1 B8.4: the Coriolis force written
+     right, docked for the amplitude B8.2 had already lost) */
+  if (opts.ecf) {
+    const order = new Map(scheme.items.map((it, k) => [it.id, k])), byId = new Map(items.map(i => [i.id, i]));
+    for (const i of items) {
+      const from = String(got.get(i.id)?.carried_from || ""), src = byId.get(from);
+      if (!src || !(order.get(from) < order.get(i.id)) || !(src.got < src.points) || i.got >= i.points || (i.rules || []).some(r => r === "R13" || r === "R9" || r === "R1")) continue;
+      i.got = i.points; i.decision = "met"; i.rules = [...new Set([...(i.rules || []).filter(r => !/^IP[123]$|^R12$/.test(r)), "IP1"])]; i.carried = from;
+    }
+  }
   /* R15: of alternative methods for one question only the one that earns most counts */
   { const alt = new Map(scheme.items.map(it => [it.id, it.alt])), { dropped } = oneMethod(items.map(i => ({ ...i, alt: alt.get(i.id) })), i => i.got, opts.methods);
     for (const i of items) if (dropped.has(i.id) && i.got > 0) { i.got = 0; i.decision = "not_met"; i.rules = [...new Set([...(i.rules || []), "R15"])]; } }
@@ -2635,9 +2655,21 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   if (useTools) parts.push({ text: "Tools: before marking an item with an official expr, call compare_expressions with the candidate's final expression; before marking a numerical item, call check_value with the candidate's number in the item's unit; before deciding that something is not written, call find_on_pages. Treat their answers as evidence about the transcript, and still apply the scheme's own partial rules. Call several tools at once where you can; then return the grading JSON." });
   /* with tools, a long paper can still end without an answer (DeepSeek, 97k tokens): grade it once more without them */
   const toolNote = useTools ? parts.at(-1) : null;
-  const gradeOnce = () => labVision(env, s, parts, GRADE_SCHEMA, 16384, m, "grade", 0, useTools ? { tools: GRADE_TOOLS, onTool: (name, args) => runGradeTool(name, args, toolCtx), maxToolRounds: roles?.toolRounds || +env.LAB_GRADE_TOOL_ROUNDS || 3 } : {})
+  const ecf = roles?.ecf ?? env.LAB_ECF_RULE === "on";
+  if (ecf) parts.push({ text: "carried_from: on an item whose only fault is a wrong result taken over from an earlier item of the same problem (used correctly here), give that earlier item's id; mark the item as the regulation's IP1 says and code checks it. Otherwise leave it out." });
+  const gradeCall = (ps, note) => labVision(env, s, note ? [...ps, note] : ps, GRADE_SCHEMA, 16384, m, "grade", 0, useTools ? { tools: GRADE_TOOLS, onTool: (name, args) => runGradeTool(name, args, toolCtx), maxToolRounds: roles?.toolRounds || +env.LAB_GRADE_TOOL_ROUNDS || 3 } : {})
     .catch(error => { if (!useTools || !['vision_response_empty', 'vision_invalid_response', 'vision_response_truncated'].includes(error?.code)) throw error;
-      console.error("lab grade tools", error.code); return labVision(env, s, parts.filter(p => p !== toolNote), GRADE_SCHEMA, 16384, m, "grade", 0); });
+      console.error("lab grade tools", error.code); const plain = ps.filter(p => p !== toolNote); return labVision(env, s, note ? [...plain, note] : plain, GRADE_SCHEMA, 16384, m, "grade", 0); });
+  /* split grading (LAB_GRADE_SPLIT on, bench grade.split): the paper's questions in groups of at most ~30 items, each
+     group graded in its own call over the same prefix (scheme, pages: the provider's cache), two at a time. One call
+     over 80 items let the grader slip on the late ones; the first group also writes the feedback and the review. */
+  const split = (roles?.split ?? env.LAB_GRADE_SPLIT === "on") ? labItemGroups(scheme, 30) : null;
+  const gradeOnce = () => !split || split.length < 2 ? gradeCall(parts) : (async () => {
+    const outs = new Array(split.length);
+    for (let k = 0; k < split.length; k += 2) await Promise.all(split.slice(k, k + 2).map((ids, j) => gradeCall(parts, { text: `Grade now only these scheme items, and return an item for every one of them: ${ids.join(", ")}. ${k + j === 0 ? "Also write the feedback and the review for the whole paper." : "Leave feedback empty and give the review an empty summary, empty habits and handwriting {rating:\"readable\",notes:\"\"}: another call writes them."}` }).then(o => { outs[k + j] = o; })));
+    const want = split.map(ids => new Set(ids));
+    return { ...outs[0], raw: { ...outs[0].raw, items: outs.flatMap((o, k) => (o.raw?.items || []).filter(x => want[k].has(String(x?.id)))) }, tools: outs.flatMap(o => o.tools || []) };
+  })();
   /* double grading (LAB_DOUBLE_GRADE on, bench grade.double): a second, independent grading of the same pages, after the
      first (two at once, each with every photo, ran a Worker isolate out of memory); an item the two mark differently is
      decided once more from the photos (the recheck call), not by either */
@@ -2721,7 +2753,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   await roles?.trace?.('score');
   /* the method the grader showed the candidate used, where its line is on the pages, decides R15 for its question */
   const chosenMethods = methodChoice ? labChosenMethods(scheme, raw, mine) : null;
-  let sc = labScore(scheme, raw, mine, { theory, family, methods: chosenMethods });
+  let sc = labScore(scheme, raw, mine, { theory, family, methods: chosenMethods, ecf });
   /* focused re-read (focus-read.js; LAB_FOCUS_READ on, bench grade.focus): a value the code marks wrong is read once more
      by Mathpix; a one-character misread (a digit, a power of ten) is replaced and the task scored again */
   const focusLog = roles?.bench ? [] : null;
@@ -2732,7 +2764,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
       const scale = Number.isFinite(+x.value_in_unit) && Number.isFinite(+x.value) && +x.value ? +x.value_in_unit / +x.value : null;
       return { ...x, value: f.value, ...(scale != null ? { value_in_unit: f.value * scale } : {}) }; }) };
     for (const f of focus) { const pg = mine.find(p => p.no === f.page); if (pg) pg.ocr = `${pg.ocr ?? ""}\n[focused re-read of ${f.id}: ${f.written} = ${f.value}]`; }
-    sc = labScore(scheme, raw, mine, { theory, family, methods: chosenMethods });
+    sc = labScore(scheme, raw, mine, { theory, family, methods: chosenMethods, ecf });
   }
   await roles?.trace?.('scored');
   if (moderator) { const ids = new Set(moderator.ids); for (const item of sc.items) if (ids.has(item.id)) item.moderated = true; }
@@ -3155,6 +3187,7 @@ async function labBench(env, s, job) {
         audit: spec.grade.audit === true ? true : undefined,
         methods: spec.grade.methods === true ? true : undefined,
         suspect: spec.grade.suspect === true ? true : undefined,
+        split: spec.grade.split === true ? true : undefined, ecf: spec.grade.ecf === true ? true : undefined,
         lessons: typeof spec.grade.lessons === "string" && spec.grade.lessons.trim() ? spec.grade.lessons.trim().slice(0, 12000) : undefined,
         tiles: Number.isInteger(spec.grade.tiles) && spec.grade.tiles >= 2 && spec.grade.tiles <= 4 ? spec.grade.tiles : undefined,
         toolRounds: Number.isInteger(spec.grade.toolRounds) && spec.grade.toolRounds > 0 && spec.grade.toolRounds <= 6 ? spec.grade.toolRounds : undefined,
