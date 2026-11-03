@@ -35,12 +35,15 @@ test('signup/login, old-password check, verified-email reset and revoked session
     assert.equal((await s.api('GET','/me/security')).status,401);
     assert.equal((await s.api('POST','/me/password',{password:'new-password'},token)).data.error,'current_password_required');
     assert.equal((await s.api('POST','/me/password',{old:'wrong-password',password:'new-password'},token)).data.error,'bad_current_password');
+    assert.equal((await s.api('POST','/me/password',{old:'old-password',password:'old-password'},token)).data.error,'password_unchanged');
+    assert.equal((await s.api('GET','/me',undefined,token)).data.user.username,'recovery_owner');
     assert.equal((await s.api('POST','/me/email',{old:'old-password',email:'fixture-owner@example.com'},token)).status,200);
     assert.equal((await s.api('GET','/me/security',undefined,token)).data.email_verified,false);
     const verify=s.proof();assert.equal((await s.api('POST','/auth/verify-email',{token:verify})).status,200);assert.equal((await s.api('POST','/auth/verify-email',{token:verify})).status,400);
     assert.equal((await s.api('GET','/me/security',undefined,token)).data.email,'fixture-owner@example.com');
     const known=await s.api('POST','/auth/forgot-password',{email:'fixture-owner@example.com'});await Promise.all(s.jobs);const reset=s.proof();
     const unknown=await s.api('POST','/auth/forgot-password',{email:'fixture-absent@example.com'});assert.deepEqual(known,unknown);
+    assert.equal((await s.api('POST','/auth/reset-password',{token:reset,password:'old-password'})).data.error,'password_unchanged');
     assert.equal((await s.api('POST','/auth/reset-password',{token:reset,password:'new-password'})).status,200);
     assert.equal((await s.api('GET','/me',undefined,token)).data.user,null);
     assert.equal((await s.api('POST','/login',{username:'recovery_owner',password:'old-password'})).status,401);

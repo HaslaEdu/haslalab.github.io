@@ -280,6 +280,7 @@ function arAuth(root, which) {
   for (const l of root.querySelectorAll("a[href='#/community/signup'],a[href='#/community/login']")) l.setAttribute("href", l.getAttribute("href").replace("/community", ""));
 }
 function arClaimUsername(root){
+  if(typeof cmAccountUsername==='function'&&typeof window.HL_ACCOUNT_UI?.username==='function'){cmAccountUsername(root,()=>{if(location.hash==='#/me')arMount();else location.hash='#/me';});return;}
   const ko=lang==='ko';
   root.innerHTML=`<div class="cmauth"><div class="card"><h2>${ko?'아이디 생성':'Choose your username'}</h2><p class="lead">${ko?'외부 계정 인증을 마쳤습니다. 사용할 아이디를 만들어 회원가입을 완료하세요.':'Your external account is verified. Choose a username to complete sign-up.'}</p><form id="arClaimUsername"><label>${ko?'아이디':'Username'}<input name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}"><small>${ko?'영문·숫자·밑줄 3~20자. 한 번 정하면 변경할 수 없습니다.':'3–20 letters, numbers or underscores. This cannot be changed later.'}</small></label><p class="cmerr" role="status"></p><button class="cmbtn pri">${ko?'가입 완료':'Complete sign-up'}</button></form></div></div>`;
   const form=root.querySelector('form'),submit=form.querySelector('button'),error=form.querySelector('.cmerr');
@@ -1022,9 +1023,10 @@ async function arMe(root, alive,overview) {
   const j = overview.stats;
   j.lv = j.lv || 0; j.rating = j.rating || 0;               // a server from before the rating sends neither
   root.innerHTML = `
-    <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}${cm.me.username==='g_QFAlJRmIyg'?` · ${lang==='ko'?'고유번호':'Unique identifier'}`:''}</p></div>
+    <div class="cmtop"><div><h1>${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}</h1><p>@${esc(cm.me.username)}${cm.me.username_kind==='generated'?` · ${lang==='ko'?'고유번호':'Unique identifier'}`:''}</p></div>
       <div style="display:flex;gap:6px"><a class="cmbtn sm" href="#/community/account">${T.settings}</a><button class="cmbtn sm" id="arLogout">${T.logout}</button></div></div>
     ${arModelTestLink()}
+    ${cm.me.username_setup_available?`<div id="arUsernameSetup"></div>`:""}
     <div class="arstats"><div><small>${T.rating}</small><b style="color:${TIER_COL[tierKey(j.lv)]}">${j.rating}</b></div><div><small>${T.myRank}</small><b>${j.rank || "–"}</b></div><div><small>${T.solvedN}</small><b>${j.solved}</b></div><div><small>${T.myTotal}</small><b>${j.total}</b></div></div>
     ${(() => { const at = j.tierAt || [], lo = j.lv >= 1 ? at[j.lv - 1] : 0, hi = at[j.lv]; if (hi == null) return "";
       const f = Math.max(0, Math.min(1, (j.rating - lo) / (hi - lo)));
@@ -1039,6 +1041,7 @@ async function arMe(root, alive,overview) {
     <div class="arpanel"><h3>${T.recent}</h3>${j.subs.length ? `<table class="cmtbl artbl"><tbody>${j.subs.map((s) => `<tr><td style="width:96px">${esc(arPeriodLabel(s))}</td>
       <td class="t"><a href="#/monthly/p/${s.problem_id}">${s.no}. ${esc(lang === "en" ? s.title_en : s.title_ko)}</a></td>
       <td style="width:110px"><b>${s.status === "graded" ? s.score + " / " + s.points : T[s.status] || s.status}</b></td><td style="width:130px">${cmShort(s.created_at)}</td></tr>`).join("")}</tbody></table>` : `<p class="arempty">${T.empty}</p>`}</div>`;
+  if(cm.me.username_setup_available&&typeof cmAccountUsername==='function')cmAccountUsername(root.querySelector("#arUsernameSetup"),()=>{if(alive())arMount();});
   cmAvatarForm(root.querySelector("#arAv"), () => { const h = root.querySelector(".cmtop h1"); if (h) h.innerHTML = `${cmAv(cm.me.nickname, "", cm.me.avatar)} ${esc(cm.me.nickname)} ${arTier(j.lv)}`; });
   const nf = root.querySelector("#arNick");
   const nickFree = cmNickCheck(nf.n, nf.querySelector(".cmnick"), cm.me.nickname);

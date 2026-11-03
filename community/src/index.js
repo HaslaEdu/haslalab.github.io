@@ -11,6 +11,7 @@ import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localiz
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 import { createDesktopOAuth } from './oauth-desktop.js';
+import {isPendingUsername,usernameProfile,claimUsername,ensureUsernameClaimSchema,usernameProfileColumns,decorateUsernameProfile} from './username-setup.js';
 import { CONTEST_PROOF_EXAMS } from "./contest-catalog.js";
 import { tokenUnits, tokenBalance, tokenSql, tokenSet } from './lab-tokens.js';
 import { LAB_PAIR_CATALOGUE, LAB_MIXED_CATALOGUE, LAB_SHORTLIST_CATALOGUE } from './lab-pair-catalog.js';
@@ -184,12 +185,13 @@ async function currentUser(req, env) {
     `SELECT u.id,u.username,u.nickname,u.role,u.created_at,u.avatar,s.created_at AS sessionCreatedAt FROM sessions s JOIN users u ON u.id=s.user_id
      WHERE s.token_hash=? AND s.expires_at>? AND u.deleted=0`).bind(th, now()).first();
   if (u) u.tokenHash = th;
-  return u || null;
+  return u&&['/api/me','/api/me/username','/api/me/auth-context'].includes(new URL(req.url).pathname.replace(/\/+$/,''))?usernameProfile(env,u,env[DB_SCOPE]||env.DB):u||null;
 }
-const needsUsername = u => !!u && String(u.username).startsWith('~pending_');
+const needsUsername = isPendingUsername;
 function needUser(u) { if (!u) throw new HttpError(401, "login_required"); if(needsUsername(u))throw new HttpError(403,'username_required'); return u; }
-const pubUser = u => ({ id: u.id, username: needsUsername(u)?null:u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null, ...(needsUsername(u)?{username_required:true}:{}) });
-const desktopOAuth=createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers:oauthProviders,newSession,pubUser});
+const pubUser = u => ({ id: u.id, username: needsUsername(u)?null:u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null, ...(needsUsername(u)?{username_required:true}:{}),...(u.username_setup_available!==undefined?{username_setup_available:u.username_setup_available}:{}),...(u.unique_identifier?{unique_identifier:u.unique_identifier,username_kind:u.username_kind}:{}) });
+async function accountUser(env,id){const user=await env.DB.prepare('SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0').bind(id).first();return usernameProfile(env,user,env[DB_SCOPE]||env.DB)}
+const desktopOAuth=createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers:oauthProviders,newSession,pubUser,readUser:accountUser});
 const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab, lab_reg: LAB_REG, jobs: { available: hasLabQueue(env), mode: 'queue' } });
 const canEdit = (u, ownerId) => u && (u.id === ownerId || u.role === "admin");
 const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "admin")) ? t : "gen";
@@ -252,26 +254,30 @@ async function handle(req, env, url, ctx) {
     await limit(env, "loginu:" + username.toLowerCase(), 10, 900);
     const u = await env.DB.prepare("SELECT * FROM users WHERE username=? AND deleted=0").bind(username).first();
     if (!u || !(await checkPw(String(body.password || ""), u.pw))) throw new HttpError(401, "bad_credentials");
-    return { token: await newSession(env, u.id), user: pubUser(u) };
+    return { token: await newSession(env, u.id), user: pubUser(await usernameProfile(env,u,env[DB_SCOPE]||env.DB)) };
   }
   if (p === "/api/logout" && m === "POST") {
     if (me) await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(me.tokenHash).run();
     return { ok: true };
   }
   if (p === "/api/me" && m === "GET") return { user: me ? pubUser(me) : null };
+  if(p==='/api/me/auth-context'&&m==='GET'){
+    needUser(me);return {user:pubUser(me),recent_login:Number.isFinite(me.sessionCreatedAt)&&me.sessionCreatedAt>=now()-600};
+  }
   if(p==='/api/me/username'&&m==='POST'){
     if(!me)throw new HttpError(401,'login_required');
-    if(!needsUsername(me))throw new HttpError(409,'username_already_set');
-    if(me.sessionCreatedAt<now()-1800)throw new HttpError(403,'recent_login_required');
+    if(!needsUsername(me)&&!me.username_setup_available)throw new HttpError(409,'username_already_set');
+    if(!Number.isFinite(me.sessionCreatedAt)||me.sessionCreatedAt<now()-(needsUsername(me)?1800:600))throw new HttpError(403,'recent_login_required');
     const username=String(body.username||'').trim();if(!USERNAME_RE.test(username))bad('bad_username');
     await limit(env,'username-claim:'+me.id,30,600);
-    let row;try{row=await env.DB.prepare('UPDATE users SET username=? WHERE id=? AND username=? AND deleted=0 RETURNING id,username,nickname,role,created_at,avatar').bind(username,me.id,me.username).first()}catch(error){if(isUnique(error))throw new HttpError(409,'username_taken');throw error}
-    if(!row)throw new HttpError(409,'username_already_set');
-    return {ok:true,user:pubUser(row)};
+    let changed;try{changed=await claimUsername(env,me,username,now(),env[DB_SCOPE]||env.DB)}catch(error){if(isUnique(error))throw new HttpError(409,'username_taken');throw error}
+    if(!changed)throw new HttpError(409,'username_already_set');
+    return {ok:true,user:pubUser(await accountUser(env,me.id))};
   }
   if (p === "/api/me" && m === "DELETE") {
     needUser(me);
     await ensureAccountSecuritySchema(env.DB);
+    await ensureUsernameClaimSchema(env.DB,env[DB_SCOPE]||env.DB);
     await ensureOmrSchema(env);
     await ensureMonthlyCaptureSchema(env.DB,env[DB_SCOPE] || env.DB);
     await ensureMonthlyExperimentSchema(env.DB,env[DB_SCOPE] || env.DB);
@@ -283,6 +289,7 @@ async function handle(req, env, url, ctx) {
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
       env.DB.prepare("DELETE FROM sessions WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM identities WHERE user_id=?").bind(me.id),
+      env.DB.prepare('DELETE FROM account_username_claims WHERE user_id=?').bind(me.id),
       env.DB.prepare("DELETE FROM account_email_tokens WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM account_emails WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM avatars WHERE user_id=?").bind(me.id),
@@ -354,7 +361,7 @@ async function handle(req, env, url, ctx) {
     const row = await env.DB.prepare("DELETE FROM oauth_codes WHERE code_hash=? AND fresh>=0 RETURNING *").bind(h).first();
     await env.DB.prepare("DELETE FROM oauth_codes WHERE created_at<?").bind(now() - 600).run();
     if (!row || row.created_at < now() - 60) throw new HttpError(400, "bad_code");
-    const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0").bind(row.user_id).first();
+    const user = await accountUser(env,row.user_id);
     if (!user) throw new HttpError(400, "bad_code");
     return { token: await newSession(env, user.id), user: pubUser(user), fresh: !!row.fresh };
   }
@@ -1046,18 +1053,18 @@ async function accountOverview(env, me, req) {
   // Validate the session once, then fetch only this account's private sections
   // in one transaction. Only the public ranking projection can be reused.
   const sections = async () => {
-    const [lab, half] = await Promise.all([labReady(env), halfReady(env)]);
+    const [lab, half] = await Promise.all([labReady(env), halfReady(env),ensureUsernameClaimSchema(env.DB,env[DB_SCOPE]||env.DB)]);
     const statements = [
       env.DB.prepare(ACCOUNT_HISTORY).bind(me.id),
       env.DB.prepare('SELECT provider,created_at FROM identities WHERE user_id=?').bind(me.id),
-      env.DB.prepare(`SELECT pw IS NOT NULL AS has_pw${lab ? `,exam_tokens,token_parts,${half ? 'exam_half' : '0 AS exam_half'}` : ''} FROM users WHERE id=?`).bind(me.id),
+      env.DB.prepare(`SELECT pw IS NOT NULL AS has_pw${lab ? `,exam_tokens,token_parts,${half ? 'exam_half' : '0 AS exam_half'}` : ''},${usernameProfileColumns(me)} FROM users u LEFT JOIN account_username_claims c ON c.user_id=u.id WHERE u.id=?`).bind(me.id),
     ];
     if (lab) statements.push(env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(me.id));
     return { lab, result: await env.DB.batch(statements) };
   };
   const [all, { lab, result }] = await Promise.all([ranking(env, null, wantsFresh(req)), sections()]), credit = result[2].results[0] || {};
   const active = lab ? await labAdvance(env, result[3].results[0] || null) : null;
-  return { user: pubUser(me), stats: accountStats(all, result[0].results, me), identities: result[1].results,
+  return { user: pubUser(decorateUsernameProfile(me,credit)), stats: accountStats(all, result[0].results, me), identities: result[1].results,
     has_password: !!credit.has_pw, providers: oauthProviders(env), active: active && ['running','scanning'].includes(active.status) ? pubLab(active, null) : null,
     tokens: tokenBalance(credit), parts: credit.token_parts || 0, health: healthData(env, lab), now: now(), api_version: 5 };
 }

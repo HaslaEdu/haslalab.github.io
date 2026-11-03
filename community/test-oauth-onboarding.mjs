@@ -24,6 +24,7 @@ test('social registration requires a unique chosen username before protected API
   assert.equal(signed.status,200);assert.equal(signed.data.user.username,null);assert.equal(signed.data.user.username_required,true);const token=signed.data.token;
   assert.equal((await s.api('POST','/oauth/redeem',{code})).status,400);
   assert.equal((await s.api('GET','/me/security',undefined,token)).data.error,'username_required');
+  assert.equal((await s.api('GET','/me/auth-context',undefined,token)).data.error,'username_required');
   await assert.rejects(studioUser(new Request(gateway+'/api/studio/capabilities',{headers:{Authorization:'Bearer '+token}}),s.env),error=>error.code==='username_required');
   assert.equal((await s.api('POST','/me/username',{username:'x'},token)).data.error,'bad_username');
   s.sql.prepare('INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,NULL,?)').run('taken_name','Taken name',Math.floor(Date.now()/1000));
@@ -35,6 +36,52 @@ test('social registration requires a unique chosen username before protected API
   s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','legacy-admin',?,?)").run(id,Math.floor(Date.now()/1000));
   const legacyFinish=await s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'legacy-admin');
   const legacy=await s.api('POST','/oauth/redeem',{code:new URLSearchParams(legacyFinish.hash.split('?')[1]).get('c')});assert.equal(legacy.data.user.id,id);assert.equal(legacy.data.user.role,'admin');assert.equal(legacy.data.user.username,'g_QFAlJRmIyg');assert.equal(legacy.data.user.username_required,undefined);
+ }finally{s.close()}
+});
+test('a historical social admin with a later password can choose a name once without losing identity, role or data',async()=>{
+ const s=setup();try{
+  const normal=await s.api('POST','/signup',{username:'g_Member1234',nickname:'Chosen member',password:'fixture-password'});
+  assert.equal((await s.api('GET','/me',undefined,normal.data.token)).data.user.username_setup_available,undefined);
+  assert.equal((await s.api('POST','/me/username',{username:'other_name'},normal.data.token)).data.error,'username_already_set');
+  const created=Math.floor(Date.now()/1000)-86400,password=s.sql.prepare('SELECT pw FROM users WHERE id=?').get(normal.data.user.id).pw;
+  const inserted=s.sql.prepare("INSERT INTO users(username,nickname,pw,role,created_at,exam_tokens) VALUES('g_QFAlJRmIyg','기존 관리자',?,'admin',?,7)").run(password,created),id=Number(inserted.lastInsertRowid);
+  s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','historical-admin',?,?)").run(id,created+1);
+  s.sql.prepare("INSERT INTO posts(board,user_id,title,body,created_at) VALUES('free',?,'Fixture post','Owned fixture material',?)").run(id,created);
+  const signIn=async()=>{const finish=await s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'historical-admin');return s.api('POST','/oauth/redeem',{code:new URLSearchParams(finish.hash.split('?')[1]).get('c')})};
+  const signed=await signIn(),token=signed.data.token;assert.equal(signed.data.user.id,id);assert.equal(signed.data.user.role,'admin');assert.equal(signed.data.user.username,'g_QFAlJRmIyg');assert.equal(signed.data.user.username_required,undefined);assert.equal(signed.data.user.username_setup_available,true);assert.equal(signed.data.user.username_kind,'generated');assert.equal(signed.data.user.unique_identifier,'g_QFAlJRmIyg');
+  assert.equal((await s.api('GET','/me/security',undefined,token)).status,200); // Existing work remains available before choosing.
+  s.sql.prepare('UPDATE sessions SET created_at=? WHERE user_id=?').run(Math.floor(Date.now()/1000)-601,id);
+  assert.equal((await s.api('POST','/me/username',{username:'chosen_owner'},token)).data.error,'recent_login_required');
+  assert.equal((await s.api('GET','/me/auth-context',undefined,token)).data.recent_login,false);
+  const refreshed=await signIn(),fresh=refreshed.data.token;
+  assert.equal((await s.api('POST','/me/username',{username:'g_Member1234'},fresh)).data.error,'username_taken');
+  assert.equal(s.sql.prepare('SELECT count(*) n FROM account_username_claims WHERE user_id=?').get(id).n,0); // Failed collision rolls the marker back.
+  const before=s.sql.prepare('SELECT id,role,nickname,pw,avatar,created_at,exam_tokens FROM users WHERE id=?').get(id);
+  const requests=await Promise.all([s.api('POST','/me/username',{username:'g_Chosen1234'},fresh),s.api('POST','/me/username',{username:'other_chosen'},fresh)]);assert.deepEqual(requests.map(result=>result.status).sort(),[200,409]);
+  const changed=requests.find(result=>result.status===200).data.user;assert.equal(changed.id,id);assert.equal(changed.role,'admin');assert.equal(changed.unique_identifier,'g_QFAlJRmIyg');assert.equal(changed.username_setup_available,false);
+  assert.deepEqual(s.sql.prepare('SELECT id,role,nickname,pw,avatar,created_at,exam_tokens FROM users WHERE id=?').get(id),before);
+  assert.equal(s.sql.prepare('SELECT body FROM posts WHERE user_id=?').get(id).body,'Owned fixture material');
+  const me=(await s.api('GET','/me',undefined,fresh)).data.user;assert.equal(me.username,changed.username);assert.equal(me.unique_identifier,'g_QFAlJRmIyg');assert.equal(me.username_kind,'chosen');assert.equal(me.username_setup_available,false);
+  assert.equal((await s.api('POST','/me/username',{username:'claim_again'},fresh)).data.error,'username_already_set');
+  assert.equal((await s.api('DELETE','/me',undefined,fresh)).status,200);assert.equal(s.sql.prepare('SELECT count(*) n FROM account_username_claims WHERE user_id=?').get(id).n,0);
+ }finally{s.close()}
+});
+test('a manually chosen social-looking username with a later linked provider is not treated as generated',async()=>{
+ const s=setup();try{
+  const created=Math.floor(Date.now()/1000)-86400,row=s.sql.prepare("INSERT INTO users(username,nickname,pw,created_at) VALUES('g_Chosen5678','Manual fixture','fixture-hash',?)").run(created),id=Number(row.lastInsertRowid);
+  s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','linked-later',?,?)").run(id,created+600);
+  const finish=await s.oauth('/api/oauth/google/start?return='+encodeURIComponent(origin+'/'),'linked-later'),signed=await s.api('POST','/oauth/redeem',{code:new URLSearchParams(finish.hash.split('?')[1]).get('c')});
+  assert.equal(signed.data.user.username,'g_Chosen5678');assert.equal(signed.data.user.username_setup_available,undefined);assert.equal((await s.api('POST','/me/username',{username:'changed_later'},signed.data.token)).data.error,'username_already_set');
+ }finally{s.close()}
+});
+test('auth-context contains only public user data and a fresh-login boolean; guests and pending members are denied',async()=>{
+ const s=setup();try{
+  assert.equal((await s.api('GET','/me/auth-context')).status,401);
+  const signed=await s.api('POST','/signup',{username:'context_owner',nickname:'Context fixture',password:'fixture-password'}),token=signed.data.token;
+  s.sql.exec('DROP TABLE account_username_claims'); // A pre-migration deployment creates only its additive claim table on the first account read.
+  const fresh=await s.api('GET','/me/auth-context',undefined,token);assert.equal(fresh.status,200);assert.deepEqual(Object.keys(fresh.data).sort(),['recent_login','user']);assert.equal(fresh.data.recent_login,true);assert.equal(fresh.data.user.id,signed.data.user.id);
+  for(const key of ['token','tokenHash','sessionCreatedAt','pw','password'])assert.equal(fresh.data.user[key],undefined);
+  s.sql.prepare('UPDATE sessions SET created_at=?').run(Math.floor(Date.now()/1000)-601);assert.equal((await s.api('GET','/me/auth-context',undefined,token)).data.recent_login,false);
  }finally{s.close()}
 });
 test('desktop handoff accepts only fixed loopback callbacks and proof-bound, one-use codes',async()=>{

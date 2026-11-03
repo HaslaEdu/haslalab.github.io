@@ -44,8 +44,12 @@ async function deliver(env,{to,purpose,token,origin,lang,digest}){
   const intro=english?(verify?'Confirm this address for your HaslaEdu / HaslaLab account.':'Choose a new password for your HaslaEdu / HaslaLab account.'):(verify?'하슬라에듀 / 하슬라랩 계정의 복구 이메일을 확인해 주세요.':'하슬라에듀 / 하슬라랩 계정의 새 비밀번호를 설정해 주세요.');
   const expiry=english?`This link expires in ${minutes} minutes and can be used once.`:`이 링크는 ${minutes}분 동안 한 번만 사용할 수 있습니다.`;
   const ignore=english?'If you did not request this, ignore this email.':'요청하지 않았다면 이 메일을 무시하세요.';
+  const copyLink=english?'If the button does not work, copy this address into your browser:':'버튼이 열리지 않으면 아래 주소를 복사해 브라우저에서 열어 주세요.';
+  const notice=english?'We never ask you to reply with your password or verification link.':'비밀번호나 인증 링크를 답장으로 보내 달라고 요청하지 않습니다.';
+  const safeLink=escapeHtml(link);
   const from=cleanRecoveryEmail(env.AUTH_MAIL_FROM),message={from:{email:from,name:'HaslaEdu'},to,subject:'HaslaEdu · '+title,
-    text:[intro,link,expiry,ignore].join('\n\n'),html:`<h1>${title}</h1><p>${intro}</p><p><a href="${escapeHtml(link)}">${title}</a></p><p>${expiry}</p><p>${ignore}</p>`};
+    text:['HaslaEdu',intro,link,expiry,ignore,notice].join('\n\n'),
+    html:`<!doctype html><html lang="${english?'en':'ko'}"><body style="margin:0;padding:32px 16px;background:#f6f5fa;color:#263247;font-family:Arial,'Malgun Gothic',sans-serif"><div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #e2ddea;border-radius:12px;padding:32px"><p style="margin:0 0 28px;font-size:22px;font-weight:700;color:#7059a4">HaslaEdu</p><h1 style="font-size:23px;line-height:1.5;margin:0 0 16px">${title}</h1><p style="font-size:15px;line-height:1.8">${intro}</p><p style="font-size:14px;line-height:1.8;color:#657187">${expiry}</p><p style="margin:28px 0"><a href="${safeLink}" style="display:inline-block;background:#7059a4;color:#fff;text-decoration:none;border-radius:7px;padding:14px 22px;font-weight:700">${title}</a></p><p style="font-size:12px;line-height:1.8;color:#657187">${copyLink}</p><p style="font-size:12px;line-height:1.8;word-break:break-all"><a href="${safeLink}" style="color:#7059a4">${safeLink}</a></p><hr style="border:0;border-top:1px solid #e2ddea;margin:28px 0"><p style="font-size:12px;line-height:1.8;color:#657187">${ignore}<br>${notice}</p></div></body></html>`};
   if(typeof env.ACCOUNT_EMAIL?.send==='function'){await env.ACCOUNT_EMAIL.send(message);return}
   const response=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:'Bearer '+(env.AUTH_RESEND_API_KEY||env.RESEND_API_KEY),
     'Content-Type':'application/json','Idempotency-Key':'account-'+digest},body:JSON.stringify({...message,from:'HaslaEdu <'+from+'>'}),signal:AbortSignal.timeout(15000)});
@@ -84,7 +88,7 @@ export function createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,c
     if(path==='/api/me/password'){
       const row=await account(env.DB,me);await limit(env,'pw:'+me.id,10,900);
       if(!row.pw)error(409,'password_not_set');await confirmAccount(row,me,body);
-      if(!pwOk(body.password))error(400,'bad_password');await ensureAccountSecuritySchema(env.DB);
+      if(!pwOk(body.password))error(400,'bad_password');if(body.password===body.old)error(409,'password_unchanged');await ensureAccountSecuritySchema(env.DB);
       const password=await hashPw(body.password);
       const changed=await env.DB.batch([
         env.DB.prepare('UPDATE users SET pw=? WHERE id=? AND pw IS ? AND deleted=0').bind(password,me.id,row.pw),
@@ -132,7 +136,7 @@ export function createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,c
       ])}catch(e){if(/UNIQUE constraint/i.test(String(e?.message)))error(409,'email_in_use');throw e}
       if(!results[0]?.meta?.changes)error(400,'invalid_or_expired_link');return {ok:true};
     }
-    if(!pwOk(body.password))error(400,'bad_password');
+    if(!pwOk(body.password))error(400,'bad_password');if(row.pw&&await checkPw(body.password,row.pw))error(409,'password_unchanged');
     const password=await hashPw(body.password),results=await env.DB.batch([
       env.DB.prepare(`UPDATE users SET pw=? WHERE id=? AND deleted=0 AND pw IS ? AND EXISTS(
         SELECT 1 FROM account_email_tokens t JOIN account_emails e ON e.user_id=t.user_id AND e.email=t.email

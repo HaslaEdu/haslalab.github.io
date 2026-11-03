@@ -7,7 +7,7 @@ const schema=`CREATE TABLE IF NOT EXISTS oauth_desktop_intents (
 )`;
 const ready=new WeakMap();
 async function ensure(db){let pending=ready.get(db);if(!pending){pending=db.prepare(schema).run().catch(error=>{ready.delete(db);throw error});ready.set(db,pending)}await pending}
-export function createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers,newSession,pubUser}){
+export function createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers,newSession,pubUser,readUser}){
  const fail=code=>{throw new HttpError(400,code)};
  const callback=(row,params)=>{const url=new URL(row.callback_url),query=new URLSearchParams({state:row.client_state,...params});if(url.protocol==='https:')url.hash='/oauth?'+new URLSearchParams({...(params.code?{c:params.code}:{}),...(params.error?{e:params.error}:{}),state:row.client_state});else url.search=query.toString();return new Response(null,{status:302,headers:{Location:url.href,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})};
  return {
@@ -42,7 +42,7 @@ export function createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers,ne
    const challenge=b64u(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)));
    if(!row||row.used_at||row.created_at<now()-300||row.client_state!==state||row.challenge!==challenge||(new URL(row.callback_url).protocol==='https:')!==webFlow)fail('bad_code');
    const claimed=await env.DB.prepare('UPDATE oauth_desktop_intents SET used_at=? WHERE code_hash=? AND used_at IS NULL RETURNING user_id').bind(now(),hash).first();if(!claimed)fail('bad_code');
-   const user=await env.DB.prepare('SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0').bind(row.user_id).first();if(!user)fail('bad_code');
+   const user=await readUser(env,row.user_id);if(!user)fail('bad_code');
    return {token:await newSession(env,user.id),user:pubUser(user),fresh:!!row.fresh};
   },
   async start(env,intent,provider){
