@@ -267,6 +267,16 @@ async function handle(req, env, url, ctx) {
   if(p==='/api/me/auth-context'&&m==='GET'){
     needUser(me);return {user:pubUser(me),recent_login:Number.isFinite(me.sessionCreatedAt)&&me.sessionCreatedAt>=now()-600};
   }
+  if(p==='/api/me/identity-proof'&&m==='GET'){
+    needUser(me);
+    if([...url.searchParams.keys()].length!==1||url.searchParams.get('provider')!=='google')bad('bad_provider');
+    if(!Number.isFinite(me.sessionCreatedAt)||me.sessionCreatedAt<now()-600)throw new HttpError(401,'recent_login_required');
+    const rows=(await env.DB.prepare("SELECT sub FROM identities WHERE user_id=? AND provider='google' LIMIT 2").bind(me.id).all()).results;
+    if(!rows.length)throw new HttpError(409,'provider_identity_required');
+    if(rows.length!==1)throw new HttpError(409,'provider_identity_ambiguous');
+    const subject=rows[0].sub;if(typeof subject!=='string'||!subject||subject.length>255||/[\u0000-\u0020\u007f]/.test(subject))throw new HttpError(503,'provider_identity_unavailable');
+    return {provider:'google',subject};
+  }
   if(p==='/api/me/username'&&m==='POST'){
     if(!me)throw new HttpError(401,'login_required');
     if(!needsUsername(me)&&!me.username_setup_available)throw new HttpError(409,'username_already_set');

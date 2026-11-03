@@ -11,7 +11,7 @@ function setup(){
  const sql=new DatabaseSync(':memory:');for(const name of readdirSync(new URL('./migrations/',import.meta.url)).filter(name=>/^\d{4}_.*\.sql$/.test(name)).sort())sql.exec(readFileSync(new URL('./migrations/'+name,import.meta.url),'utf8'));
  const DB={prepare(query){const statement=sql.prepare(query),make=args=>({bind:(...values)=>make(values),async first(){return statement.get(...args)||null},async all(){return{results:statement.all(...args)}},async run(){return this.execute()},execute(){if(statement.columns().length)return{results:statement.all(...args),meta:{changes:sql.prepare('SELECT changes() n').get().n}};const out=statement.run(...args);return{results:[],meta:{changes:Number(out.changes),last_row_id:Number(out.lastInsertRowid)}}}});return make([])},async batch(statements){sql.exec('BEGIN');try{const out=statements.map(s=>s.execute());sql.exec('COMMIT');return out}catch(e){sql.exec('ROLLBACK');throw e}}};
  const env={DB,ALLOWED_ORIGINS:origin+',https://physleague.kr',GOOGLE_CLIENT_ID:'fixture-client',GOOGLE_CLIENT_SECRET:'fixture-secret',OAUTH_MOCK_BASE:'https://provider.invalid'};
- const api=async(method,path,body,token)=>{const r=await worker.fetch(new Request(gateway+'/api'+path,{method,headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.88',...(body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},...(body?{body:JSON.stringify(body)}:{})}),env,{waitUntil(){}});return{status:r.status,data:await r.json()}};
+ const api=async(method,path,body,token)=>{const r=await worker.fetch(new Request(gateway+'/api'+path,{method,headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.88',...(body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},...(body?{body:JSON.stringify(body)}:{})}),env,{waitUntil(){}});return{status:r.status,data:await r.json(),headers:r.headers}};
  const get=path=>worker.fetch(new Request(path.startsWith('http')?path:gateway+path,{headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.88'}}),env,{waitUntil(){}});
  const oauth=async(start,sub='new-social')=>{const original=globalThis.fetch;globalThis.fetch=async input=>{const url=new URL(input);assert.equal(url.origin,'https://provider.invalid');return Response.json(url.pathname.includes('token')?{access_token:'fixture-access'}:{sub,name:'소셜 사용자'})};try{const started=await get(start);assert.equal(started.status,302);const state=new URL(started.headers.get('Location')).searchParams.get('state');const finished=await get('/api/oauth/google/callback?state='+state+'&code=fixture');assert.equal(finished.status,302);assert.equal((await get('/api/oauth/google/callback?state='+state+'&code=fixture')).status,400);return new URL(finished.headers.get('Location'))}finally{globalThis.fetch=original}};
  return{sql,env,api,get,oauth,close(){sql.close()}};
@@ -25,6 +25,7 @@ test('social registration requires a unique chosen username before protected API
   assert.equal((await s.api('POST','/oauth/redeem',{code})).status,400);
   assert.equal((await s.api('GET','/me/security',undefined,token)).data.error,'username_required');
   assert.equal((await s.api('GET','/me/auth-context',undefined,token)).data.error,'username_required');
+  assert.equal((await s.api('GET','/me/identity-proof?provider=google',undefined,token)).data.error,'username_required');
   await assert.rejects(studioUser(new Request(gateway+'/api/studio/capabilities',{headers:{Authorization:'Bearer '+token}}),s.env),error=>error.code==='username_required');
   assert.equal((await s.api('POST','/me/username',{username:'x'},token)).data.error,'bad_username');
   s.sql.prepare('INSERT INTO users(username,nickname,pw,created_at) VALUES(?,?,NULL,?)').run('taken_name','Taken name',Math.floor(Date.now()/1000));
@@ -82,6 +83,19 @@ test('auth-context contains only public user data and a fresh-login boolean; gue
   const fresh=await s.api('GET','/me/auth-context',undefined,token);assert.equal(fresh.status,200);assert.deepEqual(Object.keys(fresh.data).sort(),['recent_login','user']);assert.equal(fresh.data.recent_login,true);assert.equal(fresh.data.user.id,signed.data.user.id);
   for(const key of ['token','tokenHash','sessionCreatedAt','pw','password'])assert.equal(fresh.data.user[key],undefined);
   s.sql.prepare('UPDATE sessions SET created_at=?').run(Math.floor(Date.now()/1000)-601);assert.equal((await s.api('GET','/me/auth-context',undefined,token)).data.recent_login,false);
+ }finally{s.close()}
+});
+test('Google identity proof requires a recent completed login and binds only the authenticated owner',async()=>{
+ const s=setup();try{
+  assert.equal((await s.api('GET','/me/identity-proof?provider=google')).status,401);
+  const owner=await s.api('POST','/signup',{username:'proof_owner',nickname:'Proof fixture',password:'fixture-password'}),other=await s.api('POST','/signup',{username:'proof_other',nickname:'Other fixture',password:'fixture-password'}),token=owner.data.token;
+  assert.equal((await s.api('GET','/me/identity-proof?provider=google',undefined,token)).data.error,'provider_identity_required');
+  s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','fixture-owner-google-sub',?,?)").run(owner.data.user.id,Math.floor(Date.now()/1000));
+  s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','fixture-other-google-sub',?,?)").run(other.data.user.id,Math.floor(Date.now()/1000));
+  const proof=await s.api('GET','/me/identity-proof?provider=google',undefined,token);assert.equal(proof.status,200);assert.deepEqual(proof.data,{provider:'google',subject:'fixture-owner-google-sub'});assert.equal(proof.headers.get('Cache-Control'),'no-store');
+  for(const query of ['provider=github','provider=GOOGLE','provider=google&user_id=2','provider=google&provider=google',''])assert.equal((await s.api('GET','/me/identity-proof?'+query,undefined,token)).data.error,'bad_provider');
+  s.sql.prepare('UPDATE sessions SET created_at=? WHERE user_id=?').run(Math.floor(Date.now()/1000)-601,owner.data.user.id);assert.equal((await s.api('GET','/me/identity-proof?provider=google',undefined,token)).data.error,'recent_login_required');
+  s.sql.prepare('UPDATE sessions SET created_at=? WHERE user_id=?').run(Math.floor(Date.now()/1000),owner.data.user.id);s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','fixture-second-google-sub',?,?)").run(owner.data.user.id,Math.floor(Date.now()/1000));assert.equal((await s.api('GET','/me/identity-proof?provider=google',undefined,token)).data.error,'provider_identity_ambiguous');
  }finally{s.close()}
 });
 test('desktop handoff accepts only fixed loopback callbacks and proof-bound, one-use codes',async()=>{

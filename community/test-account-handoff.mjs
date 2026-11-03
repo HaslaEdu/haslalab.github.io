@@ -26,6 +26,7 @@ test('a guest target receives a different server session with the source age and
   const target=await f.exchange(flow);assert.equal(target.status,200);assert.notEqual(target.data.token,source);assert.equal(target.data.user.id,signed.data.user.id);
   const stored=f.sql.prepare('SELECT * FROM sessions WHERE token_hash=?').get(await digest(target.data.token));assert.equal(stored.created_at,created);assert.equal(stored.expires_at,expires);
   const context=await f.api('/me/auth-context',{token:target.data.token,origin:TARGET});assert.equal(context.status,200);assert.equal(context.data.recent_login,false);assert.equal(context.headers.get('Cache-Control'),'no-store');
+  f.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','fixture-source-sub',?,?)").run(signed.data.user.id,t);assert.equal((await f.api('/me/identity-proof?provider=google',{token:target.data.token,origin:TARGET})).data.error,'recent_login_required');
   assert.equal((await f.exchange(flow)).status,400);assert.equal(f.sql.prepare('SELECT count(*) n FROM sessions').get().n,2);
  }finally{f.close()}
 });
