@@ -99,13 +99,15 @@ export function forgetMemoryCache() { memory = null; }
 async function memoryRows(db) {
   if (memory && memory.db === db && Date.now() - memory.at < MEMORY_TTL) return memory.rows;
   await ensureAiMemory(db);
-  const rows = (await db.prepare('SELECT id, answer, style, vec FROM ai_memory').all()).results.map(r => ({...r, vec: fromBlob(r.vec)}));
+  // the answer's language: an English question must not get a Korean answer back
+  const rows = (await db.prepare('SELECT id, answer, style, vec FROM ai_memory').all()).results
+    .map(r => ({...r, vec: fromBlob(r.vec), lang: /[가-힣]/.test(r.answer) ? 'ko' : 'en'}));
   memory = {db, at: Date.now(), rows};
   return rows;
 }
 
-export async function recall(env, db, question, style = 'default') {
-  const rows = (await memoryRows(db)).filter(r => r.style === style);
+export async function recall(env, db, question, style = 'default', lang = null) {
+  const rows = (await memoryRows(db)).filter(r => r.style === style && (!lang || r.lang === lang));
   if (!rows.length) return null;
   const q = await embed(env, question), min = +env.AI_CACHE_MIN || CACHE_MIN;
   let best = null, score = -1;
