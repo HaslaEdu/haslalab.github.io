@@ -46,7 +46,7 @@ const AT = {
              ocr_empty: "사진에서 글씨를 찾지 못했습니다. 원본을 확인하거나 더 선명하게 다시 찍어주세요.",
              ocr_image_too_big: "글씨의 선명도를 유지하면서 사진 용량을 줄이지 못했습니다. 종이가 화면을 채우게 다시 찍어주세요.",
              ocr_off: "사진 인식(OCR)이 아직 서버에 연결되지 않았습니다.", ocr_failed: "사진을 읽지 못했습니다. 더 밝고 반듯하게 찍어 보세요.", rate_limited: "요청이 너무 많습니다. 내일 다시 시도해 주세요.",
-             forbidden: "관리자만 할 수 있습니다.", recent_login_required: "보안을 위해 다시 로그인한 뒤 진행해 주세요.", bad_code: "로그인 링크가 만료되었습니다. 다시 시도해 주세요.", oauth_off: "이 로그인은 아직 연결되지 않았습니다.",
+             forbidden: "관리자만 할 수 있습니다.", recent_login_required: "보안을 위해 다시 로그인한 뒤 진행해 주세요.", account_suspended: "채점 AI에 지시를 넣은 답안이 확인되어 계정이 정지되었습니다.", bad_code: "로그인 링크가 만료되었습니다. 다시 시도해 주세요.", oauth_off: "이 로그인은 아직 연결되지 않았습니다.",
              oauth_failed: "외부 로그인에 실패했습니다. 다시 시도해 주세요.", oauth_cancelled: "로그인을 취소했습니다.", oauth_in_use: "그 계정은 이미 다른 HaslaLab 계정에 연결되어 있습니다.", bad_week: "월은 2026-11 형식으로 쓰세요.", bad_rubric: "채점 기준(JSON)을 확인하세요.", bad_kind: "유형을 고르세요."}},
   en: {nav: "Monthly", login: "Sign in", signup: "Sign up", me: "My record", logout: "Sign out",
        weekH: "Problems of the month", weekSub: "Problems are grouped by month. Answers submitted before the deadline count towards that month's rankings; solutions are published after the deadline. All deadlines use Korean time (KST).",
@@ -85,7 +85,7 @@ const AT = {
              ocr_empty: "No writing was found. Check the original or take a clearer photo.",
              ocr_image_too_big: "The photo could not be made smaller while keeping the writing clear. Take another with the page filling the frame.",
              ocr_off: "Photo reading (OCR) is not connected yet.", ocr_failed: "The photo could not be read. Try a brighter, straighter shot.", rate_limited: "Too many requests. Try again tomorrow.",
-             forbidden: "Admins only.", recent_login_required: "For your security, please sign in again before continuing.", bad_code: "The sign-in link has expired. Please try again.", oauth_off: "That sign-in is not connected yet.",
+             forbidden: "Admins only.", recent_login_required: "For your security, please sign in again before continuing.", account_suspended: "This account is suspended: an answer tried to instruct the grading AI.", bad_code: "The sign-in link has expired. Please try again.", oauth_off: "That sign-in is not connected yet.",
              oauth_failed: "The outside sign-in failed. Please try again.", oauth_cancelled: "Sign-in was cancelled.", oauth_in_use: "That account is already connected to another HaslaLab account.", bad_week: "Write the month as 2026-11.", bad_rubric: "Check the rubric JSON.", bad_kind: "Choose a kind."}}};
 /* tiers after solved.ac: level 1–30 is Bronze V … Ruby I, 31 Master, 0 unrated */
 const TIER_KEYS = ["bronze", "silver", "gold", "platinum", "diamond", "ruby"];
