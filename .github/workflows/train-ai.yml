@@ -1,7 +1,8 @@
 # Hasla AI's automatic training (tools/ai/autotrain.py): when enough newly approved conversations have built up, a
-# RunPod GPU trains a LoRA for each role, the adapter is tried against the current setting on the same problems and
-# promoted only if it scores better. Runs every Monday 03:17 Korean time, or by hand (Actions → Train Hasla AI →
-# Run workflow); "dry run" only checks the keys and the data.
+# RunPod GPU trains a LoRA for each role and the adapter is in use as soon as it answers; it is then compared with the
+# setting it replaced on the same problems and rolled back by itself when clearly worse. Checks every day at 03:17
+# Korean time (it trains only with enough new data), or by hand (Actions → Train Hasla AI → Run workflow); "dry run"
+# only checks the keys and the data.
 # Repository secrets: RUNPOD_API_KEY, WANDB_API_KEY, HF_TOKEN, and the deploy token CLOUDFLARE_API_TOKEN (it sets the
 # run's key on the Worker); CLOUDFLARE_AI_TOKEN (a token from the Workers AI page) uploads the solver adapter, or the
 # deploy token does it if it has Workers AI · Read and Edit.
@@ -9,7 +10,7 @@ name: Train Hasla AI
 
 on:
   schedule:
-    - cron: "17 18 * * 0"
+    - cron: "17 18 * * *"
   workflow_dispatch:
     inputs:
       role:
