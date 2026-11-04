@@ -4103,6 +4103,9 @@ const paddlePacks = env => {
 };
 const paddleOn = env => !!(env.PADDLE_CLIENT_TOKEN && env.PADDLE_API_KEY && env.PADDLE_WEBHOOK_SECRET && paddlePacks(env));
 const paddleEnv = env => /^test_/.test(env.PADDLE_CLIENT_TOKEN || "") ? "sandbox" : "production";
+/* PADDLE_CHECKOUT "off" closes Paddle checkout (the owner's call, 2026-11-04): no pack is offered and no new order is made.
+   Orders already paid still complete by the signed webhook and the order check, and refunds still go through. */
+const paddleCheckout = env => env.PADDLE_CHECKOUT !== "off" && paddleOn(env);
 async function paddle(env, method, path, body) {
   const base = env.PADDLE_BASE || (paddleEnv(env) === "sandbox" ? "https://sandbox-api.paddle.com" : "https://api.paddle.com");
   const r = await fetch(base + path, { method, headers: { Authorization: "Bearer " + env.PADDLE_API_KEY, "Content-Type": "application/json" },
@@ -4177,12 +4180,12 @@ async function shop(p, m, body, me, req, env, url) {
   if (p === "/api/pay/config" && m === "GET") {
     const ads = adsOf(env);
     return { pay: env.TOSS_CLIENT_KEY && env.TOSS_SECRET_KEY ? { client_key: env.TOSS_CLIENT_KEY, packs: packsOf(env) } : null,
-      paddle: paddleOn(env) ? { token: env.PADDLE_CLIENT_TOKEN, env: paddleEnv(env), packs: paddlePacks(env).map(p => ({ id: p.id, tokens: p.tokens, price_id: p.price_id, usd: p.usd ?? null })) } : null,
+      paddle: paddleCheckout(env) ? { token: env.PADDLE_CLIENT_TOKEN, env: paddleEnv(env), packs: paddlePacks(env).map(p => ({ id: p.id, tokens: p.tokens, price_id: p.price_id, usd: p.usd ?? null })) } : null,
       ads: ads.unit ? { unit: ads.unit, daily: ads.daily, parts: ads.parts } : null };
   }
   if (p === "/api/pay/order" && m === "POST" && body.provider === "paddle") {
     needUser(me);
-    if (!paddleOn(env)) throw new HttpError(503, "pay_off");
+    if (!paddleCheckout(env)) throw new HttpError(503, "pay_off");
     const pk = paddlePacks(env).find(x => x.id === body.pack);
     if (!pk) bad("bad_pack");
     await limit(env, "payorder:" + me.id, 30, 3600);
