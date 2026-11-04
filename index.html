@@ -8816,6 +8816,7 @@ const CMT = {
     stPosts:"글", stToday:"오늘", hotH:"지금 뜨는 글", aboutH:"게시판 정보", boardList:"이 게시판의 다른 글",
     err:{bad_image:"JPG · PNG · WebP 사진만 올릴 수 있습니다.", bad_username:"아이디는 영문 · 숫자 · _ 3–20자입니다.",
          bad_nickname:"닉네임은 2–16자이고, 글자 · 숫자 · _ . - 와 사이 공백만 쓸 수 있습니다.",
+         nickname_reserved:"운영진으로 보일 수 있는 닉네임(admin, 관리자, 운영자 등)은 쓸 수 없습니다.", username_reserved:"운영진으로 보일 수 있는 아이디(admin 등)는 쓸 수 없습니다.",
          bad_password:"비밀번호는 8자 이상이어야 합니다.",
          username_taken:"이미 쓰고 있는 아이디입니다.", nickname_taken:"이미 쓰고 있는 닉네임입니다.",
          bad_credentials:"아이디 또는 비밀번호가 맞지 않습니다.",
@@ -8827,7 +8828,7 @@ const CMT = {
          bad_reason:"사유를 입력하세요.", network:"서버에 연결하지 못했습니다. 잠시 뒤에 다시 해 주세요.",
          consent_required:"필수 항목(이용약관, 개인정보 수집·이용)에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
          age_required:"만 14세 이상만 가입할 수 있습니다. 만 14세 미만은 가입할 수 없습니다.",
-         bad_email:"이메일 주소를 확인해 주세요.", email_taken:"이미 가입에 쓰인 이메일입니다. 로그인하거나 비밀번호 찾기를 이용해 주세요.",
+         bad_email:"이메일 주소를 확인해 주세요.", email_taken:"이미 가입에 쓰인 이메일입니다. 로그인하거나 비밀번호 찾기를 이용해 주세요.", email_disposable:"일회용 메일 주소는 쓸 수 없습니다. 평소 쓰는 메일 주소를 입력해 주세요.",
          mail_unavailable:"지금은 인증 메일을 보낼 수 없습니다. 잠시 뒤에 다시 하거나 소셜 로그인으로 가입해 주세요.",
          code_required:"이메일로 받은 6자리 인증 코드를 입력해 주세요.", code_invalid:"인증 코드가 맞지 않습니다.",
          code_expired:"인증 코드가 만료되었습니다. 코드를 다시 받아 주세요.", code_attempts:"인증 코드를 너무 여러 번 틀렸습니다. 코드를 다시 받아 주세요.",
@@ -8889,6 +8890,7 @@ const CMT = {
     stPosts:"posts", stToday:"today", hotH:"Trending now", aboutH:"About this board", boardList:"More from this board",
     err:{bad_image:"Only JPG, PNG or WebP pictures can be used.", bad_username:"Usernames are 3–20 letters, digits or _.",
          bad_nickname:"Display names are 2–16 characters: letters, digits, _ . - and inner spaces.",
+         nickname_reserved:"Names that look like staff (admin, moderator and the like) are not allowed.", username_reserved:"Usernames that look like staff (admin and the like) are not allowed.",
          bad_password:"Passwords need at least 8 characters.",
          username_taken:"That username is taken.", nickname_taken:"That display name is taken.",
          bad_credentials:"Wrong username or password.",
@@ -8900,7 +8902,7 @@ const CMT = {
          bad_reason:"Enter a reason.", network:"Couldn't reach the server. Please try again shortly.",
          consent_required:"Please accept the required terms (Terms of Service and data collection). Grading cannot start until you do.",
          age_required:"You must be 14 or older to sign up.",
-         bad_email:"Please check the email address.", email_taken:"That email is already on an account. Log in, or use “Forgot your password?”.",
+         bad_email:"Please check the email address.", email_taken:"That email is already on an account. Log in, or use “Forgot your password?”.", email_disposable:"Disposable email addresses are not accepted. Please use an address you keep.",
          mail_unavailable:"We can't send the verification email right now. Try again later, or sign up with a social login.",
          code_required:"Enter the 6-digit code from the email.", code_invalid:"That code is not right.",
          code_expired:"That code has expired. Send a new one.", code_attempts:"Too many wrong codes. Send a new one.",
@@ -9695,7 +9697,7 @@ function cmSignup(root){
     send.disabled=true;
     try{ await cmApi("POST","/signup/email-code",{email,lang}); info.textContent=T.codeSent; info.className="cmnick ok";
       wait=61; count(); timer=setInterval(count,1000); f.code.focus(); }
-    catch(er){ send.disabled=false; err.textContent=cmErr(er); if(er.code==="bad_email"||er.code==="email_taken") f.email.focus(); }
+    catch(er){ send.disabled=false; err.textContent=cmErr(er); if(er.code==="bad_email"||er.code==="email_taken"||er.code==="email_disposable") f.email.focus(); }
   };
   f.onsubmit=async e=>{
     e.preventDefault();
@@ -9708,8 +9710,8 @@ function cmSignup(root){
     if(!/^\d{6}$/.test(code)){ err.textContent=cmErr({code:"code_required"}); f.code.focus(); return; }
     try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code})); }
     catch(er){ err.textContent=cmErr(er);
-      if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); }
-      else if(/^code_/.test(er.code)) f.code.focus(); else if(er.code==="bad_email"||er.code==="email_taken") f.email.focus(); }
+      if(er.code==="nickname_taken"||er.code==="bad_nickname"||er.code==="nickname_reserved"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); }
+      else if(/^code_/.test(er.code)) f.code.focus(); else if(er.code==="bad_email"||er.code==="email_taken"||er.code==="email_disposable") f.email.focus(); }
   };
   arOauth(root);
 }
