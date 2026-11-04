@@ -414,8 +414,10 @@ export async function* sseTexts(stream) {
       if (m) { try { return {text: JSON.parse(`"${m[1]}"`)}; } catch {} }
       return {text: '', bad: data.slice(0, 120)};
     }
-    const t = j.response ?? j.choices?.[0]?.delta?.content ?? '';
-    return {text: t == null ? '' : String(t), usage: j.usage};
+    const c = j.choices?.[0], t = j.response ?? c?.delta?.content ?? '';
+    /* a reasoning model on the chat schema streams its thinking in its own field (GLM-5.3 Flash, Qwen 3.8, Nemotron 3) */
+    const r = c?.delta?.reasoning_content ?? c?.delta?.reasoning ?? j.reasoning_content ?? null;
+    return {text: t == null ? '' : String(t), usage: j.usage, ...(r ? {reasoning: String(r)} : {}), ...(c?.finish_reason ? {finish: c.finish_reason} : {})};
   };
   try {
     for (;;) {
