@@ -183,3 +183,18 @@ test('linking a provider needs a recent login: a stale session is refused, a fre
     assert.equal(stale.status,403);assert.equal(stale.data.error,'recent_login_required');
   }finally{s.close()}
 });
+
+test('a throwaway mailbox gets no code; staff-looking usernames and nicknames make no account',async()=>{
+  const s=setup();try{
+    const no=await s.api('/signup/email-code',{email:'cegaroj972@drtall.com',lang:'ko'});
+    assert.equal(no.status,400);assert.equal(no.data.error,'email_disposable');assert.equal(s.mails.length,0);
+    assert.equal((await s.api('/signup/email-code',{email:'kim@example.com',lang:'ko'})).status,200);const code=s.mailedCode();
+    const asAdmin=await s.api('/signup',{...s.form('admin','kim@example.com',code)});
+    assert.equal(asAdmin.status,400);assert.equal(asAdmin.data.error,'username_reserved');
+    const asStaff=await s.api('/signup',{...s.form('kim_ok','kim@example.com',code),nickname:'관리자'});
+    assert.equal(asStaff.status,400);assert.equal(asStaff.data.error,'nickname_reserved');
+    assert.equal(users(s),0);
+    const ok=await s.api('/signup',s.form('kim_ok','kim@example.com',code));assert.equal(ok.status,200,JSON.stringify(ok.data));
+    const check=await s.api('/nick-check?n='+encodeURIComponent('Admin'));assert.deepEqual(check.data,{ok:false,error:'nickname_reserved',nickname:'Admin'});
+  }finally{s.close()}
+});

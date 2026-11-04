@@ -1,6 +1,7 @@
 // Account recovery belongs to the account service, never the browser bundle.
 // Only digests of short-lived links are stored. A recovery address is usable
 // only after its owner has followed a verification link.
+import {disposableEmail} from './reserved-names.js';
 const readySchemas=new WeakMap();
 export const ACCOUNT_SECURITY_SCHEMA=[
   `CREATE TABLE IF NOT EXISTS account_emails (
@@ -115,7 +116,7 @@ export function createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,c
     }
     if(path==='/api/me/email'){
       const row=await account(env.DB,me);await limit(env,'email-register:'+me.id,3,3600);await confirmAccount(row,me,body);
-      const email=cleanRecoveryEmail(body.email);if(!email)error(400,'bad_email');
+      const email=cleanRecoveryEmail(body.email);if(!email)error(400,'bad_email');if(disposableEmail(email,env))error(400,'email_disposable');
       if(!accountMailAvailable(env))error(503,'email_unavailable');await ensureAccountSecuritySchema(env.DB);
       await limit(env,'email-send:'+await sha256(email),5,3600);await limit(env,'account-email-total',100,3600);
       await issue(env,req,{row,email,purpose:'verify',body});return {ok:true};
