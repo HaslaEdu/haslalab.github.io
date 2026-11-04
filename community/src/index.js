@@ -4788,12 +4788,23 @@ async function lab(p, m, body, me, req, env, url) {
       if (!u) throw new HttpError(404, "no_user");
       return { user: {id:u.id,username:u.username,nickname:u.nickname,exam_tokens:tokenBalance(u)},tokens:tokenBalance(u), ledger: (await env.DB.prepare("SELECT * FROM lab_ledger WHERE user_id=? ORDER BY id DESC LIMIT 50").bind(u.id).all()).results };
     }
-    if (p === "/api/admin/lab/tokens" && m === "POST") {              // give (or take back) exam tokens; the balance never goes below 0
+    if (p === "/api/admin/lab/tokens" && m === "POST") {              // give (or take back) exam tokens, or set the balance (body.set); it never goes below 0
       needRecentLogin(me);                                            // minting tokens is where a stolen admin token turns into value; require a fresh admin login
-      const who = String(body.user || ""), delta = Number(body.delta),units=tokenUnits(delta);
-      if (units == null || !units || Math.abs(delta) > 1000) bad("bad_delta");
+      const who = String(body.user || ""), setTo = body.set != null && body.set !== "" ? tokenUnits(Number(body.set)) : undefined;
+      const delta = Number(body.delta),units=tokenUnits(delta);
+      if (setTo === null || (setTo !== undefined && (setTo < 0 || setTo > 1000000))) bad("bad_set");
+      if (setTo === undefined && (units == null || !units || Math.abs(delta) > 1000)) bad("bad_delta");
       const half=await halfReady(env),balance=tokenSql(half),u = await env.DB.prepare("SELECT id FROM users WHERE (username=? COLLATE NOCASE OR nickname=?) AND deleted=0").bind(who, who).first();
       if (!u) throw new HttpError(404, "no_user");
+      if (setTo !== undefined) {                                      // the ledger keeps the difference, so the history still adds up
+        await env.DB.batch([
+          env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,by_user,note,created_at)
+            SELECT id,(?-${balance})/10.0,CASE WHEN ?>=${balance} THEN 'grant' ELSE 'revoke' END,?,?,? FROM users WHERE id=? AND ?<>${balance}`)
+            .bind(setTo,setTo,me.id,String(body.note || '').slice(0,300)||'set',t,u.id,setTo),
+          env.DB.prepare(`UPDATE users SET ${tokenSet('?',half)} WHERE id=?`).bind(setTo,u.id),
+        ]);
+        return { tokens: await labTokens(env, u.id) };
+      }
       await env.DB.batch([
         env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,by_user,note,created_at)
           SELECT id,MAX(?, -${balance})/10.0,?,?,?,? FROM users WHERE id=?`)
