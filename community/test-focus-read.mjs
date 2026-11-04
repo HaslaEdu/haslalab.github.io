@@ -44,3 +44,9 @@ test("a leading zero read as a nine is one misread character, though it moves th
   const { fits } = focusCandidates(9.23, String.raw`v = \frac{6}{10}\sqrt{\frac{\gamma}{\rho a}(1-2^{-1/3})} = 0,23 \mathrm{m/s}`, "v = 9,23 m/s");
   assert.deepEqual(fits, [0.23]);
 });
+
+test("a zoomed read may replace a leading-zero misread though its significant digits differ in count", async () => {
+  const { writtenSwap } = await import("./src/focus-read.js");
+  assert.ok(writtenSwap(9.23, 0.23) && !sameDigitCount(9.23, 0.23), "0,23 read 9,23: same written length, fewer significant digits");
+  assert.ok(!writtenSwap(3.3, 3) && !writtenSwap(1.5, 1.05), "a digit cut off or added is never a swap");
+});
