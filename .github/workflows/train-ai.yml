@@ -372,6 +372,17 @@ jobs:
           HASLA_CONTEST_FETCH_PLAN_02: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_02 }}
           HASLA_CONTEST_FETCH_PLAN_03: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_03 }}
           HASLA_CONTEST_FETCH_PLAN_04: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_04 }}
+          HASLA_CONTEST_FETCH_PLAN_05: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_05 }}
+          HASLA_CONTEST_FETCH_PLAN_06: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_06 }}
+          HASLA_CONTEST_FETCH_PLAN_07: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_07 }}
+          HASLA_CONTEST_FETCH_PLAN_08: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_08 }}
+          HASLA_CONTEST_FETCH_PLAN_09: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_09 }}
+          HASLA_CONTEST_FETCH_PLAN_10: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_10 }}
+          HASLA_CONTEST_FETCH_PLAN_11: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_11 }}
+          HASLA_CONTEST_FETCH_PLAN_12: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_12 }}
+          HASLA_CONTEST_FETCH_PLAN_13: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_13 }}
+          HASLA_CONTEST_FETCH_PLAN_14: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_14 }}
+          HASLA_CONTEST_FETCH_PLAN_15: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_15 }}
   private-gpu-ocr-calibration:
     if: ${{ inputs.ocr_batch_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:

@@ -519,10 +519,13 @@ def convert_local(input_dir, inventory_sha, packed_dir, packed_manifest_sha, out
     return manifest
 
 
-def inspect_summary(report, inventory_sha):
+def inspect_summary(report, inventory_sha, *, source_artifact=None):
     result={'event':'private_contest_inventory_inspected','inventory_sha256':inventory_sha,
             'processed_source_names':report['processed_source_names'],'remaining_source_names':report['remaining_source_names'],
             'status_counts':report['status_counts'],'native_or_pdf_content_downloaded':False,'training_performed':False}
+    if source_artifact is not None:
+        require(isinstance(source_artifact,str) and bool(source_artifact),'immutable_private_reference_required')
+        result['source_artifact_sha256']=hashlib.sha256(source_artifact.encode('utf8')).hexdigest()
     if 'resume_provenance' in report:
         result.update({k:v for k,v in inventory_coverage(report).items() if k!='resume_provenance'})
     return result
@@ -566,8 +569,8 @@ def encrypted_inventory_export(root,actual_sha,configuration):
     return metadata,fragments
 
 
-def inspection_result(report,actual_sha,root,configuration):
-    result=inspect_summary(report,actual_sha)
+def inspection_result(report,actual_sha,root,configuration,*,source_artifact=None):
+    result=inspect_summary(report,actual_sha,source_artifact=source_artifact)
     if configuration is not None:
         metadata,fragments=encrypted_inventory_export(root,actual_sha,configuration)
         for fragment in fragments:
@@ -606,7 +609,7 @@ def main(argv=None):
         with tempfile.TemporaryDirectory(prefix='.contest-input-',dir=parent) as temporary:
             root=Path(temporary)
             report,actual=download_sources(args.input_artifact,args.inventory_sha256,os.environ,root,inspect=args.inspect)
-            result=inspection_result(report,actual,root,export) if args.inspect else convert_local(root,actual,args.packed_dir,
+            result=inspection_result(report,actual,root,export,source_artifact=args.input_artifact) if args.inspect else convert_local(root,actual,args.packed_dir,
                 args.packed_manifest_sha256,args.output_dir,args.dataset_version,args.authorization_note,
                 artifact_reference=args.input_artifact,chunk_chars=args.chunk_chars)
     if args.inspect:

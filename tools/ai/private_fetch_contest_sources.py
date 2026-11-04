@@ -862,12 +862,14 @@ def publish_checkpoint(plan, output, env, worker_error=None):
     target = private_path(output) / 'publication-inventory.json'
     with target.open('xb') as stream:
         stream.write(canonical(report))
+    inventory_sha = digest(target)
     files.append((target, 'inventory.json'))
     deadline = time.monotonic() + UPLOAD_SECONDS
     entity = private_entity(env, deadline)
     reference = publish_private_sources(entity, env.get('GITHUB_RUN_ID', ''), report, files,
                                         None, env, deadline)
     print(json.dumps({'event': 'private_contest_sources_staged', 'private': True, 'artifact': reference,
+        'inventory_sha256': inventory_sha, 'plan_sha256': report['plan_sha256'],
         'artifact_type': OUTPUT_TYPE if report['complete'] else PARTIAL_TYPE, 'complete': report['complete'],
         'source_names': report['processed_source_names'], 'remaining_source_names': report['remaining_source_names'],
         'status_counts': report['status_counts'], 'stop_code': report['stop_code']}), flush=True)

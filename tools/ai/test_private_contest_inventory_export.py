@@ -54,6 +54,29 @@ class InventoryExportTests(unittest.TestCase):
             self.assertNotIn('fixture-',out.getvalue());self.assertNotIn('archive_url',out.getvalue())
             self.assertNotIn(str(self.input),out.getvalue());self.assertNotIn(self.raw.decode(),out.getvalue())
             self.assertFalse(result['native_or_pdf_content_downloaded'])
+            self.assertNotIn('source_artifact_sha256',result)
+
+    def test_remote_inspection_hashes_exact_input_reference_without_printing_it(self):
+        references=(fixtures.REFERENCE,fixtures.REFERENCE.removesuffix(':v0')+':v1')
+        hashes=[]
+        for reference in references:
+            with self.subTest(reference_version=reference.rsplit(':',1)[-1]), \
+                    patch.dict(os.environ,{},clear=True), \
+                    patch.object(delta,'download_sources',return_value=(self.inventory,self.pin)) as download, \
+                    contextlib.redirect_stdout(io.StringIO()) as out:
+                result=delta.main(['--input-artifact',reference,'--inspect',
+                    '--output-dir',str(self.root/'unused-private-output')])
+            expected=hashlib.sha256(reference.encode('utf8')).hexdigest()
+            self.assertEqual(result['source_artifact_sha256'],expected)
+            self.assertEqual(json.loads(out.getvalue())['source_artifact_sha256'],expected)
+            self.assertEqual(download.call_args.args[0],reference)
+            self.assertTrue(download.call_args.kwargs['inspect'])
+            self.assertNotIn(reference,out.getvalue())
+            self.assertNotIn('fixture-entity',out.getvalue())
+            self.assertNotIn('hasla-contest-sources-partial',out.getvalue())
+            self.assertFalse(result['native_or_pdf_content_downloaded'])
+            hashes.append(expected)
+        self.assertNotEqual(*hashes)
 
     def test_half_invalid_or_noninspection_bindings_fail_before_any_read_or_download(self):
         cases=[({delta.EXPORT_PUBLIC_KEY:self.env[delta.EXPORT_PUBLIC_KEY]},True),

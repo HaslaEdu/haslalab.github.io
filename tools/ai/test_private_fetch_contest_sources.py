@@ -639,8 +639,36 @@ class ContestFetchTests(unittest.TestCase):
         published = json.loads(files[-1][0].read_text())
         self.assertFalse(published['complete'])
         event = json.loads(output.getvalue())
+        self.assertEqual(event['inventory_sha256'], sha(files[-1][0].read_bytes()))
+        self.assertEqual(event['plan_sha256'], sha(worker.canonical(plan)))
         self.assertEqual(event['artifact_type'], 'contest-source-partial')
         self.assertFalse(event['complete'])
+        self.assertNotIn(PRIVATE, output.getvalue())
+
+    def test_publication_event_hashes_new_publication_bytes_not_prior_checkpoint(self):
+        plan = plan_for(PDF_A)
+        self.run_fetch(plan, [Response()])
+        old_inventory = (self.output / 'inventory.json').read_bytes()
+        reference = f'fixture/{worker.PROJECT}/hasla-contest-sources-partial-123:v0'
+        output = io.StringIO()
+        with patch.object(worker, 'private_entity', return_value='fixture'), \
+                patch.object(worker, 'publish_private_sources', return_value=reference) as publish, \
+                redirect_stdout(output):
+            self.assertEqual(worker.publish_checkpoint(plan, self.output,
+                {**self.env, 'GITHUB_RUN_ID': '123'}, 'worker_process_failed'), 0)
+        published_path, published_name = publish.call_args.args[3][-1]
+        published_raw = published_path.read_bytes()
+        self.assertEqual(published_name, 'inventory.json')
+        self.assertEqual(published_path.name, 'publication-inventory.json')
+        self.assertNotEqual(published_raw, old_inventory)
+        event = json.loads(output.getvalue())
+        self.assertEqual(event['inventory_sha256'], sha(published_raw))
+        self.assertNotEqual(event['inventory_sha256'], sha(old_inventory))
+        self.assertEqual(event['plan_sha256'], json.loads(published_raw)['plan_sha256'])
+        self.assertEqual(event['plan_sha256'], sha(worker.canonical(plan)))
+        self.assertFalse(event['complete'])
+        self.assertEqual(event['stop_code'], 'worker_process_failed')
+        self.assertEqual((self.output / 'inventory.json').read_bytes(), old_inventory)
         self.assertNotIn(PRIVATE, output.getvalue())
 
 
