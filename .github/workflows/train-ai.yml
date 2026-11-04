@@ -1,5 +1,5 @@
 name: Hasla Gemma and QwQ private pilot
-run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }})
+run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }})
 on:
   workflow_dispatch:
     inputs:
@@ -7,13 +7,18 @@ on:
         description: "Verify the two private corpora and accounts without creating a GPU"
         type: boolean
         default: true
+      collection_only:
+        description: "Collect the next private community pattern batch on CPU only"
+        type: boolean
+        default: false
 permissions:
   contents: read
-concurrency:
-  group: hasla-private-book-training
-  cancel-in-progress: false
 jobs:
   private-pilot:
+    if: ${{ !inputs.collection_only }}
+    concurrency:
+      group: hasla-private-book-training
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 140
     steps:
@@ -72,3 +77,26 @@ jobs:
         run: python tools/ai/private_dual_run.py --cleanup
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+  collect-patterns:
+    if: ${{ inputs.collection_only }}
+    concurrency:
+      group: hasla-private-pattern-collection
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ai
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install --quiet wandb
+      - name: Collect and preserve the next private pattern batch
+        run: python tools/ai/private_pattern_collect.py
+        env:
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+          HASLA_PATTERN_EXCLUDED_URLS: ${{ secrets.HASLA_PATTERN_EXCLUDED_URLS }}
+          HASLA_PATTERN_CURSORS: ${{ secrets.HASLA_PATTERN_CURSORS }}
+          HASLA_PATTERN_OBSERVED_LISTING_URLS: ${{ secrets.HASLA_PATTERN_OBSERVED_LISTING_URLS }}

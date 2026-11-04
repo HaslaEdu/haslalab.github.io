@@ -194,7 +194,7 @@ class PrivateCorpusRunnerTests(unittest.TestCase):
             runner.graphql_create_pod("fixture", {"PRIVATE": PRIVATE_TEXT}, "bash -lc 'echo fixture'", runner.GPU_IDS[0])
         call.assert_called_once()
         body = call.call_args.kwargs["json"]
-        self.assertEqual(body["gpu"], {"id": runner.GPU_IDS[0], "count": 1})
+        self.assertEqual(body["gpu"], {"id": runner.GPU_IDS[0], "count": 1, "minCudaVersion": "12.8"})
         self.assertEqual(body["disk"], 200)
         self.assertNotIn("mounts", body)
         self.assertEqual(body["entrypoint"], ["/bin/bash", "-lc"])

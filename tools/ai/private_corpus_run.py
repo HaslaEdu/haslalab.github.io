@@ -75,7 +75,20 @@ def runpod(method, path, **kwargs):
             category = 'request_validation'
         else:
             category = 'provider_error'
-        safe_event('runpod_api_error', method=method, http_status=response.status_code, category=category)
+        # v2 problem details help distinguish exhausted placement from malformed input.
+        # Never log an echoed environment or credential in upstream diagnostics.
+        try:
+            problem = response.json()
+        except ValueError:
+            problem = {}
+        detail = str(problem.get('detail', '')) if isinstance(problem, dict) else ''
+        sensitive = [str(E.get(key, '')) for key in ('RUNPOD_API_KEY','HF_TOKEN','WANDB_API_KEY')]
+        sensitive += [str(value) for value in (kwargs.get('json', {}).get('env', {}) or {}).values()]
+        for value in sorted((value for value in sensitive if value), key=len, reverse=True):
+            detail = detail.replace(value, '[redacted]')
+        detail = re.sub(r'(?i)(?:hf_|rpa_|rp_|wandb_)[A-Za-z0-9_-]{8,}', '[redacted]', detail)
+        safe_event('runpod_api_error', method=method, http_status=response.status_code, category=category,
+                   provider_detail=detail[:600])
         raise RuntimeError(f'RunPod {method} status {response.status_code}')
     data = response.json() if response.content else None
     if method == 'GET' and path == '/pods':
@@ -132,7 +145,7 @@ def capacity_preflight():
     user = data['data'].get('myself') or {}
     balance = user.get('clientBalance')
     funded = isinstance(balance, (float, int)) and balance > 0 and user.get('underBalance') is not True
-    catalog = runpod('GET', '/catalog/gpus?include=AVAILABILITY&product=POD&count=1&cloud=SECURE')
+    catalog = runpod('GET', '/catalog/gpus?include=AVAILABILITY&product=POD&count=1&cloud=SECURE&minCudaVersion=12.8')
     quotes = [{'gpu': gpu.get('id'), 'hourly_usd': (gpu.get('price') or {}).get('secure'),
                'stock': gpu.get('availability')}
               for gpu in catalog.get('gpus', []) if gpu.get('id') in GPU_IDS]
@@ -157,7 +170,7 @@ def graphql_create_pod(name, env, command, gpu_id=GPU_IDS[1]):
     if gpu_id not in GPU_IDS:
         raise ValueError('Only the configured A100/H100 training GPUs are allowed for this pilot')
     return runpod('POST', '/pods', json={
-        'name': name, 'cloud': 'SECURE', 'gpu': {'id': gpu_id, 'count': 1},
+        'name': name, 'cloud': 'SECURE', 'gpu': {'id': gpu_id, 'count': 1, 'minCudaVersion': '12.8'},
         'disk': 200, 'image': 'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404',
         'entrypoint': ['/bin/bash', '-lc'], 'cmd': [command], 'ports': [], 'env': env,
         'startSsh': False, 'startJupyter': False})

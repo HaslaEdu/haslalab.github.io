@@ -5,13 +5,15 @@ Example (output must be a new private directory outside every Git checkout):
     --output-dir D:/haslalab-private-problem-bank/hasla-ai/community-probe-v1 \
     --max-posts 10
 
-The default purpose is pattern extraction for later AI development. Explicit AI
-training crawler exclusions are respected in addition to this client's own robots
-rules. A blocked source still produces a truthful status report. No login,
+The default purpose is pattern extraction for later AI development. Robots rules
+are matched against this client's truthful, consistent User-Agent. Exclusions for
+other named bots are observations, not rules automatically applied to this agent.
+A blocked source still produces a truthful status report. No login,
 challenge solving, API guessing, proxy rotation, raw corpus, or training occurs.
 """
 
 import argparse
+from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import hashlib
@@ -69,6 +71,7 @@ def source_metadata(source_id, supplied=None):
     reference = supplied.get("permission_reference")
     license_name = supplied.get("license")
     return {"source_id": source_id, "rights_status": rights,
+            "site_terms_permission_status": str(supplied.get("site_terms_permission_status", "unknown")),
             "allowed_uses": sorted(set(uses)),
             "permission_reference": str(reference)[:1000] if reference else None,
             "license": str(license_name)[:300] if license_name else None,
@@ -109,18 +112,109 @@ def canonical_thread(source_id, href, base):
     return (source["origin"] + "/r/" + match[1] + "/comments/" + match[2] + "/") if match else None
 
 
+def observed_listing_link(source_id, href, base):
+    """Validate an actual page link; never manufacture pagination/API URLs."""
+    source = DEFAULT_SOURCES[source_id]
+    url = parse.urljoin(base, href)
+    if source_id == "reddit" or not same_origin_url(url, source):
+        return None
+    parts, seed = parse.urlsplit(url), parse.urlsplit(source["seed"])
+    if parts.path != seed.path:
+        return None
+    query = parse.parse_qs(parts.query)
+    if any(len(values) != 1 for values in query.values()):
+        return None
+    page = query.get("page", [""])[0]
+    if not re.fullmatch(r"[0-9]+", page) or int(page) < 2:
+        return None
+    allowed = {"page"}
+    if source_id == "dcinside":
+        allowed.add("id")
+        if query.get("id") != parse.parse_qs(seed.query).get("id"):
+            return None
+    if set(query) - allowed:
+        return None
+    return parse.urlunsplit(parts._replace(fragment=""))
+
+
+def load_excluded_urls(paths):
+    """Read prior reports/pattern JSONL or explicit URL lists without raw output."""
+    candidates = []
+    def visit(value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if key in ("source_url", "url") and isinstance(item, str):
+                    candidates.append(item)
+                elif isinstance(item, (dict, list)):
+                    visit(item)
+        elif isinstance(value, list):
+            for item in value:
+                if isinstance(item, (dict, list)):
+                    visit(item)
+    for filename in paths or []:
+        raw = Path(filename).read_text(encoding="utf-8-sig")
+        if len(raw) > 16777216:
+            raise ValueError("exclusion file is too large")
+        try:
+            value = json.loads(raw)
+        except json.JSONDecodeError:
+            for line in raw.splitlines():
+                if not line.strip():
+                    continue
+                if line.strip().startswith("https://"):
+                    candidates.append(line.strip())
+                else:
+                    visit(json.loads(line))
+        else:
+            if isinstance(value, list) and all(isinstance(item, str) for item in value):
+                candidates.extend(value)
+            else:
+                visit(value)
+    result = set()
+    for url in candidates:
+        for source_id, source in DEFAULT_SOURCES.items():
+            canonical = canonical_thread(source_id, url, source["seed"])
+            if canonical:
+                result.add(canonical)
+                break
+    return result
+
+
+def observed_cursors(paths):
+    """Recover only pagination URLs recorded as observed in earlier reports."""
+    found = {source_id: set() for source_id in DEFAULT_SOURCES}
+    for filename in paths or []:
+        try:
+            value = json.loads(Path(filename).read_text(encoding="utf-8-sig"))
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(value, dict):
+            continue
+        for source in value.get("sources", []):
+            source_id = source.get("source_id")
+            if source_id not in found:
+                continue
+            for listing in source.get("listing_results", []):
+                for url in listing.get("observed_pagination_urls", []):
+                    valid = observed_listing_link(source_id, url, DEFAULT_SOURCES[source_id]["seed"])
+                    if valid:
+                        found[source_id].add(valid)
+    return found
+
+
 def robots_decision(text, url):
     parser = robotparser.RobotFileParser()
     parser.parse(text.splitlines())
-    if not parser.can_fetch(USER_AGENT, url):
-        return {"allowed": False, "reason": "robots_denied", "denied_agents": ["HaslaPatternResearch"]}
     explicit = {match[1].strip().casefold()
                 for match in re.finditer(r"(?im)^\s*user-agent\s*:\s*([^#\r\n]+)", text)}
-    denied = [agent for agent in AI_AGENTS
-              if agent.casefold() in explicit and not parser.can_fetch(agent, url)]
-    if denied:
-        return {"allowed": False, "reason": "ai_training_crawler_excluded", "denied_agents": denied}
-    return {"allowed": True, "reason": "robots_allowed", "denied_agents": []}
+    observations = [agent for agent in AI_AGENTS
+                    if agent.casefold() in explicit and not parser.can_fetch(agent, url)]
+    allowed = parser.can_fetch(USER_AGENT, url)
+    return {"allowed": allowed, "reason": "robots_allowed" if allowed else "robots_denied",
+            "matched_user_agent": "HaslaPatternResearch",
+            "denied_agents": [] if allowed else ["HaslaPatternResearch"],
+            "observed_exclusions": observations,
+            "robots_is_site_permission": False}
 
 
 @dataclass
@@ -199,7 +293,13 @@ def response_block_reason(response):
                  r"you(?:'ve| have) been blocked", text, re.I):
         return "challenge_or_access_block"
     if re.search(r"<input\b[^>]*\btype\s*=\s*['\"]?password", text, re.I):
-        return "login_required"
+        # Public DC posts contain password fields for nonmember comment deletion.
+        # Such a field alone is not evidence of a login wall.
+        public_body = re.search(r'class\s*=\s*[\'"][^\'"]*\bwrite_div\b', text, re.I)
+        public_body = public_body or ("layout-board-read" in text and
+                                     re.search(r'class\s*=\s*[\'"][^\'"]*\bcontent-wrap\b', text, re.I))
+        if not public_body or re.search(r"/(?:login|signin)(?:/|$)", parse.urlsplit(response.url).path, re.I):
+            return "login_required"
     return None
 
 
@@ -211,43 +311,68 @@ class Page(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.source_id = source_id
         self.links, self.stack, self.captures = [], [], []
+        self.anchors, self.active_anchors = [], []
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
         if tag == "a" and values.get("href"):
             self.links.append(values["href"])
+            anchor = {"href": values["href"], "parts": [], "title": values.get("title", "")}
+            self.anchors.append(anchor)
+            self.active_anchors.append(anchor)
         classes = set(values.get("class", "").split())
+        ancestors = set().union(*(entry[2] for entry in self.stack)) if self.stack else set()
         role = None
         if tag == "h1" or "title_subject" in classes:
             role = "title"
-        if (values.get("itemprop") == "articleBody" or
-                classes.intersection(("write_div", "content-text", "post-content", "article-content", "content-body"))):
+        if self.source_id == "dcinside" and "write_div" in classes:
             role = "body"
-        elif tag == "article":
-            role = "article_fallback"
-        if classes.intersection(("usertxt", "comment-content", "comment-body", "comment-text")):
+        elif self.source_id == "orbi" and "content-wrap" in classes and "layout-board-read" in ancestors:
+            role = "body"
+        if ((self.source_id == "dcinside" and "usertxt" in classes and
+             ancestors.intersection(("comment_wrap", "comment_box", "cmt_list"))) or
+            (self.source_id == "orbi" and classes.intersection(("comment-content", "comment-text")) and
+             "comment-wrap" in ancestors)):
             role = "comment"
-        capture = {"role": role, "parts": []} if role else None
+        if role == "comment" and any(active and active["role"] == "comment" for _, active, _ in self.stack):
+            # Orbi nests .comment-text within .comment-content. Capture that
+            # displayed comment once, while retaining identical separate replies.
+            role = None
+        rank = next((int(match[1]) for value in classes | ancestors
+                     if (match := re.fullmatch(r"comment-rank-(\d+)", value))), None)
+        capture = {"role": role, "parts": [], "depth": rank} if role else None
         if capture:
             self.captures.append(capture)
         # Void elements must not corrupt the capture stack.
         if tag not in ("area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"):
-            self.stack.append((tag, capture))
+            self.stack.append((tag, capture, classes))
+        if tag == "br":
+            for _, active, _ in self.stack:
+                if active:
+                    active["parts"].append("\n")
 
     def handle_startendtag(self, tag, attrs):
         self.handle_starttag(tag, attrs)
         self.handle_endtag(tag)
 
     def handle_endtag(self, tag):
+        if tag == "a" and self.active_anchors:
+            self.active_anchors.pop()
+        if tag in ("p", "div", "li"):
+            for _, capture, _ in self.stack:
+                if capture:
+                    capture["parts"].append("\n")
         for i in range(len(self.stack) - 1, -1, -1):
             if self.stack[i][0] == tag:
                 del self.stack[i:]
                 break
 
     def handle_data(self, data):
-        if any(tag in self.SKIP for tag, _ in self.stack):
+        if any(tag in self.SKIP for tag, _, _ in self.stack):
             return
-        for _, capture in self.stack:
+        for anchor in self.active_anchors:
+            anchor["parts"].append(data)
+        for _, capture, _ in self.stack:
             if capture:
                 capture["parts"].append(data)
 
@@ -255,10 +380,33 @@ class Page(HTMLParser):
         values = []
         for capture in self.captures:
             if capture["role"] == role:
-                text = re.sub(r"\s+", " ", " ".join(capture["parts"])).strip()
-                if text and text not in values:
+                text = re.sub(r"[^\S\n]+", " ", " ".join(capture["parts"])).strip()
+                text = re.sub(r"\n\s*\n+", "\n", text)
+                if text and (role == "comment" or text not in values):
                     values.append(text)
         return values
+
+
+def prioritized_threads(page, source_id, base):
+    """Transient title cues prioritize questions; titles are never saved/logged."""
+    links = list(dict.fromkeys(url for href in page.links
+                              if (url := canonical_thread(source_id, href, base))))
+    scores, promotional, outside_board = {}, set(), set()
+    if source_id == "dcinside":
+        wanted = parse.parse_qs(parse.urlsplit(DEFAULT_SOURCES[source_id]["seed"]).query).get("id")
+        outside_board = {url for url in links if parse.parse_qs(parse.urlsplit(url).query).get("id") != wanted}
+    for anchor in page.anchors:
+        url = canonical_thread(source_id, anchor["href"], base)
+        if not url:
+            continue
+        title = anchor["title"] or " ".join(anchor["parts"])
+        if re.search(r"공지|이용\s*약관|프리패스|할인|이벤트|운세|광고|강사\s*모집|교재\s*판매", title):
+            promotional.add(url)
+        score = len(re.findall(r"질문|왜|어떻게|추천|공부|[?？]|\bvs\b|\bhow\b|\bwhy\b", title, re.I))
+        scores[url] = max(scores.get(url, 0), score)
+    eligible = [url for url in links if url not in promotional and url not in outside_board]
+    eligible.sort(key=lambda url: -scores.get(url, 0))
+    return eligible, len(set(links) & promotional), len(outside_board)
 
 
 def abstract_features(text):
@@ -266,7 +414,7 @@ def abstract_features(text):
     text = unicodedata.normalize("NFC", text)
     text = re.sub(r"https?://\S+|[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|"
                   r"\b(?:\d{1,3}\.){3}\d{1,3}\b|\b01[016789][ -]?\d{3,4}[ -]?\d{4}\b", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"[^\S\n]+", " ", text).strip()
     sentences = [part.strip() for part in re.split(r"[.!?。！？]+|\n+", text) if part.strip()]
     lengths = [len(part) for part in sentences]
     features = {}
@@ -276,6 +424,14 @@ def abstract_features(text):
                          ("laughter", r"ㅋ{2,}|ㅎ{2,}|\blol\b"),
                          ("question_mark", r"[?？]")):
         features[label] = len(re.findall(regex, text, re.I))
+    endings = Counter()
+    # A fixed allowlist of short grammar markers, never learned phrases/snippets.
+    for sentence in sentences:
+        sentence = sentence.rstrip(' \t\r\n"\'”’)]}')
+        for marker in ("하셈", "니다", "임", "함", "요", "죠", "까", "다", "해", "어", "야"):
+            if sentence.endswith(marker):
+                endings[marker] += 1
+                break
     questions = []
     for label, regex in (("explanation", r"왜|이유|원리|설명|\bwhy\b|\bexplain\b"),
                          ("solution_request", r"풀[어이]|풀이|구하|계산|\bsolve\b|\bcalculate\b"),
@@ -288,7 +444,8 @@ def abstract_features(text):
             "sentence_count": len(lengths),
             "sentence_length": {"mean": round(sum(lengths) / len(lengths), 2) if lengths else 0,
                                 "max": max(lengths, default=0)},
-            "fixed_style_features": features, "question_types": questions or ["other"],
+            "fixed_style_features": features, "ending_markers": dict(endings.most_common()),
+            "question_types": questions or ["other"],
             "has_math": bool(re.search(r"\$|\\(?:frac|sqrt|begin|\(|\[)|[∫∑√]|"
                                        r"\b\d+\s*[=+*/^]|\b[A-Za-z]\s*[=^]", text))}
 
@@ -297,9 +454,7 @@ def extract_pattern(source_id, url, html, metadata):
     page = Page(source_id)
     page.feed(html)
     bodies = page.texts("body")
-    extraction = "body_selector"
-    if not bodies:
-        bodies, extraction = page.texts("article_fallback"), "article_fallback_unverified"
+    extraction = "dcinside.write_div" if source_id == "dcinside" else "orbi.layout-board-read.content-wrap"
     if not bodies:
         return None
     comments = page.texts("comment")
@@ -308,7 +463,11 @@ def extract_pattern(source_id, url, html, metadata):
     return {"kind": "abstract_pattern", "source_id": source_id, "source_url": url,
             "metadata": dict(metadata), "extraction": extraction,
             "structure": {"body_blocks": len(bodies), "visible_comment_blocks": len(comments),
-                          "comment_roles": "unassigned", "comments_are_answers": False},
+                          "observed_comment_depths": dict(Counter(str(capture["depth"]) if capture["depth"] is not None else "unknown"
+                                                                  for capture in page.captures if capture["role"] == "comment")),
+                          "comment_roles": "unassigned", "comments_are_answers": False,
+                          "parent_relationships": "not_verified_from_html",
+                          "depth_basis": "explicit_comment_rank_class_when_present"},
             "body": abstract_features(body),
             "comment_features": [abstract_features(value) for value in comments[:100]],
             "training_eligible": False, "export_exclusion": "pattern_only_no_training_text"}
@@ -332,21 +491,51 @@ def fetch_public(client, url, source, robots_text):
     return None, "redirect_limit"
 
 
-def collect(sources, max_posts=10, metadata=None, client=None):
-    if not 1 <= max_posts <= 10:
-        raise ValueError("max-posts must be between one and ten")
+def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, exclude_urls=None, progress=None, listing_cursors=None):
+    if not 1 <= max_posts <= 50:
+        raise ValueError("max-posts must be between one and fifty")
+    if not 1 <= max_pages <= 3:
+        raise ValueError("max-pages must be between one and three")
     if not sources or any(source not in DEFAULT_SOURCES for source in sources):
         raise ValueError("sources must contain dcinside, orbi, or reddit")
     client, metadata = client or BoundedClient(), metadata or {}
+    listing_cursors = listing_cursors or {}
+    for source_id, cursor in listing_cursors.items():
+        if source_id not in sources or not observed_listing_link(source_id, cursor, DEFAULT_SOURCES[source_id]["seed"]):
+            raise ValueError("listing cursor must be a valid observed pagination URL for a selected source")
     # Invalid metadata is rejected before any site is contacted.
     rights_by_source = {source_id: source_metadata(source_id, metadata.get(source_id))
                         for source_id in dict.fromkeys(sources)}
-    reports, patterns, attempted, seen = [], [], 0, set()
+    excluded = set(exclude_urls or [])
+    reports, patterns, attempted, seen = [], [], 0, set(excluded)
+    def emit(report, candidate=None):
+        if progress:
+            summary = {"source_id": report["source_id"], "patterns": report["patterns"],
+                       "thread_requests": report["thread_requests"], "listing_pages": len(report.get("listing_results", [])),
+                       "status": report["status"], "total_patterns": len(patterns),
+                       "qa_candidate_count": len(report.get("qa_candidates", []))}
+            if report.get("reason"):
+                summary["reason"] = report["reason"]
+            summary["checkpoint"] = {"created_at": datetime.now(timezone.utc).isoformat(),
+                                     "training_performed": False, "raw_content_saved": False,
+                                     "pattern_records": len(patterns), "sources": reports,
+                                     "source_hashes": [{"source_id": record["source_id"], "url": record["source_url"],
+                                                        "content_sha256": record["body"]["content_sha256"]}
+                                                       for record in patterns]}
+            if candidate:
+                summary["new_qa_candidate"] = candidate
+            progress(summary)
     for source_id in dict.fromkeys(sources):
         source = DEFAULT_SOURCES[source_id]
+        initial_listing = listing_cursors.get(source_id, source["seed"])
         rights = rights_by_source[source_id]
         report = {"source_id": source_id, "seed_url": source["seed"], "permission": rights,
-                  "patterns": 0, "thread_requests": 0, "status": "not_started"}
+                  "initial_listing_url": initial_listing,
+                  "patterns": 0, "thread_requests": 0, "status": "not_started",
+                  "listing_results": [], "thread_results": [], "discovered_thread_urls": [],
+                  "excluded_or_duplicate_links": 0, "qa_candidates": []}
+        report["skipped_listing_promotions"] = 0
+        report["skipped_other_board_links"] = 0
         reports.append(report)
         robots = client.get(source["origin"] + "/robots.txt")
         reason = response_block_reason(robots)
@@ -357,59 +546,93 @@ def collect(sources, max_posts=10, metadata=None, client=None):
         if reason or not valid_robots:
             report["status"] = "robots_unavailable"
             report["reason"] = reason or "unrecognized_robots_response"
+            emit(report)
             continue
-        decision = robots_decision(robots_text, source["seed"])
+        decision = robots_decision(robots_text, initial_listing)
         report["robots"].update(decision)
         if not decision["allowed"]:
             report["status"], report["reason"] = "blocked_robots", decision["reason"]
             report["listing_http_status"] = None
+            emit(report)
             continue
-        listing, reason = fetch_public(client, source["seed"], source, robots_text)
-        report["listing_http_status"] = listing.status if listing else None
-        if reason:
-            report["status"], report["reason"] = "listing_blocked", reason
-            continue
-        page = Page(source_id)
-        page.feed(listing.text())
-        links = list(dict.fromkeys(url for href in page.links
-                                  if (url := canonical_thread(source_id, href, listing.url))))
-        report["discovered_thread_urls"] = links[:max_posts]
-        report["discovered_thread_count"] = len(links)
-        report["thread_results"] = []
-        for url in links:
-            if attempted >= max_posts:
-                break
-            if url in seen:
+        queue, visited, discovered = [initial_listing], set(), set()
+        while queue and len(visited) < max_pages and report["thread_requests"] < max_posts and not report.get("reason"):
+            listing_url = queue.pop(0)
+            if listing_url in visited:
                 continue
-            seen.add(url)
-            decision = robots_decision(robots_text, url)
-            if not decision["allowed"]:
-                report["thread_results"].append({"url": url, "status": decision["reason"]})
-                continue
-            attempted += 1
-            report["thread_requests"] += 1
-            response, reason = fetch_public(client, url, source, robots_text)
+            visited.add(listing_url)
+            listing, reason = fetch_public(client, listing_url, source, robots_text)
+            report["listing_http_status"] = listing.status if listing else None
+            listing_result = {"url": listing_url, "http_status": report["listing_http_status"]}
+            report["listing_results"].append(listing_result)
             if reason:
-                report["thread_results"].append({"url": url, "status": reason})
                 report["reason"] = reason
-                # Stop the source on any failed/access-controlled thread, without retries.
+                listing_result["status"] = reason
                 break
-            record = extract_pattern(source_id, url, response.text(), rights)
-            if record:
-                patterns.append(record)
-                report["patterns"] += 1
-            report["thread_results"].append({"url": url, "status": "pattern_extracted" if record else "no_body_selector"})
+            page = Page(source_id)
+            page.feed(listing.text())
+            links, skipped, outside_board = prioritized_threads(page, source_id, listing.url)
+            report["skipped_listing_promotions"] += skipped
+            report["skipped_other_board_links"] += outside_board
+            pagination = list(dict.fromkeys(url for href in page.links
+                                           if (url := observed_listing_link(source_id, href, listing.url))))
+            pagination.sort(key=lambda url: (int(parse.parse_qs(parse.urlsplit(url).query)["page"][0]), url))
+            listing_result.update({"status": "read", "discovered_thread_count": len(links),
+                                   "observed_pagination_urls": pagination[:20]})
+            queue.extend(url for url in pagination if url not in visited and url not in queue)
+            for url in links:
+                if url not in discovered:
+                    report["discovered_thread_urls"].append(url)
+                    discovered.add(url)
+                if report["thread_requests"] >= max_posts:
+                    break
+                if url in seen:
+                    report["excluded_or_duplicate_links"] += 1
+                    continue
+                seen.add(url)
+                decision = robots_decision(robots_text, url)
+                if not decision["allowed"]:
+                    report["thread_results"].append({"url": url, "status": decision["reason"]})
+                    continue
+                attempted += 1
+                report["thread_requests"] += 1
+                response, reason = fetch_public(client, url, source, robots_text)
+                if reason:
+                    report["thread_results"].append({"url": url, "status": reason})
+                    report["reason"] = reason
+                    break
+                record = extract_pattern(source_id, url, response.text(), rights)
+                if record:
+                    patterns.append(record)
+                    report["patterns"] += 1
+                candidate = None
+                if (record and record["structure"]["visible_comment_blocks"] > 0 and
+                        2 <= record["body"]["character_count"] <= 6000):
+                    candidate = {"url": url, "body_character_count": record["body"]["character_count"],
+                                 "content_sha256": record["body"]["content_sha256"],
+                                 "visible_comment_blocks": record["structure"]["visible_comment_blocks"],
+                                 "question_types": record["body"]["question_types"],
+                                 "candidate_kind": ("discussion_with_visible_comments" if record["body"]["question_types"] == ["other"] else "question_with_visible_comments"),
+                                 "reply_relevance_review_required": True, "assistant_roles_assigned": False}
+                    report["qa_candidates"].append(candidate)
+                report["thread_results"].append({"url": url, "status": "pattern_extracted" if record else "no_body_selector"})
+                report["status"] = "collecting"
+                emit(report, candidate)
+        report["discovered_thread_count"] = len(discovered)
+        report["resume_observed_listing_urls"] = [url for url in queue if url not in visited]
         report["status"] = ("partial_patterns_source_stopped" if report["patterns"] and report.get("reason") else
                             "patterns_collected" if report["patterns"] else
                             "source_stopped" if report.get("reason") else
-                            "empty_listing" if not links else
-                            "post_budget_exhausted" if attempted >= max_posts else "no_usable_patterns")
+                            "empty_listing" if not discovered else
+                            "post_budget_exhausted" if report["thread_requests"] >= max_posts else "no_usable_patterns")
+        emit(report)
     return {"schema_version": 1, "created_at": datetime.now(timezone.utc).isoformat(),
             "purpose": "abstract_pattern_extraction_for_ai_development",
             "collection_status": "patterns_collected" if patterns else "no_records",
             "raw_content_saved": False, "training_performed": False,
             "training_status": "not_started", "train_export_records": 0,
-            "pattern_records": len(patterns), "max_posts": max_posts,
+            "pattern_records": len(patterns), "max_posts_per_source": max_posts,
+            "max_listing_pages_per_source": max_pages, "excluded_url_count": len(excluded),
             "thread_requests": attempted, "sources": reports,
             "requests": client.requests, "patterns": patterns}
 
@@ -419,18 +642,38 @@ def write_results(result, output_dir):
     output.mkdir(parents=True, exist_ok=True)
     patterns = result["patterns"]
     payload = "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in patterns)
-    (output / "patterns.jsonl").write_text(payload, encoding="utf-8")
+    # Hash the exact bytes written, including on Windows (no LF->CRLF rewrite).
+    (output / "patterns.jsonl").write_bytes(payload.encode("utf-8"))
     report = {key: value for key, value in result.items() if key != "patterns"}
     report["files"] = {"patterns.jsonl": {"records": len(patterns), "sha256": sha256(payload)}}
     (output / "collection-report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     return report
 
 
+def progress_writer(path):
+    """Write safe partial status separately so final output stays overwrite-safe."""
+    path = Path(path)
+    if path.exists():
+        raise ValueError("progress file already exists; choose a new output directory")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    def update(status):
+        summary = dict(status)
+        snapshot = summary.pop("checkpoint")
+        temporary = path.with_name(path.name + ".tmp")
+        temporary.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8")
+        temporary.replace(path)
+        print(json.dumps({"event": "collection_progress", **summary}, ensure_ascii=False), flush=True)
+    return update
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sources", default="dcinside,orbi,reddit", help="comma-separated source IDs")
     parser.add_argument("--output-dir", required=True, help="new private directory outside every Git checkout")
-    parser.add_argument("--max-posts", type=int, default=10, help="global thread request cap, 1..10")
+    parser.add_argument("--max-posts", type=int, default=10, help="thread request cap PER SOURCE, 1..50; default 10")
+    parser.add_argument("--max-pages", type=int, default=1, help="observed listing page cap per source, 1..3")
+    parser.add_argument("--exclude-urls", action="append", default=[], help="prior report/pattern JSONL or URL list; repeatable")
+    parser.add_argument("--listing-cursor", action="append", default=[], help="SOURCE=URL previously observed in an exclusion report")
     parser.add_argument("--source-metadata", help="optional private JSON source permission metadata; unknown by default")
     parser.add_argument("--max-response-bytes", type=int, default=524288)
     args = parser.parse_args(argv)
@@ -440,7 +683,17 @@ def main(argv=None):
         if not isinstance(metadata, dict):
             raise ValueError("source metadata must be an object keyed by source ID")
         source_ids = [source.strip() for source in args.sources.split(",") if source.strip()]
-        result = collect(source_ids, args.max_posts, metadata, BoundedClient(max_bytes=args.max_response_bytes))
+        exclusions = load_excluded_urls(args.exclude_urls)
+        cursor_proof = observed_cursors(args.exclude_urls)
+        cursors = {}
+        for item in args.listing_cursor:
+            source_id, separator, url = item.partition("=")
+            if not separator or source_id not in source_ids or url not in cursor_proof.get(source_id, set()):
+                raise ValueError("listing cursor lacks an observed URL in the supplied prior reports")
+            cursors[source_id] = url
+        checkpoint = progress_writer(output.with_name(output.name + ".progress.json"))
+        result = collect(source_ids, args.max_posts, metadata, BoundedClient(max_bytes=args.max_response_bytes),
+                         args.max_pages, exclusions, checkpoint, cursors)
         report = write_results(result, output)
     except (ValueError, OSError) as exc:
         parser.error(str(exc))
