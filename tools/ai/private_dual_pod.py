@@ -36,7 +36,8 @@ def role_jobs(env):
             if not isinstance(job.get(key), str) or not re.fullmatch(r'[a-f0-9]{64}', job[key]):
                 raise ValueError('invalid private input checksum')
         runtime = job.get('runtime_seconds', 1200 if role == 'chat' else 2700)
-        if (type(runtime) is not int or not 60 <= runtime <= (1800 if role == 'chat' else 14400)):
+        maximum = (3000 if profile == 'gemma-26b-qlora-v1' else 1800) if role == 'chat' else 14400
+        if (type(runtime) is not int or not 60 <= runtime <= maximum):
             raise ValueError('invalid private role runtime')
         if job.get('initial_adapter') is not None and (role != 'solver' or not isinstance(job['initial_adapter'], dict)
                 or not re.fullmatch(r'[a-f0-9]{64}', env.get('HASLA_RESUME_SCRIPT_SHA256', ''))):

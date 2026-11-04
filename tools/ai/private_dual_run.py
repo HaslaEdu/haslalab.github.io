@@ -373,7 +373,7 @@ def resource_settings(manifest, role):
     # Pure profile validation precedes any provider or corpus request.
     profile = spec.get('training_profile')
     get_role_config(role, profile)
-    maximum = 1800 if role == 'chat' else 14400
+    maximum = (3600 if profile == 'gemma-26b-qlora-v1' else 1800) if role == 'chat' else 14400
     seconds = spec.get('runtime_seconds', 1800 if role == 'chat' else 3600)
     if type(seconds) is not int or not 660 <= seconds <= maximum:
         raise ValueError('role runtime must include setup/upload and stay within its time ceiling')

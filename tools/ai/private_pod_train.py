@@ -822,7 +822,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         stage = "training"
         run.summary["status"] = stage
         timeout = int(env.get("HASLA_TRAIN_TIMEOUT_SECONDS", "1200" if role == "chat" else "3600"))
-        maximum_timeout = 1800 if role == "chat" else 14400
+        maximum_timeout = (3000 if config.get('training_profile') == 'gemma-26b-qlora-v1' else 1800) if role == "chat" else 14400
         if not 60 <= timeout <= maximum_timeout:
             raise PilotError("invalid_training_timeout")
         # The trainer's stdout remains discarded. Its stderr is private and

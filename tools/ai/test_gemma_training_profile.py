@@ -92,7 +92,7 @@ class GemmaTrainingProfileTests(unittest.TestCase):
         self.assertEqual(reserved.reserved_krw, 4944)
         self.assertEqual(preferences, spec['gpu_ids'])
         for update in ({'gpu_ids': ['NVIDIA H200']}, {'gpu_ids': ['NVIDIA A100 80GB PCIe']},
-                       {'gpu_usd_per_hour_upper': '4.01'}, {'runtime_seconds': 1801},
+                       {'gpu_usd_per_hour_upper': '4.01'}, {'runtime_seconds': 3601},
                        {'training_profile': 'unknown'}):
             bad = copy.deepcopy(manifest)
             bad['roles']['chat'].update(update)
@@ -104,9 +104,12 @@ class GemmaTrainingProfileTests(unittest.TestCase):
         spec = manifest['roles']['chat']
         spec['training_profile'] = PROFILE
         child = dedicated.pod_environment(env, manifest, 'fixture', 'chat', 'synthetic-chat',
-                                          'fixture/private/chat:v0', 1800)
+                                          'fixture/private/chat:v0', 3600)
         job = json.loads(child['HASLA_ROLE_JOBS'])[0]
         self.assertEqual(job['training_profile'], PROFILE)
+        self.assertEqual(job['runtime_seconds'], 3000)
+        with self.assertRaises(ValueError):
+            bootstrap.role_jobs({'HASLA_ROLE_JOBS': json.dumps([{**job, 'runtime_seconds': 3001}])})
         code = b'# synthetic pinned child\n'
         child.update(REPO_SHA='a' * 40, HASLA_POD_SCRIPT_SHA256=hashlib.sha256(code).hexdigest(),
                      HASLA_TRAINING_PROFILE='stale-untrusted-profile')
@@ -117,6 +120,8 @@ class GemmaTrainingProfileTests(unittest.TestCase):
             self.assertEqual(bootstrap.main(), 0)
         forwarded = run.call_args.kwargs['env']
         self.assertEqual(forwarded['HASLA_TRAINING_PROFILE'], PROFILE)
+        self.assertEqual(forwarded['HASLA_TRAIN_TIMEOUT_SECONDS'], '3000')
+        self.assertEqual(run.call_args.kwargs['timeout'], 3300)
         config = pod.pinned_role_settings(Path(role_config.__file__), 'chat', 'chat', forwarded['HASLA_TRAINING_PROFILE'])
         command = pod.training_command('train.py', 'train.jsonl', 'out', config=config, data_format='chat')
         self.assertEqual(command[command.index('--training-profile') + 1], PROFILE)
@@ -127,6 +132,56 @@ class GemmaTrainingProfileTests(unittest.TestCase):
         self.assertFalse(options['fast_inference'])
         self.assertTrue(options['load_in_4bit'])
         self.assertFalse(options['load_in_16bit'])
+
+    def test_parent_runtime_extension_is_only_for_the_qlora_profile(self):
+        _, manifest = fixture()
+        manifest.update(budget_krw=100000, authorized_budget_krw=100000, prior_upper_krw=49979)
+        chat = manifest['roles']['chat']
+        chat.update(training_profile=PROFILE, gpu_ids=[GPU], gpu_usd_per_hour_upper='1.2', runtime_seconds=3600)
+        ledger, quote, seconds, _ = inputs.resource_settings(manifest, 'chat')
+        self.assertEqual(seconds, 3600)
+        reserved = inputs.reserve_run(ledger, 'synthetic-extended-chat', 'chat', quote, 0, seconds, seconds)
+        self.assertLessEqual(reserved.prior_spend_krw + reserved.reserved_krw + 5000, 100000)
+        chat['runtime_seconds'] = 3601
+        with self.assertRaises(ValueError):
+            inputs.resource_settings(manifest, 'chat')
+        del chat['training_profile']
+        chat.update(gpu_ids=['NVIDIA A100-SXM4-80GB'], runtime_seconds=1800)
+        self.assertEqual(inputs.resource_settings(manifest, 'chat')[2], 1800)
+        chat['runtime_seconds'] = 1801
+        with self.assertRaises(ValueError):
+            inputs.resource_settings(manifest, 'chat')
+        manifest['roles']['solver']['runtime_seconds'] = 14400
+        self.assertEqual(inputs.resource_settings(manifest, 'solver')[2], 14400)
+        manifest['roles']['solver']['runtime_seconds'] = 14401
+        with self.assertRaises(ValueError):
+            inputs.resource_settings(manifest, 'solver')
+
+    def test_worker_timeout_extension_is_only_for_the_qlora_profile(self):
+        from test_private_pod_train import FakeWandb
+        env = {'ROLE': 'chat', 'HASLA_DATA_FORMAT': 'chat', 'RUN': 'synthetic-timeout',
+               'ARTIFACT': 'synthetic-timeout-lora', 'HF_TOKEN': 'synthetic-only'}
+        for profile, seconds, allowed in ((PROFILE, 3000, True), (PROFILE, 3001, False),
+                                           (None, 1800, True), (None, 1801, False)):
+            config = pod.data_bounded_settings(role_config.get_role_config('chat', profile), 1)
+            with self.subTest(profile=profile, seconds=seconds), tempfile.TemporaryDirectory() as directory, \
+                    patch.object(pod, 'decode_payload', return_value=b'{}'), \
+                    patch.object(pod, 'rows_from_payload', return_value=[{}]), \
+                    patch.object(pod, 'validate_row_roles'), patch.object(pod, 'verify_partitions'), \
+                    patch.object(pod, 'assert_private_project', return_value={'base_url': 'https://api.wandb.ai', 'entity': 'fixture', 'project': 'private'}), \
+                    patch.object(pod, 'fetch_training_script', return_value='a' * 64), \
+                    patch.object(pod, 'fetch_role_config', return_value='b' * 64), \
+                    patch.object(pod, 'pinned_role_settings', return_value=config), \
+                    patch.object(pod, 'supervise_training', return_value=NS(returncode=1)) as run, \
+                    patch.dict(os.environ, {}, clear=False):
+                result = pod.run_pilot({**env, 'HASLA_TRAIN_TIMEOUT_SECONDS': str(seconds)}, Path(directory), FakeWandb())
+                self.assertEqual(run.called, allowed)
+                if allowed:
+                    self.assertEqual(run.call_args.kwargs['timeout'], seconds)
+                    command = run.call_args.args[0]
+                    self.assertEqual(command[command.index('--train-wall-seconds') + 1], str(seconds - 600))
+                else:
+                    self.assertEqual(result['error_code'], 'invalid_training_timeout')
 
     def test_new_two_role_batch_keeps_profile_chat_and_solver_separate_without_old_sibling(self):
         env, manifest = fixture()
