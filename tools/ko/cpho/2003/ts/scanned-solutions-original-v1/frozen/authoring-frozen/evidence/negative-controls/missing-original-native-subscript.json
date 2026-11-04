@@ -1,0 +1,98 @@
+{
+  "schema": "cpho2003-ts-actual-bad-pdf-negative-v1",
+  "case": "missing-original-native-subscript",
+  "source_original_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "source_page": 10,
+  "language": "ko",
+  "positive_sha256": "51f9c48125ed3dace5a5bd0b2454935a120fa8d97416e4243d0709c44eba89c2",
+  "candidate_sha256": "102118f74bc7d19bc7868b4f48dc7541193822c9b15daec045ff2d41b153fe47",
+  "candidate_bytes": 786971,
+  "actual_pdf_mutation": true,
+  "not_a_metadata_only_mutation": true,
+  "rejected_as_expected": true,
+  "checker_sha256": "4f4140736e38a194be91e5a76c4bd8d198102c1342ae704c66c98fe6511090f7",
+  "detail": {
+    "original_source_script": {
+      "c": "0",
+      "font": "TimesNewRomanPSMT",
+      "size": 7.009312629699707,
+      "origin": [
+        188.9490203857422,
+        232.98348999023438
+      ],
+      "bbox": [
+        188.9490203857422,
+        227.3418426513672,
+        192.45367431640625,
+        234.35116577148438
+      ],
+      "render_mode": 0,
+      "trace_gid": 19,
+      "color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "opacity": 1.0,
+      "linewidth": null,
+      "direction": [
+        1.0,
+        0.0
+      ],
+      "stroke_color": null,
+      "stroke_opacity": null,
+      "wmode": 0,
+      "colorspace": 3
+    },
+    "actual_removed_script": {
+      "c": "0",
+      "font": "TimesNewRomanPSMT",
+      "size": 7.009312629699707,
+      "origin": [
+        165.23329162597656,
+        232.98348999023438
+      ],
+      "bbox": [
+        165.23329162597656,
+        227.3418426513672,
+        168.73794555664062,
+        234.35116577148438
+      ],
+      "render_mode": 0,
+      "trace_gid": 19,
+      "color": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "opacity": 1.0,
+      "linewidth": null,
+      "direction": [
+        1.0,
+        0.0
+      ],
+      "stroke_color": null,
+      "stroke_opacity": null,
+      "wmode": 0,
+      "colorspace": 3
+    },
+    "removed_actual_source_glyphs": 1,
+    "actual_original_Form_before_sha256": "7b8739fb566e03278b374a399e6a476b1c0e8715ff0fa3a566fb7ddab5bf27a4",
+    "deliberately_bad_Form_after_sha256": "4f0e8ea60a259f6f70d5c670af3ea22968398b3b6758ad587fe1569946498c64",
+    "production_native_form_guard_unchanged": true,
+    "actual_checker_error": "('Actual source-native glyph/ink missing', [{'c': '0', 'font': 'TimesNewRomanPSMT', 'gid': 19, 'expected_origin': [165.2332956790924, 232.98348999023438]}], None)",
+    "actual_missing_final_native_glyphs": [
+      {
+        "c": "0",
+        "font": "TimesNewRomanPSMT",
+        "gid": 19,
+        "expected_origin": [
+          165.2332956790924,
+          232.98348999023438
+        ]
+      }
+    ],
+    "original_source_protected_glyphs": 111,
+    "production_native_form_guard_sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f"
+  }
+}

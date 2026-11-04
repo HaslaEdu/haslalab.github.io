@@ -1,0 +1,128 @@
+{
+  "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\inputs\\CPhO_2003_Chinese_original.pdf",
+  "source_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "source_page": 10,
+  "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\TS\\proofs\\ko\\page10.pdf",
+  "final_sha256": "51f9c48125ed3dace5a5bd0b2454935a120fa8d97416e4243d0709c44eba89c2",
+  "math_control_sha256": "779f7514ba4511b6ee55f1913375e11db95f4851f395343e8aac1a5c87f32de7",
+  "prose_reference_sha256": "2d0cd9df11cd854221c4b8f0ec9fae1605b80c9c901c28e399726b9e8935ceeb",
+  "render_scale": 4,
+  "original_encoded_image_programs_masks_palettes_icc_and_declared_ctms_retained": true,
+  "original_native_font_program_changes": [],
+  "original_pagegroup_unchanged": true,
+  "outside_declared_language_and_math_motion": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "stationary_original_dark_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "independent_protected_source_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_overlap_original_or_replayed_nonlanguage_ink": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "raw_collision_including_reviewed_scan_background": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_expected_dark_pixels_missing": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "reviewed_blank_background_records": [],
+  "thresholds": {
+    "source_deep_dark": 160,
+    "new_prose_and_existing_ink": 180,
+    "actual_missing_white": 240
+  },
+  "note": "Only declared language and inline mathematical motion may change; source display/figure rects remain independently protected. Blank records never white-fill anything and exclude every protected/math region. New-prose final visibility is independently required.",
+  "passed": true,
+  "actual_final_math_single_native_source_controls": {
+    "atoms": 3,
+    "RGB_errors": 0,
+    "records": [
+      {
+        "id": "scan-intro-v1",
+        "source_rect": [
+          150.25,
+          79.67000732421877,
+          161.5,
+          91.25
+        ],
+        "destination_rect": [
+          135.5,
+          79.67000732421877,
+          146.75,
+          91.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1496,
+        "expected_actual_dark_glyph_pixels": 216
+      },
+      {
+        "id": "scan-intro-p1",
+        "source_rect": [
+          251.25,
+          79.67000732421877,
+          262.75,
+          91.5
+        ],
+        "destination_rect": [
+          187.0,
+          79.67000732421877,
+          198.5,
+          91.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1727,
+        "expected_actual_dark_glyph_pixels": 279
+      },
+      {
+        "id": "scan-intro-E1",
+        "source_rect": [
+          278.0,
+          79.67000732421877,
+          290.5,
+          91.5
+        ],
+        "destination_rect": [
+          239.0,
+          79.67000732421877,
+          251.5,
+          91.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1853,
+        "expected_actual_dark_glyph_pixels": 363
+      }
+    ]
+  },
+  "actual_prose_font_point_baseline_and_paint": {
+    "glyph_paints_checked": 39,
+    "errors": [],
+    "passed": true
+  },
+  "new_prose_outlines": {
+    "file": "page10.pdf",
+    "sha256": "51f9c48125ed3dace5a5bd0b2454935a120fa8d97416e4243d0709c44eba89c2",
+    "delivered_pdf_modified": false,
+    "pages": [
+      {
+        "page": 1,
+        "new_nonspace_actual_gids_checked": 82,
+        "ascii_actual_gids_checked": 21,
+        "empty_outlines": [],
+        "analysis_only_alias_normalisation": [],
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "publication_ready": false,
+  "full_edition_complete": false
+}

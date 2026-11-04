@@ -90,8 +90,8 @@ for (const year of cphoBilingualYears) {
   assert.equal(file.paper, year === '2023' ? 'CPhO_2023_Combined_EN.pdf' : ['2003', '2005', '2006', '2007', '2008', '2013', '2022', '2024'].includes(year) ? `CPhO_${year}_T_EN.pdf` : `CPhO_${year}_T_BAUPC_EN.pdf`);
   assert.ok(assets[file.paper] > 0);
   assert.ok(assets[file.ko.paper] > 0);
-  if (['2008', '2013', '2024'].includes(year)) {
-    assert.equal(file.sol, year === '2008' ? 'CPhO_2008_TS_EN.pdf' : `CPhO_${year}_TS_BAUPC_EN.pdf`);
+  if (['2003', '2008', '2013', '2024'].includes(year)) {
+    assert.equal(file.sol, ['2003', '2008'].includes(year) ? `CPhO_${year}_TS_EN.pdf` : `CPhO_${year}_TS_BAUPC_EN.pdf`);
     assert.ok(assets[file.sol] > 0);
     assert.ok(assets[file.ko.sol] > 0);
   }

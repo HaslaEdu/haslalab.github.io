@@ -1,0 +1,18 @@
+"""Record the completed manual original/current full-page and linked-prose read."""
+from pathlib import Path
+import json,hashlib
+B=Path('C:/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2003-original-native');T=B/'TS'
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+old=json.loads((T/'master-v1/authoring-frozen/authoring/full144-visual-review-complete.json').read_text('utf8'))
+rows=[];glyphs=0;native=0;math=0
+for n in range(4,11):
+ for lang in ['ko','en']:
+  p=T/f'proofs/{lang}/page{n:02}.pdf';source=json.loads(p.with_suffix('.source-qa.json').read_text('utf8'));pop=json.loads(p.with_suffix('.poppler-qa.json').read_text('utf8'));style=json.loads(p.with_suffix('.final-actual-donor-style.json').read_text('utf8'));ink=json.loads(p.with_suffix('.original-source-native-ink-v2.json').read_text('utf8'));last=json.loads(p.with_suffix('.final-source-native-ink.json').read_text('utf8'))
+  for q,key in [(source,'final_sha256'),(pop,'proof_sha256'),(style,'proof_sha256'),(ink,'output_sha256'),(last,'output_sha256')]:assert q['passed']and q[key]==sha(p)
+  png=p.parent/f'page{n:02}-poppler/final.png';assert png.exists()
+  glyphs+=style['actual_new_nonspace_glyphs_checked'];native+=ink['actual_original_native_nonspace_glyphs'];math+=len(pop['actual_single_source_math_controls'])
+  rows.append(dict(language=lang,source_page=n,edition_page=n-3,proof_sha256=sha(p),source_png_sha256=sha(B/f'source-renders-144/page{n:02}.png'),png=str(png),png_sha256=sha(png),dpi=144,passed=True,full_original_and_current_proof_144dpi_visually_reviewed=True,visual_review_pending=False,source_QA_sha256=sha(p.with_suffix('.source-qa.json')),Poppler_QA_sha256=sha(p.with_suffix('.poppler-qa.json')),actual_donor_style_sha256=sha(p.with_suffix('.final-actual-donor-style.json')),original_native_ink_sha256=sha(p.with_suffix('.original-source-native-ink-v2.json'))))
+old.update(actual_new_nonspace_glyphs_checked=glyphs,actual_source_native_glyphs_checked=native,actual_single_original_image_expression_controls=math,pages=rows,successor='M3_TWO_TARGETED_ENGLISH_REPAIRS_TO_REVIEWED_M2',all14_current_M2_full_page_images_actually_read=True,complete_KO_EN_paragraphs_read_across_source_rows_and_page_breaks=True,original_M1_snapshot_preserved=True,original_font_points_baselines_math_Y_and_graphic_programs_unchanged=True,source_bound_language_review='Each solution and both languages were reread as linked prose. Repaired the upper-ball opening, force enumeration, orbital-energy and angular-momentum paragraphs, Lorentz-force reasoning, meeting-delay/page bridge, myopic-eye and pinhole/diffraction explanations. Semi-major/minor and transverse/conjugate distinctions retained. The source literal O before P-coordinate equations remains unchanged. All14 final current full pages were visually inspected after the final original-paper and Chinese-antialias-support corrections; actual native outlines and single-image expressions are separately audited.')
+out=T/'authoring/full144-visual-review-complete.json';assert not out.exists();out.write_text(json.dumps(old,ensure_ascii=False,indent=2)+'\n','utf8')
+p=T/'authoring/m2-linked-prose-width-reviewed.json';q=json.loads(p.read_text('utf8'));assert not q['all_original_point_width_advisory_overflows'];q.update(status='ALL14_CURRENT_PROOFS_SOURCE_QA_PASSED_AND_LINKED_PROSE_VISUALLY_READ',full_original_and_both_language_full_page_images_actually_read=True,original_fixed_point_width_cases_checked=sum(len(r['rows'])for r in q['pages']),final_visual_review_sha256=sha(out));p.write_text(json.dumps(q,ensure_ascii=False,indent=2)+'\n','utf8')
+print('ALL14_M2_CURRENT_FULL_PAGE_VISUALS_AND_LINKED_PROSE_REVIEWED',glyphs,native,math,sha(out),flush=True)
