@@ -1,4 +1,4 @@
-"""Train a LoRA adapter for HaslaLab AI from the approved conversations (ai-review.html → 학습 데이터 내보내기).
+"""Train a LoRA adapter for Hasla AI from the approved conversations (ai-review.html → 학습 데이터 내보내기).
 
 Run on a rented GPU (e.g. RunPod: A100 80GB for the 26–32B models, RTX 4090 for 8B), not on the site's servers:
 

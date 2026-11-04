@@ -8,7 +8,7 @@ export const CONSENT_SQL=`CREATE TABLE IF NOT EXISTS user_consents (
  terms_version TEXT NOT NULL, age_ok INTEGER NOT NULL DEFAULT 0, train_ok INTEGER NOT NULL DEFAULT 0,
  country TEXT, agreed_at INTEGER NOT NULL, train_at INTEGER
 )`;
-// the second optional box: the member's HaslaLab AI chats may be kept for review and training (ai-memory.js)
+// the second optional box: the member's Hasla AI chats may be kept for review and training (ai-memory.js)
 const CONSENT_COLUMNS_ADDED=['ALTER TABLE user_consents ADD COLUMN ai_train_ok INTEGER NOT NULL DEFAULT 0','ALTER TABLE user_consents ADD COLUMN ai_train_at INTEGER'];
 // training rows are kept at most this long after capture (the privacy notice promises one year)
 export const TRAIN_KEEP_SEC=365*86400;

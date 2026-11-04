@@ -22,7 +22,7 @@ test('the boxes link the policies, show the age box only when the server asks, a
   assert.throws(()=>read(),e=>e.code==='consent_required');
   box.querySelector('[name=cTerms]').checked=box.querySelector('[name=cPrivacy]').checked=true;
   assert.deepEqual({...read()},{terms:true,privacy:true,age14:false,train:false,aiTrain:false});
-  assert.match(box.textContent,/\[선택\] 하슬라랩 AI와 나눈 대화를 AI 답변 개선/);box.querySelector('[name=cAiTrain]').checked=true;
+  assert.match(box.textContent,/\[선택\] 하슬라 AI와 나눈 대화를 AI 답변 개선/);box.querySelector('[name=cAiTrain]').checked=true;
   assert.deepEqual({...read()},{terms:true,privacy:true,age14:false,train:false,aiTrain:true},'the AI-chat box is its own choice');
   const kr=page(),b2=kr.d.getElementById('root');b2.innerHTML=kr.w.eval('cmConsentHtml()');const r2=kr.w.eval('cmConsentWire')(b2);await tick();
   assert.equal(b2.querySelector('[data-age]').hidden,false);b2.querySelector('[name=cTerms]').checked=b2.querySelector('[name=cPrivacy]').checked=true;

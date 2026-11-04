@@ -165,7 +165,7 @@ export async function aiEvalTick(env, {now = Date.now()} = {}) {
 const REVIEW = new Set(['approve', 'reject', 'reset']);
 /* one chat-format training line; the system line names the tone, as the assistant's prompt does */
 export function trainingLine(row) {
-  const system = `You are HaslaLab's assistant (하슬라랩 AI). ${STYLES[styleOf(row.style)].split('\n')[0]}`;
+  const system = `You are Hasla AI (하슬라 AI), HaslaLab's assistant. ${STYLES[styleOf(row.style)].split('\n')[0]}`;
   let context = [];
   try { context = JSON.parse(row.context || '[]').filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string'); } catch {}
   return JSON.stringify({messages: [{role: 'system', content: system}, ...context.map(m => ({role: m.role, content: m.content})),

@@ -1149,7 +1149,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=093476a8bf6d"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
-<script src="ai-chat.js?v=291f537387fe"></script>
+<script src="ai-chat.js?v=8ab0c109b1e7"></script>
 <script>
 "use strict";
 
@@ -8796,8 +8796,8 @@ const CMT = {
     pwMismatch:"비밀번호 확인이 맞지 않습니다.", mustAgree:"커뮤니티 규칙에 동의해 주세요.",
     consent:{h:"약관 동의", terms:'[필수] <a href="terms.html" target="_blank" rel="noopener">이용약관</a> 동의', privacy:'[필수] <a href="privacy.html" target="_blank" rel="noopener">개인정보 수집·이용</a> 동의',
       age:"[필수] 만 14세 이상입니다.", train:"[선택] 내 답안과 채점 결과를 AI 채점 개선(학습)에 최대 1년 활용하는 데 동의합니다. (언제든 철회 가능)",
-      aiTrain:"[선택] 하슬라랩 AI와 나눈 대화를 AI 답변 개선(관리자 검토·학습)에 활용하는 데 동의합니다. (언제든 철회 가능)",
-      aiTrainH:"하슬라랩 AI 대화 학습 활용", aiTrainHelp:"동의하면 이후 하슬라랩 AI와 나눈 대화를 관리자가 검토해 AI 답변 개선과 학습에 씁니다. 검토되지 않은 대화는 1년 뒤 지우며, 철회하면 남아 있던 대화도 바로 지웁니다.",
+      aiTrain:"[선택] 하슬라 AI와 나눈 대화를 AI 답변 개선(관리자 검토·학습)에 활용하는 데 동의합니다. (언제든 철회 가능)",
+      aiTrainH:"하슬라 AI 대화 학습 활용", aiTrainHelp:"동의하면 이후 하슬라 AI와 나눈 대화를 관리자가 검토해 AI 답변 개선과 학습에 씁니다. 검토되지 않은 대화는 1년 뒤 지우며, 철회하면 남아 있던 대화도 바로 지웁니다.",
       aiTrainGiven:"동의했습니다. 이후 대화부터 적용됩니다.", aiTrainWithdrawn:"철회했습니다. 남아 있던 대화도 지웠습니다.",
       ai:"HaslaLab의 채점은 AI가 하는 참고용 결과이며 실제 대회 점수와 다를 수 있습니다.",
       dlgH:"약관 동의가 필요합니다", dlgP:"이용약관과 개인정보 처리방침이 2026년 11월 3일부터 시행됩니다. 계속 이용하려면 아래 항목에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
@@ -8869,8 +8869,8 @@ const CMT = {
     pwMismatch:"The passwords don't match.", mustAgree:"Please agree to the community rules.",
     consent:{h:"Agreements", terms:'[Required] I agree to the <a href="terms.html#en" target="_blank" rel="noopener">Terms of Service</a>', privacy:'[Required] I agree to the <a href="privacy.html#en" target="_blank" rel="noopener">collection and use of personal data</a>',
       age:"[Required] I am 14 or older.", train:"[Optional] My answers and grading results may be used to improve the AI grading (training) for up to 1 year. (You can withdraw at any time.)",
-      aiTrain:"[Optional] My chats with HaslaLab AI may be used to improve its answers (admin review and training). (You can withdraw at any time.)",
-      aiTrainH:"HaslaLab AI chats for training", aiTrainHelp:"If you agree, an admin reviews your later chats with HaslaLab AI and uses them to improve and train it. Chats not reviewed are deleted after a year; withdrawing deletes the kept chats at once.",
+      aiTrain:"[Optional] My chats with Hasla AI may be used to improve its answers (admin review and training). (You can withdraw at any time.)",
+      aiTrainH:"Hasla AI chats for training", aiTrainHelp:"If you agree, an admin reviews your later chats with Hasla AI and uses them to improve and train it. Chats not reviewed are deleted after a year; withdrawing deletes the kept chats at once.",
       aiTrainGiven:"Agreed. It applies from your next chats.", aiTrainWithdrawn:"Withdrawn. The kept chats were deleted.",
       ai:"HaslaLab's grading is done by AI for reference only and may differ from an official competition score.",
       dlgH:"Please accept the terms", dlgP:"New Terms of Service and a Privacy Policy take effect on 3 November 2026. Please agree below to keep using the site. Grading cannot start until you do.",
@@ -9612,7 +9612,7 @@ async function cmTrainToggle(box,known){
     };};
   draw();
 }
-/* the optional HaslaLab AI chat box, on the profile page: withdrawing deletes the kept chats at once */
+/* the optional Hasla AI chat box, on the profile page: withdrawing deletes the kept chats at once */
 async function cmAiTrainToggle(box){
   if(!box||!cm.me)return;
   const C=CMT[lang].consent,hide=()=>{box.hidden=true;};let on=false;
