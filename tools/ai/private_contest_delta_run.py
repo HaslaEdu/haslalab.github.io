@@ -22,6 +22,16 @@ TOKENIZER_FILES={
 class PreparationError(ValueError):pass
 
 
+class PipelineFailure(PreparationError):
+    def __init__(self,phase,error):
+        from private_text_pack import PackError
+        known=isinstance(error,(PreparationError,delta.DeltaError,fetch.FetchError,PackError))
+        code=str(error) if known and re.fullmatch(r'[a-z_]{1,80}',str(error)) else 'private_native_preparation_failed'
+        super().__init__(code)
+        self.phase=phase
+        self.error_class=type(error).__name__
+
+
 def require(value,code):
     if not value:raise PreparationError(code)
 
@@ -159,22 +169,29 @@ def execute(env=None):
     parent=delta.private_path(env.get('WANDB_DIR',''));parent.mkdir(parents=True,exist_ok=True)
     cloud.E=env
     with privacy.quiet_output(),tempfile.TemporaryDirectory(prefix='native-delta-',dir=parent) as temporary:
-        base=Path(temporary);deadline=time.monotonic()+2400
-        fetch.assert_private(entity,env,deadline)
-        import wandb as sdk
-        source=base/'source';source.mkdir()
-        delta.download_sources(manifest['source_artifact'],manifest['inventory_sha256'],env,source)
-        packed_pin=download_packed(manifest,env,entity,base/'previous',sdk)
-        native=base/'native'
-        delta.convert_local(source,manifest['inventory_sha256'],base/'previous',packed_pin,native,
-            manifest['dataset_version']+'-native',manifest['authorization_note'],artifact_reference=manifest['source_artifact'])
-        download_tokenizer(base/'tokenizer')
-        import private_text_pack as packing
-        output=base/'packed'
-        packed=packing.prepare(native,delta.sha_file(native/'manifest.json'),base/'tokenizer',
-            TOKENIZER_FILES['tokenizer.json'][1],TOKENIZER_FILES['tokenizer_config.json'][1],output,manifest['dataset_version'])
-        require(packed.get('training_ready') is True and packed.get('token_length_measured') is True,'token_gate_unverified')
-        event=stage_packed(manifest,packed,output,env,entity,sdk,run_id)
+        phase='private_project'
+        try:
+            base=Path(temporary);deadline=time.monotonic()+2400
+            fetch.assert_private(entity,env,deadline)
+            import wandb as sdk
+            source=base/'source';source.mkdir()
+            phase='source_native_download'
+            delta.download_sources(manifest['source_artifact'],manifest['inventory_sha256'],env,source)
+            phase='previous_packed_download'
+            packed_pin=download_packed(manifest,env,entity,base/'previous',sdk)
+            native=base/'native';phase='native_conversion'
+            delta.convert_local(source,manifest['inventory_sha256'],base/'previous',packed_pin,native,
+                manifest['dataset_version']+'-native',manifest['authorization_note'],artifact_reference=manifest['source_artifact'])
+            phase='public_tokenizer_download';download_tokenizer(base/'tokenizer')
+            import private_text_pack as packing
+            output=base/'packed';phase='exact_token_packing'
+            packed=packing.prepare(native,delta.sha_file(native/'manifest.json'),base/'tokenizer',
+                TOKENIZER_FILES['tokenizer.json'][1],TOKENIZER_FILES['tokenizer_config.json'][1],output,manifest['dataset_version'])
+            require(packed.get('training_ready') is True and packed.get('token_length_measured') is True,'token_gate_unverified')
+            phase='private_dataset_staging'
+            event=stage_packed(manifest,packed,output,env,entity,sdk,run_id)
+        except Exception as error:
+            raise PipelineFailure(phase,error) from None
     return event
 
 
@@ -183,6 +200,7 @@ def main():
     except Exception as error:
         safe=str(error) if isinstance(error,(PreparationError,delta.DeltaError,fetch.FetchError)) else 'private_native_preparation_failed'
         event={'event':'private_contest_delta_failed','code':safe,'training_performed':False}
+        if isinstance(error,PipelineFailure):event.update(phase=error.phase,error_class=error.error_class)
     print(json.dumps(event,ensure_ascii=True,separators=(',',':')),flush=True)
     return 0 if event.get('status')=='staged' else 1
 
