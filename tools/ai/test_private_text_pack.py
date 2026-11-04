@@ -103,10 +103,36 @@ class TextPackTests(unittest.TestCase):
         self.assertTrue(self.tokenizer.truncation_disabled and self.tokenizer.padding_disabled)
 
     def test_1024_includes_terminal_eos_and_1024_payload_is_split(self):
+        fitting=list(packing.split_row(row_for('x'*1023),self.tokenizer))
+        self.assertEqual([p['tokens_including_eos'] for p in fitting],[1024])
         row=row_for('x'*1024)
         pieces=list(packing.split_row(row,self.tokenizer))
-        self.assertEqual([p['tokens_including_eos'] for p in pieces],[1024,2])
+        self.assertEqual([p['tokens_including_eos'] for p in pieces],[513,513])
         self.assertEqual(''.join(p['text'] for p in pieces),row['text'])
+
+    def test_balanced_long_sources_keep_shared_tiny_footer_with_context(self):
+        footer='\nEND\n'
+        texts=[('Algebra exercise: factor polynomials and compare roots. '*24)[:1023]+footer,
+            ('Astronomy exercise: estimate stellar flux and orbital periods. '*24)[:1023]+footer]
+        # The former 1023-byte payload prefixes left this identical tiny tail.
+        self.assertEqual([text[1023:] for text in texts],[footer,footer])
+        self.rows={'train':[row_for(texts[0])],
+            'validation':[row_for(texts[1],'validation','b'*64,'held-row')]}
+        piece_sets=[]
+        for original in (self.rows['train'][0],self.rows['validation'][0]):
+            pieces=list(packing.split_row(original,self.tokenizer))
+            self.assertEqual(len(pieces),2)
+            self.assertEqual(''.join(p['text'] for p in pieces),original['text'])
+            self.assertTrue(pieces[-1]['text'].endswith(footer))
+            self.assertGreater(len(pieces[-1]['text']),len(footer))
+            self.assertTrue(all(p['tokens_including_eos']==packing.measure(p['text'],self.tokenizer)
+                and p['tokens_including_eos']<=1024 for p in pieces))
+            piece_sets.append({p['segment_text_sha256'] for p in pieces})
+        self.assertTrue(piece_sets[0].isdisjoint(piece_sets[1]))
+        self.write_input();result=self.prepare()
+        self.assertTrue(result['training_ready'] and result['existing_solver_gates_passed'])
+        for split in ('train','validation'):
+            self.assertEqual(len(self.output_rows(split)),2)
 
     def test_unicode_combining_whitespace_and_existing_eos_are_exact(self):
         text=' 한글🙂e\u0301\n\t'+packing.EOS+' αβ\n'*20+'\r\n  '
@@ -114,7 +140,11 @@ class TextPackTests(unittest.TestCase):
         self.assertEqual(''.join(p['text'] for p in pieces),text)
         self.assertEqual([p['original_char_start'] for p in pieces][0],0)
         self.assertEqual(pieces[-1]['original_char_end'],len(text))
-        self.assertTrue(all(p['tokens_including_eos']<=16 for p in pieces))
+        self.assertEqual([p['original_char_start'] for p in pieces[1:]],
+            [p['original_char_end'] for p in pieces[:-1]])
+        self.assertTrue(all(p['text']==text[p['original_char_start']:p['original_char_end']]
+            and p['tokens_including_eos']==packing.measure(p['text'],self.tokenizer)
+            and p['tokens_including_eos']<=16 for p in pieces))
 
     def test_same_split_group_and_type_only_are_packed(self):
         originals=[row_for('a','train','a'*64,'a'),row_for('b','train','a'*64,'b'),
@@ -206,16 +236,23 @@ class TextPackTests(unittest.TestCase):
             packing.measure(PRIVATE,tokenizer)
         self.assertNotIn(PRIVATE,str(caught.exception))
 
-    def test_bpe_prefix_search_needs_no_monotonic_token_count_assumption(self):
+    def test_balanced_split_needs_no_monotonic_token_count_assumption(self):
         class Nonmonotone(ByteTokenizer):
             def encode(self,text,add_special_tokens=False):
                 plain=text.removesuffix(packing.EOS)
                 size=4 if len(plain)%7==0 else len(plain)+1
                 return SimpleNamespace(ids=[1]*(size-1)+[1000])
-        tokenizer=Nonmonotone();original=row_for('abcdefghi'*20)
+        tokenizer=Nonmonotone();original=row_for('abcdefghi'*25)
         pieces=list(packing.split_row(original,tokenizer,capacity=8))
+        self.assertGreater(packing.measure('abcdef',tokenizer),packing.measure('abcdefg',tokenizer))
         self.assertEqual(''.join(p['text'] for p in pieces),original['text'])
-        self.assertTrue(all(p['tokens_including_eos']<=8 for p in pieces))
+        self.assertTrue(any(len(p['text'])>8 for p in pieces))
+        self.assertTrue(all(p['tokens_including_eos']==packing.measure(p['text'],tokenizer)
+            and p['tokens_including_eos']<=8 for p in pieces))
+
+    def test_oversized_single_unicode_character_fails_closed(self):
+        with self.assertRaisesRegex(packing.PackError,'one_character_exceeds_capacity'):
+            list(packing.split_row(row_for('🙂'),self.tokenizer,capacity=4))
 
     def test_nonadditive_eos_boundaries_fail_closed(self):
         class Nonadditive(ByteTokenizer):

@@ -80,32 +80,27 @@ def measure(text, tokenizer, eos=EOS):
 
 
 def split_row(row, tokenizer, eos=EOS, capacity=CAPACITY, input_index=0):
-    """Find fitting prefixes by exact remeasurement, preserving every character.
+    """Bisect oversized character spans, preserving every character in order.
 
-    BPE prefix counts need not be monotone. Binary probing is merely a search
-    heuristic: each accepted prefix is remeasured, and one fitting codepoint is
-    a progress guarantee. No token decode/re-encode reconstruction is used.
+    Balanced subdivision avoids a greedy remainder that can isolate a short
+    common footer. Every candidate is measured including EOS;
+    no monotone BPE count assumption or token decode reconstruction is used.
     """
     require(type(capacity) is int and 2 <= capacity <= CAPACITY,'invalid_token_capacity')
-    text = row['text'];start = 0;original_sha = text_sha(text)
-    while start < len(text):
-        window_end = min(len(text),start+capacity*16)
-        count = measure(text[start:window_end],tokenizer,eos)
-        if count <= capacity: end = window_end
-        else:
-            require(measure(text[start:start+1],tokenizer,eos) <= capacity,'one_character_exceeds_capacity')
-            lo,hi = 1,window_end-start-1
-            while lo < hi:
-                middle = (lo+hi+1)//2
-                if measure(text[start:start+middle],tokenizer,eos) <= capacity: lo = middle
-                else: hi = middle-1
-            end = start+lo
-            count = measure(text[start:end],tokenizer,eos)
+    text = row['text'];original_sha = text_sha(text)
+    pending = [(0,len(text))] if text else []
+    while pending:
+        start,end = pending.pop()
+        count = measure(text[start:end],tokenizer,eos)
+        if count > capacity:
+            require(end-start > 1,'one_character_exceeds_capacity')
+            middle = (start+end)//2
+            pending.extend(((middle,end),(start,middle)))
+            continue
         require(end > start and count <= capacity,'character_split_measurement_rejected')
         yield {'original':row,'original_id':row['id'],'original_text_sha256':original_sha,
             'input_row_index':input_index,'original_char_start':start,'original_char_end':end,
             'text':text[start:end],'segment_text_sha256':text_sha(text[start:end]),'tokens_including_eos':count}
-        start = end
 
 
 def arrange(pieces, capacity=CAPACITY):
