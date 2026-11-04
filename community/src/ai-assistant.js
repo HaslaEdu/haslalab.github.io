@@ -12,10 +12,16 @@ import { readPublicPosts } from './public-data.js';
 
 export const AI_ASSISTANT_PATH = '/api/ai/chat';
 const SITE = 'https://haslalab.org/';
-const CHAT_MODEL = '@cf/google/gemma-4-26b-a4b-it';
-const SOLVER_MODEL = '@cf/openai/gpt-oss-120b';
-const GUARD_MODEL = '@cf/meta/llama-guard-3-8b';
+// Every model here takes a LoRA adapter of our own (AI_CHAT_LORA, AI_SOLVER_LORA, AI_GUARD_LORA: the name given to
+// `wrangler ai finetune create`), so the assistant can be tuned on the answers an admin has checked (ai-eval.js).
+export const CHAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';   // function calling, 24k context
+export const SOLVER_MODEL = '@cf/qwen/qwq-32b';                          // reasoning
+export const GUARD_MODEL = '@cf/meta/llama-guard-3-8b';
+// the nightly self-test (ai-eval.js): one model writes students' questions, another grades the answers
+export const MODELS = {CHAT: CHAT_MODEL, SOLVER: SOLVER_MODEL, GUARD: GUARD_MODEL,
+  ASKER: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', JUDGE: '@cf/openai/gpt-oss-120b'};
 const MAX_TURNS = 20, MAX_CHARS = 4000, MAX_STEPS = 5;
+const HISTORY_CHARS = 12000, TOOL_CHARS = 6000;   // the chat model's 24k-token window holds the system, history and tool results
 const PER_DAY = 40, PER_MINUTE = 6;
 
 const SYSTEM = `You are HaslaLab's assistant (하슬라랩 AI). HaslaLab is a Korean site for physics, astronomy, earth-science,
@@ -45,6 +51,7 @@ const TOOLS = [
   fn('solve_problem', 'Have the reasoning model work out a full solution or explanation of a problem.',
     {problem: str('the full problem statement'), context: str('relevant excerpts, e.g. from the official solution (optional)')}, ['problem']),
 ];
+const TOOL_NAMES = new Set(TOOLS.map(t => t.function.name));
 function fn(name, description, properties, required) { return {type: 'function', function: {name, description, parameters: {type: 'object', properties, required}}}; }
 function str(description) { return {type: 'string', description}; }
 
@@ -60,13 +67,33 @@ export function readCompletion(res) {
     if (typeof a === 'string') { try { args = JSON.parse(a || '{}'); } catch { args = {}; } }
     return {id: c.id || `call_${i}_${name}`, name, args: args && typeof args === 'object' ? args : {}};
   }).filter(c => typeof c.name === 'string');
+  // Llama sometimes writes its call as the answer text: {"name": "...", "parameters": {...}} (alone, or in a code fence)
+  if (!calls.length) {
+    const m = /^(?:```(?:json)?\s*)?(\{[\s\S]*\})\s*(?:```)?$/.exec(text);
+    let o = null;
+    if (m) { try { o = JSON.parse(m[1]); } catch {} }
+    const name = o?.name ?? o?.function?.name, args = o?.parameters ?? o?.arguments ?? o?.function?.arguments;
+    if (typeof name === 'string' && TOOL_NAMES.has(name) && args && typeof args === 'object')
+      return {text: '', calls: [{id: `call_0_${name}`, name, args}]};
+  }
   return {text, calls};
 }
+
+/* one Workers AI call: the output limit under the name the model takes (OpenAI's open models: max_completion_tokens,
+   the others: max_tokens, which otherwise defaults to 256), and the LoRA adapter when one is set */
+export function runModel(env, which, input, maxTokens) {
+  const model = env[`AI_${which}_MODEL`] || MODELS[which];
+  const lora = env[`AI_${which}_LORA`];
+  const out = /^@cf\/openai\//.test(model) ? {max_completion_tokens: maxTokens} : {max_tokens: maxTokens};
+  return env.AI.run(model, {...input, ...(maxTokens ? out : {}), ...(lora ? {lora} : {})});
+}
+/* a reasoning model's thinking («<think>…</think>», sometimes with only the closing tag) is not part of its answer */
+export const stripThinking = t => String(t || '').replace(/^[\s\S]*?<\/think>/, '').replace(/<think>[\s\S]*$/, '').trim();
 
 /* Llama Guard answers «safe» or «unsafe» followed by the category codes */
 async function guard(env, messages) {
   try {
-    const r = readCompletion(await env.AI.run(env.AI_GUARD_MODEL || GUARD_MODEL, {messages}));
+    const r = readCompletion(await runModel(env, 'GUARD', {messages}, 64));
     const verdict = r.text.toLowerCase();
     return {safe: !verdict.startsWith('unsafe'), categories: verdict.startsWith('unsafe') ? r.text.split(/\s+/).slice(1).join(',') : ''};
   } catch { return {safe: true, categories: '', unchecked: true}; }
@@ -151,11 +178,10 @@ export async function webSearch(env, {query = ''}) {
 }
 
 async function solveProblem(env, {problem = '', context = ''}) {
-  const res = await env.AI.run(env.AI_SOLVER_MODEL || SOLVER_MODEL, {
+  const res = await runModel(env, 'SOLVER', {
     messages: [{role: 'system', content: SOLVER_SYSTEM},
-      {role: 'user', content: String(problem).slice(0, 8000) + (context ? `\n\nReference material:\n${String(context).slice(0, 8000)}` : '')}],
-    max_completion_tokens: 4096});
-  return {solution: readCompletion(res).text.slice(0, 12000)};
+      {role: 'user', content: String(problem).slice(0, 6000) + (context ? `\n\nReference material:\n${String(context).slice(0, 6000)}` : '')}]}, 8192);
+  return {solution: stripThinking(readCompletion(res).text).slice(0, TOOL_CHARS - 200)};
 }
 
 const RUN = {find_olympiad_problem: (env, a) => ({problems: findOlympiadProblems(a)}), search_problem_bank: searchProblemBank,
@@ -169,14 +195,40 @@ export function cleanHistory(messages) {
   return turns.length && turns[turns.length - 1].role === 'user' ? turns : null;
 }
 
+/* the chat model; should it refuse OpenAI-style tool_calls in the history, the calls are given again as text */
+export const plainMessages = messages => messages.map(m => m.tool_calls
+  ? {role: 'assistant', content: JSON.stringify(m.tool_calls.map(c => ({name: c.function.name, parameters: JSON.parse(c.function.arguments || '{}')})))}
+  : m.role === 'tool' ? {role: 'tool', name: m.name, content: m.content} : m);
+async function chat(env, messages, tools) {
+  const input = msgs => ({messages: msgs, ...(tools ? {tools} : {})});
+  try { return await runModel(env, 'CHAT', input(messages), 2048); }
+  catch (e) {
+    if (!messages.some(m => m.tool_calls)) throw e;
+    return runModel(env, 'CHAT', input(plainMessages(messages)), 2048);
+  }
+}
+
+/* the latest turns that fit HISTORY_CHARS (always the member's last message) */
+export function fitHistory(history) {
+  const out = [];
+  let n = 0;
+  for (let i = history.length - 1; i >= 0; i--) {
+    n += history[i].content.length;
+    if (out.length && n > HISTORY_CHARS) break;
+    out.unshift(history[i]);
+  }
+  while (out.length > 1 && out[0].role !== 'user') out.shift();
+  return out;
+}
+
 export async function answer(env, history, {lang = 'ko'} = {}) {
   const inCheck = await guard(env, history.slice(-4));
   if (!inCheck.safe) return {answer: lang === 'en' ? 'I can\'t help with that request.' : '그 요청은 도와드릴 수 없습니다.', blocked: 'input', sources: []};
-  const messages = [{role: 'system', content: SYSTEM}, ...history], sources = [], used = [];
+  const messages = [{role: 'system', content: SYSTEM}, ...fitHistory(history)], sources = [], used = [];
   let text = '';
   for (let step = 0; step < MAX_STEPS; step++) {
     const done = step === MAX_STEPS - 1;
-    const r = readCompletion(await env.AI.run(env.AI_CHAT_MODEL || CHAT_MODEL, {messages, ...(done ? {} : {tools: TOOLS}), max_completion_tokens: 2048}));
+    const r = readCompletion(await chat(env, messages, done ? null : TOOLS));
     text = r.text;
     if (!r.calls.length || done) break;
     messages.push({role: 'assistant', content: r.text || '', tool_calls: r.calls.map(c => ({id: c.id, type: 'function', function: {name: c.name, arguments: JSON.stringify(c.args)}}))});
@@ -187,7 +239,7 @@ export async function answer(env, history, {lang = 'ko'} = {}) {
       used.push(c.name);
       for (const x of [...(result.problems || []), ...(result.posts || []), ...(result.results || [])])
         sources.push({title: x.title || x.competition || '', url: x.page || x.link || x.url});
-      messages.push({role: 'tool', tool_call_id: c.id, name: c.name, content: JSON.stringify(result).slice(0, 14000)});
+      messages.push({role: 'tool', tool_call_id: c.id, name: c.name, content: JSON.stringify(result).slice(0, TOOL_CHARS)});
     }
   }
   const outCheck = await guard(env, [...history.slice(-2), {role: 'assistant', content: text.slice(0, 6000)}]);
