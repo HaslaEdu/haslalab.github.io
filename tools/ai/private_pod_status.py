@@ -406,24 +406,26 @@ def collect_status(run_id, *, api=None, env=None, wandb_query=None, system_logs=
         raise StatusError("missing_runpod_api_key")
     api = cloud.runpod if api is None else api
     name = cloud.PREFIX + run_id
+    names = {name, name + '-chat', name + '-solver'}
     # cloud.runpod emits provider diagnostics on failure; none are safe here.
     with contextlib.redirect_stdout(_Discard()), contextlib.redirect_stderr(_Discard()):
         rows = api("GET", "/pods")
         if not isinstance(rows, list):
             raise StatusError("invalid_pod_list")
-        pod_ids = []
+        pod_ids = {}
         for row in rows:
-            if not isinstance(row, dict) or row.get("name") != name:
+            if not isinstance(row, dict) or row.get("name") not in names:
                 continue
             pod_id = row.get("id")
             if not isinstance(pod_id, str) or re.fullmatch(r"[A-Za-z0-9_-]{1,128}", pod_id) is None:
                 raise StatusError("invalid_pod_id")
-            if pod_id not in pod_ids:
-                pod_ids.append(pod_id)
+            if pod_id in pod_ids and pod_ids[pod_id] != row['name']:
+                raise StatusError('pod_identity_mismatch')
+            pod_ids[pod_id] = row['name']
         pods, raw_pods = [], []
         for pod_id in pod_ids:
             raw = api("GET", "/pods/" + pod_id)
-            pods.append(_safe_pod(raw, pod_id, name))
+            pods.append(_safe_pod(raw, pod_id, pod_ids[pod_id]))
             raw_pods.append(raw)
         if system_logs:
             now = time.monotonic if clock is None else clock

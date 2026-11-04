@@ -236,6 +236,22 @@ class PrivateCorpusRunnerTests(unittest.TestCase):
         self.assertTrue(all(c.args == ('GET','/pods') for c in call.call_args_list))
         self.assertEqual(self.now, 110)
 
+    def test_role_gpu_preference_and_individual_price_ceiling_are_enforced(self):
+        funded = response(data={"data": {"myself": {"clientBalance": 20, "underBalance": False}}})
+        h100 = runner.GPU_IDS[2]
+        catalog = {"gpus": [{"id": runner.GPU_IDS[0], "availability": "HIGH", "price": {"secure": 1.79}},
+                            {"id": h100, "availability": "LOW", "price": {"secure": 3.99}}]}
+        with patch.object(runner.requests, "post", return_value=funded), \
+                patch.object(runner, "runpod", return_value=catalog), contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(runner.capacity_preflight([h100, runner.GPU_IDS[0]], 4), h100)
+            with self.assertRaisesRegex(RuntimeError, "ceiling"):
+                runner.capacity_preflight([h100], 3)
+        for ids, price in (([], 4), (["unknown"], 4), ([h100, h100], 4), ([h100], "NaN"), ([h100], 4.01)):
+            with self.subTest(ids=ids, price=price), patch.object(runner.requests, "post") as request, \
+                    self.assertRaises(ValueError):
+                runner.capacity_preflight(ids, price)
+            request.assert_not_called()
+
     def test_over_ceiling_creation_response_is_deleted_before_polling(self):
         self.env["HASLA_PREFLIGHT_ONLY"] = "false"
         with self.ready_main(create=self.valid_pod(costPerHr="3.01")) as mocks, contextlib.redirect_stdout(io.StringIO()), \

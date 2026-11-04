@@ -58,9 +58,10 @@ class PrivateDualBootstrapTests(unittest.TestCase):
             self.assertEqual(kwargs["env"]["HASLA_WORKSPACE"], "/workspace/" + role)
             self.assertEqual(kwargs["cwd"], "/workspace/" + role)
             self.assertEqual(kwargs["env"]["RUN"], "fixture-" + role)
-            self.assertEqual(kwargs["env"]["HASLA_TRAIN_TIMEOUT_SECONDS"], "2700")
+            runtime = 1200 if role == "chat" else 2700
+            self.assertEqual(kwargs["env"]["HASLA_TRAIN_TIMEOUT_SECONDS"], str(runtime))
             self.assertNotIn("HASLA_ROLE_JOBS", kwargs["env"])
-            self.assertEqual(kwargs["timeout"], 3000)
+            self.assertEqual(kwargs["timeout"], runtime + 300)
             self.assertEqual(kwargs["stdout"], subprocess.DEVNULL)
             self.assertEqual(kwargs["stderr"], subprocess.DEVNULL)
 
@@ -87,6 +88,21 @@ class PrivateDualBootstrapTests(unittest.TestCase):
         run.assert_called_once()
         self.assertEqual(run.call_args.kwargs["env"]["ROLE"], "solver")
         self.assertEqual(run.call_args.kwargs["cwd"], "/workspace/solver")
+
+    def test_dedicated_solver_runtime_reaches_child_and_process_deadline(self):
+        job = {**self.jobs[1], "runtime_seconds": 13800}
+        with patch.dict(os.environ, {"HASLA_ROLE_JOBS": json.dumps([job])}), \
+                patch.object(bootstrap.urllib.request, "urlopen", return_value=io.BytesIO(self.code)), \
+                patch.object(Path, "write_bytes"), \
+                patch.object(bootstrap.subprocess, "run", return_value=SimpleNamespace(returncode=0)) as run, \
+                contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(bootstrap.main(), 0)
+        self.assertEqual(run.call_args.kwargs["env"]["HASLA_TRAIN_TIMEOUT_SECONDS"], "13800")
+        self.assertEqual(run.call_args.kwargs["timeout"], 14100)
+        for role, value in (("chat", 1801), ("solver", 14401), ("solver", True), ("solver", 59)):
+            job = {**self.jobs[0 if role == "chat" else 1], "runtime_seconds": value}
+            with self.subTest(role=role, value=value), self.assertRaises(ValueError):
+                bootstrap.role_jobs({"HASLA_ROLE_JOBS": json.dumps([job])})
 
     def test_solver_first_execution_is_sequential_in_provided_order(self):
         with patch.dict(os.environ, {"HASLA_ROLE_JOBS": json.dumps(list(reversed(self.jobs)))}), \

@@ -23,7 +23,8 @@ from decimal import Decimal, InvalidOperation, ROUND_CEILING, ROUND_FLOOR
 from typing import Mapping
 
 
-MAX_BUDGET_KRW = Decimal("30000")
+DEFAULT_BUDGET_KRW = Decimal("30000")
+MAX_BUDGET_KRW = Decimal("100000")
 MAX_RUN_SECONDS = 5 * 3600
 # Dividing monthly storage by the shortest month overestimates hourly charges.
 MONTH_HOURS_LOWER = Decimal(28 * 24)
@@ -63,15 +64,20 @@ class BudgetPolicy:
     # An explicitly chosen upper FX bound, including any expected card spread.
     # It is an input, not a live exchange-rate claim or an automatically fetched rate.
     fx_krw_per_usd_upper: Decimal
-    budget_krw: Decimal = MAX_BUDGET_KRW
+    budget_krw: Decimal = DEFAULT_BUDGET_KRW
     reserve_krw: Decimal = Decimal("3000")
     tax_multiplier: Decimal = Decimal("1.10")
+    # An explicit authorization must accompany budgets above the legacy default.
+    authorized_budget_krw: Decimal = DEFAULT_BUDGET_KRW
+    max_active_pods: int = 1
 
     def __post_init__(self):
-        for name in ("fx_krw_per_usd_upper", "budget_krw", "reserve_krw", "tax_multiplier"):
+        for name in ("fx_krw_per_usd_upper", "budget_krw", "reserve_krw", "tax_multiplier", "authorized_budget_krw"):
             object.__setattr__(self, name, _number(getattr(self, name), name, positive=True))
-        if self.budget_krw > MAX_BUDGET_KRW:
-            raise BudgetError("budget_krw exceeds the authorized 30000 KRW maximum")
+        if self.authorized_budget_krw > MAX_BUDGET_KRW or self.budget_krw > self.authorized_budget_krw:
+            raise BudgetError("budget_krw exceeds the explicit authorization or 100000 KRW ceiling")
+        if type(self.max_active_pods) is not int or self.max_active_pods not in (1, 2):
+            raise BudgetError("max_active_pods must explicitly allow one or two Pods")
         if self.reserve_krw < 3000 or self.reserve_krw >= self.budget_krw:
             raise BudgetError("reserve_krw must be at least 3000 and below budget_krw")
         if self.fx_krw_per_usd_upper < 1 or self.tax_multiplier < Decimal("1.10"):
@@ -177,8 +183,13 @@ class BudgetLedger:
                 raise BudgetError("run pricing does not match the ledger FX/tax policy")
             if row.charged_krw is None and row.plan.reserved_krw > self.policy.spendable_krw:
                 raise BudgetError("active reservation exceeds the batch spending limit")
-        if sum(row.charged_krw is None for row in self.runs) > 1:
-            raise BudgetError("only one active Pod reservation is allowed per batch")
+        active = [row for row in self.runs if row.charged_krw is None]
+        if len(active) > self.policy.max_active_pods:
+            raise BudgetError("active Pod reservations exceed the explicit parallel limit")
+        if len(active) > 1:
+            roles = [row.plan.role for row in active]
+            if set(roles) != {'chat', 'solver'} or len(roles) != len(set(roles)):
+                raise BudgetError("parallel Pods must be separate chat and solver roles")
         ids = [row.plan.run_id for row in self.runs]
         if len(ids) != len(set(ids)):
             raise BudgetError("run_id must be unique across every role and retry")
@@ -213,8 +224,11 @@ def reserve_run(ledger, run_id, role, quote, now_monotonic, requested_seconds, h
         raise BudgetError("run_id must be a nonempty identifier up to 120 characters")
     if any(row.plan.run_id == run_id for row in ledger.runs):
         raise BudgetError("run_id was already reserved in this batch")
-    if any(row.charged_krw is None for row in ledger.runs):
-        raise BudgetError("an earlier Pod is not settled; confirm deletion before starting another role or retry")
+    active = [row for row in ledger.runs if row.charged_krw is None]
+    if len(active) >= ledger.policy.max_active_pods:
+        raise BudgetError("an earlier Pod is not settled; the active Pod limit is reached")
+    if active and (role not in ('chat', 'solver') or any(row.plan.role == role or row.plan.role not in ('chat', 'solver') for row in active)):
+        raise BudgetError("parallel reservations require different chat and solver roles")
     if role not in ("chat", "solver", "fast", "dual"):
         raise BudgetError("unknown training role")
     start = _number(now_monotonic, "now_monotonic")
@@ -233,7 +247,10 @@ def reserve_run(ledger, run_id, role, quote, now_monotonic, requested_seconds, h
     if reserved > ledger.available_krw:
         raise BudgetError("rounded reservation exceeds the remaining batch budget")
     plan = RunPlan(run_id, role, quote, start, seconds, grace, hourly, reserved)
-    return replace(ledger, runs=ledger.runs + (RunRecord(plan),))
+    updated = replace(ledger, runs=ledger.runs + (RunRecord(plan),))
+    if updated.over_budget:
+        raise BudgetError("combined active reservations exceed the remaining batch budget")
+    return updated
 
 
 def elapsed_seconds(plan, now_monotonic):

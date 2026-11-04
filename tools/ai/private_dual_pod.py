@@ -32,6 +32,9 @@ def role_jobs(env):
         for key in ('training_sha256', 'validation_sha256'):
             if not isinstance(job.get(key), str) or not re.fullmatch(r'[a-f0-9]{64}', job[key]):
                 raise ValueError('invalid private input checksum')
+        runtime = job.get('runtime_seconds', 1200 if role == 'chat' else 2700)
+        if (type(runtime) is not int or not 60 <= runtime <= (1800 if role == 'chat' else 14400)):
+            raise ValueError('invalid private role runtime')
     return jobs
 
 
@@ -54,6 +57,7 @@ def main():
         workspace.mkdir(parents=True, exist_ok=True)
     any_failed = False
     for job in jobs:
+        runtime = job.get('runtime_seconds', 1200 if job['role'] == 'chat' else 2700)
         child = {k: v for k, v in env.items() if k != 'HASLA_ROLE_JOBS'}
         child.update({'ROLE': job['role'], 'HASLA_DATA_FORMAT': job['format'],
                       'HASLA_INPUT_ARTIFACT': job['input_artifact'],
@@ -61,10 +65,11 @@ def main():
                       'HASLA_VALIDATION_SHA256': job['validation_sha256'],
                       'RUN': job['run'], 'ARTIFACT': job['run'] + '-lora',
                       'HASLA_WORKSPACE': workspaces[job['role']].as_posix(),
-                      'HASLA_TRAIN_TIMEOUT_SECONDS': '2700'})
+                      'HASLA_TRAIN_TIMEOUT_SECONDS': str(runtime)})
         try:
             result = subprocess.run([sys.executable, str(script)], env=child, cwd=workspaces[job['role']].as_posix(),
-                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3000)
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                                     timeout=runtime + 300)
             failed = result.returncode != 0
         except (subprocess.TimeoutExpired, OSError):
             # subprocess.run kills and reaps its timed-out child before raising;

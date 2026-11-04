@@ -457,7 +457,7 @@ class PrivatePodTests(unittest.TestCase):
 
     def test_artifact_size_and_raw_hash_are_both_checked(self):
         artifact = self.configure_dataset_input()
-        artifact.manifest.entries["train.text.jsonl"].size = pod.MAX_RAW_BYTES + 1
+        artifact.manifest.entries["train.text.jsonl"].size = pod.MAX_ARTIFACT_RAW_BYTES + 1
         result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
         self.assertEqual(result["error_code"], "input_artifact_file_size_limit")
         self.assertFalse(artifact.downloads)
@@ -522,9 +522,9 @@ class PrivatePodTests(unittest.TestCase):
 
     def test_data_bounded_steps_copy_config_and_never_exceed_role_caps(self):
         for role, n, expected in (("chat", 1, 1), ("chat", 8, 1), ("chat", 9, 2),
-                                  ("chat", 17, 3), ("chat", 64, 8), ("chat", 1000, 8),
+                                  ("chat", 17, 3), ("chat", 64, 8), ("chat", 1000, 125), ("chat", 5000, 512),
                                   ("solver", 1, 1), ("solver", 9, 2), ("solver", 255, 32),
-                                  ("solver", 256, 32), ("solver", 1000, 32)):
+                                  ("solver", 256, 32), ("solver", 1000, 125), ("solver", 300000, 32768)):
             with self.subTest(role=role, n=n):
                 original = get_role_config(role)
                 capped = pod.data_bounded_settings(original, n)
@@ -718,6 +718,12 @@ class PrivatePodTests(unittest.TestCase):
         with self.assertRaisesRegex(pod.PilotError, "role_mismatch"):
             pod.validate_row_roles(self.train, "solver", "chat")
 
+    def test_jsonl_preserves_legal_unicode_separators_inside_scientific_text(self):
+        values = [{'text': 'Alpha\u2028beta\u2029gamma\u0085delta', 'metadata': {'split': 'train'}},
+                  {'text': 'Second scientific paragraph', 'metadata': {'split': 'train'}}]
+        raw = ('\r\n'.join(json.dumps(row, ensure_ascii=False) for row in values) + '\r\n').encode('utf8')
+        self.assertEqual(pod.rows_from_payload(raw, 'train', 'text'), values)
+
     def test_chat_partition_checks_thread_and_exact_message_overlap(self):
         self.configure_chat()
         with self.assertRaisesRegex(pod.PilotError, "group_overlap"):
@@ -748,7 +754,7 @@ class PrivatePodTests(unittest.TestCase):
                 pod.adapter_inventory(path.parent, get_role_config("solver"))
 
     def test_trainer_report_must_confirm_role_precision_hash_and_actual_bounded_steps(self):
-        for changed in ({"steps_completed": 0}, {"steps_completed": 33}, {"steps_completed": True},
+        for changed in ({"steps_completed": 0}, {"steps_completed": 32769}, {"steps_completed": True},
                         {"role": "chat"}, {"precision": "bf16"}, {"training_sha256": "0" * 64},
                         {"weights_updated": False}, {"eval_loss": float("nan")}, {"train_loss": True}):
             self.runner([], env={})

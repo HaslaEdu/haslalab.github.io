@@ -128,7 +128,15 @@ def private_project():
     return entity
 
 
-def capacity_preflight():
+def capacity_preflight(preferred_gpu_ids=None, hourly_ceiling=4):
+    preferred = list(preferred_gpu_ids) if preferred_gpu_ids is not None else [GPU_IDS[1], GPU_IDS[0], *GPU_IDS[2:]]
+    try:
+        ceiling = Decimal(str(hourly_ceiling))
+    except (InvalidOperation, ValueError):
+        raise ValueError('Invalid GPU price ceiling') from None
+    if (not preferred or len(set(preferred)) != len(preferred) or any(g not in GPU_IDS for g in preferred)
+            or not ceiling.is_finite() or not 0 < ceiling <= 4):
+        raise ValueError('Invalid preferred GPU policy')
     query = 'query { myself { clientBalance underBalance } }'
     response = requests.post('https://api.runpod.io/graphql', json={'query': query},
                              headers={'Authorization': 'Bearer ' + E['RUNPOD_API_KEY']}, timeout=20)
@@ -152,16 +160,16 @@ def capacity_preflight():
     safe_event('runpod_readonly_preflight', funded=funded, quotes=quotes)
     if not funded:
         raise RuntimeError('RunPod account needs prepaid funds; no payment or GPU creation attempted')
-    for gpu_id in (GPU_IDS[1], GPU_IDS[0], *GPU_IDS[2:]):
+    for gpu_id in preferred:
         for row in quotes:
             try:
                 price = Decimal(str(row['hourly_usd']))
             except InvalidOperation:
                 continue
             if (row['gpu'] == gpu_id and str(row['stock']).upper() in ('LOW', 'MEDIUM', 'HIGH')
-                    and price.is_finite() and 0 < price <= 4):
+                    and price.is_finite() and 0 < price <= ceiling):
                 return gpu_id
-    raise RuntimeError('No supported GPU is available within the reserved USD4 hourly ceiling')
+    raise RuntimeError('No supported GPU is available within the selected price ceiling')
 
 
 def graphql_create_pod(name, env, command, gpu_id=GPU_IDS[1]):

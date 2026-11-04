@@ -29,7 +29,7 @@ class PrivatePodStatusTests(unittest.TestCase):
             self.assertEqual(method, "GET")
             calls.append((method, path))
             if path == "/pods":
-                return [pod, pod, self.pod(id="other", name=self.name + "-chat"), self.pod(id="unrelated", name="other")]
+                return [pod, pod, self.pod(id="other", name=self.name + "-other"), self.pod(id="unrelated", name="other")]
             self.assertEqual(path, "/pods/fixture-pod")
             return pod
         event = status.collect_status("41810732513", api=api, env=self.env)
@@ -45,6 +45,14 @@ class PrivatePodStatusTests(unittest.TestCase):
         self.assertEqual(event["state"], "absent")
         self.assertEqual(event["pods"], [])
         self.assertNotIn("clean", json.dumps(event))
+
+    def test_dedicated_chat_and_solver_pods_are_read_by_exact_role_names(self):
+        pods = {role + '-pod': self.pod(id=role + '-pod', name=self.name + '-' + role) for role in ('chat', 'solver')}
+        def api(method, path):
+            self.assertEqual(method, 'GET')
+            return [*pods.values(), self.pod(id='unrelated', name=self.name + '-solver-other')] if path == '/pods' else pods[path.rsplit('/', 1)[-1]]
+        event = status.collect_status('41810732513', api=api, env=self.env)
+        self.assertEqual({pod['id'] for pod in event['pods']}, {'chat-pod', 'solver-pod'})
 
     def test_bad_run_ids_and_missing_key_fail_before_io(self):
         def forbidden(*args):

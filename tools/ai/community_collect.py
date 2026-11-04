@@ -22,6 +22,7 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
+import ssl
 import time
 import unicodedata
 from urllib import error, parse, request, robotparser
@@ -29,10 +30,14 @@ from urllib import error, parse, request, robotparser
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 USER_AGENT = "HaslaPatternResearch/0.1 (purpose=abstract-pattern-extraction-for-AI-development)"
+AUTHOR_FILTER_POLICY = "exclude-bugiu-v1"
+# User-provided exclusion policy, not a nickname discovered from a source.
+EXCLUDED_AUTHORS = frozenset(("부기우",))
 AI_AGENTS = ("GPTBot", "ClaudeBot", "anthropic-ai", "Claude-Web", "Google-Extended",
              "Applebot-Extended", "CCBot", "Bytespider", "Amazonbot",
              "Meta-ExternalAgent", "cohere-ai", "PerplexityBot")
 SKIPPABLE_THREAD_FAILURES = frozenset(("http_404", "http_410", "redirect_outside_public_source"))
+TRANSPORT_THREAD_FAILURES = frozenset(("network_incomplete_response", "network_timeout", "network_error", "network_protocol_error"))
 DEFAULT_SOURCES = {
     "dcinside": {"origin": "https://gall.dcinside.com",
                  "seed": "https://gall.dcinside.com/mgallery/board/lists/?id=physics"},
@@ -279,8 +284,17 @@ class BoundedClient:
             result = Response(url, failure="network_incomplete_response")
         except HTTPException:
             result = Response(url, failure="network_protocol_error")
-        except (error.URLError, TimeoutError, OSError):
-            result = Response(url, failure="network_error")
+        except (error.URLError, TimeoutError, OSError) as exc:
+            cause = exc.reason if isinstance(exc, error.URLError) else exc
+            if isinstance(cause, ssl.SSLCertVerificationError):
+                failure = "network_certificate_error"
+            elif isinstance(cause, ssl.SSLError):
+                failure = "network_tls_error"
+            elif isinstance(cause, TimeoutError):
+                failure = "network_timeout"
+            else:
+                failure = "network_error"
+            result = Response(url, failure=failure)
         self.requests.append({"url": url, "status": result.status,
                               "failure": result.failure, "oversized": result.oversized,
                               "response_sha256": sha256(result.body) if result.body else None})
@@ -310,6 +324,13 @@ def response_block_reason(response):
     return None
 
 
+def normalized_author(value):
+    """Compare in memory only; IP display suffixes are never persisted."""
+    value = unicodedata.normalize("NFKC", value or "").strip()
+    value = re.sub(r"\s*[([]\s*(?:\d{1,3}\.){1,3}(?:\d{1,3}|\*+)\s*[)\]]\s*$", "", value)
+    return re.sub(r"\s+", "", value)
+
+
 class Page(HTMLParser):
     """Transient HTML parser. Only numerical features and canonical URLs escape."""
     SKIP = frozenset(("script", "style", "nav", "footer", "aside", "form", "textarea", "button"))
@@ -319,6 +340,15 @@ class Page(HTMLParser):
         self.source_id = source_id
         self.links, self.stack, self.captures = [], [], []
         self.anchors, self.active_anchors = [], []
+        self._post_author_states, self._comment_nodes, self._comment_contexts = [], [], []
+
+    def _author(self, value, target):
+        name = normalized_author(value)
+        state = {"checked": bool(name), "excluded": bool(name) and name in EXCLUDED_AUTHORS}
+        if target == "post":
+            self._post_author_states.append(state)
+        elif isinstance(target, dict):
+            target["author_states"].append(state)
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
@@ -329,6 +359,16 @@ class Page(HTMLParser):
             self.active_anchors.append(anchor)
         classes = set(values.get("class", "").split())
         ancestors = set().union(*(entry[2] for entry in self.stack)) if self.stack else set()
+        if tag == "li" and ((self.source_id == "orbi" and "comment" in classes and "comment-wrap" in ancestors)
+                            or (self.source_id == "dcinside" and "ub-content" in classes and
+                                ancestors.intersection(("comment_wrap", "comment_box", "cmt_list")))):
+            depth = next((int(match[1]) for value in classes
+                          if (match := re.fullmatch(r"comment-rank-(\d+)", value))), None)
+            node = {"author_states": [], "depth": depth,
+                    "dom_parent": self._comment_contexts[-1][1] if self._comment_contexts else None}
+            self._comment_nodes.append(node)
+            self._comment_contexts.append((len(self.stack), node))
+        node = self._comment_contexts[-1][1] if self._comment_contexts else None
         role = None
         if tag == "h1" or "title_subject" in classes:
             role = "title"
@@ -345,11 +385,31 @@ class Page(HTMLParser):
             # Orbi nests .comment-text within .comment-content. Capture that
             # displayed comment once, while retaining identical separate replies.
             role = None
-        rank = next((int(match[1]) for value in classes | ancestors
-                     if (match := re.fullmatch(r"comment-rank-(\d+)", value))), None)
+        rank = next((int(match[1]) for group in [classes] + [entry[2] for entry in reversed(self.stack)]
+                     for value in group if (match := re.fullmatch(r"comment-rank-(\d+)", value))), None)
         capture = {"role": role, "parts": [], "depth": rank} if role else None
         if capture:
+            if role == "comment":
+                capture["author_node"] = node
             self.captures.append(capture)
+        # Identity text has a private capture on the stack only. It is reduced
+        # to booleans when its tag closes, never added to captures/feature rows.
+        identity_target = None
+        if self.source_id == "orbi" and tag == "a" and "nickname" in classes:
+            if node is not None and "meta-wrap" in ancestors:
+                identity_target = node
+            elif "author-wrap" in ancestors and "layout-board-read" in ancestors:
+                identity_target = "post"
+        elif self.source_id == "dcinside" and classes.intersection(("gall_writer", "ub-writer")):
+            if node is not None:
+                identity_target = node
+            elif "gallview_head" in ancestors:
+                identity_target = "post"
+        if identity_target is not None:
+            if self.source_id == "dcinside" and values.get("data-nick"):
+                self._author(values["data-nick"], identity_target)
+            elif capture is None:
+                capture = {"role": "author_private", "parts": [], "target": identity_target}
         # Void elements must not corrupt the capture stack.
         if tag not in ("area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"):
             self.stack.append((tag, capture, classes))
@@ -371,7 +431,13 @@ class Page(HTMLParser):
                     capture["parts"].append("\n")
         for i in range(len(self.stack) - 1, -1, -1):
             if self.stack[i][0] == tag:
+                for _, active, _ in self.stack[i:]:
+                    if active and active["role"] == "author_private":
+                        self._author("".join(active["parts"]), active["target"])
+                        active["parts"].clear()
                 del self.stack[i:]
+                self._comment_contexts = [(position, node) for position, node in self._comment_contexts
+                                          if position < len(self.stack)]
                 break
 
     def handle_data(self, data):
@@ -385,13 +451,57 @@ class Page(HTMLParser):
 
     def texts(self, role):
         values = []
+        blocked, _ = self._excluded_comment_nodes()
         for capture in self.captures:
             if capture["role"] == role:
+                if role == "comment" and id(capture.get("author_node")) in blocked:
+                    continue
                 text = re.sub(r"[^\S\n]+", " ", " ".join(capture["parts"])).strip()
                 text = re.sub(r"\n\s*\n+", "\n", text)
                 if text and (role == "comment" or text not in values):
                     values.append(text)
         return values
+
+    def _excluded_comment_nodes(self):
+        excluded = {id(node) for node in self._comment_nodes
+                    if any(state["excluded"] for state in node["author_states"])}
+        if not excluded:
+            # If all authors are checked and none match, even a flattened
+            # comment hierarchy cannot contain an excluded-author ancestor.
+            return set(), True
+        if not any(node["dom_parent"] is not None for node in self._comment_nodes):
+            # A CSS rank alone is not verified parentage. On a flattened list,
+            # discard all comments if any excluded author could be their context.
+            return {id(node) for node in self._comment_nodes}, False
+        blocked = set()
+        for node in self._comment_nodes:
+            ancestor = node
+            while ancestor is not None:
+                if id(ancestor) in excluded:
+                    blocked.add(id(node))
+                    break
+                ancestor = ancestor["dom_parent"]
+        return blocked, True
+
+    def author_filter(self, selected_comment_indices=None):
+        """Metadata for actual observed authors, with no names/IDs/IPs/hashes."""
+        captures = [capture for capture in self.captures if capture["role"] == "comment"]
+        selected = captures if selected_comment_indices is None else [captures[index] for index in selected_comment_indices
+                                                                     if type(index) is int and 0 <= index < len(captures)]
+        post_checked = bool(self._post_author_states) and all(state["checked"] for state in self._post_author_states)
+        post_excluded = any(state["excluded"] for state in self._post_author_states)
+        all_checked = bool(self._comment_nodes) and all(node["author_states"] and
+                      all(state["checked"] for state in node["author_states"]) for node in self._comment_nodes)
+        selected_checked = bool(selected) and all(capture.get("author_node") is not None and
+                           capture["author_node"]["author_states"] and
+                           all(state["checked"] for state in capture["author_node"]["author_states"])
+                           for capture in selected)
+        blocked, hierarchy_checked = self._excluded_comment_nodes()
+        present = post_excluded or any(id(capture.get("author_node")) in blocked for capture in selected)
+        return {"policy_version": AUTHOR_FILTER_POLICY, "post_author_checked": post_checked,
+                "selected_reply_authors_checked": bool(selected_checked),
+                "reply_branch_checked": bool(all_checked and hierarchy_checked),
+                "excluded_author_present": present}
 
 
 def prioritized_threads(page, source_id, base):
@@ -457,9 +567,14 @@ def abstract_features(text):
                                        r"\b\d+\s*[=+*/^]|\b[A-Za-z]\s*[=^]", text))}
 
 
-def extract_pattern(source_id, url, html, metadata):
+def extract_pattern(source_id, url, html, metadata, diagnostics=None):
     page = Page(source_id)
     page.feed(html)
+    author_filter = page.author_filter()
+    if any(state["excluded"] for state in page._post_author_states):
+        if diagnostics is not None:
+            diagnostics["reason"] = "excluded_post_author"
+        return None
     bodies = page.texts("body")
     extraction = "dcinside.write_div" if source_id == "dcinside" else "orbi.layout-board-read.content-wrap"
     if not bodies:
@@ -468,10 +583,11 @@ def extract_pattern(source_id, url, html, metadata):
     body = "\n".join(bodies)
     # Comments remain comments; neither usernames nor guessed assistant roles are emitted.
     return {"kind": "abstract_pattern", "source_id": source_id, "source_url": url,
-            "metadata": dict(metadata), "extraction": extraction,
+            "metadata": {**metadata, "author_filter": author_filter}, "extraction": extraction,
             "structure": {"body_blocks": len(bodies), "visible_comment_blocks": len(comments),
                           "observed_comment_depths": dict(Counter(str(capture["depth"]) if capture["depth"] is not None else "unknown"
-                                                                  for capture in page.captures if capture["role"] == "comment")),
+                                                                  for capture in page.captures if capture["role"] == "comment"
+                                                                  and id(capture.get("author_node")) not in page._excluded_comment_nodes()[0])),
                           "comment_roles": "unassigned", "comments_are_answers": False,
                           "parent_relationships": "not_verified_from_html",
                           "depth_basis": "explicit_comment_rank_class_when_present"},
@@ -520,7 +636,9 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
             summary = {"source_id": report["source_id"], "patterns": report["patterns"],
                        "thread_requests": report["thread_requests"], "listing_pages": len(report.get("listing_results", [])),
                        "status": report["status"], "total_patterns": len(patterns),
-                       "qa_candidate_count": len(report.get("qa_candidates", []))}
+                       "qa_candidate_count": len(report.get("qa_candidates", [])),
+                       "transport_failure_count": sum(report.get("transport_failures", {}).values()),
+                       "consecutive_transport_failures": report.get("consecutive_transport_failures", 0)}
             if report.get("reason"):
                 summary["reason"] = report["reason"]
             summary["checkpoint"] = {"created_at": datetime.now(timezone.utc).isoformat(),
@@ -544,6 +662,8 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
                   "listing_results": [], "thread_results": [], "discovered_thread_urls": [],
                   "excluded_or_duplicate_links": 0, "qa_candidates": []}
         report["skipped_thread_failures"] = {}
+        report["transport_failures"] = {}
+        report["consecutive_transport_failures"] = 0
         report["skipped_listing_promotions"] = 0
         report["skipped_other_board_links"] = 0
         reports.append(report)
@@ -610,6 +730,17 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
                 response, reason = fetch_public(client, url, source, robots_text)
                 if reason:
                     report["thread_results"].append({"url": url, "status": reason})
+                    if reason in TRANSPORT_THREAD_FAILURES:
+                        report["transport_failures"][reason] = report["transport_failures"].get(reason, 0) + 1
+                        report["consecutive_transport_failures"] += 1
+                        if report["consecutive_transport_failures"] >= 3:
+                            report["reason"] = "transport_circuit_breaker"
+                            report["last_transport_failure"] = reason
+                            break
+                        report["status"] = "collecting_after_discarded_transport_response"
+                        emit(report)
+                        continue
+                    report["consecutive_transport_failures"] = 0
                     if reason in SKIPPABLE_THREAD_FAILURES:
                         report["skipped_thread_failures"][reason] = report["skipped_thread_failures"].get(reason, 0) + 1
                         report["status"] = "collecting_after_skipped_thread"
@@ -617,7 +748,9 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
                         continue
                     report["reason"] = reason
                     break
-                record = extract_pattern(source_id, url, response.text(), rights)
+                report["consecutive_transport_failures"] = 0
+                diagnostics = {}
+                record = extract_pattern(source_id, url, response.text(), rights, diagnostics)
                 if record:
                     patterns.append(record)
                     report["patterns"] += 1
@@ -631,7 +764,8 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
                                  "candidate_kind": ("discussion_with_visible_comments" if record["body"]["question_types"] == ["other"] else "question_with_visible_comments"),
                                  "reply_relevance_review_required": True, "assistant_roles_assigned": False}
                     report["qa_candidates"].append(candidate)
-                report["thread_results"].append({"url": url, "status": "pattern_extracted" if record else "no_body_selector"})
+                report["thread_results"].append({"url": url, "status": "pattern_extracted" if record else
+                                                  diagnostics.get("reason", "no_body_selector")})
                 report["status"] = "collecting"
                 emit(report, candidate)
         report["discovered_thread_count"] = len(discovered)

@@ -14,7 +14,7 @@ _ROLES = {
                          "unsloth/Gemma-4-26B-A4B-it"],
         "loader": "FastModel", "precision": "bf16", "training_method": "lora",
         "load_in_4bit": False, "load_in_16bit": True,
-        "default_rank": 8, "max_length": 1024, "max_steps": 8,
+        "default_rank": 8, "max_length": 1024, "max_steps": 512,
         "allowed_formats": ["chat"], "default_format": "chat",
     },
     "solver": {
@@ -23,7 +23,7 @@ _ROLES = {
                          "unsloth/QwQ-32B-unsloth-bnb-4bit"],
         "loader": "FastLanguageModel", "precision": "4bit", "training_method": "qlora",
         "load_in_4bit": True, "load_in_16bit": False,
-        "default_rank": 16, "max_length": 1024, "max_steps": 32,
+        "default_rank": 16, "max_length": 1024, "max_steps": 32768,
         "allowed_formats": ["text", "chat"], "default_format": "text",
     },
     "fast": {

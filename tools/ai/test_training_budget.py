@@ -32,6 +32,43 @@ class TrainingBudgetTests(unittest.TestCase):
                 self.policy(**kwargs)
         self.assertEqual(self.policy().spendable_krw, Decimal(27000))
 
+    def test_explicit_100k_authorization_preserves_legacy_default_and_absolute_cap(self):
+        self.assertEqual(self.policy().budget_krw, 30000)
+        large = self.policy(budget_krw=100000, authorized_budget_krw=100000, reserve_krw=5000)
+        self.assertEqual(large.spendable_krw, 95000)
+        for kwargs in ({'budget_krw':100000}, {'budget_krw':100001,'authorized_budget_krw':100000},
+                       {'budget_krw':100000,'authorized_budget_krw':100001}, {'authorized_budget_krw':True}):
+            with self.subTest(kwargs=kwargs), self.assertRaises(BudgetError):
+                self.policy(**kwargs)
+        first = self.reserve(BudgetLedger(large,prior_spend_krw=7653),quote=PodQuote('4'),
+                             requested_seconds=1800,hard_max_seconds=1800)
+        closed = settle_run(first,'chat-1',1900,deletion_confirmed=True)
+        second = self.reserve(closed,run_id='solver-1',role='solver',quote=PodQuote('4'),
+                              now_monotonic=2000,requested_seconds=14400,hard_max_seconds=14400)
+        self.assertEqual(second.runs[-1].plan.run_seconds,14400)
+        self.assertLessEqual(second.spent_krw+second.reserved_krw+large.reserve_krw,100000)
+
+    def test_opted_in_parallel_roles_share_one_budget_and_cannot_duplicate_a_role(self):
+        policy = self.policy(budget_krw=100000, authorized_budget_krw=100000,
+                             reserve_krw=5000, max_active_pods=2)
+        ledger = self.reserve(BudgetLedger(policy, prior_spend_krw=7653), quote=PodQuote('4'),
+                              requested_seconds=1800, hard_max_seconds=1800)
+        both = self.reserve(ledger, run_id='solver-1', role='solver', quote=PodQuote('4'),
+                            requested_seconds=14400, hard_max_seconds=14400)
+        self.assertEqual(len(both.runs), 2)
+        self.assertFalse(both.over_budget)
+        self.assertLess(both.spent_krw + both.reserved_krw + policy.reserve_krw, 100000)
+        with self.assertRaises(BudgetError):
+            self.reserve(ledger, run_id='chat-duplicate')
+        with self.assertRaises(BudgetError):
+            self.reserve(both, run_id='third', role='fast')
+        for invalid in (0, 3, True, '2'):
+            with self.assertRaises(BudgetError):
+                replace(policy, max_active_pods=invalid)
+        closed_chat = settle_run(both, 'chat-1', 200, deletion_confirmed=True)
+        self.assertEqual(len([row for row in closed_chat.runs if row.charged_krw is None]), 1)
+        self.assertGreater(closed_chat.available_krw, both.available_krw)
+
     def test_restored_ledger_rejects_negative_nonfinite_or_mismatched_accounting(self):
         ledger = self.reserve()
         plan = ledger.runs[0].plan
@@ -44,6 +81,20 @@ class TrainingBudgetTests(unittest.TestCase):
             replace(plan, reserved_krw=1)
         with self.assertRaisesRegex(BudgetError, "FX/tax"):
             BudgetLedger(BudgetPolicy(2500), runs=ledger.runs)
+
+    def test_actual_overrun_is_recorded_even_when_another_pod_is_reserved(self):
+        policy = self.policy(budget_krw=100000, authorized_budget_krw=100000,
+                             reserve_krw=5000, tax_multiplier='1.15', max_active_pods=2)
+        first = self.reserve(BudgetLedger(policy, prior_spend_krw=70000), quote=PodQuote('4'),
+                             requested_seconds=1800, hard_max_seconds=1800)
+        both = self.reserve(first, run_id='solver-1', role='solver', quote=PodQuote('4'),
+                            requested_seconds=14400, hard_max_seconds=14400)
+        actual = settle_run(both, 'chat-1', 2100, deletion_confirmed=True)
+        self.assertTrue(actual.over_budget)
+        self.assertIsNotNone(actual.runs[0].charged_krw)
+        self.assertIsNone(actual.runs[1].charged_krw)
+        with self.assertRaises(BudgetError):
+            self.reserve(actual, run_id='new-chat')
 
     def test_missing_or_zero_compute_and_storage_price_fail_closed(self):
         for bad in (None, 0, -1, "NaN", "Infinity", True):

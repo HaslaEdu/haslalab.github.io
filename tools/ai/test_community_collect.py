@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import patch
 from urllib import error
 from http.client import IncompleteRead
+import ssl
 
 import community_collect as collector
 
@@ -33,6 +34,75 @@ class FakeClient:
 
 
 class CommunityCollectorTests(unittest.TestCase):
+    def test_author_normalization_is_exact_and_removes_display_ip_only(self):
+        self.assertEqual(collector.normalized_author('  부 기 우 (１２７.０.０.１) '), '부기우')
+        self.assertEqual(collector.normalized_author('부기우(123.45)'), '부기우')
+        self.assertNotIn(collector.normalized_author('부기우님'), collector.EXCLUDED_AUTHORS)
+
+    def test_excluded_post_author_is_not_a_feature_record(self):
+        html = '<div class="layout-board-read"><div class="author-wrap"><a class="nickname"> 부 기 우 </a></div><div class="content-wrap">plain post</div></div>'
+        self.assertIsNone(collector.extract_pattern('orbi', 'https://orbi.kr/000123', html, {}))
+        dc = '<div class="gallview_head"><div class="gall_writer ub-writer" data-nick="부기우"></div></div><div class="write_div">body</div>'
+        self.assertIsNone(collector.extract_pattern('dcinside', 'https://gall.dcinside.com/mgallery/board/view/?id=physics&no=398', dc, {}))
+
+    def test_collector_reports_author_exclusion_instead_of_missing_content(self):
+        robots='https://orbi.kr/robots.txt';listing='https://orbi.kr/list';post='https://orbi.kr/00079999123'
+        html='<div class="layout-board-read"><div class="author-wrap"><a class="nickname">부기우</a></div><div class="content-wrap">body that must not become a feature</div></div>'
+        client=FakeClient({robots:response(robots,'User-agent: *\nAllow: /\n'),listing:response(listing,'<a href="/00079999123">question</a>'),post:response(post,html)})
+        result=collector.collect(['orbi'],client=client)
+        self.assertEqual(result['pattern_records'],0)
+        self.assertEqual(result['sources'][0]['thread_results'][0]['status'],'excluded_post_author')
+
+    def test_body_mention_is_not_an_author_match_and_names_are_not_saved(self):
+        html = '<div class="layout-board-read"><div class="author-wrap"><a class="nickname">safe-author-private</a></div><div class="content-wrap">부기우라는 이름을 언급한 글</div><div class="comment-wrap"><ul><li class="comment comment-rank-0"><div class="meta-wrap"><a class="nickname">reply-author-private</a></div><div class="comment-content">relevant reply</div></li></ul></div></div>'
+        record = collector.extract_pattern('orbi', 'https://orbi.kr/000123', html, {})
+        self.assertIsNotNone(record)
+        policy = record['metadata']['author_filter']
+        self.assertEqual(policy, {'policy_version':'exclude-bugiu-v1','post_author_checked':True,
+                                 'selected_reply_authors_checked':True,'reply_branch_checked':True,
+                                 'excluded_author_present':False})
+        self.assertNotIn('safe-author-private', json.dumps(record))
+        self.assertNotIn('reply-author-private', json.dumps(record))
+        self.assertFalse(record['training_eligible'])
+
+    def test_excluded_comment_and_descendant_branch_are_removed(self):
+        def comment(name, text, depth):
+            return f'<li class="comment comment-rank-{depth}"><div class="meta-wrap"><a class="nickname">{name}</a></div><div class="comment-content">{text}</div></li>'
+        excluded_parent = '<li class="comment comment-rank-0"><div class="meta-wrap"><a class="nickname">부기우</a></div><div class="comment-content">excluded text</div><ul>' + comment('safe child','excluded branch reply',1) + '</ul></li>'
+        html = '<div class="layout-board-read"><div class="author-wrap"><a class="nickname">safe</a></div><div class="content-wrap">post</div><div class="comment-wrap"><ul>' + excluded_parent + comment('safe sibling','retained reply',0) + '</ul></div></div>'
+        page = collector.Page('orbi'); page.feed(html)
+        self.assertEqual(page.texts('comment'), ['retained reply'])
+        self.assertTrue(page.author_filter([0])['excluded_author_present'])
+        self.assertTrue(page.author_filter([1])['excluded_author_present'])
+        self.assertEqual(page.author_filter([2]), {'policy_version':'exclude-bugiu-v1','post_author_checked':True,
+                                                  'selected_reply_authors_checked':True,'reply_branch_checked':True,
+                                                  'excluded_author_present':False})
+        record = collector.extract_pattern('orbi','https://orbi.kr/000123',html,{})
+        self.assertEqual(len(record['comment_features']),1)
+
+    def test_unknown_identity_or_parent_structure_never_claims_filter_checked(self):
+        html = orbi_post('body','<li class="comment"><div class="meta-wrap"><a class="nickname">부기우</a></div><div class="comment-content">blocked</div></li><li class="comment"><div class="meta-wrap"><a class="nickname">safe</a></div><div class="comment-content">uncertain reply branch</div></li>')
+        page=collector.Page('orbi'); page.feed(html)
+        self.assertEqual(page.texts('comment'),[])
+        policy=page.author_filter([1])
+        self.assertFalse(policy['post_author_checked'])
+        self.assertFalse(policy['reply_branch_checked'])
+        self.assertTrue(policy['excluded_author_present'])
+        missing=collector.extract_pattern('orbi','https://orbi.kr/000123',orbi_post('body','<div class="comment-content">reply</div>'),{})
+        self.assertFalse(missing['metadata']['author_filter']['selected_reply_authors_checked'])
+        self.assertFalse(missing['training_eligible'])
+
+    def test_sidebar_identity_does_not_authorize_the_post(self):
+        html='<aside><div class="author-wrap"><a class="nickname">safe</a></div></aside>'+orbi_post('post')
+        page=collector.Page('orbi'); page.feed(html)
+        self.assertFalse(page.author_filter()['post_author_checked'])
+
+    def test_flat_css_ranks_do_not_prove_an_excluded_comment_has_no_replies(self):
+        html=orbi_post('body','<li class="comment comment-rank-0"><div class="meta-wrap"><a class="nickname">부기우</a></div><div class="comment-content">blocked</div></li><li class="comment comment-rank-0"><div class="meta-wrap"><a class="nickname">safe</a></div><div class="comment-content">possibly related reply</div></li>')
+        page=collector.Page('orbi');page.feed(html)
+        self.assertEqual(page.texts('comment'),[])
+        self.assertFalse(page.author_filter([1])['reply_branch_checked'])
+
     def test_other_named_bot_exclusion_is_observed_without_applying_it_to_our_agent(self):
         text = "User-agent: GPTBot\nDisallow: /\n\nUser-agent: *\nAllow: /\n"
         decision = collector.robots_decision(text, "https://orbi.kr/list")
@@ -245,6 +315,46 @@ class CommunityCollectorTests(unittest.TestCase):
                 result = collector.collect(["orbi"], client=client)
                 self.assertEqual(result["sources"][0]["reason"], reason)
                 self.assertNotIn(origin + "/0006658325", [row["url"] for row in client.requests])
+
+    def test_three_different_consecutive_transport_failures_stop_without_retrying_any_url(self):
+        origin = "https://orbi.kr"
+        links = [origin + "/000" + str(n) for n in range(6658324, 6658328)]
+        routes = {origin + "/robots.txt": response(origin + "/robots.txt", "User-agent: *\nAllow: /\n"),
+                  origin + "/list": response(origin + "/list", ''.join('<a href="' + url + '">post</a>' for url in links))}
+        for url, failure in zip(links, ("network_incomplete_response", "network_timeout", "network_error")):
+            routes[url] = collector.Response(url, failure=failure)
+        client = FakeClient(routes)
+        result = collector.collect(["orbi"], client=client)
+        self.assertEqual(result["sources"][0]["reason"], "transport_circuit_breaker")
+        self.assertEqual(result["sources"][0]["consecutive_transport_failures"], 3)
+        actual = [row["url"] for row in client.requests]
+        self.assertEqual(actual[-3:], links[:3])
+        self.assertNotIn(links[3], actual)
+        self.assertEqual(len(actual), len(set(actual)))
+
+    def test_success_resets_transport_streak_and_single_failed_urls_are_discarded(self):
+        origin = "https://orbi.kr"
+        links = [origin + "/000" + str(n) for n in range(6658324, 6658329)]
+        routes = {origin + "/robots.txt": response(origin + "/robots.txt", "User-agent: *\nAllow: /\n"),
+                  origin + "/list": response(origin + "/list", ''.join('<a href="' + url + '">post</a>' for url in links))}
+        for i, url in enumerate(links):
+            routes[url] = response(url, orbi_post("정상 본문입니다.")) if i in (1, 4) else collector.Response(url, failure="network_timeout")
+        client = FakeClient(routes)
+        result = collector.collect(["orbi"], client=client)
+        self.assertEqual(result["pattern_records"], 2)
+        self.assertEqual(result["sources"][0]["transport_failures"], {"network_timeout": 3})
+        self.assertEqual(result["sources"][0]["consecutive_transport_failures"], 0)
+        self.assertNotIn("reason", result["sources"][0])
+        self.assertEqual(len(client.requests), len({row["url"] for row in client.requests}))
+
+    def test_certificate_failure_is_not_treated_as_an_ordinary_transient_timeout(self):
+        class Opener:
+            def open(self, req, timeout):
+                raise error.URLError(ssl.SSLCertVerificationError("certificate rejected"))
+        client = collector.BoundedClient(opener=Opener())
+        result = client.get("https://orbi.kr/list")
+        self.assertEqual(result.failure, "network_certificate_error")
+        self.assertNotIn(result.failure, collector.TRANSPORT_THREAD_FAILURES)
 
     def test_atomic_checkpoint_retains_full_abstract_rows_after_later_disk_failure(self):
         with tempfile.TemporaryDirectory() as root:

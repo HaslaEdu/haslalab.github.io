@@ -30,6 +30,7 @@ import urllib.request
 
 MAX_COMPRESSED_BYTES = 4 * 1024 * 1024
 MAX_RAW_BYTES = 16 * 1024 * 1024
+MAX_ARTIFACT_RAW_BYTES = 256 * 1024 * 1024
 MAX_SCRIPT_BYTES = 256 * 1024
 MAX_PARTS = 100
 ADAPTER_TOTAL_LIMITS = {"solver": 2 * 1024**3, "chat": 4 * 1024**3}
@@ -117,7 +118,9 @@ def rows_from_payload(raw, expected_split, data_format="text"):
     if data_format not in ("text", "chat"):
         raise PilotError("unsupported_payload_format")
     try:
-        lines = raw.decode("utf-8-sig").splitlines()
+        # JSON Lines uses LF delimiters. U+0085/U+2028/U+2029 may legally occur
+        # inside JSON strings and must not be treated as record boundaries.
+        lines = raw.decode("utf-8-sig").split("\n")
     except UnicodeError:
         raise PilotError("payload_not_utf8") from None
     rows = []
@@ -279,7 +282,7 @@ def artifact_payloads(env, workspace, wandb_module, private):
         if getattr(entry, "ref", None):
             raise PilotError("input_artifact_external_reference")
         size = getattr(entry, "size", None)
-        if type(size) is not int or not 0 < size <= MAX_RAW_BYTES:
+        if type(size) is not int or not 0 < size <= MAX_ARTIFACT_RAW_BYTES:
             raise PilotError("input_artifact_file_size_limit")
     downloaded = artifact.download(root=str(root), allow_missing_references=False, skip_cache=True)
     if root.is_symlink() or not root.is_dir() or Path(downloaded).resolve() != root.resolve():
@@ -291,7 +294,7 @@ def artifact_payloads(env, workspace, wandb_module, private):
     for path in actual:
         if path.is_symlink() or not path.is_file() or path.resolve().parent != root.resolve():
             raise PilotError("input_artifact_unsafe_file")
-        if path.stat().st_size != entries[path.name].size or not 0 < path.stat().st_size <= MAX_RAW_BYTES:
+        if path.stat().st_size != entries[path.name].size or not 0 < path.stat().st_size <= MAX_ARTIFACT_RAW_BYTES:
             raise PilotError("input_artifact_file_size_limit")
         raw = path.read_bytes()
         if sha_bytes(raw) != expected[path.name]:
@@ -341,7 +344,7 @@ def pinned_role_settings(path, role, data_format):
         raise PilotError("role_format_mismatch") from None
     if (config.get("role") != role or data_format not in config.get("allowed_formats", ())
             or type(config.get("default_rank")) is not int or not 1 <= config["default_rank"] <= 32
-            or type(config.get("max_steps")) is not int or not 1 <= config["max_steps"] <= 32
+            or type(config.get("max_steps")) is not int or not 1 <= config["max_steps"] <= 32768
             or type(config.get("max_length")) is not int or not 128 <= config["max_length"] <= 4096
             or not isinstance(config.get("base_model"), str) or not config["base_model"]
             or not isinstance(config.get("base_aliases"), list) or config["base_model"] not in config["base_aliases"]
@@ -377,7 +380,7 @@ def data_bounded_settings(config, training_rows):
     """
     if type(training_rows) is not int or training_rows < 1:
         raise PilotError("invalid_validated_training_row_count")
-    if type(config.get("max_steps")) is not int or not 1 <= config["max_steps"] <= 32:
+    if type(config.get("max_steps")) is not int or not 1 <= config["max_steps"] <= 32768:
         raise PilotError("invalid_pinned_role_configuration")
     bounded = dict(config)
     bounded["role_max_steps"] = config["max_steps"]
@@ -687,8 +690,9 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                                 settings=settings, dir=str(workspace))
         stage = "training"
         run.summary["status"] = stage
-        timeout = int(env.get("HASLA_TRAIN_TIMEOUT_SECONDS", "3600"))
-        if not 60 <= timeout <= 5400:
+        timeout = int(env.get("HASLA_TRAIN_TIMEOUT_SECONDS", "1200" if role == "chat" else "3600"))
+        maximum_timeout = 1800 if role == "chat" else 14400
+        if not 60 <= timeout <= maximum_timeout:
             raise PilotError("invalid_training_timeout")
         # The trainer's stdout remains discarded. Its stderr is private and
         # temporary; only a classified tail (never raw text) can leave this scope.

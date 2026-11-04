@@ -15,7 +15,7 @@ class RoleConfigTests(unittest.TestCase):
         self.assertTrue(c['load_in_16bit'])
         self.assertEqual(c['default_rank'], 8)
         self.assertEqual(c['max_length'], 1024)
-        self.assertEqual(c['max_steps'], 8)
+        self.assertEqual(c['max_steps'], 512)
         with self.assertRaisesRegex(ValueError, 'does not allow'):
             validate_role_format('chat', 'text')
 
