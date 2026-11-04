@@ -12,6 +12,7 @@
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 import { readPublicPosts } from './public-data.js';
 import { recall, logUsage, fastAllowed, logMemberChat, memberFeedback, forgetMember, forgetMemberChat } from './ai-memory.js';
+import { aiSettings } from './ai-train.js';
 
 export const AI_ASSISTANT_PATH = '/api/ai/chat';
 const SITE = 'https://haslalab.org/';
@@ -127,7 +128,7 @@ const CHAT_SCHEMA = /^@cf\/(?:openai\/|google\/gemma-4|qwen\/qwen3\.[1-9]|deepse
 export async function runModel(env, which, input, maxTokens) {
   const url = env[`AI_${which}_URL`], key = env[`AI_${which}_KEY`], remote = env[`AI_${which}_REMOTE`];
   if (url && key && remote) {
-    try { return await runRemote(url, key, remote, input, maxTokens); }
+    try { return await runRemote(url, key, remote, input, maxTokens, env[`AI_${which}_PROJECT`]); }
     catch (e) { console.error('ai-remote', which, String(e?.message || e).slice(0, 200)); }
   }
   const model = env[`AI_${which}_MODEL`] || MODELS[which];
@@ -138,9 +139,10 @@ export async function runModel(env, which, input, maxTokens) {
 }
 /* an OpenAI-compatible chat completion (CoreWeave / W&B Inference serves our LoRAs this way); a stream comes back as
    the response body, the same server-sent events generate() reads from Workers AI */
-async function runRemote(url, key, model, input, maxTokens) {
+async function runRemote(url, key, model, input, maxTokens, project) {
   const r = await fetch(url.replace(/\/+$/, '') + '/chat/completions', {method: 'POST',
-    headers: {'Content-Type': 'application/json', Authorization: `Bearer ${key}`},
+    // W&B Inference bills a team/project (AI_<ROLE>_PROJECT), sent as OpenAI's project header
+    headers: {'Content-Type': 'application/json', Authorization: `Bearer ${key}`, ...(project ? {'OpenAI-Project': project} : {})},
     body: JSON.stringify({model, messages: input.messages, ...(input.tools ? {tools: input.tools} : {}), ...(input.stream ? {stream: true, stream_options: {include_usage: true}} : {}),
       ...(input.temperature != null ? {temperature: input.temperature} : {}), ...(maxTokens ? {max_tokens: maxTokens} : {})}),
     signal: AbortSignal.timeout(input.stream ? 300000 : 120000)});
@@ -512,7 +514,9 @@ function metered(env, meter) {
    answers (the self-test must really answer); onDelta(text) receives the answer as it is written; onMeta({intent})
    is told the intent as soon as it is known */
 export async function answer(env0, history, {lang = 'ko', style = 'default', route = null, memory = true, onDelta = null, onMeta = null} = {}) {
-  const t0 = Date.now(), usage = {in: 0, out: 0, calls: 0}, env = metered(env0, usage);
+  // the adapters the automatic training promoted (ai-train.js); a Worker variable of the same name still wins
+  const promoted = env0.DB ? await aiSettings(env0.DB) : {};
+  const t0 = Date.now(), usage = {in: 0, out: 0, calls: 0}, env = metered({...promoted, ...env0}, usage);
   style = styleOf(style);
   const q = history[history.length - 1].content;
   lang = langOf(q, lang);

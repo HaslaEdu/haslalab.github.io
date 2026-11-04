@@ -48,6 +48,7 @@ import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-ban
 import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH } from './ai-assistant.js';
 import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
+import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount, writtenSwap } from './focus-read.js';
@@ -251,6 +252,7 @@ const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUse
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
 const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit,clientIp,trainAllowed:(env,id)=>aiTrainAllowed(env.DB,id,env[DB_SCOPE]||env.DB)});
 const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
+const aiTrainRouter=createAiTrainRouter({HttpError,currentUser});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url, ctx) {
@@ -259,6 +261,7 @@ async function handle(req, env, url, ctx) {
   if(p===PROBLEM_BANK_OCR_PATH)return problemBankOcrRouter(req,env);
   if(p===AI_ASSISTANT_PATH||p===AI_FEEDBACK_PATH||p===AI_FORGET_PATH)return aiAssistantRouter(req,env);
   if(p===AI_EVAL_PATH||p.startsWith(AI_EVAL_PATH+'/'))return aiEvalRouter(req,env);
+  if(p.startsWith(AI_TRAIN_PATH+'/'))return aiTrainRouter(req,env);
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
   const body = (m === "POST" || m === "PATCH") && !form ? /^\/api\/auth\/handoff\/(start|exchange)$/.test(p)?await accountHandoff.readBody(req,env):/^\/api\/oauth\/(desktop|web)\/(start|exchange)$/.test(p)?await desktopOAuth.readBody(req,env):await req.json().catch(() => ({})) : {};
