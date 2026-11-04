@@ -32,6 +32,9 @@ MAX_RAW_BYTES = 16 * 1024 * 1024
 MAX_SCRIPT_BYTES = 256 * 1024
 MAX_PARTS = 100
 MAX_ADAPTER_BYTES = 512 * 1024 * 1024
+# train_lora.py pins per-device batch=1 and gradient accumulation=8.
+# Keep this local policy independent of caller-provided environment settings.
+PILOT_EFFECTIVE_BATCH_ROWS = 8
 ALLOWED_WANDB_BASES = {"https://api.wandb.ai", "https://api.forge.coreweave.com"}
 CODE_ROOT = "https://raw.githubusercontent.com/HaslaEdu/haslalab.github.io"
 SHA_PATTERN = re.compile(r"[a-f0-9]{64}\Z")
@@ -352,6 +355,25 @@ def training_command(script, data, adapter, validation=None, config=None, data_f
     return command
 
 
+def data_bounded_settings(config, training_rows):
+    """Cap a pilot at approximately one pass over the validated input rows.
+
+    A copied configuration drives the trainer command, report verification and
+    public-safe result metadata so a tiny corpus cannot silently cycle to the
+    role's full step cap. No environment override can increase this bound.
+    """
+    if type(training_rows) is not int or training_rows < 1:
+        raise PilotError("invalid_validated_training_row_count")
+    if type(config.get("max_steps")) is not int or not 1 <= config["max_steps"] <= 32:
+        raise PilotError("invalid_pinned_role_configuration")
+    bounded = dict(config)
+    bounded["role_max_steps"] = config["max_steps"]
+    bounded["effective_batch_rows"] = PILOT_EFFECTIVE_BATCH_ROWS
+    bounded["max_steps"] = min(config["max_steps"],
+                               (training_rows + PILOT_EFFECTIVE_BATCH_ROWS - 1) // PILOT_EFFECTIVE_BATCH_ROWS)
+    return bounded
+
+
 def training_environment(env):
     # Only the local JSONL file is needed by the trainer; do not forward corpus shards.
     child = {key: value for key, value in env.items()
@@ -468,7 +490,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         stage = "role_config_verification"
         role_path = workspace / "role_config.py"
         role_sha = fetch_role_config(env, role_path, opener)
-        config = pinned_role_settings(role_path, role, data_format)
+        config = data_bounded_settings(pinned_role_settings(role_path, role, data_format), len(training))
         data_path, validation_path, adapter = workspace / f"train.{data_format}.jsonl", None, workspace / "adapter"
         if adapter.exists():
             raise PilotError("adapter_output_already_exists")
@@ -490,6 +512,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         safe_config = {"role": role, "base_model": config["base_model"], "format": data_format,
                        "precision": config["precision"], "training_method": config["training_method"],
                        "rank": config["default_rank"], "max_steps": config["max_steps"],
+                       "role_max_steps": config["role_max_steps"], "effective_batch_rows": config["effective_batch_rows"],
                        "epochs": 1, "learning_rate": 1e-5, "max_length": config["max_length"],
                        "training_records": len(training), "validation_records": len(validation),
                        "training_sha256": sha_bytes(data),
@@ -526,6 +549,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             "role": role, "base_model": config["base_model"], "format": data_format,
             "precision": config["precision"], "training_method": config["training_method"],
             "rank": config["default_rank"], "max_steps": config["max_steps"],
+            "role_max_steps": config["role_max_steps"], "effective_batch_rows": config["effective_batch_rows"],
             "steps_completed": report["steps_completed"],
             "train_loss": report["train_loss"], "eval_loss": report["eval_loss"],
             "training_records": len(training), "validation_records": len(validation),
@@ -544,6 +568,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                   "role": role, "base_model": config["base_model"], "format": data_format,
                   "precision": config["precision"], "training_method": config["training_method"],
                   "rank": config["default_rank"], "max_steps": config["max_steps"],
+                  "role_max_steps": config["role_max_steps"], "effective_batch_rows": config["effective_batch_rows"],
                   "steps_completed": report["steps_completed"],
                   "train_loss": report["train_loss"], "eval_loss": report["eval_loss"],
                   "adapter_files": files, "training_records": len(training),

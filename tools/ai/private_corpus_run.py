@@ -5,6 +5,7 @@ repository secrets, never committed source or public workflow artifacts. Only
 the requested data, HF token and private W&B credentials enter the GPU Pod.
 """
 import base64
+from decimal import Decimal, InvalidOperation
 from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
@@ -25,11 +26,29 @@ from training_budget import BudgetLedger, BudgetPolicy, PodQuote, reserve_run, s
 from private_pod_train import decode_payload, rows_from_payload, verify_partitions
 
 
-REST = 'https://rest.runpod.io/v1'
+REST = 'https://api.runpod.io/v2'
 PROJECT = 'hasla-ai-private-training'
 PREFIX = 'hasla-private-books-'
 E = os.environ
 GPU_IDS = ('NVIDIA A100 80GB PCIe', 'NVIDIA A100-SXM4-80GB')
+
+
+def normalized_pod(value):
+    """Translate the documented v2 billing fields for the existing cost ledger."""
+    if not isinstance(value, dict) or not isinstance(value.get('id'), str):
+        raise ValueError('RunPod returned an invalid pod')
+    row = dict(value)
+    if 'cost' in row:
+        row['costPerHr'] = row['cost']
+    if 'disk' in row:
+        row['containerDiskInGb'] = row['disk']
+    if 'status' in row:
+        row['desiredStatus'] = row['status']
+    mounts = row.get('mounts') or {}
+    row['volumeInGb'] = (mounts.get('persistent') or {}).get('size', 0)
+    if mounts.get('network') or mounts.get('global'):
+        row['networkVolume'] = True
+    return row
 
 
 def safe_event(kind, **fields):
@@ -57,7 +76,14 @@ def runpod(method, path, **kwargs):
             category = 'provider_error'
         safe_event('runpod_api_error', method=method, http_status=response.status_code, category=category)
         raise RuntimeError(f'RunPod {method} status {response.status_code}')
-    return response.json() if response.content else None
+    data = response.json() if response.content else None
+    if method == 'GET' and path == '/pods':
+        if not isinstance(data, dict) or not isinstance(data.get('pods'), list):
+            raise ValueError('RunPod v2 pod list is invalid')
+        return [normalized_pod(row) for row in data['pods']]
+    if path.startswith('/pods/') or method == 'POST' and path == '/pods':
+        return normalized_pod(data) if data is not None else None
+    return data
 
 
 def wandb_query(query, variables=None, timeout=20):
@@ -105,48 +131,35 @@ def capacity_preflight():
     user = data['data'].get('myself') or {}
     balance = user.get('clientBalance')
     funded = isinstance(balance, (float, int)) and balance > 0 and user.get('underBalance') is not True
-    quotes = []
-    for gpu in data['data'].get('gpuTypes') or []:
-        price = gpu.get('lowestPrice') or {}
-        quotes.append({'gpu': gpu.get('id'), 'hourly_usd': price.get('uninterruptablePrice'),
-                       'stock': price.get('stockStatus'), 'available_count': price.get('availableGpuCount')})
+    catalog = runpod('GET', '/catalog/gpus?include=AVAILABILITY&product=POD&count=1&cloud=SECURE')
+    quotes = [{'gpu': gpu.get('id'), 'hourly_usd': (gpu.get('price') or {}).get('secure'),
+               'stock': gpu.get('availability')}
+              for gpu in catalog.get('gpus', []) if gpu.get('id') in GPU_IDS]
     safe_event('runpod_readonly_preflight', funded=funded, quotes=quotes)
     if not funded:
         raise RuntimeError('RunPod account needs prepaid funds; no payment or GPU creation attempted')
+    for gpu_id in reversed(GPU_IDS):
+        for row in quotes:
+            try:
+                price = Decimal(str(row['hourly_usd']))
+            except InvalidOperation:
+                continue
+            if (row['gpu'] == gpu_id and str(row['stock']).upper() in ('LOW', 'MEDIUM', 'HIGH')
+                    and price.is_finite() and 0 < price <= 3):
+                return gpu_id
+    raise RuntimeError('No A100 80GB is available within the reserved USD3 hourly ceiling')
 
 
-def graphql_create_pod(name, env, command):
-    # Official legacy API fallback for v1's creation-only HTTP 500 responses.
-    # A GraphQL error is never followed by an automatic second creation request.
-    payload = {'name': name, 'cloudType': 'SECURE', 'gpuCount': 1, 'volumeInGb': 0,
-               'containerDiskInGb': 200, 'gpuTypeId': GPU_IDS[1],
-               'imageName': 'runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04',
-               'dockerArgs': command, 'ports': '', 'volumeMountPath': '/workspace',
-               'env': [{'key': k, 'value': v} for k, v in env.items()]}
-    response = requests.post('https://api.runpod.io/graphql',
-        json={'query': 'mutation($input:PodFindAndDeployOnDemandInput!){podFindAndDeployOnDemand(input:$input){id}}',
-              'variables': {'input': payload}},
-        headers={'Authorization': 'Bearer ' + E['RUNPOD_API_KEY']}, timeout=20)
-    if not response.ok:
-        safe_event('runpod_graphql_create_error', http_status=response.status_code)
-        raise RuntimeError('RunPod GraphQL creation failed')
-    data = response.json()
-    if data.get('errors'):
-        categories, fields = [], []
-        for error in data['errors']:
-            message = str(error.get('message', ''))
-            lower = message.lower()
-            categories.append('gpu_capacity' if any(x in lower for x in ('available', 'capacity', 'stock'))
-                              else 'account_funding' if any(x in lower for x in ('balance', 'credit', 'fund'))
-                              else 'authorization' if any(x in lower for x in ('permission', 'unauthorized', 'authentication'))
-                              else 'provider_or_validation')
-            fields.extend(re.findall(r'(?:field|argument|type) ["\']([A-Za-z_][A-Za-z_0-9]*)["\']', message))
-        safe_event('runpod_graphql_create_error', categories=categories, fields=fields)
-        raise RuntimeError('RunPod GraphQL rejected creation')
-    pod = (data.get('data') or {}).get('podFindAndDeployOnDemand')
-    if not pod or not isinstance(pod.get('id'), str):
-        raise RuntimeError('RunPod GraphQL did not return a Pod ID')
-    return pod
+def graphql_create_pod(name, env, command, gpu_id=GPU_IDS[1]):
+    # Compatibility name for callers; provisioning now uses the current REST v2.
+    # Make exactly one creation request, then reconcile by exact name on failure.
+    if gpu_id not in GPU_IDS:
+        raise ValueError('Only an A100 80GB is authorized for this pilot')
+    return runpod('POST', '/pods', json={
+        'name': name, 'cloud': 'SECURE', 'gpu': {'id': gpu_id, 'count': 1},
+        'disk': 200, 'image': 'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404',
+        'entrypoint': ['/bin/bash', '-lc'], 'cmd': [command], 'ports': [], 'env': env,
+        'startSsh': False, 'startJupyter': False})
 
 
 def publish_private_input(entity, run_id, manifest, data_env):
@@ -256,11 +269,22 @@ def delete_and_confirm(pod_id):
                 continue
             check = requests.get(REST + '/pods/' + pod_id,
                 headers={'Authorization': 'Bearer ' + E['RUNPOD_API_KEY']}, timeout=20)
-            if check.status_code == 404 or (check.ok and check.json().get('desiredStatus') == 'TERMINATED'):
+            if check.status_code == 404 or (check.ok and check.json().get('status') == 'TERMINATED'):
                 return True
         except requests.RequestException:
             pass
     return False
+
+
+def reconcile_created_pods(name):
+    """A lost create response may precede listing visibility. Never recreate."""
+    for attempt in range(4):
+        matches = [p for p in runpod('GET', '/pods') if p.get('name') == name]
+        if matches:
+            return matches
+        if attempt != 3:
+            time.sleep(5)
+    return []
 
 
 def cleanup():

@@ -176,6 +176,54 @@ class PrivateCorpusRunnerTests(unittest.TestCase):
         self.assertNotIn(PRIVATE_TEXT, str(caught.exception))
         self.assertNotIn(FAKE_KEY, str(caught.exception))
 
+    def test_v2_list_and_single_billing_fields_normalize_without_losing_storage(self):
+        raw = {"id": "fixture-pod", "name": "fixture", "cost": 2.5, "disk": 200,
+               "gpu": {"id": runner.GPU_IDS[1], "count": 1}, "status": "PROVISIONING",
+               "mounts": {"persistent": {"size": 25, "path": "/workspace"}}}
+        with patch.object(runner.requests, "request", return_value=response(data={"pods": [raw]})) as call:
+            row = runner.runpod("GET", "/pods")[0]
+        self.assertEqual(call.call_args.args[1], "https://api.runpod.io/v2/pods")
+        self.assertEqual((row["costPerHr"], row["containerDiskInGb"], row["volumeInGb"]), (2.5, 200, 25))
+        self.assertEqual(row["desiredStatus"], "PROVISIONING")
+        self.assertTrue(runner.normalized_pod({**raw, "mounts": {"network": [{"volumeId": "unexpected"}]}})["networkVolume"])
+        with patch.object(runner.requests, "request", return_value=response(data=[])), self.assertRaises(ValueError):
+            runner.runpod("GET", "/pods")
+
+    def test_v2_create_is_one_nested_request_with_explicit_command_and_no_paid_volume(self):
+        with patch.object(runner, "runpod", return_value={"id": "fixture-pod"}) as call:
+            runner.graphql_create_pod("fixture", {"PRIVATE": PRIVATE_TEXT}, "bash -lc 'echo fixture'", runner.GPU_IDS[0])
+        call.assert_called_once()
+        body = call.call_args.kwargs["json"]
+        self.assertEqual(body["gpu"], {"id": runner.GPU_IDS[0], "count": 1})
+        self.assertEqual(body["disk"], 200)
+        self.assertNotIn("mounts", body)
+        self.assertEqual(body["entrypoint"], ["/bin/bash", "-lc"])
+        self.assertEqual(body["env"], {"PRIVATE": PRIVATE_TEXT})
+        self.assertFalse(body["startSsh"])
+
+    def test_capacity_uses_current_catalog_and_does_not_select_an_empty_gpu_pool(self):
+        funded = response(data={"data": {"myself": {"clientBalance": 20, "underBalance": False}}})
+        catalog = {"gpus": [{"id": runner.GPU_IDS[1], "availability": "NONE", "price": {"secure": 1.79}},
+                            {"id": runner.GPU_IDS[0], "availability": "LOW", "price": {"secure": 1.89}}]}
+        with patch.object(runner.requests, "post", return_value=funded), patch.object(runner, "runpod", return_value=catalog), \
+                contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(runner.capacity_preflight(), runner.GPU_IDS[0])
+            catalog["gpus"][1]["availability"] = "NONE"
+            with self.assertRaisesRegex(RuntimeError, "No A100"):
+                runner.capacity_preflight()
+            catalog['gpus'][0].update(availability='HIGH', price={'secure': 3.01})
+            with self.assertRaisesRegex(RuntimeError, 'ceiling'):
+                runner.capacity_preflight()
+
+    def test_lost_create_reconciliation_waits_for_listing_visibility_without_recreating(self):
+        name = runner.PREFIX + '12345'
+        exact = {'id':'fixture-pod','name':name}
+        with patch.object(runner, 'runpod', side_effect=[[], [{'id':'other','name':'unrelated'}], [exact]]) as call:
+            self.assertEqual(runner.reconcile_created_pods(name), [exact])
+        self.assertEqual(call.call_count, 3)
+        self.assertTrue(all(c.args == ('GET','/pods') for c in call.call_args_list))
+        self.assertEqual(self.now, 110)
+
     def test_over_ceiling_creation_response_is_deleted_before_polling(self):
         self.env["HASLA_PREFLIGHT_ONLY"] = "false"
         with self.ready_main(create=self.valid_pod(costPerHr="3.01")) as mocks, contextlib.redirect_stdout(io.StringIO()), \

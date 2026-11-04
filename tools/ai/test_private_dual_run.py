@@ -29,9 +29,14 @@ def fixture():
         for split in ("train", "validation"):
             row = {"metadata": {"group_id": f"{role}-{split}", "split": split}}
             if role == "chat":
+                row["metadata"].update(derivation="paraphrase_observed_exchange", reconstructed=True,
+                    old_synthetic_seed=False, observed_reply_link="fixture top-level body reply",
+                    reviewer="agent:fixture", review_status="approved", collected_at="2026-11-04T00:00:00Z",
+                    source_url="https://orbi.kr/00079999827", question_sha256="a" * 64, answer_sha256="b" * 64)
                 row["messages"] = [{"role": "user", "content": "fixture question " + split},
                                    {"role": "assistant", "content": PRIVATE + split}]
             else:
+                row["metadata"].update(drive_provenance={"drive_file_id": "fixture-drive-book", "local_original_pdf_sha256": "c" * 64}, page_number=10)
                 row["text"] = PRIVATE + role + split
             raw = (json.dumps(row) + "\n").encode()
             encoded = base64.b64encode(gzip.compress(raw)).decode()
@@ -76,7 +81,7 @@ class PrivateDualParentTests(unittest.TestCase):
             if path == "/pods/fixture-pod":
                 return self.pod()
             raise AssertionError("unexpected Runpod operation")
-        def create(*args):
+        def create(*args, **kwargs):
             if lost:
                 raise dual.cloud.requests.Timeout("synthetic lost response")
             return {"id": "fixture-pod"}
@@ -87,7 +92,7 @@ class PrivateDualParentTests(unittest.TestCase):
             return {"role": role, "status": "failed" if failed else "uploaded", "artifact": role + "-adapter:v0"}
         patches = [patch.object(dual.cloud, "runpod", side_effect=api),
                    patch.object(dual.cloud, "graphql_create_pod", side_effect=create),
-                   patch.object(dual.cloud, "capacity_preflight"),
+                   patch.object(dual.cloud, "capacity_preflight", return_value=dual.cloud.GPU_IDS[1]),
                    patch.object(dual.cloud, "private_project", return_value="fixture-entity"),
                    patch.object(dual.cloud.requests, "head", return_value=SimpleNamespace(ok=True)),
                    patch.object(dual.cloud, "publish_private_input", side_effect=publish),
@@ -114,7 +119,8 @@ class PrivateDualParentTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             dual.load_inputs({**self.env, "HASLA_DUAL_MANIFEST": json.dumps(broken)})
         # Validation is an intact, correctly hashed JSONL, but belongs to a training group.
-        row = {"text": "different passage", "metadata": {"group_id": "solver-train", "split": "validation"}}
+        row = {"text": "different passage", "metadata": {"group_id": "solver-train", "split": "validation",
+            "drive_provenance": {"drive_file_id": "fixture-drive-book", "local_original_pdf_sha256": "c" * 64}, "page_number": 11}}
         raw = (json.dumps(row) + "\n").encode()
         encoded = base64.b64encode(gzip.compress(raw)).decode()
         broken = json.loads(json.dumps(self.manifest))
@@ -133,6 +139,23 @@ class PrivateDualParentTests(unittest.TestCase):
         event = next(json.loads(line) for line in output.getvalue().splitlines() if json.loads(line)["event"] == "dual_preflight")
         self.assertEqual(event["runtime_seconds"], 7200)
         self.assertLess(int(event["reserved_upper_krw"]) + 5000 + 10, 30000)
+
+    def test_authored_seed_or_source_less_book_cannot_masquerade_as_collected_material(self):
+        for role in ('chat', 'solver'):
+            spec = self.manifest['roles'][role]['train']
+            prefix = f'HASLA_{role.upper()}_DATA_00'
+            row = json.loads(gzip.decompress(base64.b64decode(self.env[prefix])).decode())
+            if role == 'chat':
+                row['metadata']['old_synthetic_seed'] = True
+            else:
+                row['metadata'].pop('drive_provenance')
+            raw = (json.dumps(row) + '\n').encode()
+            encoded = base64.b64encode(gzip.compress(raw)).decode()
+            changed = json.loads(json.dumps(self.manifest))
+            changed['roles'][role]['train'].update(raw_sha256=hashlib.sha256(raw).hexdigest(),
+                encoded_sha256=hashlib.sha256(encoded.encode()).hexdigest())
+            with self.subTest(role=role), self.assertRaisesRegex(ValueError, 'requires'):
+                dual.load_inputs({**self.env, prefix: encoded, 'HASLA_DUAL_MANIFEST': json.dumps(changed)})
 
     def test_one_pod_handles_two_references_and_results_then_always_cleans_up(self):
         output = io.StringIO()

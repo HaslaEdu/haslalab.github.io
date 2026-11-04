@@ -15,6 +15,30 @@ from private_pod_train import decode_payload, rows_from_payload, verify_partitio
 from training_budget import BudgetLedger, BudgetPolicy, PodQuote, reserve_run, settle_run, should_stop, validate_observed_pod
 
 
+def validate_source_lineage(rows, role):
+    """This pilot must use collected exchanges and the user's Drive textbooks."""
+    for row in rows:
+        meta = row.get('metadata') or {}
+        if role == 'chat':
+            if (meta.get('derivation') != 'paraphrase_observed_exchange'
+                    or meta.get('reconstructed') is not True
+                    or meta.get('old_synthetic_seed') is not False
+                    or not meta.get('observed_reply_link')
+                    or not meta.get('reviewer')
+                    or meta.get('review_status') != 'approved'
+                    or not meta.get('collected_at')
+                    or not re.fullmatch(r'https://(?:orbi\.kr/[0-9]+|gall\.dcinside\.com/(?:m?gallery/)?board/view/\?id=[A-Za-z0-9_]+&no=[0-9]+)', str(meta.get('source_url', '')))
+                    or any(not re.fullmatch(r'[a-f0-9]{64}', str(meta.get(key, '')))
+                           for key in ('question_sha256', 'answer_sha256'))):
+                raise ValueError('Gemma requires reviewed, source-grounded collected exchanges')
+        elif (not isinstance(meta.get('drive_provenance'), dict)
+              or not meta['drive_provenance'].get('drive_file_id')
+              or not re.fullmatch(r'[a-f0-9]{64}', str(meta['drive_provenance'].get('local_original_pdf_sha256', '')))
+              or not meta.get('page_number')
+              or meta.get('scan_suspect') is True):
+            raise ValueError('QwQ requires native-text pages with Drive and PDF provenance')
+
+
 def load_inputs(env):
     manifest = json.loads(env['HASLA_DUAL_MANIFEST'])
     if manifest.get('budget_krw') != 30000 or list(manifest.get('roles', {})) != ['chat', 'solver']:
@@ -49,6 +73,7 @@ def load_inputs(env):
             data_env[target + '_SHA256'] = item['raw_sha256']
         training = rows_from_payload(decode_payload(data_env), 'train', expected)
         validation = rows_from_payload(decode_payload(data_env, 'HASLA_VALIDATION'), 'validation', expected)
+        validate_source_lineage(training + validation, role)
         verify_partitions(training, validation)
         if len(training) != spec['train']['records'] or len(validation) != spec['validation']['records']:
             raise ValueError('private record count mismatch')
@@ -68,7 +93,7 @@ def main():
     run_id = cloud.PREFIX + env['GITHUB_RUN_ID']
     if any(p.get('name') == run_id for p in cloud.runpod('GET', '/pods')):
         raise RuntimeError('a Pod already exists for this run')
-    cloud.capacity_preflight()
+    selected_gpu = cloud.capacity_preflight()
     bases = {'chat': 'google/gemma-4-26B-A4B-it', 'solver': 'Qwen/QwQ-32B'}
     for role, model in bases.items():
         response = cloud.requests.head(f'https://huggingface.co/{model}/resolve/main/config.json',
@@ -111,9 +136,9 @@ def main():
     pod, attempted, results = None, False, {}
     try:
         attempted = True
-        cloud.safe_event('gpu_request', api='graphql', gpu='A100 80GB SXM', roles=['chat', 'solver'],
+        cloud.safe_event('gpu_request', api='rest_v2', gpu=selected_gpu, roles=['chat', 'solver'],
                          private_environment_bytes=sum(len(v) for v in pod_env.values()))
-        pod = cloud.graphql_create_pod(run_id, pod_env, command)
+        pod = cloud.graphql_create_pod(run_id, pod_env, command, gpu_id=selected_gpu)
         pod = cloud.runpod('GET', '/pods/' + pod['id'])
         validate_observed_pod(plan, pod)
         cloud.safe_event('pod_started', pod_id=pod['id'], hourly_usd=pod['costPerHr'], roles=['chat', 'solver'])
@@ -142,13 +167,13 @@ def main():
                 break
             info = cloud.runpod('GET', '/pods/' + pod['id'], request_timeout=min(10, remaining))
             validate_observed_pod(plan, info)
-            if info.get('desiredStatus') in ('EXITED', 'TERMINATED'):
+            if info.get('desiredStatus') in ('EXITED', 'ERROR', 'TERMINATED'):
                 raise RuntimeError('GPU stopped before both private adapters were uploaded')
             time.sleep(min(20, max(0, float(plan.deadline_monotonic) - time.monotonic())))
         raise RuntimeError('dual-model deadline reached')
     finally:
         if attempted:
-            matches = [pod] if pod and pod.get('id') else [p for p in cloud.runpod('GET', '/pods') if p.get('name') == run_id]
+            matches = [pod] if pod and pod.get('id') else cloud.reconcile_created_pods(run_id)
             outcomes = [cloud.delete_and_confirm(p['id']) for p in matches]
             confirmed = all(outcomes)
             cloud.safe_event('pod_cleanup', matched_pods=len(matches), deletion_confirmed=confirmed)

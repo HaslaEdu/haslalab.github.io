@@ -134,6 +134,7 @@ class PrivatePodTests(unittest.TestCase):
         self.calls.append((command, kwargs))
         config = get_role_config(command[command.index("--base") + 1]) if "--base" in command else get_role_config("solver")
         data_format = command[command.index("--format") + 1] if "--format" in command else "text"
+        max_steps = int(command[command.index("--max-steps") + 1]) if "--max-steps" in command else config["max_steps"]
         adapter = self.root / "adapter"
         adapter.mkdir()
         (adapter / "adapter_config.json").write_text(json.dumps({"base_model_name_or_path": config["base_model"],
@@ -145,8 +146,8 @@ class PrivatePodTests(unittest.TestCase):
         validation_file = self.root / f"validation.{data_format}.jsonl"
         report = {"role": config["role"], "base_model": config["base_model"], "precision": config["precision"],
                   "training_method": config["training_method"], "rank": config["default_rank"],
-                  "max_length": config["max_length"], "max_steps": config["max_steps"], "format": data_format,
-                  "steps_completed": config["max_steps"], "weights_updated": True,
+                  "max_length": config["max_length"], "max_steps": max_steps, "format": data_format,
+                  "steps_completed": max_steps, "weights_updated": True,
                   "training_sha256": hashlib.sha256(training_file.read_bytes()).hexdigest() if training_file.exists() else None,
                   "validation_sha256": hashlib.sha256(validation_file.read_bytes()).hexdigest() if validation_file.exists() else None}
         (adapter / "hasla_training_manifest.json").write_text(json.dumps(report))
@@ -214,7 +215,7 @@ class PrivatePodTests(unittest.TestCase):
         self.assertEqual((self.root / "train.text.jsonl").read_bytes(), self.raw)
         self.assertEqual((self.root / "validation.text.jsonl").read_bytes(), validation_raw)
         command, kwargs = self.calls[0]
-        for option, value in (("--base", "solver"), ("--format", "text"), ("--max-steps", "32"),
+        for option, value in (("--base", "solver"), ("--format", "text"), ("--max-steps", "1"),
                               ("--epochs", "1"), ("--lr", "1e-5"), ("--max-len", "1024")):
             self.assertEqual(command[command.index(option) + 1], value)
         self.assertIn("--validation-data", command)
@@ -232,7 +233,11 @@ class PrivatePodTests(unittest.TestCase):
         self.assertEqual(self.wandb.init_kwargs["settings"]["console"], "off")
         self.assertEqual(result["role"], "solver")
         self.assertEqual(result["precision"], "4bit")
-        self.assertEqual(result["steps_completed"], get_role_config("solver")["max_steps"])
+        self.assertEqual(result["steps_completed"], 1)
+        self.assertEqual(result["max_steps"], 1)
+        self.assertEqual(result["role_max_steps"], get_role_config("solver")["max_steps"])
+        self.assertEqual(self.wandb.init_kwargs["config"]["max_steps"], 1)
+        self.assertEqual(uploaded.metadata["max_steps"], 1)
 
     def test_unverified_public_code_cannot_execute(self):
         self.env["HASLA_TRAIN_SCRIPT_SHA256"] = "0" * 64
@@ -379,7 +384,8 @@ class PrivatePodTests(unittest.TestCase):
         self.assertEqual(result["precision"], "bf16")
         self.assertEqual(result["training_method"], "lora")
         self.assertEqual(result["rank"], 8)
-        self.assertEqual(result["steps_completed"], get_role_config("chat")["max_steps"])
+        self.assertEqual(result["steps_completed"], 1)
+        self.assertEqual(result["role_max_steps"], get_role_config("chat")["max_steps"])
         self.assertEqual(len(self.calls), 1)
         command, kwargs = self.calls[0]
         for flag, expected in (("--base", "chat"), ("--format", "chat"), ("--rank", "8")):
@@ -391,6 +397,74 @@ class PrivatePodTests(unittest.TestCase):
         self.assertEqual(uploaded.metadata["base_model"], result["base_model"])
         self.assertNotIn("HASLA_INPUT_ARTIFACT", kwargs["env"])
         self.assertNotIn(self.secret_text, json.dumps(result))
+
+    def test_data_bounded_steps_copy_config_and_never_exceed_role_caps(self):
+        for role, n, expected in (("chat", 1, 1), ("chat", 8, 1), ("chat", 9, 2),
+                                  ("chat", 17, 3), ("chat", 64, 8), ("chat", 1000, 8),
+                                  ("solver", 1, 1), ("solver", 9, 2), ("solver", 255, 32),
+                                  ("solver", 256, 32), ("solver", 1000, 32)):
+            with self.subTest(role=role, n=n):
+                original = get_role_config(role)
+                capped = pod.data_bounded_settings(original, n)
+                self.assertEqual(capped["max_steps"], expected)
+                self.assertEqual(capped["role_max_steps"], original["max_steps"])
+                self.assertNotIn("role_max_steps", original)
+                self.assertEqual(capped["effective_batch_rows"], 8)
+        for bad in (0, -1, True, 1.5, "8"):
+            with self.subTest(bad=bad), self.assertRaisesRegex(pod.PilotError, "row_count"):
+                pod.data_bounded_settings(get_role_config("chat"), bad)
+
+    def test_tiny_chat_steps_use_validated_count_and_ignore_environment_overrides(self):
+        self.configure_chat()
+        rows = [{"messages": [{"role": "user", "content": "synthetic question " + str(i)},
+                               {"role": "assistant", "content": "synthetic reply " + str(i)}],
+                 "split": "train", "metadata": {"conversation_id": "chat-" + str(i), "training_role": "chat"}}
+                for i in range(9)]
+        data_env, self.raw = payload_environment(rows)
+        for key in list(self.env):
+            if key.startswith("HASLA_DATA_"):
+                del self.env[key]
+        self.env.update(data_env)
+        self.env["HASLA_DATA_FORMAT"] = "chat"
+        self.env.update({"MAX_STEPS": "9999", "HASLA_MAX_STEPS": "9999", "GRADIENT_ACCUMULATION_STEPS": "1"})
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["status"], "uploaded")
+        command = self.calls[0][0]
+        self.assertEqual(command[command.index("--max-steps") + 1], "2")
+        self.assertEqual(result["training_records"], 9)
+        self.assertEqual(result["max_steps"], 2)
+        self.assertEqual(result["steps_completed"], 2)
+        self.assertEqual(self.wandb.init_kwargs["config"]["max_steps"], 2)
+        self.assertEqual(self.wandb.run.artifacts[0][0].metadata["max_steps"], 2)
+
+    def test_solver_256_rows_retains_the_32_step_cap(self):
+        rows = [{"text": "synthetic native textbook row " + str(i), "split": "train",
+                 "metadata": {"document_id": "book-" + str(i)}} for i in range(256)]
+        data_env, self.raw = payload_environment(rows)
+        for key in list(self.env):
+            if key.startswith("HASLA_DATA_"):
+                del self.env[key]
+        self.env.update(data_env)
+        self.env["HASLA_DATA_FORMAT"] = "text"
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["status"], "uploaded")
+        command = self.calls[0][0]
+        self.assertEqual(command[command.index("--max-steps") + 1], "32")
+        self.assertEqual(result["training_records"], 256)
+        self.assertEqual(result["steps_completed"], 32)
+
+    def test_trainer_cannot_report_full_role_cap_after_a_tiny_data_limit(self):
+        def ignores_bounded_steps(command, **kwargs):
+            completed = self.runner(command, **kwargs)
+            path = self.root / "adapter" / "hasla_training_manifest.json"
+            report = json.loads(path.read_text())
+            report.update({"max_steps": 32, "steps_completed": 32})
+            path.write_text(json.dumps(report))
+            return completed
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, ignores_bounded_steps)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["error_code"], "training_report_role_or_input_mismatch")
+        self.assertFalse(self.wandb.run.artifacts)
 
     def test_missing_or_crossed_role_format_is_rejected_before_private_data_access(self):
         for role, data_format in ((None, "text"), ("chat", "text"), ("solver", None), ("both", "text")):
