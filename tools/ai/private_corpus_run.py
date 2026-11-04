@@ -64,7 +64,7 @@ def private_project():
                      config={'purpose': 'private textbook LoRA pilot', 'budget_krw': 30000},
                      settings=wandb.Settings(disable_code=True, disable_git=True, console='off', save_code=False,
                                              disable_job_creation=True, x_disable_meta=True, x_disable_stats=True))
-    run.finish(quiet=True)
+    run.finish()
     data = wandb_query('query($e:String!,$p:String!){project(name:$p,entityName:$e){name access}}',
                        {'e': entity, 'p': PROJECT})
     if str((data.get('project') or {}).get('access', '')).upper() != 'PRIVATE':
