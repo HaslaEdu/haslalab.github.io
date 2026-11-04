@@ -117,7 +117,7 @@ test("the neutral tone puts the same rules without «strict» and asks a zero fo
 test("a wrong form costs the whole item, except where the item is a whole part marked only as a total", () => {
   const ip2 = rulesFor("ipho", "theory").find(r => r.id === "IP2");
   assert.match(ip2.en, /wrong form .* earns nothing for that item unless the scheme gives a partial mark/);
-  assert.match(ip2.en, /whole part the scheme marks only as a total: there the wrong form costs only the result's share/);
+  assert.match(ip2.en, /whole part the scheme marks only as a total \(marked whole: true\): there the wrong form costs only the result's share/);
   assert.ok(!/IP9/.test(ip2.en), "IP2 is shared with experiments, where IP9 does not exist: it must not cite it");
   assert.ok(rulesFor("ipho", "experiment").some(r => r.id === "IP2"));
 });

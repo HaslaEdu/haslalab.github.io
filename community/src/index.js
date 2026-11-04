@@ -8,7 +8,7 @@
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
-import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -1851,7 +1851,12 @@ const PAGE_SCHEMA = { type: "object", properties: {
 const lean = v => Array.isArray(v) ? (v.length ? v.map(lean) : undefined)
   : v && typeof v === "object" ? (o => Object.keys(o).length ? o : undefined)(Object.fromEntries(Object.entries(v).map(([k, x]) => [k, lean(x)]).filter(([, x]) => x !== undefined && x !== null && x !== "")))
   : v;
-function compactScheme(scheme) { return lean({ ...scheme, items: scheme.items.map(({ what, ...rest }) => ({ ...rest, what })) }) || {}; }
+/* whole: the item is the only one of its printed part and carries all its points, so the scheme marks that part only as
+   a total (IP2 and IP9 then give a correct set-up its share: IPhO 2015 T1 B3, 2 pt, zeroed for one missing term) */
+const wholeParts = scheme => { const parts = new Map((Array.isArray(scheme.parts) ? scheme.parts : []).map(p => [String(p.id), +p.points]));
+  const count = new Map(); for (const it of scheme.items) { const k = String(it.id); if (parts.has(k)) count.set(k, (count.get(k) || 0) + 1); }
+  return new Set(scheme.items.filter(it => count.get(String(it.id)) === 1 && Math.abs(parts.get(String(it.id)) - +it.points) < 1e-9 && +it.points >= .5 && !scheme.items.some(o => o !== it && String(o.id).startsWith(String(it.id) + "."))).map(it => it.id)); };
+export function compactScheme(scheme) { const whole = wholeParts(scheme); return lean({ ...scheme, items: scheme.items.map(({ what, ...rest }) => ({ ...rest, ...(whole.has(rest.id) ? { whole: true } : {}), what })) }) || {}; }
 function compactRead(read) {
   if (!read) return "";
   try {
@@ -2122,7 +2127,7 @@ async function labScheme(env, s, task, m, strict = false) {
   const reviewed = sc => sc && !sc.unscored && Array.isArray(sc.items) && sc.items.length && (typeof labSrc(s)._schemeCheck === "boolean" ? labSrc(s)._schemeCheck : env.LAB_SCHEME_CHECK === "on")
     ? labSchemeReviewed(env, s, task, key, sc, m).catch(e => { console.error("lab scheme review", e?.code || e?.message); return sc; }) : sc;
   /* on every load, not stored: a window that is only the official example's reading of its own graph (ownDataWindows) */
-  const own = sc => sc && Array.isArray(sc.items) ? ownDataWindows(sc).scheme : sc;
+  const own = sc => sc && Array.isArray(sc.items) ? withRelTol(ownDataWindows(sc).scheme) : sc;
   if (await cached()) return build().then(reviewed).then(own);
   const turn = labSchemeBuilds.then(build);
   labSchemeBuilds = turn.catch(() => {});
@@ -2559,6 +2564,7 @@ function labItemGroups(scheme, max = 30) {
   return out;
 }
 export function labScore(scheme, raw, pages, opts = {}) {
+  withRelTol(scheme);                                    // the paper's own ±N% for its numerical answers
   const readCache = new Map(), readOf = p => { if (!readCache.has(p)) { let v = []; try { v = (p.read ? JSON.parse(p.read).items || [] : []).filter(i => !i.crossed_out); } catch {} readCache.set(p, v); } return readCache.get(p); };
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
