@@ -5,6 +5,8 @@ zero PDF download/model import/Pod creation); --cleanup uses only the RunPod
 key and this exact run's prefix/receipt. Unknown creation is never free/deleted.
 """
 from decimal import Decimal, ROUND_CEILING
+import base64
+import contextlib
 import hashlib
 import json
 import math
@@ -16,6 +18,7 @@ import signal
 import sys
 import tempfile
 import time
+import zlib
 
 import private_corpus_run as cloud
 import private_stage_corpus as privacy
@@ -56,6 +59,28 @@ def number(value):
 
 
 def canonical(value):return json.dumps(value,ensure_ascii=False,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+
+
+@contextlib.contextmanager
+def creation_diagnostics(result):
+    """Retain fixed status/category only; never retain upstream text or payloads."""
+    original=cloud.safe_event
+    def capture(kind,**fields):
+        if kind=='runpod_api_error' and fields.get('method')=='POST':
+            status=fields.get('http_status')
+            if type(status) is int and 400<=status<=599:result['http_status']=status
+            category=fields.get('category')
+            if category in ('account_funding','gpu_capacity','request_size','authorization','request_validation','provider_error'):
+                result['category']=category
+        original(kind,**fields)
+    cloud.safe_event=capture
+    try:yield
+    finally:cloud.safe_event=original
+
+
+def bootstrap_loader():
+    encoded=base64.b64encode(zlib.compress(BOOTSTRAP.encode(),9)).decode('ascii')
+    return 'import base64,zlib;exec(compile(zlib.decompress(base64.b64decode('+repr(encoded)+')),"<pinned-ocr-bootstrap>","exec"))'
 
 
 def run_id(env):
@@ -285,7 +310,7 @@ def command_and_env(manifest,env,entity,name,work_deadline_epoch):
     setup+='curl --connect-timeout 10 --max-time 30 -fsSL '+shlex.quote(url)+' -o private_ocr_batch_worker.py; '
     setup+='printf \'%s  %s\\n\' '+shlex.quote(manifest['worker_script_sha256'])+' private_ocr_batch_worker.py | sha256sum -c - >/dev/null; '
     setup+='python -m venv --system-site-packages venv; env -u WANDB_API_KEY venv/bin/python -m pip install --quiet wandb >/workspace/ocr-calibration/bootstrap.log 2>&1; '
-    setup+='exec venv/bin/python -c '+shlex.quote(BOOTSTRAP)+' >/workspace/ocr-calibration/driver.log 2>&1'
+    setup+='exec venv/bin/python -c '+shlex.quote(bootstrap_loader())+' >/workspace/ocr-calibration/driver.log 2>&1'
     work=manifest['total_runtime_seconds']-CLEANUP_SECONDS
     command='exec timeout --signal=TERM --kill-after=10s '+str(work-10)+'s bash -lc '+shlex.quote(setup)
     return command,pod_env
@@ -437,7 +462,7 @@ def execute(env=None,*,preflight=False,clock=time.monotonic,wall_clock=time.time
         source_manifest_sha256=manifest['job']['source_manifest_sha256'],job_sha256=manifest['job_sha256'],
         manifest_sha256=hashlib.sha256(canonical(manifest)).hexdigest())
     if preflight:return {'event':KIND,'status':'preflight_ready','gpu_creation_attempted':False,'pdfs_downloaded':0,'gpu':gpu,**guard}
-    pod=None;value=None;outcome=None;attempted=False;code=None;last_phase={'phase':'bootstrap','status':'unreported','code':'awaiting_bootstrap_heartbeat'}
+    pod=None;value=None;outcome=None;attempted=False;code=None;create_failure={};last_phase={'phase':'bootstrap','status':'unreported','code':'awaiting_bootstrap_heartbeat'}
     try:
         with privacy.quiet_output():
             check_inventory(manifest,cloud.runpod('GET','/pods'),name)
@@ -446,9 +471,10 @@ def execute(env=None,*,preflight=False,clock=time.monotonic,wall_clock=time.time
             ledger,quote=budget(manifest,name,clock());plan=ledger.runs[-1].plan
             command,pod_env=command_and_env(manifest,env,entity,name,wall_clock()+plan.run_seconds)
             state.update(create_attempted=True,reserved_upper_krw=str(plan.reserved_krw));common.save_state(path,state);attempted=True
-            pod=cloud.runpod('POST','/pods',json={'name':name,'cloud':'SECURE','gpu':{'id':gpu,'count':1,'minCudaVersion':'12.8'},
-                'disk':200,'image':'runpod/pytorch@'+manifest['image_digest'],'entrypoint':['/bin/bash','-lc'],'cmd':[command],
-                'ports':[],'env':pod_env,'startSsh':False,'startJupyter':False})
+            with creation_diagnostics(create_failure):
+                pod=cloud.runpod('POST','/pods',json={'name':name,'cloud':'SECURE','gpu':{'id':gpu,'count':1,'minCudaVersion':'12.8'},
+                    'disk':200,'image':'runpod/pytorch@'+manifest['image_digest'],'entrypoint':['/bin/bash','-lc'],'cmd':[command],
+                    'ports':[],'env':pod_env,'startSsh':False,'startJupyter':False})
             require(isinstance(pod,dict) and isinstance(pod.get('id'),str) and re.fullmatch(r'[A-Za-z0-9_-]{1,128}',pod['id']),'creation_failed')
             state['pod_id']=pod['id'];common.save_state(path,state)
             pod=cloud.runpod('GET','/pods/'+pod['id'],request_timeout=10)
@@ -471,7 +497,11 @@ def execute(env=None,*,preflight=False,clock=time.monotonic,wall_clock=time.time
                 require(info.get('desiredStatus') not in ('EXITED','ERROR','TERMINATED','STOPPED'),'pod_stopped')
             sleep(min(10,max(0,float(plan.deadline_monotonic)-clock())))
         require(value is not None,'deadline_reached')
-    except Exception as error:code=error.code if isinstance(error,RunError) else 'probe_failed'
+    except Exception as error:
+        code=error.code if isinstance(error,RunError) else 'probe_failed'
+        if attempted and pod is None:
+            match=re.fullmatch(r'RunPod POST status ([45][0-9]{2})',str(error))
+            if match:create_failure['http_status']=int(match[1])
     finally:
         if attempted:
             with privacy.quiet_output():outcome=bounded_cleanup(name,pod,float(plan.billing_deadline_monotonic),clock=clock,sleep=sleep)
@@ -481,6 +511,7 @@ def execute(env=None,*,preflight=False,clock=time.monotonic,wall_clock=time.time
     status='succeeded' if not code and value and value.get('status')=='calibration_complete' else 'partial' if not code and value and value.get('status')=='partial' else 'failed'
     event={'event':KIND,'status':status,'gpu_creation_attempted':attempted,**guard}
     if code:event['code']=code
+    if create_failure:event['creation_diagnostic']=create_failure
     if outcome:event.update(outcome)
     if value:event['result']=value
     event['last_observed_phase']=last_phase

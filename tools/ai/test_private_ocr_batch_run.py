@@ -1,5 +1,6 @@
 """Offline money/deadline/privacy/cleanup fixtures; no real API/GPU/install."""
 import ast
+import base64
 from decimal import Decimal
 import hashlib
 import io
@@ -10,6 +11,7 @@ from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 import unittest
+import zlib
 from unittest.mock import patch
 
 import private_ocr_batch_run as parent
@@ -131,6 +133,26 @@ class ParentTests(unittest.TestCase):
         self.assertEqual(first['job_sha256'],second['job_sha256'])
         self.assertNotEqual(first['manifest_sha256'],second['manifest_sha256'])
         self.assertFalse(any(method=='POST' for method,_,_ in self.calls))
+
+    def test_compact_bootstrap_is_byte_identical_and_reduces_command_size(self):
+        tree=ast.parse(parent.bootstrap_loader())
+        encoded=next(n.value for n in ast.walk(tree) if isinstance(n,ast.Constant)
+                     and isinstance(n.value,str) and len(n.value)>100)
+        self.assertEqual(zlib.decompress(base64.b64decode(encoded)),parent.BOOTSTRAP.encode())
+        command,_=parent.command_and_env(self.manifest,self.env,'fixture',parent.PREFIX+'123456',1003480)
+        self.assertLess(len(command.encode()),5000)
+
+    def test_creation_http_diagnostic_never_contains_upstream_payload_and_hold_remains(self):
+        def failure(method,path,**options):
+            if method=='POST':
+                parent.cloud.safe_event('runpod_api_error',method='POST',http_status=400,category='gpu_capacity',provider_detail=PRIVATE)
+                raise RuntimeError('RunPod POST status 400')
+            return self.api(method,path,**options)
+        parent.cloud.runpod.side_effect=failure
+        event=self.execute()
+        self.assertEqual(event['creation_diagnostic'],{'http_status':400,'category':'gpu_capacity'})
+        self.assertTrue(event['reservation_retained']);self.assertIsNone(event['incremental_ocr_cost_upper_krw'])
+        self.assertNotIn(PRIVATE,json.dumps(event))
 
     def test_manifest_preflight_passes_only_wandb_credentials_to_strict_source_reader(self):
         observed=[]
