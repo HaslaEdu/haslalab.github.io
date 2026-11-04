@@ -87,16 +87,18 @@ def private_project():
 
 
 def capacity_preflight():
-    query = '''query { myself { clientBalance underBalance } gpuTypes(input:{id:"NVIDIA A100 80GB PCIe"}) {
-        id lowestPrice(input:{gpuCount:1,secureCloud:true,totalDisk:200,minMemoryInGb:8,minVcpuCount:2}) {
-        uninterruptablePrice stockStatus availableGpuCount } } }'''
+    query = 'query { myself { clientBalance underBalance } }'
     response = requests.post('https://api.runpod.io/graphql', json={'query': query},
                              headers={'Authorization': 'Bearer ' + E['RUNPOD_API_KEY']}, timeout=20)
     if not response.ok:
         raise RuntimeError('RunPod read-only funding/capacity check failed')
     data = response.json()
     if data.get('errors') or not isinstance(data.get('data'), dict):
-        safe_event('runpod_readonly_schema_error', error_count=len(data.get('errors', [])))
+        fields = []
+        for error in data.get('errors', []):
+            message = str(error.get('message', ''))
+            fields.extend(re.findall(r'(?:field|argument|type) ["\']([A-Za-z_][A-Za-z_0-9]*)["\']', message))
+        safe_event('runpod_readonly_schema_error', error_count=len(data.get('errors', [])), fields=fields)
         raise RuntimeError('RunPod read-only schema check failed')
     user = data['data'].get('myself') or {}
     balance = user.get('clientBalance')
