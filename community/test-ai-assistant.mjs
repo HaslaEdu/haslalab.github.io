@@ -334,3 +334,18 @@ test('an English question gets an English answer, whatever the page or the tone'
   const ko = await answer({AI: ai({intent: 'explain'})}, [{role: 'user', content: '각운동량 설명해줘'}], {lang: 'en'});
   assert.equal(ko.lang, 'ko', 'a Korean question on the English page is answered in Korean');
 });
+
+test('a competition name alone keeps the page language; the prompt carries today and the site\'s papers for the named competition', async () => {
+  const {langOf, groundFacts, styled} = await import('./src/ai-assistant.js');
+  assert.equal(langOf('ipho'), 'ko', '«ipho» on the Korean page is answered in Korean');
+  assert.equal(langOf('IPhO 2026 T2'), 'ko');
+  assert.equal(langOf('ipho', 'en'), 'en');
+  assert.equal(langOf('solve ipho 2026 T1'), 'en', 'English words still mean English');
+  const day = Date.UTC(2026, 10, 4, 20, 0);
+  const g = groundFacts([{role: 'user', content: 'ipho 2026 풀어줘'}], day);
+  assert.match(g, /^Today is 2026-11-05 \(Korea time\)/);
+  assert.match(g, /2026 T2 «햇빛으로 요리하기\?» https:\/\/haslalab\.org\/#\/ipho\/2026/);
+  assert.match(groundFacts([{role: 'user', content: 'ipho 2031'}], day), /no IPHO 2031 paper yet/);
+  assert.doesNotMatch(groundFacts([{role: 'user', content: '단진자 주기'}], day), /HaslaLab has/);
+  assert.match(styled('SYS', [{role: 'user', content: 'ipho'}], 'default', 'ko')[0].content, /Today is \d{4}-\d{2}-\d{2}/);
+});

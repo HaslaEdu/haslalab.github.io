@@ -58,10 +58,11 @@ const STYLES_EN = {
   community: 'Tone: casual and friendly, like a fellow student on a study forum (short sentences, light slang is fine); never rude, insulting or vulgar. The science and mathematics stay exact and complete, and the formulas stay in LaTeX.',
 };
 export const toneOf = (style, lang = 'ko') => (lang === 'en' ? STYLES_EN : STYLES)[styleOf(style)];
-/* the language to answer in: the member's message decides (any Hangul: Korean; Latin letters only: English); a message
-   of formulas or numbers alone keeps the page's language */
+/* the language to answer in: the member's message decides (any Hangul: Korean; Latin words: English); a message of
+   formulas, numbers or competition names alone («ipho», «IPhO 2026», «APhO T2») keeps the page's language */
+const LANG_NEUTRAL = /\b(?:[A-Za-z]{0,6}pho|imo|ioi|ioaa|ibo|icho|iesO|ijso|kpho|kphe|cpho|usapho|physics\s*cup|[a-z]?\d+[a-z]?|t\d|e\d|q\d)\b/gi;
 export function langOf(text, fallback = 'ko') {
-  const t = String(text || '').replace(/\$[^$]*\$/g, ' ').replace(/https?:\/\/\S+/g, ' ');
+  const t = String(text || '').replace(/\$[^$]*\$/g, ' ').replace(/https?:\/\/\S+/g, ' ').replace(LANG_NEUTRAL, ' ');
   if (/[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(t)) return 'ko';
   return (t.match(/[A-Za-z]/g) || []).length >= 3 ? 'en' : (fallback === 'en' ? 'en' : 'ko');
 }
@@ -235,7 +236,7 @@ export async function webSearch(env, {query = ''}) {
 
 async function solveProblem(env, {problem = '', context = '', style = 'default', lang = 'ko'}) {
   const res = await runModel(env, 'SOLVER', {
-    messages: [{role: 'system', content: `${SOLVER_SYSTEM}\n${toneOf(style, lang)}\n${lang === 'en' ? 'Reply in English.' : 'Reply in Korean.'}`},
+    messages: [{role: 'system', content: `${SOLVER_SYSTEM}\n${groundFacts([{role: 'user', content: String(problem)}])}\n${toneOf(style, lang)}\n${lang === 'en' ? 'Reply in English.' : 'Reply in Korean.'}`},
       {role: 'user', content: String(problem).slice(0, 6000) + (context ? `\n\nReference material:\n${String(context).slice(0, 6000)}` : '')}]}, 8192);
   return {solution: stripThinking(readCompletion(res).text).slice(0, TOOL_CHARS - 200)};
 }
@@ -346,10 +347,24 @@ const TONE_EXAMPLES = {community: [
   {role: 'assistant', content: '작은 각도면 이거임:\n$$T = 2\\pi\\sqrt{\\frac{L}{g}}$$\n질량이랑 상관없다는 게 꿀팁임. 각도 커지면 주기 살짝 길어지니까 근사 조건 꼭 확인하셈'},
 ]};
 const TONE_REMINDER = {community: '\n\n[답변 말투: 커뮤 말투(반말, "~임/~함/~하셈" 체). 존댓말 쓰지 말 것. 욕설·비하는 금지]'};
+/* what the model cannot know from its training: today's date, and the site's own papers for a competition the message
+   names (a model trained in 2024 said IPhO 2026 «has not been held» and that «it is still 2023») */
+export const koreaDay = (ms = Date.now()) => new Date(ms + 9 * 3600e3).toISOString().slice(0, 10);
+export function groundFacts(history, ms = Date.now()) {
+  const q = String([...history].reverse().find(m => m.role === 'user')?.content || '');
+  const lines = [`Today is ${koreaDay(ms)} (Korea time). Your own knowledge may be out of date: never say a year is earlier than this or that a competition up to this year has not happened; for when, where or whether a competition was held, rely on the site facts below or the tools, never on memory.`];
+  const comp = compIn(q), year = +(q.match(/\b(?:19|20)\d{2}\b/) || [0])[0] || null;
+  if (comp) {
+    const hits = findOlympiadProblems({query: q, comp, year}).slice(0, 6);
+    if (hits.length) lines.push('HaslaLab has these papers (facts from the site catalogue): ' + hits.map(h => `${h.competition} ${h.year} ${h.task} «${h.title}» ${h.page}`).join('; ') + '.');
+    else if (year) lines.push(`HaslaLab's catalogue has no ${comp.toUpperCase()} ${year} paper yet; say so rather than guessing.`);
+  }
+  return lines.join('\n');
+}
 export function styled(system, history, style, lang = 'ko') {
   style = styleOf(style);
   const en = lang === 'en';
-  const msgs = [{role: 'system', content: `${system}\n${toneOf(style, lang)}\n${en ? 'Reply in English.' : 'Reply in Korean.'}`},
+  const msgs = [{role: 'system', content: `${system}\n${groundFacts(history)}\n${toneOf(style, lang)}\n${en ? 'Reply in English.' : 'Reply in Korean.'}`},
     ...(en ? [] : TONE_EXAMPLES[style] || []), ...history.map(m => ({...m}))];
   const reminder = en ? '\n\n[Reply in English.]' : TONE_REMINDER[style];
   if (reminder) msgs[msgs.length - 1].content += reminder;
@@ -548,10 +563,13 @@ export async function answer(env0, history, {lang = 'ko', style = 'default', rou
   const canned = set => (lang === 'en' ? set.en : set[style]);
   if (!check.safe) return done({answer: say(check.reason?.includes('S11') ? (lang === 'en' ? HELP_EN : HELP) : canned(BLOCKED)), blocked: check.reason}, 'blocked');
   if (hit) return done({answer: say(hit.answer), cached: true}, 'cache', intent);
+  /* «IPhO 2026 풀어줘» names a paper but holds no problem: the solver would answer from memory, so it goes to the tools,
+     which find the paper on the site and its links */
+  const bare = intent === 'solve' && compIn(q) && q.replace(/\s+/g, '').length < 60;
   if (onMeta) onMeta({intent});
   const opts = {style, lang, onDelta};
-  let r = null, via = intent;
-  switch (intent) {
+  let r = null, via = bare ? 'tools' : intent;
+  switch (bare ? 'tools' : intent) {
     case 'off': r = {answer: say(canned(OFF))}; break;
     case 'chat': r = {answer: await generate(env, 'CHAT', styled(CHAT_SYSTEM, fitHistory(history).slice(-8), style, lang), 400, onDelta)}; break;
     case 'explain': r = {answer: await generate(env, 'CHAT', styled(EXPLAIN_SYSTEM, fitHistory(history), style, lang), 1800, onDelta)}; break;
