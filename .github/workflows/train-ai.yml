@@ -1,5 +1,5 @@
 name: Hasla Gemma and QwQ private pilot
-run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }})
+run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }}, source-inspect=${{ inputs.ocr_source_inspect_only }})
 on:
   workflow_dispatch:
     inputs:
@@ -43,11 +43,15 @@ on:
         description: "Bounded one-public-page GPU OCR calibration; preflight_only controls GPU creation"
         type: boolean
         default: false
+      ocr_source_inspect_only:
+        description: "CPU-only private OCR source manifest inspection; downloads no original PDFs"
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   private-pilot:
-    if: ${{ !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only }}
+    if: ${{ !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     concurrency:
       group: hasla-private-book-training
       cancel-in-progress: false
@@ -110,7 +114,7 @@ jobs:
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
   collect-patterns:
-    if: ${{ inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only }}
+    if: ${{ inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     concurrency:
       group: hasla-private-pattern-collection
       cancel-in-progress: false
@@ -133,7 +137,7 @@ jobs:
           HASLA_PATTERN_CURSORS: ${{ secrets.HASLA_PATTERN_CURSORS }}
           HASLA_PATTERN_OBSERVED_LISTING_URLS: ${{ secrets.HASLA_PATTERN_OBSERVED_LISTING_URLS }}
   inspect-gpu:
-    if: ${{ inputs.status_run_id != '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only }}
+    if: ${{ inputs.status_run_id != '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -152,7 +156,7 @@ jobs:
           HASLA_STATUS_RUN_ID: ${{ inputs.status_run_id }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
   verify-adapters:
-    if: ${{ inputs.verify_run_id != '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only }}
+    if: ${{ inputs.verify_run_id != '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -172,7 +176,7 @@ jobs:
           HASLA_VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
           HASLA_VERIFY_ROLES: ${{ inputs.verify_roles }}
   stage-corpus:
-    if: ${{ inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only }}
+    if: ${{ inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     concurrency:
       group: hasla-private-corpus-staging
       cancel-in-progress: false
@@ -194,7 +198,7 @@ jobs:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
           HASLA_STAGE_INPUT: ${{ secrets.HASLA_STAGE_INPUT }}
   public-ocr-probe:
-    if: ${{ inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only }}
+    if: ${{ inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -214,7 +218,7 @@ jobs:
         timeout-minutes: 27
         run: python tools/ai/private_ocr_probe.py --run --output "$RUNNER_TEMP/ocr-probe-summary.json"
   stage-ocr-sources:
-    if: ${{ inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only }}
+    if: ${{ inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     concurrency:
       group: hasla-private-ocr-source-staging
       cancel-in-progress: false
@@ -237,7 +241,7 @@ jobs:
           HASLA_OCR_STAGE_INPUT: ${{ secrets.HASLA_OCR_STAGE_INPUT }}
           HASLA_OCR_STAGE_BUNDLE_ID: ${{ inputs.ocr_stage_bundle_id }}
   public-gpu-ocr-probe:
-    if: ${{ inputs.ocr_gpu_probe_only }}
+    if: ${{ inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only }}
     concurrency:
       group: hasla-private-public-gpu-ocr-probe
       cancel-in-progress: false
@@ -271,3 +275,22 @@ jobs:
         run: python tools/ai/private_ocr_gpu_run.py --cleanup
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+  inspect-ocr-sources:
+    if: ${{ inputs.ocr_source_inspect_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ai
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install --quiet requests wandb
+      - name: Inspect exact private original source manifest on CPU
+        timeout-minutes: 5
+        run: python tools/ai/private_inspect_ocr_source.py --inspect-source
+        env:
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+          HASLA_OCR_SOURCE_ARTIFACT: ${{ secrets.HASLA_OCR_SOURCE_ARTIFACT }}

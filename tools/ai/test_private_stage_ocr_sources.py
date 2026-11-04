@@ -407,7 +407,7 @@ class TransferTests(unittest.TestCase):
         def api(method,path,body=None):
             if '/jobs?' in path:return {'jobs':[{'name':'stage-ocr-sources','status':'completed','conclusion':'success'}]}
             return {'status':'completed','head_branch':self.control['BRANCH'],
-                    'display_title':'ocr-stage=true, bundle='+descriptor['bundle_id'],
+                    'display_title':'Hasla dual-model pilot (ocr-stage=true, bundle='+descriptor['bundle_id']+')',
                     'created_at':datetime.fromtimestamp(epoch+1,timezone.utc).isoformat()}
         event=self.control['acknowledge'](self.output,987,api=api,lock_path=lock)
         self.assertTrue(event['secret_rotation_unblocked'])
