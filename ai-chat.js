@@ -16,12 +16,16 @@
       err: {guest_limit: '오늘 무료 질문 2번을 다 썼어요. 로그인하면 계속 쓸 수 있습니다.', rate_limited: '질문이 너무 많습니다. 잠시 후 다시 시도해 주세요.', login_required: '로그인이 필요합니다.', ai_unavailable: 'AI를 지금 쓸 수 없습니다.', _: '답을 받지 못했습니다. 잠시 후 다시 시도해 주세요.'},
       note: 'AI 답변은 틀릴 수 있습니다. 중요한 내용은 원문과 해설로 확인하세요.',
       train: '내 대화를 하슬라랩 AI 학습에 활용 동의 (끄면 남은 대화도 삭제)', good: '도움이 됐어요', bad: '별로예요',
+      ask: '하슬라랩 AI가 더 똑똑해지도록 대화를 학습에 활용해도 될까요? 관리자가 검토한 대화만 쓰고, 검토되지 않은 대화는 1년 뒤 지웁니다. 동의하지 않아도 AI는 그대로 쓸 수 있고, 아래 체크박스로 언제든 바꿀 수 있어요.',
+      yes: '동의', later: '괜찮아요',
       guest: '로그인하지 않아도 하루 2번까지 물어볼 수 있어요. 로그인하면 계속 쓸 수 있습니다.', guestDone: '오늘 무료 질문 2번을 다 썼어요. 로그인하면 계속 쓸 수 있습니다.'},
     en: {open: 'Ask AI', title: 'HaslaLab AI', hint: 'Ask where a problem is, for an explanation, about posts, or for web information.', ph: 'Type a question (Enter to send, Shift+Enter for a new line)',
       send: 'Send', clear: 'Clear chat', close: 'Close', style: {default: 'Tone: default', community: 'Tone: casual'}, styleHint: 'Change the answer tone', login: 'Members only.', loginGo: 'Log in', wait: 'Thinking…', sources: 'Links',
       err: {guest_limit: 'You have used today\'s two free questions. Log in to keep going.', rate_limited: 'Too many questions. Please try again shortly.', login_required: 'Please log in.', ai_unavailable: 'The assistant is unavailable right now.', _: 'No answer came back. Please try again.'},
       note: 'AI answers can be wrong. Check important points against the papers and solutions.',
       train: 'Let HaslaLab AI learn from my chats (unticking deletes the kept chats)', good: 'Helpful', bad: 'Not helpful',
+      ask: 'May HaslaLab AI learn from your chats so it gets better? Only chats an admin reviews are used, and unreviewed ones are deleted after a year. You can use the AI either way and change this any time with the box below.',
+      yes: 'Agree', later: 'No thanks',
       guest: 'You can ask twice a day without logging in. Log in to keep going.', guestDone: 'You have used today\'s two free questions. Log in to keep going.'},
   };
   const t = () => T[ko() ? 'ko' : 'en'];
@@ -165,6 +169,22 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
     if (!token()) { train = null; return showTrain(); }
     try { const st = await authed('GET', '/api/me/consent'); train = st.consent_required ? null : st.ai_train_ok === true; } catch { train = null; }
     showTrain();
+    if (train === false) askOnce();
+  }
+  /* asked once per browser of a member who has not agreed; declining changes nothing (the AI stays open to them) */
+  function askOnce() {
+    try { if (localStorage.getItem('hlAiAsked')) return; } catch { return; }
+    if (box.querySelector('.hlai-ask')) return;
+    const d = document.createElement('div'), row = document.createElement('div');
+    d.className = 'hlai-ask'; d.textContent = t().ask;
+    for (const [v, label, cls] of [[true, t().yes, 'y'], [false, t().later, '']]) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.className = cls;
+      b.addEventListener('click', () => { try { localStorage.setItem('hlAiAsked', '1'); } catch {} d.remove(); if (v) setTrain(true); });
+      row.appendChild(b);
+    }
+    d.appendChild(row);
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
   }
   async function setTrain(v) {
     try { const r = await authed('POST', '/api/me/consent/ai-train', {on: v}); train = r.ai_train_ok === true; } catch { /* left as it was */ }
