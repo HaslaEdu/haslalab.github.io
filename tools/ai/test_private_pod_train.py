@@ -6,6 +6,7 @@ import io
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 from types import SimpleNamespace
@@ -13,6 +14,7 @@ import unittest
 from unittest.mock import patch
 
 import private_pod_train as pod
+from role_config import get_role_config
 
 
 def payload_environment(rows, prefix="HASLA_DATA", shards=2):
@@ -51,10 +53,30 @@ class FakeArtifact:
         self.timeout = timeout
 
 
+class FakeDatasetArtifact:
+    def __init__(self, files, reference="fixture-entity/private-project/private-input:v2"):
+        self.files = files
+        self.qualified_name = reference
+        self.type, self.state, self.is_link = "dataset", "COMMITTED", False
+        self.manifest = SimpleNamespace(entries={
+            name: SimpleNamespace(size=len(data), ref=None) for name, data in files.items()})
+        self.downloads = []
+
+    def download(self, **kwargs):
+        self.downloads.append(kwargs)
+        root = Path(kwargs["root"])
+        root.mkdir()
+        for name, data in self.files.items():
+            (root / name).write_bytes(data)
+        return str(root)
+
+
 class FakeWandb:
     def __init__(self):
         self.run = FakeRun()
         self.init_kwargs = None
+        self.dataset_artifact = None
+        self.api_requests = []
 
     @staticmethod
     def Settings(**kwargs):
@@ -65,6 +87,14 @@ class FakeWandb:
         return self.run
 
     Artifact = FakeArtifact
+
+    def Api(self, **kwargs):
+        self.api_kwargs = kwargs
+
+        def artifact(reference, type):
+            self.api_requests.append((reference, type))
+            return self.dataset_artifact
+        return SimpleNamespace(artifact=artifact)
 
 
 class PrivatePodTests(unittest.TestCase):
@@ -78,8 +108,11 @@ class PrivatePodTests(unittest.TestCase):
         self.train = [{"text": self.secret_text, "split": "train", "metadata": {"document_id": "book-a"}}]
         self.env, self.raw = payload_environment(self.train)
         self.script = b"# synthetic public training code fixture\n"
+        self.role_script = Path(pod.__file__).with_name("role_config.py").read_bytes()
         self.env.update({"REPO_SHA": "a" * 40,
+                         "ROLE": "solver", "HASLA_DATA_FORMAT": "text",
                          "HASLA_TRAIN_SCRIPT_SHA256": hashlib.sha256(self.script).hexdigest(),
+                         "HASLA_ROLE_CONFIG_SHA256": hashlib.sha256(self.role_script).hexdigest(),
                          "WANDB_ENTITY": "fixture-entity", "WANDB_PROJECT": "private-project",
                          "WANDB_API_KEY": "fixture-only-wandb-key", "HF_TOKEN": "fixture-only-hf-token",
                          "RUN": "pilot-fixture", "ARTIFACT": "fixture-lora"})
@@ -91,17 +124,32 @@ class PrivatePodTests(unittest.TestCase):
         if request.full_url.endswith("/graphql"):
             return io.BytesIO(json.dumps({"data": {"project": {"name": "private-project", "access": "PRIVATE"}}}).encode())
         self.assertNotIn("Authorization", dict(request.header_items()))
-        self.assertIn("/" + "a" * 40 + "/tools/ai/train_lora.py", request.full_url)
+        self.assertIn("/" + "a" * 40 + "/tools/ai/", request.full_url)
+        if request.full_url.endswith("/role_config.py"):
+            return io.BytesIO(self.role_script)
+        self.assertTrue(request.full_url.endswith("/train_lora.py"))
         return io.BytesIO(self.script)
 
     def runner(self, command, **kwargs):
         self.calls.append((command, kwargs))
+        config = get_role_config(command[command.index("--base") + 1]) if "--base" in command else get_role_config("solver")
+        data_format = command[command.index("--format") + 1] if "--format" in command else "text"
         adapter = self.root / "adapter"
         adapter.mkdir()
-        (adapter / "adapter_config.json").write_text(json.dumps({"base_model_name_or_path": pod.BASE_MODEL, "peft_type": "LORA"}))
+        (adapter / "adapter_config.json").write_text(json.dumps({"base_model_name_or_path": config["base_model"],
+                                                                 "peft_type": "LORA", "r": config["default_rank"]}))
         (adapter / "adapter_model.safetensors").write_bytes(b"synthetic-adapter-file")
         # A raw-data file in the output directory must not become an artifact file.
         (adapter / "do-not-upload.jsonl").write_text(self.secret_text)
+        training_file = self.root / f"train.{data_format}.jsonl"
+        validation_file = self.root / f"validation.{data_format}.jsonl"
+        report = {"role": config["role"], "base_model": config["base_model"], "precision": config["precision"],
+                  "training_method": config["training_method"], "rank": config["default_rank"],
+                  "max_length": config["max_length"], "max_steps": config["max_steps"], "format": data_format,
+                  "steps_completed": config["max_steps"], "weights_updated": True,
+                  "training_sha256": hashlib.sha256(training_file.read_bytes()).hexdigest() if training_file.exists() else None,
+                  "validation_sha256": hashlib.sha256(validation_file.read_bytes()).hexdigest() if validation_file.exists() else None}
+        (adapter / "hasla_training_manifest.json").write_text(json.dumps(report))
         return SimpleNamespace(returncode=0)
 
     def test_payload_roundtrip_and_bounded_decompression(self):
@@ -150,7 +198,7 @@ class PrivatePodTests(unittest.TestCase):
         self.assertEqual(len(self.requests), 1)
         self.assertFalse(self.calls)
         self.assertIsNone(self.wandb.init_kwargs)
-        self.assertFalse((self.root / "data.jsonl").exists())
+        self.assertFalse((self.root / "train.text.jsonl").exists())
 
     def test_success_only_uploads_adapter_and_safe_exact_result(self):
         validation_env, validation_raw = payload_environment([
@@ -163,8 +211,8 @@ class PrivatePodTests(unittest.TestCase):
         self.assertFalse(result["deployed"])
         self.assertFalse(result["promoted"])
         self.assertEqual(result["test_records_used"], 0)
-        self.assertEqual((self.root / "data.jsonl").read_bytes(), self.raw)
-        self.assertEqual((self.root / "validation.jsonl").read_bytes(), validation_raw)
+        self.assertEqual((self.root / "train.text.jsonl").read_bytes(), self.raw)
+        self.assertEqual((self.root / "validation.text.jsonl").read_bytes(), validation_raw)
         command, kwargs = self.calls[0]
         for option, value in (("--base", "solver"), ("--format", "text"), ("--max-steps", "32"),
                               ("--epochs", "1"), ("--lr", "1e-5"), ("--max-len", "1024")):
@@ -182,6 +230,9 @@ class PrivatePodTests(unittest.TestCase):
         self.assertNotIn(self.secret_text, logged)
         self.assertNotIn(self.env["WANDB_API_KEY"], logged)
         self.assertEqual(self.wandb.init_kwargs["settings"]["console"], "off")
+        self.assertEqual(result["role"], "solver")
+        self.assertEqual(result["precision"], "4bit")
+        self.assertEqual(result["steps_completed"], get_role_config("solver")["max_steps"])
 
     def test_unverified_public_code_cannot_execute(self):
         self.env["HASLA_TRAIN_SCRIPT_SHA256"] = "0" * 64
@@ -203,19 +254,220 @@ class PrivatePodTests(unittest.TestCase):
     def test_known_unsloth_base_alias_is_preserved(self):
         self.runner([], env={})
         path = self.root / "adapter" / "adapter_config.json"
-        value = {"base_model_name_or_path": "unsloth/QwQ-32B-unsloth-bnb-4bit", "peft_type": "LORA"}
+        value = {"base_model_name_or_path": "unsloth/QwQ-32B-unsloth-bnb-4bit", "peft_type": "LORA", "r": 16}
         path.write_text(json.dumps(value))
-        pod.adapter_inventory(path.parent)
+        pod.adapter_inventory(path.parent, get_role_config("solver"))
         self.assertEqual(json.loads(path.read_text()), value)
         path.write_text(json.dumps({**value, "base_model_name_or_path": "unrelated/model"}))
         with self.assertRaisesRegex(pod.PilotError, "base_model_mismatch"):
-            pod.adapter_inventory(path.parent)
+            pod.adapter_inventory(path.parent, get_role_config("solver"))
 
     def test_arbitrary_wandb_endpoint_cannot_receive_credentials(self):
         self.env["WANDB_BASE_URL"] = "https://example.test"
         with self.assertRaisesRegex(pod.PilotError, "wandb_configuration"):
             pod.assert_private_project(self.env, self.opener)
         self.assertFalse(self.requests)
+
+    def configure_dataset_input(self, validation=False):
+        for key in list(self.env):
+            if re.fullmatch(r"HASLA_DATA_\d{2}", key):
+                del self.env[key]
+        reference = "fixture-entity/private-project/private-input:v2"
+        self.env["HASLA_INPUT_ARTIFACT"] = reference
+        data_format = self.env["HASLA_DATA_FORMAT"]
+        files = {f"train.{data_format}.jsonl": self.raw}
+        if validation:
+            record = {"text": "separate validation book", "split": "validation", "metadata": {"document_id": "book-b"}}
+            if data_format == "chat":
+                record = {"messages": [{"role": "user", "content": "validation question"},
+                                       {"role": "assistant", "content": "validation reply"}],
+                          "split": "validation", "metadata": {"conversation_id": "chat-b"}}
+            validation_env, data = payload_environment([record], "HASLA_VALIDATION")
+            self.env["HASLA_VALIDATION_SHA256"] = validation_env["HASLA_VALIDATION_SHA256"]
+            files[f"validation.{data_format}.jsonl"] = data
+        self.wandb.dataset_artifact = FakeDatasetArtifact(files, reference)
+        return self.wandb.dataset_artifact
+
+    def test_private_input_artifact_downloads_exact_files_then_trains(self):
+        dataset = self.configure_dataset_input(validation=True)
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["status"], "uploaded")
+        self.assertEqual(self.wandb.api_requests, [(self.env["HASLA_INPUT_ARTIFACT"], "dataset")])
+        self.assertEqual(len(dataset.downloads), 1)
+        self.assertTrue(dataset.downloads[0]["skip_cache"])
+        self.assertFalse(dataset.downloads[0]["allow_missing_references"])
+        self.assertEqual((self.root / "train.text.jsonl").read_bytes(), self.raw)
+        self.assertIn("--validation-data", self.calls[0][0])
+        serialized = json.dumps(self.wandb.run.summary)
+        self.assertNotIn(self.secret_text, serialized)
+        self.assertNotIn(self.env["WANDB_API_KEY"], serialized)
+
+    def test_artifact_other_project_and_latest_never_download(self):
+        self.configure_dataset_input()
+        for bad in ("other/private-project/data:v2", "fixture-entity/public-project/data:v2",
+                    "fixture-entity/private-project/data:latest", "fixture-entity/private-project/../data:v2"):
+            self.env["HASLA_INPUT_ARTIFACT"] = bad
+            result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+            self.assertEqual(result["status"], "failed")
+        self.assertFalse(self.requests)
+        self.assertFalse(self.wandb.api_requests)
+        self.assertFalse(self.calls)
+
+    def test_artifact_unexpected_test_file_is_rejected_before_download(self):
+        artifact = self.configure_dataset_input()
+        artifact.manifest.entries["test.text.jsonl"] = SimpleNamespace(size=20, ref=None)
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["error_code"], "input_artifact_unexpected_files")
+        self.assertFalse(artifact.downloads)
+        self.assertFalse(self.calls)
+
+    def test_artifact_external_references_are_not_fetched(self):
+        artifact = self.configure_dataset_input()
+        artifact.manifest.entries["train.text.jsonl"].ref = "https://untrusted.example/data"
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["error_code"], "input_artifact_external_reference")
+        self.assertFalse(artifact.downloads)
+
+    def test_artifact_size_and_raw_hash_are_both_checked(self):
+        artifact = self.configure_dataset_input()
+        artifact.manifest.entries["train.text.jsonl"].size = pod.MAX_RAW_BYTES + 1
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["error_code"], "input_artifact_file_size_limit")
+        self.assertFalse(artifact.downloads)
+        artifact.manifest.entries["train.text.jsonl"].size = len(self.raw)
+        self.env["HASLA_DATA_SHA256"] = "0" * 64
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["error_code"], "payload_hash_mismatch")
+        self.assertFalse(self.calls)
+
+    def test_downloaded_symlink_is_rejected(self):
+        self.configure_dataset_input()
+        original = Path.is_symlink
+        with patch.object(Path, "is_symlink", lambda path: path.name == "train.text.jsonl" or original(path)):
+            result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["error_code"], "input_artifact_unsafe_file")
+        self.assertFalse(self.calls)
+
+    def test_downloaded_artifact_test_split_still_cannot_train(self):
+        artifact = self.configure_dataset_input()
+        raw = (json.dumps({"text": "held-out example", "split": "test"}) + "\n").encode()
+        artifact.files["train.text.jsonl"] = raw
+        artifact.manifest.entries["train.text.jsonl"].size = len(raw)
+        self.env["HASLA_DATA_SHA256"] = hashlib.sha256(raw).hexdigest()
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["error_code"], "test_or_wrong_split_in_payload")
+        self.assertFalse(self.calls)
+
+    def configure_chat(self):
+        self.train = [{"messages": [{"role": "user", "content": "안녕, 질문해도 돼?"},
+                                    {"role": "assistant", "content": self.secret_text}],
+                       "split": "train", "metadata": {"conversation_id": "chat-a", "training_role": "chat"}}]
+        data_env, self.raw = payload_environment(self.train)
+        for key in list(self.env):
+            if key.startswith("HASLA_DATA_"):
+                del self.env[key]
+        self.env.update(data_env)
+        self.env.update({"ROLE": "chat", "HASLA_DATA_FORMAT": "chat"})
+
+    def test_chat_role_uses_gemma_bf16_rank8_and_never_loads_solver(self):
+        self.configure_chat()
+        self.configure_dataset_input(validation=True)
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["status"], "uploaded")
+        self.assertEqual(result["role"], "chat")
+        self.assertEqual(result["base_model"], "google/gemma-4-26B-A4B-it")
+        self.assertEqual(result["precision"], "bf16")
+        self.assertEqual(result["training_method"], "lora")
+        self.assertEqual(result["rank"], 8)
+        self.assertEqual(result["steps_completed"], get_role_config("chat")["max_steps"])
+        self.assertEqual(len(self.calls), 1)
+        command, kwargs = self.calls[0]
+        for flag, expected in (("--base", "chat"), ("--format", "chat"), ("--rank", "8")):
+            self.assertEqual(command[command.index(flag) + 1], expected)
+        self.assertIn("train.chat.jsonl", " ".join(command))
+        self.assertEqual(self.wandb.init_kwargs["config"]["precision"], "bf16")
+        uploaded = self.wandb.run.artifacts[0][0]
+        self.assertEqual(uploaded.metadata["role"], "chat")
+        self.assertEqual(uploaded.metadata["base_model"], result["base_model"])
+        self.assertNotIn("HASLA_INPUT_ARTIFACT", kwargs["env"])
+        self.assertNotIn(self.secret_text, json.dumps(result))
+
+    def test_missing_or_crossed_role_format_is_rejected_before_private_data_access(self):
+        for role, data_format in ((None, "text"), ("chat", "text"), ("solver", None), ("both", "text")):
+            with self.subTest(role=role, data_format=data_format):
+                result = pod.run_pilot({**self.env, "ROLE": role, "HASLA_DATA_FORMAT": data_format},
+                                       self.root, self.wandb, self.opener, self.runner)
+                self.assertEqual(result["status"], "failed")
+        self.assertFalse(self.requests)
+        self.assertFalse(self.calls)
+
+    def test_chat_records_require_messages_and_solver_chat_requires_verified_solutions(self):
+        with self.assertRaisesRegex(pod.PilotError, "invalid_chat"):
+            pod.rows_from_payload(self.raw, "train", "chat")
+        unpaired = {"messages": [{"role": "user", "content": "question"}]}
+        with self.assertRaisesRegex(pod.PilotError, "invalid_chat"):
+            pod.rows_from_payload(json.dumps(unpaired).encode(), "train", "chat")
+        self.configure_chat()
+        self.train[0]["metadata"].pop("training_role")
+        with self.assertRaisesRegex(pod.PilotError, "verified_solution"):
+            pod.validate_row_roles(self.train, "solver", "chat")
+        self.train[0]["metadata"]["review_status"] = "verified"
+        pod.validate_row_roles(self.train, "solver", "chat")
+        self.train[0]["metadata"]["training_role"] = "chat"
+        with self.assertRaisesRegex(pod.PilotError, "role_mismatch"):
+            pod.validate_row_roles(self.train, "solver", "chat")
+
+    def test_chat_partition_checks_thread_and_exact_message_overlap(self):
+        self.configure_chat()
+        with self.assertRaisesRegex(pod.PilotError, "group_overlap"):
+            pod.verify_partitions(self.train, [{"messages": [{"role": "assistant", "content": "different"}],
+                                               "metadata": {"conversation_id": "chat-a"}}])
+        with self.assertRaisesRegex(pod.PilotError, "content_overlap"):
+            pod.verify_partitions(self.train, [{"messages": self.train[0]["messages"],
+                                               "metadata": {"conversation_id": "chat-b"}}])
+
+    def test_role_configuration_is_pinned_separately_before_trainer_execution(self):
+        self.env["HASLA_ROLE_CONFIG_SHA256"] = "0" * 64
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["stage"], "role_config_verification")
+        self.assertEqual(result["error_code"], "training_code_hash_mismatch")
+        self.assertFalse(self.calls)
+        self.assertIsNone(self.wandb.init_kwargs)
+
+    def test_adapter_cross_role_base_and_incorrect_rank_are_rejected(self):
+        self.runner([], env={})
+        path = self.root / "adapter" / "adapter_config.json"
+        for changed, error in (({"base_model_name_or_path": get_role_config("chat")["base_model"]}, "base_model"),
+                               ({"r": 8}, "rank"), ({"r": True}, "rank")):
+            path.write_text(json.dumps({"base_model_name_or_path": get_role_config("solver")["base_model"],
+                                        "peft_type": "LORA", "r": 16, **changed}))
+            with self.subTest(changed=changed), self.assertRaisesRegex(pod.PilotError, error):
+                pod.adapter_inventory(path.parent, get_role_config("solver"))
+
+    def test_trainer_report_must_confirm_role_precision_hash_and_actual_bounded_steps(self):
+        for changed in ({"steps_completed": 0}, {"steps_completed": 33}, {"steps_completed": True},
+                        {"role": "chat"}, {"precision": "bf16"}, {"training_sha256": "0" * 64},
+                        {"weights_updated": False}, {"eval_loss": float("nan")}, {"train_loss": True}):
+            self.runner([], env={})
+            adapter = self.root / "adapter"
+            path = adapter / "hasla_training_manifest.json"
+            report = json.loads(path.read_text())
+            report.update({"training_sha256": "1" * 64, **changed})
+            path.write_text(json.dumps(report))
+            with self.subTest(changed=changed), self.assertRaises(pod.PilotError):
+                pod.training_report(adapter, get_role_config("solver"), "text", "1" * 64, None)
+            for child in adapter.iterdir():
+                child.unlink()
+            adapter.rmdir()
+
+    def test_role_workspaces_are_fixed_separate_paths(self):
+        self.assertEqual(pod.workspace_from_environment({}), Path("/workspace"))
+        self.assertEqual(pod.workspace_from_environment({"ROLE": "chat", "HASLA_DATA_FORMAT": "chat",
+                                                        "HASLA_WORKSPACE": "/workspace/chat"}), Path("/workspace/chat"))
+        for bad in ("/workspace/solver", "/workspace/chat/../solver", "/tmp/private", "/workspace/chat/"):
+            with self.subTest(path=bad), self.assertRaisesRegex(pod.PilotError, "workspace"):
+                pod.workspace_from_environment({"ROLE": "chat", "HASLA_DATA_FORMAT": "chat", "HASLA_WORKSPACE": bad})
 
 
 if __name__ == "__main__":

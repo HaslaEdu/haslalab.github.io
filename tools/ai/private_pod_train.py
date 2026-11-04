@@ -1,9 +1,11 @@
-"""One bounded private textbook LoRA pilot inside an already authorized GPU pod.
+"""One bounded, single-role private LoRA pilot inside an authorized GPU pod.
 
 The parent supplies base64(gzip(JSONL)) shards through HASLA_DATA_00, _01, ...
 and HASLA_DATA_SHA256 (the uncompressed bytes). Validation uses the optional
-HASLA_VALIDATION_* prefix. Neither test data nor raw text is logged/uploaded.
-Only adapter files are uploaded to an existing PRIVATE W&B project. This
+HASLA_VALIDATION_* prefix. Alternatively HASLA_INPUT_ARTIFACT identifies an
+immutable dataset artifact in that same PRIVATE W&B project. Input hashes
+are always required. Neither test data nor raw text is logged by this pod.
+Only adapter files are uploaded to the existing PRIVATE W&B project. This
 program never deploys, promotes, starts, or deletes a GPU pod.
 """
 from __future__ import annotations
@@ -12,8 +14,10 @@ import base64
 import contextlib
 import gzip
 import hashlib
+import importlib.util
 import io
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -28,9 +32,6 @@ MAX_RAW_BYTES = 16 * 1024 * 1024
 MAX_SCRIPT_BYTES = 256 * 1024
 MAX_PARTS = 100
 MAX_ADAPTER_BYTES = 512 * 1024 * 1024
-BASE_MODEL = "Qwen/QwQ-32B"
-BASE_ALIASES = {BASE_MODEL, "unsloth/QwQ-32B", "unsloth/QwQ-32B-bnb-4bit",
-                "unsloth/QwQ-32B-unsloth-bnb-4bit"}
 ALLOWED_WANDB_BASES = {"https://api.wandb.ai", "https://api.forge.coreweave.com"}
 CODE_ROOT = "https://raw.githubusercontent.com/HaslaEdu/haslalab.github.io"
 SHA_PATTERN = re.compile(r"[a-f0-9]{64}\Z")
@@ -96,7 +97,9 @@ def decode_payload(env, prefix="HASLA_DATA", optional=False,
     return raw
 
 
-def rows_from_payload(raw, expected_split):
+def rows_from_payload(raw, expected_split, data_format="text"):
+    if data_format not in ("text", "chat"):
+        raise PilotError("unsupported_payload_format")
     try:
         lines = raw.decode("utf-8-sig").splitlines()
     except UnicodeError:
@@ -109,8 +112,18 @@ def rows_from_payload(raw, expected_split):
             row = json.loads(line)
         except ValueError:
             raise PilotError("payload_invalid_jsonl") from None
-        if not isinstance(row, dict) or not isinstance(row.get("text"), str) or not row["text"].strip():
-            raise PilotError("payload_invalid_text_record")
+        if not isinstance(row, dict):
+            raise PilotError("payload_invalid_record")
+        if data_format == "text":
+            if not isinstance(row.get("text"), str) or not row["text"].strip() or "messages" in row:
+                raise PilotError("payload_invalid_text_record")
+        else:
+            messages = row.get("messages")
+            if (not isinstance(messages, list) or not 2 <= len(messages) <= 512 or "text" in row
+                    or any(not isinstance(m, dict) or m.get("role") not in ("system", "user", "assistant")
+                           or not isinstance(m.get("content"), str) or not m["content"].strip() for m in messages)
+                    or not any(m["role"] == "user" for m in messages) or messages[-1]["role"] != "assistant"):
+                raise PilotError("payload_invalid_chat_record")
         metadata = row.get("metadata", {})
         if not isinstance(metadata, dict):
             raise PilotError("payload_invalid_metadata")
@@ -123,12 +136,18 @@ def rows_from_payload(raw, expected_split):
     return rows
 
 
+def row_content(row):
+    if isinstance(row.get("text"), str):
+        return row["text"]
+    return json.dumps(row.get("messages"), sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
 def row_group(row):
     meta = row.get("metadata", {})
     for key in ("group_id", "duplicate_cluster_id", "document_id", "thread_id", "conversation_id", "source_id"):
         if meta.get(key) or row.get(key):
             return str(meta.get(key) or row[key])
-    return sha_bytes(row["text"].encode("utf-8"))
+    return sha_bytes(row_content(row).encode("utf-8"))
 
 
 def verify_partitions(training, validation):
@@ -136,9 +155,31 @@ def verify_partitions(training, validation):
         return
     if {row_group(r) for r in training} & {row_group(r) for r in validation}:
         raise PilotError("training_validation_group_overlap")
-    if {sha_bytes(r["text"].encode("utf-8")) for r in training} & {
-            sha_bytes(r["text"].encode("utf-8")) for r in validation}:
+    if {sha_bytes(row_content(r).encode("utf-8")) for r in training} & {
+            sha_bytes(row_content(r).encode("utf-8")) for r in validation}:
         raise PilotError("training_validation_content_overlap")
+
+
+def role_input(env):
+    role, data_format = env.get("ROLE"), env.get("HASLA_DATA_FORMAT")
+    if role not in ("chat", "solver") or data_format not in ("chat", "text"):
+        raise PilotError("missing_or_invalid_training_role_format")
+    if role == "chat" and data_format != "chat":
+        raise PilotError("role_format_mismatch")
+    return role, data_format
+
+
+def validate_row_roles(rows, role, data_format):
+    for row in rows:
+        metadata = row.get("metadata", {})
+        labels = (row.get("training_role"), row.get("target_role"),
+                  metadata.get("training_role"), metadata.get("target_role"))
+        if any(label is not None and label != role for label in labels):
+            raise PilotError("payload_training_role_mismatch")
+        if role == "solver" and data_format == "chat":
+            reviewed = row.get("review_status", metadata.get("review_status"))
+            if reviewed not in ("verified", "approved"):
+                raise PilotError("solver_chat_requires_verified_solution")
 
 
 def assert_private_project(env, opener=None):
@@ -173,12 +214,82 @@ def assert_private_project(env, opener=None):
     return {"entity": entity, "project": project, "base_url": base, "access": "PRIVATE"}
 
 
-def fetch_training_script(env, destination, opener=None):
+def validate_input_artifact_reference(env):
+    entity = required_name(env, "WANDB_ENTITY")
+    project = required_name(env, "WANDB_PROJECT")
+    reference = env.get("HASLA_INPUT_ARTIFACT", "")
+    prefix = f"{entity}/{project}/"
+    if not reference.startswith(prefix):
+        raise PilotError("input_artifact_outside_private_project")
+    tail = reference[len(prefix):]
+    match = re.fullmatch(r"([A-Za-z0-9][A-Za-z0-9_.-]{0,127}):(v\d+)", tail)
+    if not match:
+        raise PilotError("input_artifact_requires_exact_version")
+    return reference
+
+
+def artifact_payloads(env, workspace, wandb_module, private):
+    """Download only two allowlisted immutable dataset files, then verify bytes.
+
+    The caller must first perform the live PRIVATE project check. W&B's SDK
+    Artifact.download(root=..., allow_missing_references=False, skip_cache=True)
+    is documented at docs.coreweave.com/products/wandb/ref/python/experiments/artifact.
+    """
+    if private.get("access") != "PRIVATE":
+        raise PilotError("wandb_project_not_private")
+    reference = validate_input_artifact_reference(env)
+    _, data_format = role_input(env)
+    train_name, validation_name = f"train.{data_format}.jsonl", f"validation.{data_format}.jsonl"
+    expected = {train_name: env.get("HASLA_DATA_SHA256", "").lower()}
+    validation_hash = env.get("HASLA_VALIDATION_SHA256", env.get("HASLA_DATA_VALIDATION_SHA256", ""))
+    if validation_hash:
+        expected[validation_name] = validation_hash.lower()
+    if any(not SHA_PATTERN.fullmatch(digest) for digest in expected.values()):
+        raise PilotError("missing_or_invalid_payload_hash")
+    root = Path(workspace) / "input-artifact"
+    if root.exists() or root.is_symlink():
+        raise PilotError("input_artifact_directory_already_exists")
+    api = wandb_module.Api(api_key=env["WANDB_API_KEY"],
+                           overrides={"base_url": private["base_url"]}, timeout=45)
+    artifact = api.artifact(reference, type="dataset")
+    if artifact.qualified_name != reference or artifact.type != "dataset" or artifact.state != "COMMITTED":
+        raise PilotError("input_artifact_identity_mismatch")
+    if getattr(artifact, "is_link", False):
+        raise PilotError("input_artifact_links_not_allowed")
+    entries = artifact.manifest.entries
+    if set(entries) != set(expected):
+        raise PilotError("input_artifact_unexpected_files")
+    for entry in entries.values():
+        if getattr(entry, "ref", None):
+            raise PilotError("input_artifact_external_reference")
+        size = getattr(entry, "size", None)
+        if type(size) is not int or not 0 < size <= MAX_RAW_BYTES:
+            raise PilotError("input_artifact_file_size_limit")
+    downloaded = artifact.download(root=str(root), allow_missing_references=False, skip_cache=True)
+    if root.is_symlink() or not root.is_dir() or Path(downloaded).resolve() != root.resolve():
+        raise PilotError("input_artifact_unsafe_download_path")
+    actual = list(root.iterdir())
+    if {path.name for path in actual} != set(expected):
+        raise PilotError("input_artifact_unexpected_files")
+    payloads = {}
+    for path in actual:
+        if path.is_symlink() or not path.is_file() or path.resolve().parent != root.resolve():
+            raise PilotError("input_artifact_unsafe_file")
+        if path.stat().st_size != entries[path.name].size or not 0 < path.stat().st_size <= MAX_RAW_BYTES:
+            raise PilotError("input_artifact_file_size_limit")
+        raw = path.read_bytes()
+        if sha_bytes(raw) != expected[path.name]:
+            raise PilotError("payload_hash_mismatch")
+        payloads[path.name] = raw
+    return payloads[train_name], payloads.get(validation_name)
+
+
+def fetch_pinned_code(env, destination, filename, hash_key, opener=None):
     commit = env.get("REPO_SHA", env.get("GITHUB_SHA", ""))
-    digest = env.get("HASLA_TRAIN_SCRIPT_SHA256", "").lower()
+    digest = env.get(hash_key, "").lower()
     if not re.fullmatch(r"[a-f0-9]{40}", commit) or not SHA_PATTERN.fullmatch(digest):
         raise PilotError("missing_or_invalid_pinned_training_code")
-    request = urllib.request.Request(f"{CODE_ROOT}/{commit}/tools/ai/train_lora.py")
+    request = urllib.request.Request(f"{CODE_ROOT}/{commit}/tools/ai/{filename}")
     try:
         with (opener or urllib.request.urlopen)(request, timeout=45) as response:
             raw = response.read(MAX_SCRIPT_BYTES + 1)
@@ -190,9 +301,51 @@ def fetch_training_script(env, destination, opener=None):
     return digest
 
 
-def training_command(script, data, adapter, validation=None):
-    command = [sys.executable, str(script), "--base", "solver", "--format", "text",
-               "--max-steps", "32", "--epochs", "1", "--lr", "1e-5", "--max-len", "1024",
+def fetch_training_script(env, destination, opener=None):
+    return fetch_pinned_code(env, destination, "train_lora.py", "HASLA_TRAIN_SCRIPT_SHA256", opener)
+
+
+def fetch_role_config(env, destination, opener=None):
+    return fetch_pinned_code(env, destination, "role_config.py", "HASLA_ROLE_CONFIG_SHA256", opener)
+
+
+def pinned_role_settings(path, role, data_format):
+    # Execute only the pure configuration file whose full bytes were SHA-checked.
+    name = "_hasla_pinned_role_config_" + sha_file(path)
+    spec = importlib.util.spec_from_file_location(name, str(path))
+    if spec is None or spec.loader is None:
+        raise PilotError("invalid_pinned_role_configuration")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    try:
+        module.validate_role_format(role, data_format)
+        config = dict(module.get_role_config(role))
+    except (ValueError, KeyError, TypeError):
+        raise PilotError("role_format_mismatch") from None
+    if (config.get("role") != role or data_format not in config.get("allowed_formats", ())
+            or type(config.get("default_rank")) is not int or not 1 <= config["default_rank"] <= 32
+            or type(config.get("max_steps")) is not int or not 1 <= config["max_steps"] <= 32
+            or type(config.get("max_length")) is not int or not 128 <= config["max_length"] <= 4096
+            or not isinstance(config.get("base_model"), str) or not config["base_model"]
+            or not isinstance(config.get("base_aliases"), list) or config["base_model"] not in config["base_aliases"]
+            or any(not isinstance(alias, str) or not alias for alias in config["base_aliases"])):
+        raise PilotError("invalid_pinned_role_configuration")
+    expected_precision = "bf16" if role == "chat" else "4bit"
+    if (config.get("precision") != expected_precision or config.get("load_in_4bit") is not (role == "solver")
+            or config.get("load_in_16bit") is not (role == "chat")
+            or config.get("loader") != ("FastModel" if role == "chat" else "FastLanguageModel")
+            or config.get("training_method") != ("lora" if role == "chat" else "qlora")):
+        raise PilotError("training_role_precision_mismatch")
+    return config
+
+
+def training_command(script, data, adapter, validation=None, config=None, data_format="text"):
+    if config is None:
+        raise PilotError("validated_role_configuration_required")
+    command = [sys.executable, str(script), "--base", config["role"], "--format", data_format,
+               "--rank", str(config["default_rank"]), "--max-steps", str(config["max_steps"]),
+               "--epochs", "1", "--lr", "1e-5", "--max-len", str(config["max_length"]),
                "--holdout", "0", str(data), str(adapter)]
     if validation is not None:
         command.extend(["--validation-data", str(validation)])
@@ -203,14 +356,16 @@ def training_environment(env):
     # Only the local JSONL file is needed by the trainer; do not forward corpus shards.
     child = {key: value for key, value in env.items()
              if not key.startswith(("HASLA_DATA_", "HASLA_VALIDATION_"))
-             and key not in ("WANDB_API_KEY", "RUNPOD_API_KEY")}
+             and key not in ("WANDB_API_KEY", "RUNPOD_API_KEY", "HASLA_INPUT_ARTIFACT")}
     child.update({"WANDB_MODE": "disabled", "WANDB_DISABLED": "true", "WANDB_CONSOLE": "off",
                   "WANDB_DISABLE_CODE": "true", "WANDB_SILENT": "true", "HF_HUB_DISABLE_TELEMETRY": "1",
                   "TOKENIZERS_PARALLELISM": "false"})
     return child
 
 
-def adapter_inventory(adapter):
+def adapter_inventory(adapter, config=None):
+    if config is None:
+        raise PilotError("validated_role_configuration_required")
     adapter = Path(adapter)
     files = []
     for name in ("adapter_config.json", "adapter_model.safetensors"):
@@ -223,13 +378,42 @@ def adapter_inventory(adapter):
         files.append({"name": name, "bytes": size, "sha256": sha_file(path)})
     if sum(f["bytes"] for f in files) > MAX_ADAPTER_BYTES:
         raise PilotError("invalid_adapter_size")
-    config = json.loads((adapter / "adapter_config.json").read_text(encoding="utf-8"))
+    peft = json.loads((adapter / "adapter_config.json").read_text(encoding="utf-8"))
     # Validate rather than silently relabeling an adapter trained against another base.
-    if config.get("base_model_name_or_path") not in BASE_ALIASES:
+    if peft.get("base_model_name_or_path") not in config["base_aliases"]:
         raise PilotError("adapter_base_model_mismatch")
-    if config.get("peft_type") != "LORA":
+    if peft.get("peft_type") != "LORA":
         raise PilotError("adapter_type_mismatch")
+    if type(peft.get("r")) is not int or peft["r"] != config["default_rank"]:
+        raise PilotError("adapter_rank_mismatch")
     return files, sha_bytes(json.dumps(files, sort_keys=True, separators=(",", ":")).encode())
+
+
+def training_report(adapter, config, data_format, training_sha, validation_sha):
+    path = Path(adapter) / "hasla_training_manifest.json"
+    if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= 64 * 1024:
+        raise PilotError("verified_training_report_missing")
+    report = json.loads(path.read_text(encoding="utf-8"))
+    expected = {"role": config["role"], "base_model": config["base_model"],
+                "format": data_format, "precision": config["precision"],
+                "training_method": config["training_method"], "rank": config["default_rank"],
+                "max_length": config["max_length"], "max_steps": config["max_steps"],
+                "training_sha256": training_sha, "validation_sha256": validation_sha}
+    if not isinstance(report, dict) or any(report.get(k) != value for k, value in expected.items()):
+        raise PilotError("training_report_role_or_input_mismatch")
+    steps = report.get("steps_completed")
+    if report.get("weights_updated") is not True or type(steps) is not int or not 1 <= steps <= config["max_steps"]:
+        raise PilotError("training_report_has_no_bounded_weight_update")
+    losses = {}
+    for name in ("train_loss", "eval_loss"):
+        value = report.get(name)
+        if value is not None:
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+                raise PilotError("training_report_invalid_loss")
+            losses[name] = float(value)
+        else:
+            losses[name] = None
+    return {**expected, "steps_completed": steps, **losses}
 
 
 def safe_failure(error, stage):
@@ -244,9 +428,10 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
               opener=None, runner=None):
     env = dict(os.environ if env is None else env)
     workspace = Path(workspace)
-    run, stage = None, "configuration"
+    run, stage, private = None, "configuration", None
     result_path = workspace / "result.json"
     try:
+        role, data_format = role_input(env)
         required_name(env, "RUN")
         required_name(env, "ARTIFACT")
         if not env.get("HF_TOKEN"):
@@ -254,24 +439,42 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         if not workspace.is_dir():
             raise PilotError("workspace_not_found")
         stage = "payload_validation"
-        data = decode_payload(env)
-        validation_prefix = "HASLA_DATA_VALIDATION" if any(
-            key.startswith("HASLA_DATA_VALIDATION_") for key in env) else "HASLA_VALIDATION"
-        validation_data = decode_payload(env, validation_prefix, optional=True)
-        training = rows_from_payload(data, "train")
-        validation = rows_from_payload(validation_data, "validation") if validation_data is not None else []
+        if env.get("HASLA_INPUT_ARTIFACT"):
+            # Check project visibility before downloading any private input artifact.
+            validate_input_artifact_reference(env)
+            stage = "privacy_verification"
+            private = assert_private_project(env, opener)
+            os.environ.update({"WANDB_CONSOLE": "off", "WANDB_DISABLE_CODE": "true",
+                               "WANDB_SILENT": "true", "WANDB_BASE_URL": private["base_url"]})
+            if wandb_module is None:
+                import wandb as wandb_module
+            stage = "input_artifact_verification"
+            data, validation_data = artifact_payloads(env, workspace, wandb_module, private)
+        else:
+            data = decode_payload(env)
+            validation_prefix = "HASLA_DATA_VALIDATION" if any(
+                key.startswith("HASLA_DATA_VALIDATION_") for key in env) else "HASLA_VALIDATION"
+            validation_data = decode_payload(env, validation_prefix, optional=True)
+        stage = "payload_validation"
+        training = rows_from_payload(data, "train", data_format)
+        validation = rows_from_payload(validation_data, "validation", data_format) if validation_data is not None else []
+        validate_row_roles(training + validation, role, data_format)
         verify_partitions(training, validation)
         stage = "privacy_verification"
-        private = assert_private_project(env, opener)
+        private = private or assert_private_project(env, opener)
         stage = "training_code_verification"
         script = workspace / "train_lora.py"
         script_sha = fetch_training_script(env, script, opener)
-        data_path, validation_path, adapter = workspace / "data.jsonl", None, workspace / "adapter"
+        stage = "role_config_verification"
+        role_path = workspace / "role_config.py"
+        role_sha = fetch_role_config(env, role_path, opener)
+        config = pinned_role_settings(role_path, role, data_format)
+        data_path, validation_path, adapter = workspace / f"train.{data_format}.jsonl", None, workspace / "adapter"
         if adapter.exists():
             raise PilotError("adapter_output_already_exists")
         data_path.write_bytes(data)
         if validation_data is not None:
-            validation_path = workspace / "validation.jsonl"
+            validation_path = workspace / f"validation.{data_format}.jsonl"
             validation_path.write_bytes(validation_data)
 
         stage = "run_initialization"
@@ -284,23 +487,27 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                                          disable_git=True, disable_job_creation=True,
                                          x_disable_meta=True, x_disable_stats=True, silent=True,
                                          base_url=private["base_url"])
-        safe_config = {"base_model": BASE_MODEL, "format": "text", "max_steps": 32,
-                       "epochs": 1, "learning_rate": 1e-5, "max_length": 1024,
+        safe_config = {"role": role, "base_model": config["base_model"], "format": data_format,
+                       "precision": config["precision"], "training_method": config["training_method"],
+                       "rank": config["default_rank"], "max_steps": config["max_steps"],
+                       "epochs": 1, "learning_rate": 1e-5, "max_length": config["max_length"],
                        "training_records": len(training), "validation_records": len(validation),
                        "training_sha256": sha_bytes(data),
+                       "input_artifact": env.get("HASLA_INPUT_ARTIFACT"),
                        "validation_sha256": sha_bytes(validation_data) if validation_data is not None else None,
-                       "training_code_sha256": script_sha, "repo_sha": env.get("REPO_SHA", env.get("GITHUB_SHA")),
+                       "training_code_sha256": script_sha, "role_config_sha256": role_sha,
+                       "repo_sha": env.get("REPO_SHA", env.get("GITHUB_SHA")),
                        "test_records_used": 0, "private": True, "deploy": False, "promote": False}
         run = wandb_module.init(entity=private["entity"], project=private["project"],
                                 id=env["RUN"], name=env["RUN"], resume="never",
-                                job_type="private-textbook-pilot", config=safe_config,
+                                job_type="private-" + role + "-pilot", config=safe_config,
                                 settings=settings, dir=str(workspace))
         stage = "training"
         run.summary["status"] = stage
         timeout = int(env.get("HASLA_TRAIN_TIMEOUT_SECONDS", "3600"))
         if not 60 <= timeout <= 5400:
             raise PilotError("invalid_training_timeout")
-        completed = (runner or subprocess.run)(training_command(script, data_path, adapter, validation_path),
+        completed = (runner or subprocess.run)(training_command(script, data_path, adapter, validation_path, config, data_format),
             cwd=str(workspace), env=training_environment(env), stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL, timeout=timeout, check=False)
         if completed.returncode:
@@ -308,13 +515,20 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
 
         stage = "adapter_validation"
         run.summary["status"] = stage
-        files, adapter_sha = adapter_inventory(adapter)
+        files, adapter_sha = adapter_inventory(adapter, config)
+        report = training_report(adapter, config, data_format, sha_bytes(data),
+                                 sha_bytes(validation_data) if validation_data is not None else None)
         # Check again immediately before uploading an adapter; never change project visibility here.
         assert_private_project(env, opener)
         stage = "uploading_adapter"
         run.summary["status"] = stage
         artifact = wandb_module.Artifact(env["ARTIFACT"], type="lora", metadata={
-            "base_model": BASE_MODEL, "training_records": len(training), "validation_records": len(validation),
+            "role": role, "base_model": config["base_model"], "format": data_format,
+            "precision": config["precision"], "training_method": config["training_method"],
+            "rank": config["default_rank"], "max_steps": config["max_steps"],
+            "steps_completed": report["steps_completed"],
+            "train_loss": report["train_loss"], "eval_loss": report["eval_loss"],
+            "training_records": len(training), "validation_records": len(validation),
             "training_sha256": sha_bytes(data), "adapter_sha256": adapter_sha,
             "test_records_used": 0, "private": True, "promoted": False})
         for file in files:
@@ -327,6 +541,11 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                 r"v\d+", exact[len(expected_prefix):]):
             raise PilotError("artifact_exact_version_missing")
         result = {"status": "uploaded", "artifact": exact, "adapter_sha256": adapter_sha,
+                  "role": role, "base_model": config["base_model"], "format": data_format,
+                  "precision": config["precision"], "training_method": config["training_method"],
+                  "rank": config["default_rank"], "max_steps": config["max_steps"],
+                  "steps_completed": report["steps_completed"],
+                  "train_loss": report["train_loss"], "eval_loss": report["eval_loss"],
                   "adapter_files": files, "training_records": len(training),
                   "validation_records": len(validation), "training_sha256": sha_bytes(data),
                   "test_records_used": 0, "weights_updated": True, "deployed": False, "promoted": False}
@@ -349,10 +568,27 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         return result
 
 
+def workspace_from_environment(env):
+    selected = env.get("HASLA_WORKSPACE")
+    if selected is None:
+        return Path("/workspace")
+    role, _ = role_input(env)
+    if selected != f"/workspace/{role}":
+        raise PilotError("invalid_role_workspace")
+    return Path(selected)
+
+
 def main():
     # SDK/third-party output is suppressed too, including any unexpected exception text.
     with open(os.devnull, "w") as sink, contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
-        result = run_pilot()
+        try:
+            workspace = workspace_from_environment(os.environ)
+            if workspace.is_symlink():
+                raise PilotError("invalid_role_workspace")
+            workspace.mkdir(parents=True, exist_ok=True)
+            result = run_pilot(workspace=workspace)
+        except Exception as error:
+            result = safe_failure(error, "configuration")
     print(json.dumps({"status": result["status"], "artifact": result.get("artifact"),
                       "error_code": result.get("error_code"), "stage": result.get("stage")}), flush=True)
     return 0 if result["status"] == "uploaded" else 1

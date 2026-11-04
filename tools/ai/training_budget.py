@@ -124,7 +124,7 @@ class RunPlan:
     def __post_init__(self):
         if not isinstance(self.run_id, str) or not self.run_id.strip() or len(self.run_id) > 120:
             raise BudgetError("run_id must be a nonempty identifier up to 120 characters")
-        if self.role not in ("chat", "solver", "fast") or not isinstance(self.quote, PodQuote):
+        if self.role not in ("chat", "solver", "fast", "dual") or not isinstance(self.quote, PodQuote):
             raise BudgetError("RunPlan must have a supported role and validated PodQuote")
         for name in ("started_monotonic", "krw_per_hour_upper", "reserved_krw"):
             object.__setattr__(self, name, _number(getattr(self, name), name, positive=name != "started_monotonic"))
@@ -215,7 +215,7 @@ def reserve_run(ledger, run_id, role, quote, now_monotonic, requested_seconds, h
         raise BudgetError("run_id was already reserved in this batch")
     if any(row.charged_krw is None for row in ledger.runs):
         raise BudgetError("an earlier Pod is not settled; confirm deletion before starting another role or retry")
-    if role not in ("chat", "solver", "fast"):
+    if role not in ("chat", "solver", "fast", "dual"):
         raise BudgetError("unknown training role")
     start = _number(now_monotonic, "now_monotonic")
     requested = _integer(requested_seconds, "requested_seconds", minimum=1)

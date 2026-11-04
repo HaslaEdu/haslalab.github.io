@@ -15,6 +15,7 @@ import re
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 import traceback
 
@@ -148,6 +149,50 @@ def graphql_create_pod(name, env, command):
     return pod
 
 
+def publish_private_input(entity, run_id, manifest, data_env):
+    """Upload two checked files to a verified private project before renting a GPU."""
+    import wandb
+    checked = wandb_query('query($e:String!,$p:String!){project(name:$p,entityName:$e){name access}}',
+                         {'e': entity, 'p': PROJECT}).get('project') or {}
+    if checked.get('name') != PROJECT or checked.get('access') != 'PRIVATE':
+        raise RuntimeError('private input project could not be verified')
+    data_format = manifest.get('format', 'text')
+    if data_format not in ('text', 'chat'):
+        raise ValueError('unsupported private data format')
+    role = manifest.get('role', 'solver')
+    run = wandb.init(entity=entity, project=PROJECT, id=run_id + '-input', name=run_id + '-input',
+        job_type='private-dataset-transfer', config={'format': data_format, 'role': role, 'private': True, 'test_records_used': 0},
+        settings=wandb.Settings(console='off', disable_code=True, save_code=False, disable_git=True,
+                                disable_job_creation=True, x_disable_meta=True, x_disable_stats=True))
+    try:
+        with tempfile.TemporaryDirectory(prefix='hasla-private-input-') as directory:
+            artifact = wandb.Artifact(run_id + '-data', type='dataset', metadata={
+                'dataset_version': manifest['dataset_version'], 'format': data_format, 'role': role, 'private': True,
+                'training_sha256': manifest['train']['raw_sha256'],
+                'validation_sha256': manifest['validation']['raw_sha256'], 'test_records_used': 0})
+            for label, prefix in (('train', 'HASLA_DATA'), ('validation', 'HASLA_VALIDATION')):
+                raw = decode_payload(data_env, prefix)
+                if len(raw) > 16 * 1024 * 1024:
+                    raise ValueError('private input exceeds its size limit')
+                data_format = manifest.get('format', 'text')
+                if data_format not in ('text', 'chat'):
+                    raise ValueError('unsupported private data format')
+                path = Path(directory, label + '.' + data_format + '.jsonl')
+                path.write_bytes(raw)
+                artifact.add_file(str(path), name=path.name)
+            run.log_artifact(artifact, aliases=['pilot-input'])
+            artifact.wait(timeout=180)
+            reference = artifact.qualified_name
+            expected = f'{entity}/{PROJECT}/{run_id}-data:'
+            if not isinstance(reference, str) or not reference.startswith(expected) or not re.fullmatch(r'v\d+', reference[len(expected):]):
+                raise RuntimeError('private dataset immutable version is missing')
+        safe_event('private_input_ready', artifact=reference, raw_files=2, public=False)
+        return {'HASLA_INPUT_ARTIFACT': reference, 'HASLA_DATA_SHA256': manifest['train']['raw_sha256'],
+                'HASLA_VALIDATION_SHA256': manifest['validation']['raw_sha256']}
+    finally:
+        run.finish()
+
+
 def data_environment():
     manifest = json.loads(E['HASLA_CORPUS_MANIFEST'])
     if manifest.get('format') != 'text' or manifest.get('budget_krw') != 30000:
@@ -259,6 +304,8 @@ def main():
                production_promotion=False)
     if E.get('HASLA_PREFLIGHT_ONLY') == 'true':
         return 0
+    if E.get('HASLA_INPUT_TRANSPORT') == 'artifact':
+        data_env = publish_private_input(entity, run_id, manifest, data_env)
     env = {**data_env, 'REPO_SHA': E['GITHUB_SHA'],
            'HASLA_TRAIN_SCRIPT_SHA256': manifest['train_script_sha256'],
            'HF_TOKEN': E['HF_TOKEN'], 'WANDB_API_KEY': E['WANDB_API_KEY'], 'WANDB_ENTITY': entity,
