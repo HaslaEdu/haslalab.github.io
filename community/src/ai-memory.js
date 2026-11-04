@@ -55,6 +55,17 @@ export async function memberFeedback(db, userId, id, good) {
   const r = await db.prepare(`UPDATE ai_eval SET verdict=? WHERE id=? AND kind='member' AND ref=?`).bind(good ? 'good' : 'bad', id, String(userId)).run();
   return (r?.meta?.changes ?? 0) > 0;
 }
+/* a member deleted (or edited away) one exchange in the chat: it goes from the review queue and the saved answers */
+export async function forgetMemberChat(db, userId, ids) {
+  if (!db || !ids.length) return 0;
+  await ensureAiEval(db);
+  await ensureAiMemory(db);
+  const q = ids.map(() => '?').join(',');
+  await db.prepare(`DELETE FROM ai_memory WHERE eval_id IN (SELECT id FROM ai_eval WHERE id IN (${q}) AND kind='member' AND ref=?)`).bind(...ids, String(userId)).run().catch(() => {});
+  const r = await db.prepare(`DELETE FROM ai_eval WHERE id IN (${q}) AND kind='member' AND ref=?`).bind(...ids, String(userId)).run();
+  forgetMemoryCache();
+  return r?.meta?.changes ?? 0;
+}
 /* what a member's withdrawal of consent or deletion of the account removes */
 export async function forgetMember(db, userId) {
   await ensureAiEval(db);
