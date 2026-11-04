@@ -384,7 +384,7 @@ const HELP = '많이 힘드신가요? 혼자 견디지 마시고 자살예방상
 const HELP_EN = 'It sounds like things are really hard right now. Please don\'t carry it alone: talk to someone you trust, or call a local crisis line (in Korea, 109, any time). I\'m here for study questions too.';
 
 /* one model's answer, streamed to onDelta when given (a reasoning model's thinking is held back) */
-async function* sseTexts(stream) {
+export async function* sseTexts(stream) {
   const reader = stream.getReader(), dec = new TextDecoder();
   let buf = '';
   for (;;) {
