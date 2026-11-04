@@ -156,11 +156,11 @@ const clientIp = req => req.headers.get("CF-Connecting-IP") || "local";
 /* ── input validation ───────────────────────────────────────── */
 /* a new account starts with three exam tokens (the column default of 5 was for accounts that existed when tokens came in) */
 const SIGNUP_TOKENS = 3;
-/* Each new account carries SIGNUP_TOKENS free grading tokens, so a farm that makes accounts in bulk is
-   spending our model budget. Email-verified sign-up already forces one readable mailbox per account; this
-   daily per-IP cap on account creation bounds the other axis — a classroom shares an address, not 50 new
-   accounts a day from one IP. OAuth sign-ups count against the same key. */
-const SIGNUP_DAY_CAP = 50;
+/* Each new account carries SIGNUP_TOKENS free grading tokens, so a farm that makes accounts in bulk is spending our
+   model budget. Email-verified sign-up forces one readable mailbox per account; this cap on account creation bounds the
+   other axis: two new accounts a day from one IP (the owner's rule, 2026-11-04), password and OAuth sign-ups alike.
+   SIGNUP_DAY_CAP in the environment overrides it. */
+const SIGNUP_DAY_CAP = 2;
 const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 // letters (any script), digits, _ . -  and inner spaces; 2–16 chars
 const NICK_RE = /^[\p{L}\p{N}_.\-](?:[\p{L}\p{N}_.\- ]{0,14}[\p{L}\p{N}_.\-])?$/u;
@@ -284,8 +284,7 @@ async function handle(req, env, url, ctx) {
     const clash = await env.DB.prepare("SELECT username,nickname FROM users WHERE username=? OR nickname=?")
       .bind(username, nickname).first();
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
-    // a whole classroom often shares one address, so the hourly cap is generous; a daily cap still bounds
-    // a farm that would make hundreds of token-bearing accounts from one address over a day
+    // per hour, and at most SIGNUP_DAY_CAP new accounts a day from one address
     await limit(env, "signup:" + clientIp(req), 20, 3600);
     await limit(env, "signup-day:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400);
     /* the mailed code last: a name taken or a box left unticked does not spend one of its tries */
