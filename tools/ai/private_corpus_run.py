@@ -86,6 +86,31 @@ def private_project():
     return entity
 
 
+def capacity_preflight():
+    query = '''query { myself { clientBalance underBalance } gpuTypes(input:{id:"NVIDIA A100 80GB PCIe"}) {
+        id lowestPrice(input:{gpuCount:1,secureCloud:true,totalDisk:200,minMemoryInGb:8,minVcpuCount:2}) {
+        uninterruptablePrice stockStatus availableGpuCount } } }'''
+    response = requests.post('https://api.runpod.io/graphql', json={'query': query},
+                             headers={'Authorization': 'Bearer ' + E['RUNPOD_API_KEY']}, timeout=20)
+    if not response.ok:
+        raise RuntimeError('RunPod read-only funding/capacity check failed')
+    data = response.json()
+    if data.get('errors') or not isinstance(data.get('data'), dict):
+        safe_event('runpod_readonly_schema_error', error_count=len(data.get('errors', [])))
+        raise RuntimeError('RunPod read-only schema check failed')
+    user = data['data'].get('myself') or {}
+    balance = user.get('clientBalance')
+    funded = isinstance(balance, (float, int)) and balance > 0 and user.get('underBalance') is not True
+    quotes = []
+    for gpu in data['data'].get('gpuTypes') or []:
+        price = gpu.get('lowestPrice') or {}
+        quotes.append({'gpu': gpu.get('id'), 'hourly_usd': price.get('uninterruptablePrice'),
+                       'stock': price.get('stockStatus'), 'available_count': price.get('availableGpuCount')})
+    safe_event('runpod_readonly_preflight', funded=funded, quotes=quotes)
+    if not funded:
+        raise RuntimeError('RunPod account needs prepaid funds; no payment or GPU creation attempted')
+
+
 def data_environment():
     manifest = json.loads(E['HASLA_CORPUS_MANIFEST'])
     if manifest.get('format') != 'text' or manifest.get('budget_krw') != 30000:
@@ -179,6 +204,8 @@ def main():
     run_id = PREFIX + E['GITHUB_RUN_ID']
     if any(p.get('name') == run_id for p in existing):
         raise RuntimeError('this pilot already has a Pod; inspect it instead of creating a duplicate')
+    if E.get('HASLA_CHECK_CAPACITY') == 'true':
+        capacity_preflight()
     for filename in ('config.json', 'tokenizer_config.json'):
         check = requests.head('https://huggingface.co/Qwen/QwQ-32B/resolve/main/' + filename,
                               headers={'Authorization': 'Bearer ' + E['HF_TOKEN']}, allow_redirects=True, timeout=20)

@@ -34,6 +34,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HASLA_CORPUS_MANIFEST: ${{ secrets.HASLA_CORPUS_MANIFEST }}
           HASLA_PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
+          HASLA_CHECK_CAPACITY: 'true'
           HASLA_DATA_00: ${{ secrets.HASLA_DATA_00 }}
           HASLA_DATA_01: ${{ secrets.HASLA_DATA_01 }}
           HASLA_DATA_02: ${{ secrets.HASLA_DATA_02 }}
