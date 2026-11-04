@@ -1,0 +1,390 @@
+{
+  "kind": "source2017-complete-original-CID-program-conjunction-design-v1",
+  "actual_bundle_sha256": "c2235b05d93ddd9689563b8904f396ce2b814265ff7b464ce802e69abcdd382b",
+  "original_source_sha256": "fb90239d8da3dea3dcfe104551243f444802632a74a47a139374013aa16080f1",
+  "full_pdf_sha256": "3a27a3561c779bb9fbc149387da370dfa9db10173dd9b24b055842ce62fa3b62",
+  "actual_artifacts": 123,
+  "actual_distinct_bad_PDFs": 7,
+  "semantic_mutations_rejected": 69,
+  "actual_byte_mutations_rejected": 3,
+  "required_resolver_checked": true,
+  "private_source_path_never_trusted": true,
+  "checks": 75,
+  "results": [
+    {
+      "id": "actual-source-and-current-edition-positive",
+      "passed": true,
+      "actual_artifacts": 123
+    },
+    {
+      "id": "official-source-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "final-full-PDF-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "page06-proof-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "page07-proof-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "guard-replaced",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "raw-control-confused-with-full-original",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "native-control-confused-with-proof",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "source-base-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "page-plan-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "selected-CID-removed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "encoded-CID-rebased-in-source-and-reference",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "source-and-reference-font-resource-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "embedded-original-font-program-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "embedded-CID-to-GID-font-map-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "literal-original-Tf-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "literal-original-Tm-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "per-CID-computed-Tm-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "original-CTM-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "fractional-script-point-retyped",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "physical-font-substitution-source-and-final",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "physical-GID-substitution-source-and-final",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "paint-substitution-source-and-final",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "ancestor-clip-removed-source-and-reference",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "ancestor-clip-drift-source-and-reference",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "character-spacing-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "text-horizontal-scale-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "text-rise-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "render-mode-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "one-final-glyph-relative-dx-changed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "one-final-glyph-Y-changed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "complete-group-common-dx-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-original-fraction-rule-removed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "one-original-fraction-rule-relative-drift",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "fraction-rule-source-and-final-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "fraction-rule-paint-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "Form-program-and-its-report-pin-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "decoded-Form-program-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "reference-PDF-and-programme-pin-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "added-Page-Group-with-false-zeroRGB-claim",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "wrapper-Matrix-changed-with-false-zeroRGB-claim",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "wrapper-BBox-clipped-with-false-zeroRGB-claim",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "outer-original-Page-Group-changed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "wrapper-invoked-after-first-Korean-q",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "pre-motion-wrapper-invoked-after-prose",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "one-pre-motion-MuPDF-pixel-changed-but-passed-true",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "one-pre-motion-Poppler-pixel-changed-but-passed-true",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "pre-motion-independent-renderer-omitted",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "pre-motion-native-CID-omitted",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "page06-or-moved-after-equations-but-claim-true",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "page07-and-moved-after-equations-but-claim-true",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "page07-or-analogous-wide-internal-English-hole",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "page07-or-analogous-wide-reference-gap",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "lower92-CID-original-display-moved",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "outside-three-rows-one-Poppler-pixel-changed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "other13-proof-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "independent-native-geometry-error-hidden-by-passed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-native-original-geometry-pattern-lost",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "real-negative-removed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "real-negative-replaced-with-positive-proof",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "old07-conjunction-negative-falsely-accepted",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "bar-only-negative-falsely-accepted",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "covered-root-negative-missing-ink-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "source-final-visual-omitted",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "native-append-one-pixel-changed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "Poppler-append-one-pixel-changed",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-artifact-byte-hash-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-artifact-length-rebased",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-artifact-omitted",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-artifact-duplicate-ID",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "resolver-required-no-detached-fixture",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-byte-mutation-proof-07",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-byte-mutation-original-program-07-1",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "actual-byte-mutation-bad-page07-one-fraction-rule",
+      "mutation_rejected": true,
+      "passed": true
+    },
+    {
+      "id": "private-source-path-never-trusted",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

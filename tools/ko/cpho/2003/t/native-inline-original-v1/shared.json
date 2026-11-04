@@ -1,0 +1,626 @@
+{
+  "schema": "cpho2003-native-inline-original-v1",
+  "source_original_pdf": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/inputs/CPhO_2003_Chinese_original.pdf",
+    "sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+    "bytes": 2307080,
+    "frozen_path": "authoring-frozen/inputs/CPhO_2003_Chinese_original.pdf"
+  },
+  "master_manifest": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/snapshot-manifest.json",
+    "sha256": "8970ece688a1ebbb7afb60a06eb90b9ae838113f9c7e98c45bee500aa6097493",
+    "bytes": 42372
+  },
+  "native_ready": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/native-ready.json",
+    "sha256": "b0420ab5a801e5dd8595a57773887b9665c2aad8a5786e3d26c3f6b40c3cbf2f",
+    "bytes": 2674
+  },
+  "source_slots": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/inputs/original-all10-source-slots.json",
+    "sha256": "d0df5391c001da840ded6401dc625359b1ac23d59e541326005be0f1ed846c31",
+    "bytes": 1435942,
+    "frozen_path": "authoring-frozen/inputs/original-all10-source-slots.json"
+  },
+  "source_classification": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/inputs/source-classification.json",
+    "sha256": "e97c0c44f603b61a66c8b4e243119ac2fdca3cc5fe82174f08514820f7ae58e0",
+    "bytes": 2235,
+    "frozen_path": "authoring-frozen/inputs/source-classification.json"
+  },
+  "font_source_pins": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/inputs/external-font-source-pins.json",
+    "sha256": "c7d519b18066453086d94c9a3878c21656ce5f3a3ce2a9489ba0d5e102bbd54e",
+    "bytes": 1215,
+    "frozen_path": "authoring-frozen/inputs/external-font-source-pins.json"
+  },
+  "atomic_inline": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/tools/ko/cpho/2003/natural/atomic-inline.json",
+    "sha256": "3033e76722eddb2a6cb5fc230f8417ccff55dbe54c0791c0e2bad05e04b98716",
+    "bytes": 59671,
+    "frozen_path": "authoring-frozen/tools/ko/cpho/2003/natural/atomic-inline.json"
+  },
+  "visual_review": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/full144-visual-review-complete.json",
+    "sha256": "ddbdf4bf6713625bf50e8929888b1f8d85bcac4201ff8067113b2c5f3ac2bde0",
+    "bytes": 8094,
+    "frozen_path": "authoring-frozen/authoring/full144-visual-review-complete.json"
+  },
+  "stationary_math_Poppler": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/original-stationary-math-Poppler144.json",
+    "sha256": "fbecd6c5b24d9cacc06d6280a3b9c1ef10cdcac17e61fd97979098e190611d1c",
+    "bytes": 4765,
+    "frozen_path": "authoring-frozen/evidence/original-stationary-math-Poppler144.json"
+  },
+  "negative_manifest": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/native-negative-control-manifest.json",
+    "sha256": "182723416bd2659d9e7f4d1d0c34761ed2cb543c9858b6e1ba29e7373cc1c366",
+    "bytes": 2344,
+    "frozen_path": "authoring-frozen/evidence/negative-controls/native-negative-control-manifest.json"
+  },
+  "assembly_summary": {
+    "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/verification/summary.json",
+    "sha256": "cd73086f3f7a070cf3a6b0e750a51b3195365d1b81c17c4ba7e57de7bebbe59a",
+    "bytes": 2399,
+    "frozen_path": "verification/summary.json"
+  },
+  "authoring_closure": [
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho2003_initial_native_baseline.py",
+      "sha256": "39707fa9ffb29011893a31776a85192c8935a028a7e18fd2d8ec2058de2dc155",
+      "bytes": 24356,
+      "frozen_path": "authoring-frozen/engine/cpho2003_initial_native_baseline.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho2003_native_runtime.py",
+      "sha256": "4899a6225993d48f32f695ac8a4a05ac4bc5bb29a14cfa52e3ced541a94b06a1",
+      "bytes": 11618,
+      "frozen_path": "authoring-frozen/engine/cpho2003_native_runtime.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_cjk_translate.py",
+      "sha256": "55a9d2bf4a2d0a41f7437a340155ef74b40a83943e486822869b824b6737db78",
+      "bytes": 20877,
+      "frozen_path": "authoring-frozen/engine/cpho_cjk_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_atoms.py",
+      "sha256": "870c7e161ecca3281bf55d7a72b0628349d50dc83e3f4122eeed9fd7789adb35",
+      "bytes": 4874,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_atoms.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_english_fonts.py",
+      "sha256": "597bafebb1984e52da37ab08cd69ae267651efaa7a9f5c4013c730ad8e2c7435",
+      "bytes": 6217,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_english_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_full_qa.py",
+      "sha256": "4bc4858bb868f319027916242ffe0b5eb694c810ab6a8ff13cddeb895e13968e",
+      "bytes": 14962,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_full_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_inventory.py",
+      "sha256": "cdcca3d9fab790d135f7eecf2f40d9341f8113406bd523f7fef61f7dd311e121",
+      "bytes": 9855,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_inventory.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_prose_edits.py",
+      "sha256": "07024e5aaed75ba2b9250ee008fbc79cbb4edb27c0c569197d8e93bcd9a665ca",
+      "bytes": 5881,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_prose_edits.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_rotated_labels.py",
+      "sha256": "ead27cdda4415053bd7b43e037e3806d099c04f5a1eff9b567644a1719a95429",
+      "bytes": 2458,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_rotated_labels.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_spacing.py",
+      "sha256": "1d51a1cf55022647f61ddb16adf041b3e2b5ee01e652eabda6d549504eca0b75",
+      "bytes": 20506,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_spacing.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_natural_spacing_qa.py",
+      "sha256": "4d0307faf55ff1a99b09bef2651afcc16c61305db913140393dc9cc4d09fdd6b",
+      "bytes": 2351,
+      "frozen_path": "authoring-frozen/engine/cpho_natural_spacing_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_original_latin_fonts.py",
+      "sha256": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2",
+      "bytes": 4600,
+      "frozen_path": "authoring-frozen/engine/cpho_original_latin_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/cpho_original_style.py",
+      "sha256": "df7fc81dfb538b33d3906c01edfc0d3253a246e7a79d8a5e334aa705de8db603",
+      "bytes": 11723,
+      "frozen_path": "authoring-frozen/engine/cpho_original_style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/haslalab_runtime_paths.py",
+      "sha256": "4e0cbff73a5fd8e219db9a987b6b0fcf25e81adb12aaf7ecf41b3d6ee25c8afa",
+      "bytes": 778,
+      "frozen_path": "authoring-frozen/engine/haslalab_runtime_paths.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/initial_prose_reading_order.py",
+      "sha256": "b4e7441f1c2edc773dbcc1285af0b92c8a1d842a0ecc897decad9952c653aa32",
+      "bytes": 4423,
+      "frozen_path": "authoring-frozen/engine/initial_prose_reading_order.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_early_fixed_style.py",
+      "sha256": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+      "bytes": 27794,
+      "frozen_path": "authoring-frozen/engine/izho_early_fixed_style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_extract_word.py",
+      "sha256": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e",
+      "bytes": 6369,
+      "frozen_path": "authoring-frozen/engine/izho_extract_word.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_math_clean.py",
+      "sha256": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65",
+      "bytes": 3681,
+      "frozen_path": "authoring-frozen/engine/izho_math_clean.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_native_atomic_tokens.py",
+      "sha256": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+      "bytes": 10189,
+      "frozen_path": "authoring-frozen/engine/izho_native_atomic_tokens.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_native_math_audit.py",
+      "sha256": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8",
+      "bytes": 3484,
+      "frozen_path": "authoring-frozen/engine/izho_native_math_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_natural_spacing.py",
+      "sha256": "86a53ff3052324c20c32cca0e7afcb5e4d5f24b604219e5975ef8d7fbc8d358e",
+      "bytes": 15695,
+      "frozen_path": "authoring-frozen/engine/izho_natural_spacing.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_natural_spacing_qa.py",
+      "sha256": "4f14f08c77a693c384d8179edd84d5f8245bdbe1beb5e3c5d34b7daf4b74f943",
+      "bytes": 19208,
+      "frozen_path": "authoring-frozen/engine/izho_natural_spacing_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_natural_spacing_rebuild.py",
+      "sha256": "b916e1810476db5343bd539149494d958cd87c5de711bbbbef0e11675619630e",
+      "bytes": 24096,
+      "frozen_path": "authoring-frozen/engine/izho_natural_spacing_rebuild.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_new_prose_outline_qa.py",
+      "sha256": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+      "bytes": 14366,
+      "frozen_path": "authoring-frozen/engine/izho_new_prose_outline_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/izho_translate.py",
+      "sha256": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e",
+      "bytes": 24613,
+      "frozen_path": "authoring-frozen/engine/izho_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_grading_columns_stationary.py",
+      "sha256": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+      "bytes": 2455,
+      "frozen_path": "authoring-frozen/engine/pdf_grading_columns_stationary.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_hangul_visibility.py",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+      "bytes": 3356,
+      "frozen_path": "authoring-frozen/engine/pdf_hangul_visibility.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_korean_natural_composer.py",
+      "sha256": "e9c55906b77d7cbcaceb4cd494b494a734736937bbd01475999e41f34b0f8242",
+      "bytes": 17633,
+      "frozen_path": "authoring-frozen/engine/pdf_korean_natural_composer.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_layout_translate.py",
+      "sha256": "257c68b0a1538d05f88a1a93323889ec6f2ebfed901c8bbe9ba9dd98d4ba487a",
+      "bytes": 10531,
+      "frozen_path": "authoring-frozen/engine/pdf_layout_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_memory_gate.py",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+      "bytes": 1237,
+      "frozen_path": "authoring-frozen/engine/pdf_memory_gate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_moved_native_ink.py",
+      "sha256": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+      "bytes": 10333,
+      "frozen_path": "authoring-frozen/engine/pdf_moved_native_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_geometry_motion.py",
+      "sha256": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+      "bytes": 5092,
+      "frozen_path": "authoring-frozen/engine/pdf_native_geometry_motion.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_glyph_promote.py",
+      "sha256": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+      "bytes": 8538,
+      "frozen_path": "authoring-frozen/engine/pdf_native_glyph_promote.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_glyph_raster_witness.py",
+      "sha256": "8c7d6fc1856d1161e710beb66c69e8bd38dfebd33ab5ae88b6e61994620e139e",
+      "bytes": 3366,
+      "frozen_path": "authoring-frozen/engine/pdf_native_glyph_raster_witness.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_inline_reposition.py",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559,
+      "frozen_path": "authoring-frozen/engine/pdf_native_inline_reposition.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_inline_reposition_regression.py",
+      "sha256": "430a9e7f39f73358aa3b346b2df61ea812bc4ed0df43ccef897db19850cb75c0",
+      "bytes": 12407,
+      "frozen_path": "authoring-frozen/engine/pdf_native_inline_reposition_regression.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_native_script_motion_audit.py",
+      "sha256": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+      "bytes": 6661,
+      "frozen_path": "authoring-frozen/engine/pdf_native_script_motion_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_new_hangul_graphics_overlap.py",
+      "sha256": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620",
+      "bytes": 1782,
+      "frozen_path": "authoring-frozen/engine/pdf_new_hangul_graphics_overlap.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_new_prose_native_text_overlap.py",
+      "sha256": "74457c2a358dfd0d8187a4c19f4c8b634794eaf3e66a61e7a74484884e168e69",
+      "bytes": 4731,
+      "frozen_path": "authoring-frozen/engine/pdf_new_prose_native_text_overlap.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_graphics_ink.py",
+      "sha256": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
+      "bytes": 6650,
+      "frozen_path": "authoring-frozen/engine/pdf_original_graphics_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_image_ink.py",
+      "sha256": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+      "bytes": 7449,
+      "frozen_path": "authoring-frozen/engine/pdf_original_image_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_style_audit.py",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+      "bytes": 8492,
+      "frozen_path": "authoring-frozen/engine/pdf_original_style_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_style_fonts.py",
+      "sha256": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+      "bytes": 2603,
+      "frozen_path": "authoring-frozen/engine/pdf_original_style_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178,
+      "frozen_path": "authoring-frozen/engine/pdf_original_text_ops.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/pdf_text_motion_ink.py",
+      "sha256": "2e76d46973af939d9fe5511e699cc98dbea8b37d837e2adc5dcd209d13100ca3",
+      "bytes": 2947,
+      "frozen_path": "authoring-frozen/engine/pdf_text_motion_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/engine/test_pdf_native_image_motion.py",
+      "sha256": "d9cd33cb8b941f0cfbdf2e354a74eabbf04858b34b6bc45331e6c37a40df582b",
+      "bytes": 4017,
+      "frozen_path": "authoring-frozen/engine/test_pdf_native_image_motion.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/archive-cpho2003-before-original-page-group-restoration.py",
+      "sha256": "8fda8730c1af2921de2c11b8808861521103c2730031075f1162ff5cc629b9b1",
+      "bytes": 1580,
+      "frozen_path": "authoring-frozen/drivers/archive-cpho2003-before-original-page-group-restoration.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/archive-cpho2003-en1-before-full-source-review.py",
+      "sha256": "9292bc37e23daa36f168e065ecd3c953cc2a1fc17c70c0716809a3837fe0c2d6",
+      "bytes": 1119,
+      "frozen_path": "authoring-frozen/drivers/archive-cpho2003-en1-before-full-source-review.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/archive-cpho2003-English-before-font-identity-isolation.py",
+      "sha256": "2cac8a2f7fabc26577454d9a082bcb97d13c2071029af4f2303bda4d1bca2fcf",
+      "bytes": 1547,
+      "frozen_path": "authoring-frozen/drivers/archive-cpho2003-English-before-font-identity-isolation.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/audit-cpho2003-actual-prose-style.py",
+      "sha256": "6e069e1cf379b72d6bf3beb1c72764188db3eb51c261d398db0417961ab54dd9",
+      "bytes": 7458,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2003-actual-prose-style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/audit-cpho2003-Poppler-font-identity-regression.py",
+      "sha256": "b50645285c0098550d2f282dc14f7a04824fcc8fabfa1446d903c0563e4f10a5",
+      "bytes": 3421,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2003-Poppler-font-identity-regression.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/audit-cpho2003-source-native-ink.py",
+      "sha256": "2110322e7bf7597c8e6aee64101310a354c58a8b8b489b998b6547ea9032e35b",
+      "bytes": 1713,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2003-source-native-ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/audit-cpho2003-source-programs-and-advances.py",
+      "sha256": "00e8607c5a22cf89e2aa9c51a7667efa692c9bf15105332d4c2b4524599be309",
+      "bytes": 4151,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2003-source-programs-and-advances.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-native-problems.py",
+      "sha256": "cf62fb943c957fd74602a986ce2732413ce586f07185eedd42182ab932472dca",
+      "bytes": 14045,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-native-problems.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/build-cpho2003-native-page.py",
+      "sha256": "61a1da2eab24c0c9064d7334aed24b2dd1f2b231f09fea8ff59b90bff0052a64",
+      "bytes": 1526,
+      "frozen_path": "authoring-frozen/drivers/build-cpho2003-native-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/cpho2003-native-width-advisory.py",
+      "sha256": "e6413c0c536f7915cfc820fe83299ae687d193cf8331f64e79b393dec9038c71",
+      "bytes": 2678,
+      "frozen_path": "authoring-frozen/drivers/cpho2003-native-width-advisory.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/freeze-cpho2003-native-T.py",
+      "sha256": "87d5a1a48cc588ed40610b0bb95b225f96b4b243ddf07ccd51239346b68df152",
+      "bytes": 7800,
+      "frozen_path": "authoring-frozen/drivers/freeze-cpho2003-native-T.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2003-native-atoms.py",
+      "sha256": "a28ff804a739a1c03fefa88bb0e0dc55c248cdd95817b3938f6640b8c3ae2a75",
+      "bytes": 3723,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2003-native-atoms.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2003-native-authoring.py",
+      "sha256": "f715ae0ca63ecbe0bd7ba4bb8f0866dc74d7683c11203e65a69c7822e8c66166",
+      "bytes": 3063,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2003-native-authoring.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2003-source-inspection.py",
+      "sha256": "f716d47f55cc04c9579c2c3c6112abbf570a4c1562c62259923434d3c30812a3",
+      "bytes": 2956,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2003-source-inspection.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/record-cpho2003-native-T-final-visuals.py",
+      "sha256": "23caffebf1405a32da18118be66d995f1c857d95a4a160602e4920cd8107ab7a",
+      "bytes": 3785,
+      "frozen_path": "authoring-frozen/drivers/record-cpho2003-native-T-final-visuals.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/revise-cpho2003-native-problems-v2.py",
+      "sha256": "22d92182f4ee3bfd1d3577e0049e4453080bdd052d5a8a067ac01b530d18822a",
+      "bytes": 7506,
+      "frozen_path": "authoring-frozen/drivers/revise-cpho2003-native-problems-v2.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/revise-cpho2003-native-problems-v3.py",
+      "sha256": "ed859ba10c373c1af283e4761ebe3270af9c9a17ecd60cf6a6f995b20cfadef1",
+      "bytes": 1159,
+      "frozen_path": "authoring-frozen/drivers/revise-cpho2003-native-problems-v3.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/revise-cpho2003-native-problems-v4.py",
+      "sha256": "f8f8f2fed7bd13e3fa986839d4c052e2d6b74603e0d6f8064043a917fbaf61d1",
+      "bytes": 2321,
+      "frozen_path": "authoring-frozen/drivers/revise-cpho2003-native-problems-v4.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/revise-cpho2003-native-problems-v5.py",
+      "sha256": "f92b882208bb69bc792b18226da3f32c5169e62700059b72c4237661f031940d",
+      "bytes": 1197,
+      "frozen_path": "authoring-frozen/drivers/revise-cpho2003-native-problems-v5.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/revise-cpho2003-native-problems-v6.py",
+      "sha256": "cd6dca4e74f36a8c242ee114bf5d766bf3683da49e0616ec3896acb3070b1428",
+      "bytes": 1635,
+      "frozen_path": "authoring-frozen/drivers/revise-cpho2003-native-problems-v6.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/validate-cpho2003-native-negatives.py",
+      "sha256": "5c75abb1a37d3ffcc702f594cf8b295fe328189bf1fd87e33f7b37382bffe2bb",
+      "bytes": 8268,
+      "frozen_path": "authoring-frozen/drivers/validate-cpho2003-native-negatives.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/drivers/verify-cpho2003-native-T-combined-page.py",
+      "sha256": "a12b0bf98b9454e9b9f5ec3c17187b9e261e6e5c1ba2d2160867f42e0bf0d24d",
+      "bytes": 4121,
+      "frozen_path": "authoring-frozen/drivers/verify-cpho2003-native-T-combined-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/full144-visual-review-complete.json",
+      "sha256": "ddbdf4bf6713625bf50e8929888b1f8d85bcac4201ff8067113b2c5f3ac2bde0",
+      "bytes": 8094,
+      "frozen_path": "authoring-frozen/authoring/full144-visual-review-complete.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/complete-inline-expressions-candidate.json",
+      "sha256": "3033e76722eddb2a6cb5fc230f8417ccff55dbe54c0791c0e2bad05e04b98716",
+      "bytes": 59671,
+      "frozen_path": "authoring-frozen/authoring/native/complete-inline-expressions-candidate.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/complete-inline-expressions-evidence.json",
+      "sha256": "5505430937efc298a42de85aebfe5dce86d421e01d61fe75a0a953d9852e390f",
+      "bytes": 199373,
+      "frozen_path": "authoring-frozen/authoring/native/complete-inline-expressions-evidence.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/complete-inline-expressions-review.json",
+      "sha256": "b8f4bc710c303bb8f0d9eb5ef264974283efbb7fef0ec9c3bc0d443bbfec6841",
+      "bytes": 831,
+      "frozen_path": "authoring-frozen/authoring/native/complete-inline-expressions-review.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/complete-inline-expressions-review.txt",
+      "sha256": "368547dafc784d3969259dd5eba7a70104132d0a80d6f4265ad3cf59f00e8372",
+      "bytes": 11892,
+      "frozen_path": "authoring-frozen/authoring/native/complete-inline-expressions-review.txt"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/current-width-advisory-not-delivery-QA.json",
+      "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+      "bytes": 4,
+      "frozen_path": "authoring-frozen/authoring/native/current-width-advisory-not-delivery-QA.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/page01-bilingual-prose.json",
+      "sha256": "486d64ed984c92fca11c062e7b21dfb1f639959fb19decc46fa0d2626b2b769a",
+      "bytes": 31006,
+      "frozen_path": "authoring-frozen/authoring/native/page01-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/page01.tsv",
+      "sha256": "9c2f5f5652d9066587236d86e87e8e2c228ff02348aa57fdfb15e1973e469c9d",
+      "bytes": 4794,
+      "frozen_path": "authoring-frozen/authoring/native/page01.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/page02-bilingual-prose.json",
+      "sha256": "9e80a1b1f6a8b197c75c466019904027af7af21afcdb80644285ce4bf0eb9810",
+      "bytes": 28708,
+      "frozen_path": "authoring-frozen/authoring/native/page02-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/page02.tsv",
+      "sha256": "9435aa98aea78b6dd5002fa3f1210a3dfda0ea63617d675d588bdc08a27680d3",
+      "bytes": 5310,
+      "frozen_path": "authoring-frozen/authoring/native/page02.tsv"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/page03-bilingual-prose.json",
+      "sha256": "6903353c586b60944bde6432d423834a26dd438403fee40d968fdc4c3d396066",
+      "bytes": 3930,
+      "frozen_path": "authoring-frozen/authoring/native/page03-bilingual-prose.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/authoring/native/page03.tsv",
+      "sha256": "34c3507ed9f2d2b8b7adda52a65f98b8f52b29b2a7f085d55f8aebaab99b85f3",
+      "bytes": 472,
+      "frozen_path": "authoring-frozen/authoring/native/page03.tsv"
+    }
+  ],
+  "negative_controls": [
+    {
+      "type": "original-native-CID-erased",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-erased-original-Delta.pdf",
+        "sha256": "23e1b0b7a48ac7c9842dd6ad163475661f35ef0585c62cd49aad47d8d1075720",
+        "bytes": 379841,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-erased-original-Delta.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-erased-original-Delta.rejection.json",
+        "sha256": "d25f170daaefa4a5b6b9189252138d8907eccb0cdfbec7a257f1b40c08235a26",
+        "bytes": 1329,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-erased-original-Delta.rejection.json"
+      }
+    },
+    {
+      "type": "actual-new-prose-over-native-math",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-new-prose-over-original-Delta.pdf",
+        "sha256": "893080dab3e38bbbb6854e9d79f6aa5847d1ac8a6e5f7c28aa7f40238196302e",
+        "bytes": 379395,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-new-prose-over-original-Delta.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-new-prose-over-original-Delta.rejection.json",
+        "sha256": "b2a1092f53437c0c93c1bd75787558daf9d979030cb886d8716ddeb40c7852d3",
+        "bytes": 2112,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-new-prose-over-original-Delta.rejection.json"
+      }
+    },
+    {
+      "type": "original-script-relative-geometry",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-original-zero-script-shifted-alone.pdf",
+        "sha256": "ad3b737e96a5c64dab59e699eeb727c04121f1dcaf7fc3f59acd8746dd82bd86",
+        "bytes": 187390,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-original-zero-script-shifted-alone.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-original-zero-script-shifted-alone.rejection.json",
+        "sha256": "c7905ee34a50d5429b8555207734a4e5965e122411f9195461bd6afc45d353a9",
+        "bytes": 2886,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-original-zero-script-shifted-alone.rejection.json"
+      }
+    },
+    {
+      "type": "new-prose-point-size",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-new-prose-wrong-9_5pt-size.pdf",
+        "sha256": "88954171196cc0322d666b480c1af6a3c1a9f4a2f23911b31d9ea66af9c952a3",
+        "bytes": 377352,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-new-prose-wrong-9_5pt-size.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-new-prose-wrong-9_5pt-size.rejection.json",
+        "sha256": "0e51fcd37e5e705b23ceb7508bb1464fdc9dc71bcfa5f8679460e5330dadf200",
+        "bytes": 880,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-new-prose-wrong-9_5pt-size.rejection.json"
+      }
+    },
+    {
+      "type": "new-prose-actual-donor-outline",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-new-prose-mutated-p-outline.pdf",
+        "sha256": "aa9f717642244f2cdbaede42b17e9146d639ad9c957e44a206c57dba4caea6d4",
+        "bytes": 379843,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-new-prose-mutated-p-outline.pdf"
+      },
+      "report": {
+        "path": "tools/ko/cpho/2003/t/native-inline-original-v1/frozen/authoring-frozen/evidence/negative-controls/rejected-new-prose-mutated-p-outline.rejection.json",
+        "sha256": "88dd30ce7ce1285d162e56f0c639447ca2dc1a4989ab9eb09846da1227ee1a59",
+        "bytes": 658,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/rejected-new-prose-mutated-p-outline.rejection.json"
+      }
+    }
+  ]
+}

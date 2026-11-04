@@ -1,0 +1,5 @@
+from pathlib import Path
+import json,hashlib
+F=Path('C:/Users/andre/CodexWork/HaslaLab/translation-builds/izho2017-complete-solutions/natural/2017/TS');P=F/'plans/page06.json';p=json.loads(P.read_text('utf8'));proof=F/'page06.pdf';pin=hashlib.sha256(proof.read_bytes()).hexdigest();assert pin=='0f751352301d8ec901bcc1c06180cce70490e3f6d6eb328aa8cdae290c475b25';r=p['reviewed_source2017_complete_original_expression_program_isolation'];assert r['passed']and len(r['programs'])==2 and sum(len(x['original_glyphs'])for x in r['programs'])==15
+p['reviewed_inline_grading_math_rows'].append(dict(source_at=[65,4],complete_original_expression_groups=2,original_native_glyphs=15,reason='Source formula6 contains two complete independent expressions separated by the translated or. Every native glyph, original parent clip, program and fraction rule is retained; independently audit the complete left9 and right6 groups. No math omitted.'))
+P.write_text(json.dumps(p,ensure_ascii=False,indent=2)+'\n','utf8');assert hashlib.sha256(proof.read_bytes()).hexdigest()==pin;print('TWO_COMPLETE_NATIVE_FORMULA6_GROUPS_BOUND_NO_PROOF_CHANGE',pin,flush=True)

@@ -4,6 +4,8 @@ const SITE_DESIGN_TEXT = {
   en: {recent:"Latest community posts",updates:"Notices & updates",more:"More",title:"Title",board:"Board",date:"Date",empty:"No posts yet.",notice:"Notice",update:"Update",retry:"Retry",failed:"Could not load the latest posts.",all:"All",close:"Close",pinned:"Pinned",pin:"Pin notice",unpin:"Unpin notice",loading:"Loading notices…",noticeFailed:"Could not load notices.",loadMore:"Load older notices",openPost:"Open post",openArchive:"Open related page",hint:"Select an item to expand and read it."}
 };
 
+/* an update about a competition the English site does not show (index.html: EN_HIDDEN) is not listed there either */
+const updateShown=item=>{ const k=(/^#\/([a-z0-9]+)/.exec(item.href||"")||[])[1]; return !k||typeof compShown!=="function"||compShown(k); };
 /* Actual repository changes. Add new entries here when publishing archive updates. */
 const SITE_UPDATES = [
   {date:"2026-11-02",ko:"IPhO 2011 실험 2: 테이프를 원하는 곳에 붙이고, 붙인 방식에 따라 버티거나 떨어짐",en:"IPhO 2011 Experiment 2: tape it down where you like; how it is stuck decides whether it holds",body:{ko:"IPhO 2011 실험 2에서 테이프를 집은 뒤 받침판 위 원하는 곳을 클릭하면 그 자리에 한 줄씩 붙습니다(휠로 방향을 돌림). 붙인 테이프마다 판을 붙잡는 힘이 다릅니다. 판을 가로질러 양쪽 책상에 붙고 모서리에서 뒤쪽일수록 단단하고, 한쪽에만 붙었거나 모서리 가까이 붙은 테이프는 원통을 걸거나 세게 흔들면 떨어지며 받침판도 함께 넘어갑니다. 핀 뚜껑은 주변을 넓게 클릭해도 빠지고, 「새 장치」 버튼과 진자 기울기 표시는 없앴습니다.",en:"In IPhO 2011 Experiment 2 you pick up the tape and click on the base plate where each strip should go (the wheel turns it). Each strip holds as it is stuck: across the plate onto the table on both sides and well behind the edge it holds firm; stuck on one side only or near the edge it peels off when the cylinder hangs or swings hard, and the plate goes over with it. The pin cap comes off with a click anywhere near it, and the «New apparatus» button and the pendulum's angle read-out are gone."},href:"#/ipho/2011"},
@@ -130,7 +132,7 @@ function viewHome(){
   original.innerHTML=viewOriginalHome();
   const experiment=original.querySelector("figure.screen").outerHTML;
   const homeText=original.querySelector(".hero > div").innerHTML;
-  const updateRows=SITE_UPDATES.slice(0,4).map(item=>`<a class="hl-update" href="${item.href}"><span class="hl-update-type">${T.update}</span><b>${esc(item[lang])}</b><time datetime="${item.date}">${item.date.slice(5).replace("-",".")}</time></a>`).join("");
+  const updateRows=SITE_UPDATES.filter(updateShown).slice(0,4).map(item=>`<a class="hl-update" href="${item.href}"><span class="hl-update-type">${T.update}</span><b>${esc(item[lang])}</b><time datetime="${item.date}">${item.date.slice(5).replace("-",".")}</time></a>`).join("");
   return `<div class="shell hl-home">
     <section class="hl-home-cover">${experiment}<div class="hl-cover-info">${homeText}</div></section>
     <div class="hl-dashboard"><section class="hl-panel"><div class="hl-panel-head"><h2>${T.recent}</h2><a href="#/community">${T.more} →</a></div><div id="homeLatest" aria-live="polite"><p class="hl-empty">${CMT[lang].loading}</p></div></section>
@@ -166,7 +168,7 @@ function siteNoticeWriteLink(){
 function siteMailboxRows(state){
   const T=SITE_DESIGN_TEXT[state.language],items=[];
   if(state.filter!=="updates")for(const post of state.posts)items.push({kind:"notice",id:String(post.id),at:post.created_at,pinned:!!post.pinned,post});
-  if(state.filter!=="notices")SITE_UPDATES.forEach((item,index)=>items.push({kind:"update",id:String(index),at:Date.parse(item.date+"T00:00:00+09:00")/1000,pinned:false,item}));
+  if(state.filter!=="notices")SITE_UPDATES.forEach((item,index)=>updateShown(item)&&items.push({kind:"update",id:String(index),at:Date.parse(item.date+"T00:00:00+09:00")/1000,pinned:false,item}));
   items.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||b.at-a.at||(a.kind===b.kind?(a.kind==="notice"?Number(b.id)-Number(a.id):Number(a.id)-Number(b.id)):a.kind==="notice"?-1:1));
   return items.map(row=>{
     const notice=row.kind==="notice",post=row.post,item=row.item,key=row.kind+":"+row.id;

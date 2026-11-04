@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "pages": 6,
+  "MuPDF4x_RGB_difference_pixels": 0,
+  "Poppler144_RGB_difference_pixels": 0,
+  "native_content_font_glyph_and_image_programs_identical": true,
+  "versions": {
+    "PyMuPDF": "1.28.2",
+    "pikepdf": "10.12.0",
+    "fonttools": "4.63.0",
+    "Pillow": "12.2.0",
+    "numpy": "2.5.2",
+    "opencv-python": "5.0.0.93"
+  },
+  "python": "3.14.6",
+  "individual_pages": [
+    {
+      "language": "ko",
+      "source_page": 1,
+      "proof_sha256": "1098483a6144b6ee509aa3e4cd553e5d3131a428b2318ca70c2bd7ed66715248",
+      "audit_sha256": "b049f5b7b74b6a5ac7b7bd8946d0dbf84f8441117738b04038ed70698f0ef279",
+      "full144_visual_review_passed": true,
+      "strict_page_QA_passed": true
+    },
+    {
+      "language": "ko",
+      "source_page": 2,
+      "proof_sha256": "09a81146b17af87c5da4355f5fe68fdbeecc2cbee7ab4ac1a3d6b0c1e13eb405",
+      "audit_sha256": "482c8aaa83ccb87a0ece9baa622005d27d0c9826614772073c310bf8c70be544",
+      "full144_visual_review_passed": true,
+      "strict_page_QA_passed": true
+    },
+    {
+      "language": "ko",
+      "source_page": 3,
+      "proof_sha256": "36ab9405d91e3e9e25637e5f4cada32d6a57bade6fc5ff5eac3b104d61bf1c29",
+      "audit_sha256": "000a488992e3796d60c35bf922d4a5d4894582025cdb4b660b32be06969fb5e8",
+      "full144_visual_review_passed": true,
+      "strict_page_QA_passed": true
+    },
+    {
+      "language": "en",
+      "source_page": 1,
+      "proof_sha256": "b6f31765142786957301be9df2b7baa57ecbeb4da17c8274b9e1d63a692d7d9f",
+      "audit_sha256": "3d19a517d44f5671a20627eb2da38bf7c13386f3f633ec4075bcd15697ad5afb",
+      "full144_visual_review_passed": true,
+      "strict_page_QA_passed": true
+    },
+    {
+      "language": "en",
+      "source_page": 2,
+      "proof_sha256": "f9a65452bf75f9da5246753be41874413186a179f0e6e2e86594c166470a0a3c",
+      "audit_sha256": "fe1c67a35e54d719300a61d67e3bab514cbc8688c83f2adf3d6e7425d42d52f9",
+      "full144_visual_review_passed": true,
+      "strict_page_QA_passed": true
+    },
+    {
+      "language": "en",
+      "source_page": 3,
+      "proof_sha256": "ab2fb87638dba70d83cb08205b01c8bfedebdf85dcf86380372e55386047a190",
+      "audit_sha256": "cb0124685e914486da61e5caf10a117a28c1305aa28e9c46c797f88dd92cd9ea",
+      "full144_visual_review_passed": true,
+      "strict_page_QA_passed": true
+    }
+  ]
+}

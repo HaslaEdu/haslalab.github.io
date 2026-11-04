@@ -77,6 +77,35 @@
     catch (e) { show(e); }
     finally { btn.disabled = false; btn.textContent = kind === 'site' ? '문제위치 1건 지금 실행' : '문제풀이 1건 지금 실행'; }
   }
+  /* the automatic training runs (ai-train.js / train-ai.yml), with promote and rollback */
+  const RUN_STATUS = {starting: '시작', downloading: '데이터 받는 중', training: '학습 중', uploaded: '업로드됨', trained: '학습 끝', testing: '비교 시험 중',
+    tested: '시험 끝', promoted: '✓ 적용됨', rejected: '적용 안 함 (점수 부족)', rolled_back: '되돌림', failed: '✗ 실패'};
+  async function loadTrain() {
+    try {
+      const r = await fetch(api() + '/api/admin/ai-train/status', {headers: {Authorization: 'Bearer ' + token()}});
+      if (!r.ok) return;
+      const d = await r.json();
+      const pct = v => (v == null ? '–' : (v * 10).toFixed(1));
+      $('train').replaceChildren(...d.runs.map(x => {
+        const act = x.promoted ? el('button', {type: 'button', textContent: '되돌리기', onclick: () => trainAct('rollback', x.run)})
+          : (x.status === 'rejected' || x.status === 'rolled_back') && x.candidate ? el('button', {type: 'button', textContent: '그래도 적용', onclick: () => trainAct('promote', x.run)}) : null;
+        return el('tr', {title: x.note || ''}, ...[x.run, x.role === 'solver' ? '풀이 (QwQ)' : '총괄 (Gemma 4)', RUN_STATUS[x.status] || x.status,
+          x.examples ?? '–', `${pct(x.base_score)} → ${pct(x.cand_score)}${x.trials ? ` (${x.trials}문제)` : ''}`, x.cost == null ? '–' : '$' + x.cost].map(v => el('td', {}, String(v))), el('td', {}, act));
+      }));
+      if (!d.runs.length) $('train').append(el('tr', {}, el('td', {colSpan: 7, className: 'muted', textContent: '아직 학습한 적이 없습니다.'})));
+      const c = d.counts;
+      $('trainSettings').textContent = `학습용 승인 데이터: 풀이 ${c.solver.approved}개(새로 ${c.solver.new_since_last}), 총괄 ${c.chat.approved}개(새로 ${c.chat.new_since_last}) · 적용 중: ` +
+        (d.settings.length ? d.settings.map(s => `${s.k}=${s.v}`).join(', ') : '기본 모델(학습 전)');
+    } catch {}
+  }
+  async function trainAct(action, run) {
+    if (!confirm(action === 'rollback' ? `${run}을(를) 되돌릴까요? 이전 설정으로 돌아갑니다.` : `${run}을(를) 적용할까요?`)) return;
+    try {
+      const r = await fetch(api() + '/api/admin/ai-train/' + action, {method: 'POST', headers: {Authorization: 'Bearer ' + token(), 'Content-Type': 'application/json'}, body: JSON.stringify({run})});
+      if (!r.ok) throw new Error('오류: ' + r.status);
+      show(null); loadTrain();
+    } catch (e) { show(e); }
+  }
   async function exportData() {
     try {
       const st = $('exportStyle').value;
@@ -92,4 +121,5 @@
   $('runSite').onclick = e => run('site', e.currentTarget);
   $('export').onclick = exportData;
   load();
+  loadTrain();
 })();

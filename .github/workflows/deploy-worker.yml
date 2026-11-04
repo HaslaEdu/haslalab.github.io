@@ -17,7 +17,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: community
@@ -44,6 +44,7 @@ jobs:
       - run: node --test test-omr.mjs
       - run: node --test test-ai-assistant.mjs
       - run: node --test test-ai-eval.mjs
+      - run: node --test test-ai-train.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-qr-isolation.mjs test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
       - run: node --test test-lab-standings.mjs ../tests/test-result-comparison.cjs ../tests/test-*-results.cjs

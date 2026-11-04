@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "source_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "positive_page02_sha256": "f9a65452bf75f9da5246753be41874413186a179f0e6e2e86594c166470a0a3c",
+  "positive_page03_sha256": "ab2fb87638dba70d83cb08205b01c8bfedebdf85dcf86380372e55386047a190",
+  "all5_actual_bad_PDFs_rejected": true,
+  "controls": [
+    {
+      "type": "original-native-CID-erased",
+      "fixture": "rejected-erased-original-Delta.pdf",
+      "sha256": "23e1b0b7a48ac7c9842dd6ad163475661f35ef0585c62cd49aad47d8d1075720",
+      "rejected": true,
+      "report": "rejected-erased-original-Delta.rejection.json",
+      "all_original_font_programs_names_and_ToUnicode_preserved": true
+    },
+    {
+      "type": "actual-new-prose-over-native-math",
+      "fixture": "rejected-new-prose-over-original-Delta.pdf",
+      "sha256": "893080dab3e38bbbb6854e9d79f6aa5847d1ac8a6e5f7c28aa7f40238196302e",
+      "rejected": true,
+      "collision_pixels": 86,
+      "report": "rejected-new-prose-over-original-Delta.rejection.json",
+      "all_original_font_programs_names_and_ToUnicode_preserved": true
+    },
+    {
+      "type": "original-script-relative-geometry",
+      "fixture": "rejected-original-zero-script-shifted-alone.pdf",
+      "sha256": "ad3b737e96a5c64dab59e699eeb727c04121f1dcaf7fc3f59acd8746dd82bd86",
+      "rejected": true,
+      "report": "rejected-original-zero-script-shifted-alone.rejection.json",
+      "all_original_font_programs_names_and_ToUnicode_preserved": true
+    },
+    {
+      "type": "new-prose-point-size",
+      "fixture": "rejected-new-prose-wrong-9_5pt-size.pdf",
+      "sha256": "88954171196cc0322d666b480c1af6a3c1a9f4a2f23911b31d9ea66af9c952a3",
+      "rejected": true,
+      "report": "rejected-new-prose-wrong-9_5pt-size.rejection.json",
+      "all_original_font_programs_names_and_ToUnicode_preserved": true
+    },
+    {
+      "type": "new-prose-actual-donor-outline",
+      "fixture": "rejected-new-prose-mutated-p-outline.pdf",
+      "sha256": "aa9f717642244f2cdbaede42b17e9146d639ad9c957e44a206c57dba4caea6d4",
+      "rejected": true,
+      "report": "rejected-new-prose-mutated-p-outline.rejection.json",
+      "all_original_font_programs_names_and_ToUnicode_preserved": true
+    }
+  ],
+  "diagnostic_false_alarm_not_counted": true
+}

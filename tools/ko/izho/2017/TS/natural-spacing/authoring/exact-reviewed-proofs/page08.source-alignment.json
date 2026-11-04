@@ -1,0 +1,91 @@
+{
+  "source_sha256": "fb90239d8da3dea3dcfe104551243f444802632a74a47a139374013aa16080f1",
+  "source_page": 8,
+  "proof_sha256": "0188efd4bd25e36318e970f24e1cccff70fefcad4b52ed821f6559ea53ac9a81",
+  "plan_sha256": "bda76577717a646cc060c023b2391cd38be96bf31aac7abc7fdddacbb383fcac",
+  "method": "Independently read every final nonspace glyph envelope against its original source center. Also inventory original bold English prose headings from13.5pt, including the source13.92pt headings and Times New Roman names with spaces, and require their alignment intent and actual center.",
+  "headings_and_captions_checked": 3,
+  "rows": [
+    {
+      "source_line_ats": [
+        [
+          13,
+          7
+        ]
+      ],
+      "baseline": 247.26995849609375,
+      "source_center": 312.2776794433594,
+      "independent_original_source_centers": [
+        312.2776794433594
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 222.71499633789062,
+      "actual_nonspace_glyph_right": 401.8403625488281,
+      "actual_center": 312.2776794433594,
+      "center_error_pt": 0.0,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 17,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          14,
+          0
+        ]
+      ],
+      "baseline": 261.66998291015625,
+      "source_center": 312.31800079345703,
+      "independent_original_source_centers": [
+        312.31800079345703
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 256.9859924316406,
+      "actual_nonspace_glyph_right": 367.6499938964844,
+      "actual_center": 312.3179931640625,
+      "center_error_pt": -7.62939453125e-06,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 13,
+      "passed": true
+    },
+    {
+      "source_line_ats": [
+        [
+          67,
+          0
+        ]
+      ],
+      "baseline": 606.4099731445312,
+      "source_center": 312.3000030517578,
+      "independent_original_source_centers": [
+        312.3000030517578
+      ],
+      "source_center_matches_original_glyphs": true,
+      "actual_nonspace_glyph_left": 300.29998779296875,
+      "actual_nonspace_glyph_right": 324.29998779296875,
+      "actual_center": 312.29998779296875,
+      "center_error_pt": -1.52587890625e-05,
+      "original_alignment_frame_resolves_to_active_composer_scope": true,
+      "glyphs": 3,
+      "passed": true
+    }
+  ],
+  "original_bold_prose_heading_coverage": {
+    "headings_checked": 1,
+    "rows": [
+      {
+        "source_at": [
+          13,
+          7
+        ],
+        "source_text": "Problem 3. Resistance of a prism (10.0 points) ",
+        "original_center": 312.2776794433594,
+        "alignment_intent_present": true,
+        "actual_center_preserved": true,
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true
+}

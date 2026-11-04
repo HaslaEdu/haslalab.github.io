@@ -18,7 +18,11 @@
       const pick = document.getElementById("hl-lang");
       if (pick) banner.after(pick);
     }
-    banner.setAttribute("aria-label", isKorean() ? "광고" : "Advertisement");
+    /* the English simulators show no ad: the banner is hidden there, and the ad is only fetched once Korean is chosen */
+    const ko = isKorean();
+    banner.style.display = ko ? "" : "none";
+    if (!ko) return;
+    banner.setAttribute("aria-label", "광고");
     banner.querySelector("span").textContent = label();
     if (mounted) return;
 

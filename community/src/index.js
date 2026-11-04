@@ -48,6 +48,7 @@ import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-ban
 import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH } from './ai-assistant.js';
 import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
+import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount, writtenSwap } from './focus-read.js';
@@ -251,6 +252,7 @@ const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUse
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
 const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit,clientIp,trainAllowed:(env,id)=>aiTrainAllowed(env.DB,id,env[DB_SCOPE]||env.DB)});
 const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
+const aiTrainRouter=createAiTrainRouter({HttpError,currentUser});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url, ctx) {
@@ -259,6 +261,7 @@ async function handle(req, env, url, ctx) {
   if(p===PROBLEM_BANK_OCR_PATH)return problemBankOcrRouter(req,env);
   if(p===AI_ASSISTANT_PATH||p===AI_FEEDBACK_PATH||p===AI_FORGET_PATH)return aiAssistantRouter(req,env);
   if(p===AI_EVAL_PATH||p.startsWith(AI_EVAL_PATH+'/'))return aiEvalRouter(req,env);
+  if(p.startsWith(AI_TRAIN_PATH+'/'))return aiTrainRouter(req,env);
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
   const body = (m === "POST" || m === "PATCH") && !form ? /^\/api\/auth\/handoff\/(start|exchange)$/.test(p)?await accountHandoff.readBody(req,env):/^\/api\/oauth\/(desktop|web)\/(start|exchange)$/.test(p)?await desktopOAuth.readBody(req,env):await req.json().catch(() => ({})) : {};
@@ -4785,12 +4788,23 @@ async function lab(p, m, body, me, req, env, url) {
       if (!u) throw new HttpError(404, "no_user");
       return { user: {id:u.id,username:u.username,nickname:u.nickname,exam_tokens:tokenBalance(u)},tokens:tokenBalance(u), ledger: (await env.DB.prepare("SELECT * FROM lab_ledger WHERE user_id=? ORDER BY id DESC LIMIT 50").bind(u.id).all()).results };
     }
-    if (p === "/api/admin/lab/tokens" && m === "POST") {              // give (or take back) exam tokens; the balance never goes below 0
+    if (p === "/api/admin/lab/tokens" && m === "POST") {              // give (or take back) exam tokens, or set the balance (body.set); it never goes below 0
       needRecentLogin(me);                                            // minting tokens is where a stolen admin token turns into value; require a fresh admin login
-      const who = String(body.user || ""), delta = Number(body.delta),units=tokenUnits(delta);
-      if (units == null || !units || Math.abs(delta) > 1000) bad("bad_delta");
+      const who = String(body.user || ""), setTo = body.set != null && body.set !== "" ? tokenUnits(Number(body.set)) : undefined;
+      const delta = Number(body.delta),units=tokenUnits(delta);
+      if (setTo === null || (setTo !== undefined && (setTo < 0 || setTo > 1000000))) bad("bad_set");
+      if (setTo === undefined && (units == null || !units || Math.abs(delta) > 1000)) bad("bad_delta");
       const half=await halfReady(env),balance=tokenSql(half),u = await env.DB.prepare("SELECT id FROM users WHERE (username=? COLLATE NOCASE OR nickname=?) AND deleted=0").bind(who, who).first();
       if (!u) throw new HttpError(404, "no_user");
+      if (setTo !== undefined) {                                      // the ledger keeps the difference, so the history still adds up
+        await env.DB.batch([
+          env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,by_user,note,created_at)
+            SELECT id,(?-${balance})/10.0,CASE WHEN ?>=${balance} THEN 'grant' ELSE 'revoke' END,?,?,? FROM users WHERE id=? AND ?<>${balance}`)
+            .bind(setTo,setTo,me.id,String(body.note || '').slice(0,300)||'set',t,u.id,setTo),
+          env.DB.prepare(`UPDATE users SET ${tokenSet('?',half)} WHERE id=?`).bind(setTo,u.id),
+        ]);
+        return { tokens: await labTokens(env, u.id) };
+      }
       await env.DB.batch([
         env.DB.prepare(`INSERT INTO lab_ledger(user_id,delta,reason,by_user,note,created_at)
           SELECT id,MAX(?, -${balance})/10.0,?,?,?,? FROM users WHERE id=?`)

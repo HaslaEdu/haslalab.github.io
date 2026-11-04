@@ -1,0 +1,11 @@
+from izho2017_authoring import begin,around,finish
+p=begin(7)
+for at,n in [('2,0,0',7),('5,1,0',8),('10,0,0',9),('19,0,0',12),('21,0,0',13),('23,0,0',14),('26,0,0',15),('28,0,0',16),('32,0,0',17),('40,0,0',18),('45,0,0',19),('45,2,0',20),('48,0,0',21),('71,0,0',28),('78,0,0',29),('86,0,0',32),('94,0,0',33),('95,0,0',35),('103,1,0',37)]:around(p,at,['식 ',' '],[f'({n})'])
+for at in ['12,2,0','30,0,0','69,0,0','102,2,0']:p.add(at,'다음의 수치 ')
+around(p,'14,0,0',['식 ','과 ',' '],['(10)','(11)'])
+for at,n in [('51,0,0',23),('51,2,0',24)]:around(p,at,['식 ',' 또는 이와 동등한 식 '],[f'({n})'])
+around(p,'51,4,0',['식 ',' 또는 식 ',' '],['(26)','(27)'])
+p.add('60,2,1',' 또는 ')
+p.add('82,0,0','식 ')
+around(p,'102,0,0',['물리적으로 올바른 근을 선택함, 식 ',' '],['(36)'])
+finish(p,[],'Full original2017 page7 scoring-table continuation read visually at144dpi. Preserve every native formula, including original complete multi-line arcsin/arctan roots and fraction bars, at original font/GID/point/Y with a common x-only shift for each same-cell expression. The true grade/subtotal columns and original1.3/1.4/2.1/2.2/2.3 merged cells stay fixed. Translation of Formula labels must pack next to complete native expressions, with no English-width holes, duplicate glyph claims, moved score or detached rules. Mathematical source typos remain literal.')

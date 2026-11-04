@@ -1,0 +1,65 @@
+{
+  "output_sha256": "c0e885db8f0d7c54b5576f1e0e4f9dd3a214dbf685149261b1c73a2b10089310",
+  "verified_native_ink_missing_pixels": 0,
+  "raw_svg_audit": {
+    "source": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2017-complete-solutions\\natural\\2017\\TS\\page11.old-source.pdf",
+    "source_page": 1,
+    "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\izho2017-complete-solutions\\natural\\2017\\TS\\page11.pdf",
+    "final_page": 1,
+    "source_sha256": "af09dc3f15fd8eaeda6ad489893506d841d77c15829802006f9152897792451b",
+    "output_sha256": "c0e885db8f0d7c54b5576f1e0e4f9dd3a214dbf685149261b1c73a2b10089310",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 354,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 354,
+      "expected_signature_count": 354,
+      "matched_outline_uses": 354,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 42664,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 1,
+    "passed": false,
+    "missing_bbox": [
+      158.5,
+      739.25,
+      158.75,
+      739.5
+    ]
+  },
+  "original_native_form_witnesses": [],
+  "original_native_cid_profile": {
+    "kind": "source2017-page11-complete-original-inline-lambda-native-Form-program-v1",
+    "method": "All7 literal original CIDs and complete unchanged MathType Form with original clips, root strokes, fonts, fractional points, paint and whole-Form CTM translation; both native PDF renderers at4x/8x/12x have exact original-reference nonwhite RGB, and all7 cropped SVG outlines at4x/8x/12x have zero missing ink. Raw fullpage1pixel unhinted edge diagnostic retained; no source glyph or mathematical ink excluded.",
+    "original_4x_svg_dark_pixel_delta": 1,
+    "exact_original_native_expression_glyphs": 7,
+    "original_native_reference_missing_pixels": 0,
+    "native_reference_nonwhite_RGB_errors": 0,
+    "native_reference_renderers": [
+      "MuPDF",
+      "Poppler"
+    ],
+    "native_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "cropped_SVG_reference_scales": [
+      4,
+      8,
+      12
+    ],
+    "cropped_SVG_native_ink_missing_pixels": 0,
+    "witness": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\izho2017-complete-solutions\\2017-page11-original-inline-lambda-program\\witness.json",
+    "witness_sha256": "f65c81b69610a32acf275ff23d06fc4174e2611b20ed49dd0b86db1793cca5a8",
+    "proof_unmodified": true,
+    "mathematical_ink_excluded": false,
+    "path": "tools/ko/izho/2017/TS/natural-spacing/witnesses/page11-native-cid.json"
+  }
+}
