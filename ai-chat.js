@@ -9,7 +9,8 @@
   const BASE = new URL('.', (document.currentScript && document.currentScript.src) || location.href).href;
   const api = () => { try { const o = localStorage.getItem('hlCmApi') || ''; return (/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o) ? o : PROD).replace(/\/+$/, ''); } catch { return PROD; } };
   const token = () => { try { return localStorage.getItem('hlCmTok') || ''; } catch { return ''; } };
-  const ko = () => !/[?&]lang=en\b/.test(location.search) && document.documentElement.lang !== 'en';
+  // the page's language: the <html lang> the site sets when the language is switched, else the address (?lang=en)
+  const ko = () => { const l = document.documentElement.lang; return l === 'en' ? false : l === 'ko' ? true : !/[?&]lang=en\b/.test(location.search); };
   const T = {
     ko: {open: 'AI에게 묻기', title: '하슬라랩 AI', hint: '문제 위치, 풀이 설명, 커뮤니티 글, 웹 정보를 물어보세요.', ph: '질문을 입력하세요 (Enter 전송, Shift+Enter 줄바꿈)',
       send: '보내기', clear: '대화 지우기', close: '닫기', style: {default: '말투: 기본', community: '말투: 커뮤'}, styleHint: '답변 말투 바꾸기', login: '로그인한 회원만 쓸 수 있습니다.', loginGo: '로그인하기', wait: '생각하는 중…', sources: '관련 링크',
@@ -265,9 +266,9 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
   btn.addEventListener('click', () => toggle(true));
   box = document.createElement('div');
   box.className = 'hlai'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', t().title);
-  box.innerHTML = `<div class="hlai-h"><b>${esc(t().title)}</b><button type="button" data-a="style" title="${esc(t().styleHint)}">${esc(t().style[style])}</button><button type="button" data-a="clear">${esc(t().clear)}</button><button type="button" data-a="close" aria-label="${esc(t().close)}">✕</button></div>
-<div class="hlai-log" aria-live="polite"></div><div class="hlai-note">${esc(t().note)}<label class="hlai-train" hidden><input type="checkbox" data-a="train">${esc(t().train)}</label></div>
-<form class="hlai-f"><textarea rows="2" maxlength="4000" placeholder="${esc(t().ph)}"></textarea><button type="submit">${esc(t().send)}</button></form>`;
+  box.innerHTML = `<div class="hlai-h"><b data-t="title">${esc(t().title)}</b><button type="button" data-a="style" title="${esc(t().styleHint)}">${esc(t().style[style])}</button><button type="button" data-a="clear">${esc(t().clear)}</button><button type="button" data-a="close" aria-label="${esc(t().close)}">✕</button></div>
+<div class="hlai-log" aria-live="polite"></div><div class="hlai-note"><span data-t="note">${esc(t().note)}</span><label class="hlai-train" hidden><input type="checkbox" data-a="train"><span data-t="train">${esc(t().train)}</span></label></div>
+<form class="hlai-f"><textarea rows="2" maxlength="4000" placeholder="${esc(t().ph)}"></textarea><button type="submit" data-t="send">${esc(t().send)}</button></form>`;
   log = box.querySelector('.hlai-log'); input = box.querySelector('textarea'); sendBtn = box.querySelector('.hlai-f button');
   box.querySelector('[data-a=close]').addEventListener('click', () => toggle(false));
   box.querySelector('[data-a=style]').addEventListener('click', e => {
@@ -280,5 +281,19 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
   box.querySelector('form').addEventListener('submit', e => { e.preventDefault(); send(); });
   input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); } });
   addEventListener('storage', e => { if (e.key === 'hlCmTok' && box.classList.contains('on')) { paint(); readTrain(); } });
+  /* the site switches language without a reload (setLang sets <html lang>): every fixed label follows */
+  function relabel() {
+    const T = t();
+    btn.textContent = T.open;
+    box.setAttribute('aria-label', T.title);
+    for (const el of box.querySelectorAll('[data-t]')) el.textContent = T[el.dataset.t];
+    const sb = box.querySelector('[data-a=style]'); sb.textContent = T.style[style]; sb.title = T.styleHint;
+    box.querySelector('[data-a=clear]').textContent = T.clear;
+    box.querySelector('[data-a=close]').setAttribute('aria-label', T.close);
+    input.placeholder = T.ph;
+    if (box.classList.contains('on') && !busy) paint();
+  }
+  let shown = ko();
+  new MutationObserver(() => { if (ko() !== shown) { shown = ko(); relabel(); } }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
   document.body.append(btn, box);
 })();
