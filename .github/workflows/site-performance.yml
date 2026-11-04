@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python tools/build-result-comparisons.py --check
-      - run: node --test tests/test-site-runtime.cjs tests/test-api-endpoint-migration.cjs tests/test-exam-network.cjs tests/test-result-comparison.cjs tests/test-*-results.cjs
+      - run: node --test tests/test-site-runtime.cjs tests/test-site-analytics.cjs tests/test-api-endpoint-migration.cjs tests/test-exam-network.cjs tests/test-result-comparison.cjs tests/test-*-results.cjs
       - run: node --test tests/test-weekly-rendering.cjs tests/test-monthly-*.cjs
       - run: node --test tests/test-markerless-scanner.mjs tests/test-scan-quality.mjs tests/test-contest-review.cjs
       - run: npm install --prefix tmp/browser-qa playwright@1.64.1 --ignore-scripts --no-audit --no-fund
