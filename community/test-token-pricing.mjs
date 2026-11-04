@@ -257,6 +257,17 @@ test('fractional admin grants/revokes preserve half balances and ledger actual c
   for (const delta of [0, 0.03, 0.333, 1000.1, 'invalid']) assert.equal((await api('/admin/lab/tokens', { user: 'price19', delta })).status, 400);
 });
 
+test('an admin sets a balance outright; the ledger keeps the difference and an unchanged balance writes nothing', async () => {
+  fund(20, 2, 0);
+  assert.equal((await api('/admin/lab/tokens', { user: 'price20', set: 7.5, note: 'event' })).data.tokens, 7.5);
+  assert.equal(balance(20), 7.5);
+  assert.equal((await api('/admin/lab/tokens', { user: 'price20', set: 1 })).data.tokens, 1);
+  assert.equal((await api('/admin/lab/tokens', { user: 'price20', set: 1 })).data.tokens, 1);
+  assert.deepEqual(sql.prepare("SELECT delta, reason FROM lab_ledger WHERE user_id=20 ORDER BY id").all().map(r => [r.delta, r.reason]), [[5.5, 'grant'], [-6.5, 'revoke']]);
+  for (const set of [-1, 0.03, 1000000.1, 'x']) assert.equal((await api('/admin/lab/tokens', { user: 'price20', set })).status, 400);
+  assert.equal((await api('/admin/lab/tokens', { user: 'price20', set: 0 })).data.tokens, 0);
+});
+
 function order(id, user, tokens, credited = 0) {
   sql.prepare("INSERT INTO pay_orders(order_id,user_id,pack,tokens,amount,status,payment_key,credited,created_at) VALUES(?,?,'local',?,1900,'done','local_key',?,?)").run(id, user, tokens, credited, time);
 }
