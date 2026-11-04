@@ -5077,7 +5077,7 @@ function viewLearnSubject(key){
   if(!L) return viewLearn();
   const archive=archiveHref("books",key==="astronomy"?"astro":"phys");
   return `<div class="shell"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1></div>
-    ${key==="physics"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio"><div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div><p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만듭니다.":"Turn physics problem photos into text and equations, and create new problems from a topic."}</p><span class="go">→</span></a></div>`:""}
+    ${key==="physics"&&cm.me?.role==="admin"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio"><div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div><p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만듭니다.":"Turn physics problem photos into text and equations, and create new problems from a topic."}</p><span class="go">→</span></a></div>`:""}
     ${["physics","astronomy"].includes(key)?`<p class="learn-tool-copy"><a href="${archive}">${lang==="ko"?"대회·교재·학교 자료는 아카이브에서 찾아볼 수 있습니다.":"Find competition, book and school materials in the archive."}</a></p>`:`<section class="learn-pending" role="status"><h2>${d.learnSoon}</h2></section>`}
   </div>${adFitBanner("primary")}`;
 }

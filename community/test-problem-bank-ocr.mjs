@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {webcrypto} from 'node:crypto';
-import {createProblemBankOcrRouter,PROBLEM_BANK_OCR_PATH} from './src/problem-bank-ocr.js';
+import {createProblemBankOcrRouter,PROBLEM_BANK_OCR_PATH,geminiProblemText} from './src/problem-bank-ocr.js';
 import {upstageParse} from './src/upstage-ocr.js';
 import community from './src/index.js';
 import bank from '../problem-bank/worker.mjs';
@@ -19,7 +19,7 @@ function photo({bytes=PNG,type='image/png',extra=[],duplicate=false}={}){
 }
 const request=(body=photo(),extra={})=>new Request(URL_BASE+'?mode=math',{method:'POST',body,...extra});
 function fixture({user=ADMIN,configured=true,parse}={}){
-  const calls={parse:0,auth:0},env={...(configured?{UPSTAGE_API_KEY:KEY}:{})};
+  const calls={parse:0,auth:0},env={...(configured?{GEMINI_API_KEY:KEY}:{})};
   const router=createProblemBankOcrRouter({HttpError,currentUser:async()=>{calls.auth++;return user;},needUser,parse:parse??(async()=>{calls.parse++;return{markdown:TEXT};})});
   return {router,env,calls,call:req=>router(req,env)};
 }
@@ -59,23 +59,22 @@ test('oversized image data and oversized declared uploads fail before paid parsi
   assert.equal(f.calls.parse,0);
 });
 
-test('valid admin photos use enhanced Document Parse once and retain its Markdown LaTeX rather than lossy plain text',async()=>{
+const geminiReply=text=>Response.json({candidates:[{content:{parts:[{text:JSON.stringify({text})}]},finishReason:'STOP'}],usageMetadata:{promptTokenCount:300,candidatesTokenCount:40,totalTokenCount:340}});
+async function withFetch(impl,run){const original=globalThis.fetch;globalThis.fetch=impl;try{return await run();}finally{globalThis.fetch=original;}}
+test('valid admin photos are transcribed once by Gemini 3.1 Flash-Lite, keeping LaTeX, with no key or prompt in the result',async()=>{
   let paidCalls=0;
-  const parse=(env,bytes,mime,options)=>{
-    assert.deepEqual(bytes,PNG);assert.equal(mime,'image/png');assert.deepEqual(options,{mode:'enhanced',timeoutMs:75000,maxAttempts:1});
-    return upstageParse(env,bytes,mime,{...options,fetchImpl:async(url,init)=>{
-      paidCalls++;assert.equal(url,'https://api.upstage.ai/v1/document-digitization');assert.equal(init.method,'POST');assert.equal(init.headers.Authorization,'Bearer '+KEY);
-      const form=init.body;assert.deepEqual([...form.keys()],['document','model','mode','ocr','output_formats']);assert.equal(form.get('model'),'document-parse');assert.equal(form.get('mode'),'enhanced');assert.equal(form.get('ocr'),'force');assert.equal(form.get('output_formats'),'["markdown","text"]');assert.deepEqual(new Uint8Array(await form.get('document').arrayBuffer()),PNG);
-      return Response.json({content:{markdown:TEXT,text:'LOSSY plain text without the equation'},model:'document-parse',usage:{pages:1}});
-    }});
-  };
-  const f=fixture({parse}),out=await f.call(request());assert.equal(paidCalls,1);assert.equal(out.text,TEXT);assert.equal(out.confidence,null);assert.equal(out.engine,'upstage-document-parse');assert.equal(out.format,'markdown-latex');assert.doesNotMatch(JSON.stringify(out),/synthetic-test-provider-key|LOSSY|solution|grade|photo_id/);
+  const out=await withFetch(async(url,init)=>{paidCalls++;assert.match(String(url),/gemini-3\.1-flash-lite:generateContent/);const body=JSON.parse(init.body);assert.ok(JSON.stringify(body).includes(Buffer.from(PNG).toString('base64')));return geminiReply(TEXT);},
+    ()=>fixture({parse:geminiProblemText}).call(request()));
+  assert.equal(paidCalls,1);assert.equal(out.text,TEXT);assert.equal(out.confidence,null);assert.equal(out.engine,'gemini-3.1-flash-lite');assert.equal(out.format,'markdown-latex');assert.doesNotMatch(JSON.stringify(out),/synthetic-test-provider-key|Transcribe|solution|grade|photo_id/);
+  const other=await withFetch(async url=>{assert.match(String(url),/gemini-9-test:generateContent/);return geminiReply(TEXT);},()=>geminiProblemText({GEMINI_API_KEY:KEY,BANK_OCR_MODEL:'gemini-9-test'},PNG,'image/png'));
+  assert.equal(other.markdown,TEXT);assert.equal(other.model,'gemini-9-test');
 });
 
-test('archive-only parsing never retries provider failures and sanitizes private diagnostics',async()=>{
+test('archive-only parsing sanitizes provider failures and private diagnostics',async()=>{
   for(const [status,expectedStatus,code]of [[429,429,'ocr_rate_limited'],[500,502,'ocr_failed'],[401,502,'ocr_failed']]){
-    let calls=0;const f=fixture({parse:(env,bytes,mime,options)=>upstageParse(env,bytes,mime,{...options,fetchImpl:async()=>{calls++;return new Response('PRIVATE provider diagnostic '+KEY,{status});}})});
-    await rejects(f.call(request()),expectedStatus,code);assert.equal(calls,1);
+    await withFetch(async()=>new Response('PRIVATE provider diagnostic '+KEY,{status}),async()=>{
+      await assert.rejects(fixture({parse:geminiProblemText}).call(request()),error=>error.status===expectedStatus&&error.code===code&&!String(error.message).includes(KEY));
+    });
   }
   for(const name of ['AbortError','TimeoutError']){const f=fixture({parse:async()=>{const e=new Error('PRIVATE timeout');e.name=name;throw e;}});await rejects(f.call(request()),504,'ocr_timeout');}
 });
@@ -96,7 +95,7 @@ test('empty, overlong or corrupt transcripts fail without truncating problem con
 
 function liveFixture(user=ADMIN,{configured=true}={}){
   const sql=[];const db={prepare(query){sql.push(query);return{bind(){return{async first(){assert.match(query,/FROM sessions s JOIN users u/);return user?{...user}:null;},async all(){assert.match(query,/FROM sessions s JOIN users u/);return{results:user?[{...user}]:[]};}};}};}};
-  return {env:{DB:db,...(configured?{UPSTAGE_API_KEY:KEY}:{}),ALLOWED_ORIGINS:'https://haslalab.org'},sql};
+  return {env:{DB:db,...(configured?{GEMINI_API_KEY:KEY}:{}),ALLOWED_ORIGINS:'https://haslalab.org'},sql};
 }
 
 test('actual community dispatch authenticates the dedicated path before generic body parsing',async()=>{
@@ -106,22 +105,22 @@ test('actual community dispatch authenticates the dedicated path before generic 
   }
 });
 
-test('actual community route reports a missing Upstage key and never creates a monthly submission or calls a provider',async()=>{
+test('actual community route reports a missing Gemini key and never creates a monthly submission or calls a provider',async()=>{
   const original=globalThis.fetch;let calls=0;globalThis.fetch=async()=>{calls++;assert.fail('provider must not be called without its key');};
   try{const f=liveFixture(ADMIN,{configured:false}),response=await community.fetch(request(photo(),{headers:{Authorization:'Bearer '+TOKEN}}),f.env,{});assert.equal(response.status,503);assert.deepEqual(await response.json(),{error:'ocr_unavailable'});assert.equal(calls,0);assert.equal(f.sql.length,1);}
   finally{globalThis.fetch=original;}
 });
 
-test('real bank adapter, actual community dispatch and genuine Upstage helper share the image-only contract',async()=>{
+test('real bank adapter, actual community dispatch and the Gemini transcriber share the image-only contract',async()=>{
   const original=globalThis.fetch,timeout=AbortSignal.timeout;let providerCalls=0;const deadlines=[],upstream=[];
   AbortSignal.timeout=ms=>{deadlines.push(ms);return timeout(ms);};
-  globalThis.fetch=async(url,init)=>{providerCalls++;assert.equal(url,'https://api.upstage.ai/v1/document-digitization');assert.equal(init.body.get('mode'),'enhanced');return Response.json({content:{markdown:TEXT},usage:{pages:1}});};
+  globalThis.fetch=async(url,init)=>{providerCalls++;assert.match(String(url),/gemini-3\.1-flash-lite:generateContent/);return geminiReply(TEXT);};
   try{
     const f=liveFixture(),bankQueries=[],db={prepare(sql){bankQueries.push(sql);return{bind(){return{async all(){return{results:sql.includes('sqlite_master')?['bank_question_facets','bank_question_catalogue','bank_source_presentations'].map(name=>({name})):[]};}};}};}};
     const env={BANK_OCR_ENABLED:'1',BANK_SEARCH:db,BANK_REGISTRY:db,COMMUNITY:{async fetch(req){const url=new URL(req.url);upstream.push(url.pathname);if(url.pathname==='/api/me')return Response.json({user:ADMIN});assert.equal(url.pathname,PROBLEM_BANK_OCR_PATH);assert.equal(url.search,'?mode=math');return community.fetch(req,f.env,{});}}};
     const body=photo();body.set('kind','book');body.set('collection','physics');body.set('source',SID);body.set('lang','ko');
     const req=new Request('https://bank.test/api/problem-bank/identify?kind=book&collection=physics',{method:'POST',headers:{Authorization:'Bearer '+TOKEN},body}),response=await bank.fetch(req,env),out=await response.json();
     assert.equal(response.status,200,JSON.stringify(out));assert.equal(providerCalls,1);assert.deepEqual(upstream,['/api/me',PROBLEM_BANK_OCR_PATH]);assert.equal(out.recognized_text,TEXT);assert.equal(out.ocr_used,true);assert.equal(out.automatic_match_confirmed,false);assert.deepEqual(out.searched_languages,['ko','en']);assert.deepEqual(out.items,[]);
-    assert.equal(f.sql.length,1);assert.ok(f.sql.every(query=>/FROM sessions s JOIN users u/.test(query)));assert.ok(bankQueries.every(query=>!/^\s*(?:INSERT|UPDATE|DELETE|CREATE|DROP)/.test(query)));assert.ok(deadlines.includes(80000)&&deadlines.includes(75000));assert.match(response.headers.get('Cache-Control'),/private.*no-store/);assert.doesNotMatch(JSON.stringify(out),/provider_required|problem_id|photo_id|synthetic-test-provider-key/);
+    assert.equal(f.sql.length,1);assert.ok(f.sql.every(query=>/FROM sessions s JOIN users u/.test(query)));assert.ok(bankQueries.every(query=>!/^\s*(?:INSERT|UPDATE|DELETE|CREATE|DROP)/.test(query)));assert.ok(deadlines.includes(80000));assert.match(response.headers.get('Cache-Control'),/private.*no-store/);assert.doesNotMatch(JSON.stringify(out),/provider_required|problem_id|photo_id|synthetic-test-provider-key/);
   }finally{globalThis.fetch=original;AbortSignal.timeout=timeout;}
 });
