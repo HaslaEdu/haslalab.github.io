@@ -2128,7 +2128,13 @@ export async function workersAiGrade(env, g, system, input) {
   else { full = readCompletion(res).text; usage = res?.usage || null; }
   const text = stripThinking(full).replace(/^```(?:json)?\s*|\s*```$/g, '');
   const a = text.indexOf('{'), b = text.lastIndexOf('}');
-  let raw = null; try { raw = JSON.parse(text.slice(a, b + 1)); } catch { throw new Error('workers_ai_bad_json:' + text.slice(0, 80)); }
+  let raw = null; try { raw = JSON.parse(text.slice(a, b + 1)); } catch {
+    /* QwQ 32B, streamed, wrote the marks with its quotes out of place ({"items:[{id:A1.1,score":.3},…): the id and score
+       pairs are still there, so they are read one by one */
+    const items = [...text.matchAll(/"?id"?\s*:\s*"?([\w.\/-]+)"?\s*,\s*"?score"?\s*:\s*"?(-?\d*\.?\d+)/g)].map(m => ({ id: m[1], score: +m[2] }));
+    if (!items.length) throw new Error('workers_ai_bad_json:' + text.slice(0, 200));
+    raw = { items, repaired: true };
+  }
   const u = usage || {};
   return { raw, model, usage: { input_tokens: u.prompt_tokens ?? null, output_tokens: u.completion_tokens ?? null } };
 }

@@ -96,3 +96,10 @@ test('the grading bench on Workers AI streams when asked: the pieces are joined,
   assert.deepEqual(r.raw, { items: [{ id: 'A1', score: 0.2 }] });
   assert.deepEqual(r.usage, { input_tokens: 50, output_tokens: 9 });
 });
+
+test('the Workers AI grading bench reads id/score pairs out of JSON whose quotes are out of place', async () => {
+  const { workersAiGrade } = await import('./src/index.js');
+  const env = { AI: { async run() { return { response: '{"items:[{id:A1.1,score":.3},{"id:A1.2,score":0},{"id":"B.1.2/1","score":"0.25"}]}' }; } } };
+  const r = await workersAiGrade(env, { model: '@cf/qwen/qwq-32b' }, 's', 'i');
+  assert.deepEqual(r.raw.items, [{ id: 'A1.1', score: 0.3 }, { id: 'A1.2', score: 0 }, { id: 'B.1.2/1', score: 0.25 }]);
+});
