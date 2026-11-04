@@ -11,7 +11,8 @@ For each role (solver: QwQ 32B on Workers AI; chat: Gemma 4 26B-A4B on CoreWeave
   6. promotes it only when it scores better; every step is recorded and shown on ai-review.html (with a rollback)
   7. replaces the run's key with a random one, so it is good for this run only
 
-Secrets: RUNPOD_API_KEY, WANDB_API_KEY, HF_TOKEN, CLOUDFLARE_API_TOKEN (the deploy token, which can set Worker secrets).
+Secrets: RUNPOD_API_KEY, WANDB_API_KEY, HF_TOKEN, CLOUDFLARE_API_TOKEN (the deploy token, which can set Worker secrets),
+and CLOUDFLARE_AI_TOKEN (optional: a Workers AI token for the adapter upload; without it the deploy token is used).
 DRY_RUN=1 checks every key and the data without starting a GPU.
 """
 import json
@@ -46,8 +47,13 @@ def say(*a):
     SUMMARY.append(line)
 
 
-def wrangler(*args, stdin=None):
-    return subprocess.run(['npx', 'wrangler', *args], cwd=COMMUNITY, input=stdin, text=True, capture_output=True)
+def wrangler(*args, stdin=None, ai=False):
+    """ai=True: a Workers AI command, run with CLOUDFLARE_AI_TOKEN when that secret exists (a token made on the
+    Workers AI page, so the deploy token needs no extra permission)"""
+    env = dict(os.environ)
+    if ai and E.get('CLOUDFLARE_AI_TOKEN'):
+        env['CLOUDFLARE_API_TOKEN'] = E['CLOUDFLARE_AI_TOKEN']
+    return subprocess.run(['npx', 'wrangler', *args], cwd=COMMUNITY, input=stdin, text=True, capture_output=True, env=env)
 
 
 def set_worker_secret(name, value):
@@ -103,8 +109,10 @@ def check_keys(w):
     entity = (r.json().get('data') or {}).get('viewer', {}).get('entity') if r.ok else None
     say(f'✓ W&B key works (entity {entity})' if entity else f'✗ W&B key: {r.status_code}')
     ok &= bool(entity)
-    r = wrangler('ai', 'finetune', 'list')
-    say('✓ Cloudflare token can use Workers AI fine-tunes' if r.returncode == 0 else '✗ Cloudflare token cannot list Workers AI fine-tunes (add the Workers AI · Edit permission to the deploy token): ' + r.stderr[-300:])
+    r = wrangler('ai', 'finetune', 'list', ai=True)
+    which = 'CLOUDFLARE_AI_TOKEN' if E.get('CLOUDFLARE_AI_TOKEN') else 'CLOUDFLARE_API_TOKEN'
+    say(f'✓ {which} can use Workers AI fine-tunes' if r.returncode == 0 else
+        f'✗ {which} cannot list Workers AI fine-tunes (needs Workers AI · Read and Edit; or add a CLOUDFLARE_AI_TOKEN secret made on the Workers AI page): ' + r.stderr[-300:])
     st = w.get('/status').json()
     for role in ('solver', 'chat'):
         c = st['counts'][role]
@@ -162,7 +170,7 @@ def train_role(w, key, role, entity):
     if role == 'solver':
         subprocess.run(['wandb', 'artifact', 'get', path, '--root', '/tmp/adapter'], check=True)
         name = run
-        r = wrangler('ai', 'finetune', 'create', '@cf/qwen/qwq-32b', name, '/tmp/adapter')
+        r = wrangler('ai', 'finetune', 'create', '@cf/qwen/qwq-32b', name, '/tmp/adapter', ai=True)
         if r.returncode:
             w.record(run, role, 'failed', note='Workers AI did not take the adapter: ' + r.stderr[-1500:])
             raise RuntimeError('wrangler ai finetune create failed: ' + r.stderr[-600:])
