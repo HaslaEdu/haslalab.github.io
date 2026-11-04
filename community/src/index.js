@@ -2526,7 +2526,7 @@ function labItemGroups(scheme, max = 30) {
   for (const { ids } of qs) { const last = out.at(-1); if (last && last.length + ids.length <= max) last.push(...ids); else out.push([...ids]); }
   return out;
 }
-function labScore(scheme, raw, pages, opts = {}) {
+export function labScore(scheme, raw, pages, opts = {}) {
   const readCache = new Map(), readOf = p => { if (!readCache.has(p)) { let v = []; try { v = (p.read ? JSON.parse(p.read).items || [] : []).filter(i => !i.crossed_out); } catch {} readCache.set(p, v); } return readCache.get(p); };
   const byNo = new Map(pages.map(p => [p.no, p])), got = new Map();
   for (const g of (raw && raw.items) || []) if (g && g.id != null && !got.has(String(g.id))) got.set(String(g.id), g);
@@ -2599,7 +2599,11 @@ function labScore(scheme, raw, pages, opts = {}) {
            APhO 2022 T1 F.1 lost its whole 1 pt). Where the grader itself gave the item marks and a number on that page,
            in the item's unit, is within the official tolerance, that number is the answer. */
         const pageNums = numbersIn([pg.ocr, ...readOf(pg).map(i => [i.text, i.value].filter(x => x != null).join(" "))].join("\n"));
-        const onPage = +g.score >= .5 * it.points ? pageNums.find(x => valueMatches(it, units?.same ? x * units.factor : x)) : undefined;
+        /* a reported bare power of ten (1e-23) beside a number on the page with that same power and the official value
+           (1.04e-23) is the mantissa dropped, whatever mark the grader gave: it marked the dropped number, not the page
+           (FULL2 2026-11-03, APhO 2022 T1 F.1.b: grader 0, code R12, audit 1 of 1) */
+        const exp10 = x => Math.floor(Math.log10(Math.abs(x)) + 1e-9), bare = v !== 0 && Math.abs(Math.log10(Math.abs(v)) - Math.round(Math.log10(Math.abs(v)))) < 1e-9;
+        const onPage = pageNums.find(x => valueMatches(it, units?.same ? x * units.factor : x) && (+g.score >= .5 * it.points || bare && x !== v && Math.sign(x) === Math.sign(v) && exp10(x) === exp10(v)));
         if (onPage !== undefined) { pts = it.points; res.value = onPage; }
         else rules.add("R12");
       }
@@ -3016,7 +3020,7 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   }
   /* pair grading (LAB_PAIR_PROVIDER, bench grade.pair): a second grader of another family marks the paper as a chat would
      (labChatGrade: GPT-6 Luna); where the two agree the marks stand (bench: agreed marks were wrong on 3 of 191 items, all
-     disputed audit items), where they differ by a quarter of an item or more it is decided once more (the recheck) */
+     disputed audit items), where they differ by LAB_PAIR_GAP of an item (0.15) or more it is decided once more (the recheck) */
   const pairOut = !double && !alone && roles?.pair ? await labChatGrade(env, labAs(s, roles.pair.provider, roles.pair), task, mine, scheme, lang, m).catch(e => { console.error("lab pair grading", e?.code || e?.message); return null; }) : null;
   const out2 = double ? await gradeOnce().catch(e => { console.error("lab second grading", e?.code || e?.message); return null; })
     : pairOut ? { raw: { items: pairOut.items.filter(i => i.raw != null).map(i => ({ id: i.id, score: i.got, found: true, note: i.note || "", quote: "" })) } } : null;
@@ -3066,13 +3070,17 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
   const suspects = (roles?.suspect ?? env.LAB_SUSPECT_RECHECK === "on") ? labSuspects(scheme, raw) : [];
   for (const id of suspects) if (!flagged.some(f => f.id === id)) flagged.push({ id, got: +((raw.items || []).find(x => String(x?.id) === id)?.score) || 0, suspect: true });
   if (flagged.length > 60) flagged.length = 60;
+  /* the two graders' gap on an item that sends it to the recheck, as a share of its points (LAB_PAIR_GAP): a quarter let
+     ±10% run-to-run swings stand on whole tasks (FULL2, 2026-11-03: 21T2, 24T1, 32T1 and 32T2 below 90%); 0.15 sends a few
+     more items to the recheck, about a cent a task */
+  const pairGap = Math.min(.5, Math.max(.05, Number(env.LAB_PAIR_GAP) || .15));
   if (out2?.raw?.items) {
     const firstBy = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
     for (const y of out2.raw.items) {
       const it = specOf.get(String(y?.id)); if (!it) continue;
       const x = firstBy.get(it.id), a = +(x?.score) || 0, b = +(y.score) || 0;
       if (!x && !y.found) continue;
-      if (x && Math.abs(a - b) < (pairOut ? .25 * it.points : Math.max(.05, .05 * it.points)) && (pairOut || !!x.found === !!y.found)) continue;
+      if (x && Math.abs(a - b) < (pairOut ? pairGap * it.points : Math.max(.05, .05 * it.points)) && (pairOut || !!x.found === !!y.found)) continue;
       const second = { score: b, found: !!y.found, page: y.page, value: y.value, note: String(y.note || "").slice(0, 300), quote: String(y.quote || "").slice(0, 300) };
       const f = flagged.find(z => z.id === it.id);
       if (f) f.second = second; else flagged.push({ id: it.id, got: a, second, ...(x ? {} : { missing: true }) });
