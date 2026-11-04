@@ -67,3 +67,13 @@ export async function tuningStatus(env, token, job, { fetchImpl = globalThis.fet
     data: stats ? { examples: stats.tuningDatasetExampleCount ?? null, tokens: stats.totalTuningCharacterCount ?? stats.totalBillableTokenCount ?? null,
       steps: stats.tuningStepCount ?? null } : null, experiment: j.experiment || null };
 }
+
+/** cancels a tuning job (Vertex :cancel; the job ends as CANCELLED and is billed only for what it ran) */
+export async function cancelTuning(env, token, job, { fetchImpl = globalThis.fetch } = {}) {
+  if (!/^projects\/[\w-]+\/locations\/[\w-]+\/tuningJobs\/\d+$/.test(String(job || ''))) throw new Error('bad_job');
+  const { region } = gcpConfig(env);
+  const r = await fetchImpl(`https://${region}-aiplatform.googleapis.com/v1/${job}:cancel`, { method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }, body: '{}' });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('tuning_cancel_' + r.status + ':' + String(j?.error?.message || '').slice(0, 300));
+  return { job, cancelled: true };
+}

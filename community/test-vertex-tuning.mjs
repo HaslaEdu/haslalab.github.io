@@ -2,7 +2,7 @@
 // Vertex AI tuning from the Worker: the service account's signed JWT for a token, uploads to the bucket, the tuning job.
 import assert from "node:assert/strict";
 import test from "node:test";
-import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./src/vertex-tuning.js";
+import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus, cancelTuning } from "./src/vertex-tuning.js";
 
 async function serviceAccount() {
   const kp = await crypto.subtle.generateKey({ name: "RSASSA-PKCS1-v1_5", modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: "SHA-256" }, true, ["sign", "verify"]);
@@ -42,4 +42,16 @@ test("uploads go to the tuning bucket; a tuning job is created over the JSONL an
   const st = await tuningStatus(env, "tok", job.job, { fetchImpl });
   assert.equal(st.state, "JOB_STATE_SUCCEEDED"); assert.equal(st.endpoint, "projects/proj-1/locations/us-central1/endpoints/9");
   await assert.rejects(tuningStatus(env, "tok", "../x", { fetchImpl }), /bad_job/);
+});
+
+test("a tuning job is cancelled with POST :cancel on its own name; a bad name is refused before any call", async () => {
+  const calls = [], env = { GCP_PROJECT: "proj-1", GCP_REGION: "us-central1" };
+  const fetchImpl = async (url, init) => { calls.push({ url, init }); return new Response("{}", { status: 200 }); };
+  const job = "projects/315/locations/us-central1/tuningJobs/1258";
+  assert.deepEqual(await cancelTuning(env, "tok", job, { fetchImpl }), { job, cancelled: true });
+  assert.equal(calls[0].url, "https://us-central1-aiplatform.googleapis.com/v1/" + job + ":cancel");
+  assert.equal(calls[0].init.method, "POST");
+  await assert.rejects(cancelTuning(env, "tok", job + "/../x", { fetchImpl }), /bad_job/);
+  assert.equal(calls.length, 1);
+  await assert.rejects(cancelTuning(env, "tok", job, { fetchImpl: async () => new Response('{"error":{"message":"no"}}', { status: 400 }) }), /tuning_cancel_400/);
 });

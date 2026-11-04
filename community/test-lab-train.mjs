@@ -68,3 +68,19 @@ test("v2 grading examples: the regulation in the system text, the paper's rules 
   assert.ok(!/B4 \|[^\n]*whole part/.test(v2));
   assert.ok(GRADE_TRAIN_SYSTEM_V2.startsWith(GRADE_TRAIN_SYSTEM) && /Notation is not form/.test(GRADE_TRAIN_SYSTEM_V2) && /whole part/.test(GRADE_TRAIN_SYSTEM_V2));
 });
+
+test('the grading bench on Workers AI: a reasoning model\'s thinking and a code fence are dropped, the JSON marks read', async () => {
+  const { workersAiGrade } = await import('./src/index.js');
+  const seen = [];
+  const env = { AI: { async run(model, input) { seen.push({ model, input }); return { response: '<think>B1 looks right</think>\n```json\n{"items":[{"id":"B1","score":0.3}]}\n```', usage: { prompt_tokens: 900, completion_tokens: 120 } }; } } };
+  const r = await workersAiGrade(env, { model: '@cf/qwen/qwq-32b' }, 'sys', 'input');
+  assert.deepEqual(r.raw, { items: [{ id: 'B1', score: 0.3 }] });
+  assert.deepEqual(r.usage, { input_tokens: 900, output_tokens: 120 });
+  assert.equal(seen[0].input.max_tokens, 16384);
+  assert.equal(seen[0].input.messages[0].content, 'sys');
+  const g = await workersAiGrade({ AI: { async run(m, i) { seen.push({ m, i }); return { choices: [{ message: { content: '{"items":[]}' } }] }; } } }, { model: '@cf/google/gemma-4-26b-a4b-it' }, 's', 'i');
+  assert.deepEqual(g.raw, { items: [] });
+  assert.equal(seen[1].i.max_completion_tokens, 16384);
+  assert.deepEqual(seen[1].i.chat_template_kwargs, { enable_thinking: false });
+  await assert.rejects(workersAiGrade({ AI: { async run() { return { response: 'no json here' }; } } }, {}, 's', 'i'), /workers_ai_bad_json/);
+});

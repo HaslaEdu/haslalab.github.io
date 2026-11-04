@@ -6,7 +6,7 @@
  */
 
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM, GRADE_TRAIN_SYSTEM_V2 } from "./lab-train.js";
-import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
+import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus, cancelTuning } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
 import { reservedName } from "./reserved-names.js";
 import { tidySchemeItems, cleanParts, cappedSum, headingTotal, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
@@ -46,7 +46,7 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './page-tiles.js';
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
-import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH } from './ai-assistant.js';
+import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH, readCompletion, stripThinking } from './ai-assistant.js';
 import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
 import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
@@ -2110,6 +2110,22 @@ async function labCanonicalPdf(env,source) {
 const SCHEME_EXPR = "expr: for a result item whose answer is a formula (a symbolic final expression), the official right-hand side as plain ASCII math: operators + - * / ^ and parentheses, functions sqrt exp ln sin cos tan asin acos atan sinh cosh tanh abs, pi; variables named as printed with subscripts after an underscore and Greek letters spelled out (rho_1, theta_b, omega_0, M_WD, Delta_phi). Example: 2*g*L*h^2*(rho_1-rho_0)^2/(k^2*rho_1). Every other item: null.";
 const GRADE_EXPR = "expr: for an item whose scheme entry has expr, the candidate's own final expression for it exactly as written in the answer box (else the last one in the working), right-hand side only, in the same plain ASCII syntax and with the same variable names as the official expr; never corrected, completed or simplified. null when the candidate wrote none.";
 const ONE_ITEM_ONE_ID = "Every item has its own id, used once (when a part repeats the same mark for several cases, e.g. one per concentration, write A1.a, A1.b, …), and its own points only — never the total of its part repeated on each row. The items' points add up to the task's printed total. A breakdown of how one mark may be earned in part (half marks for a partly right answer, «0.2 if only the sign is wrong») belongs to that item as its partial intervals or checks, never as further items added beside it; the items of a question never add up to more than its printed heading.";
+/* the grading bench on Hasla AI's open models (Workers AI: QwQ 32B, Gemma 4, gpt-oss …), to see where an untuned one
+   stands before a LoRA is trained for grading: the same system and input as the Gemini grader, the marks asked for as
+   JSON in the answer (a reasoning model's thinking is dropped), read as {raw, usage, model} like visionJSON's */
+export async function workersAiGrade(env, g, system, input) {
+  const model = /^@cf\/[\w.-]+\/[\w.-]+$/.test(g.model || '') ? g.model : '@cf/qwen/qwq-32b';
+  const chat = /^@cf\/(?:openai\/|google\/gemma-4|qwen\/qwen3\.[1-9]|deepseek-ai\/deepseek-v4|moonshotai\/)/.test(model);
+  const res = await env.AI.run(model, { messages: [{ role: 'system', content: system },
+      { role: 'user', content: input + '\n\nAnswer with JSON only, no other text: {"items":[{"id":"<scheme item id>","score":<points awarded>}, …]} with one entry per scheme item.' }],
+    ...(chat ? { max_completion_tokens: 16384 } : { max_tokens: 16384 }), temperature: 0,
+    ...(/^@cf\/google\/gemma-4/.test(model) && g.thinking !== 'on' ? { chat_template_kwargs: { enable_thinking: false } } : {}) });
+  const text = stripThinking(readCompletion(res).text).replace(/^```(?:json)?\s*|\s*```$/g, '');
+  const a = text.indexOf('{'), b = text.lastIndexOf('}');
+  let raw = null; try { raw = JSON.parse(text.slice(a, b + 1)); } catch { throw new Error('workers_ai_bad_json:' + text.slice(0, 80)); }
+  const u = res?.usage || {};
+  return { raw, model, usage: { input_tokens: u.prompt_tokens ?? null, output_tokens: u.completion_tokens ?? null } };
+}
 /* a scheme as it is used: its items tidied, its printed headings kept, its points bounded by them */
 function settleScheme(sc) {
   sc.items = tidySchemeItems(sc.items);
@@ -3609,7 +3625,8 @@ async function labBench(env, s, job) {
          tune-check  the service account's token, the bucket and the tuning API (statuses only)
          tune-upload Claude's gold pages: photos to gs://bucket/lab-pages/, train/validation JSONL to gs://bucket/runs/<id>/
          tune-start  {baseModel, train, validation, epochs}: a supervised tuning job
-         tune-status {job}: its state, and the tuned model's endpoint when done */
+         tune-status {job}: its state, and the tuned model's endpoint when done
+         tune-cancel {job}: cancel a job (one stuck in the queue for hours) */
     if (spec.stage === 'tune-check') {
       const cfg = gcpConfig(env); out = { present: cfg.present, project: cfg.project || null, bucket: cfg.bucket || null, region: cfg.region };
       if (cfg.key) {
@@ -3671,8 +3688,9 @@ async function labBench(env, s, job) {
         for (const c of ready) {
           const t1 = Date.now();
           try {
-            const r = await visionJSON(env, { provider: g.provider || 'gemini', stage: 'grade', policy: system, parts: [{ text: c.input }], schema, maxTokens: 16384,
-              model: g.model, thinking: g.thinking || 'off', timeoutMs: 240000, ...extra });
+            const r = g.provider === 'workers-ai' ? await workersAiGrade(env, g, system, c.input)
+              : await visionJSON(env, { provider: g.provider || 'gemini', stage: 'grade', policy: system, parts: [{ text: c.input }], schema, maxTokens: 16384,
+                model: g.model, thinking: g.thinking || 'off', timeoutMs: 240000, ...extra });
             const marked = c.lines.every(l => l.got != null), e = marked ? gradeAgainstAudit(c.lines, r.raw?.items) : {};
             if (marked) for (const k of Object.keys(sum)) sum[k] += e[k];
             e.marks = (r.raw?.items || []).slice(0, 200).map(x => [String(x?.id), +x?.score]);
@@ -3714,6 +3732,8 @@ async function labBench(env, s, job) {
         out.hosts[h] = { status: r.status, body: (await r.text()).slice(0, 200) }; } catch (e) { out.hosts[h] = { error: String(e?.message || e).slice(0, 120) }; } }
     } else if (spec.stage === 'tune-status') {
       out = await tuningStatus(env, await gcpToken(env), spec.job);
+    } else if (spec.stage === 'tune-cancel') {
+      out = await cancelTuning(env, await gcpToken(env), spec.job);
     } else
     if (spec.stage === 'gcp') {
       const k = String(env.GOOGLE_CLOUD_API_KEY || '').trim(); if (!k) throw new Error('no_google_cloud_key');
