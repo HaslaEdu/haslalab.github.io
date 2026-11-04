@@ -1,0 +1,49 @@
+{
+  "schema": "root-cpho2009-current-p08EN-p12-bilingual-full-visual-semantic-approval-v1",
+  "UTC": "2026-11-04T17:42:45.850043+00:00",
+  "all3_full_current_and_both_full_original_pages_personally_read": true,
+  "items": [
+    {
+      "source_page": 8,
+      "language": "en",
+      "actual_PDF": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\variants\\p08-arbitrary-constant-v2\\proofs\\en\\page08.pdf",
+      "PDF_SHA256": "c5dd13eeca5360befa32361a3021a78215e7f6e6a85a66b2110639959d0cad67",
+      "full_actual_Poppler_PNG": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\inspection\\page08-en-c5dd13eeca5360be-current144.png",
+      "PNG_SHA256": "afa642bb774a611a823eb59d2a5969fa47252845626e73072e2ea6c750f109d6",
+      "full_original_PNG": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-original-style-bilingual\\inspection\\page08-source144.png",
+      "original_PNG_SHA256": "bdbb2e2353257db314175003bb6a6ed995f4363a7b3394acccd3ea6da3c4e4e4"
+    },
+    {
+      "source_page": 12,
+      "language": "ko",
+      "actual_PDF": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\variants\\p12-prose-clause-comma-v3\\proofs\\ko\\page12.pdf",
+      "PDF_SHA256": "a7805db6bde4c2f30a1c6f81b134d125821e0fc3fc41c2b71ab185322e30b379",
+      "full_actual_Poppler_PNG": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\inspection\\page12-ko-a7805db6bde4c2f3-current144.png",
+      "PNG_SHA256": "5d2608e71ba6244c23c8d9b6845fbe05b71479c361eba021d2539dcbcc1e6eea",
+      "full_original_PNG": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-original-style-bilingual\\inspection\\page12-source144.png",
+      "original_PNG_SHA256": "d8e217e1f0812df8bfb7c8c7f2481ec3bbc78b31a6fee956e10f247fd6617a5a"
+    },
+    {
+      "source_page": 12,
+      "language": "en",
+      "actual_PDF": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\variants\\p12-prose-clause-comma-v3\\proofs\\en\\page12.pdf",
+      "PDF_SHA256": "a35c2a88f81c2e4c7db2c94139fd568e62472c7b5d573ad7fde6ed12f96597ae",
+      "full_actual_Poppler_PNG": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\inspection\\page12-en-a35c2a88f81c2e4c-current144.png",
+      "PNG_SHA256": "df4e375c58209efcfce943d62f429c632916cb7704f3403c41b464a3e1262ffa",
+      "full_original_PNG": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-original-style-bilingual\\inspection\\page12-source144.png",
+      "original_PNG_SHA256": "d8e217e1f0812df8bfb7c8c7f2481ec3bbc78b31a6fee956e10f247fd6617a5a"
+    }
+  ],
+  "findings": [
+    "P8 English explicitly preserves arbitrary constant C, original reverse-saturation-current meaning, scaling exponents and source equation geometry.",
+    "P12 Korean and English preserve both electromagnetic-wave wavelength relation, m=1 condition, x-direction wave speed and original P/OP=R/theta geometry.",
+    "P12 source-distance and angle clause stays in source full-width row03; remaining condition ends before the protected right-hand figure; display fraction/radical programmes and original figure retained.",
+    "Korean natural word gaps and original points/face roles/paragraph geometry, native displays and formula counters are visually consistent.",
+    "P12 English full-image frontend appears to omit mathematical displays, a known frontend artefact. Actual current PNG crop4x visibly contains complete display(4). Source original PNG and current proof use different renderers, so the exploratory cross-renderer crop difference was NOT a same-renderer identity test and is NOT asserted zero. Existing independent native/program/ink/graphics QA remains separate."
+  ],
+  "actual_current_PNG_display4_crop": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\inspection\\root-p12-en-display4-crop4x.png",
+  "crop_SHA256": "13b19f0a40455e861d90d9865a3993e1b31007053997a89a9f23c67a72f2a24d",
+  "review_scope": "Exact three hashes only; full-agent32proof review, actual negative PDF controls and final assembly/frozen closure still required.",
+  "all3_current_full_visual_and_semantic_approved": true,
+  "passed": true
+}

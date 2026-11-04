@@ -1,0 +1,34 @@
+{
+  "kind": "new-SimHei-nameID6",
+  "original_source_sha256": "344d96439e6956495b50cbf8d94af7023c9e7970cdda7a1222ab47a42468dddf",
+  "source_page": 8,
+  "language": "en",
+  "positive_proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\variants\\p08-arbitrary-constant-v2\\proofs\\en\\page08.pdf",
+  "positive_proof_sha256": "c5dd13eeca5360befa32361a3021a78215e7f6e6a85a66b2110639959d0cad67",
+  "actual_bad_PDF_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\actual-negative-PDF-controls\\new-SimHei-nameID6-source08-en-positive-c5dd13eeca5360be.pdf",
+  "actual_bad_PDF_sha256": "33f4ff3becc67e858aeae9535f47114254f637e5054e6b5c813ce24524c124b8",
+  "actual_bad_PDF_bytes": 596194,
+  "producing_helper_sha256": "59f0ec49ca3e2248a9f4d991eac38fee48dcb8bfc9410b4529cd739220823c72",
+  "actual_preflight_storage": {
+    "C_free_bytes": 1192288256,
+    "D_free_bytes": 1693188096,
+    "C_floor_bytes": 268435456,
+    "D_floor_bytes": 134217728,
+    "estimated_C_write_budget_bytes": 16777216,
+    "temporary_directory": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2009-native-derived-C-v5\\temp\\negative-7a1328a435bf491b84ad6b3bb1b809a8",
+    "all_new_writes_on_C_v5": true
+  },
+  "details": {
+    "original_subset_sha256": "26020a09ba19760f7d096e8931469ccacf4f2905c0b69160b40f26fd0573ff0b",
+    "changed_subset_sha256": "bd21fa30df34e9735f73e15cddade77bd44b3474af85a9858b0bf593f6e4e279",
+    "only_English_nameID6_changed_from": "SimHei",
+    "to": "FakeHei",
+    "original_BaseFont_alias_glyph_outlines_and_CID_mapping_unchanged": true
+  },
+  "phase": "prose",
+  "actual_PDF_rejected": true,
+  "positive_PDF_unmodified": true,
+  "actual_failed_audit": null,
+  "actual_rejection_exception": "ValueError(('C09 new font has ambiguous actual PostScript name', {'FakeHei', '黑体'}))",
+  "resource_or_IO_errors_not_accepted_as_rejection": true
+}
