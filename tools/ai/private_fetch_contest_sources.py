@@ -520,6 +520,11 @@ def fetch_sources(plan, output, *, get, deadline, clock=time.monotonic, extracto
                 response = get(row['archive_url'], headers={'Accept-Encoding': 'identity',
                     'User-Agent': 'HaslaContestArchivePreparation/1.0'}, allow_redirects=False,
                     stream=True, timeout=(min(5, seconds), min(15, seconds)))
+            # Access/rate denial takes precedence over the common HTML error
+            # representation, including replies without a challenge header.
+            if response.status_code in (403, 429):
+                receipt.update(archive_http_status=response.status_code,archive_response_redirected=False)
+                raise FetchError('archive_access_stopped')
             if spacing and (str(response.headers.get('cf-mitigated','')).lower()=='challenge'
                     or 'text/html' in str(response.headers.get('Content-Type','')).lower()):
                 if type(response.status_code) is int and 100<=response.status_code<=599:
@@ -531,9 +536,6 @@ def fetch_sources(plan, output, *, get, deadline, clock=time.monotonic, extracto
                 receipts.append(receipt)
                 checkpoint()
                 continue
-            if response.status_code in (403, 429):
-                receipt.update(archive_http_status=response.status_code,archive_response_redirected=False)
-                raise FetchError('archive_access_stopped')
             if response.status_code != 200 or response.url != row['archive_url']:
                 if type(response.status_code) is int and 100<=response.status_code<=599:
                     receipt.update(archive_http_status=response.status_code,
