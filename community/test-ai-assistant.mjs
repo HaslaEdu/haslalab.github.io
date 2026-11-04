@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch } from './src/ai-assistant.js';
+import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch, runModel, fitHistory, stripThinking, CHAT_MODEL, SOLVER_MODEL, FAST_MODEL, routeFor, compIn, keywordOf, fastAnswer, STYLES } from './src/ai-assistant.js';
 
 const GUARD = '@cf/meta/llama-guard-3-8b';
 function fakeAI(script, {unsafe = false} = {}) {
@@ -54,7 +54,7 @@ test('a tool call runs and its links come back with the answer', async () => {
       return {choices: [{message: {content: 'ISPhO 2026 T1입니다.'}}]};
     },
   ]);
-  const r = await answer({AI}, [{role: 'user', content: '얀센 효과 문제 어디 있어?'}]);
+  const r = await answer({AI}, [{role: 'user', content: '얀센 효과 문제 어디 있어?'}], {route: 'big'});
   assert.equal(r.answer, 'ISPhO 2026 T1입니다.');
   assert.deepEqual(r.tools, ['find_olympiad_problem']);
   assert.ok(r.sources.some(s => s.url === 'https://haslalab.org/#/ispho/2026'));
@@ -100,4 +100,89 @@ test('web search tries Tavily, then Brave, then Cloudflare, and never sends one 
   const cf = await webSearch({AI: {websearch: async () => Response.json({results: [{title: 'a', url: 'https://a', snippet: 's'}]})}}, {query: 'q'});
   assert.equal(cf.provider, 'cloudflare');
   assert.match((await webSearch({}, {query: 'q'})).error, /unavailable/);
+});
+
+test('each model gets its output limit under its own name, and our LoRA adapter when one is set', async () => {
+  const seen = [];
+  const AI = {run: async (model, input) => { seen.push({model, input}); return {response: 'ok'}; }};
+  await runModel({AI}, 'CHAT', {messages: []}, 2048);
+  await runModel({AI, AI_SOLVER_LORA: 'haslalab-solver-v1'}, 'SOLVER', {messages: []}, 8192);
+  await runModel({AI}, 'JUDGE', {messages: []}, 4096);
+  assert.deepEqual(seen.map(s => s.model), [CHAT_MODEL, SOLVER_MODEL, '@cf/openai/gpt-oss-120b']);
+  assert.equal(seen[0].input.max_tokens, 2048);
+  assert.equal(seen[0].input.lora, undefined);
+  assert.equal(seen[1].input.lora, 'haslalab-solver-v1');
+  assert.equal(seen[2].input.max_completion_tokens, 4096);
+  assert.equal(seen[2].input.max_tokens, undefined);
+  await runModel({AI, AI_CHAT_MODEL: '@cf/x/y'}, 'CHAT', {messages: []}, 10);
+  assert.equal(seen[3].model, '@cf/x/y');
+});
+
+test('a call written as text is still a call; thinking is dropped; long histories are cut from the oldest end', () => {
+  assert.deepEqual(readCompletion({response: '```json\n{"name": "search_community", "parameters": {"query": "IPhO"}}\n```'}).calls,
+    [{id: 'call_0_search_community', name: 'search_community', args: {query: 'IPhO'}}]);
+  assert.equal(readCompletion({response: '{"name": "rm_rf", "parameters": {}}'}).calls.length, 0, 'only our tools');
+  assert.equal(stripThinking('<think>a</think>\n답'), '답');
+  assert.equal(stripThinking('a</think>답'), '답');
+  const h = [{role: 'user', content: 'x'.repeat(9000)}, {role: 'assistant', content: 'y'.repeat(5000)}, {role: 'user', content: 'z'}];
+  assert.deepEqual(fitHistory(h).map(m => m.content[0]), ['z']);
+  assert.equal(fitHistory([{role: 'user', content: 'q'.repeat(20000)}]).length, 1, 'the last message always stays');
+});
+
+test('if the chat model refuses tool_calls in the history, the step is retried with the calls as text', async () => {
+  let n = 0;
+  const AI = {async run(model, input) {
+    if (model.includes('guard')) return {response: 'safe'};
+    n++;
+    if (n === 1) return {response: '', tool_calls: [{name: 'find_olympiad_problem', arguments: {query: 'Janssen'}}]};
+    if (input.messages.some(m => m.tool_calls)) throw new Error('AiError: 5006: oneOf at /messages/2 not met');
+    const a = input.messages.find(m => m.role === 'assistant');
+    assert.match(a.content, /"name":"find_olympiad_problem"/);
+    return {response: '찾았습니다.'};
+  }};
+  const r = await answer({AI}, [{role: 'user', content: '얀센 효과'}]);
+  assert.equal(r.answer, '찾았습니다.');
+});
+
+test('simple "where is it" questions take the fast route; problems to solve take the big one', () => {
+  const r = q => routeFor([{role: 'user', content: q}]);
+  assert.equal(r('IPhO 2025 문제 어디 있어?'), 'fast');
+  assert.equal(r('얀센 효과 관련 글 찾아줘'), 'fast');
+  assert.equal(r('IPhO 2025 T1 풀이 설명해줘'), 'big');
+  assert.equal(r('질량 2 kg 물체가 어디에 있을 때 위치에너지가 최대야?'), 'big');
+  assert.equal(r('$E=mc^2$ 어디서 나와?'), 'big');
+  assert.equal(compIn('국제물리올림피아드 2025 기출'), 'ipho');
+  assert.equal(compIn('ipho 2025'), 'ipho');
+  assert.equal(compIn('그냥 질문'), '');
+  assert.equal(keywordOf('얀센효과 관련 글 어디 있어?'), '얀센효과');
+});
+
+test('the fast route answers from the catalogue with the small model, and hands over when it is not sure', async () => {
+  const seen = [];
+  const sure = {run: async (model, input) => { seen.push(model); return {response: '이 문제는 IPhO 2025 T1입니다: https://haslalab.org/#/ipho/2025'}; }};
+  const q = [{role: 'user', content: 'IPhO 2025 문제 어디 있어?'}];
+  const r = await fastAnswer({AI: sure}, q);
+  assert.deepEqual(seen, [FAST_MODEL]);
+  assert.ok(r.sources.some(s => s.url === 'https://haslalab.org/#/ipho/2025'));
+  const unsure = {run: async () => ({response: 'NONE'})};
+  assert.equal(await fastAnswer({AI: unsure}, q), null);
+  const invented = {run: async () => ({response: '여기 있어요: https://example.com/fake'})};
+  assert.equal(await fastAnswer({AI: invented}, q), null, 'an answer without one of the found links is not trusted');
+  // through answer(): the fast route, and its fallback to the big model
+  const both = {run: async (model, input) => model === GUARD ? {response: 'safe'} : model === FAST_MODEL ? {response: 'NONE'} : {response: '큰 모델 답'}};
+  const a = await answer({AI: both}, q);
+  assert.equal(a.route, 'fast→big');
+  assert.equal(a.answer, '큰 모델 답');
+  assert.ok(a.usage.calls >= 3 && a.ms >= 0);
+});
+
+test('the community tone is asked for in the prompt, and the route logs each answer', async () => {
+  const prompts = [];
+  const AI = {run: async (model, input) => { if (model !== GUARD) prompts.push(input.messages[0].content); return {response: model === GUARD ? 'safe' : 'ㄹㅇ 에너지 보존임'}; }};
+  const r = await answer({AI}, [{role: 'user', content: '이거 왜 그래?'}], {style: 'community'});
+  assert.equal(r.style, 'community');
+  assert.ok(prompts[0].includes(STYLES.community.split('\n')[0]));
+  assert.match(prompts[0], /\$\$\.\.\.\$\$ on its own line/);
+  assert.match(STYLES.community, /Never swear/);
+  assert.equal((await answer({AI}, [{role: 'user', content: 'x'}], {style: 'weird'})).style, 'default');
 });
