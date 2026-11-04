@@ -109,6 +109,9 @@ LAB_KEEP_HOURS = "off"
 # Paddle checkout closed (the owner's call, 2026-11-04): no Paddle pack in the shop and no new Paddle order; paid orders
 # still complete by the webhook and refunds still work. "on" (or deleting this line) opens it again.
 PADDLE_CHECKOUT = "off"
+# DeepSeek V4 Pro (Workers AI, MIT weights) writes this many worked solutions a night for the QwQ solver's LoRA
+# (ai-eval.js teacher cases): judged correct with 8/10 or more they are approved for training at once
+AI_TEACHER_DAILY = "40"
 # the problem studio (studio-gateway.js: digitize, generate, restore) is for administrators only
 STUDIO_ACCESS = "admin"
 # photo problem search (problem-bank-ocr.js): the photo is transcribed by this Gemini model

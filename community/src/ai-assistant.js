@@ -30,8 +30,11 @@ export const SOLVER_MODEL = '@cf/qwen/qwq-32b';
 export const GUARD_MODEL = '@cf/meta/llama-guard-3-8b';
 export const FAST_MODEL = '@cf/meta/llama-3.1-8b-instruct-fast';
 // the nightly self-test (ai-eval.js): one model writes students' questions, another grades the answers
+// TEACHER: DeepSeek V4 Pro (open weights, MIT) on Workers AI writes the worked solutions QwQ's LoRA is trained on
+// (ai-eval.js, teacher cases); it is not trained itself
+export const TEACHER_MODEL = '@cf/deepseek-ai/deepseek-v4-pro-0813';
 export const MODELS = {CHAT: CHAT_MODEL, SOLVER: SOLVER_MODEL, GUARD: GUARD_MODEL, FAST: FAST_MODEL,
-  ASKER: CHAT_MODEL, JUDGE: '@cf/openai/gpt-oss-120b'};
+  ASKER: CHAT_MODEL, JUDGE: '@cf/openai/gpt-oss-120b', TEACHER: TEACHER_MODEL};
 const MAX_TURNS = 20, MAX_CHARS = 4000, MAX_STEPS = 5;
 const HISTORY_CHARS = 16000, TOOL_CHARS = 8000;   // kept well inside the smallest window in use (QwQ, 24k tokens)
 

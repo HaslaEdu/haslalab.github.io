@@ -55,14 +55,14 @@ async function bankJson(env, path) {
 const versionText = x => x?.selected_version?.text || x?.versions?.find(v => v.language === 'ko')?.text || x?.versions?.[0]?.text || '';
 
 /* a problem bank problem with a solution in text and no figure, not tested in the last 90 days */
-export async function pickBankProblem(env, db, rand = Math.random) {
+export async function pickBankProblem(env, db, rand = Math.random, kind = 'bank') {
   if (!env.PROBLEM_BANK) throw new Error('problem bank unavailable');
   const stars = 1 + Math.floor(rand() * 5);
   const {items = []} = await bankJson(env, `/recommendations?${new URLSearchParams({lang: 'ko', limit: '20', stars: String(stars)})}`);
   const ids = items.map(i => i.id).filter(Boolean);
   if (!ids.length) throw new Error('no problems');
-  const seen = new Set((await db.prepare(`SELECT ref FROM ai_eval WHERE kind='bank' AND created_at>unixepoch()-7776000 AND ref IN (${ids.map(() => '?').join(',')})`)
-    .bind(...ids).all()).results.map(r => r.ref));
+  const seen = new Set((await db.prepare(`SELECT ref FROM ai_eval WHERE kind=? AND created_at>unixepoch()-7776000 AND ref IN (${ids.map(() => '?').join(',')})`)
+    .bind(kind, ...ids).all()).results.map(r => r.ref));
   const order = ids.filter(id => !seen.has(id)).sort(() => rand() - 0.5);
   for (const id of order.slice(0, 4)) {
     const {question} = await bankJson(env, `/questions/${encodeURIComponent(id)}?lang=ko`);
@@ -109,6 +109,49 @@ export async function runBankCase(env, db, rand = Math.random, {style} = {}) {
   return {...base, score: judged.score, verdict: judged.correct ? 'correct' : 'wrong', reason: judged.reason};
 }
 
+/* ── teacher cases: DeepSeek V4 Pro writes the solution QwQ learns from ─────────────
+   A problem bank problem and a student's question about it; the teacher answers the way the solver should: a short think
+   (the principle, the equations, the checks: what QwQ's think should hold, not a monologue), then the answer to the
+   student. The judge grades it against the official solution; one judged correct with 8/10 or more is approved for the
+   solver's training at once (route 'solve', kind 'teacher'), the rest wait for an admin like any other case. */
+export const TEACHER_SYSTEM = `You are the teacher whose answers train a smaller tutor model. Answer the student's question
+about the olympiad problem below in exactly this form:
+<think>
+the reasoning the tutor needs and nothing more: the principle, the equations in order, a units or limit check — at most
+about 250 words, no restating the problem, no hesitation
+</think>
+the answer to the student, in Korean, step by step, mathematics in LaTeX ($...$ inline, $$...$$ display), the final
+result stated clearly; as long as the question needs and no longer.`;
+/* AI_TEACHER_DAILY teacher cases a night (none without it; wrangler.toml sets it), on top of the self-test's own total */
+export function teacherConfig(env) {
+  const n = Math.max(0, Math.min(500, Math.floor(+env.AI_TEACHER_DAILY) || 0));
+  return {daily: n};
+}
+/* the teacher's reply as «<think>…</think> answer», or null when it is not in that form */
+export function teacherText(res) {
+  const text = readCompletion(res).text;
+  const k = text.indexOf('</think>');
+  if (k < 0) return null;
+  const think = text.slice(0, k).replace(/^[\s\S]*?<think>/, '').trim(), answer = text.slice(k + 8).trim();
+  return think && answer ? `<think>\n${think}\n</think>\n\n${answer}` : null;
+}
+export async function runTeacherCase(env, db, rand = Math.random) {
+  const p = await pickBankProblem(env, db, rand, 'teacher');
+  const line = await ask(env, ASK_SYSTEM, p.text, '이 문제 어떻게 풀어요? 풀이 과정을 자세히 설명해 주세요.');
+  const question = `${line}\n\n${clip(p.text, 3400)}`;
+  const res = await runModel(env, 'TEACHER', {messages: [{role: 'system', content: TEACHER_SYSTEM}, {role: 'user', content: question}]}, 8192);
+  const text = teacherText(res);
+  const base = {ref: p.id, question, reference: clip(p.solution, 8000), tools: '[]', route: 'solve', style: 'default'};
+  if (!text) return {...base, answer: clip(readCompletion(res).text, 12000), score: null, verdict: 'ungraded', reason: '선생 모델의 답이 <think> 형식이 아님'};
+  const shown = text.slice(text.indexOf('</think>') + 8).trim();
+  const judged = readVerdict(readCompletion(await runModel(env, 'JUDGE', {messages: [{role: 'system', content: JUDGE_SYSTEM},
+    {role: 'user', content: `Requested tone: ${STYLES.default.split('\n')[0]}\n\nProblem:\n${clip(p.text, 5000)}\n\nOfficial solution:\n${clip(p.solution, 6000)}\n\nStudent's message:\n${line}\n\nTutor's answer:\n${clip(shown, 6000)}`}]}, 4096)).text);
+  if (!judged) return {...base, answer: text, score: null, verdict: 'ungraded', reason: '채점 모델의 답을 읽지 못함'};
+  const good = judged.correct && judged.score >= 0.8;
+  return {...base, answer: text, score: judged.score, verdict: judged.correct ? 'correct' : 'wrong', reason: judged.reason,
+    ...(good ? {status: 'approved', note: 'teacher_auto'} : {})};
+}
+
 export async function runSiteCase(env, rand = Math.random, exams = MODEL_TEST_EXAMS, {route} = {}) {
   route = {fast: 'site', big: 'tools'}[route] || route || (rand() < FAST_SHARE ? 'site' : 'tools');
   const pool = exams.filter(e => e.title?.ko || e.title?.en);
@@ -137,14 +180,14 @@ export async function runEvalCase(env, {day, kind, rand = Math.random} = {}) {
   if (rand() < 0.1) await pruneUsage(db).catch(() => {});
   let row;
   try {
-    row = {...(kind === 'site' ? await runSiteCase(env, rand) : await runBankCase(env, db, rand)), status: 'graded'};
+    row = {status: 'graded', ...(kind === 'site' ? await runSiteCase(env, rand) : kind === 'teacher' ? await runTeacherCase(env, db, rand) : await runBankCase(env, db, rand))};
     if (/^(site|fast)/.test(row.route || '')) forgetFastCache();
   } catch (e) {
     row = {status: 'failed', reason: clip(e?.message || e, 300)};
   }
-  await db.prepare(`UPDATE ai_eval SET route=?, style=?, ref=?, question=?, answer=?, reference=?, tools=?, score=?, verdict=?, reason=?, status=? WHERE id=?`)
+  await db.prepare(`UPDATE ai_eval SET route=?, style=?, ref=?, question=?, answer=?, reference=?, tools=?, score=?, verdict=?, reason=?, status=?, note=COALESCE(?, note) WHERE id=?`)
     .bind(row.route ?? null, row.style || 'default', row.ref ?? null, clip(row.question, 8000), row.answer == null ? null : clip(row.answer, 12000), row.reference == null ? null : clip(row.reference, 8000),
-      row.tools ?? null, row.score ?? null, row.verdict ?? null, row.reason ?? null, row.status, claim.id).run();
+      row.tools ?? null, row.score ?? null, row.verdict ?? null, row.reason ?? null, row.status, row.note ?? null, claim.id).run();
   return {id: claim.id, kind, ...row};
 }
 
@@ -152,13 +195,17 @@ export async function runEvalCase(env, {day, kind, rand = Math.random} = {}) {
 export async function aiEvalTick(env, {now = Date.now()} = {}) {
   if (!env.AI || !env.DB) return null;
   const cfg = evalConfig(env), {day, hour} = koreanClock(now);
-  if (!cfg.daily || hour < cfg.hour) return null;
+  if ((!cfg.daily && !teacherConfig(env).daily) || hour < cfg.hour) return null;
   await ensureAiEval(env.DB);
   await env.DB.prepare(`UPDATE ai_eval SET status='failed', reason='timed out' WHERE status='running' AND created_at<unixepoch()-?`).bind(STALE_SEC).run();
-  const {n} = await env.DB.prepare(`SELECT count(*) AS n FROM ai_eval WHERE day=? AND status!='failed' AND kind!='member'`).bind(day).first();
-  const {f} = await env.DB.prepare(`SELECT count(*) AS f FROM ai_eval WHERE day=? AND status='failed' AND kind!='member'`).bind(day).first();
-  if (n >= cfg.daily || f >= cfg.daily) return null;   // the day's total, or a night of failures: stop until tomorrow
-  return runEvalCase(env, {day});
+  const {n} = await env.DB.prepare(`SELECT count(*) AS n FROM ai_eval WHERE day=? AND status!='failed' AND kind NOT IN ('member','teacher')`).bind(day).first();
+  const {f} = await env.DB.prepare(`SELECT count(*) AS f FROM ai_eval WHERE day=? AND status='failed' AND kind NOT IN ('member','teacher')`).bind(day).first();
+  /* the teacher's cases have their own night total and stop after as many failures */
+  const t = teacherConfig(env), tc = t.daily ? await env.DB.prepare(`SELECT sum(status!='failed') AS n, sum(status='failed') AS f FROM ai_eval WHERE day=? AND kind='teacher'`).bind(day).first() : null;
+  const teacherDue = !!tc && (tc.n || 0) < t.daily && (tc.f || 0) < t.daily;
+  const selfDue = n < cfg.daily && f < cfg.daily;
+  if (!selfDue && !teacherDue) return null;   // the day's totals, or a night of failures: stop until tomorrow
+  return runEvalCase(env, {day, kind: teacherDue && (!selfDue || Math.random() < 0.5) ? 'teacher' : undefined});
 }
 
 /* ── admin review ─────────────────────────────────────────── */

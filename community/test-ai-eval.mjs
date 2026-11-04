@@ -186,3 +186,32 @@ test('members\' chats wait for review apart from the night\'s total; their earli
   assert.deepEqual(line.messages.map(m => m.content).slice(1), ['앞 질문', '앞 답', '그럼 이건?', '이건 이렇게']);
   assert.equal(env.DB.sql.prepare('SELECT count(*) n FROM ai_memory').get().n, 0, 'an answer that needed earlier turns is not reused alone');
 });
+
+test('a teacher case: DeepSeek V4 Pro writes a short think and the answer; judged good, it is approved for the solver at once', async () => {
+  const { runEvalCase, teacherText, teacherConfig, aiEvalTick } = await import('./src/ai-eval.js');
+  const TEACH = '@cf/deepseek-ai/deepseek-v4-pro-0813';
+  const ai = fakeAI(), run = ai.run;
+  ai.run = async (model, input) => model === TEACH ? {choices: [{message: {content: '<think>\n에너지 보존: mgh = mv^2/2\n</think>\n\n$v=\\sqrt{2gh}=2$ m/s'}}]} : run(model, input);
+  const env = {DB: d1(), AI: ai, PROBLEM_BANK: bank()};
+  const r = await runEvalCase(env, {day: '2026-11-05', kind: 'teacher'});
+  assert.equal(r.status, 'approved');
+  assert.equal(r.route, 'solve');
+  assert.match(r.answer, /^<think>\n에너지 보존[\s\S]*<\/think>\n\n\$v=/);
+  const judged = ai.calls.find(c => c.model === JUDGE);
+  assert.ok(!/<think>/.test(judged.input.messages[1].content), 'the judge sees only the answer');
+  const row = env.DB.sql.prepare("SELECT kind, status, note, route FROM ai_eval").get();
+  assert.deepEqual({...row}, {kind: 'teacher', status: 'approved', note: 'teacher_auto', route: 'solve'});
+  // judged wrong: it waits for review; not in the form: ungraded
+  const env2 = {DB: d1(), AI: fakeAI({judge: '{"score": 4, "correct": false, "reason": "틀림"}'}), PROBLEM_BANK: bank()};
+  const run2 = env2.AI.run; env2.AI.run = async (m, i) => m === TEACH ? {response: '<think>x</think>\n답'} : run2(m, i);
+  assert.equal((await runEvalCase(env2, {day: '2026-11-05', kind: 'teacher'})).status, 'graded');
+  assert.equal(teacherText({response: '그냥 답'}), null);
+  assert.equal(teacherText({response: 'a</think>b'}), '<think>\na\n</think>\n\nb');
+  assert.equal(teacherConfig({}).daily, 0);
+  assert.equal(teacherConfig({AI_TEACHER_DAILY: '40'}).daily, 40);
+  // the night: the teacher's total runs beside the self-test's own
+  const env3 = {DB: d1(), AI: ai, PROBLEM_BANK: bank(), AI_EVAL_DAILY: '0', AI_TEACHER_DAILY: '1'};
+  const night = Date.UTC(2026, 10, 3, 17, 5);
+  assert.equal((await aiEvalTick(env3, {now: night})).kind, 'teacher');
+  assert.equal(await aiEvalTick(env3, {now: night}), null);
+});
