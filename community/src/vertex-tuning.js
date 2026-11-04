@@ -59,6 +59,11 @@ export async function tuningStatus(env, token, job, { fetchImpl = globalThis.fet
   const r = await fetchImpl(`https://${region}-aiplatform.googleapis.com/v1/${job}`, { headers: { Authorization: 'Bearer ' + token } });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error('tuning_status_' + r.status + ':' + String(j?.error?.message || '').slice(0, 300));
+  /* a job that runs for hours says little by its state alone: when it was last updated, when it started training, the
+     dataset Vertex counted, and the experiment it logs to (names and numbers only) */
+  const stats = j.tuningDataStats?.supervisedTuningDataStats || null;
   return { job: j.name, state: j.state, error: j.error?.message || null, model: j.tunedModel?.model || null, endpoint: j.tunedModel?.endpoint || null,
-    created: j.createTime || null, ended: j.endTime || null };
+    created: j.createTime || null, started: j.startTime || null, updated: j.updateTime || null, ended: j.endTime || null,
+    data: stats ? { examples: stats.tuningDatasetExampleCount ?? null, tokens: stats.totalTuningCharacterCount ?? stats.totalBillableTokenCount ?? null,
+      steps: stats.tuningStepCount ?? null } : null, experiment: j.experiment || null };
 }
