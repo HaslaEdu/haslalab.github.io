@@ -4791,7 +4791,9 @@ const countLabel = (c,ps) => {
 };
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
+/* ads run on the Korean site only: the English site shows none */
 function adFitBanner(placement){
+  if(lang!=="ko") return "";
   const size=placement==="secondary" ? " adfit-banner--secondary" : "";
   const ad=lang==="ko" ? {aria:"광고",label:"광고"} : {aria:"Advertisement",label:"Ad"};
   return `<aside class="adfit-banner${size}" aria-label="${ad.aria}">
