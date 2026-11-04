@@ -6,6 +6,7 @@
   const token = () => { try { return localStorage.getItem('hlCmTok') || ''; } catch { return ''; } };
   const $ = id => document.getElementById(id);
   const el = (tag, props = {}, ...kids) => { const e = Object.assign(document.createElement(tag), props); e.append(...kids.filter(k => k != null)); return e; };
+  const ROUTE = {cache: '저장된 답', fast: '작은 모델', 'fast→big': '작은→큰 모델', big: '큰 모델', blocked: '차단'}, STYLE = {default: '기본 말투', community: '커뮤 말투'};
   const KIND = {bank: '문제풀이', site: '문제위치'}, VERDICT = {correct: '맞음', wrong: '틀림', blocked: '차단됨', ungraded: '채점 안 됨'};
   let before = 0;
 
@@ -30,6 +31,7 @@
     const tools = (() => { try { return JSON.parse(c.tools || '[]').join(', '); } catch { return ''; } })();
     const box = el('section', {className: 'case'},
       el('h2', {}, `#${c.id}`, el('span', {className: 'tag'}, KIND[c.kind] || c.kind), c.verdict ? el('span', {className: 'tag ' + c.verdict}, VERDICT[c.verdict] || c.verdict) : null,
+        c.route ? el('span', {className: 'tag'}, ROUTE[c.route] || c.route) : null, c.style === 'community' ? el('span', {className: 'tag'}, STYLE.community) : null,
         el('span', {}, `점수 ${score}`), el('span', {className: 'muted'}, `${c.day} · ${c.status}${tools ? ' · 도구: ' + tools : ''}`)),
       el('div', {className: 'cols'},
         el('div', {}, el('b', {}, '질문'), el('pre', {textContent: c.question || ''})),
@@ -52,7 +54,13 @@
       if (before) q.set('before', before);
       const d = await (await call('?' + q)).json();
       $('config').textContent = `매일 ${d.config.daily}건, 한국시간 ${d.config.hour}시부터 · 검토 대기 ${d.counts.graded || 0} · 승인 ${d.counts.approved || 0} · 거절 ${d.counts.rejected || 0} · 실패 ${d.counts.failed || 0}`;
-      if (!more) $('days').replaceChildren(...d.days.map(r => el('tr', {}, ...[r.day, KIND[r.kind] || r.kind, r.n, r.avg == null ? '–' : (r.kind === 'site' ? Math.round(r.avg * 100) + '%' : (r.avg * 10).toFixed(1) + '/10'), r.correct, r.failed, r.approved].map(v => el('td', {}, String(v ?? 0))))));
+      if (!more && d.usage) {
+        const total = d.usage.routes.reduce((n, r) => n + r.n, 0) || 1;
+        $('usage').replaceChildren(...d.usage.routes.map(r => el('tr', {}, ...[ROUTE[r.route] || r.route, r.n, Math.round(r.n / total * 100) + '%',
+          r.ms == null ? '–' : (r.ms / 1000).toFixed(1) + '초', Math.round(r.tokens_in || 0), Math.round(r.tokens_out || 0)].map(v => el('td', {}, String(v))))));
+        $('usageNote').textContent = `최근 ${d.usage.days}일 회원 질문 · 저장된 답 ${d.usage.memory}개`;
+      }
+      if (!more) $('days').replaceChildren(...d.days.map(r => el('tr', {}, ...[r.day, (KIND[r.kind] || r.kind) + (r.route ? ` · ${ROUTE[r.route] || r.route}` : ''), r.n, r.avg == null ? '–' : (r.kind === 'site' ? Math.round(r.avg * 100) + '%' : (r.avg * 10).toFixed(1) + '/10'), r.correct, r.failed, r.approved].map(v => el('td', {}, String(v ?? 0))))));
       for (const c of d.items) $('list').append(caseView(c));
       if (!d.items.length && !more) $('list').append(el('p', {className: 'muted', textContent: '해당하는 시험이 없습니다.'}));
       before = d.items.length ? d.items[d.items.length - 1].id : before;
@@ -68,8 +76,9 @@
   }
   async function exportData() {
     try {
-      const blob = await (await call('/export')).blob();
-      const a = el('a', {href: URL.createObjectURL(blob), download: 'haslalab-ai-train.jsonl'});
+      const st = $('exportStyle').value;
+      const blob = await (await call('/export' + (st ? '?style=' + st : ''))).blob();
+      const a = el('a', {href: URL.createObjectURL(blob), download: `haslalab-ai-train${st ? '-' + st : ''}.jsonl`});
       document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     } catch (e) { show(e); }
   }

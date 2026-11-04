@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch, runModel, fitHistory, stripThinking, CHAT_MODEL, SOLVER_MODEL } from './src/ai-assistant.js';
+import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch, runModel, fitHistory, stripThinking, CHAT_MODEL, SOLVER_MODEL, FAST_MODEL, routeFor, compIn, keywordOf, fastAnswer, STYLES } from './src/ai-assistant.js';
 
 const GUARD = '@cf/meta/llama-guard-3-8b';
 function fakeAI(script, {unsafe = false} = {}) {
@@ -54,7 +54,7 @@ test('a tool call runs and its links come back with the answer', async () => {
       return {choices: [{message: {content: 'ISPhO 2026 T1입니다.'}}]};
     },
   ]);
-  const r = await answer({AI}, [{role: 'user', content: '얀센 효과 문제 어디 있어?'}]);
+  const r = await answer({AI}, [{role: 'user', content: '얀센 효과 문제 어디 있어?'}], {route: 'big'});
   assert.equal(r.answer, 'ISPhO 2026 T1입니다.');
   assert.deepEqual(r.tools, ['find_olympiad_problem']);
   assert.ok(r.sources.some(s => s.url === 'https://haslalab.org/#/ispho/2026'));
@@ -142,4 +142,47 @@ test('if the chat model refuses tool_calls in the history, the step is retried w
   }};
   const r = await answer({AI}, [{role: 'user', content: '얀센 효과'}]);
   assert.equal(r.answer, '찾았습니다.');
+});
+
+test('simple "where is it" questions take the fast route; problems to solve take the big one', () => {
+  const r = q => routeFor([{role: 'user', content: q}]);
+  assert.equal(r('IPhO 2025 문제 어디 있어?'), 'fast');
+  assert.equal(r('얀센 효과 관련 글 찾아줘'), 'fast');
+  assert.equal(r('IPhO 2025 T1 풀이 설명해줘'), 'big');
+  assert.equal(r('질량 2 kg 물체가 어디에 있을 때 위치에너지가 최대야?'), 'big');
+  assert.equal(r('$E=mc^2$ 어디서 나와?'), 'big');
+  assert.equal(compIn('국제물리올림피아드 2025 기출'), 'ipho');
+  assert.equal(compIn('ipho 2025'), 'ipho');
+  assert.equal(compIn('그냥 질문'), '');
+  assert.equal(keywordOf('얀센효과 관련 글 어디 있어?'), '얀센효과');
+});
+
+test('the fast route answers from the catalogue with the small model, and hands over when it is not sure', async () => {
+  const seen = [];
+  const sure = {run: async (model, input) => { seen.push(model); return {response: '이 문제는 IPhO 2025 T1입니다: https://haslalab.org/#/ipho/2025'}; }};
+  const q = [{role: 'user', content: 'IPhO 2025 문제 어디 있어?'}];
+  const r = await fastAnswer({AI: sure}, q);
+  assert.deepEqual(seen, [FAST_MODEL]);
+  assert.ok(r.sources.some(s => s.url === 'https://haslalab.org/#/ipho/2025'));
+  const unsure = {run: async () => ({response: 'NONE'})};
+  assert.equal(await fastAnswer({AI: unsure}, q), null);
+  const invented = {run: async () => ({response: '여기 있어요: https://example.com/fake'})};
+  assert.equal(await fastAnswer({AI: invented}, q), null, 'an answer without one of the found links is not trusted');
+  // through answer(): the fast route, and its fallback to the big model
+  const both = {run: async (model, input) => model === GUARD ? {response: 'safe'} : model === FAST_MODEL ? {response: 'NONE'} : {response: '큰 모델 답'}};
+  const a = await answer({AI: both}, q);
+  assert.equal(a.route, 'fast→big');
+  assert.equal(a.answer, '큰 모델 답');
+  assert.ok(a.usage.calls >= 3 && a.ms >= 0);
+});
+
+test('the community tone is asked for in the prompt, and the route logs each answer', async () => {
+  const prompts = [];
+  const AI = {run: async (model, input) => { if (model !== GUARD) prompts.push(input.messages[0].content); return {response: model === GUARD ? 'safe' : 'ㄹㅇ 에너지 보존임'}; }};
+  const r = await answer({AI}, [{role: 'user', content: '이거 왜 그래?'}], {style: 'community'});
+  assert.equal(r.style, 'community');
+  assert.ok(prompts[0].includes(STYLES.community.split('\n')[0]));
+  assert.match(prompts[0], /\$\$\.\.\.\$\$ on its own line/);
+  assert.match(STYLES.community, /Never swear/);
+  assert.equal((await answer({AI}, [{role: 'user', content: 'x'}], {style: 'weird'})).style, 'default');
 });

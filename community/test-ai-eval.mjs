@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
-import { aiEvalTick, runEvalCase, readVerdict, koreanClock, evalConfig, createAiEvalRouter, trainingLine, runSiteCase } from './src/ai-eval.js';
+import { aiEvalTick, runEvalCase, readVerdict, koreanClock, evalConfig, createAiEvalRouter, trainingLine, runSiteCase, runBankCase, ensureAiEval } from './src/ai-eval.js';
+import { answer } from './src/ai-assistant.js';
+import { forgetMemoryCache, forgetFastCache, fastAllowed } from './src/ai-memory.js';
 
 function d1(sql = new DatabaseSync(':memory:')) {
   const isRead = s => /^\s*(SELECT|PRAGMA|WITH)\b/i.test(s);
@@ -22,7 +24,9 @@ function fakeAI({answerText = '답: v = 2 m/s', judge = '{"score": 8, "correct":
   return {calls, async run(model, input) {
     calls.push({model, input});
     if (model === GUARD) return {response: 'safe'};
+    if (model === '@cf/baai/bge-m3') return {data: input.text.map(t => /공/.test(t) ? [1, 0.1, 0] : [0, 1, 0])};
     if (model === JUDGE) return {choices: [{message: {content: judge}}]};
+    if (/where on the site/.test(input.messages[0].content)) return {response: 'IPhO 2025 수소와 은하 문제 어디 있어요?'};
     if (/You play a Korean high-school student/.test(input.messages[0].content)) return {response: '풀이 알려주세요'};
     return {response: answerText};
   }};
@@ -112,7 +116,55 @@ test('admins review the cases and export the approved ones as training data', as
   const out = await route(req('/export', 'admin'), env);
   assert.ok(out instanceof Response);
   const lines = (await out.text()).trim().split('\n').map(l => JSON.parse(l));
-  assert.deepEqual(lines[0].messages.map(m => m.role), ['user', 'assistant']);
-  assert.equal(lines[0].messages[1].content, '고친 답');
-  assert.equal(JSON.parse(trainingLine({question: 'q', answer: 'a'}, 'sys')).messages[0].role, 'system');
+  assert.deepEqual(lines[0].messages.map(m => m.role), ['system', 'user', 'assistant']);
+  assert.equal(lines[0].messages[2].content, '고친 답');
+  assert.match(JSON.parse(trainingLine({question: 'q', answer: 'a', style: 'community'})).messages[0].content, /casual tone/);
+  // the approved answer is now in memory: the same question gets it back without the chat model
+  forgetMemoryCache();
+  const calls = env.AI.calls.length;
+  const again = await answer(env, [{role: 'user', content: run.question}], {style: run.style});
+  assert.equal(again.route, 'cache');
+  assert.equal(again.answer, '고친 답');
+  assert.ok(!env.AI.calls.slice(calls).some(c => c.model === CHAT), 'no chat model call');
+  const other = await answer(env, [{role: 'user', content: '전혀 다른 질문'}], {style: run.style});
+  assert.notEqual((await answer(env, [{role: 'user', content: run.question}], {style: run.style === 'community' ? 'default' : 'community'})).route, 'cache', 'another tone is not reused');
+  assert.notEqual(other.route, 'cache');
+  // rejecting it takes it out of memory again
+  await route(req(`/${run.id}`, 'admin', {method: 'POST', body: '{"action":"reject"}'}), env);
+  forgetMemoryCache();
+  assert.notEqual((await answer(env, [{role: 'user', content: run.question}], {style: run.style})).route, 'cache');
+  const listed = await route(req('?status=all', 'admin'), env);
+  assert.ok(listed.usage && typeof listed.usage.memory === 'number');
+});
+
+test('a table from before the new columns gets them; cases record their route and tone', async () => {
+  const db = d1();
+  db.sql.exec(`CREATE TABLE ai_eval (id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT NOT NULL, kind TEXT NOT NULL, ref TEXT,
+    question TEXT NOT NULL DEFAULT '', answer TEXT, reference TEXT, tools TEXT, score REAL, verdict TEXT, reason TEXT,
+    status TEXT NOT NULL DEFAULT 'running', corrected TEXT, note TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+    reviewed_at INTEGER, reviewed_by INTEGER)`);
+  await ensureAiEval(db);
+  const cols = db.sql.prepare('PRAGMA table_info(ai_eval)').all().map(c => c.name);
+  assert.ok(cols.includes('route') && cols.includes('style'));
+  const env = {DB: db, AI: fakeAI(), PROBLEM_BANK: bank()};
+  const r = await runBankCase(env, db, Math.random, {style: 'community'});
+  assert.equal(r.style, 'community');
+  const sys = env.AI.calls.find(c => c.model === CHAT && /HaslaLab's assistant/.test(c.input.messages[0].content));
+  assert.match(sys.input.messages[0].content, /casual tone/);
+  assert.match(env.AI.calls.find(c => c.model === JUDGE).input.messages[1].content, /^Requested tone: Tone: the casual tone/);
+});
+
+test('location cases run on the small model half the time; a poor record turns the fast route off', async () => {
+  const exams = [{id: 'ipho-2025-T1', comp: 'ipho', year: 2025, task: 'T1', kind: 'theory', competition: {ko: '국제물리올림피아드'}, title: {ko: '수소와 은하'}}];
+  const fast = await runSiteCase({AI: fakeAI({answerText: 'https://haslalab.org/#/ipho/2025 에 있어요'})}, () => 0.1, exams, {route: 'fast'});
+  assert.equal(fast.route, 'fast');
+  assert.equal(fast.score, 1);
+  const db = d1();
+  await ensureAiEval(db);
+  for (let i = 0; i < 10; i++) db.sql.prepare("INSERT INTO ai_eval (day, kind, status, route, score) VALUES ('d', 'site', 'graded', 'fast', 0)").run();
+  forgetFastCache();
+  assert.equal(await fastAllowed({}, db), false);
+  forgetFastCache();
+  assert.equal(await fastAllowed({AI_FAST: 'on'}, db), true);
+  forgetFastCache();
 });
