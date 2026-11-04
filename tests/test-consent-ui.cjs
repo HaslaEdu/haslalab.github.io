@@ -21,11 +21,13 @@ test('the boxes link the policies, show the age box only when the server asks, a
   assert.equal(box.querySelector('[data-age]').hidden,true);
   assert.throws(()=>read(),e=>e.code==='consent_required');
   box.querySelector('[name=cTerms]').checked=box.querySelector('[name=cPrivacy]').checked=true;
-  assert.deepEqual({...read()},{terms:true,privacy:true,age14:false,train:false});
+  assert.deepEqual({...read()},{terms:true,privacy:true,age14:false,train:false,aiTrain:false});
+  assert.match(box.textContent,/\[선택\] 하슬라랩 AI와 나눈 대화를 AI 답변 개선/);box.querySelector('[name=cAiTrain]').checked=true;
+  assert.deepEqual({...read()},{terms:true,privacy:true,age14:false,train:false,aiTrain:true},'the AI-chat box is its own choice');
   const kr=page(),b2=kr.d.getElementById('root');b2.innerHTML=kr.w.eval('cmConsentHtml()');const r2=kr.w.eval('cmConsentWire')(b2);await tick();
   assert.equal(b2.querySelector('[data-age]').hidden,false);b2.querySelector('[name=cTerms]').checked=b2.querySelector('[name=cPrivacy]').checked=true;
   assert.throws(()=>r2(),e=>e.code==='age_required');b2.querySelector('[name=cAge]').checked=b2.querySelector('[name=cTrain]').checked=true;
-  assert.deepEqual({...r2()},{terms:true,privacy:true,age14:true,train:true});p.close();kr.close();
+  assert.deepEqual({...r2()},{terms:true,privacy:true,age14:true,train:true,aiTrain:false});p.close();kr.close();
 });
 test('an account without consent gets one dialog that posts /me/consent; a pending social sign-up is left to its username step',async()=>{
   const pending=page({me:{id:3,username_required:true,consent_required:true}});pending.w.eval('cmConsentGate()');assert.equal(pending.d.getElementById('cmConsentDlg'),null);pending.close();
@@ -34,7 +36,7 @@ test('an account without consent gets one dialog that posts /me/consent; a pendi
   assert.equal(p.calls.filter(c=>c.route==='/me/consent').length,0);assert.match(f.querySelector('.cmerr').textContent,/필수 항목/);
   for(const n of ['cTerms','cPrivacy','cAge'])f.querySelector(`[name=${n}]`).checked=true;
   f.dispatchEvent(new p.w.Event('submit',{cancelable:true}));await tick();await tick();
-  assert.deepEqual(plain(p.calls.find(c=>c.route==='/me/consent').body),{consent:{terms:true,privacy:true,age14:true,train:false}});
+  assert.deepEqual(plain(p.calls.find(c=>c.route==='/me/consent').body),{consent:{terms:true,privacy:true,age14:true,train:false,aiTrain:false}});
   assert.equal(p.d.getElementById('cmConsentDlg'),null);assert.equal(p.w.eval('cm.me.consent_required'),undefined);p.close();
   const none=page({me:{id:5}});none.w.eval('cmConsentGate()');assert.equal(none.d.getElementById('cmConsentDlg'),null);none.close();
 });

@@ -499,16 +499,20 @@ export async function answer(env0, history, {lang = 'ko', style = 'default', rou
     sources: (r.sources || []).filter(s => s.url).filter((s, i, a) => a.findIndex(t => t.url === s.url) === i).slice(0, 8)}, via, intent);
 }
 
-/* ── 5. the route: members only; no per-member quota, only a flood guard against scripted abuse ─────────── */
+/* ── 5. the route: no per-member quota, only a flood guard against scripted abuse; a visitor who is not signed in
+   gets AI_GUEST_LIMIT (default 2) messages a day per IP address. A member's exchange is kept for review only with
+   the AI-chat box of their consent (given at sign-up, or later in the chat or on the profile) ─────────────── */
 export const AI_FEEDBACK_PATH = '/api/ai/feedback', AI_FORGET_PATH = '/api/ai/forget';
-const FLOOD_PER_MINUTE = 30;
+const FLOOD_PER_MINUTE = 30, GUEST_PER_DAY = 2;
 const sse = (event, data) => `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
-export function createAiAssistantRouter({HttpError, currentUser, needUser, limit}) {
+export function createAiAssistantRouter({HttpError, currentUser, needUser, limit, clientIp = req => req.headers.get('CF-Connecting-IP') || 'local',
+  trainAllowed = async () => false}) {
   return async function aiAssistant(req, env) {
     if (req.method !== 'POST') throw new HttpError(405, 'method_not_allowed');
-    const me = needUser(await currentUser(req, env));
-    const body = await req.json().catch(() => null);
     const path = new URL(req.url).pathname.replace(/\/+$/, '');
+    const user = await currentUser(req, env);
+    const me = user || path !== AI_ASSISTANT_PATH ? needUser(user) : null;   // a visitor may only ask
+    const body = await req.json().catch(() => null);
     if (path === AI_FORGET_PATH) { if (env.DB) await forgetMember(env.DB, me.id); return {ok: true}; }   // the member withdrew the chat's learning permission
     if (path === AI_FEEDBACK_PATH) {
       const id = +body?.id;
@@ -519,13 +523,17 @@ export function createAiAssistantRouter({HttpError, currentUser, needUser, limit
     if (!env.AI) throw new HttpError(503, 'ai_unavailable');
     const history = cleanHistory(body?.messages);
     if (!history) throw new HttpError(400, 'invalid_messages');
-    await limit(env, `ai:m:${me.id}`, +env.AI_FLOOD_LIMIT || FLOOD_PER_MINUTE, 60);
+    if (me) await limit(env, `ai:m:${me.id}`, +env.AI_FLOOD_LIMIT || FLOOD_PER_MINUTE, 60);
+    else {
+      try { await limit(env, `ai:g:${clientIp(req)}`, env.AI_GUEST_LIMIT == null || env.AI_GUEST_LIMIT === '' ? GUEST_PER_DAY : Math.max(0, +env.AI_GUEST_LIMIT || 0), 86400); }
+      catch (e) { throw e?.status === 429 ? new HttpError(429, 'guest_limit') : e; }
+    }
     const opts = {lang: body?.lang === 'en' ? 'en' : 'ko', style: body?.style};
     /* after the answer: usage for the review page and, when the member allowed it, the exchange for training */
     const finish = async r => {
       if (!env.DB) return null;
-      await logUsage(env.DB, {...r, user_id: me.id}).catch(e => console.error('ai-usage', String(e?.message || e).slice(0, 200)));
-      if (body?.train !== true || r.blocked || r.cached) return null;
+      await logUsage(env.DB, {...r, user_id: me?.id ?? null}).catch(e => console.error('ai-usage', String(e?.message || e).slice(0, 200)));
+      if (!me || r.blocked || r.cached || !await trainAllowed(env, me.id).catch(() => false)) return null;
       return logMemberChat(env.DB, {user_id: me.id, history, answer: r.answer, route: r.route, style: r.style}).catch(e => { console.error('ai-member', String(e?.message || e).slice(0, 200)); return null; });
     };
     const view = (r, id) => ({answer: r.answer, sources: r.sources, tools: r.tools, route: r.route, intent: r.intent, cached: !!r.cached, blocked: r.blocked || null, id});

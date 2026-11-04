@@ -1149,7 +1149,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="logo/variants.js?v=786a059372e6"></script>
 <script src="site-design.js?v=093476a8bf6d"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
-<script src="ai-chat.js?v=cd49a2986ecc"></script>
+<script src="ai-chat.js?v=0c5dacf519cc"></script>
 <script>
 "use strict";
 
@@ -8796,6 +8796,9 @@ const CMT = {
     pwMismatch:"비밀번호 확인이 맞지 않습니다.", mustAgree:"커뮤니티 규칙에 동의해 주세요.",
     consent:{h:"약관 동의", terms:'[필수] <a href="terms.html" target="_blank" rel="noopener">이용약관</a> 동의', privacy:'[필수] <a href="privacy.html" target="_blank" rel="noopener">개인정보 수집·이용</a> 동의',
       age:"[필수] 만 14세 이상입니다.", train:"[선택] 내 답안과 채점 결과를 AI 채점 개선(학습)에 최대 1년 활용하는 데 동의합니다. (언제든 철회 가능)",
+      aiTrain:"[선택] 하슬라랩 AI와 나눈 대화를 AI 답변 개선(관리자 검토·학습)에 활용하는 데 동의합니다. (언제든 철회 가능)",
+      aiTrainH:"하슬라랩 AI 대화 학습 활용", aiTrainHelp:"동의하면 이후 하슬라랩 AI와 나눈 대화를 관리자가 검토해 AI 답변 개선과 학습에 씁니다. 검토되지 않은 대화는 1년 뒤 지우며, 철회하면 남아 있던 대화도 바로 지웁니다.",
+      aiTrainGiven:"동의했습니다. 이후 대화부터 적용됩니다.", aiTrainWithdrawn:"철회했습니다. 남아 있던 대화도 지웠습니다.",
       ai:"HaslaLab의 채점은 AI가 하는 참고용 결과이며 실제 대회 점수와 다를 수 있습니다.",
       dlgH:"약관 동의가 필요합니다", dlgP:"이용약관과 개인정보 처리방침이 2026년 11월 3일부터 시행됩니다. 계속 이용하려면 아래 항목에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
       agreeBtn:"동의하고 계속하기", trainH:"AI 채점 개선(학습) 활용", trainHelp:"동의하면 이후 채점되는 답안과 채점 결과를 AI 채점 개선에 최대 1년 활용합니다. 철회하면 이미 모아 둔 학습용 사본도 바로 지웁니다.",
@@ -8866,6 +8869,9 @@ const CMT = {
     pwMismatch:"The passwords don't match.", mustAgree:"Please agree to the community rules.",
     consent:{h:"Agreements", terms:'[Required] I agree to the <a href="terms.html#en" target="_blank" rel="noopener">Terms of Service</a>', privacy:'[Required] I agree to the <a href="privacy.html#en" target="_blank" rel="noopener">collection and use of personal data</a>',
       age:"[Required] I am 14 or older.", train:"[Optional] My answers and grading results may be used to improve the AI grading (training) for up to 1 year. (You can withdraw at any time.)",
+      aiTrain:"[Optional] My chats with HaslaLab AI may be used to improve its answers (admin review and training). (You can withdraw at any time.)",
+      aiTrainH:"HaslaLab AI chats for training", aiTrainHelp:"If you agree, an admin reviews your later chats with HaslaLab AI and uses them to improve and train it. Chats not reviewed are deleted after a year; withdrawing deletes the kept chats at once.",
+      aiTrainGiven:"Agreed. It applies from your next chats.", aiTrainWithdrawn:"Withdrawn. The kept chats were deleted.",
       ai:"HaslaLab's grading is done by AI for reference only and may differ from an official competition score.",
       dlgH:"Please accept the terms", dlgP:"New Terms of Service and a Privacy Policy take effect on 3 November 2026. Please agree below to keep using the site. Grading cannot start until you do.",
       agreeBtn:"Agree and continue", trainH:"Use for AI grading improvement (training)", trainHelp:"If you agree, answers and grading results graded from now on may be used to improve the AI grading for up to 1 year. Withdrawing also deletes the training copies already kept.",
@@ -9562,13 +9568,14 @@ function cmConsentHtml(){const C=CMT[lang].consent;return `<fieldset class="cmco
   <label class="chk"><input type="checkbox" name="cPrivacy"> <span>${C.privacy}</span></label>
   <label class="chk" data-age hidden><input type="checkbox" name="cAge"> <span>${C.age}</span></label>
   <label class="chk"><input type="checkbox" name="cTrain"> <span>${C.train}</span></label>
+  <label class="chk"><input type="checkbox" name="cAiTrain"> <span>${C.aiTrain}</span></label>
   <small class="cmai">${C.ai}</small></fieldset>`;}
 /* returns read(): the body's consent field, or throws {code} for what is missing (the server checks the same) */
 function cmConsentWire(box){
   let age=false;const row=box.querySelector("[data-age]"),on=n=>!!box.querySelector(`[name=${n}]`)?.checked;
   cmConsentInfo().then(i=>{age=!!i.age_required;if(row)row.hidden=!age;});
   return()=>{if(!on("cTerms")||!on("cPrivacy"))throw{code:"consent_required"};if(age&&!on("cAge"))throw{code:"age_required"};
-    return{terms:true,privacy:true,age14:on("cAge"),train:on("cTrain")};};
+    return{terms:true,privacy:true,age14:on("cAge"),train:on("cTrain"),aiTrain:on("cAiTrain")};};
 }
 /* an account without consent to the current terms (one from before them, or after a new version) is asked as soon as
    it is known to be signed in; the server refuses grading until then. A social sign-up agrees on its username step. */
@@ -9601,6 +9608,20 @@ async function cmTrainToggle(box,known){
     <p style="font-size:12px;margin:8px 0 0"><a href="terms.html${lang==="en"?"#en":""}" target="_blank" rel="noopener">${C.policies.split(" · ")[0]}</a> · <a href="privacy.html${lang==="en"?"#en":""}" target="_blank" rel="noopener">${C.policies.split(" · ")[1]}</a></p>`;
     box.querySelector("[data-train]").onclick=async()=>{
       try{const r=await cmApi("POST","/me/consent/train",{train:!on});on=r.train_ok===true;if(cm.me)cm.me.train_ok=on;draw(on?C.trainGiven:C.trainWithdrawn);}
+      catch(e){box.querySelector(".cmerr").textContent=cmErr(e);}
+    };};
+  draw();
+}
+/* the optional HaslaLab AI chat box, on the profile page: withdrawing deletes the kept chats at once */
+async function cmAiTrainToggle(box){
+  if(!box||!cm.me)return;
+  const C=CMT[lang].consent,hide=()=>{box.hidden=true;};let on=false;
+  try{const st=await cmApi("GET","/me/consent");if(st.consent_required)return hide();on=st.ai_train_ok===true;}catch(e){return hide();}
+  const draw=msg=>{box.innerHTML=`<h3 style="font-size:15px;margin:0 0 6px">${C.aiTrainH}</h3><p style="font-size:13px;color:var(--graphite);margin:0 0 8px">${C.aiTrainHelp}</p>
+    <div class="row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:13px">${on?C.trainOn:C.trainOff}</b><span style="flex:1"></span>
+    <button class="cmbtn" type="button" data-ai-train>${on?C.trainWithdraw:C.trainGive}</button></div><span class="cmerr" style="color:${msg?"var(--graphite)":""}">${msg||""}</span>`;
+    box.querySelector("[data-ai-train]").onclick=async()=>{
+      try{const r=await cmApi("POST","/me/consent/ai-train",{on:!on});on=r.ai_train_ok===true;draw(on?C.aiTrainGiven:C.aiTrainWithdrawn);}
       catch(e){box.querySelector(".cmerr").textContent=cmErr(e);}
     };};
   draw();
@@ -9824,6 +9845,7 @@ async function cmAccount(root, alive){
     <div class="cmbh"><h2 style="font-size:1rem">${T.myPosts}</h2></div><div id="cmMine"><p class="cmempty">${T.loading}</p></div>
     <div id="cmSecurity" style="border-top:8px solid var(--cm-soft)"></div>
     <div class="cmform" id="cmTrain" style="border-top:8px solid var(--cm-soft)"></div>
+    <div class="cmform" id="cmAiTrain" style="border-top:8px solid var(--cm-soft)"></div>
     <div class="cmform" style="border-top:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${T.delAcc}</h3>
       <p style="font-size:13px;color:var(--graphite);margin:0">${T.delAccHelp}</p>
@@ -9842,6 +9864,7 @@ async function cmAccount(root, alive){
   };
   cmAccountSecurity(root.querySelector('#cmSecurity'));
   cmTrainToggle(root.querySelector('#cmTrain'));
+  cmAiTrainToggle(root.querySelector('#cmAiTrain'));
   root.querySelector("#cmDelAcc").onclick=async()=>{
     if(!confirm(T.confirmDelAcc)) return;
     try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ cmToast(cmErr(e)); }

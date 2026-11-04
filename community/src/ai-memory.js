@@ -28,9 +28,11 @@ export const AI_EVAL_SQL = [
 const AI_EVAL_COLUMNS = [`ALTER TABLE ai_eval ADD COLUMN route TEXT`, `ALTER TABLE ai_eval ADD COLUMN style TEXT NOT NULL DEFAULT 'default'`,
   `ALTER TABLE ai_eval ADD COLUMN context TEXT`];
 const evalReady = new WeakMap();
+/* ALTER TABLE … ADD COLUMN that is already done elsewhere (another isolate) is fine */
+export const addColumn = db => async q => { try { await db.prepare(q).run(); } catch (e) { if (!/duplicate column/i.test(String(e?.message || e))) throw e; } };
 export function ensureAiEval(db) {
   if (!evalReady.has(db)) evalReady.set(db, runEach(db, AI_EVAL_SQL)
-    .then(() => Promise.all(AI_EVAL_COLUMNS.map(s => db.prepare(s).run().catch(e => { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }))))
+    .then(() => Promise.all(AI_EVAL_COLUMNS.map(addColumn(db))))
     .catch(e => { evalReady.delete(db); throw e; }));
   return evalReady.get(db);
 }

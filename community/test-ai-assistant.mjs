@@ -232,23 +232,32 @@ test('answers stream as they are written; a reasoning model\'s thinking never re
   assert.equal(meter.out, 7, 'usage from the stream\'s last event');
 });
 
-test('the route: members only, no quota but a flood guard; it streams, logs allowed chats and takes feedback', async () => {
+test('the route: visitors get two messages, members no quota but a flood guard; it streams, logs allowed chats and takes feedback', async () => {
   class HttpError extends Error { constructor(status, code) { super(code); this.status = status; } }
-  const limits = [];
+  const limits = [], counts = {};
+  let allowed = false;
   const route = createAiAssistantRouter({HttpError, currentUser: async req => req.headers.get('Authorization') ? {id: 7} : null,
-    needUser: u => { if (!u) throw new HttpError(401, 'login_required'); return u; }, limit: async (env, key, max, win) => limits.push([key, max, win])});
+    needUser: u => { if (!u) throw new HttpError(401, 'login_required'); return u; }, clientIp: () => '203.0.113.9', trainAllowed: async () => allowed,
+    limit: async (env, key, max, win) => { limits.push([key, max, win]); counts[key] = (counts[key] || 0) + 1; if (counts[key] > max) throw new HttpError(429, 'rate_limited'); }});
   const DB = d1(), env = {AI: ai({intent: 'chat', reply: '안녕하세요', stream: true}), DB};
   const post = (body, auth = true, path = '/api/ai/chat') => new Request('https://x' + path, {method: 'POST', headers: auth ? {Authorization: 'Bearer t'} : {}, body: JSON.stringify(body)});
-  await assert.rejects(route(post({messages: [{role: 'user', content: 'hi'}]}, false), env), e => e.status === 401);
+  // a visitor who is not signed in: two messages a day, never kept, no feedback
+  assert.equal((await route(post({messages: [{role: 'user', content: 'hi'}]}, false), env)).id, null);
+  assert.equal((await route(post({messages: [{role: 'user', content: 'hi'}]}, false), env)).answer, '안녕하세요');
+  await assert.rejects(route(post({messages: [{role: 'user', content: 'hi'}]}, false), env), e => e.status === 429 && e.message === 'guest_limit');
+  await assert.rejects(route(post({id: 1, good: true}, false, '/api/ai/feedback'), env), e => e.status === 401);
+  limits.length = 0;
   await assert.rejects(route(post({messages: []}), env), e => e.status === 400);
   await assert.rejects(route(new Request('https://x/api/ai/chat'), env), e => e.status === 405);
-  // not allowed to learn: answered, not kept
-  const plain = await route(post({messages: [{role: 'user', content: '반가워'}]}), env);
+  // no AI-chat consent: answered, not kept (whatever the browser says)
+  const plain = await route(post({messages: [{role: 'user', content: '반가워'}], train: true}), env);
   assert.equal(plain.answer, '안녕하세요');
   assert.equal(plain.id, null);
   assert.deepEqual(limits, [['ai:m:7', 30, 60]], 'only the flood guard');
-  // allowed: streamed, and kept for review
-  const res = await route(post({messages: [{role: 'user', content: '반가워'}], stream: true, train: true}), env);
+  assert.ok(counts['ai:g:203.0.113.9'] >= 3, 'visitors are counted by address');
+  // consent given: streamed, and kept for review
+  allowed = true;
+  const res = await route(post({messages: [{role: 'user', content: '반가워'}], stream: true}), env);
   assert.match(res.headers.get('Content-Type'), /text\/event-stream/);
   const events = (await res.text()).trim().split('\n\n').map(b => ({event: /^event: (\w+)/.exec(b)[1], data: JSON.parse(/\ndata: (.*)$/.exec(b)[1])}));
   assert.equal(events[0].event, 'meta');
@@ -256,15 +265,17 @@ test('the route: members only, no quota but a flood guard; it streams, logs allo
   const done = events.at(-1);
   assert.equal(done.event, 'done');
   assert.ok(done.data.id > 0);
+  assert.equal(DB.sql.prepare("SELECT count(*) n FROM ai_eval WHERE kind='member'").get().n, 1, 'only the consenting member\'s exchange was kept');
   const row = DB.sql.prepare('SELECT * FROM ai_eval WHERE id=?').get(done.data.id);
   assert.equal(row.kind, 'member');
   assert.equal(row.ref, '7');
   assert.equal(row.question, '반가워');
-  assert.equal(DB.sql.prepare('SELECT count(*) n FROM ai_usage').get().n, 2);
+  assert.equal(DB.sql.prepare('SELECT count(*) n FROM ai_usage WHERE user_id=7').get().n, 2);
+  assert.equal(DB.sql.prepare('SELECT count(*) n FROM ai_usage WHERE user_id IS NULL').get().n, 2, 'the visitors\' two answers');
   // 👍/👎 only on one's own answers
   assert.deepEqual(await route(post({id: done.data.id, good: false}, true, '/api/ai/feedback'), env), {ok: true});
   assert.equal(DB.sql.prepare('SELECT verdict FROM ai_eval WHERE id=?').get(done.data.id).verdict, 'bad');
-  const other = createAiAssistantRouter({HttpError, currentUser: async () => ({id: 8}), needUser: u => u, limit: async () => {}});
+  const other = createAiAssistantRouter({HttpError, currentUser: async () => ({id: 8}), needUser: u => u, limit: async () => {}, trainAllowed: async () => true});
   await assert.rejects(other(post({id: done.data.id, good: true}, true, '/api/ai/feedback'), env), e => e.status === 404);
   // withdrawing the permission removes the member's kept chats
   await route(post({}, true, '/api/ai/forget'), env);

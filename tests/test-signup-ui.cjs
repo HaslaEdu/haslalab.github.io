@@ -45,7 +45,7 @@ test('the sign-up needs the code and sends the address and code with the rest',a
   await p.submit();assert.match(p.err(),/이메일 주소를 확인/);
   p.fill('email','owner@example.com');await p.submit();assert.match(p.err(),/6자리 인증 코드/);assert.equal(p.calls.filter(c=>c.route==='/signup').length,0);
   p.fill('code','123 456');await p.submit();
-  assert.deepEqual(plain(p.calls.find(c=>c.route==='/signup').body),{username:'new_user',nickname:'New user',password:'fixture-password',consent:{terms:true,privacy:true,age14:false,train:false},email:'owner@example.com',code:'123456'});
+  assert.deepEqual(plain(p.calls.find(c=>c.route==='/signup').body),{username:'new_user',nickname:'New user',password:'fixture-password',consent:{terms:true,privacy:true,age14:false,train:false,aiTrain:false},email:'owner@example.com',code:'123456'});
   assert.equal(p.w.eval('done.length'),1);p.close();
 });
 test('the code errors from the server read in both languages',async()=>{

@@ -57,6 +57,7 @@ import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 import { createAccountSecurityRouter, ensureAccountSecuritySchema } from './account-security.js';
 import { createSignupEmail, ensureSignupCodeSchema, CODE_HELD } from './signup-email.js';
+import { setAiTrainConsent, aiTrainAllowed } from './consent.js';
 import { ensureConsentSchema, consentInfo, requestCountry, readConsent, recordConsent, consentStatus, decorateConsent, setTrainConsent, dropTrainRows, trainAllowed, CONSENT_COLUMNS, consentOf, TRAIN_KEEP_SEC } from './consent.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
@@ -248,7 +249,7 @@ const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limi
 const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUser,limit,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,scope:env=>env[DB_SCOPE]||env.DB});
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
-const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit});
+const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit,clientIp,trainAllowed:(env,id)=>aiTrainAllowed(env.DB,id,env[DB_SCOPE]||env.DB)});
 const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
 
 /* ── routes ─────────────────────────────────────────────────── */
@@ -335,7 +336,16 @@ async function handle(req, env, url, ctx) {
     await recordConsent(env.DB, me.id, consent, now(), scope);
     // agreeing again without the training box withdraws it: what was captured before goes
     if (!consent.train) await dropTrainRows(env.DB, me.id, LAB_TRAIN_SQL);
+    if (!consent.aiTrain) await forgetMember(env.DB, me.id);
     return { ok: true, user: pubUser(decorateConsent(me, { consent_required: false, train_ok: consent.train })) };
+  }
+  /* the HaslaLab AI chat box (chat window and profile): withdrawing deletes the kept chats */
+  if (p === "/api/me/consent/ai-train" && m === "POST") {
+    needUser(me);
+    if (typeof body.on !== "boolean") bad("bad_train");
+    await limit(env, "consent:" + me.id, 20, 600);
+    if (!await setAiTrainConsent(env.DB, me.id, body.on, now(), forgetMember, env[DB_SCOPE] || env.DB)) throw new HttpError(403, "consent_required");
+    return { ok: true, ai_train_ok: body.on };
   }
   if (p === "/api/me/consent/train" && m === "POST") {
     needUser(me);
