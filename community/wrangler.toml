@@ -102,6 +102,9 @@ LAB_FOCUS_READ = "on"
 # answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
 # reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
 LAB_KEEP_HOURS = "off"
+# Paddle checkout closed (the owner's call, 2026-11-04): no Paddle pack in the shop and no new Paddle order; paid orders
+# still complete by the webhook and refunds still work. "on" (or deleting this line) opens it again.
+PADDLE_CHECKOUT = "off"
 # the problem studio (studio-gateway.js: digitize, generate, restore) is for administrators only
 STUDIO_ACCESS = "admin"
 # photo problem search (problem-bank-ocr.js): the photo is transcribed by this Gemini model
