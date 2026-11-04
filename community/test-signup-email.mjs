@@ -152,8 +152,8 @@ test('a new code clears expired ones; the purge leaves live codes; old password 
   }finally{s.close()}
 });
 
-test('a per-IP daily cap bounds how many token-bearing accounts one address can mint in a day',async()=>{
-  const s=setup({SIGNUP_DAY_CAP:2});try{
+test('two new accounts a day from one IP: a third is refused, another IP is not',async()=>{
+  const s=setup();try{   // the default: two new accounts a day from one IP
     const ip='203.0.113.9';
     for(let i=0;i<2;i++){
       const r=await s.api('/signup/email-code',{email:`farm${i}@example.com`},{address:ip});assert.equal(r.status,200);
