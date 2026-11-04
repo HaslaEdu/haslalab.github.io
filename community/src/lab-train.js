@@ -17,16 +17,28 @@ export const GRADE_TRAIN_SYSTEM = [
   "missing or wrong. Of alternative methods, mark only the one the student used.",
   'Return one JSON object: {"items":[{"id":"<scheme line id>","score":<number>}]}, one entry for every line.'].join(" ");
 
+/* v2 (2026-11-04): the marking rules the audits and the bench taught, in the grader's own words, so a tuned model learns
+   the same regulation the production graders are given */
+export const GRADE_TRAIN_SYSTEM_V2 = [GRADE_TRAIN_SYSTEM,
+  "Rules: a correct final result earns its marks with or without working; a step earns its marks where it is written, or where a correct later line could not have been written without it.",
+  "An error carried into later parts is penalised once, where it is made; a dimensionally wrong result earns nothing.",
+  "A slip (typo, copying error) costs the scheme's small deduction, not the item; an expression of the wrong form earns nothing for that line, except on a line marked whole part (the scheme marks that part only as a total), where it loses only the result's share and the correct set-up keeps its share, never the whole part.",
+  "Notation is not form: a component without its unit vector where the direction is stated, or ± / ∓ over the physical cases (two spin states, two roots), is correct.",
+  "A number is correct within the paper's own tolerance (its paper rules, e.g. ±10%), else within one unit of the official value's last digit or 2%; an uncertainty written relative to the quantity (0.40 μ, 20 %) that matches the official range is correct.",
+  "A missing or wrong unit costs 0.1, never the whole line."].join(" ");
+
 const clip = (v, n) => String(v ?? "").slice(0, n);
 
 /** the grader's input: the scheme's lines, then each page's transcript (answer sheets first) */
-export function gradeTrainInput(scheme, pages, { task = "", exam = "" } = {}) {
+export function gradeTrainInput(scheme, pages, { task = "", exam = "", v2 = false } = {}) {
   const lines = (scheme?.items || []).map(it => [it.id, it.points, clip(it.what, 300),
     it.expr ? "official: " + clip(it.expr, 200) : it.value != null ? `official: ${it.value}${it.unit ? " " + it.unit : ""}` : "",
-    it.alt ? `alternative method ${it.alt}` : ""].filter(x => x !== "").join(" | "));
+    it.alt ? `alternative method ${it.alt}` : "", v2 && it.whole ? "whole part (marked only as a total)" : ""].filter(x => x !== "").join(" | "));
+  /* v2: the paper's own general rules (its numerical tolerance, its unit and significant-figure rules) */
+  const rules = v2 ? [scheme?.unit_rule, scheme?.notes].filter(x => typeof x === "string" && x.trim()).map(x => clip(x, 600)) : [];
   const order = [...(pages || [])].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || (a.no || 0) - (b.no || 0));
   const sheets = order.map(p => `[page ${p.no ?? ""} · ${p.kind || "page"}]\n${clip(p.ocr ?? p.text ?? "", 12000)}`);
-  return [`Exam: ${exam} ${task}`.trim(), "", "Marking scheme (id | points | what earns them | official | method):", ...lines, "", "Student pages:", ...sheets].join("\n");
+  return [`Exam: ${exam} ${task}`.trim(), ...(rules.length ? ["", "Paper rules: " + rules.join(" ")] : []), "", "Marking scheme (id | points | what earns them | official | method):", ...lines, "", "Student pages:", ...sheets].join("\n");
 }
 
 /** the target: one mark per scheme line (a line the grading left out is 0), each within its points */

@@ -5,7 +5,7 @@
  * ALLOWED_ORIGINS without third-party-cookie trouble.
  */
 
-import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM } from "./lab-train.js";
+import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM, GRADE_TRAIN_SYSTEM_V2 } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
 import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
@@ -3635,7 +3635,7 @@ async function labBench(env, s, job) {
          tune-grade-data: the train tasks as Vertex tuning lines to gs://bucket/runs/<id>/grade-train.jsonl.
          tune-grade-eval: the eval tasks graded by spec.grader {provider, model, thinking, endpoint} from the same input,
          marked against the audit. */
-      const cases = [];
+      const cases = [], v2 = spec.version === 2, system = v2 ? GRADE_TRAIN_SYSTEM_V2 : GRADE_TRAIN_SYSTEM;
       for (const c of (spec.tasks || []).slice(0, 60)) {
         if (spec.stage === 'tune-grade-data' ? c.split !== 'train' : c.split !== 'eval') continue;
         const ss = await env.DB.prepare('SELECT * FROM lab_sessions WHERE id=?').bind(c.session).first(); if (!ss) { cases.push({ ...c, items: undefined, skip: 'no_session' }); continue; }
@@ -3644,12 +3644,14 @@ async function labBench(env, s, job) {
         const lines = sch && (Array.isArray(c.items) ? auditedLines(sch, c.items, Number.isFinite(+spec.minShare) ? Math.max(0.2, Math.min(1, +spec.minShare)) : 0.8) : spec.stage === 'tune-grade-eval' ? sch.items.map(item => ({ item, got: null })) : null);
         if (!lines) { cases.push({ session: c.session, task: c.task, skip: sch ? 'audit_covers_too_little' : 'no_scheme', scheme_items: sch?.items?.length || 0 }); continue; }
         const pages = (await env.DB.prepare('SELECT no, kind, ocr, text FROM lab_pages WHERE session_id=? AND task=? ORDER BY no').bind(c.session, c.task).all()).results;
-        cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: gradeTrainInput({ items: lines.map(l => l.item) }, pages, { task: c.task, exam: `${ss.comp} ${ss.year}` }) });
+        /* v2 (spec.version 2): the regulation in the system text, the paper's rules and its whole-part lines in the input */
+        const whole = v2 ? wholeParts(sch) : new Set();
+        cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: gradeTrainInput({ items: lines.map(l => whole.has(l.item.id) ? { ...l.item, whole: true } : l.item), unit_rule: sch.unit_rule, notes: sch.notes }, pages, { task: c.task, exam: `${ss.comp} ${ss.year}`, v2 }) });
       }
       const ready = cases.filter(c => c.lines);
       if (spec.stage === 'tune-grade-data') {
         const cfg = gcpConfig(env); if (!cfg.key || !cfg.bucket) throw new Error('gcp_not_configured');
-        const t = await gcpToken(env), body = ready.map(c => vertexGradeLine(c.input, c.lines)).join('\n') + '\n';
+        const t = await gcpToken(env), body = ready.map(c => vertexGradeLine(c.input, c.lines, system)).join('\n') + '\n';
         out = { tasks: ready.map(c => ({ session: c.session, task: c.task, lines: c.lines.length, chars: c.input.length })), skipped: cases.filter(c => c.skip),
           train: ready.length ? await gcsPut(env, t, `runs/${row.id}/grade-train.jsonl`, new TextEncoder().encode(body), 'application/jsonl') : null };
       } else {
@@ -3660,7 +3662,7 @@ async function labBench(env, s, job) {
         for (const c of ready) {
           const t1 = Date.now();
           try {
-            const r = await visionJSON(env, { provider: g.provider || 'gemini', stage: 'grade', policy: GRADE_TRAIN_SYSTEM, parts: [{ text: c.input }], schema, maxTokens: 16384,
+            const r = await visionJSON(env, { provider: g.provider || 'gemini', stage: 'grade', policy: system, parts: [{ text: c.input }], schema, maxTokens: 16384,
               model: g.model, thinking: g.thinking || 'off', timeoutMs: 240000, ...extra });
             const marked = c.lines.every(l => l.got != null), e = marked ? gradeAgainstAudit(c.lines, r.raw?.items) : {};
             if (marked) for (const k of Object.keys(sum)) sum[k] += e[k];

@@ -56,3 +56,15 @@ test("an audited paper as a grading example: audit marks matched to the scheme's
   const e = gradeAgainstAudit(lines, [{ id: "1.1.a", score: 0.4 }, { id: "1.2", score: 0.5 }]);
   assert.equal(e.mis, 2); assert.equal(e.over, 1); assert.equal(e.under, 1); assert.equal(e.missing, 1); assert.equal(e.score, 0.9); assert.equal(e.ref, 1.4);
 });
+
+test("v2 grading examples: the regulation in the system text, the paper's rules and whole-part lines in the input", async () => {
+  const { gradeTrainInput, GRADE_TRAIN_SYSTEM, GRADE_TRAIN_SYSTEM_V2 } = await import("./src/lab-train.js");
+  const scheme = { unit_rule: "Numerical answers must be correct to +/- 10%.", items: [{ id: "B3", points: 2, what: "relativistic KE", whole: true }, { id: "B4", points: 1, what: "T" }] };
+  const v1 = gradeTrainInput(scheme, [{ no: 1, kind: "answer", ocr: "x" }], { task: "T1", exam: "ipho 2015" });
+  const v2 = gradeTrainInput(scheme, [{ no: 1, kind: "answer", ocr: "x" }], { task: "T1", exam: "ipho 2015", v2: true });
+  assert.ok(!v1.includes("Paper rules") && !v1.includes("whole part"), "v1 is the pilot's format, unchanged");
+  assert.match(v2, /Paper rules: Numerical answers must be correct to \+\/- 10%/);
+  assert.match(v2, /B3 \| 2 \| relativistic KE \| whole part \(marked only as a total\)/);
+  assert.ok(!/B4 \|[^\n]*whole part/.test(v2));
+  assert.ok(GRADE_TRAIN_SYSTEM_V2.startsWith(GRADE_TRAIN_SYSTEM) && /Notation is not form/.test(GRADE_TRAIN_SYSTEM_V2) && /whole part/.test(GRADE_TRAIN_SYSTEM_V2));
+});
