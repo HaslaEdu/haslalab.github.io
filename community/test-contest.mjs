@@ -4,6 +4,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 import worker from "./src/index.js";
+import { agreeTerms } from "./fixtures/consent.mjs";
 import { CONTEST_PROOF_EXAMS } from "./src/contest-catalog.js";
 import { contestGradeTask, contestMeta, CONTEST_REG } from "./src/contest.js";
 
@@ -34,6 +35,7 @@ for (let id = 1; id <= 14; id++) {
   const hash = Buffer.from(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token))).toString("base64url");
   sqlite.prepare("INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)").run(hash, id, timestamp, timestamp + 3600);
 }
+agreeTerms(sqlite, Object.keys(tokens).map(Number), timestamp);
 const messages=[];
 const env = { DB, LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: "http://localhost:8765", LAB_KEEP_HOURS: "off", GEMINI_API_KEY: "mock-existing-key" };
 const examId = "kmo-2025-T2-s2", base = "/api/lab/contest", sessionBase = id => `/api/lab/sessions/${id}`;

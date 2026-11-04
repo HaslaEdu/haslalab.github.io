@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
 import worker from './src/index.js';
+import {agreeTerms} from './fixtures/consent.mjs';
 
 const digest = async value => Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))).toString('base64url');
 async function fixture(run) {
@@ -34,6 +35,7 @@ async function fixture(run) {
       .run(id, 'qr' + id, 'QR ' + id, clock);
     sql.prepare('INSERT INTO sessions VALUES(?,?,?,?)').run(await digest(tokens[id]), id, clock, clock + 86400);
   }
+  agreeTerms(sql, [1, 2, 3], clock);
   const saved = { fetch: globalThis.fetch, caches: globalThis.caches, now: Date.now };
   globalThis.fetch = () => { externalCalls++; throw new Error('QR tests must never call external services'); };
   globalThis.caches = { default: { async match() {}, async put() {} } }; Date.now = () => clock * 1000;

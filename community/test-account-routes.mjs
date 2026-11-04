@@ -31,7 +31,7 @@ function setup(){
 test('signup/login, old-password check, verified-email reset and revoked sessions work through the complete Worker',async()=>{
   const s=setup();try{
     assert.deepEqual(await s.api('GET','/auth/recovery'),{status:200,data:{mail_available:true}});
-    const signup=await s.api('POST','/signup',{username:'recovery_owner',nickname:'복구 테스트',password:'old-password'});assert.equal(signup.status,200);const token=signup.data.token;assert.ok(token);assert.equal(signup.data.user.sessionCreatedAt,undefined);
+    const signup=await s.api('POST','/signup',{username:'recovery_owner',nickname:'복구 테스트',password:'old-password',consent:{terms:true,privacy:true,age14:true}});assert.equal(signup.status,200);const token=signup.data.token;assert.ok(token);assert.equal(signup.data.user.sessionCreatedAt,undefined);
     assert.equal((await s.api('GET','/me/security')).status,401);
     assert.equal((await s.api('POST','/me/password',{password:'new-password'},token)).data.error,'current_password_required');
     assert.equal((await s.api('POST','/me/password',{old:'wrong-password',password:'new-password'},token)).data.error,'bad_current_password');

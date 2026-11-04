@@ -16,7 +16,7 @@ const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Nu
 
 (async () => {
   const rnd = Math.random().toString(36).slice(2, 7);
-  const [, su] = await call("POST", "/signup", { username: "e2e" + rnd, nickname: "e2e" + rnd, password: "password1" });
+  const [, su] = await call("POST", "/signup", { username: "e2e" + rnd, nickname: "e2e" + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } });
   const TOK = su.token;
   /* an E1 marking scheme, so one experiment is graded and the other waits for an admin */
   require("child_process").execSync(`npx wrangler d1 execute haslalab-community --local --command "UPDATE users SET exam_tokens=1 WHERE username='e2e${rnd}'; DELETE FROM lab_rubrics WHERE exam_key='ipho2024' AND task='E2'; INSERT OR REPLACE INTO lab_rubrics(exam_key,task,points,rubric,reference,updated_at) VALUES('ipho2024','E1',10,'[{\\"id\\":\\"A1\\",\\"name\\":\\"R0\\",\\"max\\":4,\\"requirement\\":\\"R0 108\\"},{\\"id\\":\\"A2\\",\\"name\\":\\"lambda\\",\\"max\\":6,\\"requirement\\":\\"lambda\\"}]','R0 = 108 ohm',0)"`, { cwd: __dirname, stdio: "ignore" });

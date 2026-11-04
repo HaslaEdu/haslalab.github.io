@@ -52,6 +52,7 @@ import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 import { createAccountSecurityRouter, ensureAccountSecuritySchema } from './account-security.js';
+import { ensureConsentSchema, consentInfo, requestCountry, readConsent, recordConsent, consentStatus, decorateConsent, setTrainConsent, dropTrainRows, trainAllowed, CONSENT_COLUMNS, consentOf, TRAIN_KEEP_SEC } from './consent.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
 // 말머리: general, question, info, review, bug report, notice (admins only)
@@ -189,12 +190,17 @@ async function currentUser(req, env) {
     `SELECT u.id,u.username,u.nickname,u.role,u.created_at,u.avatar,s.created_at AS sessionCreatedAt FROM sessions s JOIN users u ON u.id=s.user_id
      WHERE s.token_hash=? AND s.expires_at>? AND u.deleted=0`).bind(th, now()).first();
   if (u) u.tokenHash = th;
-  return u&&['/api/me','/api/me/username','/api/me/auth-context'].includes(new URL(req.url).pathname.replace(/\/+$/,''))?usernameProfile(env,u,env[DB_SCOPE]||env.DB):u||null;
+  if (!u) return null;
+  const path=new URL(req.url).pathname.replace(/\/+$/,'');
+  if(!['/api/me','/api/me/username','/api/me/auth-context'].includes(path))return u;
+  /* only the account reads carry the consent flags: every other route stays at one query per request */
+  const scope=env[DB_SCOPE]||env.DB,[profile,consent]=await Promise.all([usernameProfile(env,u,scope),consentStatus(env.DB,u.id,scope)]);
+  return decorateConsent(profile,consent);
 }
 const needsUsername = isPendingUsername;
 function needUser(u) { if (!u) throw new HttpError(401, "login_required"); if(needsUsername(u))throw new HttpError(403,'username_required'); return u; }
-const pubUser = u => ({ id: u.id, username: needsUsername(u)?null:u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null, ...(needsUsername(u)?{username_required:true}:{}),...(u.username_setup_available!==undefined?{username_setup_available:u.username_setup_available}:{}),...(u.unique_identifier?{unique_identifier:u.unique_identifier,username_kind:u.username_kind}:{}) });
-async function accountUser(env,id){const user=await env.DB.prepare('SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0').bind(id).first();return usernameProfile(env,user,env[DB_SCOPE]||env.DB)}
+const pubUser = u => ({ id: u.id, username: needsUsername(u)?null:u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null, ...(needsUsername(u)?{username_required:true}:{}),...(u.username_setup_available!==undefined?{username_setup_available:u.username_setup_available}:{}),...(u.unique_identifier?{unique_identifier:u.unique_identifier,username_kind:u.username_kind}:{}),...(u.consent_required?{consent_required:true}:{}),...(u.train_ok!==undefined?{train_ok:!!u.train_ok}:{}) });
+async function accountUser(env,id){const user=await env.DB.prepare('SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0').bind(id).first();const scope=env[DB_SCOPE]||env.DB;return user?decorateConsent(await usernameProfile(env,user,scope),await consentStatus(env.DB,user.id,scope)):user}
 const desktopOAuth=createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers:oauthProviders,newSession,pubUser,readUser:accountUser});
 const accountHandoff=createAccountHandoff({HttpError,now,limit,sha256,b64u,needUser,pubUser,readUser:accountUser});
 const healthData = (env, lab) => ({ ok: true, v: 5, boards: BOARDS, tags: TAGS, best: BEST, langs: LANGS, arena: arenaHealth(env), oauth: oauthProviders(env), lab, lab_reg: LAB_REG, jobs: { available: hasLabQueue(env), mode: 'queue' } });
@@ -225,7 +231,7 @@ async function handle(req, env, url, ctx) {
 
   const desktopResult=await desktopOAuth.handle(req,env,url,body);if(desktopResult!==null)return desktopResult;
   const handoffResult=await accountHandoff.handle(req,env,{path:p,body,me,scope:env[DB_SCOPE]||env.DB});if(handoffResult!==null)return handoffResult;
-  if(needsUsername(me)&&!['/api/me','/api/me/username','/api/logout','/api/oauth/redeem'].includes(p))throw new HttpError(403,'username_required');
+  if(needsUsername(me)&&!['/api/me','/api/me/username','/api/logout','/api/oauth/redeem','/api/consent/info'].includes(p))throw new HttpError(403,'username_required');
   if (p === "/api/health") return healthData(env, await labReady(env));
   if(p==='/api/oauth/providers'&&m==='GET')return {providers:oauthProviders(env)};
   if (p === "/api/boards" && m === "GET") return readPublicBoards(env.DB, url);
@@ -239,6 +245,7 @@ async function handle(req, env, url, ctx) {
     if (!USERNAME_RE.test(username)) bad("bad_username");
     if (!nickOk(nickname)) bad("bad_nickname");
     if (!pwOk(body.password)) bad("bad_password");
+    const consent = readConsent(body.consent, requestCountry(req), bad);     // before anything is written: a refusal leaves no account
     const clash = await env.DB.prepare("SELECT username,nickname FROM users WHERE username=? OR nickname=?")
       .bind(username, nickname).first();
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
@@ -253,8 +260,9 @@ async function handle(req, env, url, ctx) {
       throw new HttpError(409, /nickname/.test(String(e.message)) || await nickTaken(env, nickname) ? "nickname_taken" : "username_taken");
     }
     const id = res.meta.last_row_id;
+    await recordConsent(env.DB, id, consent, now(), env[DB_SCOPE] || env.DB);
     const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=?").bind(id).first();
-    return { token: await newSession(env, id), user: pubUser(user) };
+    return { token: await newSession(env, id), user: pubUser(decorateConsent(user, { consent_required: false, train_ok: consent.train })) };
   }
   if (p === "/api/login" && m === "POST") {
     const username = String(body.username || "").trim();
@@ -269,6 +277,25 @@ async function handle(req, env, url, ctx) {
     return { ok: true };
   }
   if (p === "/api/me" && m === "GET") return { user: me ? pubUser(me) : null };
+  /* which boxes the sign-up and consent forms show: the age box only where the request comes from Korea */
+  if (p === "/api/consent/info" && m === "GET") return consentInfo(req);
+  if (p === "/api/me/consent" && m === "GET") { needUser(me); return { ...await consentStatus(env.DB, me.id, env[DB_SCOPE] || env.DB), ...consentInfo(req) }; }
+  if (p === "/api/me/consent" && m === "POST") {        // an account from before the terms, or one asked again after a new version
+    needUser(me);
+    const consent = readConsent(body.consent, requestCountry(req), bad), scope = env[DB_SCOPE] || env.DB;
+    await limit(env, "consent:" + me.id, 20, 600);
+    await recordConsent(env.DB, me.id, consent, now(), scope);
+    // agreeing again without the training box withdraws it: what was captured before goes
+    if (!consent.train) await dropTrainRows(env.DB, me.id, LAB_TRAIN_SQL);
+    return { ok: true, user: pubUser(decorateConsent(me, { consent_required: false, train_ok: consent.train })) };
+  }
+  if (p === "/api/me/consent/train" && m === "POST") {
+    needUser(me);
+    if (typeof body.train !== "boolean") bad("bad_train");
+    await limit(env, "consent:" + me.id, 20, 600);
+    if (!await setTrainConsent(env.DB, me.id, body.train, now(), LAB_TRAIN_SQL, env[DB_SCOPE] || env.DB)) throw new HttpError(403, "consent_required");
+    return { ok: true, train_ok: body.train };
+  }
   if(p==='/api/me/auth-context'&&m==='GET'){
     needUser(me);return {user:pubUser(me),recent_login:Number.isFinite(me.sessionCreatedAt)&&me.sessionCreatedAt>=now()-600};
   }
@@ -287,9 +314,12 @@ async function handle(req, env, url, ctx) {
     if(!needsUsername(me)&&!me.username_setup_available)throw new HttpError(409,'username_already_set');
     if(!Number.isFinite(me.sessionCreatedAt)||me.sessionCreatedAt<now()-(needsUsername(me)?1800:600))throw new HttpError(403,'recent_login_required');
     const username=String(body.username||'').trim();if(!USERNAME_RE.test(username))bad('bad_username');
+    // a social sign-up finishes here, so this is where it agrees to the terms (checked before the name is claimed)
+    const consent=me.consent_required?readConsent(body.consent,requestCountry(req),bad):null;
     await limit(env,'username-claim:'+me.id,30,600);
     let changed;try{changed=await claimUsername(env,me,username,now(),env[DB_SCOPE]||env.DB)}catch(error){if(isUnique(error))throw new HttpError(409,'username_taken');throw error}
     if(!changed)throw new HttpError(409,'username_already_set');
+    if(consent)await recordConsent(env.DB,me.id,consent,now(),env[DB_SCOPE]||env.DB);
     return {ok:true,user:pubUser(await accountUser(env,me.id))};
   }
   if (p === "/api/me" && m === "DELETE") {
@@ -300,6 +330,8 @@ async function handle(req, env, url, ctx) {
     await ensureMonthlyCaptureSchema(env.DB,env[DB_SCOPE] || env.DB);
     await ensureMonthlyExperimentSchema(env.DB,env[DB_SCOPE] || env.DB);
     await ensureVisionPhotos(env);
+    await ensureConsentSchema(env.DB, env[DB_SCOPE] || env.DB);
+    await env.DB.prepare(LAB_TRAIN_SQL).run(); await env.DB.prepare(LAB_BENCH_SQL).run();
     // posts and comments stay so threads keep making sense; the name goes
     await labR2Drop(env, "session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)", me.id);
     await env.DB.batch([
@@ -313,6 +345,10 @@ async function handle(req, env, url, ctx) {
       env.DB.prepare("DELETE FROM avatars WHERE user_id=?").bind(me.id),
       env.DB.prepare("UPDATE users SET avatar=NULL WHERE id=?").bind(me.id),
       env.DB.prepare("DELETE FROM lab_pages WHERE session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)").bind(me.id),
+      // training copies and admin bench runs are of the sittings, so they go before the sittings do
+      env.DB.prepare("DELETE FROM lab_train WHERE session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)").bind(me.id),
+      env.DB.prepare("DELETE FROM lab_bench WHERE session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)").bind(me.id),
+      env.DB.prepare("DELETE FROM user_consents WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM lab_sessions WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM omr_attempts WHERE user_id=?").bind(me.id),
       env.DB.prepare("DELETE FROM lab_ledger WHERE user_id=?").bind(me.id),
@@ -1073,18 +1109,18 @@ async function accountOverview(env, me, req) {
   // Validate the session once, then fetch only this account's private sections
   // in one transaction. Only the public ranking projection can be reused.
   const sections = async () => {
-    const [lab, half] = await Promise.all([labReady(env), halfReady(env),ensureUsernameClaimSchema(env.DB,env[DB_SCOPE]||env.DB)]);
+    const [lab, half] = await Promise.all([labReady(env), halfReady(env),ensureUsernameClaimSchema(env.DB,env[DB_SCOPE]||env.DB),ensureConsentSchema(env.DB,env[DB_SCOPE]||env.DB)]);
     const statements = [
       env.DB.prepare(ACCOUNT_HISTORY).bind(me.id),
       env.DB.prepare('SELECT provider,created_at FROM identities WHERE user_id=?').bind(me.id),
-      env.DB.prepare(`SELECT pw IS NOT NULL AS has_pw${lab ? `,exam_tokens,token_parts,${half ? 'exam_half' : '0 AS exam_half'}` : ''},${usernameProfileColumns(me)} FROM users u LEFT JOIN account_username_claims c ON c.user_id=u.id WHERE u.id=?`).bind(me.id),
+      env.DB.prepare(`SELECT pw IS NOT NULL AS has_pw${lab ? `,exam_tokens,token_parts,${half ? 'exam_half' : '0 AS exam_half'}` : ''},${usernameProfileColumns(me)},${CONSENT_COLUMNS} FROM users u LEFT JOIN account_username_claims c ON c.user_id=u.id LEFT JOIN user_consents k ON k.user_id=u.id WHERE u.id=?`).bind(me.id),
     ];
     if (lab) statements.push(env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(me.id));
     return { lab, result: await env.DB.batch(statements) };
   };
   const [all, { lab, result }] = await Promise.all([ranking(env, null, wantsFresh(req)), sections()]), credit = result[2].results[0] || {};
   const active = lab ? await labAdvance(env, result[3].results[0] || null) : null;
-  return { user: pubUser(decorateUsernameProfile(me,credit)), stats: accountStats(all, result[0].results, me), identities: result[1].results,
+  return { user: pubUser(decorateConsent(decorateUsernameProfile(me,credit),consentOf(credit))), stats: accountStats(all, result[0].results, me), identities: result[1].results,
     has_password: !!credit.has_pw, providers: oauthProviders(env), active: active && ['running','scanning'].includes(active.status) ? pubLab(active, null) : null,
     tokens: tokenBalance(credit), parts: credit.token_parts || 0, health: healthData(env, lab), now: now(), api_version: 5 };
 }
@@ -2633,6 +2669,12 @@ async function labR2Drop(env, where, ...args) {
    Run by the Worker's cron trigger and, now and then, on an ordinary request. */
 const keepHours = env => env.LAB_KEEP_HOURS == null || env.LAB_KEEP_HOURS === "" ? 2 : env.LAB_KEEP_HOURS === "off" ? null : parseFloat(env.LAB_KEEP_HOURS);
 async function labPurge(env) {
+  /* training copies are kept at most a year (the privacy notice), whatever the photo keeping time says */
+  try { await env.DB.prepare(LAB_TRAIN_SQL).run(); await env.DB.prepare("DELETE FROM lab_train WHERE created_at<?").bind(now() - TRAIN_KEEP_SEC).run(); }
+  catch (e) { console.error("lab train purge", e?.message); }
+  /* rate-limit rows carry IP addresses; the longest window is a day, so a row two days old only remembers an address */
+  try { await env.DB.prepare("DELETE FROM ratelimits WHERE start<?").bind(now() - 2 * 86400).run(); }
+  catch (e) { console.error("ratelimit purge", e?.message); }
   const h = keepHours(env);
   /* «off» is null, and null >= 0 is true in JavaScript: the guard must name it, or «off» purges every graded sitting at
      once (2026-11-01/02: 121 audit photos, then 28 of them again right after they were put back) */
@@ -3084,10 +3126,12 @@ async function labZoomFocus(env, s, disputed, photos, m, log, mine = []) {
 
 /* one experiment: from the images with Gemini; without a Gemini key, from the OCR text with whichever grader there is */
 /* training data (lab-train.js; LAB_TRAIN_CAPTURE on): each graded theory paper as (scheme + transcripts → marks), unverified
-   until an admin checks it. Off by default: the candidates' answers are kept only where the terms allow it. */
+   until an admin checks it. Off by default, and then only for a candidate who ticked the optional training consent
+   (consent.js); labPurge removes a row a year after capture, and withdrawing removes the candidate's rows at once. */
 async function labTrainCapture(env, s, task, mine, scheme, res) {
   if (env.LAB_TRAIN_CAPTURE !== "on" || res?.status !== "graded" || !Array.isArray(res.items)) return;
   try {
+    if (!s.user_id || !await trainAllowed(env.DB, s.user_id, env[DB_SCOPE] || env.DB)) return;
     await env.DB.prepare(LAB_TRAIN_SQL).run();
     await env.DB.prepare("INSERT INTO lab_train(kind,session_id,task,exam_key,input,target,source) VALUES('grade',?,?,?,?,?,'model')")
       .bind(s.id, task, s.exam_key || null, gradeTrainInput(scheme, mine, { task, exam: s.exam_key || "" }), gradeTrainTarget(scheme, res.items)).run();
@@ -3629,15 +3673,16 @@ async function labBootstrap(env,me,url){
   if(id!==null&&(!Number.isSafeInteger(id)||id<=0))bad('bad_session');
   if(include.has('health'))out.health=healthData(env,await labReady(env));
   if(!me){if(include.has('sessions'))out.sessions=[];return out;}
-  const half=await halfReady(env),statements=[
-    env.DB.prepare(`SELECT exam_tokens,${half?'exam_half':'0 AS exam_half'},token_parts FROM users WHERE id=?`).bind(me.id),
+  const [half]=await Promise.all([halfReady(env),ensureConsentSchema(env.DB,env[DB_SCOPE]||env.DB)]),statements=[
+    /* the consent flags ride on the balance read: the exam page learns it must ask before grading without another round trip */
+    env.DB.prepare(`SELECT exam_tokens,${half?'exam_half':'0 AS exam_half'},token_parts,${CONSENT_COLUMNS} FROM users u LEFT JOIN user_consents k ON k.user_id=u.id WHERE u.id=?`).bind(me.id),
     env.DB.prepare("SELECT * FROM lab_sessions WHERE user_id=? AND status IN ('running','scanning') ORDER BY id DESC LIMIT 1").bind(me.id),
   ];
   let selectedIndex=-1,listIndex=-1;
   if(id!==null){selectedIndex=statements.length;statements.push(env.DB.prepare('SELECT * FROM lab_sessions WHERE id=? AND (user_id=? OR ?=1)').bind(id,me.id,isAdmin(me)?1:0));}
   if(include.has('sessions')){listIndex=statements.length;statements.push(env.DB.prepare(`SELECT ${LAB_LIST_COLUMNS},(SELECT COUNT(*) FROM lab_pages p WHERE p.session_id=s.id) n_pages FROM lab_sessions s WHERE s.user_id=? ORDER BY s.id DESC LIMIT 50`).bind(me.id));}
   const results=await env.DB.batch(statements),credit=results[0].results[0]||{};
-  out.tokens=tokenBalance(credit);out.parts=credit.token_parts||0;
+  out.tokens=tokenBalance(credit);out.parts=credit.token_parts||0;out.user=pubUser(decorateConsent(me,consentOf(credit)));
   const active=await labAdvance(env,results[1].results[0]||null);
   let selected=selectedIndex>=0?results[selectedIndex].results[0]:null;
   if(selectedIndex>=0&&!selected)throw new HttpError(404,'not_found');
@@ -4063,6 +4108,11 @@ async function lab(p, m, body, me, req, env, url) {
   const lang = pickLang(url.searchParams.get("lang") || body.lang);
   const t = now();
   if(p==='/api/lab/bootstrap'&&m==='GET')return labBootstrap(env,me,url);
+  /* the photos go to the AI providers only under the current terms: opening a sitting and asking for grading (the two
+     places a token is spent) need this version's consent. Ending a sitting ungraded does not. */
+  if(m==='POST'&&(p==='/api/lab/start'||p==='/api/lab/contest/start'||/^\/api\/lab\/sessions\/\d+\/pay$/.test(p)||/^\/api\/lab\/sessions\/\d+\/submit$/.test(p)&&body.grade!==false)){
+    needUser(me);if((await consentStatus(env.DB,me.id,env[DB_SCOPE]||env.DB)).consent_required)throw new HttpError(403,'consent_required');
+  }
   const contest = await contestRoute({ p, m, body, me, env, lang, t }, { HttpError, needUser, labReady, labActive, labAdvance, labOwned,
     labGet, pubLab, labPagesOf, labTokens, labScanCode, sha256, labOpen, LAB, meter, meterSave, limit, labPageBytes, labReadPage, readText, labStoredReading, labRequireJobs, labQueueOcr, labSelectProvider });
   if (contest !== undefined) return contest;

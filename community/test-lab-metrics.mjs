@@ -11,7 +11,7 @@ let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const near = (a, b) => Math.abs(a - b) < 1e-6, near5 = (a, b) => Math.abs(a - b) < 1e-5;   // prices are kept to 6 places, sums shown to 5
 const rnd = Math.random().toString(36).slice(2, 7);
-const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1" }))[1].token;
+const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
 const png = Buffer.from("89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D49444154789C6360000002000154A24F5D0000000049454E44AE426082", "hex");
 const sql = q => JSON.parse(execSync(`npx wrangler d1 execute haslalab-community --local --json ${R2 ? "--config wrangler.test-r2.toml" : ""} --command "${q}"`, { cwd: new URL(".", import.meta.url).pathname, stdio: ["ignore", "pipe", "ignore"] }).toString())[0].results;
 

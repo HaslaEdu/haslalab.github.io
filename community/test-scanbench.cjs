@@ -8,8 +8,8 @@ const ok = (c, m) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + m)
 const call = async (m, p, body, tok) => { const r = await fetch(API + "/api" + p, { method: m, headers: { "Content-Type": "application/json", ...(tok ? { Authorization: "Bearer " + tok } : {}) }, body: body ? JSON.stringify(body) : undefined }); return [r.status, await r.json()]; };
 (async () => {
   const rnd = Math.random().toString(36).slice(2, 7);
-  const ADM = (await call("POST", "/signup", { username: "sbA" + rnd, nickname: "sbA" + rnd, password: "password1" }))[1].token;
-  const USR = (await call("POST", "/signup", { username: "sbU" + rnd, nickname: "sbU" + rnd, password: "password1" }))[1].token;
+  const ADM = (await call("POST", "/signup", { username: "sbA" + rnd, nickname: "sbA" + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
+  const USR = (await call("POST", "/signup", { username: "sbU" + rnd, nickname: "sbU" + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
   require("child_process").execSync(`npx wrangler d1 execute haslalab-community --local --command "UPDATE users SET role='admin' WHERE username='sbA${rnd}'"`, { cwd: __dirname, stdio: "ignore" });
   ok((await call("GET", "/admin/lab/scanbench", null, USR))[0] === 403, "not for ordinary users");
   const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 430, height: 900 } });

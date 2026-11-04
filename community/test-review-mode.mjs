@@ -4,6 +4,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import test from 'node:test';
 import worker from './src/index.js';
+import { agreeTerms } from './fixtures/consent.mjs';
 import {VISION_MODELS} from './src/vision-provider.js';
 import { SCHEME_VERSION as REG_VERSION } from './src/grading-rules.js';
 
@@ -26,6 +27,7 @@ for (let id = 1; id <= 21; id++) {
   const hash = Buffer.from(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))).toString('base64url');
   sqlite.prepare('INSERT INTO sessions(token_hash,user_id,created_at,expires_at) VALUES(?,?,?,?)').run(hash, id, timestamp, timestamp + 3600);
 }
+agreeTerms(sqlite, Object.keys(tokens).map(Number), timestamp);
 const messages=[];
 const env = { DB,GEMINI_API_KEY:'local-selected-provider-no-AI',LAB_JOBS:{async sendBatch(items){messages.push(...items.map(item=>item.body));}}, ALLOWED_ORIGINS: 'http://localhost:8765', LAB_KEEP_HOURS: 'off' };
 const originalFetch = globalThis.fetch;
