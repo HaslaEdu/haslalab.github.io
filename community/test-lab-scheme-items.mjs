@@ -240,3 +240,17 @@ test('a step credited «even if it was done inherently» is earned with a correc
   assert.equal(full.find(i => i.id === 'A.3').got, 0, 'an ordinary step is never implied');
   assert.equal(run(0.1, 0.5).find(i => i.id === 'A.2.1').got, 0, 'a wrong result implies nothing');
 });
+
+test("a paper's own tolerance for numerical answers (unit_rule ±N%) is used where an item prints none", async () => {
+  const { schemeRelTol, withRelTol, valueMatches } = await import("./src/lab-scheme-items.js");
+  assert.equal(schemeRelTol({ unit_rule: "Numerical answers must be correct to +/- 10% AND must respect significant figures." }), .1);
+  assert.equal(schemeRelTol({ unit_rule: "Numerical answer (i) must be correct to +/- 10%" }), .1);
+  assert.equal(schemeRelTol({ notes: "accepted within 5 % of the official value" }), .05);
+  assert.equal(schemeRelTol({ unit_rule: "A-5 loses 0.1 pt for an inappropriate number of significant figures" }), 0);
+  assert.equal(schemeRelTol({ unit_rule: "within 50 %" }), 0, "never wider than 20%");
+  const sc = withRelTol({ unit_rule: "correct to +/- 10%", items: [{ id: "F.1.b", type: "value", ref: "1.04e-23", tol: "default" }, { id: "W", type: "value", ref: "0.5", tol: "interval", full_min: .45, full_max: .55 }] });
+  assert.equal(sc.items[0].rel_tol, .1); assert.equal(sc.items[1].rel_tol, undefined, "an item with its own interval keeps it");
+  assert.ok(valueMatches(sc.items[0], 1.0e-23), "1.0e-23 within ±10% of 1.04e-23 (APhO 2022 T1 F.1.b)");
+  assert.ok(!valueMatches(sc.items[0], 0.9e-23), "outside ±10%");
+  assert.ok(!valueMatches({ type: "value", ref: "1.04e-23", tol: "default" }, 1.0e-23), "without the paper's rule the 2% default stands");
+});

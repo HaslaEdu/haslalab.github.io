@@ -225,7 +225,24 @@ export function valueMatches(item, v) {
   const r = refTolerance(item.ref);
   if (!r) return false;
   if (item.tol === "order") return r.value !== 0 && v !== 0 && Math.sign(v) === Math.sign(r.value) && Math.round(Math.log10(Math.abs(v))) === Math.round(Math.log10(Math.abs(r.value)));
-  return Math.abs(v - r.value) <= r.tol * (1 + 1e-9);
+  /* the paper's own tolerance for every numerical answer (rel_tol, from its unit_rule) where the item prints none */
+  const rel = Number.isFinite(+item.rel_tol) && +item.rel_tol > 0 ? Math.min(.2, +item.rel_tol) : 0;
+  return Math.abs(v - r.value) <= Math.max(r.tol, rel * Math.abs(r.value)) * (1 + 1e-9);
+}
+/** the relative tolerance a paper prints for all its numerical answers («Numerical answers must be correct to +/- 10%»,
+    «within 5 %»), from the scheme's unit_rule or notes; 0 when it prints none. APhO 2022 T1 F.1.b: 1.0·10^-23 against
+    1.04·10^-23 failed the 2% default though the paper accepts ±10% (1 pt). At most 20%. */
+export function schemeRelTol(scheme) {
+  const text = [scheme?.unit_rule, scheme?.notes].filter(x => typeof x === "string").join(" ");
+  const m = text.match(/(?:±|\+\s*\/\s*-|\+-|within|to)\s*(\d+(?:\.\d+)?)\s*%/i);
+  const p = m ? +m[1] : 0;
+  return p > 0 && p <= 20 ? p / 100 : 0;
+}
+/** each default-tolerance value item gets the paper's rel_tol (kept where the item has its own) */
+export function withRelTol(scheme) {
+  const rel = schemeRelTol(scheme);
+  if (rel && Array.isArray(scheme?.items)) for (const it of scheme.items) if (it && it.type === "value" && (it.tol == null || it.tol === "default") && it.rel_tol == null) it.rel_tol = rel;
+  return scheme;
 }
 
 /* ── automatic scheme review (LAB_SCHEME_CHECK): a scheme is built once per paper and marks every candidate, so a fault

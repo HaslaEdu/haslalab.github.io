@@ -108,3 +108,11 @@ test("labScore: a dropped mantissa (1e-23 for a written 1.04·10^-23) is rescued
   const wrong = { ...page, ocr: String.raw`F.1.b  \mu_s = 3.0 \cdot 10^{-23} \, J/T` };
   assert.equal(labScore(scheme, { items: [{ id: "F.1.b", found: true, page: 2, value: 1e-23, unit: "J/T", score: 0 }] }, [wrong], { theory: true }).items[0].got, 0, "no official value on the page: nothing to rescue");
 });
+
+import { compactScheme } from "./src/index.js";
+test("compactScheme marks an item that is a whole printed part (only item, all its points) as whole", () => {
+  const sc = compactScheme({ parts: [{ id: "B3", points: 2 }, { id: "B4", points: 2 }, { id: "C1", points: 1 }],
+    items: [{ id: "B3", points: 2, what: "relativistic KE" }, { id: "B4", points: 1, what: "a" }, { id: "B4.b", points: 1, what: "b" }, { id: "C1", points: 1, what: "c" }, { id: "C1.a", points: .3, what: "d" }] });
+  const w = Object.fromEntries(sc.items.map(i => [i.id, !!i.whole]));
+  assert.deepEqual(w, { B3: true, B4: false, "B4.b": false, C1: false, "C1.a": false });
+});
