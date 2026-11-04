@@ -1863,6 +1863,20 @@ const PAGE_SCHEMA = { type: "object", properties: {
 const lean = v => Array.isArray(v) ? (v.length ? v.map(lean) : undefined)
   : v && typeof v === "object" ? (o => Object.keys(o).length ? o : undefined)(Object.fromEntries(Object.entries(v).map(([k, x]) => [k, lean(x)]).filter(([, x]) => x !== undefined && x !== null && x !== "")))
   : v;
+const RELATIVE_ITEM = /±|\\pm|uncertaint|spread|range|relative|percent|%|\bdelta\b|δ|error\b/i;
+const pageText = pg => [pg?.ocr, pg?.text].filter(x => typeof x === "string").join("\n");
+const relativeKept = (it, g, pg, v) => +g.score >= .5 * it.points && RELATIVE_ITEM.test(String(it.what || "")) && relativeOnPage(pageText(pg), v);
+/** the number v written on the page as a relative amount: a coefficient of a quantity's symbol (0.40\mu_S, 0.2 Δx, 0.5x_0)
+    or a percentage (40 %), not a value with its unit */
+export function relativeOnPage(text, v) {
+  if (!Number.isFinite(v) || v === 0 || !text) return false;
+  const forms = new Set([String(v), ...[1, 2, 3].map(d => v.toFixed(d))]);
+  for (const f of [...forms]) forms.add(f.replace(".", ","));
+  const sym = String.raw`(?:\\(?:mu|Delta|delta|sigma|lambda|alpha|beta|gamma|omega|tau|theta|phi|rho|epsilon|varepsilon|nu|kappa|eta)(?![A-Za-z])|[Δδ]|[μσλαβγωτθφρεν](?![A-Za-z])|[A-Za-z]_)`;
+  const join = String.raw`\s*(?:\\[,;:!]|\\cdot|\\times|·|×|\*)?\s*`;
+  return [...forms].some(f => { const n = f.replace(/[.,]/g, m => "\\" + m);
+    return new RegExp(String.raw`(?<![\d.,])` + n + `(?![\\d])` + "(?:" + join + sym + "|" + String.raw`\s*\\?%` + ")").test(text); });
+}
 /* whole: the item is the only one of its printed part and carries all its points, so the scheme marks that part only as
    a total (IP2 and IP9 then give a correct set-up its share: IPhO 2015 T1 B3, 2 pt, zeroed for one missing term) */
 const wholeParts = scheme => { const parts = new Map((Array.isArray(scheme.parts) ? scheme.parts : []).map(p => [String(p.id), +p.points]));
@@ -2349,7 +2363,7 @@ async function labReadPage(env,s,buf,mime,notation,m) {
     'Return exactly one JSON object, with text as a string, legible as one of "good", "partial", "poor", and items as an array. Empty graphical transcription is allowed; preserve visible image evidence in items. Optional unreadable headers are null. Do not wrap JSON in prose or Markdown fences.',
     /* the look-alikes our audits found misread (LAB_READ_CONFUSIONS on, bench read.confusions): a list in the prompt,
        as EDU-CIRCUIT-HW (arXiv 2602.00095) gives its misread detector */
-    ...((typeof src._confusions==='boolean'?src._confusions:env.LAB_READ_CONFUSIONS==='on')?['Handwriting look-alikes that machine readers get wrong on these pages; check each one against the strokes before you write it: a 0 with a tail or a slash is 0, not 9 or 6; a closed or slanted 4 is 4, not 9; 1 and 7, 3 and 8, 5 and s, 2 and z (z often has a bar); a capital I with serifs is I, not Z or 1; Ω after a number is the unit ohm, never .5, 0 or n; μ (mu, also written u with a tail) is not m or u; ε is not e or C; ρ is not p; γ is not y or r; ν is not v; an exponent is small and raised: read its sign and every digit (10^18 vs 10^13, 10^-2 vs 10^2); a decimal comma (0,23) is a decimal point.']:[]),
+    ...((typeof src._confusions==='boolean'?src._confusions:env.LAB_READ_CONFUSIONS==='on')?['Handwriting look-alikes that machine readers get wrong on these pages; check each one against the strokes before you write it: a 0 with a tail or a slash is 0, not 9 or 6; a closed or slanted 4 is 4, not 9; 1 and 7, 3 and 8, 5 and s, 2 and z (z often has a bar); a capital I with serifs is I, not Z or 1; Ω after a number is the unit ohm, never .5, 0 or n; μ (mu, also written u with a tail) is not m or u; ε is not e or C; ρ is not p; γ is not y or r; ν is not v; an exponent is small and raised: read its sign and every digit (10^18 vs 10^13, 10^-2 vs 10^2); a decimal comma (0,23) is a decimal point; ± (plus over minus) and ∓ (minus over plus) are \\pm and \\mp, never a plain − or +: look for the second bar before you write a sign.']:[]),
     ...(notation?[`Symbols this paper uses, only to tell look-alike handwriting apart (σ from 6 or γ, ξ from z or τ, μ from m or u, ρ from p, C from ρ); transcribe what is written, even where it differs from these: ${notation}`]:[]),
     'JSON output format example (the example is not student work; replace it entirely with observed content): {"text":"x = 2 m","confidence":0.9,"header":{"task":null,"sheet":null,"page":null},"legible":"good","items":[{"label":"1","kind":"value","text":"x = 2 m","crossed_out":false,"value":2,"unit":"m","uncertainty":null,"box":[100,100,200,800]}]}. For a blank page use text:"", items:[], legible:"poor".'].join('\n');
   /* A full answer page reads in 0.5-2k output tokens. At temperature 0 a page can fall into a repetition loop that runs to
@@ -2643,6 +2657,7 @@ export function labScore(scheme, raw, pages, opts = {}) {
       if (interval) {
         if (w >= Math.min(it.full_min, it.full_max) && w <= Math.max(it.full_min, it.full_max)) pts = it.points;
         else for (const p of it.partial || []) if (w >= Math.min(p.min, p.max) && w <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
+        if (!pts && relativeKept(it, g, pg, v)) { pts = Math.min(it.points, +g.score); res.by = "model"; }
       } else if (valueMatches(it, w)) pts = it.points;                                   // R12 in code: the official value and its tolerance
       else {
         /* the grader's reported number can drop the mantissa of what is written (1.04·10⁻²³ on the page, 1e-23 reported:
@@ -2655,6 +2670,10 @@ export function labScore(scheme, raw, pages, opts = {}) {
         const exp10 = x => Math.floor(Math.log10(Math.abs(x)) + 1e-9), bare = v !== 0 && Math.abs(Math.log10(Math.abs(v)) - Math.round(Math.log10(Math.abs(v)))) < 1e-9;
         const onPage = pageNums.find(x => valueMatches(it, units?.same ? x * units.factor : x) && (+g.score >= .5 * it.points || bare && x !== v && Math.sign(x) === Math.sign(v) && exp10(x) === exp10(v)));
         if (onPage !== undefined) { pts = it.points; res.value = onPage; }
+        /* an uncertainty or range given relative to the quantity (δμ = 0.40 μ_s, 20 %) is not a number to hold against the
+           official absolute one: where the page writes the reported number as a coefficient of a symbol or a percentage,
+           the grader's own mark from the photo and the scheme stands (APhO 2022 T1 H.1: ±0.40 μ_s for ±0.42·10⁻²³, zeroed) */
+        else if (relativeKept(it, g, pg, v)) { pts = Math.min(it.points, +g.score); res.by = "model"; res.value = v; }
         else rules.add("R12");
       }
       if (unitSlip && pts > 0) { pts = Math.max(0, pts - (Number.isFinite(+it.unit_penalty) ? +it.unit_penalty : 0.1)); rules.add("R3"); }

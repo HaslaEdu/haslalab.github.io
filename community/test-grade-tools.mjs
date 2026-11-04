@@ -116,3 +116,19 @@ test("compactScheme marks an item that is a whole printed part (only item, all i
   const w = Object.fromEntries(sc.items.map(i => [i.id, !!i.whole]));
   assert.deepEqual(w, { B3: true, B4: false, "B4.b": false, C1: false, "C1.a": false });
 });
+
+import { relativeOnPage } from "./src/index.js";
+test("relativeOnPage: a number written as a coefficient of a symbol or a percentage, never a value with its unit", () => {
+  const yes = [[String.raw`\delta\mu_S = 2\mu_S \frac{\delta v}{v} = 0.40\mu_S`, .4], [String.raw`\delta X = 0.20\Delta x`, .2], ["error 40 %", 40], [String.raw`40\%`, 40], ["0.4x_0", .4], ["δμ = 0.40 μ", .4], ["0,40 Δx", .4]];
+  const no = [[String.raw`= 0.08 \text{ cm}`, .08], ["m = 0.40 kg", .4], [String.raw`x = 1.40\mu_S`, .4], ["0.4 m", .4], [String.raw`0.40 \mathrm{m}`, .4], [String.raw`0.4\mus`, .4], ["0.4 μs", .4], ["R = 0.4 Ω", .4], [String.raw`0.4\Omega`, .4]];
+  for (const [t, v] of yes) assert.ok(relativeOnPage(t, v), t);
+  for (const [t, v] of no) assert.ok(!relativeOnPage(t, v), t);
+});
+test("labScore: a relative uncertainty keeps the grader's mark; an absolute wrong value is still R12", () => {
+  const scheme = { items: [{ id: "H.1.a", type: "value", role: "step", points: .3, ref: "0.62e-23", tol: "interval", full_min: 6.2e-24, full_max: 1.46e-23, what: "Magnetic moment ranges from 0.62e-23 to 1.46e-23 J/T; total spread 0.84e-23 about the mean 1.04e-23" }] };
+  const at = (ocr, score) => labScore(scheme, { items: [{ id: "H.1.a", found: true, page: 2, value: .4, score }] }, [{ no: 2, kind: "working", task: "T1", ocr, read: JSON.stringify({ items: [] }) }], { theory: true }).items[0];
+  const rel = String.raw`\delta\mu_S = 2\mu_S \frac{\delta v}{v} = 0.40\mu_S`;
+  assert.equal(at(rel, .3).got, .3); assert.equal(at(rel, .3).by, "model");
+  assert.equal(at(rel, .1).got, 0, "the grader itself gave under half: nothing to keep");
+  assert.equal(at(String.raw`\delta\mu_S = 0.40 \text{ J/T}`, .3).got, 0, "an absolute number off the range stays wrong");
+});
