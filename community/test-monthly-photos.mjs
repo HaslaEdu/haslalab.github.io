@@ -73,7 +73,11 @@ async function environment(run) {
 
 test('stores original bytes in bounded chunks, OCRs scan separately, and serves only owner/admin without caching',async()=>{
   await environment(async({sql,api,upload})=>{
-    const result=await upload(); assert.equal(result.status,200);const id=result.data.photo_id;assert.match(id,/^[a-f0-9-]{36}$/);
+    const warn=console.warn,said=[];console.warn=(...args)=>said.push(args.join(' '));
+    let result;try{result=await upload();}finally{console.warn=warn;}
+    assert.equal(result.status,200);const id=result.data.photo_id;assert.match(id,/^[a-f0-9-]{36}$/);
+    assert.deepEqual(said,[`[monthly photo ${id}] stored image/png page of 600000 bytes as it is: no strips, zoom crops or size fitting (the Worker decodes JPEG only)`],
+      'a PNG that reaches the server is kept with its own MIME, and said so');
     assert.equal(result.data.bytes,600000);assert.equal(sql.prepare('SELECT COUNT(*) n FROM monthly_answer_photo_chunks').get().n,2);
     assert.equal(sql.prepare('SELECT ocr_text FROM monthly_answer_photos WHERE id=?').get(id).ocr_text,ANSWER+'\n'+WORKING);
     const original=await api('/monthly/photos/'+id);assert.equal(original.status,200);assert.deepEqual(original.data,png(600000));

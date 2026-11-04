@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import jpeg from "jpeg-js";
-import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto } from "./src/page-tiles.js";
+import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from "./src/page-tiles.js";
 
 const page = (width, height) => {
   const data = new Uint8Array(width * height * 4);
@@ -65,4 +65,17 @@ test("a photo over its share of the image budget is encoded again smaller, not l
   const small = fitPhoto(big, "image/jpeg", big.byteLength * 4 / 3 * 0.6);
   assert.ok(small && small.byteLength * 4 / 3 <= big.byteLength * 4 / 3 * 0.6 && small[0] === 0xff && small[1] === 0xd8, "a smaller JPEG");
   assert.equal(fitPhoto(big, "image/png", 10), null); assert.equal(fitPhoto(big, "image/jpeg", 10), null);
+});
+
+test("a PNG or WebP page is stored and graded as it is, with a console warning that it gets no strips, crops or fitting", () => {
+  const saved = console.warn, said = [];
+  console.warn = (...args) => said.push(args.join(" "));
+  try {
+    assert.equal(warnNotJpeg("lab page 7/2", "image/jpeg", 1000), false);
+    assert.equal(said.length, 0, "a JPEG page says nothing");
+    assert.equal(warnNotJpeg("lab page 7/3", "image/png", 2048), true);
+    assert.match(said[0], /^\[lab page 7\/3\] stored image\/png page of 2048 bytes as it is: no strips, zoom crops or size fitting/);
+    assert.equal(fitPhoto(new Uint8Array(300), "image/webp", 10), null);
+    assert.match(said[1], /image\/webp page of 300 bytes is over its 10-byte share and cannot be made smaller here/);
+  } finally { console.warn = saved; }
 });

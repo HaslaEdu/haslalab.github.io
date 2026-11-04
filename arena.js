@@ -416,7 +416,7 @@ function arVisionProvider(root, fallback = "gemini") {
   const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
 }
 function arVisionAvailable(source, provider) { return arVisionCapabilities(source).some(row=>row.id===provider&&row.available); }
-const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=dda686b6c637").catch(error => { arScanner = null; throw error; }));
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=2d410ba50bfe").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
@@ -493,8 +493,9 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     photo.reading = true; paint(); note(T.reading);
     const ctrl = new AbortController(); controller = ctrl;
     try {
-      /* Preserve an already-small PNG/JPEG/WebP. Larger photos are encoded once through the
-         shared 200dpi policy, with no repeated shrinking below the readable page size. */
+      /* An already-small JPEG keeps its bytes; a PNG or WebP becomes a JPEG (the server's strips and crops read JPEG
+         only). Larger photos are encoded once through the shared 200dpi policy, with no repeated shrinking below the
+         readable page size. */
       const scanner = await arLoadScanner(), blob = await scanner.encodeUpload(selected, { maxBytes: 4 * 1024 * 1024 }).catch(error => {
         if (error?.code === "image_too_big") throw { code: "ocr_image_too_big" };
         throw error;

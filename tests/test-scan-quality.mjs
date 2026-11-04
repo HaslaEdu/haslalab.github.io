@@ -8,27 +8,53 @@ const scannerSource = await fs.readFile(new URL('../sim/labscan/scanner.js', imp
 const scanner = await import('data:text/javascript;base64,' + Buffer.from(scannerSource).toString('base64'));
 const require = createRequire(import.meta.url), Review = require('../sim/contest-review.js');
 
-test('JPEG, PNG and WebP already under the upload limit keep their original bytes and MIME', async () => {
+test('a JPEG under the upload limit keeps its bytes; without a canvas a small PNG or WebP goes as it is', async () => {
   for (const type of ['image/jpeg', 'image/png', 'image/webp']) {
     const original = new Blob(['original pencil strokes'], { type });
     assert.equal(await scanner.encodeUpload(original), original);
   }
 });
 
-function encodingFixture(width, height, sizeFor) {
+function encodingFixture(width, height, sizeFor, { decode = true } = {}) {
   const saved = { document: globalThis.document, createImageBitmap: globalThis.createImageBitmap };
-  const calls = [], bitmaps = [];
+  const calls = [], bitmaps = [], paints = [];
   globalThis.createImageBitmap = async (_blob, options) => {
+    if (!decode) throw new Error('no decoder for this file');
     const bitmap = { width, height, options, closed: false, close() { this.closed = true; } };
     bitmaps.push(bitmap); return bitmap;
   };
   globalThis.document = { createElement() {
-    const c = { width: 0, height: 0, getContext() { return { drawImage() {}, fillRect() {} }; },
+    const ctx = { drawImage() { paints.push('draw'); }, fillRect() { paints.push(`fill ${ctx.fillStyle} ${ctx.globalCompositeOperation}`); } };
+    const c = { width: 0, height: 0, getContext() { return ctx; },
       toBlob(resolve, type, quality) { calls.push({ width: c.width, height: c.height, type, quality }); resolve(new Blob([new Uint8Array(sizeFor(c, quality))], { type })); } };
     return c;
   } };
-  return { calls, bitmaps, restore() { Object.assign(globalThis, saved); } };
+  return { calls, bitmaps, paints, restore() { Object.assign(globalThis, saved); } };
 }
+
+test('a PNG or WebP under the limit becomes a JPEG at the scanner quality, upright, at its own size and on white', async () => {
+  for (const type of ['image/png', 'image/webp']) {
+    const fixture = encodingFixture(1654, 2339, () => 400000);
+    try {
+      const out = await scanner.encodeUpload(new Blob([new Uint8Array(900000)], { type }));
+      assert.equal(out.type, 'image/jpeg', type + ' is sent as JPEG: the server strips and crops JPEG only');
+      assert.deepEqual(fixture.calls, [{ width: 1654, height: 2339, type: 'image/jpeg', quality: scanner.PAGE_JPEG_QUALITY }]);
+      assert.equal(fixture.bitmaps[0].options.imageOrientation, 'from-image', 'EXIF orientation is applied');
+      assert.deepEqual(fixture.paints, ['draw', 'fill #fff destination-over'], 'transparency is flattened onto white, behind the page');
+      assert.equal(fixture.bitmaps[0].closed, true);
+    } finally { fixture.restore(); }
+  }
+});
+
+test('a small PNG the browser cannot decode or encode smaller is kept as it is rather than lost', async () => {
+  const png = new Blob([new Uint8Array(900000)], { type: 'image/png' });
+  let fixture = encodingFixture(1654, 2339, () => 400000, { decode: false });
+  try { assert.equal(await scanner.encodeUpload(png), png); assert.equal(fixture.calls.length, 0); } finally { fixture.restore(); }
+  fixture = encodingFixture(1654, 2339, () => 2000000);
+  try { assert.equal(await scanner.encodeUpload(png), png, 'no JPEG fits the limit: the PNG under it goes'); } finally { fixture.restore(); }
+  fixture = encodingFixture(1654, 2339, () => 400000, { decode: false });
+  try { await assert.rejects(scanner.encodeUpload(new Blob([new Uint8Array(2100000)], { type: 'image/webp' })), e => e.code === 'bad_image'); } finally { fixture.restore(); }
+});
 
 test('oversized 200dpi A4 tries quality settings without reducing document resolution', async () => {
   const fixture = encodingFixture(1654, 2339, (_canvas, q) => q > .84 ? 2000000 : 1700000);
