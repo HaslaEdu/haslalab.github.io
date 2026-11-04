@@ -1147,7 +1147,7 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="site-catalogue.js?v=c58f9b7a5fb2"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=093476a8bf6d"></script>
+<script src="site-design.js?v=7385ce7c7606"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
 <script src="ai-chat.js?v=3cfdb03f8e1d"></script>
 <script>
@@ -4808,7 +4808,10 @@ function viewOriginalHome(){
   const d=UI[lang];
   const catalogueTotals=window.HL_CATALOGUE?.totals;
   let years=0,probs=0,live=0,thy=0;
-  if(catalogueTotals){({years,probs,live,thy}=catalogueTotals);}
+  let comps=catalogueTotals?.comps??Object.keys(DATA).length;
+  if(catalogueTotals){({years,probs,live,thy}=catalogueTotals);
+    /* what the English site does not show is not counted on it */
+    for(const k of EN_HIDDEN) if(!compShown(k)){ const c=catalogueTotals&&window.HL_CATALOGUE.competitions[k]?.counts; comps--; if(c){ years-=c.years; thy-=c.problems; } } }
   else{
 
   for(const k in THEORY) for(const y in THEORY[k]) thy+=thyParts(THEORY[k][y]).length;
@@ -4844,7 +4847,7 @@ function viewOriginalHome(){
 
   <section><div class="shell">
     <dl class="tally">
-      <div><dt>${d.tComps}</dt><dd>${catalogueTotals?.comps??Object.keys(DATA).length}</dd></div>
+      <div><dt>${d.tComps}</dt><dd>${comps}</dd></div>
       <div><dt>${d.tYears}</dt><dd>${years}</dd></div>
       <div><dt>${d.tProbs}</dt><dd>${probs}</dd></div>
       <div><dt>${d.tThy}</dt><dd>${thy}</dd></div>
@@ -4855,6 +4858,10 @@ function viewOriginalHome(){
   ${adFitBanner("home")}`;
 }
 
+/* competitions the English site does not show (they stay on the Korean site): no card, no count, and a link to one
+   goes to the subject's list */
+const EN_HIDDEN=new Set(["cpho"]);
+const compShown=key=>!(lang==="en"&&EN_HIDDEN.has(key));
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
   {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe"]},
@@ -4873,7 +4880,7 @@ function viewComps(sub,limit=Infinity){
   let cur=SUBJ.find(x=>x.k===sub);
   if(!cur){ let k=""; try{ k=localStorage.getItem("hlSubj")||""; }catch(e){} cur=SUBJ.find(x=>x.k===k)||SUBJ[0]; }
   try{ localStorage.setItem("hlSubj",cur.k); }catch(e){}
-  const list=cur.comps.filter(k=>DATA[k]).slice(0,limit);
+  const list=cur.comps.filter(k=>DATA[k]&&compShown(k)).slice(0,limit);
   return `
   <div class="shell">
     ${archiveCategories("contests",cur.k)}
@@ -4917,7 +4924,7 @@ function archiveCategories(category,subject){
 function archiveSubjects(category,subject){
   const d=UI[lang],list=category==="contests"?SUBJ:SUBJ.filter(x=>x.k!=="sci");
   return `<nav class="subjs${category==="contests"?"":" archive-library-subjects"}" aria-label="${d.subjLabel}">${list.map(x=>{
-    const count=category==="contests"?x.comps.filter(k=>DATA[k]).length:null;
+    const count=category==="contests"?x.comps.filter(k=>DATA[k]&&compShown(k)).length:null;
     const note=count===null?(category==="books"?(lang==="ko"?"교재 보기":"Books"):(lang==="ko"?"학교 보기":"Schools")):(count?d.subjN(count):d.subjSoon);
     const picture=category==="contests"?`<img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)">`:`<img class="archive-subject-art" data-subject-art="${x.k}" src="archive-media/subjects/${x.k}.svg?v=1" alt="" loading="lazy" decoding="async">`;
     return `<a href="${archiveHref(category,x.k)}"${x.k===subject?' aria-current="true"':""} class="${count===0?"none":""}">${picture}<b>${x[lang]}</b><small>${note}</small></a>`;
@@ -10000,6 +10007,7 @@ function render(){
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
+  else if(first && DATA[first] && !compShown(first)){ const to="#/comps/"+subjOf(first); try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;} return render(); }
   else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.body.dataset.siteRoute=active==="comps"?"archive":active;
