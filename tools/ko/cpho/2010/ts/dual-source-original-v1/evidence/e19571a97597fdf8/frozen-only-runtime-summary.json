@@ -1,0 +1,1149 @@
+{
+  "passed": true,
+  "actual_fresh_positive_runtime_cases": 104,
+  "actual_fresh_damaged_PDF_cases": 8,
+  "all104_source_specific_actual_point_native_frame_color_both_renderer_ink_and_full_donor_cases_passed": true,
+  "all8_actual_damaged_PDFs_rejected_by_their_intended_predicates": true,
+  "all_original_live_task_source_authoring_subset_and_fullfont_reads_redirected_to_exact_frozen_inputs": true,
+  "all_actual_full_font_inputs_used_for_each_proof_are_captured_private_and_were_read_from_frozen": true,
+  "actual_full_font_input_SHA256s": [
+    "10cc03741178ad6d2747df8497d911e34b167d0474a826fb9d866c402cbe3d8f",
+    "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+    "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+    "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+    "aa4560dd8fe5645745fed3ffa301c3ca4d6c03cbd738145b613303961ba733b8"
+  ],
+  "positives": [
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 7,
+      "edition_page": 1,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "48b82f49faab40bb0f06b6a6e999527fbc7c09d7c99ee8afa8dc51f58ac40dce",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page07-48b82f49faab40bb-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "00bc4a669a4d542458e8af92bed51c66256aec53fddd7e262b047d00c31234d9"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 7,
+      "edition_page": 1,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "48b82f49faab40bb0f06b6a6e999527fbc7c09d7c99ee8afa8dc51f58ac40dce",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page07-48b82f49faab40bb-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e35aa70233c25a92f84c65203c6fb234192fda4a57457c2205ff3fec19a31885"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 7,
+      "edition_page": 1,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "48b82f49faab40bb0f06b6a6e999527fbc7c09d7c99ee8afa8dc51f58ac40dce",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page07-48b82f49faab40bb-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "eddc41f372f66c531ed24b6529aabd59c6a586abf3eb1500b0c3b01fe411097a"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 7,
+      "edition_page": 1,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "86f43410bd2c7301331fbbeb3fda51d64aebff6946c45bc600480946e5f1001c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page07-86f43410bd2c7301-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "237842e0c6fba5e6f60f4379fad5c21ecdbdbf6f60b337737e5157f3257c1bff"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 7,
+      "edition_page": 1,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "86f43410bd2c7301331fbbeb3fda51d64aebff6946c45bc600480946e5f1001c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page07-86f43410bd2c7301-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "8ba6d7be6be947ea326bd08f8d3b3c6d68ac88b96fd1397b7937ec5ca344d8f6"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 7,
+      "edition_page": 1,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "86f43410bd2c7301331fbbeb3fda51d64aebff6946c45bc600480946e5f1001c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page07-86f43410bd2c7301-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "2d3bb9a6266cc594188d4b92a0ba98bf3f90921a4cf64c52888c4f752dcf6145"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 8,
+      "edition_page": 2,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "b6abfb633d453a763269a9cb9a47103b037ee30401fe07de0cd362223c6e80ec",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page08-b6abfb633d453a76-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "4f739854b72a9f53de557e7d6a226d34a3312ce9bf9a520ac89648245bef6ad6"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 8,
+      "edition_page": 2,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "b6abfb633d453a763269a9cb9a47103b037ee30401fe07de0cd362223c6e80ec",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page08-b6abfb633d453a76-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "82f6f81b5530ad78e86a6f2855139d3378619107e774d8a37dd23ce95127177e"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 8,
+      "edition_page": 2,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "b6abfb633d453a763269a9cb9a47103b037ee30401fe07de0cd362223c6e80ec",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page08-b6abfb633d453a76-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "25df7f5cbb378b155ad7d361098c91844debf0fb0b0a521cd514682fefb08db3"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 8,
+      "edition_page": 2,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "e7fc1541c3dd6537dfd0b9b41b94a9f7342217e74333d7b4edc9a6f7b701d00f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page08-e7fc1541c3dd6537-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ac4be5918854317ed47f89c8593defab0e096f014dbe8c35e00348a0c957811a"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 8,
+      "edition_page": 2,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "e7fc1541c3dd6537dfd0b9b41b94a9f7342217e74333d7b4edc9a6f7b701d00f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page08-e7fc1541c3dd6537-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "930fba3f2f4457da79b1960a32a914fe7220c98d66bed8fddf916bb39f4ae803"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 8,
+      "edition_page": 2,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "e7fc1541c3dd6537dfd0b9b41b94a9f7342217e74333d7b4edc9a6f7b701d00f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page08-e7fc1541c3dd6537-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "a7ff98a34fd38f4d72521883418bbb629154826a4d0d9ed3749c500ac8b9c553"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 9,
+      "edition_page": 3,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "fc7b5ebb16589a8710f154d61d4d85fa4dc4c4e780a435f772908a65b4d425f8",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page09-fc7b5ebb16589a87-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "d8d7814e86688536fd3d5c3b6b8d61a94a21f3a6342dc207fbd27611a499e52b"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 9,
+      "edition_page": 3,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "fc7b5ebb16589a8710f154d61d4d85fa4dc4c4e780a435f772908a65b4d425f8",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page09-fc7b5ebb16589a87-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "2688cd412ee8c8489b93c98514d0e91463e02a6c494c4722ccd8353eb8d54050"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 9,
+      "edition_page": 3,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "fc7b5ebb16589a8710f154d61d4d85fa4dc4c4e780a435f772908a65b4d425f8",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page09-fc7b5ebb16589a87-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "8f9c88df603e828d680cd057e53c4480d80033d7c745a94fe372c4eb2f18045d"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 9,
+      "edition_page": 3,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "1281f47f74679ba9c36f0ce9e7a782071958e5bae96bf096ce09a03a0e7e53ac",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page09-1281f47f74679ba9-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "51b4a2c6f019c1d47565eeef9fc7a1092113ab3389b823478faf020ffbf9d09e"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 9,
+      "edition_page": 3,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "1281f47f74679ba9c36f0ce9e7a782071958e5bae96bf096ce09a03a0e7e53ac",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page09-1281f47f74679ba9-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "03ace67b9d38648490bdbb7a6a1a74403953e108646f0b2854b5f659f3be822f"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 9,
+      "edition_page": 3,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "1281f47f74679ba9c36f0ce9e7a782071958e5bae96bf096ce09a03a0e7e53ac",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page09-1281f47f74679ba9-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "d52ecd9866bfacec8029c945d0615d57d8f3b92c4d2da8083ce679b2460e74c4"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 10,
+      "edition_page": 4,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "8b67464456e202a41ed2ed5d27ea5ef75d40290b772165c088a4248263f6aae0",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page10-8b67464456e202a4-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "b3179846cd64a1dc05390a3d72998fd609ce3102adb0d9166709fbb9ef86bf88"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 10,
+      "edition_page": 4,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "8b67464456e202a41ed2ed5d27ea5ef75d40290b772165c088a4248263f6aae0",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page10-8b67464456e202a4-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "3b6fc877773e065d4ca4ca597fecd85ae37301585fcabf280ff564a19a4000f9"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 10,
+      "edition_page": 4,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "8b67464456e202a41ed2ed5d27ea5ef75d40290b772165c088a4248263f6aae0",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page10-8b67464456e202a4-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "710dfa1e87274a6ea82766f2ac5871a7d2321f796659e6c85e8b72209b570c1a"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 10,
+      "edition_page": 4,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "d4adf6a66d001bd0c2db85174db88c324ba7fff973c5671f675225bbae6c1ce7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page10-d4adf6a66d001bd0-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6085b806214fc7af95d69eaea0b1648064146fac5d627acce22d8e2f19cf4369"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 10,
+      "edition_page": 4,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "d4adf6a66d001bd0c2db85174db88c324ba7fff973c5671f675225bbae6c1ce7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page10-d4adf6a66d001bd0-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "895a20f823c496ad2c6c96fad9262f2257c4defc765342062666625cb1902166"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 10,
+      "edition_page": 4,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "d4adf6a66d001bd0c2db85174db88c324ba7fff973c5671f675225bbae6c1ce7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page10-d4adf6a66d001bd0-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "154f65ac6e3f4f49f17e2063fb849828de7f3b0fbb0b860184830d47d59eda58"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 11,
+      "edition_page": 5,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "36ce117478c52010e2c8750a5ec05a2b2ac1ba6ed760ee2bc44994e1f3bc0fb7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page11-36ce117478c52010-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "31a4ef85a881a9718420256c3dc157d3dc08ddbe7f40fa55b79508ef2a59ab5f"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 11,
+      "edition_page": 5,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "36ce117478c52010e2c8750a5ec05a2b2ac1ba6ed760ee2bc44994e1f3bc0fb7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page11-36ce117478c52010-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "0f10894cff8fd3c3e3c32a56a61f859276e5bff49ec9a537e41ea57410170435"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 11,
+      "edition_page": 5,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "36ce117478c52010e2c8750a5ec05a2b2ac1ba6ed760ee2bc44994e1f3bc0fb7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page11-36ce117478c52010-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e8ad3db8a814d48a744e33fcf4a76e467d87fed2d4111a97567ea6bde4c92bf8"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 11,
+      "edition_page": 5,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "c29c766a0cd2493a9936b9ffa5354e43f585cbd5b96a011049b859e67bc661c5",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page11-c29c766a0cd2493a-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "b9884743ed00e1c43eb09f7774165fe05427a0db062b28e77ad1febffb821c61"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 11,
+      "edition_page": 5,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "c29c766a0cd2493a9936b9ffa5354e43f585cbd5b96a011049b859e67bc661c5",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page11-c29c766a0cd2493a-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "4f82369f823da33fe61b1ad151aa6b317f8c737132905d3b0f4bfb341d40f848"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 11,
+      "edition_page": 5,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "c29c766a0cd2493a9936b9ffa5354e43f585cbd5b96a011049b859e67bc661c5",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page11-c29c766a0cd2493a-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "d9a140cafb11177cee2b6c5d52dc156a0e208f067c367ae78e1071b0e7d262e6"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 12,
+      "edition_page": 6,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "c2c62bb37883f350fc398808b2d51ffe6ed22839b59b62e05d499e9f269c881f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page12-c2c62bb37883f350-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e8052087e9ccfb1c93cf8b51c51e0fb3aa461de817081dfad34899649444297c"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 12,
+      "edition_page": 6,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "c2c62bb37883f350fc398808b2d51ffe6ed22839b59b62e05d499e9f269c881f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page12-c2c62bb37883f350-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "8ee87e2644b994645b064f2df2823f87b6553b41759bd895c3ce663954bb1d09"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 12,
+      "edition_page": 6,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "c2c62bb37883f350fc398808b2d51ffe6ed22839b59b62e05d499e9f269c881f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page12-c2c62bb37883f350-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "638aeeead84c75c8fd052594d9e09dfd4c69ff05e28ec1208310c7dde2939407"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 12,
+      "edition_page": 6,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "b2cbc869624c91a813e19931ee3ff208dc14f746c1bc14ad58429ba89a615195",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page12-b2cbc869624c91a8-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "b3d61cc1ba6b2fce137e0c11ef293ba0c5d23d38c1426b59c50bce016f16ad0e"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 12,
+      "edition_page": 6,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "b2cbc869624c91a813e19931ee3ff208dc14f746c1bc14ad58429ba89a615195",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page12-b2cbc869624c91a8-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "7955184db1d37795f7291fa26db98c02d64dc645cfdb5536d5ec7850234a70c9"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 12,
+      "edition_page": 6,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "b2cbc869624c91a813e19931ee3ff208dc14f746c1bc14ad58429ba89a615195",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page12-b2cbc869624c91a8-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "fedca0f646fdb64a3d46869780bbac22d042accb9c10d63d8aea029b45202999"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 13,
+      "edition_page": 7,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "dcbc458919892f3d7d0fa5668bedb71442dfe8ca9ffed4fdebbd6f6912eec661",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page13-dcbc458919892f3d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "7b5bfdc8dc2518b2410dde7cd1238332e187a63c65853b3bc91c58768557a335"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 13,
+      "edition_page": 7,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "dcbc458919892f3d7d0fa5668bedb71442dfe8ca9ffed4fdebbd6f6912eec661",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page13-dcbc458919892f3d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6180bc01c950861adb87a91b7a7416675527bf80646810e1194214fe8fb01be1"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 13,
+      "edition_page": 7,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "dcbc458919892f3d7d0fa5668bedb71442dfe8ca9ffed4fdebbd6f6912eec661",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page13-dcbc458919892f3d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "87309550a5653d667b6b4d75d4582bcf76d666edba72c1e4f281c1e9802bedcb"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 13,
+      "edition_page": 7,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "8e75f367d4b369d2358a8794afde03725cfad0c189842ed4796d8123b669b13c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page13-8e75f367d4b369d2-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "5ce2813b9ac852dfc913698cb798f621f4581ecfc8af61413e982f1d4a624070"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 13,
+      "edition_page": 7,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "8e75f367d4b369d2358a8794afde03725cfad0c189842ed4796d8123b669b13c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page13-8e75f367d4b369d2-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ab85cf78915c8f3271e011de0ee0705f19d3e4ca66ffe2d1e2529423ffd29eaa"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 13,
+      "edition_page": 7,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "8e75f367d4b369d2358a8794afde03725cfad0c189842ed4796d8123b669b13c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page13-8e75f367d4b369d2-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6645eca1065904fc73e2914d32f41b47fc2b5df81daa631e5ea312e7d67f5949"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 14,
+      "edition_page": 8,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "eed1d9382d57f5df2cffd8ccf5d43fe195f7d0f0f335b90e7a007a9f469e031f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page14-eed1d9382d57f5df-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "c8b0a67aa991a875aca8d5914e2761a3f12f16c37c164280d295980ce9cb8949"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 14,
+      "edition_page": 8,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "eed1d9382d57f5df2cffd8ccf5d43fe195f7d0f0f335b90e7a007a9f469e031f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page14-eed1d9382d57f5df-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "594590cf20fa0da65515ae6ad4c7aa616ce98092dc2ed5327801263a424ddd2c"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 14,
+      "edition_page": 8,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "eed1d9382d57f5df2cffd8ccf5d43fe195f7d0f0f335b90e7a007a9f469e031f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page14-eed1d9382d57f5df-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6234bf7451775d3aa29250dc1778ed40563e7d2f86434eb0c7f14ea169132ce4"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 14,
+      "edition_page": 8,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "c2199eff68a1efb1c536982aec2ca11e9d0280c61ed41a9fb4ed96157f56061a",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page14-c2199eff68a1efb1-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "c68e812d2150c6d6ad5a167c0871d23829a368304c64ef734ec086e7b570df41"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 14,
+      "edition_page": 8,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "c2199eff68a1efb1c536982aec2ca11e9d0280c61ed41a9fb4ed96157f56061a",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page14-c2199eff68a1efb1-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "cb2862fc23152b19138f3039796098aef3647b7c5775cbe3fb009e64819306f9"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 14,
+      "edition_page": 8,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "c2199eff68a1efb1c536982aec2ca11e9d0280c61ed41a9fb4ed96157f56061a",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page14-c2199eff68a1efb1-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "03166980bb7fcbeab2b1b70f5061710b9c16cec51b9467586b6e908dc257a19d"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 15,
+      "edition_page": 9,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "cf0c31954d3a852a9ea67d80f0405629f92eb0a6ee70466ef36f3a5f639557c4",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page15-cf0c31954d3a852a-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "39fb491591658ca5fa73a345b7ec55c2fb5b66fcff1150950ece74dc946ab6dd"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 15,
+      "edition_page": 9,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "cf0c31954d3a852a9ea67d80f0405629f92eb0a6ee70466ef36f3a5f639557c4",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page15-cf0c31954d3a852a-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "32db508b4981b96b66881f1f96a6549e726806dca78920336e5cb78b1a2155d3"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 15,
+      "edition_page": 9,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "cf0c31954d3a852a9ea67d80f0405629f92eb0a6ee70466ef36f3a5f639557c4",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page15-cf0c31954d3a852a-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "73c6f047f7d4a90b83e096278e20929a25a6cf4c3469cc8dea8afa6018043a4a"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 15,
+      "edition_page": 9,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "4a6ddc323adf65f44e1a00278ad78119165af974453c178719feddcfa56e8c4e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page15-4a6ddc323adf65f4-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "fb0a5bb899d87e54865e1f1e6e4e4591198942930bd5649070d65cab2ba5956e"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 15,
+      "edition_page": 9,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "4a6ddc323adf65f44e1a00278ad78119165af974453c178719feddcfa56e8c4e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page15-4a6ddc323adf65f4-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e818125d5afa2819c832cee1d88420c331acbb97cf30dbcfc9252b47a9d00d56"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 15,
+      "edition_page": 9,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "4a6ddc323adf65f44e1a00278ad78119165af974453c178719feddcfa56e8c4e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page15-4a6ddc323adf65f4-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "513224b99efa9f0cff34ae9e75d216d096ca8d6dc9fccceefa26946b5dd27cb9"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 16,
+      "edition_page": 10,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "eae5a0763f1c8f7dfddcb8494f6ba43b80e7ec937c6bc9d63823316993f3979b",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page16-eae5a0763f1c8f7d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ea2469187bcd8d5e2835502b7b9abce384da4e9a9b4dcb1067b6628cdbc21112"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 16,
+      "edition_page": 10,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "eae5a0763f1c8f7dfddcb8494f6ba43b80e7ec937c6bc9d63823316993f3979b",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page16-eae5a0763f1c8f7d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6f044ed428edad47842b27090a8ce23f597670f85edff64fa0887e62598d4d5d"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 16,
+      "edition_page": 10,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "eae5a0763f1c8f7dfddcb8494f6ba43b80e7ec937c6bc9d63823316993f3979b",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page16-eae5a0763f1c8f7d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "80a5ffeeebcd345e23400d929fa41c3b0b0bf710bdbd2bb87d0393bb10561984"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 16,
+      "edition_page": 10,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "7ef21801854dd70720d03b1fb158b1be14ab7fba9c99719453a77fdf0ca6dbe6",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page16-7ef21801854dd707-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ef76d68ec7802fdd52ba5ba6954341ed3af4ed63d4344e8f549ed0f457c4b7ac"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 16,
+      "edition_page": 10,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "7ef21801854dd70720d03b1fb158b1be14ab7fba9c99719453a77fdf0ca6dbe6",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page16-7ef21801854dd707-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ba28b7605f64d49bbfa139ed8269ffe1309cb66176a384a91eb2b3fe2129c234"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 16,
+      "edition_page": 10,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "7ef21801854dd70720d03b1fb158b1be14ab7fba9c99719453a77fdf0ca6dbe6",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page16-7ef21801854dd707-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "544b09cc18b64e3d0959e30306d874b6e822525c6c2685d20a3f57b94b9733a0"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 17,
+      "edition_page": 11,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "2f2b617786f30dd7c5c944c53abdd0a3fc08fdd9b26e3d80a6015db1fa577cb9",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page17-2f2b617786f30dd7-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "4912a159ef0d2d01663deee27c82fec93f5f2c271801f9df9b5b2d682e23bd7e"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 17,
+      "edition_page": 11,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "2f2b617786f30dd7c5c944c53abdd0a3fc08fdd9b26e3d80a6015db1fa577cb9",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page17-2f2b617786f30dd7-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "04b10ebcf96e9e27ad9721b5e599c34a66553ab46172c4d7844e224a6c67efdd"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 17,
+      "edition_page": 11,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "2f2b617786f30dd7c5c944c53abdd0a3fc08fdd9b26e3d80a6015db1fa577cb9",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page17-2f2b617786f30dd7-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ab6f5a6daa43e53971ce5e9f2204c4b136bf02a3b36620005fb15c95a933cd3b"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 17,
+      "edition_page": 11,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "fd88afbef68214a342999e87d39601aff58e568195e0655d6d4c47328d3558d9",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page17-fd88afbef68214a3-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "a14e7a7817a18f3079ce4f6787445b383d9b75f118263a124d6d389482aef71b"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 17,
+      "edition_page": 11,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "fd88afbef68214a342999e87d39601aff58e568195e0655d6d4c47328d3558d9",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page17-fd88afbef68214a3-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "271e87dea216d3680522af3f79e5347bcbefb0ff433a38e74af579e7340ad624"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 17,
+      "edition_page": 11,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "fd88afbef68214a342999e87d39601aff58e568195e0655d6d4c47328d3558d9",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page17-fd88afbef68214a3-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "250647c1bd1cd069f2e8855af3f20ae0083d257b1165be7c37545c96e9c3eeee"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 18,
+      "edition_page": 12,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "da21cadf80c95547d66f2dbb7971172dd8f054d09e8971606fd7f0243be2fee0",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page18-da21cadf80c95547-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "bb2f5c6a60d56bf5f2bc7424778e79cff76ac658b9bf94b5665f04ec003ff207"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 18,
+      "edition_page": 12,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "da21cadf80c95547d66f2dbb7971172dd8f054d09e8971606fd7f0243be2fee0",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page18-da21cadf80c95547-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e1c781a9caf4a755a0291d61710ed9935c2b2270f2d61c9d7354c3311a4676e9"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 18,
+      "edition_page": 12,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "da21cadf80c95547d66f2dbb7971172dd8f054d09e8971606fd7f0243be2fee0",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page18-da21cadf80c95547-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "82abe9294b3099ab0006c80843badb012bc434ebede4e4009b61d2cb51ead228"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 18,
+      "edition_page": 12,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "738485badcc85f198c2eb1cbc788f6cebd352468299464d79d0b86e6b64cc06a",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page18-738485badcc85f19-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e71367dd38f56b9afeff7f563b366f6d1135312e207e2a81596ffd9f2fb77b20"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 18,
+      "edition_page": 12,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "738485badcc85f198c2eb1cbc788f6cebd352468299464d79d0b86e6b64cc06a",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page18-738485badcc85f19-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "adb97ac1752c5c44e20ec66331bc775df5812a1f6d834cdf21426c5445030891"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 18,
+      "edition_page": 12,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "738485badcc85f198c2eb1cbc788f6cebd352468299464d79d0b86e6b64cc06a",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page18-738485badcc85f19-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "7919d2660f66378dfe0d2f6b22e418033391b4635994578c7a2a8f84bd93cced"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "edition_page": 13,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "9795ee7e4521236e4ff8a8c23b7f8ec5b17baf476a79588100c9eadcac109115",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page19-9795ee7e4521236e-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ded5c50975a227c0a995eb4ce01141de441320e7d151ef6fe98dc02558ec6a02"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "edition_page": 13,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "9795ee7e4521236e4ff8a8c23b7f8ec5b17baf476a79588100c9eadcac109115",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page19-9795ee7e4521236e-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "644eb1341dc86e8fb335c8fdf2ba7d7951bdcdd28639f7562d2b6211efae9e84"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "edition_page": 13,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "9795ee7e4521236e4ff8a8c23b7f8ec5b17baf476a79588100c9eadcac109115",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page19-9795ee7e4521236e-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "5171bd72a38395647abb4b463cc71200aac99cf8172901a73c14e505d9e2c4d3"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "edition_page": 13,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page19-52e4895e7c24cdc3-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ec83baa4b6c17049a15baa0a1e69603b840b3f8f485f91f06a21e3a93f55e42b"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "edition_page": 13,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page19-52e4895e7c24cdc3-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "d429d9dae886e6aff3cff135ee19edab2fb50ac42a6865bde7ddc3980b0d3540"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "edition_page": 13,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page19-52e4895e7c24cdc3-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "c54e4f07edae2efd669683692bf60e4daf47f6d838915709b1afbd11f790b867"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 20,
+      "edition_page": 14,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "62e0d1cb72ad5d80f780298c590c4c172495108e38c5b0630a8944c47f095070",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page20-62e0d1cb72ad5d80-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "214469ec88bcc14f6bcab42fabf71b3163a6ed8c1fe6cd889a4667f854305034"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 20,
+      "edition_page": 14,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "62e0d1cb72ad5d80f780298c590c4c172495108e38c5b0630a8944c47f095070",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page20-62e0d1cb72ad5d80-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "79ee095536aded2bc5a47adf3d459c9144b608795f9b7ef3629cdf1bb09d5a5d"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 20,
+      "edition_page": 14,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "62e0d1cb72ad5d80f780298c590c4c172495108e38c5b0630a8944c47f095070",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page20-62e0d1cb72ad5d80-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "bd3c96f8417eba76314192f7a3a8018b444d24a8ad6b68ed5523b132b23db27e"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 20,
+      "edition_page": 14,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "1d90932c8b59a9e8c1b3a9c1a2d1a53aff7c7996f17bdf687a0aefc8eb7e56e7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page20-1d90932c8b59a9e8-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "978216b27b9bb50c9949b7d2e0c193ba685a5cbb3e625f30809646f2c2c521aa"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 20,
+      "edition_page": 14,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "1d90932c8b59a9e8c1b3a9c1a2d1a53aff7c7996f17bdf687a0aefc8eb7e56e7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page20-1d90932c8b59a9e8-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "beb99f8777e45d7e7e2ece458ee0fa0eb11194e93dad26813efc698e936c11d2"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 20,
+      "edition_page": 14,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "1d90932c8b59a9e8c1b3a9c1a2d1a53aff7c7996f17bdf687a0aefc8eb7e56e7",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page20-1d90932c8b59a9e8-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "652b06836fc3ad5a1ec91af831d86cdd47cb21a1f4ce346c4b136dcaa22f2942"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 21,
+      "edition_page": 15,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "b01300c50fb2123790fe1eb6585fb56ad8e0d68c8a4147a8761c4b5ef4b8a032",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page21-b01300c50fb21237-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "a0554f948119a66a3497a8225c900345e2149f7de0e014af5df0248e2b9d708c"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 21,
+      "edition_page": 15,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "b01300c50fb2123790fe1eb6585fb56ad8e0d68c8a4147a8761c4b5ef4b8a032",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page21-b01300c50fb21237-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "b6b3b3b69e04eb1cc7fa3682e6553822a4fdae37d66d42d10d23b707773c0c6d"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 21,
+      "edition_page": 15,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "b01300c50fb2123790fe1eb6585fb56ad8e0d68c8a4147a8761c4b5ef4b8a032",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page21-b01300c50fb21237-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "4a08e5235fb59469bfaf7b2ded5271a4b4978bbfea195acfa0e69873469e1d72"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 21,
+      "edition_page": 15,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "fe8ff0ca919076192e5af5fb588af17447dc75ffdc9967b90696d2f7ee41b725",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page21-fe8ff0ca91907619-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "d19091878a5b9a7793c199a38e6c95abb1b485bcda4023971cae7ae9d3ac73fc"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 21,
+      "edition_page": 15,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "fe8ff0ca919076192e5af5fb588af17447dc75ffdc9967b90696d2f7ee41b725",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page21-fe8ff0ca91907619-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "153e4c8da684c11ef280364b74586e7c6416d3c49da59851b13104bef8198579"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 21,
+      "edition_page": 15,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "fe8ff0ca919076192e5af5fb588af17447dc75ffdc9967b90696d2f7ee41b725",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page21-fe8ff0ca91907619-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "65c03e4b3df598f54ded61e3e352ac6cd4d406259901994dcea38016d2f58b89"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 22,
+      "edition_page": 16,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "b1851df9b7187865b3e7f3543e6d0a43caa33608dfc20c57a7bd0b53483a324c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page22-b1851df9b7187865-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "af7771e389f1a12a49abafc40291a97ad206c487a510ad1619606c9ce265a336"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 22,
+      "edition_page": 16,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "b1851df9b7187865b3e7f3543e6d0a43caa33608dfc20c57a7bd0b53483a324c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page22-b1851df9b7187865-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "1a94f44165cb5d16760b1f0cec20331696bcc227f14261c1c48b5662f3220d0c"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 22,
+      "edition_page": 16,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "b1851df9b7187865b3e7f3543e6d0a43caa33608dfc20c57a7bd0b53483a324c",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page22-b1851df9b7187865-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "25d98b8498722f1c060ea1b3beb73148f53d33eb25270ef66a5f3d06b5f4437a"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 22,
+      "edition_page": 16,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "fb75d25b03ee8b20023ee2981e4e9b62bfa314ed572b61caa8ecd26412108c42",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page22-fb75d25b03ee8b20-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "471d746ad7179bb4c179c3ca546a7fbfc99854b824a69fe3f7e4e9e22c1ed9e1"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 22,
+      "edition_page": 16,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "fb75d25b03ee8b20023ee2981e4e9b62bfa314ed572b61caa8ecd26412108c42",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page22-fb75d25b03ee8b20-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "eac2247d2785b689b63896a03290ac4848246108a7d43d91b97df5b0a9d9fb62"
+    },
+    {
+      "source_id": "legacy22",
+      "source_physical_page": 22,
+      "edition_page": 16,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "fb75d25b03ee8b20023ee2981e4e9b62bfa314ed572b61caa8ecd26412108c42",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page22-fb75d25b03ee8b20-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e33b77d50d57598e537070199d62495aee41ded00aca4ec35ad53b8fbebe9402"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "ko",
+      "job": "point",
+      "proof_sha256": "c2d63cd351aba81cceda5652f05892579bef2b2415d4b1957a618c8d1e663b5e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page26-c2d63cd351aba81c-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "90c1bf40f106509dd28e09d4668f64fb080fff0db5840d70028a03cff41180ff"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "ko",
+      "job": "frame",
+      "proof_sha256": "c2d63cd351aba81cceda5652f05892579bef2b2415d4b1957a618c8d1e663b5e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\frame-ko-page26-c2d63cd351aba81c-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "54642e8caff9a95215a43535f183942dacc7bc54a24c3b9581d37191726a8287"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "ko",
+      "job": "ink",
+      "proof_sha256": "c2d63cd351aba81cceda5652f05892579bef2b2415d4b1957a618c8d1e663b5e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-ko-page26-c2d63cd351aba81c-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "58149d946cfd84ff53d2caac48a7b50fa6fa63221ddab4085f14a1b167852ba6"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "ko",
+      "job": "donor",
+      "proof_sha256": "c2d63cd351aba81cceda5652f05892579bef2b2415d4b1957a618c8d1e663b5e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-ko-page26-c2d63cd351aba81c-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6f25264c8e08a50cf4cba1610025acbcc9143759f2d0cdcc0da7eb11d1845442"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "en",
+      "job": "point",
+      "proof_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page26-98dd705ad3ac135d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "925572116d3bd498112d12c5396f74e6f12027e377358c91c3a901603a166266"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "en",
+      "job": "frame",
+      "proof_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\frame-en-page26-98dd705ad3ac135d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "0d687dd5ccb34bf890e40e9c2daf993e3f41a3a566caef16cc71968f2e5e5452"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "en",
+      "job": "ink",
+      "proof_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page26-98dd705ad3ac135d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6dd8ab692d35218322f77a31e85035f291fe8e8e5bf0d8549f5c977197156b9b"
+    },
+    {
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "edition_page": 17,
+      "language": "en",
+      "job": "donor",
+      "proof_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+      "runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\donor-en-page26-98dd705ad3ac135d-runtime-v4\\frozen-only-case-result.json",
+      "runtime_result_sha256": "5da5bed70ae0b3acab91ff47b97346a21ae3484268db181f8db316ee098a0372"
+    }
+  ],
+  "negatives": [
+    {
+      "name": "same-name-version-advance-new-English-C-outline-damaged",
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "language": "en",
+      "job": "point",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\same-name-version-advance-new-English-C-outline-damaged.pdf",
+      "expected_marker": "C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-en-page19-c2d5f4769724e8b6-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "ccac95833cd4e4989b8f9299417684ba87119517260c4b659993dc20fa4d853e"
+    },
+    {
+      "name": "new-Korean-prose-actual-Tf-plus-one-point",
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "language": "ko",
+      "job": "point",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\new-Korean-prose-actual-Tf-plus-one-point.pdf",
+      "expected_marker": "C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page19-e317da27779f8c0c-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "8d94981d47940b0238511108dbc7dadcef246270df99ac4c7432aa9f0c484a1e"
+    },
+    {
+      "name": "original-native-math-subscript-zero-to-one-CID",
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "language": "ko",
+      "job": "point",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\original-native-math-subscript-zero-to-one-CID.pdf",
+      "expected_marker": "C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\point-ko-page19-7cb3b529f50355da-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "77b3726453ce72eaaba0eee116f0ed8f32dbddd59215566a96e06ddbe3243a77"
+    },
+    {
+      "name": "one-pixel-original-circuit-wire-covered",
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "language": "en",
+      "job": "ink",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-figure-negative-controls-v1\\one-pixel-original-circuit-wire-covered.pdf",
+      "expected_marker": "Unreviewed non-text paint after source program",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page19-53d21647bbea3e2b-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "e0631a62a9aa86e0dd45a1c702b8a5af2c127f1e682ed6ef22eb138a111ceaea"
+    },
+    {
+      "name": "actual-English-prose-over-original-circuit-leader",
+      "source_id": "legacy22",
+      "source_physical_page": 19,
+      "language": "en",
+      "job": "ink",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-figure-negative-controls-v1\\actual-English-prose-over-original-circuit-leader.pdf",
+      "expected_marker": "Actual source/native/new-prose ink visibility or collision failure",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page19-f5dc2d547d21553f-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "051ea6fb104835d05822b216ab0e6e7e20fce0769bca81ef936855f3ccaf38d2"
+    },
+    {
+      "name": "blue-label-fill-changed-black",
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "language": "en",
+      "job": "frame",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\actual-source26-negative-controls-v1\\blue-label-fill-changed-black.pdf",
+      "expected_marker": "SOURCE26_RAW_NEW_PROSE_FRAME_OR_COLOR_MISMATCH",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\frame-en-page26-9920d632484c12ad-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "b79b662687cf4fdcac95cb78cf41b1152d40e8832040e90c2e35a7834be855ed"
+    },
+    {
+      "name": "red-title-source-CTM-xscale-changed",
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "language": "en",
+      "job": "frame",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\actual-source26-negative-controls-v1\\red-title-source-CTM-xscale-changed.pdf",
+      "expected_marker": "SOURCE26_RAW_NEW_PROSE_AFFINE_FRAME_MISMATCH",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\frame-en-page26-238c8650678d891a-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "8db55622b4d0a28fe82f6103d5c23a0e499c208cb04fa47f075119d3a8c8298a"
+    },
+    {
+      "name": "one-pixel-original-colored-vector-ray-covered",
+      "source_id": "complete_reference26",
+      "source_physical_page": 26,
+      "language": "en",
+      "job": "ink",
+      "target": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\actual-source26-negative-controls-v1\\one-pixel-original-colored-vector-ray-covered.pdf",
+      "expected_marker": "Unreviewed non-text paint after source program",
+      "actual_runtime_result_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS\\master-v3\\frozen-only-runtime-verification\\ink-en-page26-1894b960769295cb-runtime-v4\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "891725c104f8d0f550621969241c58f30d71326d0a7b2a15ab23b6ce977ea884"
+    }
+  ],
+  "explicit_source_specific_frame_rules_not_a_broad_allow_either_source": true
+}

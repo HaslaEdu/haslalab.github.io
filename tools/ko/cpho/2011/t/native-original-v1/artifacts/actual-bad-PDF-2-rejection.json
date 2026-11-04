@@ -1,0 +1,36 @@
+{
+  "kind": "original-native-Y",
+  "source_page": 3,
+  "language": "en",
+  "phase": "native",
+  "source_sha256": "834cf89c87442874b76a8aba714d814440b413fe1b3cde98ff773ce1ce72ff48",
+  "positive_proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.pdf",
+  "positive_proof_sha256": "a6c99c2cf5378bc266a95258c47ea50a7c926191a2986512539c3a0a5d69ce0c",
+  "actual_bad_PDF": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-Y-source03-positive-a6c99c2cf5378bc2.pdf",
+  "actual_bad_PDF_sha256": "2cc55cc8302dc8b841a5609644ca254020bdc82b7cb2e98a7bd4b7569564014a",
+  "actual_bad_PDF_bytes": 695022,
+  "mutation": {
+    "actual_original_Tm": [
+      "1",
+      "0",
+      "0",
+      "1",
+      "295.49",
+      "24.48"
+    ],
+    "actual_bad_Tm": [
+      "1",
+      "0",
+      "0",
+      "1",
+      "295.49",
+      "24.73"
+    ],
+    "only_literal_Tm_f_delta_pt": 0.25
+  },
+  "actual_property_audit_result": null,
+  "actual_property_rejection_exception": "ValueError('Original native glyph position missing in final collision control')",
+  "actual_bad_PDF_rejected": true,
+  "source_expected_data_not_rebased_and_no_guard_or_threshold_changed": true,
+  "original_source_and_positive_proof_unchanged": true
+}

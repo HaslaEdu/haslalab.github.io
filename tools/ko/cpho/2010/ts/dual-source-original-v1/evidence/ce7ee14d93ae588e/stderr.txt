@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\run-source26-audit-job-v4.py", line 15, in <module>
+    runpy.run_path(str(driver),run_name='__main__');result='COMPLETED'
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\supplement-source26-v1\drivers\audit-source26-ink-graphics-v8.py", line 35, in <module>
+    assert c['source_bitmap_language_overlay']is not None,'Unreviewed non-text paint after source program'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Unreviewed non-text paint after source program

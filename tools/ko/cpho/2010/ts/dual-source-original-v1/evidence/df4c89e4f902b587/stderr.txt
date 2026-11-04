@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\run-C-TS-successor-job-v20.py", line 45, in <module>
+    sys.argv=args;runpy.run_path(str(driver),run_name='__main__');result='COMPLETED'
+                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\audit-actual-ink-native-graphics-and-prose-visibility-v7.py", line 91, in <module>
+    assert result['passed'],'Actual source/native/new-prose ink visibility or collision failure'
+           ~~~~~~^^^^^^^^^^
+AssertionError: Actual source/native/new-prose ink visibility or collision failure

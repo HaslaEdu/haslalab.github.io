@@ -1,0 +1,1692 @@
+{
+  "schema": "cpho2010-solutions-dual-source-native-v1",
+  "status": "READY",
+  "competition": "cpho",
+  "year": 2010,
+  "kind": "TS",
+  "file": "CPhO_2010_TS_EN.pdf",
+  "language": "en",
+  "pages": 17,
+  "bytes": 6634255,
+  "sha256": "1fec9d8594d37d8fda5309f361b7e227fecbe9fc9350f66b826f52af88b0c669",
+  "source_inputs": [
+    {
+      "source_id": "legacy22",
+      "path": "C:/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/source/CPhO_2010_original_combined_ZH.pdf",
+      "sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "total_pages": 22,
+      "covered_physical_pages": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "source_id": "complete_reference26",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\source\\CPhO2010-complete-reference-original-layout-26p.pdf",
+      "sha256": "ce1b74fa12cd496501e1630927d004977950e7d71f9cdb031de97df43c1c0b6d",
+      "total_pages": 26,
+      "covered_physical_pages": [
+        26
+      ]
+    }
+  ],
+  "question_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "original_math_retyped": false,
+  "original_math_y_changed": false,
+  "translated_point_sizes_fitted": false,
+  "full_fonts_and_private_Python_bytes_publicly_exported": false,
+  "original_native_fonts_and_exact_mathematical_programs_preserved": true,
+  "new_English_5_24_prose_version_difference_honestly_recorded": true,
+  "original_legacy_VIII_tail_incomplete": true,
+  "recovered_original_source26_completes_VIII": true,
+  "all_legacy16_pages_preserved": true,
+  "all_eight_solutions_complete": true,
+  "source_completion_note_ko": "원문에서 끊긴 제8문 해설은 완전한 대조 원문의 26쪽을 보충하여 수록했습니다.",
+  "source_completion_note_en": "The complete original reference page26 is appended to supply the missing end of solutionVIII; all16 legacy source pages are preserved.",
+  "page_proofs": [
+    {
+      "page": 1,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 7,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/86f43410bd2c7301/page07.pdf",
+        "sha256": "86f43410bd2c7301331fbbeb3fda51d64aebff6946c45bc600480946e5f1001c",
+        "bytes": 520204,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page07.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/2b71ca69efbef34e/page07.composition.json",
+        "sha256": "2b71ca69efbef34e5dfd9a5da60125c7a84791c1da834bccd8085288456c20ab",
+        "bytes": 323752,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page07.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/828d8b3297e2d401/page07-en-828d8b3297e2d4018eb3.json",
+        "sha256": "828d8b3297e2d4018eb3485325aacc6b75b5c213adbc737b9d3276605c4057db",
+        "bytes": 521740,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page07-en-828d8b3297e2d4018eb3.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1506a89f5f4cc331/page07.native-control.pdf",
+        "sha256": "1506a89f5f4cc3319dfe5d4c9ce9450cdd814c32216f4461f8b7220882b6ab8d",
+        "bytes": 183524,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page07.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e2cf7eb621ec3dde/actual-source-point-paint-native.json",
+        "sha256": "e2cf7eb621ec3ddefe86f73ab045091eb4a287197bb23332db86fa8cb1a86599",
+        "bytes": 59373,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page07-86f43410bd2c7301-runtime-v4/qa-point-native-v3/page07-en-86f43410bd2c7301/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/53997c4bff79c15d/actual-ink-graphics.json",
+        "sha256": "53997c4bff79c15d4c9fafd2d86dcbd17486ff51ef2c3e280eb0a489cfa790b8",
+        "bytes": 5054,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page07-86f43410bd2c7301-runtime-v4/qa-ink-graphics-v7/page07-en-86f43410bd2c7301/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/39544de768389493/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "39544de768389493c9fef0ee3db938663ffaffe3b2e9d9dbfc077c7de9a81bb0",
+        "bytes": 13066,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page07-86f43410bd2c7301-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/237842e0c6fba5e6/frozen-only-case-result.json",
+          "sha256": "237842e0c6fba5e6f60f4379fad5c21ecdbdbf6f60b337737e5157f3257c1bff",
+          "bytes": 18761,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page07-86f43410bd2c7301-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8ba6d7be6be947ea/frozen-only-case-result.json",
+          "sha256": "8ba6d7be6be947ea326bd08f8d3b3c6d68ac88b96fd1397b7937ec5ca344d8f6",
+          "bytes": 15862,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page07-86f43410bd2c7301-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/2d3bb9a6266cc594/frozen-only-case-result.json",
+          "sha256": "2d3bb9a6266cc594188d4b92a0ba98bf3f90921a4cf64c52888c4f752dcf6145",
+          "bytes": 9683,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page07-86f43410bd2c7301-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/4e55903e6c04c7d3/en-page01.json",
+        "sha256": "4e55903e6c04c7d34f1010f78956de62914c369021e1cdd95242b25b5a17948b",
+        "bytes": 1375,
+        "frozen_path": "verification/en-page01.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/910d35f39422dca0/page07-source144.png",
+        "sha256": "910d35f39422dca02a3502be1400444e7351660fe2632a970db3bb548f97877d",
+        "bytes": 145679,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page07-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/f2bf9eaaa4304c5b/MuPDF144.png",
+          "sha256": "f2bf9eaaa4304c5b8a07cf64c1899111c9f0fa0a8cb18b32ef23452c03f05729",
+          "bytes": 125708,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page07/en-86f43410bd2c7301/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/195e6bda7e9efda5/Poppler144.png",
+          "sha256": "195e6bda7e9efda5ff044283e5ae549b1453ece60fc34f9fc7685a874a6d0de2",
+          "bytes": 145891,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page07/en-86f43410bd2c7301/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 2,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 8,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e7fc1541c3dd6537/page08.pdf",
+        "sha256": "e7fc1541c3dd6537dfd0b9b41b94a9f7342217e74333d7b4edc9a6f7b701d00f",
+        "bytes": 290123,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page08.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/2fb68544d492b161/page08.composition.json",
+        "sha256": "2fb68544d492b16148c0241c1626668219781f88c0ae94c48a2a00f4ff3878bb",
+        "bytes": 312329,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page08.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fee1728a179d7238/page08-en-fee1728a179d72381e12.json",
+        "sha256": "fee1728a179d72381e1258680822b464febf6327869756d015572b8995b2714e",
+        "bytes": 555638,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page08-en-fee1728a179d72381e12.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/cc6afbf11e9e18e3/page08.native-control.pdf",
+        "sha256": "cc6afbf11e9e18e3eba21fb785d2094b9afe36017ce37ecdddec4cb6167b88ed",
+        "bytes": 180246,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page08.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/f470933e56400698/actual-source-point-paint-native.json",
+        "sha256": "f470933e5640069847577760b486ba4747b299bfcea2dff978c0d8fddc3ea607",
+        "bytes": 55153,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page08-e7fc1541c3dd6537-runtime-v4/qa-point-native-v3/page08-en-e7fc1541c3dd6537/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/9c92b07f461f8f00/actual-ink-graphics.json",
+        "sha256": "9c92b07f461f8f00476ff318768d6707e0821eef17b29160ec93e4aba915dcef",
+        "bytes": 5054,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page08-e7fc1541c3dd6537-runtime-v4/qa-ink-graphics-v7/page08-en-e7fc1541c3dd6537/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6343fa6e33148272/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "6343fa6e331482722c0a84f87847e21f4cb5f89fb10608d778186ecbe402240a",
+        "bytes": 13689,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page08-e7fc1541c3dd6537-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ac4be5918854317e/frozen-only-case-result.json",
+          "sha256": "ac4be5918854317ed47f89c8593defab0e096f014dbe8c35e00348a0c957811a",
+          "bytes": 18759,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page08-e7fc1541c3dd6537-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/930fba3f2f4457da/frozen-only-case-result.json",
+          "sha256": "930fba3f2f4457da79b1960a32a914fe7220c98d66bed8fddf916bb39f4ae803",
+          "bytes": 15862,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page08-e7fc1541c3dd6537-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a7ff98a34fd38f4d/frozen-only-case-result.json",
+          "sha256": "a7ff98a34fd38f4d72521883418bbb629154826a4d0d9ed3749c500ac8b9c553",
+          "bytes": 9683,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page08-e7fc1541c3dd6537-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1aba9c53796c4dbc/en-page02.json",
+        "sha256": "1aba9c53796c4dbc767fdb69cee7b5419d209e45654455c34beb00cd5d5b1381",
+        "bytes": 1375,
+        "frozen_path": "verification/en-page02.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/4689cd79f06f73f0/page08-source144.png",
+        "sha256": "4689cd79f06f73f0b4d87077aecb0ac42be46e0ce8a023025363825969c132af",
+        "bytes": 144181,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page08-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/f74a2686c98e0980/MuPDF144.png",
+          "sha256": "f74a2686c98e0980ed921bbcc8cdf83a6d95c322603ef8a1ae7e2da21fdf0bc9",
+          "bytes": 125036,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v6/page08/en-e7fc1541c3dd6537/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/0629909092767175/Poppler144.png",
+          "sha256": "0629909092767175e97d398796cf2f29e48ccdd9477b5c010c5dac99a6255972",
+          "bytes": 144606,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v6/page08/en-e7fc1541c3dd6537/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 3,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 9,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1281f47f74679ba9/page09.pdf",
+        "sha256": "1281f47f74679ba9c36f0ce9e7a782071958e5bae96bf096ce09a03a0e7e53ac",
+        "bytes": 327175,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page09.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/3fe0080cd6e581fe/page09.composition.json",
+        "sha256": "3fe0080cd6e581fe6893236dc1016c2c8a07e6d712c988b5d90026705aeea1d6",
+        "bytes": 368291,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page09.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fbefa9f92c130577/page09-en-fbefa9f92c130577c784.json",
+        "sha256": "fbefa9f92c130577c784b066ba88d419f4df59040d8c02c353302d4bd7240dc2",
+        "bytes": 699712,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page09-en-fbefa9f92c130577c784.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8004d268baa260ea/page09.native-control.pdf",
+        "sha256": "8004d268baa260eaa266d834a52a63ebb0f8aab6589c94537ff83eedafc1c203",
+        "bytes": 189252,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page09.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/05360b93dfc2ac5a/actual-source-point-paint-native.json",
+        "sha256": "05360b93dfc2ac5ab783f1fec15ace8e2c4866d41baa1b713aa0350208b9690c",
+        "bytes": 64220,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page09-1281f47f74679ba9-runtime-v4/qa-point-native-v3/page09-en-1281f47f74679ba9/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/982b44a499b435a8/actual-ink-graphics.json",
+        "sha256": "982b44a499b435a8903c451bac583fa8189ecc2dedbbc0392be1a12e3b1dad92",
+        "bytes": 5054,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page09-1281f47f74679ba9-runtime-v4/qa-ink-graphics-v7/page09-en-1281f47f74679ba9/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ceb3d9ae6403ceb3/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "ceb3d9ae6403ceb31367a6c20334fffa1281d8a3f086375fe7bf83ee4517e1d9",
+        "bytes": 13052,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page09-1281f47f74679ba9-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/51b4a2c6f019c1d4/frozen-only-case-result.json",
+          "sha256": "51b4a2c6f019c1d47565eeef9fc7a1092113ab3389b823478faf020ffbf9d09e",
+          "bytes": 18759,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page09-1281f47f74679ba9-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/03ace67b9d386484/frozen-only-case-result.json",
+          "sha256": "03ace67b9d38648490bdbb7a6a1a74403953e108646f0b2854b5f659f3be822f",
+          "bytes": 15862,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page09-1281f47f74679ba9-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d52ecd9866bfacec/frozen-only-case-result.json",
+          "sha256": "d52ecd9866bfacec8029c945d0615d57d8f3b92c4d2da8083ce679b2460e74c4",
+          "bytes": 9683,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page09-1281f47f74679ba9-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c501025d22f02bee/en-page03.json",
+        "sha256": "c501025d22f02beecf865dff90f2053d46df450de1daccf689a7a0aeb344bc04",
+        "bytes": 1375,
+        "frozen_path": "verification/en-page03.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/0abf5384b06c6d5c/page09-source144.png",
+        "sha256": "0abf5384b06c6d5cf2e230cfbfb33ef53fada44ab2b18ef8c1a6490659df4a99",
+        "bytes": 174997,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page09-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e39862a5734f6b76/MuPDF144.png",
+          "sha256": "e39862a5734f6b76082255d0ebeb606389147a559d4effc56f8d2e43136825a4",
+          "bytes": 138909,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v6/page09/en-1281f47f74679ba9/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/f775d16085b8ca6d/Poppler144.png",
+          "sha256": "f775d16085b8ca6db6992acadb6cdee9150c4505a8cb97767d21d264979ceb72",
+          "bytes": 159975,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v6/page09/en-1281f47f74679ba9/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 4,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 10,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d4adf6a66d001bd0/page10.pdf",
+        "sha256": "d4adf6a66d001bd0c2db85174db88c324ba7fff973c5671f675225bbae6c1ce7",
+        "bytes": 343344,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page10.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e7d063bf5b129aa1/page10.composition.json",
+        "sha256": "e7d063bf5b129aa10b06009e492de75d5974f2a63a720a9df55c9903e399ea7d",
+        "bytes": 409625,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page10.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/43874f41f2417f89/page10-en-43874f41f2417f89313a.json",
+        "sha256": "43874f41f2417f89313a8474cbe6d7560e10ef6c7af9cb75ab835f43ad9d0864",
+        "bytes": 727649,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page10-en-43874f41f2417f89313a.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8b1fc6205dbb2993/page10.native-control.pdf",
+        "sha256": "8b1fc6205dbb2993d5d573dd68e5efa2c6032ef605ca6fe5fb750f54330630a7",
+        "bytes": 200159,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page10.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/f71430b87aaf0a80/actual-source-point-paint-native.json",
+        "sha256": "f71430b87aaf0a8049c2c3f27bc7dcbf75f39590f9cdbbc13159c5fb2da73f80",
+        "bytes": 66049,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page10-d4adf6a66d001bd0-runtime-v4/qa-point-native-v3/page10-en-d4adf6a66d001bd0/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ebf1746096b8b35a/actual-ink-graphics.json",
+        "sha256": "ebf1746096b8b35a6d55b7a78bae99cb7c7ff00f34086b883965b3a186c68a0d",
+        "bytes": 5055,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page10-d4adf6a66d001bd0-runtime-v4/qa-ink-graphics-v7/page10-en-d4adf6a66d001bd0/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1f87fc117aa19ff5/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "1f87fc117aa19ff57e223438cdfe9ef99f88829f980a920a13a569fbc8464aaf",
+        "bytes": 12743,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page10-d4adf6a66d001bd0-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6085b806214fc7af/frozen-only-case-result.json",
+          "sha256": "6085b806214fc7af95d69eaea0b1648064146fac5d627acce22d8e2f19cf4369",
+          "bytes": 18760,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page10-d4adf6a66d001bd0-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/895a20f823c496ad/frozen-only-case-result.json",
+          "sha256": "895a20f823c496ad2c6c96fad9262f2257c4defc765342062666625cb1902166",
+          "bytes": 15863,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page10-d4adf6a66d001bd0-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/154f65ac6e3f4f49/frozen-only-case-result.json",
+          "sha256": "154f65ac6e3f4f49f17e2063fb849828de7f3b0fbb0b860184830d47d59eda58",
+          "bytes": 9684,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page10-d4adf6a66d001bd0-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8f376f4a8735627f/en-page04.json",
+        "sha256": "8f376f4a8735627fcba9b3c3a53bea58631f802c4785e2e3f1a6762fa23bac34",
+        "bytes": 1376,
+        "frozen_path": "verification/en-page04.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/3e8882ce54e11bf1/page10-source144.png",
+        "sha256": "3e8882ce54e11bf1ab31982e89950b4718de4d3dba1577debeb2d0fc15bf2fc7",
+        "bytes": 185323,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page10-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8b5b86b9ef03ad63/MuPDF144.png",
+          "sha256": "8b5b86b9ef03ad639b1d6ee12a7e04835ad0c0d4ce6c0feef48607833bc6a78f",
+          "bytes": 152707,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page10/en-d4adf6a66d001bd0/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e8cbe050a4663c12/Poppler144.png",
+          "sha256": "e8cbe050a4663c1238a8252fdc21a19b2b6516382b636cd1a453ff64adeabdae",
+          "bytes": 178080,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page10/en-d4adf6a66d001bd0/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 5,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 11,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c29c766a0cd2493a/page11.pdf",
+        "sha256": "c29c766a0cd2493a9936b9ffa5354e43f585cbd5b96a011049b859e67bc661c5",
+        "bytes": 288449,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page11.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c81a9044cc8bb88e/page11.composition.json",
+        "sha256": "c81a9044cc8bb88ee433da821f8d864f99500c27fdfd23c7527d3d2f7cd0e817",
+        "bytes": 370019,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page11.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/25aa4229aa2334d4/page11-en-25aa4229aa2334d45a23.json",
+        "sha256": "25aa4229aa2334d45a2357ec85c272ff798186e8df7e4815a2df15754ab9574a",
+        "bytes": 672920,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page11-en-25aa4229aa2334d45a23.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/35acc3f64eebb959/page11.native-control.pdf",
+        "sha256": "35acc3f64eebb9599e3fc75ff12dcad05c831a029a91821fe5d417cc939447e0",
+        "bytes": 201310,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v6/en/page11.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6b1924b6a89890b5/actual-source-point-paint-native.json",
+        "sha256": "6b1924b6a89890b56e02b97e9d1ab5a83a817ac8b87d752ba7554726152ea0cd",
+        "bytes": 49677,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page11-c29c766a0cd2493a-runtime-v4/qa-point-native-v3/page11-en-c29c766a0cd2493a/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8d110a8f652f0827/actual-ink-graphics.json",
+        "sha256": "8d110a8f652f0827fd8473cd5a91b3ad818d16f2772057ed30a0435b51c34c0e",
+        "bytes": 5055,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page11-c29c766a0cd2493a-runtime-v4/qa-ink-graphics-v7/page11-en-c29c766a0cd2493a/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ca8dfe8f1bf6c212/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "ca8dfe8f1bf6c2128b5de1b51522dfa9269038cc0445e55ae42efe66c88bf319",
+        "bytes": 14318,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page11-c29c766a0cd2493a-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b9884743ed00e1c4/frozen-only-case-result.json",
+          "sha256": "b9884743ed00e1c43eb09f7774165fe05427a0db062b28e77ad1febffb821c61",
+          "bytes": 18760,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page11-c29c766a0cd2493a-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/4f82369f823da33f/frozen-only-case-result.json",
+          "sha256": "4f82369f823da33fe61b1ad151aa6b317f8c737132905d3b0f4bfb341d40f848",
+          "bytes": 15863,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page11-c29c766a0cd2493a-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d9a140cafb11177c/frozen-only-case-result.json",
+          "sha256": "d9a140cafb11177cee2b6c5d52dc156a0e208f067c367ae78e1071b0e7d262e6",
+          "bytes": 9684,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page11-c29c766a0cd2493a-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/30295754052519df/en-page05.json",
+        "sha256": "30295754052519df03aabe9032455fc287589e1903668a74fd4ec6435e75b68c",
+        "bytes": 1376,
+        "frozen_path": "verification/en-page05.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ff2fcf1be92ed543/page11-source144.png",
+        "sha256": "ff2fcf1be92ed543da1fc6af9a806449333ad7349bf9da2b5584efaf62ca5a3e",
+        "bytes": 165602,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page11-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1701a7800c228b33/MuPDF144.png",
+          "sha256": "1701a7800c228b3364b6da5d0138188dd19451bd0cff3e76f2a24bd11ac52c11",
+          "bytes": 149586,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v6/page11/en-c29c766a0cd2493a/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d21cdcc4274e8f14/Poppler144.png",
+          "sha256": "d21cdcc4274e8f14bc35204099c2634c2f610d603f4bfd0ba59451c1602f1286",
+          "bytes": 173194,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v6/page11/en-c29c766a0cd2493a/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 6,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 12,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b2cbc869624c91a8/page12.pdf",
+        "sha256": "b2cbc869624c91a813e19931ee3ff208dc14f746c1bc14ad58429ba89a615195",
+        "bytes": 351326,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page12.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/24856eb39e1675eb/page12.composition.json",
+        "sha256": "24856eb39e1675eb64b9d25454808ac5217456910140a31f3c74b37fc29f144b",
+        "bytes": 591489,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page12.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b75ed04a12a1f4ad/page12-en-b75ed04a12a1f4ad6f7c.json",
+        "sha256": "b75ed04a12a1f4ad6f7c25af9e30aa346219f6b4a5426c74180b98b2e5c1a67a",
+        "bytes": 888072,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page12-en-b75ed04a12a1f4ad6f7c.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a26682141f423ef0/page12.native-control.pdf",
+        "sha256": "a26682141f423ef0b88c024067dfeae87dc59da2a23dde31db40b09543a91494",
+        "bytes": 210986,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page12.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/0552d313173742cd/actual-source-point-paint-native.json",
+        "sha256": "0552d313173742cd71118e8199a97092e0d5b0f29ed2be9781d18132a53302d5",
+        "bytes": 78244,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page12-b2cbc869624c91a8-runtime-v4/qa-point-native-v3/page12-en-b2cbc869624c91a8/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/adae0a8f63b19a7a/actual-ink-graphics.json",
+        "sha256": "adae0a8f63b19a7a243564fe0384506a488000a793a6c9241bc0f628e0278090",
+        "bytes": 5055,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page12-b2cbc869624c91a8-runtime-v4/qa-ink-graphics-v7/page12-en-b2cbc869624c91a8/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/3f7ffab3df6fba53/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "3f7ffab3df6fba533b1735b7a27cddd89793e217fc2fc2fefe7bef6ee4cb9fc0",
+        "bytes": 14320,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page12-b2cbc869624c91a8-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b3d61cc1ba6b2fce/frozen-only-case-result.json",
+          "sha256": "b3d61cc1ba6b2fce137e0c11ef293ba0c5d23d38c1426b59c50bce016f16ad0e",
+          "bytes": 18760,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page12-b2cbc869624c91a8-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7955184db1d37795/frozen-only-case-result.json",
+          "sha256": "7955184db1d37795f7291fa26db98c02d64dc645cfdb5536d5ec7850234a70c9",
+          "bytes": 15863,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page12-b2cbc869624c91a8-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fedca0f646fdb64a/frozen-only-case-result.json",
+          "sha256": "fedca0f646fdb64a3d46869780bbac22d042accb9c10d63d8aea029b45202999",
+          "bytes": 9684,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page12-b2cbc869624c91a8-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c76554bb0e5a79e7/en-page06.json",
+        "sha256": "c76554bb0e5a79e7555344067c2fca57975bb653c852f1a4bc780935a9a03a11",
+        "bytes": 1377,
+        "frozen_path": "verification/en-page06.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b194e1c0b7712b18/page12-source144.png",
+        "sha256": "b194e1c0b7712b18ce3c7585e1ae0a947427e4a93daef62268bfb8a530eab7be",
+        "bytes": 183723,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page12-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fc6fd7a7b5c80edd/MuPDF144.png",
+          "sha256": "fc6fd7a7b5c80eddb7204d04d3b5294ff9ddd661332849f09acf4953a00bea15",
+          "bytes": 160565,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page12/en-b2cbc869624c91a8/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/06ad0c396f7f92bd/Poppler144.png",
+          "sha256": "06ad0c396f7f92bdf41ae261975a13276ad194ddb4fdf56a286fcdacc17f9dd6",
+          "bytes": 187077,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page12/en-b2cbc869624c91a8/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 7,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 13,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8e75f367d4b369d2/page13.pdf",
+        "sha256": "8e75f367d4b369d2358a8794afde03725cfad0c189842ed4796d8123b669b13c",
+        "bytes": 561096,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page13.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/159faeef1acf3811/page13.composition.json",
+        "sha256": "159faeef1acf38115e8573c274f6f96d9da6e8dbdf559a535a0d8515ec01f679",
+        "bytes": 367501,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page13.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/45293ca2cc7468a3/page13-en-45293ca2cc7468a3b277.json",
+        "sha256": "45293ca2cc7468a3b277017124f45b1ca669c7f36682b2518644e1a6c048a045",
+        "bytes": 759732,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page13-en-45293ca2cc7468a3b277.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/939c492d8b88e05c/page13.native-control.pdf",
+        "sha256": "939c492d8b88e05c12596ad801d26bc20f568322da5f157d75f95e794a05846a",
+        "bytes": 179209,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page13.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/bd068b149f274904/actual-source-point-paint-native.json",
+        "sha256": "bd068b149f2749047c5d2839bec33a8e5e51c5286ad931c8b2b81d0be5566cd1",
+        "bytes": 80541,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page13-8e75f367d4b369d2-runtime-v4/qa-point-native-v3/page13-en-8e75f367d4b369d2/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1a15ec57fdb3b283/actual-ink-graphics.json",
+        "sha256": "1a15ec57fdb3b283196195c0db83fe65e291d1b81400a5f6c3b69ce6cf90848b",
+        "bytes": 4748,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page13-8e75f367d4b369d2-runtime-v4/qa-ink-graphics-v7/page13-en-8e75f367d4b369d2/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a11f21afafda4dc1/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "a11f21afafda4dc1a839bacb406f3d31d32c1f513dee1c84d4a0bf354d2ebed1",
+        "bytes": 14963,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page13-8e75f367d4b369d2-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5ce2813b9ac852df/frozen-only-case-result.json",
+          "sha256": "5ce2813b9ac852dfc913698cb798f621f4581ecfc8af61413e982f1d4a624070",
+          "bytes": 18762,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page13-8e75f367d4b369d2-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ab85cf78915c8f32/frozen-only-case-result.json",
+          "sha256": "ab85cf78915c8f3271e011de0ee0705f19d3e4ca66ffe2d1e2529423ffd29eaa",
+          "bytes": 15863,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page13-8e75f367d4b369d2-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6645eca1065904fc/frozen-only-case-result.json",
+          "sha256": "6645eca1065904fc73e2914d32f41b47fc2b5df81daa631e5ea312e7d67f5949",
+          "bytes": 9684,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page13-8e75f367d4b369d2-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1cca9c886162a088/en-page07.json",
+        "sha256": "1cca9c886162a088b33f575ce0e89df17d176f64e4513dedb7aedd64e961b80b",
+        "bytes": 1377,
+        "frozen_path": "verification/en-page07.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e24d3d571b736523/page13-source144.png",
+        "sha256": "e24d3d571b7365236bf97af8b43bc0bf517c72b212585250379f1788e244ce3a",
+        "bytes": 175234,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page13-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/de335545c9134918/MuPDF144.png",
+          "sha256": "de335545c9134918c9698187b09b169b2593e9a0d2f5d3ac7ab6007f9d22c8c0",
+          "bytes": 134188,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page13/en-8e75f367d4b369d2/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e22be60ac43d58e8/Poppler144.png",
+          "sha256": "e22be60ac43d58e823489cdbd1539c6368ef6cb28f356b32dfacca29991dbe48",
+          "bytes": 154262,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page13/en-8e75f367d4b369d2/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 8,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 14,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c2199eff68a1efb1/page14.pdf",
+        "sha256": "c2199eff68a1efb1c536982aec2ca11e9d0280c61ed41a9fb4ed96157f56061a",
+        "bytes": 305066,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page14.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/88fd35acfc63cb6a/page14.composition.json",
+        "sha256": "88fd35acfc63cb6a19ad92e0e4424605e0849776960c65465706b4879f0df963",
+        "bytes": 305140,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page14.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8fb967b8243c4f55/page14-en-8fb967b8243c4f5553cd.json",
+        "sha256": "8fb967b8243c4f5553cd280b6a192e93409d0f4df6975460ec2f6bf65214191e",
+        "bytes": 630686,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page14-en-8fb967b8243c4f5553cd.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/dba4b0f5d1f71616/page14.native-control.pdf",
+        "sha256": "dba4b0f5d1f71616e21bb7950707ac6692870867fa733d915888026e61d229b1",
+        "bytes": 182910,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page14.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/da01f2506464dc66/actual-source-point-paint-native.json",
+        "sha256": "da01f2506464dc660345bf901437bb68103dd3d488c2a9c3532de83149087d5e",
+        "bytes": 57720,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page14-c2199eff68a1efb1-runtime-v4/qa-point-native-v3/page14-en-c2199eff68a1efb1/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/59ddd81fd0d1dc2f/actual-ink-graphics.json",
+        "sha256": "59ddd81fd0d1dc2ffcc83b2621a905ede0d8635139b3cec8595c6b8816211679",
+        "bytes": 4748,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page14-c2199eff68a1efb1-runtime-v4/qa-ink-graphics-v7/page14-en-c2199eff68a1efb1/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/4866a3d6f07b53e2/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "4866a3d6f07b53e227152bfaf87c6980c51c966c35c24b73dee8139a8f2d79b8",
+        "bytes": 11794,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page14-c2199eff68a1efb1-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c68e812d2150c6d6/frozen-only-case-result.json",
+          "sha256": "c68e812d2150c6d6ad5a167c0871d23829a368304c64ef734ec086e7b570df41",
+          "bytes": 18760,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page14-c2199eff68a1efb1-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/cb2862fc23152b19/frozen-only-case-result.json",
+          "sha256": "cb2862fc23152b19138f3039796098aef3647b7c5775cbe3fb009e64819306f9",
+          "bytes": 15863,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page14-c2199eff68a1efb1-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/03166980bb7fcbea/frozen-only-case-result.json",
+          "sha256": "03166980bb7fcbeab2b1b70f5061710b9c16cec51b9467586b6e908dc257a19d",
+          "bytes": 9684,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page14-c2199eff68a1efb1-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7833007d878f6577/en-page08.json",
+        "sha256": "7833007d878f65777c52cac60aabae086af722810370fb3b942278f71f2ec474",
+        "bytes": 1377,
+        "frozen_path": "verification/en-page08.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8a92e3c8498965cc/page14-source144.png",
+        "sha256": "8a92e3c8498965ccc742554275cb3a09d86a303e827502d5d7969ccf1d013d62",
+        "bytes": 150797,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page14-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/0e8c73ea0288b2fb/MuPDF144.png",
+          "sha256": "0e8c73ea0288b2fbc5b4bd1fbfb396f458c0ae2e33e30e96da1c57b532065ee5",
+          "bytes": 126284,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page14/en-c2199eff68a1efb1/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/abaf97d09c8a3867/Poppler144.png",
+          "sha256": "abaf97d09c8a3867768c3870355df9cf06c4b9330cc2bde28f86ec962bfe9258",
+          "bytes": 145388,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page14/en-c2199eff68a1efb1/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 9,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 15,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/4a6ddc323adf65f4/page15.pdf",
+        "sha256": "4a6ddc323adf65f44e1a00278ad78119165af974453c178719feddcfa56e8c4e",
+        "bytes": 296520,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page15.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/124837cdfb6b2eb2/page15.composition.json",
+        "sha256": "124837cdfb6b2eb22df26eb51e059c18f4693478abdc251de14bb167802c4656",
+        "bytes": 365193,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page15.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6a0349037e2152e6/page15-en-6a0349037e2152e6b18f.json",
+        "sha256": "6a0349037e2152e6b18fe4005dab0412094e3c70410c8daad20aa27fea88b7cb",
+        "bytes": 648713,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/compiled-inputs/page15-en-6a0349037e2152e6b18f.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d0887d53b32aeb79/page15.native-control.pdf",
+        "sha256": "d0887d53b32aeb7905d1ae057bc60edbfe53d3084f2a1b71134157cde992b3c7",
+        "bytes": 174468,
+        "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/proofs-v5/en/page15.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c1e211ff588b9726/actual-source-point-paint-native.json",
+        "sha256": "c1e211ff588b97266e81a6bdf0b41aa63cca936fed1db645ee4e4e2cebc2b7db",
+        "bytes": 57671,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page15-4a6ddc323adf65f4-runtime-v4/qa-point-native-v3/page15-en-4a6ddc323adf65f4/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/0117c759132844f0/actual-ink-graphics.json",
+        "sha256": "0117c759132844f0a47c70761b7b627d959ab924a1fb8c33f76763074fbbacdc",
+        "bytes": 4748,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page15-4a6ddc323adf65f4-runtime-v4/qa-ink-graphics-v7/page15-en-4a6ddc323adf65f4/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5a1b2c9300f783c5/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "5a1b2c9300f783c535d63b3d909ab5c27503b05d537181056e961b980f1a399f",
+        "bytes": 13057,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page15-4a6ddc323adf65f4-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fb0a5bb899d87e54/frozen-only-case-result.json",
+          "sha256": "fb0a5bb899d87e54865e1f1e6e4e4591198942930bd5649070d65cab2ba5956e",
+          "bytes": 18760,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page15-4a6ddc323adf65f4-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e818125d5afa2819/frozen-only-case-result.json",
+          "sha256": "e818125d5afa2819c832cee1d88420c331acbb97cf30dbcfc9252b47a9d00d56",
+          "bytes": 15863,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page15-4a6ddc323adf65f4-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/513224b99efa9f0c/frozen-only-case-result.json",
+          "sha256": "513224b99efa9f0cff34ae9e75d216d096ca8d6dc9fccceefa26946b5dd27cb9",
+          "bytes": 9684,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page15-4a6ddc323adf65f4-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/313e8195ddf72dec/en-page09.json",
+        "sha256": "313e8195ddf72decb83a57b4e60b1034340c24faf4cd6e0d931d2bc41fa2358d",
+        "bytes": 1376,
+        "frozen_path": "verification/en-page09.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1ac6c98a8db11c39/page15-source144.png",
+        "sha256": "1ac6c98a8db11c398cb313f6b1979586c862a3e1a9c55ec71a7d02de8a1d4243",
+        "bytes": 140965,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page15-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a74869decd7e18e2/MuPDF144.png",
+          "sha256": "a74869decd7e18e20bffd0a597d206b4943b553049b69c2519f35de43965b52c",
+          "bytes": 119624,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page15/en-4a6ddc323adf65f4/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e09305da97271f2b/Poppler144.png",
+          "sha256": "e09305da97271f2b3ee3892b93f4b684a6fc6555273388974df0386a2c8c0b1d",
+          "bytes": 136384,
+          "frozen_path": "frozen/raw-files/D/CodexBuilds/Hasla-original-style-20261031/cpho2010-native-derived-v1/successor-D-v6/review-v5/page15/en-4a6ddc323adf65f4/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 10,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 16,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7ef21801854dd707/page16.pdf",
+        "sha256": "7ef21801854dd70720d03b1fb158b1be14ab7fba9c99719453a77fdf0ca6dbe6",
+        "bytes": 280292,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page16.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/9b0cbb62bb9d103c/page16.composition.json",
+        "sha256": "9b0cbb62bb9d103c9bf986572901fe7881eb61fe4f700d002d783e854bc5dd8b",
+        "bytes": 246456,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page16.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/42e8e3c33521ce15/page16-en-42e8e3c33521ce151711.json",
+        "sha256": "42e8e3c33521ce1517110f8902e4b842c3795432289d582ba6b0e22753589376",
+        "bytes": 510882,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/compiled-inputs/page16-en-42e8e3c33521ce151711.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fa994e49be996e72/page16.native-control.pdf",
+        "sha256": "fa994e49be996e72b33feebda57cbf9c8b86adc2a4ff19fe79865956b28ea27d",
+        "bytes": 177443,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page16.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7d6d2640418d54d6/actual-source-point-paint-native.json",
+        "sha256": "7d6d2640418d54d63ebf3f47110869c88da123822200f8a1de86451c1fb91f1f",
+        "bytes": 46555,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page16-7ef21801854dd707-runtime-v4/qa-point-native-v3/page16-en-7ef21801854dd707/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e92777e0572b8ab6/actual-ink-graphics.json",
+        "sha256": "e92777e0572b8ab6deb88de1860b489df75255c2bd5188717bf3e0b2051f09c6",
+        "bytes": 4738,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page16-7ef21801854dd707-runtime-v4/qa-ink-graphics-v7/page16-en-7ef21801854dd707/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/95c9cb8034c68b16/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "95c9cb8034c68b168817f30501f0e540b6478d6d807c6af3c6d69cf072e8bd8e",
+        "bytes": 11796,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page16-7ef21801854dd707-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ef76d68ec7802fdd/frozen-only-case-result.json",
+          "sha256": "ef76d68ec7802fdd52ba5ba6954341ed3af4ed63d4344e8f549ed0f457c4b7ac",
+          "bytes": 18635,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page16-7ef21801854dd707-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ba28b7605f64d49b/frozen-only-case-result.json",
+          "sha256": "ba28b7605f64d49bbfa139ed8269ffe1309cb66176a384a91eb2b3fe2129c234",
+          "bytes": 15748,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page16-7ef21801854dd707-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/544b09cc18b64e3d/frozen-only-case-result.json",
+          "sha256": "544b09cc18b64e3d0959e30306d874b6e822525c6c2685d20a3f57b94b9733a0",
+          "bytes": 9659,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page16-7ef21801854dd707-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d9649a33e3689066/en-page10.json",
+        "sha256": "d9649a33e368906663a2fd1a384c6bc774f9a2b8aa9a43f7b1bed81c1eeb47f6",
+        "bytes": 1372,
+        "frozen_path": "verification/en-page10.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/670d9d14cd6d8320/page16-source144.png",
+        "sha256": "670d9d14cd6d8320a2e012e38c51a61049e219ef41d01f372a9717dbceec86f8",
+        "bytes": 129768,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page16-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/007e8f27b6bde30e/MuPDF144.png",
+          "sha256": "007e8f27b6bde30ec9543c3dbd6f0432b028079c41894edca97a613b5d35cd8c",
+          "bytes": 111768,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page16/en-7ef21801854dd707/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/603f91583d86f537/Poppler144.png",
+          "sha256": "603f91583d86f53796309680459ea9d7c801a088b9e95436971e53dd00b9226c",
+          "bytes": 128499,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page16/en-7ef21801854dd707/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 11,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 17,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fd88afbef68214a3/page17.pdf",
+        "sha256": "fd88afbef68214a342999e87d39601aff58e568195e0655d6d4c47328d3558d9",
+        "bytes": 295400,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page17.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/2407ba9f992de649/page17.composition.json",
+        "sha256": "2407ba9f992de649a7fe0cb44f9723d420a943debe5646c98b4ca537e5b3148a",
+        "bytes": 224448,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page17.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5e9ffe33bd1cdb6c/page17-en-5e9ffe33bd1cdb6c52d5.json",
+        "sha256": "5e9ffe33bd1cdb6c52d5c59b4821e08ffa2c14891a88ab963320d537f88f0a70",
+        "bytes": 552806,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/compiled-inputs/page17-en-5e9ffe33bd1cdb6c52d5.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/3d7972c2da2833d6/page17.native-control.pdf",
+        "sha256": "3d7972c2da2833d64df7cc33ef47071a458fc62ddeef3741ea77d727e8a0db5f",
+        "bytes": 169869,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page17.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/918464fe39c1a35d/actual-source-point-paint-native.json",
+        "sha256": "918464fe39c1a35d514d80f8033cb34061f15b364bf39295d50c4001c2b94664",
+        "bytes": 49118,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page17-fd88afbef68214a3-runtime-v4/qa-point-native-v3/page17-en-fd88afbef68214a3/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6051b99a6a7a45d9/actual-ink-graphics.json",
+        "sha256": "6051b99a6a7a45d9d90b3e9a8899475b7325bd4aad149ce0515d74c32d854532",
+        "bytes": 4738,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page17-fd88afbef68214a3-runtime-v4/qa-ink-graphics-v7/page17-en-fd88afbef68214a3/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/218ee2b812ec6e31/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "218ee2b812ec6e31404066d3d02ce1d2ad20374671504d2b2c0dca9e03391608",
+        "bytes": 12109,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page17-fd88afbef68214a3-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a14e7a7817a18f30/frozen-only-case-result.json",
+          "sha256": "a14e7a7817a18f3079ce4f6787445b383d9b75f118263a124d6d389482aef71b",
+          "bytes": 18635,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page17-fd88afbef68214a3-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/271e87dea216d368/frozen-only-case-result.json",
+          "sha256": "271e87dea216d3680522af3f79e5347bcbefb0ff433a38e74af579e7340ad624",
+          "bytes": 15748,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page17-fd88afbef68214a3-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/250647c1bd1cd069/frozen-only-case-result.json",
+          "sha256": "250647c1bd1cd069f2e8855af3f20ae0083d257b1165be7c37545c96e9c3eeee",
+          "bytes": 9659,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page17-fd88afbef68214a3-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e9a1081bd062f64f/en-page11.json",
+        "sha256": "e9a1081bd062f64f99d544efe22d189ccdf3a6325c17da9a65086cea34f49ac3",
+        "bytes": 1372,
+        "frozen_path": "verification/en-page11.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ce83fd3cee852809/page17-source144.png",
+        "sha256": "ce83fd3cee852809bbde1726244cc0ff2d2c230db3bb7db7d3dee16e5fc3bd6e",
+        "bytes": 127441,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page17-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a60efd566df55d4f/MuPDF144.png",
+          "sha256": "a60efd566df55d4f5d2ad18e9bf13460811931a369b1f0a60d4537d876e20151",
+          "bytes": 106011,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page17/en-fd88afbef68214a3/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7234b070e1d1ed2d/Poppler144.png",
+          "sha256": "7234b070e1d1ed2d6a182cdd7f2fe5410739cd26bbecf4f8fc49d26ce91b0908",
+          "bytes": 119225,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page17/en-fd88afbef68214a3/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 12,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 18,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/738485badcc85f19/page18.pdf",
+        "sha256": "738485badcc85f198c2eb1cbc788f6cebd352468299464d79d0b86e6b64cc06a",
+        "bytes": 285248,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page18.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/bdc07a1833dfc025/page18.composition.json",
+        "sha256": "bdc07a1833dfc025252cd22f7158e697c5c7251414a6fbfcadf5cadc9585e3ec",
+        "bytes": 211536,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page18.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/01831966ebafae10/page18-en-01831966ebafae102918.json",
+        "sha256": "01831966ebafae10291822858dcb7775089f2e585f4453f127874f2ce1a26501",
+        "bytes": 513932,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/compiled-inputs/page18-en-01831966ebafae102918.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/46afab0737c2a37b/page18.native-control.pdf",
+        "sha256": "46afab0737c2a37b0db32e9adee6b3729227d876bfe0175683880f4b83b69ff8",
+        "bytes": 180675,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page18.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/50fed6768640f72c/actual-source-point-paint-native.json",
+        "sha256": "50fed6768640f72c3cbe92f51cabb9b26c855bff45cdd0a81e6c95e9d8492f11",
+        "bytes": 45811,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page18-738485badcc85f19-runtime-v4/qa-point-native-v3/page18-en-738485badcc85f19/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7f7384e4ce4e49e1/actual-ink-graphics.json",
+        "sha256": "7f7384e4ce4e49e1b16feac5189f84f4bf54cbd63ae07242cfffd8b8c94b0643",
+        "bytes": 4738,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page18-738485badcc85f19-runtime-v4/qa-ink-graphics-v7/page18-en-738485badcc85f19/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d00bc45d1b2ce495/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "d00bc45d1b2ce495a9845087cd4ae23d826c2cffaa253c1a30827d783929af3c",
+        "bytes": 11794,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page18-738485badcc85f19-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e71367dd38f56b9a/frozen-only-case-result.json",
+          "sha256": "e71367dd38f56b9afeff7f563b366f6d1135312e207e2a81596ffd9f2fb77b20",
+          "bytes": 18635,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page18-738485badcc85f19-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/adb97ac1752c5c44/frozen-only-case-result.json",
+          "sha256": "adb97ac1752c5c44e20ec66331bc775df5812a1f6d834cdf21426c5445030891",
+          "bytes": 15748,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page18-738485badcc85f19-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7919d2660f66378d/frozen-only-case-result.json",
+          "sha256": "7919d2660f66378dfe0d2f6b22e418033391b4635994578c7a2a8f84bd93cced",
+          "bytes": 9659,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page18-738485badcc85f19-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/eb346fb74b576d83/en-page12.json",
+        "sha256": "eb346fb74b576d83ddd138ff68dd0f7cc38cd464005c982d4940a12d80cc383d",
+        "bytes": 1372,
+        "frozen_path": "verification/en-page12.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1454c4b078941767/page18-source144.png",
+        "sha256": "1454c4b07894176790ae9cfa89c37ae4fe832f97dd32dc50fd90e52d2e425794",
+        "bytes": 137450,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page18-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b522fdfb5f738853/MuPDF144.png",
+          "sha256": "b522fdfb5f738853c576c261215b5cf9cfe50068d15d70ee739d4259620e0d91",
+          "bytes": 112809,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page18/en-738485badcc85f19/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6886a882c2c545b6/Poppler144.png",
+          "sha256": "6886a882c2c545b6c78ac71d9adff605bb143dc22f0dfbff69831170841f3ed2",
+          "bytes": 129349,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page18/en-738485badcc85f19/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 13,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 19,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/52e4895e7c24cdc3/page19.pdf",
+        "sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+        "bytes": 262839,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v8/en/page19.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d9b468eeadd59042/page19.composition.json",
+        "sha256": "d9b468eeadd59042c25b4f9c49027e7cf016268fce03ce6d6f34ec50a0e85f4d",
+        "bytes": 233781,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v8/en/page19.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/135b2c7c18e1927b/page19-en-135b2c7c18e1927beb56.json",
+        "sha256": "135b2c7c18e1927beb56c2df475d22aba2fca870cbcfcd6a43e5a3c9430aef83",
+        "bytes": 438981,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/compiled-inputs/page19-en-135b2c7c18e1927beb56.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5aafccdc209f6003/page19.native-control.pdf",
+        "sha256": "5aafccdc209f600325c0b752e24545a2aaa76c0e95ccc05c56e9492a31a6b7c6",
+        "bytes": 194248,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v8/en/page19.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5f3c8c15848e3eb2/actual-source-point-paint-native.json",
+        "sha256": "5f3c8c15848e3eb29ac45be6d8a3f5d5e68bb1729753b405511cfb5eff7155b5",
+        "bytes": 33130,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page19-52e4895e7c24cdc3-runtime-v4/qa-point-native-v3/page19-en-52e4895e7c24cdc3/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/721d9facff24f533/actual-ink-graphics.json",
+        "sha256": "721d9facff24f5338e6fc3c3f4eaa9f94864eed5f1aa2bb452048b694bb5ed37",
+        "bytes": 5045,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page19-52e4895e7c24cdc3-runtime-v4/qa-ink-graphics-v7/page19-en-52e4895e7c24cdc3/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/608df29506760816/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "608df295067608167eb15f8a24c0fbc3aaa61fb00b7a50865829ec1e052e3a26",
+        "bytes": 12422,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page19-52e4895e7c24cdc3-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ec83baa4b6c17049/frozen-only-case-result.json",
+          "sha256": "ec83baa4b6c17049a15baa0a1e69603b840b3f8f485f91f06a21e3a93f55e42b",
+          "bytes": 18635,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page19-52e4895e7c24cdc3-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d429d9dae886e6af/frozen-only-case-result.json",
+          "sha256": "d429d9dae886e6aff3cff135ee19edab2fb50ac42a6865bde7ddc3980b0d3540",
+          "bytes": 15748,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page19-52e4895e7c24cdc3-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c54e4f07edae2efd/frozen-only-case-result.json",
+          "sha256": "c54e4f07edae2efd669683692bf60e4daf47f6d838915709b1afbd11f790b867",
+          "bytes": 9659,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page19-52e4895e7c24cdc3-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/451156677dd40348/en-page13.json",
+        "sha256": "451156677dd403481d3bbd1f7154fe395095a066aa441b1f9a4a64be7ee4fd11",
+        "bytes": 1372,
+        "frozen_path": "verification/en-page13.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e02d29aba6f32b32/page19-source144.png",
+        "sha256": "e02d29aba6f32b3275fa83f96adcb5ab2e4248e449df07bb847692c2d0305d03",
+        "bytes": 128791,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page19-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/128190c08c15739f/MuPDF144.png",
+          "sha256": "128190c08c15739ff3dbd11522967876ae718cb0d5baae3b8b98afc000f01fe8",
+          "bytes": 119220,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v8/page19/en-52e4895e7c24cdc3/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fcacd66fe12508d1/Poppler144.png",
+          "sha256": "fcacd66fe12508d1f6b6155d052432f54b30d5d6ddbc43d4d6a818501c5c730c",
+          "bytes": 135380,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v8/page19/en-52e4895e7c24cdc3/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 14,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 20,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/1d90932c8b59a9e8/page20.pdf",
+        "sha256": "1d90932c8b59a9e8c1b3a9c1a2d1a53aff7c7996f17bdf687a0aefc8eb7e56e7",
+        "bytes": 325131,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page20.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/4a74275ac39f9502/page20.composition.json",
+        "sha256": "4a74275ac39f9502d9a565a1835657beeada844a1a89a088e0ab1c43fe24be66",
+        "bytes": 435296,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page20.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a1351cc7bbc89e7d/page20-en-a1351cc7bbc89e7dd1a9.json",
+        "sha256": "a1351cc7bbc89e7dd1a980c98d84b253325823ee33841ceaefcd19247947f9e0",
+        "bytes": 676538,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/compiled-inputs/page20-en-a1351cc7bbc89e7dd1a9.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/56a5a469d39745f8/page20.native-control.pdf",
+        "sha256": "56a5a469d39745f8ee82111ee5d43a49607e847367b9374c3c919b99dc90e417",
+        "bytes": 228581,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page20.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/2c87d544b3ea33a3/actual-source-point-paint-native.json",
+        "sha256": "2c87d544b3ea33a331eece36fb1ff8f2afb504aa1bef5c2dbf625c814751fb35",
+        "bytes": 57621,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page20-1d90932c8b59a9e8-runtime-v4/qa-point-native-v3/page20-en-1d90932c8b59a9e8/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ddf44d42691d5568/actual-ink-graphics.json",
+        "sha256": "ddf44d42691d55681240bdd16d3a20df74ec9c1b286dfab806936423f6dad7b8",
+        "bytes": 5350,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page20-1d90932c8b59a9e8-runtime-v4/qa-ink-graphics-v7/page20-en-1d90932c8b59a9e8/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/73cca5fae27ab520/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "73cca5fae27ab5200bf3971cfb4d93e69b164c048b1ca1662659b5cf8142b2f0",
+        "bytes": 12109,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page20-1d90932c8b59a9e8-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/978216b27b9bb50c/frozen-only-case-result.json",
+          "sha256": "978216b27b9bb50c9949b7d2e0c193ba685a5cbb3e625f30809646f2c2c521aa",
+          "bytes": 18635,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page20-1d90932c8b59a9e8-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/beb99f8777e45d7e/frozen-only-case-result.json",
+          "sha256": "beb99f8777e45d7e7e2ece458ee0fa0eb11194e93dad26813efc698e936c11d2",
+          "bytes": 15748,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page20-1d90932c8b59a9e8-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/652b06836fc3ad5a/frozen-only-case-result.json",
+          "sha256": "652b06836fc3ad5a1ec91af831d86cdd47cb21a1f4ce346c4b136dcaa22f2942",
+          "bytes": 9659,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page20-1d90932c8b59a9e8-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/665eb8a583c1c3b8/en-page14.json",
+        "sha256": "665eb8a583c1c3b89b1c8e328cd848c5bcb07bb74706a3d86d1b0b41ec289f78",
+        "bytes": 1372,
+        "frozen_path": "verification/en-page14.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/a5c5d24606036aa5/page20-source144.png",
+        "sha256": "a5c5d24606036aa5fe5d567ce4780b4e3a5b8faeaec48ee80f2a464854631f30",
+        "bytes": 190913,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page20-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/3a1f819a3f0eea73/MuPDF144.png",
+          "sha256": "3a1f819a3f0eea7360bd447b9486a1da1ef9141c01cc80f2004e3c474499a61e",
+          "bytes": 165649,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page20/en-1d90932c8b59a9e8/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e282884e52d869af/Poppler144.png",
+          "sha256": "e282884e52d869af863b79e19ab7fd24f600239be4ef5d4705dc4b791f1ceee6",
+          "bytes": 191534,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page20/en-1d90932c8b59a9e8/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 15,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 21,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fe8ff0ca91907619/page21.pdf",
+        "sha256": "fe8ff0ca919076192e5af5fb588af17447dc75ffdc9967b90696d2f7ee41b725",
+        "bytes": 322482,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v9/en/page21.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c82764a8fb14ecef/page21.composition.json",
+        "sha256": "c82764a8fb14ecef11fb22b839ed899b401a74665534cbf8487a386ccc28957c",
+        "bytes": 409138,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v9/en/page21.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5ef04e8e89e53147/page21-en-5ef04e8e89e53147b71a.json",
+        "sha256": "5ef04e8e89e53147b71acadb066bdd9e4cc3a79ec91a11dde147b741c5148d10",
+        "bytes": 653184,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/compiled-inputs/page21-en-5ef04e8e89e53147b71a.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/ca12766b28e69cdd/page21.native-control.pdf",
+        "sha256": "ca12766b28e69cdd4d2b4e83c15b20563a75b6059a0061edbd4ecd5ed1742efb",
+        "bytes": 210935,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v9/en/page21.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/7fbaaa4bc91aae6b/actual-source-point-paint-native.json",
+        "sha256": "7fbaaa4bc91aae6b9f98fe766554ebfa6bbd7043bf220315575a613866b15f22",
+        "bytes": 72083,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page21-fe8ff0ca91907619-runtime-v4/qa-point-native-v3/page21-en-fe8ff0ca91907619/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b221494d76165bf8/actual-ink-graphics.json",
+        "sha256": "b221494d76165bf88af2633d24e5e9aafce97e0aca6f8b24d4c744367a13cf9a",
+        "bytes": 5045,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page21-fe8ff0ca91907619-runtime-v4/qa-ink-graphics-v7/page21-en-fe8ff0ca91907619/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/cab4068ffd32645b/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "cab4068ffd32645bbeed4903bd140d2f67a28ef0dd342761963237b9c04467ef",
+        "bytes": 12738,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page21-fe8ff0ca91907619-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d19091878a5b9a77/frozen-only-case-result.json",
+          "sha256": "d19091878a5b9a7793c199a38e6c95abb1b485bcda4023971cae7ae9d3ac73fc",
+          "bytes": 18635,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page21-fe8ff0ca91907619-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/153e4c8da684c11e/frozen-only-case-result.json",
+          "sha256": "153e4c8da684c11ef280364b74586e7c6416d3c49da59851b13104bef8198579",
+          "bytes": 15748,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page21-fe8ff0ca91907619-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/65c03e4b3df598f5/frozen-only-case-result.json",
+          "sha256": "65c03e4b3df598f54ded61e3e352ac6cd4d406259901994dcea38016d2f58b89",
+          "bytes": 9659,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page21-fe8ff0ca91907619-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8dd491daae23e029/en-page15.json",
+        "sha256": "8dd491daae23e029336510717aef6ee4aafdbaa030dd33f166bfc1ed9123a622",
+        "bytes": 1372,
+        "frozen_path": "verification/en-page15.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6774858b59dcec45/page21-source144.png",
+        "sha256": "6774858b59dcec4570d695b9197cad9cc3aca2669c6f4f915f7ccac0a9b179f1",
+        "bytes": 173868,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page21-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/9e06c869fe6ac07a/MuPDF144.png",
+          "sha256": "9e06c869fe6ac07a8ddfd76efab8768df42bc64436c3cc4070cd1dd2338c4002",
+          "bytes": 148095,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v9/page21/en-fe8ff0ca91907619/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/0c71b606b837c828/Poppler144.png",
+          "sha256": "0c71b606b837c8282a523857c39cef5fd031bd488113f53cb21e01eaa3ea0897",
+          "bytes": 171230,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v9/page21/en-fe8ff0ca91907619/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 16,
+      "source_id": "legacy22",
+      "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "source_page": 22,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fb75d25b03ee8b20/page22.pdf",
+        "sha256": "fb75d25b03ee8b20023ee2981e4e9b62bfa314ed572b61caa8ecd26412108c42",
+        "bytes": 195595,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page22.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/f102a02574c921ee/page22.composition.json",
+        "sha256": "f102a02574c921ee080921e0d6340c308f822b9bd11095faf93fbd2282ee92d1",
+        "bytes": 42007,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page22.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/4543e66b38614635/page22-en-4543e66b38614635298f.json",
+        "sha256": "4543e66b38614635298ff8ce0a90b53df37bd36c853d8f564339faa2e54842d2",
+        "bytes": 70854,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/compiled-inputs/page22-en-4543e66b38614635298f.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/2922f4b2f69f460c/page22.native-control.pdf",
+        "sha256": "2922f4b2f69f460cc441b4e58dc679c763f5cd2405b6218a514bea0794ddd4e4",
+        "bytes": 173114,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/proofs-v7/en/page22.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/cf1fa656a6146dd8/actual-source-point-paint-native.json",
+        "sha256": "cf1fa656a6146dd8b34fdd749763620938a672c2e450024ea6d8fd4933ee4d16",
+        "bytes": 7532,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page22-fb75d25b03ee8b20-runtime-v4/qa-point-native-v3/page22-en-fb75d25b03ee8b20/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/426d42080339d786/actual-ink-graphics.json",
+        "sha256": "426d42080339d7861ad206c4dff032550d52051235011b9fea3b3c4ffc23aa03",
+        "bytes": 5042,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page22-fb75d25b03ee8b20-runtime-v4/qa-ink-graphics-v7/page22-en-fb75d25b03ee8b20/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6c2c50754af05fd4/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "6c2c50754af05fd4732d68359a3a5620ede4d1f98e5a6ea050ce883012d92f50",
+        "bytes": 7371,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page22-fb75d25b03ee8b20-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/471d746ad7179bb4/frozen-only-case-result.json",
+          "sha256": "471d746ad7179bb4c179c3ca546a7fbfc99854b824a69fe3f7e4e9e22c1ed9e1",
+          "bytes": 18630,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page22-fb75d25b03ee8b20-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/eac2247d2785b689/frozen-only-case-result.json",
+          "sha256": "eac2247d2785b689b63896a03290ac4848246108a7d43d91b97df5b0a9d9fb62",
+          "bytes": 15747,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page22-fb75d25b03ee8b20-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/e33b77d50d57598e/frozen-only-case-result.json",
+          "sha256": "e33b77d50d57598e537070199d62495aee41ded00aca4ec35ad53b8fbebe9402",
+          "bytes": 9658,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page22-fb75d25b03ee8b20-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/45e191a266e6e3dd/en-page16.json",
+        "sha256": "45e191a266e6e3dd0a203bafd9fb40b03af9690a02c02c783773c726dd40adc5",
+        "bytes": 1371,
+        "frozen_path": "verification/en-page16.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/9297fd3fc0807da7/page22-source144.png",
+        "sha256": "9297fd3fc0807da79b868ae17fafd20bf6039fbca6cc9557fc4656db12ba7936",
+        "bytes": 41893,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-original-style-bilingual/inspection/page22-source144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c2b01ead08b6caed/MuPDF144.png",
+          "sha256": "c2b01ead08b6caed43b3d1cd0fdf769827811e78f2796b900a0bee960dabee3a",
+          "bytes": 39569,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page22/en-fb75d25b03ee8b20/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/66212be9bcbcb365/Poppler144.png",
+          "sha256": "66212be9bcbcb365ae2a040edd6bf31dd2dc2b76b4e960fc45a43582c99577d0",
+          "bytes": 42538,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/review-v7/page22/en-fb75d25b03ee8b20/Poppler144.png"
+        }
+      }
+    },
+    {
+      "page": 17,
+      "source_id": "complete_reference26",
+      "source_sha256": "ce1b74fa12cd496501e1630927d004977950e7d71f9cdb031de97df43c1c0b6d",
+      "source_page": 26,
+      "proof": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/98dd705ad3ac135d/page26.pdf",
+        "sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+        "bytes": 1343720,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/supplement-source26-v1/proofs-v2/en/page26.pdf"
+      },
+      "composition": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/00a29f7361683b4b/page26.composition.json",
+        "sha256": "00a29f7361683b4b5d0a508be9fff2e6544e288abf3facf88ed1379b5c461b47",
+        "bytes": 307471,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/supplement-source26-v1/proofs-v2/en/page26.composition.json"
+      },
+      "plan": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/2181d843291a74f4/page26-en-2181d843291a74f4a5d7.json",
+        "sha256": "2181d843291a74f4a5d73e3bd73339feec5a3508f49bd201a4bb6338c9a04897",
+        "bytes": 193165,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/supplement-source26-v1/compiled-inputs/page26-en-2181d843291a74f4a5d7.json"
+      },
+      "native_control": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b6cea204dfd66e2a/page26.native-control.pdf",
+        "sha256": "b6cea204dfd66e2a29522a502ebdad6e8d3445ca5d290a0fe62880bf939db59f",
+        "bytes": 565448,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/supplement-source26-v1/proofs-v2/en/page26.native-control.pdf"
+      },
+      "actual_point_native": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/d5eb57aa31bc7e10/actual-source-point-paint-native.json",
+        "sha256": "d5eb57aa31bc7e10a9672df293a6953818c96bcb2eb2f51b1cb1ee54563dd81c",
+        "bytes": 26762,
+        "frozen_path": "frozen-only-runtime-verification/point-en-page26-98dd705ad3ac135d-runtime-v4/qa-point-native-v3/page26-en-98dd705ad3ac135d/actual-source-point-paint-native.json"
+      },
+      "actual_ink_graphics": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/35349a306d2481c1/actual-ink-graphics.json",
+        "sha256": "35349a306d2481c172edc9186cd880d2ba33a80e97e81861bd1551ade311f0e6",
+        "bytes": 4786,
+        "frozen_path": "frozen-only-runtime-verification/ink-en-page26-98dd705ad3ac135d-runtime-v4/qa-ink-graphics-v7/page26-en-98dd705ad3ac135d/actual-ink-graphics.json"
+      },
+      "actual_full_frozen_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/27c0d9d74a2b6c6d/actual-full-frozen-donor-outline-audit.json",
+        "sha256": "27c0d9d74a2b6c6d6064623165c7d12e1dd4821876664f29bbc00d1aa0667f66",
+        "bytes": 17699,
+        "frozen_path": "frozen-only-runtime-verification/donor-en-page26-98dd705ad3ac135d-runtime-v4/actual-full-frozen-donor-outline-audit.json"
+      },
+      "actual_frozen_runtime_cases": {
+        "point": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/925572116d3bd498/frozen-only-case-result.json",
+          "sha256": "925572116d3bd498112d12c5396f74e6f12027e377358c91c3a901603a166266",
+          "bytes": 23082,
+          "frozen_path": "frozen-only-runtime-verification/point-en-page26-98dd705ad3ac135d-runtime-v4/frozen-only-case-result.json"
+        },
+        "frame": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/0d687dd5ccb34bf8/frozen-only-case-result.json",
+          "sha256": "0d687dd5ccb34bf890e40e9c2daf993e3f41a3a566caef16cc71968f2e5e5452",
+          "bytes": 15220,
+          "frozen_path": "frozen-only-runtime-verification/frame-en-page26-98dd705ad3ac135d-runtime-v4/frozen-only-case-result.json"
+        },
+        "ink": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/6dd8ab692d352183/frozen-only-case-result.json",
+          "sha256": "6dd8ab692d35218322f77a31e85035f291fe8e8e5bf0d8549f5c977197156b9b",
+          "bytes": 248804,
+          "frozen_path": "frozen-only-runtime-verification/ink-en-page26-98dd705ad3ac135d-runtime-v4/frozen-only-case-result.json"
+        },
+        "donor": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5da5bed70ae0b3ac/frozen-only-case-result.json",
+          "sha256": "5da5bed70ae0b3acab91ff47b97346a21ae3484268db181f8db316ee098a0372",
+          "bytes": 12750,
+          "frozen_path": "frozen-only-runtime-verification/donor-en-page26-98dd705ad3ac135d-runtime-v4/frozen-only-case-result.json"
+        }
+      },
+      "native_append": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/fd93d6a35853bd7e/en-page17.json",
+        "sha256": "fd93d6a35853bd7e85eab65b893074e2dff4a5a70f82c52df8277b4108a83a86",
+        "bytes": 1408,
+        "frozen_path": "verification/en-page17.json"
+      },
+      "original_full_source": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/155dd82a3e55c3f6/source26-full-original144.png",
+        "sha256": "155dd82a3e55c3f6b26b7904ebc1ca43b9ddf05e908cf0cec6aa254c593cd264",
+        "bytes": 67046,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/official-CPS-source-references-20261105/complete-layout-C10-reference/source26-full-original144.png"
+      },
+      "reviewed_full_renders": {
+        "MuPDF": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/5bc1e8f9e1183a8a/MuPDF144.png",
+          "sha256": "5bc1e8f9e1183a8a0cad3e89d01321bd9bff5b83f1839e1720415e2e5c966955",
+          "bytes": 62065,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/supplement-source26-v1/review-v2/page26/en-98dd705ad3ac135d/MuPDF144.png"
+        },
+        "Poppler": {
+          "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/8717a91bd9d9b563/Poppler144.png",
+          "sha256": "8717a91bd9d9b563a1e6528003c7d7454cfa52ec43d8ac7ae228c721b7234c2d",
+          "bytes": 65595,
+          "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/supplement-source26-v1/review-v2/page26/en-98dd705ad3ac135d/Poppler144.png"
+        }
+      },
+      "actual_raw_source_frame": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/c34c847a5e6d2925/actual-source-raw-frame-and-colored-paint.json",
+        "sha256": "c34c847a5e6d2925ce04aef86d51aea5902ff70d86c043bbfa1a59f5bb677a15",
+        "bytes": 319065,
+        "frozen_path": "frozen-only-runtime-verification/frame-en-page26-98dd705ad3ac135d-runtime-v4/qa-raw-source-frame-v1/en-98dd705ad3ac135d/actual-source-raw-frame-and-colored-paint.json"
+      },
+      "actual_original_boxes_resources_and_optical_donor": {
+        "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/evidence/b2e447575b69dd9e/en-source-box-resource-optical.json",
+        "sha256": "b2e447575b69dd9e1c0fd383aa835772e8bcbdce7d735b2ef3479717034ccfc7",
+        "bytes": 4348,
+        "frozen_path": "frozen/raw-files/C/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2010-TS-C-successor-v7/supplement-source26-v1/inspection/final-source-box-resource-and-optical-v1/en-source-box-resource-optical.json"
+      }
+    }
+  ],
+  "shared": {
+    "path": "tools/ko/cpho/2010/ts/dual-source-original-v1/shared.json",
+    "sha256": "d7e4b196e82720371e88b309e480e710726b4749a95e2732bae4249be22f8216",
+    "bytes": 141416
+  }
+}

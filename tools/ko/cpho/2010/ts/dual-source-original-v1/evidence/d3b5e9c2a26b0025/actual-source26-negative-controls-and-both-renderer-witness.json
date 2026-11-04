@@ -1,0 +1,143 @@
+{
+  "source_sha256": "ce1b74fa12cd496501e1630927d004977950e7d71f9cdb031de97df43c1c0b6d",
+  "positive_proof_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+  "all_source_and_current_proof_bytes_unchanged": true,
+  "source26_specific_actual_damaged_PDFs": 3,
+  "controls": [
+    {
+      "name": "blue-label-fill-changed-black",
+      "actual_new_glyph_programs_changed": 8,
+      "all_original_native_font_math_vector_programs_unchanged": true,
+      "expected_job": "frame",
+      "expected_marker": "SOURCE26_RAW_NEW_PROSE_FRAME_OR_COLOR_MISMATCH",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\actual-source26-negative-controls-v1\\blue-label-fill-changed-black.pdf",
+      "sha256": "9920d632484c12ade505de69786ad31b02a3a5085805b2f4a908ad5ab34c9994",
+      "language": "en",
+      "source_page": 26,
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\proofs-v2\\en\\page26.pdf",
+      "positive_baseline_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 763,
+          "actual_bbox_px": [
+            149,
+            973,
+            239,
+            996
+          ],
+          "positive_RGB_sha256": "7acb940d56a165c359df076ed0dc7f613c13f3a059529f5a4d7325a7144b2626",
+          "damaged_RGB_sha256": "b6cb42ff3f8148939882bc297c0105433ce8fac86dac02e9041cdb84256a9484"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 758,
+          "actual_bbox_px": [
+            149,
+            972,
+            239,
+            995
+          ],
+          "positive_RGB_sha256": "853df476b2fa8703bf1a816765468c8dfa01926c9b235910835789177d28811f",
+          "damaged_RGB_sha256": "bd0c5b18f7e900bf7c9c90e8c19a50d7dd4713728ac696e533e8a8a96c59b6d9"
+        }
+      ],
+      "validator_execution_still_required": true
+    },
+    {
+      "name": "red-title-source-CTM-xscale-changed",
+      "actual_new_glyph_programs_changed": 9,
+      "all_original_native_font_math_vector_programs_unchanged": true,
+      "expected_job": "frame",
+      "expected_marker": "SOURCE26_RAW_NEW_PROSE_AFFINE_FRAME_MISMATCH",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\actual-source26-negative-controls-v1\\red-title-source-CTM-xscale-changed.pdf",
+      "sha256": "238c8650678d891a28787be0ad78d7e680a645b4b561b1ffd688acc0f565e3d7",
+      "language": "en",
+      "source_page": 26,
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\proofs-v2\\en\\page26.pdf",
+      "positive_baseline_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 456,
+          "actual_bbox_px": [
+            108,
+            178,
+            196,
+            193
+          ],
+          "positive_RGB_sha256": "7acb940d56a165c359df076ed0dc7f613c13f3a059529f5a4d7325a7144b2626",
+          "damaged_RGB_sha256": "121e427b32ed173a772fa305b79583b64749b9857ebbfa84cf628e69d27cfc7a"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 386,
+          "actual_bbox_px": [
+            108,
+            178,
+            196,
+            193
+          ],
+          "positive_RGB_sha256": "853df476b2fa8703bf1a816765468c8dfa01926c9b235910835789177d28811f",
+          "damaged_RGB_sha256": "ed8a1b3e6019db9ec2def0280c7f4a4c7c44aa702913bfb8e6e97ca32ab5faef"
+        }
+      ],
+      "validator_execution_still_required": true
+    },
+    {
+      "name": "one-pixel-original-colored-vector-ray-covered",
+      "actual_original_source_pixel": [
+        570,
+        362
+      ],
+      "actual_source_RGB": [
+        255,
+        0,
+        0
+      ],
+      "original_source_PNG_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\official-CPS-source-references-20261105\\complete-layout-C10-reference\\source26-full-original144.png",
+      "original_source_PNG_sha256": "155dd82a3e55c3f6b26b7904ebc1ca43b9ddf05e908cf0cec6aa254c593cd264",
+      "actual_opaque_rect_pt": [
+        285.0,
+        181.0,
+        285.5,
+        181.5
+      ],
+      "expected_job": "ink",
+      "expected_marker": "Unreviewed non-text paint after source program",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\actual-source26-negative-controls-v1\\one-pixel-original-colored-vector-ray-covered.pdf",
+      "sha256": "1894b960769295cbfda252a3e5a253025ad6e8b0f1384cf616473248635295c4",
+      "language": "en",
+      "source_page": 26,
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\supplement-source26-v1\\proofs-v2\\en\\page26.pdf",
+      "positive_baseline_sha256": "98dd705ad3ac135d1e9da437be3650dab1a27ecf7142c92397c0b2997ea6972e",
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 1,
+          "actual_bbox_px": [
+            570,
+            362,
+            571,
+            363
+          ],
+          "positive_RGB_sha256": "7acb940d56a165c359df076ed0dc7f613c13f3a059529f5a4d7325a7144b2626",
+          "damaged_RGB_sha256": "e24d9ca713f8aac0476a57894c0131cae0ed44447bf1fab19b5d45bb8e0d4d4c"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 1,
+          "actual_bbox_px": [
+            570,
+            362,
+            571,
+            363
+          ],
+          "positive_RGB_sha256": "853df476b2fa8703bf1a816765468c8dfa01926c9b235910835789177d28811f",
+          "damaged_RGB_sha256": "998685773ecf5dced82c8ae12015611fe054784c8d278d09b3c08a465a713353"
+        }
+      ],
+      "validator_execution_still_required": true
+    }
+  ]
+}

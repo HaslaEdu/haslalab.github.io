@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\TS\master-v3\frozen\private-runtime\frozen-only-dual-source-audit-case-v4.py", line 62, in <module>
+    raw=original_open(path_for(driver),'rb').read();sys.argv=[str(driver),lang,str(n),str(target)]if job in('point','frame')else[str(driver),str(n),lang,str(target)];exec(compile(raw,str(driver),'exec'),dict(__name__='__main__',__file__=str(driver)))
+                                                                                                                                                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\audit-actual-ink-native-graphics-and-prose-visibility-v7.py", line 35, in <module>
+    assert c['source_bitmap_language_overlay']is not None,'Unreviewed non-text paint after source program'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Unreviewed non-text paint after source program

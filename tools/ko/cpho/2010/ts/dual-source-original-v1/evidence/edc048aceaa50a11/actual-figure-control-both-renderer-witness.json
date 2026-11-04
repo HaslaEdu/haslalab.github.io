@@ -1,0 +1,107 @@
+{
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "source_original_wire_selection_PNG_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\inspection\\page19-source144.png",
+  "source_original_wire_selection_PNG_sha256": "e02d29aba6f32b3275fa83f96adcb5ab2e4248e449df07bb847692c2d0305d03",
+  "controls": [
+    {
+      "name": "one-pixel-original-circuit-wire-covered",
+      "source_only_wire_selection_ROI_px": [
+        880,
+        827,
+        960,
+        832
+      ],
+      "source_actual_wire_pixel": [
+        914,
+        827
+      ],
+      "actual_source_RGB": [
+        0,
+        0,
+        0
+      ],
+      "actual_white_rectangle_pt": [
+        457.0,
+        413.5,
+        457.5,
+        414.0
+      ],
+      "expected_predicate": "Unreviewed non-text paint after source program",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-figure-negative-controls-v1\\one-pixel-original-circuit-wire-covered.pdf",
+      "sha256": "53d21647bbea3e2b8de21f63c7e6fc7180dae2d1ee6226489c829f9da7db08b5",
+      "source_page": 19,
+      "language": "en",
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v8\\en\\page19.pdf",
+      "positive_baseline_sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 1,
+          "actual_difference_bbox_px": [
+            914,
+            827,
+            915,
+            828
+          ],
+          "positive_RGB_sha256": "6d2179564fa4a7520d87a52f9097d92166603e590434de9f889e7941e6a1f2e5",
+          "damaged_RGB_sha256": "2b558eec599dc538195299cf113e1e27123a5c01f72269372e1f297f2a2b000e"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 1,
+          "actual_difference_bbox_px": [
+            914,
+            827,
+            915,
+            828
+          ],
+          "positive_RGB_sha256": "f5e5f9bc2f42aa265484c6f13aa212d0bd31240cb51945099b2eaea3466e69c1",
+          "damaged_RGB_sha256": "68b073a2e0f067d04455ee11247327d51d6147be6974efc71e59437c934c4448"
+        }
+      ],
+      "validator_execution_still_required": true
+    },
+    {
+      "name": "actual-English-prose-over-original-circuit-leader",
+      "actual_native_new_prose_glyph_streams_moved": 22,
+      "actual_same_points_fonts_and_GIDs_retained": true,
+      "actual_horizontal_shift_pt": 310.0,
+      "original_native_source_programs_unchanged": true,
+      "expected_predicate": "Actual source/native/new-prose ink visibility or collision failure",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-figure-negative-controls-v1\\actual-English-prose-over-original-circuit-leader.pdf",
+      "sha256": "f5dc2d547d21553fa4d0c41de3b7183ed2f067f659ee5097e6453523e21dc944",
+      "source_page": 19,
+      "language": "en",
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v8\\en\\page19.pdf",
+      "positive_baseline_sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 2546,
+          "actual_difference_bbox_px": [
+            217,
+            806,
+            1155,
+            822
+          ],
+          "positive_RGB_sha256": "6d2179564fa4a7520d87a52f9097d92166603e590434de9f889e7941e6a1f2e5",
+          "damaged_RGB_sha256": "ce41c01ec7256727666a7a35f014722949ff9d6fe1eb37070977578c89f1a6df"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 2524,
+          "actual_difference_bbox_px": [
+            217,
+            806,
+            1155,
+            822
+          ],
+          "positive_RGB_sha256": "f5e5f9bc2f42aa265484c6f13aa212d0bd31240cb51945099b2eaea3466e69c1",
+          "damaged_RGB_sha256": "7880e4aa69dbdbc11e310e0bb34b133ab27a2602eec7031489fc8c2b7ead98bd"
+        }
+      ],
+      "validator_execution_still_required": true
+    }
+  ],
+  "source_and_all_positive_proofs_unchanged": true
+}

@@ -1,0 +1,30 @@
+{
+  "UTC": "2026-11-04T20:41:08.309783+00:00",
+  "runid": "20261104T204106Z-ink-en-19-ad9a15d8",
+  "job": "ink",
+  "language": "en",
+  "source_page": 19,
+  "generation": "v7",
+  "result": "FAILED",
+  "failure": "AssertionError: Unreviewed non-text paint after source program",
+  "resource_policy_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\C-TS-successor-policy-v7.json",
+  "resource_policy_sha256": "e2d1094a8468500e1e091be13283bae2dbbe612c52251548beb979a86b92561d",
+  "driver_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\audit-actual-ink-native-graphics-and-prose-visibility-v7.py",
+  "driver_sha256": "ec258a93b21906ccaab4f9ef223b15b4ca3f1d7d07b090571f5b8a976cf73a9a",
+  "producer_engine_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_native_compose.py",
+  "producer_engine_sha256": "3941d15564d4f5b9cfd189f3f84d588083c0f82907dbaa5c6a480a03be3fc7cc",
+  "original_source_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual",
+  "active_authoring_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7",
+  "active_proofs_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v7",
+  "active_reviews_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\review-v7",
+  "process_TEMP_TMP_TMPDIR": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204106Z-ink-en-19-ad9a15d8",
+  "bytecode_writes_disabled": true,
+  "all_observed_writes": [
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\pdf-render-memory.lock"
+  ],
+  "outside_output_attempts": [],
+  "unchanged_native_guard_sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+  "shared_memory_gate_or_native_QA_modified": false,
+  "actual_C_free_after": 13277720576,
+  "actual_D_free_after": 1061158912
+}

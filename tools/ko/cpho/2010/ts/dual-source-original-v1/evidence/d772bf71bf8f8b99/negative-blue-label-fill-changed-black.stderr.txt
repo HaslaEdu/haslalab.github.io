@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\TS\master-v3\frozen\private-runtime\frozen-only-dual-source-audit-case-v4.py", line 62, in <module>
+    raw=original_open(path_for(driver),'rb').read();sys.argv=[str(driver),lang,str(n),str(target)]if job in('point','frame')else[str(driver),str(n),lang,str(target)];exec(compile(raw,str(driver),'exec'),dict(__name__='__main__',__file__=str(driver)))
+                                                                                                                                                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\supplement-source26-v1\audit-source26-exact-raw-source-frames-v2.py", line 27, in <module>
+    for key in('w','M','J','j','Tr','rg','RG','Tf','Tc','Tw','Tz','Ts'):assert s[key]==source_state[key],('SOURCE26_RAW_NEW_PROSE_FRAME_OR_COLOR_MISMATCH',role,key,s[key],source_state[key])
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('SOURCE26_RAW_NEW_PROSE_FRAME_OR_COLOR_MISMATCH', 'SimSunBold', 'rg', [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])

@@ -1,0 +1,296 @@
+{
+  "schema": "cpho2010-TS-actual-positive4-negative5-source-native-contract-v1",
+  "passed": true,
+  "UTC": "2026-11-04T20:41:11.990706+00:00",
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "cases": [
+    {
+      "name": "unchanged-positive-ko-auditpage",
+      "job": "auditpage",
+      "language": "ko",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v7\\ko\\page19.pdf",
+      "sha256": "9795ee7e4521236e4ff8a8c23b7f8ec5b17baf476a79588100c9eadcac109115",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "actual_failure": null,
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204031Z-auditpage-ko-19-7c53d3e8\\run-lineage.json",
+      "actual_lineage_sha256": "e43955c46f9705911d4865d04c82b7d91592e245bf3cec36614cfa56a2ab0df3",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\unchanged-positive-ko-auditpage",
+      "actual_stdout_sha256": "764dd14315e1784a1ecc373f92345ec1761e084131a8c4ba38137adc1f744c12",
+      "actual_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "unchanged-positive-ko-ink",
+      "job": "ink",
+      "language": "ko",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v7\\ko\\page19.pdf",
+      "sha256": "9795ee7e4521236e4ff8a8c23b7f8ec5b17baf476a79588100c9eadcac109115",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "actual_failure": null,
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204033Z-ink-ko-19-19cae458\\run-lineage.json",
+      "actual_lineage_sha256": "3db31b763d77e75f8fcbff9c0ad723732dffc920200537d58164eb755adec822",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\unchanged-positive-ko-ink",
+      "actual_stdout_sha256": "6acbad570a77eb76e9ba4f79b329b9bd134046b8772ca746f7cfb687f73ceedb",
+      "actual_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "unchanged-positive-en-auditpage",
+      "job": "auditpage",
+      "language": "en",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v8\\en\\page19.pdf",
+      "sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "actual_failure": null,
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204036Z-auditpage-en-19-891e83e6\\run-lineage.json",
+      "actual_lineage_sha256": "3dca7c4c27268158766f15ad10ff125533a4dd85f6d17ae22eb505fefe0abdc6",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\unchanged-positive-en-auditpage",
+      "actual_stdout_sha256": "bd8b886ab6aaccb555df87661a4675f54e827b0bb45f5f526e87d7d3b721777b",
+      "actual_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "unchanged-positive-en-ink",
+      "job": "ink",
+      "language": "en",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v8\\en\\page19.pdf",
+      "sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "actual_failure": null,
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204038Z-ink-en-19-d2241920\\run-lineage.json",
+      "actual_lineage_sha256": "aeaa618c38848377ce4b496d94c6d8c2bca5a1a5b8e5fa0b9f5b080ce531eaf2",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\unchanged-positive-en-ink",
+      "actual_stdout_sha256": "5320a8df314a54ac16d75eccb1a7c02cd49ac267bf6888bd27cc08cab5c09b55",
+      "actual_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "same-name-version-advance-new-English-C-outline-damaged",
+      "job": "auditpage",
+      "language": "en",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\same-name-version-advance-new-English-C-outline-damaged.pdf",
+      "sha256": "c2d5f4769724e8b614f6dcdb0d73733a32a57312d25135dd3d3ac4468de00462",
+      "expected_exit": 1,
+      "expected_marker": "C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+      "both_renderer_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 10,
+          "actual_difference_bbox_px": [
+            182,
+            1049,
+            190,
+            1051
+          ],
+          "positive_RGB_sha256": "6d2179564fa4a7520d87a52f9097d92166603e590434de9f889e7941e6a1f2e5",
+          "damaged_RGB_sha256": "57359a269f96e5ac6f74c1bc8142ab71df4a98de8bc2f0824bc1a236fa052ed0"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 10,
+          "actual_difference_bbox_px": [
+            182,
+            1049,
+            190,
+            1051
+          ],
+          "positive_RGB_sha256": "f5e5f9bc2f42aa265484c6f13aa212d0bd31240cb51945099b2eaea3466e69c1",
+          "damaged_RGB_sha256": "11de6a2180c901ed98aa30773d4f98f36bda2e6f878219dbd488c9cf475f4da4"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_failure": "AssertionError: C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204052Z-auditpage-en-19-7649bb1b\\run-lineage.json",
+      "actual_lineage_sha256": "8c4ab229b8e1dcc438ff131063a9498353346aa310af0fac1b21a63a64c989fd",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\same-name-version-advance-new-English-C-outline-damaged",
+      "actual_stdout_sha256": "14736baff5a05c81989283574a4f0dcba8bb4598711cf8e5ec39ba18bf57b5cd",
+      "actual_stderr_sha256": "7786e2bce50fda14e9ee45ed5b689e7bd8795ba21715339e978291e4e066f99e",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "new-Korean-prose-actual-Tf-plus-one-point",
+      "job": "auditpage",
+      "language": "ko",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\new-Korean-prose-actual-Tf-plus-one-point.pdf",
+      "sha256": "e317da27779f8c0c9bf599c4211ad36edfad60996001108f5c93e6390ffa708a",
+      "expected_exit": 1,
+      "expected_marker": "C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH",
+      "both_renderer_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 174,
+          "actual_difference_bbox_px": [
+            182,
+            232,
+            199,
+            255
+          ],
+          "positive_RGB_sha256": "d2618c80ea0f739b29a255e39bdab40ef0c61e38d98091c2c022eba90a91c3e8",
+          "damaged_RGB_sha256": "71479d4e7c1fa364004bf4685d28867b8769111c0791e068e0f7aad564b72d37"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 174,
+          "actual_difference_bbox_px": [
+            182,
+            231,
+            199,
+            254
+          ],
+          "positive_RGB_sha256": "7474d1c854dbd78fc9ff64852917df220ac38f04c1fb38863f25d69009e693b8",
+          "damaged_RGB_sha256": "5155e89c91ce8392fd4ce4e5948f1e742c033ce87d6a4c4ded832d0535fa6e95"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_failure": "AssertionError: ('C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH', [{'index': 0, 'expected': {'row': 'r00', 'c': '이', 'gid': 14794, 'font': 'Batang', 'size': 10.5600004196167, 'origin': [90.00288391113281, 125.9970703125], 'render_mode': 0, 'color': [0.0, 0.0, 0.0], 'linewidth': None}, 'actual': {'c': '이', 'font': 'Batang', 'size': 11.5600004196167, 'origin': (90.00288391113281, 125.9970703125), 'bbox': (90.00288391113281, 116.06866455078125, 101.56288146972656, 127.628662109375), 'render_mode': 0, 'trace_gid': 14794, 'color': (0.0, 0.0, 0.0), 'opacity': 1.0, 'linewidth': None, 'direction': (1.0, 0.0), 'stroke_color': None, 'stroke_opacity': None, 'wmode': 0, 'colorspace': 3}, 'errors': ['source point']}])",
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204057Z-auditpage-ko-19-f9e3fbd8\\run-lineage.json",
+      "actual_lineage_sha256": "193d90ac3f95a1acfec06c800c0a7537c8b5d2f6c5aeca1d633b84cbc1b9cd91",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\new-Korean-prose-actual-Tf-plus-one-point",
+      "actual_stdout_sha256": "62bacf8770132f5f1886fc54b69c00eaf921011574c23ad1c64f884b7cf0067a",
+      "actual_stderr_sha256": "b66e2cc0b2d8bc86e8d622376b013955b096b4d74bc17377b9902cfd5ba2a653",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "original-native-math-subscript-zero-to-one-CID",
+      "job": "auditpage",
+      "language": "ko",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\original-native-math-subscript-zero-to-one-CID.pdf",
+      "sha256": "7cb3b529f50355daebaa6626dd8caf129b6a8864f0c824a75777fcaace26c116",
+      "expected_exit": 1,
+      "expected_marker": "C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH",
+      "both_renderer_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 48,
+          "actual_difference_bbox_px": [
+            386,
+            166,
+            393,
+            176
+          ],
+          "positive_RGB_sha256": "d2618c80ea0f739b29a255e39bdab40ef0c61e38d98091c2c022eba90a91c3e8",
+          "damaged_RGB_sha256": "51c0da00aeac601aa006169a0b9cf4b8740d52233272d9cf1e5db164e0710efe"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 46,
+          "actual_difference_bbox_px": [
+            386,
+            166,
+            392,
+            176
+          ],
+          "positive_RGB_sha256": "7474d1c854dbd78fc9ff64852917df220ac38f04c1fb38863f25d69009e693b8",
+          "damaged_RGB_sha256": "81332ea22a482888f7f01cf14eb9773dfb43673552796a0d12fb8e2ca7e8c443"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_failure": "AssertionError: C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH",
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204101Z-auditpage-ko-19-c688d65d\\run-lineage.json",
+      "actual_lineage_sha256": "0e0d5176729b48ed22b3eb890b267e9d77fb96833566a5b1f25e1ba10ef178ec",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\original-native-math-subscript-zero-to-one-CID",
+      "actual_stdout_sha256": "acd7baea91fd2a1f4e9caf6eabad8f38e76a4f463bcf4002488e6b78dfb53c62",
+      "actual_stderr_sha256": "8508576428cee91b42818954de7e986c3819332bde30dad693ac289bb84f0a36",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "one-pixel-original-circuit-wire-covered",
+      "job": "ink",
+      "language": "en",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-figure-negative-controls-v1\\one-pixel-original-circuit-wire-covered.pdf",
+      "sha256": "53d21647bbea3e2b8de21f63c7e6fc7180dae2d1ee6226489c829f9da7db08b5",
+      "expected_exit": 1,
+      "expected_marker": "Unreviewed non-text paint after source program",
+      "both_renderer_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 1,
+          "actual_difference_bbox_px": [
+            914,
+            827,
+            915,
+            828
+          ],
+          "positive_RGB_sha256": "6d2179564fa4a7520d87a52f9097d92166603e590434de9f889e7941e6a1f2e5",
+          "damaged_RGB_sha256": "2b558eec599dc538195299cf113e1e27123a5c01f72269372e1f297f2a2b000e"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 1,
+          "actual_difference_bbox_px": [
+            914,
+            827,
+            915,
+            828
+          ],
+          "positive_RGB_sha256": "f5e5f9bc2f42aa265484c6f13aa212d0bd31240cb51945099b2eaea3466e69c1",
+          "damaged_RGB_sha256": "68b073a2e0f067d04455ee11247327d51d6147be6974efc71e59437c934c4448"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_failure": "AssertionError: Unreviewed non-text paint after source program",
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204106Z-ink-en-19-ad9a15d8\\run-lineage.json",
+      "actual_lineage_sha256": "3ca112f2d7711c626486d1a20f84f2ec2166aabe3ccf35a68d4294f04a8f8019",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\one-pixel-original-circuit-wire-covered",
+      "actual_stdout_sha256": "17025d5ddd77c44f1a644d806cb62fe96cd81bd6685d6618c5277b01b9631dc7",
+      "actual_stderr_sha256": "8b08175379a1d393346ceb623e03730b19368d3b9ad200a30aa5e25b5d46d443",
+      "matched_intended_predicate": true
+    },
+    {
+      "name": "actual-English-prose-over-original-circuit-leader",
+      "job": "ink",
+      "language": "en",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-figure-negative-controls-v1\\actual-English-prose-over-original-circuit-leader.pdf",
+      "sha256": "f5dc2d547d21553fa4d0c41de3b7183ed2f067f659ee5097e6453523e21dc944",
+      "expected_exit": 1,
+      "expected_marker": "Actual source/native/new-prose ink visibility or collision failure",
+      "both_renderer_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 2546,
+          "actual_difference_bbox_px": [
+            217,
+            806,
+            1155,
+            822
+          ],
+          "positive_RGB_sha256": "6d2179564fa4a7520d87a52f9097d92166603e590434de9f889e7941e6a1f2e5",
+          "damaged_RGB_sha256": "ce41c01ec7256727666a7a35f014722949ff9d6fe1eb37070977578c89f1a6df"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 2524,
+          "actual_difference_bbox_px": [
+            217,
+            806,
+            1155,
+            822
+          ],
+          "positive_RGB_sha256": "f5e5f9bc2f42aa265484c6f13aa212d0bd31240cb51945099b2eaea3466e69c1",
+          "damaged_RGB_sha256": "7880e4aa69dbdbc11e310e0bb34b133ab27a2602eec7031489fc8c2b7ead98bd"
+        }
+      ],
+      "actual_exit": 1,
+      "actual_failure": "AssertionError: Actual source/native/new-prose ink visibility or collision failure",
+      "actual_lineage_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204108Z-ink-en-19-30774f51\\run-lineage.json",
+      "actual_lineage_sha256": "b03907995cc6a1eee6a7cba167e33b13f142d2beb0ae9ed40b2c21d54e5304a7",
+      "case_output_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-damaged-PDF-contract-v1\\actual-English-prose-over-original-circuit-leader",
+      "actual_stdout_sha256": "3c684d8899d0663f53061fd1b9934e6fc952aed866b2e22c116f2820efbd10a2",
+      "actual_stderr_sha256": "df4c89e4f902b587e516df585ac3f2309fa919e78b71a41bfa22cdc848abb29b",
+      "matched_intended_predicate": true
+    }
+  ],
+  "actual_negative_PDF_count": 5,
+  "actual_fresh_positive_cases": 4,
+  "all_five_damage_cases_have_both_renderer_visible_damage_witnesses": true,
+  "source_wire_damage_exactly_one_pixel_each_renderer": true,
+  "resource_or_setup_failures_never_accepted_as_negative_success": true,
+  "actual_driver_source_sha256": "ec217bbfb8d4f24b81eecee9f797ea290b8b667ec6c9e0ca3bf4ac8b0a9d195a",
+  "actual_runtime_wrapper_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\run-C-TS-successor-job-v20.py",
+  "actual_runtime_wrapper_sha256": "7b59b81216648b1011347a4d513fc9a815c4d3ff98ce7b2acd7ba26436b66b0d",
+  "source_and_all_positive_proofs_unchanged": true
+}

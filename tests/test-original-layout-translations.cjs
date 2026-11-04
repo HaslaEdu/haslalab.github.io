@@ -80,6 +80,14 @@ for (const item of published) {
     require('./helpers/cpho2009-native-bilingual-publication.cjs')(root, qa, item);
     continue;
   }
+  if (item.audit_schema === 'cpho2011-theory-original-native-v1') {
+    require('./helpers/cpho2011-theory-native-publication.cjs')(root, qa, item);
+    continue;
+  }
+  if (item.audit_schema === 'cpho2010-solutions-dual-source-native-v1') {
+    require('./helpers/cpho2010-solutions-native-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'cpho2010-theory-original-native-v1') {
     require('./helpers/cpho2010-theory-native-publication.cjs')(root, qa, item);
     continue;

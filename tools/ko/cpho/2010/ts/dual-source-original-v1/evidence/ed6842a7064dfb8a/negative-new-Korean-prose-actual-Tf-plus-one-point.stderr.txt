@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\TS\master-v3\frozen\private-runtime\frozen-only-dual-source-audit-case-v4.py", line 62, in <module>
+    raw=original_open(path_for(driver),'rb').read();sys.argv=[str(driver),lang,str(n),str(target)]if job in('point','frame')else[str(driver),str(n),lang,str(target)];exec(compile(raw,str(driver),'exec'),dict(__name__='__main__',__file__=str(driver)))
+                                                                                                                                                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\audit-each-source-point-paint-native-v3.py", line 122, in <module>
+    assert not errors,('C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH',errors[:3])
+           ^^^^^^^^^^
+AssertionError: ('C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH', [{'index': 0, 'expected': {'row': 'r00', 'c': '이', 'gid': 14794, 'font': 'Batang', 'size': 10.5600004196167, 'origin': [90.00288391113281, 125.9970703125], 'render_mode': 0, 'color': [0.0, 0.0, 0.0], 'linewidth': None}, 'actual': {'c': '이', 'font': 'Batang', 'size': 11.5600004196167, 'origin': (90.00288391113281, 125.9970703125), 'bbox': (90.00288391113281, 116.06866455078125, 101.56288146972656, 127.628662109375), 'render_mode': 0, 'trace_gid': 14794, 'color': (0.0, 0.0, 0.0), 'opacity': 1.0, 'linewidth': None, 'direction': (1.0, 0.0), 'stroke_color': None, 'stroke_opacity': None, 'wmode': 0, 'colorspace': 3}, 'errors': ['source point']}])

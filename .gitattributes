@@ -22,3 +22,8 @@ tools/ko/izho/heading-alignment/natural-spacing/authoring/**/*.pdf -text -diff
 
 tools/ko/cpho/**/scanned-solutions-original-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
 tools/ko/cpho/**/native-original-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tools/ko/cpho/**/dual-source-original-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tests/helpers/cpho2010-solutions-native-publication.cjs -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tests/test-cpho2010-solutions-native-publication.cjs -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tests/helpers/cpho2011-theory-native-publication.cjs -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+tests/test-cpho2011-theory-native-publication.cjs -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol

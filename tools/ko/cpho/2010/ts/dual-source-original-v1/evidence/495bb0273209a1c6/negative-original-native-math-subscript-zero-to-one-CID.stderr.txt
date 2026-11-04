@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\TS\master-v3\frozen\private-runtime\frozen-only-dual-source-audit-case-v4.py", line 62, in <module>
+    raw=original_open(path_for(driver),'rb').read();sys.argv=[str(driver),lang,str(n),str(target)]if job in('point','frame')else[str(driver),str(n),lang,str(target)];exec(compile(raw,str(driver),'exec'),dict(__name__='__main__',__file__=str(driver)))
+                                                                                                                                                                      ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\audit-each-source-point-paint-native-v3.py", line 121, in <module>
+    assert not native['native_glyph_mismatches']and not native['unexpected_glyphs'],'C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH

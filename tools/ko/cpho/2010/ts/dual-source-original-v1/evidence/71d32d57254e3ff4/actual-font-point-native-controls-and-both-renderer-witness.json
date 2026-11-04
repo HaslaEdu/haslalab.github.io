@@ -1,0 +1,148 @@
+{
+  "schema": "cpho2010-three-actual-font-point-native-script-damaged-PDFs-v1",
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "controls": [
+    {
+      "name": "same-name-version-advance-new-English-C-outline-damaged",
+      "language": "en",
+      "expected_predicate": "C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+      "actual_new_font_alias": "/C2010TranslatedSimSun",
+      "actual_character": "C",
+      "actual_GID": 38,
+      "actual_advance_unchanged": 128,
+      "actual_name_version_records_unchanged": true,
+      "old_subset_sha256": "da6330109c88c105968bb931195060d28b111ed4413d607fd0630b790e6aaf87",
+      "damaged_subset_sha256": "13d0726e9874912feaf6fcd3f20af43af69217ad3356f25e01e20c6f43d314c5",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\same-name-version-advance-new-English-C-outline-damaged.pdf",
+      "sha256": "c2d5f4769724e8b614f6dcdb0d73733a32a57312d25135dd3d3ac4468de00462",
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v8\\en\\page19.pdf",
+      "positive_baseline_sha256": "52e4895e7c24cdc3b5e0bd23daca922ad5688927393b04db126df2e4e5897e7f",
+      "all_original_native_font_programs_unchanged": true,
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 10,
+          "actual_difference_bbox_px": [
+            182,
+            1049,
+            190,
+            1051
+          ],
+          "positive_RGB_sha256": "6d2179564fa4a7520d87a52f9097d92166603e590434de9f889e7941e6a1f2e5",
+          "damaged_RGB_sha256": "57359a269f96e5ac6f74c1bc8142ab71df4a98de8bc2f0824bc1a236fa052ed0"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 10,
+          "actual_difference_bbox_px": [
+            182,
+            1049,
+            190,
+            1051
+          ],
+          "positive_RGB_sha256": "f5e5f9bc2f42aa265484c6f13aa212d0bd31240cb51945099b2eaea3466e69c1",
+          "damaged_RGB_sha256": "11de6a2180c901ed98aa30773d4f98f36bda2e6f878219dbd488c9cf475f4da4"
+        }
+      ],
+      "validator_execution_still_required": true
+    },
+    {
+      "name": "new-Korean-prose-actual-Tf-plus-one-point",
+      "language": "ko",
+      "expected_predicate": "C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH",
+      "actual_old_Tf": 10.56,
+      "actual_new_Tf": 11.56,
+      "actual_new_font_program_and_encoded_CID_unchanged": true,
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\new-Korean-prose-actual-Tf-plus-one-point.pdf",
+      "sha256": "e317da27779f8c0c9bf599c4211ad36edfad60996001108f5c93e6390ffa708a",
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v7\\ko\\page19.pdf",
+      "positive_baseline_sha256": "9795ee7e4521236e4ff8a8c23b7f8ec5b17baf476a79588100c9eadcac109115",
+      "all_original_native_font_programs_unchanged": true,
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 174,
+          "actual_difference_bbox_px": [
+            182,
+            232,
+            199,
+            255
+          ],
+          "positive_RGB_sha256": "d2618c80ea0f739b29a255e39bdab40ef0c61e38d98091c2c022eba90a91c3e8",
+          "damaged_RGB_sha256": "71479d4e7c1fa364004bf4685d28867b8769111c0791e068e0f7aad564b72d37"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 174,
+          "actual_difference_bbox_px": [
+            182,
+            231,
+            199,
+            254
+          ],
+          "positive_RGB_sha256": "7474d1c854dbd78fc9ff64852917df220ac38f04c1fb38863f25d69009e693b8",
+          "damaged_RGB_sha256": "5155e89c91ce8392fd4ce4e5948f1e742c033ce87d6a4c4ded832d0535fa6e95"
+        }
+      ],
+      "validator_execution_still_required": true
+    },
+    {
+      "name": "original-native-math-subscript-zero-to-one-CID",
+      "language": "ko",
+      "expected_predicate": "C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH",
+      "actual_stream_index": 1,
+      "actual_operator_index": 98,
+      "actual_native_alias": "/F11",
+      "actual_original_Tm": [
+        6.017,
+        0.0,
+        0.0,
+        6.017,
+        0.0,
+        0.0
+      ],
+      "actual_old_CID": 2,
+      "actual_new_CID": 3,
+      "actual_original_ToUnicode_zero": "0",
+      "actual_changed_ToUnicode_one": "1",
+      "exactly_one_native_text_show_CID_changed": true,
+      "all_other_original_raw_native_stream_bytes_exact": true,
+      "original_show_fragment_sha256": "e88d4b15fea7794c79cf081c4ad6db631d7fefc5e0bea0ab3d887f8b38f492b8",
+      "damaged_show_fragment_sha256": "b47caeb07969639a9170245d307e6352552f00f54a8ae06247bd335f54c40531",
+      "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\TS-actual-font-point-native-negative-controls-v1\\original-native-math-subscript-zero-to-one-CID.pdf",
+      "sha256": "7cb3b529f50355daebaa6626dd8caf129b6a8864f0c824a75777fcaace26c116",
+      "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v7\\ko\\page19.pdf",
+      "positive_baseline_sha256": "9795ee7e4521236e4ff8a8c23b7f8ec5b17baf476a79588100c9eadcac109115",
+      "all_original_native_font_programs_unchanged": true,
+      "both_renderer_actual_visible_damage": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 48,
+          "actual_difference_bbox_px": [
+            386,
+            166,
+            393,
+            176
+          ],
+          "positive_RGB_sha256": "d2618c80ea0f739b29a255e39bdab40ef0c61e38d98091c2c022eba90a91c3e8",
+          "damaged_RGB_sha256": "51c0da00aeac601aa006169a0b9cf4b8740d52233272d9cf1e5db164e0710efe"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 46,
+          "actual_difference_bbox_px": [
+            386,
+            166,
+            392,
+            176
+          ],
+          "positive_RGB_sha256": "7474d1c854dbd78fc9ff64852917df220ac38f04c1fb38863f25d69009e693b8",
+          "damaged_RGB_sha256": "81332ea22a482888f7f01cf14eb9773dfb43673552796a0d12fb8e2ca7e8c443"
+        }
+      ],
+      "validator_execution_still_required": true
+    }
+  ],
+  "source_and_all_positive_proofs_unchanged": true,
+  "no_resource_error_counted_as_success": true
+}

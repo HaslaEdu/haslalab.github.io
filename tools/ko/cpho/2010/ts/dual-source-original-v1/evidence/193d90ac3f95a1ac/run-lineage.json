@@ -1,0 +1,30 @@
+{
+  "UTC": "2026-11-04T20:41:00.945580+00:00",
+  "runid": "20261104T204057Z-auditpage-ko-19-f9e3fbd8",
+  "job": "auditpage",
+  "language": "ko",
+  "source_page": 19,
+  "generation": "v7",
+  "result": "FAILED",
+  "failure": "AssertionError: ('C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH', [{'index': 0, 'expected': {'row': 'r00', 'c': '\uc774', 'gid': 14794, 'font': 'Batang', 'size': 10.5600004196167, 'origin': [90.00288391113281, 125.9970703125], 'render_mode': 0, 'color': [0.0, 0.0, 0.0], 'linewidth': None}, 'actual': {'c': '\uc774', 'font': 'Batang', 'size': 11.5600004196167, 'origin': (90.00288391113281, 125.9970703125), 'bbox': (90.00288391113281, 116.06866455078125, 101.56288146972656, 127.628662109375), 'render_mode': 0, 'trace_gid': 14794, 'color': (0.0, 0.0, 0.0), 'opacity': 1.0, 'linewidth': None, 'direction': (1.0, 0.0), 'stroke_color': None, 'stroke_opacity': None, 'wmode': 0, 'colorspace': 3}, 'errors': ['source point']}])",
+  "resource_policy_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\C-TS-successor-policy-v7.json",
+  "resource_policy_sha256": "e2d1094a8468500e1e091be13283bae2dbbe612c52251548beb979a86b92561d",
+  "driver_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\audit-each-source-point-paint-native-v3.py",
+  "driver_sha256": "0a24162cac83415d5792d764eca9170800b5620eb5a41ebe026f6ae2abaf6ded",
+  "producer_engine_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_native_compose.py",
+  "producer_engine_sha256": "3941d15564d4f5b9cfd189f3f84d588083c0f82907dbaa5c6a480a03be3fc7cc",
+  "original_source_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual",
+  "active_authoring_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7",
+  "active_proofs_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\proofs-v7",
+  "active_reviews_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\review-v7",
+  "process_TEMP_TMP_TMPDIR": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-TS-C-successor-v7\\temp-runs\\20261104T204057Z-auditpage-ko-19-f9e3fbd8",
+  "bytecode_writes_disabled": true,
+  "all_observed_writes": [
+    "D:\\CodexBuilds\\Hasla-original-style-20261031\\pdf-render-memory.lock"
+  ],
+  "outside_output_attempts": [],
+  "unchanged_native_guard_sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+  "shared_memory_gate_or_native_QA_modified": false,
+  "actual_C_free_after": 13282553856,
+  "actual_D_free_after": 1061158912
+}

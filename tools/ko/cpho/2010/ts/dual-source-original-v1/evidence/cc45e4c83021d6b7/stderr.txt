@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\run-source26-audit-job-v4.py", line 15, in <module>
+    runpy.run_path(str(driver),run_name='__main__');result='COMPLETED'
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\andre\CodexWork\HaslaLab\translation-builds\cpho2010-TS-C-successor-v7\supplement-source26-v1\audit-source26-exact-raw-source-frames-v2.py", line 27, in <module>
+    for key in('w','M','J','j','Tr','rg','RG','Tf','Tc','Tw','Tz','Ts'):assert s[key]==source_state[key],('SOURCE26_RAW_NEW_PROSE_FRAME_OR_COLOR_MISMATCH',role,key,s[key],source_state[key])
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('SOURCE26_RAW_NEW_PROSE_FRAME_OR_COLOR_MISMATCH', 'SimSunBold', 'rg', [0.0, 0.0, 0.0], [0.0, 0.0, 1.0])

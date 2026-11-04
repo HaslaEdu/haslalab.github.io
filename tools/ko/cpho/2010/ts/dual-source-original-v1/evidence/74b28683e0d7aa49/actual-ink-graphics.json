@@ -1,0 +1,85 @@
+{
+  "schema": "cpho2010-actual-both-renderer-ink-visibility-native-graphics-v3",
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "source_page": 14,
+  "language": "en",
+  "proof_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\proofs-v5\\en\\page14.pdf",
+  "proof_sha256": "c2199eff68a1efb1c536982aec2ca11e9d0280c61ed41a9fb4ed96157f56061a",
+  "native_control_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\proofs-v5\\en\\page14.native-control.pdf",
+  "native_control_sha256": "dba4b0f5d1f71616e21bb7950707ac6692870867fa733d915888026e61d229b1",
+  "actual_native_source_preserving_streams_byte_exact": true,
+  "exact_source_program_isolation_wrapper": {
+    "before_hex": "710a",
+    "after_hex": "0a510a",
+    "basis": "Exact PyMuPDF page-isolation q/Q only; enclosed actual native content bytes remain identical"
+  },
+  "actual_native_source_preserving_stream_sha256": [
+    "0265b0bb6afd97cf36ddbe372bd9caa13efc9be715a3b81b91aad371f80a9ac7"
+  ],
+  "actual_prose_reference_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\qa-ink-graphics-v7\\page14-en-c2199eff68a1efb1\\actual-new-prose-and-caption-native-ink-only.pdf",
+  "actual_prose_reference_sha256": "1189aa830e9cbdc7bff6837d3ff9b6df869b114c3731c917569559e588c07f57",
+  "reference_uses_only_actual_encoded_new_font_text_programmes_from_this_final_PDF": true,
+  "reference_new_text_program_count": 518,
+  "actual_original_image_programs_and_dictionaries": [],
+  "actual_white_panel_programs": [],
+  "actual_composite_background_reference_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\qa-ink-graphics-v7\\page14-en-c2199eff68a1efb1\\actual-new-prose-and-caption-native-ink-only.pdf",
+  "actual_composite_background_reference_sha256": "1189aa830e9cbdc7bff6837d3ff9b6df869b114c3731c917569559e588c07f57",
+  "source_quiet_paper_is_source_JPEG_EXACT255_outside_halo_complete_old_language_panel": null,
+  "source_original_image_paint_program_sha256": null,
+  "renderers": [
+    {
+      "renderer": "MuPDF144",
+      "dimensions": [
+        1191,
+        1684
+      ],
+      "counts": {
+        "actual_new_ink_pixels": 27915,
+        "new_prose_overlap_original_native_ink_pixels": 0,
+        "actual_new_glyph_ink_not_exactly_visible_pixels": 0,
+        "original_native_ink_or_graphics_changed_outside_actual_new_ink_and_source_closed_language_panel_pixels": 0
+      },
+      "actual_arrays_sha256": {
+        "proof": "e825b70d9abd3e24581c12227eb1f2bb6d9565795093791fd6cce39258169c6b",
+        "native_control": "4312ad641da6367d131c509ca443173cace968d7f6c4d82a1e30b5b36b0f846f",
+        "actual_native_new_prose_only": "55e11f027bff57be73d7e4bcf6597a8be1255e0fc6a7467471157a22c5f71d9d"
+      },
+      "actual_fresh_Poppler_PNG_sha256": null,
+      "source_only_language_panel_exceptions": [],
+      "source_closed_pure_paper_caption_context_only_pixels": 0,
+      "source_quiet_paper_witness_sha256": null,
+      "passed": true
+    },
+    {
+      "renderer": "Poppler144",
+      "dimensions": [
+        1191,
+        1684
+      ],
+      "counts": {
+        "actual_new_ink_pixels": 27953,
+        "new_prose_overlap_original_native_ink_pixels": 0,
+        "actual_new_glyph_ink_not_exactly_visible_pixels": 0,
+        "original_native_ink_or_graphics_changed_outside_actual_new_ink_and_source_closed_language_panel_pixels": 0
+      },
+      "actual_arrays_sha256": {
+        "proof": "5593e8735df2d28e0b3227a1cbd400c99e25e68ea91331012bba413a844497f5",
+        "native_control": "5a59d9548560f494097847a754ab9c6b92bb18ecd2c9e325126fa44a91423367",
+        "actual_native_new_prose_only": "e226bc3c0ad10671bf7482b6f4eb5797848067bcff5a1bb6febca90146c6e00a"
+      },
+      "actual_fresh_Poppler_PNG_sha256": {
+        "actual": "abaf97d09c8a3867768c3870355df9cf06c4b9330cc2bde28f86ec962bfe9258",
+        "native_control": "7a92a6859379da4d11eb642758471d211c0d1a09239ce1447ce7a56e08a6051f",
+        "actual_new_prose_ink_only": "5b0926c0c5ba0c81a06de196a2cd25bec3a7301d4f50e7b5d02002c3893fce90"
+      },
+      "source_only_language_panel_exceptions": [],
+      "source_closed_pure_paper_caption_context_only_pixels": 0,
+      "source_quiet_paper_witness_sha256": null,
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "source_math_path_complete_ownership_and_semantic_full_visual_review_remain_separate_required_checks": true,
+  "publication_ready": false
+}

@@ -1,0 +1,3019 @@
+{
+  "kind": "cpho2011-theory-original-native-v1",
+  "source_sha256": "834cf89c87442874b76a8aba714d814440b413fe1b3cde98ff773ce1ce72ff48",
+  "guard_sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+  "classification": {
+    "kind": "T",
+    "physical_source_pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "complete_original_problems": 8,
+    "total_original_points": 140,
+    "solution_document_TS_pending": true
+  },
+  "editions": [
+    {
+      "file": "CPhO_2011_T_KO.pdf",
+      "kind": "T",
+      "language": "ko",
+      "pages": 4,
+      "sha256": "53b85bf42c2e4b6de1ec991970e4e884e1537cbe7a0ec339bcc37847936a94af",
+      "bytes": 4978745
+    },
+    {
+      "file": "CPhO_2011_T_EN.pdf",
+      "kind": "T",
+      "language": "en",
+      "pages": 4,
+      "sha256": "37f850ad5a760a6b838310d1f87a6d672644067bacb806187e650130c4ed0114",
+      "bytes": 2280830
+    }
+  ],
+  "proofs": {
+    "p01-ko": "1a0180184f5dbef0785f2495693afb27d1c19722def8fdf1ca3b777a864eaeb6",
+    "p01-en": "1c18c552b499f75347740be1d6d9357a9a852d87603495caec08998a403dc6b0",
+    "p02-ko": "4f427d0c08103185b49b35a705b263d5c4b8f63165fd247ed2886d295b4d56f6",
+    "p02-en": "95d9d79826aa3aff25ed9536b4cbde4dd16a09f9f82375c9dfd15c8df41c6792",
+    "p03-ko": "4c33304bb93277cd21313b37dc411819f3a5379a179873df8fc4db7de43db58f",
+    "p03-en": "a6c99c2cf5378bc266a95258c47ea50a7c926191a2986512539c3a0a5d69ce0c",
+    "p04-ko": "05ebf039490fcd2a4964be8c27cad75bb3e9e14daebe3a62ee2d0d2ea84fac20",
+    "p04-en": "34979b5c996c49e6890dfd77a05375d2b2d36aaa6f7c2a86453b81b9fb711042"
+  },
+  "actual_producing_plans": {
+    "p01-ko": "36fc7b48a1f78037095f7cd6880d4904f085a08bcb790d322513f552c464085a",
+    "p01-en": "da55d5b7f31f1d640ba959591288613302a85efa5c0adecc82a5dee89d53a0c2",
+    "p02-ko": "f51b26aad83dd28c9daae9154ff8dea380ed527341ab1c416f67995de244d122",
+    "p02-en": "8472e1b387d490d51777b9fe6982a4907188f4cdef557c4b02b71866a0efe9c8",
+    "p03-ko": "8cf643ac2f4b19f9f84d353121bc2ee3ecfc42dd554e7c534e1c995b1249cd0f",
+    "p03-en": "844adc7307ff289ba665c940789a1b2ab78745c2f60924234e42bcd6828c9f16",
+    "p04-ko": "172914f16a4f9f8c7cc09b358ec329c50bab6fda23814fdac55bebf569b85fe9",
+    "p04-en": "789aa4a5622a9c25692e79374545f97eaefc3dbbd3d5f4548de9d7addd380556"
+  },
+  "bindings": {
+    "p01-ko": {
+      "new_prose_reference": "p01-ko-actual-font-paper-reference",
+      "subsets": {
+        "SimHei": "p01-ko-embedded-subset-SimHei",
+        "SimSun": "p01-ko-embedded-subset-SimSun"
+      },
+      "used_witnesses": {
+        "SimHei": "p01-ko-used-donor-glyphs-SimHei",
+        "SimSun": "p01-ko-used-donor-glyphs-SimSun"
+      },
+      "whole_math_path_witness": "p01-ko-whole-math-path-witness",
+      "whole_math_controls": [
+        "p01-ko-whole-math-control-0",
+        "p01-ko-whole-math-control-1",
+        "p01-ko-whole-math-control-2",
+        "p01-ko-whole-math-control-3"
+      ],
+      "source_background_witness": "p01-ko-original-r25-background-witness",
+      "source_background_controls": [
+        "p01-ko-proof",
+        "source01-inventory",
+        "p01-ko-whole-math-path-witness",
+        "p01-ko-whole-math-control-1",
+        "p01-ko-actual-font-paper-reference",
+        "p01-ko-r25-input-5",
+        "p01-ko-r25-input-6",
+        "p01-ko-r25-input-7",
+        "p01-ko-r25-input-8",
+        "p01-ko-r25-input-9",
+        "p01-ko-r25-input-10"
+      ]
+    },
+    "p01-en": {
+      "new_prose_reference": "p01-en-actual-font-paper-reference",
+      "subsets": {
+        "SimHei": "p01-en-embedded-subset-SimHei",
+        "SimSun": "p01-en-embedded-subset-SimSun"
+      },
+      "used_witnesses": {
+        "SimHei": "p01-en-used-donor-glyphs-SimHei",
+        "SimSun": "p01-en-used-donor-glyphs-SimSun"
+      },
+      "whole_math_path_witness": "p01-en-whole-math-path-witness",
+      "whole_math_controls": [
+        "p01-en-whole-math-control-0",
+        "p01-en-whole-math-control-1",
+        "p01-en-whole-math-control-2",
+        "p01-en-whole-math-control-3"
+      ],
+      "source_background_witness": "p01-en-original-r25-background-witness",
+      "source_background_controls": [
+        "p01-en-proof",
+        "source01-inventory",
+        "p01-en-whole-math-path-witness",
+        "p01-en-whole-math-control-1",
+        "p01-en-actual-font-paper-reference",
+        "p01-en-r25-input-5",
+        "p01-en-r25-input-6",
+        "p01-en-r25-input-7",
+        "p01-en-r25-input-8",
+        "p01-en-r25-input-9",
+        "p01-en-r25-input-10"
+      ]
+    },
+    "p02-ko": {
+      "new_prose_reference": "p02-ko-actual-font-paper-reference",
+      "subsets": {
+        "SimSun": "p02-ko-embedded-subset-SimSun",
+        "SimHei": "p02-ko-embedded-subset-SimHei"
+      },
+      "used_witnesses": {
+        "SimSun": "p02-ko-used-donor-glyphs-SimSun",
+        "SimHei": "p02-ko-used-donor-glyphs-SimHei"
+      },
+      "whole_math_path_witness": "p02-ko-whole-math-path-witness",
+      "whole_math_controls": [
+        "p02-ko-whole-math-control-0",
+        "p02-ko-whole-math-control-1",
+        "p02-ko-whole-math-control-2",
+        "p02-ko-whole-math-control-3"
+      ]
+    },
+    "p02-en": {
+      "new_prose_reference": "p02-en-actual-font-paper-reference",
+      "subsets": {
+        "SimSun": "p02-en-embedded-subset-SimSun",
+        "SimHei": "p02-en-embedded-subset-SimHei"
+      },
+      "used_witnesses": {
+        "SimSun": "p02-en-used-donor-glyphs-SimSun",
+        "SimHei": "p02-en-used-donor-glyphs-SimHei"
+      },
+      "whole_math_path_witness": "p02-en-whole-math-path-witness",
+      "whole_math_controls": [
+        "p02-en-whole-math-control-0",
+        "p02-en-whole-math-control-1",
+        "p02-en-whole-math-control-2",
+        "p02-en-whole-math-control-3"
+      ]
+    },
+    "p03-ko": {
+      "new_prose_reference": "p03-ko-actual-font-paper-reference",
+      "subsets": {
+        "SimSun": "p03-ko-embedded-subset-SimSun",
+        "SimHei": "p03-ko-embedded-subset-SimHei"
+      },
+      "used_witnesses": {
+        "SimSun": "p03-ko-used-donor-glyphs-SimSun",
+        "SimHei": "p03-ko-used-donor-glyphs-SimHei"
+      }
+    },
+    "p03-en": {
+      "new_prose_reference": "p03-en-actual-font-paper-reference",
+      "subsets": {
+        "SimSun": "p03-en-embedded-subset-SimSun",
+        "SimHei": "p03-en-embedded-subset-SimHei"
+      },
+      "used_witnesses": {
+        "SimSun": "p03-en-used-donor-glyphs-SimSun",
+        "SimHei": "p03-en-used-donor-glyphs-SimHei"
+      }
+    },
+    "p04-ko": {
+      "new_prose_reference": "p04-ko-actual-font-paper-reference",
+      "subsets": {
+        "SimSun": "p04-ko-embedded-subset-SimSun"
+      },
+      "used_witnesses": {
+        "SimSun": "p04-ko-used-donor-glyphs-SimSun"
+      }
+    },
+    "p04-en": {
+      "new_prose_reference": "p04-en-actual-font-paper-reference",
+      "subsets": {
+        "SimSun": "p04-en-embedded-subset-SimSun"
+      },
+      "used_witnesses": {
+        "SimSun": "p04-en-used-donor-glyphs-SimSun"
+      }
+    }
+  },
+  "actual_original_encoded_CIDs": {
+    "p01-ko": 236,
+    "p01-en": 236,
+    "p02-ko": 272,
+    "p02-en": 272,
+    "p03-ko": 196,
+    "p03-en": 196,
+    "p04-ko": 79,
+    "p04-en": 79
+  },
+  "actual_new_donor_glyphs": {
+    "p01-ko": 719,
+    "p01-en": 1464,
+    "p02-ko": 711,
+    "p02-en": 1427,
+    "p03-ko": 871,
+    "p03-en": 1771,
+    "p04-ko": 66,
+    "p04-en": 146
+  },
+  "actual_bad_PDF_artifact_ids": [
+    "actual-bad-PDF-0",
+    "actual-bad-PDF-1",
+    "actual-bad-PDF-2",
+    "actual-bad-PDF-3",
+    "actual-bad-PDF-4",
+    "actual-bad-PDF-5",
+    "actual-bad-PDF-6",
+    "actual-bad-PDF-7",
+    "actual-bad-PDF-8"
+  ],
+  "private_raw_input_fixed_boundary": [
+    {
+      "id": "p01-en-r25-input-10",
+      "role": "private-Python-input",
+      "sha256": "d6fdb19fce87c8ce9ba990dcf14ecbdf9bd5677b719da98df06d7be5894cbca3",
+      "bytes": 11668
+    },
+    {
+      "id": "p01-ko-r25-input-10",
+      "role": "private-Python-input",
+      "sha256": "623158ff7da6a85f5f213836840d5009565a641eeb7e183cdef24e4ec1740630",
+      "bytes": 10780
+    },
+    {
+      "id": "private-actual-Python-0",
+      "role": "private-Python-input",
+      "sha256": "d6fdb19fce87c8ce9ba990dcf14ecbdf9bd5677b719da98df06d7be5894cbca3",
+      "bytes": 11668
+    },
+    {
+      "id": "private-actual-Python-1",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559
+    },
+    {
+      "id": "private-actual-Python-10",
+      "role": "private-Python-input",
+      "sha256": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+      "bytes": 10333
+    },
+    {
+      "id": "private-actual-Python-11",
+      "role": "private-Python-input",
+      "sha256": "700c1051537c81b05027467d06090fabc369c16139f3ac3d972e27e873111616",
+      "bytes": 8913
+    },
+    {
+      "id": "private-actual-Python-12",
+      "role": "private-Python-input",
+      "sha256": "5a6631d776e9ecfb066fbea378d97a3f8fc826af87cad820a598959b4ef5d9b1",
+      "bytes": 8696
+    },
+    {
+      "id": "private-actual-Python-13",
+      "role": "private-Python-input",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+      "bytes": 3356
+    },
+    {
+      "id": "private-actual-Python-14",
+      "role": "private-Python-input",
+      "sha256": "ae7d5cd73104edb0c9de64d371075d1779597e112535fc897c5a1cd08f201f1a",
+      "bytes": 2854
+    },
+    {
+      "id": "private-actual-Python-15",
+      "role": "private-Python-input",
+      "sha256": "0cd62260de73f66004e0aa40222da8224117c7d2c7d05736b3fae553944f81d8",
+      "bytes": 17279
+    },
+    {
+      "id": "private-actual-Python-16",
+      "role": "private-Python-input",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+      "bytes": 8492
+    },
+    {
+      "id": "private-actual-Python-17",
+      "role": "private-Python-input",
+      "sha256": "6a78f0005d5dd801b9c43879638af59ff6999036df161bca2cc0cdd3d9be2b38",
+      "bytes": 2809
+    },
+    {
+      "id": "private-actual-Python-18",
+      "role": "private-Python-input",
+      "sha256": "38a411cb411b73647b08425027f002ba2d96837827b94c92c93c227d20fb35d5",
+      "bytes": 2963
+    },
+    {
+      "id": "private-actual-Python-19",
+      "role": "private-Python-input",
+      "sha256": "9b331fad79184b48635509142e5d467dff6bc542531aa48c4ba718b0156d6b63",
+      "bytes": 970
+    },
+    {
+      "id": "private-actual-Python-2",
+      "role": "private-Python-input",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178
+    },
+    {
+      "id": "private-actual-Python-20",
+      "role": "private-Python-input",
+      "sha256": "cba4071f1c529721df98cf19c8bd1106576df830f2a56fdea6d54beefbfe44fe",
+      "bytes": 10538
+    },
+    {
+      "id": "private-actual-Python-21",
+      "role": "private-Python-input",
+      "sha256": "7275cfe9ed51089f59f3ac47908ea3b169e18067adcce7c0f7d8e2fdef096b53",
+      "bytes": 10314
+    },
+    {
+      "id": "private-actual-Python-22",
+      "role": "private-Python-input",
+      "sha256": "fe6ee68ec3cacf082429d025c5a7235210fc9a3034711765e49e8932d6ef8a83",
+      "bytes": 3643
+    },
+    {
+      "id": "private-actual-Python-23",
+      "role": "private-Python-input",
+      "sha256": "48e6eeb49a631b8c765818afdef55eb09ffef072ee4c1d8e6992f64d200d1d7e",
+      "bytes": 13414
+    },
+    {
+      "id": "private-actual-Python-24",
+      "role": "private-Python-input",
+      "sha256": "1e5eb8dd09b343fe7543942733a9c22bb7feed93de47702c4d64aec174e9e211",
+      "bytes": 14304
+    },
+    {
+      "id": "private-actual-Python-25",
+      "role": "private-Python-input",
+      "sha256": "228e885a5fd7db950ac21cf98151a02654da4c4770523c03ab6a170141269e85",
+      "bytes": 4483
+    },
+    {
+      "id": "private-actual-Python-26",
+      "role": "private-Python-input",
+      "sha256": "30a7fa67b45a271cfeb623baee491ca23a7d19468f4a64c3eed4e35f174f13a2",
+      "bytes": 1418
+    },
+    {
+      "id": "private-actual-Python-27",
+      "role": "private-Python-input",
+      "sha256": "cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f",
+      "bytes": 13266
+    },
+    {
+      "id": "private-actual-Python-28",
+      "role": "private-Python-input",
+      "sha256": "d8623042104eaddafa44671156e59112a1378f4354d149bca2c377f3f1916966",
+      "bytes": 6719
+    },
+    {
+      "id": "private-actual-Python-29",
+      "role": "private-Python-input",
+      "sha256": "b2708197527ed6ad1f84c32c2bad6ad6377595fc86e81e29472b3d1281761eaf",
+      "bytes": 3590
+    },
+    {
+      "id": "private-actual-Python-3",
+      "role": "private-Python-input",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+      "bytes": 1237
+    },
+    {
+      "id": "private-actual-Python-30",
+      "role": "private-Python-input",
+      "sha256": "9bddf2c7f3fb01f648f8bc32c261eea829612ecdc478c68d58e7ceb18a892db8",
+      "bytes": 6496
+    },
+    {
+      "id": "private-actual-Python-4",
+      "role": "private-Python-input",
+      "sha256": "564766639e95fb9435fe980982729471877ab40bc8437fba71edf2322a563c6e",
+      "bytes": 14505
+    },
+    {
+      "id": "private-actual-Python-5",
+      "role": "private-Python-input",
+      "sha256": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+      "bytes": 5092
+    },
+    {
+      "id": "private-actual-Python-6",
+      "role": "private-Python-input",
+      "sha256": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
+      "bytes": 6650
+    },
+    {
+      "id": "private-actual-Python-7",
+      "role": "private-Python-input",
+      "sha256": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+      "bytes": 7449
+    },
+    {
+      "id": "private-actual-Python-8",
+      "role": "private-Python-input",
+      "sha256": "74457c2a358dfd0d8187a4c19f4c8b634794eaf3e66a61e7a74484884e168e69",
+      "bytes": 4731
+    },
+    {
+      "id": "private-actual-Python-9",
+      "role": "private-Python-input",
+      "sha256": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+      "bytes": 6661
+    },
+    {
+      "id": "private-full-donor-0",
+      "role": "private-full-font-input",
+      "sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+      "bytes": 16433112
+    },
+    {
+      "id": "private-full-donor-1",
+      "role": "private-full-font-input",
+      "sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+      "bytes": 16273348
+    },
+    {
+      "id": "private-full-donor-2",
+      "role": "private-full-font-input",
+      "sha256": "aa4560dd8fe5645745fed3ffa301c3ca4d6c03cbd738145b613303961ba733b8",
+      "bytes": 9753388
+    },
+    {
+      "id": "private-full-donor-3",
+      "role": "private-full-font-input",
+      "sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+      "bytes": 18312320
+    },
+    {
+      "id": "private-negative-prose-path-adapter",
+      "role": "private-Python-input",
+      "sha256": "7923772247a0df5e784cfdc0060981b7394e37370424ef25ba34968460bcf94a",
+      "bytes": 14579
+    },
+    {
+      "id": "private-original-producer-0",
+      "role": "private-Python-input",
+      "sha256": "cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f",
+      "bytes": 13266
+    },
+    {
+      "id": "private-original-producer-1",
+      "role": "private-Python-input",
+      "sha256": "d8623042104eaddafa44671156e59112a1378f4354d149bca2c377f3f1916966",
+      "bytes": 6719
+    },
+    {
+      "id": "private-original-producer-2",
+      "role": "private-Python-input",
+      "sha256": "228e885a5fd7db950ac21cf98151a02654da4c4770523c03ab6a170141269e85",
+      "bytes": 4483
+    },
+    {
+      "id": "private-original-producer-3",
+      "role": "private-Python-input",
+      "sha256": "0cd62260de73f66004e0aa40222da8224117c7d2c7d05736b3fae553944f81d8",
+      "bytes": 17279
+    },
+    {
+      "id": "private-original-producer-4",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559
+    },
+    {
+      "id": "private-original-producer-5",
+      "role": "private-Python-input",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178
+    },
+    {
+      "id": "private-original-producer-6",
+      "role": "private-Python-input",
+      "sha256": "f3179fca8ec603f0c16337c1457abb9bd7267f40206332b97e4069f9a369ec25",
+      "bytes": 11238
+    },
+    {
+      "id": "private-original-producer-7",
+      "role": "private-Python-input",
+      "sha256": "d8623042104eaddafa44671156e59112a1378f4354d149bca2c377f3f1916966",
+      "bytes": 6719
+    },
+    {
+      "id": "private-original-producer-8",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559
+    },
+    {
+      "id": "private-original-producer-9",
+      "role": "private-Python-input",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178
+    },
+    {
+      "id": "private-runtime-entrypoint-0",
+      "role": "private-runtime-entrypoint",
+      "sha256": "e8cdb45ed0afa21f919cec30e69b7b572c3db7bc80d203e4e07e4c7ea2b19cce",
+      "bytes": 924164
+    },
+    {
+      "id": "private-runtime-entrypoint-1",
+      "role": "private-runtime-entrypoint",
+      "sha256": "f5628e5d8793f4a869f1a722eca5328f6eaa69a98ccb50a44bbb062c2e382491",
+      "bytes": 7104
+    },
+    {
+      "id": "private-runtime-entrypoint-2",
+      "role": "private-runtime-entrypoint",
+      "sha256": "a6958cb364663b7acce81ccfd58eeb65a2b34d5376157f924777b97211a73be4",
+      "bytes": 26470
+    },
+    {
+      "id": "private-runtime-entrypoint-3",
+      "role": "private-runtime-entrypoint",
+      "sha256": "3269bfaa5cba0fc3b96d727aa619347db46bfda3c2ae1b06f6f388a953abbbc4",
+      "bytes": 191
+    },
+    {
+      "id": "private-runtime-entrypoint-4",
+      "role": "private-runtime-entrypoint",
+      "sha256": "3fffff8502f4b59ca61d39cce713d55ffef046954262fce1abac3e97f3803734",
+      "bytes": 2122
+    },
+    {
+      "id": "private-runtime-entrypoint-5",
+      "role": "private-runtime-entrypoint",
+      "sha256": "674817e87409bc589608ef9f4dd4c1a49f600b5e85ca8b106b3b0a9eab5c46cc",
+      "bytes": 6811
+    },
+    {
+      "id": "private-runtime-entrypoint-6",
+      "role": "private-runtime-entrypoint",
+      "sha256": "153487617f15516147236be301e8849b85aabbafca2091e27074874f6d3c3b0c",
+      "bytes": 596
+    },
+    {
+      "id": "unchanged-native-guard",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559
+    }
+  ],
+  "source_paths_are_inventory_only": true,
+  "raw_payload_count": 272,
+  "public_raw_payload_count": 216,
+  "artifacts": [
+    {
+      "id": "original-source",
+      "role": "original-public-source-PDF",
+      "sha256": "834cf89c87442874b76a8aba714d814440b413fe1b3cde98ff773ce1ce72ff48",
+      "bytes": 417624,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source\\CPhO_2011_T_ZH.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/original-source.pdf"
+    },
+    {
+      "id": "unchanged-native-guard",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\pdf_native_inline_reposition.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/unchanged-native-guard.py"
+    },
+    {
+      "id": "all8-current-positive-and-lineage",
+      "role": "actual-current-positive-lineage",
+      "sha256": "52def292455db8d1ddefc758dfc289362c30e344befdb92e1f1a0805d0f4df8a",
+      "bytes": 40405,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\all8-current-proof-positive-QA-and-lineage.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/all8-current-positive-and-lineage.json"
+    },
+    {
+      "id": "all8-root-visual-approval",
+      "role": "actual-full-original-current-visual-approval",
+      "sha256": "9c3418e4cd87bed9bf49c2ef67b5c28951d094d5340cfbb5f0372b6edf2190aa",
+      "bytes": 19041,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\root-all8-theory-proofs-full-visual-semantic-approval-v2.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/all8-root-visual-approval.json"
+    },
+    {
+      "id": "all8-font-and-Python-inputs",
+      "role": "actual-private-input-inventory",
+      "sha256": "a106bd754309dc0665ff61de10870d3ff29ffbf282a59f0926459d955b92d9d3",
+      "bytes": 53763,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-full-font-Python-and-producer-input-closure.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/all8-font-and-Python-inputs.json"
+    },
+    {
+      "id": "source-T-space-paint-proof",
+      "role": "source-encoded-whitespace-paint-proof",
+      "sha256": "231153ad7b857819c65b7af63df9bb49a7ff364998622ee6113f9b8e29631d1b",
+      "bytes": 55731,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\inspection\\source-T-actual-space-paint-proof.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source-T-space-paint-proof.json"
+    },
+    {
+      "id": "source-T-space-exact-bindings",
+      "role": "source-encoded-whitespace-fixed-bindings",
+      "sha256": "173fd60de8c809a3ee8e9e4f149490595c72b25477a440072c459e02db03757c",
+      "bytes": 56751,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\inspection\\source-T-actual-space-exact-bindings.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source-T-space-exact-bindings.json"
+    },
+    {
+      "id": "source2011-correct28-metadata-clarification",
+      "role": "source-bound-nonrendering-metadata-clarification",
+      "sha256": "cfe3e8b5dcabd4fac189e5455c004d8e3f70dc2b65c818c7dc8fabcca850def4",
+      "bytes": 2478,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\inspection\\source2011-correct28-identifier-metadata-clarification.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source2011-correct28-metadata-clarification.json"
+    },
+    {
+      "id": "source04-corrected-review-metadata",
+      "role": "source-bound-corrected-review-metadata-not-producer-recipe",
+      "sha256": "494ccf289c965ad13e48ad3345ad501859a7a8fdde7e6a480dc24c105ed7559c",
+      "bytes": 94208,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\page04-native-language-metadata-corrected-review-v2.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source04-corrected-review-metadata.json"
+    },
+    {
+      "id": "private-full-donor-0",
+      "role": "private-full-font-input",
+      "sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+      "bytes": 16433112,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-full-fonts\\6bcb2a0703aa137e-NotoSansCJKkr-Regular.otf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-full-donor-0.otf"
+    },
+    {
+      "id": "private-full-donor-1",
+      "role": "private-full-font-input",
+      "sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+      "bytes": 16273348,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-full-fonts\\51d9a8d4205239c8-batang.ttc",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-full-donor-1.ttc"
+    },
+    {
+      "id": "private-full-donor-2",
+      "role": "private-full-font-input",
+      "sha256": "aa4560dd8fe5645745fed3ffa301c3ca4d6c03cbd738145b613303961ba733b8",
+      "bytes": 9753388,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-full-fonts\\aa4560dd8fe56457-simhei.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-full-donor-2.ttf"
+    },
+    {
+      "id": "private-full-donor-3",
+      "role": "private-full-font-input",
+      "sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+      "bytes": 18312320,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-full-fonts\\79ba39fde98703ec-SimSun-5.24.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-full-donor-3.ttf"
+    },
+    {
+      "id": "private-actual-Python-0",
+      "role": "private-Python-input",
+      "sha256": "d6fdb19fce87c8ce9ba990dcf14ecbdf9bd5677b719da98df06d7be5894cbca3",
+      "bytes": 11668,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\d6fdb19fce87c8ce-cpho2011_T01_transfer_label_source_background.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-0.py"
+    },
+    {
+      "id": "private-actual-Python-1",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\ab04f78a8de18452-pdf_native_inline_reposition.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-1.py"
+    },
+    {
+      "id": "private-actual-Python-2",
+      "role": "private-Python-input",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\b8519eb3194be410-pdf_original_text_ops.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-2.py"
+    },
+    {
+      "id": "private-actual-Python-3",
+      "role": "private-Python-input",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+      "bytes": 1237,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\8a2601b9f6308c2c-pdf_memory_gate.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-3.py"
+    },
+    {
+      "id": "private-actual-Python-4",
+      "role": "private-Python-input",
+      "sha256": "564766639e95fb9435fe980982729471877ab40bc8437fba71edf2322a563c6e",
+      "bytes": 14505,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\564766639e95fb94-cpho2011_independent_native_qa.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-4.py"
+    },
+    {
+      "id": "private-actual-Python-5",
+      "role": "private-Python-input",
+      "sha256": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+      "bytes": 5092,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\bbfa1b300372208c-pdf_native_geometry_motion.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-5.py"
+    },
+    {
+      "id": "private-actual-Python-6",
+      "role": "private-Python-input",
+      "sha256": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
+      "bytes": 6650,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\b125dc81f5979568-pdf_original_graphics_ink.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-6.py"
+    },
+    {
+      "id": "private-actual-Python-7",
+      "role": "private-Python-input",
+      "sha256": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+      "bytes": 7449,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\d424bcc33847aef6-pdf_original_image_ink.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-7.py"
+    },
+    {
+      "id": "private-actual-Python-8",
+      "role": "private-Python-input",
+      "sha256": "74457c2a358dfd0d8187a4c19f4c8b634794eaf3e66a61e7a74484884e168e69",
+      "bytes": 4731,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\74457c2a358dfd0d-pdf_new_prose_native_text_overlap.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-8.py"
+    },
+    {
+      "id": "private-actual-Python-9",
+      "role": "private-Python-input",
+      "sha256": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+      "bytes": 6661,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\3a3cc0898ecf7592-pdf_native_script_motion_audit.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-9.py"
+    },
+    {
+      "id": "private-actual-Python-10",
+      "role": "private-Python-input",
+      "sha256": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+      "bytes": 10333,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\a196f7237adeb04e-pdf_moved_native_ink.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-10.py"
+    },
+    {
+      "id": "private-actual-Python-11",
+      "role": "private-Python-input",
+      "sha256": "700c1051537c81b05027467d06090fabc369c16139f3ac3d972e27e873111616",
+      "bytes": 8913,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\700c1051537c81b0-cpho2011_T02_complete_graphics_contract.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-11.py"
+    },
+    {
+      "id": "private-actual-Python-12",
+      "role": "private-Python-input",
+      "sha256": "5a6631d776e9ecfb066fbea378d97a3f8fc826af87cad820a598959b4ef5d9b1",
+      "bytes": 8696,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\5a6631d776e9ecfb-cpho2011_T01_complete_graphics_contract.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-12.py"
+    },
+    {
+      "id": "private-actual-Python-13",
+      "role": "private-Python-input",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+      "bytes": 3356,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\ed23ca5378c27a7e-pdf_hangul_visibility.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-13.py"
+    },
+    {
+      "id": "private-actual-Python-14",
+      "role": "private-Python-input",
+      "sha256": "ae7d5cd73104edb0c9de64d371075d1779597e112535fc897c5a1cd08f201f1a",
+      "bytes": 2854,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\ae7d5cd73104edb0-pdf_new_prose_outlines.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-14.py"
+    },
+    {
+      "id": "private-actual-Python-15",
+      "role": "private-Python-input",
+      "sha256": "0cd62260de73f66004e0aa40222da8224117c7d2c7d05736b3fae553944f81d8",
+      "bytes": 17279,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\0cd62260de73f660-cpho2008_prose_outline_primitives.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-15.py"
+    },
+    {
+      "id": "private-actual-Python-16",
+      "role": "private-Python-input",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+      "bytes": 8492,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\9b9b268b20f426d9-pdf_original_style_audit.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-16.py"
+    },
+    {
+      "id": "private-actual-Python-17",
+      "role": "private-Python-input",
+      "sha256": "6a78f0005d5dd801b9c43879638af59ff6999036df161bca2cc0cdd3d9be2b38",
+      "bytes": 2809,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\6a78f0005d5dd801-cpho2011_exact_program_phase_contract.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-17.py"
+    },
+    {
+      "id": "private-actual-Python-18",
+      "role": "private-Python-input",
+      "sha256": "38a411cb411b73647b08425027f002ba2d96837827b94c92c93c227d20fb35d5",
+      "bytes": 2963,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\38a411cb411b7364-cpho2011_space_paint_contract.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-18.py"
+    },
+    {
+      "id": "private-actual-Python-19",
+      "role": "private-Python-input",
+      "sha256": "9b331fad79184b48635509142e5d467dff6bc542531aa48c4ba718b0156d6b63",
+      "bytes": 970,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\9b331fad79184b48-cpho2011_atomic_evidence.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-19.py"
+    },
+    {
+      "id": "private-actual-Python-20",
+      "role": "private-Python-input",
+      "sha256": "cba4071f1c529721df98cf19c8bd1106576df830f2a56fdea6d54beefbfe44fe",
+      "bytes": 10538,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\cba4071f1c529721-cpho2011_T02_complete_graphics_program.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-20.py"
+    },
+    {
+      "id": "private-actual-Python-21",
+      "role": "private-Python-input",
+      "sha256": "7275cfe9ed51089f59f3ac47908ea3b169e18067adcce7c0f7d8e2fdef096b53",
+      "bytes": 10314,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\7275cfe9ed51089f-cpho2011_T01_complete_graphics_program.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-21.py"
+    },
+    {
+      "id": "private-actual-Python-22",
+      "role": "private-Python-input",
+      "sha256": "fe6ee68ec3cacf082429d025c5a7235210fc9a3034711765e49e8932d6ef8a83",
+      "bytes": 3643,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\fe6ee68ec3cacf08-cpho2011_new_language_native_graphic_overlap.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-22.py"
+    },
+    {
+      "id": "private-actual-Python-23",
+      "role": "private-Python-input",
+      "sha256": "48e6eeb49a631b8c765818afdef55eb09ffef072ee4c1d8e6992f64d200d1d7e",
+      "bytes": 13414,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\48e6eeb49a631b8c-cpho2011_T01_source_background_contract.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-23.py"
+    },
+    {
+      "id": "private-actual-Python-24",
+      "role": "private-Python-input",
+      "sha256": "1e5eb8dd09b343fe7543942733a9c22bb7feed93de47702c4d64aec174e9e211",
+      "bytes": 14304,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\1e5eb8dd09b343fe-cpho2011_new_prose_qa.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-24.py"
+    },
+    {
+      "id": "private-actual-Python-25",
+      "role": "private-Python-input",
+      "sha256": "228e885a5fd7db950ac21cf98151a02654da4c4770523c03ab6a170141269e85",
+      "bytes": 4483,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\228e885a5fd7db95-cpho2011_vertical_language_layout.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-25.py"
+    },
+    {
+      "id": "private-actual-Python-26",
+      "role": "private-Python-input",
+      "sha256": "30a7fa67b45a271cfeb623baee491ca23a7d19468f4a64c3eed4e35f174f13a2",
+      "bytes": 1418,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\30a7fa67b45a271c-cpho2011_literal_show_paint.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-26.py"
+    },
+    {
+      "id": "private-actual-Python-27",
+      "role": "private-Python-input",
+      "sha256": "cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f",
+      "bytes": 13266,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\cbefa2f14c3721e8-cpho2011_native_compose.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-27.py"
+    },
+    {
+      "id": "private-actual-Python-28",
+      "role": "private-Python-input",
+      "sha256": "d8623042104eaddafa44671156e59112a1378f4354d149bca2c377f3f1916966",
+      "bytes": 6719,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\d8623042104eadda-cpho2011_new_packet_boundaries.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-28.py"
+    },
+    {
+      "id": "private-actual-Python-29",
+      "role": "private-Python-input",
+      "sha256": "b2708197527ed6ad1f84c32c2bad6ad6377595fc86e81e29472b3d1281761eaf",
+      "bytes": 3590,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\b2708197527ed6ad-cpho2011_exact_native_program_qa.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-29.py"
+    },
+    {
+      "id": "private-actual-Python-30",
+      "role": "private-Python-input",
+      "sha256": "9bddf2c7f3fb01f648f8bc32c261eea829612ecdc478c68d58e7ceb18a892db8",
+      "bytes": 6496,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-private-Python-imports\\9bddf2c7f3fb01f6-cpho2011_original_CID_states.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-actual-Python-30.py"
+    },
+    {
+      "id": "private-runtime-entrypoint-0",
+      "role": "private-runtime-entrypoint",
+      "sha256": "e8cdb45ed0afa21f919cec30e69b7b572c3db7bc80d203e4e07e4c7ea2b19cce",
+      "bytes": 924164,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-runtime-entrypoints\\e8cdb45ed0afa21f-pymupdf-__init__.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-runtime-entrypoint-0.py"
+    },
+    {
+      "id": "private-runtime-entrypoint-1",
+      "role": "private-runtime-entrypoint",
+      "sha256": "f5628e5d8793f4a869f1a722eca5328f6eaa69a98ccb50a44bbb062c2e382491",
+      "bytes": 7104,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-runtime-entrypoints\\f5628e5d8793f4a8-pikepdf-__init__.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-runtime-entrypoint-1.py"
+    },
+    {
+      "id": "private-runtime-entrypoint-2",
+      "role": "private-runtime-entrypoint",
+      "sha256": "a6958cb364663b7acce81ccfd58eeb65a2b34d5376157f924777b97211a73be4",
+      "bytes": 26470,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-runtime-entrypoints\\a6958cb364663b7a-numpy-__init__.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-runtime-entrypoint-2.py"
+    },
+    {
+      "id": "private-runtime-entrypoint-3",
+      "role": "private-runtime-entrypoint",
+      "sha256": "3269bfaa5cba0fc3b96d727aa619347db46bfda3c2ae1b06f6f388a953abbbc4",
+      "bytes": 191,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-runtime-entrypoints\\3269bfaa5cba0fc3-fontTools-__init__.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-runtime-entrypoint-3.py"
+    },
+    {
+      "id": "private-runtime-entrypoint-4",
+      "role": "private-runtime-entrypoint",
+      "sha256": "3fffff8502f4b59ca61d39cce713d55ffef046954262fce1abac3e97f3803734",
+      "bytes": 2122,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-runtime-entrypoints\\3fffff8502f4b59c-PIL-__init__.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-runtime-entrypoint-4.py"
+    },
+    {
+      "id": "private-runtime-entrypoint-5",
+      "role": "private-runtime-entrypoint",
+      "sha256": "674817e87409bc589608ef9f4dd4c1a49f600b5e85ca8b106b3b0a9eab5c46cc",
+      "bytes": 6811,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-runtime-entrypoints\\674817e87409bc58-cv2-__init__.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-runtime-entrypoint-5.py"
+    },
+    {
+      "id": "private-runtime-entrypoint-6",
+      "role": "private-runtime-entrypoint",
+      "sha256": "153487617f15516147236be301e8849b85aabbafca2091e27074874f6d3c3b0c",
+      "bytes": 596,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\actual-runtime-entrypoints\\153487617f155161-lxml-__init__.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-runtime-entrypoint-6.py"
+    },
+    {
+      "id": "private-original-producer-0",
+      "role": "private-Python-input",
+      "sha256": "cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f",
+      "bytes": 13266,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f\\cpho2011_native_compose.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-0.py"
+    },
+    {
+      "id": "private-original-producer-1",
+      "role": "private-Python-input",
+      "sha256": "d8623042104eaddafa44671156e59112a1378f4354d149bca2c377f3f1916966",
+      "bytes": 6719,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f\\cpho2011_new_packet_boundaries.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-1.py"
+    },
+    {
+      "id": "private-original-producer-2",
+      "role": "private-Python-input",
+      "sha256": "228e885a5fd7db950ac21cf98151a02654da4c4770523c03ab6a170141269e85",
+      "bytes": 4483,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f\\cpho2011_vertical_language_layout.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-2.py"
+    },
+    {
+      "id": "private-original-producer-3",
+      "role": "private-Python-input",
+      "sha256": "0cd62260de73f66004e0aa40222da8224117c7d2c7d05736b3fae553944f81d8",
+      "bytes": 17279,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f\\cpho2008_prose_outline_primitives.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-3.py"
+    },
+    {
+      "id": "private-original-producer-4",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f\\pdf_native_inline_reposition.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-4.py"
+    },
+    {
+      "id": "private-original-producer-5",
+      "role": "private-Python-input",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\cbefa2f14c3721e82f8253fb0031772a45ebd281f8fb462059acb90bb53d5e2f\\pdf_original_text_ops.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-5.py"
+    },
+    {
+      "id": "private-original-producer-6",
+      "role": "private-Python-input",
+      "sha256": "f3179fca8ec603f0c16337c1457abb9bd7267f40206332b97e4069f9a369ec25",
+      "bytes": 11238,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\f3179fca8ec603f0c16337c1457abb9bd7267f40206332b97e4069f9a369ec25\\cpho2011_native_compose.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-6.py"
+    },
+    {
+      "id": "private-original-producer-7",
+      "role": "private-Python-input",
+      "sha256": "d8623042104eaddafa44671156e59112a1378f4354d149bca2c377f3f1916966",
+      "bytes": 6719,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\f3179fca8ec603f0c16337c1457abb9bd7267f40206332b97e4069f9a369ec25\\cpho2011_new_packet_boundaries.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-7.py"
+    },
+    {
+      "id": "private-original-producer-8",
+      "role": "private-Python-input",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\f3179fca8ec603f0c16337c1457abb9bd7267f40206332b97e4069f9a369ec25\\pdf_native_inline_reposition.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-8.py"
+    },
+    {
+      "id": "private-original-producer-9",
+      "role": "private-Python-input",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\producer-snapshots\\f3179fca8ec603f0c16337c1457abb9bd7267f40206332b97e4069f9a369ec25\\pdf_original_text_ops.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-original-producer-9.py"
+    },
+    {
+      "id": "source01-inventory",
+      "role": "actual-original-native-program-inventory",
+      "sha256": "971e9c50cf7073be0fb73d4c2fe0f6c09633520a130b4f47d18ba32c38c1e588",
+      "bytes": 2922990,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page01-original-native-programs.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source01-inventory.json"
+    },
+    {
+      "id": "source01-full-preview",
+      "role": "actual-full-original-Poppler144-preview",
+      "sha256": "c267777c04be9f0d37276f0c8b8221669ee7562540fcf67dd2ee4b5153da807e",
+      "bytes": 339045,
+      "source_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2011-original-style-bilingual\\T\\inspection\\page01-source144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source01-full-preview.png"
+    },
+    {
+      "id": "p01-ko-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "1a0180184f5dbef0785f2495693afb27d1c19722def8fdf1ca3b777a864eaeb6",
+      "bytes": 1459194,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page01.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-proof.pdf"
+    },
+    {
+      "id": "p01-ko-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "9e7b58c6e56da8a3cb329dc0f886ce6ea8c7c8d7abd2f2898ca357f34f023ce6",
+      "bytes": 3326701,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page01.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-composition.json"
+    },
+    {
+      "id": "p01-ko-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "36fc7b48a1f78037095f7cd6880d4904f085a08bcb790d322513f552c464085a",
+      "bytes": 936313,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page01-ko-36fc7b48a1f78037095f.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-plan.json"
+    },
+    {
+      "id": "p01-ko-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "59adaa1757b58f25ac005b0d84e1a1f811bca436317e9a670f84ac71d73301b2",
+      "bytes": 336605,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page01.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-native-control.pdf"
+    },
+    {
+      "id": "p01-ko-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "e38879c08552eacc1f660042335455ff9cf49c00ee863b8af890ee4f76388983",
+      "bytes": 363771,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page01-ko-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-full-preview.png"
+    },
+    {
+      "id": "p01-ko-native",
+      "role": "actual-positive-native",
+      "sha256": "b7ae2a0c064a79594f9086a292add5bdf3d610aae9afdddb3770cd563ac45d36",
+      "bytes": 79505,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page01.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-native.json"
+    },
+    {
+      "id": "p01-ko-CID",
+      "role": "actual-positive-CID",
+      "sha256": "2e4e1b62114fcd74affa4d2178c2f666009b41d59b3ea9b3db4c1706ef6815c6",
+      "bytes": 517155,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page01.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-CID.json"
+    },
+    {
+      "id": "p01-ko-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "542a45481886b75e3b570fce027e149c734fc61bb892ef874fd077321b7ae992",
+      "bytes": 72505,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page01.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-new-prose.json"
+    },
+    {
+      "id": "p01-ko-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "fa5ee2cd6cb357f8208db66cb860df87c133a87235272a2dddf1a766f8fb464f",
+      "bytes": 11508,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page01.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-all-native-overlap.json"
+    },
+    {
+      "id": "p01-ko-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "2ced1f4abc224cbb9a44f136627f9753ed657286174221b01d262031c1eb36ef",
+      "bytes": 1388919,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page01-ko-1a0180184f5dbef0.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p01-ko-embedded-subset-SimHei",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "8225b47a746bcfa83d86db9098bd2147d7cde650dc473b6a618ad124550fe4a8",
+      "bytes": 702164,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\NotoSansCJKkr-Regular-c1350224b2f0875dbf.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-embedded-subset-SimHei.ttf"
+    },
+    {
+      "id": "p01-ko-used-donor-glyphs-SimHei",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "af2ce48df9513215c3c125d724e304011cd783e3319748746e7d4f38fd5f1294",
+      "bytes": 74602,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page01-ko-SimHei.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-used-donor-glyphs-SimHei.json"
+    },
+    {
+      "id": "p01-ko-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "00504b25e9a73c2d8262162caa93027e400e4bfcb552d4acfcaf256f4408bddb",
+      "bytes": 284972,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\batang-4275ff894cf5d53c73.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p01-ko-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "11255df73b9613600987b7ec1b436d51696b653c29b0112228f9850b8237146f",
+      "bytes": 2284803,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page01-ko-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "p01-ko-whole-math-path-witness",
+      "role": "actual-six-renderer-complete-original-path-program-witness",
+      "sha256": "412b082c6efa1a2e2ed611e48260e1600e28fd4c319080343f57545ba4519a68",
+      "bytes": 10826,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-complete-original-one-math-path-1a0180184f5dbef0\\witness.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-whole-math-path-witness.json"
+    },
+    {
+      "id": "p01-ko-whole-math-control-0",
+      "role": "actual-complete-original-program-control",
+      "sha256": "921e71ee3167aefccfb72e3bf5555d3b6c99e0ba5c35a1671efb5d2dd218c3ae",
+      "bytes": 327644,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-complete-original-one-math-path-1a0180184f5dbef0\\source-only-exact-one-original-path-program-translation.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-whole-math-control-0.pdf"
+    },
+    {
+      "id": "p01-ko-whole-math-control-1",
+      "role": "actual-complete-original-program-control",
+      "sha256": "463ece617484dce63d34c427578e97ab0b18c63142d1c508d5885f71d2ea0363",
+      "bytes": 321945,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-complete-original-one-math-path-1a0180184f5dbef0\\expected-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-whole-math-control-1.pdf"
+    },
+    {
+      "id": "p01-ko-whole-math-control-2",
+      "role": "actual-complete-original-program-control",
+      "sha256": "beacb6b78089cbec1854d2dc38f022346efe0539f02dd21e2871c801645008b9",
+      "bytes": 1394621,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-complete-original-one-math-path-1a0180184f5dbef0\\actual-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-whole-math-control-2.pdf"
+    },
+    {
+      "id": "p01-ko-whole-math-control-3",
+      "role": "actual-complete-original-program-control",
+      "sha256": "b2f29066b6bae5f51f7e87f05da06d99de91f15656f8c13b0bc1e78993247cf5",
+      "bytes": 78819,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-complete-original-one-math-path-1a0180184f5dbef0\\immutable-first-raw-graphics-region-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-whole-math-control-3.json"
+    },
+    {
+      "id": "p01-ko-original-r25-background-witness",
+      "role": "actual-source-attested-line-crossing-background-witness",
+      "sha256": "8af0cc44aaa1d781d95f02e3c7f67d6edb077245245db8cefa51e9c8b2f39372",
+      "bytes": 13335,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-original-transfer-label-background-1a0180184f5dbef0\\witness.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-original-r25-background-witness.json"
+    },
+    {
+      "id": "p01-ko-r25-input-5",
+      "role": "actual-source-background-program-control",
+      "sha256": "d4151c134612cd37fbb5f2a70ab5392a11c6a72b5e0c6f4929cc53121abcf2f1",
+      "bytes": 71466,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-original-transfer-label-background-1a0180184f5dbef0\\immutable-paper-white-new-prose-FAIL.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-r25-input-5.json"
+    },
+    {
+      "id": "p01-ko-r25-input-6",
+      "role": "actual-source-background-program-control",
+      "sha256": "609a64568d5eb1b758d68ac0a2301a1a374073ae2b2b844ef4df6574d889ba25",
+      "bytes": 1447171,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-original-transfer-label-background-1a0180184f5dbef0\\source-only-entire-original-background-plus-exact-actual-font-language.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-r25-input-6.pdf"
+    },
+    {
+      "id": "p01-ko-r25-input-7",
+      "role": "actual-source-background-program-control",
+      "sha256": "a1c8dfbe1bbcd9fe2899cb1abcb6263e13366efdf5d54e253bf9097e1dacafb0",
+      "bytes": 1397216,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-original-transfer-label-background-1a0180184f5dbef0\\actual-entire-background-plus-new-language-original-math-text-suppressed.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-r25-input-7.pdf"
+    },
+    {
+      "id": "p01-ko-r25-input-8",
+      "role": "actual-source-background-program-control",
+      "sha256": "51868210f65eb0245e40f79336434bac237df5f0067f7e166b710df32257dacd",
+      "bytes": 1262797,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-original-transfer-label-background-1a0180184f5dbef0\\exact-new-r25-label-only-paper-reference.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-r25-input-8.pdf"
+    },
+    {
+      "id": "p01-ko-r25-input-9",
+      "role": "actual-source-background-program-control",
+      "sha256": "e45d19fccb4b4f0b6815403d6d180cd4ac934dbfa56afd7aacf24a1a862ffe00",
+      "bytes": 321404,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-ko-original-transfer-label-background-1a0180184f5dbef0\\exact-original-four-CID-r25-label-only-paper-reference.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-r25-input-9.pdf"
+    },
+    {
+      "id": "p01-ko-r25-input-10",
+      "role": "private-Python-input",
+      "sha256": "623158ff7da6a85f5f213836840d5009565a641eeb7e183cdef24e4ec1740630",
+      "bytes": 10780,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\engine\\witness-producer-snapshots\\623158ff7da6a85f5f213836840d5009565a641eeb7e183cdef24e4ec1740630\\cpho2011_T01_transfer_label_source_background.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-ko-r25-input-10.py"
+    },
+    {
+      "id": "p01-en-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "1c18c552b499f75347740be1d6d9357a9a852d87603495caec08998a403dc6b0",
+      "bytes": 623818,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page01.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-proof.pdf"
+    },
+    {
+      "id": "p01-en-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "411b6eea8c731b3c34ccf6578b1a665317ddad9b5b057fdf1d905d3e4c9f058a",
+      "bytes": 3327107,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page01.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-composition.json"
+    },
+    {
+      "id": "p01-en-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "da55d5b7f31f1d640ba959591288613302a85efa5c0adecc82a5dee89d53a0c2",
+      "bytes": 935775,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page01-en-da55d5b7f31f1d640ba9.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-plan.json"
+    },
+    {
+      "id": "p01-en-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "a09aa2a7a4701610f1e5059c0d46f08bb95fec32705fbaf720e6b6ffff0297c7",
+      "bytes": 336629,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page01.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-native-control.pdf"
+    },
+    {
+      "id": "p01-en-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "4472729fc7b280e9cf9c8900ff69a77e521cb46febed162ef7146709316a6fe6",
+      "bytes": 263523,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page01-en-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-full-preview.png"
+    },
+    {
+      "id": "p01-en-native",
+      "role": "actual-positive-native",
+      "sha256": "45c87844d1ed6e6a0e0e0d3eb05edbffdd94d49f11bf4e40d4e546cd2951302e",
+      "bytes": 79147,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page01.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-native.json"
+    },
+    {
+      "id": "p01-en-CID",
+      "role": "actual-positive-CID",
+      "sha256": "7f798d00be5c97d72c4ea0a77589e37ba98734931278cb1d30b5bbd17dcad313",
+      "bytes": 517330,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page01.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-CID.json"
+    },
+    {
+      "id": "p01-en-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "e18df5b9883871fc0343bc2f1b2613d203128d87f0631d7b3aa3081c73dae788",
+      "bytes": 126146,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page01.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-new-prose.json"
+    },
+    {
+      "id": "p01-en-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "1912087c260bbc6a3e9c9d0c4dcac631314465f15bba5b5356209bd1a81439c6",
+      "bytes": 11503,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page01.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-all-native-overlap.json"
+    },
+    {
+      "id": "p01-en-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "69006c0a69188401c6141303c7c3c0aa2fc099441f999e40aff7195f100c2d3b",
+      "bytes": 553532,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page01-en-1c18c552b499f753.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p01-en-embedded-subset-SimHei",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "4020362d4d1dc19ba2ded20451cedde04019e4df17f9b8dc81033cacbbff7a4c",
+      "bytes": 6212,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\simhei-c7f628bed2432f7ae7.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-embedded-subset-SimHei.ttf"
+    },
+    {
+      "id": "p01-en-used-donor-glyphs-SimHei",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "16c21030803e276b8463cccb31cea79e66e05fb21752bd322d7eb84d09e14265",
+      "bytes": 58622,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page01-en-SimHei.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-used-donor-glyphs-SimHei.json"
+    },
+    {
+      "id": "p01-en-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "c156f1f4cde19415b56d76f1a7e6a9e2a9ab5ab3b949492c10f9ebf60f9dfdc2",
+      "bytes": 21128,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\SimSun-5.24-af29fa5ecb642920cd.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p01-en-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "7778985c7d9bc13d14f8c9ffc1efbe528f0fb4e11d1afe45092588e767bb12d6",
+      "bytes": 186887,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page01-en-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "p01-en-whole-math-path-witness",
+      "role": "actual-six-renderer-complete-original-path-program-witness",
+      "sha256": "bd82dee2068dba0c7b1e0450c27ab61ae65c68e9c1a47a2c5789b90d742cb922",
+      "bytes": 10826,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-complete-original-one-math-path-1c18c552b499f753\\witness.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-whole-math-path-witness.json"
+    },
+    {
+      "id": "p01-en-whole-math-control-0",
+      "role": "actual-complete-original-program-control",
+      "sha256": "0696bc3b3d7ccdd6e31eee382853d71a2d240b089d8552f0366c788ed0ebeef2",
+      "bytes": 327644,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-complete-original-one-math-path-1c18c552b499f753\\source-only-exact-one-original-path-program-translation.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-whole-math-control-0.pdf"
+    },
+    {
+      "id": "p01-en-whole-math-control-1",
+      "role": "actual-complete-original-program-control",
+      "sha256": "00224ec0056317106259fe88b9533e859a2525636edf2cc7651bd6f4a1b35a59",
+      "bytes": 321945,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-complete-original-one-math-path-1c18c552b499f753\\expected-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-whole-math-control-1.pdf"
+    },
+    {
+      "id": "p01-en-whole-math-control-2",
+      "role": "actual-complete-original-program-control",
+      "sha256": "58dac41ac302acd72f3d413637170c4401d4d961ea8996ba030a119fd88fe97c",
+      "bytes": 495021,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-complete-original-one-math-path-1c18c552b499f753\\actual-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-whole-math-control-2.pdf"
+    },
+    {
+      "id": "p01-en-whole-math-control-3",
+      "role": "actual-complete-original-program-control",
+      "sha256": "0a6ffc6f11b5cb00f2b8fed7c53e1f4ec82acf2f1485844611b779a5551c70ce",
+      "bytes": 78461,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-complete-original-one-math-path-1c18c552b499f753\\immutable-first-raw-graphics-region-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-whole-math-control-3.json"
+    },
+    {
+      "id": "p01-en-original-r25-background-witness",
+      "role": "actual-source-attested-line-crossing-background-witness",
+      "sha256": "aaa3a2496bb12d808735cc0dad870e58c3bfa29a40035a478a4691e3afd88ea9",
+      "bytes": 12512,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-original-transfer-label-background-1c18c552b499f753\\witness.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-original-r25-background-witness.json"
+    },
+    {
+      "id": "p01-en-r25-input-5",
+      "role": "actual-source-background-program-control",
+      "sha256": "88478f6f9fa2d2ed68c679b297ba581301d09ecac5555cc572ff803d32aedfcc",
+      "bytes": 125107,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-original-transfer-label-background-1c18c552b499f753\\immutable-paper-white-new-prose-FAIL.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-r25-input-5.json"
+    },
+    {
+      "id": "p01-en-r25-input-6",
+      "role": "actual-source-background-program-control",
+      "sha256": "9b7fdc962e787c9e211b31c11e813928085343b55cb1a44c621321398d734aa1",
+      "bytes": 611786,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-original-transfer-label-background-1c18c552b499f753\\source-only-entire-original-background-plus-exact-actual-font-language.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-r25-input-6.pdf"
+    },
+    {
+      "id": "p01-en-r25-input-7",
+      "role": "actual-source-background-program-control",
+      "sha256": "170297db1af17e6159130c403c94235c5b80d26b3028ddbcfefc39df499c1554",
+      "bytes": 500596,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-original-transfer-label-background-1c18c552b499f753\\actual-entire-background-plus-new-language-original-math-text-suppressed.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-r25-input-7.pdf"
+    },
+    {
+      "id": "p01-en-r25-input-8",
+      "role": "actual-source-background-program-control",
+      "sha256": "81ce1a89ea52e210ff50e7e5c5be5462a4a19c44f8e0e32f1580d06a0e080562",
+      "bytes": 296605,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-original-transfer-label-background-1c18c552b499f753\\exact-new-r25-label-only-paper-reference.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-r25-input-8.pdf"
+    },
+    {
+      "id": "p01-en-r25-input-9",
+      "role": "actual-source-background-program-control",
+      "sha256": "4dc498b0ed36d8b4129dd72d3ca622e79787446ddb62c7641cc399ded1d73447",
+      "bytes": 321404,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-original-transfer-label-background-1c18c552b499f753\\exact-original-four-CID-r25-label-only-paper-reference.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-r25-input-9.pdf"
+    },
+    {
+      "id": "p01-en-r25-input-10",
+      "role": "private-Python-input",
+      "sha256": "d6fdb19fce87c8ce9ba990dcf14ecbdf9bd5677b719da98df06d7be5894cbca3",
+      "bytes": 11668,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page01-en-original-transfer-label-background-1c18c552b499f753\\actual-helper-source-at-runtime.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p01-en-r25-input-10.py"
+    },
+    {
+      "id": "source02-inventory",
+      "role": "actual-original-native-program-inventory",
+      "sha256": "fedd96754ffdd792411b246b7f2694b89ee5969b42590fa25549af2293b1095b",
+      "bytes": 3144253,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page02-original-native-programs.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source02-inventory.json"
+    },
+    {
+      "id": "source02-full-preview",
+      "role": "actual-full-original-Poppler144-preview",
+      "sha256": "6eecb1ac796d674071bf5c4e55411fc89143752b3904780dc35f30d6d0d0818e",
+      "bytes": 335445,
+      "source_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2011-original-style-bilingual\\T\\inspection\\page02-source144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source02-full-preview.png"
+    },
+    {
+      "id": "p02-ko-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "4f427d0c08103185b49b35a705b263d5c4b8f63165fd247ed2886d295b4d56f6",
+      "bytes": 1494708,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page02.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-proof.pdf"
+    },
+    {
+      "id": "p02-ko-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "c906fb1fe7fc0f13735f5b94be093a56385b9286ca49d39d100958a73acbd87d",
+      "bytes": 3380283,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page02.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-composition.json"
+    },
+    {
+      "id": "p02-ko-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "f51b26aad83dd28c9daae9154ff8dea380ed527341ab1c416f67995de244d122",
+      "bytes": 1084474,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page02-ko-f51b26aad83dd28c9daa.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-plan.json"
+    },
+    {
+      "id": "p02-ko-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "27915beac4cb0d6637ea3d2d70863e89fb16ea538e6eda9b8e1bf4427445064f",
+      "bytes": 367990,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page02.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-native-control.pdf"
+    },
+    {
+      "id": "p02-ko-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "2b98920411adffb7227f735dcb99eb485bc510b92207c9b1d506ce187693fa0a",
+      "bytes": 353482,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page02-ko-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-full-preview.png"
+    },
+    {
+      "id": "p02-ko-native",
+      "role": "actual-positive-native",
+      "sha256": "4c81410bc9bfa76a6657e01e937aa80d66cb83c400b9f48fda6b41c2da2de6af",
+      "bytes": 100745,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page02.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-native.json"
+    },
+    {
+      "id": "p02-ko-CID",
+      "role": "actual-positive-CID",
+      "sha256": "8e7b1ede84c397998980c7c77e79a6a43d9b7497c62b188bf9b150ad2ab2e4a2",
+      "bytes": 593629,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page02.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-CID.json"
+    },
+    {
+      "id": "p02-ko-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "a3ec1514620a4d1cbe31209ea2a3903f2142181e002d0d29a3c691116620d077",
+      "bytes": 176024,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page02.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-new-prose.json"
+    },
+    {
+      "id": "p02-ko-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "fc3d6f0442a551bcf11c2525c77d2a0c9262b1863923ee3db0dd560c21fd48a5",
+      "bytes": 1686,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page02.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-all-native-overlap.json"
+    },
+    {
+      "id": "p02-ko-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "f94a90bcb9704bb53a9054f6ace43016d296f77054242742d167ad609d5bbaba",
+      "bytes": 1421038,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page02-ko-4f427d0c08103185.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p02-ko-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "3b2076cad7105528afa8d8328e3635cad03240bdeceb54661dff3e6b3f17aa91",
+      "bytes": 292508,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\batang-595e140dbd9db67c57.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p02-ko-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "536f05a5cb527799283368d7b516c8cb48d6a3a581e75c789013126a5e7c09b5",
+      "bytes": 2346143,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page02-ko-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "p02-ko-embedded-subset-SimHei",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "8c7a2b85edbfe95dba094533a521d0329eca09037139b0310a8b3fdd57a53db8",
+      "bytes": 700312,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\NotoSansCJKkr-Regular-2fee708758e0ce46f2.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-embedded-subset-SimHei.ttf"
+    },
+    {
+      "id": "p02-ko-used-donor-glyphs-SimHei",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "0d27fb86c08e53ffebe73663554f56a7346ecc61fedccd7caee1d487401c836a",
+      "bytes": 14161,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page02-ko-SimHei.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-used-donor-glyphs-SimHei.json"
+    },
+    {
+      "id": "p02-ko-whole-math-path-witness",
+      "role": "actual-six-renderer-complete-original-path-program-witness",
+      "sha256": "3aa21b9ea0ee838d00fd8a10162d161a15217e25ab9a4826bc305fd10f0e3b1a",
+      "bytes": 38006,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-ko-complete-original-eight-math-paths-4f427d0c08103185\\witness.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-whole-math-path-witness.json"
+    },
+    {
+      "id": "p02-ko-whole-math-control-0",
+      "role": "actual-complete-original-program-control",
+      "sha256": "9ab3034c29614aa0745dfbc85dc7c6b5777af482bc10f1fb8782f3096aac80ae",
+      "bytes": 358664,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-ko-complete-original-eight-math-paths-4f427d0c08103185\\source-only-exact-eight-original-path-program-translations.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-whole-math-control-0.pdf"
+    },
+    {
+      "id": "p02-ko-whole-math-control-1",
+      "role": "actual-complete-original-program-control",
+      "sha256": "848faf2a7a34d171f5dcb75f3e4fcd55c3c049c2a4ceca500847dcf14dafda63",
+      "bytes": 352557,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-ko-complete-original-eight-math-paths-4f427d0c08103185\\expected-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-whole-math-control-1.pdf"
+    },
+    {
+      "id": "p02-ko-whole-math-control-2",
+      "role": "actual-complete-original-program-control",
+      "sha256": "e393b40acd3017827dff87db8a2882fd5af47ee6d16ad0ec38dc439a458afbb2",
+      "bytes": 1430629,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-ko-complete-original-eight-math-paths-4f427d0c08103185\\actual-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-whole-math-control-2.pdf"
+    },
+    {
+      "id": "p02-ko-whole-math-control-3",
+      "role": "actual-complete-original-program-control",
+      "sha256": "9289d5f6c3730c3e4571c921ba246755ed35acd20193fe8fe31d8d5145444626",
+      "bytes": 99860,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-ko-complete-original-eight-math-paths-4f427d0c08103185\\immutable-first-raw-graphics-region-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-ko-whole-math-control-3.json"
+    },
+    {
+      "id": "p02-en-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "95d9d79826aa3aff25ed9536b4cbde4dd16a09f9f82375c9dfd15c8df41c6792",
+      "bytes": 648572,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page02.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-proof.pdf"
+    },
+    {
+      "id": "p02-en-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "4b844a51acbc2cf3be44da67a62cb15e5bb838d3eb91c483685ffd92a970dda9",
+      "bytes": 3392154,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page02.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-composition.json"
+    },
+    {
+      "id": "p02-en-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "8472e1b387d490d51777b9fe6982a4907188f4cdef557c4b02b71866a0efe9c8",
+      "bytes": 1083953,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page02-en-8472e1b387d490d51777.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-plan.json"
+    },
+    {
+      "id": "p02-en-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "0a1ee544f3503462fb968dd617f849295b347c845aacf007fe8ade2102c090e4",
+      "bytes": 367941,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page02.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-native-control.pdf"
+    },
+    {
+      "id": "p02-en-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "17c7260d2590823dba6091d5ba0220f9904bb263666d480be70e707425bff9e7",
+      "bytes": 261321,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page02-en-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-full-preview.png"
+    },
+    {
+      "id": "p02-en-native",
+      "role": "actual-positive-native",
+      "sha256": "8fd732ba91e3f222794577f9a7cf128b131c4f078961c245e845e3162c66bf39",
+      "bytes": 100505,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page02.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-native.json"
+    },
+    {
+      "id": "p02-en-CID",
+      "role": "actual-positive-CID",
+      "sha256": "494f8bc14757122d802bc686453056e77a8edaff61d948362d8169584e9d6baa",
+      "bytes": 593459,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page02.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-CID.json"
+    },
+    {
+      "id": "p02-en-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "743ebb5afe467057875a3299a6361d72060ce26ad7bdf28c3b84ad9444921e62",
+      "bytes": 229633,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page02.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-new-prose.json"
+    },
+    {
+      "id": "p02-en-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "f2ac73d0954c68bda003f0f9b54532133401532c42b57a58a0c08f26e4328fa1",
+      "bytes": 1686,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page02.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-all-native-overlap.json"
+    },
+    {
+      "id": "p02-en-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "3bc3ab56340686bbe19d55f5b36167295ba3c4c4967cfd5eeba023b298052763",
+      "bytes": 574926,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page02-en-95d9d79826aa3aff.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p02-en-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "3bd071bf2f3007da25a4f7277b8f6ed822eb84e52a94636bb5739dce8a8c281d",
+      "bytes": 22640,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\SimSun-5.24-b99547e549cc7b3d41.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p02-en-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "d02f54f4a272d3f006d83149ec5b0439bac632fc2439b3dbe22dca64a0e751dc",
+      "bytes": 206520,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page02-en-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "p02-en-embedded-subset-SimHei",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "9d0a4bfcab4ac628f91e4c110198005639d0db56e4c3875b575cd22b9adc9c2e",
+      "bytes": 5076,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\simhei-fd475688ce388722e0.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-embedded-subset-SimHei.ttf"
+    },
+    {
+      "id": "p02-en-used-donor-glyphs-SimHei",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "95d0c712a933ccb731164533b301e78cae9b5d51cfe0ff4e8f3587df6bcf6e01",
+      "bytes": 19990,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page02-en-SimHei.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-used-donor-glyphs-SimHei.json"
+    },
+    {
+      "id": "p02-en-whole-math-path-witness",
+      "role": "actual-six-renderer-complete-original-path-program-witness",
+      "sha256": "b7b1b22618326276352b21f2aa4f00bbffa9c32fa08e1e16cf1c7fec92fdd987",
+      "bytes": 38014,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-en-complete-original-eight-math-paths-95d9d79826aa3aff\\witness.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-whole-math-path-witness.json"
+    },
+    {
+      "id": "p02-en-whole-math-control-0",
+      "role": "actual-complete-original-program-control",
+      "sha256": "3e9f90fc0ac31010c3dd356e00076bd2b4d18743112ab9fcf2954d6b5dcf9c3c",
+      "bytes": 358668,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-en-complete-original-eight-math-paths-95d9d79826aa3aff\\source-only-exact-eight-original-path-program-translations.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-whole-math-control-0.pdf"
+    },
+    {
+      "id": "p02-en-whole-math-control-1",
+      "role": "actual-complete-original-program-control",
+      "sha256": "34c21cb034b727e31afe6eb282d2ba707d9891d1af0d6a5903aef01d0f43be1f",
+      "bytes": 352561,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-en-complete-original-eight-math-paths-95d9d79826aa3aff\\expected-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-whole-math-control-1.pdf"
+    },
+    {
+      "id": "p02-en-whole-math-control-2",
+      "role": "actual-complete-original-program-control",
+      "sha256": "4ae870aaab2fe036b1d6490968e33b4145583e94ea7741786d9edccef234b56a",
+      "bytes": 522591,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-en-complete-original-eight-math-paths-95d9d79826aa3aff\\actual-all-original-nontext-graphics.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-whole-math-control-2.pdf"
+    },
+    {
+      "id": "p02-en-whole-math-control-3",
+      "role": "actual-complete-original-program-control",
+      "sha256": "e42ed78f9c0f7c3c8e7fc70aeaf1337c09226315807aede4a644cd9ebda864be",
+      "bytes": 99620,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\page02-en-complete-original-eight-math-paths-95d9d79826aa3aff\\immutable-first-raw-graphics-region-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p02-en-whole-math-control-3.json"
+    },
+    {
+      "id": "source03-inventory",
+      "role": "actual-original-native-program-inventory",
+      "sha256": "629fc885c75e00cd35a521926216253398baeaa4fa29e72bb6f75b424c657f51",
+      "bytes": 3308886,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page03-original-native-programs.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source03-inventory.json"
+    },
+    {
+      "id": "source03-full-preview",
+      "role": "actual-full-original-Poppler144-preview",
+      "sha256": "24baa73d0fae4fb8966dbc9de664a9a32f2fb81574d6355ca13f2404ee4c3d03",
+      "bytes": 389962,
+      "source_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2011-original-style-bilingual\\T\\inspection\\page03-source144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source03-full-preview.png"
+    },
+    {
+      "id": "p03-ko-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "4c33304bb93277cd21313b37dc411819f3a5379a179873df8fc4db7de43db58f",
+      "bytes": 1523970,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page03.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-proof.pdf"
+    },
+    {
+      "id": "p03-ko-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "887b02d022bda707ec850901dd9001453ba23b871842ca1fe1680e97e6e8f7ea",
+      "bytes": 2823094,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page03.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-composition.json"
+    },
+    {
+      "id": "p03-ko-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "8cf643ac2f4b19f9f84d353121bc2ee3ecfc42dd554e7c534e1c995b1249cd0f",
+      "bytes": 1092577,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page03-ko-8cf643ac2f4b19f9f84d.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-plan.json"
+    },
+    {
+      "id": "p03-ko-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "f731c8b578a7c0d6451f22779069e6d1e8c6c3be73baf818989861723732beb3",
+      "bytes": 351705,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page03.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-native-control.pdf"
+    },
+    {
+      "id": "p03-ko-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "9a20fbdb7b9305f6cb06b163c5e9f2edd70150a9e4658d55d228a1d154f7bd7e",
+      "bytes": 406737,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page03-ko-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-full-preview.png"
+    },
+    {
+      "id": "p03-ko-native",
+      "role": "actual-positive-native",
+      "sha256": "e4f7ea8e1c032e46ee1254165e922d10010e9b1e6338a64c9359740e7e76431d",
+      "bytes": 84442,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page03.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-native.json"
+    },
+    {
+      "id": "p03-ko-CID",
+      "role": "actual-positive-CID",
+      "sha256": "2c2ae6783a706d401ac76125d2f0adfd897d4608696529b14b242989594439d9",
+      "bytes": 430150,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page03.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-CID.json"
+    },
+    {
+      "id": "p03-ko-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "9097e0a0179a5e863fc1ed3e5a9e61a438f92e9b3f4f6d4c7edd30e5f4f53f9a",
+      "bytes": 79931,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page03.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-new-prose.json"
+    },
+    {
+      "id": "p03-ko-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "6aae59f7efa0afd32171d2e492e6616c98ab3cf93de70dcefc65f9446a4f4ddc",
+      "bytes": 1812,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page03.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-all-native-overlap.json"
+    },
+    {
+      "id": "p03-ko-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "53bbc3f38c1486412e83628e2ea5daacb6a89a0577f8a8e19aeebe454b36315c",
+      "bytes": 1459761,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page03-ko-4c33304bb93277cd.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p03-ko-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "885c06ca2a94127ff0fb14cd88dfcc10b1cda1b9c03840724e9cb42ea92a47de",
+      "bytes": 308296,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\batang-1f28a1bd8d8839fb9f.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p03-ko-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "5a8e26d174a4f8f2603ac4aaa0baf3a492d6c74519ffda2f8084937d6ad9f0a1",
+      "bytes": 2733558,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page03-ko-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "p03-ko-embedded-subset-SimHei",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "0ab0b94ff9c8234e54ce2e533f314a7ff56d220b2e7a6adab7e74ff4fd953aa8",
+      "bytes": 700300,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\NotoSansCJKkr-Regular-509d4d2a24202d8299.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-embedded-subset-SimHei.ttf"
+    },
+    {
+      "id": "p03-ko-used-donor-glyphs-SimHei",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "ddaeac2725f1f6c19127003051aafb019dbc5af75845fce12a692766d5055a96",
+      "bytes": 13689,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page03-ko-SimHei.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-ko-used-donor-glyphs-SimHei.json"
+    },
+    {
+      "id": "p03-en-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "a6c99c2cf5378bc266a95258c47ea50a7c926191a2986512539c3a0a5d69ce0c",
+      "bytes": 692110,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-proof.pdf"
+    },
+    {
+      "id": "p03-en-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "001c9b3e774cc1259a1bcec66cda4ea3a8d028ddc1dc58d46f73079f865e6973",
+      "bytes": 2823030,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-composition.json"
+    },
+    {
+      "id": "p03-en-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "844adc7307ff289ba665c940789a1b2ab78745c2f60924234e42bcd6828c9f16",
+      "bytes": 1091886,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page03-en-844adc7307ff289ba665.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-plan.json"
+    },
+    {
+      "id": "p03-en-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "41e736c449d4731b30919834ed5983ccd0bf0a21715774613f92997a0bebf9fc",
+      "bytes": 351692,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-native-control.pdf"
+    },
+    {
+      "id": "p03-en-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "a805ec421e288514942957792dedaa8fe00a7c190170cbd8dbdd9610b59a73d2",
+      "bytes": 272415,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page03-en-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-full-preview.png"
+    },
+    {
+      "id": "p03-en-native",
+      "role": "actual-positive-native",
+      "sha256": "f3c981bcb5e12f3934f240bac0ba491dacfac5377e3d3d3bd98b9feb55b9638a",
+      "bytes": 84099,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-native.json"
+    },
+    {
+      "id": "p03-en-CID",
+      "role": "actual-positive-CID",
+      "sha256": "1959e0fe8fb2e35c492b1ec416b4c001f774d61aad17b2d0b46a787582dabb5b",
+      "bytes": 430066,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-CID.json"
+    },
+    {
+      "id": "p03-en-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "6d09c13a5f81bea189ed712e1770e4b883c4460a9737eeff1948c4cbee7c9a66",
+      "bytes": 144735,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-new-prose.json"
+    },
+    {
+      "id": "p03-en-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "da378cea79dea0a79319a8aad462fc68c98c0919a86771ae56f432825dfec53c",
+      "bytes": 1812,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page03.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-all-native-overlap.json"
+    },
+    {
+      "id": "p03-en-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "c9174e6e5b4243fadc9563a9dd55eec69ac90efb1b3a158f5f655f187e9e22df",
+      "bytes": 627870,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page03-en-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p03-en-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "5bc0a4c8a6527d5d7ab7e4950c57af670cc2b0afc0fb9427877aff89952963e3",
+      "bytes": 21808,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\SimSun-5.24-ec323c996e4c987f0d.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p03-en-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "2c5a7d3f36f590637f8606f8776a01a744e984521cf352e6ce2d5ae1ae92341a",
+      "bytes": 195557,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page03-en-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "p03-en-embedded-subset-SimHei",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "9d0a4bfcab4ac628f91e4c110198005639d0db56e4c3875b575cd22b9adc9c2e",
+      "bytes": 5076,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\simhei-400c9fcd3172fdf37d.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-embedded-subset-SimHei.ttf"
+    },
+    {
+      "id": "p03-en-used-donor-glyphs-SimHei",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "31ac8216c1844f9ba2b773471764d368bf284b4a910d6f28bf63eda757d76038",
+      "bytes": 19990,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page03-en-SimHei.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p03-en-used-donor-glyphs-SimHei.json"
+    },
+    {
+      "id": "source04-inventory",
+      "role": "actual-original-native-program-inventory",
+      "sha256": "1455bb2d2ff0a51cc58b47037efb5b9b6284e2fdc558ddb1a36b0b4aeb66d651",
+      "bytes": 484331,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page04-original-native-programs.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source04-inventory.json"
+    },
+    {
+      "id": "source04-full-preview",
+      "role": "actual-full-original-Poppler144-preview",
+      "sha256": "30600e79c09463695bd6443a334f40bcf1b917acf74495cd9fcff0fa8c940e0b",
+      "bytes": 49121,
+      "source_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2011-original-style-bilingual\\T\\inspection\\page04-source144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/source04-full-preview.png"
+    },
+    {
+      "id": "p04-ko-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "05ebf039490fcd2a4964be8c27cad75bb3e9e14daebe3a62ee2d0d2ea84fac20",
+      "bytes": 487587,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page04.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-proof.pdf"
+    },
+    {
+      "id": "p04-ko-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "728482d0f696e25d30cdf48e7e0dbc695fa2ce88f893125545807f159aa31928",
+      "bytes": 448405,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page04.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-composition.json"
+    },
+    {
+      "id": "p04-ko-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "172914f16a4f9f8c7cc09b358ec329c50bab6fda23814fdac55bebf569b85fe9",
+      "bytes": 94494,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page04-ko-172914f16a4f9f8c7cc0.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-plan.json"
+    },
+    {
+      "id": "p04-ko-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "104f36012ed568312955f5c295b483c3d64578856ce49c5e319902b3bd35237a",
+      "bytes": 259763,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page04.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-native-control.pdf"
+    },
+    {
+      "id": "p04-ko-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "f193291b9743830660d790efdcdb0950375a39a63e21e880069064f8ee252a2d",
+      "bytes": 51626,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page04-ko-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-full-preview.png"
+    },
+    {
+      "id": "p04-ko-native",
+      "role": "actual-positive-native",
+      "sha256": "34bd7b6028cb27815368f499d9bd62eec0490401df862e6a0bce24bd65d1af1c",
+      "bytes": 63426,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page04.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-native.json"
+    },
+    {
+      "id": "p04-ko-CID",
+      "role": "actual-positive-CID",
+      "sha256": "3944d4a6958ef06c99fae77c5f9026e11e45784939b8a9f577344953ec944146",
+      "bytes": 172816,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page04.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-CID.json"
+    },
+    {
+      "id": "p04-ko-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "d39fe208c4a923e8795064381de28dd966cfdc23e35c39deacbc7cc7cc89b25d",
+      "bytes": 9624,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page04.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-new-prose.json"
+    },
+    {
+      "id": "p04-ko-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "97e026b7c0d045536632c797b19d8bad5a9e2a23c564e46e4693cabe1eed9ee9",
+      "bytes": 1810,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\ko\\page04.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-all-native-overlap.json"
+    },
+    {
+      "id": "p04-ko-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "60f987ee2d48252cbaa9d7b0d31d81f913ab3110881619eefda9f0eb396fc09d",
+      "bytes": 455865,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page04-ko-05ebf039490fcd2a.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p04-ko-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "057508168305bd4778decb0a3dd7e61eb91c0e910e00795516aa7e283929d1e9",
+      "bytes": 213964,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\batang-7b25ed6c8c6131d376.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p04-ko-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "2b59c177b818e687b50e5b0d7f031b59507ecb2ea30fb7e2e8d55e00dc05ee89",
+      "bytes": 668027,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page04-ko-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-ko-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "p04-en-proof",
+      "role": "actual-original-style-native-page-proof",
+      "sha256": "34979b5c996c49e6890dfd77a05375d2b2d36aaa6f7c2a86453b81b9fb711042",
+      "bytes": 302300,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page04.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-proof.pdf"
+    },
+    {
+      "id": "p04-en-composition",
+      "role": "actual-immutable-composition",
+      "sha256": "87b3b1e0954eade3e65928337096bb1687b2ace54e72d259fd569a2001ff59d5",
+      "bytes": 448910,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page04.composition.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-composition.json"
+    },
+    {
+      "id": "p04-en-plan",
+      "role": "actual-immutable-producing-plan",
+      "sha256": "789aa4a5622a9c25692e79374545f97eaefc3dbbd3d5f4548de9d7addd380556",
+      "bytes": 94457,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\authoring\\compiled\\page04-en-789aa4a5622a9c25692e.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-plan.json"
+    },
+    {
+      "id": "p04-en-native-control",
+      "role": "actual-native-original-program-control",
+      "sha256": "e9344562353260cf68594e7d30bb8e1e04346978dd9327065678f7b006c74274",
+      "bytes": 259763,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page04.native-control.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-native-control.pdf"
+    },
+    {
+      "id": "p04-en-full-preview",
+      "role": "actual-full-current-Poppler144-preview",
+      "sha256": "727551024a050c153716d6a2525439ea6e7f81e4e14b2953d51c851b7037970b",
+      "bytes": 42234,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\inspection\\page04-en-current144.png",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-full-preview.png"
+    },
+    {
+      "id": "p04-en-native",
+      "role": "actual-positive-native",
+      "sha256": "79c32fe2ace8f9d74b413a664b9f0158f66fe73f93a3930830541a9bd115049c",
+      "bytes": 63083,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page04.independent-native-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-native.json"
+    },
+    {
+      "id": "p04-en-CID",
+      "role": "actual-positive-CID",
+      "sha256": "9b37aa17a6b8cb20ebe5d5001235cb3ccc861d1f29c235bd8c32911c6dc61024",
+      "bytes": 172786,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page04.exact-original-CID-Form-program-audit.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-CID.json"
+    },
+    {
+      "id": "p04-en-new-prose",
+      "role": "actual-positive-new-prose",
+      "sha256": "00526029c5b9c05d9146518778064bbba8e82e5a2066d0ad4d6cf460afb53aee",
+      "bytes": 15385,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page04.new-prose-style-spacing-visibility.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-new-prose.json"
+    },
+    {
+      "id": "p04-en-all-native-overlap",
+      "role": "actual-positive-all-native-overlap",
+      "sha256": "5e0f30d275508fc36b16487839d5c3413dca275301370877bae3f481aa95a754",
+      "bytes": 1810,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\proofs\\en\\page04.all-native-graphic-language-ink-overlap.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-all-native-overlap.json"
+    },
+    {
+      "id": "p04-en-actual-font-paper-reference",
+      "role": "actual-encoded-new-font-paper-reference",
+      "sha256": "5fe5a540de519e22ddeee371b946f16c245d6aca0dc40478f75b57a539c0da98",
+      "bytes": 270454,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page04-en-34979b5c996c49e6.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-actual-font-paper-reference.pdf"
+    },
+    {
+      "id": "p04-en-embedded-subset-SimSun",
+      "role": "actual-embedded-source-role-used-font-subset",
+      "sha256": "65c509a36b33701f99fe63b555685606911d3c27c9781529f65bf06337e7f1aa",
+      "bytes": 16556,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\font-cache\\SimSun-5.24-80e26abe9856990f16.ttf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-embedded-subset-SimSun.ttf"
+    },
+    {
+      "id": "p04-en-used-donor-glyphs-SimSun",
+      "role": "actual-full-donor-used-glyph-outline-witness",
+      "sha256": "3b40c8fe646b5ab96f0dfecd8b7d88d61da73e630defca378620c686f1324385",
+      "bytes": 129615,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\inputs\\source-donor-used-glyph-witnesses\\page04-en-SimSun.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/p04-en-used-donor-glyphs-SimSun.json"
+    },
+    {
+      "id": "all9-actual-bad-PDFs",
+      "role": "actual-independent-property-negative-summary",
+      "sha256": "fdd9e16b83efe9f9293ac1ec9ffd99f68b7fbf9385bbbc05d6134959175e4975",
+      "bytes": 754387,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\all9-actual-independent-native-and-prose-property-negatives.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/all9-actual-bad-PDFs.json"
+    },
+    {
+      "id": "actual-bad-PDF-0",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "e665aa752c96fcd6c52add85c05c1b1742aecfaca8550e3549bf167462dac410",
+      "bytes": 695025,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-point-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-0.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-0-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "2779090a7875dd0f9fbbf05dba04a58191eadc50c249517bd705b9c41d9f656a",
+      "bytes": 1228,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-point-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-0-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-0-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "b90e570ce69f7106b9c7f156575379726ae3e17ef593ac37c3fe2114373f75ee",
+      "bytes": 558,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-point-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-0-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-1",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "1375a7b36b6f98f4b832e545122932fbdc136eaa74bffcf197b19815e443fc84",
+      "bytes": 695024,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-CID-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-1.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-1-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "66be953f6aeaf46ac8d2b2b7dbf4c1290184bf981013cb62de83b15785ff45e8",
+      "bytes": 1244,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-CID-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-1-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-1-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "477179251028765e250523dca9c7a04268e3c8db1b17049f56d9fa8ae27802b7",
+      "bytes": 576,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-CID-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-1-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-2",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "2cc55cc8302dc8b841a5609644ca254020bdc82b7cb2e98a7bd4b7569564014a",
+      "bytes": 695022,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-Y-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-2.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-2-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "6ad77bf73fcdce61e47d79810a94a27a03f43f0aaeff60925b83d5983c7c0347",
+      "bytes": 1366,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-Y-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-2-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-2-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "5b01d607525e7d3ac54b7fdbeebd98f0d23b5f3d176cf4493757c932b88b90f0",
+      "bytes": 701,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\original-native-Y-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-2-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-3",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "e48b6fabdec6c3d046a6dbf57cba761429ac75991e17ead20f0ee08b47918931",
+      "bytes": 695022,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\whole-math-fraction-or-radical-rule-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-3.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-3-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "0cc03cb90fbe76bd9c49688e9f172326e743e69240592d6ec3ea26fe758518e9",
+      "bytes": 93371,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\whole-math-fraction-or-radical-rule-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-3-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-3-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "a70a32525cef56908b812ee27c16b826a2a455607fca0b04706c5790cc5a4d82",
+      "bytes": 894,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\whole-math-fraction-or-radical-rule-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-3-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-4",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "83c4abdfe2970d23b2fb174e5a147ff2f3f390c9b25c4d99e3099c3779504a58",
+      "bytes": 695023,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\unrelated-original-diagram-coordinate-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-4.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-4-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "ac2c98f437044009a5beae95c4eaefebb3b41cbc8b85ff566580f30ecc4925c1",
+      "bytes": 93367,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\unrelated-original-diagram-coordinate-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-4-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-4-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "ecbaf9728416828e22c21c79e41e0d16c66157b3178fdf542ae8d7f345df12fd",
+      "bytes": 868,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\unrelated-original-diagram-coordinate-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-4-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-5",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "b469246c93ab4a166fd620b3f24cb5b2e0e073321a946e1e118e6afb0eda6bd5",
+      "bytes": 695022,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\new-prose-point-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-5.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-5-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "bd6b0d4e2606968033c51f7946117f1bd0cdbbf12f21bc7e27f15f400c452382",
+      "bytes": 152928,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\new-prose-point-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-5-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-5-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "be696b4f27b05f4081e6c06da410f5b61dbca119cefc99b35d26052852d74f85",
+      "bytes": 591,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\new-prose-point-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-5-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-5-font-reference",
+      "role": "actual-damaged-font-property-reference",
+      "sha256": "8040cde887f3ae5ba728521ea6afba24159e8b3bff6b7ece8d920703264bc76e",
+      "bytes": 627870,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page03-en-b469246c93ab4a16.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-5-font-reference.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-6",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "376ead2f32c5e9682c50827912b0ab440d61260c7bf3e1320a33d5d7cff1d208",
+      "bytes": 695022,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\new-prose-baseline-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-6.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-6-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "755902c86f7fdd8e791b6c64a96157d9a26a05c4734052cd29fb6a371949f692",
+      "bytes": 152945,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\new-prose-baseline-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-6-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-6-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "8ddcf29cf5e72ba6f64e39860e958642f64e35967586ba7270d2633865154042",
+      "bytes": 596,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\new-prose-baseline-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-6-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-6-font-reference",
+      "role": "actual-damaged-font-property-reference",
+      "sha256": "0a8a4ae47139696797948bae61547e05f47db0f807bc947953d9392b2f4ebfeb",
+      "bytes": 627870,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page03-en-376ead2f32c5e968.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-6-font-reference.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-7",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "cb920cd1e6ea299ace79dee79d9e9553290e91bafccbc0204a8a2f338d94c531",
+      "bytes": 695022,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\natural-quarter-em-word-gap-source03-positive-a6c99c2cf5378bc2.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-7.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-7-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "50359354274563629541180b93b423dcae360f89b02941eb8230e1aaa654ab76",
+      "bytes": 152990,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\natural-quarter-em-word-gap-source03-positive-a6c99c2cf5378bc2.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-7-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-7-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "7df06b912996eed199b6b88661179ff631d3719966b56f23f3932e29e228a3ba",
+      "bytes": 631,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\natural-quarter-em-word-gap-source03-positive-a6c99c2cf5378bc2.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-7-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-7-font-reference",
+      "role": "actual-damaged-font-property-reference",
+      "sha256": "0ff5b6267939e6671f115b11226478d5ecb5917d7684907be709e4598b7f2e51",
+      "bytes": 627870,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page03-en-cb920cd1e6ea299a.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-7-font-reference.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-8",
+      "role": "actual-intentionally-damaged-property-control",
+      "sha256": "3ef122e1cb8a1e0aff46620a99bf285827398e404cc50282539872e79c0e34e8",
+      "bytes": 303496,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\source-caption-alignment-source04-positive-34979b5c996c49e6.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-8.pdf"
+    },
+    {
+      "id": "actual-bad-PDF-8-rejection",
+      "role": "actual-damaged-PDF-property-rejection",
+      "sha256": "ca6a33e24447d6dc36d134e43b93c248d4f22e33534d5b31f841e8c79d8e27c5",
+      "bytes": 44822,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\source-caption-alignment-source04-positive-34979b5c996c49e6.actual-rejection.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-8-rejection.json"
+    },
+    {
+      "id": "actual-bad-PDF-8-mutation",
+      "role": "actual-damaged-PDF-mutation-provenance",
+      "sha256": "ccfd0faf7f00c4be7c119cde9a9d8a7b8f67966c3067a774b3a640dbbc1595bc",
+      "bytes": 576,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\source-caption-alignment-source04-positive-34979b5c996c49e6.mutation.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-8-mutation.json"
+    },
+    {
+      "id": "actual-bad-PDF-8-font-reference",
+      "role": "actual-damaged-font-property-reference",
+      "sha256": "d480dadbb85c6739df3f04bf05cc37660a57074468e1bb9fe5ede4938e0fcd35",
+      "bytes": 270454,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T\\evidence\\new-prose-native-program-references\\page04-en-3ef122e1cb8a1e0a.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/actual-bad-PDF-8-font-reference.pdf"
+    },
+    {
+      "id": "private-negative-prose-path-adapter",
+      "role": "private-Python-input",
+      "sha256": "7923772247a0df5e784cfdc0060981b7394e37370424ef25ba34968460bcf94a",
+      "bytes": 14579,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\actual_positive_prose_audit_with_explicit_bad_copy_path.py",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/private-negative-prose-path-adapter.py"
+    },
+    {
+      "id": "negative-prose-adapter-lineage",
+      "role": "actual-negative-audit-input-path-only-provenance",
+      "sha256": "cf50b51b3497d8b878ca3096a8ee7fe3b1f24c8029743d4a58f26e46cad651f4",
+      "bytes": 947,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\actual-negative-PDF-controls\\positive_prose_path_adapter_lineage.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/negative-prose-adapter-lineage.json"
+    },
+    {
+      "id": "both-final-native-append",
+      "role": "actual-all8-native-page-both-renderer-append-proof",
+      "sha256": "cd59b3212a1ac4180d49612273a3f107872cdeacc456e6e5e6ab8bd3b739f8b9",
+      "bytes": 16947,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\both-editions-all8-native-pages-append-checks.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/both-final-native-append.json"
+    },
+    {
+      "id": "CPhO_2011_T_KO.pdf",
+      "role": "actual-four-page-native-theory-edition",
+      "sha256": "53b85bf42c2e4b6de1ec991970e4e884e1537cbe7a0ec339bcc37847936a94af",
+      "bytes": 4978745,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\CPhO_2011_T_KO.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/CPhO_2011_T_KO.pdf.pdf"
+    },
+    {
+      "id": "final-ko-native-page-inputs",
+      "role": "actual-native-append-producer-inputs",
+      "sha256": "5c8f4e0d97f75ea3a4d8c3b2030fcffc77b799de273474ec68b91a190dc0052a",
+      "bytes": 1468,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\CPhO_2011_T_KO.actual-native-inputs.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/final-ko-native-page-inputs.json"
+    },
+    {
+      "id": "CPhO_2011_T_EN.pdf",
+      "role": "actual-four-page-native-theory-edition",
+      "sha256": "37f850ad5a760a6b838310d1f87a6d672644067bacb806187e650130c4ed0114",
+      "bytes": 2280830,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\CPhO_2011_T_EN.pdf",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/CPhO_2011_T_EN.pdf.pdf"
+    },
+    {
+      "id": "final-en-native-page-inputs",
+      "role": "actual-native-append-producer-inputs",
+      "sha256": "a5743d610e2ba61e22aa967c3a75caedc78cfa7adf77f546110a301246d38d56",
+      "bytes": 1465,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\CPhO_2011_T_EN.actual-native-inputs.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/final-en-native-page-inputs.json"
+    },
+    {
+      "id": "append-en-page01-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "ad324324eca5632b6cd017ebe9366fe6cf0f27ffff8d3fb8452c808a4b243739",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page01-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page01-MuPDF.json"
+    },
+    {
+      "id": "append-en-page01-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "50c4ccf6a654c75605b6767de33bf509ae735079022d85384a0b8645f85ad814",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page01-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page01-Poppler.json"
+    },
+    {
+      "id": "append-en-page02-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "b30342b7abd9252b589e27e5ae60c780ea12c91482677a68f8f9b289aa8d8163",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page02-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page02-MuPDF.json"
+    },
+    {
+      "id": "append-en-page02-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "50f42e7554575545f42aad4757a17aa98eca90f47f9092709aa2142ec045b4b7",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page02-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page02-Poppler.json"
+    },
+    {
+      "id": "append-en-page03-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "96885550f62f655147eed17eb1fe2ecb8f2592bbc1f74b0697ace74403ce404a",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page03-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page03-MuPDF.json"
+    },
+    {
+      "id": "append-en-page03-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "083539d70a1fdc47dcfcec629994ac6f110a4c607da310b743327a0ab8498d1a",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page03-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page03-Poppler.json"
+    },
+    {
+      "id": "append-en-page04-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "f1c7f9b0866aa518a55c6d8baf5906536b65d85489ec1fe7d103de9a7d3901f8",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page04-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page04-MuPDF.json"
+    },
+    {
+      "id": "append-en-page04-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "e1f37ad28fa4546ed729521c6acd33dd921f870c2740bdc11105cdf36b9d9b60",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\en-page04-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-en-page04-Poppler.json"
+    },
+    {
+      "id": "append-ko-page01-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "883cbe22003a724a1b9c3c87439fa1cc58f9d7d136b25d14ea4dd49758710fd2",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page01-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page01-MuPDF.json"
+    },
+    {
+      "id": "append-ko-page01-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "094412db55107b252019f6fde87a87c79f223fa7c9cefc023c675455e423fa95",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page01-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page01-Poppler.json"
+    },
+    {
+      "id": "append-ko-page02-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "b46642d6b0bb389fb2fcd71f68289cedbada74c0d8244c6ab5b59b221cd20743",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page02-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page02-MuPDF.json"
+    },
+    {
+      "id": "append-ko-page02-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "1132e529514556998354de695ff182ba628f14f0c431019927cc4efe269738ae",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page02-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page02-Poppler.json"
+    },
+    {
+      "id": "append-ko-page03-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "fd395fad7008fe518dee0ac2773fb4cb444fa55ffb15bef760f382fffd6763f7",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page03-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page03-MuPDF.json"
+    },
+    {
+      "id": "append-ko-page03-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "d9cff8a365a2109af34f7c8c5b7416c145c1becfca1b367098a3377ac6e3515b",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page03-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page03-Poppler.json"
+    },
+    {
+      "id": "append-ko-page04-MuPDF",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "b864fe03e12e3d80fa8bb52af2442c861b9f8f685849349d7e11dda9f5efbf8a",
+      "bytes": 937,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page04-MuPDF.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page04-MuPDF.json"
+    },
+    {
+      "id": "append-ko-page04-Poppler",
+      "role": "actual-native-fullpage-append-renderer-check",
+      "sha256": "c7dfd3fa3cbd176776f09ef26fb824257b085a2534bce82d68cd4283b1aee09a",
+      "bytes": 939,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\T-final-v1\\editions\\actual-append-checks\\ko-page04-Poppler.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/append-ko-page04-Poppler.json"
+    },
+    {
+      "id": "root-source-independent-review-0",
+      "role": "actual-root-source-font-math-layout-independent-review",
+      "sha256": "bc4caac0d98e7840e49112267b0d008d07ee4aa310179666f4b948806b8a1079",
+      "bytes": 2776,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\root-T1-independent-fullfont-plan-math-and-source-label-check-v1.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/root-source-independent-review-0.json"
+    },
+    {
+      "id": "root-source-independent-review-1",
+      "role": "actual-root-source-font-math-layout-independent-review",
+      "sha256": "3e870ba29e2bfe10c657cb5d6dbe0b4c7b530e9d4764eb7dac5c8f82b0fc7074",
+      "bytes": 5130,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\root-T2-bilingual-full-visual-semantic-approval.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/root-source-independent-review-1.json"
+    },
+    {
+      "id": "root-source-independent-review-2",
+      "role": "actual-root-source-font-math-layout-independent-review",
+      "sha256": "b3a286453867a7ae6f37058ba5233e65a4a9ec7f52ac96e980a9ca23d3360f25",
+      "bytes": 6919,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\root-T2-independent-fullfont-and-compiled-plan-math-DX-v2.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/root-source-independent-review-2.json"
+    },
+    {
+      "id": "root-source-independent-review-3",
+      "role": "actual-root-source-font-math-layout-independent-review",
+      "sha256": "69153e9ac4f16bb7017e37d9c8cd029c4c6187e925b5e2a6d95a93814b322408",
+      "bytes": 2105,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\root-T3-bilingual-full-visual-semantic-approval.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/root-source-independent-review-3.json"
+    },
+    {
+      "id": "root-source-independent-review-4",
+      "role": "actual-root-source-font-math-layout-independent-review",
+      "sha256": "0a86f19ae800bba33ff44fc54250d57dde624fd8c3485d3bce2a965d01502236",
+      "bytes": 7171,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\root-TS20-bilingual-full-visual-semantic-approval.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/root-source-independent-review-4.json"
+    },
+    {
+      "id": "root-source-independent-review-5",
+      "role": "actual-root-source-font-math-layout-independent-review",
+      "sha256": "3788ddf823a6d197e4a9827c9f46bc5d86baf3a03bc8e41a59f73eb8ec8a9233",
+      "bytes": 2736,
+      "source_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2011-native-derived-C-v1\\root-TS21-pilot-bilingual-full-visual-semantic-approval.json",
+      "source_path_inventory_only": true,
+      "payload_relative": "artifacts/root-source-independent-review-5.json"
+    }
+  ]
+}
