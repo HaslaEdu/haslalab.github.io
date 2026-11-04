@@ -370,19 +370,30 @@ def resource_settings(manifest, role):
         raise ValueError('cumulative prior budget is required')
     ledger = BudgetLedger(policy, prior_spend_krw=manifest['prior_upper_krw'])
     spec = manifest['roles'][role]
+    # Pure profile validation precedes any provider or corpus request.
+    profile = spec.get('training_profile')
+    get_role_config(role, profile)
     maximum = 1800 if role == 'chat' else 14400
     seconds = spec.get('runtime_seconds', 1800 if role == 'chat' else 3600)
     if type(seconds) is not int or not 660 <= seconds <= maximum:
         raise ValueError('role runtime must include setup/upload and stay within its time ceiling')
-    default_gpus = [*cloud.GPU_IDS[2:], cloud.GPU_IDS[1], cloud.GPU_IDS[0]] if role == 'chat' else list(cloud.GPU_IDS)
+    low_memory_gpus = ['NVIDIA A100-PCIE-40GB', 'NVIDIA L40S', 'NVIDIA L40', 'NVIDIA A40']
+    legacy_gpus = [gpu for gpu in cloud.GPU_IDS if gpu not in low_memory_gpus]
+    default_gpus = ([*legacy_gpus[2:], legacy_gpus[1], legacy_gpus[0]] if role == 'chat' else legacy_gpus)
+    if profile is not None:
+        default_gpus = low_memory_gpus
     gpu_ids = spec.get('gpu_ids', default_gpus)
     if (not isinstance(gpu_ids, list) or not gpu_ids
             or any(not isinstance(gpu, str) or gpu not in cloud.GPU_IDS for gpu in gpu_ids)
             or len(set(gpu_ids)) != len(gpu_ids)):
         raise ValueError('only configured training GPUs may be preferred')
+    if (profile is not None and any(gpu not in low_memory_gpus for gpu in gpu_ids)
+            or profile is None and any(gpu in low_memory_gpus for gpu in gpu_ids)):
+        raise ValueError('40/48GB GPU eligibility requires the explicit low-memory Gemma profile')
     quote = PodQuote(gpu_usd_per_hour_upper=spec.get('gpu_usd_per_hour_upper', 4), container_disk_gb=200, volume_disk_gb=0)
-    if quote.gpu_usd_per_hour_upper > 4:
-        raise ValueError('role GPU hourly ceiling exceeds USD4')
+    ceiling = 6 if role == 'chat' and profile is None else 4
+    if quote.gpu_usd_per_hour_upper > ceiling:
+        raise ValueError(f'role GPU hourly ceiling exceeds USD{ceiling}')
     return ledger, quote, seconds, gpu_ids
 
 
@@ -459,6 +470,8 @@ def main():
                      'training_sha256': spec['train']['raw_sha256'],
                      'validation_sha256': spec['validation']['raw_sha256'],
                      'runtime_seconds': plan.run_seconds - 600})
+        if spec.get('training_profile') is not None:
+            jobs[-1]['training_profile'] = spec['training_profile']
     pod_env = {'HASLA_ROLE_JOBS': json.dumps(jobs, separators=(',', ':')), 'REPO_SHA': env['GITHUB_SHA'],
         'HASLA_TRAIN_SCRIPT_SHA256': manifest['train_script_sha256'],
         'HASLA_ROLE_CONFIG_SHA256': manifest['role_config_sha256'],

@@ -29,7 +29,7 @@ from pathlib import Path
 import re
 import time
 
-from role_config import BASES, get_role_config, validate_role_format
+from role_config import BASES, GEMMA_26B_QLORA_V1, get_role_config, validate_role_format
 
 
 def valid_messages(messages):
@@ -183,7 +183,81 @@ def loader_kwargs(config, max_length, bf16_dtype):
                'full_finetuning': False}
     if config['precision'] == 'bf16':
         options['dtype'] = bf16_dtype
+    if config.get('training_profile') == GEMMA_26B_QLORA_V1:
+        options.update(dtype=bf16_dtype, fast_inference=False, device_map={'': 0}, use_exact_model_name=True)
     return options
+
+
+def gemma_quantized_expert_proof(model, params4bit_type):
+    """Inspect actual packed experts; a requested quantization flag is no proof."""
+    blocks = [m for m in model.modules() if type(m).__name__ == 'Gemma4TextExperts']
+    if len(blocks) != 30 or not isinstance(params4bit_type, type):
+        raise ValueError('Gemma QLoRA requires all 30 recognized expert blocks')
+    expected = {'gate_up_proj': (128, 1408, 2816), 'down_proj': (128, 2816, 704)}
+    count = 0
+    for block in blocks:
+        for name, shape in expected.items():
+            weight = getattr(block, name, None)
+            state = getattr(weight, 'quant_state', None)
+            logical = getattr(weight, '_original_shape', None)
+            if logical is None:
+                logical = getattr(state, 'shape', None)
+            if (not isinstance(weight, params4bit_type) or state is None or tuple(logical or ()) != shape
+                    or getattr(state, 'quant_type', None) != 'nf4' or weight.requires_grad
+                    or weight.numel() * weight.element_size() > math.prod(shape)
+                    or getattr(weight.device, 'type', None) != 'cuda'
+                    or getattr(weight.device, 'index', None) != 0):
+                raise ValueError('Gemma expert weights are not verified packed frozen CUDA NF4')
+            count += 1
+    return {'expert_quantization_verified': True, 'expert_blocks': len(blocks), 'quantized_expert_tensors': count}
+
+
+def gemma_moe_patch_provenance(module, installed_version):
+    """Record actual installed source bytes; do not invent a preapproved pin."""
+    if not callable(getattr(module, 'replace_expert_params_with_bnb_params', None)):
+        raise ValueError('required Gemma MoE NF4 quantizer patch is unavailable')
+    source = Path(module.__file__)
+    if (source.is_symlink() or not source.is_file() or source.suffix != '.py'
+            or not 0 < source.stat().st_size <= 1024**2
+            or not isinstance(installed_version, str) or not re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', installed_version)):
+        raise ValueError('Gemma MoE quantizer source provenance is unavailable')
+    return {'expert_quantizer_module_sha256': file_sha256(source), 'unsloth_zoo_version': installed_version,
+            'expert_quantizer_upstream_fix': '9adee9372d5d86749e757d5a91c6bfa30c2ff674'}
+
+
+def gemma_single_gpu_proof(torch_module, model=None):
+    cuda = torch_module.cuda
+    if not cuda.is_available() or cuda.device_count() != 1:
+        raise ValueError('Gemma QLoRA profile requires exactly one CUDA GPU')
+    props = cuda.get_device_properties(0)
+    names = ('NVIDIA A100-PCIE-40GB', 'NVIDIA L40S', 'NVIDIA L40', 'NVIDIA A40')
+    if (props.name not in names or type(props.total_memory) is not int
+            or not 37 * 1024**3 <= props.total_memory <= 49 * 1024**3):
+        raise ValueError('Gemma QLoRA GPU is outside the approved 40/48GB hardware')
+    if model is not None:
+        mapping = getattr(model, 'hf_device_map', None)
+        if mapping is not None and (not isinstance(mapping, dict) or any(str(v) not in ('0', 'cuda', 'cuda:0') for v in mapping.values())):
+            raise ValueError('Gemma QLoRA cannot silently offload model weights')
+        if any(getattr(p.device, 'type', None) != 'cuda' or getattr(p.device, 'index', None) != 0
+               for p in model.parameters()):
+            raise ValueError('Gemma QLoRA model parameters must stay on CUDA GPU zero')
+    return {'gpu_count': 1, 'gpu_name': props.name, 'physical_vram_bytes': props.total_memory,
+            'cpu_or_disk_offload_used': False}
+
+
+def gemma_first_step_callback(callback_type, summary, torch_module):
+    class Proof(callback_type):
+        def on_step_end(self, args, state, control, **kwargs):
+            if state.global_step >= 1 and not summary.get('first_optimizer_step_completed'):
+                allocated = torch_module.cuda.max_memory_allocated(0)
+                reserved = torch_module.cuda.max_memory_reserved(0)
+                if (type(allocated) is not int or type(reserved) is not int
+                        or not 0 < allocated <= reserved <= summary['physical_vram_bytes']):
+                    raise ValueError('invalid first optimizer-step GPU memory proof')
+                summary.update(first_optimizer_step_completed=True,
+                               first_step_peak_allocated_bytes=allocated, first_step_peak_reserved_bytes=reserved)
+            return control
+    return Proof()
 
 
 def initial_adapter(path, config, rank, output):
@@ -348,6 +422,7 @@ def progress_callback(callback_type, path, *, started, wall_seconds=None, clock=
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', choices=BASES, default='chat')
+    ap.add_argument('--training-profile', choices=(GEMMA_26B_QLORA_V1,), default=None)
     ap.add_argument('data')
     ap.add_argument('out')
     ap.add_argument('--rank', type=int)
@@ -366,13 +441,15 @@ def main(argv=None):
     ap.add_argument('--assistant-only-loss', choices=('auto', 'required', 'off'), default='auto',
                     help='use only officially supported generation masks for chat; never handcraft masks')
     a = ap.parse_args(argv)
-    config = validate_role_format(a.base, a.format)
+    config = validate_role_format(a.base, a.format, a.training_profile)
     a.rank = config['default_rank'] if a.rank is None else a.rank
     a.max_len = config['max_length'] if a.max_len is None else a.max_len
     if not 1 <= a.rank <= 32 or a.max_len < 1 or a.max_steps == 0 or a.max_steps < -1 or a.epochs <= 0 or a.lr <= 0:
         ap.error('invalid training hyperparameters')
     if a.train_wall_seconds is not None and (a.train_wall_seconds < 30 or not a.progress_json):
         ap.error('a wall-time allowance requires private progress output and at least 30 seconds')
+    if a.training_profile and (a.rank != 8 or a.max_len != 1024):
+        ap.error('Gemma QLoRA profile requires rank8 and length1024')
 
     train, held = load(a.data, a.holdout, a.format, a.validation_data, role=a.base)
     summary = dataset_summary(train, held, a.format)
@@ -386,6 +463,8 @@ def main(argv=None):
                    assistant_only_loss=False, assistant_loss_status='not_checked_in_prepare_only',
                    test_records_used=0, train_loss=None, eval_loss=None)
     summary.update(warmup_policy(a.max_steps))
+    if a.training_profile:
+        summary['training_profile'] = a.training_profile
     initial_path, initial_sha = initial_adapter(a.resume_adapter, config, a.rank, a.out) if a.resume_adapter else (None, None)
     summary.update(initial_adapter_model_sha256=initial_sha, optimizer_state_restored=False)
     print(json.dumps(summary, ensure_ascii=False), flush=True)
@@ -402,13 +481,23 @@ def main(argv=None):
     from trl import SFTConfig, SFTTrainer
 
     bf16 = unsloth.is_bfloat16_supported()
-    if config['precision'] == 'bf16' and not bf16:
+    if (config['precision'] == 'bf16' or a.training_profile) and not bf16:
         raise ValueError('chat BF16 LoRA requires a BF16-capable GPU; precision is not downgraded automatically')
+    if a.training_profile:
+        from importlib.metadata import version
+        from unsloth_zoo.temporary_patches import moe_utils_bnb4bit
+        from bitsandbytes.nn import Params4bit
+        summary.update(gemma_moe_patch_provenance(moe_utils_bnb4bit, version('unsloth_zoo')))
+        summary.update(gemma_single_gpu_proof(torch))
+        torch.cuda.reset_peak_memory_stats(0)
     loader = choose_loader(unsloth, config)
     options = loader_kwargs(config, a.max_len, torch.bfloat16)
     if initial_path:
         options['model_name'] = str(initial_path)
     model, tok = loader.from_pretrained(**options)
+    if a.training_profile:
+        summary.update(gemma_single_gpu_proof(torch, model))
+        summary.update(gemma_quantized_expert_proof(model, Params4bit))
     if initial_path:
         validate_loaded_adapter_trainability(model)
     else:
@@ -445,6 +534,10 @@ def main(argv=None):
         training_options['assistant_only_loss'] = mask_enabled
     trainer = SFTTrainer(model=model, processing_class=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
                          args=SFTConfig(**training_options))
+    if a.training_profile:
+        from transformers import TrainerCallback
+        gemma_single_gpu_proof(torch, model)
+        trainer.add_callback(gemma_first_step_callback(TrainerCallback, summary, torch))
     if a.progress_json:
         from transformers import TrainerCallback
         trainer.add_callback(progress_callback(TrainerCallback, a.progress_json, started=started,
@@ -456,6 +549,8 @@ def main(argv=None):
         raise ValueError('trainer completed no optimizer steps')
     if a.max_steps > 0 and summary['steps_completed'] > a.max_steps:
         raise ValueError('trainer exceeded its requested optimizer-step limit')
+    if a.training_profile and summary.get('first_optimizer_step_completed') is not True:
+        raise ValueError('Gemma QLoRA first optimizer-step proof is missing')
     if a.max_steps == -1:
         scheduled_steps = getattr(trainer.state, 'max_steps', None)
         if type(scheduled_steps) is int and scheduled_steps > 0:

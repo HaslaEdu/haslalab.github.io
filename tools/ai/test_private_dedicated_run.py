@@ -108,6 +108,11 @@ class DedicatedGpuTests(unittest.TestCase):
         self.assertEqual(state.delete.call_count, 2)
         events = [json.loads(line) for line in output.getvalue().splitlines()]
         preflight = next(row for row in events if row['event'] == 'dual_preflight')
+        self.assertEqual(preflight['manifest_sha256'], hashlib.sha256(os.environ['HASLA_DUAL_MANIFEST'].encode()).hexdigest())
+        for role in ('chat', 'solver'):
+            self.assertEqual(preflight['roles'][role]['training_sha256'], self.manifest['roles'][role]['train']['raw_sha256'])
+            self.assertEqual(preflight['roles'][role]['validation_sha256'], self.manifest['roles'][role]['validation']['raw_sha256'])
+            self.assertEqual(preflight['roles'][role]['training_profile'], 'default')
         self.assertTrue(preflight['dedicated_pods'])
         self.assertLess(sum(int(row['reserved_upper_krw']) for row in preflight['roles'].values()) + 7653 + 5000, 100000)
         self.assertNotIn('SYNTHETIC_PRIVATE', output.getvalue())

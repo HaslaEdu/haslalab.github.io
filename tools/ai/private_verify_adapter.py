@@ -172,6 +172,7 @@ def summary_result(summary):
             return result
     result = {}
     fields = ("status", "artifact", "role", "base_model", "rank", "steps_completed",
+              "training_profile", "precision", "training_method", "runtime_profile_proof",
               "adapter_files", "adapter_sha256", "initial_adapter", "resume_script_sha256",
               "initial_adapter_model_sha256", "optimizer_state_restored")
     for field in fields:
@@ -184,7 +185,33 @@ def summary_result(summary):
 
 
 def expected_result(result, entity, run_id, role):
-    config = get_role_config(role)
+    try:
+        config = get_role_config(role, result.get('training_profile'))
+    except ValueError:
+        raise VerificationError('result_training_profile_invalid') from None
+    if result.get('training_profile') is not None:
+        require(result.get('precision') == config['precision']
+                and result.get('training_method') == config['training_method'], 'result_training_profile_invalid')
+        proof = result.get('runtime_profile_proof')
+        fixed = {'expert_quantization_verified': True, 'expert_blocks': 30, 'quantized_expert_tensors': 60,
+                 'first_optimizer_step_completed': True, 'gpu_count': 1, 'cpu_or_disk_offload_used': False}
+        extra = {'gpu_name', 'physical_vram_bytes', 'first_step_peak_allocated_bytes',
+                 'first_step_peak_reserved_bytes', 'expert_quantizer_module_sha256', 'unsloth_zoo_version',
+                 'expert_quantizer_upstream_fix'}
+        require(isinstance(proof, dict) and set(proof) == set(fixed) | extra
+                and all(type(proof.get(k)) is type(v) and proof[k] == v for k, v in fixed.items()),
+                'result_training_profile_proof_invalid')
+        physical, allocated, reserved = [proof[k] for k in ('physical_vram_bytes',
+                                         'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')]
+        require(proof['gpu_name'] in ('NVIDIA A100-PCIE-40GB', 'NVIDIA L40S', 'NVIDIA L40', 'NVIDIA A40')
+                and all(type(v) is int for v in (physical, allocated, reserved))
+                and 37 * 1024**3 <= physical <= 49 * 1024**3 and 0 < allocated <= reserved <= physical
+                and isinstance(proof['expert_quantizer_module_sha256'], str)
+                and re.fullmatch(r'[0-9a-f]{64}', proof['expert_quantizer_module_sha256'])
+                and isinstance(proof['unsloth_zoo_version'], str)
+                and re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', proof['unsloth_zoo_version'])
+                and proof['expert_quantizer_upstream_fix'] == '9adee9372d5d86749e757d5a91c6bfa30c2ff674',
+                'result_training_profile_proof_invalid')
     require(result.get("role") == role and result.get("base_model") in config["base_aliases"],
             "result_role_or_base_mismatch")
     require(type(result.get("rank")) is int and result["rank"] in (8, 16)
@@ -392,6 +419,8 @@ def verify_role(reader, api, entity, run_id, role, root):
     if result.get("status") == "failed":
         return {**output, "status": "failed", "code": "training_failed"}
     reference, inventory = expected_result(result, entity, run_id, role)
+    if result.get('training_profile') is not None:
+        output.update(training_profile=result['training_profile'], runtime_profile_proof=result['runtime_profile_proof'])
     output["artifact"] = reference
     reader.assert_private(entity)
     artifact = api.artifact(reference, type="lora")
@@ -402,6 +431,9 @@ def verify_role(reader, api, entity, run_id, role, root):
             and all(metadata.get(key) == result[key] for key in
                     ("role", "base_model", "rank", "steps_completed", "adapter_sha256")),
             "artifact_metadata_mismatch")
+    if result.get('training_profile') is not None:
+        require(all(metadata.get(k) == result.get(k) for k in ('training_profile', 'runtime_profile_proof',
+                    'precision', 'training_method')), 'artifact_training_profile_mismatch')
     entries = artifact.manifest.entries
     require(isinstance(entries, dict), "artifact_manifest_invalid")
     initial = result.get('initial_adapter')

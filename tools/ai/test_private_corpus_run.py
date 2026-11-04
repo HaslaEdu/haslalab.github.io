@@ -272,11 +272,45 @@ class PrivateCorpusRunnerTests(unittest.TestCase):
             self.assertEqual(runner.capacity_preflight([h100, runner.GPU_IDS[0]], 4), h100)
             with self.assertRaisesRegex(RuntimeError, "ceiling"):
                 runner.capacity_preflight([h100], 3)
-        for ids, price in (([], 4), (["unknown"], 4), ([h100, h100], 4), ([h100], "NaN"), ([h100], 4.01)):
+        for ids, price in (([], 4), (["unknown"], 4), ([h100, h100], 4), ([h100], "NaN"), ([h100], 6.01)):
             with self.subTest(ids=ids, price=price), patch.object(runner.requests, "post") as request, \
                     self.assertRaises(ValueError):
                 runner.capacity_preflight(ids, price)
             request.assert_not_called()
+
+    def test_h200_secure_capacity_honors_six_dollar_ceiling_and_existing_default_four(self):
+        funded = response(data={"data": {"myself": {"clientBalance": 20, "underBalance": False}}})
+        for gpu in ('NVIDIA H200', 'NVIDIA H200 NVL'):
+            catalog = {'gpus': [{'id': gpu, 'availability': 'LOW', 'price': {'secure': '5.29'}}]}
+            with self.subTest(gpu=gpu), patch.object(runner.requests, 'post', return_value=funded), \
+                    patch.object(runner, 'runpod', return_value=catalog) as call, \
+                    contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(runner.capacity_preflight([gpu], 6), gpu)
+                self.assertIn('cloud=SECURE&minCudaVersion=12.8', call.call_args.args[1])
+                with self.assertRaises(RuntimeError):
+                    runner.capacity_preflight([gpu])
+                catalog['gpus'][0]['price']['secure'] = '6.01'
+                with self.assertRaises(RuntimeError):
+                    runner.capacity_preflight([gpu], 6)
+                catalog['gpus'][0].update(availability='NONE', price={'secure': '5.29'})
+                with self.assertRaises(RuntimeError):
+                    runner.capacity_preflight([gpu], 6)
+
+    def test_h200_new_pod_stays_one_gpu_no_volume_same_cuda_image(self):
+        for gpu in ('NVIDIA H200', 'NVIDIA H200 NVL'):
+            with self.subTest(gpu=gpu), patch.object(runner, 'runpod', return_value={'id': 'fixture-new'}) as call:
+                runner.graphql_create_pod('fixture-new-run-chat', {'PRIVATE': PRIVATE_TEXT}, 'fixture-command', gpu)
+            call.assert_called_once()
+            self.assertEqual(call.call_args.args, ('POST', '/pods'))
+            body = call.call_args.kwargs['json']
+            self.assertEqual(body['cloud'], 'SECURE')
+            self.assertEqual(body['gpu'], {'id': gpu, 'count': 1, 'minCudaVersion': '12.8'})
+            self.assertEqual(body['disk'], 200)
+            self.assertEqual(body['image'], 'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404')
+            self.assertNotIn('mounts', body)
+            self.assertEqual(body['ports'], [])
+            self.assertFalse(body['startSsh'])
+            self.assertFalse(body['startJupyter'])
 
     def test_over_ceiling_creation_response_is_deleted_before_polling(self):
         self.env["HASLA_PREFLIGHT_ONLY"] = "false"

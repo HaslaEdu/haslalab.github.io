@@ -7,6 +7,9 @@ GPU imports, credentials, or environment-dependent choices belong here.
 from copy import deepcopy
 
 
+GEMMA_26B_QLORA_V1 = 'gemma-26b-qlora-v1'
+
+
 _ROLES = {
     "chat": {
         "role": "chat", "base_model": "google/gemma-4-26B-A4B-it",
@@ -41,14 +44,20 @@ _ROLES = {
 BASES = {role: config["base_model"] for role, config in _ROLES.items()}
 
 
-def get_role_config(role):
+def get_role_config(role, training_profile=None):
     if role not in _ROLES:
         raise ValueError("unknown training role")
-    return deepcopy(_ROLES[role])
+    config = deepcopy(_ROLES[role])
+    if training_profile is not None:
+        if role != 'chat' or training_profile != GEMMA_26B_QLORA_V1:
+            raise ValueError('unknown or incompatible training profile')
+        config.update(training_profile=training_profile, precision='4bit', training_method='qlora',
+                      load_in_4bit=True, load_in_16bit=False, supported_gpu_memory_gb=[40, 48])
+    return config
 
 
-def validate_role_format(role, data_format):
-    config = get_role_config(role)
+def validate_role_format(role, data_format, training_profile=None):
+    config = get_role_config(role, training_profile)
     if data_format not in config["allowed_formats"]:
         raise ValueError(f"{role} role does not allow {data_format} format")
     # Reference-solution conversations retain the complete question and answer.

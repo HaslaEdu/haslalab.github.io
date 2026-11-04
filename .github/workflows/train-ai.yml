@@ -1,8 +1,12 @@
 name: Hasla Gemma and QwQ private pilot
-run-name: Hasla dual-model pilot (training-role=${{ inputs.training_role || 'both' }}, preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }}, source-inspect=${{ inputs.ocr_source_inspect_only }}, contest-fetch=${{ inputs.contest_fetch_only }}, private-ocr=${{ inputs.ocr_batch_only }}, contest-delta=${{ inputs.contest_delta_inspect_only }}, contest-prepare=${{ inputs.contest_delta_prepare_only }}, ocr-reconcile=${{ inputs.ocr_reconcile_run_id }})
+run-name: Hasla dual-model pilot (training-role=${{ inputs.training_role || 'both' }}, launch=${{ inputs.launch_id }}, preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }}, source-inspect=${{ inputs.ocr_source_inspect_only }}, contest-fetch=${{ inputs.contest_fetch_only }}, private-ocr=${{ inputs.ocr_batch_only }}, contest-delta=${{ inputs.contest_delta_inspect_only }}, contest-prepare=${{ inputs.contest_delta_prepare_only }}, ocr-reconcile=${{ inputs.ocr_reconcile_run_id }})
 on:
   workflow_dispatch:
     inputs:
+      launch_id:
+        description: "Non-secret correlation ID for a frozen private launch"
+        type: string
+        default: ""
       training_role:
         description: "Dedicated training role; both preserves the legacy global queue"
         type: choice

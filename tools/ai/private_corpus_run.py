@@ -31,7 +31,9 @@ PROJECT = 'hasla-ai-private-training'
 PREFIX = 'hasla-private-books-'
 E = os.environ
 GPU_IDS = ('NVIDIA A100 80GB PCIe', 'NVIDIA A100-SXM4-80GB',
-           'NVIDIA H100 80GB HBM3', 'NVIDIA H100 PCIe', 'NVIDIA H100 NVL')
+           'NVIDIA H100 80GB HBM3', 'NVIDIA H100 PCIe', 'NVIDIA H100 NVL',
+           'NVIDIA H200', 'NVIDIA H200 NVL', 'NVIDIA A100-PCIE-40GB',
+           'NVIDIA L40S', 'NVIDIA L40', 'NVIDIA A40')
 
 
 def normalized_pod(value):
@@ -135,7 +137,7 @@ def capacity_preflight(preferred_gpu_ids=None, hourly_ceiling=4):
     except (InvalidOperation, ValueError):
         raise ValueError('Invalid GPU price ceiling') from None
     if (not preferred or len(set(preferred)) != len(preferred) or any(g not in GPU_IDS for g in preferred)
-            or not ceiling.is_finite() or not 0 < ceiling <= 4):
+            or not ceiling.is_finite() or not 0 < ceiling <= 6):
         raise ValueError('Invalid preferred GPU policy')
     query = 'query { myself { clientBalance underBalance } }'
     response = requests.post('https://api.runpod.io/graphql', json={'query': query},
@@ -176,7 +178,7 @@ def graphql_create_pod(name, env, command, gpu_id=GPU_IDS[1]):
     # Compatibility name for callers; provisioning now uses the current REST v2.
     # Make exactly one creation request, then reconcile by exact name on failure.
     if gpu_id not in GPU_IDS:
-        raise ValueError('Only the configured A100/H100 training GPUs are allowed for this pilot')
+        raise ValueError('Only the configured A100/H100/H200 training GPUs are allowed for this pilot')
     return runpod('POST', '/pods', json={
         'name': name, 'cloud': 'SECURE', 'gpu': {'id': gpu_id, 'count': 1, 'minCudaVersion': '12.8'},
         'disk': 200, 'image': 'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404',

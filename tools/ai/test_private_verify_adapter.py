@@ -114,6 +114,34 @@ class Fixture:
 
 
 class SafetensorsTests(unittest.TestCase):
+    def test_chat_quantized_profile_verifies_same_base_weights_and_binds_private_proof(self):
+        fixture = Fixture()
+        profile = 'gemma-26b-qlora-v1'
+        proof = {'expert_quantization_verified': True, 'expert_blocks': 30, 'quantized_expert_tensors': 60,
+                 'first_optimizer_step_completed': True, 'gpu_count': 1, 'cpu_or_disk_offload_used': False,
+                 'gpu_name': 'NVIDIA A40', 'physical_vram_bytes': 48 * 1024**3,
+                 'first_step_peak_allocated_bytes': 16 * 1024**3, 'first_step_peak_reserved_bytes': 18 * 1024**3,
+                 'expert_quantizer_module_sha256': 'a' * 64, 'unsloth_zoo_version': '2026.11.2',
+                 'expert_quantizer_upstream_fix': '9adee9372d5d86749e757d5a91c6bfa30c2ff674'}
+        fields = dict(training_profile=profile, precision='4bit', training_method='qlora', runtime_profile_proof=proof)
+        result = fixture.results['chat']
+        result.update(fields)
+        artifact = fixture.artifacts[result['artifact']]
+        artifact.metadata.update(fields)
+        outcome = fixture.run()['roles'][0]
+        self.assertEqual(outcome['status'], 'verified')
+        self.assertEqual(outcome['training_profile'], profile)
+        self.assertEqual(outcome['runtime_profile_proof'], proof)
+        artifact.metadata['training_profile'] = 'unknown'
+        self.assertEqual(fixture.run()['roles'][0]['code'], 'artifact_training_profile_mismatch')
+        for change in ({'training_profile': 'unknown'}, {'runtime_profile_proof': {**proof, 'expert_blocks': 29}},
+                       {'runtime_profile_proof': {**proof, 'arbitrary_raw_text': 'must-not-emit'}},
+                       {'runtime_profile_proof': {**proof, 'gpu_name': 'NVIDIA H200'}}):
+            with self.subTest(change=change), self.assertRaises(verify.VerificationError):
+                verify.expected_result({**result, **change}, 'fixture-entity', '123', 'chat')
+        with self.assertRaises(verify.VerificationError):
+            verify.expected_result({**result, 'role': 'solver'}, 'fixture-entity', '123', 'solver')
+
     def inspect(self, blob, rank=8, maximum=4096):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "fixture.safetensors"

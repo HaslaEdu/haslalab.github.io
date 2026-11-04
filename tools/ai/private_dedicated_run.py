@@ -139,6 +139,8 @@ def pod_environment(env, manifest, entity, role, run_name, reference, seconds):
     job = {'role': role, 'format': spec['format'], 'run': run_name, 'input_artifact': reference,
            'training_sha256': spec['train']['raw_sha256'],
            'validation_sha256': spec['validation']['raw_sha256'], 'runtime_seconds': seconds - 600}
+    if spec.get('training_profile') is not None:
+        job['training_profile'] = spec['training_profile']
     if spec.get('initial_adapter'):
         job['initial_adapter'] = spec['initial_adapter']
     child = {'HASLA_ROLE_JOBS': json.dumps([job], separators=(',', ':')), 'REPO_SHA': env['GITHUB_SHA'],
@@ -228,8 +230,13 @@ def main():
             raise ValueError('the combined budget cannot cover a selected model')
     verify_reserved_funding(ledger, sibling['reserved_upper_krw'] if sibling else 0)
     cloud.safe_event('dual_preflight', selected_roles=roles, dedicated_pods=True,
+                     manifest_sha256=hashlib.sha256(env['HASLA_DUAL_MANIFEST'].encode('utf8')).hexdigest(),
                      budget_krw=int(ledger.policy.budget_krw), prior_upper_krw=str(ledger.prior_spend_krw),
                      roles={r: {'format': manifest['roles'][r]['format'],
+                                'training_profile': manifest['roles'][r].get('training_profile', 'default'),
+                                'training_sha256': manifest['roles'][r]['train']['raw_sha256'],
+                                'validation_sha256': manifest['roles'][r]['validation']['raw_sha256'],
+                                'preferred_gpu_ids': manifest['roles'][r].get('gpu_ids'),
                                 'training_records': manifest['roles'][r]['train']['records'],
                                 'validation_records': manifest['roles'][r]['validation']['records'],
                                 'runtime_seconds': plans[r].run_seconds, 'gpu': gpus[r],

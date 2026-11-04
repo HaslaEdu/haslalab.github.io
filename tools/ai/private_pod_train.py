@@ -330,7 +330,7 @@ def fetch_role_config(env, destination, opener=None):
     return fetch_pinned_code(env, destination, "role_config.py", "HASLA_ROLE_CONFIG_SHA256", opener)
 
 
-def pinned_role_settings(path, role, data_format):
+def pinned_role_settings(path, role, data_format, training_profile=None):
     # Execute only the pure configuration file whose full bytes were SHA-checked.
     name = "_hasla_pinned_role_config_" + sha_file(path)
     spec = importlib.util.spec_from_file_location(name, str(path))
@@ -340,7 +340,7 @@ def pinned_role_settings(path, role, data_format):
     sys.modules[name] = module
     spec.loader.exec_module(module)
     try:
-        config = dict(module.validate_role_format(role, data_format))
+        config = dict(module.validate_role_format(role, data_format, training_profile)) if training_profile is not None else dict(module.validate_role_format(role, data_format))
     except (ValueError, KeyError, TypeError):
         raise PilotError("role_format_mismatch") from None
     if (config.get("role") != role or data_format not in config.get("allowed_formats", ())
@@ -351,11 +351,15 @@ def pinned_role_settings(path, role, data_format):
             or not isinstance(config.get("base_aliases"), list) or config["base_model"] not in config["base_aliases"]
             or any(not isinstance(alias, str) or not alias for alias in config["base_aliases"])):
         raise PilotError("invalid_pinned_role_configuration")
-    expected_precision = "bf16" if role == "chat" else "4bit"
-    if (config.get("precision") != expected_precision or config.get("load_in_4bit") is not (role == "solver")
-            or config.get("load_in_16bit") is not (role == "chat")
+    low_memory = training_profile == 'gemma-26b-qlora-v1' and role == 'chat'
+    if training_profile is not None and (not low_memory or config.get('training_profile') != training_profile):
+        raise PilotError('training_profile_mismatch')
+    expected_precision = "bf16" if role == "chat" and not low_memory else "4bit"
+    quantized = role == 'solver' or low_memory
+    if (config.get("precision") != expected_precision or config.get("load_in_4bit") is not quantized
+            or config.get("load_in_16bit") is not (not quantized)
             or config.get("loader") != ("FastModel" if role == "chat" else "FastLanguageModel")
-            or config.get("training_method") != ("lora" if role == "chat" else "qlora")):
+            or config.get("training_method") != ("qlora" if quantized else "lora")):
         raise PilotError("training_role_precision_mismatch")
     return config
 
@@ -369,6 +373,8 @@ def training_command(script, data, adapter, validation=None, config=None, data_f
                "--holdout", "0", str(data), str(adapter)]
     if validation is not None:
         command.extend(["--validation-data", str(validation)])
+    if config.get('training_profile') is not None:
+        command.extend(['--training-profile', config['training_profile']])
     return command
 
 
@@ -448,8 +454,38 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
                 "training_method": config["training_method"], "rank": config["default_rank"],
                 "max_length": config["max_length"], "max_steps": config["max_steps"],
                 "training_sha256": training_sha, "validation_sha256": validation_sha}
+    if config.get('training_profile') is not None:
+        expected['training_profile'] = config['training_profile']
     if not isinstance(report, dict) or any(report.get(k) != value for k, value in expected.items()):
         raise PilotError("training_report_role_or_input_mismatch")
+    if report.get('training_profile') != config.get('training_profile'):
+        raise PilotError('training_profile_mismatch')
+    proof = {}
+    if config.get('training_profile') is not None:
+        for key, value in {'expert_quantization_verified': True, 'expert_blocks': 30,
+                           'quantized_expert_tensors': 60, 'first_optimizer_step_completed': True,
+                           'gpu_count': 1, 'cpu_or_disk_offload_used': False}.items():
+            if type(report.get(key)) is not type(value) or report[key] != value:
+                raise PilotError('training_profile_runtime_proof_missing')
+            proof[key] = value
+        physical = report.get('physical_vram_bytes')
+        allocated = report.get('first_step_peak_allocated_bytes')
+        reserved = report.get('first_step_peak_reserved_bytes')
+        if (report.get('gpu_name') not in ('NVIDIA A100-PCIE-40GB', 'NVIDIA L40S', 'NVIDIA L40', 'NVIDIA A40')
+                or any(type(v) is not int for v in (physical, allocated, reserved))
+                or not 37 * 1024**3 <= physical <= 49 * 1024**3
+                or not 0 < allocated <= reserved <= physical):
+            raise PilotError('training_profile_runtime_memory_proof_missing')
+        proof.update({k: report[k] for k in ('gpu_name', 'physical_vram_bytes',
+                      'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')})
+        if (not isinstance(report.get('expert_quantizer_module_sha256'), str)
+                or not SHA_PATTERN.fullmatch(report['expert_quantizer_module_sha256'])
+                or not isinstance(report.get('unsloth_zoo_version'), str)
+                or not re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', report['unsloth_zoo_version'])
+                or report.get('expert_quantizer_upstream_fix') != '9adee9372d5d86749e757d5a91c6bfa30c2ff674'):
+            raise PilotError('training_profile_quantizer_provenance_missing')
+        proof.update({k: report[k] for k in ('expert_quantizer_module_sha256', 'unsloth_zoo_version',
+                                            'expert_quantizer_upstream_fix')})
     if report.get('initial_adapter_model_sha256') != initial_model_sha or report.get('optimizer_state_restored') is True:
         raise PilotError('training_report_initial_adapter_mismatch')
     steps = report.get("steps_completed")
@@ -464,7 +500,7 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
             losses[name] = float(value)
         else:
             losses[name] = None
-    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses}
+    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses, **proof}
 
 
 def safe_failure(error, stage):
@@ -719,7 +755,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         stage = "role_config_verification"
         role_path = workspace / "role_config.py"
         role_sha = fetch_role_config(env, role_path, opener)
-        config = data_bounded_settings(pinned_role_settings(role_path, role, data_format), len(training))
+        config = data_bounded_settings(pinned_role_settings(role_path, role, data_format,
+                                      env.get('HASLA_TRAINING_PROFILE')), len(training))
         if env.get('HASLA_INITIAL_ADAPTER') is not None:
             stage = 'initial_adapter_verification'
             try:
@@ -776,6 +813,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                        "training_code_sha256": script_sha, "role_config_sha256": role_sha,
                        "repo_sha": env.get("REPO_SHA", env.get("GITHUB_SHA")),
                        "test_records_used": 0, "private": True, "deploy": False, "promote": False}
+        if config.get('training_profile') is not None:
+            safe_config['training_profile'] = config['training_profile']
         run = wandb_module.init(entity=private["entity"], project=private["project"],
                                 id=env["RUN"], name=env["RUN"], resume="never",
                                 job_type="private-" + role + "-pilot", config=safe_config,
@@ -830,6 +869,13 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             "training_records": len(training), "validation_records": len(validation),
             "training_sha256": sha_bytes(data), "adapter_sha256": adapter_sha,
             "test_records_used": 0, "private": True, "promoted": False})
+        if config.get('training_profile') is not None:
+            artifact.metadata['training_profile'] = config['training_profile']
+            artifact.metadata['runtime_profile_proof'] = {k: report[k] for k in (
+                'expert_quantization_verified', 'expert_blocks', 'quantized_expert_tensors',
+                'first_optimizer_step_completed', 'gpu_count', 'gpu_name', 'physical_vram_bytes',
+                'cpu_or_disk_offload_used', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes',
+                'expert_quantizer_module_sha256', 'unsloth_zoo_version', 'expert_quantizer_upstream_fix')}
         if initial_spec:
             artifact.metadata.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                                      initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
@@ -853,6 +899,9 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                   "adapter_files": files, "training_records": len(training),
                   "validation_records": len(validation), "training_sha256": sha_bytes(data),
                   "test_records_used": 0, "weights_updated": True, "deployed": False, "promoted": False}
+        if config.get('training_profile') is not None:
+            result['training_profile'] = config['training_profile']
+            result['runtime_profile_proof'] = artifact.metadata['runtime_profile_proof']
         if initial_spec:
             result.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                           initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)

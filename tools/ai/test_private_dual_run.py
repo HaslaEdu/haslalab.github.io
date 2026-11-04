@@ -334,6 +334,27 @@ class PrivateDualParentTests(unittest.TestCase):
             dual.main()
         mocks.delete.assert_called_once_with('fixture-pod')
 
+    def test_chat_h200_six_dollar_cap_remains_bounded_and_solver_stays_four(self):
+        manifest = copy.deepcopy(self.manifest)
+        manifest.update(selected_roles=['chat'], budget_krw=100000, authorized_budget_krw=100000,
+                        prior_upper_krw=52842)
+        manifest['roles']['chat'].update(runtime_seconds=1800, gpu_usd_per_hour_upper='6',
+                                        gpu_ids=['NVIDIA H200', 'NVIDIA H200 NVL'])
+        loaded, _ = dual.load_inputs({**self.env, 'HASLA_DUAL_MANIFEST': json.dumps(manifest)})
+        ledger, quote, seconds, preferences = dual.resource_settings(loaded, 'chat')
+        self.assertEqual((seconds, quote.gpu_count, preferences), (1800, 1, ['NVIDIA H200', 'NVIDIA H200 NVL']))
+        ledger = dual.reserve_run(ledger, 'fixture-new-chat', 'chat', quote, 0, seconds, seconds)
+        self.assertEqual(ledger.reserved_krw, 7397)
+        self.assertEqual(ledger.prior_spend_krw + ledger.reserved_krw + ledger.policy.reserve_krw, 65239)
+        self.assertLessEqual(ledger.prior_spend_krw + ledger.reserved_krw + ledger.policy.reserve_krw, 100000)
+        for role, price, runtime in [('solver', '6', 1800), ('chat', '6.01', 1800),
+                                     ('chat', '6', 1801)]:
+            bad = copy.deepcopy(manifest)
+            bad['selected_roles'] = [role]
+            bad['roles'][role].update(gpu_usd_per_hour_upper=price, runtime_seconds=runtime)
+            with self.subTest(role=role, price=price, runtime=runtime), self.assertRaises(ValueError):
+                dual.load_inputs({**self.env, 'HASLA_DUAL_MANIFEST': json.dumps(bad)})
+
     def test_unselected_input_is_not_required_but_an_earlier_private_pod_blocks_run(self):
         env={key:value for key,value in self.env.items() if not key.startswith('HASLA_CHAT_')}
         _,payloads=dual.load_inputs(env)

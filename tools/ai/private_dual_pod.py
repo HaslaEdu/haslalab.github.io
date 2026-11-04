@@ -22,6 +22,9 @@ def role_jobs(env):
         seen_roles.add(role)
         if job.get('format') not in expected_formats[role]:
             raise ValueError('role and data format do not match')
+        profile = job.get('training_profile')
+        if profile is not None and (role != 'chat' or profile != 'gemma-26b-qlora-v1'):
+            raise ValueError('unknown or incompatible training profile')
         run_id = job.get('run')
         if not isinstance(run_id, str) or not re.fullmatch(r'[A-Za-z0-9_.-]{1,120}', run_id) or run_id in seen_runs:
             raise ValueError('invalid private run identity')
@@ -61,7 +64,7 @@ def main():
     any_failed = False
     for job in jobs:
         runtime = job.get('runtime_seconds', 1200 if job['role'] == 'chat' else 2700)
-        child = {k: v for k, v in env.items() if k != 'HASLA_ROLE_JOBS'}
+        child = {k: v for k, v in env.items() if k not in ('HASLA_ROLE_JOBS', 'HASLA_TRAINING_PROFILE')}
         child.update({'ROLE': job['role'], 'HASLA_DATA_FORMAT': job['format'],
                       'HASLA_INPUT_ARTIFACT': job['input_artifact'],
                       'HASLA_DATA_SHA256': job['training_sha256'],
@@ -69,6 +72,8 @@ def main():
                       'RUN': job['run'], 'ARTIFACT': job['run'] + '-lora',
                       'HASLA_WORKSPACE': workspaces[job['role']].as_posix(),
                       'HASLA_TRAIN_TIMEOUT_SECONDS': str(runtime)})
+        if job.get('training_profile') is not None:
+            child['HASLA_TRAINING_PROFILE'] = job['training_profile']
         if job.get('initial_adapter') is not None:
             child['HASLA_INITIAL_ADAPTER'] = json.dumps(job['initial_adapter'], separators=(',', ':'))
         try:
