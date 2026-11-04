@@ -1,0 +1,219 @@
+// The assistant's nightly self-test, and the data its LoRA adapters are trained on.
+// Every night (from AI_EVAL_HOUR, Korean time, default 02:00) the Worker's minute cron runs one case at a time until
+// AI_EVAL_DAILY cases (default 30, 0 turns it off) are done:
+//   · bank: a problem bank problem with an official solution and no figure; a model writes what a student would ask
+//     about it, the assistant answers (answer() in ai-assistant.js, tools and all), and a judge model grades the answer
+//     against the official solution (0–10, with its reasons)
+//   · site: a competition problem from the site's catalogue; a model asks where it is; the answer must give its page
+//     (graded by the link, no model)
+// Admins review the cases (/api/admin/ai-eval, page ai-review.html): approve an answer, or correct it and approve, or
+// reject it. The approved cases are the training data (GET …/export: chat JSONL for a LoRA of the chat model).
+import { answer, runModel, readCompletion, stripThinking, findOlympiadProblems } from './ai-assistant.js';
+import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
+
+export const AI_EVAL_PATH = '/api/admin/ai-eval';
+export const AI_EVAL_SQL = [
+  `CREATE TABLE IF NOT EXISTS ai_eval (id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT NOT NULL, kind TEXT NOT NULL, ref TEXT,
+    question TEXT NOT NULL DEFAULT '', answer TEXT, reference TEXT, tools TEXT, score REAL, verdict TEXT, reason TEXT,
+    status TEXT NOT NULL DEFAULT 'running', corrected TEXT, note TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+    reviewed_at INTEGER, reviewed_by INTEGER)`,
+  `CREATE INDEX IF NOT EXISTS ai_eval_day ON ai_eval(day)`,
+  `CREATE INDEX IF NOT EXISTS ai_eval_status ON ai_eval(status, id)`,
+];
+const DAILY = 30, START_HOUR = 2, PARALLEL = 2, STALE_SEC = 900, SITE_SHARE = 0.25;
+const BANK = 'https://problem-bank/api/problem-bank';
+const clip = (v, n) => String(v ?? '').slice(0, n);
+
+const ready = new WeakMap();
+export function ensureAiEval(db) {
+  if (!ready.has(db)) ready.set(db, db.batch(AI_EVAL_SQL.map(s => db.prepare(s))).catch(e => { ready.delete(db); throw e; }));
+  return ready.get(db);
+}
+export function evalConfig(env) {
+  const n = env.AI_EVAL_DAILY == null || env.AI_EVAL_DAILY === '' ? DAILY : Math.max(0, Math.min(500, Math.floor(+env.AI_EVAL_DAILY) || 0));
+  const hour = env.AI_EVAL_HOUR == null || env.AI_EVAL_HOUR === '' ? START_HOUR : Math.max(0, Math.min(23, Math.floor(+env.AI_EVAL_HOUR) || 0));
+  return {daily: n, hour, parallel: Math.max(1, Math.min(5, +env.AI_EVAL_PARALLEL || PARALLEL))};
+}
+/* the Korean date and hour of a moment */
+export function koreanClock(ms) {
+  const k = new Date(ms + 9 * 3600e3);
+  return {day: k.toISOString().slice(0, 10), hour: k.getUTCHours()};
+}
+
+/* ── one case ─────────────────────────────────────────────── */
+const ASK_SYSTEM = `You play a Korean high-school student preparing for science olympiads, writing to a tutor about the
+problem below. Write ONE short message (one or two sentences, in Korean) that asks for one of: the full solution, a hint,
+a check of a final answer you propose, or the key idea. Do not copy the problem; do not answer it. Write only the message.`;
+const SITE_ASK_SYSTEM = `You play a Korean high-school student using HaslaLab, a site of olympiad past papers. Write ONE short
+message in Korean asking where on the site to find the problem described below (mention its topic or title, and the
+competition or year if you like, as a student would). Write only the message.`;
+const JUDGE_SYSTEM = `You grade a tutor's answer to a student's question about an olympiad problem, using the official
+solution as the reference. Judge: is the physics or mathematics right; does the final result agree with the official one
+(when the student asked for it); does it answer what the student asked (a good hint need not give everything away);
+is it clear, in Korean, without invented links or facts. Return only JSON:
+{"score": <0-10>, "correct": <true|false>, "issues": ["<short issue>", ...], "reason": "<two or three sentences, Korean>"}`;
+
+async function bankJson(env, path) {
+  const r = await env.PROBLEM_BANK.fetch(BANK + path);
+  if (!r.ok) throw new Error(`problem bank ${r.status} ${path.split('?')[0]}`);
+  return r.json();
+}
+const versionText = x => x?.selected_version?.text || x?.versions?.find(v => v.language === 'ko')?.text || x?.versions?.[0]?.text || '';
+
+/* a problem bank problem with a solution in text and no figure, not tested in the last 90 days */
+export async function pickBankProblem(env, db, rand = Math.random) {
+  if (!env.PROBLEM_BANK) throw new Error('problem bank unavailable');
+  const stars = 1 + Math.floor(rand() * 5);
+  const {items = []} = await bankJson(env, `/recommendations?${new URLSearchParams({lang: 'ko', limit: '20', stars: String(stars)})}`);
+  const ids = items.map(i => i.id).filter(Boolean);
+  if (!ids.length) throw new Error('no problems');
+  const seen = new Set((await db.prepare(`SELECT ref FROM ai_eval WHERE kind='bank' AND created_at>unixepoch()-7776000 AND ref IN (${ids.map(() => '?').join(',')})`)
+    .bind(...ids).all()).results.map(r => r.ref));
+  const order = ids.filter(id => !seen.has(id)).sort(() => rand() - 0.5);
+  for (const id of order.slice(0, 4)) {
+    const {question} = await bankJson(env, `/questions/${encodeURIComponent(id)}?lang=ko`);
+    if (!question || question.figures?.length || question.assets?.some(a => a.role === 'figure')) continue;
+    const text = versionText(question);
+    if (text.trim().length < 20 || text.length > 6000) continue;
+    const {solutions = []} = await bankJson(env, `/questions/${encodeURIComponent(id)}/solutions?lang=ko`);
+    const solution = solutions.map(versionText).find(t => t.trim().length >= 10);
+    if (solution) return {id, text, solution};
+  }
+  throw new Error('no problem with a text solution');
+}
+
+async function ask(env, system, content, fallback) {
+  try {
+    const t = stripThinking(readCompletion(await runModel(env, 'ASKER', {messages: [{role: 'system', content: system}, {role: 'user', content}],
+      temperature: 0.9}, 200)).text).replace(/^["'“]|["'”]$/g, '').trim();
+    return t && t.length < 400 ? t : fallback;
+  } catch { return fallback; }
+}
+
+/* the judge's JSON, from a reply that may wrap it in thinking or prose */
+export function readVerdict(text) {
+  const t = stripThinking(text), m = t.match(/\{[\s\S]*\}/);
+  let o = null;
+  if (m) { try { o = JSON.parse(m[0]); } catch {} }
+  if (!o || !Number.isFinite(+o.score)) return null;
+  const score = Math.max(0, Math.min(10, +o.score));
+  return {score: score / 10, correct: o.correct === true || (o.correct == null && score >= 7),
+    reason: clip([o.reason, ...(Array.isArray(o.issues) ? o.issues.map(i => '· ' + i) : [])].filter(Boolean).join('\n'), 3000)};
+}
+
+export async function runBankCase(env, db, rand = Math.random) {
+  const p = await pickBankProblem(env, db, rand);
+  const line = await ask(env, ASK_SYSTEM, p.text, '이 문제 어떻게 풀어요? 풀이 과정을 자세히 설명해 주세요.');
+  const question = `${line}\n\n${clip(p.text, 3400)}`;
+  const r = await answer(env, [{role: 'user', content: question}], {lang: 'ko'});
+  const base = {ref: p.id, question, answer: r.answer, reference: clip(p.solution, 8000), tools: JSON.stringify(r.tools || [])};
+  if (r.blocked) return {...base, score: 0, verdict: 'blocked', reason: `안전 검사에서 막힘 (${r.blocked})`};
+  const judged = readVerdict(readCompletion(await runModel(env, 'JUDGE', {messages: [{role: 'system', content: JUDGE_SYSTEM},
+    {role: 'user', content: `Problem:\n${clip(p.text, 5000)}\n\nOfficial solution:\n${clip(p.solution, 6000)}\n\nStudent's message:\n${line}\n\nTutor's answer:\n${clip(r.answer, 6000)}`}]}, 4096)).text);
+  if (!judged) return {...base, score: null, verdict: 'ungraded', reason: '채점 모델의 답을 읽지 못함'};
+  return {...base, score: judged.score, verdict: judged.correct ? 'correct' : 'wrong', reason: judged.reason};
+}
+
+export async function runSiteCase(env, rand = Math.random, exams = MODEL_TEST_EXAMS) {
+  const pool = exams.filter(e => e.title?.ko || e.title?.en);
+  const e = pool[Math.floor(rand() * pool.length)];
+  const page = `#/${e.comp}/${e.year}`, title = e.title?.ko || e.title?.en;
+  const desc = `${e.competition?.ko || e.comp} ${e.year} ${e.task} (${e.kind}): «${title}»`;
+  const question = await ask(env, SITE_ASK_SYSTEM, desc, `${e.year}년 ${e.competition?.ko || e.comp.toUpperCase()} «${title}» 문제 어디서 볼 수 있어요?`);
+  const r = await answer(env, [{role: 'user', content: question}], {lang: 'ko'});
+  const found = r.answer.includes(page) || (r.sources || []).some(s => String(s.url).includes(page));
+  const hit = findOlympiadProblems({query: title, comp: e.comp, year: e.year}, [e])[0];
+  return {ref: e.id, question, answer: r.answer, tools: JSON.stringify(r.tools || []),
+    reference: [desc, hit?.page, hit?.paper].filter(Boolean).join('\n'), score: found ? 1 : 0,
+    verdict: r.blocked ? 'blocked' : found ? 'correct' : 'wrong',
+    reason: found ? '문제 페이지 링크를 안내함' : r.blocked ? `안전 검사에서 막힘 (${r.blocked})` : `정답 링크(${SITE_URL}${page})가 답에 없음`};
+}
+const SITE_URL = 'https://haslalab.org/';
+
+/* claim a slot (counted against today's total and the cases running now), run it, store the result */
+export async function runEvalCase(env, {day, kind, rand = Math.random} = {}) {
+  const db = env.DB, cfg = evalConfig(env);
+  await ensureAiEval(db);
+  kind ||= rand() < SITE_SHARE ? 'site' : 'bank';
+  const claim = await db.prepare(`INSERT INTO ai_eval (day, kind, status) SELECT ?, ?, 'running'
+      WHERE (SELECT count(*) FROM ai_eval WHERE status='running') < ? RETURNING id`).bind(day, kind, cfg.parallel).first();
+  if (!claim) return null;
+  let row;
+  try {
+    row = {...(kind === 'site' ? await runSiteCase(env, rand) : await runBankCase(env, db, rand)), status: 'graded'};
+  } catch (e) {
+    row = {status: 'failed', reason: clip(e?.message || e, 300)};
+  }
+  await db.prepare(`UPDATE ai_eval SET ref=?, question=?, answer=?, reference=?, tools=?, score=?, verdict=?, reason=?, status=? WHERE id=?`)
+    .bind(row.ref ?? null, clip(row.question, 8000), row.answer == null ? null : clip(row.answer, 12000), row.reference == null ? null : clip(row.reference, 8000),
+      row.tools ?? null, row.score ?? null, row.verdict ?? null, row.reason ?? null, row.status, claim.id).run();
+  return {id: claim.id, kind, ...row};
+}
+
+/* the minute cron: tonight's cases, one per tick until the day's total is reached */
+export async function aiEvalTick(env, {now = Date.now()} = {}) {
+  if (!env.AI || !env.DB) return null;
+  const cfg = evalConfig(env), {day, hour} = koreanClock(now);
+  if (!cfg.daily || hour < cfg.hour) return null;
+  await ensureAiEval(env.DB);
+  await env.DB.prepare(`UPDATE ai_eval SET status='failed', reason='timed out' WHERE status='running' AND created_at<unixepoch()-?`).bind(STALE_SEC).run();
+  const {n} = await env.DB.prepare(`SELECT count(*) AS n FROM ai_eval WHERE day=? AND status!='failed'`).bind(day).first();
+  const {f} = await env.DB.prepare(`SELECT count(*) AS f FROM ai_eval WHERE day=? AND status='failed'`).bind(day).first();
+  if (n >= cfg.daily || f >= cfg.daily) return null;   // the day's total, or a night of failures: stop until tomorrow
+  return runEvalCase(env, {day});
+}
+
+/* ── admin review ─────────────────────────────────────────── */
+const REVIEW = new Set(['approve', 'reject', 'reset']);
+export function trainingLine(row, system) {
+  const target = row.corrected || row.answer;
+  return JSON.stringify({messages: [...(system ? [{role: 'system', content: system}] : []), {role: 'user', content: row.question}, {role: 'assistant', content: target}]});
+}
+
+export function createAiEvalRouter({HttpError, currentUser}) {
+  return async function aiEval(req, env) {
+    const me = await currentUser(req, env);
+    if (!me) throw new HttpError(401, 'login_required');
+    if (me.role !== 'admin') throw new HttpError(403, 'forbidden');
+    const db = env.DB, url = new URL(req.url), p = url.pathname.replace(/\/+$/, ''), m = req.method;
+    await ensureAiEval(db);
+    if (p === AI_EVAL_PATH && m === 'GET') {
+      const status = url.searchParams.get('status') || 'graded', before = +url.searchParams.get('before') || 0;
+      const lim = Math.max(1, Math.min(100, +url.searchParams.get('limit') || 30));
+      const where = [], args = [];
+      if (status !== 'all') { where.push('status=?'); args.push(status); }
+      if (before) { where.push('id<?'); args.push(before); }
+      const verdict = url.searchParams.get('verdict');
+      if (verdict) { where.push('verdict=?'); args.push(verdict); }
+      const items = (await db.prepare(`SELECT * FROM ai_eval ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY id DESC LIMIT ?`).bind(...args, lim).all()).results;
+      const days = (await db.prepare(`SELECT day, kind, count(*) AS n, avg(score) AS avg, sum(verdict='correct') AS correct, sum(status='failed') AS failed,
+          sum(status='approved') AS approved FROM ai_eval WHERE day>=date('now','-14 days') GROUP BY day, kind ORDER BY day DESC, kind`).all()).results;
+      const counts = Object.fromEntries((await db.prepare(`SELECT status, count(*) AS n FROM ai_eval GROUP BY status`).all()).results.map(r => [r.status, r.n]));
+      return {items, days, counts, config: evalConfig(env)};
+    }
+    if (p === AI_EVAL_PATH + '/run' && m === 'POST') {
+      const body = await req.json().catch(() => ({}));
+      const r = await runEvalCase(env, {day: koreanClock(Date.now()).day, kind: ['bank', 'site'].includes(body?.kind) ? body.kind : undefined});
+      if (!r) throw new HttpError(429, 'busy');
+      return db.prepare('SELECT * FROM ai_eval WHERE id=?').bind(r.id).first();
+    }
+    if (p === AI_EVAL_PATH + '/export' && m === 'GET') {
+      const rows = (await db.prepare(`SELECT question, answer, corrected FROM ai_eval WHERE status='approved' ORDER BY id`).all()).results;
+      return new Response(rows.map(r => trainingLine(r)).join('\n') + (rows.length ? '\n' : ''), {headers: {
+        'Content-Type': 'application/x-ndjson; charset=utf-8', 'Content-Disposition': 'attachment; filename="haslalab-ai-train.jsonl"', 'Cache-Control': 'no-store'}});
+    }
+    const one = new RegExp(`^${AI_EVAL_PATH}/(\\d+)$`).exec(p);
+    if (one && m === 'POST') {
+      const body = await req.json().catch(() => null);
+      if (!REVIEW.has(body?.action)) throw new HttpError(400, 'invalid_action');
+      const corrected = typeof body.corrected === 'string' && body.corrected.trim() ? clip(body.corrected.trim(), 12000) : null;
+      const status = {approve: 'approved', reject: 'rejected', reset: 'graded'}[body.action];
+      const row = await db.prepare(`UPDATE ai_eval SET status=?, corrected=?, note=?, reviewed_at=unixepoch(), reviewed_by=?
+          WHERE id=? AND status IN ('graded','approved','rejected') RETURNING *`)
+        .bind(status, body.action === 'reset' ? null : corrected, clip(body.note, 1000) || null, me.id, +one[1]).first();
+      if (!row) throw new HttpError(404, 'not_found');
+      return row;
+    }
+    throw new HttpError(404, 'not_found');
+  };
+}

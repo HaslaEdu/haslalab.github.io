@@ -46,6 +46,7 @@ import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './pag
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
 import { createAiAssistantRouter, AI_ASSISTANT_PATH } from './ai-assistant.js';
+import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './focus-read.js';
@@ -236,6 +237,7 @@ const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUse
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,scope:env=>env[DB_SCOPE]||env.DB});
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
 const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit});
+const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url, ctx) {
@@ -243,6 +245,7 @@ async function handle(req, env, url, ctx) {
   const m = req.method;
   if(p===PROBLEM_BANK_OCR_PATH)return problemBankOcrRouter(req,env);
   if(p===AI_ASSISTANT_PATH)return aiAssistantRouter(req,env);
+  if(p===AI_EVAL_PATH||p.startsWith(AI_EVAL_PATH+'/'))return aiEvalRouter(req,env);
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
   const body = (m === "POST" || m === "PATCH") && !form ? /^\/api\/auth\/handoff\/(start|exchange)$/.test(p)?await accountHandoff.readBody(req,env):/^\/api\/oauth\/(desktop|web)\/(start|exchange)$/.test(p)?await desktopOAuth.readBody(req,env):await req.json().catch(() => ({})) : {};
@@ -743,6 +746,8 @@ export default {
     if(Math.floor((event.scheduledTime??Date.now())/60000)%15===0)work.push(labPurge(env),purgeVisionPhotos(env));
     /* the weekly Google Drive backup (drive-backup.js): starts Sunday 18:00 UTC, then one short step a minute until done */
     work.push(backupTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('backup',String(e?.message||e).slice(0,200))));
+    /* the assistant's nightly self-test (ai-eval.js): one case a minute from 02:00 Korean time until the day's total */
+    work.push(aiEvalTick(env,{now:event.scheduledTime??Date.now()}).catch(e=>console.error('ai-eval',String(e?.message||e).slice(0,200))));
     ctx.waitUntil(Promise.allSettled(work));
   },
   async queue(batch, env) { await consumeLabJobs(batch, env, LAB_JOB_HANDLERS); },

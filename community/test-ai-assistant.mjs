@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch } from './src/ai-assistant.js';
+import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch, runModel, fitHistory, stripThinking, CHAT_MODEL, SOLVER_MODEL } from './src/ai-assistant.js';
 
 const GUARD = '@cf/meta/llama-guard-3-8b';
 function fakeAI(script, {unsafe = false} = {}) {
@@ -100,4 +100,46 @@ test('web search tries Tavily, then Brave, then Cloudflare, and never sends one 
   const cf = await webSearch({AI: {websearch: async () => Response.json({results: [{title: 'a', url: 'https://a', snippet: 's'}]})}}, {query: 'q'});
   assert.equal(cf.provider, 'cloudflare');
   assert.match((await webSearch({}, {query: 'q'})).error, /unavailable/);
+});
+
+test('each model gets its output limit under its own name, and our LoRA adapter when one is set', async () => {
+  const seen = [];
+  const AI = {run: async (model, input) => { seen.push({model, input}); return {response: 'ok'}; }};
+  await runModel({AI}, 'CHAT', {messages: []}, 2048);
+  await runModel({AI, AI_SOLVER_LORA: 'haslalab-solver-v1'}, 'SOLVER', {messages: []}, 8192);
+  await runModel({AI}, 'JUDGE', {messages: []}, 4096);
+  assert.deepEqual(seen.map(s => s.model), [CHAT_MODEL, SOLVER_MODEL, '@cf/openai/gpt-oss-120b']);
+  assert.equal(seen[0].input.max_tokens, 2048);
+  assert.equal(seen[0].input.lora, undefined);
+  assert.equal(seen[1].input.lora, 'haslalab-solver-v1');
+  assert.equal(seen[2].input.max_completion_tokens, 4096);
+  assert.equal(seen[2].input.max_tokens, undefined);
+  await runModel({AI, AI_CHAT_MODEL: '@cf/x/y'}, 'CHAT', {messages: []}, 10);
+  assert.equal(seen[3].model, '@cf/x/y');
+});
+
+test('a call written as text is still a call; thinking is dropped; long histories are cut from the oldest end', () => {
+  assert.deepEqual(readCompletion({response: '```json\n{"name": "search_community", "parameters": {"query": "IPhO"}}\n```'}).calls,
+    [{id: 'call_0_search_community', name: 'search_community', args: {query: 'IPhO'}}]);
+  assert.equal(readCompletion({response: '{"name": "rm_rf", "parameters": {}}'}).calls.length, 0, 'only our tools');
+  assert.equal(stripThinking('<think>a</think>\n답'), '답');
+  assert.equal(stripThinking('a</think>답'), '답');
+  const h = [{role: 'user', content: 'x'.repeat(9000)}, {role: 'assistant', content: 'y'.repeat(5000)}, {role: 'user', content: 'z'}];
+  assert.deepEqual(fitHistory(h).map(m => m.content[0]), ['z']);
+  assert.equal(fitHistory([{role: 'user', content: 'q'.repeat(20000)}]).length, 1, 'the last message always stays');
+});
+
+test('if the chat model refuses tool_calls in the history, the step is retried with the calls as text', async () => {
+  let n = 0;
+  const AI = {async run(model, input) {
+    if (model.includes('guard')) return {response: 'safe'};
+    n++;
+    if (n === 1) return {response: '', tool_calls: [{name: 'find_olympiad_problem', arguments: {query: 'Janssen'}}]};
+    if (input.messages.some(m => m.tool_calls)) throw new Error('AiError: 5006: oneOf at /messages/2 not met');
+    const a = input.messages.find(m => m.role === 'assistant');
+    assert.match(a.content, /"name":"find_olympiad_problem"/);
+    return {response: '찾았습니다.'};
+  }};
+  const r = await answer({AI}, [{role: 'user', content: '얀센 효과'}]);
+  assert.equal(r.answer, '찾았습니다.');
 });
