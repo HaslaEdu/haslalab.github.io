@@ -3,6 +3,7 @@
 // is kept, for 10 minutes and 5 tries, and POST /api/signup spends it. Social sign-up is left alone: the provider account
 // stands in for the address there. Accounts made before this keep working without an address.
 import {accountMailAvailable,cleanRecoveryEmail,ensureAccountSecuritySchema,deliverSignupCode} from './account-security.js';
+import {disposableEmail} from './reserved-names.js';
 export const CODE_SEC=600,CODE_TRIES=5;
 export const SIGNUP_CODE_SCHEMA=[
   `CREATE TABLE IF NOT EXISTS signup_email_codes (
@@ -40,6 +41,7 @@ export function createSignupEmail({HttpError,now,limit,sha256,clientIp,scope}){
     // the IP limit comes first: it also bounds probing which addresses are on an account
     await limit(env,'signup-code-ip:'+clientIp(req),20,3600);
     const email=cleanRecoveryEmail(body.email);if(!email)error(400,'bad_email');
+    if(disposableEmail(email,env))error(400,'email_disposable');     // a throwaway mailbox is not one readable mailbox per account
     if(!accountMailAvailable(env))error(503,'mail_unavailable');
     await ensureSignupCodeSchema(env.DB,scope(env));
     if(await taken(env,email))error(409,'email_taken');

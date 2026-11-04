@@ -8,7 +8,8 @@
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM, GRADE_TRAIN_SYSTEM_V2 } from "./lab-train.js";
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
-import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
+import { reservedName } from "./reserved-names.js";
+import { tidySchemeItems, cleanParts, cappedSum, headingTotal, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -283,7 +284,9 @@ async function handle(req, env, url, ctx) {
     const username = String(body.username || "").trim();
     const nickname = cleanNick(body.nickname);
     if (!USERNAME_RE.test(username)) bad("bad_username");
+    if (reservedName(username)) bad("username_reserved");
     if (!nickOk(nickname)) bad("bad_nickname");
+    if (reservedName(nickname)) bad("nickname_reserved");
     if (!pwOk(body.password)) bad("bad_password");
     const consent = readConsent(body.consent, requestCountry(req), bad);     // before anything is written: a refusal leaves no account
     const clash = await env.DB.prepare("SELECT username,nickname FROM users WHERE username=? OR nickname=?")
@@ -374,7 +377,7 @@ async function handle(req, env, url, ctx) {
     if(!me)throw new HttpError(401,'login_required');
     if(!needsUsername(me)&&!me.username_setup_available)throw new HttpError(409,'username_already_set');
     if(!Number.isFinite(me.sessionCreatedAt)||me.sessionCreatedAt<now()-(needsUsername(me)?1800:600))throw new HttpError(403,'recent_login_required');
-    const username=String(body.username||'').trim();if(!USERNAME_RE.test(username))bad('bad_username');
+    const username=String(body.username||'').trim();if(!USERNAME_RE.test(username))bad('bad_username');if(reservedName(username))bad('username_reserved');
     // a social sign-up finishes here, so this is where it agrees to the terms (checked before the name is claimed)
     const consent=me.consent_required?readConsent(body.consent,requestCountry(req),bad):null;
     await limit(env,'username-claim:'+me.id,30,600);
@@ -428,6 +431,7 @@ async function handle(req, env, url, ctx) {
     const nickname = cleanNick(body.nickname);
     if (!nickOk(nickname)) bad("bad_nickname");
     if (nickname === me.nickname) return { ok: true, nickname };
+    if (reservedName(nickname)) bad("nickname_reserved");
     if (await nickTaken(env, nickname, me.id)) throw new HttpError(409, "nickname_taken");
     await limit(env, "nick:" + me.id, 5, 86400);        // only real changes count against the five a day
     try { await env.DB.prepare("UPDATE users SET nickname=? WHERE id=?").bind(nickname, me.id).run(); }
@@ -439,6 +443,7 @@ async function handle(req, env, url, ctx) {
     const nickname = cleanNick(url.searchParams.get("n"));
     if (!nickOk(nickname)) return { ok: false, error: "bad_nickname", nickname };
     if (me && nickname === me.nickname) return { ok: true, same: true, nickname };
+    if (reservedName(nickname)) return { ok: false, error: "nickname_reserved", nickname };
     return (await nickTaken(env, nickname, me && me.id)) ? { ok: false, error: "nickname_taken", nickname } : { ok: true, nickname };
   }
   if (p === "/api/me/avatar" && (m === "PUT" || m === "DELETE")) {
@@ -2111,6 +2116,10 @@ function settleScheme(sc) {
   sc.parts = cleanParts(sc.parts);
   /* a printed total only trims a small excess (10.1 → 10); one far below the items is a misread heading, not the total */
   { const listed = cappedSum(oneMethod(sc.items).kept, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
+  /* headings that hold every item and are filled by them outweigh a total below their sum (IPhO 2015 T2/T3, APhO 2022
+     T2/T3 and ISPhO 2026 T2 read 9 or 9.5 over headings adding to 10). Only that way: a total above the headings is kept,
+     since a heading the scheme missed leaves them short (IPhO 2025 T1 has 9.4 of headings under its printed 10). */
+  { const kept = oneMethod(sc.items).kept, heads = headingTotal(kept, sc.parts); if (heads && +sc.total > 0 && heads > 1.02 * +sc.total) delete sc.total; }
   sc.points = schemeTotal(sc);
   return sc;
 }
@@ -4936,10 +4945,10 @@ function oauthBack(env,ret,frag){return ret.startsWith('desktop:')?desktopOAuth.
 /* a provider's display name, made into a free nickname */
 async function freeNick(env, raw) {
   let base = cleanNick(String(raw || "").normalize("NFKC").replace(/[^\p{L}\p{N}_.\- ]/gu, "").replace(NICK_BLANK, "")).slice(0, 12).trim();
-  if (!nickOk(base)) base = "user";
+  if (!nickOk(base) || reservedName(base)) base = "user";
   for (let i = 0; i < 30; i++) {
     const n = i ? (base.slice(0, 11) + Math.floor(1000 + Math.random() * 9000)) : base;
-    if (nickOk(n) && !(await nickTaken(env, n))) return n;
+    if (nickOk(n) && !reservedName(n) && !(await nickTaken(env, n))) return n;
   }
   return "user" + Date.now() % 1e9;
 }
