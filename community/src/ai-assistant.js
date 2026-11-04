@@ -384,23 +384,38 @@ const HELP = '많이 힘드신가요? 혼자 견디지 마시고 자살예방상
 const HELP_EN = 'It sounds like things are really hard right now. Please don\'t carry it alone: talk to someone you trust, or call a local crisis line (in Korea, 109, any time). I\'m here for study questions too.';
 
 /* one model's answer, streamed to onDelta when given (a reasoning model's thinking is held back) */
+/* A piece is always text: a lone «0» could come as the number 0 and was dropped by «text || ''» (QwQ's streamed
+   «IPhO 2016» read «IPHO 216», «0.3» read «.3»). A line that is not JSON keeps its «response» string when one can be
+   read out of it, and is counted otherwise rather than lost silently. Leaving early cancels the stream. */
 export async function* sseTexts(stream) {
   const reader = stream.getReader(), dec = new TextDecoder();
   let buf = '';
-  for (;;) {
-    const {value, done} = await reader.read();
-    if (done) break;
-    buf += dec.decode(value, {stream: true});
-    let i;
-    while ((i = buf.indexOf('\n')) >= 0) {
-      const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
-      if (!line.startsWith('data:')) continue;
-      const data = line.slice(5).trim();
-      if (data === '[DONE]') return;
-      let j; try { j = JSON.parse(data); } catch { continue; }
-      yield {text: j.response ?? j.choices?.[0]?.delta?.content ?? '', usage: j.usage};
+  const piece = data => {
+    let j; try { j = JSON.parse(data); } catch {
+      const m = /"response"\s*:\s*"((?:[^"\\]|\\.)*)"/.exec(data);
+      if (m) { try { return {text: JSON.parse(`"${m[1]}"`)}; } catch {} }
+      return {text: '', bad: data.slice(0, 120)};
     }
-  }
+    const t = j.response ?? j.choices?.[0]?.delta?.content ?? '';
+    return {text: t == null ? '' : String(t), usage: j.usage};
+  };
+  try {
+    for (;;) {
+      const {value, done} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream: true});
+      let i;
+      while ((i = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') return;
+        yield piece(data);
+      }
+    }
+    const tail = buf.trim();
+    if (tail.startsWith('data:') && tail.slice(5).trim() !== '[DONE]') yield piece(tail.slice(5).trim());
+  } finally { reader.cancel().catch(() => {}); }
 }
 export async function generate(env, which, messages, maxTokens, onDelta, {reasoning = false} = {}) {
   if (onDelta) {
