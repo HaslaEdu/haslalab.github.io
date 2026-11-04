@@ -22,10 +22,25 @@ function editDistance(a, b) {
     53295 from 5.3295, 12 from 120), never a misread */
 export function misreadOf(first, again) {
   if (!Number.isFinite(first) || !Number.isFinite(again) || first === again || first === 0 || again === 0) return false;
+  if (writtenSwap(first, again)) return true;
   const a = sig(first), b = sig(again);
   if (editDistance(a, b) !== 1) return false;
   const [ma, ea] = a.split('e'), [mb, eb] = b.split('e');
   return ma !== mb || Math.abs(+ea) >= 3 && Math.abs(+eb) >= 3;
+}
+/* one digit swapped in the number as written, same length: a leading zero read as a nine (0,23 m/s read 9,23: IPhO 2023
+   T3 A.1, 2 pt lost) moves the number a power of ten, so its significant digits differ in more than one place. Only
+   plain decimals (no power of ten written, 10^-3 to 10^4) and a substitution, never a digit added or dropped: those were
+   numbers Mathpix split or ran together on the bench (53295 from 5.3295, 12 from 120) */
+function writtenSwap(first, again) {
+  const plain = x => Math.abs(x) >= 1e-3 && Math.abs(x) < 1e4;
+  if (!plain(first) || !plain(again) || Math.sign(first) !== Math.sign(again)) return false;
+  const dec = x => { const t = String(Math.abs(x)); return t.includes('e') ? 99 : (t.split('.')[1] || '').length; };
+  const k = Math.max(dec(first), dec(again)); if (k > 6) return false;
+  const p = Math.abs(first).toFixed(k), q = Math.abs(again).toFixed(k);
+  if (p.length !== q.length) return false;
+  let diff = 0; for (let i = 0; i < p.length; i++) if (p[i] !== q[i]) diff++;
+  return diff === 1;
 }
 
 /** as many significant digits written in both (3.3 and 3.8, 1.04e-4 and 1.84e-4): a zoomed crop that cut a digit off

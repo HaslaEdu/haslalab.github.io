@@ -113,3 +113,18 @@ test("the neutral tone puts the same rules without «strict» and asks a zero fo
   assert.match(neutral, /a 0 or a deduction on an item the candidate attempted needs a note naming where you looked/);
   assert.equal(neutral.split("\n").length, strict.split("\n").length, "the same rules, line for line");
 });
+
+test("a wrong form costs the whole item, except where the item is a whole part marked only as a total", () => {
+  const ip2 = rulesFor("ipho", "theory").find(r => r.id === "IP2");
+  assert.match(ip2.en, /wrong form .* earns nothing for that item unless the scheme gives a partial mark/);
+  assert.match(ip2.en, /whole part the scheme marks only as a total: there the wrong form costs only the result's share/);
+  assert.ok(!/IP9/.test(ip2.en), "IP2 is shared with experiments, where IP9 does not exist: it must not cite it");
+  assert.ok(rulesFor("ipho", "experiment").some(r => r.id === "IP2"));
+});
+
+test("notation is not form: a dropped unit vector or a ± over the physical cases is not a wrong form", () => {
+  const ip2 = rulesFor("ipho", "theory").find(r => r.id === "IP2");
+  assert.match(ip2.en, /Notation is not form: a component written without its unit vector/);
+  assert.match(ip2.en, /± or ∓ that gives the physical cases the question has/);
+  assert.match(ip2.ko, /표기는 형태가 아닙니다/);
+});

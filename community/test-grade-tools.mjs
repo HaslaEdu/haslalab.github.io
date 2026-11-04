@@ -94,3 +94,17 @@ test("scrubStudentText breaks fence markers and defuses control headers, keeping
   assert.equal(scrubStudentText(null), "", "nullish is empty");
   assert.equal(scrubStudentText(scrubStudentText(attack)), out, "idempotent");
 });
+
+// A reported bare power of ten is the mantissa dropped when the page holds that power with the official value.
+import { labScore } from "./src/index.js";
+test("labScore: a dropped mantissa (1e-23 for a written 1.04·10^-23) is rescued from the page even at the grader's 0", () => {
+  const scheme = { items: [{ id: "F.1.b", type: "value", role: "result", points: 1, ref: "1.04e-23", tol: "default", unit: "J/T", what: "mu_s" }] };
+  const page = { no: 2, kind: "answer", task: "T1", ocr: String.raw`F.1.b  \mu_s = 1.04 \cdot 10^{-23} \, J/T`, read: JSON.stringify({ items: [] }) };
+  const at = (value, score) => labScore(scheme, { items: [{ id: "F.1.b", found: true, page: 2, value, unit: "J/T", score }] }, [page], { theory: true }).items[0];
+  const r = at(1e-23, 0);
+  assert.equal(r.got, 1); assert.ok(Math.abs(r.value - 1.04e-23) < 1e-30, "the page's number is the answer");
+  assert.equal(at(1e-22, 0).got, 0, "another power of ten is a wrong answer, not a dropped mantissa");
+  assert.ok(at(1e-22, 0).rules.includes("R12"));
+  const wrong = { ...page, ocr: String.raw`F.1.b  \mu_s = 3.0 \cdot 10^{-23} \, J/T` };
+  assert.equal(labScore(scheme, { items: [{ id: "F.1.b", found: true, page: 2, value: 1e-23, unit: "J/T", score: 0 }] }, [wrong], { theory: true }).items[0].got, 0, "no official value on the page: nothing to rescue");
+});
