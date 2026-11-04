@@ -16,6 +16,7 @@ from contextlib import contextmanager, redirect_stderr, redirect_stdout
 import hashlib
 import json
 import logging
+import math
 import os
 from pathlib import Path
 import re
@@ -174,7 +175,8 @@ def summary_result(summary):
     fields = ("status", "artifact", "role", "base_model", "rank", "steps_completed",
               "training_profile", "precision", "training_method", "runtime_profile_proof", "format", "label_diagnostics",
               "adapter_files", "adapter_sha256", "initial_adapter", "resume_script_sha256",
-              "initial_adapter_model_sha256", "optimizer_state_restored")
+              "initial_adapter_model_sha256", "optimizer_state_restored", "formatter_provenance", "baseline_evaluation",
+              "training_records", "validation_records")
     for field in fields:
         for separator in (".", "/"):
             key = "private_training_result" + separator + field
@@ -216,7 +218,67 @@ def validated_label_diagnostics(value, data_format):
             or data_format == 'text' and (dimensions or batch or tokens or selected)):
         raise ValueError('invalid_label_diagnostics')
     return dict(value)
+def validated_gemma_receipts(report, role, profile, training_records, validation_records, validation_sha=None):
+    names = ('formatter_provenance', 'baseline_evaluation')
+    if not any(name in report for name in names):
+        return {}
+    if role != 'chat' or profile != 'gemma-26b-qlora-v1' or 'formatter_provenance' not in report:
+        raise ValueError('invalid_gemma_receipts')
+    value = report['formatter_provenance']
+    fixed = {'version': 1, 'policy': 'official_unsloth_gemma4_empty_thought_v1',
+             'processor_wrapper_preserved': True, 'single_bos_verified': True,
+             'prefix_consistency_verified': True, 'enable_thinking': False, 'official_template_replacement': True,
+             'upstream_fix': '3182f568d4e2e87b0945168e04f6e6265700f117'}
+    hashes = ('helper_module_sha256', 'source_template_sha256', 'selected_template_sha256',
+              'vocabulary_sha256', 'special_tokens_sha256')
+    extra = {'unsloth_version', 'records_checked', 'training_records', 'validation_records', 'validation_sha256', *hashes}
+    if (not isinstance(value, dict) or set(value) != set(fixed) | extra
+            or any(type(value.get(k)) is not type(v) or value[k] != v for k, v in fixed.items())
+            or any(not isinstance(value[k], str) or not re.fullmatch(r'[0-9a-f]{64}', value[k]) for k in hashes)
+            or value['source_template_sha256'] not in ('ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4',
+                                                        '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1')
+            or value['selected_template_sha256'] != '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1'
+            or not isinstance(value['unsloth_version'], str) or not re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', value['unsloth_version'])
+            or type(training_records) is not int or not 0 < training_records <= 1000000
+            or type(validation_records) is not int or not 0 <= validation_records <= 1000000
+            or any(type(value[k]) is not int for k in ('records_checked', 'training_records', 'validation_records'))
+            or (value['training_records'], value['validation_records'], value['records_checked']) !=
+               (training_records, validation_records, training_records + validation_records)):
+        raise ValueError('invalid_gemma_receipts')
+    digest = value['validation_sha256']
+    if validation_records:
+        if not isinstance(digest, str) or not re.fullmatch(r'[0-9a-f]{64}', digest):
+            raise ValueError('invalid_gemma_receipts')
+    elif digest is not None:
+        raise ValueError('invalid_gemma_receipts')
+    if validation_sha is not None and digest != validation_sha:
+        raise ValueError('invalid_gemma_receipts')
+    labels = report.get('label_diagnostics')
+    if not isinstance(labels, dict) or labels.get('selected_template_sha256') != value['selected_template_sha256']:
+        raise ValueError('invalid_gemma_receipts')
+    clean = {'formatter_provenance': dict(value)}
+    if 'baseline_evaluation' in report:
+        baseline = report['baseline_evaluation']
+        required = {'version', 'baseline_eval_loss', 'baseline_method', 'same_validation_sha256', 'validation_records', 'zero_b_tensors'}
+        if (not isinstance(baseline, dict) or set(baseline) != required
+                or type(baseline['version']) is not int or baseline['version'] != 1
+                or baseline['baseline_method'] != 'fresh_zero_b_before_optimizer_v1'
+                or type(baseline['baseline_eval_loss']) not in (int, float) or not math.isfinite(baseline['baseline_eval_loss'])
+                or baseline['baseline_eval_loss'] < 0 or not validation_records
+                or baseline['same_validation_sha256'] != digest
+                or type(baseline['validation_records']) is not int or baseline['validation_records'] != validation_records
+                or type(baseline['zero_b_tensors']) is not int or not 0 < baseline['zero_b_tensors'] <= 10000):
+            raise ValueError('invalid_gemma_receipts')
+        clean['baseline_evaluation'] = dict(baseline)
+    elif validation_records:
+        raise ValueError('invalid_gemma_receipts')
+    return clean
 def expected_result(result, entity, run_id, role):
+    try:
+        validated_gemma_receipts(result, role, result.get('training_profile'),
+                                 result.get('training_records'), result.get('validation_records'))
+    except ValueError:
+        raise VerificationError('result_gemma_receipts_invalid') from None
     if 'label_diagnostics' in result:
         try:
             validated_label_diagnostics(result['label_diagnostics'], result.get('format'))
@@ -468,6 +530,8 @@ def verify_role(reader, api, entity, run_id, role, root):
         output.update(training_profile=result['training_profile'], runtime_profile_proof=result['runtime_profile_proof'])
     if 'label_diagnostics' in result:
         output['label_diagnostics'] = validated_label_diagnostics(result['label_diagnostics'], result.get('format'))
+    output.update(validated_gemma_receipts(result, role, result.get('training_profile'),
+                                           result.get('training_records'), result.get('validation_records')))
     output["artifact"] = reference
     reader.assert_private(entity)
     artifact = api.artifact(reference, type="lora")
@@ -483,6 +547,8 @@ def verify_role(reader, api, entity, run_id, role, root):
     require(('label_diagnostics' in metadata) == ('label_diagnostics' in result)
             and metadata.get('label_diagnostics') == result.get('label_diagnostics'),
             'artifact_label_diagnostics_mismatch')
+    require(all((k in metadata) == (k in result) and metadata.get(k) == result.get(k)
+                for k in ('formatter_provenance', 'baseline_evaluation')), 'artifact_gemma_receipts_mismatch')
     if result.get('training_profile') is None:
         require('runtime_profile_proof' not in result and 'runtime_profile_proof' not in metadata,
                 'artifact_training_profile_mismatch')

@@ -416,6 +416,117 @@ def label_diagnostics(processor, enabled, reason, probe, data_format):
             'processor_class': class_name(processor), 'tokenizer_class': class_name(tokenizer), **probe}
 
 
+GEMMA_FORMATTER_TEMPLATE_SHA256 = '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1'
+GEMMA_SOURCE_TEMPLATE_SHA256 = 'ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4'
+
+
+def configure_gemma_formatter(processor, train_rows, validation_rows, validation_sha, module, installed_version):
+    """Use only Unsloth's official helper; never inject or edit Jinja ourselves.
+
+    This replaces Google's Jinja with the reviewed Unsloth Gemma4 template.
+    The complete provided corpus is checked for unchanged content apart from
+    the official empty thought prefix. Test data are never supplied here.
+    """
+    source = Path(module.__file__)
+    if (source.is_symlink() or not source.is_file() or source.suffix != '.py' or not 0 < source.stat().st_size <= 1024**2
+            or not callable(getattr(module, 'get_chat_template', None))
+            or not isinstance(installed_version, str) or not re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', installed_version)):
+        raise ValueError('official Gemma formatter provenance is unavailable')
+    def template_of(value):
+        template = getattr(value, 'chat_template', None)
+        if isinstance(template, dict):
+            template = template.get('default')
+        if not isinstance(template, str) or not 0 < len(template.encode()) <= 256 * 1024:
+            raise ValueError('Gemma formatter template is unavailable')
+        return template
+    def identity(value):
+        tokenizer = getattr(value, 'tokenizer', value)
+        vocab = tokenizer.get_vocab()
+        if not isinstance(vocab, dict) or not vocab or any(not isinstance(k, str) or type(v) is not int for k, v in vocab.items()):
+            raise ValueError('Gemma tokenizer vocabulary cannot be identified')
+        special = {k: getattr(tokenizer, k, None) for k in
+                   ('bos_token', 'bos_token_id', 'eos_token', 'eos_token_id', 'pad_token', 'pad_token_id')}
+        if special['bos_token'] != '<bos>' or special['bos_token_id'] != 2:
+            raise ValueError('Gemma BOS identity mismatch')
+        canonical = lambda v: hashlib.sha256(json.dumps(v, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode()).hexdigest()
+        return tokenizer, canonical(vocab), canonical(special)
+    def render(value, messages, generation=False):
+        text = value.apply_chat_template(messages, tokenize=False, add_generation_prompt=generation,
+                                        enable_thinking=False, preserve_thinking=False)
+        if not isinstance(text, str):
+            raise ValueError('Gemma formatter must render a single text conversation')
+        return text
+    old_template = template_of(processor)
+    old_sha = hashlib.sha256(old_template.encode()).hexdigest()
+    if old_sha not in (GEMMA_SOURCE_TEMPLATE_SHA256, GEMMA_FORMATTER_TEMPLATE_SHA256):
+        raise ValueError('Gemma input template requires a separate source audit')
+    rows = list(train_rows) + list(validation_rows)
+    if not rows:
+        raise ValueError('Gemma formatter requires provided conversations')
+    before = [render(processor, row['messages']) for row in rows]
+    _, vocabulary_sha, special_sha = identity(processor)
+    original = processor
+    selected = module.get_chat_template(processor, chat_template='gemma4', map_eos_token=False, patch_saving=False)
+    if selected is not original:
+        raise ValueError('official Gemma formatter must preserve the processing wrapper')
+    tokenizer, new_vocabulary_sha, new_special_sha = identity(selected)
+    template_sha = hashlib.sha256(template_of(selected).encode()).hexdigest()
+    if template_sha != GEMMA_FORMATTER_TEMPLATE_SHA256 or (new_vocabulary_sha, new_special_sha) != (vocabulary_sha, special_sha):
+        raise ValueError('official Gemma formatter changed unapproved template or token identities')
+    for row, previous in zip(rows, before):
+        messages = row['messages']
+        full, prompt = render(selected, messages), render(selected, messages[:-1], True)
+        expected = previous if old_sha == template_sha else previous.replace(
+            '<|turn>model\n', '<|turn>model\n<|channel>thought\n<channel|>')
+        ids = tokenizer.encode(full, add_special_tokens=False)
+        prompt_ids = tokenizer.encode(prompt, add_special_tokens=False)
+        if (full != expected or not full.startswith(prompt) or full.count('<bos>') != 1
+                or not isinstance(ids, list) or not isinstance(prompt_ids, list)
+                or not prompt_ids or ids[:len(prompt_ids)] != prompt_ids or ids.count(2) != 1):
+            raise ValueError('Gemma provided conversation failed formatter identity or prefix checks')
+    return selected, {'version': 1, 'policy': 'official_unsloth_gemma4_empty_thought_v1',
+        'helper_module_sha256': file_sha256(source), 'unsloth_version': installed_version,
+        'source_template_sha256': old_sha, 'selected_template_sha256': template_sha,
+        'vocabulary_sha256': vocabulary_sha, 'special_tokens_sha256': special_sha,
+        'processor_wrapper_preserved': True, 'single_bos_verified': True, 'prefix_consistency_verified': True,
+        'records_checked': len(rows), 'training_records': len(train_rows), 'validation_records': len(validation_rows),
+        'validation_sha256': validation_sha, 'enable_thinking': False,
+        'official_template_replacement': True, 'upstream_fix': '3182f568d4e2e87b0945168e04f6e6265700f117'}
+
+
+def fresh_zero_b_tensors(model):
+    validate_loaded_adapter_trainability(model)
+    count = 0
+    for name, parameter in model.named_parameters():
+        if re.search(r'(^|\.)lora_B(?=\.|$)', name):
+            value = parameter.detach()
+            if (not parameter.requires_grad or value.numel() < 1 or not value.isfinite().all().item()
+                    or value.count_nonzero().item() != 0):
+                raise ValueError('baseline requires finite unchanged zero LoRA B weights')
+            count += 1
+    if not count:
+        raise ValueError('baseline requires recognized fresh zero LoRA B weights')
+    return count
+
+
+def evaluate_fresh_gemma_baseline(trainer, model, validation_sha, validation_records):
+    def before_updates():
+        step = getattr(getattr(trainer, 'state', None), 'global_step', None)
+        if type(step) is not int or step != 0 or getattr(trainer, 'optimizer', None) is not None:
+            raise ValueError('Gemma baseline must precede optimizer creation and updates')
+    before_updates()
+    count = fresh_zero_b_tensors(model)
+    metrics = trainer.evaluate(metric_key_prefix='baseline_eval')
+    before_updates()
+    if fresh_zero_b_tensors(model) != count:
+        raise ValueError('Gemma baseline changed adapter identities')
+    loss = metrics.get('baseline_eval_loss') if isinstance(metrics, dict) else None
+    if type(loss) not in (int, float) or not math.isfinite(loss) or loss < 0:
+        raise ValueError('Gemma baseline returned no finite validation loss')
+    return {'version': 1, 'baseline_eval_loss': float(loss), 'baseline_method': 'fresh_zero_b_before_optimizer_v1',
+            'same_validation_sha256': validation_sha, 'validation_records': validation_records, 'zero_b_tensors': count}
+
+
 def safe_loss_metrics(history, final_metrics=None):
     """Copy only finite scalar loss values, never arbitrary trainer log fields."""
     result = {'train_loss': None, 'eval_loss': None}
@@ -575,6 +686,11 @@ def main(argv=None):
     if initial_path and not canonical_continuation:
         options['model_name'] = str(initial_path)
     model, tok = loader.from_pretrained(**options)
+    if a.training_profile == GEMMA_26B_QLORA_V1:
+        from unsloth import chat_templates as official_chat_templates
+        tok, formatter = configure_gemma_formatter(tok, train, held, summary['validation_sha256'],
+                                                   official_chat_templates, version('unsloth'))
+        summary['formatter_provenance'] = formatter
     if canonical_continuation:
         # An adapter's recorded alias may name a dynamic quant. Load the exact
         # Qwen base above, then attach the unchanged original private adapter.
@@ -627,7 +743,7 @@ def main(argv=None):
                            dataset_text_field='text', max_length=a.max_len, max_steps=a.max_steps,
                            eval_strategy='epoch' if held else 'no', report_to='none')
     training_options.update(warmup_training_options(a.max_steps, SFTConfig))
-    if a.training_profile == QWQ_32B_QLORA_48GB_V1:
+    if a.training_profile in (GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1):
         # Transformers otherwise defaults evaluation to a larger batch than
         # this bounded single-example training profile.
         training_options['per_device_eval_batch_size'] = 1
@@ -642,6 +758,11 @@ def main(argv=None):
                                                      mask_reason, mask_probe, a.format)
     if mask_enabled and summary['label_diagnostics']['selected_template_sha256'] != hashlib.sha256(patched_template.encode()).hexdigest():
         raise ValueError('trainer changed the probed assistant-loss template')
+    if a.training_profile == GEMMA_26B_QLORA_V1:
+        if summary['label_diagnostics']['selected_template_sha256'] != formatter['selected_template_sha256']:
+            raise ValueError('trainer changed the reviewed Gemma formatter')
+        if held:
+            summary['baseline_evaluation'] = evaluate_fresh_gemma_baseline(trainer, model, summary['validation_sha256'], len(held))
     if a.training_profile:
         from transformers import TrainerCallback
         gemma_single_gpu_proof(torch, model)

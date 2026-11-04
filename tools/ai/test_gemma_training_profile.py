@@ -318,7 +318,7 @@ class GemmaTrainingProfileTests(unittest.TestCase):
                 for callback in self.callbacks:
                     callback.on_step_end(None, self.state, NS())
                 return NS(metrics={'train_loss': 1.0})
-        modules = {'unsloth': NS(FastModel=Loader, is_bfloat16_supported=lambda: True), 'torch': torch,
+        modules = {'unsloth': NS(FastModel=Loader, is_bfloat16_supported=lambda: True, chat_templates=NS()), 'torch': torch,
                    'datasets': NS(Dataset=NS(from_list=lambda rows: rows)),
                    'trl': NS(SFTConfig=lambda **kw: NS(**kw), SFTTrainer=Trainer),
                    'transformers': NS(TrainerCallback=object),
@@ -326,6 +326,8 @@ class GemmaTrainingProfileTests(unittest.TestCase):
                    'bitsandbytes': NS(), 'bitsandbytes.nn': NS(Params4bit=Packed)}
         out = self.root / 'adapter'
         with patch.dict(sys.modules, modules), patch('importlib.metadata.version', return_value='2026.11.2'), \
+                patch.object(train_lora, 'configure_gemma_formatter', return_value=(processor,
+                    {'selected_template_sha256': hashlib.sha256(processor.chat_template.encode()).hexdigest()})), \
                 contextlib.redirect_stdout(io.StringIO()):
             train_lora.main(['--base', 'chat', '--training-profile', PROFILE, '--format', 'chat',
                              '--holdout', '0', '--max-steps', '1', '--assistant-only-loss', 'off', str(path), str(out)])

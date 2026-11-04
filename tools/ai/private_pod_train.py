@@ -477,6 +477,61 @@ def validated_label_diagnostics(value, data_format):
             or data_format == 'text' and (dimensions or batch or tokens or selected)):
         raise ValueError('invalid_label_diagnostics')
     return dict(value)
+def validated_gemma_receipts(report, role, profile, training_records, validation_records, validation_sha=None):
+    names = ('formatter_provenance', 'baseline_evaluation')
+    if not any(name in report for name in names):
+        return {}
+    if role != 'chat' or profile != 'gemma-26b-qlora-v1' or 'formatter_provenance' not in report:
+        raise ValueError('invalid_gemma_receipts')
+    value = report['formatter_provenance']
+    fixed = {'version': 1, 'policy': 'official_unsloth_gemma4_empty_thought_v1',
+             'processor_wrapper_preserved': True, 'single_bos_verified': True,
+             'prefix_consistency_verified': True, 'enable_thinking': False, 'official_template_replacement': True,
+             'upstream_fix': '3182f568d4e2e87b0945168e04f6e6265700f117'}
+    hashes = ('helper_module_sha256', 'source_template_sha256', 'selected_template_sha256',
+              'vocabulary_sha256', 'special_tokens_sha256')
+    extra = {'unsloth_version', 'records_checked', 'training_records', 'validation_records', 'validation_sha256', *hashes}
+    if (not isinstance(value, dict) or set(value) != set(fixed) | extra
+            or any(type(value.get(k)) is not type(v) or value[k] != v for k, v in fixed.items())
+            or any(not isinstance(value[k], str) or not re.fullmatch(r'[0-9a-f]{64}', value[k]) for k in hashes)
+            or value['source_template_sha256'] not in ('ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4',
+                                                        '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1')
+            or value['selected_template_sha256'] != '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1'
+            or not isinstance(value['unsloth_version'], str) or not re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', value['unsloth_version'])
+            or type(training_records) is not int or not 0 < training_records <= 1000000
+            or type(validation_records) is not int or not 0 <= validation_records <= 1000000
+            or any(type(value[k]) is not int for k in ('records_checked', 'training_records', 'validation_records'))
+            or (value['training_records'], value['validation_records'], value['records_checked']) !=
+               (training_records, validation_records, training_records + validation_records)):
+        raise ValueError('invalid_gemma_receipts')
+    digest = value['validation_sha256']
+    if validation_records:
+        if not isinstance(digest, str) or not re.fullmatch(r'[0-9a-f]{64}', digest):
+            raise ValueError('invalid_gemma_receipts')
+    elif digest is not None:
+        raise ValueError('invalid_gemma_receipts')
+    if validation_sha is not None and digest != validation_sha:
+        raise ValueError('invalid_gemma_receipts')
+    labels = report.get('label_diagnostics')
+    if not isinstance(labels, dict) or labels.get('selected_template_sha256') != value['selected_template_sha256']:
+        raise ValueError('invalid_gemma_receipts')
+    clean = {'formatter_provenance': dict(value)}
+    if 'baseline_evaluation' in report:
+        baseline = report['baseline_evaluation']
+        required = {'version', 'baseline_eval_loss', 'baseline_method', 'same_validation_sha256', 'validation_records', 'zero_b_tensors'}
+        if (not isinstance(baseline, dict) or set(baseline) != required
+                or type(baseline['version']) is not int or baseline['version'] != 1
+                or baseline['baseline_method'] != 'fresh_zero_b_before_optimizer_v1'
+                or type(baseline['baseline_eval_loss']) not in (int, float) or not math.isfinite(baseline['baseline_eval_loss'])
+                or baseline['baseline_eval_loss'] < 0 or not validation_records
+                or baseline['same_validation_sha256'] != digest
+                or type(baseline['validation_records']) is not int or baseline['validation_records'] != validation_records
+                or type(baseline['zero_b_tensors']) is not int or not 0 < baseline['zero_b_tensors'] <= 10000):
+            raise ValueError('invalid_gemma_receipts')
+        clean['baseline_evaluation'] = dict(baseline)
+    elif validation_records:
+        raise ValueError('invalid_gemma_receipts')
+    return clean
 def runtime_profile_proof_keys(profile):
     common = ('first_optimizer_step_completed', 'gpu_count', 'gpu_name', 'physical_vram_bytes',
               'cpu_or_disk_offload_used', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')
@@ -488,7 +543,8 @@ def runtime_profile_proof_keys(profile):
     raise PilotError('training_profile_mismatch')
 
 
-def training_report(adapter, config, data_format, training_sha, validation_sha, initial_model_sha=None):
+def training_report(adapter, config, data_format, training_sha, validation_sha, initial_model_sha=None,
+                    *, training_records=None, validation_records=None):
     path = Path(adapter) / "hasla_training_manifest.json"
     if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= 64 * 1024:
         raise PilotError("verified_training_report_missing")
@@ -557,7 +613,12 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
             diagnostics['label_diagnostics'] = validated_label_diagnostics(report['label_diagnostics'], data_format)
         except ValueError:
             raise PilotError('training_label_diagnostics_invalid') from None
-    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses, **proof, **diagnostics}
+    try:
+        receipts = validated_gemma_receipts(report, config['role'], config.get('training_profile'),
+                                           training_records, validation_records, validation_sha)
+    except ValueError:
+        raise PilotError('training_gemma_receipts_invalid') from None
+    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses, **proof, **diagnostics, **receipts}
 
 
 def safe_failure(error, stage):
@@ -909,7 +970,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         run.summary["status"] = stage
         report = verified_training = training_report(adapter, config, data_format, sha_bytes(data),
                                                      sha_bytes(validation_data) if validation_data is not None else None,
-                                                     initial_spec['files'][1]['sha256'] if initial_spec else None)
+                                                     initial_spec['files'][1]['sha256'] if initial_spec else None,
+                                                     training_records=len(training), validation_records=len(validation))
         files, adapter_sha = adapter_inventory(adapter, config)
         # Check again immediately before uploading an adapter; never change project visibility here.
         assert_private_project(env, opener)
@@ -931,6 +993,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             artifact.metadata['runtime_profile_proof'] = {k: report[k] for k in runtime_profile_proof_keys(config['training_profile'])}
         if 'label_diagnostics' in report:
             artifact.metadata['label_diagnostics'] = report['label_diagnostics']
+        artifact.metadata.update({k: report[k] for k in ('formatter_provenance', 'baseline_evaluation') if k in report})
         if initial_spec:
             artifact.metadata.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                                      initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
@@ -959,6 +1022,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             result['runtime_profile_proof'] = artifact.metadata['runtime_profile_proof']
         if 'label_diagnostics' in report:
             result['label_diagnostics'] = report['label_diagnostics']
+        result.update({k: report[k] for k in ('formatter_provenance', 'baseline_evaluation') if k in report})
         if initial_spec:
             result.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                           initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
