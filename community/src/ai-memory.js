@@ -55,6 +55,17 @@ export async function memberFeedback(db, userId, id, good) {
   const r = await db.prepare(`UPDATE ai_eval SET verdict=? WHERE id=? AND kind='member' AND ref=?`).bind(good ? 'good' : 'bad', id, String(userId)).run();
   return (r?.meta?.changes ?? 0) > 0;
 }
+/* a member deleted (or edited away) one exchange in the chat: it goes from the review queue and the saved answers */
+export async function forgetMemberChat(db, userId, ids) {
+  if (!db || !ids.length) return 0;
+  await ensureAiEval(db);
+  await ensureAiMemory(db);
+  const q = ids.map(() => '?').join(',');
+  await db.prepare(`DELETE FROM ai_memory WHERE eval_id IN (SELECT id FROM ai_eval WHERE id IN (${q}) AND kind='member' AND ref=?)`).bind(...ids, String(userId)).run().catch(() => {});
+  const r = await db.prepare(`DELETE FROM ai_eval WHERE id IN (${q}) AND kind='member' AND ref=?`).bind(...ids, String(userId)).run();
+  forgetMemoryCache();
+  return r?.meta?.changes ?? 0;
+}
 /* what a member's withdrawal of consent or deletion of the account removes */
 export async function forgetMember(db, userId) {
   await ensureAiEval(db);
@@ -99,13 +110,15 @@ export function forgetMemoryCache() { memory = null; }
 async function memoryRows(db) {
   if (memory && memory.db === db && Date.now() - memory.at < MEMORY_TTL) return memory.rows;
   await ensureAiMemory(db);
-  const rows = (await db.prepare('SELECT id, answer, style, vec FROM ai_memory').all()).results.map(r => ({...r, vec: fromBlob(r.vec)}));
+  // the answer's language: an English question must not get a Korean answer back
+  const rows = (await db.prepare('SELECT id, answer, style, vec FROM ai_memory').all()).results
+    .map(r => ({...r, vec: fromBlob(r.vec), lang: /[가-힣]/.test(r.answer) ? 'ko' : 'en'}));
   memory = {db, at: Date.now(), rows};
   return rows;
 }
 
-export async function recall(env, db, question, style = 'default') {
-  const rows = (await memoryRows(db)).filter(r => r.style === style);
+export async function recall(env, db, question, style = 'default', lang = null) {
+  const rows = (await memoryRows(db)).filter(r => r.style === style && (!lang || r.lang === lang));
   if (!rows.length) return null;
   const q = await embed(env, question), min = +env.AI_CACHE_MIN || CACHE_MIN;
   let best = null, score = -1;

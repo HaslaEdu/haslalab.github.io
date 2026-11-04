@@ -302,7 +302,35 @@ test('the route: visitors get two messages, members no quota but a flood guard; 
   assert.equal(DB.sql.prepare('SELECT verdict FROM ai_eval WHERE id=?').get(done.data.id).verdict, 'bad');
   const other = createAiAssistantRouter({HttpError, currentUser: async () => ({id: 8}), needUser: u => u, limit: async () => {}, trainAllowed: async () => true});
   await assert.rejects(other(post({id: done.data.id, good: true}, true, '/api/ai/feedback'), env), e => e.status === 404);
+  // a deleted (or edited) exchange leaves the review queue; another member's ids are left alone
+  const kept2 = (await route(post({messages: [{role: 'user', content: '또 질문'}]}), env)).id;
+  assert.deepEqual(await other(post({remove: [kept2]}, true, '/api/ai/feedback'), env), {ok: true, removed: 0});
+  assert.deepEqual(await route(post({remove: [kept2, 'x']}, true, '/api/ai/feedback'), env), {ok: true, removed: 1});
+  assert.equal(DB.sql.prepare('SELECT count(*) n FROM ai_eval WHERE id=?').get(kept2).n, 0);
   // withdrawing the permission removes the member's kept chats
   await route(post({}, true, '/api/ai/forget'), env);
   assert.equal(DB.sql.prepare("SELECT count(*) n FROM ai_eval WHERE kind='member'").get().n, 0);
+});
+
+test('an English question gets an English answer, whatever the page or the tone', async () => {
+  const {langOf, toneOf} = await import('./src/ai-assistant.js');
+  assert.equal(langOf('How do I solve this pendulum problem?'), 'en');
+  assert.equal(langOf('IPhO 2025 T1 풀이 알려줘'), 'ko', 'any Hangul is Korean');
+  assert.equal(langOf('$x^2+1=0$', 'en'), 'en', 'formulas alone keep the page language');
+  assert.equal(langOf('$x^2+1=0$'), 'ko');
+  for (const style of ['default', 'community']) {
+    const AI = ai({intent: 'explain', reply: 'Angular momentum is conserved when…'});
+    const r = await answer({AI}, [{role: 'user', content: 'Explain conservation of angular momentum'}], {style, lang: 'ko'});
+    assert.equal(r.lang, 'en');
+    const sent = AI.calls.find(c => c.model === CHAT_MODEL).input.messages;
+    assert.match(sent[0].content, /Reply in English\./);
+    assert.ok(!/존댓말|반말/.test(sent[0].content), 'no Korean tone instruction');
+    assert.ok(!sent.slice(1, -1).some(m => /[가-힣]/.test(m.content)), 'no Korean example exchanges');
+    assert.match(sent.at(-1).content, /\[Reply in English\.\]$/);
+    assert.equal(toneOf(style, 'en').includes('English') || style === 'community', true);
+  }
+  const off = await answer({AI: ai({intent: 'off'})}, [{role: 'user', content: 'Who is the best K-pop idol?'}]);
+  assert.match(off.answer, /^I only help with HaslaLab/);
+  const ko = await answer({AI: ai({intent: 'explain'})}, [{role: 'user', content: '각운동량 설명해줘'}], {lang: 'en'});
+  assert.equal(ko.lang, 'ko', 'a Korean question on the English page is answered in Korean');
 });

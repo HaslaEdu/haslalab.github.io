@@ -339,7 +339,7 @@ async function handle(req, env, url, ctx) {
     if (!consent.aiTrain) await forgetMember(env.DB, me.id);
     return { ok: true, user: pubUser(decorateConsent(me, { consent_required: false, train_ok: consent.train })) };
   }
-  /* the HaslaLab AI chat box (chat window and profile): withdrawing deletes the kept chats */
+  /* the Hasla AI chat box (chat window and profile): withdrawing deletes the kept chats */
   if (p === "/api/me/consent/ai-train" && m === "POST") {
     needUser(me);
     if (typeof body.on !== "boolean") bad("bad_train");
