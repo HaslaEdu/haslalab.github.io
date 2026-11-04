@@ -45,6 +45,7 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './page-tiles.js';
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
+import { createAiAssistantRouter, AI_ASSISTANT_PATH } from './ai-assistant.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './focus-read.js';
@@ -234,12 +235,14 @@ const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limi
 const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUser,limit,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,scope:env=>env[DB_SCOPE]||env.DB});
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
+const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit});
 
 /* ── routes ─────────────────────────────────────────────────── */
 async function handle(req, env, url, ctx) {
   const p = url.pathname.replace(/\/+$/, "");
   const m = req.method;
   if(p===PROBLEM_BANK_OCR_PATH)return problemBankOcrRouter(req,env);
+  if(p===AI_ASSISTANT_PATH)return aiAssistantRouter(req,env);
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
   const body = (m === "POST" || m === "PATCH") && !form ? /^\/api\/auth\/handoff\/(start|exchange)$/.test(p)?await accountHandoff.readBody(req,env):/^\/api\/oauth\/(desktop|web)\/(start|exchange)$/.test(p)?await desktopOAuth.readBody(req,env):await req.json().catch(() => ({})) : {};
