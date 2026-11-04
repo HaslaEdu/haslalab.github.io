@@ -4,6 +4,7 @@ This command uses only RunPod GET requests. It deliberately discards upstream
 diagnostic output, which can contain environment variables or network details.
 """
 import contextlib
+from decimal import Decimal
 import json
 import math
 import os
@@ -398,7 +399,79 @@ def _safe_pod(pod, pod_id, expected_name):
     return result
 
 
-def collect_status(run_id, *, api=None, env=None, wandb_query=None, system_logs=False, log_get=None, clock=None):
+def _funding_query(document, env):
+    """Read account funding inside the dedicated CI job; never log the response."""
+    response = cloud.requests.post('https://api.runpod.io/graphql', json={'query': document},
+        headers={'Authorization': 'Bearer ' + env['RUNPOD_API_KEY']}, timeout=(5, 10))
+    try:
+        if response.status_code != 200:
+            raise StatusError('funding_query_unavailable')
+        result = response.json()
+        if not isinstance(result, dict) or result.get('errors') or not isinstance(result.get('data'), dict):
+            raise StatusError('funding_query_unavailable')
+        return result['data']
+    finally:
+        response.close()
+
+
+def collect_funding_status(run_id, pods, *, query=None, env=None):
+    """Return only a boolean comparison against full original role cost caps.
+
+    No elapsed-time deduction is taken: the bound covers already accrued but
+    possibly unposted billing too. False means this conservative bound is not
+    covered, not proof that the actual remaining run is underfunded.
+    """
+    validate_run_id(run_id)
+    env = os.environ if env is None else env
+    unavailable = {'funding_check': 'monitoring_unavailable',
+        'sufficient_for_reserved_remaining_upper': None, 'bound_method': 'full_original_role_caps',
+        'below_bound_does_not_prove_insufficient_funds': True}
+    caps = {'chat': 1800, 'solver': 14400}
+    names = {cloud.PREFIX + run_id + '-' + role: role for role in caps}
+    roles = []
+    if not isinstance(pods, list) or not pods:
+        return unavailable
+    for pod in pods:
+        if not isinstance(pod, dict) or pod.get('name') not in names:
+            return unavailable
+        role = names[pod['name']]
+        gpu = pod.get('gpu')
+        rate = _number(pod.get('costPerHr', pod.get('cost')))
+        if pod.get('adjustedCostPerHr') is not None:
+            adjusted = _number(pod['adjustedCostPerHr'])
+            if adjusted is None:
+                return unavailable
+            rate = max(rate, adjusted) if rate is not None else None
+        disk = _number(pod.get('containerDiskInGb', pod.get('disk')))
+        volume = _number(pod.get('volumeInGb'))
+        if (role in roles or not isinstance(gpu, dict) or type(gpu.get('count')) is not int or gpu['count'] != 1
+                or rate is None or not 0 < rate <= 4 or disk is None or disk > 200 or volume != 0
+                or pod.get('networkVolume') or pod.get('networkVolumeId')):
+            return unavailable
+        roles.append(role)
+    hourly_upper = Decimal('4') + Decimal(200) * Decimal('0.1') / Decimal(672)
+    required_upper = sum((hourly_upper * Decimal(caps[role] + 120) / Decimal(3600) for role in roles), Decimal(0))
+    with contextlib.redirect_stdout(_Discard()), contextlib.redirect_stderr(_Discard()):
+        try:
+            document = 'query FundingSufficiency { myself { clientBalance underBalance } }'
+            data = _funding_query(document, env) if query is None else query(document)
+            user = data.get('myself') if isinstance(data, dict) else None
+            if not isinstance(user, dict) or type(user.get('underBalance')) is not bool:
+                return unavailable
+            value = user.get('clientBalance')
+            if isinstance(value, bool) or not isinstance(value, (int, float, str, Decimal)):
+                return unavailable
+            balance = Decimal(str(value))
+            if not balance.is_finite() or balance < 0:
+                return unavailable
+            sufficient = balance >= required_upper and user['underBalance'] is False
+        except Exception:
+            return unavailable
+    return {'funding_check': 'available', 'sufficient_for_reserved_remaining_upper': sufficient,
+        'bound_method': 'full_original_role_caps', 'below_bound_does_not_prove_insufficient_funds': True}
+
+
+def collect_status(run_id, *, api=None, env=None, wandb_query=None, system_logs=False, log_get=None, clock=None, funding_query=None):
     """Resolve exact-name matches and fetch their details, without mutations."""
     run_id = validate_run_id(run_id)
     env = os.environ if env is None else env
@@ -433,6 +506,8 @@ def collect_status(run_id, *, api=None, env=None, wandb_query=None, system_logs=
             for safe, raw in zip(pods, raw_pods):
                 safe["system"] = collect_system_status(raw, env, get=log_get, clock=now, deadline=deadline)
     result = {"event": "pod_status", "run_id": run_id, "state": "present" if pods else "absent", "pods": pods}
+    if pods:
+        result['funding'] = collect_funding_status(run_id, raw_pods, query=funding_query, env=env)
     if isinstance(env.get("WANDB_API_KEY"), str) and env["WANDB_API_KEY"].strip():
         result["training"] = collect_training_status(run_id, query=wandb_query)
     return result

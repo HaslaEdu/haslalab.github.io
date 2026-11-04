@@ -1,5 +1,6 @@
 """Offline checks: status observations must never mutate RunPod resources."""
 import contextlib
+from decimal import Decimal
 import io
 import json
 import os
@@ -288,6 +289,100 @@ class PrivatePodStatusTests(unittest.TestCase):
         with patch.object(status, "collect_status", return_value={"event": "pod_status", "pods": []}) as collect, contextlib.redirect_stdout(output):
             self.assertEqual(status.main(["--run-id", "41810732513", "--system-logs"]), 0)
         collect.assert_called_once_with("41810732513", system_logs=True)
+
+    def dedicated_pod(self, role, **fields):
+        return self.pod(id=role+'-pod',name=self.name+'-'+role,**fields)
+
+    def test_funding_uses_both_full_role_caps_and_only_outputs_boolean(self):
+        pods=[self.dedicated_pod('chat'),self.dedicated_pod('solver')]
+        required=(Decimal('4')+Decimal(200)*Decimal('0.1')/Decimal(672))*Decimal(1800+120+14400+120)/Decimal(3600)
+        calls=[]
+        def query(document):
+            self.assertNotIn('mutation',document.lower())
+            calls.append(document)
+            return {'myself':{'clientBalance':str(required),'underBalance':False,'email':'PRIVATE_EMAIL'}}
+        event=status.collect_funding_status('41810732513',pods,query=query)
+        self.assertTrue(event['sufficient_for_reserved_remaining_upper'])
+        self.assertEqual(event['funding_check'],'available')
+        self.assertEqual(len(calls),1)
+        encoded=json.dumps(event)
+        for sensitive in (str(required),'clientBalance','underBalance','PRIVATE_EMAIL'):
+            self.assertNotIn(sensitive,encoded)
+        lower=status.collect_funding_status('41810732513',pods,query=lambda _: {'myself':{'clientBalance':str(required-Decimal('0.000001')),'underBalance':False}})
+        self.assertFalse(lower['sufficient_for_reserved_remaining_upper'])
+        self.assertTrue(lower['below_bound_does_not_prove_insufficient_funds'])
+
+    def test_funding_counts_only_the_dedicated_roles_currently_present(self):
+        query=lambda _: {'myself':{'clientBalance':'5','underBalance':False}}
+        chat=status.collect_funding_status('41810732513',[self.dedicated_pod('chat')],query=query)
+        solver=status.collect_funding_status('41810732513',[self.dedicated_pod('solver')],query=query)
+        self.assertTrue(chat['sufficient_for_reserved_remaining_upper'])
+        self.assertFalse(solver['sufficient_for_reserved_remaining_upper'])
+
+    def test_funding_legacy_ambiguous_or_over_policy_resources_are_unknown_without_query(self):
+        cases=[[],[self.pod()],[self.dedicated_pod('chat'),self.pod()],
+               [self.dedicated_pod('chat'),self.dedicated_pod('chat')],
+               [self.dedicated_pod('solver',costPerHr=4.01)],
+               [self.dedicated_pod('solver',adjustedCostPerHr=4.01)],
+               [self.dedicated_pod('solver',gpu={'count':2})],
+               [self.dedicated_pod('solver',containerDiskInGb=201)],
+               [self.dedicated_pod('solver',volumeInGb=1)],
+               [self.dedicated_pod('solver',networkVolume=True)]]
+        for pods in cases:
+            with self.subTest(count=len(pods)):
+                event=status.collect_funding_status('41810732513',pods,query=lambda _:self.fail('ambiguous cost must not query'))
+                self.assertEqual(event['funding_check'],'monitoring_unavailable')
+                self.assertIsNone(event['sufficient_for_reserved_remaining_upper'])
+
+    def test_funding_untrusted_schema_and_nonfinite_balance_never_claim_sufficiency(self):
+        for balance in (None,True,'NaN','Infinity',float('inf'),-1,{'PRIVATE':'DATA'}):
+            with self.subTest(balance_type=type(balance).__name__):
+                event=status.collect_funding_status('41810732513',[self.dedicated_pod('chat')],query=lambda _,value=balance: {'myself':{'clientBalance':value,'underBalance':False}})
+                self.assertIsNone(event['sufficient_for_reserved_remaining_upper'])
+        for data in ({},{'myself':None},{'myself':{'clientBalance':1000,'underBalance':None}}):
+            event=status.collect_funding_status('41810732513',[self.dedicated_pod('chat')],query=lambda _:data)
+            self.assertEqual(event['funding_check'],'monitoring_unavailable')
+        event=status.collect_funding_status('41810732513',[self.dedicated_pod('chat')],query=lambda _: {'myself':{'clientBalance':1000,'underBalance':True}})
+        self.assertFalse(event['sufficient_for_reserved_remaining_upper'])
+
+    def test_funding_upstream_output_and_exceptions_are_discarded(self):
+        output,errors=io.StringIO(),io.StringIO()
+        def unsafe(document):
+            print('PRIVATE_BALANCE 1234.5678 PRIVATE_KEY')
+            print('PRIVATE_EMAIL',file=status.sys.stderr)
+            raise RuntimeError('PRIVATE_RESPONSE_BODY')
+        with contextlib.redirect_stdout(output),contextlib.redirect_stderr(errors):
+            event=status.collect_funding_status('41810732513',[self.dedicated_pod('chat')],query=unsafe)
+        self.assertEqual(output.getvalue()+errors.getvalue(),'')
+        self.assertEqual(event['funding_check'],'monitoring_unavailable')
+        self.assertNotIn('PRIVATE_',json.dumps(event))
+
+    def test_funding_default_graphql_transport_is_a_read_query_only(self):
+        class Response:
+            status_code=200
+            def json(self):return {'data':{'myself':{'clientBalance':'100','underBalance':False}}}
+            def close(self):pass
+        with patch.object(status.cloud.requests,'post',return_value=Response()) as post:
+            event=status.collect_funding_status('41810732513',[self.dedicated_pod('solver')],env=self.env)
+        self.assertTrue(event['sufficient_for_reserved_remaining_upper'])
+        args,kwargs=post.call_args
+        self.assertEqual(args,('https://api.runpod.io/graphql',))
+        self.assertTrue(kwargs['json']['query'].startswith('query FundingSufficiency'))
+        self.assertNotIn('mutation',kwargs['json']['query'])
+        self.assertNotIn('WANDB',repr(kwargs))
+
+    def test_status_includes_funding_for_exact_dedicated_pods_and_invalid_id_has_no_io(self):
+        pods=[self.dedicated_pod('chat'),self.dedicated_pod('solver')]
+        by_id={pod['id']:pod for pod in pods}
+        calls=[]
+        def query(document):
+            calls.append(document)
+            return {'myself':{'clientBalance':'100','underBalance':False}}
+        event=status.collect_status('41810732513',api=lambda method,path:pods if path=='/pods' else by_id[path.rsplit('/',1)[1]],env=self.env,funding_query=query)
+        self.assertTrue(event['funding']['sufficient_for_reserved_remaining_upper'])
+        self.assertEqual(len(calls),1)
+        with self.assertRaises(status.StatusError):
+            status.collect_funding_status('bad-id',pods,query=lambda _:self.fail('invalid ID queried'))
 
 
 if __name__ == "__main__":
