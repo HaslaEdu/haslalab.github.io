@@ -4,6 +4,7 @@
 // With R2=1 the run is against a Worker started with wrangler.test-r2.toml (an R2 bucket bound as LAB_PAGES and
 // LAB_KEEP_HOURS=0): the photo goes to R2, and after grading it is removed.
 import { execSync } from "node:child_process";
+import { devSignupCode } from "./fixtures/signup-code.mjs";   // password sign-up needs a mailed code: the row goes into the local D1
 const API = process.env.API || "http://127.0.0.1:8787", B = API + "/api", R2 = !!process.env.R2;
 const call = async (m, p, body, tok, extra) => { const r = await fetch(B + p, { method: m, headers: { "Content-Type": "application/json", ...(tok ? { Authorization: "Bearer " + tok } : {}), ...(extra || {}) }, body: body ? JSON.stringify(body) : undefined }); return [r.status, await r.json().catch(() => ({}))]; };
 const up = async (sid, key, task, kind, bytes) => { const r = await fetch(B + `/lab/up/${sid}/pages?task=${task}&kind=${kind}`, { method: "PUT", headers: { "Content-Type": "image/png", "X-Lab-Token": key }, body: bytes }); return [r.status, await r.json().catch(() => ({}))]; };
@@ -11,7 +12,7 @@ let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const near = (a, b) => Math.abs(a - b) < 1e-6, near5 = (a, b) => Math.abs(a - b) < 1e-5;   // prices are kept to 6 places, sums shown to 5
 const rnd = Math.random().toString(36).slice(2, 7);
-const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
+const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true }, ...await devSignupCode(undefined, { config: R2 ? "--config wrangler.test-r2.toml" : "" }) }))[1].token;
 const png = Buffer.from("89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D49444154789C6360000002000154A24F5D0000000049454E44AE426082", "hex");
 const sql = q => JSON.parse(execSync(`npx wrangler d1 execute haslalab-community --local --json ${R2 ? "--config wrangler.test-r2.toml" : ""} --command "${q}"`, { cwd: new URL(".", import.meta.url).pathname, stdio: ["ignore", "pipe", "ignore"] }).toString())[0].results;
 

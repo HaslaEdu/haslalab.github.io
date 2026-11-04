@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import worker from './src/index.js';
+import {signupCode} from './fixtures/signup-code.mjs';
 const SOURCE='https://physleague.kr',TARGET='https://haslaedu.haslalab.workers.dev',GATEWAY='https://haslalab-community-edge.haslalab.workers.dev';
 const base64=bytes=>Buffer.from(bytes).toString('base64url'),digest=async value=>base64(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)));
 function fixture(){
@@ -11,7 +12,7 @@ function fixture(){
  const DB={prepare(query){const statement=sql.prepare(query),make=args=>({bind:(...values)=>make(values),async first(){return statement.get(...args)||null},async all(){return{results:statement.all(...args)}},async run(){return this.execute()},execute(){if(statement.columns().length)return{results:statement.all(...args),meta:{changes:sql.prepare('SELECT changes() n').get().n}};const out=statement.run(...args);return{results:[],meta:{changes:Number(out.changes),last_row_id:Number(out.lastInsertRowid)}}}});return make([])},async batch(statements){sql.exec('BEGIN');try{const out=statements.map(s=>s.execute());sql.exec('COMMIT');return out}catch(error){sql.exec('ROLLBACK');throw error}}};
  const env={DB,ALLOWED_ORIGINS:'https://haslalab.org,'+SOURCE+','+TARGET+',https://www.physleague.kr'};
  const api=async(path,{body,token,method=body?'POST':'GET',origin=SOURCE,headers={}}={})=>{const response=await worker.fetch(new Request(GATEWAY+'/api'+path,{method,headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.90',...(body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{}),...headers},...(body?{body:typeof body==='string'?body:JSON.stringify(body)}:{})}),env,{waitUntil(){}});return{status:response.status,data:await response.json(),headers:response.headers}};
- const signup=async(name='handoff_owner')=>api('/signup',{body:{username:name,nickname:name,password:'local-fixture-password',consent:{terms:true,privacy:true,age14:true}}});
+ const signup=async(name='handoff_owner')=>api('/signup',{body:{username:name,nickname:name,password:'local-fixture-password',consent:{terms:true,privacy:true,age14:true},...await signupCode(sql)}});
  const start=async(token,{state='s'.repeat(43),verifier='v'.repeat(43),source=SOURCE,target=TARGET}={})=>{const body={source_origin:source,target_origin:target,code_challenge:await digest(verifier),state};return{result:await api('/auth/handoff/start',{token,body}),state,verifier,target}};
  const exchange=(flow,token,patch={})=>api('/auth/handoff/exchange',{token,origin:TARGET,body:{code:flow.result.data.code,code_verifier:flow.verifier,state:flow.state,target_origin:flow.target,...patch}});
  return{sql,api,signup,start,exchange,close(){sql.close()}};

@@ -7,7 +7,7 @@
   'use strict';
   const Network=typeof module==='object'&&module.exports?require('./exam-network.js'):window.HLExamNetwork;
   const DEFAULT_API='https://haslalab-community-edge.haslalab.workers.dev';
-  const apiBase=value=>{const base=String(value||DEFAULT_API).replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?DEFAULT_API:base;};
+  const apiBase=value=>{const base=String(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(value||'')?value:DEFAULT_API).replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?DEFAULT_API:base;};
   const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
   const MAX_IMAGE=1850000,MAX_PAGES=40;
   const PROVIDERS=['deepseek','gemini'];

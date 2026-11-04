@@ -1,10 +1,11 @@
 // nicknames: one rule for sign-up, renaming and the live check.  Against `npm run dev`:  node test-nick.mjs
+import { devSignupCode } from "./fixtures/signup-code.mjs";   // password sign-up needs a mailed code: the row goes into the local D1
 const B = (process.env.API || "http://127.0.0.1:8787") + "/api";
 const call = async (m, p, body, tok) => { const r = await fetch(B + p, { method: m, headers: { "Content-Type": "application/json", Origin: "http://localhost:8765", ...(tok ? { Authorization: "Bearer " + tok } : {}) }, body: body ? JSON.stringify(body) : undefined }); return [r.status, await r.json().catch(() => ({}))]; };
 let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const r = Math.random().toString(36).slice(2, 6);
-const sign = (u, n) => call("POST", "/signup", { username: u + r, nickname: n, password: "password1", consent: { terms: true, privacy: true, age14: true } });
+const sign = async (u, n) => call("POST", "/signup", { username: u + r, nickname: n, password: "password1", consent: { terms: true, privacy: true, age14: true }, ...await devSignupCode() });
 const chk = (n, tok) => call("GET", "/nick-check?n=" + encodeURIComponent(n), null, tok);
 
 let [s, j] = await sign("nA", "Kim" + r); const A = j.token;

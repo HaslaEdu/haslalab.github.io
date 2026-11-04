@@ -129,7 +129,8 @@
   const token = () => readStore('hlCmTok');
   function apiBase() {
     try {
-      const u = new URL(readStore('hlCmApi') || DEFAULT_API);
+      const o = readStore('hlCmApi') || '';
+      const u = new URL(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o) ? o : DEFAULT_API);
       const localHosts = ['localhost', '127.0.0.1', '[::1]'];
       if (u.origin === DEFAULT_API || localHosts.includes(location.hostname) && ['http:', 'https:'].includes(u.protocol) && localHosts.includes(u.hostname)) return u.origin;
     } catch (_) {}

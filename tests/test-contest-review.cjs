@@ -4,7 +4,7 @@ const Review=require('../sim/contest-review.js');
 
 function transport(){
   const calls=[];
-  const client=Review.createClient({getBase:()=> 'https://example.test/',getToken:()=> 'test-only-token',fetch:async(url,options)=>{calls.push({url,...options});return{ok:true,json:async()=>({session:{id:12},tokens:4})};}});
+  const client=Review.createClient({getBase:()=> 'http://127.0.0.1:8787/',getToken:()=> 'test-only-token',fetch:async(url,options)=>{calls.push({url,...options});return{ok:true,json:async()=>({session:{id:12},tokens:4})};}});
   return{client,calls};
 }
 
@@ -26,7 +26,7 @@ test('loading the review client never creates or charges a session',()=>{
 test('a review start uses the review purpose and authoritative exam ID while sending the shared account token in a header',async()=>{
   const {client,calls}=transport();
   await client.start({examId:'kmo-2025-T2-s2',purpose:'exam',runId:'local-run-1'});
-  assert.equal(calls[0].url,'https://example.test/api/lab/contest/start');
+  assert.equal(calls[0].url,'http://127.0.0.1:8787/api/lab/contest/start');
   assert.equal(calls[0].headers.Authorization,'Bearer test-only-token');
   assert.deepEqual(JSON.parse(calls[0].body),{examId:'kmo-2025-T2-s2',purpose:'review',runId:'local-run-1'});
   assert.ok(!calls[0].url.includes('test-only-token'));
@@ -53,7 +53,7 @@ test('upload bytes stay binary and the scan code goes in its dedicated header',a
   assert.equal(calls[0].method,'PUT');assert.equal(calls[0].body,blob);
   assert.equal(calls[0].headers['X-Lab-Token'],'scan-test-code');
   assert.equal(calls[0].headers['Content-Type'],'image/jpeg');
-  assert.equal(calls[0].url,'https://example.test/api/lab/up/pages?task=Q6&kind=answer');
+  assert.equal(calls[0].url,'http://127.0.0.1:8787/api/lab/up/pages?task=Q6&kind=answer');
   assert.ok(!calls[0].url.includes('scan-test-code'));
 });
 
@@ -84,7 +84,7 @@ function testHost(){
 test('mount and open preparation never spend tokens; only the explicit one-token button pays and reads',async()=>{
   const host=testHost(),calls=[],dialogs=[];
   const original={window:global.window,document:global.document,location:global.location};
-  global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};
+  global.location={href:'http://127.0.0.1:8787/sim/contest-exam.html?id=kmo-example'};
   global.window={qrcode:()=>({addData(){},make(){},createSvgTag:()=>'<svg></svg>'})};
   global.document={head:{append(){}},body:{append(d){dialogs.push(d);}},createElement:()=>Object.assign(testHost(),{open:false,showModal(){this.open=true;},close(){this.open=false;},remove(){}})};
   let paid=false,controller;
@@ -117,7 +117,7 @@ test('mount and open preparation never spend tokens; only the explicit one-token
 
 test('sign-in return is saved only on the explicit login click and an expired login shows that link again',async()=>{
   const prior={location:global.location,sessionStorage:global.sessionStorage},stored=new Map();
-  global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};
+  global.location={href:'http://127.0.0.1:8787/sim/contest-exam.html?id=kmo-example'};
   global.sessionStorage={setItem:(key,value)=>stored.set(key,value)};
   let controller;
   try{
@@ -139,7 +139,7 @@ test('a returned server review opens without a local attempt or new charge and c
   const prior=global.location;
   let controller;
   try{
-    global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example&review=37'};
+    global.location={href:'http://127.0.0.1:8787/sim/contest-exam.html?id=kmo-example&review=37'};
     const calls=[],entry={id:'kmo-example',comp:'kmo',kind:'proof',questions:4},host=testHost();
     let serverExam='kmo-example';
     const options={storage:{getItem:key=>key==='hlCmTok'?'test-token':null,setItem(){}},fetch:async(url,opts)=>{
@@ -184,7 +184,7 @@ test('account records reopen contest review and show math-review rules instead o
 
 test('queued OCR stays read-only and cannot be confirmed or submitted before it finishes',async()=>{
   const previous={document:global.document,window:global.window,location:global.location};let controller;
-  global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};
+  global.location={href:'http://127.0.0.1:8787/sim/contest-exam.html?id=kmo-example'};
   global.window={};global.document={hidden:false,addEventListener(){},removeEventListener(){}};
   try{
     let status='queued';const calls=[],session=()=>({id:12,examId:'kmo-example',status:'scanning',paid:true,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'scan',ocr_status:status,text:status==='done'?'Proof x = 1.':'',confirmed:false}]}),host=testHost();
@@ -240,7 +240,7 @@ test('desktop queued photos retain unconfirmed originals through mode changes un
 
 test('KMO selection sends only provider IDs through start, payment, OCR and final review, then obeys the server lock',async()=>{
   const prior={window:global.window,document:global.document,location:global.location};let controller;
-  global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};
+  global.location={href:'http://127.0.0.1:8787/sim/contest-exam.html?id=kmo-example'};
   global.window={qrcode:()=>({addData(){},make(){},createSvgTag:()=>'<svg></svg>'})};global.document={head:{append(){}},body:{append(){}},createElement:testHost};
   const host=testHost(),calls=[],vision={default:'gemini',providers:[{id:'deepseek',available:true,model:'PRIVATE_MODEL_A'},{id:'gemini',available:true,model:'PRIVATE_MODEL_B'}]};let paid=false,selected='gemini';
   const session=()=>({id:12,examId:'kmo-example',status:'scanning',paid,provider:selected,provider_locked:paid,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'typed',confirmed:true,text:'Proof',ocr_status:'done'}]});
@@ -264,7 +264,7 @@ test('KMO selection sends only provider IDs through start, payment, OCR and fina
 test('a stale KMO payment completion cannot start OCR after account switching or route disposal',async()=>{
   for(const leave of ['account','route']) {
     const prior={window:global.window,document:global.document,location:global.location};let controller,finish,auth='owner-A';const calls=[];
-    global.location={href:'https://example.test/sim/contest-exam.html?id=kmo-example'};global.window={};global.document={head:{append(){}},body:{append(){}},createElement:testHost};
+    global.location={href:'http://127.0.0.1:8787/sim/contest-exam.html?id=kmo-example'};global.window={};global.document={head:{append(){}},body:{append(){}},createElement:testHost};
     const session={id:12,examId:'kmo-example',status:'scanning',paid:false,provider:'deepseek',provider_locked:false,scan_until:Date.now()/1000+1800,pages:[{id:34,no:1,task:'Q1',source:'typed',confirmed:true,text:'Proof',ocr_status:'done'}]};
     const vision={providers:[{id:'deepseek',available:true},{id:'gemini',available:true}]},host=testHost();
     const fetch=async(url,options)=>{calls.push({url,options});if(url.endsWith('/pay'))return new Promise(resolve=>finish=()=>resolve({ok:true,json:async()=>({session:{...session,paid:true,provider_locked:true},vision})}));return{ok:true,json:async()=>({session,vision,tokens:3})};};

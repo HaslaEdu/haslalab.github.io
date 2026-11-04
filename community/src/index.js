@@ -52,6 +52,7 @@ import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 import { createAccountSecurityRouter, ensureAccountSecuritySchema } from './account-security.js';
+import { createSignupEmail, ensureSignupCodeSchema, CODE_HELD } from './signup-email.js';
 import { ensureConsentSchema, consentInfo, requestCountry, readConsent, recordConsent, consentStatus, decorateConsent, setTrainConsent, dropTrainRows, trainAllowed, CONSENT_COLUMNS, consentOf, TRAIN_KEEP_SEC } from './consent.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
@@ -209,6 +210,7 @@ const pickTag = (t, u) => (TAGS.includes(t) && (t !== "notice" || u.role === "ad
 const omrRouter = createOmrRouter({HttpError, needUser, limit, now});
 const modelTestRouter = createModelTestRouter({HttpError, currentUser, needUser, limit});
 const accountSecurityRouter = createAccountSecurityRouter({HttpError,now,limit,sha256,hashPw,checkPw,pwOk});
+const signupEmail = createSignupEmail({HttpError,now,limit,sha256,clientIp,scope:env => env[DB_SCOPE] || env.DB});
 const monthlyPhotoRouter = createMonthlyPhotoRouter({HttpError, needUser, limit, ocr, imageType,
   ensureContent:ensureWeeklyContent, visibleSql:visibleMonthlySql, attempts:monthlyAttempts, scope:env => env[DB_SCOPE] || env.DB});
 const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limit,ocr,imageType,invoke:callGrader,
@@ -239,6 +241,7 @@ async function handle(req, env, url, ctx) {
   if(security!==null)return security;
 
   /* auth */
+  if (p === "/api/signup/email-code" && m === "POST") return signupEmail.sendCode(req, env, body);
   if (p === "/api/signup" && m === "POST") {
     const username = String(body.username || "").trim();
     const nickname = cleanNick(body.nickname);
@@ -251,15 +254,25 @@ async function handle(req, env, url, ctx) {
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
     // a whole classroom often shares one address, so this is per hour, not per day
     await limit(env, "signup:" + clientIp(req), 20, 3600);
+    /* the mailed code last: a name taken or a box left unticked does not spend one of its tries */
+    const { email, hash, t } = await signupEmail.checkCode(env, body);
     let res;
     try {
-      res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,?,?,?)")
-        .bind(username, nickname, await hashPw(body.password), now(), SIGNUP_TOKENS).run();
-    } catch (e) {                                       // someone took the name between the check and here
+      // one transaction: the account, its verified address and the spent code, or none of them
+      res = await env.DB.batch([
+        env.DB.prepare(`INSERT INTO users(username,nickname,pw,created_at,exam_tokens) SELECT ?,?,?,?,? WHERE ${CODE_HELD}`)
+          .bind(username, nickname, await hashPw(body.password), t, SIGNUP_TOKENS, email, hash, t),
+        env.DB.prepare(`INSERT INTO account_emails(user_id,email,verified_at) SELECT id,?,? FROM users WHERE username=? AND deleted=0 AND ${CODE_HELD}`)
+          .bind(email, t, username, email, hash, t),
+        env.DB.prepare("DELETE FROM signup_email_codes WHERE email=? AND code_hash=?").bind(email, hash),
+      ]);
+    } catch (e) {                                       // someone took the name or the address between the check and here
       if (!isUnique(e)) throw e;
-      throw new HttpError(409, /nickname/.test(String(e.message)) || await nickTaken(env, nickname) ? "nickname_taken" : "username_taken");
+      const msg = String(e.message);
+      throw new HttpError(409, /account_emails/.test(msg) ? "email_taken" : /nickname/.test(msg) || await nickTaken(env, nickname) ? "nickname_taken" : "username_taken");
     }
-    const id = res.meta.last_row_id;
+    if (!res[0].meta?.changes) bad("code_invalid");      // a parallel sign-up spent the code first
+    const id = res[0].meta.last_row_id;
     await recordConsent(env.DB, id, consent, now(), env[DB_SCOPE] || env.DB);
     const user = await env.DB.prepare("SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=?").bind(id).first();
     return { token: await newSession(env, id), user: pubUser(decorateConsent(user, { consent_required: false, train_ok: consent.train })) };
@@ -2714,6 +2727,9 @@ async function labPurge(env) {
   /* rate-limit rows carry IP addresses; the longest window is a day, so a row two days old only remembers an address */
   try { await env.DB.prepare("DELETE FROM ratelimits WHERE start<?").bind(now() - 2 * 86400).run(); }
   catch (e) { console.error("ratelimit purge", e?.message); }
+  /* a sign-up code nobody used keeps its address only until it expires */
+  try { await ensureSignupCodeSchema(env.DB); await env.DB.prepare("DELETE FROM signup_email_codes WHERE expires_at<=?").bind(now()).run(); }
+  catch (e) { console.error("signup code purge", e?.message); }
   const h = keepHours(env);
   /* «off» is null, and null >= 0 is true in JavaScript: the guard must name it, or «off» purges every graded sitting at
      once (2026-11-01/02: 121 audit photos, then 28 of them again right after they were put back) */
@@ -3520,6 +3536,19 @@ async function labBench(env, s, job) {
         }
         out = { grader: { ...g, endpoint: ep }, sum, results, skipped: cases.filter(c => c.skip) };
       }
+    } else if (spec.stage === 'monthly-rubric') {
+      /* a hand-built monthly rubric (community/weekly/rubrics-<week>/<id>.json, served by the site) becomes the problem's
+         rubric: an administrator edit, checked here as the grader reads it (integer maxima adding up to the points) */
+      const pid = Number(spec.problem_id); if (!Number.isSafeInteger(pid) || pid <= 0) throw new Error('bad_problem');
+      const prob = await env.DB.prepare('SELECT id, week, points, rubric FROM problems WHERE id=?').bind(pid).first();
+      if (!prob || !/^\d{4}-\d{2}$/.test(String(prob.week || ''))) throw new Error('problem_not_monthly');
+      const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}community/weekly/rubrics-${prob.week}/${pid}.json`, { signal: AbortSignal.timeout(15000) });
+      if (!r.ok) throw new Error('rubric_not_found_' + r.status);
+      const rubric = await r.json(), ok = Array.isArray(rubric) && rubric.length && rubric.every(c => c && typeof c.id === 'string' && c.id && typeof c.name === 'string' && Number.isInteger(c.max) && c.max > 0 && typeof c.requirement === 'string');
+      const total = ok ? rubric.reduce((a, c) => a + c.max, 0) : NaN;
+      if (!ok || total !== Number(prob.points) || new Set(rubric.map(c => c.id)).size !== rubric.length) throw new Error('bad_rubric');
+      if (spec.dry !== true) await env.DB.prepare('UPDATE problems SET rubric=? WHERE id=?').bind(JSON.stringify(rubric), pid).run();
+      out = { problem_id: pid, dry: spec.dry === true, criteria: rubric.length, total, before: (() => { try { return JSON.parse(prob.rubric || '[]').length; } catch { return null; } })() };
     } else if (spec.stage === 'migrate-r2') {
       out = await labMigrateR2(env, spec);
     } else if (spec.stage === 'backup') {

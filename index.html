@@ -45,7 +45,7 @@
   };
   const production="https://haslalab-community-edge.haslalab.workers.dev";
   let base=production,token="";
-  try{base=(localStorage.getItem("hlCmApi")||production).replace(/\/+$/,"");token=localStorage.getItem("hlCmTok")||"";}catch(e){}
+  try{const o=localStorage.getItem("hlCmApi")||"";base=(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o)?o:production).replace(/\/+$/,"");token=localStorage.getItem("hlCmTok")||"";}catch(e){}
   if(base==="https://haslalab-community.haslalab.workers.dev")base=production;
   const hash=location.hash,parts=hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean),[route,section,item]=parts;
   const language=new URLSearchParams(location.search).get("lang")==="en"?"en":"ko";
@@ -820,7 +820,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmcrop .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 
 /* forms */
-.cm input[type=text],.cm input[type=password],.cm input[type=search],.cm select,.cm textarea{
+.cm input[type=text],.cm input[type=password],.cm input[type=email],.cm input[type=search],.cm select,.cm textarea{
   font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid #d5dde7;border-radius:8px;padding:9px 11px;width:100%;transition:.12s}
 .cm textarea{resize:vertical;min-height:84px;line-height:1.6}
 .cm textarea.big{min-height:340px}
@@ -848,6 +848,9 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmauth .rules{margin:0;padding:10px 12px 10px 28px;background:var(--cm-soft);border-radius:8px;font-size:12.5px;color:#4b5563}
 .cmauth .chk{flex-direction:row;align-items:flex-start;gap:8px;text-transform:none;letter-spacing:0;font-weight:500;font-size:13px}
 .cmauth .chk input{margin-top:3px;width:auto}
+/* the sign-up address and its «send code» button on one line */
+.cmauth .cmmail{display:flex;gap:8px}
+.cmauth .cmmail .cmbtn{flex:none;white-space:nowrap;text-transform:none;letter-spacing:0}
 /* the consent boxes: sign-up, the social username step and the dialog for accounts from before the terms */
 .cmconsent{border:1px solid var(--cm-line);border-radius:8px;padding:10px 12px;margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
 .cmconsent legend{font-size:12px;font-weight:700;color:#4b5563;padding:0 4px}
@@ -8774,6 +8777,8 @@ const CMT = {
     cropH:"프로필 사진 자르기", cropHint:"끌어서 위치를 옮기고, 휠 · 두 손가락 · 막대로 크기를 조절하세요. 동그라미 안이 프로필에 보입니다.", cropZoom:"크기", cropRotate:"↻ 90° 돌리기",
     cropApply:"이대로 올리기", cropCancel:"취소", cropSrc:"원본", cropOut:"올라가는 크기", cropReset:"처음대로",
     password:"비밀번호", passwordHelp:"8자 이상", password2:"비밀번호 확인",
+    email:"이메일", emailHelp:"가입 확인과 비밀번호 찾기에만 씁니다.", sendCode:"인증 코드 받기", resendCode:"코드 다시 받기", resendIn:"{s}초 뒤 다시 받기",
+    code:"인증 코드", codeHelp:"메일로 받은 6자리 숫자", codeSent:"코드를 보냈습니다. 메일함(스팸함 포함)을 확인해 주세요. 10분 동안 쓸 수 있습니다.",
     welcome:"다시 오신 걸 환영해요!", welcomeSub:"HaslaLab 커뮤니티에 로그인하세요.",
     create:"계정 만들기", createSub:"가입하고 질문하고, 답하고, 추천하세요.",
     agree:"커뮤니티 규칙을 읽었고 지키겠습니다.", rulesH:"커뮤니티 규칙",
@@ -8808,6 +8813,10 @@ const CMT = {
          bad_reason:"사유를 입력하세요.", network:"서버에 연결하지 못했습니다. 잠시 뒤에 다시 해 주세요.",
          consent_required:"필수 항목(이용약관, 개인정보 수집·이용)에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
          age_required:"만 14세 이상만 가입할 수 있습니다. 만 14세 미만은 가입할 수 없습니다.",
+         bad_email:"이메일 주소를 확인해 주세요.", email_taken:"이미 가입에 쓰인 이메일입니다. 로그인하거나 비밀번호 찾기를 이용해 주세요.",
+         mail_unavailable:"지금은 인증 메일을 보낼 수 없습니다. 잠시 뒤에 다시 하거나 소셜 로그인으로 가입해 주세요.",
+         code_required:"이메일로 받은 6자리 인증 코드를 입력해 주세요.", code_invalid:"인증 코드가 맞지 않습니다.",
+         code_expired:"인증 코드가 만료되었습니다. 코드를 다시 받아 주세요.", code_attempts:"인증 코드를 너무 여러 번 틀렸습니다. 코드를 다시 받아 주세요.",
          server_error:"서버 오류가 났습니다."}
   },
   en:{
@@ -8837,6 +8846,8 @@ const CMT = {
     cropH:"Crop your profile picture", cropHint:"Drag to move it; zoom with the wheel, two fingers or the slider. What is inside the circle shows on your profile.", cropZoom:"Zoom", cropRotate:"↻ Rotate 90°",
     cropApply:"Upload this", cropCancel:"Cancel", cropSrc:"Original", cropOut:"Uploaded as", cropReset:"Reset",
     password:"Password", passwordHelp:"At least 8 characters", password2:"Confirm password",
+    email:"Email", emailHelp:"Used only to confirm the sign-up and to recover your password.", sendCode:"Send code", resendCode:"Send again", resendIn:"Send again in {s}s",
+    code:"Verification code", codeHelp:"The 6 digits from the email", codeSent:"Code sent. Check your inbox (and the spam folder). It works for 10 minutes.",
     welcome:"Welcome back!", welcomeSub:"Log in to the HaslaLab community.",
     create:"Create an account", createSub:"Join to ask, answer and vote.",
     agree:"I have read the community rules and will follow them.", rulesH:"Community rules",
@@ -8871,6 +8882,10 @@ const CMT = {
          bad_reason:"Enter a reason.", network:"Couldn't reach the server. Please try again shortly.",
          consent_required:"Please accept the required terms (Terms of Service and data collection). Grading cannot start until you do.",
          age_required:"You must be 14 or older to sign up.",
+         bad_email:"Please check the email address.", email_taken:"That email is already on an account. Log in, or use “Forgot your password?”.",
+         mail_unavailable:"We can't send the verification email right now. Try again later, or sign up with a social login.",
+         code_required:"Enter the 6-digit code from the email.", code_invalid:"That code is not right.",
+         code_expired:"That code has expired. Send a new one.", code_attempts:"Too many wrong codes. Send a new one.",
          server_error:"The server hit an error."}
   }
 };
@@ -8879,7 +8894,8 @@ const cm = { me:null, meChecked:false, seq:0, draft:{}, v:0, boards:null, view:"
 try{ cm.view = localStorage.getItem("hlCmView")==="card" ? "card" : "list"; }catch(e){}
 
 function cmBase(){
-  let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
+  /* the API base may be overridden for local development only: a script that set it elsewhere would get every request */
+  let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){} if(!/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o))o="";
   const base=(o||COMMUNITY_API).replace(/\/+$/,"");
   return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;
 }
@@ -9623,6 +9639,8 @@ function cmSignup(root){
       <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small><span class="cmnick" id="cmSnick"></span></label>
       <label>${T.password}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
       <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
+      <label>${T.email}<span class="cmmail"><input type="email" name="email" autocomplete="email" maxlength="254"><button type="button" class="cmbtn" data-code>${T.sendCode}</button></span><small>${T.emailHelp}</small></label>
+      <label>${T.code}<input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7"><small data-codeinfo>${T.codeHelp}</small></label>
       <ol class="rules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
       <label class="chk"><input type="checkbox" name="agree"> ${T.agree}</label>
       ${cmConsentHtml()}
@@ -9632,14 +9650,33 @@ function cmSignup(root){
     <p class="alt">${T.haveAcc} <a href="#/community/login">${T.login}</a></p></div></div>`;
   const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr"), consentOf=cmConsentWire(f);
   const nickFree=cmNickCheck(f.nickname, root.querySelector("#cmSnick"));
+  /* a password account is made only for an address its owner reads: the server mails a 6-digit code (10 minutes,
+     5 tries) and the sign-up spends it. The button waits a minute between sends; the server allows 5 an hour.
+     The two fields carry no `required`: the script checks them after the name, so a taken nickname is still the first thing said */
+  const send=f.querySelector("[data-code]"), info=f.querySelector("[data-codeinfo]"), digits=v=>v.replace(/\s+/g,"");
+  let wait=0, timer=null;
+  const count=()=>{ if(!send.isConnected||--wait<=0){ clearInterval(timer); timer=null; send.disabled=false; send.textContent=T.resendCode; } else send.textContent=T.resendIn.replace("{s}",wait); };
+  send.onclick=async()=>{
+    err.textContent=""; const email=f.email.value.trim();
+    if(!email||!f.email.checkValidity()){ err.textContent=cmErr({code:"bad_email"}); f.email.focus(); return; }
+    send.disabled=true;
+    try{ await cmApi("POST","/signup/email-code",{email,lang}); info.textContent=T.codeSent; info.className="cmnick ok";
+      wait=61; count(); timer=setInterval(count,1000); f.code.focus(); }
+    catch(er){ send.disabled=false; err.textContent=cmErr(er); if(er.code==="bad_email"||er.code==="email_taken") f.email.focus(); }
+  };
   f.onsubmit=async e=>{
     e.preventDefault();
     if(await nickFree()===false){ err.textContent=cmErr({code:"nickname_taken"}); f.nickname.focus(); return; }
     if(f.password.value!==f.password2.value){ err.textContent=T.pwMismatch; return; }
     if(!f.agree.checked){ err.textContent=T.mustAgree; return; }
     let consent; try{ consent=consentOf(); }catch(er){ err.textContent=cmErr(er); return; }
-    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent})); }
-    catch(er){ err.textContent=cmErr(er); if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); } }
+    const email=f.email.value.trim(), code=digits(f.code.value);
+    if(!email||!f.email.checkValidity()){ err.textContent=cmErr({code:"bad_email"}); f.email.focus(); return; }
+    if(!/^\d{6}$/.test(code)){ err.textContent=cmErr({code:"code_required"}); f.code.focus(); return; }
+    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code})); }
+    catch(er){ err.textContent=cmErr(er);
+      if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); }
+      else if(/^code_/.test(er.code)) f.code.focus(); else if(er.code==="bad_email"||er.code==="email_taken") f.email.focus(); }
   };
   arOauth(root);
 }

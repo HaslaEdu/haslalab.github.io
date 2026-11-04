@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..'),read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const EDGE='https://haslalab-community-edge.haslalab.workers.dev',LEGACY='https://haslalab-community.haslalab.workers.dev';
-const cases=[['',EDGE],[LEGACY,EDGE],[LEGACY+'/',EDGE],[EDGE+'/',EDGE],['http://localhost:8765/','http://localhost:8765'],['https://custom-api.example/','https://custom-api.example']];
+const cases=[['',EDGE],[LEGACY,EDGE],[LEGACY+'/',EDGE],[EDGE+'/',EDGE],['http://localhost:8765/','http://localhost:8765'],['https://custom-api.example/',EDGE],['https://haslalab-dev.haslalab.workers.dev/','https://haslalab-dev.haslalab.workers.dev']]; /* an override to any other host is ignored: a script that set one would receive every request and its token */;
 const storage=value=>({getItem:key=>key==='hlCmApi'?value:key==='hlCmTok'?'unchanged-account-token':null,setItem(){throw Error('migration must not rewrite account storage');},removeItem(){throw Error('migration must not remove account storage');}});
 
 test('main, exam and payment API bases migrate only the known production override',()=>{

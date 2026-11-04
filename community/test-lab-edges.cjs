@@ -10,8 +10,10 @@ const call = async (m, p, body, tok) => { const r = await fetch(API + "/api" + p
 const clockSec = t => { const p = t.match(/(\d+:)?\d+:\d+/)[0].split(":").map(Number); return p.length === 3 ? p[0] * 3600 + p[1] * 60 + p[2] : p[0] * 60 + p[1]; };
 
 (async () => {
+  // password sign-up needs a mailed code: the code row goes into the local D1 directly
+  const { devSignupCode } = await import("./fixtures/signup-code.mjs");
   const rnd = Math.random().toString(36).slice(2, 7);
-  const TOK = (await call("POST", "/signup", { username: "edg" + rnd, nickname: "edg" + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
+  const TOK = (await call("POST", "/signup", { username: "edg" + rnd, nickname: "edg" + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true }, ...await devSignupCode() }))[1].token;
   /* this run is about the last token: the account starts with one instead of the five every account gets */
   require("child_process").execSync(`npx wrangler d1 execute haslalab-community --local --command "UPDATE users SET exam_tokens=1 WHERE username='edg${rnd}'"`, { cwd: __dirname, stdio: "ignore" });
   const browser = await chromium.launch();

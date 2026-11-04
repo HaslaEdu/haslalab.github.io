@@ -49,7 +49,7 @@
 <script type="module">
 import { detectQuad, solveHomography, MARKER_INSET } from "./labscan/scanner.js?v=2d410ba50bfe";
 const COMMUNITY_API="https://haslalab-community-edge.haslalab.workers.dev";
-const API = (() => { let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; })();
+const API = (() => { let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}if(!/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(value))value="";const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; })();
 const TOK = (() => { try { return localStorage.getItem("hlCmTok") || ""; } catch (e) { return ""; } })();
 const COL = { haslalab: "#57ab5a", gemini: "#4c8bf5", openai: "#c678dd", claude: "#e5534b", upstage: "#56b6c2", gt: "#f2c14e" };
 const $ = id => document.getElementById(id);

@@ -8,8 +8,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const call = async (m, p, body, tok) => { const r = await fetch(API + "/api" + p, { method: m, headers: { "Content-Type": "application/json", ...(tok ? { Authorization: "Bearer " + tok } : {}) }, body: body ? JSON.stringify(body) : undefined }); return [r.status, await r.json()]; };
 
 (async () => {
+  // password sign-up needs a mailed code: the code row goes into the local D1 directly
+  const { devSignupCode } = await import("./fixtures/signup-code.mjs");
   const r = Math.random().toString(36).slice(2, 6);
-  const [, other] = await call("POST", "/signup", { username: "pfo" + r, nickname: "Taken" + r, password: "password1", consent: { terms: true, privacy: true, age14: true } });
+  const [, other] = await call("POST", "/signup", { username: "pfo" + r, nickname: "Taken" + r, password: "password1", consent: { terms: true, privacy: true, age14: true }, ...await devSignupCode() });
   const browser = await chromium.launch(), errs = [];
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   await ctx.addInitScript(api => { if (!sessionStorage.getItem("s")) { sessionStorage.setItem("s", 1); localStorage.setItem("hlCmApi", api); localStorage.removeItem("hlCmTok"); localStorage.setItem("hlLang", "ko"); } }, API);
@@ -27,6 +29,10 @@ const call = async (m, p, body, tok) => { const r = await fetch(API + "/api" + p
   await pg.fill("#cmS [name=nickname]", "Fresh" + r);
   await pg.waitForFunction(() => /쓸 수 있는/.test(document.querySelector("#cmSnick").textContent), null, { timeout: 5000 });
   ok(true, "a free name says so");
+  /* the address and its code (put in the local D1 as if mailed), and the required consent boxes */
+  const mailed = await devSignupCode();
+  await pg.fill("#cmS [name=email]", mailed.email); await pg.fill("#cmS [name=code]", mailed.code);
+  await pg.$$eval("#cmS .cmconsent input[type=checkbox]", boxes => boxes.forEach(b => { b.checked = true; }));
   await pg.click("#cmS button[type=submit]");
   await pg.waitForFunction(() => !!localStorage.getItem("hlCmTok"), null, { timeout: 8000 });
   ok(true, "signed up with the free name");

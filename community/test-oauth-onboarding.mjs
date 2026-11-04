@@ -5,6 +5,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {readFileSync,readdirSync} from 'node:fs';
 import worker from './src/index.js';
 import {studioUser} from './src/studio-gateway.js';
+import {signupCode} from './fixtures/signup-code.mjs';
 const origin='https://haslalab.org',gateway='https://haslalab-community-edge.haslalab.workers.dev';
 const b64=bytes=>Buffer.from(bytes).toString('base64url');
 function setup(){
@@ -14,7 +15,9 @@ function setup(){
  const api=async(method,path,body,token)=>{const r=await worker.fetch(new Request(gateway+'/api'+path,{method,headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.88',...(body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:'Bearer '+token}:{})},...(body?{body:JSON.stringify(body)}:{})}),env,{waitUntil(){}});return{status:r.status,data:await r.json(),headers:r.headers}};
  const get=path=>worker.fetch(new Request(path.startsWith('http')?path:gateway+path,{headers:{Origin:origin,'CF-Connecting-IP':'192.0.2.88'}}),env,{waitUntil(){}});
  const oauth=async(start,sub='new-social')=>{const original=globalThis.fetch;globalThis.fetch=async input=>{const url=new URL(input);assert.equal(url.origin,'https://provider.invalid');return Response.json(url.pathname.includes('token')?{access_token:'fixture-access'}:{sub,name:'소셜 사용자'})};try{const started=await get(start);assert.equal(started.status,302);const state=new URL(started.headers.get('Location')).searchParams.get('state');const finished=await get('/api/oauth/google/callback?state='+state+'&code=fixture');assert.equal(finished.status,302);assert.equal((await get('/api/oauth/google/callback?state='+state+'&code=fixture')).status,400);return new URL(finished.headers.get('Location'))}finally{globalThis.fetch=original}};
- return{sql,env,api,get,oauth,close(){sql.close()}};
+ // a password sign-up also carries a mailed code (signup-email.js): `coded` adds a fresh address and its code row
+ const coded=async body=>({...body,...await signupCode(sql)});
+ return{sql,env,api,get,oauth,coded,close(){sql.close()}};
 }
 test('social registration requires a unique chosen username before protected API use; existing admin identity is retained',async()=>{
  const s=setup();try{
@@ -41,7 +44,7 @@ test('social registration requires a unique chosen username before protected API
 });
 test('a historical social admin with a later password can choose a name once without losing identity, role or data',async()=>{
  const s=setup();try{
-  const normal=await s.api('POST','/signup',{username:'g_Member1234',nickname:'Chosen member',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}});
+  const normal=await s.api('POST','/signup',await s.coded({username:'g_Member1234',nickname:'Chosen member',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}}));
   assert.equal((await s.api('GET','/me',undefined,normal.data.token)).data.user.username_setup_available,undefined);
   assert.equal((await s.api('POST','/me/username',{username:'other_name',consent:{terms:true,privacy:true,age14:true}},normal.data.token)).data.error,'username_already_set');
   const created=Math.floor(Date.now()/1000)-86400,password=s.sql.prepare('SELECT pw FROM users WHERE id=?').get(normal.data.user.id).pw;
@@ -78,7 +81,7 @@ test('a manually chosen social-looking username with a later linked provider is 
 test('auth-context contains only public user data and a fresh-login boolean; guests and pending members are denied',async()=>{
  const s=setup();try{
   assert.equal((await s.api('GET','/me/auth-context')).status,401);
-  const signed=await s.api('POST','/signup',{username:'context_owner',nickname:'Context fixture',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}}),token=signed.data.token;
+  const signed=await s.api('POST','/signup',await s.coded({username:'context_owner',nickname:'Context fixture',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}})),token=signed.data.token;
   s.sql.exec('DROP TABLE account_username_claims'); // A pre-migration deployment creates only its additive claim table on the first account read.
   const fresh=await s.api('GET','/me/auth-context',undefined,token);assert.equal(fresh.status,200);assert.deepEqual(Object.keys(fresh.data).sort(),['recent_login','user']);assert.equal(fresh.data.recent_login,true);assert.equal(fresh.data.user.id,signed.data.user.id);
   for(const key of ['token','tokenHash','sessionCreatedAt','pw','password'])assert.equal(fresh.data.user[key],undefined);
@@ -88,7 +91,7 @@ test('auth-context contains only public user data and a fresh-login boolean; gue
 test('Google identity proof requires a recent completed login and binds only the authenticated owner',async()=>{
  const s=setup();try{
   assert.equal((await s.api('GET','/me/identity-proof?provider=google')).status,401);
-  const owner=await s.api('POST','/signup',{username:'proof_owner',nickname:'Proof fixture',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}}),other=await s.api('POST','/signup',{username:'proof_other',nickname:'Other fixture',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}}),token=owner.data.token;
+  const owner=await s.api('POST','/signup',await s.coded({username:'proof_owner',nickname:'Proof fixture',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}})),other=await s.api('POST','/signup',await s.coded({username:'proof_other',nickname:'Other fixture',password:'fixture-password',consent:{terms:true,privacy:true,age14:true}})),token=owner.data.token;
   assert.equal((await s.api('GET','/me/identity-proof?provider=google',undefined,token)).data.error,'provider_identity_required');
   s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','fixture-owner-google-sub',?,?)").run(owner.data.user.id,Math.floor(Date.now()/1000));
   s.sql.prepare("INSERT INTO identities(provider,sub,user_id,created_at) VALUES('google','fixture-other-google-sub',?,?)").run(other.data.user.id,Math.floor(Date.now()/1000));

@@ -1,14 +1,17 @@
 // run against `npm run dev` on a fresh local DB:  node test.mjs
+import { devSignupCode } from "./fixtures/signup-code.mjs";
 const B=(process.env.API||"http://127.0.0.1:8787")+"/api";
 const call=async(m,p,body,tok)=>{const r=await fetch(B+p,{method:m,headers:{"Content-Type":"application/json",Origin:"http://localhost:8765",...(tok?{Authorization:"Bearer "+tok}:{})},body:body?JSON.stringify(body):undefined});return [r.status,await r.json(),r.headers.get("access-control-allow-origin")];};
 const ok=(c,msg)=>console.log((c?"PASS ":"FAIL ")+msg);
-let [s,j,o]=await call("POST","/signup",{username:"alice",nickname:"앨리스",password:"password1"});ok(s===200&&j.token&&o==="http://localhost:8765","signup "+s);
+// a password sign-up agrees to the terms and spends a mailed code; the code row goes into the local D1 directly
+const AGREE={terms:true,privacy:true,age14:true},join=async body=>({...body,consent:AGREE,...await devSignupCode()});
+let [s,j,o]=await call("POST","/signup",await join({username:"alice",nickname:"앨리스",password:"password1"}));ok(s===200&&j.token&&o==="http://localhost:8765","signup "+s);
 const A=j.token;
-[s,j]=await call("POST","/signup",{username:"ALICE",nickname:"x1",password:"password1"});ok(s===409&&j.error==="username_taken","dup username "+j.error);
-[s,j]=await call("POST","/signup",{username:"bob",nickname:"앨리스",password:"password1"});ok(s===409&&j.error==="nickname_taken","dup nick");
-[s,j]=await call("POST","/signup",{username:"bo",nickname:"bob",password:"password1"});ok(s===400,"short username");
-[s,j]=await call("POST","/signup",{username:"bob",nickname:"밥이",password:"short"});ok(s===400&&j.error==="bad_password","short pw");
-[s,j]=await call("POST","/signup",{username:"bob",nickname:"밥 Kim",password:"password2"});ok(s===200,"signup bob");const Bt=j.token;
+[s,j]=await call("POST","/signup",{username:"ALICE",nickname:"x1",password:"password1",consent:AGREE});ok(s===409&&j.error==="username_taken","dup username "+j.error);
+[s,j]=await call("POST","/signup",{username:"bob",nickname:"앨리스",password:"password1",consent:AGREE});ok(s===409&&j.error==="nickname_taken","dup nick");
+[s,j]=await call("POST","/signup",{username:"bo",nickname:"bob",password:"password1",consent:AGREE});ok(s===400,"short username");
+[s,j]=await call("POST","/signup",{username:"bob",nickname:"밥이",password:"short",consent:AGREE});ok(s===400&&j.error==="bad_password","short pw");
+[s,j]=await call("POST","/signup",await join({username:"bob",nickname:"밥 Kim",password:"password2"}));ok(s===200,"signup bob");const Bt=j.token;
 [s,j]=await call("POST","/login",{username:"alice",password:"wrong"});ok(s===401,"bad login");
 [s,j]=await call("POST","/login",{username:"Alice",password:"password1"});ok(s===200&&j.user.nickname==="앨리스","login case-insens");
 [s,j]=await call("GET","/me",null,A);ok(j.user&&j.user.username==="alice","me");
@@ -41,8 +44,8 @@ const r=await fetch(B+"/health",{method:"OPTIONS",headers:{Origin:"https://evil.
 /* v2: tags, votes, replies, sorting, best posts, notices */
 {
   let [s0, h] = await call("GET", "/health"); ok(h.v >= 2, "health v2+");
-  let [s1, a] = await call("POST", "/signup", { username: "v2user", nickname: "브이투", password: "password1" }); const T = a.token;
-  let [s2, b] = await call("POST", "/signup", { username: "v2other", nickname: "다른이", password: "password1" }); const U = b.token;
+  let [s1, a] = await call("POST", "/signup", await join({ username: "v2user", nickname: "브이투", password: "password1" })); const T = a.token;
+  let [s2, b] = await call("POST", "/signup", await join({ username: "v2other", nickname: "다른이", password: "password1" })); const U = b.token;
   let [s3, p1] = await call("POST", "/posts", { board: "qna", tag: "q", title: "태그 질문", body: "본문" }, T); ok(s3 === 200, "post with tag");
   let [s4, p2] = await call("POST", "/posts", { board: "qna", tag: "notice", title: "공지 시도", body: "x" }, T);
   let [, g2] = await call("GET", `/posts/${p2.id}`); ok(g2.post.tag === "gen", "notice tag needs admin");
@@ -68,7 +71,7 @@ const r=await fetch(B+"/health",{method:"OPTIONS",headers:{Origin:"https://evil.
 /* v3: the Korean and the English server keep their own posts */
 {
   let [, h] = await call("GET", "/health"); ok(h.v >= 3, "health v3+");
-  let [, a] = await call("POST", "/signup", { username: "v3user", nickname: "브이삼", password: "password1" });
+  let [, a] = await call("POST", "/signup", await join({ username: "v3user", nickname: "브이삼", password: "password1" }));
   let [, pk] = await call("POST", "/posts", { board: "free", lang: "ko", title: "한국어 글", body: "x" }, a.token);
   let [, pe] = await call("POST", "/posts", { board: "free", lang: "en", title: "English post", body: "x" }, a.token);
   let [, lk] = await call("GET", "/posts?lang=ko&board=free"); let [, le] = await call("GET", "/posts?lang=en&board=free");
