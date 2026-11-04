@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install --quiet requests wandb
-      - name: Validate and train Gemma then QwQ on one A100
+      - name: Train selected Hasla model roles independently
         timeout-minutes: 130
         run: python tools/ai/private_dual_run.py
         env:

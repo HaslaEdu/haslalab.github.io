@@ -176,6 +176,18 @@ class PrivateCorpusRunnerTests(unittest.TestCase):
         self.assertNotIn(PRIVATE_TEXT, str(caught.exception))
         self.assertNotIn(FAKE_KEY, str(caught.exception))
 
+    def test_model_results_accept_scalar_json_and_terminal_failure_never_waits_forever(self):
+        failed={'status':'failed','stage':'training','error_code':'trainer_process_failed'}
+        for summary in ({'private_training_result':failed}, {'private_training_result_json':json.dumps(failed)},
+                        {'private_training_result.status':'failed','private_training_result.stage':'training','private_training_result.error_code':'trainer_process_failed'}):
+            with self.subTest(summary=summary), patch.object(runner,'wandb_query',return_value={
+                    'project':{'run':{'state':'failed','summaryMetrics':json.dumps(summary)}}}):
+                self.assertEqual(runner.result_for('fixture','fixture-run'),failed)
+        with patch.object(runner,'wandb_query',return_value={'project':{'run':{'state':'failed','summaryMetrics':'{}'}}}):
+            self.assertEqual(runner.result_for('fixture','fixture-run')['error_code'],'terminal_run_without_verified_result')
+        with patch.object(runner,'wandb_query',return_value={'project':{'run':{'state':'running','summaryMetrics':'{}'}}}):
+            self.assertIsNone(runner.result_for('fixture','fixture-run'))
+
     def test_v2_list_and_single_billing_fields_normalize_without_losing_storage(self):
         raw = {"id": "fixture-pod", "name": "fixture", "cost": 2.5, "disk": 200,
                "gpu": {"id": runner.GPU_IDS[1], "count": 1}, "status": "PROVISIONING",

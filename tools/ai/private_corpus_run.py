@@ -270,7 +270,30 @@ def result_for(entity, run_id, timeout=20):
     summary = row.get('summaryMetrics') or '{}'
     if isinstance(summary, str):
         summary = json.loads(summary)
-    return summary.get('private_training_result')
+    for key in ('private_training_result_json', 'private_training_result'):
+        result = summary.get(key)
+        for _ in range(2):
+            if not isinstance(result, str):
+                break
+            try:
+                result = json.loads(result)
+            except ValueError:
+                result = None
+                break
+        if isinstance(result, dict) and result.get('status') in ('uploaded', 'failed'):
+            return result
+    flattened = {}
+    for field in ('status', 'stage', 'error_code'):
+        for separator in ('.', '/'):
+            key = 'private_training_result' + separator + field
+            if key in summary:
+                flattened[field] = summary[key]
+    if flattened.get('status') == 'failed':
+        return flattened
+    if str(row.get('state', '')).lower() in ('failed', 'crashed', 'killed', 'finished'):
+        return {'status': 'failed', 'stage': 'result_verification',
+                'error_code': 'terminal_run_without_verified_result'}
+    return None
 
 
 def delete_and_confirm(pod_id):

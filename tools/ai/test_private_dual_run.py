@@ -195,14 +195,38 @@ class PrivateDualParentTests(unittest.TestCase):
         self.assertEqual(set(results), {"chat", "solver"})
         mocks.delete.assert_called_once_with("fixture-pod")
 
-    def test_first_role_failure_does_not_wait_for_second_and_still_deletes(self):
-        with self.ready(failed=True) as mocks, contextlib.redirect_stdout(io.StringIO()), \
-                self.assertRaisesRegex(RuntimeError, "one model"):
-            dual.main()
-        mocks.result.assert_called_once()
-        self.assertTrue(mocks.result.call_args.args[1].endswith("-chat"))
+    def test_model_failures_are_recorded_and_other_selected_role_is_still_checked(self):
+        with self.ready(failed=True) as mocks, contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(dual.main(), 1)
+        self.assertEqual(mocks.result.call_count, 2)
         mocks.delete.assert_called_once_with("fixture-pod")
-        self.assertFalse(Path("private-dual-result.json").exists())
+        self.assertEqual(json.loads(Path("private-dual-result.json").read_text()), {})
+        self.assertEqual(set(json.loads(Path("private-dual-failures.json").read_text())), {'chat','solver'})
+
+    def test_completed_solver_adapter_is_retained_when_chat_failed(self):
+        with self.ready() as mocks, contextlib.redirect_stdout(io.StringIO()):
+            mocks.result.side_effect = lambda entity, run, **kw: {'status':'uploaded','artifact':'solver-adapter:v0'} if run.endswith('-solver') else {'status':'failed','error_code':'trainer_process_failed'}
+            self.assertEqual(dual.main(), 1)
+        self.assertEqual(set(json.loads(Path('private-dual-result.json').read_text())), {'solver'})
+        self.assertEqual(set(json.loads(Path('private-dual-failures.json').read_text())), {'chat'})
+        mocks.delete.assert_called_once_with('fixture-pod')
+
+    def test_independent_solver_run_uses_one_hour_and_never_uploads_chat_input(self):
+        self.manifest['selected_roles'] = ['solver']
+        os.environ['HASLA_DUAL_MANIFEST'] = json.dumps(self.manifest)
+        output = io.StringIO()
+        with self.ready() as mocks, contextlib.redirect_stdout(output):
+            self.assertEqual(dual.main(), 0)
+        mocks.publish.assert_called_once()
+        self.assertTrue(mocks.publish.call_args.args[1].endswith('-solver'))
+        self.assertEqual([j['role'] for j in json.loads(mocks.create.call_args.args[1]['HASLA_ROLE_JOBS'])], ['solver'])
+        event=next(json.loads(line) for line in output.getvalue().splitlines() if json.loads(line)['event']=='dual_preflight')
+        self.assertEqual(event['runtime_seconds'],3600)
+        self.assertEqual(set(json.loads(Path('private-dual-result.json').read_text())),{'solver'})
+        for selected in ([], ['chat','chat'], ['unknown'], 'solver'):
+            bad={**self.manifest,'selected_roles':selected}
+            with self.subTest(selected=selected), self.assertRaisesRegex(ValueError,'selected'):
+                dual.load_inputs({**self.env,'HASLA_DUAL_MANIFEST':json.dumps(bad)})
 
     def test_lost_creation_response_recovers_only_exact_name_without_recreation(self):
         with self.ready(lost=True) as mocks, contextlib.redirect_stdout(io.StringIO()), \

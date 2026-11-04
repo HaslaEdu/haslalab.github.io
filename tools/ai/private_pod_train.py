@@ -23,6 +23,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 import traceback
 import urllib.request
 
@@ -31,7 +32,10 @@ MAX_COMPRESSED_BYTES = 4 * 1024 * 1024
 MAX_RAW_BYTES = 16 * 1024 * 1024
 MAX_SCRIPT_BYTES = 256 * 1024
 MAX_PARTS = 100
-MAX_ADAPTER_BYTES = 512 * 1024 * 1024
+ADAPTER_TOTAL_LIMITS = {"solver": 2 * 1024**3, "chat": 4 * 1024**3}
+MAX_ADAPTER_CONFIG_BYTES = 1024 * 1024
+ADAPTER_FILENAMES = ("adapter_config.json", "adapter_model.safetensors")
+MAX_TRAINER_DIAGNOSTIC_BYTES = 64 * 1024
 # train_lora.py pins per-device batch=1 and gradient accumulation=8.
 # Keep this local policy independent of caller-provided environment settings.
 PILOT_EFFECTIVE_BATCH_ROWS = 8
@@ -43,6 +47,15 @@ SAFE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}\Z")
 
 class PilotError(RuntimeError):
     """Only fixed, nonsensitive error codes may be passed to this exception."""
+
+
+class AdapterSizeError(PilotError):
+    """An invalid-size error with only fixed filenames and byte counts attached."""
+    def __init__(self, filename, file_bytes, total_bytes, limit_bytes):
+        super().__init__("invalid_adapter_size")
+        self.safe_details = {"adapter_size_filename": filename if filename in ADAPTER_FILENAMES else "adapter_model.safetensors",
+                             "observed_file_bytes": int(file_bytes), "observed_total_bytes": int(total_bytes),
+                             "adapter_size_limit_bytes": int(limit_bytes)}
 
 
 def sha_bytes(value):
@@ -389,17 +402,26 @@ def adapter_inventory(adapter, config=None):
     if config is None:
         raise PilotError("validated_role_configuration_required")
     adapter = Path(adapter)
-    files = []
-    for name in ("adapter_config.json", "adapter_model.safetensors"):
+    role = config.get("role")
+    if role not in ADAPTER_TOTAL_LIMITS:
+        raise PilotError("validated_role_configuration_required")
+    total_limit = ADAPTER_TOTAL_LIMITS[role]
+    # Inspect all sizes before hashing anything. The bounded limit includes the
+    # PEFT header/config, while the JSON config also has its own small limit.
+    sizes = {}
+    for name in ADAPTER_FILENAMES:
         path = adapter / name
         if not path.is_file() or path.is_symlink():
             raise PilotError("expected_adapter_file_missing")
-        size = path.stat().st_size
-        if not 0 < size <= MAX_ADAPTER_BYTES:
-            raise PilotError("invalid_adapter_size")
-        files.append({"name": name, "bytes": size, "sha256": sha_file(path)})
-    if sum(f["bytes"] for f in files) > MAX_ADAPTER_BYTES:
-        raise PilotError("invalid_adapter_size")
+        sizes[name] = path.stat().st_size
+    total = sum(sizes.values())
+    for name, size in sizes.items():
+        limit = MAX_ADAPTER_CONFIG_BYTES if name == "adapter_config.json" else total_limit
+        if not 0 < size <= limit:
+            raise AdapterSizeError(name, size, total, limit)
+    if total > total_limit:
+        raise AdapterSizeError("adapter_model.safetensors", sizes["adapter_model.safetensors"], total, total_limit)
+    files = [{"name": name, "bytes": sizes[name], "sha256": sha_file(adapter / name)} for name in ADAPTER_FILENAMES]
     peft = json.loads((adapter / "adapter_config.json").read_text(encoding="utf-8"))
     # Validate rather than silently relabeling an adapter trained against another base.
     if peft.get("base_model_name_or_path") not in config["base_aliases"]:
@@ -439,11 +461,102 @@ def training_report(adapter, config, data_format, training_sha, validation_sha):
 
 
 def safe_failure(error, stage):
-    return {"status": "failed", "stage": stage,
+    result = {"status": "failed", "stage": stage,
             "error_code": str(error) if isinstance(error, PilotError) else type(error).__name__,
             "trace": [{"file": Path(frame.filename).name, "line": frame.lineno, "function": frame.name}
                       for frame in traceback.extract_tb(error.__traceback__)[-6:]],
             "deployed": False, "promoted": False}
+    if isinstance(error, AdapterSizeError):
+        result.update(error.safe_details)
+    return result
+
+
+DIAGNOSTIC_MODULES = frozenset(("unsloth", "unsloth_zoo", "torch", "torchao", "transformers", "trl",
+    "datasets", "peft", "accelerate", "triton", "bitsandbytes", "flash_attn", "xformers", "wandb",
+    "safetensors", "tokenizers", "sentencepiece", "huggingface_hub", "numpy", "PIL", "packaging",
+    "cut_cross_entropy", "psutil", "requests", "sacremoses"))
+DIAGNOSTIC_SYMBOLS = frozenset(("FastModel", "FastLanguageModel", "SFTTrainer", "SFTConfig", "HybridCache",
+    "DynamicCache", "AutoModelForCausalLM", "AutoProcessor", "Gemma4ForConditionalGeneration",
+    "Gemma4Config", "Qwen2ForCausalLM", "ROPE_INIT_FUNCTIONS", "is_torchdynamo_compiling",
+    "DistributedDataParallelKwargs", "BloomPreTrainedModel", "prepare_model_for_kbit_training"))
+DIAGNOSTIC_KEYWORDS = frozenset(("tokenizer", "processing_class", "max_seq_length", "max_length",
+    "dataset_text_field", "eval_strategy", "evaluation_strategy", "load_in_4bit", "load_in_16bit",
+    "model_name", "trust_remote_code", "attn_implementation", "torch_dtype", "dtype",
+    "use_gradient_checkpointing", "packing", "formatting_func", "dataset_kwargs"))
+
+
+def classify_trainer_stderr(raw):
+    """Return fixed public diagnostics, never an arbitrary captured identifier.
+
+    Module/symbol/keyword names are emitted only when present in the explicit
+    public-library allowlists above. Unknown names, paths, values and error text
+    remain private even if they look like valid Python identifiers.
+    """
+    text = raw[-MAX_TRAINER_DIAGNOSTIC_BYTES:].decode("utf-8", errors="replace") if isinstance(raw, bytes) else ""
+    if re.search(r"CUDA (?:error:\s*)?out of memory|torch\.OutOfMemoryError:.*CUDA", text, re.I):
+        return {"trainer_error_kind": "cuda_out_of_memory", "trainer_error_subject": "cuda"}
+    for marker, subject in (("GatedRepoError", "gated_repository"),
+                            ("RepositoryNotFoundError", "repository_not_found"),
+                            ("HFValidationError", "repository_identifier"),
+                            ("HfHubHTTPError", "huggingface_http")):
+        if re.search(r"\b" + marker + r"\b", text):
+            return {"trainer_error_kind": "huggingface_access", "trainer_error_subject": subject}
+    match = re.search(r"ModuleNotFoundError:\s*No module named ['\"]([A-Za-z0-9_.]+)['\"]", text)
+    if match:
+        module = match.group(1).split(".")[0]
+        return {"trainer_error_kind": "missing_module", "trainer_error_subject": module if module in DIAGNOSTIC_MODULES else "unknown_module"}
+    match = re.search(r"ImportError:\s*cannot import name ['\"]([A-Za-z0-9_]+)['\"]", text)
+    if match:
+        name = match.group(1)
+        return {"trainer_error_kind": "missing_import_symbol", "trainer_error_subject": name if name in DIAGNOSTIC_SYMBOLS else "unknown_symbol"}
+    match = re.search(r"TypeError:[^\n]{0,256}unexpected keyword argument ['\"]([A-Za-z0-9_]+)['\"]", text)
+    if match:
+        name = match.group(1)
+        return {"trainer_error_kind": "unexpected_keyword", "trainer_error_subject": name if name in DIAGNOSTIC_KEYWORDS else "unknown_keyword"}
+    match = re.search(r"AttributeError:\s*module ['\"]([A-Za-z0-9_.]+)['\"] has no attribute ['\"]([A-Za-z0-9_]+)['\"]", text)
+    if match and match.group(1).split(".")[0] in DIAGNOSTIC_MODULES:
+        name = match.group(2)
+        return {"trainer_error_kind": "missing_library_attribute", "trainer_error_subject": name if name in DIAGNOSTIC_SYMBOLS else "unknown_symbol"}
+    if re.search(r"(?im)^(?:ValueError|NotImplementedError|RuntimeError):[^\n]{0,512}(?:unsupported model|unrecognized configuration class|model[^\n]{0,150}not supported|Unsloth[^\n]{0,150}not support)", text):
+        subject = "gemma4" if re.search(r"gemma[_ -]?4", text, re.I) else "qwq" if re.search(r"\bQwQ\b", text, re.I) else "unknown_model"
+        return {"trainer_error_kind": "unsupported_model", "trainer_error_subject": subject}
+    if "Cannot copy out of meta tensor" in text:
+        return {"trainer_error_kind": "model_initialization", "trainer_error_subject": "meta_tensor"}
+    if re.search(r"bfloat16[^\n]{0,120}not supported|does not support[^\n]{0,120}bfloat16", text, re.I):
+        return {"trainer_error_kind": "unsupported_precision", "trainer_error_subject": "bf16"}
+    if "CUDA Setup failed despite GPU being available" in text:
+        return {"trainer_error_kind": "quantization_setup", "trainer_error_subject": "bitsandbytes"}
+    public_errors = ("TypeError", "ValueError", "ImportError", "RuntimeError", "AssertionError",
+                     "NotImplementedError", "FileNotFoundError", "PermissionError", "IndexError", "KeyError", "AttributeError")
+    matches = re.findall(r"(?m)^(?:[A-Za-z0-9_.]+\.)?(" + "|".join(public_errors) + r"):", text)
+    if matches:
+        return {"trainer_error_kind": "python_error", "trainer_error_subject": matches[-1]}
+    return {"trainer_error_kind": "unclassified", "trainer_error_subject": "not_disclosed"}
+
+
+def diagnostic_from_private_stderr(stream):
+    try:
+        stream.flush()
+        stream.seek(0, io.SEEK_END)
+        stream.seek(max(0, stream.tell() - MAX_TRAINER_DIAGNOSTIC_BYTES))
+        return classify_trainer_stderr(stream.read(MAX_TRAINER_DIAGNOSTIC_BYTES))
+    except (OSError, ValueError):
+        return {"trainer_error_kind": "unclassified", "trainer_error_subject": "not_disclosed"}
+
+
+def store_private_result(run, result):
+    # GraphQL summaryMetrics may omit nested summary values. Persist a scalar
+    # representation first so the parent can always observe terminal state.
+    run.summary["private_training_result_json"] = json.dumps(result, ensure_ascii=True, separators=(",", ":"))
+    run.summary["private_training_result"] = result
+    if result.get("status") == "failed":
+        run.summary["failure_stage"] = result["stage"]
+        run.summary["failure_code"] = result["error_code"]
+        for key in ("trainer_error_kind", "trainer_error_subject", "adapter_size_filename",
+                    "observed_file_bytes", "observed_total_bytes", "adapter_size_limit_bytes",
+                    "role", "steps_completed", "train_loss", "eval_loss", "weights_updated"):
+            if key in result:
+                run.summary[key] = result[key]
 
 
 def publish_early_failure(env, workspace, private, result, wandb_module=None, opener=None):
@@ -483,7 +596,7 @@ def publish_early_failure(env, workspace, private, result, wandb_module=None, op
                                         "training_started": False, "weights_updated": False,
                                         "test_records_used": 0, "deploy": False, "promote": False},
                                 settings=settings, dir=str(workspace))
-        run.summary["private_training_result"] = {**result, "training_started": False, "weights_updated": False}
+        store_private_result(run, {**result, "training_started": False, "weights_updated": False})
         run.summary["status"] = "failed"
         run.finish(exit_code=1)
     except Exception:
@@ -496,6 +609,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
     env = dict(os.environ if env is None else env)
     workspace = Path(workspace)
     run, stage, private = None, "configuration", None
+    trainer_diagnostic = None
+    verified_training = None
     result_path = workspace / "result.json"
     try:
         role, data_format = role_input(env)
@@ -575,17 +690,25 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         timeout = int(env.get("HASLA_TRAIN_TIMEOUT_SECONDS", "3600"))
         if not 60 <= timeout <= 5400:
             raise PilotError("invalid_training_timeout")
-        completed = (runner or subprocess.run)(training_command(script, data_path, adapter, validation_path, config, data_format),
-            cwd=str(workspace), env=training_environment(env), stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL, timeout=timeout, check=False)
-        if completed.returncode:
-            raise PilotError("trainer_process_failed")
+        # The trainer's stdout remains discarded. Its stderr is private and
+        # temporary; only a classified tail (never raw text) can leave this scope.
+        with tempfile.SpooledTemporaryFile(max_size=MAX_TRAINER_DIAGNOSTIC_BYTES, mode="w+b") as private_stderr:
+            try:
+                completed = (runner or subprocess.run)(training_command(script, data_path, adapter, validation_path, config, data_format),
+                    cwd=str(workspace), env=training_environment(env), stdout=subprocess.DEVNULL,
+                    stderr=private_stderr, timeout=timeout, check=False)
+            except Exception:
+                trainer_diagnostic = diagnostic_from_private_stderr(private_stderr)
+                raise
+            if completed.returncode:
+                trainer_diagnostic = diagnostic_from_private_stderr(private_stderr)
+                raise PilotError("trainer_process_failed")
 
         stage = "adapter_validation"
         run.summary["status"] = stage
+        report = verified_training = training_report(adapter, config, data_format, sha_bytes(data),
+                                                     sha_bytes(validation_data) if validation_data is not None else None)
         files, adapter_sha = adapter_inventory(adapter, config)
-        report = training_report(adapter, config, data_format, sha_bytes(data),
-                                 sha_bytes(validation_data) if validation_data is not None else None)
         # Check again immediately before uploading an adapter; never change project visibility here.
         assert_private_project(env, opener)
         stage = "uploading_adapter"
@@ -619,13 +742,18 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                   "adapter_files": files, "training_records": len(training),
                   "validation_records": len(validation), "training_sha256": sha_bytes(data),
                   "test_records_used": 0, "weights_updated": True, "deployed": False, "promoted": False}
-        run.summary["private_training_result"] = result
+        store_private_result(run, result)
         run.summary["status"] = "uploaded"
         result_path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
         run.finish()
         return result
     except Exception as error:
         result = safe_failure(error, stage)
+        if trainer_diagnostic is not None:
+            result.update(trainer_diagnostic)
+        if verified_training is not None:
+            result.update({key: verified_training[key] for key in ("role", "steps_completed", "train_loss", "eval_loss")})
+            result["weights_updated"] = True
         if workspace.is_dir():
             try:
                 result_path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
@@ -633,7 +761,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                 pass
         if run is not None:
             try:
-                run.summary["private_training_result"] = result
+                store_private_result(run, result)
                 run.summary["status"] = "failed"
                 run.finish(exit_code=1)
             except Exception:

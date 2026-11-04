@@ -1,5 +1,6 @@
 """Offline fixtures only; no credential, network, model download, GPU, or upload."""
 import base64
+import contextlib
 import gzip
 import hashlib
 import io
@@ -220,7 +221,8 @@ class PrivatePodTests(unittest.TestCase):
             self.assertEqual(command[command.index(option) + 1], value)
         self.assertIn("--validation-data", command)
         self.assertEqual(kwargs["stdout"], subprocess.DEVNULL)
-        self.assertEqual(kwargs["stderr"], subprocess.DEVNULL)
+        self.assertIsInstance(kwargs["stderr"], tempfile.SpooledTemporaryFile)
+        self.assertTrue(kwargs["stderr"].closed)
         self.assertEqual(kwargs["env"]["WANDB_MODE"], "disabled")
         self.assertFalse(any(k.startswith("HASLA_DATA_") for k in kwargs["env"]))
         self.assertNotIn("WANDB_API_KEY", kwargs["env"])
@@ -238,6 +240,7 @@ class PrivatePodTests(unittest.TestCase):
         self.assertEqual(result["role_max_steps"], get_role_config("solver")["max_steps"])
         self.assertEqual(self.wandb.init_kwargs["config"]["max_steps"], 1)
         self.assertEqual(uploaded.metadata["max_steps"], 1)
+        self.assertEqual(json.loads(self.wandb.run.summary["private_training_result_json"]), result)
 
     def test_unverified_public_code_cannot_execute(self):
         self.env["HASLA_TRAIN_SCRIPT_SHA256"] = "0" * 64
@@ -249,6 +252,9 @@ class PrivatePodTests(unittest.TestCase):
         logged = self.wandb.run.summary["private_training_result"]
         self.assertEqual(logged["status"], "failed")
         self.assertEqual(logged["stage"], "training_code_verification")
+        self.assertEqual(json.loads(self.wandb.run.summary["private_training_result_json"]), logged)
+        self.assertEqual(self.wandb.run.summary["failure_stage"], "training_code_verification")
+        self.assertEqual(self.wandb.run.summary["failure_code"], "training_code_hash_mismatch")
         self.assertFalse(logged["training_started"])
         self.assertFalse(logged["weights_updated"])
         self.assertFalse(self.wandb.run.artifacts)
@@ -299,6 +305,78 @@ class PrivatePodTests(unittest.TestCase):
         self.assertNotIn(self.env["WANDB_API_KEY"], serialized)
         self.assertNotIn(str(self.root), serialized)
         self.assertEqual(self.wandb.run.summary["status"], "failed")
+        self.assertEqual(json.loads(self.wandb.run.summary["private_training_result_json"]), result)
+
+    def test_trainer_error_diagnostics_are_public_allowlist_values_only(self):
+        cases = [
+            (b"ModuleNotFoundError: No module named 'flash_attn.flash_attn_interface'", "missing_module", "flash_attn"),
+            (b"ImportError: cannot import name 'FastModel' from 'unsloth'", "missing_import_symbol", "FastModel"),
+            (b"TypeError: SFTTrainer.__init__() got an unexpected keyword argument 'tokenizer'", "unexpected_keyword", "tokenizer"),
+            (b"torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1 GiB", "cuda_out_of_memory", "cuda"),
+            (b"huggingface_hub.errors.GatedRepoError: secret URL and token", "huggingface_access", "gated_repository"),
+            (b"ValueError: Unrecognized configuration class Gemma4Config for this AutoModel", "unsupported_model", "gemma4"),
+            (b"NotImplementedError: Cannot copy out of meta tensor; no data!", "model_initialization", "meta_tensor"),
+            (b"RuntimeError: private text that must not leave the pod", "python_error", "RuntimeError"),
+        ]
+        for text, kind, subject in cases:
+            with self.subTest(kind=kind):
+                self.assertEqual(pod.classify_trainer_stderr(text),
+                                 {"trainer_error_kind": kind, "trainer_error_subject": subject})
+        for template, expected in (("ModuleNotFoundError: No module named '{}'", "unknown_module"),
+                                   ("ImportError: cannot import name '{}'", "unknown_symbol"),
+                                   ("TypeError: constructor got an unexpected keyword argument '{}'", "unknown_keyword")):
+            raw = template.format(self.secret_text).encode()
+            classified = pod.classify_trainer_stderr(raw)
+            self.assertEqual(classified["trainer_error_subject"], expected)
+            self.assertNotIn(self.secret_text, json.dumps(classified))
+
+    def test_diagnostic_reads_only_final_64k_and_never_returns_raw_tail(self):
+        class ReadSpy(io.BytesIO):
+            def read(self, size=-1):
+                self.last_read_size = size
+                return super().read(size)
+        raw = b"ModuleNotFoundError: No module named 'torch'\n" + b"X" * 100000 + b"\n" + self.secret_text.encode()
+        stream = ReadSpy(raw)
+        result = pod.diagnostic_from_private_stderr(stream)
+        self.assertEqual(stream.last_read_size, 64 * 1024)
+        self.assertEqual(result, {"trainer_error_kind": "unclassified", "trainer_error_subject": "not_disclosed"})
+        self.assertNotIn(self.secret_text, json.dumps(result))
+
+    def test_failed_trainer_uses_private_stderr_and_scalar_summary_without_echoing_secrets(self):
+        capture = io.StringIO()
+        stderr_handles = []
+        def fails(command, **kwargs):
+            self.assertEqual(kwargs["stdout"], subprocess.DEVNULL)
+            private = kwargs["stderr"]
+            stderr_handles.append(private)
+            private.write((self.secret_text + "\n" + self.env["WANDB_API_KEY"] + "\n" + self.env["HF_TOKEN"] +
+                           "\nTypeError: SFTTrainer.__init__() got an unexpected keyword argument 'tokenizer'\n").encode())
+            return SimpleNamespace(returncode=1)
+        with contextlib.redirect_stdout(capture), contextlib.redirect_stderr(capture):
+            result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, fails)
+        self.assertEqual(capture.getvalue(), "")
+        self.assertEqual(result["error_code"], "trainer_process_failed")
+        self.assertEqual(result["trainer_error_kind"], "unexpected_keyword")
+        self.assertEqual(result["trainer_error_subject"], "tokenizer")
+        self.assertEqual(self.wandb.run.summary["trainer_error_kind"], "unexpected_keyword")
+        self.assertEqual(json.loads(self.wandb.run.summary["private_training_result_json"]), result)
+        self.assertTrue(stderr_handles[0].closed)
+        self.assertFalse(self.wandb.run.artifacts)
+        self.assertEqual(self.wandb.run.exit_codes, [1])
+        logged = json.dumps({"summary": self.wandb.run.summary, "config": self.wandb.init_kwargs["config"], "result": result})
+        for secret in (self.secret_text, self.env["WANDB_API_KEY"], self.env["HF_TOKEN"]):
+            self.assertNotIn(secret, logged)
+            self.assertNotIn(secret, (self.root / "result.json").read_text())
+
+    def test_successful_trainer_stderr_is_discarded_and_not_classified(self):
+        def success(command, **kwargs):
+            kwargs["stderr"].write((self.secret_text + "\nCUDA out of memory\n").encode())
+            return self.runner(command, **kwargs)
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, success)
+        self.assertEqual(result["status"], "uploaded")
+        self.assertNotIn("trainer_error_kind", result)
+        self.assertEqual(json.loads(self.wandb.run.summary["private_training_result_json"]), result)
+        self.assertNotIn(self.secret_text, json.dumps(self.wandb.run.summary))
 
     def test_known_unsloth_base_alias_is_preserved(self):
         self.runner([], env={})
@@ -508,7 +586,112 @@ class PrivatePodTests(unittest.TestCase):
         result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, ignores_bounded_steps)
         self.assertEqual(result["status"], "failed")
         self.assertEqual(result["error_code"], "training_report_role_or_input_mismatch")
+        self.assertIsNot(result.get("weights_updated"), True)
         self.assertFalse(self.wandb.run.artifacts)
+
+    def test_role_size_caps_accept_legitimate_large_adapters_without_creating_large_files(self):
+        self.runner([], env={})
+        adapter = self.root / "adapter"
+        original_stat = Path.stat
+        def pretend_weights(size):
+            def stat(path, *args, **kwargs):
+                value = original_stat(path, *args, **kwargs)
+                return SimpleNamespace(st_size=size, st_mode=value.st_mode) if path.name == "adapter_model.safetensors" else value
+            return stat
+        solver = get_role_config("solver")
+        # A real FP32 rank-16 QwQ adapter can exceed the old 512 MiB cap.
+        with patch.object(Path, "stat", pretend_weights(512 * 1024**2 + 8192)), patch.object(pod, "sha_file", return_value="a" * 64):
+            files, _ = pod.adapter_inventory(adapter, solver)
+            self.assertEqual(files[1]["bytes"], 512 * 1024**2 + 8192)
+        config_path = adapter / "adapter_config.json"
+        config_size = config_path.stat().st_size
+        with patch.object(Path, "stat", pretend_weights(pod.ADAPTER_TOTAL_LIMITS["solver"] - config_size)), patch.object(pod, "sha_file", return_value="a" * 64):
+            files, _ = pod.adapter_inventory(adapter, solver)
+            self.assertEqual(sum(f["bytes"] for f in files), 2 * 1024**3)
+        chat = get_role_config("chat")
+        config_path.write_text(json.dumps({"base_model_name_or_path": chat["base_model"], "peft_type": "LORA", "r": 8}))
+        with patch.object(Path, "stat", pretend_weights(3 * 1024**3)), patch.object(pod, "sha_file", return_value="a" * 64):
+            files, _ = pod.adapter_inventory(adapter, chat)
+            self.assertEqual(files[1]["bytes"], 3 * 1024**3)
+
+    def test_size_cap_rejects_full_base_and_oversized_config_before_hashing(self):
+        self.runner([], env={})
+        adapter = self.root / "adapter"
+        original_stat = Path.stat
+        for filename, size, limit, role in (("adapter_model.safetensors", 2 * 1024**3 + 1, 2 * 1024**3, "solver"),
+                                           ("adapter_model.safetensors", 5 * 1024**3, 4 * 1024**3, "chat"),
+                                           ("adapter_config.json", pod.MAX_ADAPTER_CONFIG_BYTES + 1, pod.MAX_ADAPTER_CONFIG_BYTES, "solver")):
+            def fake_stat(path, *args, **kwargs):
+                value = original_stat(path, *args, **kwargs)
+                return SimpleNamespace(st_size=size, st_mode=value.st_mode) if path.name == filename else value
+            with self.subTest(filename=filename, role=role), patch.object(Path, "stat", fake_stat), \
+                    patch.object(pod, "sha_file") as hasher, \
+                    patch.dict(os.environ, {"HASLA_MAX_ADAPTER_BYTES": str(99 * 1024**3)}):
+                with self.assertRaises(pod.AdapterSizeError) as raised:
+                    pod.adapter_inventory(adapter, {**get_role_config(role), "max_adapter_bytes": 99 * 1024**3})
+                self.assertEqual(raised.exception.safe_details["adapter_size_filename"], filename)
+                self.assertEqual(raised.exception.safe_details["observed_file_bytes"], size)
+                self.assertEqual(raised.exception.safe_details["adapter_size_limit_bytes"], limit)
+                hasher.assert_not_called()
+
+    def test_total_adapter_limit_includes_header_and_reports_safe_size_counts(self):
+        self.runner([], env={})
+        adapter = self.root / "adapter"
+        config_size = (adapter / "adapter_config.json").stat().st_size
+        limit = pod.ADAPTER_TOTAL_LIMITS["solver"]
+        original_stat = Path.stat
+        def fake_stat(path, *args, **kwargs):
+            value = original_stat(path, *args, **kwargs)
+            return SimpleNamespace(st_size=limit - config_size + 1, st_mode=value.st_mode) if path.name == "adapter_model.safetensors" else value
+        with patch.object(Path, "stat", fake_stat), patch.object(pod, "sha_file") as hasher:
+            with self.assertRaises(pod.AdapterSizeError) as raised:
+                pod.adapter_inventory(adapter, get_role_config("solver"))
+            failure = pod.safe_failure(raised.exception, "adapter_validation")
+            self.assertEqual(failure["error_code"], "invalid_adapter_size")
+            self.assertEqual(failure["observed_total_bytes"], limit + 1)
+            self.assertEqual(failure["adapter_size_limit_bytes"], limit)
+            self.assertEqual(failure["adapter_size_filename"], "adapter_model.safetensors")
+            self.assertNotIn(str(adapter), json.dumps(failure))
+            hasher.assert_not_called()
+
+    def test_verified_training_survives_posttraining_size_failure_without_claiming_usable_artifact(self):
+        def trained(command, **kwargs):
+            completed = self.runner(command, **kwargs)
+            path = self.root / "adapter" / "hasla_training_manifest.json"
+            report = json.loads(path.read_text())
+            report.update({"train_loss": 1.25, "eval_loss": 1.5})
+            path.write_text(json.dumps(report))
+            return completed
+        # A small mocked limit exercises the failure without writing large files.
+        with patch.dict(pod.ADAPTER_TOTAL_LIMITS, {"solver": 16}):
+            result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, trained)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["stage"], "adapter_validation")
+        self.assertEqual(result["error_code"], "invalid_adapter_size")
+        self.assertTrue(result["weights_updated"])
+        self.assertEqual(result["role"], "solver")
+        self.assertEqual(result["steps_completed"], 1)
+        self.assertEqual((result["train_loss"], result["eval_loss"]), (1.25, 1.5))
+        self.assertEqual(result["adapter_size_limit_bytes"], 16)
+        self.assertNotIn("artifact", result)
+        self.assertNotIn("adapter_files", result)
+        self.assertFalse(self.wandb.run.artifacts)
+        self.assertEqual(json.loads(self.wandb.run.summary["private_training_result_json"]), result)
+        self.assertEqual(self.wandb.run.summary["steps_completed"], 1)
+        self.assertTrue(self.wandb.run.summary["weights_updated"])
+
+    def test_verified_training_survives_upload_failure_but_no_artifact_is_reported(self):
+        class FailingArtifact(FakeArtifact):
+            def wait(inner, timeout):
+                raise RuntimeError(self.secret_text + self.env["WANDB_API_KEY"])
+        self.wandb.Artifact = FailingArtifact
+        result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["stage"], "uploading_adapter")
+        self.assertTrue(result["weights_updated"])
+        self.assertEqual(result["steps_completed"], 1)
+        self.assertNotIn("artifact", result)
+        self.assertNotIn(self.secret_text, json.dumps(self.wandb.run.summary))
 
     def test_missing_or_crossed_role_format_is_rejected_before_private_data_access(self):
         for role, data_format in ((None, "text"), ("chat", "text"), ("solver", None), ("both", "text")):

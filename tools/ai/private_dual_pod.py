@@ -1,4 +1,4 @@
-"""Run Gemma and QwQ in separate processes on one private GPU, in that order."""
+"""Run selected private GPU roles sequentially, preserving their explicit order."""
 import hashlib
 import json
 import os
@@ -11,16 +11,26 @@ import urllib.request
 
 def role_jobs(env):
     jobs = json.loads(env['HASLA_ROLE_JOBS'])
-    if not isinstance(jobs, list) or [j.get('role') for j in jobs] != ['chat', 'solver']:
-        raise ValueError('exactly chat then solver is required')
+    if not isinstance(jobs, list) or not 1 <= len(jobs) <= 2 or any(not isinstance(j, dict) for j in jobs):
+        raise ValueError('one or two private role jobs are required')
     expected_formats = {'chat': 'chat', 'solver': 'text'}
+    seen_roles, seen_runs = set(), set()
     for job in jobs:
-        if job.get('format') != expected_formats[job['role']]:
+        role = job.get('role')
+        if role not in expected_formats or role in seen_roles:
+            raise ValueError('private roles must be unique chat or solver')
+        seen_roles.add(role)
+        if job.get('format') != expected_formats[role]:
             raise ValueError('role and data format do not match')
-        if not re.fullmatch(r'[A-Za-z0-9_.-]{1,120}', job.get('run', '')):
+        run_id = job.get('run')
+        if not isinstance(run_id, str) or not re.fullmatch(r'[A-Za-z0-9_.-]{1,120}', run_id) or run_id in seen_runs:
             raise ValueError('invalid private run identity')
+        seen_runs.add(run_id)
+        artifact = job.get('input_artifact')
+        if not isinstance(artifact, str) or not re.fullmatch(r'[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+:v[0-9]+', artifact):
+            raise ValueError('immutable private input artifact is required')
         for key in ('training_sha256', 'validation_sha256'):
-            if not re.fullmatch(r'[a-f0-9]{64}', job.get(key, '')):
+            if not isinstance(job.get(key), str) or not re.fullmatch(r'[a-f0-9]{64}', job[key]):
                 raise ValueError('invalid private input checksum')
     return jobs
 
@@ -38,6 +48,11 @@ def main():
         raise ValueError('private child code checksum mismatch')
     script = Path('/workspace/private_pod_train.py')
     script.write_bytes(code)
+    workspaces = {job['role']: Path('/workspace') / job['role'] for job in jobs}
+    # Filesystem/bootstrap failures abort before any GPU child is launched.
+    for workspace in workspaces.values():
+        workspace.mkdir(parents=True, exist_ok=True)
+    any_failed = False
     for job in jobs:
         child = {k: v for k, v in env.items() if k != 'HASLA_ROLE_JOBS'}
         child.update({'ROLE': job['role'], 'HASLA_DATA_FORMAT': job['format'],
@@ -45,20 +60,32 @@ def main():
                       'HASLA_DATA_SHA256': job['training_sha256'],
                       'HASLA_VALIDATION_SHA256': job['validation_sha256'],
                       'RUN': job['run'], 'ARTIFACT': job['run'] + '-lora',
-                      'HASLA_WORKSPACE': '/workspace/' + job['role'],
+                      'HASLA_WORKSPACE': workspaces[job['role']].as_posix(),
                       'HASLA_TRAIN_TIMEOUT_SECONDS': '2700'})
-        result = subprocess.run([sys.executable, str(script)], env=child, cwd='/workspace',
-                                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3000)
-        if result.returncode:
+        try:
+            result = subprocess.run([sys.executable, str(script)], env=child, cwd=workspaces[job['role']].as_posix(),
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=3000)
+            failed = result.returncode != 0
+        except (subprocess.TimeoutExpired, OSError):
+            # subprocess.run kills and reaps its timed-out child before raising;
+            # a launch OSError does not leave a successfully started child here.
+            # Unknown exceptions remain global failures instead of risking overlap.
+            failed = True
+        if failed:
             print(json.dumps({'status': 'failed', 'role': job['role']}), flush=True)
-            return 1
-        print(json.dumps({'status': 'uploaded', 'role': job['role']}), flush=True)
-    return 0
+            any_failed = True
+        else:
+            print(json.dumps({'status': 'uploaded', 'role': job['role']}), flush=True)
+    return 1 if any_failed else 0
+
+
+def entrypoint():
+    try:
+        return main()
+    except Exception:
+        print(json.dumps({'status': 'failed', 'role': 'bootstrap'}), flush=True)
+        return 1
 
 
 if __name__ == '__main__':
-    try:
-        raise SystemExit(main())
-    except Exception as error:
-        print(json.dumps({'status': 'failed', 'error_class': type(error).__name__}), flush=True)
-        raise SystemExit(1)
+    raise SystemExit(entrypoint())

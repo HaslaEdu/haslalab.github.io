@@ -43,6 +43,10 @@ def load_inputs(env):
     manifest = json.loads(env['HASLA_DUAL_MANIFEST'])
     if manifest.get('budget_krw') != 30000 or list(manifest.get('roles', {})) != ['chat', 'solver']:
         raise ValueError('invalid dual-role budget or ordering')
+    selected = manifest.get('selected_roles', ['chat', 'solver'])
+    if (not isinstance(selected, list) or not 1 <= len(selected) <= 2
+            or any(role not in ('chat', 'solver') for role in selected) or len(set(selected)) != len(selected)):
+        raise ValueError('invalid selected model roles')
     for key in ('train_script_sha256', 'role_config_sha256', 'pod_script_sha256', 'dual_pod_sha256'):
         if not re.fullmatch(r'[a-f0-9]{64}', manifest.get(key, '')):
             raise ValueError('pinned code checksums are required')
@@ -99,6 +103,7 @@ def main():
     if '--cleanup' in sys.argv:
         return cloud.cleanup()
     manifest, payloads = load_inputs(env)
+    selected_roles = manifest.get('selected_roles', ['chat', 'solver'])
     for key in ('RUNPOD_API_KEY', 'WANDB_API_KEY', 'HF_TOKEN'):
         if not env.get(key):
             raise ValueError('missing required training credential')
@@ -108,7 +113,8 @@ def main():
         raise RuntimeError('a Pod already exists for this run')
     selected_gpu = cloud.capacity_preflight()
     bases = {'chat': 'google/gemma-4-26B-A4B-it', 'solver': 'Qwen/QwQ-32B'}
-    for role, model in bases.items():
+    for role in selected_roles:
+        model = bases[role]
         response = cloud.requests.head(f'https://huggingface.co/{model}/resolve/main/config.json',
             headers={'Authorization': 'Bearer ' + env['HF_TOKEN']}, allow_redirects=True, timeout=20)
         if not response.ok:
@@ -117,16 +123,19 @@ def main():
     entity = cloud.private_project()
     policy = BudgetPolicy(fx_krw_per_usd_upper=2000, budget_krw=30000, reserve_krw=5000, tax_multiplier='1.15')
     quote = PodQuote(gpu_usd_per_hour_upper=4, container_disk_gb=200, volume_disk_gb=0)
+    run_seconds = 7200 if len(selected_roles) == 2 else 3600
     ledger = reserve_run(BudgetLedger(policy, prior_spend_krw=manifest.get('prior_upper_krw', 10)),
-                         run_id, 'dual', quote, time.monotonic(), 7200, 7200)
+                         run_id, 'dual' if len(selected_roles) == 2 else selected_roles[0], quote,
+                         time.monotonic(), run_seconds, run_seconds)
     plan = ledger.runs[-1].plan
     cloud.safe_event('dual_preflight', roles={r: {'format': s['format'], 'training_records': s['train']['records'],
         'validation_records': s['validation']['records']} for r, s in manifest['roles'].items()},
-        budget_krw=30000, reserved_upper_krw=str(plan.reserved_krw), runtime_seconds=plan.run_seconds)
+        selected_roles=selected_roles, budget_krw=30000, reserved_upper_krw=str(plan.reserved_krw), runtime_seconds=plan.run_seconds)
     if env.get('HASLA_PREFLIGHT_ONLY') == 'true':
         return 0
     jobs = []
-    for role, spec in manifest['roles'].items():
+    for role in selected_roles:
+        spec = manifest['roles'][role]
         input_ref = cloud.publish_private_input(entity, run_id + '-' + role, {**spec, 'role': role}, payloads[role])
         jobs.append({'role': role, 'format': spec['format'], 'run': run_id + '-' + role,
                      'input_artifact': input_ref['HASLA_INPUT_ARTIFACT'],
@@ -145,19 +154,21 @@ def main():
              f'curl -fsSL {url} -o /workspace/private_dual_pod.py; '
              f'echo "{manifest["dual_pod_sha256"]}  /workspace/private_dual_pod.py" | sha256sum -c - >/dev/null; '
              'python /workspace/private_dual_pod.py')
-    command = 'bash -lc ' + shlex.quote('timeout --signal=TERM --kill-after=30s 6600s bash -lc ' + shlex.quote(start))
-    pod, attempted, results = None, False, {}
+    command = 'bash -lc ' + shlex.quote(f'timeout --signal=TERM --kill-after=30s {run_seconds - 600}s bash -lc ' + shlex.quote(start))
+    pod, attempted, results, failures = None, False, {}, {}
     try:
         attempted = True
-        cloud.safe_event('gpu_request', api='rest_v2', gpu=selected_gpu, roles=['chat', 'solver'],
+        cloud.safe_event('gpu_request', api='rest_v2', gpu=selected_gpu, roles=selected_roles,
                          private_environment_bytes=sum(len(v) for v in pod_env.values()))
         pod = cloud.graphql_create_pod(run_id, pod_env, command, gpu_id=selected_gpu)
         pod = cloud.runpod('GET', '/pods/' + pod['id'])
         validate_observed_pod(plan, pod)
-        cloud.safe_event('pod_started', pod_id=pod['id'], hourly_usd=pod['costPerHr'], roles=['chat', 'solver'])
+        cloud.safe_event('pod_started', pod_id=pod['id'], hourly_usd=pod['costPerHr'], roles=selected_roles)
         last_roles = []
         while not should_stop(plan, time.monotonic()):
             for job in jobs:
+                if job['role'] in results or job['role'] in failures:
+                    continue
                 remaining = float(plan.deadline_monotonic) - time.monotonic()
                 if remaining <= 0:
                     break
@@ -165,12 +176,19 @@ def main():
                 if row:
                     if row.get('status') != 'uploaded':
                         cloud.safe_event('role_failed', role=job['role'], stage=row.get('stage'), error_code=row.get('error_code'))
-                        raise RuntimeError('one model did not complete successfully')
-                    results[job['role']] = row
+                        failures[job['role']] = row
+                    else:
+                        results[job['role']] = row
             if sorted(results) != last_roles:
                 last_roles = sorted(results)
                 cloud.safe_event('roles_completed', roles=last_roles)
-            if len(results) == 2:
+            if len(results) + len(failures) == len(jobs):
+                if failures:
+                    cloud.safe_event('training_partial', completed_roles=sorted(results), failed_roles=sorted(failures),
+                                     artifacts={role: row['artifact'] for role, row in results.items()})
+                    Path('private-dual-result.json').write_text(json.dumps(results, ensure_ascii=True), encoding='utf8')
+                    Path('private-dual-failures.json').write_text(json.dumps(failures, ensure_ascii=True), encoding='utf8')
+                    return 1
                 cloud.safe_event('dual_training_completed', artifacts={r: x['artifact'] for r, x in results.items()},
                                  weights_updated=True, production_promotion=False)
                 Path('private-dual-result.json').write_text(json.dumps(results, ensure_ascii=True), encoding='utf8')
