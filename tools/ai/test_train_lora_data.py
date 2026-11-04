@@ -27,6 +27,19 @@ class DatasetChecks(unittest.TestCase):
     def row(self, text, group, split=None):
         return {'text': text, 'metadata': {'group_id': group, **({'split': split} if split else {})}}
 
+    def test_standalone_pod_trainer_allows_private_adapter_but_source_checkouts_do_not(self):
+        pod = self.root / 'workspace' / 'chat'
+        standalone = pod / 'train_lora.py'
+        self.assertEqual(train_lora.private_adapter_output(pod / 'adapter', standalone), (pod / 'adapter').resolve())
+        source = self.root / 'repository'
+        with self.assertRaisesRegex(ValueError, 'source repository'):
+            train_lora.private_adapter_output(source / 'adapter', source / 'tools' / 'ai' / 'train_lora.py')
+        worktree = self.root / 'other-worktree'
+        worktree.mkdir()
+        (worktree / '.git').write_text('gitdir: fixture-only')
+        with self.assertRaisesRegex(ValueError, 'every source repository'):
+            train_lora.private_adapter_output(worktree / 'private-adapter', standalone)
+
     def test_book_pages_remain_together(self):
         rows = [self.row(f'book {book} page {page}', f'book-{book}') for book in range(60) for page in range(4)]
         path = self.write('books.jsonl', rows)

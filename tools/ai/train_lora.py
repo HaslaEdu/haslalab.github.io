@@ -157,6 +157,20 @@ def file_sha256(path):
         return hashlib.file_digest(handle, 'sha256').hexdigest()
 
 
+def private_adapter_output(path, trainer_path=__file__):
+    target = Path(path).resolve()
+    script = Path(trainer_path).resolve()
+    # A pinned standalone trainer on a Pod has no repository ancestors.
+    # Inferring parents[2] there would identify '/' as the repository.
+    if any((parent / '.git').exists() for parent in (target, *target.parents)):
+        raise ValueError('save private adapters outside every source repository')
+    if script.parent.name == 'ai' and script.parent.parent.name == 'tools':
+        repository = script.parent.parent.parent
+        if target.is_relative_to(repository):
+            raise ValueError('save private adapters outside the source repository')
+    return target
+
+
 def selected_dataset_sha256(rows, data_format):
     return hashlib.sha256(('\n'.join(fingerprint(row, data_format) for row in rows) + '\n').encode()).hexdigest()
 
@@ -271,9 +285,7 @@ def main(argv=None):
     print(json.dumps(summary, ensure_ascii=False), flush=True)
     if a.prepare_only:
         return
-    repository = Path(__file__).resolve().parents[2]
-    if Path(a.out).resolve().is_relative_to(repository):
-        raise ValueError('save private adapters and training artifacts outside the source repository')
+    private_adapter_output(a.out)
 
     import unsloth
     import torch
