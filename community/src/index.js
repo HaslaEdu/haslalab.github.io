@@ -47,6 +47,7 @@ import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './pag
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
 import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH, readCompletion, stripThinking, sseTexts } from './ai-assistant.js';
+import { reasonBudgeted, readMarkLines, QWQ_MODEL, QWQ_CONTEXT } from './qwq-reason.js';
 import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
 import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
@@ -2115,6 +2116,17 @@ const ONE_ITEM_ONE_ID = "Every item has its own id, used once (when a part repea
    JSON in the answer (a reasoning model's thinking is dropped), read as {raw, usage, model} like visionJSON's */
 export async function workersAiGrade(env, g, system, input) {
   const model = /^@cf\/[\w.-]+\/[\w.-]+$/.test(g.model || '') ? g.model : '@cf/qwen/qwq-32b';
+  /* QwQ (g.budget): streamed, sampled as Qwen advises, its think cut at the budget and the marks written one per line
+     (qwq-reason.js); the budget is kept inside QwQ's 24k context with the input (about 3 characters a token) */
+  if (model === QWQ_MODEL && g.budget) {
+    const answerTokens = Math.max(300, Math.min(2000, Math.ceil(input.length / 40) + 300));
+    const budget = Math.max(500, Math.min(+g.budget || 4000, QWQ_CONTEXT - Math.ceil((system.length + input.length) / 3) - answerTokens - 800));
+    const r = await reasonBudgeted(env, { system, messages: [{ role: 'user', content: input + '\n\nAfter thinking, write only the marks, one scheme item per line: «<item id> <points awarded>», nothing else.' }],
+      budget, answerTokens, lora: g.lora || null });
+    const items = readMarkLines(r.answer);
+    if (!items.length) throw new Error('qwq_no_marks:' + (r.forced ? 'forced:' : '') + r.answer.slice(0, 160));
+    return { raw: { items, think_tokens: r.think_tokens, forced: r.forced, ms: r.ms }, model, usage: { input_tokens: null, output_tokens: (r.think_tokens || 0) + r.answer_tokens } };
+  }
   const chat = /^@cf\/(?:openai\/|google\/gemma-4|qwen\/qwen3\.[1-9]|deepseek-ai\/deepseek-v4|moonshotai\/)/.test(model);
   const res = await env.AI.run(model, { messages: [{ role: 'system', content: system },
       { role: 'user', content: input + '\n\nAnswer with JSON only, no other text: {"items":[{"id":"<scheme item id>","score":<points awarded>}, …]} with one entry per scheme item.' }],
@@ -3684,7 +3696,11 @@ async function labBench(env, s, job) {
         const pages = (await env.DB.prepare('SELECT no, kind, ocr, text FROM lab_pages WHERE session_id=? AND task=? ORDER BY no').bind(c.session, c.task).all()).results;
         /* v2 (spec.version 2): the regulation in the system text, the paper's rules and its whole-part lines in the input */
         const whole = v2 ? wholeParts(sch) : new Set();
-        cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: gradeTrainInput({ items: lines.map(l => whole.has(l.item.id) ? { ...l.item, whole: true } : l.item), unit_rule: sch.unit_rule, notes: sch.notes }, pages, { task: c.task, exam: `${ss.comp} ${ss.year}`, v2 }) });
+        const inputOf = ls => gradeTrainInput({ items: ls.map(l => whole.has(l.item.id) ? { ...l.item, whole: true } : l.item), unit_rule: sch.unit_rule, notes: sch.notes }, pages, { task: c.task, exam: `${ss.comp} ${ss.year}`, v2 });
+        /* spec.grader.split: one call per top-level part (A, B, …), side by side — shorter inputs and thinks, and a failed
+           part costs only itself */
+        const groups = spec.grader?.split ? Object.values(lines.reduce((o, l) => { const k = (/^[A-Za-z]+|^\d+/.exec(String(l.item.id)) || ['_'])[0]; (o[k] ||= []).push(l); return o; }, {})) : null;
+        cases.push({ session: c.session, task: c.task, exam: ss.exam_key, lines, input: inputOf(lines), parts: groups && groups.length > 1 ? groups.map(inputOf) : null });
       }
       const ready = cases.filter(c => c.lines);
       if (spec.stage === 'tune-grade-data') {
@@ -3700,14 +3716,24 @@ async function labBench(env, s, job) {
         for (const c of ready) {
           const t1 = Date.now();
           try {
-            const r = g.provider === 'workers-ai' ? await workersAiGrade(env, g, system, c.input)
+            const r = g.provider === 'workers-ai' && c.parts ? await (async () => {
+                const got = await Promise.allSettled(c.parts.map(input => workersAiGrade(env, g, system, input)));
+                const ok = got.filter(x => x.status === 'fulfilled').map(x => x.value);
+                if (!ok.length) throw got[0].reason;
+                return { raw: { items: ok.flatMap(x => x.raw.items), parts: got.length, failed_parts: got.length - ok.length,
+                    think_tokens: ok.map(x => x.raw.think_tokens ?? null), forced: ok.filter(x => x.raw.forced).length,
+                    errors: got.filter(x => x.status === 'rejected').map(x => String(x.reason?.message || x.reason).slice(0, 120)) },
+                  model: ok[0].model, usage: { input_tokens: null, output_tokens: ok.reduce((a, x) => a + (x.usage?.output_tokens || 0), 0) } };
+              })()
+              : g.provider === 'workers-ai' ? await workersAiGrade(env, g, system, c.input)
               : await visionJSON(env, { provider: g.provider || 'gemini', stage: 'grade', policy: system, parts: [{ text: c.input }], schema, maxTokens: 16384,
                 model: g.model, thinking: g.thinking || 'off', timeoutMs: 240000, ...extra });
             const marked = c.lines.every(l => l.got != null), e = marked ? gradeAgainstAudit(c.lines, r.raw?.items) : {};
             if (marked) for (const k of Object.keys(sum)) sum[k] += e[k];
             e.marks = (r.raw?.items || []).slice(0, 200).map(x => [String(x?.id), +x?.score]);
             meterAdd(env, m, { step: 'grade', model: r.model || g.model, in: r.usage?.input_tokens, cached: r.usage?.cached_tokens ?? 0, out: r.usage?.output_tokens, ms: Date.now() - t1, ok: 1 });
-            results.push({ session: c.session, task: c.task, ...e, ms: Date.now() - t1, usage: r.usage ? { in: r.usage.input_tokens, out: r.usage.output_tokens } : null });
+            const qwq = r.raw && (r.raw.think_tokens !== undefined || r.raw.parts) ? { think_tokens: r.raw.think_tokens, forced: r.raw.forced, parts: r.raw.parts, failed_parts: r.raw.failed_parts, errors: r.raw.errors } : {};
+            results.push({ session: c.session, task: c.task, ...e, ...qwq, ms: Date.now() - t1, usage: r.usage ? { in: r.usage.input_tokens, out: r.usage.output_tokens } : null });
           } catch (err) { results.push({ session: c.session, task: c.task, error: String(err?.code || err?.message || err).slice(0, 160) }); }
         }
         out = { grader: { ...g, endpoint: ep }, sum, results, skipped: cases.filter(c => c.skip) };

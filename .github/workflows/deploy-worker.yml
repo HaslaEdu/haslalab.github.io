@@ -35,7 +35,7 @@ jobs:
       # Studio creates its additive schema through the existing DB binding, so
       # deployment does not require a new D1 management permission or secret.
       - run: node --check src/worker.js && node --test test-studio.mjs test-studio-schema.mjs
-      - run: node --test test-grading-rules.mjs test-vision-provider.mjs test-reference-images.mjs test-selected-vision-worker.mjs test-ocr-failure-worker.mjs test-expr-check.mjs test-page-tiles.mjs test-grade-tools.mjs test-focus-read.mjs test-unit-check.mjs test-scheme-review.mjs test-upstage-ocr.mjs test-problem-bank-ocr.mjs test-lab-train.mjs test-vertex-tuning.mjs test-curated-schemes.mjs test-drive-backup.mjs test-injection-guard.mjs test-paddle-switch.mjs test-reserved-names.mjs
+      - run: node --test test-grading-rules.mjs test-vision-provider.mjs test-reference-images.mjs test-selected-vision-worker.mjs test-ocr-failure-worker.mjs test-expr-check.mjs test-page-tiles.mjs test-grade-tools.mjs test-focus-read.mjs test-unit-check.mjs test-scheme-review.mjs test-upstage-ocr.mjs test-problem-bank-ocr.mjs test-lab-train.mjs test-vertex-tuning.mjs test-curated-schemes.mjs test-drive-backup.mjs test-injection-guard.mjs test-paddle-switch.mjs test-reserved-names.mjs test-qwq-reason.mjs
       - run: node --test test-vision-runtime.mjs
       - run: node ../tools/build-site-catalogue.cjs --check
       - run: node --test test-lab-call-pricing.mjs test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs test-model-test-reference.mjs ../tests/test-model-test-ui.cjs ../tests/test-model-test-exam-ui.cjs ../tests/test-model-test-catalogue.cjs
