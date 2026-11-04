@@ -128,7 +128,12 @@ test("labScore: a relative uncertainty keeps the grader's mark; an absolute wron
   const scheme = { items: [{ id: "H.1.a", type: "value", role: "step", points: .3, ref: "0.62e-23", tol: "interval", full_min: 6.2e-24, full_max: 1.46e-23, what: "Magnetic moment ranges from 0.62e-23 to 1.46e-23 J/T; total spread 0.84e-23 about the mean 1.04e-23" }] };
   const at = (ocr, score) => labScore(scheme, { items: [{ id: "H.1.a", found: true, page: 2, value: .4, score }] }, [{ no: 2, kind: "working", task: "T1", ocr, read: JSON.stringify({ items: [] }) }], { theory: true }).items[0];
   const rel = String.raw`\delta\mu_S = 2\mu_S \frac{\delta v}{v} = 0.40\mu_S`;
-  assert.equal(at(rel, .3).got, .3); assert.equal(at(rel, .3).by, "model");
-  assert.equal(at(rel, .1).got, 0, "the grader itself gave under half: nothing to keep");
+  assert.equal(at(rel, .3).got, .3); assert.equal(at(rel, .3).by, "code", "the ratio matches the official range: code decides");
+  const other = String.raw`\delta\mu_S = 0.25\mu_S`, by = (score) => labScore(scheme, { items: [{ id: "H.1.a", found: true, page: 2, value: .25, score }] }, [{ no: 2, kind: "working", task: "T1", ocr: other, read: JSON.stringify({ items: [] }) }], { theory: true }).items[0];
+  assert.equal(by(.3).got, .3); assert.equal(by(.3).by, "model", "a ratio code cannot confirm: the grader's mark of at least half stands");
+  assert.equal(at(rel, 0).got, .3, "0.40 × 1.04 = 0.416 is the official ±0.42: code credits it whatever the grader gave");
+  assert.equal(at(rel, 0).by, "code");
+  const off = String.raw`\delta\mu_S = 0.10\mu_S`;
+  assert.equal(labScore(scheme, { items: [{ id: "H.1.a", found: true, page: 2, value: .1, score: .1 }] }, [{ no: 2, kind: "working", task: "T1", ocr: off, read: JSON.stringify({ items: [] }) }], { theory: true }).items[0].got, 0, "a relative uncertainty that does not match, and a grader under half: nothing");
   assert.equal(at(String.raw`\delta\mu_S = 0.40 \text{ J/T}`, .3).got, 0, "an absolute number off the range stays wrong");
 });

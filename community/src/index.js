@@ -1865,7 +1865,13 @@ const lean = v => Array.isArray(v) ? (v.length ? v.map(lean) : undefined)
   : v;
 const RELATIVE_ITEM = /±|\\pm|uncertaint|spread|range|relative|percent|%|\bdelta\b|δ|error\b/i;
 const pageText = pg => [pg?.ocr, pg?.text].filter(x => typeof x === "string").join("\n");
-const relativeKept = (it, g, pg, v) => +g.score >= .5 * it.points && RELATIVE_ITEM.test(String(it.what || "")) && relativeOnPage(pageText(pg), v);
+/* a relative uncertainty the code can check itself: the official range [c − d, c + d] and the written k·(quantity) agree
+   when k·c is d within 10 % (APhO 2022 T1 H.1: ±0.40 μ_s, 0.40 × 1.04 = 0.416 for the official ±0.42); else the
+   grader's own mark from the photo stands, where it gave at least half */
+const relativeMatches = (it, v) => { const lo = +it.full_min, hi = +it.full_max;
+  if (!(Number.isFinite(lo) && Number.isFinite(hi) && hi > lo && lo > 0) || !(v > 0 && v < 1)) return false;
+  const c = (lo + hi) / 2, d = (hi - lo) / 2; return Math.abs(v * c - d) <= .1 * d; };
+const relativeKept = (it, g, pg, v) => RELATIVE_ITEM.test(String(it.what || "")) && relativeOnPage(pageText(pg), v) && (relativeMatches(it, v) || +g.score >= .5 * it.points);
 /** the number v written on the page as a relative amount: a coefficient of a quantity's symbol (0.40\mu_S, 0.2 Δx, 0.5x_0)
     or a percentage (40 %), not a value with its unit */
 export function relativeOnPage(text, v) {
@@ -2657,7 +2663,7 @@ export function labScore(scheme, raw, pages, opts = {}) {
       if (interval) {
         if (w >= Math.min(it.full_min, it.full_max) && w <= Math.max(it.full_min, it.full_max)) pts = it.points;
         else for (const p of it.partial || []) if (w >= Math.min(p.min, p.max) && w <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
-        if (!pts && relativeKept(it, g, pg, v)) { pts = Math.min(it.points, +g.score); res.by = "model"; }
+        if (!pts && relativeKept(it, g, pg, v)) { const sure = relativeMatches(it, v); pts = sure ? it.points : Math.min(it.points, +g.score); res.by = sure ? "code" : "model"; }
       } else if (valueMatches(it, w)) pts = it.points;                                   // R12 in code: the official value and its tolerance
       else {
         /* the grader's reported number can drop the mantissa of what is written (1.04·10⁻²³ on the page, 1e-23 reported:
@@ -2673,7 +2679,7 @@ export function labScore(scheme, raw, pages, opts = {}) {
         /* an uncertainty or range given relative to the quantity (δμ = 0.40 μ_s, 20 %) is not a number to hold against the
            official absolute one: where the page writes the reported number as a coefficient of a symbol or a percentage,
            the grader's own mark from the photo and the scheme stands (APhO 2022 T1 H.1: ±0.40 μ_s for ±0.42·10⁻²³, zeroed) */
-        else if (relativeKept(it, g, pg, v)) { pts = Math.min(it.points, +g.score); res.by = "model"; res.value = v; }
+        else if (relativeKept(it, g, pg, v)) { const sure = relativeMatches(it, v); pts = sure ? it.points : Math.min(it.points, +g.score); res.by = sure ? "code" : "model"; res.value = v; }
         else rules.add("R12");
       }
       if (unitSlip && pts > 0) { pts = Math.max(0, pts - (Number.isFinite(+it.unit_penalty) ? +it.unit_penalty : 0.1)); rules.add("R3"); }
