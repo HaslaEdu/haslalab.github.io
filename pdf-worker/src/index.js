@@ -14,7 +14,7 @@ const NAME = /^\/pdf\/(([A-Za-z]+)_[A-Za-z0-9._-]+\.pdf)$/;
 const DAY = 86400;
 /* Replacing assets in place keeps their download URLs, so cached copies would
  * outlive the swap.  Bump this after re-uploading files to drop every cached copy. */
-const CACHE_V = 60;         // Complete original-layout bilingual CPhO2003 reference solutions
+const CACHE_V = 61;         // Resume large original-layout PDFs with byte-range requests
 
 export default {
   async fetch(req, env, ctx) {
@@ -28,23 +28,41 @@ export default {
     /* one cached copy per file at each edge; the query string never matters */
     const cache = caches.default;
     const key = new Request(`${url.origin}${url.pathname}?v=${CACHE_V}`, { method: "GET" });
-    let res = await cache.match(key);
+    /* Cache.match slices complete entries when the lookup retains Range.
+     * We do not publish validators, so If-Range must fall back to a full copy. */
+    const range = req.method === "GET" && !req.headers.has("If-Range") ? req.headers.get("Range") : null;
+    const lookup = range ? new Request(key, { headers: { Range: range } }) : key;
+    let res = await cache.match(lookup);
     if (!res) {
       const up = await fetch(`https://github.com/${REPO}/releases/download/pdf-${prefix.toLowerCase()}/${name}?v=${CACHE_V}`,
-                             { redirect: "follow", cf: { cacheEverything: true, cacheTtlByStatus: { "200-299": DAY, "404": 30, "500-599": 0 } } });
+                             { redirect: "follow", headers: range ? { Range: range } : {}, cf: { cacheEverything: true, cacheTtlByStatus: { "200-299": DAY, "404": 30, "500-599": 0 } } });
+      if (range && up.status === 416) {
+        const headers = { "Accept-Ranges": "bytes", "Access-Control-Allow-Origin": "*", "Access-Control-Expose-Headers": "Content-Length, Content-Range, Accept-Ranges" };
+        const contentRange = up.headers.get("Content-Range");
+        if (contentRange) headers["Content-Range"] = contentRange;
+        return new Response(null, { status: 416, headers });
+      }
       /* a file asked for before it was uploaded is «not found» for half a minute only, not for a day */
       if (!up.ok) return new Response("Not found", { status: up.status === 404 ? 404 : 502 });
-      res = new Response(up.body, { status: 200, headers: {
+      res = new Response(up.body, { status: up.status === 206 ? 206 : 200, headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `inline; filename="${name}"`,
         "Cache-Control": "public, max-age=3600",
         "Access-Control-Allow-Origin": "*",
+        "Access-Control-Expose-Headers": "Content-Length, Content-Range, Accept-Ranges",
+        "Accept-Ranges": "bytes",
         "X-Content-Type-Options": "nosniff",
       }});
       const len = up.headers.get("Content-Length");
       if (len) res.headers.set("Content-Length", len);
-      ctx.waitUntil(cache.put(key, res.clone()));
+      const contentRange = up.headers.get("Content-Range");
+      if (contentRange) res.headers.set("Content-Range", contentRange);
+      /* A partial PDF must never replace the complete cached document. */
+      if (res.status === 200) ctx.waitUntil(cache.put(key, res.clone()));
     }
-    return req.method === "HEAD" ? new Response(null, { status: res.status, headers: res.headers }) : res;
+    const headers = new Headers(res.headers);
+    headers.set("Accept-Ranges", "bytes");
+    headers.set("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges");
+    return new Response(req.method === "HEAD" ? null : res.body, { status: res.status, headers });
   },
 };

@@ -73,6 +73,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       # the PDF Worker (problem sheets and solutions from the releases), with the same wrangler
+      - run: node --test ../tests/test-pdf-worker-ranges.cjs
       - run: node --check ../pdf-worker/src/index.js && npx wrangler deploy --config ../pdf-worker/wrangler.toml
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
