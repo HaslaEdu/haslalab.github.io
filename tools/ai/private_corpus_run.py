@@ -28,6 +28,7 @@ REST = 'https://rest.runpod.io/v1'
 PROJECT = 'hasla-ai-private-training'
 PREFIX = 'hasla-private-books-'
 E = os.environ
+GPU_IDS = ('NVIDIA A100 80GB PCIe', 'NVIDIA A100-SXM4-80GB')
 
 
 def safe_event(kind, **fields):
@@ -111,6 +112,40 @@ def capacity_preflight():
     safe_event('runpod_readonly_preflight', funded=funded, quotes=quotes)
     if not funded:
         raise RuntimeError('RunPod account needs prepaid funds; no payment or GPU creation attempted')
+
+
+def graphql_create_pod(name, env, command):
+    # Official legacy API fallback for v1's creation-only HTTP 500 responses.
+    # A GraphQL error is never followed by an automatic second creation request.
+    payload = {'name': name, 'cloudType': 'SECURE', 'gpuCount': 1, 'volumeInGb': 0,
+               'containerDiskInGb': 200, 'gpuTypeId': GPU_IDS[1],
+               'imageName': 'runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04',
+               'dockerArgs': command, 'ports': '', 'volumeMountPath': '/workspace',
+               'env': [{'key': k, 'value': v} for k, v in env.items()]}
+    response = requests.post('https://api.runpod.io/graphql',
+        json={'query': 'mutation($input:PodFindAndDeployOnDemandInput!){podFindAndDeployOnDemand(input:$input){id}}',
+              'variables': {'input': payload}},
+        headers={'Authorization': 'Bearer ' + E['RUNPOD_API_KEY']}, timeout=20)
+    if not response.ok:
+        safe_event('runpod_graphql_create_error', http_status=response.status_code)
+        raise RuntimeError('RunPod GraphQL creation failed')
+    data = response.json()
+    if data.get('errors'):
+        categories, fields = [], []
+        for error in data['errors']:
+            message = str(error.get('message', ''))
+            lower = message.lower()
+            categories.append('gpu_capacity' if any(x in lower for x in ('available', 'capacity', 'stock'))
+                              else 'account_funding' if any(x in lower for x in ('balance', 'credit', 'fund'))
+                              else 'authorization' if any(x in lower for x in ('permission', 'unauthorized', 'authentication'))
+                              else 'provider_or_validation')
+            fields.extend(re.findall(r'(?:field|argument|type) ["\']([A-Za-z_][A-Za-z_0-9]*)["\']', message))
+        safe_event('runpod_graphql_create_error', categories=categories, fields=fields)
+        raise RuntimeError('RunPod GraphQL rejected creation')
+    pod = (data.get('data') or {}).get('podFindAndDeployOnDemand')
+    if not pod or not isinstance(pod.get('id'), str):
+        raise RuntimeError('RunPod GraphQL did not return a Pod ID')
+    return pod
 
 
 def data_environment():
@@ -241,10 +276,15 @@ def main():
     creation_attempted = False
     try:
         creation_attempted = True
-        pod = runpod('POST', '/pods', json={'name': run_id, 'imageName': 'runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04',
-            'cloudType': 'SECURE', 'gpuTypeIds': ['NVIDIA A100 80GB PCIe'], 'gpuCount': 1,
-            'containerDiskInGb': 200, 'volumeInGb': 0, 'interruptible': False, 'env': env,
-            'dockerStartCmd': ['bash', '-lc', 'timeout --signal=TERM --kill-after=30s 3300s bash -lc ' + __import__('shlex').quote(start)]})
+        bounded_command = 'timeout --signal=TERM --kill-after=30s 3300s bash -lc ' + __import__('shlex').quote(start)
+        if E.get('HASLA_CREATE_API') == 'graphql':
+            pod = graphql_create_pod(run_id, env, 'bash -lc ' + __import__('shlex').quote(bounded_command))
+            pod = runpod('GET', '/pods/' + pod['id'])
+        else:
+            pod = runpod('POST', '/pods', json={'name': run_id, 'imageName': 'runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04',
+                'cloudType': 'SECURE', 'gpuTypeIds': [GPU_IDS[0]], 'gpuCount': 1,
+                'containerDiskInGb': 200, 'volumeInGb': 0, 'interruptible': False, 'env': env,
+                'dockerStartCmd': ['bash', '-lc', bounded_command]})
         validate_observed_pod(plan, pod)
         safe_event('pod_started', pod_id=pod['id'], hourly_usd=pod['costPerHr'])
         Path('private-pilot-state.json').write_text(json.dumps({'pod_id': pod['id'], 'run': run_id}), encoding='utf-8')
