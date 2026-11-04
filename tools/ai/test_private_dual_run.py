@@ -1,5 +1,6 @@
 """Offline dual-role parent checks: no credentials, network, GPUs or uploads."""
 import base64
+import copy
 import contextlib
 import gzip
 import hashlib
@@ -341,6 +342,100 @@ class PrivateDualParentTests(unittest.TestCase):
             dual.main()
         mocks.create.assert_not_called()
         mocks.publish.assert_not_called()
+
+
+class AuthoredGemmaProvenanceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import gemma_role_curriculum as authored
+        cls.authored = authored
+        trusted = dual._AUTHORED_CHAT_COHORT
+        pins = {item['path']:item['sha256'] for item in trusted['source_refs']}
+        _current, classifier, _about = authored.source_contract(Path(authored.__file__).resolve().parents[2])
+        rows, _proof, spec = authored.author_rows(classifier, pins)
+        if authored.sha(authored.canonical(spec)) != trusted['spec_sha256']:
+            raise AssertionError('The public authored fixture builder changed; do not silently reapprove a cohort')
+        for row in rows:
+            row['review_status'] = 'approved'
+            row['metadata'].update(dataset_version=trusted['approved_dataset_version'],
+                source_dataset_version=trusted['source_dataset_version'], source_curriculum_version=trusted['source_curriculum_version'],
+                review_status='approved', reviewer=trusted['reviewer'], review_receipt_sha256=trusted['review_receipt_sha256'])
+        cls.rows = rows
+
+    def test_all_exact_root_reviewed_synthetic_records_pass_without_private_files(self):
+        self.assertEqual(len(self.rows),64)
+        dual.validate_source_lineage(self.rows,'chat')
+        self.assertNotEqual(dual._AUTHORED_CHAT_COHORT['reviewer'],dual._AUTHORED_CHAT_COHORT['authoring_agent'])
+        self.assertTrue(all(row['metadata']['synthetic'] for row in self.rows))
+
+    def test_tampered_message_cannot_pass_by_recomputing_its_own_hash(self):
+        row=copy.deepcopy(self.rows[0]);row['messages'][-1]['content']='A changed, never-reviewed authored answer.'
+        row['metadata']['messages_sha256']=dual._authored_chat_sha(row['messages'])
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_approval_reviewer_spec_receipt_and_source_versions_are_exact(self):
+        changes={'review_status':'pending_independent_review','reviewer':dual._AUTHORED_CHAT_COHORT['authoring_agent'],
+            'authoring_agent':'another-author','review_receipt_sha256':'0'*64,'curriculum_spec_sha256':'0'*64,
+            'dataset_version':'another-export','source_dataset_version':'another-source','source_curriculum_version':'another-curriculum'}
+        for key,value in changes.items():
+            row=copy.deepcopy(self.rows[0]);row['metadata'][key]=value
+            with self.subTest(field=key),self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+        row=copy.deepcopy(self.rows[0]);row['review_status']='pending_independent_review'
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_typed_authorship_booleans_cannot_be_missing_or_numeric(self):
+        for key in ('authored','synthetic','community_observation','old_synthetic_seed','human_reviewed','scientifically_verified'):
+            for value in (None,0,1):
+                row=copy.deepcopy(self.rows[0]);row['metadata'][key]=value
+                with self.subTest(field=key,value=value),self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_unknown_schema_modes_languages_domains_tasks_and_test_split_are_rejected(self):
+        for key,value in {'curriculum_mode':'unrecognized','input_language':'ja','output_language':'en',
+            'language_origin':'observed_translation','domain':'shared','task':'solve','split':'test',
+            'group_id':'another-group','family_id':'unknown-family'}.items():
+            row=copy.deepcopy(self.rows[0]);row['metadata'][key]=value
+            with self.subTest(field=key),self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_family_or_record_identity_cannot_be_moved_even_with_valid_looking_labels(self):
+        row=copy.deepcopy(self.rows[0]);row['metadata'].update(family_id='chat:motivation',group_id='authored-role-family:chat:motivation',split='validation')
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+        row=copy.deepcopy(self.rows[0]);row['id']=self.rows[1]['id']
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_source_refs_and_fixture_context_are_bound_by_the_reviewed_whole_row(self):
+        row=copy.deepcopy(self.rows[0]);row['metadata']['source_refs'][0]['sha256']='0'*64
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+        row=copy.deepcopy(self.rows[0]);row['metadata']['context']['model_verified']=True
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_malformed_container_types_fail_with_fixed_validation_errors(self):
+        for field in ('curriculum_mode','family_id','task'):
+            row=copy.deepcopy(self.rows[0]);row['metadata'][field]=[]
+            with self.subTest(field=field),self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_extra_fields_community_impersonation_and_unknown_provenance_cannot_bypass_filters(self):
+        for key in ('source_url','author_filter','observed_reply_link','collected_at'):
+            row=copy.deepcopy(self.rows[0]);row['metadata'][key]='forged-community-evidence'
+            with self.subTest(field=key),self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+        row=copy.deepcopy(self.rows[0]);row['extra']='not approved'
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+        row=copy.deepcopy(self.rows[0]);row['metadata']['provenance_type']='unknown_authored_kind'
+        with self.assertRaisesRegex(ValueError,'unknown'):dual.validate_source_lineage([row],'chat')
+
+    def test_existing_community_author_exclusion_and_forbidden_gallery_remain_enforced(self):
+        from test_gemma_role_curriculum import community_row
+        row=community_row('train',0);dual.validate_source_lineage([row],'chat')
+        row['metadata']['author_filter']['excluded_author_present']=True
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+        row=community_row('train',0);row['metadata']['source_url']='https://gall.dcinside.com/mgallery/board/view/?id=physicalscience&no=1'
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+
+    def test_approved_gemma_authoring_never_becomes_solver_or_test_data(self):
+        with self.assertRaises(ValueError):dual.validate_source_lineage(self.rows,'solver')
+        row=copy.deepcopy(self.rows[0]);row['metadata']['target_role']='solver'
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
+        row=copy.deepcopy(self.rows[0]);row['metadata']['split']='test'
+        with self.assertRaises(ValueError):dual.validate_source_lineage([row],'chat')
 
 
 if __name__ == "__main__":

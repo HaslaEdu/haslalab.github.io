@@ -89,6 +89,19 @@ class PrivateDualBootstrapTests(unittest.TestCase):
         self.assertEqual(run.call_args.kwargs["env"]["ROLE"], "solver")
         self.assertEqual(run.call_args.kwargs["cwd"], "/workspace/solver")
 
+    def test_source_solution_chat_format_reaches_solver_child_unchanged(self):
+        job = {**self.jobs[1], "format": "chat"}
+        with patch.dict(os.environ, {"HASLA_ROLE_JOBS": json.dumps([job])}), \
+                patch.object(bootstrap.urllib.request, "urlopen", return_value=io.BytesIO(self.code)), \
+                patch.object(Path, "write_bytes"), \
+                patch.object(bootstrap.subprocess, "run", return_value=SimpleNamespace(returncode=0)) as run, \
+                contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(bootstrap.main(), 0)
+        run.assert_called_once()
+        self.assertEqual(run.call_args.kwargs["env"]["ROLE"], "solver")
+        self.assertEqual(run.call_args.kwargs["env"]["HASLA_DATA_FORMAT"], "chat")
+        self.assertEqual(run.call_args.kwargs["env"]["HASLA_WORKSPACE"], "/workspace/solver")
+
     def test_dedicated_solver_runtime_reaches_child_and_process_deadline(self):
         job = {**self.jobs[1], "runtime_seconds": 13800}
         with patch.dict(os.environ, {"HASLA_ROLE_JOBS": json.dumps([job])}), \

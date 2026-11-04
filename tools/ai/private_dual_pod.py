@@ -13,14 +13,14 @@ def role_jobs(env):
     jobs = json.loads(env['HASLA_ROLE_JOBS'])
     if not isinstance(jobs, list) or not 1 <= len(jobs) <= 2 or any(not isinstance(j, dict) for j in jobs):
         raise ValueError('one or two private role jobs are required')
-    expected_formats = {'chat': 'chat', 'solver': 'text'}
+    expected_formats = {'chat': ('chat',), 'solver': ('text', 'chat')}
     seen_roles, seen_runs = set(), set()
     for job in jobs:
         role = job.get('role')
         if role not in expected_formats or role in seen_roles:
             raise ValueError('private roles must be unique chat or solver')
         seen_roles.add(role)
-        if job.get('format') != expected_formats[role]:
+        if job.get('format') not in expected_formats[role]:
             raise ValueError('role and data format do not match')
         run_id = job.get('run')
         if not isinstance(run_id, str) or not re.fullmatch(r'[A-Za-z0-9_.-]{1,120}', run_id) or run_id in seen_runs:

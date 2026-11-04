@@ -51,5 +51,9 @@ def validate_role_format(role, data_format):
     config = get_role_config(role)
     if data_format not in config["allowed_formats"]:
         raise ValueError(f"{role} role does not allow {data_format} format")
+    # Reference-solution conversations retain the complete question and answer.
+    # Native text remains separately packed at 1024; Gemma is unaffected.
+    if role == 'solver' and data_format == 'chat':
+        config['max_length'] = 4096
     return config
 

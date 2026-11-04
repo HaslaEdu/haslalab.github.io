@@ -340,8 +340,7 @@ def pinned_role_settings(path, role, data_format):
     sys.modules[name] = module
     spec.loader.exec_module(module)
     try:
-        module.validate_role_format(role, data_format)
-        config = dict(module.get_role_config(role))
+        config = dict(module.validate_role_format(role, data_format))
     except (ValueError, KeyError, TypeError):
         raise PilotError("role_format_mismatch") from None
     if (config.get("role") != role or data_format not in config.get("allowed_formats", ())

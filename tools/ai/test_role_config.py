@@ -28,7 +28,11 @@ class RoleConfigTests(unittest.TestCase):
         self.assertFalse(c['load_in_16bit'])
         self.assertEqual(c['default_rank'], 16)
         self.assertEqual(validate_role_format('solver', 'text'), c)
-        self.assertEqual(validate_role_format('solver', 'chat'), c)
+        chat = validate_role_format('solver', 'chat')
+        self.assertEqual(chat['max_length'], 4096)
+        self.assertEqual({k: v for k, v in chat.items() if k != 'max_length'},
+                         {k: v for k, v in c.items() if k != 'max_length'})
+        self.assertEqual(get_role_config('solver')['max_length'], 1024)
         self.assertEqual(c['default_format'], 'text')
 
     def test_callers_cannot_mutate_shared_configs(self):

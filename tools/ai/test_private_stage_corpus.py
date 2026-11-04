@@ -63,6 +63,77 @@ class StageTests(unittest.TestCase):
         self.assertNotIn(PRIVATE.encode(), self.cipher)
         self.assertEqual(set(files), {'train', 'validation'})
 
+    def test_tiny_bundle_never_requests_a_large_upfront_decompression_read(self):
+        real = gzip.GzipFile
+        sizes = []
+        class MemoryCeiling:
+            def __init__(self, *args, **kwargs):
+                self.stream = real(*args, **kwargs)
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                self.stream.close()
+            def read(self, size=-1):
+                sizes.append(size)
+                if not 0 < size <= 64 * 1024:
+                    raise MemoryError('synthetic allocation ceiling')
+                return self.stream.read(size)
+        with patch.object(stage.gzip, 'GzipFile', MemoryCeiling):
+            metadata, files = stage.decode_bundle(self.cipher, self.descriptor)
+        self.assertEqual(files, self.files)
+        self.assertEqual(metadata['role'], 'solver')
+        self.assertTrue(sizes and max(sizes) <= 64 * 1024)
+        self.assertEqual(stage.PLAIN_LIMIT, 512 * 1024**2)
+
+    def test_streaming_decompression_keeps_exact_limit_and_one_byte_over_detection(self):
+        compressed = SecretBox(b'k' * 32).decrypt(self.cipher)
+        plain = gzip.decompress(compressed)
+        with patch.object(stage, 'PLAIN_LIMIT', len(plain)):
+            _metadata, files = stage.decode_bundle(self.cipher, self.descriptor)
+        self.assertEqual(files, self.files)
+        with patch.object(stage, 'PLAIN_LIMIT', len(plain) - 1), self.assertRaisesRegex(stage.StageError, 'plain_size_limit'):
+            stage.decode_bundle(self.cipher, self.descriptor)
+        # Retain only limit+1 bytes even when the gzip payload is much larger.
+        cipher = bytes(SecretBox(b'k' * 32).encrypt(gzip.compress(b'x' * 8192), nonce=b'n' * 24))
+        descriptor = {**self.descriptor, 'cipher_bytes':len(cipher), 'cipher_sha256':stage.sha(cipher)}
+        real = gzip.GzipFile
+        consumed = []
+        class CountingStream:
+            def __init__(self, *args, **kwargs):
+                self.stream = real(*args, **kwargs)
+            def __enter__(self):
+                return self
+            def __exit__(self, *args):
+                self.stream.close()
+            def read(self, size=-1):
+                value = self.stream.read(size)
+                consumed.append(len(value))
+                return value
+        with patch.object(stage, 'PLAIN_LIMIT', 256), patch.object(stage.gzip, 'GzipFile', CountingStream), self.assertRaisesRegex(stage.StageError, 'plain_size_limit'):
+            stage.decode_bundle(cipher, descriptor)
+        self.assertEqual(sum(consumed), 257)
+
+    def test_solver_supervised_chat_roundtrip_keeps_format_and_source_guards(self):
+        files = {}
+        for split, raw in self.files.items():
+            row = json.loads(raw)
+            text = row.pop('text')
+            row['messages'] = [{'role': 'user', 'content': 'Source-grounded fixture question ' + split},
+                               {'role': 'assistant', 'content': text}]
+            files[split] = (json.dumps(row) + '\n').encode()
+        cipher, descriptor = stage.make_bundle('solver', 'solver-chat-fixture', files['train'], files['validation'],
+            data_format='chat', key=b'k' * 32, nonce=b'n' * 24)
+        descriptor['url'] = self.descriptor['url']
+        metadata, decoded = stage.decode_bundle(cipher, descriptor)
+        self.assertEqual(metadata['format'], 'chat')
+        self.assertEqual(decoded, files)
+        broken = json.loads(files['train'])
+        broken['metadata'].pop('drive_provenance')
+        with self.assertRaisesRegex(stage.StageError, 'source_or_row'):
+            stage.make_bundle('solver', 'solver-chat-fixture', (json.dumps(broken) + '\n').encode(), files['validation'], data_format='chat')
+        with self.assertRaisesRegex(stage.StageError, 'invalid_format'):
+            stage.make_bundle('chat', 'wrong-role-fixture', self.files['train'], self.files['validation'], data_format='text')
+
     def test_cipher_hash_key_header_and_raw_metadata_mismatch_fail_closed(self):
         for update in ({'cipher_sha256':'0'*64}, {'key_b64':base64.b64encode(b'x'*32).decode()},
                        {'header_sha256':'0'*64}, {'train':{**self.descriptor['train'],'raw_sha256':'0'*64}}):

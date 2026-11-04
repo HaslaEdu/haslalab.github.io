@@ -67,8 +67,8 @@ def strict_json(value):
 
 def metadata_check(value):
     require(isinstance(value, dict) and value.get('role') in ('chat', 'solver'), 'invalid_role')
-    fmt = 'chat' if value['role'] == 'chat' else 'text'
-    require(value.get('format') == fmt, 'invalid_format')
+    allowed = ('chat',) if value['role'] == 'chat' else ('text', 'chat')
+    require(value.get('format') in allowed, 'invalid_format')
     require(isinstance(value.get('dataset_version'), str)
             and re.fullmatch(r'[A-Za-z0-9_.-]{1,100}', value['dataset_version']), 'invalid_dataset_version')
     result = {key: value[key] for key in ('role', 'format', 'dataset_version')}
@@ -123,12 +123,13 @@ def validate_corpora(metadata, files):
         raise StageError('source_split_overlap') from None
 
 
-def make_bundle(role, dataset_version, train, validation, *, key=None, nonce=None):
+def make_bundle(role, dataset_version, train, validation, *, data_format=None, key=None, nonce=None):
     """Local pure preparation; validates observed sources before encryption."""
     from nacl.secret import SecretBox
     import secrets
     require(role in ('chat', 'solver'), 'invalid_role')
-    metadata = {'role': role, 'format': 'chat' if role == 'chat' else 'text', 'dataset_version': dataset_version}
+    fmt = data_format if data_format is not None else ('chat' if role == 'chat' else 'text')
+    metadata = {'role': role, 'format': fmt, 'dataset_version': dataset_version}
     files = {'train': train, 'validation': validation}
     for split, raw in files.items():
         require(isinstance(raw, bytes) and 0 < len(raw) <= FILE_LIMIT, 'file_size_limit')
@@ -156,7 +157,20 @@ def decode_bundle(cipher, descriptor):
     try:
         compressed = SecretBox(key).decrypt(cipher)
         with gzip.GzipFile(fileobj=io.BytesIO(compressed)) as stream:
-            plain = stream.read(PLAIN_LIMIT + 1)
+            # BufferedReader.read(n) may allocate for n before seeing EOF. A
+            # 512 MiB request can therefore exhaust Windows commit even when
+            # the authenticated fixture contains only a few hundred bytes.
+            # Grow only with actual decompressed bytes, retaining exactly one
+            # byte beyond the unchanged cap to detect an oversized frame.
+            with io.BytesIO() as output:
+                total = 0
+                while total <= PLAIN_LIMIT:
+                    chunk = stream.read(min(64 * 1024, PLAIN_LIMIT + 1 - total))
+                    if not chunk:
+                        break
+                    output.write(chunk)
+                    total += len(chunk)
+                plain = output.getvalue()
     except Exception:
         raise StageError('decrypt_or_gzip_failed') from None
     require(8 < len(plain) <= PLAIN_LIMIT, 'plain_size_limit')
