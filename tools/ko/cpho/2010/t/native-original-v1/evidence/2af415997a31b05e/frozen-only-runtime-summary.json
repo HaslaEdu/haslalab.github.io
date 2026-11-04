@@ -1,0 +1,420 @@
+{
+  "schema": "cpho2010-theory-frozen-only-full-input-runtime-contract-v4",
+  "passed": true,
+  "source_physical_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "current_proof_count": 12,
+  "actual_fresh_positive_runtime_cases": 36,
+  "actual_fresh_damaged_PDF_cases": 5,
+  "all36_actual_point_native_both_renderer_ink_and_full_donor_cases_passed": true,
+  "all5_actual_damaged_PDFs_rejected_by_their_intended_predicates": true,
+  "all_original_live_task_source_authoring_subset_and_fullfont_reads_redirected_to_exact_frozen_inputs": true,
+  "actual_full_font_input_SHA256s": [
+    "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+    "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6"
+  ],
+  "all_actual_full_font_inputs_used_for_every_proof_are_captured_private_and_were_read_from_frozen": true,
+  "full_font_bytes_must_remain_private": true,
+  "resource_or_setup_failures_not_counted_as_success": true,
+  "private_runtime_wrapper_frozen_path": "frozen/private-runtime/frozen-only-theory-audit-case-v2.py",
+  "private_runtime_wrapper_sha256": "93b1ba5a033c593cf142f192c41f641c7a03b17dfc84d8d8a50f255862274ed6",
+  "positives": [
+    {
+      "job": "point",
+      "language": "ko",
+      "source_physical_page": 1,
+      "proof_sha256": "3a30c86f634903f79c2ddb703de86fa0f712554f6066a80b1e15f4809359f880",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page01-3a30c86f634903f7-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "4f34b93050921cb2e88947e129eccd27881fb9cc61782f37cb6d0bcc488b2843",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "ko",
+      "source_physical_page": 1,
+      "proof_sha256": "3a30c86f634903f79c2ddb703de86fa0f712554f6066a80b1e15f4809359f880",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page01-3a30c86f634903f7-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "f89926fc2ab92df267ad76f3cef2a4de80cfe94fed816ba2e81fd4db324db77b",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "ko",
+      "source_physical_page": 1,
+      "proof_sha256": "3a30c86f634903f79c2ddb703de86fa0f712554f6066a80b1e15f4809359f880",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-ko-page01-3a30c86f634903f7-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "6263aeb0134ac64288c3896e0726e009889ffdf11efa92be994479f07daf2977",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "en",
+      "source_physical_page": 1,
+      "proof_sha256": "1b28feb99d656d5614f44bfffb69d572ee216784dc96e8c0b4028b315db5079b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-en-page01-1b28feb99d656d56-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "498382e631f8b42c53454d476d013dcafe7af349ab2b20715bfc21478569d107",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "en",
+      "source_physical_page": 1,
+      "proof_sha256": "1b28feb99d656d5614f44bfffb69d572ee216784dc96e8c0b4028b315db5079b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page01-1b28feb99d656d56-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "061c958d5926c69230b6f4fa080988aa05b9063e67f68b1d089f5a090549a039",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "en",
+      "source_physical_page": 1,
+      "proof_sha256": "1b28feb99d656d5614f44bfffb69d572ee216784dc96e8c0b4028b315db5079b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-en-page01-1b28feb99d656d56-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "c3958b4763df0510f034178c0bc6bc334407638e2454b5ac73d0a75012f3bb36",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "ko",
+      "source_physical_page": 2,
+      "proof_sha256": "df232b0f173ecf5d6be65d14e5c764ff8848826f359c0b9b4b253d7497a0231b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page02-df232b0f173ecf5d-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "8e54e2fc7169a82592aecc859c52d31123f143ddab3c80943348bbb4f91da1c9",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "ko",
+      "source_physical_page": 2,
+      "proof_sha256": "df232b0f173ecf5d6be65d14e5c764ff8848826f359c0b9b4b253d7497a0231b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page02-df232b0f173ecf5d-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e87783f61c0d5878eac2b55ad38442eaa1134080dcc22d65ca1dd5e2035a7bff",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "ko",
+      "source_physical_page": 2,
+      "proof_sha256": "df232b0f173ecf5d6be65d14e5c764ff8848826f359c0b9b4b253d7497a0231b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-ko-page02-df232b0f173ecf5d-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "822b46a06cb20635bc297c15de09a765e1272a9d734db9e214b6851d28ab8f00",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "en",
+      "source_physical_page": 2,
+      "proof_sha256": "c0f856a0ba352d1bc44bc19a7655e5553b8d8b20966a2c38168ac02072a77ffa",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-en-page02-c0f856a0ba352d1b-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "325845f194834ddadbcf7fe919e7fac540412ddae11a0fadcbe63bb005932b49",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "en",
+      "source_physical_page": 2,
+      "proof_sha256": "c0f856a0ba352d1bc44bc19a7655e5553b8d8b20966a2c38168ac02072a77ffa",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page02-c0f856a0ba352d1b-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "b8971cbce4e865dc51c38427564d4ff714e7783c42561a9c58d2a39f6e76cff4",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "en",
+      "source_physical_page": 2,
+      "proof_sha256": "c0f856a0ba352d1bc44bc19a7655e5553b8d8b20966a2c38168ac02072a77ffa",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-en-page02-c0f856a0ba352d1b-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "763051b2c89ea64925471723824dc093ca83004081807c69826a995257e48ca2",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "ko",
+      "source_physical_page": 3,
+      "proof_sha256": "7a6b7a514be717be9b3961c8067ff9fb051e5390b55e57dbb8668900681f66b2",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page03-7a6b7a514be717be-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "4b52b73a44e395e8b772cb58779c020f4380bfcb40475aae9899fa6792b5a5c6",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "ko",
+      "source_physical_page": 3,
+      "proof_sha256": "7a6b7a514be717be9b3961c8067ff9fb051e5390b55e57dbb8668900681f66b2",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page03-7a6b7a514be717be-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "1c79abb6701bf718e5db01e3927d49c7f1eb6a53b04b6e6cd265850d7835842c",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "ko",
+      "source_physical_page": 3,
+      "proof_sha256": "7a6b7a514be717be9b3961c8067ff9fb051e5390b55e57dbb8668900681f66b2",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-ko-page03-7a6b7a514be717be-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "7e4d526001364adf653bbadf8163da847270c9564f1411ef6b2d258959f28984",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "en",
+      "source_physical_page": 3,
+      "proof_sha256": "b38f532a894e3aeb62a213ad560151d81b2404e703f33195b1247d3b429b222b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-en-page03-b38f532a894e3aeb-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "8390c839915c36ab4856026466b8fbecb17791bfd4d574f78e7d0976a6d34d89",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "en",
+      "source_physical_page": 3,
+      "proof_sha256": "b38f532a894e3aeb62a213ad560151d81b2404e703f33195b1247d3b429b222b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page03-b38f532a894e3aeb-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "3a358c55095dbc5d7fafde624623a2e983cbdab4840e6e6a52ec0a7a7ad9d40e",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "en",
+      "source_physical_page": 3,
+      "proof_sha256": "b38f532a894e3aeb62a213ad560151d81b2404e703f33195b1247d3b429b222b",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-en-page03-b38f532a894e3aeb-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "cc6394e707ab175c77e1487a12b5bf4465422ba25351d01b20018262a4a61f13",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "ko",
+      "source_physical_page": 4,
+      "proof_sha256": "cb698fc699580336677f6dcb2088023ed0493588579a06733e82e33cbee320c3",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page04-cb698fc699580336-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "056489940a19394fe34a2269941386c1bf1ac6c756c9a9316097759665b86e5e",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "ko",
+      "source_physical_page": 4,
+      "proof_sha256": "cb698fc699580336677f6dcb2088023ed0493588579a06733e82e33cbee320c3",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page04-cb698fc699580336-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ab9bbb1ba0962c2bf814749731bf7b8149a155e3df0a3a79035f45e1f3b4d2f6",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "ko",
+      "source_physical_page": 4,
+      "proof_sha256": "cb698fc699580336677f6dcb2088023ed0493588579a06733e82e33cbee320c3",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-ko-page04-cb698fc699580336-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "79f0143e782dc61ac2fae4b3d7b546c4407920e438773783131cd53beee2233c",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "en",
+      "source_physical_page": 4,
+      "proof_sha256": "32e498e498879e99e531f297a9d595924c2257aab27f8f8ad684e477cb1961fe",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-en-page04-32e498e498879e99-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ef604ab4494abd3d75397f02fe83134342553149c4ede2df8a026b9415bbef84",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "en",
+      "source_physical_page": 4,
+      "proof_sha256": "32e498e498879e99e531f297a9d595924c2257aab27f8f8ad684e477cb1961fe",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page04-32e498e498879e99-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "7cfb39e1358acaa03c612e84cbab57d3e4c69f44128161857a2737ace4e2dd94",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "en",
+      "source_physical_page": 4,
+      "proof_sha256": "32e498e498879e99e531f297a9d595924c2257aab27f8f8ad684e477cb1961fe",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-en-page04-32e498e498879e99-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "82c4d4a8d6553a9aaafee73c8310ef626c0059538e0a8ed3a65c7168e705791e",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "ko",
+      "source_physical_page": 5,
+      "proof_sha256": "14b6fd94202f579c0d8ffb45d95acbb63c710a54187783a6d54ae8ef0708ce98",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page05-14b6fd94202f579c-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e69a15eefc453eb4d15a80cec7ac24e659b3336b405093d70f38f1cea60c7ca0",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "ko",
+      "source_physical_page": 5,
+      "proof_sha256": "14b6fd94202f579c0d8ffb45d95acbb63c710a54187783a6d54ae8ef0708ce98",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page05-14b6fd94202f579c-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ffe141c55d20431f9ef4394eaa320984673c3df9c1860a5fe53f55e51eebd97d",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "ko",
+      "source_physical_page": 5,
+      "proof_sha256": "14b6fd94202f579c0d8ffb45d95acbb63c710a54187783a6d54ae8ef0708ce98",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-ko-page05-14b6fd94202f579c-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "ca3e2d0790107d494c19e9c1da21106e5848c9964b8727d4df4075ea978d6f61",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "en",
+      "source_physical_page": 5,
+      "proof_sha256": "44af7e8c9f063264225f953fa925cf5835d71d1b2fbe882a256844396ceab037",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-en-page05-44af7e8c9f063264-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "8093e950e531cb4bc5581cec0d5d01f8064df1c86bc078dcf3fba0df6e3484e5",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "en",
+      "source_physical_page": 5,
+      "proof_sha256": "44af7e8c9f063264225f953fa925cf5835d71d1b2fbe882a256844396ceab037",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page05-44af7e8c9f063264-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "d12ce981a69fe897e6cef3c38fb286426aad9e6963082cf0713f1335a82a5621",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "en",
+      "source_physical_page": 5,
+      "proof_sha256": "44af7e8c9f063264225f953fa925cf5835d71d1b2fbe882a256844396ceab037",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-en-page05-44af7e8c9f063264-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "aca8b1dd5a366d25fc451b570906f18cbe3db68140454c037f2d2a1e3fe33d38",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "ko",
+      "source_physical_page": 6,
+      "proof_sha256": "8e171e2d729e7dbd2e46cc307f122f5d8742d7ed484e5a9e2bf224f538d43ba1",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page06-8e171e2d729e7dbd-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "acfd650b084c63c6a6991c72e53a016067138d8e51c8b469c6d034b4be02d4fc",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "ko",
+      "source_physical_page": 6,
+      "proof_sha256": "8e171e2d729e7dbd2e46cc307f122f5d8742d7ed484e5a9e2bf224f538d43ba1",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page06-8e171e2d729e7dbd-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "fa97f96e7b1fc095b9e1548327644ae1321c6d328e59ce6bb2eedab9ef1c2f21",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "ko",
+      "source_physical_page": 6,
+      "proof_sha256": "8e171e2d729e7dbd2e46cc307f122f5d8742d7ed484e5a9e2bf224f538d43ba1",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-ko-page06-8e171e2d729e7dbd-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "3f19526ee9794a8338f1317a8b94c055fc366588832ddbb87a836a7e9b2914c3",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "point",
+      "language": "en",
+      "source_physical_page": 6,
+      "proof_sha256": "0b0b99bbb61ebfbc67403f656e129af06d66ee29b2bd31f5e607baa22a4fc4cc",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-en-page06-0b0b99bbb61ebfbc-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "1305344e983f6b9c9f6ef527aedd0750c858ce286373b0174d99c1216f2af3df",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "ink",
+      "language": "en",
+      "source_physical_page": 6,
+      "proof_sha256": "0b0b99bbb61ebfbc67403f656e129af06d66ee29b2bd31f5e607baa22a4fc4cc",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page06-0b0b99bbb61ebfbc-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "e61a12676a33e359e80c21307dc3b00e03284d407b6f59f5d64ae8ac077cbdb8",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "job": "donor",
+      "language": "en",
+      "source_physical_page": 6,
+      "proof_sha256": "0b0b99bbb61ebfbc67403f656e129af06d66ee29b2bd31f5e607baa22a4fc4cc",
+      "runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\donor-en-page06-0b0b99bbb61ebfbc-runtime-v2\\frozen-only-case-result.json",
+      "runtime_result_sha256": "c4ca3289f8acf5fab469cf0838f5aee12f0039fa4a341a5bdefc7df824a37325",
+      "all_task_inputs_actual_frozen_only": true
+    }
+  ],
+  "negatives": [
+    {
+      "name": "one-pixel-original-wire-covered",
+      "target": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-negative-controls-v2\\one-pixel-original-wire-covered.pdf",
+      "sha256": "7ac20772246716ba12dcee2202501a3640ceceaecf035818005147d8fa0fba91",
+      "job": "ink",
+      "language": "ko",
+      "expected_marker": "C2010 SOURCE_ONLY_LANGUAGE_PANEL_MISMATCH",
+      "actual_exit": 1,
+      "expected_failure": true,
+      "actual_runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page01-7ac20772246716ba-runtime-v2\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "975016aa4a07801a5577188ecdda79e646ab8d8ed5985cafa4d03d51b6b408cc",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "name": "caption-over-original-leader",
+      "target": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-negative-controls-v2\\caption-over-original-leader.pdf",
+      "sha256": "40eca73843a7853f6bc3b7727da23836402b6a15dc797fbd4a08108d097013e3",
+      "job": "ink",
+      "language": "ko",
+      "expected_marker": "Actual source/native/new-prose ink visibility or collision failure",
+      "actual_exit": 1,
+      "expected_failure": true,
+      "actual_runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page01-40eca73843a7853f-runtime-v2\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "83323740b77af275fb7a59d6fa7667c172f7f024abeeca056cae6a49bcd50524",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "name": "same-name-version-advance-new-English-A-outline-damaged",
+      "target": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "sha256": "34dbbbc0d7700ef7db214b058b5b3f89932019366b93a76ceb0207a3703dcb46",
+      "job": "point",
+      "language": "en",
+      "expected_marker": "C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+      "actual_exit": 1,
+      "expected_failure": true,
+      "actual_runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-en-page01-34dbbbc0d7700ef7-runtime-v2\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "924ca5fde1a1e1e66fd03ec60a81a0b3063d8304b3c3d3dd565e7f145ae3ca5b",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "name": "new-Korean-prose-actual-Tf-plus-one-point",
+      "target": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\new-Korean-prose-actual-Tf-plus-one-point.pdf",
+      "sha256": "ed6fdc57e50de9d440881051a844499e69012e00636880df0c45b658147dee73",
+      "job": "point",
+      "language": "ko",
+      "expected_marker": "C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH",
+      "actual_exit": 1,
+      "expected_failure": true,
+      "actual_runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page01-ed6fdc57e50de9d4-runtime-v2\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "5a74f5048c382cbb6577b87cdaf4d3af4559566fbaefe2273da626d156de2005",
+      "all_task_inputs_actual_frozen_only": true
+    },
+    {
+      "name": "original-native-math-subscript-zero-to-one-CID",
+      "target": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\original-native-math-subscript-zero-to-one-CID.pdf",
+      "sha256": "15619e9e632ad3e978ca50afda27d07c556fd195fbd96b2a42c4f95f50fe727c",
+      "job": "point",
+      "language": "ko",
+      "expected_marker": "C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH",
+      "actual_exit": 1,
+      "expected_failure": true,
+      "actual_runtime_result_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\point-ko-page01-15619e9e632ad3e9-runtime-v2\\frozen-only-case-result.json",
+      "actual_runtime_result_sha256": "5e875c9a2f7599b0a1989763735d9ab2b210a48c18223d4a25682bccd1750b77",
+      "all_task_inputs_actual_frozen_only": true
+    }
+  ]
+}

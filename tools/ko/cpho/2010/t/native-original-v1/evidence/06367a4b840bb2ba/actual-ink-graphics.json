@@ -1,0 +1,175 @@
+{
+  "schema": "cpho2010-actual-both-renderer-ink-visibility-native-graphics-v3",
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "source_page": 1,
+  "language": "ko",
+  "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\proofs-v5\\ko\\page01.pdf",
+  "proof_sha256": "3a30c86f634903f79c2ddb703de86fa0f712554f6066a80b1e15f4809359f880",
+  "native_control_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\proofs-v5\\ko\\page01.native-control.pdf",
+  "native_control_sha256": "68b4bd2ade10c8c8c53707866fce9f858e23134afd3575a5da9ade07d4fa9fc1",
+  "actual_native_source_preserving_streams_byte_exact": true,
+  "exact_source_program_isolation_wrapper": {
+    "before_hex": "710a",
+    "after_hex": "0a510a",
+    "basis": "Exact PyMuPDF page-isolation q/Q only; enclosed actual native content bytes remain identical"
+  },
+  "actual_native_source_preserving_stream_sha256": [
+    "2eac5e466c3fb02a47756ec317687a967f2e58912f75c0efc8ab608b6e4f8209"
+  ],
+  "actual_prose_reference_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page01-3a30c86f634903f7-runtime-v2\\qa-ink-graphics-v7\\page01-ko-3a30c86f634903f7\\actual-new-prose-and-caption-native-ink-only.pdf",
+  "actual_prose_reference_sha256": "44a983f5d83b1c487b637f94c3e692dd85fe0dd42e5689e82a235e0ad3a2e35f",
+  "reference_uses_only_actual_encoded_new_font_text_programmes_from_this_final_PDF": true,
+  "reference_new_text_program_count": 781,
+  "actual_original_image_programs_and_dictionaries": [
+    {
+      "alias": "/Im20",
+      "original_raw_sha256": "55859400638bb15f7532f2244869f45102213c431391420fceb0d6da7598e442",
+      "actual_final_raw_sha256": "55859400638bb15f7532f2244869f45102213c431391420fceb0d6da7598e442",
+      "actual_full_original_image_dictionary_and_program_exact": true
+    }
+  ],
+  "actual_white_panel_programs": [
+    {
+      "id": "cylinder",
+      "actual_rect": [
+        454.32,
+        289.67999999999995,
+        475.68,
+        302.4
+      ],
+      "actual_program_sha256": "847188cd50956c6dbf6dee7e9cbb7030ae7149809c89e8facc21eaa5f66de37e"
+    },
+    {
+      "id": "piston",
+      "actual_rect": [
+        432.24,
+        355.67999999999995,
+        453.36,
+        365.99999999999994
+      ],
+      "actual_program_sha256": "05f5124ae08da42661d5fa2ce455272d4003ec2dfcb0e1e1417e283844df7ed9"
+    }
+  ],
+  "actual_composite_background_reference_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-ko-page01-3a30c86f634903f7-runtime-v2\\qa-ink-graphics-v7\\page01-ko-3a30c86f634903f7\\actual-source-image-panels-and-new-prose-reference.pdf",
+  "actual_composite_background_reference_sha256": "d6de5cbc5be9ae7d19e0721e0952e6aeb1616f096aada10135b9676231bc7481",
+  "source_quiet_paper_is_source_JPEG_EXACT255_outside_halo_complete_old_language_panel": true,
+  "source_original_image_paint_program_sha256": "7b9ebf1f2e09dbcd72f3dc2a47d2041c21116a583d0969ae01f2ccfa01cd5e9b",
+  "renderers": [
+    {
+      "renderer": "MuPDF144",
+      "dimensions": [
+        1191,
+        1684
+      ],
+      "counts": {
+        "actual_new_ink_pixels": 99731,
+        "new_prose_overlap_original_native_ink_pixels": 0,
+        "actual_new_glyph_ink_not_exactly_visible_pixels": 0,
+        "original_native_ink_or_graphics_changed_outside_actual_new_ink_and_source_closed_language_panel_pixels": 0
+      },
+      "actual_arrays_sha256": {
+        "proof": "4f647496472b343ee3c1bbed2a7b6dc713d831b648d022f35b1765eabb6acf77",
+        "native_control": "676a4087facb00325657f47bb6b59606cfa493d5ce681b28dfd910a1569921f5",
+        "actual_native_new_prose_only": "1a9709d520fbaa5c10615fb7c7502fde5502bbf659c1b1e7ac9b5ad7ca78d726"
+      },
+      "actual_fresh_Poppler_PNG_sha256": null,
+      "source_only_language_panel_exceptions": [
+        {
+          "source_label": "气缸",
+          "actual_source_closed_safe_language_only_rect": [
+            454.3200059909265,
+            289.67999380665185,
+            475.68000539761147,
+            302.39999370535133
+          ],
+          "pixel_ROI_with_one_AA_pixel": [
+            907,
+            578,
+            953,
+            606
+          ]
+        },
+        {
+          "source_label": "活塞",
+          "actual_source_closed_safe_language_only_rect": [
+            432.24,
+            355.67999267578125,
+            453.36,
+            365.99999267578124
+          ],
+          "pixel_ROI_with_one_AA_pixel": [
+            863,
+            710,
+            908,
+            733
+          ]
+        }
+      ],
+      "source_closed_pure_paper_caption_context_only_pixels": 284,
+      "source_quiet_paper_witness_sha256": "b242eb8ba6c0db0b0f0df59678059fb0b2ea14c9872576628ec5d979a5f1506d",
+      "passed": true
+    },
+    {
+      "renderer": "Poppler144",
+      "dimensions": [
+        1191,
+        1684
+      ],
+      "counts": {
+        "actual_new_ink_pixels": 99990,
+        "new_prose_overlap_original_native_ink_pixels": 0,
+        "actual_new_glyph_ink_not_exactly_visible_pixels": 0,
+        "original_native_ink_or_graphics_changed_outside_actual_new_ink_and_source_closed_language_panel_pixels": 0
+      },
+      "actual_arrays_sha256": {
+        "proof": "782c43999ec57b8b39d79b81497f9dfd520ed1c2085c857b36aa01cdb7a0f284",
+        "native_control": "b9c4edeaa1a7d83ecb939be1ad74481604ff7a2618a456bedb952714fdb8aafe",
+        "actual_native_new_prose_only": "17a33990071e675eb951206b74cb1c6442910dc7cf17455af179a6ab2c4199b5"
+      },
+      "actual_fresh_Poppler_PNG_sha256": {
+        "actual": "fec3600bf264ebde1008bccf7720f9b32c9e2993ff8d75efae52efc506775985",
+        "native_control": "98019dcff9f41551049458abe9575454cb969a3bc8408b5783553700b9730953",
+        "actual_new_prose_ink_only": "f154af09eb56f0ca3f533c4685ce43ee22646b374b612c718a5127887ca82c4d"
+      },
+      "source_only_language_panel_exceptions": [
+        {
+          "source_label": "气缸",
+          "actual_source_closed_safe_language_only_rect": [
+            454.3200059909265,
+            289.67999380665185,
+            475.68000539761147,
+            302.39999370535133
+          ],
+          "pixel_ROI_with_one_AA_pixel": [
+            907,
+            578,
+            953,
+            606
+          ]
+        },
+        {
+          "source_label": "活塞",
+          "actual_source_closed_safe_language_only_rect": [
+            432.24,
+            355.67999267578125,
+            453.36,
+            365.99999267578124
+          ],
+          "pixel_ROI_with_one_AA_pixel": [
+            863,
+            710,
+            908,
+            733
+          ]
+        }
+      ],
+      "source_closed_pure_paper_caption_context_only_pixels": 283,
+      "source_quiet_paper_witness_sha256": "b242eb8ba6c0db0b0f0df59678059fb0b2ea14c9872576628ec5d979a5f1506d",
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "source_math_path_complete_ownership_and_semantic_full_visual_review_remain_separate_required_checks": true,
+  "publication_ready": false
+}

@@ -1,0 +1,98 @@
+{
+  "schema": "cpho2010-two-actual-bitmap-language-safety-negative-PDFs-v1",
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "positive_baseline_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\proofs-v5\\ko\\page01.pdf",
+  "positive_baseline_sha256": "3a30c86f634903f79c2ddb703de86fa0f712554f6066a80b1e15f4809359f880",
+  "source_original_wire_selection_PNG_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\inspection\\page01-source144.png",
+  "source_original_wire_selection_PNG_sha256": "37a4784298b668e77cef8036c5a27ca2a485e8f874aa8fd022eca76c54877a6c",
+  "controls": [
+    {
+      "kind": "actual-one-144dpi-pixel-opaque-white-cover-of-original-cylinder-wire",
+      "name": "one-pixel-original-wire-covered",
+      "source_only_selected_actual_black_wire_pixel": [
+        843,
+        659
+      ],
+      "actual_source_wire_RGB": [
+        4,
+        4,
+        4
+      ],
+      "actual_opaque_white_rect_pt": [
+        421.5,
+        329.5,
+        422.0,
+        330.0
+      ],
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-negative-controls-v2\\one-pixel-original-wire-covered.pdf",
+      "sha256": "7ac20772246716ba12dcee2202501a3640ceceaecf035818005147d8fa0fba91",
+      "actual_changed_painted_pixels_demonstrated_in_both_renderers": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 1,
+          "actual_difference_bbox_px": [
+            843,
+            659,
+            844,
+            660
+          ],
+          "positive_RGB_sha256": "4f647496472b343ee3c1bbed2a7b6dc713d831b648d022f35b1765eabb6acf77",
+          "damaged_RGB_sha256": "b59f36a4d50780d2b10957c87bf902eb36b33ecb05473ab0d64b202107a459a6"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 1,
+          "actual_difference_bbox_px": [
+            843,
+            659,
+            844,
+            660
+          ],
+          "positive_RGB_sha256": "782c43999ec57b8b39d79b81497f9dfd520ed1c2085c857b36aa01cdb7a0f284",
+          "damaged_RGB_sha256": "a5770a512e9f9e80a5f43eedbcfa92dd45edfce57e7a25d98e4e0ed0a9753515"
+        }
+      ],
+      "expected_rejection": "source-closed white-panel predicate",
+      "validator_execution_still_required": true
+    },
+    {
+      "kind": "actual-native-piston-caption-moved-eight-points-up-over-original-leader",
+      "name": "caption-over-original-leader",
+      "actual_piston_caption_native_glyph_streams_moved": 3,
+      "actual_same_font_points_and_GIDs_retained": true,
+      "actual_Y_shift_pt": -8.0,
+      "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-negative-controls-v2\\caption-over-original-leader.pdf",
+      "sha256": "40eca73843a7853f6bc3b7727da23836402b6a15dc797fbd4a08108d097013e3",
+      "actual_changed_painted_pixels_demonstrated_in_both_renderers": [
+        {
+          "renderer": "MuPDF144",
+          "actual_differing_pixels": 566,
+          "actual_difference_bbox_px": [
+            858,
+            696,
+            911,
+            729
+          ],
+          "positive_RGB_sha256": "4f647496472b343ee3c1bbed2a7b6dc713d831b648d022f35b1765eabb6acf77",
+          "damaged_RGB_sha256": "a351cb82e50a1398dae9386f5238cdf4ed21b3f3de083e50c94c72f5d7803763"
+        },
+        {
+          "renderer": "Poppler144",
+          "actual_differing_pixels": 564,
+          "actual_difference_bbox_px": [
+            858,
+            696,
+            911,
+            729
+          ],
+          "positive_RGB_sha256": "782c43999ec57b8b39d79b81497f9dfd520ed1c2085c857b36aa01cdb7a0f284",
+          "damaged_RGB_sha256": "51c39705dd4d58871e0ba14400c2d553180c20211379d8609b0e0ed23124e1f8"
+        }
+      ],
+      "expected_rejection": "actual new caption ink over original leader outside source-only pure-paper region",
+      "validator_execution_still_required": true
+    }
+  ],
+  "source_and_positive_proofs_unchanged": true,
+  "no_QA_failure_has_been_converted_to_pass": true
+}

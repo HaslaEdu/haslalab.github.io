@@ -84,10 +84,10 @@ for (let year = 1997; year <= 2026; year++) {
   } else assert.ok(assets[file.ko.paper] > 0);
   usapho++;
 }
-const cphoBilingualYears = ['2003', '2004', '2005', '2006', '2007', '2008', '2013', '2022', '2023', '2024', '2025'];
+const cphoBilingualYears = ['2003', '2004', '2005', '2006', '2007', '2008', '2010', '2013', '2022', '2023', '2024', '2025'];
 for (const year of cphoBilingualYears) {
   const file = window.THEORY.cpho[year].f.T;
-  assert.equal(file.paper, year === '2023' ? 'CPhO_2023_Combined_EN.pdf' : ['2003', '2004', '2005', '2006', '2007', '2008', '2013', '2022', '2024'].includes(year) ? `CPhO_${year}_T_EN.pdf` : `CPhO_${year}_T_BAUPC_EN.pdf`);
+  assert.equal(file.paper, year === '2023' ? 'CPhO_2023_Combined_EN.pdf' : ['2003', '2004', '2005', '2006', '2007', '2008', '2010', '2013', '2022', '2024'].includes(year) ? `CPhO_${year}_T_EN.pdf` : `CPhO_${year}_T_BAUPC_EN.pdf`);
   assert.ok(assets[file.paper] > 0);
   assert.ok(assets[file.ko.paper] > 0);
   if (['2003', '2004', '2008', '2013', '2024'].includes(year)) {

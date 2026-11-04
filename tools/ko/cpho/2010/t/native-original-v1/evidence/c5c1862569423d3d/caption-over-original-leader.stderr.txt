@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\CodexBuilds\Hasla-original-style-20261031\cpho2010-native-derived-v1\successor-D-v6\T\master-v4\frozen\private-runtime\frozen-only-theory-audit-case-v2.py", line 57, in <module>
+    driver=OR/('audit-each-source-point-paint-native-v3.py'if job=='point'else'audit-actual-ink-native-graphics-and-prose-visibility-v7.py');raw=original_open(path_for(driver),'rb').read();sys.argv=[str(driver),lang,str(n),str(target)]if job=='point'else[str(driver),str(n),lang,str(target)];exec(compile(raw,str(driver),'exec'),dict(__name__='__main__',__file__=str(driver)))
+                                                                                                                                                                                                                                                                                                    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\CodexBuilds\Hasla-original-style-20261031\cpho2010-native-derived-v1\successor-D-v6\audit-actual-ink-native-graphics-and-prose-visibility-v7.py", line 91, in <module>
+    assert result['passed'],'Actual source/native/new-prose ink visibility or collision failure'
+           ~~~~~~^^^^^^^^^^
+AssertionError: Actual source/native/new-prose ink visibility or collision failure

@@ -1,0 +1,84 @@
+{
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "source_page": 1,
+  "source_measurement_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\inspection\\page01-source-only-cylinder-bitmap-label-measurements.json",
+  "source_measurement_sha256": "412493f4557f42117bde39515ef837a2ee085f884bfde647ad299e8dc94889ba",
+  "only_actual_source_bitmap_Chinese_language_regions_may_be_covered": true,
+  "original_image_bytes_CTM_and_all_nonlanguage_geometry_preserved": true,
+  "labels": [
+    {
+      "id": "cylinder",
+      "source_label": "气缸",
+      "ko": "원통",
+      "en": "Cyl.",
+      "source_only_point_estimate": 9.119834734207506,
+      "source_only_baseline_estimate": 299.2934440282597,
+      "source_word_ink_center_x": 465.4800056809361,
+      "source_word_ink_rect_px": [
+        210,
+        56,
+        283,
+        91
+      ],
+      "source_safe_language_only_erase_rect_pt": [
+        454.3200059909265,
+        289.67999380665185,
+        475.68000539761147,
+        302.39999370535133
+      ],
+      "source_safe_language_only_erase_roi_px": [
+        200,
+        47,
+        289,
+        100
+      ],
+      "source_raster_font_role": "regular Song serif",
+      "exact_raster_font_metadata_claimed": false,
+      "source_point_fitted_to_translation": false,
+      "source_word_ink_center_retained": true,
+      "old_word_ROI_includes_source_JPEG_antialias_halo_and_excludes_original_leader_and_cylinder_wires": true
+    },
+    {
+      "id": "piston",
+      "source_label": "活塞",
+      "ko": "피스톤",
+      "en": "Piston",
+      "source_only_point_estimate": 8.999377513470025,
+      "source_only_baseline_estimate": 363.59933993478217,
+      "source_word_ink_center_x": 442.2000063275828,
+      "source_word_ink_rect_px": [
+        114,
+        324,
+        185,
+        359
+      ],
+      "source_safe_language_only_erase_rect_pt": [
+        432.24,
+        355.67999267578125,
+        453.36,
+        365.99999267578124
+      ],
+      "source_safe_language_only_erase_roi_px": [
+        108,
+        322,
+        196,
+        365
+      ],
+      "source_raster_font_role": "regular Song serif",
+      "exact_raster_font_metadata_claimed": false,
+      "source_point_fitted_to_translation": false,
+      "source_word_ink_center_retained": true,
+      "old_word_ROI_includes_source_JPEG_antialias_halo_and_excludes_original_leader_and_cylinder_wires": true
+    }
+  ],
+  "translation_context": "Adjacent complete prose names the insulated cylinder. Cyl. is the compact conventional English diagram label at the source-only estimated point and original ink center.",
+  "publication_ready": false,
+  "source_only_quiet_paper_and_original_language_halo_witness": {
+    "path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\source-only-piston-halo-and-pure-paper-interior-v1.json",
+    "sha256": "c012198885e07e12ecd3436ff4a04dbaf9152bce1b18e0307c2e761dd20ac10e"
+  },
+  "source_only_language_halo_complete_successor_of": {
+    "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\generation-v3-inputs\\authoring\\page01-original-cylinder-label-policy.json",
+    "sha256": "221901c547dff04d5703d74033514478144adf8b4652709f2620d7f719ffcf7b"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema": "cpho2010-actual-both-renderer-ink-visibility-native-graphics-v3",
+  "source_sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+  "source_page": 3,
+  "language": "en",
+  "proof_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\proofs-v5\\en\\page03.pdf",
+  "proof_sha256": "b38f532a894e3aeb62a213ad560151d81b2404e703f33195b1247d3b429b222b",
+  "native_control_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\proofs-v5\\en\\page03.native-control.pdf",
+  "native_control_sha256": "525542fb4613ae5e50cb029e5b0f4a395195bcd2198410365120e369e1623589",
+  "actual_native_source_preserving_streams_byte_exact": true,
+  "exact_source_program_isolation_wrapper": {
+    "before_hex": "710a",
+    "after_hex": "0a510a",
+    "basis": "Exact PyMuPDF page-isolation q/Q only; enclosed actual native content bytes remain identical"
+  },
+  "actual_native_source_preserving_stream_sha256": [
+    "f2829deb105f9fd98384c8d7c5b632a925a28e98c4d4257d66bc57faf59dadca"
+  ],
+  "actual_prose_reference_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page03-b38f532a894e3aeb-runtime-v2\\qa-ink-graphics-v7\\page03-en-b38f532a894e3aeb\\actual-new-prose-and-caption-native-ink-only.pdf",
+  "actual_prose_reference_sha256": "58d7f6c22fd7c5222cb355ae32e7e28a2b9886f16d41140b82704f5d196ec147",
+  "reference_uses_only_actual_encoded_new_font_text_programmes_from_this_final_PDF": true,
+  "reference_new_text_program_count": 963,
+  "actual_original_image_programs_and_dictionaries": [
+    {
+      "alias": "/Im26",
+      "original_raw_sha256": "0c2a3a3ff1c51013fa2dfcb9293ef421ba776b363826c81f21aef829000efe4b",
+      "actual_final_raw_sha256": "0c2a3a3ff1c51013fa2dfcb9293ef421ba776b363826c81f21aef829000efe4b",
+      "actual_full_original_image_dictionary_and_program_exact": true
+    }
+  ],
+  "actual_white_panel_programs": [],
+  "actual_composite_background_reference_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen-only-runtime-verification\\ink-en-page03-b38f532a894e3aeb-runtime-v2\\qa-ink-graphics-v7\\page03-en-b38f532a894e3aeb\\actual-new-prose-and-caption-native-ink-only.pdf",
+  "actual_composite_background_reference_sha256": "58d7f6c22fd7c5222cb355ae32e7e28a2b9886f16d41140b82704f5d196ec147",
+  "source_quiet_paper_is_source_JPEG_EXACT255_outside_halo_complete_old_language_panel": null,
+  "source_original_image_paint_program_sha256": null,
+  "renderers": [
+    {
+      "renderer": "MuPDF144",
+      "dimensions": [
+        1191,
+        1684
+      ],
+      "counts": {
+        "actual_new_ink_pixels": 50279,
+        "new_prose_overlap_original_native_ink_pixels": 0,
+        "actual_new_glyph_ink_not_exactly_visible_pixels": 0,
+        "original_native_ink_or_graphics_changed_outside_actual_new_ink_and_source_closed_language_panel_pixels": 0
+      },
+      "actual_arrays_sha256": {
+        "proof": "cc0265f87f39305f37433f64cf42887c39deb16190c53c02df106f47d4c50318",
+        "native_control": "76411c472246b7e00dede9d121b5fec79ca5252344c7d0968a781e6f5fb270b9",
+        "actual_native_new_prose_only": "cc95bbf2fa1891e6bde0d356c1bd4f380f15a2fa3c6b0fcb3bd701d9c45951ca"
+      },
+      "actual_fresh_Poppler_PNG_sha256": null,
+      "source_only_language_panel_exceptions": [],
+      "source_closed_pure_paper_caption_context_only_pixels": 0,
+      "source_quiet_paper_witness_sha256": null,
+      "passed": true
+    },
+    {
+      "renderer": "Poppler144",
+      "dimensions": [
+        1191,
+        1684
+      ],
+      "counts": {
+        "actual_new_ink_pixels": 50185,
+        "new_prose_overlap_original_native_ink_pixels": 0,
+        "actual_new_glyph_ink_not_exactly_visible_pixels": 0,
+        "original_native_ink_or_graphics_changed_outside_actual_new_ink_and_source_closed_language_panel_pixels": 0
+      },
+      "actual_arrays_sha256": {
+        "proof": "47bdb11ce481208f5ee25be306d47a063a41b6700b6404f3e940c7b30bee4079",
+        "native_control": "dc6eec71b65368009efcb9443dc65d44b6889e1091299e4600bbc752e888dd28",
+        "actual_native_new_prose_only": "cf6d532c9c61f9160754c855fcf9a58e2194f7887cdf3fa3859c0993081bdc9c"
+      },
+      "actual_fresh_Poppler_PNG_sha256": {
+        "actual": "0fc3f0ba12a3b1f70574f6be9f11defba5bfc1b6539b2896912a5bbdb03294a8",
+        "native_control": "25264b09a8cb7605f695e2501ec44ce4c37773140522837586dd2b49a5596a93",
+        "actual_new_prose_ink_only": "ac37cd0ec95d0d936d1fe3e635aa3f0d0a7ceee466f8b6187edad4beef448204"
+      },
+      "source_only_language_panel_exceptions": [],
+      "source_closed_pure_paper_caption_context_only_pixels": 0,
+      "source_quiet_paper_witness_sha256": null,
+      "passed": true
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "source_math_path_complete_ownership_and_semantic_full_visual_review_remain_separate_required_checks": true,
+  "publication_ready": false
+}

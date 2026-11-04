@@ -1,0 +1,298 @@
+{
+  "schema": "cpho2010-theory-private-actual-full-input-closure-v4",
+  "predecessor_master": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v3",
+  "predecessor_READY_sha256": "dd37808947700876587cabe8948248ba418796a93f8fc9a9655ae97b6ca89dbf",
+  "predecessor_manifest_sha256": "e309dec8cfdc138fa3b0950faf2fad56f4b61a6a31a9dc2dd732dab58358011c",
+  "all_predecessor_leaf_bytes_preserved": true,
+  "all_canonical_PDF_bytes_identical": true,
+  "source_raw_JSON_paths_not_rewritten": true,
+  "source_total_pages": 22,
+  "covered_source_physical_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "actual_proof_count": 12,
+  "files": [
+    {
+      "original_path": "C:\\Windows\\Fonts\\batang.ttc",
+      "frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+      "sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+      "bytes": 16273348,
+      "roles": [
+        "PRIVATE actual full licensed donor used by new bitmap-label",
+        "PRIVATE actual full licensed donor used by new body-SimSun"
+      ],
+      "actual_bytes_captured_private": true
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+      "frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+      "sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+      "bytes": 18312320,
+      "roles": [
+        "PRIVATE actual full licensed donor used by new bitmap-label",
+        "PRIVATE actual full licensed donor used by new body-SimSun"
+      ],
+      "actual_bytes_captured_private": true
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\derived-output-config-v2.json",
+      "frozen_path": "frozen/closed-runtime-inputs/c956961f73fe37d2-derived-output-config-v2.json",
+      "sha256": "c956961f73fe37d2a7fd047b58e15dd230acb3149141d359de8928e595052c36",
+      "bytes": 764,
+      "roles": [
+        "PRIVATE actual source composer import-time resource config"
+      ],
+      "actual_bytes_captured_private": true
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\authoring\\page01-original-cylinder-label-policy.json",
+      "frozen_path": "frozen/closed-runtime-inputs/221901c547dff04d-page01-original-cylinder-label-policy.json",
+      "sha256": "221901c547dff04d5703d74033514478144adf8b4652709f2620d7f719ffcf7b",
+      "bytes": 2738,
+      "roles": [
+        "actual literal point-auditor source-only caption point/center profile"
+      ],
+      "actual_bytes_captured_private": true
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\audit-theory-all-actual-new-embedded-outlines-against-full-licensed-donors-v1.py",
+      "frozen_path": "frozen/closed-runtime-inputs/8e743ac9b3c68d30-audit-theory-all-actual-new-embedded-outlines-against-full-licensed-donors-v1.py",
+      "sha256": "8e743ac9b3c68d30feadd3043f99c1489530ce996d47365452ebd93ebcecbf27",
+      "bytes": 5055,
+      "roles": [
+        "PRIVATE exact independent full donor outline-auditor source"
+      ],
+      "actual_bytes_captured_private": true
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\prepare-theory-private-full-input-successor-v4.py",
+      "frozen_path": "frozen/closed-runtime-inputs/2a378bbf696c4afe-prepare-theory-private-full-input-successor-v4.py",
+      "sha256": "2a378bbf696c4afefa0642c38bed2b0f104c159f2f1c99ac5e3de5c93f9df103",
+      "bytes": 4530,
+      "roles": [
+        "PRIVATE exact successor capture driver"
+      ],
+      "actual_bytes_captured_private": true
+    }
+  ],
+  "per_proof_actual_full_font_inputs": [
+    {
+      "language": "ko",
+      "source_physical_page": 1,
+      "proof_sha256": "3a30c86f634903f79c2ddb703de86fa0f712554f6066a80b1e15f4809359f880",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "C:\\Windows\\Fonts\\batang.ttc",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+          "actual_full_font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+          "actual_full_font_bytes": 16273348,
+          "actual_subset_sha256": "7fc29bde8aae2aafafad5f3a72e4ffb8b4a9ecd14d992b9c1ea3ed384005fa4a",
+          "actual_subset_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\batang-8d8ddb583cbce2c1cc08.ttf"
+        },
+        {
+          "role": "bitmap-label",
+          "original_full_font_path": "C:\\Windows\\Fonts\\batang.ttc",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+          "actual_full_font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+          "actual_full_font_bytes": 16273348,
+          "actual_subset_sha256": "7deec14b1bd419ef8989e27bc1231d2067792cba2ff6240e932f76b9bee4e140",
+          "actual_subset_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\batang-3a2878bb0706133ef081.ttf"
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "source_physical_page": 1,
+      "proof_sha256": "1b28feb99d656d5614f44bfffb69d572ee216784dc96e8c0b4028b315db5079b",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+          "actual_full_font_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+          "actual_full_font_bytes": 18312320,
+          "actual_subset_sha256": "9899a16adc202e987d9f3b80ff74ee22827d0452a0f64b5ee7cce5e3ad851d51",
+          "actual_subset_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\SimSun-5.24-bb27db38fd3eade62b74.ttf"
+        },
+        {
+          "role": "bitmap-label",
+          "original_full_font_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+          "actual_full_font_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+          "actual_full_font_bytes": 18312320,
+          "actual_subset_sha256": "924840a76a8ed59674034525dcc1f36fddf600388d06b5a8c99b433b1aa7d163",
+          "actual_subset_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\SimSun-5.24-12d7389c6b93cb77d9e4.ttf"
+        }
+      ]
+    },
+    {
+      "language": "ko",
+      "source_physical_page": 2,
+      "proof_sha256": "df232b0f173ecf5d6be65d14e5c764ff8848826f359c0b9b4b253d7497a0231b",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "C:\\Windows\\Fonts\\batang.ttc",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+          "actual_full_font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+          "actual_full_font_bytes": 16273348,
+          "actual_subset_sha256": "1fe848aa9e099987d0e6184d9d5e80317e790aa4320f15050953e9a2023f1c26",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\batang-fee32fcb431a665bd0b0.ttf"
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "source_physical_page": 2,
+      "proof_sha256": "c0f856a0ba352d1bc44bc19a7655e5553b8d8b20966a2c38168ac02072a77ffa",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+          "actual_full_font_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+          "actual_full_font_bytes": 18312320,
+          "actual_subset_sha256": "d84ae62664f5f85f8bd7a2396a0f2400a08e0569915b5c7005ae23ec9d67d658",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\SimSun-5.24-de1c4dcfcdf06baae512.ttf"
+        }
+      ]
+    },
+    {
+      "language": "ko",
+      "source_physical_page": 3,
+      "proof_sha256": "7a6b7a514be717be9b3961c8067ff9fb051e5390b55e57dbb8668900681f66b2",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "C:\\Windows\\Fonts\\batang.ttc",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+          "actual_full_font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+          "actual_full_font_bytes": 16273348,
+          "actual_subset_sha256": "b7cf7d7490ee31a93b0b0d0bbd13f31f3450410cef9528969df03d136b9fcfee",
+          "actual_subset_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\batang-5c406cd8cbed347f4217.ttf"
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "source_physical_page": 3,
+      "proof_sha256": "b38f532a894e3aeb62a213ad560151d81b2404e703f33195b1247d3b429b222b",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+          "actual_full_font_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+          "actual_full_font_bytes": 18312320,
+          "actual_subset_sha256": "b9fbc98281e23eea112239234f56585be00fd0b9d27e71f37b285837e56ab0dd",
+          "actual_subset_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\SimSun-5.24-31ff99cbb98fa7930e40.ttf"
+        }
+      ]
+    },
+    {
+      "language": "ko",
+      "source_physical_page": 4,
+      "proof_sha256": "cb698fc699580336677f6dcb2088023ed0493588579a06733e82e33cbee320c3",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "C:\\Windows\\Fonts\\batang.ttc",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+          "actual_full_font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+          "actual_full_font_bytes": 16273348,
+          "actual_subset_sha256": "01d4e020a00910eae767030beb78f8c71e80b73d7d54a0b5add9ae509b560dc0",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\batang-db2c2089ec9d53cbb29c.ttf"
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "source_physical_page": 4,
+      "proof_sha256": "32e498e498879e99e531f297a9d595924c2257aab27f8f8ad684e477cb1961fe",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+          "actual_full_font_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+          "actual_full_font_bytes": 18312320,
+          "actual_subset_sha256": "93e9a9068bffad684277296eb85c96762bb3e4b2c5cb35ccf695b3873cf2a0b1",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\SimSun-5.24-6a018f14c61be5ae5f2b.ttf"
+        }
+      ]
+    },
+    {
+      "language": "ko",
+      "source_physical_page": 5,
+      "proof_sha256": "14b6fd94202f579c0d8ffb45d95acbb63c710a54187783a6d54ae8ef0708ce98",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "C:\\Windows\\Fonts\\batang.ttc",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+          "actual_full_font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+          "actual_full_font_bytes": 16273348,
+          "actual_subset_sha256": "f5774544593e17c1d329f67648d92aa6551d695b5cd5324eb56673ae1045d36f",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\batang-3c7bc22aeae6aa124403.ttf"
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "source_physical_page": 5,
+      "proof_sha256": "44af7e8c9f063264225f953fa925cf5835d71d1b2fbe882a256844396ceab037",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+          "actual_full_font_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+          "actual_full_font_bytes": 18312320,
+          "actual_subset_sha256": "c4806066f495d2de72bb8f11b334bd24d5f5fc2368e6d4ce18178ab270bd7a61",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\SimSun-5.24-8a1ce7a7fca8ea62c4bb.ttf"
+        }
+      ]
+    },
+    {
+      "language": "ko",
+      "source_physical_page": 6,
+      "proof_sha256": "8e171e2d729e7dbd2e46cc307f122f5d8742d7ed484e5a9e2bf224f538d43ba1",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "C:\\Windows\\Fonts\\batang.ttc",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/51d9a8d4205239c8-batang.ttc",
+          "actual_full_font_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+          "actual_full_font_bytes": 16273348,
+          "actual_subset_sha256": "0df31a74916b27a8345029de73a729271b4bfef21df8ffb25fe24a2474035337",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\batang-b7926be3609710774e27.ttf"
+        }
+      ]
+    },
+    {
+      "language": "en",
+      "source_physical_page": 6,
+      "proof_sha256": "0b0b99bbb61ebfbc67403f656e129af06d66ee29b2bd31f5e607baa22a4fc4cc",
+      "actual_full_font_inputs": [
+        {
+          "role": "body-SimSun",
+          "original_full_font_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\english-face-repair\\font-faces\\SimSun-5.24.ttf",
+          "actual_full_font_frozen_path": "frozen/private-full-font-inputs/79ba39fde98703ec-SimSun-5.24.ttf",
+          "actual_full_font_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+          "actual_full_font_bytes": 18312320,
+          "actual_subset_sha256": "d17a57953e59782be53531951bf4196388eebd1bd4ff540c9f1b119411cdeb6a",
+          "actual_subset_original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\font-cache\\SimSun-5.24-afb16362e863e50904fd.ttf"
+        }
+      ]
+    }
+  ],
+  "full_font_bytes_are_PRIVATE_and_must_not_be_exported": true,
+  "public_boundary_must_enumerate_exact_literal_private_ID_SHA_bytes_role": true,
+  "frozen_only_runtime_replay_required_before_READY": true
+}

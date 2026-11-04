@@ -1,0 +1,120 @@
+{
+  "passed": true,
+  "actual_damaged_PDF_count": 5,
+  "all_five_intended_predicates_reject_actual_visible_damage": true,
+  "all_damaged_controls_have_both_fresh_renderer_visible_damage_witnesses": true,
+  "resource_or_setup_failures_never_counted_as_negative_success": true,
+  "current_positive_KO_EN_p1_hashes": {
+    "ko": "3a30c86f634903f79c2ddb703de86fa0f712554f6066a80b1e15f4809359f880",
+    "en": "1b28feb99d656d5614f44bfffb69d572ee216784dc96e8c0b4028b315db5079b"
+  },
+  "controls": [
+    {
+      "case": {
+        "name": "one-pixel-original-wire-covered",
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-negative-controls-v2\\one-pixel-original-wire-covered.pdf",
+        "sha256": "7ac20772246716ba12dcee2202501a3640ceceaecf035818005147d8fa0fba91",
+        "language": "ko",
+        "expected_exit": 1,
+        "expected_stderr_marker": "C2010 SOURCE_ONLY_LANGUAGE_PANEL_MISMATCH",
+        "actual_exit": 1,
+        "actual_lineage_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\temp-runs\\20261104T161750Z-ink-ko-1-e131d40f\\run-lineage.json",
+        "actual_lineage_sha256": "c161b042efa6e99b4c18760a0113746926608c96209a278e6c28190602ed8b0e",
+        "actual_stderr_sha256": "374602b57f974d349912c80c658f2b347aefdac774660eec76333ca35c652cf2",
+        "actual_stdout_sha256": "11422189b7806b39263fe27ee561075df6466eaf8e53e32b8f6f4a47e11e365b",
+        "actual_failure": "AssertionError: C2010 SOURCE_ONLY_LANGUAGE_PANEL_MISMATCH: opaque paint would cover unreviewed original graphics",
+        "actual_ink_QA_path": null,
+        "actual_ink_QA_sha256": null,
+        "actual_QA_passed": null,
+        "actual_overlap_counts": null,
+        "matched_intended_source_closed_predicate": true
+      },
+      "contract": "bitmap"
+    },
+    {
+      "case": {
+        "name": "caption-over-original-leader",
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-negative-controls-v2\\caption-over-original-leader.pdf",
+        "sha256": "40eca73843a7853f6bc3b7727da23836402b6a15dc797fbd4a08108d097013e3",
+        "language": "ko",
+        "expected_exit": 1,
+        "expected_stderr_marker": "Actual source/native/new-prose ink visibility or collision failure",
+        "actual_exit": 1,
+        "actual_lineage_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\temp-runs\\20261104T161751Z-ink-ko-1-150979e6\\run-lineage.json",
+        "actual_lineage_sha256": "fd50f79c398743755a67ab370d6218104514e39af0ddc5594c3c4e909ef6e884",
+        "actual_stderr_sha256": "333b44b43da130c3cd39e822506cc7a2bd49e61c2628b816f1822f4c2d0a919f",
+        "actual_stdout_sha256": "0d4da57846637431482ea8bd3281b83cd699fb18a604ced5a4b5713a4c6cd844",
+        "actual_failure": "AssertionError: Actual source/native/new-prose ink visibility or collision failure",
+        "actual_ink_QA_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\qa-ink-graphics-v7\\page01-ko-40eca73843a7853f\\actual-ink-graphics.json",
+        "actual_ink_QA_sha256": "03cbca858ed86badb06d537dc051a503a9efa051ad04329a6ff0f76377ce1dc6",
+        "actual_QA_passed": false,
+        "actual_overlap_counts": {
+          "MuPDF144": 21,
+          "Poppler144": 69
+        },
+        "matched_intended_source_closed_predicate": true
+      },
+      "contract": "bitmap"
+    },
+    {
+      "case": {
+        "name": "same-name-version-advance-new-English-A-outline-damaged",
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+        "sha256": "34dbbbc0d7700ef7db214b058b5b3f89932019366b93a76ceb0207a3703dcb46",
+        "language": "en",
+        "expected_exit": 1,
+        "expected_stderr_marker": "C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+        "actual_exit": 1,
+        "actual_lineage_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\temp-runs\\20261104T175728Z-auditpage-en-1-049d5a37\\run-lineage.json",
+        "actual_lineage_sha256": "6ddff0b6eab3402553b86728019c767eaf1e8bad6f4b7c3b3152f2d40083a915",
+        "actual_stderr_sha256": "ad3de0846f283a7fd1621d12ee1268e3d7bdc303b970a3f0113d3637bd92f45b",
+        "actual_stdout_sha256": "19514d26f2763ee92b5fdd531cf2aa0947868b7bfb03eb3815d48d3a1382df1b",
+        "actual_failure": "AssertionError: C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+        "actual_QA_path": null,
+        "actual_QA_sha256": null,
+        "matched_intended_predicate": true
+      },
+      "contract": "font-point-native"
+    },
+    {
+      "case": {
+        "name": "new-Korean-prose-actual-Tf-plus-one-point",
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\new-Korean-prose-actual-Tf-plus-one-point.pdf",
+        "sha256": "ed6fdc57e50de9d440881051a844499e69012e00636880df0c45b658147dee73",
+        "language": "ko",
+        "expected_exit": 1,
+        "expected_stderr_marker": "C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH",
+        "actual_exit": 1,
+        "actual_lineage_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\temp-runs\\20261104T175730Z-auditpage-ko-1-359b8eb9\\run-lineage.json",
+        "actual_lineage_sha256": "ef3bfa644aa88acb70acede1bc776155d1be43f6813fc43120267f044400b88b",
+        "actual_stderr_sha256": "d532a1d93fd34b8ff8b44c21894029e64c0f43bd309152b4944de320f7016b9e",
+        "actual_stdout_sha256": "8187ebb504ee657d8d015ab16064257c799a371ec5cc11bb80e377688a4f29c7",
+        "actual_failure": "AssertionError: ('C2010_NEW_PROSE_POINT_GID_PAINT_ORIGIN_MISMATCH', [{'index': 0, 'expected': {'row': 'r00', 'c': '\uc911', 'gid': 15207, 'font': 'Batang', 'size': 16.079999923706055, 'origin': [154.89113593101501, 93.36505126953125], 'render_mode': 2, 'color': [1.0, 0.0, 0.0], 'linewidth': 0.27799999713897705}, 'actual': {'c': '\uc911', 'font': 'Batang', 'size': 17.079999923706055, 'origin': (154.89112854003906, 93.36505126953125), 'bbox': (154.89112854003906, 78.69573974609375, 171.97113037109375, 95.77574157714844), 'render_mode': 2, 'trace_gid': 15207, 'color': (1.0, 0.0, 0.0), 'opacity': 1.0, 'linewidth': 0.27799999713897705, 'direction': (1.0, 0.0), 'stroke_color': (1.0, 0.0, 0.0), 'stroke_opacity': 1.0, 'wmode': 0, 'colorspace': 3}, 'errors': ['source point']}])",
+        "actual_QA_path": null,
+        "actual_QA_sha256": null,
+        "matched_intended_predicate": true
+      },
+      "contract": "font-point-native"
+    },
+    {
+      "case": {
+        "name": "original-native-math-subscript-zero-to-one-CID",
+        "path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\original-native-math-subscript-zero-to-one-CID.pdf",
+        "sha256": "15619e9e632ad3e978ca50afda27d07c556fd195fbd96b2a42c4f95f50fe727c",
+        "language": "ko",
+        "expected_exit": 1,
+        "expected_stderr_marker": "C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH",
+        "actual_exit": 1,
+        "actual_lineage_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\temp-runs\\20261104T175733Z-auditpage-ko-1-0b96e96b\\run-lineage.json",
+        "actual_lineage_sha256": "840ddbaa2c769951b5385a50ab76e4e0f4f42eaf13d2b908207671e2a3bf1286",
+        "actual_stderr_sha256": "b53756c7a629df41d8ca9aa89052eb756239824fb574d3559ecfca4f46840999",
+        "actual_stdout_sha256": "4f572233fd77bf93bed97db542c772ce66c648033284060dae6fe929961ead65",
+        "actual_failure": "AssertionError: C2010_ORIGINAL_NATIVE_GLYPH_MISMATCH",
+        "actual_QA_path": null,
+        "actual_QA_sha256": null,
+        "matched_intended_predicate": true
+      },
+      "contract": "font-point-native"
+    }
+  ]
+}

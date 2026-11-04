@@ -1,0 +1,163 @@
+{
+  "schema": "cpho2010-frozen-only-runtime-case-v1",
+  "job": "point",
+  "language": "en",
+  "source_physical_page": 1,
+  "target_literal_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+  "target_sha256": "34dbbbc0d7700ef7db214b058b5b3f89932019366b93a76ceb0207a3703dcb46",
+  "result": "FAILED",
+  "failure": "AssertionError: C2010_NEW_PROSE_FONT_PROGRAM_MISMATCH",
+  "actual_source_input_reads": [
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_original_text_ops.py",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_native_inline_reposition.py",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_native_inline_reposition.py",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_exact_source_trace_pairs.py",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_exact_source_trace_pairs.py",
+      "sha256": "0c4476c9559e60fb1ef767eb52f42150c6da5ba0d3b8561dbbfac1b397738a17",
+      "bytes": 4537
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\engine\\pdf_memory_gate.py",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\engine\\pdf_memory_gate.py",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+      "bytes": 1237
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_native_compose.py",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_native_compose.py",
+      "sha256": "3941d15564d4f5b9cfd189f3f84d588083c0f82907dbaa5c6a480a03be3fc7cc",
+      "bytes": 11830
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\derived-output-config-v2.json",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\closed-runtime-inputs\\c956961f73fe37d2-derived-output-config-v2.json",
+      "sha256": "c956961f73fe37d2a7fd047b58e15dd230acb3149141d359de8928e595052c36",
+      "bytes": 764
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\audit-each-source-point-paint-native-v3.py",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\D\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\audit-each-source-point-paint-native-v3.py",
+      "sha256": "0a24162cac83415d5792d764eca9170800b5620eb5a41ebe026f6ae2abaf6ded",
+      "bytes": 13465
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.composition.json",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\D\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.composition.json",
+      "sha256": "675c868db526f36196738ccf680b9218e91c10ffe1c4f7c45b2679075cee0007",
+      "bytes": 1013554
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\compiled-inputs\\page01-en-220b9e8d438b6077d97f.json",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\compiled-inputs\\page01-en-220b9e8d438b6077d97f.json",
+      "sha256": "220b9e8d438b6077d97fc18837d0671a2093d72417c07e81d6de3677bc39f9ea",
+      "bytes": 1755033
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\source\\CPhO_2010_original_combined_ZH.pdf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\source\\CPhO_2010_original_combined_ZH.pdf",
+      "sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "bytes": 559581
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\D\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "sha256": "34dbbbc0d7700ef7db214b058b5b3f89932019366b93a76ceb0207a3703dcb46",
+      "bytes": 530236
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\compiled-inputs\\page01-en-220b9e8d438b6077d97f.json",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\compiled-inputs\\page01-en-220b9e8d438b6077d97f.json",
+      "sha256": "220b9e8d438b6077d97fc18837d0671a2093d72417c07e81d6de3677bc39f9ea",
+      "bytes": 1755033
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\D\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "sha256": "34dbbbc0d7700ef7db214b058b5b3f89932019366b93a76ceb0207a3703dcb46",
+      "bytes": 530236
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\source\\CPhO_2010_original_combined_ZH.pdf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\source\\CPhO_2010_original_combined_ZH.pdf",
+      "sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "bytes": 559581
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\D\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "sha256": "34dbbbc0d7700ef7db214b058b5b3f89932019366b93a76ceb0207a3703dcb46",
+      "bytes": 530236
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\source\\CPhO_2010_original_combined_ZH.pdf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\source\\CPhO_2010_original_combined_ZH.pdf",
+      "sha256": "345dfd46708d6ce195d60dd82c31f1511f61940db92075a0d28c832c3fb2d335",
+      "bytes": 559581
+    },
+    {
+      "original_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\D\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\actual-font-point-native-negative-controls-v2\\same-name-version-advance-new-English-A-outline-damaged.pdf",
+      "sha256": "34dbbbc0d7700ef7db214b058b5b3f89932019366b93a76ceb0207a3703dcb46",
+      "bytes": 530236
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\SimSun-5.24-bb27db38fd3eade62b74.ttf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\SimSun-5.24-bb27db38fd3eade62b74.ttf",
+      "sha256": "9899a16adc202e987d9f3b80ff74ee22827d0452a0f64b5ee7cce5e3ad851d51",
+      "bytes": 23136
+    },
+    {
+      "original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\SimSun-5.24-bb27db38fd3eade62b74.ttf",
+      "frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-native-derived-C-v4\\font-cache\\SimSun-5.24-bb27db38fd3eade62b74.ttf",
+      "sha256": "9899a16adc202e987d9f3b80ff74ee22827d0452a0f64b5ee7cce5e3ad851d51",
+      "bytes": 23136
+    }
+  ],
+  "actual_case_output_writes": [],
+  "blocked_reads_or_writes": [],
+  "actual_project_modules_executed_only_from_frozen_bytes": [
+    {
+      "module": "pdf_original_text_ops",
+      "literal_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_original_text_ops.py",
+      "actual_executed_frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230"
+    },
+    {
+      "module": "pdf_native_inline_reposition",
+      "literal_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_native_inline_reposition.py",
+      "actual_executed_frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\pdf_native_inline_reposition.py",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f"
+    },
+    {
+      "module": "cpho2010_exact_source_trace_pairs",
+      "literal_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_exact_source_trace_pairs.py",
+      "actual_executed_frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_exact_source_trace_pairs.py",
+      "sha256": "0c4476c9559e60fb1ef767eb52f42150c6da5ba0d3b8561dbbfac1b397738a17"
+    },
+    {
+      "module": "pdf_memory_gate",
+      "literal_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\engine\\pdf_memory_gate.py",
+      "actual_executed_frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\engine\\pdf_memory_gate.py",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436"
+    },
+    {
+      "module": "cpho2010_native_compose",
+      "literal_original_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_native_compose.py",
+      "actual_executed_frozen_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2010-native-derived-v1\\successor-D-v6\\T\\master-v4\\frozen\\raw-files\\C\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2010-original-style-bilingual\\engine\\cpho2010_native_compose.py",
+      "sha256": "3941d15564d4f5b9cfd189f3f84d588083c0f82907dbaa5c6a480a03be3fc7cc"
+    }
+  ],
+  "all_resolved_task_input_paths_under_frozen": true,
+  "no_original_live_source_authoring_subset_or_fullfont_bytes_read": true,
+  "shared_memory_lock_unchanged": true
+}
