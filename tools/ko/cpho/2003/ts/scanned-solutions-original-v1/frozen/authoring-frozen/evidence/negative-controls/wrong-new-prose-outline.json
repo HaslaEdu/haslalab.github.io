@@ -1,0 +1,17 @@
+{
+  "schema": "cpho2003-ts-actual-bad-pdf-negative-v1",
+  "case": "wrong-new-prose-outline",
+  "source_original_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "source_page": 6,
+  "language": "ko",
+  "positive_sha256": "798d56a70c19edad1bdb4149ecd9bd48cb50f9aba17bcc497d1b113c9816d83c",
+  "candidate_sha256": "0795745e523f7249647748e31ea23eb9156fe2a23c9cdb428e43ad1a94aff2f7",
+  "candidate_bytes": 2540722,
+  "actual_pdf_mutation": true,
+  "not_a_metadata_only_mutation": true,
+  "rejected_as_expected": true,
+  "checker_sha256": "b8b1cd90f3d9fcf14a38c7de4008c4f0d2936e34e4db2502e2c24cebddb0cd1c",
+  "detail": {
+    "actual_checker_error": "('Actual PDF glyph differs from full donor', 'Batang', '이', 14794)"
+  }
+}

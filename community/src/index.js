@@ -4952,6 +4952,13 @@ const OAUTH = {
   kakao: { auth: "https://kauth.kakao.com/oauth/authorize", token: "https://kauth.kakao.com/oauth/token",
            me: "https://kapi.kakao.com/v2/user/me", scope: "profile_nickname", pkce: false },
 };
+/* every request to a provider says who it is: Discord's API (behind Cloudflare) can refuse requests that carry no
+   User-Agent, and GitHub refuses them outright */
+const OAUTH_UA = "HaslaLab (https://haslalab.org, 1.0)";
+/* why a sign-in failed, kept short and plain for the page and the log: the step, the provider's status and its error code
+   (never a token or a secret) */
+const oauthWhy = (step, status, body) => [step, status, String((body && (body.error || body.code || body.message)) || "").toLowerCase()]
+  .filter(x => x !== "").join("-").replace(/[^a-z0-9_-]+/gi, "_").slice(0, 60);
 const oauthKeys = (env, p) => ({ id: env[p.toUpperCase() + "_CLIENT_ID"], secret: env[p.toUpperCase() + "_CLIENT_SECRET"] });
 function oauthProviders(env) { return Object.keys(OAUTH).filter(p => { const k = oauthKeys(env, p); return k.id && k.secret; }); }
 const mockable = (env, u) => env.OAUTH_MOCK_BASE ? env.OAUTH_MOCK_BASE + new URL(u).pathname : u;
@@ -5004,19 +5011,30 @@ async function oauthRoute(req, env, url) {
   /* callback */
   const st = await env.DB.prepare("DELETE FROM oauth_states WHERE state=? AND provider=? RETURNING *").bind(url.searchParams.get("state") || "", prov).first();
   if (!st || st.created_at < now() - 600) return new Response("This sign-in link has expired. Please try again.", { status: 400 });
+  /* from here the browser always goes back to the site with a reason, never to a bare error page on the Worker's address */
+  try { return await oauthCallback(req, env, url, prov, P, keys, redirectUri, st); }
+  catch (e) {
+    if (e && e.status === 429) return oauthBack(env, st.return_to, "e=signup_limit");
+    console.error("oauth callback", prov, e && e.stack || e);
+    return oauthBack(env, st.return_to, "e=oauth_failed&d=server-" + String(e && e.code || "error").replace(/[^a-z0-9_]+/gi, "_").slice(0, 40));
+  }
+}
+async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   const code = url.searchParams.get("code");
   if (!code) return oauthBack(env,st.return_to, "e=oauth_cancelled");
   const form = new URLSearchParams({ grant_type: "authorization_code", code, client_id: keys.id, client_secret: keys.secret, redirect_uri: redirectUri });
   if (st.verifier) form.set("code_verifier", st.verifier);
   if (prov === "naver") form.set("state", st.state);
-  const tr = await fetch(mockable(env, P.token), { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" }, body: form });
-  const tj = await tr.json().catch(() => ({}));
-  if (!tr.ok || !tj.access_token) { console.error("oauth token", prov, tr.status); return oauthBack(env,st.return_to, "e=oauth_failed"); }
-  const mr = await fetch(mockable(env, P.me), { headers: { Authorization: "Bearer " + tj.access_token, Accept: "application/json", "User-Agent": "HaslaLab" } });   // GitHub refuses requests without a User-Agent
-  const mj = await mr.json().catch(() => ({}));
+  let tr, tj;
+  try { tr = await fetch(mockable(env, P.token), { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json", "User-Agent": OAUTH_UA }, body: form }); tj = await tr.json().catch(() => ({})); }
+  catch (e) { console.error("oauth token", prov, "network", String(e && e.message || e).slice(0, 120)); return oauthBack(env, st.return_to, "e=oauth_failed&d=token-network"); }
+  if (!tr.ok || !tj.access_token) { const why = oauthWhy("token", tr.status, tj); console.error("oauth token", prov, why); return oauthBack(env,st.return_to, "e=oauth_failed&d=" + why); }
+  let mr, mj;
+  try { mr = await fetch(mockable(env, P.me), { headers: { Authorization: "Bearer " + tj.access_token, Accept: "application/json", "User-Agent": OAUTH_UA } }); mj = await mr.json().catch(() => ({})); }
+  catch (e) { console.error("oauth profile", prov, "network", String(e && e.message || e).slice(0, 120)); return oauthBack(env, st.return_to, "e=oauth_failed&d=profile-network"); }
   const prof = prov === "naver" ? (mj.response || {}) : mj;
   const sub = String(prov === "google" ? prof.sub : prof.id || "");
-  if (!mr.ok || !sub) { console.error("oauth profile", prov, mr.status); return oauthBack(env,st.return_to, "e=oauth_failed"); }
+  if (!mr.ok || !sub) { const why = oauthWhy("profile", mr.status, mj); console.error("oauth profile", prov, why); return oauthBack(env,st.return_to, "e=oauth_failed&d=" + why); }
   const name = prov === "google" ? (prof.name || prof.given_name) : prov === "discord" ? (prof.global_name || prof.username)
     : prov === "github" ? (prof.name || prof.login) : prov === "kakao" ? ((prof.kakao_account || {}).profile || prof.properties || {}).nickname : (prof.nickname || prof.name);
   const found = await env.DB.prepare("SELECT i.user_id FROM identities i JOIN users u ON u.id=i.user_id WHERE i.provider=? AND i.sub=? AND u.deleted=0").bind(prov, sub).first();

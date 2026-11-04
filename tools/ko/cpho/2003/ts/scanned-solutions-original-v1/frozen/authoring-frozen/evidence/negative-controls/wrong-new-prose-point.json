@@ -1,0 +1,17 @@
+{
+  "schema": "cpho2003-ts-actual-bad-pdf-negative-v1",
+  "case": "wrong-new-prose-point",
+  "source_original_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "source_page": 6,
+  "language": "ko",
+  "positive_sha256": "798d56a70c19edad1bdb4149ecd9bd48cb50f9aba17bcc497d1b113c9816d83c",
+  "candidate_sha256": "37f1d2128f426d4a456a0e72d9c4980d9805d221c684673885d87719f725489e",
+  "candidate_bytes": 2540760,
+  "actual_pdf_mutation": true,
+  "not_a_metadata_only_mutation": true,
+  "rejected_as_expected": true,
+  "checker_sha256": "b8b1cd90f3d9fcf14a38c7de4008c4f0d2936e34e4db2502e2c24cebddb0cd1c",
+  "detail": {
+    "actual_checker_error": "('No unique measured original scan role/point/baseline', {'c': '이', 'gid': 14794, 'font': 'Batang', 'size': 11.5, 'origin': [73.75, 82.66522216796875], 'bbox': [73.75, 72.78834533691406, 85.25, 84.28834533691406], 'color': [0.0, 0.0, 0.0], 'render_type': 0, 'font_alias': '/TSScanBody', 'font_basefont': '/Batang', 'font_program_sha256': 'd1148dc6b0e7bdb6e863f6c14a109e4ff0a4642479d6aa499f04e53893125774', 'encoded_code': 14794}, [])"
+  }
+}

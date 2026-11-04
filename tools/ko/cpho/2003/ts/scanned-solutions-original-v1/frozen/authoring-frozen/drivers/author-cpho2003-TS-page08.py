@@ -1,0 +1,51 @@
+"""Original source8 manual prose, unchanged trajectory and eye-ray figures."""
+from pathlib import Path
+import sys
+B=Path('C:/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2003-original-native')
+sys.path[:0]=[str(B/'TS/engine'),str(B/'engine')]
+from cpho2003_manual_scan_layout import ManualPage
+p=ManualPage(8);A=p.atom;R=p.row
+R('least-delay',1,[0,0,523,40],'切',[0,0,31,39],'切点时两者的时间差最短，则这个时','교점·접점의 통과 시간 차가 최소이면','The least passage-time difference',right=226)
+R('starting-delay',1,[0,45,523,90],'间',[0,48,31,88],'间差就应当等于题中所说的要a、b在','이는 [[a]], [[b]]가 만나기 위한 출발','equals the start delay for [[a]], [[b]]',[A(1,'a',[424,47,445,89]),A(1,'b',[474,47,496,89])],right=226)
+R('delay-equivalence',1,[0,93,523,138],'此',[0,97,31,137],'此交叉或相切点能相遇，两者出发时','시간 차와 같다. 이를 알아보기 위해','to meet at that crossing/tangency.',right=226)
+R('crossing-reference-prefix',1,[0,141,523,185],'间',[0,145,31,184],'间的时间差。为此，结合图决解20-4-','그림 [[ref-prefix]]','For this, consider Fig. [[ref-prefix]]',[A(1,'ref-prefix',[421,145,521,185])],right=226)
+R('crossing-reference-tail',1,[0,189,523,233],'分',[21,193,53,232],'1分别考查a、b的运动，经过分析就可','[[ref-tail]]의 [[a]], [[b]] 운동을 살피면','[[ref-tail]] and the motion of [[a]], [[b]]:',[A(1,'ref-tail',[0,192,17,233]),A(1,'a',[157,193,176,234]),A(1,'b',[187,193,210,234])],left=54,right=226,first_known_char_is_first_token=False)
+R('shortest-crossing',1,[0,236,523,282],'看',[0,241,31,281],'看出，在5T0到5.25T0之间的那个交','[[fiveT]]와 [[fiveQuarterT]] 사이 교점에서','the crossing between [[fiveT]], [[fiveQuarterT]]',[A(1,'fiveT',[120,239,173,283]),A(1,'fiveQuarterT',[215,239,313,283])],right=226)
+R('crossing-P',1,[0,285,523,332],'叉',[0,289,31,331],'叉点(图决解20-4-1中的P点)处，','(그림 [[ref]]의 [[P]]) 통과 시간 차가','(point [[P]], Fig. [[ref]]) gives the',[A(1,'ref',[182,288,305,333]),A(1,'P',[382,288,407,333])],right=226)
+R('before-five',1,[0,333,523,379],'通',[49,337,81,378],'a、b通过它的时间差最短(在5T0以前','최소이다. [[a]], [[b]]는 [[fiveT]] 이전과','least delay. For [[a]], [[b]], before [[fiveT]]',[A(1,'a',[0,336,20,379]),A(1,'b',[29,336,50,379]),A(1,'fiveT',[387,336,443,380])],left=54,right=226,first_known_char_is_first_token=False)
+R('after-five-quarter',1,[0,382,523,427],'和',[0,386,31,426],'和5.25T0以后的那些交叉或相切点，','[[fiveQuarterT]] 이후의 다른 교점·접점을','or after [[fiveQuarterT]], other points',[A(1,'fiveQuarterT',[39,385,140,429])],right=226)
+R('larger-delay',1,[0,430,523,462],'通',[49,434,80,462],'a、b通过时的时间差都较长)。','지날 때 [[a]], [[b]]의 시간 차가 더 크다.','give [[a]], [[b]] longer passage delays.',[A(1,'a',[0,433,20,462]),A(1,'b',[29,433,50,462])],left=54,right=226,first_known_char_is_first_token=False)
+r=R('trajectory-detail-caption',1,[606,367,784,405],'图',[608,369,636,404],'图决解20-4-2','그림 [[number]]','Fig. [[number]]',[A(1,'number',[680,368,782,404])],size=8,left=251,right=329)
+r['align']='center';v=p.rect(1,[606,367,784,405]);r['source_caption_horizontal_center']=(v[0]+v[2])/2
+R('new-origin-location',2,[65,0,865,39],'为',[65,0,100,38],'为了定量地求出此时间差，取负y轴上距原点O为3Ral(即','계산을 위해 음의 [[y]]축 위에서 [[O]]로부터 [[threeRal]]','Choose on negative [[y]], [[threeRal]] from [[O]]',[A(2,'y',[508,0,535,40]),A(2,'O',[695,0,721,40]),A(2,'threeRal',[759,0,826,43])])
+R('new-origin-time',2,[0,43,865,89],'处',[74,47,109,88],'6Rbl)处为新的原点O′，如图决解20-4-2所示。取时间t=5T0','(즉 [[sixRbl]]) 떨어진 새 원점 [[Oprime]](그림 [[ref]])과 [[time]]를','(i.e. [[sixRbl]]), origin [[Oprime]] (Fig. [[ref]]). Take [[time]]',[A(2,'sixRbl',[0,47,59,92]),A(2,'Oprime',[279,46,319,91]),A(2,'ref',[463,47,580,91]),A(2,'time',[759,47,865,92])],left=54,first_known_char_is_first_token=False)
+R('two-time-labels',2,[0,94,865,139],'为',[0,98,35,138],'为新的起始计时时刻，对a用t′=0表示，对b用t″=0表示。在','새 시간 원점으로 잡고 [[a]]는 [[tp]], [[b]]는 [[tpp]]로 쓴다.','as time origin: [[tp]] for [[a]] and [[tpp]] for [[b]].',[A(2,'a',[344,98,366,140]),A(2,'tp',[400,97,491,141]),A(2,'b',[610,98,632,141]),A(2,'tpp',[668,97,759,141])])
+R('common-angular-speed',2,[0,142,865,187],'轴',[46,146,81,186],'y轴以左a、b的周期相同，所以角速度亦相同，以ω1表示a、b在','[[y]]축 왼쪽에서 [[a1]], [[b1]]는 주기가 같아 [[omega1]]도 같다. [[a2]], [[b2]]의','Left of [[y]], [[a1]], [[b1]] share a period; [[omega1]] is [[a2]], [[b2]]’s',[A(2,'y',[0,146,24,189]),A(2,'a1',[130,146,151,188]),A(2,'b1',[160,146,183,188]),A(2,'omega1',[673,146,713,190]),A(2,'a2',[782,146,804,189]),A(2,'b2',[814,146,837,190])],left=54,first_known_char_is_first_token=False)
+R('speed-definition-end',2,[0,191,278,232],'轴',[46,195,81,231],'y轴以左的角速度','[[y]]축 왼쪽의 공통 각속도이다.','common angular speed left of [[y]]:',[A(2,'y',[0,195,24,233])],left=54,first_known_char_is_first_token=False)
+R('for-a',2,[63,318,129,358],'对',[64,322,99,357],'对a','[[a]]에 대해','For [[a]]:',[A(2,'a',[103,322,125,361])])
+R('for-b',2,[63,513,129,550],'对',[64,517,99,549],'对b','[[b]]에 대해','For [[b]]:',[A(2,'b',[103,516,126,553])])
+R('at-P',2,[0,718,172,758],'对',[0,722,35,757],'对P点应有','[[P]]에서는','At [[P]]:',[A(2,'P',[42,722,69,760])])
+R('solve-time-delay',3,[0,0,522,39],'由',[0,0,33,38],'由以上各式可解得所求的时间差应为','위 식들을 풀면 구하려는 시간 차는','Solving gives the required time difference:')
+R('simultaneous-passage',3,[0,124,862,171],'这',[0,128,35,170],'这个结果说明，如果a、b同时出发，则a比b晚0.0802πm/qB0','동시에 출발한 [[a1]], [[b1]] 중 [[a2]]는 [[b2]]보다 [[delay]]','If [[a1]], [[b1]] start together, [[a2]] follows [[b2]] by [[delay]]',[A(3,'a1',[278,127,301,173]),A(3,'b1',[308,127,333,173]),A(3,'a2',[518,127,540,173]),A(3,'b2',[576,127,603,173]),A(3,'delay',[638,126,862,179])])
+R('meeting-start-order',3,[0,174,862,217],'时',[0,178,35,216],'时通过P点。换成题目的要求，就应当说，要a、b相遇，则b的','늦게 [[P]]를 지난다. 만나려면 [[a]], [[b1]] 중 [[b2]]의','at [[P]]. To make [[a]], [[b1]] meet, [[b2]] must start',[A(3,'P',[138,177,165,219]),A(3,'a',[637,177,660,219]),A(3,'b1',[666,177,691,220]),A(3,'b2',[811,177,838,220])])
+R('delayed-b-start',3,[0,221,514,265],'出',[0,225,35,264],'出发时间应比a晚0.0802πm/qB0。','출발은 [[a]]보다 [[delay]] 늦어야 한다.','later than [[a]] by [[delay]].',[A(3,'a',[198,225,221,267]),A(3,'delay',[257,224,499,272])])
+R('coordinates-O-source-label',3,[65,270,532,313],'由',[66,274,101,312],'由以上各式还可求得O点的坐标','위 식들에서 [[O]]점의 좌표도 구하면','These equations also give coordinates of [[O]]:',[A(3,'O',[361,274,391,315])])
+R('convert-coordinate-system',3,[0,489,234,534],'换',[0,493,35,533],'换为Oxy坐标系','[[Oxy]]좌표계로 바꾸면','In the [[Oxy]] coordinate system:',[A(3,'Oxy',[72,493,127,538])])
+R('problem5',4,[72,0,124,33],'五',[73,0,108,32],'五、','5.','5.')
+R('eye-first-reference',4,[72,43,397,84],'图',[103,47,137,83],'1.图决解20-5-1是近','[[one]] 그림 [[ref]]은 근시안의','[[one]] Fig. [[ref]]: a myopic',[A(4,'one',[72,47,98,87]),A(4,'ref',[208,47,309,87])],left=455,right=562.6,first_known_char_is_first_token=False)
+R('farthest-object',4,[0,90,397,130],'视',[0,94,35,129],'视眼观察能看清的最远的物','선명하게 보이는 가장 먼 물체의','eye’s farthest clear object,',right=562.6)
+R('eye-rays',4,[0,137,397,179],'时',[0,142,35,178],'时的成像光路图。对近视眼，','결상 광선도이다. 근시안이','and its ray image. With',right=562.6)
+R('accommodation',4,[0,184,397,225],'通',[0,189,35,224],'通过眼睛调节，能看清的物','눈을 조절해 선명하게 보는 최대','accommodation, the maximum',right=562.6)
+R('maximum-distance',4,[0,232,397,275],'到',[0,237,35,274],'到眼睛的最大距离为a，位','거리는 [[a]]이다. 이때 광축 위','clear distance is [[a]]. An axial',[A(4,'a',[317,236,343,278])],right=562.6)
+R('retinal-image',4,[0,280,397,324],'于',[0,286,35,323],'于光轴上的物点，将成像在','물체점은 망막에 상을 맺는다.','point forms on the retina.',right=562.6)
+R('infinite-object',4,[0,331,866,378],'视',[0,336,35,377],'视网膜上；离眼睛无限远，位于光轴上的物点，只能成像在焦点','광축 위 무한히 먼 물체점은 초점에만 상을 맺어','An infinitely distant axial point focuses only at the focus;')
+R('focus-patch',4,[0,381,866,426],'在',[43,386,77,425],'F，在视网膜上是一个光斑，这光斑就是物点在视网膜上的模糊','[[F]]에서 모인 뒤 망막에서는 빛의 얼룩, 즉 물체점의 흐린','at [[F]], it leaves a retinal patch: the blurred image of a point.',[A(4,'F',[0,385,30,430])],left=431.6,first_known_char_is_first_token=False)
+R('pinhole-card',4,[0,430,866,475],'的',[0,435,35,474],'的“像”。如果在眼前靠近眼睛处放一个有小圆孔的卡片，小孔使','상이 된다. 눈 가까이에 작은 원형 구멍을 낸 카드를 두면','Place a card with a small round hole close to the eye: the')
+R('patch-reduced',4,[0,478,866,523],'视',[0,484,35,522],'视网膜上的光斑变小，如图决解20-5-2所示。光斑越小，即模','망막의 얼룩이 작아진다(그림 [[ref]]). 얼룩이 작을수록, 즉 흐린','retinal patch shrinks (Fig. [[ref]]). A smaller patch, hence a',[A(4,'ref',[407,484,570,527])])
+R('clearer-small-patch',4,[0,528,866,570],'糊',[0,534,35,570],'糊像点越小，眼睛感觉到的像越清晰。因此，在靠近眼睛处放一','상점이 작을수록 선명하게 느낀다. 따라서 눈 가까이에','smaller blurred point, looks clearer. Thus, near the eye, a')
+r=R('eye-ray-caption',4,[542,273,749,314],'图',[543,278,574,313],'图决解20-5-1','그림 [[number]]','Fig. [[number]]',[A(4,'number',[625,277,747,315])],size=8,left=620,right=704)
+r['align']='center';v=p.rect(4,[542,273,749,314]);r['source_caption_horizontal_center']=(v[0]+v[2])/2
+protected=[]
+for image,box in [(1,[540,0,837,364]),(2,[350,243,865,314]),(2,[253,365,865,511]),(2,[249,560,865,712]),(2,[254,763,865,804]),(3,[218,45,862,123]),(3,[60,319,862,404]),(3,[60,409,862,485]),(3,[250,540,862,615]),(3,[60,621,862,700]),(4,[414,39,866,272])]:protected.append(p.rect(image,box))
+p.save(protected)
+print('C03 TS8:',len(p.rows),'rows',sum(len(r['atoms'])for r in p.rows),'source expressions')

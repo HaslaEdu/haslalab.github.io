@@ -1,0 +1,52 @@
+"""Manual whole-page5 bilingual prose with unchanged original equation/figure paints."""
+from pathlib import Path
+import sys
+B=Path('C:/Users/andre/CodexWork/HaslaLab/translation-builds/cpho2003-original-native')
+sys.path[:0]=[str(B/'TS/engine'),str(B/'engine')]
+from cpho2003_manual_scan_layout import ManualPage
+p=ManualPage(5);A=p.atom;R=p.row
+R('separation-condition',1,[0,0,860,35],'如',[0,0,31,35],'如果F1<0，则下面的4个球将相互分离。当下面的4个球分离','[[negative]]이면 아래 [[4a]]구가 분리. [[4b]]구의 분리 조건은','[[negative]]: the lower [[4a]] separate. When [[4b]] separate,',[A(1,'negative',[73,0,169,33]),A(1,'4a',[315,0,337,33]),A(1,'4b',[710,0,735,33])])
+R('from8',1,[0,44,204,82],'时',[0,44,32,82],'时，由式(8)得','식 [[8]]에서','from [[8]]:',[A(1,'8',[111,44,161,81])])
+R('using2-5-9',2,[0,6,405,44],'利',[0,7,32,43],'利用式(2)和(5)，式(9)化为','식 [[2]], [[5]]를 쓰면 [[9]]는','Using [[2]] and [[5]], [[9]] becomes:',[A(2,'2',[96,7,146,44]),A(2,'5',[181,7,230,44]),A(2,'9',[275,7,325,44])])
+R('solve-inequality',2,[0,149,249,188],'解',[0,149,33,188],'解此不等式，可得','이 부등식을 풀면','Solving the inequality gives:')
+R('radius-condition',2,[0,256,626,296],'即',[0,256,32,296],'即碗的半径R满足上式时，下面的球将分离。','반지름 [[R]]이 위 식을 만족하면 아래 구가 분리된다.','For bowl radius [[R]] as above, the lower balls separate.',[A(2,'R',[168,257,201,294])])
+R('solution-condition11',2,[60,303,355,342],'要',[60,303,98,342],'要式(11)有解，应有','식 [[11]]이 해를 가지려면','For [[11]] to have a solution:',[A(2,'11',[128,304,192,341])])
+R('that-is13',2,[0,417,37,451],'即',[0,417,36,451],'即','즉','i.e.')
+R('distance-to-O',2,[0,482,860,523],'由',[0,482,33,523],'由于下面各球距O的最小距离为(sqrt2−1)a，现上面的球能放在','아래 구와 [[O]]의 최소 거리가 [[distance]]이다. 위 구가 놓이는','Each lower ball is at least [[distance]] from [[O]]. The upper ball on',[A(2,'O',[235,482,263,522]),A(2,'distance',[457,481,600,523])])
+R('four-balls14',2,[0,531,280,569],'个',[22,531,58,569],'4个球的上面，表明','아래 [[4]]구의 위에 있을 수 있으므로','the [[4]] lower balls implies:',[A(2,'4',[0,532,20,567])],left=54,first_known_char_is_first_token=False)
+R('automatic12',2,[0,622,848,666],'而',[0,622,32,666],'而sqrt2>4sqrt3/5，所以只要第5个球能够放在4个球的上面，式','[[inequality]]이므로 [[5]]번째 구가 [[4]]구 위에 놓일 수만 있으면','Since [[inequality]], a [[5]]th ball resting on the [[4]] balls makes',[A(2,'inequality',[30,622,200,664]),A(2,'5',[379,627,401,662]),A(2,'4',[599,627,625,663])])
+R('holds12',2,[0,676,217,713],'一',[68,677,102,712],'(12)一定成立。','[[12]]는 항상 성립한다.','[[12]] hold automatically.',[A(2,'12',[0,677,61,712])],left=54,first_known_char_is_first_token=False)
+R('problem2',2,[59,724,113,760],'二',[59,724,101,756],'二、','2.','2.')
+R('ellipse-intro1',2,[59,769,490,808],'探',[59,769,96,808],'探测器在发射前，是人造地球','발사 전 탐사기는 인공위성의','Before launch the probe is',right=215)
+R('ellipse-intro2',2,[0,816,490,855],'卫',[0,816,33,855],'卫星的一部分，它与人造地球卫星','일부로서 위성과 함께','part of the Earth satellite,',right=215)
+R('ellipse-intro3',2,[0,864,490,904],'一',[0,864,33,904],'一起沿同一椭圆轨道运动，椭圆的','같은 타원 궤도를 돈다.','sharing its elliptical orbit.',right=215)
+R('ellipse-axes',2,[0,911,490,953],'长',[0,911,33,953],'长半轴为a，短半轴为b，椭圆的中','긴반지름 [[a]], 짧은반지름 [[b]],','Semi-major [[a]], semi-minor [[b]];',[A(2,'a',[137,916,161,950]),A(2,'b',[314,915,335,951])],right=215)
+R('ellipse-focal-distance',2,[0,958,490,1002],'心',[0,958,34,1002],'心O到焦点F的距离为c，如图决解','중심 [[O]]와 초점 [[F]]의 거리는 [[c]].','center [[O]] to focus [[F]] is [[c]].',[A(2,'O',[38,960,67,998]),A(2,'F',[163,960,193,998]),A(2,'c',[319,962,340,997])],right=215)
+R('ellipse-reference',2,[0,1006,420,1048],'所',[125,1007,160,1047],'20-2-1所示。由解析几何知','그림 [[ref]]. 해석기하학에서','Fig. [[ref]]. Geometry gives:',[A(2,'ref',[0,1007,124,1046])],left=54,right=215,first_known_char_is_first_token=False)
+R('ellipse-energy1',2,[59,1106,860,1139],'探',[59,1106,96,1139],'探测器发射前的能量就是它做椭圆运动的能量。设在远地','발사 전 에너지는 궤도 에너지이다. 원지점 속력을','Before launch it has orbital energy. Its speed at apogee')
+R('ellipse-energy2',3,[10,0,708,35],'点',[10,0,45,35],'点，探测器的速度为v1，则发射前探测器的能量为','[[v1]]이라 하면 발사 전 에너지는','is [[v1]]; its energy before launch is',[A(3,'v1',[295,0,331,34])])
+R('central-gravity',3,[73,126,878,169],'由',[73,126,111,166],'由于作用于探测器的万有引力作用线始终通过地心，引力','탐사기에 작용하는 중력의 작용선은 지구 중심을 지나므로','Gravity always acts through Earth’s center, giving')
+R('angular-conservation1',4,[5,8,878,48],'对',[5,8,42,48],'对地心的力矩为零，做椭圆运动的探测器角动量守恒。若探测器','중심에 대한 토크는 0이다. 따라서 각운동량은 보존된다.','zero torque. Thus angular momentum is conserved. At')
+R('angular-conservation2',4,[6,57,603,100],'在',[6,57,40,100],'在近地点的速度为v2，则由角动量守恒，有','근지점 속력이 [[v2]]일 때 각운동량 보존에서','perigee speed [[v2]], conservation gives:',[A(4,'v2',[273,58,315,99])])
+R('energy-conservation1',4,[64,157,878,201],'万',[64,157,101,201],'万有引力是保守力，探测器沿椭圆运动过程中机械能守恒。','중력은 보존력이다. 따라서 타원 운동 중','Gravity is conservative: orbital energy is conserved.')
+R('energy-conservation2',4,[5,205,355,245],'对',[5,205,42,245],'对于远地点与近地点，有','역학적 에너지가 보존된다. 원지점과 근지점에서','At apogee and perigee:')
+R('solving3-4',4,[5,331,254,372],'解',[5,331,41,372],'解式(3)和(4)得','식 [[3]], [[4]]를 풀면','Solving [[3]] and [[4]]:',[A(4,'3',[73,331,117,371]),A(4,'4',[160,331,207,371])])
+R('substitute5-2',4,[5,458,321,503],'把',[5,458,43,503],'把式(5)代入式(2)，得','[[5]]를 [[2]]에 대입하면','Substituting [[5]] into [[2]]:',[A(4,'5',[72,458,119,501]),A(4,'2',[223,458,270,501])])
+R('hyperbola1',4,[63,585,430,626],'探',[63,585,101,626],'探测器射出后，沿双曲线','방출 후 탐사기는','After ejection, a',right=573)
+R('hyperbola2',4,[0,633,430,674],'运',[0,633,34,674],'运动，该双曲线的顶点与原来','쌍곡선을 따른다. 꼭짓점은','hyperbola, its vertex',right=573)
+R('hyperbola3',4,[0,680,430,721],'的',[0,680,34,721],'的卫星的椭圆轨道的顶点重','원래 타원 궤도의 꼭짓점과','at the old ellipse’s vertex',right=573)
+R('hyperbola4',4,[0,727,430,770],'合',[0,727,34,770],'合，如图决解20-2-2所示。探','같다(그림 [[ref]]). 이 운동은','(Fig. [[ref]]). Angular',[A(4,'ref',[184,729,307,769])],right=573)
+R('hyperbola5',4,[0,775,430,817],'测',[0,775,35,817],'测器做双曲线运动的过程中','각운동량과 역학적 에너지가','momentum and energy',right=573)
+R('hyperbola6',4,[0,823,430,865],'角',[0,823,35,865],'角动量守恒，机械能亦守恒。设','보존된다. 방출 때 속력','are conserved. Let',right=573)
+R('hyperbola7',4,[0,871,430,915],'为',[34,871,70,915],'v0为探测器刚弹出时的速度','[[v0]]는 꼭짓점의 속력이다.','[[v0]] be its ejection speed,',[A(4,'v0',[0,872,32,914])],left=431.6,right=573,first_known_char_is_first_token=False)
+R('hyperbola8',4,[0,923,430,965],'也',[0,923,35,965],'也就是在双曲线顶点处的速','꼭짓점과 지구 중심의 거리','at the hyperbola vertex.',right=573)
+R('hyperbola9',4,[0,978,878,1021],'度',[0,978,34,1021],'度，该点到地心的距离为a+c。探测器的角动量为mv0(a+c)，','는 [[ac]]이고, 탐사기의 각운동량은 [[angular]]이다.','Earth-center distance is [[ac]]; angular momentum [[angular]].',[A(4,'ac',[344,979,414,1020]),A(4,'angular',[693,981,831,1021])])
+R('hyperbola10',4,[0,1026,878,1068],'当',[0,1026,34,1068],'当探测器到达无限远处时，其速度的方向沿双曲线的渐近线，以','무한히 멀어지면 속도는 점근선 방향이다. 그 속력을','At infinity velocity follows the asymptote. Denote its speed')
+R('hyperbola11',4,[0,1075,878,1121],'表',[31,1075,68,1121],'v表示其速度的大小，d表示地心到渐近线的距离，其角动量为','[[v]], 지구 중심과 점근선 거리를 [[d]]라 하면 각운동량은','by [[v]], its Earth-center distance by [[d]]; angular momentum is',[A(4,'v',[0,1077,24,1117]),A(4,'d',[262,1077,288,1119])],left=431.6,first_known_char_is_first_token=False)
+# Complete original figure captions, including their original numerical labels.
+r=R('caption-ellipse',2,[588,997,774,1045],'图',[588,997,620,1045],'图决解20-2-1','그림 [[number]]','Fig. [[number]]',[A(2,'number',[665,999,770,1044])],size=8,left=247,right=320)
+r['align']='center';r['original_horizontal_center']=(p.rect(2,[588,997,774,1045])[0]+p.rect(2,[588,997,774,1045])[2])/2
+r=R('caption-hyperbola',4,[548,927,742,975],'图',[548,927,580,975],'图决解20-2-2','그림 [[number]]','Fig. [[number]]',[A(4,'number',[627,930,740,973])],size=8,left=615,right=691)
+r['align']='center';r['original_horizontal_center']=(p.rect(4,[548,927,742,975])[0]+p.rect(4,[548,927,742,975])[2])/2
+p.save([[142,101,336,119.93],[119,145,336,174],[123,191,336,210],[124,240,336,254],[145,260,336,282],[144,312,336,332],[159,470,336,489],[216,381,326,449],[564,347,699,450],[515,94,718,119],[507,181,718,198],[495,235,718,254],[513,275,718,298],[518,317,718,337]])
+print('C03 TS5 manual full page:',len(p.rows),'rows',sum(len(r['atoms'])for r in p.rows),'complete original inline expressions')

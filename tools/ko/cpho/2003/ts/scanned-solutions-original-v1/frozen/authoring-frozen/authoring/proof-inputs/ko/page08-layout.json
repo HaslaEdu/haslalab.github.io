@@ -1,0 +1,3341 @@
+{
+  "source_page": 8,
+  "source_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "manual_rois_reviewed": true,
+  "publication_ready": false,
+  "rows": [
+    {
+      "id": "least-delay",
+      "reviewed": true,
+      "source": "切点时两者的时间差最短，则这个时",
+      "ko": "시간 차를 비교한다. 그 최소 차는",
+      "en": "each crossing or tangent point.",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 82.95710452389406,
+      "left": 53.710454469086024,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          73.5,
+          226.0,
+          87.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "切",
+        "manual_source_cell_raw_pixels": [
+          0,
+          0,
+          31,
+          39
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          1,
+          3,
+          28,
+          31
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 53.710454469086024,
+        "independent_source_baseline_estimate": 82.95710452389406,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.16974431818181301,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        73.65000732421873,
+        225.5215053763441,
+        86.76689044110185
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "starting-delay",
+      "reviewed": true,
+      "source": "间差就应当等于题中所说的要a、b在",
+      "ko": "[[a]], [[b]]가 그 점에서 만나기 위한",
+      "en": "For [[a]] and [[b]], the least time gap",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 98.7793955141538,
+      "left": 53.402837281586024,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          88.0,
+          226.0,
+          103.5
+        ]
+      ],
+      "source_atom_ids": [
+        "a",
+        "b"
+      ],
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            193.0,
+            89.0,
+            199.75,
+            103.0
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            424,
+            47,
+            444,
+            89
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b",
+          "rect": [
+            204.0,
+            89.0,
+            211.0,
+            103.0
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            458,
+            47,
+            478,
+            89
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "间",
+        "manual_source_cell_raw_pixels": [
+          0,
+          48,
+          31,
+          88
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          2,
+          51,
+          27,
+          79
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 53.402837281586024,
+        "independent_source_baseline_estimate": 98.7793955141538,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.251775568181813,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        88.40650083071225,
+        225.5215053763441,
+        103.16299433720575
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "delay-equivalence",
+      "reviewed": true,
+      "source": "此交叉或相切点能相遇，两者出发时",
+      "ko": "출발 시간 차와 같다. 이를 구하려고",
+      "en": "is the start delay for a meeting.",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 114.5402645279525,
+      "left": 53.81282552083333,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          104.0,
+          226.0,
+          119.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "此",
+        "manual_source_cell_raw_pixels": [
+          0,
+          97,
+          31,
+          137
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          1,
+          99,
+          30,
+          126
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 53.81282552083333,
+        "independent_source_baseline_estimate": 114.5402645279525,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.3746195211039094,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        104.14676057097198,
+        225.5215053763441,
+        118.90325407746549
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "crossing-reference-prefix",
+      "reviewed": true,
+      "source": "间的时间差。为此，结合图决解20-4-",
+      "ko": "그림 [[ref-prefix]]",
+      "en": "Trace the paths in Fig. [[ref-prefix]]",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 130.09595395571222,
+      "left": 53.730794270833336,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          119.5,
+          226.0,
+          134.5
+        ]
+      ],
+      "source_atom_ids": [
+        "ref-prefix"
+      ],
+      "atoms": [
+        {
+          "id": "ref-prefix",
+          "rect": [
+            192.0,
+            121.0,
+            225.0,
+            134.5
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            421,
+            145,
+            521,
+            185
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "间",
+        "manual_source_cell_raw_pixels": [
+          0,
+          145,
+          31,
+          184
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          3,
+          147,
+          28,
+          174
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 53.730794270833336,
+        "independent_source_baseline_estimate": 130.09595395571222,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.579697646103881,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        119.88702031123172,
+        225.5215053763441,
+        134.31559173980315
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "crossing-reference-tail",
+      "reviewed": true,
+      "source": "1分别考查a、b的运动，经过分析就可",
+      "ko": "[[ref-tail]]의 [[a]], [[b]] 운동을 살피면",
+      "en": "[[ref-tail]] for [[a]] and [[b]].",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 145.754182445972,
+      "left": 54,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          135.5,
+          226.0,
+          150.5
+        ]
+      ],
+      "source_atom_ids": [
+        "ref-tail",
+        "a",
+        "b"
+      ],
+      "atoms": [
+        {
+          "id": "ref-tail",
+          "rect": [
+            54.0,
+            136.5,
+            59.75,
+            150.25
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            0,
+            192,
+            17,
+            233
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "a",
+          "rect": [
+            105.25,
+            136.75,
+            111.75,
+            150.5
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            157,
+            193,
+            176,
+            234
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b",
+          "rect": [
+            115.25,
+            136.75,
+            123.0,
+            150.5
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            187,
+            193,
+            210,
+            234
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "分",
+        "manual_source_cell_raw_pixels": [
+          21,
+          193,
+          53,
+          232
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          24,
+          194,
+          52,
+          223
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 61.171349966397855,
+        "independent_source_baseline_estimate": 145.754182445972,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.005884740259745058,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        135.62728005149145,
+        225.5215053763441,
+        150.05585148006287
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "shortest-crossing",
+      "reviewed": true,
+      "source": "看出，在5T0到5.25T0之间的那个交",
+      "ko": "[[fiveT]]와 [[fiveQuarterT]] 사이 교점에서",
+      "en": "A crossing between [[fiveT]] and [[fiveQuarterT]]",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 161.5149499987317,
+      "left": 54.01781964045699,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          151.0,
+          226.0,
+          166.5
+        ]
+      ],
+      "source_atom_ids": [
+        "fiveT",
+        "fiveQuarterT"
+      ],
+      "atoms": [
+        {
+          "id": "fiveT",
+          "rect": [
+            93.25,
+            152.0,
+            110.75,
+            166.5
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            120,
+            239,
+            173,
+            283
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "fiveQuarterT",
+          "rect": [
+            124.5,
+            152.0,
+            156.75,
+            166.5
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            215,
+            239,
+            313,
+            283
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "看",
+        "manual_source_cell_raw_pixels": [
+          0,
+          241,
+          31,
+          281
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          2,
+          242,
+          30,
+          271
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 54.01781964045699,
+        "independent_source_baseline_estimate": 161.5149499987317,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.12893161525974506,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        151.03961771382913,
+        225.5215053763441,
+        166.1240332982447
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "crossing-P",
+      "reviewed": true,
+      "source": "叉点(图决解20-4-1中的P点)处，",
+      "ko": "(그림 [[ref]]의 [[P]]) 통과 시간 차가",
+      "en": "(point [[P]], Fig. [[ref]]) gives the",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 177.0092174500304,
+      "left": 54.79669648857527,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          167.0,
+          226.0,
+          183.0
+        ]
+      ],
+      "source_atom_ids": [
+        "ref",
+        "P"
+      ],
+      "atoms": [
+        {
+          "id": "ref",
+          "rect": [
+            113.5,
+            168.0,
+            154.25,
+            183.0
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            182,
+            288,
+            305,
+            333
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "P",
+          "rect": [
+            179.25,
+            168.0,
+            187.5,
+            183.0
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            382,
+            288,
+            407,
+            333
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "叉",
+        "manual_source_cell_raw_pixels": [
+          0,
+          289,
+          31,
+          331
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          8,
+          292,
+          29,
+          316
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 54.79669648857527,
+        "independent_source_baseline_estimate": 177.0092174500304,
+        "source_top_bottom_baseline_estimate_spread_pt": 1.1122920048701133,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        167.10779953201094,
+        225.5215053763441,
+        182.5201371943486
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "before-five",
+      "reviewed": true,
+      "source": "a、b通过它的时间差最短(在5T0以前",
+      "ko": "최소이다. [[a]], [[b]]는 [[fiveT]] 이전과",
+      "en": "least gap. For [[a]], [[b]], before [[fiveT]]",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 192.8111020888291,
+      "left": 54,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          182.5,
+          226.0,
+          198.0
+        ]
+      ],
+      "source_atom_ids": [
+        "a",
+        "b",
+        "fiveT"
+      ],
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            54.0,
+            183.75,
+            60.75,
+            198.0
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            0,
+            336,
+            20,
+            379
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b",
+          "rect": [
+            63.5,
+            183.75,
+            70.5,
+            198.0
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            29,
+            336,
+            50,
+            379
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "fiveT",
+          "rect": [
+            183.0,
+            183.75,
+            200.5,
+            198.5
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            394,
+            336,
+            446,
+            380
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "通",
+        "manual_source_cell_raw_pixels": [
+          49,
+          337,
+          81,
+          378
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          55,
+          338,
+          81,
+          365
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 71.0510752688172,
+        "independent_source_baseline_estimate": 192.8111020888291,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.25157264610388097,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        182.8480592722707,
+        225.5215053763441,
+        197.93247485668627
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "after-five-quarter",
+      "reviewed": true,
+      "source": "和5.25T0以后的那些交叉或相切点，",
+      "ko": "[[fiveQuarterT]] 이후의 다른 교점·접점을",
+      "en": "or after [[fiveQuarterT]], other points",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 208.5512603680499,
+      "left": 54.69432543682795,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          198.5,
+          226.0,
+          214.0
+        ]
+      ],
+      "source_atom_ids": [
+        "fiveQuarterT"
+      ],
+      "atoms": [
+        {
+          "id": "fiveQuarterT",
+          "rect": [
+            66.75,
+            199.75,
+            100.0,
+            214.5
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            39,
+            385,
+            140,
+            429
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "和",
+        "manual_source_cell_raw_pixels": [
+          0,
+          386,
+          31,
+          426
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          5,
+          387,
+          30,
+          413
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 54.69432543682795,
+        "independent_source_baseline_estimate": 208.5512603680499,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.7435572240259489,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        198.9162410904525,
+        225.5215053763441,
+        213.67273459694601
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "larger-delay",
+      "reviewed": true,
+      "source": "a、b通过时的时间差都较长)。",
+      "ko": "지날 때 [[a]], [[b]]의 시간 차가 더 크다.",
+      "en": "give [[a]] and [[b]] longer time gaps.",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 224.2916215693486,
+      "left": 54,
+      "right": 226,
+      "erase_rects": [
+        [
+          54.0,
+          214.5,
+          226.0,
+          225.5
+        ]
+      ],
+      "source_atom_ids": [
+        "a",
+        "b"
+      ],
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            54.0,
+            215.5,
+            60.75,
+            225.15000732421873
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            0,
+            433,
+            20,
+            462
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b",
+          "rect": [
+            63.5,
+            215.5,
+            70.5,
+            225.15000732421873
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            29,
+            433,
+            50,
+            462
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "通",
+        "manual_source_cell_raw_pixels": [
+          49,
+          434,
+          80,
+          462
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          57,
+          434,
+          80,
+          461
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 71.21505376344086,
+        "independent_source_baseline_estimate": 224.2916215693486,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.25157264610388097,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        214.65650083071225,
+        225.5215053763441,
+        225.15000732421873
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "trajectory-detail-caption",
+      "reviewed": true,
+      "source": "图决解20-4-2",
+      "ko": "그림 [[number]]",
+      "en": "Fig. [[number]]",
+      "size": 8,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 201.93957712941352,
+      "left": 251,
+      "right": 329,
+      "erase_rects": [
+        [
+          252.5,
+          193.5,
+          311.5,
+          206.5
+        ]
+      ],
+      "source_atom_ids": [
+        "number"
+      ],
+      "atoms": [
+        {
+          "id": "number",
+          "rect": [
+            277.0,
+            194.25,
+            310.5,
+            206.25
+          ],
+          "image_path": [
+            215
+          ],
+          "manually_reviewed_source_pixels": [
+            680,
+            368,
+            782,
+            404
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "图",
+        "manual_source_cell_raw_pixels": [
+          608,
+          369,
+          636,
+          404
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          611,
+          372,
+          636,
+          393
+        ],
+        "original_source_image_sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+        "fixed_original_point": 8,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 254.27805779569894,
+        "independent_source_baseline_estimate": 201.93957712941352,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.33238636363634555,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        252.74193548387098,
+        193.99740992162134,
+        311.1182795698925,
+        206.4584488826603
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "align": "center",
+      "source_caption_horizontal_center": 281.9301075268817,
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "new-origin-location",
+      "reviewed": true,
+      "source": "为了定量地求出此时间差，取负y轴上距原点O为3Ral(即",
+      "ko": "계산을 위해 음의 [[y]]축 위에서 [[O]]로부터 [[threeRal]]",
+      "en": "On the negative [[y]]-axis, [[threeRal]] from [[O]], choose",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 242.64583055442148,
+      "left": 75.06372832369942,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          75.0,
+          232.5,
+          337.0,
+          246.0
+        ]
+      ],
+      "source_atom_ids": [
+        "y",
+        "O",
+        "threeRal"
+      ],
+      "atoms": [
+        {
+          "id": "y",
+          "rect": [
+            220.0,
+            232.77400732421876,
+            229.0,
+            246.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            508,
+            0,
+            535,
+            40
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "O",
+          "rect": [
+            281.0,
+            232.77400732421876,
+            289.75,
+            246.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            695,
+            0,
+            721,
+            40
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "threeRal",
+          "rect": [
+            302.0,
+            232.77400732421876,
+            321.5,
+            247.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            759,
+            0,
+            818,
+            43
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "为",
+        "manual_source_cell_raw_pixels": [
+          65,
+          0,
+          100,
+          38
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          68,
+          4,
+          93,
+          33
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 75.06372832369942,
+        "independent_source_baseline_estimate": 242.64583055442148,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.10231932833082169,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        75.2471098265896,
+        232.77400732421876,
+        336.75,
+        245.5435983568083
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "new-origin-time",
+      "reviewed": true,
+      "source": "6Rbl)处为新的原点O′，如图决解20-4-2所示。取时间t=5T0",
+      "ko": "(즉 [[sixRbl]]) 떨어진 새 원점 [[Oprime]](그림 [[ref]])과 [[time]]를",
+      "en": "([[sixRbl]]) [[Oprime]] as origin (Fig. [[ref]]). Let [[time]] be",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 257.64587602715534,
+      "left": 54,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          54.0,
+          246.5,
+          337.0,
+          263.0
+        ]
+      ],
+      "source_atom_ids": [
+        "sixRbl",
+        "Oprime",
+        "ref",
+        "time"
+      ],
+      "atoms": [
+        {
+          "id": "sixRbl",
+          "rect": [
+            54.0,
+            248.0,
+            73.5,
+            263.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            0,
+            47,
+            59,
+            92
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "Oprime",
+          "rect": [
+            145.0,
+            247.75,
+            155.5,
+            262.75
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            279,
+            46,
+            310,
+            91
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "ref",
+          "rect": [
+            205.25,
+            248.0,
+            243.75,
+            262.75
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            463,
+            47,
+            580,
+            91
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "time",
+          "rect": [
+            302.0,
+            248.0,
+            336.75,
+            263.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            759,
+            47,
+            865,
+            92
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "处",
+        "manual_source_cell_raw_pixels": [
+          74,
+          47,
+          109,
+          88
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          81,
+          51,
+          107,
+          78
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 79.39455834537573,
+        "independent_source_baseline_estimate": 257.64587602715534,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.3059982755149804,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        246.85330000117648,
+        336.75,
+        261.9148689114103
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "manual_original_image_edge_review": "Original time/delay expression reaches an original image edge. Its entire vertical source row is translated language/math. Full original image-expression height now lies on the same white translated-language backdrop as independent control; original partial-edge pixels, source image program, scale, fonts, point and y unchanged.",
+      "original_image_right_edge_pixel_grid_atom_ids": [
+        "time"
+      ],
+      "whole_original_math_edge_placement_review": "The expression reaches the actual original scanned-image right edge. Use a positive <0.5pt whole-expression x shift placing that original image edge on the144dpi pixel grid. No glyph, equation, source image encoding, clipping program, relative position, scale, y or original partial-edge source pixel is changed. Exact both-renderer source pixel controls remain mandatory; no tolerance adjustment.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "two-time-labels",
+      "reviewed": true,
+      "source": "为新的起始计时时刻，对a用t′=0表示，对b用t″=0表示。在",
+      "ko": "새 시간 원점으로 잡고 [[a]]는 [[tp]], [[b]]는 [[tpp]]로 쓴다.",
+      "en": "time zero: [[tp]] for [[a]], [[tpp]] for [[b]].",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 274.8972335469874,
+      "left": 54.30693641618497,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          54.0,
+          263.5,
+          337.0,
+          278.5
+        ]
+      ],
+      "source_atom_ids": [
+        "a",
+        "tp",
+        "b",
+        "tpp"
+      ],
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            166.25,
+            264.75,
+            173.75,
+            278.75
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            344,
+            98,
+            366,
+            140
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "tp",
+          "rect": [
+            184.75,
+            264.5,
+            214.5,
+            279.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            400,
+            97,
+            491,
+            141
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b",
+          "rect": [
+            253.25,
+            264.75,
+            260.75,
+            279.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            610,
+            98,
+            632,
+            141
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "tpp",
+          "rect": [
+            272.25,
+            264.5,
+            302.25,
+            279.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            668,
+            97,
+            759,
+            141
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "为",
+        "manual_source_cell_raw_pixels": [
+          0,
+          98,
+          35,
+          138
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          5,
+          103,
+          29,
+          131
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 54.30693641618497,
+        "independent_source_baseline_estimate": 274.8972335469874,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.4297447394228584,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        263.5519959668705,
+        336.75,
+        278.2861394660123
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "common-angular-speed",
+      "reviewed": true,
+      "source": "y轴以左a、b的周期相同，所以角速度亦相同，以ω1表示a、b在",
+      "ko": "[[y]]축 왼쪽에서 [[a1]], [[b1]]의 주기는 같다. [[omega1]]은 [[a2]], [[b2]]의",
+      "en": "Left of [[y]], [[a1]], [[b1]] share a period; [[omega1]] is [[a2]], [[b2]]’s",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 289.5698536086292,
+      "left": 54,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          54.0,
+          279.0,
+          337.0,
+          294.5
+        ]
+      ],
+      "source_atom_ids": [
+        "y",
+        "a1",
+        "b1",
+        "omega1",
+        "a2",
+        "b2"
+      ],
+      "atoms": [
+        {
+          "id": "y",
+          "rect": [
+            54.0,
+            280.5,
+            62.0,
+            294.75
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            0,
+            146,
+            24,
+            189
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "a1",
+          "rect": [
+            96.25,
+            280.5,
+            103.5,
+            294.5
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            130,
+            146,
+            151,
+            188
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b1",
+          "rect": [
+            106.25,
+            280.5,
+            114.0,
+            294.5
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            160,
+            146,
+            183,
+            188
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "omega1",
+          "rect": [
+            273.75,
+            280.5,
+            287.25,
+            295.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            673,
+            146,
+            713,
+            190
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "a2",
+          "rect": [
+            308.75,
+            280.5,
+            315.75,
+            294.75
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            780,
+            146,
+            800,
+            189
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b2",
+          "rect": [
+            320.0,
+            280.5,
+            327.75,
+            295.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            814,
+            146,
+            837,
+            190
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "轴",
+        "manual_source_cell_raw_pixels": [
+          46,
+          146,
+          81,
+          186
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          46,
+          148,
+          81,
+          176
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 69.69136222001445,
+        "independent_source_baseline_estimate": 289.5698536086292,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.5527916144228584,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        279.2684156992884,
+        336.75,
+        294.0025591984302
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "speed-definition-end",
+      "reviewed": true,
+      "source": "y轴以左的角速度",
+      "ko": "[[y]]축 왼쪽의 공통 각속도이다.",
+      "en": "common angular speed left of [[y]]:",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 305.12256063550115,
+      "left": 54,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          54.0,
+          295.0,
+          145.0,
+          309.0
+        ]
+      ],
+      "source_atom_ids": [
+        "y"
+      ],
+      "atoms": [
+        {
+          "id": "y",
+          "rect": [
+            54.0,
+            296.5,
+            62.0,
+            309.25
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            0,
+            195,
+            24,
+            233
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "轴",
+        "manual_source_cell_raw_pixels": [
+          46,
+          195,
+          81,
+          231
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          46,
+          196,
+          81,
+          223
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 69.69136222001445,
+        "independent_source_baseline_estimate": 305.12256063550115,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.8802170255149235,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        295.31226084279837,
+        144.8722543352601,
+        308.736702697572
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "for-a",
+      "reviewed": true,
+      "source": "对a",
+      "ko": "[[a]]에 대해",
+      "en": "For [[a]]:",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 346.5008595136442,
+      "left": 75.2681832550578,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          74.5,
+          336.5,
+          96.5,
+          350.0
+        ]
+      ],
+      "source_atom_ids": [
+        "a"
+      ],
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            87.5,
+            338.0,
+            95.0,
+            351.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            103,
+            322,
+            125,
+            361
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "对",
+        "manual_source_cell_raw_pixels": [
+          64,
+          322,
+          99,
+          357
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          67,
+          322,
+          95,
+          350
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 75.2681832550578,
+        "independent_source_baseline_estimate": 346.5008595136442,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.22466661442291525,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        74.59335260115607,
+        336.89528805148746,
+        96.16734104046242,
+        349.99230449516904
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "for-b",
+      "reviewed": true,
+      "source": "对b",
+      "ko": "[[b]]에 대해",
+      "en": "For [[b]]:",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 410.51252738213793,
+      "left": 75.43162256141619,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          74.5,
+          400.5,
+          96.5,
+          413.0
+        ]
+      ],
+      "source_atom_ids": [
+        "b"
+      ],
+      "atoms": [
+        {
+          "id": "b",
+          "rect": [
+            87.5,
+            401.5,
+            95.25,
+            414.0
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            103,
+            516,
+            126,
+            553
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "对",
+        "manual_source_cell_raw_pixels": [
+          64,
+          517,
+          99,
+          549
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          67,
+          518,
+          96,
+          545
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 75.43162256141619,
+        "independent_source_baseline_estimate": 410.51252738213793,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.5520920255149235,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        74.59335260115607,
+        400.7432432144352,
+        96.16734104046242,
+        412.85798342484065
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "at-P",
+      "reviewed": true,
+      "source": "对P点应有",
+      "ko": "[[P]]에서는",
+      "en": "At [[P]]:",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 477.4710239504601,
+      "left": 54.674830653901736,
+      "right": 336.75,
+      "erase_rects": [
+        [
+          54.0,
+          467.5,
+          110.5,
+          481.0
+        ]
+      ],
+      "source_atom_ids": [
+        "P"
+      ],
+      "atoms": [
+        {
+          "id": "P",
+          "rect": [
+            67.5,
+            469.0,
+            76.75,
+            481.75
+          ],
+          "image_path": [
+            224
+          ],
+          "manually_reviewed_source_pixels": [
+            42,
+            722,
+            69,
+            760
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "对",
+        "manual_source_cell_raw_pixels": [
+          0,
+          722,
+          35,
+          757
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          4,
+          722,
+          32,
+          750
+        ],
+        "original_source_image_sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 54.674830653901736,
+        "independent_source_baseline_estimate": 477.4710239504601,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.22466661442291525,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        54.0,
+        467.86545248830333,
+        110.22312138728324,
+        480.962468931985
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "solve-time-delay",
+      "reviewed": true,
+      "source": "由以上各式可解得所求的时间差应为",
+      "ko": "위 식들을 풀면 구하려는 시간 차는",
+      "en": "Solving gives the required time difference:",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 86.75119035993302,
+      "left": 431.52232589544667,
+      "right": 713.6,
+      "erase_rects": [
+        [
+          431.5,
+          77.5,
+          602.5,
+          90.5
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "由",
+        "manual_source_cell_raw_pixels": [
+          0,
+          0,
+          33,
+          38
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          5,
+          2,
+          28,
+          30
+        ],
+        "original_source_image_sha256": "ee024f7c17b92d264d39a3a8cfcea8834789b2ec63cb1d627d895e4e5ec9afc5",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 431.52232589544667,
+        "independent_source_baseline_estimate": 86.75119035993302,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.08953124999999318,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        77.65000732421873,
+        602.37030162413,
+        90.4364358956473
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "simultaneous-passage",
+      "reviewed": true,
+      "source": "这个结果说明，如果a、b同时出发，则a比b晚0.0802πm/qB0",
+      "ko": "동시에 출발한 [[a1]], [[b1]] 중 [[a2]]는 [[b2]]보다 [[delay]]",
+      "en": "If [[a1]], [[b1]] start together, [[a2]] follows [[b2]] by [[delay]]",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 128.7784280831473,
+      "left": 431.25719257540607,
+      "right": 713.6,
+      "erase_rects": [
+        [
+          431.5,
+          118.0,
+          714.0,
+          136.5
+        ]
+      ],
+      "source_atom_ids": [
+        "a1",
+        "b1",
+        "a2",
+        "b2",
+        "delay"
+      ],
+      "atoms": [
+        {
+          "id": "a1",
+          "rect": [
+            522.75,
+            119.25,
+            529.0,
+            134.5
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            279,
+            127,
+            297,
+            173
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b1",
+          "rect": [
+            532.25,
+            119.25,
+            540.75,
+            134.5
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            308,
+            127,
+            333,
+            173
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "a2",
+          "rect": [
+            601.0,
+            119.25,
+            608.5,
+            134.5
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            518,
+            127,
+            540,
+            173
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b2",
+          "rect": [
+            620.0,
+            119.25,
+            629.0,
+            134.5
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            576,
+            127,
+            603,
+            173
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "delay",
+          "rect": [
+            640.25,
+            118.75,
+            713.6,
+            134.25
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            638,
+            126,
+            862,
+            172
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "这",
+        "manual_source_cell_raw_pixels": [
+          0,
+          128,
+          35,
+          170
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          1,
+          130,
+          29,
+          158
+        ],
+        "original_source_image_sha256": "ee024f7c17b92d264d39a3a8cfcea8834789b2ec63cb1d627d895e4e5ec9afc5",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 431.25719257540607,
+        "independent_source_baseline_estimate": 128.7784280831473,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.11554687500000682,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        118.30429303850445,
+        713.6,
+        133.71357875279017
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "manual_original_image_edge_review": "Original time/delay expression reaches an original image edge. Its entire vertical source row is translated language/math. Full original image-expression height now lies on the same white translated-language backdrop as independent control; original partial-edge pixels, source image program, scale, fonts, point and y unchanged.",
+      "original_image_right_edge_pixel_grid_atom_ids": [
+        "delay"
+      ],
+      "whole_original_math_edge_placement_review": "The expression reaches the actual original scanned-image right edge. Use a positive <0.5pt whole-expression x shift placing that original image edge on the144dpi pixel grid. No glyph, equation, source image encoding, clipping program, relative position, scale, y or original partial-edge source pixel is changed. Exact both-renderer source pixel controls remain mandatory; no tolerance adjustment.",
+      "complete_original_formula_vertical_review": "Full original source crop and raw rows confirm q descender/B0 script dark ink endsy167 and full antialias support above172;172..179 is unrelated lower paper padding. Keep all original mathematical ink and source image right edge; omit only unused lower background padding that intersected next Korean prose. Exact MuPDF/Poppler full-expression RGB controls still required.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "meeting-start-order",
+      "reviewed": true,
+      "source": "时通过P点。换成题目的要求，就应当说，要a、b相遇，则b的",
+      "ko": "늦게 [[P]]를 지난다. 만나려면 [[a]], [[b1]] 중 [[b2]]의",
+      "en": "at [[P]]. To make [[a]], [[b1]] meet, [[b2]] must start",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 144.24910330636158,
+      "left": 431.44078405959976,
+      "right": 713.6,
+      "erase_rects": [
+        [
+          431.5,
+          134.5,
+          714.0,
+          149.0
+        ]
+      ],
+      "source_atom_ids": [
+        "P",
+        "a",
+        "b1",
+        "b2"
+      ],
+      "atoms": [
+        {
+          "id": "P",
+          "rect": [
+            476.5,
+            135.5,
+            485.75,
+            149.5
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            138,
+            177,
+            165,
+            219
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "a",
+          "rect": [
+            639.75,
+            135.5,
+            646.0,
+            149.5
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            637,
+            177,
+            655,
+            219
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b1",
+          "rect": [
+            649.75,
+            135.5,
+            656.75,
+            150.0
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            667,
+            177,
+            688,
+            220
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "b2",
+          "rect": [
+            696.25,
+            135.5,
+            703.0,
+            150.0
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            809,
+            177,
+            829,
+            220
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "时",
+        "manual_source_cell_raw_pixels": [
+          0,
+          178,
+          35,
+          216
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          2,
+          178,
+          30,
+          205
+        ],
+        "original_source_image_sha256": "ee024f7c17b92d264d39a3a8cfcea8834789b2ec63cb1d627d895e4e5ec9afc5",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 431.44078405959976,
+        "independent_source_baseline_estimate": 144.24910330636158,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.6634821428571342,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        134.6971501813616,
+        713.6,
+        148.79500732421872
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "delayed-b-start",
+      "reviewed": true,
+      "source": "出发时间应比a晚0.0802πm/qB0。",
+      "ko": "출발은 [[a]]보다 [[delay]] 늦어야 한다.",
+      "en": "later than [[a]] by [[delay]].",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 159.78130196707588,
+      "left": 432.3816963638341,
+      "right": 713.6,
+      "erase_rects": [
+        [
+          431.5,
+          150.0,
+          600.0,
+          165.0
+        ]
+      ],
+      "source_atom_ids": [
+        "a",
+        "delay"
+      ],
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            496.25,
+            151.25,
+            504.0,
+            165.25
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            198,
+            225,
+            221,
+            267
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "delay",
+          "rect": [
+            515.5,
+            151.0,
+            590.0,
+            165.0
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            257,
+            224,
+            484,
+            266
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "出",
+        "manual_source_cell_raw_pixels": [
+          0,
+          225,
+          35,
+          264
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          3,
+          225,
+          34,
+          253
+        ],
+        "original_source_image_sha256": "ee024f7c17b92d264d39a3a8cfcea8834789b2ec63cb1d627d895e4e5ec9afc5",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 432.3816963638341,
+        "independent_source_baseline_estimate": 159.78130196707588,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.08953124999999318,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        150.1064358956473,
+        599.75313225058,
+        164.5321501813616
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "complete_source_formula_vertical_review": "Original q descender endsraw260 with full antialias support above266;266..272 is unused lower paper margin. Preserve every original numeral, slash, q descender and B0 script and their original y/scale/program, exclude only padding before following Korean prose. Both exact renderer controls remain required.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "coordinates-O-source-label",
+      "reviewed": true,
+      "source": "由以上各式还可求得O点的坐标",
+      "ko": "위 식들에서 [[O]]점의 좌표도 구하면",
+      "en": "These equations also give coordinates of [[O]]:",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 175.92833321707587,
+      "left": 453.76826557062066,
+      "right": 713.6,
+      "erase_rects": [
+        [
+          452.5,
+          166.0,
+          606.0,
+          180.5
+        ]
+      ],
+      "source_atom_ids": [
+        "O"
+      ],
+      "atoms": [
+        {
+          "id": "O",
+          "rect": [
+            549.5,
+            167.25,
+            559.75,
+            181.0
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            361,
+            274,
+            391,
+            315
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "由",
+        "manual_source_cell_raw_pixels": [
+          66,
+          274,
+          101,
+          312
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          68,
+          274,
+          101,
+          302
+        ],
+        "original_source_image_sha256": "ee024f7c17b92d264d39a3a8cfcea8834789b2ec63cb1d627d895e4e5ec9afc5",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 453.76826557062066,
+        "independent_source_baseline_estimate": 175.92833321707587,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.08953124999999318,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        452.8645011600928,
+        166.1714358956473,
+        605.6417633410673,
+        180.26929303850443
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "convert-coordinate-system",
+      "reviewed": true,
+      "source": "换为Oxy坐标系",
+      "ko": "[[Oxy]]좌표계로 바꾸면",
+      "en": "In the [[Oxy]] coordinate system:",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 247.5035954938616,
+      "left": 432.05455019214037,
+      "right": 713.6,
+      "erase_rects": [
+        [
+          431.5,
+          237.5,
+          508.5,
+          253.0
+        ]
+      ],
+      "source_atom_ids": [
+        "Oxy"
+      ],
+      "atoms": [
+        {
+          "id": "Oxy",
+          "rect": [
+            455.0,
+            239.25,
+            473.25,
+            254.25
+          ],
+          "image_path": [
+            233
+          ],
+          "manually_reviewed_source_pixels": [
+            72,
+            493,
+            127,
+            538
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "换",
+        "manual_source_cell_raw_pixels": [
+          0,
+          493,
+          35,
+          533
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          0,
+          493,
+          35,
+          520
+        ],
+        "original_source_image_sha256": "ee024f7c17b92d264d39a3a8cfcea8834789b2ec63cb1d627d895e4e5ec9afc5",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 432.05455019214037,
+        "independent_source_baseline_estimate": 247.5035954938616,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.7865290178571342,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        237.9721501813616,
+        508.1522041763341,
+        252.72572160993303
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "problem5",
+      "reviewed": true,
+      "source": "五、",
+      "ko": "5.",
+      "en": "5.",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 321.9543629985609,
+      "left": 455.09679065025983,
+      "right": 715.1,
+      "erase_rects": [
+        [
+          455.0,
+          314.0,
+          472.5,
+          325.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "五",
+        "manual_source_cell_raw_pixels": [
+          73,
+          0,
+          108,
+          32
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          74,
+          1,
+          102,
+          24
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 455.09679065025983,
+        "independent_source_baseline_estimate": 321.9543629985609,
+        "source_top_bottom_baseline_estimate_spread_pt": 1.1187705592105317,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        455.17043879907624,
+        314.02400732421876,
+        472.19353348729794,
+        324.8358494294819
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "eye-first-reference",
+      "reviewed": true,
+      "source": "1.图决解20-5-1是近",
+      "ko": "[[one]] 그림 [[ref]]:",
+      "en": "[[one]] Fig. [[ref]] shows",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 337.5986475380346,
+      "left": 455,
+      "right": 562.6,
+      "erase_rects": [
+        [
+          455.0,
+          328.0,
+          562.0,
+          342.0
+        ]
+      ],
+      "source_atom_ids": [
+        "one",
+        "ref"
+      ],
+      "atoms": [
+        {
+          "id": "one",
+          "rect": [
+            455.0,
+            329.25,
+            463.75,
+            342.75
+          ],
+          "image_path": [
+            242
+          ],
+          "manually_reviewed_source_pixels": [
+            72,
+            47,
+            98,
+            87
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        },
+        {
+          "id": "ref",
+          "rect": [
+            498.25,
+            329.25,
+            536.5,
+            342.75
+          ],
+          "image_path": [
+            242
+          ],
+          "manually_reviewed_source_pixels": [
+            204,
+            47,
+            320,
+            87
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "图",
+        "manual_source_cell_raw_pixels": [
+          103,
+          47,
+          137,
+          83
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          106,
+          47,
+          132,
+          74
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 465.04009589708437,
+        "independent_source_baseline_estimate": 337.5986475380346,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.6285567434210293,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        455.17043879907624,
+        328.1121652189556,
+        561.564780600462,
+        341.5450599557977
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "farthest-object",
+      "reviewed": true,
+      "source": "视眼观察能看清的最远的物",
+      "ko": "근시안이 가장 먼 물체를",
+      "en": "a myopic eye viewing its",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 352.9563161235609,
+      "left": 433.4089027316686,
+      "right": 562.6,
+      "erase_rects": [
+        [
+          431.5,
+          343.5,
+          562.0,
+          357.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "视",
+        "manual_source_cell_raw_pixels": [
+          0,
+          94,
+          35,
+          129
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          8,
+          94,
+          35,
+          121
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 433.4089027316686,
+        "independent_source_baseline_estimate": 352.9563161235609,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.6285567434210293,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        343.51084942948194,
+        561.564780600462,
+        356.6161125873767
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "eye-rays",
+      "reviewed": true,
+      "source": "时的成像光路图。对近视眼，",
+      "ko": "선명히 보는 결상도이다.",
+      "en": "farthest clear object.",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 368.7851709755346,
+      "left": 433.2448402316686,
+      "right": 562.6,
+      "erase_rects": [
+        [
+          431.5,
+          358.5,
+          562.0,
+          373.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "时",
+        "manual_source_cell_raw_pixels": [
+          0,
+          142,
+          35,
+          178
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          8,
+          142,
+          35,
+          169
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 433.2448402316686,
+        "independent_source_baseline_estimate": 368.7851709755346,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.6695723684210293,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        358.90953364000825,
+        561.564780600462,
+        372.6700599557977
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "accommodation",
+      "reviewed": true,
+      "source": "通过眼睛调节，能看清的物",
+      "ko": "눈 조절로 선명히 보는 최대",
+      "en": "It can accommodate to see",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 384.59351801500827,
+      "left": 433.22471131639725,
+      "right": 562.6,
+      "erase_rects": [
+        [
+          431.5,
+          374.0,
+          562.0,
+          388.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "通",
+        "manual_source_cell_raw_pixels": [
+          0,
+          189,
+          35,
+          224
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          7,
+          190,
+          35,
+          217
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 433.22471131639725,
+        "independent_source_baseline_estimate": 384.59351801500827,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.2594161184210293,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        374.30821785053456,
+        561.564780600462,
+        387.7411125873766
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "maximum-distance",
+      "reviewed": true,
+      "source": "到眼睛的最大距离为a，位",
+      "ko": "거리는 [[a]]이다. 광축 위 점은",
+      "en": "up to [[a]]; axial points form",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 399.99195551500827,
+      "left": 433.0815355261259,
+      "right": 562.6,
+      "erase_rects": [
+        [
+          431.5,
+          390.0,
+          562.0,
+          404.5
+        ]
+      ],
+      "source_atom_ids": [
+        "a"
+      ],
+      "atoms": [
+        {
+          "id": "a",
+          "rect": [
+            535.25,
+            391.25,
+            544.0,
+            405.25
+          ],
+          "image_path": [
+            242
+          ],
+          "manually_reviewed_source_pixels": [
+            317,
+            236,
+            343,
+            278
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "到",
+        "manual_source_cell_raw_pixels": [
+          0,
+          237,
+          35,
+          274
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          7,
+          237,
+          34,
+          265
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 433.0815355261259,
+        "independent_source_baseline_estimate": 399.99195551500827,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.3419407894736537,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        390.03453364000825,
+        561.564780600462,
+        404.12269153474506
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "retinal-image",
+      "reviewed": true,
+      "source": "于光轴上的物点，将成像在",
+      "ko": "망막에 상을 맺는다.",
+      "en": "images on the retina.",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 416.00488725842933,
+      "left": 433.0815355261259,
+      "right": 562.6,
+      "erase_rects": [
+        [
+          431.5,
+          405.5,
+          562.0,
+          420.5
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "于",
+        "manual_source_cell_raw_pixels": [
+          0,
+          286,
+          35,
+          323
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          7,
+          287,
+          34,
+          313
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 433.0815355261259,
+        "independent_source_baseline_estimate": 416.00488725842933,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.5870476973684049,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        405.76084942948194,
+        561.564780600462,
+        420.1766389031661
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "infinite-object",
+      "reviewed": true,
+      "source": "视网膜上；离眼睛无限远，位于光轴上的物点，只能成像在焦点",
+      "ko": "광축 위 무한히 먼 물체점은 초점에만 상을 맺어",
+      "en": "An axial point at infinity focuses only at",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 433.88131612356085,
+      "left": 432.91785192335453,
+      "right": 715.1,
+      "erase_rects": [
+        [
+          431.5,
+          422.0,
+          715.5,
+          438.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "视",
+        "manual_source_cell_raw_pixels": [
+          0,
+          336,
+          35,
+          377
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          6,
+          341,
+          34,
+          368
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 432.91785192335453,
+        "independent_source_baseline_estimate": 433.88131612356085,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.6285567434210861,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        422.4700599557977,
+        715.1,
+        437.868744166324
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "focus-patch",
+      "reviewed": true,
+      "source": "F，在视网膜上是一个光斑，这光斑就是物点在视网膜上的模糊",
+      "ko": "[[F]]에서 모인 뒤 망막에서는 빛의 얼룩, 즉 물체점의 흐린",
+      "en": "[[F]], leaving a blurred patch on the retina.",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 450.2221261564556,
+      "left": 431.6,
+      "right": 715.1,
+      "erase_rects": [
+        [
+          431.5,
+          438.5,
+          715.5,
+          454.0
+        ]
+      ],
+      "source_atom_ids": [
+        "F"
+      ],
+      "atoms": [
+        {
+          "id": "F",
+          "rect": [
+            431.6,
+            440.0,
+            441.5,
+            455.0
+          ],
+          "image_path": [
+            242
+          ],
+          "manually_reviewed_source_pixels": [
+            0,
+            385,
+            30,
+            430
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "在",
+        "manual_source_cell_raw_pixels": [
+          43,
+          386,
+          77,
+          425
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          47,
+          390,
+          75,
+          418
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 446.42193860060627,
+        "independent_source_baseline_estimate": 450.2221261564556,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.38295641447371054,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        438.85163890316613,
+        715.1,
+        453.5950599557977
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "pinhole-card",
+      "reviewed": true,
+      "source": "的“像”。如果在眼前靠近眼睛处放一个有小圆孔的卡片，小孔使",
+      "ko": "상이 된다. 눈 가까이에 작은 원형 구멍을 낸 카드를 두면",
+      "en": "A card with a small circular hole near the eye reduces",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 466.27607352487667,
+      "left": 432.5080745705832,
+      "right": 715.1,
+      "erase_rects": [
+        [
+          431.5,
+          454.5,
+          715.5,
+          470.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "的",
+        "manual_source_cell_raw_pixels": [
+          0,
+          435,
+          35,
+          474
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          6,
+          439,
+          33,
+          467
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 432.5080745705832,
+        "independent_source_baseline_estimate": 466.27607352487667,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.30092516447371054,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        454.90558627158714,
+        715.1,
+        469.64900732421876
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "patch-reduced",
+      "reviewed": true,
+      "source": "视网膜上的光斑变小，如图决解20-5-2所示。光斑越小，即模",
+      "ko": "얼룩이 준다(그림 [[ref]]). 작을수록, 즉 흐린",
+      "en": "the patch (Fig. [[ref]]). A smaller patch gives",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 481.87934243935035,
+      "left": 432.42680111504046,
+      "right": 715.1,
+      "erase_rects": [
+        [
+          431.5,
+          470.5,
+          715.5,
+          485.5
+        ]
+      ],
+      "source_atom_ids": [
+        "ref"
+      ],
+      "atoms": [
+        {
+          "id": "ref",
+          "rect": [
+            575.75,
+            472.5,
+            617.75,
+            486.75
+          ],
+          "image_path": [
+            242
+          ],
+          "manually_reviewed_source_pixels": [
+            441,
+            484,
+            568,
+            527
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "视",
+        "manual_source_cell_raw_pixels": [
+          0,
+          484,
+          35,
+          522
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          4,
+          487,
+          33,
+          515
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 432.42680111504046,
+        "independent_source_baseline_estimate": 481.87934243935035,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.30092516447371054,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        470.6319020610608,
+        715.1,
+        485.37532311369245
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "clearer-small-patch",
+      "reviewed": true,
+      "source": "糊像点越小，眼睛感觉到的像越清晰。因此，在靠近眼睛处放一",
+      "ko": "상의 점이 작을수록 더 선명하다. 따라서 눈 가까이에",
+      "en": "a clearer image. Thus, near the eye, a hole",
+      "size": 10.5,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 498.1586290347451,
+      "left": 432.32501984699775,
+      "right": 715.1,
+      "erase_rects": [
+        [
+          431.5,
+          487.0,
+          715.5,
+          501.0
+        ]
+      ],
+      "source_atom_ids": [],
+      "atoms": [],
+      "independent_original_baseline_measurement": {
+        "source_char": "糊",
+        "manual_source_cell_raw_pixels": [
+          0,
+          534,
+          35,
+          570
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          3,
+          536,
+          32,
+          565
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 10.5,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 432.32501984699775,
+        "independent_source_baseline_estimate": 498.1586290347451,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.17837171052633494,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        431.6,
+        487.01348100842927,
+        715.1,
+        500.77400732421876
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    },
+    {
+      "id": "eye-ray-caption",
+      "reviewed": true,
+      "source": "图决解20-5-1",
+      "ko": "그림 [[number]]",
+      "en": "Fig. [[number]]",
+      "size": 8,
+      "source_prose_face": "SimSun",
+      "render_mode": 0,
+      "baseline": 411.4050928505345,
+      "left": 620,
+      "right": 704,
+      "erase_rects": [
+        [
+          609.0,
+          403.0,
+          677.0,
+          417.0
+        ]
+      ],
+      "source_atom_ids": [
+        "number"
+      ],
+      "atoms": [
+        {
+          "id": "number",
+          "rect": [
+            636.0,
+            404.75,
+            676.25,
+            417.25
+          ],
+          "image_path": [
+            242
+          ],
+          "manually_reviewed_source_pixels": [
+            625,
+            277,
+            747,
+            315
+          ],
+          "reason": "Complete manually read original symbol/expression/number, including scripts; original encoded image/clip/CTM/scale/y retained. Only whole-expression page-horizontal translation is allowed."
+        }
+      ],
+      "independent_original_baseline_measurement": {
+        "source_char": "图",
+        "manual_source_cell_raw_pixels": [
+          543,
+          278,
+          574,
+          313
+        ],
+        "actual_original_ink_box_raw_pixels": [
+          547,
+          278,
+          574,
+          299
+        ],
+        "original_source_image_sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+        "fixed_original_point": 8,
+        "source_full_face_sha256": "79ba39fde98703ec0cd804ba1119b915f5e8f4e6663b2d729105b0f4c761ded6",
+        "source_original_advance_origin_x": 610.8861937066974,
+        "independent_source_baseline_estimate": 411.4050928505345,
+        "source_top_bottom_baseline_estimate_spread_pt": 0.3384868421052829,
+        "method": "Only manually identified original Chinese glyph ink and original-size source-family contour bounds; no translated width/shape/fitting."
+      },
+      "whole_original_image_expression_pixel_grid": true,
+      "exact_manual_prose_region_before_antialias_support_margin": [
+        609.0330254041571,
+        403.4674283768503,
+        676.7980369515012,
+        416.9003231136924
+      ],
+      "manual_prose_erase_edge_review": "Outward0.5pt grid covers the actual original prose antialias support at scan boundaries, with no math/figure/font/point/scale change.",
+      "align": "center",
+      "source_caption_horizontal_center": 642.9155311778292,
+      "source_bound_M2_language_review": "Natural grammatical continuity is checked across adjoining source rows; every original image/native math atom, measured point, source-only baseline, face role and figure remains unchanged. No point/scale fitting."
+    }
+  ],
+  "protected_source_display_and_figure_rects": [
+    [
+      231.09677419354838,
+      73.65000732421873,
+      328.5,
+      193.0136436878551
+    ],
+    [
+      168.40751445086704,
+      312.33838221958445,
+      336.75,
+      335.58558640711925
+    ],
+    [
+      136.70028901734105,
+      352.2842823728133,
+      336.75,
+      400.08839239225114
+    ],
+    [
+      135.39277456647397,
+      416.1322375357611,
+      336.75,
+      465.9009000217511
+    ],
+    [
+      137.02716763005782,
+      482.5995959874451,
+      336.75,
+      496.0240378422188
+    ],
+    [
+      502.9178654292344,
+      92.40357875279017,
+      713.6,
+      117.97643589564731
+    ],
+    [
+      451.22877030162414,
+      182.2364358956473,
+      713.6,
+      210.10429303850444
+    ],
+    [
+      451.22877030162414,
+      211.74357875279017,
+      713.6,
+      236.660721609933
+    ],
+    [
+      513.3865429234339,
+      254.69286446707588,
+      713.6,
+      279.2821501813616
+    ],
+    [
+      451.22877030162414,
+      281.24929303850445,
+      713.6,
+      307.15000732421873
+    ],
+    [
+      567.1300230946882,
+      326.8016389031661,
+      715.1,
+      403.139796797903
+    ]
+  ],
+  "reviewed_blank_background_rects": [],
+  "all_original_math_and_figures_native_image_programs_preserved": true,
+  "original_prose_points_independently_measured": true
+}

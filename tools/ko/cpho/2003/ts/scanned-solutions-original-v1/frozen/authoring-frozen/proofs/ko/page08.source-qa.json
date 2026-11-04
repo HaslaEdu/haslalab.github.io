@@ -1,0 +1,1100 @@
+{
+  "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\inputs\\CPhO_2003_Chinese_original.pdf",
+  "source_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "source_page": 8,
+  "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\TS\\proofs\\ko\\page08.pdf",
+  "final_sha256": "9534be016c2cc3b703a06e02217d32438eb451e49c59d51288136e6ae668f7e8",
+  "math_control_sha256": "8ab5503b074bd42c6ee71afc567a1ed4cb54b73ce68df337168755d48a4a7bf5",
+  "prose_reference_sha256": "1f679b50d10ff58385106e1ee360c77b83e021443cd2975979b5d0818c5de649",
+  "render_scale": 4,
+  "original_encoded_image_programs_masks_palettes_icc_and_declared_ctms_retained": true,
+  "original_native_font_program_changes": [],
+  "original_pagegroup_unchanged": true,
+  "outside_declared_language_and_math_motion": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "stationary_original_dark_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "independent_protected_source_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_overlap_original_or_replayed_nonlanguage_ink": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "raw_collision_including_reviewed_scan_background": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_expected_dark_pixels_missing": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "reviewed_blank_background_records": [],
+  "thresholds": {
+    "source_deep_dark": 160,
+    "new_prose_and_existing_ink": 180,
+    "actual_missing_white": 240
+  },
+  "note": "Only declared language and inline mathematical motion may change; source display/figure rects remain independently protected. Blank records never white-fill anything and exclude every protected/math region. New-prose final visibility is independently required.",
+  "passed": true,
+  "actual_final_math_single_native_source_controls": {
+    "atoms": 57,
+    "RGB_errors": 0,
+    "records": [
+      {
+        "id": "starting-delay-a",
+        "source_rect": [
+          193.0,
+          89.0,
+          199.75,
+          103.0
+        ],
+        "destination_rect": [
+          53.5,
+          89.0,
+          60.25,
+          103.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1258,
+        "expected_actual_dark_glyph_pixels": 182
+      },
+      {
+        "id": "starting-delay-b",
+        "source_rect": [
+          204.0,
+          89.0,
+          211.0,
+          103.0
+        ],
+        "destination_rect": [
+          66.0,
+          89.0,
+          73.0,
+          103.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1444,
+        "expected_actual_dark_glyph_pixels": 230
+      },
+      {
+        "id": "crossing-reference-prefix-ref-prefix",
+        "source_rect": [
+          192.0,
+          121.0,
+          225.0,
+          134.5
+        ],
+        "destination_rect": [
+          77.5,
+          121.0,
+          110.5,
+          134.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 4668,
+        "expected_actual_dark_glyph_pixels": 867
+      },
+      {
+        "id": "crossing-reference-tail-ref-tail",
+        "source_rect": [
+          54.0,
+          136.5,
+          59.75,
+          150.25
+        ],
+        "destination_rect": [
+          54.0,
+          136.5,
+          59.75,
+          150.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 960,
+        "expected_actual_dark_glyph_pixels": 160
+      },
+      {
+        "id": "crossing-reference-tail-a",
+        "source_rect": [
+          105.25,
+          136.75,
+          111.75,
+          150.5
+        ],
+        "destination_rect": [
+          73.0,
+          136.75,
+          79.5,
+          150.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 949,
+        "expected_actual_dark_glyph_pixels": 181
+      },
+      {
+        "id": "crossing-reference-tail-b",
+        "source_rect": [
+          115.25,
+          136.75,
+          123.0,
+          150.5
+        ],
+        "destination_rect": [
+          85.5,
+          136.75,
+          93.25,
+          150.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1135,
+        "expected_actual_dark_glyph_pixels": 233
+      },
+      {
+        "id": "shortest-crossing-fiveT",
+        "source_rect": [
+          93.25,
+          152.0,
+          110.75,
+          166.5
+        ],
+        "destination_rect": [
+          54.5,
+          152.0,
+          72.0,
+          166.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2854,
+        "expected_actual_dark_glyph_pixels": 585
+      },
+      {
+        "id": "shortest-crossing-fiveQuarterT",
+        "source_rect": [
+          124.5,
+          152.0,
+          156.75,
+          166.5
+        ],
+        "destination_rect": [
+          85.5,
+          152.0,
+          117.75,
+          166.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 3705,
+        "expected_actual_dark_glyph_pixels": 1023
+      },
+      {
+        "id": "crossing-P-ref",
+        "source_rect": [
+          113.5,
+          168.0,
+          154.25,
+          183.0
+        ],
+        "destination_rect": [
+          82.5,
+          168.0,
+          123.25,
+          183.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 3048,
+        "expected_actual_dark_glyph_pixels": 861
+      },
+      {
+        "id": "crossing-P-P",
+        "source_rect": [
+          179.25,
+          168.0,
+          187.5,
+          183.0
+        ],
+        "destination_rect": [
+          136.5,
+          168.0,
+          144.75,
+          183.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 915,
+        "expected_actual_dark_glyph_pixels": 237
+      },
+      {
+        "id": "before-five-a",
+        "source_rect": [
+          54.0,
+          183.75,
+          60.75,
+          198.0
+        ],
+        "destination_rect": [
+          102.0,
+          183.75,
+          108.75,
+          198.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 788,
+        "expected_actual_dark_glyph_pixels": 188
+      },
+      {
+        "id": "before-five-b",
+        "source_rect": [
+          63.5,
+          183.75,
+          70.5,
+          198.0
+        ],
+        "destination_rect": [
+          114.5,
+          183.75,
+          121.5,
+          198.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 879,
+        "expected_actual_dark_glyph_pixels": 244
+      },
+      {
+        "id": "before-five-fiveT",
+        "source_rect": [
+          183.0,
+          183.75,
+          200.5,
+          198.5
+        ],
+        "destination_rect": [
+          135.0,
+          183.75,
+          152.5,
+          198.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 3267,
+        "expected_actual_dark_glyph_pixels": 616
+      },
+      {
+        "id": "after-five-quarter-fiveQuarterT",
+        "source_rect": [
+          66.75,
+          199.75,
+          100.0,
+          214.5
+        ],
+        "destination_rect": [
+          55.0,
+          199.75,
+          88.25,
+          214.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 4378,
+        "expected_actual_dark_glyph_pixels": 1060
+      },
+      {
+        "id": "larger-delay-a",
+        "source_rect": [
+          54.0,
+          215.5,
+          60.75,
+          225.15000732421873
+        ],
+        "destination_rect": [
+          91.0,
+          215.5,
+          97.75,
+          225.15000732421873
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 739,
+        "expected_actual_dark_glyph_pixels": 191
+      },
+      {
+        "id": "larger-delay-b",
+        "source_rect": [
+          63.5,
+          215.5,
+          70.5,
+          225.15000732421873
+        ],
+        "destination_rect": [
+          103.5,
+          215.5,
+          110.5,
+          225.15000732421873
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 786,
+        "expected_actual_dark_glyph_pixels": 253
+      },
+      {
+        "id": "trajectory-detail-caption-number",
+        "source_rect": [
+          277.0,
+          194.25,
+          310.5,
+          206.25
+        ],
+        "destination_rect": [
+          274.1801075268817,
+          194.25,
+          307.6801075268817,
+          206.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2430,
+        "expected_actual_dark_glyph_pixels": 604
+      },
+      {
+        "id": "new-origin-location-y",
+        "source_rect": [
+          220.0,
+          232.77400732421876,
+          229.0,
+          246.0
+        ],
+        "destination_rect": [
+          156.5,
+          232.77400732421876,
+          165.5,
+          246.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1026,
+        "expected_actual_dark_glyph_pixels": 149
+      },
+      {
+        "id": "new-origin-location-O",
+        "source_rect": [
+          281.0,
+          232.77400732421876,
+          289.75,
+          246.0
+        ],
+        "destination_rect": [
+          213.0,
+          232.77400732421876,
+          221.75,
+          246.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1286,
+        "expected_actual_dark_glyph_pixels": 282
+      },
+      {
+        "id": "new-origin-location-threeRal",
+        "source_rect": [
+          302.0,
+          232.77400732421876,
+          321.5,
+          247.0
+        ],
+        "destination_rect": [
+          256.0,
+          232.77400732421876,
+          275.5,
+          247.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2843,
+        "expected_actual_dark_glyph_pixels": 706
+      },
+      {
+        "id": "new-origin-time-sixRbl",
+        "source_rect": [
+          54.0,
+          248.0,
+          73.5,
+          263.0
+        ],
+        "destination_rect": [
+          71.5,
+          248.0,
+          91.0,
+          263.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2986,
+        "expected_actual_dark_glyph_pixels": 757
+      },
+      {
+        "id": "new-origin-time-Oprime",
+        "source_rect": [
+          145.0,
+          247.75,
+          155.5,
+          262.75
+        ],
+        "destination_rect": [
+          168.5,
+          247.75,
+          179.0,
+          262.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1325,
+        "expected_actual_dark_glyph_pixels": 331
+      },
+      {
+        "id": "new-origin-time-ref",
+        "source_rect": [
+          205.25,
+          248.0,
+          243.75,
+          262.75
+        ],
+        "destination_rect": [
+          207.0,
+          248.0,
+          245.5,
+          262.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 4030,
+        "expected_actual_dark_glyph_pixels": 969
+      },
+      {
+        "id": "new-origin-time-time",
+        "source_rect": [
+          302.0,
+          248.0,
+          336.75,
+          263.0
+        ],
+        "destination_rect": [
+          262.75,
+          248.0,
+          297.5,
+          263.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2451,
+        "expected_actual_dark_glyph_pixels": 605
+      },
+      {
+        "id": "two-time-labels-a",
+        "source_rect": [
+          166.25,
+          264.75,
+          173.75,
+          278.75
+        ],
+        "destination_rect": [
+          159.5,
+          264.75,
+          167.0,
+          278.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 586,
+        "expected_actual_dark_glyph_pixels": 169
+      },
+      {
+        "id": "two-time-labels-tp",
+        "source_rect": [
+          184.75,
+          264.5,
+          214.5,
+          279.0
+        ],
+        "destination_rect": [
+          180.5,
+          264.5,
+          210.25,
+          279.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 3495,
+        "expected_actual_dark_glyph_pixels": 577
+      },
+      {
+        "id": "two-time-labels-b",
+        "source_rect": [
+          253.25,
+          264.75,
+          260.75,
+          279.0
+        ],
+        "destination_rect": [
+          216.0,
+          264.75,
+          223.5,
+          279.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 750,
+        "expected_actual_dark_glyph_pixels": 223
+      },
+      {
+        "id": "two-time-labels-tpp",
+        "source_rect": [
+          272.25,
+          264.5,
+          302.25,
+          279.0
+        ],
+        "destination_rect": [
+          237.0,
+          264.5,
+          267.0,
+          279.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2586,
+        "expected_actual_dark_glyph_pixels": 584
+      },
+      {
+        "id": "common-angular-speed-y",
+        "source_rect": [
+          54.0,
+          280.5,
+          62.0,
+          294.75
+        ],
+        "destination_rect": [
+          54.0,
+          280.5,
+          62.0,
+          294.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1191,
+        "expected_actual_dark_glyph_pixels": 138
+      },
+      {
+        "id": "common-angular-speed-a1",
+        "source_rect": [
+          96.25,
+          280.5,
+          103.5,
+          294.5
+        ],
+        "destination_rect": [
+          120.0,
+          280.5,
+          127.25,
+          294.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 789,
+        "expected_actual_dark_glyph_pixels": 179
+      },
+      {
+        "id": "common-angular-speed-b1",
+        "source_rect": [
+          106.25,
+          280.5,
+          114.0,
+          294.5
+        ],
+        "destination_rect": [
+          133.0,
+          280.5,
+          140.75,
+          294.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 774,
+        "expected_actual_dark_glyph_pixels": 227
+      },
+      {
+        "id": "common-angular-speed-omega1",
+        "source_rect": [
+          273.75,
+          280.5,
+          287.25,
+          295.0
+        ],
+        "destination_rect": [
+          215.0,
+          280.5,
+          228.5,
+          295.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 932,
+        "expected_actual_dark_glyph_pixels": 255
+      },
+      {
+        "id": "common-angular-speed-a2",
+        "source_rect": [
+          308.75,
+          280.5,
+          315.75,
+          294.75
+        ],
+        "destination_rect": [
+          242.0,
+          280.5,
+          249.0,
+          294.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 517,
+        "expected_actual_dark_glyph_pixels": 176
+      },
+      {
+        "id": "common-angular-speed-b2",
+        "source_rect": [
+          320.0,
+          280.5,
+          327.75,
+          295.0
+        ],
+        "destination_rect": [
+          255.0,
+          280.5,
+          262.75,
+          295.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 580,
+        "expected_actual_dark_glyph_pixels": 198
+      },
+      {
+        "id": "speed-definition-end-y",
+        "source_rect": [
+          54.0,
+          296.5,
+          62.0,
+          309.25
+        ],
+        "destination_rect": [
+          54.0,
+          296.5,
+          62.0,
+          309.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 717,
+        "expected_actual_dark_glyph_pixels": 145
+      },
+      {
+        "id": "for-a-a",
+        "source_rect": [
+          87.5,
+          338.0,
+          95.0,
+          351.0
+        ],
+        "destination_rect": [
+          75.5,
+          338.0,
+          83.0,
+          351.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 673,
+        "expected_actual_dark_glyph_pixels": 189
+      },
+      {
+        "id": "for-b-b",
+        "source_rect": [
+          87.5,
+          401.5,
+          95.25,
+          414.0
+        ],
+        "destination_rect": [
+          75.5,
+          401.5,
+          83.25,
+          414.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 790,
+        "expected_actual_dark_glyph_pixels": 252
+      },
+      {
+        "id": "at-P-P",
+        "source_rect": [
+          67.5,
+          469.0,
+          76.75,
+          481.75
+        ],
+        "destination_rect": [
+          55.0,
+          469.0,
+          64.25,
+          481.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1428,
+        "expected_actual_dark_glyph_pixels": 289
+      },
+      {
+        "id": "simultaneous-passage-a1",
+        "source_rect": [
+          522.75,
+          119.25,
+          529.0,
+          134.5
+        ],
+        "destination_rect": [
+          500.0,
+          119.25,
+          506.25,
+          134.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 426,
+        "expected_actual_dark_glyph_pixels": 168
+      },
+      {
+        "id": "simultaneous-passage-b1",
+        "source_rect": [
+          532.25,
+          119.25,
+          540.75,
+          134.5
+        ],
+        "destination_rect": [
+          512.0,
+          119.25,
+          520.5,
+          134.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 685,
+        "expected_actual_dark_glyph_pixels": 203
+      },
+      {
+        "id": "simultaneous-passage-a2",
+        "source_rect": [
+          601.0,
+          119.25,
+          608.5,
+          134.5
+        ],
+        "destination_rect": [
+          536.5,
+          119.25,
+          544.0,
+          134.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1260,
+        "expected_actual_dark_glyph_pixels": 188
+      },
+      {
+        "id": "simultaneous-passage-b2",
+        "source_rect": [
+          620.0,
+          119.25,
+          629.0,
+          134.5
+        ],
+        "destination_rect": [
+          557.5,
+          119.25,
+          566.5,
+          134.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1399,
+        "expected_actual_dark_glyph_pixels": 243
+      },
+      {
+        "id": "simultaneous-passage-delay",
+        "source_rect": [
+          640.25,
+          118.75,
+          713.6,
+          134.25
+        ],
+        "destination_rect": [
+          590.15,
+          118.75,
+          663.5,
+          134.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 9800,
+        "expected_actual_dark_glyph_pixels": 2562
+      },
+      {
+        "id": "meeting-start-order-P",
+        "source_rect": [
+          476.5,
+          135.5,
+          485.75,
+          149.5
+        ],
+        "destination_rect": [
+          455.5,
+          135.5,
+          464.75,
+          149.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1103,
+        "expected_actual_dark_glyph_pixels": 263
+      },
+      {
+        "id": "meeting-start-order-a",
+        "source_rect": [
+          639.75,
+          135.5,
+          646.0,
+          149.5
+        ],
+        "destination_rect": [
+          560.0,
+          135.5,
+          566.25,
+          149.5
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 653,
+        "expected_actual_dark_glyph_pixels": 184
+      },
+      {
+        "id": "meeting-start-order-b1",
+        "source_rect": [
+          649.75,
+          135.5,
+          656.75,
+          150.0
+        ],
+        "destination_rect": [
+          572.0,
+          135.5,
+          579.0,
+          150.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 918,
+        "expected_actual_dark_glyph_pixels": 224
+      },
+      {
+        "id": "meeting-start-order-b2",
+        "source_rect": [
+          696.25,
+          135.5,
+          703.0,
+          150.0
+        ],
+        "destination_rect": [
+          595.0,
+          135.5,
+          601.75,
+          150.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 955,
+        "expected_actual_dark_glyph_pixels": 236
+      },
+      {
+        "id": "delayed-b-start-a",
+        "source_rect": [
+          496.25,
+          151.25,
+          504.0,
+          165.25
+        ],
+        "destination_rect": [
+          467.0,
+          151.25,
+          474.75,
+          165.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1016,
+        "expected_actual_dark_glyph_pixels": 173
+      },
+      {
+        "id": "delayed-b-start-delay",
+        "source_rect": [
+          515.5,
+          151.0,
+          590.0,
+          165.0
+        ],
+        "destination_rect": [
+          498.5,
+          151.0,
+          573.0,
+          165.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 10035,
+        "expected_actual_dark_glyph_pixels": 2464
+      },
+      {
+        "id": "coordinates-O-source-label-O",
+        "source_rect": [
+          549.5,
+          167.25,
+          559.75,
+          181.0
+        ],
+        "destination_rect": [
+          512.0,
+          167.25,
+          522.25,
+          181.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 882,
+        "expected_actual_dark_glyph_pixels": 258
+      },
+      {
+        "id": "convert-coordinate-system-Oxy",
+        "source_rect": [
+          455.0,
+          239.25,
+          473.25,
+          254.25
+        ],
+        "destination_rect": [
+          432.5,
+          239.25,
+          450.75,
+          254.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2205,
+        "expected_actual_dark_glyph_pixels": 594
+      },
+      {
+        "id": "eye-first-reference-one",
+        "source_rect": [
+          455.0,
+          329.25,
+          463.75,
+          342.75
+        ],
+        "destination_rect": [
+          455.0,
+          329.25,
+          463.75,
+          342.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 1034,
+        "expected_actual_dark_glyph_pixels": 180
+      },
+      {
+        "id": "eye-first-reference-ref",
+        "source_rect": [
+          498.25,
+          329.25,
+          536.5,
+          342.75
+        ],
+        "destination_rect": [
+          490.0,
+          329.25,
+          528.25,
+          342.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 3950,
+        "expected_actual_dark_glyph_pixels": 830
+      },
+      {
+        "id": "maximum-distance-a",
+        "source_rect": [
+          535.25,
+          391.25,
+          544.0,
+          405.25
+        ],
+        "destination_rect": [
+          467.5,
+          391.25,
+          476.25,
+          405.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 676,
+        "expected_actual_dark_glyph_pixels": 153
+      },
+      {
+        "id": "focus-patch-F",
+        "source_rect": [
+          431.6,
+          440.0,
+          441.5,
+          455.0
+        ],
+        "destination_rect": [
+          432.0,
+          440.0,
+          441.9,
+          455.0
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 2251,
+        "expected_actual_dark_glyph_pixels": 267
+      },
+      {
+        "id": "patch-reduced-ref",
+        "source_rect": [
+          575.75,
+          472.5,
+          617.75,
+          486.75
+        ],
+        "destination_rect": [
+          515.5,
+          472.5,
+          557.5,
+          486.75
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 7779,
+        "expected_actual_dark_glyph_pixels": 991
+      },
+      {
+        "id": "eye-ray-caption-number",
+        "source_rect": [
+          636.0,
+          404.75,
+          676.25,
+          417.25
+        ],
+        "destination_rect": [
+          631.7905311778292,
+          404.75,
+          672.0405311778292,
+          417.25
+        ],
+        "changed_RGB_pixels": 0,
+        "expected_nonwhite_pixels": 3023,
+        "expected_actual_dark_glyph_pixels": 545
+      }
+    ]
+  },
+  "actual_prose_font_point_baseline_and_paint": {
+    "glyph_paints_checked": 419,
+    "errors": [],
+    "passed": true
+  },
+  "new_prose_outlines": {
+    "file": "page08.pdf",
+    "sha256": "9534be016c2cc3b703a06e02217d32438eb451e49c59d51288136e6ae668f7e8",
+    "delivered_pdf_modified": false,
+    "pages": [
+      {
+        "page": 1,
+        "new_nonspace_actual_gids_checked": 421,
+        "ascii_actual_gids_checked": 38,
+        "empty_outlines": [],
+        "analysis_only_alias_normalisation": [],
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "publication_ready": false,
+  "full_edition_complete": false
+}

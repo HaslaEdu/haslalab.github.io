@@ -1,0 +1,60 @@
+{
+  "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\inputs\\CPhO_2003_Chinese_original.pdf",
+  "source_sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+  "source_page": 6,
+  "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\TS\\negative-controls-v2\\new-prose-over-original-math.pdf",
+  "final_sha256": "1c79c92de09a794650413f4806213d213e7e6d9daee5b2012f8027995bef0076",
+  "math_control_sha256": "b5d975293c6165525cb43389be2d3513cd33fb152ec3ecdc73d80eb881bca3f8",
+  "prose_reference_sha256": "544d7a3b1d2eda961cf1af6e13139fb9af24235221d107a925e76047326d26a7",
+  "render_scale": 4,
+  "original_encoded_image_programs_masks_palettes_icc_and_declared_ctms_retained": true,
+  "original_native_font_program_changes": [],
+  "original_pagegroup_unchanged": true,
+  "outside_declared_language_and_math_motion": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "stationary_original_dark_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "independent_protected_source_ink_lost": {
+    "pixels": 0,
+    "bbox": null
+  },
+  "new_prose_overlap_original_or_replayed_nonlanguage_ink": {
+    "pixels": 99,
+    "bbox": [
+      141.0,
+      146.0,
+      159.5,
+      153.25
+    ]
+  },
+  "raw_collision_including_reviewed_scan_background": {
+    "pixels": 99,
+    "bbox": [
+      141.0,
+      146.0,
+      159.5,
+      153.25
+    ]
+  },
+  "new_prose_expected_dark_pixels_missing": {
+    "pixels": 445,
+    "bbox": [
+      140.75,
+      143.25,
+      160.0,
+      152.75
+    ]
+  },
+  "reviewed_blank_background_records": [],
+  "thresholds": {
+    "source_deep_dark": 160,
+    "new_prose_and_existing_ink": 180,
+    "actual_missing_white": 240
+  },
+  "note": "Only declared language and inline mathematical motion may change; source display/figure rects remain independently protected. Blank records never white-fill anything and exclude every protected/math region. New-prose final visibility is independently required.",
+  "passed": false
+}

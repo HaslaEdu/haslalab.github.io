@@ -1,0 +1,1313 @@
+{
+  "schema": "cpho2003-scanned-solutions-original-v1",
+  "master_manifest": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/snapshot-manifest.json",
+    "sha256": "1aa38f34e9decbad0e630033a8a685893d3199af29267b3f944668eed79a4dbb",
+    "bytes": 308674
+  },
+  "native_ready": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/native-ready.json",
+    "sha256": "01b84c751c57f642309bb508b54a82a501cbc0e922aafa2c11517889566790db",
+    "bytes": 2923
+  },
+  "source_original_pdf": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/inputs/CPhO_2003_Chinese_original.pdf",
+    "sha256": "52f8a891d6129becf4d21ccb60f46997cedf9aa50123ffd147294cedcb121b63",
+    "bytes": 2307080,
+    "frozen_path": "authoring-frozen/inputs/CPhO_2003_Chinese_original.pdf"
+  },
+  "source_slots": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/inputs/native-slots.json",
+    "sha256": "d0beaa68af963b967cbf338271c355b0dffde8a535de63c715bf5c1e13b82a60",
+    "bytes": 1519505,
+    "frozen_path": "authoring-frozen/inputs/native-slots.json"
+  },
+  "original_all10_source_slots": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/inputs/original-all10-source-slots.json",
+    "sha256": "d0df5391c001da840ded6401dc625359b1ac23d59e541326005be0f1ed846c31",
+    "bytes": 1435942,
+    "frozen_path": "authoring-frozen/inputs/original-all10-source-slots.json"
+  },
+  "source_classification": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/inputs/source-classification.json",
+    "sha256": "e97c0c44f603b61a66c8b4e243119ac2fdca3cc5fe82174f08514820f7ae58e0",
+    "bytes": 2235,
+    "frozen_path": "authoring-frozen/inputs/source-classification.json"
+  },
+  "font_source_pins": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/inputs/external-font-source-pins.json",
+    "sha256": "c7d519b18066453086d94c9a3878c21656ce5f3a3ce2a9489ba0d5e102bbd54e",
+    "bytes": 1215,
+    "frozen_path": "authoring-frozen/inputs/external-font-source-pins.json"
+  },
+  "visual_review": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/full144-visual-review-complete.json",
+    "sha256": "894ae13c4e910a54a7aa7e952c8b73c915a11753e9e038a2be3f3dface0b24a4",
+    "bytes": 17667,
+    "frozen_path": "authoring-frozen/authoring/full144-visual-review-complete.json"
+  },
+  "parent_semantic_review": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/root-final-full-visual-semantic-review.json",
+    "sha256": "3f94de3b4b27d1944c9a605e119aaa3adecb5cfe44061334e72b94647d4abe92",
+    "bytes": 7614,
+    "frozen_path": "authoring-frozen/evidence/root-final-full-visual-semantic-review.json"
+  },
+  "linked_prose_review": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/m2-linked-prose-width-reviewed.json",
+    "sha256": "927ddc99b2fe2e92e6c47d67af6e55f09a8140898d56e1efc2e95f6d73a89c71",
+    "bytes": 138324,
+    "frozen_path": "authoring-frozen/authoring/m2-linked-prose-width-reviewed.json"
+  },
+  "proof_input_layouts": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs-map.json",
+    "sha256": "6a50b2bef3fd0e7ae190bfd1818132954f63a22b4969a00a37bbcc97c82bcac0",
+    "bytes": 7464,
+    "frozen_path": "authoring-frozen/authoring/proof-inputs-map.json"
+  },
+  "assembly_summary": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/verification/summary.json",
+    "sha256": "ab61e2ce44ccc43872c110e95a87940bc379bd6b8d95bcd32184af69a1aeb72a",
+    "bytes": 18577,
+    "frozen_path": "verification/summary.json"
+  },
+  "actual_build_import_closure": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/actual-build-import-closure.json",
+    "sha256": "41ac589c2aa475004d6fbd2852cb155b5881963294aed7bccca9a18584d419e3",
+    "bytes": 42743,
+    "frozen_path": "authoring-frozen/actual-build-import-closure.json"
+  },
+  "final_auditor_import_closure": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/final-auditor-import-closure.json",
+    "sha256": "e0b15beee6101aaaa2fa6126ff84ceed9cf636aa32a4e3e3c0bc4c5b2937849b",
+    "bytes": 16470,
+    "frozen_path": "authoring-frozen/authoring/final-auditor-import-closure.json"
+  },
+  "negative_manifest": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/negative-control-results.json",
+    "sha256": "54926ea4358d54af09172f80f16f283725034e5d69ba8a35b5a51371dca29e67",
+    "bytes": 7172,
+    "frozen_path": "authoring-frozen/evidence/negative-controls/negative-control-results.json"
+  },
+  "reviewed_paper_map": {
+    "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/reviewed-original-paper-map.json",
+    "sha256": "f709abe2c326fe54533f5e6f8eabdf8e4d037e9f08dde5f0cb6ab582c0dc2569",
+    "bytes": 531,
+    "frozen_path": "authoring-frozen/reviewed-original-paper-map.json"
+  },
+  "authoring_closure": [
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho2003_initial_native_baseline.py",
+      "sha256": "39707fa9ffb29011893a31776a85192c8935a028a7e18fd2d8ec2058de2dc155",
+      "bytes": 24356,
+      "frozen_path": "authoring-frozen/engine-base/cpho2003_initial_native_baseline.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho2003_native_runtime.py",
+      "sha256": "4899a6225993d48f32f695ac8a4a05ac4bc5bb29a14cfa52e3ced541a94b06a1",
+      "bytes": 11618,
+      "frozen_path": "authoring-frozen/engine-base/cpho2003_native_runtime.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_cjk_translate.py",
+      "sha256": "55a9d2bf4a2d0a41f7437a340155ef74b40a83943e486822869b824b6737db78",
+      "bytes": 20877,
+      "frozen_path": "authoring-frozen/engine-base/cpho_cjk_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_atoms.py",
+      "sha256": "870c7e161ecca3281bf55d7a72b0628349d50dc83e3f4122eeed9fd7789adb35",
+      "bytes": 4874,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_atoms.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_english_fonts.py",
+      "sha256": "597bafebb1984e52da37ab08cd69ae267651efaa7a9f5c4013c730ad8e2c7435",
+      "bytes": 6217,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_english_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_full_qa.py",
+      "sha256": "4bc4858bb868f319027916242ffe0b5eb694c810ab6a8ff13cddeb895e13968e",
+      "bytes": 14962,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_full_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_inventory.py",
+      "sha256": "cdcca3d9fab790d135f7eecf2f40d9341f8113406bd523f7fef61f7dd311e121",
+      "bytes": 9855,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_inventory.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_prose_edits.py",
+      "sha256": "07024e5aaed75ba2b9250ee008fbc79cbb4edb27c0c569197d8e93bcd9a665ca",
+      "bytes": 5881,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_prose_edits.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_rotated_labels.py",
+      "sha256": "ead27cdda4415053bd7b43e037e3806d099c04f5a1eff9b567644a1719a95429",
+      "bytes": 2458,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_rotated_labels.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_spacing.py",
+      "sha256": "1d51a1cf55022647f61ddb16adf041b3e2b5ee01e652eabda6d549504eca0b75",
+      "bytes": 20506,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_spacing.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_natural_spacing_qa.py",
+      "sha256": "4d0307faf55ff1a99b09bef2651afcc16c61305db913140393dc9cc4d09fdd6b",
+      "bytes": 2351,
+      "frozen_path": "authoring-frozen/engine-base/cpho_natural_spacing_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_original_latin_fonts.py",
+      "sha256": "7c7d0cff920418d9ebe107fcaae1eecb5af4e2e54870c58fe7990c7b7edbada2",
+      "bytes": 4600,
+      "frozen_path": "authoring-frozen/engine-base/cpho_original_latin_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/cpho_original_style.py",
+      "sha256": "df7fc81dfb538b33d3906c01edfc0d3253a246e7a79d8a5e334aa705de8db603",
+      "bytes": 11723,
+      "frozen_path": "authoring-frozen/engine-base/cpho_original_style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/haslalab_runtime_paths.py",
+      "sha256": "4e0cbff73a5fd8e219db9a987b6b0fcf25e81adb12aaf7ecf41b3d6ee25c8afa",
+      "bytes": 778,
+      "frozen_path": "authoring-frozen/engine-base/haslalab_runtime_paths.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/initial_prose_reading_order.py",
+      "sha256": "b4e7441f1c2edc773dbcc1285af0b92c8a1d842a0ecc897decad9952c653aa32",
+      "bytes": 4423,
+      "frozen_path": "authoring-frozen/engine-base/initial_prose_reading_order.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_early_fixed_style.py",
+      "sha256": "bab1ae56177c5d4a4fa5624fceb46a5949037c573010fc0e853d9c55ee738826",
+      "bytes": 27794,
+      "frozen_path": "authoring-frozen/engine-base/izho_early_fixed_style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_extract_word.py",
+      "sha256": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e",
+      "bytes": 6369,
+      "frozen_path": "authoring-frozen/engine-base/izho_extract_word.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_math_clean.py",
+      "sha256": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65",
+      "bytes": 3681,
+      "frozen_path": "authoring-frozen/engine-base/izho_math_clean.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_native_atomic_tokens.py",
+      "sha256": "c9dae0a752922b803928b36586f57ad02493848293b8c540964b14ca50a84377",
+      "bytes": 10189,
+      "frozen_path": "authoring-frozen/engine-base/izho_native_atomic_tokens.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_native_math_audit.py",
+      "sha256": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8",
+      "bytes": 3484,
+      "frozen_path": "authoring-frozen/engine-base/izho_native_math_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_natural_spacing.py",
+      "sha256": "86a53ff3052324c20c32cca0e7afcb5e4d5f24b604219e5975ef8d7fbc8d358e",
+      "bytes": 15695,
+      "frozen_path": "authoring-frozen/engine-base/izho_natural_spacing.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_natural_spacing_qa.py",
+      "sha256": "4f14f08c77a693c384d8179edd84d5f8245bdbe1beb5e3c5d34b7daf4b74f943",
+      "bytes": 19208,
+      "frozen_path": "authoring-frozen/engine-base/izho_natural_spacing_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_natural_spacing_rebuild.py",
+      "sha256": "b916e1810476db5343bd539149494d958cd87c5de711bbbbef0e11675619630e",
+      "bytes": 24096,
+      "frozen_path": "authoring-frozen/engine-base/izho_natural_spacing_rebuild.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_new_prose_outline_qa.py",
+      "sha256": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+      "bytes": 14366,
+      "frozen_path": "authoring-frozen/engine-base/izho_new_prose_outline_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/izho_translate.py",
+      "sha256": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e",
+      "bytes": 24613,
+      "frozen_path": "authoring-frozen/engine-base/izho_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_grading_columns_stationary.py",
+      "sha256": "4f23b44a9877827209591694ce909e5a2b2974ee7cc69e5d373fc879dba6185c",
+      "bytes": 2455,
+      "frozen_path": "authoring-frozen/engine-base/pdf_grading_columns_stationary.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_hangul_visibility.py",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+      "bytes": 3356,
+      "frozen_path": "authoring-frozen/engine-base/pdf_hangul_visibility.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_korean_natural_composer.py",
+      "sha256": "e9c55906b77d7cbcaceb4cd494b494a734736937bbd01475999e41f34b0f8242",
+      "bytes": 17633,
+      "frozen_path": "authoring-frozen/engine-base/pdf_korean_natural_composer.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_layout_translate.py",
+      "sha256": "257c68b0a1538d05f88a1a93323889ec6f2ebfed901c8bbe9ba9dd98d4ba487a",
+      "bytes": 10531,
+      "frozen_path": "authoring-frozen/engine-base/pdf_layout_translate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_memory_gate.py",
+      "sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+      "bytes": 1237,
+      "frozen_path": "authoring-frozen/engine-base/pdf_memory_gate.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_moved_native_ink.py",
+      "sha256": "a196f7237adeb04ef05252192cb3482125e4e255d3e20bd4e4e91b3758689da7",
+      "bytes": 10333,
+      "frozen_path": "authoring-frozen/engine-base/pdf_moved_native_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_native_geometry_motion.py",
+      "sha256": "bbfa1b300372208c2ec938a9709bf41b42711e135d7954d295166650d2e612bf",
+      "bytes": 5092,
+      "frozen_path": "authoring-frozen/engine-base/pdf_native_geometry_motion.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_native_glyph_promote.py",
+      "sha256": "212ec0b9733688bf506e705bbb3d790eb8cc350df3975b46f757d17187637f80",
+      "bytes": 8538,
+      "frozen_path": "authoring-frozen/engine-base/pdf_native_glyph_promote.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_native_glyph_raster_witness.py",
+      "sha256": "8c7d6fc1856d1161e710beb66c69e8bd38dfebd33ab5ae88b6e61994620e139e",
+      "bytes": 3366,
+      "frozen_path": "authoring-frozen/engine-base/pdf_native_glyph_raster_witness.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_native_inline_reposition.py",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "bytes": 56559,
+      "frozen_path": "authoring-frozen/engine-base/pdf_native_inline_reposition.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_native_inline_reposition_regression.py",
+      "sha256": "430a9e7f39f73358aa3b346b2df61ea812bc4ed0df43ccef897db19850cb75c0",
+      "bytes": 12407,
+      "frozen_path": "authoring-frozen/engine-base/pdf_native_inline_reposition_regression.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_native_script_motion_audit.py",
+      "sha256": "3a3cc0898ecf759250d47dc3973b7bec9aa01944716f4753c408800fca4f1e76",
+      "bytes": 6661,
+      "frozen_path": "authoring-frozen/engine-base/pdf_native_script_motion_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_new_hangul_graphics_overlap.py",
+      "sha256": "99569eb126ff7120c5e448660538ced996abed664c9d8eb255a4daac68241620",
+      "bytes": 1782,
+      "frozen_path": "authoring-frozen/engine-base/pdf_new_hangul_graphics_overlap.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_new_prose_native_text_overlap.py",
+      "sha256": "74457c2a358dfd0d8187a4c19f4c8b634794eaf3e66a61e7a74484884e168e69",
+      "bytes": 4731,
+      "frozen_path": "authoring-frozen/engine-base/pdf_new_prose_native_text_overlap.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_original_graphics_ink.py",
+      "sha256": "b125dc81f5979568fc91042b913fc1d44b1c8bf102c9bf73dd80a97c3cc4ce3a",
+      "bytes": 6650,
+      "frozen_path": "authoring-frozen/engine-base/pdf_original_graphics_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_original_image_ink.py",
+      "sha256": "d424bcc33847aef69c90223d950f3b0f14138b4eccf705a62174635ed1a6ccea",
+      "bytes": 7449,
+      "frozen_path": "authoring-frozen/engine-base/pdf_original_image_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_original_style_audit.py",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+      "bytes": 8492,
+      "frozen_path": "authoring-frozen/engine-base/pdf_original_style_audit.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_original_style_fonts.py",
+      "sha256": "1d2f08fd15556d772558fd824bccd57b26ad2559642a89457202b0a12fba5758",
+      "bytes": 2603,
+      "frozen_path": "authoring-frozen/engine-base/pdf_original_style_fonts.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "bytes": 19178,
+      "frozen_path": "authoring-frozen/engine-base/pdf_original_text_ops.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/pdf_text_motion_ink.py",
+      "sha256": "2e76d46973af939d9fe5511e699cc98dbea8b37d837e2adc5dcd209d13100ca3",
+      "bytes": 2947,
+      "frozen_path": "authoring-frozen/engine-base/pdf_text_motion_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-base/test_pdf_native_image_motion.py",
+      "sha256": "d9cd33cb8b941f0cfbdf2e354a74eabbf04858b34b6bc45331e6c37a40df582b",
+      "bytes": 4017,
+      "frozen_path": "authoring-frozen/engine-base/test_pdf_native_image_motion.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho2003_hybrid_native_prose.py",
+      "sha256": "131ce2801ae8db64455f93deb6a2091272168fc62adbff064c347f60b60812c2",
+      "bytes": 4105,
+      "frozen_path": "authoring-frozen/engine-ts/cpho2003_hybrid_native_prose.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho2003_manual_scan_layout.py",
+      "sha256": "e902f512c4d10a33afbdf1764096f2e13ccd26a51107539fedbe5c8aee9efb0a",
+      "bytes": 5905,
+      "frozen_path": "authoring-frozen/engine-ts/cpho2003_manual_scan_layout.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho2003_ts_actual_donor_style.py",
+      "sha256": "b8b1cd90f3d9fcf14a38c7de4008c4f0d2936e34e4db2502e2c24cebddb0cd1c",
+      "bytes": 9494,
+      "frozen_path": "authoring-frozen/engine-ts/cpho2003_ts_actual_donor_style.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho2003_ts_native_ink.py",
+      "sha256": "4f4140736e38a194be91e5a76c4bd8d198102c1342ae704c66c98fe6511090f7",
+      "bytes": 2342,
+      "frozen_path": "authoring-frozen/engine-ts/cpho2003_ts_native_ink.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho_2003_ts_compose.py",
+      "sha256": "3caa9a5aa5e3036b844477d145978e0b1aece4961a1043c9de3d5b9fc0a9294c",
+      "bytes": 21702,
+      "frozen_path": "authoring-frozen/engine-ts/cpho_2003_ts_compose.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho_2003_ts_poppler_qa.py",
+      "sha256": "767ff7d3244160250e8071a96c9066a4685a0a17bf0edf37ee49fa6b0feb9692",
+      "bytes": 6320,
+      "frozen_path": "authoring-frozen/engine-ts/cpho_2003_ts_poppler_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho_2003_ts_qa.py",
+      "sha256": "bd32706bf69bf023ec704e5eeef608fc5a5e98869984cd5d9d1afca12aa06129",
+      "bytes": 9613,
+      "frozen_path": "authoring-frozen/engine-ts/cpho_2003_ts_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho_2005_ts_compose.py",
+      "sha256": "501ddb645cb2ba0036bf74485b6fde511152e09e5e299021130a2f76a39352ba",
+      "bytes": 18673,
+      "frozen_path": "authoring-frozen/engine-ts/cpho_2005_ts_compose.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho_2005_ts_poppler_qa.py",
+      "sha256": "cd0a8460d7ed4598b62065de56263db833f04cfad2ff1942afae92c2f2554517",
+      "bytes": 5277,
+      "frozen_path": "authoring-frozen/engine-ts/cpho_2005_ts_poppler_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/cpho_2005_ts_qa.py",
+      "sha256": "337f3fb5f43085fd1bfc2adf1e2fd78acc96bbf358c751a0dad289a52d06735a",
+      "bytes": 9268,
+      "frozen_path": "authoring-frozen/engine-ts/cpho_2005_ts_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/pdf_new_prose_outlines.py",
+      "sha256": "5b64e4d427aee21cf07350d6bb0c6886d32e125f00925a78a91d1991cf03e90f",
+      "bytes": 2812,
+      "frozen_path": "authoring-frozen/engine-ts/pdf_new_prose_outlines.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/pdf_original_raster_math.py",
+      "sha256": "9a6670706909dbe36d54db0d0e215156aeb290c0e83ee620607c46fa3624db26",
+      "bytes": 14204,
+      "frozen_path": "authoring-frozen/engine-ts/pdf_original_raster_math.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-ts/pdf_scanned_translation_ink_qa.py",
+      "sha256": "c63550511796b21b586bbabee5e2b776e86f076df6dd3ab8c228db53a423b41d",
+      "bytes": 6419,
+      "frozen_path": "authoring-frozen/engine-ts/pdf_scanned_translation_ink_qa.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-history/cpho2003_ts_native_ink-57a77d5dc796301c696c16b8b521ce70e2c74dc7d74ada6608641ab0393f8f09.py",
+      "sha256": "57a77d5dc796301c696c16b8b521ce70e2c74dc7d74ada6608641ab0393f8f09",
+      "bytes": 2131,
+      "frozen_path": "authoring-frozen/engine-history/cpho2003_ts_native_ink-57a77d5dc796301c696c16b8b521ce70e2c74dc7d74ada6608641ab0393f8f09.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/engine-history/cpho_2003_ts_compose-09c08b788f4b88b52dcf878c75076653868964500ef7eb3009bd26a66a049bcd.py",
+      "sha256": "09c08b788f4b88b52dcf878c75076653868964500ef7eb3009bd26a66a049bcd",
+      "bytes": 21487,
+      "frozen_path": "authoring-frozen/engine-history/cpho_2003_ts_compose-09c08b788f4b88b52dcf878c75076653868964500ef7eb3009bd26a66a049bcd.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/audit-cpho2003-TS-final-receipts-and-closure.py",
+      "sha256": "0b8d201edc9b46c6462d18840fe28dc1e9bbf1c2a24ad1cc4480bd4a0b14f8a8",
+      "bytes": 1379,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2003-TS-final-receipts-and-closure.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/audit-cpho2003-TS-final-style-and-native.py",
+      "sha256": "55cd30092436d8ba7e88fd88a2aac772ab77dd26abba3b2079f57271013ffce3",
+      "bytes": 608,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2003-TS-final-style-and-native.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/audit-cpho2003-TS-targeted-English-successors.py",
+      "sha256": "9b14c8486e045a569cbd1e91260a6f503bde587a71be7aa26ff3614cfbe570e7",
+      "bytes": 3118,
+      "frozen_path": "authoring-frozen/drivers/audit-cpho2003-TS-targeted-English-successors.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-TS-page04.py",
+      "sha256": "52c225cfc6e1e4095c07626ea64159bcd98fa869bc5300760b2b89802a8df4f4",
+      "bytes": 9013,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-TS-page04.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-TS-page05.py",
+      "sha256": "71b9de4092da469a34be5b65ebce82737b3b65a6d706d937b401cd1a16c9b401",
+      "bytes": 10117,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-TS-page05.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-TS-page06.py",
+      "sha256": "a7800dbe02f6fb742e98560a438a25357ffe39fe69c90452528f92fe0949efdc",
+      "bytes": 5939,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-TS-page06.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-TS-page07.py",
+      "sha256": "6e823973baa1b3437af63e45f9130a1dcb504cd82e2f9880e72adf56a1ed4e59",
+      "bytes": 7068,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-TS-page07.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-TS-page08.py",
+      "sha256": "86fad7c578fe8363a216a48b3dfbae6a84a8855676a3474155924725520b1e09",
+      "bytes": 10890,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-TS-page08.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-TS-page09.py",
+      "sha256": "c338467d244d24da0b5d7521db1de819e1a57c2f73691002c53357e964cf14bc",
+      "bytes": 8585,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-TS-page09.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/author-cpho2003-TS-page10.py",
+      "sha256": "2050086514e94bc50151550d7621d8e59f978fc92e302992d22c5bfcfffaffd8",
+      "bytes": 3412,
+      "frozen_path": "authoring-frozen/drivers/author-cpho2003-TS-page10.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/build-cpho2003-scanned-TS-page.py",
+      "sha256": "a4f8c66e026815ed46ce68cc4342f0827ffa9592288bdcbbadc05bddc962a67e",
+      "bytes": 956,
+      "frozen_path": "authoring-frozen/drivers/build-cpho2003-scanned-TS-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/freeze-cpho2003-scanned-TS-m2.py",
+      "sha256": "0a31f694b5450dc31be088099024a7b6d6cc92ad5180109618aacff7642dfefd",
+      "bytes": 12586,
+      "frozen_path": "authoring-frozen/drivers/freeze-cpho2003-scanned-TS-m2.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/freeze-cpho2003-scanned-TS-m3.py",
+      "sha256": "3907cec9cb1a22664e6ad7f771675de0c17590092d740ac9257539fa8d491ace",
+      "bytes": 13955,
+      "frozen_path": "authoring-frozen/drivers/freeze-cpho2003-scanned-TS-m3.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/freeze-cpho2003-scanned-TS.py",
+      "sha256": "45bbd58ed9d62a2bbb33071e7c52b22eb317eba32b33c1174c83592a4513884c",
+      "bytes": 12232,
+      "frozen_path": "authoring-frozen/drivers/freeze-cpho2003-scanned-TS.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/import-cpho2003-TS-parent-final-review.py",
+      "sha256": "63da8404621c5effb45dd9ec5da2f886ec97218f26c47971a25889dc00a5ca18",
+      "bytes": 1294,
+      "frozen_path": "authoring-frozen/drivers/import-cpho2003-TS-parent-final-review.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/inspect-cpho2003-scanned-TS-math-atlas.py",
+      "sha256": "aa2e0ef2d9382fddb22041dd05fe0ea868525ad125bc7ecf131d0474693291d9",
+      "bytes": 1455,
+      "frozen_path": "authoring-frozen/drivers/inspect-cpho2003-scanned-TS-math-atlas.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/negative-cpho2003-TS-actual-bad-pdfs.py",
+      "sha256": "a24bf16e585dcd55ec4cb79f9337df8a5e9c8cc0ab0b4a4e67a51dae7e306736",
+      "bytes": 9998,
+      "frozen_path": "authoring-frozen/drivers/negative-cpho2003-TS-actual-bad-pdfs.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/negative-cpho2003-TS-m2-actual-bad-pdfs.py",
+      "sha256": "da0e6c90b4476c3f2b1896fdc47b28badfcc6ac70f9beebac759fa52729a9f48",
+      "bytes": 9998,
+      "frozen_path": "authoring-frozen/drivers/negative-cpho2003-TS-m2-actual-bad-pdfs.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/package-cpho2003-TS-lossless-pooled.py",
+      "sha256": "a2a4df6633fca02cd29576f25b9b98fa8c03b609ff905d5ec8abb58a95c35f15",
+      "bytes": 5245,
+      "frozen_path": "authoring-frozen/drivers/package-cpho2003-TS-lossless-pooled.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/package-cpho2003-TS-lossless.py",
+      "sha256": "cfdc176e5da3d1f78f98557b3eddc41ae483ffa4e3143cd7ce60207c13981674",
+      "bytes": 3885,
+      "frozen_path": "authoring-frozen/drivers/package-cpho2003-TS-lossless.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/prepare-cpho2003-scanned-TS-engine.py",
+      "sha256": "a4833f86803f560003604af4b7a54eba0c2c0872e53f80543c5be528f20291fc",
+      "bytes": 4930,
+      "frozen_path": "authoring-frozen/drivers/prepare-cpho2003-scanned-TS-engine.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/record-cpho2003-TS-m2-full-visual.py",
+      "sha256": "7a7ce0f3727a292cdcfc7ea0199d54da80a4086b3c0e55dab5eb1dd0590cfea2",
+      "bytes": 3725,
+      "frozen_path": "authoring-frozen/drivers/record-cpho2003-TS-m2-full-visual.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/review-cpho2003-TS-m2-language.py",
+      "sha256": "aa9e38ba98d1f1d5ef15ee6d40390f7883366b01ab9d40209cf0807bc85bdb57",
+      "bytes": 15004,
+      "frozen_path": "authoring-frozen/drivers/review-cpho2003-TS-m2-language.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/stage-cpho2003-scanned-TS-publication.py",
+      "sha256": "386cceb1a1278e32d7f2df519e381c95086e9f895301c08ed8b593fe383c48e1",
+      "bytes": 7571,
+      "frozen_path": "authoring-frozen/drivers/stage-cpho2003-scanned-TS-publication.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/verify-cpho2003-scanned-TS-combined-page.py",
+      "sha256": "12ccd215cc838b1f30f7d9fe942f9383344e0957ce2add0973bb9ad589a6a66f",
+      "bytes": 4242,
+      "frozen_path": "authoring-frozen/drivers/verify-cpho2003-scanned-TS-combined-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/verify-cpho2003-scanned-TS-m2-combined-page.py",
+      "sha256": "0371485d06d0f39e9116e7aae58a8bb5ef7ab19b34feb41082628fdb739c48ef",
+      "bytes": 4277,
+      "frozen_path": "authoring-frozen/drivers/verify-cpho2003-scanned-TS-m2-combined-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/verify-cpho2003-scanned-TS-m3-combined-page.py",
+      "sha256": "db4d17d93fd9594c1c230746608f4af7ef4bfb9379d71bd9b00c77748b4da66f",
+      "bytes": 4277,
+      "frozen_path": "authoring-frozen/drivers/verify-cpho2003-scanned-TS-m3-combined-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/drivers/verify-cpho2003-scanned-TS-page.py",
+      "sha256": "e0b7d780757e43a26a4ba5f234ceec8e2dbe45e942c567dd14c60777f75fffef",
+      "bytes": 858,
+      "frozen_path": "authoring-frozen/drivers/verify-cpho2003-scanned-TS-page.py"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/final-auditor-import-closure.json",
+      "sha256": "e0b15beee6101aaaa2fa6126ff84ceed9cf636aa32a4e3e3c0bc4c5b2937849b",
+      "bytes": 16470,
+      "frozen_path": "authoring-frozen/authoring/final-auditor-import-closure.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/full144-visual-review-complete.json",
+      "sha256": "894ae13c4e910a54a7aa7e952c8b73c915a11753e9e038a2be3f3dface0b24a4",
+      "bytes": 17667,
+      "frozen_path": "authoring-frozen/authoring/full144-visual-review-complete.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/m2-history-byte-identical-storage-dedup.json",
+      "sha256": "985aa7ced6b2dde691a5fc431cfd3a25e6ba72cf226417f54120f2fa091ced55",
+      "bytes": 772818,
+      "frozen_path": "authoring-frozen/authoring/m2-history-byte-identical-storage-dedup.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/m2-linked-prose-width-reviewed.json",
+      "sha256": "927ddc99b2fe2e92e6c47d67af6e55f09a8140898d56e1efc2e95f6d73a89c71",
+      "bytes": 138324,
+      "frozen_path": "authoring-frozen/authoring/m2-linked-prose-width-reviewed.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/m2-page10-prose-antialias-edge-review.json",
+      "sha256": "14535edaf8a7ff2591baa9ce71ed04aa6aceabf95f975da92ad657b05f30bdc3",
+      "bytes": 566,
+      "frozen_path": "authoring-frozen/authoring/m2-page10-prose-antialias-edge-review.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/m2-source-bound-language-review.json",
+      "sha256": "da6fa992b97894248609e01f27180581a7dd347e860d377745b9c72d0e7105b9",
+      "bytes": 4565,
+      "frozen_path": "authoring-frozen/authoring/m2-source-bound-language-review.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page04-layout.json",
+      "sha256": "e37ae2d1a9deabe79fee440345a195db7713d2b628440d6bfdadbac6d503743f",
+      "bytes": 92520,
+      "frozen_path": "authoring-frozen/authoring/page04-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page04.json",
+      "sha256": "9de0f2cbce343a8a30ae8190345264c259e79e82d8128dc21f17b5a2c6620062",
+      "bytes": 964,
+      "frozen_path": "authoring-frozen/authoring/page04.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page05-layout.json",
+      "sha256": "f7a464b6dbde4b19086dda0c509249b482aa0fd676b526ac7a233c76785b7eac",
+      "bytes": 120456,
+      "frozen_path": "authoring-frozen/authoring/page05-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page05-source-semantics.json",
+      "sha256": "3e22250eadfe0391e466038a9d7ddc3543db6a801dfb627b982f9417246c5c0e",
+      "bytes": 6811,
+      "frozen_path": "authoring-frozen/authoring/page05-source-semantics.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page05.json",
+      "sha256": "d7ca051783303a8af30340fb5a7be4b4845ad7bd57040237c201d9b4af1bc7ce",
+      "bytes": 392,
+      "frozen_path": "authoring-frozen/authoring/page05.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page06-layout.json",
+      "sha256": "77c28864559a517301f6d57d2a25891227515fbbd0f9485a46a43681e2aa7ff7",
+      "bytes": 74498,
+      "frozen_path": "authoring-frozen/authoring/page06-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page06-source-semantics.json",
+      "sha256": "840a43cdf22584d59aefe685f0b14f47f5c58cb72c5dac1f0b5fabda6bc0a394",
+      "bytes": 4674,
+      "frozen_path": "authoring-frozen/authoring/page06-source-semantics.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page06.json",
+      "sha256": "0aacfd0c4ee18444464afc1533e6782139e343ee1bb8bb98942eed5cc3a22e09",
+      "bytes": 392,
+      "frozen_path": "authoring-frozen/authoring/page06.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page07-layout.json",
+      "sha256": "172d6b96b9f92a25b69a73f1188a06479f72642c7888ab616b34301db350166d",
+      "bytes": 76109,
+      "frozen_path": "authoring-frozen/authoring/page07-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page07-source-semantics.json",
+      "sha256": "aa2082bb1d759ce4156b8865923820399c035f44b80e4678bc1e118949b83264",
+      "bytes": 5093,
+      "frozen_path": "authoring-frozen/authoring/page07-source-semantics.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page07.json",
+      "sha256": "d942db271644cee0c72e6839a1cefc97f1c935b9940ec0ad1b2ed5033b2923e0",
+      "bytes": 392,
+      "frozen_path": "authoring-frozen/authoring/page07.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page08-layout.json",
+      "sha256": "13ce9fcfb7074b387c7ecebbea0687d0c8d65c0959cf695fd8b67d1e04ed9705",
+      "bytes": 122673,
+      "frozen_path": "authoring-frozen/authoring/page08-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page08-source-semantics.json",
+      "sha256": "88783e21f482cb3d4c008b7d0c6ad9b55ca62fcb31c5b57e388b560f0b38ab9a",
+      "bytes": 6405,
+      "frozen_path": "authoring-frozen/authoring/page08-source-semantics.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page08.json",
+      "sha256": "2ac2e2149f6fa4f961f6d546d29d7c1418ea91438c24e9f3dda2ccbeb2ff0ae8",
+      "bytes": 392,
+      "frozen_path": "authoring-frozen/authoring/page08.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page09-layout.json",
+      "sha256": "2389d0e6c2d0fcb8d0e07c3203c77c8efa16de5c436350155e1d3b53a8af2627",
+      "bytes": 88949,
+      "frozen_path": "authoring-frozen/authoring/page09-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page09-source-semantics.json",
+      "sha256": "f26d83597d80bf1c2383661abc583747112fb39a2a7c67fad2ddef10206f0340",
+      "bytes": 6084,
+      "frozen_path": "authoring-frozen/authoring/page09-source-semantics.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page09.json",
+      "sha256": "545969431150781f3490ce0d90f06a20ebf23793a3e65a5831bebbd8351481cf",
+      "bytes": 392,
+      "frozen_path": "authoring-frozen/authoring/page09.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page10-layout.json",
+      "sha256": "306929e8d98650cb65d80fbfb7f631cde30439389c57d7ebbf0321a9320204ee",
+      "bytes": 5994,
+      "frozen_path": "authoring-frozen/authoring/page10-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page10-source-semantics.json",
+      "sha256": "ee86c4a2bc323c41be2241e1b399c04b69c70267968f90360cb7b7e86b500955",
+      "bytes": 1694,
+      "frozen_path": "authoring-frozen/authoring/page10-source-semantics.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/page10.json",
+      "sha256": "bdc1af70a61122274894abf87e8779fae8deb5bfb1f926f336dc0e9aec526bca",
+      "bytes": 2136,
+      "frozen_path": "authoring-frozen/authoring/page10.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/en/page04-layout.json",
+      "sha256": "e37ae2d1a9deabe79fee440345a195db7713d2b628440d6bfdadbac6d503743f",
+      "bytes": 92520,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/en/page04-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/en/page05-layout.json",
+      "sha256": "f7a464b6dbde4b19086dda0c509249b482aa0fd676b526ac7a233c76785b7eac",
+      "bytes": 120456,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/en/page05-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/en/page06-layout.json",
+      "sha256": "77c28864559a517301f6d57d2a25891227515fbbd0f9485a46a43681e2aa7ff7",
+      "bytes": 74498,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/en/page06-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/en/page07-layout.json",
+      "sha256": "172d6b96b9f92a25b69a73f1188a06479f72642c7888ab616b34301db350166d",
+      "bytes": 76109,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/en/page07-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/en/page08-layout.json",
+      "sha256": "13ce9fcfb7074b387c7ecebbea0687d0c8d65c0959cf695fd8b67d1e04ed9705",
+      "bytes": 122673,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/en/page08-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/en/page09-layout.json",
+      "sha256": "2389d0e6c2d0fcb8d0e07c3203c77c8efa16de5c436350155e1d3b53a8af2627",
+      "bytes": 88949,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/en/page09-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/en/page10-layout.json",
+      "sha256": "306929e8d98650cb65d80fbfb7f631cde30439389c57d7ebbf0321a9320204ee",
+      "bytes": 5994,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/en/page10-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/ko/page04-layout.json",
+      "sha256": "e37ae2d1a9deabe79fee440345a195db7713d2b628440d6bfdadbac6d503743f",
+      "bytes": 92520,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/ko/page04-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/ko/page05-layout.json",
+      "sha256": "f7a464b6dbde4b19086dda0c509249b482aa0fd676b526ac7a233c76785b7eac",
+      "bytes": 120456,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/ko/page05-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/ko/page06-layout.json",
+      "sha256": "77c28864559a517301f6d57d2a25891227515fbbd0f9485a46a43681e2aa7ff7",
+      "bytes": 74498,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/ko/page06-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/ko/page07-layout.json",
+      "sha256": "172d6b96b9f92a25b69a73f1188a06479f72642c7888ab616b34301db350166d",
+      "bytes": 76109,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/ko/page07-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/ko/page08-layout.json",
+      "sha256": "5e62aa79c8dfc2e718452c3b5767c6c0dc90197919934b78e4a58460dec1811c",
+      "bytes": 122675,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/ko/page08-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/ko/page09-layout.json",
+      "sha256": "2389d0e6c2d0fcb8d0e07c3203c77c8efa16de5c436350155e1d3b53a8af2627",
+      "bytes": 88949,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/ko/page09-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs/ko/page10-layout.json",
+      "sha256": "641f0f313462cc5ed8f971b54d0a5923e4c3e3422d1fbfb43d3b00487aa23550",
+      "bytes": 5985,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs/ko/page10-layout.json"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/authoring/proof-inputs-map.json",
+      "sha256": "6a50b2bef3fd0e7ae190bfd1818132954f63a22b4969a00a37bbcc97c82bcac0",
+      "bytes": 7464,
+      "frozen_path": "authoring-frozen/authoring/proof-inputs-map.json"
+    }
+  ],
+  "embedded_new_font_subsets": [
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-0ea80e6f8fbf743d55.ttf",
+      "sha256": "6b5082126ab2f5436b4684ecbfadea8b9da15d04c101a308525ac1ccf264260f",
+      "bytes": 162172,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-0ea80e6f8fbf743d55.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-1573478f780faa680d.ttf",
+      "sha256": "893231d45cd5158bc583674c5fd39468874109bc37bd830d31bb379b45f46b02",
+      "bytes": 201820,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-1573478f780faa680d.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-19142e328c7f45cb39.ttf",
+      "sha256": "f891324c9befa42857616e46b860a9fef57cec8f573e8bcb87f3601a852cafeb",
+      "bytes": 265796,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-19142e328c7f45cb39.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-2b7da16ebb300a0f6c.ttf",
+      "sha256": "b300f0e3d72324e6d23dc3ad64edbd8f3c8e79373ed3d11d676d42cbebf72985",
+      "bytes": 205568,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-2b7da16ebb300a0f6c.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-377f12fc705eb497a1.ttf",
+      "sha256": "e854a97b8c007f303ce785ae3b1596046c199c4a1070cf2443d0028bbdcebf5e",
+      "bytes": 237840,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-377f12fc705eb497a1.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-39c4390f0edf434c30.ttf",
+      "sha256": "7c1b7a41fb73c78ba92bcd1c3d0615373b3fb15254ff96a32214ce177e8a15bf",
+      "bytes": 259984,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-39c4390f0edf434c30.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-60d8386237806c2522.ttf",
+      "sha256": "e3abc6a366780224f309f29f069ac707fd1c7a11846a0e97479ee0219134cb50",
+      "bytes": 162108,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-60d8386237806c2522.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-77b3c4154ebb5c688f.ttf",
+      "sha256": "2f4c1f88674ee28f97460089c6e3a9a3658d4b6b0d95645fc4990542b76d6168",
+      "bytes": 162184,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-77b3c4154ebb5c688f.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-7ae5df947b47252045.ttf",
+      "sha256": "7fe2335e37d79b76e5e355b86892249db146aa244a3b9948e5b937f47fbecada",
+      "bytes": 255768,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-7ae5df947b47252045.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-9910b2d6b8b4ccc108.ttf",
+      "sha256": "fb093258cfcb694ad17f3b50ca9f89a5e39ea4956c3b695812a3b1c721f039eb",
+      "bytes": 197092,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-9910b2d6b8b4ccc108.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-9a742bd7018b438bee.ttf",
+      "sha256": "18222fa254264d70b49b4843a005bd4343be14aea00f9ae74af68ee09880eb5d",
+      "bytes": 162180,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-9a742bd7018b438bee.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-d184ad7a508eea3520.ttf",
+      "sha256": "16707c1f68fed18d907d233138f47e6f895e743456c9d22861cb12728a841798",
+      "bytes": 260604,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-d184ad7a508eea3520.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-f6c64fb8e2ccea32b8.ttf",
+      "sha256": "d56913e86fd48f3e06dbde731c5c4e8bf6e04b3aaa4b754c85502a8006e8a14e",
+      "bytes": 162244,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-f6c64fb8e2ccea32b8.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/batang-fd8fa09a688fadd1ef.ttf",
+      "sha256": "d1148dc6b0e7bdb6e863f6c14a109e4ff0a4642479d6aa499f04e53893125774",
+      "bytes": 254332,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/batang-fd8fa09a688fadd1ef.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimHei-579c367854c31dc7.ttf",
+      "sha256": "ca71a91319399459c1ec316345601651b0242ee9188cdcb91f25e3363fd15aaf",
+      "bytes": 5220,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimHei-579c367854c31dc7.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-0b757b8037ff209d.ttf",
+      "sha256": "b40e311a949c857da9b5e4f934d54ccc3514ff8cdab32987ff7f96a432274ab5",
+      "bytes": 10432,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-0b757b8037ff209d.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-0d0c846be406ad8c.ttf",
+      "sha256": "5b066cf8ef0dc1e4042f3453b65977e76642c39d14abac9def2f0966ec4121d3",
+      "bytes": 19268,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-0d0c846be406ad8c.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-16a978af4657dc64.ttf",
+      "sha256": "170c17a09339e48b7e2619727b62678caaa0b0d618acaa9e13fa784e4facf8de",
+      "bytes": 19288,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-16a978af4657dc64.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-16bcb486648701a7.ttf",
+      "sha256": "0e2ebd2f89e21e4f7b74a6b0bfe6a45d6bb3a7bdb659ec556073955d66ed7622",
+      "bytes": 10268,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-16bcb486648701a7.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-59d5dc9bc6af1d7f.ttf",
+      "sha256": "a37ebb7af640274ca019aa46aaeb0fa09c9dfa1e9b1f9a2712b8219be6c1ff44",
+      "bytes": 241412,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-59d5dc9bc6af1d7f.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-b49d8504f3d1f2f3.ttf",
+      "sha256": "75275e50bae7ee0c0cf80670b04704cbeef2f1a5a979970af75bd873c885cafa",
+      "bytes": 14568,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-b49d8504f3d1f2f3.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-c7bd8132f1eadd47.ttf",
+      "sha256": "3485b25020779e915a5406e8fafa7d34e2d23f65cb51dcfa03352cc5b410feb4",
+      "bytes": 15256,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-c7bd8132f1eadd47.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-d58aefe9a8f04dd1.ttf",
+      "sha256": "47ed4f58ed8de6a732199cd0b921791bd2426725620c8a349d66e546599a7342",
+      "bytes": 10364,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-d58aefe9a8f04dd1.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-ec8fec85ae704238.ttf",
+      "sha256": "a81b6bb7242443d4c7d5c00c28999be715f4affbe25dc68ab0664494da70b5e6",
+      "bytes": 241484,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-ec8fec85ae704238.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-f5caf601909503c9.ttf",
+      "sha256": "4372187f8bbb1c3f40bf6ec7841f848454a96ad8d9a75bcf63b0efecfe639263",
+      "bytes": 240460,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-f5caf601909503c9.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-f757ee13e1ef17be.ttf",
+      "sha256": "18569476ed0ee510a4ea097352f5e48a59b047d015ecbe1e942061faa9e0747c",
+      "bytes": 10460,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-f757ee13e1ef17be.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-f8eb9bbf46399143.ttf",
+      "sha256": "bc83256b448e4622ec06a8119b8bd67980a3981fdf2d3b7f43406171b5e6606b",
+      "bytes": 10400,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-f8eb9bbf46399143.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-fc887e7b8dc5d2f3.ttf",
+      "sha256": "56ea94d61ab61fa9ab81d42b083a79678e1992490a6621ed6548dbaa47404694",
+      "bytes": 15472,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-fc887e7b8dc5d2f3.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-fcaf5670173449fb.ttf",
+      "sha256": "5a0908944761bda0c37ed7eb14ef647ff54422bd066d19e5f95d4c9bf648c2b4",
+      "bytes": 242320,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/CPhO2003TranslationSimSun-fcaf5670173449fb.ttf"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/embedded-new-font-subsets/NotoSansCJKkr-Regular-2cec1c0ef5d0a33f68.ttf",
+      "sha256": "2c4d52ebdbeca58ff653d7f6d7b5cea1b9c1bbc1c73f4572e3a87dfeb8873281",
+      "bytes": 699392,
+      "frozen_path": "authoring-frozen/embedded-new-font-subsets/NotoSansCJKkr-Regular-2cec1c0ef5d0a33f68.ttf"
+    }
+  ],
+  "source_scans": [
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page04-image01.jpeg",
+      "sha256": "9027384f3660db80818b944bf258de50139cd9a2439ca54f857888ac0f2b5f86",
+      "bytes": 126736,
+      "frozen_path": "authoring-frozen/source-image-reading/page04-image01.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page04-image02.jpeg",
+      "sha256": "0f6e4e369b73c89c48fd0b4779a5f78ee573148deb6cdeeb202576a97ea988a3",
+      "bytes": 5997,
+      "frozen_path": "authoring-frozen/source-image-reading/page04-image02.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page04-image03.jpeg",
+      "sha256": "f48d7a68fffc47df53fdbfaa5e20ef373c260e7a4fa30c589381ad2521dc7273",
+      "bytes": 69142,
+      "frozen_path": "authoring-frozen/source-image-reading/page04-image03.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page04-image04.jpeg",
+      "sha256": "579194ec3c20ba0acfb7383d38be42e4ce83ea17259514f4ceaddd3d444753a9",
+      "bytes": 36168,
+      "frozen_path": "authoring-frozen/source-image-reading/page04-image04.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page05-image01.jpeg",
+      "sha256": "941b43e16ce6216f1e6f210d5645310241d1af2adceffacd35a91142b40955a9",
+      "bytes": 16952,
+      "frozen_path": "authoring-frozen/source-image-reading/page05-image01.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page05-image02.jpeg",
+      "sha256": "5069baca6d45cd0d3a18d7898e353a546141b69c3d7ee280267b7f9619343a4f",
+      "bytes": 139786,
+      "frozen_path": "authoring-frozen/source-image-reading/page05-image02.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page05-image03.jpeg",
+      "sha256": "8a3f3f57c1cd564b0e1db54bec543fb2ec7aa4404955e745bb4c857636db952d",
+      "bytes": 24648,
+      "frozen_path": "authoring-frozen/source-image-reading/page05-image03.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page05-image04.jpeg",
+      "sha256": "892c5985628797e92c916a72c85a1779d57436cd53e608562ccb2b7b1f4a6a6a",
+      "bytes": 166499,
+      "frozen_path": "authoring-frozen/source-image-reading/page05-image04.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page06-image01.jpeg",
+      "sha256": "0f33168cef7ee5698d1eadb5e81f010c3208f8e88d9f3bada679217dde228c84",
+      "bytes": 71163,
+      "frozen_path": "authoring-frozen/source-image-reading/page06-image01.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page06-image02.jpeg",
+      "sha256": "23af0aa2127fc88591e841143a1f40e26fcf1fee61a955fdae16db68525a0d30",
+      "bytes": 74321,
+      "frozen_path": "authoring-frozen/source-image-reading/page06-image02.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page06-image03.jpeg",
+      "sha256": "492bf77fac50e6b2b2d84367478568603f5d54a47896aec3a05026ea6ccbe7a9",
+      "bytes": 89936,
+      "frozen_path": "authoring-frozen/source-image-reading/page06-image03.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page06-image04.jpeg",
+      "sha256": "b32d8aff0bb7d8d237812af83780c73656f00e0ec9a588fbdfdbd8ff8c62a74e",
+      "bytes": 20044,
+      "frozen_path": "authoring-frozen/source-image-reading/page06-image04.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page07-image01.jpeg",
+      "sha256": "191a7bdaf66417b8e70f613409a2479d76502494f66dfc37bc85040248a0f083",
+      "bytes": 141924,
+      "frozen_path": "authoring-frozen/source-image-reading/page07-image01.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page07-image02.jpeg",
+      "sha256": "4736b68d16eb90b6f51f90dba0a5730f0537c33c6f824a914bc500ec35297537",
+      "bytes": 206181,
+      "frozen_path": "authoring-frozen/source-image-reading/page07-image02.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page08-image01.jpeg",
+      "sha256": "dc484810c4837a306c87fa4246ead2de3e20cfed3f9e946e6ae6e9e97a5e5e35",
+      "bytes": 74716,
+      "frozen_path": "authoring-frozen/source-image-reading/page08-image01.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page08-image02.jpeg",
+      "sha256": "3cfbaa5efe2c8b7c908120f3f1845fc3921997e85e452e46dda6ccc716647b5e",
+      "bytes": 86969,
+      "frozen_path": "authoring-frozen/source-image-reading/page08-image02.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page08-image03.jpeg",
+      "sha256": "ee024f7c17b92d264d39a3a8cfcea8834789b2ec63cb1d627d895e4e5ec9afc5",
+      "bytes": 83427,
+      "frozen_path": "authoring-frozen/source-image-reading/page08-image03.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page08-image04.jpeg",
+      "sha256": "4c5ed6725421e938d0978554c47fb6de95d3dab8efa6a358735473da965dac56",
+      "bytes": 105712,
+      "frozen_path": "authoring-frozen/source-image-reading/page08-image04.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page09-image01.jpeg",
+      "sha256": "daf631de2b41318844caf7c7c9cd59bea865e9567454ad1cc10193cd20134ae3",
+      "bytes": 171455,
+      "frozen_path": "authoring-frozen/source-image-reading/page09-image01.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page09-image02.jpeg",
+      "sha256": "d7ebfa0f3c5f255066b820dcc13a1918e40c7e5bffd37b99ecf9b79621fdefc1",
+      "bytes": 18479,
+      "frozen_path": "authoring-frozen/source-image-reading/page09-image02.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page09-image03.jpeg",
+      "sha256": "ef33b4ffb6b33bfa07434cd793046cda0e267dfe2f7fde469d7d335401c8211c",
+      "bytes": 160345,
+      "frozen_path": "authoring-frozen/source-image-reading/page09-image03.jpeg"
+    },
+    {
+      "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/source-image-reading/page10-image01.jpeg",
+      "sha256": "ee9c07c01516bbf07b3e468c0d6dcc63b564f43c03e365826b9cede2c26e74f5",
+      "bytes": 38057,
+      "frozen_path": "authoring-frozen/source-image-reading/page10-image01.jpeg"
+    }
+  ],
+  "papers": [
+    {
+      "original_source_crop_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2003-original-native\\TS\\source-image-reading\\page04-original-paper-stain-review.png",
+      "source_crop": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/reviewed-original-paper/page04-original-paper-stain-review.png",
+        "sha256": "3288cb9e958b8b20b079bbdd35a04f1ee6d0cf18d884ad3b4b273184be7fdcd8",
+        "bytes": 19975,
+        "frozen_path": "authoring-frozen/evidence/reviewed-original-paper/page04-original-paper-stain-review.png"
+      }
+    }
+  ],
+  "negative_controls": [
+    {
+      "case": "missing-stationary-original-equation",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/missing-stationary-original-equation.pdf",
+        "sha256": "a81efee8e2c3aeaf4366c0be7196eaf944f2b178e0e0c32ee92b2610f262283b",
+        "bytes": 2540893,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/missing-stationary-original-equation.pdf"
+      },
+      "receipt": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/missing-stationary-original-equation.json",
+        "sha256": "4e4c1ac8283f902172f77a706f7f2a57584e1353bbd1f96a0a68f3f5b262a088",
+        "bytes": 722,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/missing-stationary-original-equation.json"
+      },
+      "raw": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/missing-stationary-original-equation.raw-source-qa.json",
+        "sha256": "bd1eba233cb720bf56235532f7f8769dcbaf19290917e4bd696cb84801fbd7b8",
+        "bytes": 2112,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/missing-stationary-original-equation.raw-source-qa.json"
+      }
+    },
+    {
+      "case": "new-prose-over-original-math",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/new-prose-over-original-math.pdf",
+        "sha256": "1c79c92de09a794650413f4806213d213e7e6d9daee5b2012f8027995bef0076",
+        "bytes": 2540963,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/new-prose-over-original-math.pdf"
+      },
+      "receipt": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/new-prose-over-original-math.json",
+        "sha256": "9a8be6cbe9d66d6c0d1eb5d7b3a866c3f23f76e570826a0cc6d422da9912728f",
+        "bytes": 705,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/new-prose-over-original-math.json"
+      },
+      "raw": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/new-prose-over-original-math.raw-source-qa.json",
+        "sha256": "ff4356eecde55b2f75de5cc28ba7c73963892bd2813c5718fbd2a659ad2fd0b9",
+        "bytes": 2101,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/new-prose-over-original-math.raw-source-qa.json"
+      }
+    },
+    {
+      "case": "wrong-new-prose-point",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/wrong-new-prose-point.pdf",
+        "sha256": "37f1d2128f426d4a456a0e72d9c4980d9805d221c684673885d87719f725489e",
+        "bytes": 2540760,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/wrong-new-prose-point.pdf"
+      },
+      "receipt": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/wrong-new-prose-point.json",
+        "sha256": "3f042f254b852b2ad5f0681a1b0cb3b0fa443d47be575da8525f2c794f64e97c",
+        "bytes": 1130,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/wrong-new-prose-point.json"
+      },
+      "raw": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/wrong-new-prose-point.json",
+        "sha256": "3f042f254b852b2ad5f0681a1b0cb3b0fa443d47be575da8525f2c794f64e97c",
+        "bytes": 1130,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/wrong-new-prose-point.json"
+      }
+    },
+    {
+      "case": "wrong-new-prose-outline",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/wrong-new-prose-outline.pdf",
+        "sha256": "0795745e523f7249647748e31ea23eb9156fe2a23c9cdb428e43ad1a94aff2f7",
+        "bytes": 2540722,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/wrong-new-prose-outline.pdf"
+      },
+      "receipt": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/wrong-new-prose-outline.json",
+        "sha256": "c16663417cdac44a576314a939d1faa56cb1e6dbc888c400053b850d80c6a0ee",
+        "bytes": 765,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/wrong-new-prose-outline.json"
+      },
+      "raw": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/wrong-new-prose-outline.json",
+        "sha256": "c16663417cdac44a576314a939d1faa56cb1e6dbc888c400053b850d80c6a0ee",
+        "bytes": 765,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/wrong-new-prose-outline.json"
+      }
+    },
+    {
+      "case": "missing-original-native-subscript",
+      "fixture": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/missing-original-native-subscript.pdf",
+        "sha256": "102118f74bc7d19bc7868b4f48dc7541193822c9b15daec045ff2d41b153fe47",
+        "bytes": 786971,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/missing-original-native-subscript.pdf"
+      },
+      "receipt": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/missing-original-native-subscript.json",
+        "sha256": "9dec252458b09c3b7549dab6ff6d5e43f4c72a2926e9dc5870e4e5722a9f1503",
+        "bytes": 2954,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/missing-original-native-subscript.json"
+      },
+      "raw": {
+        "path": "tools/ko/cpho/2003/ts/scanned-solutions-original-v1/frozen/authoring-frozen/evidence/negative-controls/missing-original-native-subscript.raw-native-ink.json",
+        "sha256": "0986529daf3b1ed9f6b97e8c2636cb2efe239347703523cdc51013f9e9608f59",
+        "bytes": 1698,
+        "frozen_path": "authoring-frozen/evidence/negative-controls/missing-original-native-subscript.raw-native-ink.json"
+      }
+    }
+  ]
+}

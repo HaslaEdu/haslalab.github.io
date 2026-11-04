@@ -72,6 +72,10 @@ for (const item of published) {
     require('./helpers/cpho2003-native-inline-publication.cjs')(root, qa, item);
     continue;
   }
+  if (item.audit_schema === 'cpho2003-scanned-solutions-original-v1') {
+    require('./helpers/cpho2003-scanned-solutions-publication.cjs')(root, qa, item);
+    continue;
+  }
   if (item.audit_schema === 'cpho2008-native-bilingual-original-v1') {
     require('./helpers/cpho2008-native-bilingual-publication.cjs')(root, qa, item);
     continue;
