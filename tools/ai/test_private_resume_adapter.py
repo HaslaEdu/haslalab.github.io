@@ -311,8 +311,8 @@ class ResumeTests(unittest.TestCase):
                 self.compare(raw, bad)
         path = self.root / 'fixture.safetensors'
         path.write_bytes(raw)
-        with self.assertRaisesRegex(resume.ResumeError, 'solver_rank_required'):
-            resume.compare_lora_b(path, path, 8)
+        with self.assertRaisesRegex(resume.ResumeError, 'unsupported_continuation_rank'):
+            resume.compare_lora_b(path, path, 15)
 
     def test_moe_3d_and_folded_pairs_have_strict_rank_shapes(self):
         for a_shape, b_shape in (([2, 16, 1], [2, 1, 16]), ([32, 1], [1, 32])):

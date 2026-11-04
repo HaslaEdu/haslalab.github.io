@@ -1,4 +1,4 @@
-"""Pinned private QwQ LoRA inputs and relative CPU update evidence.
+"""Pinned private role-specific LoRA inputs and relative CPU update evidence.
 
 No SDK imports, uploads, model imports, environment credentials, or training.
 Continuing a saved LoRA via Unsloth restores adapter weights with a fresh
@@ -26,6 +26,8 @@ MAX_HEADER_BYTES = 8 * 1024**2
 CHUNK = 1024**2
 QWQ_BASES = frozenset(('Qwen/QwQ-32B', 'unsloth/QwQ-32B', 'unsloth/QwQ-32B-bnb-4bit',
                        'unsloth/QwQ-32B-unsloth-bnb-4bit'))
+GEMMA_BASES = frozenset(('google/gemma-4-26B-A4B-it', 'unsloth/gemma-4-26B-A4B-it',
+                        'unsloth/Gemma-4-26B-A4B-it'))
 SHA = re.compile(r'[0-9a-f]{64}\Z')
 ID = re.compile(r'[0-9]{1,32}\Z')
 ENTITY = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,127}\Z')
@@ -75,16 +77,31 @@ def _sha_file(path):
 
 
 def _config(config):
-    require(isinstance(config, dict) and config.get('role') == 'solver'
-            and config.get('base_model') == 'Qwen/QwQ-32B'
-            and type(config.get('default_rank')) is int and config['default_rank'] == 16,
-            'solver_configuration_required')
+    require(isinstance(config, dict), 'role_configuration_required')
+    role = config.get('role')
+    if role == 'solver':
+        allowed, base, rank = QWQ_BASES, 'Qwen/QwQ-32B', 16
+    elif role == 'chat':
+        allowed, base, rank = GEMMA_BASES, 'google/gemma-4-26B-A4B-it', 8
+        require(config.get('training_profile') == 'gemma-26b-qlora-v1'
+                and config.get('precision') == '4bit' and config.get('training_method') == 'qlora'
+                and config.get('load_in_4bit') is True and config.get('load_in_16bit') is False,
+                'gemma_nf4_configuration_required')
+    else:
+        raise ResumeError('role_configuration_required')
+    require(config.get('base_model') == base and type(config.get('default_rank')) is int
+            and config['default_rank'] == rank, 'role_configuration_required')
     aliases = config.get('base_aliases')
     require(isinstance(aliases, list) and aliases
-            and all(isinstance(value, str) and value in QWQ_BASES for value in aliases)
+            and all(isinstance(value, str) and value in allowed for value in aliases)
             and len(set(aliases)) == len(aliases)
-            and config['base_model'] in aliases, 'solver_configuration_required')
+            and config['base_model'] in aliases, 'role_configuration_required')
     return set(aliases)
+
+
+def validate_role_config(config):
+    """Reject cross-role/base/rank/profile settings before any adapter I/O."""
+    return _config(config)
 
 
 def validate_spec(spec, roleconfig):
@@ -95,14 +112,14 @@ def validate_spec(spec, roleconfig):
     require(isinstance(spec, dict) and required <= set(spec)
             and set(spec) <= required | {'prior_verification_run_id'}, 'invalid_continuation_spec')
     require(spec['kind'] == KIND and type(spec['version']) is int and spec['version'] == 1
-            and spec['role'] == 'solver' and isinstance(spec['base_model'], str) and spec['base_model'] in aliases
-            and type(spec['rank']) is int and spec['rank'] == 16, 'invalid_continuation_spec')
+            and spec['role'] == roleconfig['role'] and isinstance(spec['base_model'], str) and spec['base_model'] in aliases
+            and type(spec['rank']) is int and spec['rank'] == roleconfig['default_rank'], 'invalid_continuation_spec')
     require(isinstance(spec['source_training_run_id'], str) and ID.fullmatch(spec['source_training_run_id'])
             and isinstance(spec['entity'], str) and ENTITY.fullmatch(spec['entity']), 'invalid_source_identity')
     prior = spec.get('prior_verification_run_id')
     require(prior is None or isinstance(prior, str) and ID.fullmatch(prior), 'invalid_prior_verification_id')
     expected = (spec['entity'] + '/' + PROJECT + '/hasla-private-books-'
-                + spec['source_training_run_id'] + '-solver-lora:')
+                + spec['source_training_run_id'] + '-' + spec['role'] + '-lora:')
     reference = spec['artifact']
     require(isinstance(reference, str) and reference.startswith(expected)
             and re.fullmatch(r'v[0-9]+', reference[len(expected):]), 'invalid_source_artifact')
@@ -165,13 +182,17 @@ def _entry(entry, row):
             and entry.size == row['bytes'], 'source_artifact_entry_invalid')
 
 
-def _peft(path, aliases):
+def _peft(path, aliases, rank):
     require(0 < path.stat().st_size <= MAX_CONFIG_BYTES, 'source_config_size_limit')
     value = _json(path.read_bytes())
     require(isinstance(value, dict) and value.get('peft_type') == 'LORA', 'source_adapter_type_invalid')
     require(value.get('base_model_name_or_path') in aliases, 'source_adapter_base_mismatch')
-    require(type(value.get('r')) is int and value['r'] == 16, 'source_adapter_rank_mismatch')
+    require(type(value.get('r')) is int and value['r'] == rank, 'source_adapter_rank_mismatch')
     require(not value.get('rank_pattern'), 'source_rank_pattern_unsupported')
+    if rank == 8:
+        initializer = value.get('init_lora_weights', True)
+        require(initializer is True or type(initializer) is str and initializer == 'gaussian',
+                'source_gemma_initializer_unsupported')
 
 
 def download_initial_adapter(spec, config, root, api, privacy_callback):
@@ -195,11 +216,15 @@ def download_initial_adapter(spec, config, root, api, privacy_callback):
                     and artifact.state == 'COMMITTED' and not getattr(artifact, 'is_link', False), 'source_artifact_identity_mismatch')
             metadata = artifact.metadata
             require(isinstance(metadata, dict) and metadata.get('private') is True
-                    and metadata.get('role') == 'solver' and metadata.get('base_model') == spec['base_model']
-                    and type(metadata.get('rank')) is int and metadata['rank'] == 16
+                    and metadata.get('role') == spec['role'] and metadata.get('base_model') == spec['base_model']
+                    and type(metadata.get('rank')) is int and metadata['rank'] == spec['rank']
                     and metadata.get('adapter_sha256') == spec['adapter_inventory_sha256']
                     and metadata.get('adapter_inventory_sha256', spec['adapter_inventory_sha256']) == spec['adapter_inventory_sha256'],
                     'source_artifact_metadata_mismatch')
+            if spec['role'] == 'chat':
+                require(metadata.get('training_profile') == 'gemma-26b-qlora-v1'
+                        and metadata.get('precision') == '4bit' and metadata.get('training_method') == 'qlora',
+                        'source_artifact_profile_mismatch')
             entries = artifact.manifest.entries
             require(isinstance(entries, dict) and set(entries) == set(FILES), 'source_artifact_files_mismatch')
             for row in spec['files']:
@@ -221,10 +246,10 @@ def download_initial_adapter(spec, config, root, api, privacy_callback):
                 target = root / row['name']
                 os.link(path, target)
                 owned.append(target)
-        _peft(root / FILES[0], aliases)
+        _peft(root / FILES[0], aliases, spec['rank'])
         _private(privacy_callback, spec['entity'])
         require(set(p.name for p in root.iterdir()) == set(FILES), 'downloaded_adapter_extra_files')
-        return {'path': str(root), 'role': 'solver', 'base_model': spec['base_model'], 'rank': 16,
+        return {'path': str(root), 'role': spec['role'], 'base_model': spec['base_model'], 'rank': spec['rank'],
                 'artifact': spec['artifact'], 'source_training_run_id': spec['source_training_run_id'],
                 'files': spec['files'], 'adapter_inventory_sha256': spec['adapter_inventory_sha256'],
                 'integrity_verified': True, 'relative_weight_change_verified': False,
@@ -244,7 +269,7 @@ def download_initial_adapter(spec, config, root, api, privacy_callback):
 
 
 def _layout(path, rank):
-    require(type(rank) is int and rank == 16, 'solver_rank_required')
+    require(type(rank) is int and rank in (8, 16), 'unsupported_continuation_rank')
     path = Path(path)
     require(not path.is_symlink() and path.is_file() and 8 < path.stat().st_size <= MAX_ADAPTER_BYTES, 'safetensors_size_limit')
     with path.open('rb') as stream:

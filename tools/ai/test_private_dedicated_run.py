@@ -259,6 +259,20 @@ class DedicatedGpuTests(unittest.TestCase):
         self.assertLessEqual(ledger.prior_spend_krw + ledger.reserved_krw + 5000, 100000)
         self.assertEqual(state.trace.count(('GET', '/pods')), 2)
 
+    def test_parallel_long_chat_requires_exact_qlora_profile_and_reserves_full_cap(self):
+        self.opt_in_sibling()
+        self.manifest['roles']['chat']['runtime_seconds'] = 3600
+        self.sync_manifest()
+        with self.assertRaises(ValueError):
+            runner.sibling_allowance(os.environ, self.manifest)
+        self.manifest['roles']['chat']['training_profile'] = 'gemma-26b-qlora-v1'
+        self.sync_manifest()
+        self.assertEqual(runner.sibling_allowance(os.environ, self.manifest)['run_id'], '11111')
+        for seconds in (3599, 3601, True, '3600'):
+            self.manifest['roles']['chat']['runtime_seconds'] = seconds
+            with self.subTest(seconds=seconds), self.assertRaises(ValueError):
+                runner.sibling_allowance(os.environ, self.manifest)
+
     def test_legacy_default_still_rejects_any_earlier_private_pod(self):
         old = {'id': 'fixtureOld', 'name': 'hasla-private-books-11111-solver'}
         with self.ready(existing=[old]) as state, self.assertRaisesRegex(RuntimeError, 'earlier private Pod'):

@@ -303,9 +303,14 @@ def gemma_first_step_callback(callback_type, summary, torch_module):
 
 
 def initial_adapter(path, config, rank, output):
-    """Accept only a private, unchanged QwQ adapter; reset no model weights."""
-    if config['role'] != 'solver' or rank != config['default_rank']:
-        raise ValueError('continued adapter training requires the fixed solver contract')
+    """Accept a private adapter matching the fixed role/base/rank/profile."""
+    from private_resume_adapter import ResumeError, validate_role_config
+    try:
+        validate_role_config(config)
+    except ResumeError:
+        raise ValueError('continued adapter training requires the fixed role contract') from None
+    if rank != config['default_rank']:
+        raise ValueError('continued adapter training requires the fixed role contract')
     path = private_adapter_output(path)
     output = private_adapter_output(output)
     if path.is_relative_to(output) or output.is_relative_to(path) or not path.is_dir():
@@ -317,7 +322,11 @@ def initial_adapter(path, config, rank, output):
     peft = json.loads((path / 'adapter_config.json').read_text(encoding='utf8'))
     if (peft.get('base_model_name_or_path') not in config['base_aliases'] or peft.get('peft_type') != 'LORA'
             or type(peft.get('r')) is not int or peft['r'] != rank or peft.get('rank_pattern')):
-        raise ValueError('initial adapter does not match the fixed solver contract')
+        raise ValueError('initial adapter does not match the fixed role contract')
+    if config['role'] == 'chat':
+        initializer = peft.get('init_lora_weights', True)
+        if not (initializer is True or type(initializer) is str and initializer == 'gaussian'):
+            raise ValueError('Gemma continuation cannot alter the base through an alternate initializer')
     return path, file_sha256(path / 'adapter_model.safetensors')
 
 
@@ -330,6 +339,62 @@ def validate_loaded_adapter_trainability(model):
             active.append(name)
     if not any('.lora_A.' in '.' + name for name in active) or not any('.lora_B.' in '.' + name for name in active):
         raise ValueError('loaded adapter has no trainable LoRA A/B parameters')
+
+
+def attach_gemma_continuation(model, path, loader):
+    """Follow FastModel's saved-adapter path; never initialize a new LoRA.
+
+    Official implementation: unsloth/models/loader.py FastModel.from_pretrained
+    registers grouped experts, handles ClippableLinear, then post-patches PEFT.
+    """
+    from peft import PeftModel
+    from peft.tuners.lora.model import LoraModel
+    from transformers.models.gemma4.modeling_gemma4 import Gemma4ClippableLinear
+    from unsloth.models.grouped_linear_lora import register_grouped_linear_lora_for_adapter
+    if not callable(getattr(loader, 'post_patch_model', None)):
+        raise ValueError('official Gemma saved-adapter post-patch is unavailable')
+    grouped = register_grouped_linear_lora_for_adapter(model, str(path), local_files_only=True)
+    options = {'is_trainable': True, 'local_files_only': True, 'trust_remote_code': False}
+    if grouped is not None:
+        options['config'] = grouped
+    original = LoraModel._create_and_replace
+    def replace(self, peft_config, adapter_name, target, target_name, parent, current_key=None, **kwargs):
+        if isinstance(target, Gemma4ClippableLinear):
+            return original(self, peft_config, adapter_name, target.linear, 'linear', target,
+                            current_key=current_key, **kwargs)
+        return original(self, peft_config, adapter_name, target, target_name, parent,
+                        current_key=current_key, **kwargs)
+    LoraModel._create_and_replace = replace
+    try:
+        model = PeftModel.from_pretrained(model, str(path), **options)
+    finally:
+        LoraModel._create_and_replace = original
+    return loader.post_patch_model(model, use_gradient_checkpointing='unsloth', trust_remote_code=False)
+
+
+def gemma_continuation_expert_snapshot(model, params4bit_type):
+    proof = gemma_quantized_expert_proof(model, params4bit_type)
+    weights = tuple(getattr(block, name) for block in model.modules()
+                    if type(block).__name__ == 'Gemma4TextExperts' for name in ('gate_up_proj', 'down_proj'))
+    return proof, weights
+
+
+def verify_retained_gemma_experts(model, weights, params4bit_type):
+    # PEFT may wrap/parametrize the expert class. Its original frozen NF4
+    # parameters must still be present; do not mistake a wrapper for BF16.
+    retained = {id(p) for p in model.parameters()}
+    if len(weights) != 60 or len({id(p) for p in weights}) != 60:
+        raise ValueError('Gemma continuation expert snapshot is incomplete')
+    for weight in weights:
+        state = getattr(weight, 'quant_state', None)
+        logical = getattr(weight, '_original_shape', getattr(state, 'shape', ()))
+        if (id(weight) not in retained or not isinstance(weight, params4bit_type)
+                or state is None or getattr(state, 'quant_type', None) != 'nf4'
+                or weight.requires_grad or getattr(weight.device, 'type', None) != 'cuda'
+                or getattr(weight.device, 'index', None) != 0
+                or tuple(logical or ()) not in ((128, 1408, 2816), (128, 2816, 704))
+                or weight.numel() * weight.element_size() > math.prod(logical)):
+            raise ValueError('Gemma continuation changed a frozen packed NF4 expert')
 
 
 def choose_loader(unsloth_module, config):
@@ -624,7 +689,7 @@ def main(argv=None):
     ap.add_argument('--max-steps', type=int, default=-1, help='bound a first GPU experiment; -1 uses epochs')
     ap.add_argument('--progress-json', help='private numeric-only progress file for the supervising worker')
     ap.add_argument('--train-wall-seconds', type=int, help='stop cleanly after a completed optimizer step, leaving time to save')
-    ap.add_argument('--resume-adapter', help='continue a pinned private solver adapter with a fresh optimizer')
+    ap.add_argument('--resume-adapter', help='continue a pinned private role adapter with a fresh optimizer')
     ap.add_argument('--assistant-only-loss', choices=('auto', 'required', 'off'), default='auto',
                     help='use only officially supported generation masks for chat; never handcraft masks')
     a = ap.parse_args(argv)
@@ -682,7 +747,7 @@ def main(argv=None):
         torch.cuda.reset_peak_memory_stats(0)
     loader = choose_loader(unsloth, config)
     options = loader_kwargs(config, a.max_len, torch.bfloat16)
-    canonical_continuation = initial_path is not None and a.training_profile == QWQ_32B_QLORA_48GB_V1
+    canonical_continuation = initial_path is not None and a.training_profile in (GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1)
     if initial_path and not canonical_continuation:
         options['model_name'] = str(initial_path)
     model, tok = loader.from_pretrained(**options)
@@ -691,21 +756,31 @@ def main(argv=None):
         tok, formatter = configure_gemma_formatter(tok, train, held, summary['validation_sha256'],
                                                    official_chat_templates, version('unsloth'))
         summary['formatter_provenance'] = formatter
+    original_experts = None
+    if initial_path and a.training_profile == GEMMA_26B_QLORA_V1:
+        proof, original_experts = gemma_continuation_expert_snapshot(model, Params4bit)
+        summary.update(proof)
     if canonical_continuation:
         # An adapter's recorded alias may name a dynamic quant. Load the exact
-        # Qwen base above, then attach the unchanged original private adapter.
+        # original role base above, then attach the unchanged private adapter.
         # Match Unsloth's own adapter loader: PEFT attach followed by its k-bit
         # training patch, never get_peft_model (which could initialize anew).
         # https://github.com/unslothai/unsloth/blob/main/unsloth/models/loader.py
-        from peft import PeftModel
-        model = PeftModel.from_pretrained(model, str(initial_path), is_trainable=True, local_files_only=True)
-        model = loader.patch_peft_model(model, use_gradient_checkpointing='unsloth')
+        if a.training_profile == GEMMA_26B_QLORA_V1:
+            model = attach_gemma_continuation(model, initial_path, loader)
+        else:
+            from peft import PeftModel
+            model = PeftModel.from_pretrained(model, str(initial_path), is_trainable=True, local_files_only=True)
+            model = loader.patch_peft_model(model, use_gradient_checkpointing='unsloth')
         if (file_sha256(initial_path / 'adapter_config.json') != initial_config_sha
                 or file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha):
             raise ValueError('initial adapter files changed while attaching continuation')
     if a.training_profile == GEMMA_26B_QLORA_V1:
         summary.update(gemma_single_gpu_proof(torch, model))
-        summary.update(gemma_quantized_expert_proof(model, Params4bit))
+        if original_experts is not None:
+            verify_retained_gemma_experts(model, original_experts, Params4bit)
+        else:
+            summary.update(gemma_quantized_expert_proof(model, Params4bit))
     if initial_path:
         validate_loaded_adapter_trainability(model)
     else:
@@ -762,7 +837,13 @@ def main(argv=None):
         if summary['label_diagnostics']['selected_template_sha256'] != formatter['selected_template_sha256']:
             raise ValueError('trainer changed the reviewed Gemma formatter')
         if held:
-            summary['baseline_evaluation'] = evaluate_fresh_gemma_baseline(trainer, model, summary['validation_sha256'], len(held))
+            if initial_path:
+                summary['baseline_evaluation'] = {'version': 1, 'baseline_eval_loss': None,
+                    'baseline_method': 'continued_adapter_baseline_not_measured_v1',
+                    'same_validation_sha256': summary['validation_sha256'], 'validation_records': len(held),
+                    'initial_adapter_model_sha256': initial_sha, 'reason': 'nonzero_adapter_continuation'}
+            else:
+                summary['baseline_evaluation'] = evaluate_fresh_gemma_baseline(trainer, model, summary['validation_sha256'], len(held))
     if a.training_profile:
         from transformers import TrainerCallback
         gemma_single_gpu_proof(torch, model)

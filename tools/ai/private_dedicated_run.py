@@ -19,7 +19,7 @@ from training_budget import BudgetError, PodQuote, RunPlan, reserve_run, settle_
 
 # One explicitly reviewed private sibling specification; no provider identifier
 # or wildcard allowlist is published. Any later sibling requires a new review.
-SIBLING_SPEC_SHA256 = '987a632e27ebcbf2b0984b832c3cda0fc256192145ee2a04ae9c56f0b97e3708'
+SIBLING_SPEC_SHA256 = '4a686ad2e440344e2a66f30104ffdf8cdd12f151d101468578b0c4b47e7b6f03'
 
 
 def sibling_allowance(env, manifest):
@@ -40,8 +40,10 @@ def sibling_allowance(env, manifest):
     keys = {'version', 'run_id', 'role', 'pod_id', 'pod_name', 'gpu_id', 'gpu_count',
             'runtime_cap_seconds', 'cleanup_grace_seconds', 'gpu_usd_per_hour_upper', 'reserved_upper_krw'}
     if (type(spec) is not dict or set(spec) != keys or workflow_role != 'chat' or roles != ['chat']
-            or manifest['roles']['chat'].get('runtime_seconds') != 1800):
-        raise ValueError('parallel allowance requires one explicit 1800-second chat run')
+            or manifest['roles']['chat'].get('runtime_seconds') not in (1800, 3600)
+            or (manifest['roles']['chat'].get('runtime_seconds') == 3600
+                and manifest['roles']['chat'].get('training_profile') != 'gemma-26b-qlora-v1')):
+        raise ValueError('parallel allowance requires one bounded dedicated chat run')
     for key in ('version', 'gpu_count', 'runtime_cap_seconds', 'cleanup_grace_seconds', 'reserved_upper_krw'):
         if type(spec[key]) is not int or spec[key] <= 0:
             raise ValueError('invalid sibling numeric field')

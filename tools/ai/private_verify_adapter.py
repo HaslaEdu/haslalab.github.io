@@ -36,6 +36,9 @@ CONFIG_LIMIT = 1024**2
 HEADER_LIMIT = 8 * 1024**2
 QUERY_LIMIT = 1024**2
 CHUNK = 1024**2
+# The reviewed rank16-only helper used by the already-running book job.
+# This compatibility pin never permits a Gemma adapter or an unknown helper.
+LEGACY_QWQ_CONTINUATION_HELPER_SHA256 = '15d3b84b9f74db78d126157eac2671c79ade1b85591d40795c743253a262f23d'
 DTYPES = {"F32": (4, "I", 0x7F800000, 0x7FFFFFFF),
           "F16": (2, "H", 0x7C00, 0x7FFF),
           "BF16": (2, "H", 0x7F80, 0x7FFF)}
@@ -259,6 +262,21 @@ def validated_gemma_receipts(report, role, profile, training_records, validation
     clean = {'formatter_provenance': dict(value)}
     if 'baseline_evaluation' in report:
         baseline = report['baseline_evaluation']
+        if isinstance(baseline, dict) and baseline.get('baseline_method') == 'continued_adapter_baseline_not_measured_v1':
+            required = {'version', 'baseline_eval_loss', 'baseline_method', 'same_validation_sha256',
+                        'validation_records', 'initial_adapter_model_sha256', 'reason'}
+            initial_sha = report.get('initial_adapter_model_sha256')
+            if (set(baseline) != required or type(baseline.get('version')) is not int or baseline['version'] != 1
+                    or baseline['baseline_eval_loss'] is not None or not validation_records
+                    or baseline['same_validation_sha256'] != digest
+                    or type(baseline['validation_records']) is not int or baseline['validation_records'] != validation_records
+                    or not isinstance(initial_sha, str) or not re.fullmatch(r'[0-9a-f]{64}', initial_sha)
+                    or baseline['initial_adapter_model_sha256'] != initial_sha
+                    or baseline['reason'] != 'nonzero_adapter_continuation'
+                    or report.get('optimizer_state_restored') is not False):
+                raise ValueError('invalid_gemma_receipts')
+            clean['baseline_evaluation'] = dict(baseline)
+            return clean
         required = {'version', 'baseline_eval_loss', 'baseline_method', 'same_validation_sha256', 'validation_records', 'zero_b_tensors'}
         if (not isinstance(baseline, dict) or set(baseline) != required
                 or type(baseline['version']) is not int or baseline['version'] != 1
@@ -274,6 +292,9 @@ def validated_gemma_receipts(report, role, profile, training_records, validation
         raise ValueError('invalid_gemma_receipts')
     return clean
 def expected_result(result, entity, run_id, role):
+    baseline = result.get('baseline_evaluation')
+    if isinstance(baseline, dict) and baseline.get('baseline_method') == 'continued_adapter_baseline_not_measured_v1':
+        require(isinstance(result.get('initial_adapter'), dict), 'continuation_contract_invalid')
     try:
         validated_gemma_receipts(result, role, result.get('training_profile'),
                                  result.get('training_records'), result.get('validation_records'))
@@ -592,12 +613,18 @@ def verify_role(reader, api, entity, run_id, role, root):
                   steps_completed=result["steps_completed"], base_model=result['base_model'], rank=result['rank'],
                   adapter_files=inventory, adapter_inventory_sha256=result['adapter_sha256'])
     if initial is not None:
-        require(role == 'solver' and result.get('optimizer_state_restored') is False
+        require(role in ('solver', 'chat') and result.get('optimizer_state_restored') is False
                 and metadata.get('optimizer_state_restored') is False, 'continuation_contract_invalid')
         import private_resume_adapter as continuation
-        require(result.get('resume_script_sha256') == sha_file(Path(continuation.__file__)), 'continuation_helper_pin_mismatch')
+        helper_pin = result.get('resume_script_sha256')
+        legacy_solver = (role == 'solver' and result.get('rank') == 16
+                         and result.get('base_model') in get_role_config('solver')['base_aliases']
+                         and helper_pin == LEGACY_QWQ_CONTINUATION_HELPER_SHA256)
+        require(helper_pin == sha_file(Path(continuation.__file__)) or legacy_solver,
+                'continuation_helper_pin_mismatch')
         try:
-            spec = continuation.validate_spec(initial, get_role_config(role))
+            config = get_role_config(role, result.get('training_profile'))
+            spec = continuation.validate_spec(initial, config)
             require(spec['entity'] == entity and result.get('initial_adapter_model_sha256') == spec['files'][1]['sha256'],
                     'continuation_source_mismatch')
             def checked_initial_privacy(requested):
@@ -605,7 +632,7 @@ def verify_role(reader, api, entity, run_id, role, root):
                 reader.assert_private(entity)
                 return True
             baseline = root.parent / (role + '-initial')
-            continuation.download_initial_adapter(spec, get_role_config(role), baseline, api, checked_initial_privacy)
+            continuation.download_initial_adapter(spec, config, baseline, api, checked_initial_privacy)
             evidence = continuation.compare_lora_b(baseline / FILES[1], root / FILES[1], rank=result['rank'])
         except continuation.ResumeError:
             raise VerificationError('continuation_verification_failed') from None
@@ -631,8 +658,8 @@ def verify_role(reader, api, entity, run_id, role, root):
 
 def verify(run_id, roles, env=None, reader_factory=PrivateReader, sdk_factory=sdk_reader, *, continuation_inventory=False):
     selected = validate_arguments(run_id, roles)
-    require(type(continuation_inventory) is bool and (not continuation_inventory or selected == ['solver']),
-            'continuation_inventory_requires_solver')
+    require(type(continuation_inventory) is bool and (not continuation_inventory or selected in (['solver'], ['chat'])),
+            'continuation_inventory_requires_single_role')
     key = credentials(os.environ if env is None else env)
     reader = reader_factory(key)
     entity = reader.entity()
@@ -671,7 +698,7 @@ def main(argv=None):
         parser.add_argument("--run-id", required=True)
         parser.add_argument("--roles", default="chat,solver")
         parser.add_argument('--continuation-inventory', action='store_true',
-                            help='explicit solver-only export of file digests for the next pinned continuation')
+                            help='explicit single-role export of file digests for the next pinned continuation')
         args = parser.parse_args(argv)
         event = verify(args.run_id, args.roles, continuation_inventory=args.continuation_inventory)
     except VerificationError as error:

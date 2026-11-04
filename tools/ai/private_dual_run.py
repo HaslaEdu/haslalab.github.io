@@ -260,9 +260,9 @@ def load_inputs(env):
         initial = manifest['roles'][role].get('initial_adapter')
         if initial is not None:
             from private_resume_adapter import validate_spec
-            if role != 'solver' or not re.fullmatch(r'[a-f0-9]{64}', manifest.get('resume_script_sha256', '')):
-                raise ValueError('continuation requires a solver adapter and pinned helper')
-            manifest['roles'][role]['initial_adapter'] = validate_spec(initial, get_role_config(role))
+            if not re.fullmatch(r'[a-f0-9]{64}', manifest.get('resume_script_sha256', '')):
+                raise ValueError('continuation requires a role-specific adapter and pinned helper')
+            manifest['roles'][role]['initial_adapter'] = validate_spec(initial, get_role_config(role, manifest['roles'][role].get('training_profile')))
     for key in ('train_script_sha256', 'role_config_sha256', 'pod_script_sha256', 'dual_pod_sha256'):
         if not re.fullmatch(r'[a-f0-9]{64}', manifest.get(key, '')):
             raise ValueError('pinned code checksums are required')
@@ -357,7 +357,7 @@ def verify_staged_inputs(manifest, payloads, env, entity):
                         raise ValueError('initial adapter project is not PRIVATE')
                     return True
                 for role in initial_roles:
-                    download_initial_adapter(manifest['roles'][role]['initial_adapter'], get_role_config(role),
+                    download_initial_adapter(manifest['roles'][role]['initial_adapter'], get_role_config(role, manifest['roles'][role].get('training_profile')),
                         Path(directory) / (role + '-initial'), api, checked_privacy)
 
 

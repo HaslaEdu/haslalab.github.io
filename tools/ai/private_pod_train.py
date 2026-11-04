@@ -518,6 +518,21 @@ def validated_gemma_receipts(report, role, profile, training_records, validation
     clean = {'formatter_provenance': dict(value)}
     if 'baseline_evaluation' in report:
         baseline = report['baseline_evaluation']
+        if isinstance(baseline, dict) and baseline.get('baseline_method') == 'continued_adapter_baseline_not_measured_v1':
+            required = {'version', 'baseline_eval_loss', 'baseline_method', 'same_validation_sha256',
+                        'validation_records', 'initial_adapter_model_sha256', 'reason'}
+            initial_sha = report.get('initial_adapter_model_sha256')
+            if (set(baseline) != required or type(baseline.get('version')) is not int or baseline['version'] != 1
+                    or baseline['baseline_eval_loss'] is not None or not validation_records
+                    or baseline['same_validation_sha256'] != digest
+                    or type(baseline['validation_records']) is not int or baseline['validation_records'] != validation_records
+                    or not isinstance(initial_sha, str) or not re.fullmatch(r'[0-9a-f]{64}', initial_sha)
+                    or baseline['initial_adapter_model_sha256'] != initial_sha
+                    or baseline['reason'] != 'nonzero_adapter_continuation'
+                    or report.get('optimizer_state_restored') is not False):
+                raise ValueError('invalid_gemma_receipts')
+            clean['baseline_evaluation'] = dict(baseline)
+            return clean
         required = {'version', 'baseline_eval_loss', 'baseline_method', 'same_validation_sha256', 'validation_records', 'zero_b_tensors'}
         if (not isinstance(baseline, dict) or set(baseline) != required
                 or type(baseline['version']) is not int or baseline['version'] != 1
@@ -879,8 +894,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             stage = 'initial_adapter_verification'
             try:
                 raw_initial = env['HASLA_INITIAL_ADAPTER']
-                if role != 'solver' or not isinstance(raw_initial, str) or len(raw_initial.encode()) > 16384:
-                    raise ValueError('invalid solver continuation')
+                if not isinstance(raw_initial, str) or len(raw_initial.encode()) > 16384:
+                    raise ValueError('invalid role adapter continuation')
                 helper_path = workspace / 'private_resume_adapter.py'
                 resume_sha = fetch_pinned_code(env, helper_path, 'private_resume_adapter.py',
                                                'HASLA_RESUME_SCRIPT_SHA256', opener)
