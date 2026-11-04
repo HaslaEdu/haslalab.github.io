@@ -46,7 +46,7 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './page-tiles.js';
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
-import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH, readCompletion, stripThinking } from './ai-assistant.js';
+import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH, readCompletion, stripThinking, sseTexts } from './ai-assistant.js';
 import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
 import { createAiTrainRouter, AI_TRAIN_PATH } from './ai-train.js';
@@ -2119,11 +2119,23 @@ export async function workersAiGrade(env, g, system, input) {
   const res = await env.AI.run(model, { messages: [{ role: 'system', content: system },
       { role: 'user', content: input + '\n\nAnswer with JSON only, no other text: {"items":[{"id":"<scheme item id>","score":<points awarded>}, …]} with one entry per scheme item.' }],
     ...(chat ? { max_completion_tokens: 16384 } : { max_tokens: 16384 }), temperature: 0,
-    ...(/^@cf\/google\/gemma-4/.test(model) && g.thinking !== 'on' ? { chat_template_kwargs: { enable_thinking: false } } : {}) });
-  const text = stripThinking(readCompletion(res).text).replace(/^```(?:json)?\s*|\s*```$/g, '');
+    ...(/^@cf\/google\/gemma-4/.test(model) && g.thinking !== 'on' ? { chat_template_kwargs: { enable_thinking: false } } : {}),
+    /* g.stream: the answer comes back piece by piece, so a reasoning model's long thinking (QwQ 32B) does not run into the
+       request timeout (3046) a one-shot answer meets */
+    ...(g.stream ? { stream: true } : {}) });
+  let full = '', usage = null;
+  if (g.stream && res && typeof res.getReader === 'function') for await (const p of sseTexts(res)) { full += p.text || ''; if (p.usage) usage = p.usage; }
+  else { full = readCompletion(res).text; usage = res?.usage || null; }
+  const text = stripThinking(full).replace(/^```(?:json)?\s*|\s*```$/g, '');
   const a = text.indexOf('{'), b = text.lastIndexOf('}');
-  let raw = null; try { raw = JSON.parse(text.slice(a, b + 1)); } catch { throw new Error('workers_ai_bad_json:' + text.slice(0, 80)); }
-  const u = res?.usage || {};
+  let raw = null; try { raw = JSON.parse(text.slice(a, b + 1)); } catch {
+    /* QwQ 32B, streamed, wrote the marks with its quotes out of place ({"items:[{id:A1.1,score":.3},…): the id and score
+       pairs are still there, so they are read one by one */
+    const items = [...text.matchAll(/"?id"?\s*:\s*"?([\w.\/-]+)"?\s*,\s*"?score"?\s*:\s*"?(-?\d*\.?\d+)/g)].map(m => ({ id: m[1], score: +m[2] }));
+    if (!items.length) throw new Error('workers_ai_bad_json:' + text.slice(0, 200));
+    raw = { items, repaired: true };
+  }
+  const u = usage || {};
   return { raw, model, usage: { input_tokens: u.prompt_tokens ?? null, output_tokens: u.completion_tokens ?? null } };
 }
 /* a scheme as it is used: its items tidied, its printed headings kept, its points bounded by them */
