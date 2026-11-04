@@ -133,9 +133,36 @@ def checked_sha(value, code='invalid_sha256'):
     return value
 
 
+def validate_resume_provenance(value,count):
+    required={'version','parent_plan_sha256','parent_source_names','prior_inventory_sha256',
+              'prior_artifacts','source_ordinals','completed_source_names','request_spacing_milliseconds'}
+    if (not isinstance(value,dict) or set(value)!=required or type(value['version']) is not int
+            or value['version']!=1 or type(value['request_spacing_milliseconds']) is not int
+            or value['request_spacing_milliseconds']!=5010 or type(count) is not int or not 1<=count<=256
+            or type(value['parent_source_names']) is not int or not 1<=value['parent_source_names']<=MAX_RECORDS
+            or type(value['completed_source_names']) is not int
+            or not 0<=value['completed_source_names']<value['parent_source_names']
+            or value['completed_source_names']+count>value['parent_source_names']):
+        raise FetchError('invalid_resume_provenance')
+    checked_sha(value['parent_plan_sha256'],'invalid_resume_provenance')
+    pins,refs,ordinals=value['prior_inventory_sha256'],value['prior_artifacts'],value['source_ordinals']
+    if (not isinstance(pins,list) or not 1<=len(pins)<=16 or any(not isinstance(p,str) for p in pins)
+            or len(set(pins))!=len(pins) or not isinstance(refs,list) or len(refs)!=len(pins)
+            or not isinstance(ordinals,list) or len(ordinals)!=count
+            or any(type(i) is not int or not 0<=i<value['parent_source_names'] for i in ordinals)
+            or ordinals!=sorted(set(ordinals))):
+        raise FetchError('invalid_resume_provenance')
+    for pin in pins:checked_sha(pin,'invalid_resume_provenance')
+    for ref in refs:
+        if not isinstance(ref,str) or not re.fullmatch(r'[A-Za-z0-9_.-]+/'+PROJECT+r'/hasla-contest-sources-(?:partial-)?[0-9]{1,32}:v[0-9]+',ref):
+            raise FetchError('invalid_resume_provenance')
+    return value
+
+
 def validate_plan(plan):
-    if not isinstance(plan, dict) or set(plan) != {'schema_version', 'kind', 'private', 'source_catalog_sha256',
-            'records', 'exclude_sha256', 'total_declared_bytes', 'excluded_cached_aliases', 'excluded_delta_names'}:
+    keys={'schema_version', 'kind', 'private', 'source_catalog_sha256',
+            'records', 'exclude_sha256', 'total_declared_bytes', 'excluded_cached_aliases', 'excluded_delta_names'}
+    if not isinstance(plan, dict) or set(plan) not in (keys,keys|{'resume_provenance'}):
         raise FetchError('invalid_plan_schema')
     if (type(plan['schema_version']) is not int or plan['schema_version'] != 1
             or plan['kind'] != 'contest_source_fetch_plan' or plan['private'] is not True):
@@ -167,6 +194,8 @@ def validate_plan(plan):
         total += row['declared_bytes']
     if type(plan['total_declared_bytes']) is not int or total != plan['total_declared_bytes'] or total > MAX_TOTAL_PDF_BYTES:
         raise FetchError('invalid_total_size')
+    if 'resume_provenance' in plan:
+        validate_resume_provenance(plan['resume_provenance'],len(rows))
     return plan
 
 
@@ -433,7 +462,7 @@ def extract_native(pdf_path, source_sha, source_bytes, native_stream, deadline, 
 
 
 def fetch_sources(plan, output, *, get, deadline, clock=time.monotonic, extractor=extract_native,
-                  pdf_validator=validate_pdf, disk_free=None):
+                  pdf_validator=validate_pdf, disk_free=None, sleep=time.sleep):
     validate_plan(plan)
     output = private_path(output)
     # SDK immutable/copy behavior may retain another full copy while uploading.
@@ -446,6 +475,10 @@ def fetch_sources(plan, output, *, get, deadline, clock=time.monotonic, extracto
     (output / 'native').mkdir()
     receipts, files, known = [], [], {value: None for value in plan['exclude_sha256']}
     total_received, total_native, stop_code = 0, 0, None
+    spacing=5.01 if 'resume_provenance' in plan else 0
+    # The workflow's existing exclusive fetch concurrency serializes this host.
+    # Waiting before the first request also preserves spacing across CI jobs.
+    last_request=clock()
 
     def checkpoint(complete=False, code=None):
         report = {'schema_version': 1, 'kind': 'private_contest_source_receipts', 'private': True,
@@ -457,6 +490,7 @@ def fetch_sources(plan, output, *, get, deadline, clock=time.monotonic, extracto
                   'not_all_names_are_unique_pdfs': True, 'status_counts': dict(Counter(r['status'] for r in receipts)),
                   'downloaded_body_bytes': total_received, 'native_compressed_bytes': total_native,
                   'sources': receipts, 'ocr_performed': False, 'training_or_deployment_performed': False}
+        if 'resume_provenance' in plan:report['resume_provenance']=plan['resume_provenance']
         temporary = output / 'inventory.pending.json'
         created = False
         try:
@@ -476,18 +510,34 @@ def fetch_sources(plan, output, *, get, deadline, clock=time.monotonic, extracto
         receipt.update(status='pending', scientific_accuracy_verified=False, problem_segmentation='pending')
         try:
             seconds = remaining(deadline, clock)
+            if spacing:
+                wait=max(0,spacing-(clock()-last_request))
+                if wait>=remaining(deadline,clock):raise FetchError('transfer_deadline')
+                if wait:sleep(wait)
+                seconds=remaining(deadline,clock)
+                last_request=clock()
             with quiet():
                 response = get(row['archive_url'], headers={'Accept-Encoding': 'identity',
                     'User-Agent': 'HaslaContestArchivePreparation/1.0'}, allow_redirects=False,
                     stream=True, timeout=(min(5, seconds), min(15, seconds)))
+            if spacing and (str(response.headers.get('cf-mitigated','')).lower()=='challenge'
+                    or 'text/html' in str(response.headers.get('Content-Type','')).lower()):
+                if type(response.status_code) is int and 100<=response.status_code<=599:
+                    receipt.update(archive_http_status=response.status_code,archive_response_redirected=False)
+                raise FetchError('archive_access_stopped' if str(response.headers.get('cf-mitigated','')).lower()=='challenge'
+                                 else 'archive_response_rejected')
             if response.status_code == 404:
                 receipt['status'] = 'archive_not_found'
                 receipts.append(receipt)
                 checkpoint()
                 continue
             if response.status_code in (403, 429):
+                receipt.update(archive_http_status=response.status_code,archive_response_redirected=False)
                 raise FetchError('archive_access_stopped')
             if response.status_code != 200 or response.url != row['archive_url']:
+                if type(response.status_code) is int and 100<=response.status_code<=599:
+                    receipt.update(archive_http_status=response.status_code,
+                        archive_response_redirected=response.status_code in (301,302,303,307,308) or response.url!=row['archive_url'])
                 raise FetchError('archive_response_rejected')
             if str(response.headers.get('Content-Encoding', 'identity')).lower() not in ('', 'identity'):
                 raise FetchError('archive_content_encoding_rejected')
@@ -520,6 +570,9 @@ def fetch_sources(plan, output, *, get, deadline, clock=time.monotonic, extracto
             if row['declared_sha256'] is not None and actual != row['declared_sha256']:
                 raise FetchError('archive_sha256_mismatch')
             if header != b'%PDF-':
+                if spacing:
+                    receipt.update(archive_http_status=200,archive_response_redirected=False)
+                    raise FetchError('archive_response_rejected')
                 raise FetchError('archive_pdf_magic_mismatch')
             receipt.update(sha256=actual, bytes=received,
                            integrity_basis='declared_sha256_verified' if row['declared_sha256'] else 'catalogued_archive_download_local_sha256')
@@ -608,6 +661,7 @@ def load_checkpoint(output, plan, worker_error=None):
             or type(report.get('complete')) is not bool
             or report.get('complete_means') != 'all_plan_names_processed_not_all_valid'
             or report.get('planned_source_names') != len(plan['records'])
+            or report.get('resume_provenance') != plan.get('resume_provenance')
             or report.get('stop_code') is not None and report['stop_code'] not in SOURCE_FAILURES):
         raise FetchError('checkpoint_plan_mismatch')
     receipts = report.get('sources')
@@ -619,7 +673,7 @@ def load_checkpoint(output, plan, worker_error=None):
     allowed = {'alias', 'filename', 'archive_url', 'declared_bytes', 'declared_sha256', 'status',
         'scientific_accuracy_verified', 'problem_segmentation', 'failure_code', 'sha256', 'bytes',
         'integrity_basis', 'canonical_alias', 'native_alias', 'native_sha256', 'native_bytes',
-        'pages', 'native_characters', 'quality_counts'}
+        'pages', 'native_characters', 'quality_counts','archive_http_status','archive_response_redirected'}
     files, safe_receipts, known = [], [], {sha: None for sha in plan['exclude_sha256']}
     for ordinal, receipt in enumerate(receipts):
         row = plan['records'][ordinal]
@@ -634,8 +688,17 @@ def load_checkpoint(output, plan, worker_error=None):
         if status in ('quarantined', 'failed'):
             if receipt.get('failure_code') not in SOURCE_FAILURES:
                 raise FetchError('checkpoint_source_mismatch')
-            safe_receipts.append({**row, 'status': status, 'failure_code': receipt['failure_code'],
-                                  'scientific_accuracy_verified': False, 'problem_segmentation': 'pending'})
+            safe={**row, 'status': status, 'failure_code': receipt['failure_code'],
+                  'scientific_accuracy_verified': False, 'problem_segmentation': 'pending'}
+            diagnostic={'archive_http_status','archive_response_redirected'} & set(receipt)
+            if diagnostic:
+                if (diagnostic!={'archive_http_status','archive_response_redirected'}
+                        or receipt['failure_code'] not in ('archive_response_rejected','archive_access_stopped')
+                        or type(receipt['archive_http_status']) is not int or not 100<=receipt['archive_http_status']<=599
+                        or type(receipt['archive_response_redirected']) is not bool):
+                    raise FetchError('checkpoint_source_mismatch')
+                safe.update({k:receipt[k] for k in diagnostic})
+            safe_receipts.append(safe)
             continue
         if status == 'archive_not_found':
             safe_receipts.append({**row, 'status': status, 'scientific_accuracy_verified': False,
@@ -692,6 +755,7 @@ def load_checkpoint(output, plan, worker_error=None):
         'downloaded_body_bytes': received,
         'native_compressed_bytes': sum(path.stat().st_size for path, name in files if name.startswith('native/')),
         'sources': safe_receipts, 'ocr_performed': False, 'training_or_deployment_performed': False}
+    if 'resume_provenance' in plan:report['resume_provenance']=plan['resume_provenance']
     if worker_error:
         if worker_error not in WORKER_FAILURES:
             raise FetchError('invalid_worker_failure')

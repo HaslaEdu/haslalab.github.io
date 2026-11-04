@@ -24,6 +24,7 @@ text; token lengths are NOT measured here and require the later tokenizer gate.
 from collections import Counter
 from contextlib import contextmanager
 import argparse
+import base64
 import gzip
 import hashlib
 import importlib
@@ -130,6 +131,9 @@ def validate_inventory(value):
             'inventory_counts_rejected')
     require(value.get('stop_code') is None or value['stop_code'] in fetch.SOURCE_FAILURES,
             'inventory_stop_code_rejected')
+    if 'resume_provenance' in value:
+        try:fetch.validate_resume_provenance(value['resume_provenance'],planned)
+        except fetch.FetchError:raise DeltaError('inventory_resume_provenance_rejected') from None
     known, filenames, compressed = set(), set(), 0
     for ordinal, row in enumerate(sources):
         require(isinstance(row, dict) and row.get('status') in STATUSES
@@ -177,6 +181,25 @@ def validate_inventory(value):
             'inventory_download_total_rejected')
     require(value.get('status_counts') == dict(Counter(r['status'] for r in sources)), 'inventory_counts_rejected')
     return value
+
+
+def inventory_coverage(report):
+    """A completed resume batch never implies its parent archive is complete."""
+    if 'resume_provenance' not in report:
+        return {'partial_source_inventory':not report['complete'],'remaining_source_names':report['remaining_source_names']}
+    provenance=report['resume_provenance']
+    try:fetch.validate_resume_provenance(provenance,report['planned_source_names'])
+    except fetch.FetchError:raise DeltaError('inventory_resume_provenance_rejected') from None
+    terminal={'verified_native_extracted','duplicate_existing_sha256','duplicate_batch_sha256','archive_not_found'}
+    done=sum(row['status'] in terminal for row in report['sources'])
+    remaining=provenance['parent_source_names']-provenance['completed_source_names']-done
+    require(0<=remaining<=provenance['parent_source_names'],'inventory_parent_counts_rejected')
+    complete=remaining==0 and report['complete']
+    return {'partial_source_inventory':not complete,'source_inventory_complete':complete,
+        'remaining_source_names':remaining,'parent_source_names':provenance['parent_source_names'],
+        'parent_terminal_source_names':provenance['completed_source_names']+done,
+        'batch_inventory_complete':report['complete'],'batch_remaining_source_names':report['remaining_source_names'],
+        'resume_provenance':provenance,'source_inventory_complete_means':'all_parent_names_terminal_not_all_valid'}
 
 
 def load_inventory(root, expected_sha=None):
@@ -481,8 +504,7 @@ def convert_local(input_dir, inventory_sha, packed_dir, packed_manifest_sha, out
         manifest={'schema_version':1,'kind':'private_contest_native_delta','private':True,
             'dataset_version':dataset_version,'target_role':'solver','format':'text',
             'inventory_sha256':actual_sha,'input_artifact':artifact_reference,'source_catalog_sha256':report['source_catalog_sha256'],
-            'plan_sha256':report['plan_sha256'],'partial_source_inventory':not report['complete'],
-            'remaining_source_names':report['remaining_source_names'],'source_receipt_status_counts':report['status_counts'],
+            'plan_sha256':report['plan_sha256'],**inventory_coverage(report),'source_receipt_status_counts':report['status_counts'],
             'packed_manifest_sha256':packed_manifest_sha,'existing_packed_files':pins,'files':files,'totals':dict(totals),
             'source_split_method':'SHA256(seed:source_sha256), train <0.9; validation otherwise; existing source SHA always skipped',
             'split_seed':SEED,'source_notes':source_notes,'native_raw_bytes_read':budget['raw_bytes'],
@@ -498,9 +520,62 @@ def convert_local(input_dir, inventory_sha, packed_dir, packed_manifest_sha, out
 
 
 def inspect_summary(report, inventory_sha):
-    return {'event':'private_contest_inventory_inspected','inventory_sha256':inventory_sha,
+    result={'event':'private_contest_inventory_inspected','inventory_sha256':inventory_sha,
             'processed_source_names':report['processed_source_names'],'remaining_source_names':report['remaining_source_names'],
             'status_counts':report['status_counts'],'native_or_pdf_content_downloaded':False,'training_performed':False}
+    if 'resume_provenance' in report:
+        result.update({k:v for k,v in inventory_coverage(report).items() if k!='resume_provenance'})
+    return result
+
+
+EXPORT_PUBLIC_KEY='HASLA_CONTEST_INVENTORY_EXPORT_PUBLIC_KEY'
+EXPORT_EXPECTED_SHA='HASLA_CONTEST_INVENTORY_EXPORT_SHA256'
+
+
+def inventory_export_configuration(env,inspect,explicit_sha=None):
+    public,expected=env.get(EXPORT_PUBLIC_KEY,''),env.get(EXPORT_EXPECTED_SHA,'')
+    if not public and not expected:return None
+    require(inspect and isinstance(public,str) and isinstance(expected,str) and public and expected,
+            'inventory_export_requires_inspection_and_both_bindings')
+    checked_sha(expected)
+    require(explicit_sha is None or explicit_sha==expected,'inventory_export_pin_mismatch')
+    try:key=base64.b64decode(public,validate=True)
+    except Exception:raise DeltaError('inventory_export_public_key_invalid') from None
+    require(len(key)==32 and base64.b64encode(key).decode('ascii')==public,'inventory_export_public_key_invalid')
+    return {'public_key':key,'expected_sha256':expected}
+
+
+def encrypted_inventory_export(root,actual_sha,configuration):
+    """Seal exact verified inventory bytes; no names, paths or plaintext emitted."""
+    expected=configuration['expected_sha256'];require(actual_sha==expected,'inventory_export_pin_mismatch')
+    path=checked_file(Path(root),'inventory.json',MAX_INVENTORY,expected)
+    raw=path.read_bytes();compressed=gzip.compress(raw,mtime=0)
+    require(0<len(compressed)<=MAX_INVENTORY,'inventory_export_compressed_size_limit')
+    try:
+        from nacl.public import PublicKey,SealedBox
+        cipher=SealedBox(PublicKey(configuration['public_key'])).encrypt(compressed)
+    except Exception:raise DeltaError('inventory_encryption_failed') from None
+    require(len(cipher)==len(compressed)+48 and len(cipher)<=MAX_INVENTORY+48,'inventory_export_cipher_size_invalid')
+    encoded=base64.b64encode(cipher).decode('ascii');parts=[encoded[i:i+32000] for i in range(0,len(encoded),32000)]
+    digest=hashlib.sha256(cipher).hexdigest()
+    metadata={'version':1,'algorithm':'libsodium_sealed_box_curve25519xsalsa20poly1305','compression':'gzip',
+        'public_key_sha256':hashlib.sha256(configuration['public_key']).hexdigest(),
+        'raw_sha256':expected,'raw_bytes':len(raw),'gzip_bytes':len(compressed),
+        'cipher_sha256':digest,'cipher_bytes':len(cipher),'parts':len(parts),'ciphertext_base64_characters':len(encoded)}
+    fragments=[{'cipher_sha256':digest,'part':i,'parts':len(parts),'ciphertext_b64':part} for i,part in enumerate(parts)]
+    return metadata,fragments
+
+
+def inspection_result(report,actual_sha,root,configuration):
+    result=inspect_summary(report,actual_sha)
+    if configuration is not None:
+        metadata,fragments=encrypted_inventory_export(root,actual_sha,configuration)
+        for fragment in fragments:
+            encoded=json.dumps({'event':'private_contest_inventory_inspected','inventory_export_fragment':fragment},separators=(',',':'))
+            require(len(encoded.encode())<=48*1024,'inventory_export_event_size_limit')
+            print(encoded,flush=True)
+        result['inventory_export']=metadata
+    return result
 
 
 def main(argv=None):
@@ -512,6 +587,8 @@ def main(argv=None):
     parser.add_argument('--output-dir');parser.add_argument('--dataset-version');parser.add_argument('--authorization-note')
     parser.add_argument('--chunk-chars',type=int,default=3000)
     args=parser.parse_args(argv)
+    export=inventory_export_configuration(os.environ,args.inspect,args.inventory_sha256)
+    if export is not None:args.inventory_sha256=export['expected_sha256']
     if args.inventory_sha256: checked_sha(args.inventory_sha256)
     if not args.inspect:
         require(all((args.inventory_sha256,args.packed_dir,args.packed_manifest_sha256,args.output_dir,
@@ -519,7 +596,7 @@ def main(argv=None):
     if args.input_dir:
         root=private_path(args.input_dir)
         report, actual=load_inventory(root,args.inventory_sha256)
-        result=inspect_summary(report,actual) if args.inspect else convert_local(root,actual,args.packed_dir,
+        result=inspection_result(report,actual,root,export) if args.inspect else convert_local(root,actual,args.packed_dir,
             args.packed_manifest_sha256,args.output_dir,args.dataset_version,args.authorization_note,chunk_chars=args.chunk_chars)
     else:
         require(args.inspect or args.output_dir,'private_output_required')
@@ -529,10 +606,13 @@ def main(argv=None):
         with tempfile.TemporaryDirectory(prefix='.contest-input-',dir=parent) as temporary:
             root=Path(temporary)
             report,actual=download_sources(args.input_artifact,args.inventory_sha256,os.environ,root,inspect=args.inspect)
-            result=inspect_summary(report,actual) if args.inspect else convert_local(root,actual,args.packed_dir,
+            result=inspection_result(report,actual,root,export) if args.inspect else convert_local(root,actual,args.packed_dir,
                 args.packed_manifest_sha256,args.output_dir,args.dataset_version,args.authorization_note,
                 artifact_reference=args.input_artifact,chunk_chars=args.chunk_chars)
-    if args.inspect: print(json.dumps(result),flush=True)
+    if args.inspect:
+        encoded=json.dumps(result,separators=(',',':'))
+        require(len(encoded.encode())<=48*1024,'inventory_export_event_size_limit')
+        print(encoded,flush=True)
     else: print(json.dumps({'event':'private_contest_delta_prepared','files':result['files'],
         'totals':result['totals'],'training_ready':result['training_ready'],'token_length_measured':False,
         'training_or_upload_performed':False}),flush=True)

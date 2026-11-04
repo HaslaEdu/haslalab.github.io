@@ -419,7 +419,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install --quiet requests wandb
+      - run: pip install --quiet requests wandb pynacl
       - name: Inspect immutable private contest receipts without PDF or native downloads
         timeout-minutes: 5
         run: |
@@ -431,6 +431,8 @@ jobs:
           WANDB_PROJECT: hasla-ai-private-training
           WANDB_DIR: ${{ runner.temp }}/private-contest-delta-inspection
           HASLA_CONTEST_DELTA_SOURCE: ${{ secrets.HASLA_CONTEST_DELTA_SOURCE }}
+          HASLA_CONTEST_INVENTORY_EXPORT_PUBLIC_KEY: ${{ secrets.HASLA_CONTEST_INVENTORY_EXPORT_PUBLIC_KEY }}
+          HASLA_CONTEST_INVENTORY_EXPORT_SHA256: ${{ secrets.HASLA_CONTEST_INVENTORY_EXPORT_SHA256 }}
   prepare-contest-delta:
     if: ${{ inputs.contest_delta_prepare_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
