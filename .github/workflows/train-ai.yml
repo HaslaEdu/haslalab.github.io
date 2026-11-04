@@ -3,7 +3,8 @@
 # promoted only if it scores better. Runs every Monday 03:17 Korean time, or by hand (Actions → Train Hasla AI →
 # Run workflow); "dry run" only checks the keys and the data.
 # Repository secrets: RUNPOD_API_KEY, WANDB_API_KEY, HF_TOKEN, and the deploy token CLOUDFLARE_API_TOKEN (it sets the
-# run's key on the Worker and uploads the solver adapter to Workers AI, so it needs Workers AI · Edit as well).
+# run's key on the Worker); CLOUDFLARE_AI_TOKEN (a token from the Workers AI page) uploads the solver adapter, or the
+# deploy token does it if it has Workers AI · Read and Edit.
 name: Train Hasla AI
 
 on:
@@ -61,6 +62,7 @@ jobs:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
           ROLE: ${{ inputs.role || 'both' }}
           MIN_EXAMPLES: ${{ inputs.min_examples || '200' }}
           TRIALS: ${{ inputs.trials || '8' }}
