@@ -6,8 +6,9 @@
   const token = () => { try { return localStorage.getItem('hlCmTok') || ''; } catch { return ''; } };
   const $ = id => document.getElementById(id);
   const el = (tag, props = {}, ...kids) => { const e = Object.assign(document.createElement(tag), props); e.append(...kids.filter(k => k != null)); return e; };
-  const ROUTE = {cache: '저장된 답', fast: '작은 모델', 'fast→big': '작은→큰 모델', big: '큰 모델', blocked: '차단'}, STYLE = {default: '기본 말투', community: '커뮤 말투'};
-  const KIND = {bank: '문제풀이', site: '문제위치'}, VERDICT = {correct: '맞음', wrong: '틀림', blocked: '차단됨', ungraded: '채점 안 됨'};
+  const ROUTE = {cache: '저장된 답', site: '사이트 찾기', web: '웹 검색', chat: '잡담', explain: '개념 설명', solve: '문제 풀이', off: '주제 밖', tools: '도구 사용',
+    'site→tools': '사이트→도구', 'web→tools': '웹→도구', fast: '작은 모델', 'fast→big': '작은→큰 모델', big: '큰 모델', blocked: '차단'}, STYLE = {default: '기본 말투', community: '커뮤 말투'};
+  const KIND = {bank: '문제풀이', site: '문제위치', member: '회원 대화'}, VERDICT = {correct: '맞음', wrong: '틀림', blocked: '차단됨', ungraded: '채점 안 됨', good: '👍 회원 좋아요', bad: '👎 회원 별로'};
   let before = 0;
 
   async function call(path, init = {}) {
@@ -33,11 +34,12 @@
       el('h2', {}, `#${c.id}`, el('span', {className: 'tag'}, KIND[c.kind] || c.kind), c.verdict ? el('span', {className: 'tag ' + c.verdict}, VERDICT[c.verdict] || c.verdict) : null,
         c.route ? el('span', {className: 'tag'}, ROUTE[c.route] || c.route) : null, c.style === 'community' ? el('span', {className: 'tag'}, STYLE.community) : null,
         el('span', {}, `점수 ${score}`), el('span', {className: 'muted'}, `${c.day} · ${c.status}${tools ? ' · 도구: ' + tools : ''}`)),
+      c.context ? el('div', {}, el('b', {}, '앞 대화'), el('pre', {textContent: (() => { try { return JSON.parse(c.context).map(m => (m.role === 'user' ? '회원: ' : 'AI: ') + m.content).join('\n\n'); } catch { return ''; } })()})) : null,
       el('div', {className: 'cols'},
         el('div', {}, el('b', {}, '질문'), el('pre', {textContent: c.question || ''})),
         el('div', {}, el('b', {}, 'AI의 답'), el('pre', {textContent: c.answer || ''})),
-        el('div', {}, el('b', {}, '공식 풀이 / 정답'), el('pre', {textContent: c.reference || ''}))),
-      el('div', {}, el('b', {}, '채점 이유'), el('pre', {textContent: c.reason || ''})),
+        c.kind === 'member' ? null : el('div', {}, el('b', {}, '공식 풀이 / 정답'), el('pre', {textContent: c.reference || ''}))),
+      c.kind === 'member' ? null : el('div', {}, el('b', {}, '채점 이유'), el('pre', {textContent: c.reason || ''})),
       c.status === 'failed' ? null : note,
       c.status === 'failed' ? null : el('div', {className: 'bar'},
         el('button', {type: 'button', className: 'primary', textContent: '승인', onclick: act('approve')}),
@@ -51,6 +53,7 @@
       if (!more) { before = 0; $('list').textContent = ''; }
       const q = new URLSearchParams({status: $('status').value, limit: '20'});
       if ($('verdict').value) q.set('verdict', $('verdict').value);
+      if ($('kind').value) q.set('kind', $('kind').value);
       if (before) q.set('before', before);
       const d = await (await call('?' + q)).json();
       $('config').textContent = `매일 ${d.config.daily}건, 한국시간 ${d.config.hour}시부터 · 검토 대기 ${d.counts.graded || 0} · 승인 ${d.counts.approved || 0} · 거절 ${d.counts.rejected || 0} · 실패 ${d.counts.failed || 0}`;
@@ -83,7 +86,7 @@
     } catch (e) { show(e); }
   }
   $('reload').onclick = () => load();
-  $('status').onchange = $('verdict').onchange = () => load();
+  $('status').onchange = $('verdict').onchange = $('kind').onchange = () => load();
   $('more').onclick = () => load(true);
   $('runBank').onclick = e => run('bank', e.currentTarget);
   $('runSite').onclick = e => run('site', e.currentTarget);

@@ -1,8 +1,10 @@
 /* HaslaLab assistant: a chat button on every page. It talks to the community Worker's /api/ai/chat (open-weight
-   models on Workers AI, members only); the conversation lives in this tab only (sessionStorage). */
+   models on Workers AI, members only) and shows the answer as it is written (server-sent events); the conversation
+   lives in this tab only (sessionStorage). The member decides once whether their chats may be kept to train the
+   assistant (localStorage hlAiTrain; withdrawing it deletes what was kept). */
 (() => {
   'use strict';
-  const PROD = 'https://haslalab-community-edge.haslalab.workers.dev', MAX_TURNS = 20, KEY = 'hlAiChat', STYLE_KEY = 'hlAiStyle';
+  const PROD = 'https://haslalab-community-edge.haslalab.workers.dev', MAX_TURNS = 20, KEY = 'hlAiChat', STYLE_KEY = 'hlAiStyle', TRAIN_KEY = 'hlAiTrain';
   const BASE = new URL('.', (document.currentScript && document.currentScript.src) || location.href).href;
   const api = () => { try { const o = localStorage.getItem('hlCmApi') || ''; return (/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o) ? o : PROD).replace(/\/+$/, ''); } catch { return PROD; } };
   const token = () => { try { return localStorage.getItem('hlCmTok') || ''; } catch { return ''; } };
@@ -11,18 +13,23 @@
     ko: {open: 'AI에게 묻기', title: '하슬라랩 AI', hint: '문제 위치, 풀이 설명, 커뮤니티 글, 웹 정보를 물어보세요.', ph: '질문을 입력하세요 (Enter 전송, Shift+Enter 줄바꿈)',
       send: '보내기', clear: '대화 지우기', close: '닫기', style: {default: '말투: 기본', community: '말투: 커뮤'}, styleHint: '답변 말투 바꾸기', login: '로그인한 회원만 쓸 수 있습니다.', loginGo: '로그인하기', wait: '생각하는 중…', sources: '관련 링크',
       err: {rate_limited: '질문이 너무 많습니다. 잠시 후 다시 시도해 주세요.', login_required: '로그인이 필요합니다.', ai_unavailable: 'AI를 지금 쓸 수 없습니다.', _: '답을 받지 못했습니다. 잠시 후 다시 시도해 주세요.'},
-      note: 'AI 답변은 틀릴 수 있습니다. 중요한 내용은 원문과 해설로 확인하세요.'},
+      note: 'AI 답변은 틀릴 수 있습니다. 중요한 내용은 원문과 해설로 확인하세요.',
+      train: '내 대화를 하슬라랩 AI 학습에 사용 허용', trainAsk: '대화 내용을 하슬라랩 AI를 개선하는 데 써도 될까요? 관리자가 검토한 뒤 학습 자료로 쓰며, 검토되지 않은 대화는 1년 뒤 지워집니다. 언제든 아래 체크를 끄면 지금까지 남은 대화도 지웁니다.',
+      yes: '허용', no: '허용 안 함', good: '도움이 됐어요', bad: '별로예요'},
     en: {open: 'Ask AI', title: 'HaslaLab AI', hint: 'Ask where a problem is, for an explanation, about posts, or for web information.', ph: 'Type a question (Enter to send, Shift+Enter for a new line)',
       send: 'Send', clear: 'Clear chat', close: 'Close', style: {default: 'Tone: default', community: 'Tone: casual'}, styleHint: 'Change the answer tone', login: 'Members only.', loginGo: 'Log in', wait: 'Thinking…', sources: 'Links',
       err: {rate_limited: 'Too many questions. Please try again shortly.', login_required: 'Please log in.', ai_unavailable: 'The assistant is unavailable right now.', _: 'No answer came back. Please try again.'},
-      note: 'AI answers can be wrong. Check important points against the papers and solutions.'},
+      note: 'AI answers can be wrong. Check important points against the papers and solutions.',
+      train: 'Let HaslaLab AI learn from my chats', trainAsk: 'May your chats be used to improve HaslaLab AI? An admin reviews them before they are used for training; chats not reviewed are deleted after a year. Untick the box below at any time and what was kept is deleted too.',
+      yes: 'Allow', no: 'Don\'t allow', good: 'Helpful', bad: 'Not helpful'},
   };
   const t = () => T[ko() ? 'ko' : 'en'];
   let history = [];
   try { history = JSON.parse(sessionStorage.getItem(KEY) || '[]').filter(m => m && typeof m.content === 'string').slice(-MAX_TURNS); } catch { history = []; }
   const save = () => { try { sessionStorage.setItem(KEY, JSON.stringify(history.slice(-MAX_TURNS))); } catch {} };
-  let style = 'default';
+  let style = 'default', train = null;   // train: null = not asked yet
   try { if (localStorage.getItem(STYLE_KEY) === 'community') style = 'community'; } catch {}
+  try { const v = localStorage.getItem(TRAIN_KEY); train = v === '1' ? true : v === '0' ? false : null; } catch {}
 
   const css = `
 .hlai-btn{position:fixed;right:18px;bottom:18px;z-index:60;border:0;border-radius:999px;padding:11px 16px;background:var(--rail,#2E3945);color:#fff;
@@ -49,6 +56,13 @@
 .hlai-src a{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hlai-hint,.hlai-note{color:var(--graphite,#5C6B7A);font-size:12px}
 .hlai-note{padding:0 12px 6px}
+.hlai-note label{display:flex;gap:6px;align-items:center;margin-top:3px;cursor:pointer}
+.hlai-ask{align-self:stretch;border:1px solid var(--grid-bold,#B4CADC);border-radius:10px;padding:9px 11px;font-size:13px}
+.hlai-ask div{display:flex;gap:8px;margin-top:8px}
+.hlai-ask button,.hlai-fb button{border:1px solid var(--grid-bold,#B4CADC);background:transparent;color:inherit;border-radius:999px;padding:3px 10px;font:12px var(--sans,sans-serif);cursor:pointer}
+.hlai-ask button.y{background:var(--rail,#2E3945);color:#fff;border-color:var(--rail,#2E3945)}
+.hlai-fb{display:flex;gap:6px;margin-top:6px;font-size:12px;color:var(--graphite,#5C6B7A);white-space:normal}
+.hlai-fb button[aria-pressed=true]{background:var(--rail,#2E3945);color:#fff}
 .hlai-f{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--grid-bold,#B4CADC)}
 .hlai-f textarea{flex:1;resize:none;height:44px;border:1px solid var(--grid-bold,#B4CADC);border-radius:8px;padding:8px;font:14px var(--sans,sans-serif);background:transparent;color:inherit}
 .hlai-f button{border:0;border-radius:8px;padding:0 14px;background:var(--rail,#2E3945);color:#fff;font:600 13px var(--sans,sans-serif);cursor:pointer}
@@ -108,10 +122,11 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
   }
   let box, log, input, sendBtn, busy = false;
 
-  function bubble(role, text, sources) {
+  function bubble(role, text, sources, msg) {
     const d = document.createElement('div');
     d.className = 'hlai-m ' + role;
     d.innerHTML = role === 'a' ? rich(text) : linkify(text);
+    if (msg && msg.id) d.appendChild(feedback(msg));
     if (sources && sources.length) {
       const s = document.createElement('div');
       s.className = 'hlai-src';
@@ -121,6 +136,45 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
     log.appendChild(d);
     log.scrollTop = log.scrollHeight;
     return d;
+  }
+  /* 👍/👎 on an answer that was kept for review */
+  function feedback(msg) {
+    const f = document.createElement('div');
+    f.className = 'hlai-fb';
+    for (const [good, label] of [[true, '👍 ' + t().good], [false, '👎 ' + t().bad]]) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = label; b.setAttribute('aria-pressed', String(msg.fb === good));
+      b.addEventListener('click', async () => {
+        msg.fb = good; save();
+        for (const x of f.querySelectorAll('button')) x.setAttribute('aria-pressed', String(x === b));
+        try { await fetch(api() + '/api/ai/feedback', {method: 'POST', headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + token()}, body: JSON.stringify({id: msg.id, good})}); } catch {}
+      });
+      f.appendChild(b);
+    }
+    return f;
+  }
+  function setTrain(v) {
+    train = v;
+    try { localStorage.setItem(TRAIN_KEY, v ? '1' : '0'); } catch {}
+    const cb = box.querySelector('[data-a=train]'); if (cb) cb.checked = v;
+    // withdrawing deletes what was kept
+    if (!v && token()) fetch(api() + '/api/ai/forget', {method: 'POST', headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + token()}, body: '{}'}).catch(() => {});
+  }
+  function askTrain() {
+    const d = document.createElement('div');
+    d.className = 'hlai-ask';
+    d.textContent = t().trainAsk;
+    const row = document.createElement('div');
+    for (const [v, label, cls] of [[true, t().yes, 'y'], [false, t().no, '']]) {
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.className = cls;
+      b.addEventListener('click', () => {
+        if (v) setTrain(true); else { train = false; try { localStorage.setItem(TRAIN_KEY, '0'); } catch {} }
+        d.remove();
+      });
+      row.appendChild(b);
+    }
+    d.appendChild(row);
+    log.appendChild(d);
   }
   function paint() {
     log.innerHTML = '';
@@ -134,8 +188,25 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
     }
     if (!history.length) { const h = document.createElement('div'); h.className = 'hlai-hint'; h.textContent = t().hint; log.appendChild(h); }
     pendingMath = false;
-    for (const m of history) bubble(m.role === 'user' ? 'u' : 'a', m.content, m.sources);
+    for (const m of history) bubble(m.role === 'user' ? 'u' : 'a', m.content, m.sources, m);
+    if (train === null && history.length) askTrain();
     if (pendingMath) loadKatex().then(() => { if (box.classList.contains('on')) paint(); }).catch(() => {});
+  }
+  /* the answer arrives as server-sent events: meta, delta (text), done (the whole answer, links, id) or error */
+  async function readEvents(res, on) {
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = '';
+    for (;;) {
+      const {value, done} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream: true});
+      let i;
+      while ((i = buf.indexOf('\n\n')) >= 0) {
+        const block = buf.slice(0, i); buf = buf.slice(i + 2);
+        const ev = (/^event: (\w+)/m.exec(block) || [])[1], data = (/^data: (.*)$/m.exec(block) || [])[1];
+        if (ev && data) { try { on(ev, JSON.parse(data)); } catch {} }
+      }
+    }
   }
   async function send() {
     const q = input.value.trim();
@@ -144,17 +215,28 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
     history.push({role: 'user', content: q.slice(0, 4000)});
     save(); paint();
     busy = true; sendBtn.disabled = true;
-    const wait = bubble('a', t().wait);
+    const live = bubble('a', t().wait);
+    let text = '', final = null, failed = null, timer = 0;
+    const draw = () => { timer = 0; live.innerHTML = rich(text.replace(/^\s+/, '')); log.scrollTop = log.scrollHeight; };
     try {
       const r = await fetch(api() + '/api/ai/chat', {method: 'POST', headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + token()},
-        body: JSON.stringify({lang: ko() ? 'ko' : 'en', style, messages: history.map(m => ({role: m.role, content: m.content}))})});
-      const data = await r.json().catch(() => ({}));
-      if (!r.ok) throw Object.assign(new Error(data.error || '_'), {code: data.error});
-      history.push({role: 'assistant', content: String(data.answer || ''), sources: Array.isArray(data.sources) ? data.sources : []});
+        body: JSON.stringify({lang: ko() ? 'ko' : 'en', style, stream: true, train: train === true, messages: history.map(m => ({role: m.role, content: m.content}))})});
+      if (!r.ok) { const data = await r.json().catch(() => ({})); throw Object.assign(new Error(data.error || '_'), {code: data.error}); }
+      if (/event-stream/.test(r.headers.get('Content-Type') || '') && r.body) {
+        await readEvents(r, (ev, data) => {
+          if (ev === 'delta') { text += data.t || ''; if (!timer) timer = setTimeout(draw, 60); }
+          else if (ev === 'done') final = data;
+          else if (ev === 'error') failed = data.error || '_';
+        });
+      } else final = await r.json();
+      if (failed || !final) throw Object.assign(new Error(failed || '_'), {code: failed});
+      clearTimeout(timer);
+      history.push({role: 'assistant', content: String(final.answer || text), sources: Array.isArray(final.sources) ? final.sources : [], id: final.id || null});
       save(); paint();
     } catch (e) {
-      wait.className = 'hlai-m e';
-      wait.textContent = t().err[e.code] || t().err._;
+      clearTimeout(timer);
+      live.className = 'hlai-m e';
+      live.textContent = t().err[e.code] || t().err._;
       history.pop(); save();
     } finally { busy = false; sendBtn.disabled = false; input.focus(); }
   }
@@ -167,7 +249,7 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
   box = document.createElement('div');
   box.className = 'hlai'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', t().title);
   box.innerHTML = `<div class="hlai-h"><b>${esc(t().title)}</b><button type="button" data-a="style" title="${esc(t().styleHint)}">${esc(t().style[style])}</button><button type="button" data-a="clear">${esc(t().clear)}</button><button type="button" data-a="close" aria-label="${esc(t().close)}">✕</button></div>
-<div class="hlai-log" aria-live="polite"></div><div class="hlai-note">${esc(t().note)}</div>
+<div class="hlai-log" aria-live="polite"></div><div class="hlai-note">${esc(t().note)}<label><input type="checkbox" data-a="train"${train ? ' checked' : ''}>${esc(t().train)}</label></div>
 <form class="hlai-f"><textarea rows="2" maxlength="4000" placeholder="${esc(t().ph)}"></textarea><button type="submit">${esc(t().send)}</button></form>`;
   log = box.querySelector('.hlai-log'); input = box.querySelector('textarea'); sendBtn = box.querySelector('.hlai-f button');
   box.querySelector('[data-a=close]').addEventListener('click', () => toggle(false));
@@ -176,6 +258,7 @@ html[data-theme="dark"] .hlai-m.a{background:rgba(255,255,255,.07)}
     try { localStorage.setItem(STYLE_KEY, style); } catch {}
     e.currentTarget.textContent = t().style[style];
   });
+  box.querySelector('[data-a=train]').addEventListener('change', e => setTrain(e.currentTarget.checked));
   box.querySelector('[data-a=clear]').addEventListener('click', () => { history = []; save(); paint(); });
   box.querySelector('form').addEventListener('submit', e => { e.preventDefault(); send(); });
   input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); } });
