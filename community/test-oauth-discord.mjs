@@ -37,6 +37,17 @@ test('Discord sign-in: a wrong client secret is reported as token-401-invalid_cl
  }finally{s.close()}
 });
 
+test('Discord sign-in: past the daily new-account cap the browser returns to the site (signup_limit); an existing account still signs in',async()=>{
+ const s=setup();try{
+  const profile=id=>url=>Response.json(url.pathname.includes('token')?{access_token:'fixture-access'}:{id,username:'u'+id});
+  for(const id of ['1001','1002'])assert.ok(frag((await s.signIn(profile(id))).back).get('c'),'the first two new accounts are made');
+  const third=(await s.signIn(profile('1003'))).back;
+  assert.equal(third.origin,'https://haslalab.org','back on the site, not a bare error page on the Worker');
+  assert.equal(frag(third).get('e'),'signup_limit');
+  assert.ok(frag((await s.signIn(profile('1001'))).back).get('c'),'an account that exists is not a new sign-up');
+ }finally{s.close()}
+});
+
 test('Discord sign-in: a blocked request (an HTML page, no JSON) is reported by its status',async()=>{
  const s=setup();try{
   const {back}=await s.signIn(url=>url.pathname.includes('token')?new Response('<html>error code: 1010</html>',{status:403,headers:{'Content-Type':'text/html'}}):Response.json({}));
