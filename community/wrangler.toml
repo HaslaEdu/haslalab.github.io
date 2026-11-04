@@ -99,6 +99,10 @@ LAB_READ_CONFUSIONS = "on"
 # a numerical answer the code marks wrong (R12) is read again by Mathpix on that page alone; a one-character misread
 # (10^12 for 10^18, 25 for 85) is replaced (bench: 2 misreads fixed, no wrong replacement; ~$0.005 a page it reads)
 LAB_FOCUS_READ = "on"
+# what Mathpix does not settle is read again by Gemini 3.8 Flash on a zoomed crop of its page (a 0,23 read 9,23 and an
+# exponent 10^9 for 10^7 stayed wrong with Mathpix alone, 2026-11-04); only pages with such a value, about $0.002 each
+LAB_FOCUS_ENGINE = "mathpix+gemini"
+LAB_FOCUS_MODEL = "gemini-3.8-flash"
 # answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
 # reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
 LAB_KEEP_HOURS = "off"

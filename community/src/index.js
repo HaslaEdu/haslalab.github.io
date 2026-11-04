@@ -50,7 +50,7 @@ import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
-import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './focus-read.js';
+import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount, writtenSwap } from './focus-read.js';
 import { injectionSignals, suspendForInjection, liftSuspension, ensureSuspensionSchema, SUSPENDED } from './injection-guard.js';
 import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
@@ -3207,6 +3207,13 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
 async function labFocusRead(env, s, sc, raw, photos, mine, m, log = null, engine = env.LAB_FOCUS_ENGINE || "mathpix") {
   const disputed = sc.items.filter(i => i.rules?.includes("R12") && Number.isFinite(i.value) && i.page != null).slice(0, 8);
   if (engine === "gemini") return labZoomFocus(env, s, disputed, photos, m, log, mine);
+  /* «mathpix+gemini»: what Mathpix does not settle goes to a zoomed Gemini read of its page (FIX2 2026-11-04: Mathpix
+     found no fit for a 0,23 read 9,23, IPhO 2023 T3 A.1, 2 pt) */
+  if (engine === "mathpix+gemini") {
+    const first = ocrEngineKeys(env).mathpix ? await labFocusRead(env, s, sc, raw, photos, mine, m, log, "mathpix") : [];
+    const left = disputed.filter(i => !first.some(f => f.id === i.id));
+    return left.length ? [...first, ...await labZoomFocus(env, s, left, photos, m, log, mine).catch(e => { console.error("lab zoom focus", e?.code || e?.message); return []; })] : first;
+  }
   if (!ocrEngineKeys(env).mathpix) return [];
   const out = [];
   for (const no of [...new Set(disputed.map(i => i.page))]) {
@@ -3284,7 +3291,8 @@ function readBoxes(read, items) {
    and has as many digits (bench: a crop read «3 nm» for 3.3, a digit cut off, and was taken) */
 function zoomTakes(first, read) {
   const again = Number(read?.value);
-  return read?.sure === true && Number.isFinite(again) && misreadOf(first, again) && sameDigitCount(first, again) ? again : null;
+  /* a leading zero read as a nine (0,23 for 9,23) is the same length as written, though its significant digits differ */
+  return read?.sure === true && Number.isFinite(again) && misreadOf(first, again) && (sameDigitCount(first, again) || writtenSwap(first, again)) ? again : null;
 }
 async function labZoomFocus(env, s, disputed, photos, m, log, mine = []) {
   const out = [];

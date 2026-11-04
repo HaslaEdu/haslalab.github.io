@@ -32,11 +32,11 @@ export function misreadOf(first, again) {
    T3 A.1, 2 pt lost) moves the number a power of ten, so its significant digits differ in more than one place. Only
    plain decimals (no power of ten written, 10^-3 to 10^4) and a substitution, never a digit added or dropped: those were
    numbers Mathpix split or ran together on the bench (53295 from 5.3295, 12 from 120) */
-function writtenSwap(first, again) {
+export function writtenSwap(first, again) {
   const plain = x => Math.abs(x) >= 1e-3 && Math.abs(x) < 1e4;
   if (!plain(first) || !plain(again) || Math.sign(first) !== Math.sign(again)) return false;
   const dec = x => { const t = String(Math.abs(x)); return t.includes('e') ? 99 : (t.split('.')[1] || '').length; };
-  const k = Math.max(dec(first), dec(again)); if (k > 6) return false;
+  const k = dec(first); if (k !== dec(again) || k > 6) return false;   // as many decimals written: 3 for 3.3 is a digit cut off
   const p = Math.abs(first).toFixed(k), q = Math.abs(again).toFixed(k);
   if (p.length !== q.length) return false;
   let diff = 0; for (let i = 0; i < p.length; i++) if (p[i] !== q[i]) diff++;
