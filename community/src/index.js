@@ -6,7 +6,7 @@
  */
 
 import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadLine, splitByExam, auditedLines, vertexGradeLine, gradeAgainstAudit, GRADE_TRAIN_SYSTEM, GRADE_TRAIN_SYSTEM_V2 } from "./lab-train.js";
-import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
+import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus, cancelTuning } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
 import { reservedName } from "./reserved-names.js";
 import { tidySchemeItems, cleanParts, cappedSum, headingTotal, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
@@ -3609,7 +3609,8 @@ async function labBench(env, s, job) {
          tune-check  the service account's token, the bucket and the tuning API (statuses only)
          tune-upload Claude's gold pages: photos to gs://bucket/lab-pages/, train/validation JSONL to gs://bucket/runs/<id>/
          tune-start  {baseModel, train, validation, epochs}: a supervised tuning job
-         tune-status {job}: its state, and the tuned model's endpoint when done */
+         tune-status {job}: its state, and the tuned model's endpoint when done
+         tune-cancel {job}: cancel a job (one stuck in the queue for hours) */
     if (spec.stage === 'tune-check') {
       const cfg = gcpConfig(env); out = { present: cfg.present, project: cfg.project || null, bucket: cfg.bucket || null, region: cfg.region };
       if (cfg.key) {
@@ -3714,6 +3715,8 @@ async function labBench(env, s, job) {
         out.hosts[h] = { status: r.status, body: (await r.text()).slice(0, 200) }; } catch (e) { out.hosts[h] = { error: String(e?.message || e).slice(0, 120) }; } }
     } else if (spec.stage === 'tune-status') {
       out = await tuningStatus(env, await gcpToken(env), spec.job);
+    } else if (spec.stage === 'tune-cancel') {
+      out = await cancelTuning(env, await gcpToken(env), spec.job);
     } else
     if (spec.stage === 'gcp') {
       const k = String(env.GOOGLE_CLOUD_API_KEY || '').trim(); if (!k) throw new Error('no_google_cloud_key');
