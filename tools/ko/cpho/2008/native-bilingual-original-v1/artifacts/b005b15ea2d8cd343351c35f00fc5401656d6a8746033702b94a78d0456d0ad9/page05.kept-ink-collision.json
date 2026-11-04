@@ -1,0 +1,54 @@
+{
+  "original_source_sha256": "4e076fb9234683d028792190bcec56f12de72890da6c0e44ddf0e9146013459d",
+  "source_page": 5,
+  "language": "en",
+  "proof_sha256": "fed069a21f3a1f1bd1d998d1ba4e7419133d3e62ea126cddccf358cdbde4af9e",
+  "actual_producing_plan_sha256": "d2f007108b9919655bc09172a8db819fe09e31f487bedf2936ae23427563568a",
+  "source_and_known_new_font_resource_closure": [
+    "/C08TranslatedSimHei",
+    "/C08TranslatedSimSun",
+    "/F11",
+    "/F14",
+    "/F19",
+    "/F22",
+    "/F5",
+    "/F8"
+  ],
+  "errors": [],
+  "initial_original_native_program_sha256s": [
+    "a2bdbf0d56a90892ed3574683c8657fad7e412ec23e90325d6bd7dd19e7123bd"
+  ],
+  "actual_kept_original_control_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\evidence\\kept-original-and-new-glyph-controls\\page05-en-fed069a21f3a1f1b-actual-kept-original.pdf",
+  "actual_kept_original_control_sha256": "db8f4fa424b3d45ed7099ed1da630460a8edcb9153ebc836016df269ace6001b",
+  "actual_new_glyphs_only_control_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\evidence\\kept-original-and-new-glyph-controls\\page05-en-fed069a21f3a1f1b-actual-new-glyphs.pdf",
+  "actual_new_glyphs_only_control_sha256": "ef6619e687c9926cd65c3720178c779ffc79ac68ae7931ee77b87f5e628d28c7",
+  "actual_original_native_ink_without_any_new_language_glyph": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\source\\CPhO_2008_original_combined_ZH.pdf",
+    "source_page": 5,
+    "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\evidence\\kept-original-and-new-glyph-controls\\page05-en-fed069a21f3a1f1b-actual-kept-original.pdf",
+    "final_page": 1,
+    "source_sha256": "4e076fb9234683d028792190bcec56f12de72890da6c0e44ddf0e9146013459d",
+    "output_sha256": "db8f4fa424b3d45ed7099ed1da630460a8edcb9153ebc836016df269ace6001b",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 157,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 157,
+      "expected_signature_count": 157,
+      "matched_outline_uses": 157,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 13600,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 0,
+    "passed": true
+  },
+  "kept_original_vs_new_glyph_any_nonwhite_RGB_overlap_pixels": 0,
+  "overlap_examples": [],
+  "passed": true
+}
