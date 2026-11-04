@@ -45,7 +45,7 @@
   };
   const production="https://haslalab-community-edge.haslalab.workers.dev";
   let base=production,token="";
-  try{base=(localStorage.getItem("hlCmApi")||production).replace(/\/+$/,"");token=localStorage.getItem("hlCmTok")||"";}catch(e){}
+  try{const o=localStorage.getItem("hlCmApi")||"";base=(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o)?o:production).replace(/\/+$/,"");token=localStorage.getItem("hlCmTok")||"";}catch(e){}
   if(base==="https://haslalab-community.haslalab.workers.dev")base=production;
   const hash=location.hash,parts=hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean),[route,section,item]=parts;
   const language=new URLSearchParams(location.search).get("lang")==="en"?"en":"ko";
@@ -8894,7 +8894,8 @@ const cm = { me:null, meChecked:false, seq:0, draft:{}, v:0, boards:null, view:"
 try{ cm.view = localStorage.getItem("hlCmView")==="card" ? "card" : "list"; }catch(e){}
 
 function cmBase(){
-  let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
+  /* the API base may be overridden for local development only: a script that set it elsewhere would get every request */
+  let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){} if(!/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o))o="";
   const base=(o||COMMUNITY_API).replace(/\/+$/,"");
   return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;
 }

@@ -477,7 +477,7 @@ function bindPaperLanguage() {
 }
 
 /* the community server: the same account and token as the site (same origin, same localStorage) */
-function apiBase() { let o = ""; try { o = localStorage.getItem("hlCmApi") || ""; } catch (e) {} const base=(o || COMMUNITY_API).replace(/\/+$/, "");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; }
+function apiBase() { let o = ""; try { o = localStorage.getItem("hlCmApi") || ""; } catch (e) {} if (!/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o)) o = ""; const base=(o || COMMUNITY_API).replace(/\/+$/, "");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base; }
 function tok() { try { return localStorage.getItem("hlCmTok") || ""; } catch (e) { return ""; } }
 const EXAM_NETWORK=window.HLExamNetwork,transport=EXAM_NETWORK.createTransport({getBase:apiBase,getToken:tok});
 let requestEpoch=0;

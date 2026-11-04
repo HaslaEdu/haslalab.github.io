@@ -3536,6 +3536,19 @@ async function labBench(env, s, job) {
         }
         out = { grader: { ...g, endpoint: ep }, sum, results, skipped: cases.filter(c => c.skip) };
       }
+    } else if (spec.stage === 'monthly-rubric') {
+      /* a hand-built monthly rubric (community/weekly/rubrics-<week>/<id>.json, served by the site) becomes the problem's
+         rubric: an administrator edit, checked here as the grader reads it (integer maxima adding up to the points) */
+      const pid = Number(spec.problem_id); if (!Number.isSafeInteger(pid) || pid <= 0) throw new Error('bad_problem');
+      const prob = await env.DB.prepare('SELECT id, week, points, rubric FROM problems WHERE id=?').bind(pid).first();
+      if (!prob || !/^\d{4}-\d{2}$/.test(String(prob.week || ''))) throw new Error('problem_not_monthly');
+      const r = await fetch(`${env.LAB_SITE_BASE || "https://haslalab.org/"}community/weekly/rubrics-${prob.week}/${pid}.json`, { signal: AbortSignal.timeout(15000) });
+      if (!r.ok) throw new Error('rubric_not_found_' + r.status);
+      const rubric = await r.json(), ok = Array.isArray(rubric) && rubric.length && rubric.every(c => c && typeof c.id === 'string' && c.id && typeof c.name === 'string' && Number.isInteger(c.max) && c.max > 0 && typeof c.requirement === 'string');
+      const total = ok ? rubric.reduce((a, c) => a + c.max, 0) : NaN;
+      if (!ok || total !== Number(prob.points) || new Set(rubric.map(c => c.id)).size !== rubric.length) throw new Error('bad_rubric');
+      if (spec.dry !== true) await env.DB.prepare('UPDATE problems SET rubric=? WHERE id=?').bind(JSON.stringify(rubric), pid).run();
+      out = { problem_id: pid, dry: spec.dry === true, criteria: rubric.length, total, before: (() => { try { return JSON.parse(prob.rubric || '[]').length; } catch { return null; } })() };
     } else if (spec.stage === 'migrate-r2') {
       out = await labMigrateR2(env, spec);
     } else if (spec.stage === 'backup') {

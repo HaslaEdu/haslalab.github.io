@@ -1,7 +1,7 @@
 /* Server regrades answers; browser scores are never accepted as ranking data. */
 (function(){
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const apiBase=()=>{let value='';try{value=localStorage.getItem('hlCmApi')||'';}catch(e){}const base=(value||'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?'https://haslalab-community-edge.haslalab.workers.dev':base;};
+  const apiBase=()=>{let value='';try{value=localStorage.getItem('hlCmApi')||'';}catch(e){}if(!/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(value))value='';const base=(value||'https://haslalab-community-edge.haslalab.workers.dev').replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?'https://haslalab-community-edge.haslalab.workers.dev':base;};
   window.OmrServer={async mount({container,run,comp,year,part,count,lang}){
     if(comp!=='kphe'||!run.done)return;
     const ko=lang!=='en',card=document.createElement('div');card.className='card';

@@ -136,7 +136,7 @@ try {
 } catch (e) {}
 /* the link holds one code (c=), made of the time and random digits; older links named the session (s=) beside it (k=) */
 const SID = +H.get("s") || 0, KEY = H.get("c") || H.get("k") || "", UP = MONTHLY ? "/monthly/up" : SID ? `/lab/up/${SID}` : "/lab/up";
-const requestedAPI=(H.get("a") || COMMUNITY_API).replace(/\/+$/, ""),API=requestedAPI==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:requestedAPI;
+const requestedAPI=(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(H.get("a")||"") ? H.get("a") : COMMUNITY_API).replace(/\/+$/, ""),API=requestedAPI==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:requestedAPI;
 let lang = H.get("l") === "en" || H.get("l") === "ko" ? H.get("l") : (navigator.language || "").startsWith("ko") ? "ko" : "en";
 
 const T = {
