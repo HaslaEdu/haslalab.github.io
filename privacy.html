@@ -45,7 +45,7 @@
   <li><b>자동으로 생성되는 정보</b>: 과도한 요청을 막기 위한 IP 주소(요청 횟수 제한 기록), 접속 국가(가입 시 연령 확인이 필요한지 판단)</li>
   <li><b>게시글·댓글</b>: 커뮤니티에 쓴 글과 댓글, 추천 기록</li>
   <li><b>하슬라랩 AI 이용 기록</b>: 질문마다 처리 경로·걸린 시간·사용량(대화 내용은 제외)</li>
-  <li><b>하슬라랩 AI 대화(선택)</b>: AI 채팅창에서 "학습에 사용 허용"을 켠 경우에만, 보낸 메시지와 그 앞 대화 일부, AI의 답, 답변 평가(👍/👎)</li>
+  <li><b>하슬라랩 AI 대화(선택)</b>: 회원가입 때(또는 내 정보·AI 채팅창에서) "하슬라랩 AI 대화 학습 활용"에 선택 동의한 경우에만, 보낸 메시지와 그 앞 대화 일부, AI의 답, 답변 평가(👍/👎). 로그인하지 않은 방문자의 질문은 저장하지 않으며, 하루 이용 횟수 제한에만 IP 주소를 씁니다(아래 요청 횟수 제한 기록).</li>
 </ul>
 <p class="muted">로그인 상태는 이용자 브라우저의 저장소(localStorage)에 보관되는 로그인 토큰으로 유지합니다. 광고나 행태 분석용 쿠키는 쓰지 않습니다.</p>
 
@@ -56,7 +56,7 @@
   <li>토큰 결제와 그 기록, 환불 등 결제 관련 처리</li>
   <li>커뮤니티 운영과 문의 응대</li>
   <li><b>AI 채점 개선(모델 학습)</b>: 이용자가 별도로 선택 동의한 경우에만, 그 이용자의 답안과 채점 결과를 채점 품질 개선에 씁니다.</li>
-  <li><b>하슬라랩 AI 운영과 개선</b>: 질문에 답하고 속도·비용을 관리합니다. 채팅창에서 학습 사용을 허용한 경우에만 그 대화를 관리자가 검토해 AI의 답변 개선과 학습에 씁니다.</li>
+  <li><b>하슬라랩 AI 운영과 개선</b>: 질문에 답하고 속도·비용을 관리합니다. AI 대화 학습 활용에 선택 동의한 경우에만 그 대화를 관리자가 검토해 AI의 답변 개선과 학습에 씁니다.</li>
 </ul>
 
 <h2>3. 보유 기간</h2>
@@ -68,7 +68,7 @@
   <li><b>가입을 마치지 않은 이메일 주소와 인증 코드(해시 값)</b>: 코드가 만료되면(10분) 자동으로 지웁니다. 가입을 마치면 코드는 바로 지우고, 이메일 주소는 계정 정보로 남습니다.</li>
   <li><b>결제 기록</b>: 「전자상거래 등에서의 소비자보호에 관한 법률」 등 관계 법령이 보관을 요구하는 경우 그 기간(예: 대금결제 및 재화 등의 공급에 관한 기록 5년) 동안 보관합니다.</li>
   <li><b>하슬라랩 AI 이용 기록</b>: 90일 뒤 자동으로 지웁니다.</li>
-  <li><b>하슬라랩 AI 대화(허용한 경우만)</b>: 관리자가 검토하지 않은 대화는 1년 뒤 자동으로 지웁니다. 검토를 거쳐 학습 자료로 쓰기로 한 대화는 허용을 끄거나 탈퇴할 때까지 보관합니다. 채팅창에서 허용을 끄거나 탈퇴하면 즉시 지웁니다.</li>
+  <li><b>하슬라랩 AI 대화(허용한 경우만)</b>: 관리자가 검토하지 않은 대화는 1년 뒤 자동으로 지웁니다. 검토를 거쳐 학습 자료로 쓰기로 한 대화는 동의를 철회하거나 탈퇴할 때까지 보관합니다. 내 정보나 채팅창에서 동의를 철회하거나 탈퇴하면 즉시 지웁니다.</li>
   <li><b>게시글·댓글</b>: 탈퇴해도 대화의 흐름을 위해 남으며, 작성자 이름은 ‘탈퇴한 사용자’로 바뀝니다. 탈퇴 전에 직접 지울 수 있습니다.</li>
 </ul>
 
@@ -125,7 +125,7 @@
 <ul>
   <li><b>What we collect</b>: your username, display name and password hash; for a password account, the email address you verify with a mailed code at sign-up (used only to confirm the sign-up and to recover the account; the code is kept only as a hash, and an unfinished sign-up's address and code are deleted when the code expires after 10 minutes); optionally a social-login provider identifier, a recovery email you verify (social accounts) and a profile picture; your answers (photos, files, typed work), what was read from them and the grading results; payment records (card details are handled by Paddle, not us); your consent record; IP addresses kept briefly for rate limiting. We collect no real name, phone number or ID.</li>
   <li><b>Why</b>: to read and grade your answers and show the results, to run your account, to process payments, and, <b>only if you opt in</b>, to improve the AI grading.</li>
-  <li><b>HaslaLab AI</b>: each question's route, time and usage (not its text) is kept 90 days. Your chats are kept <b>only if you tick "let HaslaLab AI learn from my chats"</b> in the chat: an admin reviews them to improve the assistant; unreviewed chats are deleted after a year, and unticking the box or deleting your account deletes them at once. Questions that need a web search are sent as search terms to Brave Software, Inc. (USA) or Tavily.</li>
+  <li><b>HaslaLab AI</b>: each question's route, time and usage (not its text) is kept 90 days. Your chats are kept <b>only if you opt in to "HaslaLab AI chats for training"</b> (at sign-up, on your profile or under the chat): an admin reviews them to improve the assistant; unreviewed chats are deleted after a year, and withdrawing or deleting your account deletes them at once. Visitors who are not logged in can ask twice a day; their questions are not stored, and only the IP address is used to count them. Questions that need a web search are sent as search terms to Brave Software, Inc. (USA) or Tavily.</li>
   <li><b>How long</b>: until you delete your account. Training copies are kept at most 1 year and only with your consent; you can withdraw at any time, which deletes them. Weekly database backups on Google Drive are kept up to 8 weeks; photo copies in backups are removed when the site deletes the photos. Rate-limit records are kept up to 2 days.</li>
   <li><b>Deletion</b>: deleting your account permanently removes your data from the server.</li>
   <li><b>Processors and transfers abroad</b> (Korean PIPA art. 28-8(1)(3)), all over encrypted connections when you submit answers or use the service: Google LLC, USA (Gemini reads the answer photos; Google Drive backups; Vertex AI tuning only with your training consent); DeepSeek, China (grading, from the answer photos and their transcription); OpenAI, USA (grading review, from the answer photos, their transcription and the first grading); Mathpix, USA (re-reading a page whose numerical answer needs checking); Cloudflare, Inc., USA and worldwide (servers, database, photo storage, sign-up and recovery emails); Paddle.com Market Ltd, UK (payments).</li>

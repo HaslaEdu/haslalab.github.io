@@ -54,8 +54,9 @@ test('the validator takes only literal true for terms and privacy, and asks the 
   assert.throws(()=>readConsent([true],null,fail),{code:'consent_required'});
   assert.throws(()=>readConsent({terms:true,privacy:true},'KR',fail),{code:'age_required'});
   assert.throws(()=>readConsent({terms:true,privacy:true,age14:'yes'},'KR',fail),{code:'age_required'});
-  assert.deepEqual(readConsent({terms:true,privacy:true},'US',fail),{age14:false,train:false,country:'US'});
-  assert.deepEqual(readConsent({terms:true,privacy:true,age14:true,train:true},'KR',fail),{age14:true,train:true,country:'KR'});
+  assert.deepEqual(readConsent({terms:true,privacy:true},'US',fail),{age14:false,train:false,aiTrain:false,country:'US'});
+  assert.deepEqual(readConsent({terms:true,privacy:true,age14:true,train:true},'KR',fail),{age14:true,train:true,aiTrain:false,country:'KR'});
+  assert.deepEqual(readConsent({terms:true,privacy:true,aiTrain:true},'US',fail),{age14:false,train:false,aiTrain:true,country:'US'});
   assert.deepEqual(consentInfo({cf:{country:'KR'}}),{version:TERMS_VERSION,country:'KR',age_required:true});
   assert.deepEqual(consentInfo({}),{version:TERMS_VERSION,country:null,age_required:false});
   assert.deepEqual(consentOf(null),{consent_required:true,train_ok:false});
@@ -172,4 +173,25 @@ test("the country comes from request.cf, or from Cloudflare's CF-IPCountry heade
   assert.equal(requestCountry({ headers: new Headers({ "CF-IPCountry": "KR" }) }), "KR");
   assert.equal(requestCountry({ headers: new Headers({ "CF-IPCountry": "T1" }) }), null);
   assert.equal(requestCountry({ headers: new Headers() }), null);
+});
+
+test('the AI-chat box is asked at sign-up, read back, toggled on its own, and withdrawing deletes the kept chats',async()=>{
+  const {logMemberChat}=await import('./src/ai-memory.js');
+  const s=setup();try{
+    const su=await s.api('POST','/signup',await s.coded({username:'ai_consent',nickname:'AI 동의',password:'fixture-password',consent:{terms:true,privacy:true,aiTrain:true}}),null,'US');
+    assert.equal(su.status,200);
+    const id=su.data.user.id,tok=su.data.token;
+    const row=s.sql.prepare('SELECT ai_train_ok,ai_train_at,train_ok FROM user_consents WHERE user_id=?').get(id);
+    assert.equal(row.ai_train_ok,1);assert.ok(row.ai_train_at>0);assert.equal(row.train_ok,0,'the grading box is a separate choice');
+    assert.equal((await s.api('GET','/me/consent',null,tok)).data.ai_train_ok,true);
+    // a kept chat, then withdrawal from the chat window or the profile
+    const db={prepare:q=>{const st=s.sql.prepare(q);const mk=a=>({bind:(...v)=>mk(v),first:async()=>st.get(...a)||null,all:async()=>({results:st.all(...a)}),run:async()=>{const o=st.run(...a);return{meta:{changes:Number(o.changes)}}}});return mk([]);}};
+    await logMemberChat(db,{user_id:id,history:[{role:'user',content:'질문'}],answer:'답',route:'chat',style:'default'});
+    assert.equal(s.sql.prepare("SELECT count(*) n FROM ai_eval WHERE kind='member'").get().n,1);
+    assert.equal((await s.api('POST','/me/consent/ai-train',{on:'no'},tok)).status,400);
+    const off=await s.api('POST','/me/consent/ai-train',{on:false},tok);assert.equal(off.status,200);assert.equal(off.data.ai_train_ok,false);
+    assert.equal(s.sql.prepare("SELECT count(*) n FROM ai_eval WHERE kind='member'").get().n,0);
+    assert.equal((await s.api('GET','/me/consent',null,tok)).data.ai_train_ok,false);
+    assert.equal((await s.api('POST','/me/consent/ai-train',{on:true},tok)).data.ai_train_ok,true);
+  }finally{s.close()}
 });
