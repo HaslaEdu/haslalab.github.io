@@ -162,7 +162,7 @@ jobs:
           HASLA_PATTERN_OBSERVED_LISTING_URLS: ${{ secrets.HASLA_PATTERN_OBSERVED_LISTING_URLS }}
   inspect-gpu:
     if: ${{ inputs.status_run_id != '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
@@ -362,7 +362,7 @@ jobs:
     concurrency:
       group: hasla-private-ocr-calibration
       cancel-in-progress: false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
@@ -443,7 +443,7 @@ jobs:
           HASLA_CONTEST_DELTA_MANIFEST: ${{ secrets.HASLA_CONTEST_DELTA_MANIFEST }}
   reconcile-private-ocr:
     if: ${{ inputs.ocr_reconcile_run_id != '' && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4

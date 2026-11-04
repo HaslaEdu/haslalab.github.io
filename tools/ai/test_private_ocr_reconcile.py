@@ -1,4 +1,6 @@
+import hashlib
 import json
+from pathlib import Path
 from types import SimpleNamespace
 import unittest
 import private_ocr_reconcile as r
@@ -23,6 +25,8 @@ class ReconciliationTests(unittest.TestCase):
         event,calls,clock=self.run_fixture({'pods':[]})
         self.assertEqual(len(calls),2);self.assertGreaterEqual(clock.value,17)
         self.assertTrue(event['absence_observed_twice']);self.assertFalse(event['reservation_release_authorized'])
+        self.assertEqual(event['observer_script_sha256'],hashlib.sha256(Path(r.__file__).read_bytes()).hexdigest())
+        self.assertEqual(event['pagination_validation'],'strict_terminal_metadata_v1')
         self.assertFalse(event['creation_attempted']);self.assertFalse(event['deletion_attempted'])
         self.assertTrue(all(url=='https://api.runpod.io/v2/pods' and options['allow_redirects'] is False for url,options in calls))
 
@@ -36,6 +40,17 @@ class ReconciliationTests(unittest.TestCase):
         for body in ({'pods':[],'hasMore':True},{'pods':[],'total':1},
                      {'pods':[],'pagination':{'offset':1}},{'pods':[],'next_page_token':'x'}):
             with self.subTest(body=body),self.assertRaises(r.ObservationError):self.run_fixture(body)
+
+    def test_malformed_falsey_pagination_never_proves_absence(self):
+        for page in ({'hasMore':None},{'hasNextPage':0},{'nextCursor':{}},
+                     {'nextPage':0},{'next':False},{'nextCursor':[]}):
+            with self.subTest(page=page),self.assertRaises(r.ObservationError):
+                self.run_fixture({'pods':[],'pagination':page})
+
+    def test_only_explicit_terminal_pagination_fields_allow_absence(self):
+        event,_,_=self.run_fixture({'pods':[],'pagination':{
+            'hasMore':False,'hasNextPage':False,'nextCursor':None,'nextPage':None,'next':'','total':0}})
+        self.assertTrue(event['absence_observed_twice'])
 
     def test_scope_cannot_be_arbitrary_prefix_or_non_ascii_id(self):
         for run,scope in [('１２３','private-batch'),('123','training'),('../123','private-batch')]:

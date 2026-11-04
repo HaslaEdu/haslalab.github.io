@@ -5,9 +5,11 @@ billing. This module has no create/delete/cleanup endpoint or model imports.
 """
 import argparse
 from datetime import datetime,timezone
+import hashlib
 import json
 import math
 import os
+from pathlib import Path
 import re
 import time
 
@@ -42,7 +44,13 @@ def inventory(env,*,get=None):
             'inventory_incomplete')
     for metadata in (value,value.get('pagination',{})):
         require(isinstance(metadata,dict),'inventory_incomplete')
-        require(not any(metadata.get(key) for key in ('nextCursor','nextPage','next','hasMore','hasNextPage')),'inventory_incomplete')
+        for key in ('hasMore','hasNextPage'):
+            if key in metadata:
+                require(metadata[key] is False,'inventory_incomplete')
+        for key in ('nextCursor','nextPage','next'):
+            if key in metadata:
+                terminal=metadata[key]
+                require(terminal is None or type(terminal) is str and terminal=='','inventory_incomplete')
         for key in ('total','totalCount'):
             if key in metadata:
                 require(type(metadata[key]) is int and metadata[key]==len(value['pods']),'inventory_incomplete')
@@ -83,6 +91,8 @@ def observe(run_id,scope,env=None,*,get=None,clock=time.monotonic,sleep=time.sle
         observations.append({'checked_at':datetime.now(timezone.utc).isoformat(),'matched_pods':len(matches),
             'pods':matches,'request_seconds':round(max(0,clock()-began),3)})
     return {'event':'private_ocr_provider_observation','run_id':run_id,'scope':scope,'observations':observations,
+        'observer_script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'pagination_validation':'strict_terminal_metadata_v1',
         'absence_observed_twice':all(row['matched_pods']==0 for row in observations),
         'get_only':True,'creation_attempted':False,'deletion_attempted':False,
         'does_not_prove_creation_rejection_or_zero_billing':True,'reservation_release_authorized':False}
@@ -94,6 +104,7 @@ def main():
     try:event=observe(args.run_id,args.scope)
     except Exception as error:
         event={'event':'private_ocr_provider_observation','status':'unavailable',
+            'observer_script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             'code':str(error) if isinstance(error,ObservationError) else 'provider_read_failed',
             'creation_attempted':False,'deletion_attempted':False,'reservation_release_authorized':False}
     print(json.dumps(event,ensure_ascii=True,separators=(',',':')),flush=True)
