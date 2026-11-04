@@ -6,7 +6,7 @@ const subjects=['phys','chem','bio','earth','astro','math','info'];
 test('book and school subject navigation uses original subject art while contest navigation keeps its logos',()=>{
   const vm=require('node:vm'),index=fs.readFileSync(path.resolve(__dirname,'../index.html'),'utf8');
   const code=index.slice(index.indexOf('function archiveSubjects('),index.indexOf('function viewArchiveDigital('));
-  const context={lang:'ko',LOGO_V:'test',SUBJ:[...subjects,'sci'].map(k=>({k,ko:k,en:k,logo:'logo-'+k,comps:['ipho']})),DATA:{ipho:{}},UI:{ko:{subjLabel:'분야',subjN:n=>String(n),subjSoon:'준비중'}},archiveHref:(category,subject)=>'#/archive/'+category+'/'+subject,logoSource:key=>'logo/'+key+'.svg'};
+  const context={lang:'ko',LOGO_V:'test',compShown:()=>true,SUBJ:[...subjects,'sci'].map(k=>({k,ko:k,en:k,logo:'logo-'+k,comps:['ipho']})),DATA:{ipho:{}},UI:{ko:{subjLabel:'분야',subjN:n=>String(n),subjSoon:'준비중'}},archiveHref:(category,subject)=>'#/archive/'+category+'/'+subject,logoSource:key=>'logo/'+key+'.svg'};
   vm.createContext(context);vm.runInContext(code,context);
   for(const category of ['books','schools','contests']){
     const dom=new JSDOM(context.archiveSubjects(category,'phys'));
