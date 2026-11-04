@@ -1,6 +1,7 @@
 """One separately bounded GPU Pod per model, sharing one authorized budget ledger."""
 import json
 from dataclasses import replace
+from decimal import Decimal
 import os
 from pathlib import Path
 import re
@@ -64,6 +65,30 @@ def pod_command(env, manifest, seconds):
     return 'bash -lc ' + shlex.quote(f'timeout --signal=TERM --kill-after=30s {seconds - 120}s bash -lc ' + shlex.quote(start))
 
 
+def verify_reserved_funding(ledger):
+    """Require prepaid coverage of every full planned Pod cap before creation."""
+    required = ledger.reserved_krw / ledger.policy.fx_krw_per_usd_upper / ledger.policy.tax_multiplier
+    response = cloud.requests.post('https://api.runpod.io/graphql',
+        json={'query': 'query { myself { clientBalance underBalance } }'},
+        headers={'Authorization': 'Bearer ' + cloud.E['RUNPOD_API_KEY']}, timeout=20)
+    try:
+        value = response.json() if response.ok else None
+        user = (value.get('data') or {}).get('myself') if isinstance(value, dict) and not value.get('errors') else None
+        balance = user.get('clientBalance') if isinstance(user, dict) else None
+        valid = type(balance) in (int, float, str) and type(user.get('underBalance')) is bool
+        try:
+            amount = Decimal(str(balance)) if valid else Decimal('NaN')
+            sufficient = amount.is_finite() and amount >= required and user['underBalance'] is False
+        except (ValueError, ArithmeticError):
+            sufficient = False
+    finally:
+        response.close()
+    cloud.safe_event('reserved_funding_check', sufficient_for_full_caps=sufficient,
+                     balance_disclosed=False, gpu_creation_performed=False)
+    if not sufficient:
+        raise RuntimeError('prepaid funds do not cover the full reserved Pod caps')
+
+
 def main():
     env = os.environ
     cloud.E = env
@@ -100,6 +125,7 @@ def main():
         plans[role] = ledger.runs[-1].plan
         if plans[role].run_seconds < 660:
             raise ValueError('the combined budget cannot cover a selected model')
+    verify_reserved_funding(ledger)
     cloud.safe_event('dual_preflight', selected_roles=roles, dedicated_pods=True,
                      budget_krw=int(ledger.policy.budget_krw), prior_upper_krw=str(ledger.prior_spend_krw),
                      roles={r: {'format': manifest['roles'][r]['format'],

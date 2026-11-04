@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
+from decimal import Decimal
 import unittest
 from unittest.mock import patch
 
@@ -77,7 +78,8 @@ class DedicatedGpuTests(unittest.TestCase):
                        {'HASLA_INPUT_ARTIFACT': f'{entity}/{runner.cloud.PROJECT}/{name}-data:v0'}),
                    patch.object(runner.cloud, 'result_for', side_effect=result),
                    patch.object(runner.cloud, 'delete_and_confirm', side_effect=delete),
-                   patch.object(runner.cloud, 'reconcile_created_pods', return_value=[])]
+                   patch.object(runner.cloud, 'reconcile_created_pods', return_value=[]),
+                   patch.object(runner, 'verify_reserved_funding')]
         mocks = [item.start() for item in patches]
         try:
             yield SimpleNamespace(trace=trace, environments=environments, create=mocks[6], publish=mocks[7], delete=mocks[9])
@@ -111,6 +113,27 @@ class DedicatedGpuTests(unittest.TestCase):
         state.create.assert_not_called()
         state.publish.assert_not_called()
         state.delete.assert_not_called()
+
+    def test_prepaid_check_covers_full_reserved_caps_without_disclosing_balance(self):
+        ledger = SimpleNamespace(reserved_krw=Decimal('23000'), policy=SimpleNamespace(
+            fx_krw_per_usd_upper=Decimal('2000'), tax_multiplier=Decimal('1.15')))
+        for balance, under, expected in [('10', False, True), ('9.99', False, False),
+                                          (True, False, False), ('NaN', False, False),
+                                          ('1000000', True, False), ('1000000', None, False)]:
+            response = SimpleNamespace(ok=True, close=lambda: None,
+                json=lambda: {'data': {'myself': {'clientBalance': balance, 'underBalance': under}}})
+            output = io.StringIO()
+            with self.subTest(balance=balance, under=under), patch.object(runner.cloud, 'E', self.env), \
+                    patch.object(runner.cloud.requests, 'post', return_value=response), contextlib.redirect_stdout(output):
+                if expected:
+                    runner.verify_reserved_funding(ledger)
+                else:
+                    with self.assertRaises(RuntimeError):
+                        runner.verify_reserved_funding(ledger)
+            event = json.loads(output.getvalue())
+            self.assertEqual(event['sufficient_for_full_caps'], expected)
+            self.assertFalse(event['balance_disclosed'])
+            self.assertNotIn('1000000', output.getvalue())
 
     def test_training_failure_preserves_other_model_success_and_closes_both(self):
         with self.ready(failed_role='chat') as state, contextlib.redirect_stdout(io.StringIO()):
