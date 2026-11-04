@@ -303,7 +303,7 @@ jobs:
     concurrency:
       group: hasla-private-contest-source-fetch
       cancel-in-progress: false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 80
     steps:
       - uses: actions/checkout@v4
