@@ -40,7 +40,7 @@ def runpod(method, path, **kwargs):
                                 timeout=timeout, **kwargs)
     if response.status_code >= 400:
         # An upstream error can echo the request's secret dataset/environment.
-        body = response.text.lower()
+        body = str(getattr(response, 'text', '')).lower()
         if any(word in body for word in ('insufficient credit', 'insufficient fund', 'balance', 'add funds', 'deposit')):
             category = 'account_funding'
         elif any(word in body for word in ('no available', 'not available', 'no longer available', 'capacity', 'out of stock')):
