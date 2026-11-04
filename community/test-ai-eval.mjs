@@ -149,22 +149,40 @@ test('a table from before the new columns gets them; cases record their route an
   const env = {DB: db, AI: fakeAI(), PROBLEM_BANK: bank()};
   const r = await runBankCase(env, db, Math.random, {style: 'community'});
   assert.equal(r.style, 'community');
-  const sys = env.AI.calls.find(c => c.model === CHAT && /HaslaLab's assistant/.test(c.input.messages[0].content));
+  // the problem goes to the reasoning model (sorted as solve), with the tone in its prompt and a reminder on the message
+  const sys = env.AI.calls.find(c => c.model === '@cf/qwen/qwq-32b');
   assert.match(sys.input.messages[0].content, /casual tone/);
+  assert.match(sys.input.messages.at(-1).content, /커뮤 말투/);
+  assert.equal(r.route, 'solve');
   assert.match(env.AI.calls.find(c => c.model === JUDGE).input.messages[1].content, /^Requested tone: Tone: the casual tone/);
 });
 
-test('location cases run on the small model half the time; a poor record turns the fast route off', async () => {
+test('location cases run on the direct site route half the time; a poor record turns that route off', async () => {
   const exams = [{id: 'ipho-2025-T1', comp: 'ipho', year: 2025, task: 'T1', kind: 'theory', competition: {ko: '국제물리올림피아드'}, title: {ko: '수소와 은하'}}];
   const fast = await runSiteCase({AI: fakeAI({answerText: 'https://haslalab.org/#/ipho/2025 에 있어요'})}, () => 0.1, exams, {route: 'fast'});
-  assert.equal(fast.route, 'fast');
+  assert.equal(fast.route, 'site');
   assert.equal(fast.score, 1);
   const db = d1();
   await ensureAiEval(db);
-  for (let i = 0; i < 10; i++) db.sql.prepare("INSERT INTO ai_eval (day, kind, status, route, score) VALUES ('d', 'site', 'graded', 'fast', 0)").run();
+  for (let i = 0; i < 10; i++) db.sql.prepare("INSERT INTO ai_eval (day, kind, status, route, score) VALUES ('d', 'site', 'graded', 'site', 0)").run();
   forgetFastCache();
   assert.equal(await fastAllowed({}, db), false);
   forgetFastCache();
   assert.equal(await fastAllowed({AI_FAST: 'on'}, db), true);
   forgetFastCache();
+});
+
+test('members\' chats wait for review apart from the night\'s total; their earlier turns go into the training line', async () => {
+  const {logMemberChat} = await import('./src/ai-memory.js');
+  class HttpError extends Error { constructor(status, code) { super(code); this.status = status; } }
+  const env = {DB: d1(), AI: fakeAI(), PROBLEM_BANK: bank(), AI_EVAL_DAILY: '1'};
+  const id = await logMemberChat(env.DB, {user_id: 5, history: [{role: 'user', content: '앞 질문'}, {role: 'assistant', content: '앞 답'}, {role: 'user', content: '그럼 이건?'}], answer: '이건 이렇게', route: 'explain', style: 'default'});
+  assert.ok(await aiEvalTick(env, {now: Date.UTC(2026, 10, 3, 17, 5)}), 'a member\'s chat does not use up the night\'s cases');
+  const route = createAiEvalRouter({HttpError, currentUser: async () => ({id: 1, role: 'admin'})});
+  const list = await route(new Request('https://x/api/admin/ai-eval?kind=member'), env);
+  assert.deepEqual(list.items.map(i => i.id), [id]);
+  await route(new Request(`https://x/api/admin/ai-eval/${id}`, {method: 'POST', body: '{"action":"approve"}'}), env);
+  const line = JSON.parse((await (await route(new Request('https://x/api/admin/ai-eval/export'), env)).text()).trim());
+  assert.deepEqual(line.messages.map(m => m.content).slice(1), ['앞 질문', '앞 답', '그럼 이건?', '이건 이렇게']);
+  assert.equal(env.DB.sql.prepare('SELECT count(*) n FROM ai_memory').get().n, 0, 'an answer that needed earlier turns is not reused alone');
 });

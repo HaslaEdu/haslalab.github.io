@@ -16,27 +16,12 @@ import { remember, forget, usageStats, pruneUsage, forgetFastCache } from './ai-
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 
 export const AI_EVAL_PATH = '/api/admin/ai-eval';
-export const AI_EVAL_SQL = [
-  `CREATE TABLE IF NOT EXISTS ai_eval (id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT NOT NULL, kind TEXT NOT NULL, ref TEXT,
-    question TEXT NOT NULL DEFAULT '', answer TEXT, reference TEXT, tools TEXT, score REAL, verdict TEXT, reason TEXT,
-    status TEXT NOT NULL DEFAULT 'running', corrected TEXT, note TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()),
-    reviewed_at INTEGER, reviewed_by INTEGER)`,
-  `CREATE INDEX IF NOT EXISTS ai_eval_day ON ai_eval(day)`,
-  `CREATE INDEX IF NOT EXISTS ai_eval_status ON ai_eval(status, id)`,
-];
-// columns added after the table first went out (a duplicate column error means it is there already)
-const AI_EVAL_COLUMNS = [`ALTER TABLE ai_eval ADD COLUMN route TEXT`, `ALTER TABLE ai_eval ADD COLUMN style TEXT NOT NULL DEFAULT 'default'`];
+export { AI_EVAL_SQL, ensureAiEval } from './ai-memory.js';
+import { ensureAiEval } from './ai-memory.js';
 const DAILY = 30, START_HOUR = 2, PARALLEL = 2, STALE_SEC = 900, SITE_SHARE = 0.25, COMMUNITY_SHARE = 0.3, FAST_SHARE = 0.5;
 const BANK = 'https://problem-bank/api/problem-bank';
 const clip = (v, n) => String(v ?? '').slice(0, n);
 
-const ready = new WeakMap();
-export function ensureAiEval(db) {
-  if (!ready.has(db)) ready.set(db, db.batch(AI_EVAL_SQL.map(s => db.prepare(s)))
-    .then(() => Promise.all(AI_EVAL_COLUMNS.map(s => db.prepare(s).run().catch(e => { if (!/duplicate column/i.test(String(e?.message || e))) throw e; }))))
-    .catch(e => { ready.delete(db); throw e; }));
-  return ready.get(db);
-}
 export function evalConfig(env) {
   const n = env.AI_EVAL_DAILY == null || env.AI_EVAL_DAILY === '' ? DAILY : Math.max(0, Math.min(500, Math.floor(+env.AI_EVAL_DAILY) || 0));
   const hour = env.AI_EVAL_HOUR == null || env.AI_EVAL_HOUR === '' ? START_HOUR : Math.max(0, Math.min(23, Math.floor(+env.AI_EVAL_HOUR) || 0));
@@ -125,7 +110,7 @@ export async function runBankCase(env, db, rand = Math.random, {style} = {}) {
 }
 
 export async function runSiteCase(env, rand = Math.random, exams = MODEL_TEST_EXAMS, {route} = {}) {
-  route ||= rand() < FAST_SHARE ? 'fast' : 'big';
+  route = {fast: 'site', big: 'tools'}[route] || route || (rand() < FAST_SHARE ? 'site' : 'tools');
   const pool = exams.filter(e => e.title?.ko || e.title?.en);
   const e = pool[Math.floor(rand() * pool.length)];
   const page = `#/${e.comp}/${e.year}`, title = e.title?.ko || e.title?.en;
@@ -153,7 +138,7 @@ export async function runEvalCase(env, {day, kind, rand = Math.random} = {}) {
   let row;
   try {
     row = {...(kind === 'site' ? await runSiteCase(env, rand) : await runBankCase(env, db, rand)), status: 'graded'};
-    if (row.route === 'fast' || row.route === 'fast→big') forgetFastCache();
+    if (/^(site|fast)/.test(row.route || '')) forgetFastCache();
   } catch (e) {
     row = {status: 'failed', reason: clip(e?.message || e, 300)};
   }
@@ -170,8 +155,8 @@ export async function aiEvalTick(env, {now = Date.now()} = {}) {
   if (!cfg.daily || hour < cfg.hour) return null;
   await ensureAiEval(env.DB);
   await env.DB.prepare(`UPDATE ai_eval SET status='failed', reason='timed out' WHERE status='running' AND created_at<unixepoch()-?`).bind(STALE_SEC).run();
-  const {n} = await env.DB.prepare(`SELECT count(*) AS n FROM ai_eval WHERE day=? AND status!='failed'`).bind(day).first();
-  const {f} = await env.DB.prepare(`SELECT count(*) AS f FROM ai_eval WHERE day=? AND status='failed'`).bind(day).first();
+  const {n} = await env.DB.prepare(`SELECT count(*) AS n FROM ai_eval WHERE day=? AND status!='failed' AND kind!='member'`).bind(day).first();
+  const {f} = await env.DB.prepare(`SELECT count(*) AS f FROM ai_eval WHERE day=? AND status='failed' AND kind!='member'`).bind(day).first();
   if (n >= cfg.daily || f >= cfg.daily) return null;   // the day's total, or a night of failures: stop until tomorrow
   return runEvalCase(env, {day});
 }
@@ -181,7 +166,10 @@ const REVIEW = new Set(['approve', 'reject', 'reset']);
 /* one chat-format training line; the system line names the tone, as the assistant's prompt does */
 export function trainingLine(row) {
   const system = `You are HaslaLab's assistant (하슬라랩 AI). ${STYLES[styleOf(row.style)].split('\n')[0]}`;
-  return JSON.stringify({messages: [{role: 'system', content: system}, {role: 'user', content: row.question}, {role: 'assistant', content: row.corrected || row.answer}]});
+  let context = [];
+  try { context = JSON.parse(row.context || '[]').filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string'); } catch {}
+  return JSON.stringify({messages: [{role: 'system', content: system}, ...context.map(m => ({role: m.role, content: m.content})),
+    {role: 'user', content: row.question}, {role: 'assistant', content: row.corrected || row.answer}]});
 }
 
 export function createAiEvalRouter({HttpError, currentUser}) {
@@ -197,6 +185,9 @@ export function createAiEvalRouter({HttpError, currentUser}) {
       const where = [], args = [];
       if (status !== 'all') { where.push('status=?'); args.push(status); }
       if (before) { where.push('id<?'); args.push(before); }
+      const kind = url.searchParams.get('kind');
+      if (kind === 'member') where.push("kind='member'");
+      else if (kind === 'eval') where.push("kind!='member'");
       const verdict = url.searchParams.get('verdict');
       if (verdict) { where.push('verdict=?'); args.push(verdict); }
       const items = (await db.prepare(`SELECT * FROM ai_eval ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY id DESC LIMIT ?`).bind(...args, lim).all()).results;
@@ -213,7 +204,7 @@ export function createAiEvalRouter({HttpError, currentUser}) {
     }
     if (p === AI_EVAL_PATH + '/export' && m === 'GET') {
       const style = url.searchParams.get('style');
-      const rows = (await db.prepare(`SELECT question, answer, corrected, style FROM ai_eval WHERE status='approved' ${style ? 'AND style=?' : ''} ORDER BY id`)
+      const rows = (await db.prepare(`SELECT question, answer, corrected, style, context FROM ai_eval WHERE status='approved' ${style ? 'AND style=?' : ''} ORDER BY id`)
         .bind(...(style ? [styleOf(style)] : [])).all()).results;
       return new Response(rows.map(r => trainingLine(r)).join('\n') + (rows.length ? '\n' : ''), {headers: {
         'Content-Type': 'application/x-ndjson; charset=utf-8', 'Content-Disposition': 'attachment; filename="haslalab-ai-train.jsonl"', 'Cache-Control': 'no-store'}});

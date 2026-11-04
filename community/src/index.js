@@ -45,7 +45,8 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './page-tiles.js';
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
-import { createAiAssistantRouter, AI_ASSISTANT_PATH } from './ai-assistant.js';
+import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH } from './ai-assistant.js';
+import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
@@ -56,6 +57,7 @@ import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
 import { createAccountSecurityRouter, ensureAccountSecuritySchema } from './account-security.js';
 import { createSignupEmail, ensureSignupCodeSchema, CODE_HELD } from './signup-email.js';
+import { setAiTrainConsent, aiTrainAllowed } from './consent.js';
 import { ensureConsentSchema, consentInfo, requestCountry, readConsent, recordConsent, consentStatus, decorateConsent, setTrainConsent, dropTrainRows, trainAllowed, CONSENT_COLUMNS, consentOf, TRAIN_KEEP_SEC } from './consent.js';
 
 const BOARDS = ["free", "qna", "sim", "study"];
@@ -247,7 +249,7 @@ const monthlyCaptureRouter = createMonthlyCaptureRouter({HttpError,needUser,limi
 const monthlyExperimentRouter = createMonthlyExperimentRouter({HttpError,needUser,limit,
   ensureContent:ensureWeeklyContent,visibleSql:visibleMonthlySql,scope:env=>env[DB_SCOPE]||env.DB});
 const problemBankOcrRouter=createProblemBankOcrRouter({HttpError,currentUser,needUser});
-const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit});
+const aiAssistantRouter=createAiAssistantRouter({HttpError,currentUser,needUser,limit,clientIp,trainAllowed:(env,id)=>aiTrainAllowed(env.DB,id,env[DB_SCOPE]||env.DB)});
 const aiEvalRouter=createAiEvalRouter({HttpError,currentUser});
 
 /* ── routes ─────────────────────────────────────────────────── */
@@ -255,7 +257,7 @@ async function handle(req, env, url, ctx) {
   const p = url.pathname.replace(/\/+$/, "");
   const m = req.method;
   if(p===PROBLEM_BANK_OCR_PATH)return problemBankOcrRouter(req,env);
-  if(p===AI_ASSISTANT_PATH)return aiAssistantRouter(req,env);
+  if(p===AI_ASSISTANT_PATH||p===AI_FEEDBACK_PATH||p===AI_FORGET_PATH)return aiAssistantRouter(req,env);
   if(p===AI_EVAL_PATH||p.startsWith(AI_EVAL_PATH+'/'))return aiEvalRouter(req,env);
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
@@ -334,7 +336,16 @@ async function handle(req, env, url, ctx) {
     await recordConsent(env.DB, me.id, consent, now(), scope);
     // agreeing again without the training box withdraws it: what was captured before goes
     if (!consent.train) await dropTrainRows(env.DB, me.id, LAB_TRAIN_SQL);
+    if (!consent.aiTrain) await forgetMember(env.DB, me.id);
     return { ok: true, user: pubUser(decorateConsent(me, { consent_required: false, train_ok: consent.train })) };
+  }
+  /* the HaslaLab AI chat box (chat window and profile): withdrawing deletes the kept chats */
+  if (p === "/api/me/consent/ai-train" && m === "POST") {
+    needUser(me);
+    if (typeof body.on !== "boolean") bad("bad_train");
+    await limit(env, "consent:" + me.id, 20, 600);
+    if (!await setAiTrainConsent(env.DB, me.id, body.on, now(), forgetMember, env[DB_SCOPE] || env.DB)) throw new HttpError(403, "consent_required");
+    return { ok: true, ai_train_ok: body.on };
   }
   if (p === "/api/me/consent/train" && m === "POST") {
     needUser(me);
@@ -381,6 +392,8 @@ async function handle(req, env, url, ctx) {
     await env.DB.prepare(LAB_TRAIN_SQL).run(); await env.DB.prepare(LAB_BENCH_SQL).run();
     // posts and comments stay so threads keep making sense; the name goes
     await labR2Drop(env, "session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)", me.id);
+    // the AI conversations the member let the assistant learn from (ai-memory.js)
+    await forgetMember(env.DB, me.id);
     await env.DB.batch([
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),
