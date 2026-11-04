@@ -15,18 +15,24 @@ import { recall, logUsage, fastAllowed, logMemberChat, memberFeedback, forgetMem
 
 export const AI_ASSISTANT_PATH = '/api/ai/chat';
 const SITE = 'https://haslalab.org/';
-// Every model here takes a LoRA adapter of our own (AI_CHAT_LORA, AI_SOLVER_LORA, AI_GUARD_LORA: the name given to
-// `wrangler ai finetune create`), so the assistant can be tuned on the answers an admin has checked (ai-eval.js).
-export const CHAT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';   // function calling, 24k context
-export const SOLVER_MODEL = '@cf/qwen/qwq-32b';                          // reasoning
+// HaslaLab AI is meant to be trained on the answers an admin has checked (ai-eval.js), so each role uses a model a
+// LoRA adapter of our own can be put on:
+//   CHAT (most answers): Gemma 4 26B-A4B, a mixture of experts with 4B active, function calling, 256k context, $0.10/$0.30
+//     per M tokens on Workers AI. Workers AI does not take LoRAs on it yet; CoreWeave's serverless inference does at the
+//     same per-token price, so a trained adapter is served from there (AI_CHAT_URL/_KEY/_REMOTE below) and the
+//     untuned model stays on Workers AI as the fallback.
+//   SOLVER: QwQ 32B, a reasoning model Workers AI takes LoRAs on (AI_SOLVER_LORA: the name given to
+//     `wrangler ai finetune create`).
+//   GUARD: Llama Guard 3 (LoRA on Workers AI); FAST, the intent classifier: Llama 3.1 8B (a LoRA on CoreWeave too).
+export const CHAT_MODEL = '@cf/google/gemma-4-26b-a4b-it';
+export const SOLVER_MODEL = '@cf/qwen/qwq-32b';
 export const GUARD_MODEL = '@cf/meta/llama-guard-3-8b';
-// the nightly self-test (ai-eval.js): one model writes students' questions, another grades the answers
-// the small model answers the simple questions (where a problem or a post is) from data the Worker looks up itself
 export const FAST_MODEL = '@cf/meta/llama-3.1-8b-instruct-fast';
+// the nightly self-test (ai-eval.js): one model writes students' questions, another grades the answers
 export const MODELS = {CHAT: CHAT_MODEL, SOLVER: SOLVER_MODEL, GUARD: GUARD_MODEL, FAST: FAST_MODEL,
-  ASKER: '@cf/meta/llama-3.3-70b-instruct-fp8-fast', JUDGE: '@cf/openai/gpt-oss-120b'};
+  ASKER: CHAT_MODEL, JUDGE: '@cf/openai/gpt-oss-120b'};
 const MAX_TURNS = 20, MAX_CHARS = 4000, MAX_STEPS = 5;
-const HISTORY_CHARS = 12000, TOOL_CHARS = 6000;   // the chat model's 24k-token window holds the system, history and tool results
+const HISTORY_CHARS = 16000, TOOL_CHARS = 8000;   // kept well inside the smallest window in use (QwQ, 24k tokens)
 
 const MATH_RULE = `Write every formula in LaTeX: $...$ inline and $$...$$ on its own line (never \\( \\), \\[ \\] or
 formulas in plain text); keep the dollar signs out of code blocks.`;
@@ -100,13 +106,34 @@ export function readCompletion(res) {
   return {text, calls};
 }
 
-/* one Workers AI call: the output limit under the name the model takes (OpenAI's open models: max_completion_tokens,
-   the others: max_tokens, which otherwise defaults to 256), and the LoRA adapter when one is set */
-export function runModel(env, which, input, maxTokens) {
+/* one model call. With AI_<ROLE>_URL, AI_<ROLE>_KEY (a secret) and AI_<ROLE>_REMOTE (the model id there, e.g. a W&B
+   artifact of our LoRA) the role goes to that OpenAI-compatible endpoint, falling back to Workers AI if it fails.
+   On Workers AI: the output limit under the name the model takes (models with the OpenAI chat schema:
+   max_completion_tokens; the older ones: max_tokens, which otherwise defaults to 256), Gemma 4 without its thinking
+   pass (an answer, not a monologue), and the LoRA adapter when one is set. */
+const CHAT_SCHEMA = /^@cf\/(?:openai\/|google\/gemma-4|qwen\/qwen3\.[1-9]|deepseek-ai\/deepseek-v4|moonshotai\/)/;
+export async function runModel(env, which, input, maxTokens) {
+  const url = env[`AI_${which}_URL`], key = env[`AI_${which}_KEY`], remote = env[`AI_${which}_REMOTE`];
+  if (url && key && remote) {
+    try { return await runRemote(url, key, remote, input, maxTokens); }
+    catch (e) { console.error('ai-remote', which, String(e?.message || e).slice(0, 200)); }
+  }
   const model = env[`AI_${which}_MODEL`] || MODELS[which];
   const lora = env[`AI_${which}_LORA`];
-  const out = /^@cf\/openai\//.test(model) ? {max_completion_tokens: maxTokens} : {max_tokens: maxTokens};
-  return env.AI.run(model, {...input, ...(maxTokens ? out : {}), ...(lora ? {lora} : {})});
+  const out = CHAT_SCHEMA.test(model) ? {max_completion_tokens: maxTokens} : {max_tokens: maxTokens};
+  const quiet = /^@cf\/google\/gemma-4/.test(model) && which !== 'JUDGE' ? {chat_template_kwargs: {enable_thinking: false}} : {};
+  return env.AI.run(model, {...input, ...quiet, ...(maxTokens ? out : {}), ...(lora ? {lora} : {})});
+}
+/* an OpenAI-compatible chat completion (CoreWeave / W&B Inference serves our LoRAs this way); a stream comes back as
+   the response body, the same server-sent events generate() reads from Workers AI */
+async function runRemote(url, key, model, input, maxTokens) {
+  const r = await fetch(url.replace(/\/+$/, '') + '/chat/completions', {method: 'POST',
+    headers: {'Content-Type': 'application/json', Authorization: `Bearer ${key}`},
+    body: JSON.stringify({model, messages: input.messages, ...(input.tools ? {tools: input.tools} : {}), ...(input.stream ? {stream: true, stream_options: {include_usage: true}} : {}),
+      ...(input.temperature != null ? {temperature: input.temperature} : {}), ...(maxTokens ? {max_tokens: maxTokens} : {})}),
+    signal: AbortSignal.timeout(input.stream ? 300000 : 120000)});
+  if (!r.ok) throw new Error(`remote ${r.status}`);
+  return input.stream ? r.body : r.json();
 }
 /* a reasoning model's thinking («<think>…</think>», sometimes with only the closing tag) is not part of its answer */
 export const stripThinking = t => String(t || '').replace(/^[\s\S]*?<\/think>/, '').replace(/<think>[\s\S]*$/, '').trim();

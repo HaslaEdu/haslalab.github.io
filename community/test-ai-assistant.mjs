@@ -72,13 +72,37 @@ test('each model gets its output limit under its own name, and our LoRA adapter 
   await runModel({AI, AI_SOLVER_LORA: 'haslalab-solver-v1'}, 'SOLVER', {messages: []}, 8192);
   await runModel({AI}, 'JUDGE', {messages: []}, 4096);
   assert.deepEqual(seen.map(s => s.model), [CHAT_MODEL, SOLVER_MODEL, '@cf/openai/gpt-oss-120b']);
-  assert.equal(seen[0].input.max_tokens, 2048);
+  assert.equal(seen[0].input.max_completion_tokens, 2048, 'Gemma 4 takes the OpenAI chat schema');
+  assert.deepEqual(seen[0].input.chat_template_kwargs, {enable_thinking: false}, 'answers without a thinking pass');
   assert.equal(seen[0].input.lora, undefined);
   assert.equal(seen[1].input.lora, 'haslalab-solver-v1');
+  assert.equal(seen[1].input.max_tokens, 8192, 'QwQ takes max_tokens');
   assert.equal(seen[2].input.max_completion_tokens, 4096);
   assert.equal(seen[2].input.max_tokens, undefined);
   await runModel({AI, AI_CHAT_MODEL: '@cf/x/y'}, 'CHAT', {messages: []}, 10);
   assert.equal(seen[3].model, '@cf/x/y');
+});
+
+test('a role can be served by an OpenAI-compatible endpoint (our LoRA on CoreWeave), with Workers AI as the fallback', async t => {
+  const sent = [];
+  let up = true;
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    sent.push({url: String(url), auth: init.headers.Authorization, body: JSON.parse(init.body)});
+    return up ? Response.json({choices: [{message: {content: '튜닝된 답'}}]}) : new Response('down', {status: 503});
+  });
+  const seen = [];
+  const env = {AI: {run: async model => { seen.push(model); return {response: '기본 답'}; }},
+    AI_CHAT_URL: 'https://api.inference.wandb.ai/v1/', AI_CHAT_KEY: 'k-secret', AI_CHAT_REMOTE: 'wandb-artifact:///team/proj/haslalab-chat:v3'};
+  const r = readCompletion(await runModel(env, 'CHAT', {messages: [{role: 'user', content: 'x'}], tools: [{type: 'function'}]}, 300));
+  assert.equal(r.text, '튜닝된 답');
+  assert.equal(sent[0].url, 'https://api.inference.wandb.ai/v1/chat/completions');
+  assert.equal(sent[0].auth, 'Bearer k-secret');
+  assert.deepEqual([sent[0].body.model, sent[0].body.max_tokens, sent[0].body.tools.length], ['wandb-artifact:///team/proj/haslalab-chat:v3', 300, 1]);
+  assert.equal(seen.length, 0);
+  up = false;
+  assert.equal(readCompletion(await runModel(env, 'CHAT', {messages: []}, 10)).text, '기본 답', 'falls back to Workers AI');
+  assert.deepEqual(seen, [CHAT_MODEL]);
+  assert.equal(readCompletion(await runModel({...env, AI_CHAT_KEY: ''}, 'CHAT', {messages: []}, 10)).text, '기본 답', 'needs all three settings');
 });
 
 test('a call written as text is still a call; thinking is dropped; long histories are cut from the oldest end', () => {
@@ -88,7 +112,8 @@ test('a call written as text is still a call; thinking is dropped; long historie
   assert.equal(stripThinking('<think>a</think>\n답'), '답');
   assert.equal(stripThinking('a</think>답'), '답');
   const h = [{role: 'user', content: 'x'.repeat(9000)}, {role: 'assistant', content: 'y'.repeat(5000)}, {role: 'user', content: 'z'}];
-  assert.deepEqual(fitHistory(h).map(m => m.content[0]), ['z']);
+  assert.deepEqual(fitHistory(h).map(m => m.content[0]), ['x', 'y', 'z']);
+  assert.deepEqual(fitHistory([{role: 'user', content: 'x'.repeat(12000)}, ...h]).map(m => m.content[0]), ['x', 'y', 'z'], 'the oldest turn that does not fit goes');
   assert.equal(fitHistory([{role: 'user', content: 'q'.repeat(20000)}]).length, 1, 'the last message always stays');
 });
 
