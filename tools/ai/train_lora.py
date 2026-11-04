@@ -38,6 +38,21 @@ def load(path, holdout):
     return rows[n:], rows[:n]
 
 
+def render(tok, messages, base):
+    """the conversation as training text. A solver answer written as «<think>…</think> answer» (DeepSeek V4 Pro's
+    teacher cases, community/src/ai-eval.js) keeps its short think: QwQ's chat template drops the think of assistant
+    turns, so the last turn is written after the template's own opening of the assistant's think, and QwQ learns to
+    think that briefly instead of only learning the answer."""
+    last = messages[-1].get('content') or ''
+    if base != 'solver' or '</think>' not in last:
+        return tok.apply_chat_template(messages, tokenize=False)
+    prefix = tok.apply_chat_template(messages[:-1], tokenize=False, add_generation_prompt=True)
+    body = last.split('<think>', 1)[1] if last.lstrip().startswith('<think>') else last
+    if not prefix.rstrip().endswith('<think>'):
+        prefix += '<think>\n'
+    return prefix + body.lstrip('\n') + '<|im_end|>\n'
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', choices=BASES, default='chat')
@@ -59,7 +74,7 @@ def main():
     model, tok = FastLanguageModel.from_pretrained(BASES[a.base], max_seq_length=a.max_len, load_in_4bit=True)
     model = FastLanguageModel.get_peft_model(model, r=a.rank, lora_alpha=a.rank * 2, lora_dropout=0,
                                              target_modules=['q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj'])
-    fmt = lambda rows: Dataset.from_list([{'text': tok.apply_chat_template(r['messages'], tokenize=False)} for r in rows])
+    fmt = lambda rows: Dataset.from_list([{'text': render(tok, r['messages'], a.base)} for r in rows])
     trainer = SFTTrainer(model=model, tokenizer=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
                          args=SFTConfig(output_dir=a.out + '-run', num_train_epochs=a.epochs, learning_rate=a.lr,
                                         per_device_train_batch_size=1, gradient_accumulation_steps=8, warmup_ratio=0.05,
