@@ -151,3 +151,35 @@ test('a new code clears expired ones; the purge leaves live codes; old password 
     assert.equal((await s.api('/me/security',null,{token:login.data.token})).data.email,null);
   }finally{s.close()}
 });
+
+test('a per-IP daily cap bounds how many token-bearing accounts one address can mint in a day',async()=>{
+  const s=setup({SIGNUP_DAY_CAP:2});try{
+    const ip='203.0.113.9';
+    for(let i=0;i<2;i++){
+      const r=await s.api('/signup/email-code',{email:`farm${i}@example.com`},{address:ip});assert.equal(r.status,200);
+      const made=await s.api('/signup',s.form('farm'+i,`farm${i}@example.com`,s.mailedCode()),{address:ip});
+      assert.equal(made.status,200,JSON.stringify(made.data));
+    }
+    // the code for a third account mails fine, but creating it is refused for this IP today
+    await s.api('/signup/email-code',{email:'farm2@example.com'},{address:ip});
+    const blocked=await s.api('/signup',s.form('farm2','farm2@example.com',s.mailedCode()),{address:ip});
+    assert.equal(blocked.status,429,JSON.stringify(blocked.data));assert.equal(blocked.data.error,'rate_limited');
+    // a different address is unaffected
+    await s.api('/signup/email-code',{email:'other@example.com'},{address:'203.0.113.10'});
+    assert.equal((await s.api('/signup',s.form('other','other@example.com',s.mailedCode()),{address:'203.0.113.10'})).status,200);
+  }finally{s.close()}
+});
+
+test('linking a provider needs a recent login: a stale session is refused, a fresh one passes',async()=>{
+  const s=setup();try{
+    await s.api('/signup/email-code',{email:'link@example.com'});
+    const made=await s.api('/signup',s.form('linker','link@example.com',s.mailedCode()));assert.equal(made.status,200);
+    const token=made.data.token;
+    // fresh session → a ticket is minted
+    assert.equal((await s.api('/oauth/ticket',{},{token})).status,200);
+    // age the session past the window → the same token can no longer graft an identity on
+    s.sql.prepare('UPDATE sessions SET created_at=created_at-100000').run();
+    const stale=await s.api('/oauth/ticket',{},{token});
+    assert.equal(stale.status,403);assert.equal(stale.data.error,'recent_login_required');
+  }finally{s.close()}
+});

@@ -153,6 +153,11 @@ const clientIp = req => req.headers.get("CF-Connecting-IP") || "local";
 /* ── input validation ───────────────────────────────────────── */
 /* a new account starts with three exam tokens (the column default of 5 was for accounts that existed when tokens came in) */
 const SIGNUP_TOKENS = 3;
+/* Each new account carries SIGNUP_TOKENS free grading tokens, so a farm that makes accounts in bulk is
+   spending our model budget. Email-verified sign-up already forces one readable mailbox per account; this
+   daily per-IP cap on account creation bounds the other axis — a classroom shares an address, not 50 new
+   accounts a day from one IP. OAuth sign-ups count against the same key. */
+const SIGNUP_DAY_CAP = 50;
 const USERNAME_RE = /^[A-Za-z0-9_]{3,20}$/;
 // letters (any script), digits, _ . -  and inner spaces; 2–16 chars
 const NICK_RE = /^[\p{L}\p{N}_.\-](?:[\p{L}\p{N}_.\- ]{0,14}[\p{L}\p{N}_.\-])?$/u;
@@ -200,6 +205,16 @@ async function currentUser(req, env) {
 }
 const needsUsername = isPendingUsername;
 function needUser(u) { if (!u) throw new HttpError(401, "login_required"); if(needsUsername(u))throw new HttpError(403,'username_required'); return u; }
+/* A sensitive action — minting exam tokens, or linking a new provider to the account — must come from a
+   session whose owner logged in recently, not a month-old bearer token lifted from a browser. A fresh login
+   by any method (password or OAuth) resets sessionCreatedAt, so re-authenticating clears the gate. This
+   bounds what a stolen token can do: read, yes; mint tokens or graft on an attacker's identity, no. */
+const RECENT_LOGIN_SEC = 900;
+function needRecentLogin(u, maxAgeSec = RECENT_LOGIN_SEC) {
+  needUser(u);
+  if (!Number.isFinite(u.sessionCreatedAt) || u.sessionCreatedAt < now() - maxAgeSec) throw new HttpError(403, "recent_login_required");
+  return u;
+}
 const pubUser = u => ({ id: u.id, username: needsUsername(u)?null:u.username, nickname: u.nickname, role: u.role, created_at: u.created_at, avatar: u.avatar || null, ...(needsUsername(u)?{username_required:true}:{}),...(u.username_setup_available!==undefined?{username_setup_available:u.username_setup_available}:{}),...(u.unique_identifier?{unique_identifier:u.unique_identifier,username_kind:u.username_kind}:{}),...(u.consent_required?{consent_required:true}:{}),...(u.train_ok!==undefined?{train_ok:!!u.train_ok}:{}) });
 async function accountUser(env,id){const user=await env.DB.prepare('SELECT id,username,nickname,role,created_at,avatar FROM users WHERE id=? AND deleted=0').bind(id).first();const scope=env[DB_SCOPE]||env.DB;return user?decorateConsent(await usernameProfile(env,user,scope),await consentStatus(env.DB,user.id,scope)):user}
 const desktopOAuth=createDesktopOAuth({HttpError,now,limit,sha256,b64u,providers:oauthProviders,newSession,pubUser,readUser:accountUser});
@@ -252,8 +267,10 @@ async function handle(req, env, url, ctx) {
     const clash = await env.DB.prepare("SELECT username,nickname FROM users WHERE username=? OR nickname=?")
       .bind(username, nickname).first();
     if (clash) throw new HttpError(409, clash.username.toLowerCase() === username.toLowerCase() ? "username_taken" : "nickname_taken");
-    // a whole classroom often shares one address, so this is per hour, not per day
+    // a whole classroom often shares one address, so the hourly cap is generous; a daily cap still bounds
+    // a farm that would make hundreds of token-bearing accounts from one address over a day
     await limit(env, "signup:" + clientIp(req), 20, 3600);
+    await limit(env, "signup-day:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400);
     /* the mailed code last: a name taken or a box left unticked does not spend one of its tries */
     const { email, hash, t } = await signupEmail.checkCode(env, body);
     let res;
@@ -417,7 +434,7 @@ async function handle(req, env, url, ctx) {
     return { identities: identities.results, has_pw: !!users.results[0]?.has_pw, providers: oauthProviders(env) };
   }
   if (p === "/api/oauth/ticket" && m === "POST") {          // lets a signed-in user add a provider to the account
-    needUser(me);
+    needRecentLogin(me);                                    // a stolen token must not graft an attacker's identity onto the account
     const t = b64u(crypto.getRandomValues(new Uint8Array(24)));
     await env.DB.prepare("INSERT INTO oauth_codes(code_hash,user_id,fresh,created_at) VALUES(?,?,?,?)").bind(await sha256("t:" + t), me.id, -1, now()).run();
     return { ticket: t };
@@ -832,6 +849,20 @@ function pubProblem(r, lang, open, full) {
 const isAdmin = u => u && u.role === "admin";
 
 /* ── grading ── */
+/* First-line defence against a prompt injected through an answer. Student-controlled text (OCR transcripts,
+   typed answers, the Mathpix re-read) is quoted into the grader prompt inside <<…>> fences and under
+   [bracketed] section headers. A candidate who writes those control tokens could otherwise close a fence
+   early and pass off their own "rubric", "scheme" or instructions as ours. Every grader prompt already says
+   never to follow instructions in answer text, and points already require a verbatim quote from this same
+   text (normalizeGrade / evidence checks), so the structure is defanged too: the fence markers are broken so
+   none can be forged, and a line that is exactly one of our control headers is turned to full-width brackets.
+   The words stay readable — only the machinery a student might imitate is neutralised. */
+const CONTROL_HEADER = /^[ \t]*\[(?:\/?\s*)(?:task|rubric|student answer|problem|reference solution[^\]]*|marking scheme[^\]]*|analysis[^\]]*|original submitted[^\]]*|private session[^\]]*|submitted original[^\]]*|text layer[^\]]*|end of[^\]]*|system|assistant|instructions?)\s*\][ \t]*$/i;
+export function scrubStudentText(s) {
+  return String(s ?? "")
+    .replace(/<<+/g, "‹‹").replace(/>>+/g, "››")          // no <<FENCE>> opener or closer can be forged
+    .split("\n").map(line => CONTROL_HEADER.test(line) ? line.replace("[", "［").replace(/\]([ \t]*)$/, "］$1") : line).join("\n");
+}
 function gradeShort(prob, raw) {
   const a = JSON.parse(prob.answer || "{}");
   const num = String(raw).replace(/,/g, ".").replace(/[^0-9eE+\-.]/g, ""), x = Number(num);
@@ -867,7 +898,7 @@ function gradePrompt(prob, rubric, answer, lang) {
     "", "[Problem]", prob.body_en, "", "[Reference solution — for concepts, not wording]", prob.model_en || "(none)",
     "", "[Rubric]", crit,
     ...(labels?.length?["The printed question labels correspond to these answer-part IDs: "+JSON.stringify(labels)+". A rubric ID that starts with an answer-part ID (a.exact, 16.3) belongs to that part and is marked only from that part's answer and working. Use rubric IDs in the result."]:[]),
-    "", "[Student answer]", answer,
+    "", "[Student answer]", scrubStudentText(answer),
   ].join("\n");
 }
 const quoteKey = v => String(v ?? "").normalize("NFKC").replace(/\s+/g, " ").trim();
@@ -1955,7 +1986,7 @@ async function labQualitative(env, s, task, mine, paper, lang, m) {
       if (stored.error) return { ...common, status: "pending", why: stored.error };
       originalImage = image; originalMime = row.mime;
     }
-    parts.push({ text: `[Original submitted answer, page ${page.no}, task ${task}]\n<<ANSWER>>\n${page.ocr ?? page.text ?? ""}\n<<END>>` });
+    parts.push({ text: `[Original submitted answer, page ${page.no}, task ${task}]\n<<ANSWER>>\n${scrubStudentText(page.ocr ?? page.text)}\n<<END>>` });
     if (page.mime !== "text/plain") {
       if (!originalImage) { const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(page.id).first(); originalImage = await labPageBytes(env, row); originalMime = row?.mime; }
       if (originalImage && originalImage.length <= imageBudget) { parts.push({ text: `[Original scan image, page ${page.no}; check diagrams and transcription against this image.]` }, { inline_data: { mime_type: originalMime, data: b64(originalImage) } }); imageBudget -= originalImage.length; }
@@ -2773,7 +2804,7 @@ async function labModerate(env, s, task, mine, scheme, raw, flagged, photos, lan
     `Write every note in ${lang === "en" ? "English" : "Korean"}.`,
     "<<ITEMS>>" + JSON.stringify(lean(items)) + "<<END>>"].join("\n") }];
   for (const { p, photo } of photos) {
-    parts.push({ text: `[p${p.no} · ${labPageTag(p)} · ${p.task}] transcript (may misread):\n<<OCR>>\n${p.ocr ?? ""}\n<<END>>` }, photo);
+    parts.push({ text: `[p${p.no} · ${labPageTag(p)} · ${p.task}] transcript (may misread):\n<<OCR>>\n${scrubStudentText(p.ocr)}\n<<END>>` }, photo);
   }
   const out = await labVision(env, s, parts, MOD_SCHEMA, items.length > 20 ? 12288 : 6144, m, "moderate");   // a long list of missing items needs room
   if (!Array.isArray(out.raw?.items)) throw new Error("moderation_schema");
@@ -2800,7 +2831,7 @@ async function labAuditSteps(env, s, task, mine, scheme, raw, m, family, kind, t
   if (!steps.length) return { raw, log: [] };
   const first = new Map((raw.items || []).filter(Boolean).map(x => [String(x.id), x]));
   const list = steps.map(it => ({ id: it.id, step: String(it.what || "").slice(0, 400), ...(it.alt ? { method: it.alt } : {}), ...(first.get(it.id)?.quote ? { cited: String(first.get(it.id).quote).slice(0, 200) } : {}) }));
-  const pages = mine.map(p => `[p${p.no} · ${labPageTag(p)} · ${p.task}] read: ${compactRead(p.read) || "(could not be read)"}${p.ocr != null ? "\n<<OCR>>\n" + p.ocr + "\n<<END>>" : ""}`).join("\n\n");
+  const pages = mine.map(p => `[p${p.no} · ${labPageTag(p)} · ${p.task}] read: ${compactRead(p.read) || "(could not be read)"}${p.ocr != null ? "\n<<OCR>>\n" + scrubStudentText(p.ocr) + "\n<<END>>" : ""}`).join("\n\n");
   const parts = [{ text: [stablePrefix(family, kind, tone), ...lessonLines(lessons), "", "[TASK: audit steps]",
     `Task ${task} of the ${s.comp.toUpperCase()} ${s.year} exam. For each step of the marking scheme below, decide from the candidate's transcribed pages whether the candidate wrote that step. This is a check of what is written, not a grading:`,
     "- states: a line on the pages states the step's own content: the same equation or relation (rearranged, in other symbols or units, or used inside a longer line), or for an idea, the idea itself. Copy that line from the transcript, character for character, as quote, with its page.",
@@ -2846,7 +2877,7 @@ async function labChatGrade(env, s, task, mine, scheme, lang, m, { reads = true,
   const order = [...mine].sort((a, b) => (a.kind === "answer" ? 0 : 1) - (b.kind === "answer" ? 0 : 1) || a.no - b.no);
   let budget = 14e6, left = order.filter(p => p.mime !== "text/plain").length;
   for (const p of order) {
-    parts.push({ text: `[Student page ${p.no}: ${p.kind === "answer" ? "answer sheet" : p.kind === "working" ? "working sheet" : p.kind}]` + (reads && p.ocr ? `\nTranscript:\n${p.ocr}` : "") });
+    parts.push({ text: `[Student page ${p.no}: ${p.kind === "answer" ? "answer sheet" : p.kind === "working" ? "working sheet" : p.kind}]` + (reads && p.ocr ? `\nTranscript:\n${scrubStudentText(p.ocr)}` : "") });
     const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), raw = row && row.mime !== "text/plain" ? await labPageBytes(env, row) : null;
     const img = raw && (fitPhoto(raw, row.mime, budget / Math.max(1, left--)) || (row.mime !== 'image/jpeg' && raw.byteLength * 4 / 3 <= budget ? raw : null));   // within the image budget; a PNG/WebP over its share cannot be shrunk here, so it goes whole while the budget allows
     if (img) { budget -= img.byteLength * 4 / 3; parts.push({ inline_data: { mime_type: row.mime, data: b64(img) }, label: `Student page ${p.no}` }); }
@@ -4649,6 +4680,7 @@ async function lab(p, m, body, me, req, env, url) {
       return { user: {id:u.id,username:u.username,nickname:u.nickname,exam_tokens:tokenBalance(u)},tokens:tokenBalance(u), ledger: (await env.DB.prepare("SELECT * FROM lab_ledger WHERE user_id=? ORDER BY id DESC LIMIT 50").bind(u.id).all()).results };
     }
     if (p === "/api/admin/lab/tokens" && m === "POST") {              // give (or take back) exam tokens; the balance never goes below 0
+      needRecentLogin(me);                                            // minting tokens is where a stolen admin token turns into value; require a fresh admin login
       const who = String(body.user || ""), delta = Number(body.delta),units=tokenUnits(delta);
       if (units == null || !units || Math.abs(delta) > 1000) bad("bad_delta");
       const half=await halfReady(env),balance=tokenSql(half),u = await env.DB.prepare("SELECT id FROM users WHERE (username=? COLLATE NOCASE OR nickname=?) AND deleted=0").bind(who, who).first();
@@ -4847,6 +4879,7 @@ async function oauthRoute(req, env, url) {
   } else if (found) userId = found.user_id;
   else {
     await limit(env, "signup:" + clientIp(req), 20, 3600);
+    await limit(env, "signup-day:" + clientIp(req), Number(env.SIGNUP_DAY_CAP) || SIGNUP_DAY_CAP, 86400);
     const uname = '~pending_' + b64u(crypto.getRandomValues(new Uint8Array(18)));
     const res = await env.DB.prepare("INSERT INTO users(username,nickname,pw,created_at,exam_tokens) VALUES(?,?,NULL,?,?)").bind(uname, await freeNick(env, name), now(), SIGNUP_TOKENS).run();
     userId = res.meta.last_row_id; fresh = 1;
