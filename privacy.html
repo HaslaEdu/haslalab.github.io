@@ -25,12 +25,14 @@
   th{font-weight:700;background:var(--soft)}tr:last-child td{border-bottom:0}
   .box{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--soft)}
 </style>
+<script defer src="site-analytics.js"></script>
 </head>
 <body>
 <main>
 <nav class="top"><a href="./">← HaslaLab</a><a href="terms.html">이용약관</a><a href="#en">English</a></nav>
 <h1>개인정보 처리방침</h1>
-<p class="muted">시행일: 2026년 11월 3일 · 버전 2026-11-03</p>
+<p class="muted">시행일: 2026년 11월 11일 · 버전 2026-11-11 (2026년 11월 4일 공지)</p>
+<p class="muted">이번 변경: 방문 통계(아래 1·2·6)를 추가했습니다. 2026년 11월 10일까지는 이전 버전(2026-11-03)이 적용되며, 방문 통계는 시행일부터 수집합니다.</p>
 <p>HaslaLab(이하 “서비스”)은 물리 올림피아드 답안을 AI로 판독·채점하고 결과를 알려 주는 서비스입니다. 서비스는 「개인정보 보호법」에 따라 이용자의 개인정보를 필요한 만큼만 처리하며, 이 방침으로 무엇을 왜 얼마 동안 처리하는지 알려 드립니다. 서비스는 실명, 전화번호, 신분증 등 본인 확인 정보를 받지 않습니다.</p>
 
 <h2>1. 처리하는 개인정보 항목</h2>
@@ -43,11 +45,12 @@
   <li><b>결제 기록</b>: 주문 번호, 상품, 금액, 결제 상태와 일시. 카드 번호 등 결제 수단 정보는 결제대행사 Paddle이 직접 처리하며 서비스는 받지 않습니다.</li>
   <li><b>동의 기록</b>: 약관·방침 버전, 동의 일시, 만 14세 이상 확인 여부, 접속 국가, 학습 활용 동의 여부와 그 일시</li>
   <li><b>자동으로 생성되는 정보</b>: 과도한 요청을 막기 위한 IP 주소(요청 횟수 제한 기록), 접속 국가(가입 시 연령 확인이 필요한지 판단)</li>
+  <li><b>방문 통계</b>: 공개 페이지(계정·결제·채점 화면 제외)를 열 때 페이지 주소(쿼리 문자열 제외), 유입 경로(이전 페이지 주소), 브라우저·운영체제·기기 종류, 접속 국가, 페이지 로딩 성능. Cloudflare Web Analytics로 수집하며 쿠키나 브라우저 저장소를 쓰지 않고, 개별 방문자를 구분하지 않는 집계 통계로만 봅니다. 브라우저에서 추적 거부(Do Not Track) 또는 Global Privacy Control을 켜면 수집하지 않습니다.</li>
   <li><b>게시글·댓글</b>: 커뮤니티에 쓴 글과 댓글, 추천 기록</li>
   <li><b>하슬라 AI 이용 기록</b>: 질문마다 처리 경로·걸린 시간·사용량(대화 내용은 제외)</li>
   <li><b>하슬라 AI 대화(선택)</b>: 회원가입 때(또는 내 정보·AI 채팅창에서) "하슬라 AI 대화 학습 활용"에 선택 동의한 경우에만, 보낸 메시지와 그 앞 대화 일부, AI의 답, 답변 평가(👍/👎). 로그인하지 않은 방문자의 질문은 저장하지 않으며, 하루 이용 횟수 제한에만 IP 주소를 씁니다(아래 요청 횟수 제한 기록).</li>
 </ul>
-<p class="muted">로그인 상태는 이용자 브라우저의 저장소(localStorage)에 보관되는 로그인 토큰으로 유지합니다. 광고나 행태 분석용 쿠키는 쓰지 않습니다.</p>
+<p class="muted">로그인 상태는 이용자 브라우저의 저장소(localStorage)에 보관되는 로그인 토큰으로 유지합니다. 광고나 행태 분석용 쿠키는 쓰지 않으며, 방문 통계에도 쿠키를 쓰지 않습니다.</p>
 
 <h2>2. 처리 목적</h2>
 <ul>
@@ -55,6 +58,7 @@
   <li>회원 가입과 계정 관리(본인 계정 로그인, 가입 시 이메일 확인, 비밀번호 재설정, 부정 이용 방지, 연령 확인)</li>
   <li>토큰 결제와 그 기록, 환불 등 결제 관련 처리</li>
   <li>커뮤니티 운영과 문의 응대</li>
+  <li><b>방문 통계</b>: 어떤 페이지가 얼마나 쓰이는지, 방문자가 어느 나라와 어떤 경로(검색·SNS 등)로 오는지 집계해 사이트를 개선하고 홍보 효과를 확인합니다.</li>
   <li><b>AI 채점 개선(모델 학습)</b>: 이용자가 별도로 선택 동의한 경우에만, 그 이용자의 답안과 채점 결과를 채점 품질 개선에 씁니다.</li>
   <li><b>하슬라 AI 운영과 개선</b>: 질문에 답하고 속도·비용을 관리합니다. AI 대화 학습 활용에 선택 동의한 경우에만 그 대화를 관리자가 검토해 AI의 답변 개선과 학습에 씁니다.</li>
 </ul>
@@ -89,7 +93,7 @@
 <tr><td><b>DeepSeek</b> (중국)<br><a href="https://www.deepseek.com/" rel="noopener">연락처</a></td><td>답안 사진, 답안에서 옮겨 적은 텍스트(판독 결과)와 채점 기준</td><td>채점</td><td>채점할 때, 암호화된 연결로 전송</td><td>요청을 처리하는 동안. 처리 결과만 서비스에 돌려받으며, 그 밖의 보관은 DeepSeek의 API 이용 약관에 따름</td></tr>
 <tr><td><b>OpenAI</b> (미국)<br><a href="https://openai.com/policies/privacy-policy/" rel="noopener">개인정보 문의</a></td><td>답안 사진, 판독 결과 텍스트와 채점 결과</td><td>채점 검토</td><td>채점할 때, 암호화된 연결로 전송</td><td>요청을 처리하는 동안. 처리 결과만 서비스에 돌려받으며, 그 밖의 보관은 OpenAI의 API 이용 약관에 따름</td></tr>
 <tr><td><b>Mathpix, Inc.</b> (미국)<br><a href="https://mathpix.com/privacy-policy" rel="noopener">개인정보 문의</a></td><td>채점 중 수치 답을 다시 확인해야 하는 답안 사진 쪽</td><td>그 쪽의 수식·숫자 재판독</td><td>채점할 때, 암호화된 연결로 전송</td><td>요청을 처리하는 동안. 처리 결과만 서비스에 돌려받습니다</td></tr>
-<tr><td><b>Cloudflare, Inc.</b> (미국 등, 전 세계 데이터센터)<br><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">개인정보 문의</a></td><td>위 1의 모든 항목</td><td>서버 운영, 데이터베이스, 답안 사진 저장, 가입 인증·계정 복구 메일 발송</td><td>서비스를 이용하는 동안 상시, 암호화된 연결로 전송</td><td>위 3의 보유 기간과 같음</td></tr>
+<tr><td><b>Cloudflare, Inc.</b> (미국 등, 전 세계 데이터센터)<br><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">개인정보 문의</a></td><td>위 1의 모든 항목</td><td>서버 운영, 데이터베이스, 답안 사진 저장, 가입 인증·계정 복구 메일 발송, 방문 통계(Web Analytics)</td><td>서비스를 이용하는 동안 상시, 암호화된 연결로 전송</td><td>위 3의 보유 기간과 같음</td></tr>
 <tr><td><b>Brave Software, Inc.</b> (미국)<br><a href="https://search.brave.com/help/privacy-policy" rel="noopener">개인정보 문의</a></td><td>웹 검색이 필요한 하슬라 AI 질문의 검색어(질문 문장)</td><td>하슬라 AI의 웹 검색</td><td>그런 질문을 보낼 때, 암호화된 연결로 전송</td><td>업체의 처리 방침에 따름</td></tr>
 <tr><td><b>AlphaAI Technologies Inc.</b>(Tavily) (미국)<br><a href="https://tavily.com/privacy" rel="noopener">개인정보 문의</a></td><td>웹 검색이 필요한 하슬라 AI 질문의 검색어(질문 문장)</td><td>하슬라 AI의 웹 검색</td><td>그런 질문을 보낼 때, 암호화된 연결로 전송</td><td>업체의 처리 방침에 따름</td></tr>
 <tr><td><b>RunPod, Inc.</b> (미국)<br><a href="https://www.runpod.io/legal/privacy-policy" rel="noopener">개인정보 문의</a></td><td>하슬라 AI 대화 학습 활용에 동의한 이용자의 대화 중 관리자가 승인한 질문·답변 내용(아이디·닉네임 등 계정 정보는 보내지 않음)</td><td>하슬라 AI 모델 학습(GPU 연산)</td><td>학습을 실행할 때, 암호화된 연결로 전송</td><td>학습이 끝나면(1회 수 시간) 학습 서버와 함께 삭제</td></tr>
@@ -119,18 +123,18 @@
 
 <h2>11. 방침의 변경</h2>
 <p>이 방침을 바꾸면 시행 7일 전(이용자에게 불리하거나 중요한 변경은 30일 전)에 사이트에 알립니다. 동의가 다시 필요한 변경이면 다음 로그인 때 동의를 다시 받습니다.</p>
-<p class="muted">이 방침은 2026년 11월 3일부터 시행합니다.</p>
+<p class="muted">이 방침은 2026년 11월 11일부터 시행합니다. 이전 버전(2026-11-03)은 2026년 11월 3일부터 11월 10일까지 적용됩니다.</p>
 
 <h2 id="en" lang="en">English summary</h2>
 <div lang="en">
-<p class="muted">Effective 3 November 2026. The Korean text above is the governing version.</p>
+<p class="muted">Effective 11 November 2026 (announced 4 November 2026; the version of 3 November 2026 applies until then). The Korean text above is the governing version.</p>
 <ul>
-  <li><b>What we collect</b>: your username, display name and password hash; for a password account, the email address you verify with a mailed code at sign-up (used only to confirm the sign-up and to recover the account; the code is kept only as a hash, and an unfinished sign-up's address and code are deleted when the code expires after 10 minutes); optionally a social-login provider identifier, a recovery email you verify (social accounts) and a profile picture; your answers (photos, files, typed work), what was read from them and the grading results; payment records (card details are handled by Paddle, not us); your consent record; IP addresses kept briefly for rate limiting. We collect no real name, phone number or ID.</li>
+  <li><b>What we collect</b>: your username, display name and password hash; for a password account, the email address you verify with a mailed code at sign-up (used only to confirm the sign-up and to recover the account; the code is kept only as a hash, and an unfinished sign-up's address and code are deleted when the code expires after 10 minutes); optionally a social-login provider identifier, a recovery email you verify (social accounts) and a profile picture; your answers (photos, files, typed work), what was read from them and the grading results; payment records (card details are handled by Paddle, not us); your consent record; IP addresses kept briefly for rate limiting; from 11 November 2026, aggregate visit statistics for public pages (page path without query string, referrer, browser/OS/device type, country, page-load performance) through Cloudflare Web Analytics, with no cookies or browser storage, and none when your browser sends Do Not Track or Global Privacy Control. We collect no real name, phone number or ID.</li>
   <li><b>Why</b>: to read and grade your answers and show the results, to run your account, to process payments, and, <b>only if you opt in</b>, to improve the AI grading.</li>
   <li><b>Hasla AI</b>: each question's route, time and usage (not its text) is kept 90 days. Your chats are kept <b>only if you opt in to "Hasla AI chats for training"</b> (at sign-up, on your profile or under the chat): an admin reviews them to improve the assistant; unreviewed chats are deleted after a year, and withdrawing or deleting your account deletes them at once. Visitors who are not logged in can ask twice a day; their questions are not stored, and only the IP address is used to count them. Questions that need a web search are sent as search terms to Brave Software, Inc. (USA) or AlphaAI Technologies Inc. (Tavily, USA). To train Hasla AI, the approved chats of members who opted in (question and answer text only, no account details) are sent to RunPod, Inc. (USA) for the training run and deleted with its server afterwards; the trained model file is kept at CoreWeave, Inc. (Weights &amp; Biases, USA), which also answers questions to Hasla AI while a trained chat model is in use.</li>
   <li><b>How long</b>: until you delete your account. Training copies are kept at most 1 year and only with your consent; you can withdraw at any time, which deletes them. Weekly database backups on Google Drive are kept up to 8 weeks; photo copies in backups are removed when the site deletes the photos. Rate-limit records are kept up to 2 days.</li>
   <li><b>Deletion</b>: deleting your account permanently removes your data from the server.</li>
-  <li><b>Processors and transfers abroad</b> (Korean PIPA art. 28-8(1)(3)), all over encrypted connections when you submit answers or use the service: Google LLC, USA (Gemini reads the answer photos; Google Drive backups; Vertex AI tuning only with your training consent); DeepSeek, China (grading, from the answer photos and their transcription); OpenAI, USA (grading review, from the answer photos, their transcription and the first grading); Mathpix, USA (re-reading a page whose numerical answer needs checking); Cloudflare, Inc., USA and worldwide (servers, database, photo storage, sign-up and recovery emails); Paddle.com Market Ltd, UK (payments).</li>
+  <li><b>Processors and transfers abroad</b> (Korean PIPA art. 28-8(1)(3)), all over encrypted connections when you submit answers or use the service: Google LLC, USA (Gemini reads the answer photos; Google Drive backups; Vertex AI tuning only with your training consent); DeepSeek, China (grading, from the answer photos and their transcription); OpenAI, USA (grading review, from the answer photos, their transcription and the first grading); Mathpix, USA (re-reading a page whose numerical answer needs checking); Cloudflare, Inc., USA and worldwide (servers, database, photo storage, sign-up and recovery emails, visit statistics); Paddle.com Market Ltd, UK (payments).</li>
   <li><b>Children</b>: users in Korea under 14 cannot sign up; such an account is deleted when found.</li>
   <li><b>Your rights</b>: view, correct and delete your data from your profile, withdraw training consent there, or write to <a href="mailto:mgsnew88@naver.com">mgsnew88@naver.com</a>.</li>
 </ul>
