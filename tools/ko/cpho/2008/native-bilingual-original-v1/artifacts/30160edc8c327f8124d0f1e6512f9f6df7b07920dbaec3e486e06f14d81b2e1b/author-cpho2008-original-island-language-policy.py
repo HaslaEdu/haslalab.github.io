@@ -1,0 +1,12 @@
+"""Bind the two original Chinese word ROIs and source-only measured typography."""
+from pathlib import Path
+import json,hashlib
+B=Path(__file__).resolve().parents[1];P=B/'inspection/page04-original-island-CJK-source-measurements.json';m=json.loads(P.read_text('utf8'));SHA='4e076fb9234683d028792190bcec56f12de72890da6c0e44ddf0e9146013459d';assert m['original_source_sha256']==SHA
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest();rows=[]
+for i,r in enumerate(m['labels']):
+ assert r['source_word_ink_bounds_px']==[[284,80,434,117],[232,224,387,262]][i]
+ a,b,c,d,e,f=r['source_image_transform'];w,h=r['source_image_dimensions'];x0,y0,x1,y1=r['source_word_ink_bounds_px'];assert b==c==0
+ rows.append(dict(id=f'island-{i+1}',source_page=4,image_index=i,source_label='单电子岛',source_image_extracted_sha256=r['source_image_extracted_sha256'],source_image_dimensions_px=[w,h],source_image_transform=r['source_image_transform'],source_word_ink_rect_px=[x0,y0,x1,y1],source_background_sample_px=[[283,78],[231,222]][i],source_background_rgb=[255,255,255],erase_rect_pt=[e+a*(x0-1)/w,f+d*(y0-1)/h,e+a*(x1+1)/w,f+d*(y1+1)/h],source_word_ink_center_x=e+a*(x0+x1)/2/w,source_only_measured_size_pt=r['source_only_horizontal_point_estimate'],source_only_measured_baseline_pt=r['source_only_common_baseline_estimate'],inferred_original_role='serif-bold',exact_raster_font_metadata_claimed=False,ko='단전자섬',en='Island',english_graph_label_context='The adjacent fully translated prose explicitly names the single-electron island; the conventional diagram name Island retains the original point and cell geometry.',reviewed_isolated_original_language_only=True))
+fonts={'ko':Path('C:/Users/andre/CodexWork/HaslaLab/haslalab/tools/ko/fonts/NotoSerifCJKkr-Bold.otf'),'en':Path('C:/Windows/Fonts/timesbd.ttf')}
+policy=dict(source_sha256=SHA,source_page=4,source_measurement_path=str(P),source_measurement_sha256=sha(P),source_only_original_role_point_and_baseline_measured=True,actual_original_image_payloads_CTM_and_nonlanguage_ink_protected=True,point_fitted_to_translation_or_box=False,font_donors={k:dict(path=str(p),sha256=sha(p))for k,p in fonts.items()},labels=rows,final_translation_and_clearance_audit_pending=True)
+out=B/'authoring/page04-original-island-language-policy.json';data=(json.dumps(policy,ensure_ascii=False,indent=2)+'\n').encode();assert not out.exists();out.write_bytes(data);print('C08_SOURCE_BOUND_ISLAND_POLICY',sha(out))

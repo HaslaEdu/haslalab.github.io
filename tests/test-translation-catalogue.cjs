@@ -84,13 +84,14 @@ for (let year = 1997; year <= 2026; year++) {
   } else assert.ok(assets[file.ko.paper] > 0);
   usapho++;
 }
-for (const year of ['2005', '2006', '2007', '2013', '2022', '2023', '2024', '2025']) {
+const cphoBilingualYears = ['2003', '2005', '2006', '2007', '2008', '2013', '2022', '2023', '2024', '2025'];
+for (const year of cphoBilingualYears) {
   const file = window.THEORY.cpho[year].f.T;
-  assert.equal(file.paper, year === '2023' ? 'CPhO_2023_Combined_EN.pdf' : ['2005', '2006', '2007', '2013', '2022', '2024'].includes(year) ? `CPhO_${year}_T_EN.pdf` : `CPhO_${year}_T_BAUPC_EN.pdf`);
+  assert.equal(file.paper, year === '2023' ? 'CPhO_2023_Combined_EN.pdf' : ['2003', '2005', '2006', '2007', '2008', '2013', '2022', '2024'].includes(year) ? `CPhO_${year}_T_EN.pdf` : `CPhO_${year}_T_BAUPC_EN.pdf`);
   assert.ok(assets[file.paper] > 0);
   assert.ok(assets[file.ko.paper] > 0);
-  if (year === '2013' || year === '2024') {
-    assert.equal(file.sol, `CPhO_${year}_TS_BAUPC_EN.pdf`);
+  if (['2008', '2013', '2024'].includes(year)) {
+    assert.equal(file.sol, year === '2008' ? 'CPhO_2008_TS_EN.pdf' : `CPhO_${year}_TS_BAUPC_EN.pdf`);
     assert.ok(assets[file.sol] > 0);
     assert.ok(assets[file.ko.sol] > 0);
   }
@@ -121,4 +122,4 @@ for (const item of JSON.parse(read('tools/original_style_publication.json'))) {
 const izhoKoreanEditions = new Set(Object.values(window.THEORY.izho)
   .flatMap(year => Object.values(year.f || {}).flatMap(part => Object.values(part.ko || {})))
   .filter(file => typeof file === 'string' && /_KO\.pdf$/.test(file))).size;
-console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions, usapho, cphoBilingualYears: 8}));
+console.log(JSON.stringify({statements, selectionPdfs, gphoSolutions: solutions, izhoKoreanEditions, usapho, cphoBilingualYears: cphoBilingualYears.length}));

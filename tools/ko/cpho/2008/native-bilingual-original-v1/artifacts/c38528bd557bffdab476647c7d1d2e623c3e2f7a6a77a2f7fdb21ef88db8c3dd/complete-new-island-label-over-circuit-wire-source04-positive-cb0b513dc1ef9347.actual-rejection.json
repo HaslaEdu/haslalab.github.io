@@ -1,0 +1,231 @@
+{
+  "kind": "complete-new-island-label-over-circuit-wire",
+  "source_page": 4,
+  "phase": "bitmap",
+  "original_source_sha256": "4e076fb9234683d028792190bcec56f12de72890da6c0e44ddf0e9146013459d",
+  "positive_proof_sha256": "cb0b513dc1ef9347803687a146117d49aeec0c8a26ddeb4535b6da62b541c91c",
+  "actual_bad_PDF_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\actual-negative-PDF-controls\\complete-new-island-label-over-circuit-wire-source04-positive-cb0b513dc1ef9347.pdf",
+  "actual_bad_PDF_sha256": "e290adefcf45e4efa6c61d4bf65bef5c29b19b1b6b7d8e82ef750b90868e464c",
+  "actual_bad_PDF_bytes": 1204004,
+  "actual_PDF_rejected": true,
+  "positive_PDF_unmodified": true,
+  "actual_failed_audit": {
+    "original_source_sha256": "4e076fb9234683d028792190bcec56f12de72890da6c0e44ddf0e9146013459d",
+    "source_page": 4,
+    "language": "ko",
+    "proof_sha256": "e290adefcf45e4efa6c61d4bf65bef5c29b19b1b6b7d8e82ef750b90868e464c",
+    "source_policy_sha256": "e3a95223c6f2c3da4d7d77db3f146cf4aa51a66ccdfc13d4c91e868db345aec9",
+    "source_measurement_sha256": "7bb22483c5442b5c59547f125786782a618d3e8c884208225b5ae2a547ce9516",
+    "errors": [
+      {
+        "error": "Actual label GID/font/point/source-baseline/source-word-center differs",
+        "expected": {
+          "c": "단",
+          "gid": 49314,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "size": 9.28459560660653,
+          "origin": [
+            193.89330208586776,
+            406.61330400609626
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0
+        },
+        "actual": {
+          "c": "단",
+          "gid": 49314,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 9.284595489501953,
+          "origin": [
+            213.89329528808594,
+            406.6133117675781
+          ],
+          "bbox": [
+            213.89329528808594,
+            399.17657470703125,
+            222.86221313476562,
+            408.461181640625
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "font_basefont": "/Noto Serif CJK KR Bold",
+          "font_program_sha256": "3fb80424c74657aaf18dad3f18daa9a305d67456ef8f7f03ba7767a21d8e06b6",
+          "encoded_code": 49314
+        }
+      },
+      {
+        "error": "Actual label GID/font/point/source-baseline/source-word-center differs",
+        "expected": {
+          "c": "전",
+          "gid": 54718,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "size": 9.28459560660653,
+          "origin": [
+            202.86222144184967,
+            406.61330400609626
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0
+        },
+        "actual": {
+          "c": "전",
+          "gid": 54718,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 9.284595489501953,
+          "origin": [
+            222.8622283935547,
+            406.6133117675781
+          ],
+          "bbox": [
+            222.8622283935547,
+            399.17657470703125,
+            231.83114624023438,
+            408.461181640625
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "font_basefont": "/Noto Serif CJK KR Bold",
+          "font_program_sha256": "3fb80424c74657aaf18dad3f18daa9a305d67456ef8f7f03ba7767a21d8e06b6",
+          "encoded_code": 54718
+        }
+      },
+      {
+        "error": "Actual label GID/font/point/source-baseline/source-word-center differs",
+        "expected": {
+          "c": "자",
+          "gid": 54602,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "size": 9.28459560660653,
+          "origin": [
+            211.83114079783158,
+            406.61330400609626
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0
+        },
+        "actual": {
+          "c": "자",
+          "gid": 54602,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 9.284595489501953,
+          "origin": [
+            231.83114624023438,
+            406.6133117675781
+          ],
+          "bbox": [
+            231.83114624023438,
+            399.17657470703125,
+            240.80006408691406,
+            408.461181640625
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "font_basefont": "/Noto Serif CJK KR Bold",
+          "font_program_sha256": "3fb80424c74657aaf18dad3f18daa9a305d67456ef8f7f03ba7767a21d8e06b6",
+          "encoded_code": 54602
+        }
+      },
+      {
+        "error": "Actual label GID/font/point/source-baseline/source-word-center differs",
+        "expected": {
+          "c": "섬",
+          "gid": 52966,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "size": 9.28459560660653,
+          "origin": [
+            220.8000601538135,
+            406.61330400609626
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0
+        },
+        "actual": {
+          "c": "섬",
+          "gid": 52966,
+          "font": "NotoSerifCJKkr-Bold",
+          "size": 9.284595489501953,
+          "origin": [
+            240.80006408691406,
+            406.6133117675781
+          ],
+          "bbox": [
+            240.80006408691406,
+            399.17657470703125,
+            249.76898193359375,
+            408.461181640625
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0,
+          "font_alias": "/C08BitmapLabelSerifBold",
+          "font_basefont": "/Noto Serif CJK KR Bold",
+          "font_program_sha256": "3fb80424c74657aaf18dad3f18daa9a305d67456ef8f7f03ba7767a21d8e06b6",
+          "encoded_code": 52966
+        }
+      }
+    ],
+    "actual_label_glyphs_checked": 8,
+    "actual_label_font_program_exact": true,
+    "original_body_program_prefix_exact": true,
+    "actual_original_language_ink_pixels": 9518,
+    "actual_old_language_ink_not_cleared_pixels": 0,
+    "actual_new_label_glyph_program_sha256s": [
+      "865706fdb36673163c220097519b8f42c8c5bc6c5bd5ac6ed66c86b848a2c744",
+      "1caca3d8abf18f4079a7053471e55b6ec32685832dc0b4972c52fc191d3f286b",
+      "8a69b1806570572adbe48222c8709507e57971b0291dc8c5588185d483926a79",
+      "1bfacc38d92905ade97bb61a367a17b3115408fdfa1ba571e4f33c7b3eca6a3a",
+      "31bcc955789a21d58fdae3de1a92366c149019a1919237ea48e9fcd705f2612b",
+      "04409bea6c3b0f6b82f677a645262cd9e257b4c7a6cf2acba95ebc94855b127c",
+      "ccb12a59aafb223abe5b7f2c4fb82596af0db539f84d9d223285d86ee7523403",
+      "fcfcc34930af6d4eb49bf8ccc4b92e7ceb594f68a11d988a93b6cd837135abb4"
+    ],
+    "actual_new_label_native_reference_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\evidence\\bitmap-language\\page04-ko-e290adefcf45e4ef-actual-label-glyphs-only.pdf",
+    "actual_new_label_native_reference_sha256": "17a094c02ce13aeb6f03e62cb6bc9ffe88bf491336a916dcdc46ed7e9a63e4c6",
+    "actual_original_graphics_control_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\evidence\\bitmap-language\\page04-actual-original-source-graphics.pdf",
+    "actual_original_graphics_control_sha256": "6c80f3601f32d746dbd877a7f2d7bb4bae3e1384afe9d4b660d1f467fe858cfa",
+    "actual_final_graphics_control_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2008-original-style-bilingual\\evidence\\bitmap-language\\page04-ko-e290adefcf45e4ef-actual-final-graphics.pdf",
+    "actual_final_graphics_control_sha256": "aa4e418a80e3160b9ebb1e49b6b0bc7693a5fe01502b253cc3bb9bbaba979965",
+    "changed_original_nonlanguage_graphics_RGB_pixels": 0,
+    "new_label_over_original_nonlanguage_ink_pixels": 629,
+    "new_label_native_RGB_differences": 243,
+    "missing_new_label_native_ink_pixels": 0,
+    "actual_original_images_reencoded_or_replaced": false,
+    "actual_source_font_point_metadata_claimed_for_bitmap": false,
+    "passed": false
+  },
+  "actual_rejection_exception": null
+}
