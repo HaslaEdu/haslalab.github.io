@@ -8,6 +8,14 @@ keep_vars = true
 binding = "STUDIO_ENGINE"
 service = "haslalab-studio-engine"
 
+# HaslaLab assistant (src/ai-assistant.js): open-weight models on Workers AI, and the problem bank Worker it searches
+[ai]
+binding = "AI"
+
+[[services]]
+binding = "PROBLEM_BANK"
+service = "haslalab-problem-bank"
+
 [[send_email]]
 name = "ACCOUNT_EMAIL"
 allowed_sender_addresses = ["noreply@notify.physleague.kr"]
