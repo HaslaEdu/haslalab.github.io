@@ -49,6 +49,7 @@ import { createAiAssistantRouter, AI_ASSISTANT_PATH } from './ai-assistant.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
 import { mathpixRereads, focusCandidates, misreadOf, sameDigitCount } from './focus-read.js';
+import { injectionSignals, suspendForInjection, liftSuspension, ensureSuspensionSchema, SUSPENDED } from './injection-guard.js';
 import { compareUnits } from './unit-check.js';
 import {safeOcrFailureCode,safeOcrFailureDetails} from './ocr-errors.js';
 import { REG_VERSION, SCHEME_VERSION, familyOf, paperKind, regulationOf, regulationId, stablePrefix, RULE_ID } from './grading-rules.js';
@@ -210,6 +211,16 @@ function needUser(u) { if (!u) throw new HttpError(401, "login_required"); if(ne
    session whose owner logged in recently, not a month-old bearer token lifted from a browser. A fresh login
    by any method (password or OAuth) resets sessionCreatedAt, so re-authenticating clears the gate. This
    bounds what a stolen token can do: read, yes; mint tokens or graft on an attacker's identity, no. */
+/* an answer that instructs the grader (injection-guard.js) suspends the account before anything is graded; an
+   administrator's own test is logged and goes on */
+async function isSuspended(env, userId) {
+  return (await env.DB.prepare('SELECT deleted FROM users WHERE id=?').bind(userId).first())?.deleted === SUSPENDED;
+}
+async function guardInjection(env, me, source, text) {
+  const signals = injectionSignals(text);
+  if (!signals.length) return;
+  if (await suspendForInjection(env, me.id, source, signals, env[DB_SCOPE] || env.DB) || await isSuspended(env, me.id)) throw new HttpError(403, "account_suspended");
+}
 const RECENT_LOGIN_SEC = 900;
 function needRecentLogin(u, maxAgeSec = RECENT_LOGIN_SEC) {
   needUser(u);
@@ -301,8 +312,9 @@ async function handle(req, env, url, ctx) {
     const username = String(body.username || "").trim();
     await limit(env, "login:" + clientIp(req), 20, 900);
     await limit(env, "loginu:" + username.toLowerCase(), 10, 900);
-    const u = await env.DB.prepare("SELECT * FROM users WHERE username=? AND deleted=0").bind(username).first();
+    const u = await env.DB.prepare(`SELECT * FROM users WHERE username=? AND deleted IN (0,${SUSPENDED})`).bind(username).first();
     if (!u || !(await checkPw(String(body.password || ""), u.pw))) throw new HttpError(401, "bad_credentials");
+    if (u.deleted === SUSPENDED) throw new HttpError(403, "account_suspended");     // only after the password: no probing which accounts are suspended
     return { token: await newSession(env, u.id), user: pubUser(await usernameProfile(env,u,env[DB_SCOPE]||env.DB)) };
   }
   if (p === "/api/logout" && m === "POST") {
@@ -1255,6 +1267,7 @@ async function arena(p, m, body, me, req, env, url) {
         normalized.sheet.provider=normalized.provider;
         await attachMonthlyExperimentEvidence(env.DB,me.id,x,normalized,body,env[DB_SCOPE]||env.DB);
         visuals=await prepareMonthlyExperimentVisuals(env.DB,me.id,x,normalized,env[DB_SCOPE]||env.DB);
+        await guardInjection(env, me, 'monthly:' + x.id, [normalized.graderAnswer, normalized.answer].filter(Boolean).join('\n'));
         reservation = await reserveMonthlySubmission(env.DB, x, me.id, normalized, now());
       } catch (error) {
         if (error instanceof MonthlyAnswerError) throw new HttpError(error.status, error.code,
@@ -1290,6 +1303,7 @@ async function arena(p, m, body, me, req, env, url) {
     if (x.kind === "short") g = gradeShort(x, answer);
     else {
       const gradingAnswer=answer+(photos.markers.length?'\n'+photos.markers.join('\n'):'');
+      await guardInjection(env, me, 'monthly:' + x.id, answer);
       try { g = await gradeEssay(env,x,gradingAnswer,lang,{provider,images:photos.images}); if(g)g.detail={...g.detail,provider,photo_ids:photos.ids}; } catch (e) { console.error("grader", e && e.message); status = "error"; }
       if (!g && status !== "error") status = "pending";
     }
@@ -1351,6 +1365,16 @@ async function arena(p, m, body, me, req, env, url) {
   /* admin: problems and the grading queue */
   if (p.startsWith("/api/admin/")) {
     if (!isAdmin(me)) throw new HttpError(403, "forbidden");
+    /* accounts suspended for an answer that instructed the grader: why (the matched passages), and lifting it */
+    if (p === "/api/admin/suspensions" && m === "GET") {
+      await ensureSuspensionSchema(env.DB, env[DB_SCOPE] || env.DB);
+      return { suspensions: (await env.DB.prepare(`SELECT x.user_id,u.nickname,x.reason,x.source,x.evidence,x.created_at,x.lifted_at FROM account_suspensions x
+        LEFT JOIN users u ON u.id=x.user_id ORDER BY x.created_at DESC LIMIT 100`).all()).results.map(r => ({ ...r, evidence: JSON.parse(r.evidence || "[]") })) };
+    }
+    if ((r = /^\/api\/admin\/suspensions\/(\d+)\/lift$/.exec(p)) && m === "POST") {
+      needRecentLogin(me);
+      return { ok: true, lifted: await liftSuspension(env, +r[1], env[DB_SCOPE] || env.DB) };
+    }
     if (p === "/api/admin/problems" && m === "GET")
       return { problems: (await env.DB.prepare("SELECT * FROM problems ORDER BY opens_at DESC, no LIMIT 200").all()).results };
     if (p === "/api/admin/problems" && m === "POST") {
@@ -2917,6 +2941,9 @@ async function labGradeVision(env, s, task, mine, scheme, lang, m, roles = null)
     } catch (e) { console.error("lab read", e && e.message); if (e?.code === "ocr_storage_limit") throw e; }
   }
   if (mine.some(p => p.mime !== "text/plain" && p.ocr == null)) throw new HttpError(502, "ocr_failed");
+  /* an answer that instructs the grader is not graded: the account is suspended (injection-guard.js) */
+  { const signals = injectionSignals(mine.map(p => p.ocr ?? p.text ?? "").join("\n"));
+    if (signals.length && (await suspendForInjection(env, s.user_id, `lab:${s.id}:${task}`, signals, env[DB_SCOPE] || env.DB) || await isSuspended(env, s.user_id))) throw new HttpError(403, "account_suspended"); }
   const theory = labTheory(s, task);
   const family=familyOf(s.comp), kind=paperKind(s.comp,task,theory);
   const tone = (roles?.tone ?? env.LAB_GRADE_TONE) === "neutral" ? "neutral" : "strict";

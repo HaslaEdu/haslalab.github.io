@@ -171,7 +171,7 @@ export async function cleanupStudioUser(env, userId) {
   if (!Number.isSafeInteger(Number(userId)) || Number(userId) < 1) return;
   await ensureStudioSchema(env.DB);
   const owner = await env.DB.prepare('SELECT deleted FROM users WHERE id=?').bind(userId).first();
-  if (!owner?.deleted) return; // Account deletion only; no Studio access/admin gate.
+  if (owner?.deleted !== 1) return; // Account deletion only (2 is a suspension, which keeps its data); no Studio access/admin gate.
   // Disable further calls and erase provider replay data before network cleanup.
   // Failed DO deletions remain indexed for the next scheduled retry.
   await env.DB.batch([

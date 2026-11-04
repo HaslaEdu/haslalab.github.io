@@ -130,7 +130,11 @@ LAB_SCHEME_MODEL = "deepseek-flash"
 LAB_SCHEME_THINKING = "off"
 # when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
 LAB_READ_FALLBACK_MODEL = "gemini-3.1-flash-lite"
-LAB_SCHEME_FALLBACK_MODEL = ""
+# a solution every scheme model refuses (IPhO 2024 T2: DeepSeek and GPT-6 Luna both answered 400, «failed to parse JSON
+# value», on its request, text-only retry included) is read by Gemini 3.8 Flash, then Luna: bench 2026-11-04, the T2
+# scheme built by 3.8 Flash and graded by DeepSeek + Luna gave 9.2 of 10 against the audit's 9.7. Built once a paper.
+LAB_SCHEME_FALLBACK_MODEL = "gemini-3.8-flash"
+LAB_SCHEME_FALLBACK_THINKING = "low"
 
 # answer photos (lab_pages.r2_key): new uploads go here instead of D1; kept after grading (LAB_KEEP_HOURS off)
 [[r2_buckets]]
