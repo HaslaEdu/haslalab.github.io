@@ -5,6 +5,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import worker from './src/index.js';
 import { agreeTerms, AGREED } from './fixtures/consent.mjs';
+import { signupCode } from './fixtures/signup-code.mjs';
 
 const sqlite = new DatabaseSync(':memory:');
 for (const file of readdirSync(new URL('./migrations/', import.meta.url)).filter(n => /^\d{4}_.*\.sql$/.test(n)).sort())
@@ -272,7 +273,7 @@ test('related metadata is bounded to 64 latest unique profiles and unavailable f
 test('a new account starts with three exam tokens', async () => {
   const response = await worker.fetch(new Request('https://worker.local/api/signup', { method: 'POST',
     headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.9' },
-    body: JSON.stringify({ username: 'fresh_signup', nickname: 'Fresh signup', password: 'correct horse battery 9', consent: AGREED }) }), env);
+    body: JSON.stringify({ username: 'fresh_signup', nickname: 'Fresh signup', password: 'correct horse battery 9', consent: AGREED, ...await signupCode(sqlite) }) }), env);
   assert.equal(response.status, 200, await response.clone().text());
   assert.equal(sqlite.prepare("SELECT exam_tokens FROM users WHERE username='fresh_signup'").get().exam_tokens, 3);
 });
