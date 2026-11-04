@@ -1,4 +1,4 @@
-/* HaslaLab AI review (admins): the nightly self-test cases from the community Worker's /api/admin/ai-eval */
+/* Hasla AI review (admins): the nightly self-test cases from the community Worker's /api/admin/ai-eval */
 (() => {
   'use strict';
   const PROD = 'https://haslalab-community-edge.haslalab.workers.dev';
