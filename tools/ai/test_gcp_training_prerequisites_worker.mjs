@@ -76,6 +76,25 @@ async function harness(options={},changes={}){
 }
 const writes=h=>h.calls.filter(call=>call.method==='POST'&&call.url!=='https://oauth2.googleapis.com/token');
 
+test('authenticated principal returns only the IAM target and fixed permissions without OAuth or contact access',async()=>{
+  const h=await harness();Object.defineProperty(h.env,'GCP_PREREQ_CONTACT_EMAIL',{get(){throw new Error('contact must stay unread');}});
+  const result=await h.call('/principal');assert.equal(result.response.status,200);assert.equal(h.calls.length,0);
+  assert.deepEqual(result.data,{project:'project-hasla',gpu_creation_attempted:false,
+    iam_member:'serviceAccount:offline-fixture@project-hasla.iam.gserviceaccount.com',project_number:PROJECT_NUMBER,
+    needed_permissions:['serviceusage.services.enable','cloudquotas.quotas.get','cloudquotas.quotas.update','storage.buckets.get'],write_api_calls:0});
+});
+
+test('guest, expired or incorrect principal route never reads the SA or sends an OAuth request',async()=>{
+  const env={...await fixture()};let reads=0,calls=0;
+  Object.defineProperty(env,'GCP_SA_KEY',{get(){reads++;throw new Error('SA must remain unread');}});
+  for(const req of [request('/principal','GET',undefined,false),request('/principal?project=other'),request('/principal','POST')]){
+    assert.ok((await handle(req,env,{cryptoImpl:webcrypto,now:NOW,fetchImpl:()=>{calls++;}})).status>=400);
+  }
+  const expired=Object.create(env);expired.GCP_PREREQ_EXPIRES_AT='2026-11-04T23:59:59Z';
+  assert.equal((await handle(request('/principal'),expired,{cryptoImpl:webcrypto,now:NOW,fetchImpl:()=>{calls++;}})).status,403);
+  assert.equal(reads,0);assert.equal(calls,0);
+});
+
 test('enable route performs one fixed batch mutation and never polls, applies quota or creates GPU',async()=>{
   const h=await harness(),result=await h.call('/enable-apis','POST','{}');assert.equal(result.response.status,200);
   assert.equal(result.data.status,'enable_request_submitted');assert.equal(result.data.operation_done,false);assert.equal(result.data.write_api_calls,1);

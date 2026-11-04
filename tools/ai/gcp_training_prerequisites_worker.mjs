@@ -8,6 +8,7 @@ export const SERVICES=Object.freeze(['cloudquotas.googleapis.com','cloudresource
 export const METRIC='aiplatform.googleapis.com/custom_model_training_nvidia_a100_80gb_gpus';
 export const PREFERENCE_ID='hasla-gemma-a10080-us-central1-20261105';
 export const JUSTIFICATION='One A10080 GPU for a single Gemma BF16LoRA style pilot; max1800sec, combined100000KRWcap; QwQseparateprovider';
+const NEEDED_PERMISSIONS=Object.freeze(['serviceusage.services.enable','cloudquotas.quotas.get','cloudquotas.quotas.update','storage.buckets.get']);
 const SERVICE='aiplatform.googleapis.com',REGION='us-central1',MAX_PAGES=5;
 const USAGE='https://serviceusage.googleapis.com/v1/projects/'+PROJECT_NUMBER;
 const QUOTA_PARENT='projects/'+PROJECT_NUMBER+'/locations/global';
@@ -92,12 +93,14 @@ export async function handle(request,env,options={}){
   let writeAttempts=0;
   try{
     const url=new URL(request.url),route=url.pathname;
-    if(url.search||url.hash||!(request.method==='GET'&&route==='/status'||request.method==='POST'&&['/enable-apis','/request-quota'].includes(route)))return reply({reason:'route_rejected',write_api_calls:0},404);
+    if(url.search||url.hash||!(request.method==='GET'&&['/status','/principal'].includes(route)||request.method==='POST'&&['/enable-apis','/request-quota'].includes(route)))return reply({reason:'route_rejected',write_api_calls:0},404);
     const gate=await authenticate(request,{GCP_PREFLIGHT_AUTH_SHA256:env.GCP_PREREQ_AUTH_SHA256,GCP_PREFLIGHT_EXPIRES_AT:env.GCP_PREREQ_EXPIRES_AT},cryptoImpl,now);
     if(!gate.ok)return reply({reason:gate.reason,write_api_calls:0},403);
     if(request.method==='POST')await emptyBody(request);
     const email=route==='/request-quota'?contactEmail(env):null;
     const config=gcpConfiguration(env);require(config.ok,'configuration_invalid');
+    if(route==='/principal')return reply({iam_member:'serviceAccount:'+config.key.client_email,project_number:PROJECT_NUMBER,
+      needed_permissions:NEEDED_PERMISSIONS,write_api_calls:0});
     const gatedFetch=(address,init)=>{if((options.now??Date.now())>=gate.expires)fail('gate_expired');return fetchImpl(address,init);};
     const auth=await gcpTokenFor(config.key,gate.expires,{fetchImpl:gatedFetch,cryptoImpl,now});
     if(!auth.ok)return reply({reason:auth.reason,http_status:auth.http_status,write_api_calls:0},502);
