@@ -396,7 +396,8 @@ def training_environment(env):
     # Only the local JSONL file is needed by the trainer; do not forward corpus shards.
     child = {key: value for key, value in env.items()
              if not key.startswith(("HASLA_DATA_", "HASLA_VALIDATION_"))
-             and key not in ("WANDB_API_KEY", "RUNPOD_API_KEY", "HASLA_INPUT_ARTIFACT")}
+             and key not in ("WANDB_API_KEY", "RUNPOD_API_KEY", "HASLA_INPUT_ARTIFACT", "HASLA_INITIAL_ADAPTER",
+                             "HASLA_RESUME_SCRIPT_SHA256")}
     child.update({"WANDB_MODE": "disabled", "WANDB_DISABLED": "true", "WANDB_CONSOLE": "off",
                   "WANDB_DISABLE_CODE": "true", "WANDB_SILENT": "true", "HF_HUB_DISABLE_TELEMETRY": "1",
                   "TOKENIZERS_PARALLELISM": "false"})
@@ -438,7 +439,7 @@ def adapter_inventory(adapter, config=None):
     return files, sha_bytes(json.dumps(files, sort_keys=True, separators=(",", ":")).encode())
 
 
-def training_report(adapter, config, data_format, training_sha, validation_sha):
+def training_report(adapter, config, data_format, training_sha, validation_sha, initial_model_sha=None):
     path = Path(adapter) / "hasla_training_manifest.json"
     if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= 64 * 1024:
         raise PilotError("verified_training_report_missing")
@@ -450,6 +451,8 @@ def training_report(adapter, config, data_format, training_sha, validation_sha):
                 "training_sha256": training_sha, "validation_sha256": validation_sha}
     if not isinstance(report, dict) or any(report.get(k) != value for k, value in expected.items()):
         raise PilotError("training_report_role_or_input_mismatch")
+    if report.get('initial_adapter_model_sha256') != initial_model_sha or report.get('optimizer_state_restored') is True:
+        raise PilotError('training_report_initial_adapter_mismatch')
     steps = report.get("steps_completed")
     if report.get("weights_updated") is not True or type(steps) is not int or not 1 <= steps <= config["max_steps"]:
         raise PilotError("training_report_has_no_bounded_weight_update")
@@ -677,6 +680,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
     run, stage, private = None, "configuration", None
     trainer_diagnostic = None
     verified_training = None
+    initial_spec, initial_directory, resume_sha = None, None, None
     result_path = workspace / "result.json"
     try:
         role, data_format = role_input(env)
@@ -717,6 +721,32 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         role_path = workspace / "role_config.py"
         role_sha = fetch_role_config(env, role_path, opener)
         config = data_bounded_settings(pinned_role_settings(role_path, role, data_format), len(training))
+        if env.get('HASLA_INITIAL_ADAPTER') is not None:
+            stage = 'initial_adapter_verification'
+            try:
+                raw_initial = env['HASLA_INITIAL_ADAPTER']
+                if role != 'solver' or not isinstance(raw_initial, str) or len(raw_initial.encode()) > 16384:
+                    raise ValueError('invalid solver continuation')
+                helper_path = workspace / 'private_resume_adapter.py'
+                resume_sha = fetch_pinned_code(env, helper_path, 'private_resume_adapter.py',
+                                               'HASLA_RESUME_SCRIPT_SHA256', opener)
+                spec = importlib.util.spec_from_file_location('_hasla_resume_' + resume_sha, helper_path)
+                helper = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(helper)
+                initial_spec = helper.validate_spec(json.loads(raw_initial), config)
+                if initial_spec['entity'] != private['entity']:
+                    raise ValueError('initial adapter project mismatch')
+                if wandb_module is None:
+                    import wandb as wandb_module
+                api = wandb_module.Api(api_key=env['WANDB_API_KEY'], overrides={'base_url': private['base_url']}, timeout=30)
+                initial_directory = workspace / 'initial-adapter'
+                def checked_initial_privacy(requested):
+                    if requested != private['entity']:
+                        raise ValueError('initial adapter project mismatch')
+                    return assert_private_project(env, opener)
+                helper.download_initial_adapter(initial_spec, config, initial_directory, api, checked_initial_privacy)
+            except Exception:
+                raise PilotError('initial_adapter_verification_failed') from None
         data_path, validation_path, adapter = workspace / f"train.{data_format}.jsonl", None, workspace / "adapter"
         if adapter.exists():
             raise PilotError("adapter_output_already_exists")
@@ -762,6 +792,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         with tempfile.SpooledTemporaryFile(max_size=MAX_TRAINER_DIAGNOSTIC_BYTES, mode="w+b") as private_stderr:
             try:
                 command = training_command(script, data_path, adapter, validation_path, config, data_format)
+                if initial_directory:
+                    command.extend(['--resume-adapter', str(initial_directory)])
                 if runner is not None:
                     completed = runner(command, cwd=str(workspace), env=training_environment(env),
                         stdout=subprocess.DEVNULL, stderr=private_stderr, timeout=timeout, check=False)
@@ -781,7 +813,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         stage = "adapter_validation"
         run.summary["status"] = stage
         report = verified_training = training_report(adapter, config, data_format, sha_bytes(data),
-                                                     sha_bytes(validation_data) if validation_data is not None else None)
+                                                     sha_bytes(validation_data) if validation_data is not None else None,
+                                                     initial_spec['files'][1]['sha256'] if initial_spec else None)
         files, adapter_sha = adapter_inventory(adapter, config)
         # Check again immediately before uploading an adapter; never change project visibility here.
         assert_private_project(env, opener)
@@ -798,6 +831,9 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             "training_records": len(training), "validation_records": len(validation),
             "training_sha256": sha_bytes(data), "adapter_sha256": adapter_sha,
             "test_records_used": 0, "private": True, "promoted": False})
+        if initial_spec:
+            artifact.metadata.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
+                                     initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
         for file in files:
             artifact.add_file(str(adapter / file["name"]), name=file["name"])
         run.log_artifact(artifact, aliases=["pilot"])
@@ -818,6 +854,9 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                   "adapter_files": files, "training_records": len(training),
                   "validation_records": len(validation), "training_sha256": sha_bytes(data),
                   "test_records_used": 0, "weights_updated": True, "deployed": False, "promoted": False}
+        if initial_spec:
+            result.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
+                          initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
         store_private_result(run, result)
         run.summary["status"] = "uploaded"
         result_path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

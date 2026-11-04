@@ -2,7 +2,8 @@
 
 No run/project creation, GPU/model imports, corpus access, or artifact upload.
 The only output is a fixed-schema event; SDK output and upstream errors are hidden.
-Nonzero B proves departure from the configured zero initializer, not model quality.
+Fresh adapters require departure from the zero B initializer. Continued adapters
+require numeric B changes relative to their pinned input. Neither proves quality.
 Safetensors format: https://github.com/safetensors/safetensors
 PEFT initialization: https://huggingface.co/docs/peft/package_reference/lora
 """
@@ -171,7 +172,8 @@ def summary_result(summary):
             return result
     result = {}
     fields = ("status", "artifact", "role", "base_model", "rank", "steps_completed",
-              "adapter_files", "adapter_sha256")
+              "adapter_files", "adapter_sha256", "initial_adapter", "resume_script_sha256",
+              "initial_adapter_model_sha256", "optimizer_state_restored")
     for field in fields:
         for separator in (".", "/"):
             key = "private_training_result" + separator + field
@@ -402,6 +404,16 @@ def verify_role(reader, api, entity, run_id, role, root):
             "artifact_metadata_mismatch")
     entries = artifact.manifest.entries
     require(isinstance(entries, dict), "artifact_manifest_invalid")
+    initial = result.get('initial_adapter')
+    require(metadata.get('initial_adapter') == initial and metadata.get('resume_script_sha256') == result.get('resume_script_sha256'),
+            'artifact_initialization_mismatch')
+    if initial is None:
+        markers = ('resume_script_sha256', 'initial_adapter_model_sha256', 'optimizer_state_restored')
+        require(not any(key in result or key in metadata for key in markers), 'continuation_contract_invalid')
+    else:
+        require(all(metadata.get(key) == result.get(key) for key in
+                    ('initial_adapter_model_sha256', 'optimizer_state_restored')),
+                'artifact_initialization_mismatch')
     for row in inventory:
         entry = entries.get(row["name"])
         require(entry is not None and str(entry.path) == row["name"] and entry.ref is None
@@ -424,7 +436,31 @@ def verify_role(reader, api, entity, run_id, role, root):
     counts = inspect_safetensors(root / FILES[1], result["rank"], LIMITS[role])
     reader.assert_private(entity)
     output.update(counts, config_bytes=inventory[0]["bytes"], zero_initializer=zero_initializer,
-                  steps_completed=result["steps_completed"])
+                  steps_completed=result["steps_completed"], base_model=result['base_model'], rank=result['rank'],
+                  adapter_files=inventory, adapter_inventory_sha256=result['adapter_sha256'])
+    if initial is not None:
+        require(role == 'solver' and result.get('optimizer_state_restored') is False
+                and metadata.get('optimizer_state_restored') is False, 'continuation_contract_invalid')
+        import private_resume_adapter as continuation
+        require(result.get('resume_script_sha256') == sha_file(Path(continuation.__file__)), 'continuation_helper_pin_mismatch')
+        try:
+            spec = continuation.validate_spec(initial, get_role_config(role))
+            require(spec['entity'] == entity and result.get('initial_adapter_model_sha256') == spec['files'][1]['sha256'],
+                    'continuation_source_mismatch')
+            def checked_initial_privacy(requested):
+                require(requested == entity, 'continuation_source_mismatch')
+                reader.assert_private(entity)
+                return True
+            baseline = root.parent / (role + '-initial')
+            continuation.download_initial_adapter(spec, get_role_config(role), baseline, api, checked_initial_privacy)
+            evidence = continuation.compare_lora_b(baseline / FILES[1], root / FILES[1], rank=result['rank'])
+        except continuation.ResumeError:
+            raise VerificationError('continuation_verification_failed') from None
+        output.update(evidence, zero_initializer=False, configured_peft_initializer_is_zero=zero_initializer,
+                      initial_adapter_artifact=spec['artifact'], optimizer_state_restored=False)
+        output.update(status='verified' if evidence['weights_updated'] else 'failed',
+                      code='relative_lora_b_change' if evidence['weights_updated'] else 'continued_lora_b_unchanged')
+        return output
     if not zero_initializer:
         output.update(status="unverifiable", code="initializer_not_zero_b")
     elif not counts["pair_shapes_supported"]:
@@ -440,8 +476,10 @@ def verify_role(reader, api, entity, run_id, role, root):
     return output
 
 
-def verify(run_id, roles, env=None, reader_factory=PrivateReader, sdk_factory=sdk_reader):
+def verify(run_id, roles, env=None, reader_factory=PrivateReader, sdk_factory=sdk_reader, *, continuation_inventory=False):
     selected = validate_arguments(run_id, roles)
+    require(type(continuation_inventory) is bool and (not continuation_inventory or selected == ['solver']),
+            'continuation_inventory_requires_solver')
     key = credentials(os.environ if env is None else env)
     reader = reader_factory(key)
     entity = reader.entity()
@@ -460,6 +498,9 @@ def verify(run_id, roles, env=None, reader_factory=PrivateReader, sdk_factory=sd
                 except Exception:
                     results.append({"role": role, "status": "failed", "code": "private_reader_failed",
                                     "weights_updated": False})
+    if not continuation_inventory:
+        results = [{key: value for key, value in row.items()
+                    if key != 'adapter_files' and not key.endswith('_sha256')} for row in results]
     event = {"event": "private_adapter_verification", "run_id": run_id, "roles": results,
              "all_verified": all(row["status"] == "verified" for row in results),
              "quality_verified": False}
@@ -476,8 +517,10 @@ def main(argv=None):
         parser = Parser(description=__doc__)
         parser.add_argument("--run-id", required=True)
         parser.add_argument("--roles", default="chat,solver")
+        parser.add_argument('--continuation-inventory', action='store_true',
+                            help='explicit solver-only export of file digests for the next pinned continuation')
         args = parser.parse_args(argv)
-        event = verify(args.run_id, args.roles)
+        event = verify(args.run_id, args.roles, continuation_inventory=args.continuation_inventory)
     except VerificationError as error:
         event = {"event": "private_adapter_verification", "roles": [], "all_verified": False,
                  "quality_verified": False, "code": error.code}

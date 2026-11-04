@@ -35,6 +35,9 @@ def role_jobs(env):
         runtime = job.get('runtime_seconds', 1200 if role == 'chat' else 2700)
         if (type(runtime) is not int or not 60 <= runtime <= (1800 if role == 'chat' else 14400)):
             raise ValueError('invalid private role runtime')
+        if job.get('initial_adapter') is not None and (role != 'solver' or not isinstance(job['initial_adapter'], dict)
+                or not re.fullmatch(r'[a-f0-9]{64}', env.get('HASLA_RESUME_SCRIPT_SHA256', ''))):
+            raise ValueError('initial adapters require a solver job and pinned helper')
     return jobs
 
 
@@ -66,6 +69,8 @@ def main():
                       'RUN': job['run'], 'ARTIFACT': job['run'] + '-lora',
                       'HASLA_WORKSPACE': workspaces[job['role']].as_posix(),
                       'HASLA_TRAIN_TIMEOUT_SECONDS': str(runtime)})
+        if job.get('initial_adapter') is not None:
+            child['HASLA_INITIAL_ADAPTER'] = json.dumps(job['initial_adapter'], separators=(',', ':'))
         try:
             result = subprocess.run([sys.executable, str(script)], env=child, cwd=workspaces[job['role']].as_posix(),
                                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,

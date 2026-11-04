@@ -85,6 +85,7 @@ _STAGES = frozenset({
     "configuration", "payload_validation", "privacy_verification", "input_artifact_verification",
     "training_code_verification", "role_config_verification", "run_initialization", "training",
     "adapter_validation", "uploading_adapter", "uploaded", "failed",
+    "initial_adapter_verification",
 })
 _RUN_STATES = frozenset({"running", "finished", "failed", "crashed", "killed", "pending", "preempted", "queued"})
 _ERROR_CODES = frozenset({
@@ -113,6 +114,7 @@ _ERROR_CODES = frozenset({
     "TimeoutError", "TimeoutExpired", "ConnectionError", "HTTPError", "URLError", "RequestException",
     "ReadTimeout", "ConnectTimeout", "SSLError", "ImportError", "ModuleNotFoundError", "MemoryError",
     "OverflowError", "UnicodeDecodeError", "JSONDecodeError", "CalledProcessError", "CommError", "UsageError",
+    "initial_adapter_verification_failed", "training_report_initial_adapter_mismatch",
 })
 
 

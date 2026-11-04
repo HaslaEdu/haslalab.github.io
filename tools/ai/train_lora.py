@@ -186,6 +186,36 @@ def loader_kwargs(config, max_length, bf16_dtype):
     return options
 
 
+def initial_adapter(path, config, rank, output):
+    """Accept only a private, unchanged QwQ adapter; reset no model weights."""
+    if config['role'] != 'solver' or rank != config['default_rank']:
+        raise ValueError('continued adapter training requires the fixed solver contract')
+    path = private_adapter_output(path)
+    output = private_adapter_output(output)
+    if path.is_relative_to(output) or output.is_relative_to(path) or not path.is_dir():
+        raise ValueError('initial adapter and output directories must be separate')
+    for name, limit in (('adapter_config.json', 1024**2), ('adapter_model.safetensors', 2 * 1024**3)):
+        file = path / name
+        if file.is_symlink() or not file.is_file() or not 0 < file.stat().st_size <= limit:
+            raise ValueError('initial adapter file is missing or invalid')
+    peft = json.loads((path / 'adapter_config.json').read_text(encoding='utf8'))
+    if (peft.get('base_model_name_or_path') not in config['base_aliases'] or peft.get('peft_type') != 'LORA'
+            or type(peft.get('r')) is not int or peft['r'] != rank or peft.get('rank_pattern')):
+        raise ValueError('initial adapter does not match the fixed solver contract')
+    return path, file_sha256(path / 'adapter_model.safetensors')
+
+
+def validate_loaded_adapter_trainability(model):
+    active = []
+    for name, parameter in model.named_parameters():
+        if parameter.requires_grad:
+            if not re.search(r'(^|\.)lora_[AB](?=\.|$)', name):
+                raise ValueError('continuation must freeze every base model parameter')
+            active.append(name)
+    if not any('.lora_A.' in '.' + name for name in active) or not any('.lora_B.' in '.' + name for name in active):
+        raise ValueError('loaded adapter has no trainable LoRA A/B parameters')
+
+
 def choose_loader(unsloth_module, config):
     return getattr(unsloth_module, config['loader'])
 
@@ -332,6 +362,7 @@ def main(argv=None):
     ap.add_argument('--max-steps', type=int, default=-1, help='bound a first GPU experiment; -1 uses epochs')
     ap.add_argument('--progress-json', help='private numeric-only progress file for the supervising worker')
     ap.add_argument('--train-wall-seconds', type=int, help='stop cleanly after a completed optimizer step, leaving time to save')
+    ap.add_argument('--resume-adapter', help='continue a pinned private solver adapter with a fresh optimizer')
     ap.add_argument('--assistant-only-loss', choices=('auto', 'required', 'off'), default='auto',
                     help='use only officially supported generation masks for chat; never handcraft masks')
     a = ap.parse_args(argv)
@@ -355,6 +386,8 @@ def main(argv=None):
                    assistant_only_loss=False, assistant_loss_status='not_checked_in_prepare_only',
                    test_records_used=0, train_loss=None, eval_loss=None)
     summary.update(warmup_policy(a.max_steps))
+    initial_path, initial_sha = initial_adapter(a.resume_adapter, config, a.rank, a.out) if a.resume_adapter else (None, None)
+    summary.update(initial_adapter_model_sha256=initial_sha, optimizer_state_restored=False)
     print(json.dumps(summary, ensure_ascii=False), flush=True)
     if a.prepare_only:
         return
@@ -372,8 +405,14 @@ def main(argv=None):
     if config['precision'] == 'bf16' and not bf16:
         raise ValueError('chat BF16 LoRA requires a BF16-capable GPU; precision is not downgraded automatically')
     loader = choose_loader(unsloth, config)
-    model, tok = loader.from_pretrained(**loader_kwargs(config, a.max_len, torch.bfloat16))
-    model = loader.get_peft_model(model, **peft_kwargs(config, a.rank, a.max_len))
+    options = loader_kwargs(config, a.max_len, torch.bfloat16)
+    if initial_path:
+        options['model_name'] = str(initial_path)
+    model, tok = loader.from_pretrained(**options)
+    if initial_path:
+        validate_loaded_adapter_trainability(model)
+    else:
+        model = loader.get_peft_model(model, **peft_kwargs(config, a.rank, a.max_len))
     mask_enabled, patched_template, mask_reason = False, None, 'plain_text_full_sequence_loss'
     if a.format == 'chat' and a.assistant_only_loss != 'off':
         try:
@@ -423,8 +462,12 @@ def main(argv=None):
             summary['warmup_steps'] = math.ceil(0.05 * scheduled_steps)
     summary.update(safe_loss_metrics(getattr(trainer.state, 'log_history', []),
                                     getattr(training_result, 'metrics', None)))
+    if initial_path and file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha:
+        raise ValueError('initial adapter file changed during continuation')
     model.save_pretrained(a.out)      # adapter_config.json + adapter_model.safetensors
     tok.save_pretrained(a.out)
+    if initial_path and file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha:
+        raise ValueError('initial adapter file changed while saving continuation')
     summary['weights_updated'] = True
     Path(a.out, 'hasla_training_manifest.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')
     print('adapter saved to', a.out)

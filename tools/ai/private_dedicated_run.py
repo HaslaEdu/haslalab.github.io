@@ -46,13 +46,18 @@ def pod_environment(env, manifest, entity, role, run_name, reference, seconds):
     job = {'role': role, 'format': spec['format'], 'run': run_name, 'input_artifact': reference,
            'training_sha256': spec['train']['raw_sha256'],
            'validation_sha256': spec['validation']['raw_sha256'], 'runtime_seconds': seconds - 600}
-    return {'HASLA_ROLE_JOBS': json.dumps([job], separators=(',', ':')), 'REPO_SHA': env['GITHUB_SHA'],
+    if spec.get('initial_adapter'):
+        job['initial_adapter'] = spec['initial_adapter']
+    child = {'HASLA_ROLE_JOBS': json.dumps([job], separators=(',', ':')), 'REPO_SHA': env['GITHUB_SHA'],
             'HASLA_TRAIN_SCRIPT_SHA256': manifest['train_script_sha256'],
             'HASLA_ROLE_CONFIG_SHA256': manifest['role_config_sha256'],
             'HASLA_POD_SCRIPT_SHA256': manifest['pod_script_sha256'],
             'HF_TOKEN': env['HF_TOKEN'], 'WANDB_API_KEY': env['WANDB_API_KEY'],
             'WANDB_ENTITY': entity, 'WANDB_PROJECT': cloud.PROJECT,
             'WANDB_CONSOLE': 'off', 'WANDB_DISABLE_CODE': 'true'}
+    if spec.get('initial_adapter'):
+        child['HASLA_RESUME_SCRIPT_SHA256'] = manifest['resume_script_sha256']
+    return child
 
 
 def pod_command(env, manifest, seconds):

@@ -13,6 +13,7 @@ import traceback
 from urllib.parse import parse_qs, urlsplit
 
 import private_corpus_run as cloud
+from role_config import get_role_config
 from private_pod_train import (MAX_ARTIFACT_RAW_BYTES, artifact_payloads, decode_payload,
                                rows_from_payload, verify_partitions)
 from training_budget import BudgetLedger, BudgetPolicy, PodQuote, reserve_run, settle_run, should_stop, validate_observed_pod
@@ -75,6 +76,12 @@ def load_inputs(env):
         raise ValueError('selected model input is missing')
     for role in selected:
         resource_settings(manifest, role)
+        initial = manifest['roles'][role].get('initial_adapter')
+        if initial is not None:
+            from private_resume_adapter import validate_spec
+            if role != 'solver' or not re.fullmatch(r'[a-f0-9]{64}', manifest.get('resume_script_sha256', '')):
+                raise ValueError('continuation requires a solver adapter and pinned helper')
+            manifest['roles'][role]['initial_adapter'] = validate_spec(initial, get_role_config(role))
     for key in ('train_script_sha256', 'role_config_sha256', 'pod_script_sha256', 'dual_pod_sha256'):
         if not re.fullmatch(r'[a-f0-9]{64}', manifest.get(key, '')):
             raise ValueError('pinned code checksums are required')
@@ -130,7 +137,8 @@ def load_inputs(env):
 def verify_staged_inputs(manifest, payloads, env, entity):
     """Validate full private artifact bytes on CPU before any paid Pod is created."""
     external = [role for role in manifest['selected_roles'] if manifest['roles'][role].get('input_artifact')]
-    if not external:
+    initial_roles = [role for role in manifest['selected_roles'] if manifest['roles'][role].get('initial_adapter')]
+    if not external and not initial_roles:
         return
     from private_verify_adapter import quiet_sdk
     with tempfile.TemporaryDirectory(prefix='hasla-staged-input-') as directory:
@@ -156,6 +164,20 @@ def verify_staged_inputs(manifest, payloads, env, entity):
                     validate_source_lineage(values, role)
                     rows.append(values)
                 verify_partitions(*rows)
+            if initial_roles:
+                from private_resume_adapter import download_initial_adapter
+                api = wandb.Api(api_key=env['WANDB_API_KEY'], overrides={'base_url': private['base_url']}, timeout=30)
+                def checked_privacy(requested):
+                    if requested != entity:
+                        raise ValueError('initial adapter must belong to the same private project')
+                    observed = cloud.wandb_query('query($e:String!,$p:String!){project(name:$p,entityName:$e){name access}}',
+                                                 {'e': entity, 'p': cloud.PROJECT}).get('project') or {}
+                    if observed.get('name') != cloud.PROJECT or observed.get('access') != 'PRIVATE':
+                        raise ValueError('initial adapter project is not PRIVATE')
+                    return True
+                for role in initial_roles:
+                    download_initial_adapter(manifest['roles'][role]['initial_adapter'], get_role_config(role),
+                        Path(directory) / (role + '-initial'), api, checked_privacy)
 
 
 def resource_settings(manifest, role):
@@ -187,6 +209,9 @@ def resource_settings(manifest, role):
 def verify_pinned_scripts(manifest, commit):
     files = {'train_script_sha256': 'train_lora.py', 'role_config_sha256': 'role_config.py',
              'pod_script_sha256': 'private_pod_train.py', 'dual_pod_sha256': 'private_dual_pod.py'}
+    if any(manifest['roles'][role].get('initial_adapter')
+           for role in manifest.get('selected_roles', list(manifest.get('roles', {})))):
+        files['resume_script_sha256'] = 'private_resume_adapter.py'
     for key, filename in files.items():
         url = f'https://raw.githubusercontent.com/HaslaEdu/haslalab.github.io/{commit}/tools/ai/{filename}'
         response = cloud.requests.get(url, timeout=20)
