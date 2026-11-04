@@ -45,7 +45,8 @@ import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
 import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './page-tiles.js';
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
-import { createAiAssistantRouter, AI_ASSISTANT_PATH } from './ai-assistant.js';
+import { createAiAssistantRouter, AI_ASSISTANT_PATH, AI_FEEDBACK_PATH, AI_FORGET_PATH } from './ai-assistant.js';
+import { forgetMember } from './ai-memory.js';
 import { createAiEvalRouter, AI_EVAL_PATH, aiEvalTick } from './ai-eval.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
 import { GRADE_TOOLS, runGradeTool } from './grade-tools.js';
@@ -255,7 +256,7 @@ async function handle(req, env, url, ctx) {
   const p = url.pathname.replace(/\/+$/, "");
   const m = req.method;
   if(p===PROBLEM_BANK_OCR_PATH)return problemBankOcrRouter(req,env);
-  if(p===AI_ASSISTANT_PATH)return aiAssistantRouter(req,env);
+  if(p===AI_ASSISTANT_PATH||p===AI_FEEDBACK_PATH||p===AI_FORGET_PATH)return aiAssistantRouter(req,env);
   if(p===AI_EVAL_PATH||p.startsWith(AI_EVAL_PATH+'/'))return aiEvalRouter(req,env);
   if (p === MODEL_TEST_PATH) return modelTestRouter(req, env);
   const form = (req.headers.get("Content-Type") || "").startsWith("multipart/form-data");
@@ -381,6 +382,8 @@ async function handle(req, env, url, ctx) {
     await env.DB.prepare(LAB_TRAIN_SQL).run(); await env.DB.prepare(LAB_BENCH_SQL).run();
     // posts and comments stay so threads keep making sense; the name goes
     await labR2Drop(env, "session_id IN (SELECT id FROM lab_sessions WHERE user_id=?)", me.id);
+    // the AI conversations the member let the assistant learn from (ai-memory.js)
+    await forgetMember(env.DB, me.id);
     await env.DB.batch([
       env.DB.prepare("UPDATE users SET deleted=1,pw=NULL,username=?,nickname=? WHERE id=?")
         .bind("deleted_" + me.id, "deleted_" + me.id, me.id),

@@ -37,11 +37,12 @@ textarea{width:100%;min-height:90px;font:inherit;border:1px solid var(--line);bo
 <body>
 <main>
   <h1>하슬라랩 AI 검토</h1>
-  <p class="muted">매일 밤 AI가 스스로 문제를 받고 답한 결과입니다. 맞는 답은 승인, 틀린 답은 고쳐서 승인하거나 거절하세요. 승인한 답은 같은 질문이 오면 바로 재사용되고, 학습 데이터(LoRA)로 내보낼 수 있습니다. 관리자만 쓸 수 있습니다.</p>
+  <p class="muted">매일 밤 AI가 스스로 문제를 받고 답한 결과입니다. 맞는 답은 승인, 틀린 답은 고쳐서 승인하거나 거절하세요. 회원이 학습 사용을 허용한 대화도 "회원 대화"로 여기 쌓입니다(👎 받은 것부터 보세요). 승인한 답은 같은 질문이 오면 바로 재사용되고, 학습 데이터(LoRA)로 내보낼 수 있습니다. 관리자만 쓸 수 있습니다.</p>
   <p id="msg" class="err" hidden></p>
   <div class="bar">
     <label>상태 <select id="status"><option value="graded">검토 대기</option><option value="approved">승인됨</option><option value="rejected">거절됨</option><option value="failed">실패</option><option value="all">전체</option></select></label>
-    <label>판정 <select id="verdict"><option value="">전체</option><option value="wrong">틀림</option><option value="correct">맞음</option><option value="blocked">차단됨</option><option value="ungraded">채점 안 됨</option></select></label>
+    <label>종류 <select id="kind"><option value="">전체</option><option value="eval">밤 시험</option><option value="member">회원 대화</option></select></label>
+    <label>판정 <select id="verdict"><option value="">전체</option><option value="wrong">틀림</option><option value="correct">맞음</option><option value="blocked">차단됨</option><option value="ungraded">채점 안 됨</option><option value="bad">👎 회원 별로</option><option value="good">👍 회원 좋아요</option></select></label>
     <button id="reload" type="button">새로고침</button>
     <button id="runBank" type="button">문제풀이 1건 지금 실행</button>
     <button id="runSite" type="button">문제위치 1건 지금 실행</button>
