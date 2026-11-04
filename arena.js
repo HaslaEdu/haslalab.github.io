@@ -46,7 +46,7 @@ const AT = {
              ocr_empty: "사진에서 글씨를 찾지 못했습니다. 원본을 확인하거나 더 선명하게 다시 찍어주세요.",
              ocr_image_too_big: "글씨의 선명도를 유지하면서 사진 용량을 줄이지 못했습니다. 종이가 화면을 채우게 다시 찍어주세요.",
              ocr_off: "사진 인식(OCR)이 아직 서버에 연결되지 않았습니다.", ocr_failed: "사진을 읽지 못했습니다. 더 밝고 반듯하게 찍어 보세요.", rate_limited: "요청이 너무 많습니다. 내일 다시 시도해 주세요.",
-             forbidden: "관리자만 할 수 있습니다.", bad_code: "로그인 링크가 만료되었습니다. 다시 시도해 주세요.", oauth_off: "이 로그인은 아직 연결되지 않았습니다.",
+             forbidden: "관리자만 할 수 있습니다.", recent_login_required: "보안을 위해 다시 로그인한 뒤 진행해 주세요.", account_suspended: "채점 AI에 지시를 넣은 답안이 확인되어 계정이 정지되었습니다.", bad_code: "로그인 링크가 만료되었습니다. 다시 시도해 주세요.", oauth_off: "이 로그인은 아직 연결되지 않았습니다.",
              oauth_failed: "외부 로그인에 실패했습니다. 다시 시도해 주세요.", oauth_cancelled: "로그인을 취소했습니다.", oauth_in_use: "그 계정은 이미 다른 HaslaLab 계정에 연결되어 있습니다.", bad_week: "월은 2026-11 형식으로 쓰세요.", bad_rubric: "채점 기준(JSON)을 확인하세요.", bad_kind: "유형을 고르세요."}},
   en: {nav: "Monthly", login: "Sign in", signup: "Sign up", me: "My record", logout: "Sign out",
        weekH: "Problems of the month", weekSub: "Problems are grouped by month. Answers submitted before the deadline count towards that month's rankings; solutions are published after the deadline. All deadlines use Korean time (KST).",
@@ -85,7 +85,7 @@ const AT = {
              ocr_empty: "No writing was found. Check the original or take a clearer photo.",
              ocr_image_too_big: "The photo could not be made smaller while keeping the writing clear. Take another with the page filling the frame.",
              ocr_off: "Photo reading (OCR) is not connected yet.", ocr_failed: "The photo could not be read. Try a brighter, straighter shot.", rate_limited: "Too many requests. Try again tomorrow.",
-             forbidden: "Admins only.", bad_code: "The sign-in link has expired. Please try again.", oauth_off: "That sign-in is not connected yet.",
+             forbidden: "Admins only.", recent_login_required: "For your security, please sign in again before continuing.", account_suspended: "This account is suspended: an answer tried to instruct the grading AI.", bad_code: "The sign-in link has expired. Please try again.", oauth_off: "That sign-in is not connected yet.",
              oauth_failed: "The outside sign-in failed. Please try again.", oauth_cancelled: "Sign-in was cancelled.", oauth_in_use: "That account is already connected to another HaslaLab account.", bad_week: "Write the month as 2026-11.", bad_rubric: "Check the rubric JSON.", bad_kind: "Choose a kind."}}};
 /* tiers after solved.ac: level 1–30 is Bronze V … Ruby I, 31 Master, 0 unrated */
 const TIER_KEYS = ["bronze", "silver", "gold", "platinum", "diamond", "ruby"];
@@ -416,7 +416,7 @@ function arVisionProvider(root, fallback = "gemini") {
   const value=arVisionField(root)?.value||fallback;return AR_VISION_PROVIDERS.includes(value)?value:"gemini";
 }
 function arVisionAvailable(source, provider) { return arVisionCapabilities(source).some(row=>row.id===provider&&row.available); }
-const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=dda686b6c637").catch(error => { arScanner = null; throw error; }));
+const arLoadScanner = () => arScanner || (arScanner = import("./sim/labscan/scanner.js?v=2d410ba50bfe").catch(error => { arScanner = null; throw error; }));
 /* Weekly answers keep the same scanner and upload quality as exam photos. The student chooses
    which image to send; picking a file alone never starts a paid OCR request. */
 function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
@@ -493,8 +493,9 @@ function arBindAnswerPhoto(f, alive, T, onRead, options = {}) {
     photo.reading = true; paint(); note(T.reading);
     const ctrl = new AbortController(); controller = ctrl;
     try {
-      /* Preserve an already-small PNG/JPEG/WebP. Larger photos are encoded once through the
-         shared 200dpi policy, with no repeated shrinking below the readable page size. */
+      /* An already-small JPEG keeps its bytes; a PNG or WebP becomes a JPEG (the server's strips and crops read JPEG
+         only). Larger photos are encoded once through the shared 200dpi policy, with no repeated shrinking below the
+         readable page size. */
       const scanner = await arLoadScanner(), blob = await scanner.encodeUpload(selected, { maxBytes: 4 * 1024 * 1024 }).catch(error => {
         if (error?.code === "image_too_big") throw { code: "ocr_image_too_big" };
         throw error;
@@ -598,7 +599,9 @@ function arSheetT() {
 }
 function arSheetPartLabel(part) { const id = String(part.displayId || part.id), label = (lang === "en" ? part.label_en : part.label_ko); return label ? `${id.includes(".") ? id : "("+id+")"} ${label}` : id; }
 function arMonthlyPartNumber(problem,id,displayId) {
-  const part = problem?.answerSheet?.parts?.find(part => part.id === id);
+  /* a criterion belongs to the part whose id starts it (a.exact, 16.3 under part 16), as the grader's guard maps it */
+  const parts = [...(problem?.answerSheet?.parts || [])].sort((x, y) => String(y.id).length - String(x.id).length);
+  const part = parts.find(part => part.id === id) || parts.find(part => String(id).startsWith(String(part.id)));
   const displayed = displayId || part?.displayId;
   return displayed ? (String(displayed).includes(".") ? String(displayed) : "("+displayed+")") : String(id);
 }
@@ -1087,7 +1090,7 @@ const LBT = {
        why: {ocr_failed: "사진 원문을 읽지 못해 점수를 보류했습니다. 답안을 확인하고 재촬영 또는 검토가 필요합니다.", ocr_structure: "사진 원문은 보관했지만 풀이 구조를 확인하지 못해 점수를 보류했습니다. 관리자 검토가 필요합니다.", no_scheme: "이 실험의 채점 기준이 아직 등록되지 않아 관리자가 채점합니다.", no_grader: "AI 채점기가 연결되지 않아 관리자가 채점합니다.", no_solution: "이 실험은 공식 솔루션 파일이 없어 채점 기준표를 만들 수 없습니다.", no_official_points: "공식 해설에 배점이 없어 수치 점수를 확정하지 않았습니다."},
        err: "채점 서버가 응답하지 않았습니다. 관리자가 다시 채점합니다.", empty: "이 실험에서 보낸 쪽이 없습니다.", sol: "풀이 · 채점 기준", answer: "답안지", working: "Working sheet",
        del: "이 기록 지우기", delQ: "이 시험 기록과 사진을 지울까요? 토큰은 돌아오지 않습니다.", howGet: "응시는 무료이고, 실전 답안이나 이미 푼 답안의 채점·첨삭을 요청할 때 토큰을 씁니다. 토큰은 위 «토큰 충전»에서 사거나 광고로 모을 수 있습니다.",
-       admin: "실전 모드 관리", grantH: "토큰 주기 / 회수", user: "아이디 또는 닉네임", delta: "개수 (+2, -1)", look: "조회", rubH: "채점 기준 (실험별)", load: "불러오기",
+       admin: "실전 모드 관리", grantH: "토큰 주기 / 회수 / 설정", user: "아이디 또는 닉네임", delta: "개수 (+2, -1 또는 설정값)", modeAdd: "더하기/빼기", modeSet: "이 개수로 설정", reLogin: "보안을 위해 다시 로그인한 뒤 해 주세요.", look: "조회", rubH: "채점 기준 (실험별)", load: "불러오기",
        queue: "채점 대기 시험", give: "점수 주기", regrade: "AI로 다시 채점", points: "만점",
        reportH: "성적표", examNo: "수험번호", cand: "응시자", exam: "시험", date: "응시일", pct: "백분율", rank: "순위", rankV: (k, n) => `${n}명 중 ${k}위`, top: "상위", avg: "응시자 평균", max: "최고",
        retryNote: "다시 응시한 시험입니다. 순위는 다른 응시자들의 첫 응시와 비교한 것입니다.", examList: "시험 목록",
@@ -1115,7 +1118,7 @@ const LBT = {
        why: {ocr_failed: "The original photo could not be read. The score is held for a retake or review.", ocr_structure: "The original text is saved, but the solution structure could not be verified. The score is held for manual review.", no_scheme: "This experiment's marking scheme is not entered yet, so an admin will grade it.", no_grader: "No AI grader is connected, so an admin will grade it.", no_solution: "This experiment has no official solution file, so no marking scheme could be drawn.", no_official_points: "The published solution has no point values, so no numerical score has been assigned."},
        err: "The grading server did not answer. An admin will grade it again.", empty: "No pages were sent for this experiment.", sol: "Solution & marking scheme", answer: "Answer sheet", working: "Working sheet",
        del: "Delete this record", delQ: "Delete this exam and its photos? The token is not given back.", howGet: "Sitting is free; tokens pay for grading and feedback on timed attempts or work already solved. Get tokens under «Get tokens» above, by buying them or watching ads.",
-       admin: "Exam mode admin", grantH: "Give / take tokens", user: "username or nickname", delta: "how many (+2, -1)", look: "Look up", rubH: "Marking schemes (per experiment)", load: "Load",
+       admin: "Exam mode admin", grantH: "Give / take / set tokens", user: "username or nickname", delta: "how many (+2, -1, or the new balance)", modeAdd: "add / take", modeSet: "set balance to", reLogin: "For safety, log in again first.", look: "Look up", rubH: "Marking schemes (per experiment)", load: "Load",
        queue: "Exams waiting for a grader", give: "Give score", regrade: "Regrade with AI", points: "full marks",
        reportH: "Score report", examNo: "Candidate no.", cand: "Candidate", exam: "Exam", date: "Date", pct: "Percentage", rank: "Rank", rankV: (k, n) => `${k} of ${n}`, top: "top", avg: "Average", max: "Best",
        retryNote: "This was a second sitting; the rank compares it with the other candidates' first sittings.", examList: "Exam list",
@@ -1512,7 +1515,7 @@ async function arLabAdmin(box) {
   const mx = await cmApi("GET", "/admin/lab/metrics?days=30").catch(() => null);
   box.innerHTML = `<h3>⏱ ${L.admin}</h3>${mx ? arLabMetrics(mx) : ""}
     <h4 class="arh4">${L.grantH}</h4>
-    <form class="arq" id="lbTok"><input name="u" placeholder="${L.user}"><input name="d" type="number" step="0.1" placeholder="${L.delta}" style="width:120px"><input name="n" placeholder="note">
+    <form class="arq" id="lbTok"><input name="u" placeholder="${L.user}"><select name="mode" class="cmsel"><option value="add">${L.modeAdd}</option><option value="set">${L.modeSet}</option></select><input name="d" type="number" step="0.1" placeholder="${L.delta}" style="width:150px"><input name="n" placeholder="note">
       <button class="cmbtn sm pri">${T0(L.grantH)}</button><button class="cmbtn sm" type="button" data-look>${L.look}</button><span class="arinfo"></span></form>
     <h4 class="arh4">${L.rubH}</h4>
     <form id="lbRub" class="arpf"><label>exam_key<input name="exam_key" placeholder="ipho2024"></label><label>task<input name="task" placeholder="E1"></label><label>${L.points}<input name="points" type="number" step="0.1" placeholder="10"></label>
@@ -1526,7 +1529,9 @@ async function arLabAdmin(box) {
           <button class="cmbtn sm pri" type="submit">${L.give}</button><button class="cmbtn sm" type="button" data-re>${L.regrade}</button></form>`; }).join("")}</details>`).join("") || `<p class="arempty">${arT().empty}</p>`}`;
   function T0(x) { return lang === "en" ? "Apply" : "적용"; }
   const tf = box.querySelector("#lbTok"), info = tf.querySelector(".arinfo");
-  tf.onsubmit = async (e) => { e.preventDefault(); try { const r = await cmApi("POST", "/admin/lab/tokens", {user: tf.u.value.trim(), delta: +tf.d.value, note: tf.n.value}); info.textContent = "→ " + r.tokens; } catch (er) { info.textContent = arErr(er); } };
+  tf.onsubmit = async (e) => { e.preventDefault(); const amount = {[tf.mode.value === "set" ? "set" : "delta"]: +tf.d.value};
+    try { const r = await cmApi("POST", "/admin/lab/tokens", {user: tf.u.value.trim(), ...amount, note: tf.n.value}); info.textContent = `${tf.u.value.trim()} → ${r.tokens}`; }
+    catch (er) { info.textContent = er && (er.code === "recent_login_required" || er.error === "recent_login_required") ? L.reLogin : arErr(er); } };
   tf.querySelector("[data-look]").onclick = async () => { try { const r = await cmApi("GET", "/admin/lab/tokens?user=" + encodeURIComponent(tf.u.value.trim())); info.textContent = `${r.user.nickname} (@${r.user.username}): ${r.user.exam_tokens} · ` + r.ledger.slice(0, 5).map((l) => (l.delta > 0 ? "+" : "") + l.delta + " " + l.reason).join(", "); } catch (er) { info.textContent = arErr(er); } };
   const rf = box.querySelector("#lbRub"), ri = rf.querySelector(".arinfo");
   rf.querySelector("[data-load]").onclick = async () => { try { const r = await cmApi("GET", "/admin/lab/rubrics?key=" + encodeURIComponent(rf.exam_key.value.trim()));

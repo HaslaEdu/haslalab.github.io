@@ -1,0 +1,71 @@
+# Hasla AI's automatic training (tools/ai/autotrain.py): when enough newly approved conversations have built up, a
+# RunPod GPU trains a LoRA for each role, the adapter is tried against the current setting on the same problems and
+# promoted only if it scores better. Runs every Monday 03:17 Korean time, or by hand (Actions → Train Hasla AI →
+# Run workflow); "dry run" only checks the keys and the data.
+# Repository secrets: RUNPOD_API_KEY, WANDB_API_KEY, HF_TOKEN, and the deploy token CLOUDFLARE_API_TOKEN (it sets the
+# run's key on the Worker); CLOUDFLARE_AI_TOKEN (a token from the Workers AI page) uploads the solver adapter, or the
+# deploy token does it if it has Workers AI · Read and Edit.
+name: Train Hasla AI
+
+on:
+  schedule:
+    - cron: "17 18 * * 0"
+  workflow_dispatch:
+    inputs:
+      role:
+        description: "which model to train"
+        type: choice
+        options: [both, solver, chat]
+        default: both
+      min_examples:
+        description: "train only with at least this many new approved conversations"
+        default: "200"
+      trials:
+        description: "problems to compare the new adapter on"
+        default: "8"
+      gpu:
+        description: "RunPod GPU type"
+        default: "NVIDIA A100 80GB PCIe"
+      force:
+        description: "train even with fewer new conversations"
+        type: boolean
+        default: false
+      dry_run:
+        description: "only check the keys and the data (no GPU, no cost)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: train-ai
+  cancel-in-progress: false
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 380
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: community/package-lock.json
+      - run: npm ci
+        working-directory: community
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests wandb
+      - run: python tools/ai/autotrain.py
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
+          ROLE: ${{ inputs.role || 'both' }}
+          MIN_EXAMPLES: ${{ inputs.min_examples || '200' }}
+          TRIALS: ${{ inputs.trials || '8' }}
+          GPU: ${{ inputs.gpu || 'NVIDIA A100 80GB PCIe' }}
+          FORCE: ${{ inputs.force && 'true' || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}

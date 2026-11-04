@@ -3,13 +3,14 @@
 // TOSS_BASE=http://127.0.0.1:8799/toss ADS_REWARDED_UNIT=test ADS_MIN_SEC=1 ADS_DAILY=3, migration 0010 applied;
 // the site on :8765 for the pay.html part.  node test-shop.mjs
 import { execSync } from "node:child_process";
+import { devSignupCode } from "./fixtures/signup-code.mjs";   // password sign-up needs a mailed code: the row goes into the local D1
 const API = process.env.API || "http://127.0.0.1:8787", B = API + "/api", SITE = "http://localhost:8765";
 const call = async (m, p, body, tok) => { const r = await fetch(B + p, { method: m, headers: { "Content-Type": "application/json", ...(tok ? { Authorization: "Bearer " + tok } : {}) }, body: body ? JSON.stringify(body) : undefined }); return [r.status, await r.json().catch(() => ({}))]; };
 let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const rnd = Math.random().toString(36).slice(2, 7);
-const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
+const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true }, ...await devSignupCode() }))[1].token;
 const sql = q => execSync(`npx wrangler d1 execute haslalab-community --local --command "${q}"`, { cwd: new URL(".", import.meta.url).pathname, stdio: "ignore" });
 const tokens = async tok => (await call("GET", "/lab/tokens", null, tok))[1];
 

@@ -30,18 +30,21 @@ jobs:
           cache-dependency-path: community/package-lock.json
       - run: npm ci
       - run: node --check src/index.js
-      - run: node --test test-account-security.mjs test-account-routes.mjs test-account-ui.cjs test-oauth-onboarding.mjs test-account-handoff.mjs test-consent.mjs ../tests/test-consent-ui.cjs
+      - run: node --test test-account-security.mjs test-account-routes.mjs test-account-ui.cjs test-oauth-onboarding.mjs test-account-handoff.mjs test-consent.mjs test-signup-email.mjs ../tests/test-consent-ui.cjs ../tests/test-signup-ui.cjs
       - run: node --test ../tests/test-problem-search-learning.cjs ../tests/test-problem-search-ui.cjs
       # Studio creates its additive schema through the existing DB binding, so
       # deployment does not require a new D1 management permission or secret.
       - run: node --check src/worker.js && node --test test-studio.mjs test-studio-schema.mjs
-      - run: node --test test-grading-rules.mjs test-vision-provider.mjs test-reference-images.mjs test-selected-vision-worker.mjs test-ocr-failure-worker.mjs test-expr-check.mjs test-page-tiles.mjs test-grade-tools.mjs test-focus-read.mjs test-unit-check.mjs test-scheme-review.mjs test-upstage-ocr.mjs test-problem-bank-ocr.mjs test-lab-train.mjs test-vertex-tuning.mjs test-curated-schemes.mjs test-drive-backup.mjs
+      - run: node --test test-grading-rules.mjs test-vision-provider.mjs test-reference-images.mjs test-selected-vision-worker.mjs test-ocr-failure-worker.mjs test-expr-check.mjs test-page-tiles.mjs test-grade-tools.mjs test-focus-read.mjs test-unit-check.mjs test-scheme-review.mjs test-upstage-ocr.mjs test-problem-bank-ocr.mjs test-lab-train.mjs test-vertex-tuning.mjs test-curated-schemes.mjs test-drive-backup.mjs test-injection-guard.mjs test-paddle-switch.mjs
       - run: node --test test-vision-runtime.mjs
       - run: node ../tools/build-site-catalogue.cjs --check
       - run: node --test test-lab-call-pricing.mjs test-model-test-pricing.mjs test-model-test-provider.mjs test-model-test-route.mjs test-model-test-reference.mjs ../tests/test-model-test-ui.cjs ../tests/test-model-test-exam-ui.cjs ../tests/test-model-test-catalogue.cjs
       - run: node weekly/build-seed.mjs --check
       - run: node --test test-weekly-content.mjs test-greenhouse-content.mjs test-astronomy-revision.mjs test-pressure-wave-content.mjs test-monthly-experiment*.mjs test-monthly-period.mjs test-monthly-answers.mjs test-monthly-capture.mjs test-monthly-policy.mjs test-monthly-photos.mjs test-monthly-presentation.mjs test-proton-presentation.mjs test-monthly-rewards.mjs ../tests/test-weekly-rendering.cjs ../tests/test-monthly-*.cjs
       - run: node --test test-omr.mjs
+      - run: node --test test-ai-assistant.mjs
+      - run: node --test test-ai-eval.mjs
+      - run: node --test test-ai-train.mjs
       - run: node --test test-ocr-parity.mjs ../tests/test-scan-quality.mjs ../tests/test-contest-review.cjs
       - run: node --test test-qr-isolation.mjs test-latency-jobs.mjs test-contest.mjs test-public-profile.mjs
       - run: node --test test-lab-standings.mjs ../tests/test-result-comparison.cjs ../tests/test-*-results.cjs

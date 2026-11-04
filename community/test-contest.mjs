@@ -171,6 +171,20 @@ test("unpaid scans are saved, require explicit payment, read once and require st
   assert.equal((await settled(sessionBase(sid) + "/submit", {}, 4)).data.session.status, "graded");
 });
 
+test("a PNG page that reaches the server is kept with its own MIME and said so in the log; a JPEG page is not", async () => {
+  const r = await start(13, { mode: "paper" }), warn = console.warn, said = [];
+  const put = (type, body) => worker.fetch(new Request(`http://worker.local/api/lab/up/pages?task=Q5&kind=answer`, { method: "PUT", headers: { "X-Lab-Token": r.data.token, "Content-Type": type }, body }), env).then(x => x.json());
+  console.warn = (...args) => said.push(args.join(" "));
+  let png, jpg;
+  try {
+    png = await put("image/png", new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13]));
+    jpg = await put("image/jpeg", new Uint8Array([255, 216, 255, 224, 0, 16, 74, 70, 73, 70]));
+  } finally { console.warn = warn; }
+  assert.equal(sqlite.prepare("SELECT mime FROM lab_pages WHERE id=?").get(png.id).mime, "image/png");
+  assert.equal(sqlite.prepare("SELECT mime FROM lab_pages WHERE id=?").get(jpg.id).mime, "image/jpeg");
+  assert.deepEqual(said, [`[lab page ${r.data.session.id}/${png.no}] stored image/png page of 12 bytes as it is: no strips, zoom crops or size fitting (the Worker decodes JPEG only)`]);
+});
+
 test("empty submissions cannot spend tokens and insufficient balance stays atomic", async () => {
   const r = await start(5), sid = r.data.session.id;
   assert.equal((await settled(sessionBase(sid) + "/submit", {}, 5)).data.error, "no_answers");

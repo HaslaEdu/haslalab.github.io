@@ -8,6 +8,14 @@ keep_vars = true
 binding = "STUDIO_ENGINE"
 service = "haslalab-studio-engine"
 
+# HaslaLab assistant (src/ai-assistant.js): open-weight models on Workers AI, and the problem bank Worker it searches
+[ai]
+binding = "AI"
+
+[[services]]
+binding = "PROBLEM_BANK"
+service = "haslalab-problem-bank"
+
 [[send_email]]
 name = "ACCOUNT_EMAIL"
 allowed_sender_addresses = ["noreply@notify.physleague.kr"]
@@ -91,9 +99,20 @@ LAB_READ_CONFUSIONS = "on"
 # a numerical answer the code marks wrong (R12) is read again by Mathpix on that page alone; a one-character misread
 # (10^12 for 10^18, 25 for 85) is replaced (bench: 2 misreads fixed, no wrong replacement; ~$0.005 a page it reads)
 LAB_FOCUS_READ = "on"
+# what Mathpix does not settle is read again by Gemini 3.8 Flash on a zoomed crop of its page (a 0,23 read 9,23 and an
+# exponent 10^9 for 10^7 stayed wrong with Mathpix alone, 2026-11-04); only pages with such a value, about $0.002 each
+LAB_FOCUS_ENGINE = "mathpix+gemini"
+LAB_FOCUS_MODEL = "gemini-3.8-flash"
 # answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
 # reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
 LAB_KEEP_HOURS = "off"
+# Paddle checkout closed (the owner's call, 2026-11-04): no Paddle pack in the shop and no new Paddle order; paid orders
+# still complete by the webhook and refunds still work. "on" (or deleting this line) opens it again.
+PADDLE_CHECKOUT = "off"
+# the problem studio (studio-gateway.js: digitize, generate, restore) is for administrators only
+STUDIO_ACCESS = "admin"
+# photo problem search (problem-bank-ocr.js): the photo is transcribed by this Gemini model
+BANK_OCR_MODEL = "gemini-3.1-flash-lite"
 # weekly Google Drive backup (src/drive-backup.js): Sunday 18:00 UTC, a gzipped SQL dump (newest 8 kept) and each answer
 # photo once, removed from Drive when the site lets it go. Needs the secrets GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET and
 # GDRIVE_REFRESH_TOKEN (scope drive.file); without them nothing runs. "off" stops it.
@@ -118,7 +137,11 @@ LAB_SCHEME_MODEL = "deepseek-flash"
 LAB_SCHEME_THINKING = "off"
 # when the reading or scheme model refuses (quota) or fails, these read the page or the solution instead
 LAB_READ_FALLBACK_MODEL = "gemini-3.1-flash-lite"
-LAB_SCHEME_FALLBACK_MODEL = ""
+# a solution every scheme model refuses (IPhO 2024 T2: DeepSeek and GPT-6 Luna both answered 400, «failed to parse JSON
+# value», on its request, text-only retry included) is read by Gemini 3.8 Flash, then Luna: bench 2026-11-04, the T2
+# scheme built by 3.8 Flash and graded by DeepSeek + Luna gave 9.2 of 10 against the audit's 9.7. Built once a paper.
+LAB_SCHEME_FALLBACK_MODEL = "gemini-3.8-flash"
+LAB_SCHEME_FALLBACK_THINKING = "low"
 
 # answer photos (lab_pages.r2_key): new uploads go here instead of D1; kept after grading (LAB_KEEP_HOURS off)
 [[r2_buckets]]

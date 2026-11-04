@@ -1,6 +1,7 @@
 import { getMonthlyAnswerSheet } from '../../monthly-problems.mjs';
 import { MonthlyAnswerError } from './monthly-answers.js';
 import { requireVisionProvider, visionProvider } from './vision-provider.js';
+import { warnNotJpeg } from './page-tiles.js';
 
 const MAX_IMAGE = 4 * 1024 * 1024, CHUNK = 512 * 1024;
 const MAX_PHOTOS = 40, MAX_STORED = 96 * 1024 * 1024;
@@ -190,6 +191,7 @@ export function createMonthlyPhotoRouter({ HttpError, needUser, ensureContent, v
     try {
       const saved = await storePhoto(env.DB,{userId:me.id,problemId:problem.id,partId,mime,data,
         transcript:result.text,provider,timestamp:Math.floor(Date.now()/1000)});
+      warnNotJpeg('monthly photo '+saved.id,mime,data.length);
       // This is a reference to a stored photograph, never a fabricated transcription.
       // A caller can use it for an image-only answer; grading validates ownership,
       // problem/part/provider and attaches the actual original before accepting it.

@@ -2,6 +2,7 @@
 // regulation applied in code.  Against `npm run dev` with test-lab-mock.mjs (see its header) and the 6-second clock
 // of test-lab.mjs (LAB_TEST_EXAM_SEC=6 LAB_TEST_SCAN_SEC=6 LAB_TEST_GRACE_SEC=1), then:  node test-lab-grading.mjs
 import { execSync } from "node:child_process";
+import { devSignupCode } from "./fixtures/signup-code.mjs";   // password sign-up needs a mailed code: the row goes into the local D1
 const B = (process.env.API || "http://127.0.0.1:8787") + "/api";
 const call = async (m, p, body, tok, extra) => { const r = await fetch(B + p, { method: m, headers: { "Content-Type": "application/json", ...(tok ? { Authorization: "Bearer " + tok } : {}), ...(extra || {}) }, body: body ? JSON.stringify(body) : undefined }); return [r.status, await r.json().catch(() => ({}))]; };
 const up = async (sid, key, task, kind, bytes) => { const r = await fetch(B + `/lab/up/${sid}/pages?task=${task}&kind=${kind}`, { method: "PUT", headers: { "Content-Type": "image/png", "X-Lab-Token": key }, body: bytes }); return [r.status, await r.json().catch(() => ({}))]; };
@@ -9,7 +10,7 @@ let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const rnd = Math.random().toString(36).slice(2, 7);
-const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
+const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true }, ...await devSignupCode() }))[1].token;
 const png = Buffer.from("89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D49444154789C6360000002000154A24F5D0000000049454E44AE426082", "hex");
 const pad = n => Buffer.concat([png, Buffer.alloc(n, 0)]);           // bytes after IEND: the stand-in reads these as another header / a poor page
 const sql = q => execSync(`npx wrangler d1 execute haslalab-community --local --json --command "${q}"`, { cwd: new URL(".", import.meta.url).pathname }).toString();

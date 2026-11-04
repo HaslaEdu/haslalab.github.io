@@ -14,7 +14,7 @@ export const fail = (status, code) => { throw new StudioError(status, code); };
 const messages = {
   login_required: 'HaslaLab 계정으로 로그인해 주세요.', forbidden_origin: '허용되지 않은 연결입니다.',
   username_required: '아이디를 생성하여 회원가입을 완료해 주세요.',
-  unavailable: '제작실 연결을 준비하고 있습니다.', admin_only: '현재 관리자 계정에서 시험 운영 중입니다.',
+  unavailable: '제작실 연결을 준비하고 있습니다.', admin_only: '문제 제작소는 관리자만 사용할 수 있습니다.',
   bad_input: '입력 항목을 확인해 주세요.', image_required: '문제 사진을 올려 주세요.',
   bad_image: 'PNG, JPEG 또는 WebP 사진을 사용해 주세요.', image_too_large: '사진은 4MB 이하로 올려 주세요.',
   image_dimensions: '사진의 크기가 지원 범위를 벗어납니다.', body_too_large: '업로드 용량이 너무 큽니다.',
@@ -171,7 +171,7 @@ export async function cleanupStudioUser(env, userId) {
   if (!Number.isSafeInteger(Number(userId)) || Number(userId) < 1) return;
   await ensureStudioSchema(env.DB);
   const owner = await env.DB.prepare('SELECT deleted FROM users WHERE id=?').bind(userId).first();
-  if (!owner?.deleted) return; // Account deletion only; no Studio access/admin gate.
+  if (owner?.deleted !== 1) return; // Account deletion only (2 is a suspension, which keeps its data); no Studio access/admin gate.
   // Disable further calls and erase provider replay data before network cleanup.
   // Failed DO deletions remain indexed for the next scheduled retry.
   await env.DB.batch([

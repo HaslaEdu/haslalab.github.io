@@ -100,7 +100,7 @@ test("theory, every competition: a result item is earned by the answer alone, a 
 test("IPhO-style theory: a part given only as a total, and a unit slip, follow the official schemes", () => {
   const ip9 = rulesFor("ipho", "theory").find(r => r.id === "IP9");
   assert.ok(ip9, "IP9 for IPhO-style theory");
-  assert.match(ip9.en, /at most half/); assert.match(ip9.en, /at most two thirds/);
+  assert.match(ip9.en, /about half for the set-up alone/); assert.match(ip9.en, /never the whole part/); assert.match(ip9.en, /at most two thirds/);
   assert.ok(!rulesFor("ipho", "experiment").some(r => r.id === "IP9"));
   const r3 = rulesFor("ipho", "theory").find(r => r.id === "R3");
   assert.match(r3.en, /loses 0\.1 pt, never the whole item/);
@@ -112,4 +112,19 @@ test("the neutral tone puts the same rules without «strict» and asks a zero fo
   assert.ok(!/strict/i.test(neutral.split("\n").slice(0, 2).join("\n")) && /experienced olympiad marker/.test(neutral));
   assert.match(neutral, /a 0 or a deduction on an item the candidate attempted needs a note naming where you looked/);
   assert.equal(neutral.split("\n").length, strict.split("\n").length, "the same rules, line for line");
+});
+
+test("a wrong form costs the whole item, except where the item is a whole part marked only as a total", () => {
+  const ip2 = rulesFor("ipho", "theory").find(r => r.id === "IP2");
+  assert.match(ip2.en, /wrong form .* earns nothing for that item unless the scheme gives a partial mark/);
+  assert.match(ip2.en, /whole part the scheme marks only as a total \(marked whole: true\): there the wrong form costs only the result's share/);
+  assert.ok(!/IP9/.test(ip2.en), "IP2 is shared with experiments, where IP9 does not exist: it must not cite it");
+  assert.ok(rulesFor("ipho", "experiment").some(r => r.id === "IP2"));
+});
+
+test("notation is not form: a dropped unit vector or a ± over the physical cases is not a wrong form", () => {
+  const ip2 = rulesFor("ipho", "theory").find(r => r.id === "IP2");
+  assert.match(ip2.en, /Notation is not form: a component written without its unit vector/);
+  assert.match(ip2.en, /± or ∓ that gives the physical cases the question has/);
+  assert.match(ip2.ko, /표기는 형태가 아닙니다/);
 });

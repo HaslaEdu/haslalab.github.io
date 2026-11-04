@@ -7,7 +7,7 @@
   'use strict';
   const Network=typeof module==='object'&&module.exports?require('./exam-network.js'):window.HLExamNetwork;
   const DEFAULT_API='https://haslalab-community-edge.haslalab.workers.dev';
-  const apiBase=value=>{const base=String(value||DEFAULT_API).replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?DEFAULT_API:base;};
+  const apiBase=value=>{const base=String(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(value||'')?value:DEFAULT_API).replace(/\/+$/,'');return base==='https://haslalab-community.haslalab.workers.dev'?DEFAULT_API:base;};
   const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
   const MAX_IMAGE=1850000,MAX_PAGES=40;
   const PROVIDERS=['deepseek','gemini'];
@@ -64,7 +64,7 @@
     return qrPromise||(qrPromise=new Promise(resolve=>{const s=document.createElement('script');s.src='../vendor/qrcode/qrcode.js';s.onload=()=>resolve(window.qrcode||null);s.onerror=()=>{qrPromise=null;resolve(null);};document.head.append(s);}));
   }
   let scannerPromise;
-  const scannerLibrary=()=>scannerPromise||(scannerPromise=import('./labscan/scanner.js?v=dda686b6c637').catch(error=>{scannerPromise=null;throw error;}));
+  const scannerLibrary=()=>scannerPromise||(scannerPromise=import('./labscan/scanner.js?v=2d410ba50bfe').catch(error=>{scannerPromise=null;throw error;}));
   async function imageBlob(file){return(await scannerLibrary()).encodeUpload(file,{maxBytes:MAX_IMAGE});}
   async function filePages(file,remaining){
     if(!file||file.size>30*1024*1024)throw{code:'file_too_big'};

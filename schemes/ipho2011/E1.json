@@ -1,0 +1,429 @@
+{
+ "points": 10,
+ "derived": true,
+ "unit_rule": null,
+ "notes": "IPhO 2011 Experiment 1 'Electrical blackbox: capacitive displacement sensor' (10 pt). DERIVED, not official: the official solution prints no marks. Part points are those printed in the problem paper (Part 1 3.0, Part 2 6.0, Part 3 1.0); within each part the points are split the way IPhO experiment schemes of nearby years split comparable work (table, graph, fitted line, final values). Values come from each candidate's own apparatus, so windows are wide, centred on the official solution's results (alpha = 714 nF/s, C_S = 17.9 pF, period 1.0 cm, dC = 19.9 pF per section, b = 60 mm, resolution 0.016 mm). Error analysis is not required anywhere in this problem.",
+ "parts": [
+  {
+   "id": "1",
+   "points": 3.0,
+   "final_full": false
+  },
+  {
+   "id": "2",
+   "points": 6.0,
+   "final_full": false
+  },
+  {
+   "id": "3",
+   "points": 1.0,
+   "final_full": false
+  }
+ ],
+ "items": [
+  {
+   "id": "1.1",
+   "points": 0.6,
+   "type": "table",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Calibration table: frequency f measured with each of the known capacitors (nominal 34, 68, 84, 150 pF, alone or combined), with C, f and 1/f columns and their units.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [
+    {
+     "check": "columns_units",
+     "n": null,
+     "points": 0.3
+    },
+    {
+     "check": "rows_min",
+     "n": 4,
+     "points": 0.3
+    }
+   ],
+   "n_min": 4,
+   "n_class": "few"
+  },
+  {
+   "id": "1.2",
+   "points": 1.0,
+   "type": "graph",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Linearising graph of 1/f against C (from f = alpha/(C + C_S): 1/f = C/alpha + C_S/alpha), axes labelled with units, the calibration points plotted and a straight line fitted.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [
+    {
+     "check": "axes_labeled",
+     "n": null,
+     "points": 0.2
+    },
+    {
+     "check": "axes_units",
+     "n": null,
+     "points": 0.2
+    },
+    {
+     "check": "points_min",
+     "n": 4,
+     "points": 0.3
+    },
+    {
+     "check": "fit_line",
+     "n": null,
+     "points": 0.3
+    }
+   ],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "1.3",
+   "points": 0.7,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "alpha = 1/slope of the 1/f-C line; official 714 nF/s (= 7.14e-7 F/s) for its apparatus.",
+   "unit": "nF/s",
+   "ref": null,
+   "tol": null,
+   "full_min": 600,
+   "full_max": 850,
+   "partial": [
+    {
+     "min": 500,
+     "max": 1000,
+     "points": 0.35
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "1.4",
+   "points": 0.7,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "C_S = intercept/slope of the 1/f-C line; official 17.9 pF.",
+   "unit": "pF",
+   "ref": null,
+   "tol": null,
+   "full_min": 10,
+   "full_max": 30,
+   "partial": [
+    {
+     "min": 5,
+     "max": 40,
+     "points": 0.35
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.1.I",
+   "points": 0.4,
+   "type": "other",
+   "sheet": "any",
+   "role": "result",
+   "what": "Qualitative expected graph of C against the upper plate's position for Pattern I, with the x-axis labelled (in units of the tooth width w).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.1.II",
+   "points": 0.4,
+   "type": "other",
+   "sheet": "any",
+   "role": "result",
+   "what": "Qualitative expected graph of C against the upper plate's position for Pattern II, with the x-axis labelled (in units of w).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.1.III",
+   "points": 0.4,
+   "type": "other",
+   "sheet": "any",
+   "role": "result",
+   "what": "Qualitative expected graph of C against the upper plate's position for Pattern III, with the x-axis labelled (in units of w).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.2",
+   "points": 0.8,
+   "type": "table",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Table of f (and C from the calibration) against the upper plate's displacement x, in steps of about 1 mm over several periods (official: x = 0-58 mm every 1 mm).",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [
+    {
+     "check": "columns_units",
+     "n": null,
+     "points": 0.3
+    },
+    {
+     "check": "rows_min",
+     "n": 20,
+     "points": 0.5
+    }
+   ],
+   "n_min": 20,
+   "n_class": "many"
+  },
+  {
+   "id": "2.3",
+   "points": 1.0,
+   "type": "graph",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Graph of C (or f) against x from the measurements, axes labelled with units, enough points to show the periodic pattern.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [
+    {
+     "check": "axes_labeled",
+     "n": null,
+     "points": 0.2
+    },
+    {
+     "check": "axes_units",
+     "n": null,
+     "points": 0.2
+    },
+    {
+     "check": "points_min",
+     "n": 20,
+     "points": 0.3
+    },
+    {
+     "check": "scale_ok",
+     "n": null,
+     "points": 0.3
+    }
+   ],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.4",
+   "points": 1.0,
+   "type": "other",
+   "sheet": "answer",
+   "role": "result",
+   "what": "The pattern deduced from the measured graph: the one whose expected C-x graph matches it (official data: periodic peaks, period 1.0 cm, whose maxima rise by about the same step each period: C_max = 105, 119, 140, 164, 182 pF at nodes 1-5), with the reason.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.5",
+   "points": 0.6,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Tooth width w from the period of the C-x graph (official: period 1.0 cm, w = 0.5 cm).",
+   "unit": "cm",
+   "ref": null,
+   "tol": null,
+   "full_min": 0.4,
+   "full_max": 0.6,
+   "partial": [
+    {
+     "min": 0.3,
+     "max": 0.75,
+     "points": 0.3
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.6",
+   "points": 0.6,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Capacitance added per section dC, the slope of C_max against node number (official 19.9 pF per section).",
+   "unit": "pF",
+   "ref": null,
+   "tol": null,
+   "full_min": 15,
+   "full_max": 25,
+   "partial": [
+    {
+     "min": 10,
+     "max": 30,
+     "points": 0.3
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.7",
+   "points": 0.3,
+   "type": "derivation",
+   "sheet": "any",
+   "role": "step",
+   "what": "Uses dC = K epsilon_0 A/d with A = w b (K = 1.5, d = 0.20 mm) to find b.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "2.8",
+   "points": 0.5,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Dimension b of the teeth (official 60 mm).",
+   "unit": "mm",
+   "ref": null,
+   "tol": null,
+   "full_min": 45,
+   "full_max": 75,
+   "partial": [
+    {
+     "min": 35,
+     "max": 90,
+     "points": 0.25
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "3.1",
+   "points": 0.4,
+   "type": "derivation",
+   "sheet": "any",
+   "role": "step",
+   "what": "Resolution from f = alpha/(C + C_S): dx = alpha df/(m f^2) with m = dC/dx read from the C-x graph near f = 5 kHz and df the meter's smallest step (0.01 kHz). Reading dx straight off the f-x graph (the official 'not strictly correct' alternative) earns 0.2.",
+   "unit": null,
+   "ref": null,
+   "tol": null,
+   "full_min": null,
+   "full_max": null,
+   "partial": [],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  },
+  {
+   "id": "3.2",
+   "points": 0.6,
+   "type": "value",
+   "sheet": "answer",
+   "role": "result",
+   "what": "Resolution at f = 5 kHz (official 0.016 mm with m = 17.5 pF/mm; the alternative gives 0.015 mm).",
+   "unit": "mm",
+   "ref": null,
+   "tol": null,
+   "full_min": 0.008,
+   "full_max": 0.03,
+   "partial": [
+    {
+     "min": 0.004,
+     "max": 0.06,
+     "points": 0.3
+    }
+   ],
+   "expr": null,
+   "alt": null,
+   "checks": [],
+   "n_min": null,
+   "n_class": null
+  }
+ ]
+}

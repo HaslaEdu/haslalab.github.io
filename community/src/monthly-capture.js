@@ -3,6 +3,7 @@ import { MonthlyAnswerError, normalizeMonthlyParts } from './monthly-answers.js'
 import { ensureMonthlyPhotoSchema, ensureMonthlyProviderColumn, storePhoto, boundedForm, MONTHLY_MAX_OCR_BYTES } from './monthly-photos.js';
 import { requireVisionProvider, visionProvider } from './vision-provider.js';
 import {safeOcrFailureCode} from './ocr-errors.js';
+import {warnNotJpeg} from './page-tiles.js';
 
 const ready = new WeakMap(), UUID = /^[a-f0-9-]{36}$/, TTL = 7200, MAX = 4*1024*1024;
 const UPLOAD_STALE = 300, MAX_UPLOAD_REQUESTS = 80;
@@ -304,6 +305,7 @@ export function createMonthlyCaptureRouter({HttpError,needUser,ensureContent,vis
           ]});
         const completed=await env.DB.prepare('SELECT receipt FROM monthly_capture_uploads WHERE session_id=? AND request_id=?').bind(session.id,requestId).first();
         if(!completed?.receipt)fail('capture_unavailable',500);
+        warnNotJpeg('monthly scan page '+photoId,imageType(data),data.length);
         return JSON.parse(completed.receipt);
       }catch(error){
         await env.DB.prepare(`UPDATE monthly_capture_uploads SET claim='',updated_at=0

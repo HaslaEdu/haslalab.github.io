@@ -29,7 +29,7 @@
 <script>
 "use strict";
 const COMMUNITY_API = "https://haslalab-community-edge.haslalab.workers.dev";
-function apiBase(){let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;}
+function apiBase(){let value="";try{value=localStorage.getItem("hlCmApi")||"";}catch(e){}if(!/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(value))value="";const base=(value||COMMUNITY_API).replace(/\/+$/,"");return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;}
 const Q = new URLSearchParams(location.search), en = (() => { try { return localStorage.getItem("hlLang") === "en"; } catch (e) { return false; } })();
 const T = en ? { checking: "Checking the payment…", ok: "Payment complete", got: (n, t) => `${n} token${n > 1 ? "s" : ""} added · you have ${t}`, bad: "The payment did not go through",
     canceled: "You cancelled the payment.", back: "Back to exam mode", login: "Please sign in on this browser and try again.", again: "No money was taken for a payment that was not confirmed.",

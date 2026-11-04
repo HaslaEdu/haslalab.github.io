@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { misreadOf, mathpixRereads, labelSection, sameDigitCount } from "./src/focus-read.js";
+import { misreadOf, mathpixRereads, labelSection, sameDigitCount, focusCandidates } from "./src/focus-read.js";
 
 test("a re-read replaces a reading only one character off: a digit or a power of ten", () => {
   assert.ok(misreadOf(1.59e12, 1.59e18), "IPhO 2021 T3 C.3: 10^12 for 10^18");
@@ -34,4 +34,19 @@ test("two candidates on the page: the one under the item's own label", () => {
 test('a zoomed reading must keep the number of written digits: a crop that cut one off is no fix', () => {
   for (const [a, b] of [[3.3, 3.8], [1.84e-4, 1.04e-4], [2.45e-2, 2.45e2], [54.3, 54.9], [20, 20], [1.59e13, 1.59e18]]) assert.equal(sameDigitCount(a, b), true, `${a} ${b}`);
   for (const [a, b] of [[3.3, 3], [9.31, 0.31], [1.6e-4, 1.65e-4], [5, NaN]]) assert.equal(sameDigitCount(a, b), false, `${a} ${b}`);
+});
+
+test("a leading zero read as a nine is one misread character, though it moves the number a power of ten", () => {
+  assert.ok(misreadOf(9.23, 0.23) && misreadOf(0.23, 9.23), "0,23 read 9,23 (IPhO 2023 T3 A.1)");
+  assert.ok(misreadOf(0.5, 6.5), "a tailed zero read as a six");
+  assert.ok(!misreadOf(9.23, 0.24), "two characters apart is another number");
+  assert.ok(!misreadOf(1.5, 1.05) && !misreadOf(120, 12) && !misreadOf(5.3295, 53295), "a digit added or dropped is never a misread");
+  const { fits } = focusCandidates(9.23, String.raw`v = \frac{6}{10}\sqrt{\frac{\gamma}{\rho a}(1-2^{-1/3})} = 0,23 \mathrm{m/s}`, "v = 9,23 m/s");
+  assert.deepEqual(fits, [0.23]);
+});
+
+test("a zoomed read may replace a leading-zero misread though its significant digits differ in count", async () => {
+  const { writtenSwap } = await import("./src/focus-read.js");
+  assert.ok(writtenSwap(9.23, 0.23) && !sameDigitCount(9.23, 0.23), "0,23 read 9,23: same written length, fewer significant digits");
+  assert.ok(!writtenSwap(3.3, 3) && !writtenSwap(1.5, 1.05), "a digit cut off or added is never a swap");
 });

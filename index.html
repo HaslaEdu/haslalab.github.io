@@ -45,7 +45,7 @@
   };
   const production="https://haslalab-community-edge.haslalab.workers.dev";
   let base=production,token="";
-  try{base=(localStorage.getItem("hlCmApi")||production).replace(/\/+$/,"");token=localStorage.getItem("hlCmTok")||"";}catch(e){}
+  try{const o=localStorage.getItem("hlCmApi")||"";base=(/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o)?o:production).replace(/\/+$/,"");token=localStorage.getItem("hlCmTok")||"";}catch(e){}
   if(base==="https://haslalab-community.haslalab.workers.dev")base=production;
   const hash=location.hash,parts=hash.replace(/^#\/?/,"").split("?")[0].split("/").filter(Boolean),[route,section,item]=parts;
   const language=new URLSearchParams(location.search).get("lang")==="en"?"en":"ko";
@@ -820,7 +820,7 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmcrop .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;flex-wrap:wrap}
 
 /* forms */
-.cm input[type=text],.cm input[type=password],.cm input[type=search],.cm select,.cm textarea{
+.cm input[type=text],.cm input[type=password],.cm input[type=email],.cm input[type=search],.cm select,.cm textarea{
   font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid #d5dde7;border-radius:8px;padding:9px 11px;width:100%;transition:.12s}
 .cm textarea{resize:vertical;min-height:84px;line-height:1.6}
 .cm textarea.big{min-height:340px}
@@ -848,6 +848,9 @@ img.cmav{object-fit:cover;background:var(--cm-soft,#eee)}
 .cmauth .rules{margin:0;padding:10px 12px 10px 28px;background:var(--cm-soft);border-radius:8px;font-size:12.5px;color:#4b5563}
 .cmauth .chk{flex-direction:row;align-items:flex-start;gap:8px;text-transform:none;letter-spacing:0;font-weight:500;font-size:13px}
 .cmauth .chk input{margin-top:3px;width:auto}
+/* the sign-up address and its «send code» button on one line */
+.cmauth .cmmail{display:flex;gap:8px}
+.cmauth .cmmail .cmbtn{flex:none;white-space:nowrap;text-transform:none;letter-spacing:0}
 /* the consent boxes: sign-up, the social username step and the dialog for accounts from before the terms */
 .cmconsent{border:1px solid var(--cm-line);border-radius:8px;padding:10px 12px;margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
 .cmconsent legend{font-size:12px;font-weight:700;color:#4b5563;padding:0 4px}
@@ -1141,11 +1144,12 @@ html[data-theme="dark"] .ar .arfigure img{filter:invert(.88) hue-rotate(180deg)}
 <script src="paper-languages.js?v=19316d4f0648"></script>
 <script src="site-runtime.js?v=70c2f47fdc85"></script>
 <script src="archive-navigation.js?v=417d67db4880"></script>
-<script src="site-catalogue.js?v=f8bfd3a3a47c"></script>
+<script src="site-catalogue.js?v=668bd2040922"></script>
 <script src="rupho-archive.js?v=b1638eae9a5f"></script>
 <script src="logo/variants.js?v=786a059372e6"></script>
-<script src="site-design.js?v=093476a8bf6d"></script>
+<script src="site-design.js?v=7385ce7c7606"></script>
 <script src="account-ui.js?v=c917e0f1296e"></script>
+<script src="ai-chat.js?v=3cfdb03f8e1d"></script>
 <script>
 "use strict";
 
@@ -4787,7 +4791,9 @@ const countLabel = (c,ps) => {
 };
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
+/* ads run on the Korean site only: the English site shows none */
 function adFitBanner(placement){
+  if(lang!=="ko") return "";
   const size=placement==="secondary" ? " adfit-banner--secondary" : "";
   const ad=lang==="ko" ? {aria:"광고",label:"광고"} : {aria:"Advertisement",label:"Ad"};
   return `<aside class="adfit-banner${size}" aria-label="${ad.aria}">
@@ -4804,7 +4810,10 @@ function viewOriginalHome(){
   const d=UI[lang];
   const catalogueTotals=window.HL_CATALOGUE?.totals;
   let years=0,probs=0,live=0,thy=0;
-  if(catalogueTotals){({years,probs,live,thy}=catalogueTotals);}
+  let comps=catalogueTotals?.comps??Object.keys(DATA).length;
+  if(catalogueTotals){({years,probs,live,thy}=catalogueTotals);
+    /* what the English site does not show is not counted on it */
+    for(const k of EN_HIDDEN) if(!compShown(k)){ const c=catalogueTotals&&window.HL_CATALOGUE.competitions[k]?.counts; comps--; if(c){ years-=c.years; thy-=c.problems; } } }
   else{
 
   for(const k in THEORY) for(const y in THEORY[k]) thy+=thyParts(THEORY[k][y]).length;
@@ -4840,7 +4849,7 @@ function viewOriginalHome(){
 
   <section><div class="shell">
     <dl class="tally">
-      <div><dt>${d.tComps}</dt><dd>${catalogueTotals?.comps??Object.keys(DATA).length}</dd></div>
+      <div><dt>${d.tComps}</dt><dd>${comps}</dd></div>
       <div><dt>${d.tYears}</dt><dd>${years}</dd></div>
       <div><dt>${d.tProbs}</dt><dd>${probs}</dd></div>
       <div><dt>${d.tThy}</dt><dd>${thy}</dd></div>
@@ -4851,6 +4860,10 @@ function viewOriginalHome(){
   ${adFitBanner("home")}`;
 }
 
+/* competitions the English site does not show (they stay on the Korean site): no card, no count, and a link to one
+   goes to the subject's list */
+const EN_HIDDEN=new Set(["cpho"]);
+const compShown=key=>!(lang==="en"&&EN_HIDDEN.has(key));
 /* the competitions by subject; each subject shows the logo of its leading olympiad */
 const SUBJ=[
   {k:"phys", ko:"물리", en:"Physics", logo:"ipho", comps:["ipho","apho","eupho","nbpho","ispho","opho","rmph","usapho","gpho","izho","iypt","wopho","physcup","ortvay","eotvos","plancks","baupc","cpho","rupho","kphe"]},
@@ -4869,7 +4882,7 @@ function viewComps(sub,limit=Infinity){
   let cur=SUBJ.find(x=>x.k===sub);
   if(!cur){ let k=""; try{ k=localStorage.getItem("hlSubj")||""; }catch(e){} cur=SUBJ.find(x=>x.k===k)||SUBJ[0]; }
   try{ localStorage.setItem("hlSubj",cur.k); }catch(e){}
-  const list=cur.comps.filter(k=>DATA[k]).slice(0,limit);
+  const list=cur.comps.filter(k=>DATA[k]&&compShown(k)).slice(0,limit);
   return `
   <div class="shell">
     ${archiveCategories("contests",cur.k)}
@@ -4913,7 +4926,7 @@ function archiveCategories(category,subject){
 function archiveSubjects(category,subject){
   const d=UI[lang],list=category==="contests"?SUBJ:SUBJ.filter(x=>x.k!=="sci");
   return `<nav class="subjs${category==="contests"?"":" archive-library-subjects"}" aria-label="${d.subjLabel}">${list.map(x=>{
-    const count=category==="contests"?x.comps.filter(k=>DATA[k]).length:null;
+    const count=category==="contests"?x.comps.filter(k=>DATA[k]&&compShown(k)).length:null;
     const note=count===null?(category==="books"?(lang==="ko"?"교재 보기":"Books"):(lang==="ko"?"학교 보기":"Schools")):(count?d.subjN(count):d.subjSoon);
     const picture=category==="contests"?`<img data-logo-key="${x.logo}" data-logo-variant="${logoSource(x.logo).match(/\/(dark|light)\//)?.[1]||"original"}" src="${logoSource(x.logo)}?v=${LOGO_V}" alt="" loading="lazy" decoding="async" onerror="logoFallback(this)">`:`<img class="archive-subject-art" data-subject-art="${x.k}" src="archive-media/subjects/${x.k}.svg?v=1" alt="" loading="lazy" decoding="async">`;
     return `<a href="${archiveHref(category,x.k)}"${x.k===subject?' aria-current="true"':""} class="${count===0?"none":""}">${picture}<b>${x[lang]}</b><small>${note}</small></a>`;
@@ -5077,7 +5090,7 @@ function viewLearnSubject(key){
   if(!L) return viewLearn();
   const archive=archiveHref("books",key==="astronomy"?"astro":"phys");
   return `<div class="shell"><div class="phead"><p class="eyebrow"><a href="#/learn">${d.navLearn}</a> / ${L.name[lang]}</p><h1>${L.name[lang]}</h1></div>
-    ${key==="physics"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio"><div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div><p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만듭니다.":"Turn physics problem photos into text and equations, and create new problems from a topic."}</p><span class="go">→</span></a></div>`:""}
+    ${key==="physics"&&cm.me?.role==="admin"?`<div class="comps"><a class="comp lsubj" href="#/learn/physics/studio" data-learn-tool="studio"><div class="chead"><div class="abbr">${lang==="ko"?"문제 제작소":"Problem Studio"}</div><span class="learn-state">${lang==="ko"?"사용 가능":"Available"}</span></div><p class="learn-tool-copy">${lang==="ko"?"물리 문제 사진을 글과 수식으로 옮기고, 주제에 맞는 새 문제를 만듭니다.":"Turn physics problem photos into text and equations, and create new problems from a topic."}</p><span class="go">→</span></a></div>`:""}
     ${["physics","astronomy"].includes(key)?`<p class="learn-tool-copy"><a href="${archive}">${lang==="ko"?"대회·교재·학교 자료는 아카이브에서 찾아볼 수 있습니다.":"Find competition, book and school materials in the archive."}</a></p>`:`<section class="learn-pending" role="status"><h2>${d.learnSoon}</h2></section>`}
   </div>${adFitBanner("primary")}`;
 }
@@ -8774,6 +8787,8 @@ const CMT = {
     cropH:"프로필 사진 자르기", cropHint:"끌어서 위치를 옮기고, 휠 · 두 손가락 · 막대로 크기를 조절하세요. 동그라미 안이 프로필에 보입니다.", cropZoom:"크기", cropRotate:"↻ 90° 돌리기",
     cropApply:"이대로 올리기", cropCancel:"취소", cropSrc:"원본", cropOut:"올라가는 크기", cropReset:"처음대로",
     password:"비밀번호", passwordHelp:"8자 이상", password2:"비밀번호 확인",
+    email:"이메일", emailHelp:"가입 확인과 비밀번호 찾기에만 씁니다.", sendCode:"인증 코드 받기", resendCode:"코드 다시 받기", resendIn:"{s}초 뒤 다시 받기",
+    code:"인증 코드", codeHelp:"메일로 받은 6자리 숫자", codeSent:"코드를 보냈습니다. 메일함(스팸함 포함)을 확인해 주세요. 10분 동안 쓸 수 있습니다.",
     welcome:"다시 오신 걸 환영해요!", welcomeSub:"HaslaLab 커뮤니티에 로그인하세요.",
     create:"계정 만들기", createSub:"가입하고 질문하고, 답하고, 추천하세요.",
     agree:"커뮤니티 규칙을 읽었고 지키겠습니다.", rulesH:"커뮤니티 규칙",
@@ -8790,6 +8805,9 @@ const CMT = {
     pwMismatch:"비밀번호 확인이 맞지 않습니다.", mustAgree:"커뮤니티 규칙에 동의해 주세요.",
     consent:{h:"약관 동의", terms:'[필수] <a href="terms.html" target="_blank" rel="noopener">이용약관</a> 동의', privacy:'[필수] <a href="privacy.html" target="_blank" rel="noopener">개인정보 수집·이용</a> 동의',
       age:"[필수] 만 14세 이상입니다.", train:"[선택] 내 답안과 채점 결과를 AI 채점 개선(학습)에 최대 1년 활용하는 데 동의합니다. (언제든 철회 가능)",
+      aiTrain:"[선택] 하슬라 AI와 나눈 대화를 AI 답변 개선(관리자 검토·학습)에 활용하는 데 동의합니다. (언제든 철회 가능)",
+      aiTrainH:"하슬라 AI 대화 학습 활용", aiTrainHelp:"동의하면 이후 하슬라 AI와 나눈 대화를 관리자가 검토해 AI 답변 개선과 학습에 씁니다. 검토되지 않은 대화는 1년 뒤 지우며, 철회하면 남아 있던 대화도 바로 지웁니다.",
+      aiTrainGiven:"동의했습니다. 이후 대화부터 적용됩니다.", aiTrainWithdrawn:"철회했습니다. 남아 있던 대화도 지웠습니다.",
       ai:"HaslaLab의 채점은 AI가 하는 참고용 결과이며 실제 대회 점수와 다를 수 있습니다.",
       dlgH:"약관 동의가 필요합니다", dlgP:"이용약관과 개인정보 처리방침이 2026년 11월 3일부터 시행됩니다. 계속 이용하려면 아래 항목에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
       agreeBtn:"동의하고 계속하기", trainH:"AI 채점 개선(학습) 활용", trainHelp:"동의하면 이후 채점되는 답안과 채점 결과를 AI 채점 개선에 최대 1년 활용합니다. 철회하면 이미 모아 둔 학습용 사본도 바로 지웁니다.",
@@ -8801,6 +8819,7 @@ const CMT = {
          bad_password:"비밀번호는 8자 이상이어야 합니다.",
          username_taken:"이미 쓰고 있는 아이디입니다.", nickname_taken:"이미 쓰고 있는 닉네임입니다.",
          bad_credentials:"아이디 또는 비밀번호가 맞지 않습니다.",
+         account_suspended:"채점 AI에 지시를 넣은 답안이 확인되어 계정이 정지되었습니다. 문의는 관리자에게 해 주세요.",
          rate_limited:"요청이 너무 많습니다. 잠시 뒤에 다시 해 주세요.",
          login_required:"로그인이 필요합니다.", forbidden:"권한이 없습니다.",
          not_found:"글을 찾을 수 없습니다. 삭제되었을 수 있습니다.",
@@ -8808,6 +8827,10 @@ const CMT = {
          bad_reason:"사유를 입력하세요.", network:"서버에 연결하지 못했습니다. 잠시 뒤에 다시 해 주세요.",
          consent_required:"필수 항목(이용약관, 개인정보 수집·이용)에 동의해 주세요. 동의하기 전에는 채점을 시작할 수 없습니다.",
          age_required:"만 14세 이상만 가입할 수 있습니다. 만 14세 미만은 가입할 수 없습니다.",
+         bad_email:"이메일 주소를 확인해 주세요.", email_taken:"이미 가입에 쓰인 이메일입니다. 로그인하거나 비밀번호 찾기를 이용해 주세요.",
+         mail_unavailable:"지금은 인증 메일을 보낼 수 없습니다. 잠시 뒤에 다시 하거나 소셜 로그인으로 가입해 주세요.",
+         code_required:"이메일로 받은 6자리 인증 코드를 입력해 주세요.", code_invalid:"인증 코드가 맞지 않습니다.",
+         code_expired:"인증 코드가 만료되었습니다. 코드를 다시 받아 주세요.", code_attempts:"인증 코드를 너무 여러 번 틀렸습니다. 코드를 다시 받아 주세요.",
          server_error:"서버 오류가 났습니다."}
   },
   en:{
@@ -8837,6 +8860,8 @@ const CMT = {
     cropH:"Crop your profile picture", cropHint:"Drag to move it; zoom with the wheel, two fingers or the slider. What is inside the circle shows on your profile.", cropZoom:"Zoom", cropRotate:"↻ Rotate 90°",
     cropApply:"Upload this", cropCancel:"Cancel", cropSrc:"Original", cropOut:"Uploaded as", cropReset:"Reset",
     password:"Password", passwordHelp:"At least 8 characters", password2:"Confirm password",
+    email:"Email", emailHelp:"Used only to confirm the sign-up and to recover your password.", sendCode:"Send code", resendCode:"Send again", resendIn:"Send again in {s}s",
+    code:"Verification code", codeHelp:"The 6 digits from the email", codeSent:"Code sent. Check your inbox (and the spam folder). It works for 10 minutes.",
     welcome:"Welcome back!", welcomeSub:"Log in to the HaslaLab community.",
     create:"Create an account", createSub:"Join to ask, answer and vote.",
     agree:"I have read the community rules and will follow them.", rulesH:"Community rules",
@@ -8853,6 +8878,9 @@ const CMT = {
     pwMismatch:"The passwords don't match.", mustAgree:"Please agree to the community rules.",
     consent:{h:"Agreements", terms:'[Required] I agree to the <a href="terms.html#en" target="_blank" rel="noopener">Terms of Service</a>', privacy:'[Required] I agree to the <a href="privacy.html#en" target="_blank" rel="noopener">collection and use of personal data</a>',
       age:"[Required] I am 14 or older.", train:"[Optional] My answers and grading results may be used to improve the AI grading (training) for up to 1 year. (You can withdraw at any time.)",
+      aiTrain:"[Optional] My chats with Hasla AI may be used to improve its answers (admin review and training). (You can withdraw at any time.)",
+      aiTrainH:"Hasla AI chats for training", aiTrainHelp:"If you agree, an admin reviews your later chats with Hasla AI and uses them to improve and train it. Chats not reviewed are deleted after a year; withdrawing deletes the kept chats at once.",
+      aiTrainGiven:"Agreed. It applies from your next chats.", aiTrainWithdrawn:"Withdrawn. The kept chats were deleted.",
       ai:"HaslaLab's grading is done by AI for reference only and may differ from an official competition score.",
       dlgH:"Please accept the terms", dlgP:"New Terms of Service and a Privacy Policy take effect on 3 November 2026. Please agree below to keep using the site. Grading cannot start until you do.",
       agreeBtn:"Agree and continue", trainH:"Use for AI grading improvement (training)", trainHelp:"If you agree, answers and grading results graded from now on may be used to improve the AI grading for up to 1 year. Withdrawing also deletes the training copies already kept.",
@@ -8864,6 +8892,7 @@ const CMT = {
          bad_password:"Passwords need at least 8 characters.",
          username_taken:"That username is taken.", nickname_taken:"That display name is taken.",
          bad_credentials:"Wrong username or password.",
+         account_suspended:"This account is suspended: an answer tried to instruct the grading AI. Contact the administrator.",
          rate_limited:"Too many requests. Please try again in a little while.",
          login_required:"Please log in first.", forbidden:"You can't do that.",
          not_found:"Post not found. It may have been deleted.",
@@ -8871,6 +8900,10 @@ const CMT = {
          bad_reason:"Enter a reason.", network:"Couldn't reach the server. Please try again shortly.",
          consent_required:"Please accept the required terms (Terms of Service and data collection). Grading cannot start until you do.",
          age_required:"You must be 14 or older to sign up.",
+         bad_email:"Please check the email address.", email_taken:"That email is already on an account. Log in, or use “Forgot your password?”.",
+         mail_unavailable:"We can't send the verification email right now. Try again later, or sign up with a social login.",
+         code_required:"Enter the 6-digit code from the email.", code_invalid:"That code is not right.",
+         code_expired:"That code has expired. Send a new one.", code_attempts:"Too many wrong codes. Send a new one.",
          server_error:"The server hit an error."}
   }
 };
@@ -8879,7 +8912,8 @@ const cm = { me:null, meChecked:false, seq:0, draft:{}, v:0, boards:null, view:"
 try{ cm.view = localStorage.getItem("hlCmView")==="card" ? "card" : "list"; }catch(e){}
 
 function cmBase(){
-  let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){}
+  /* the API base may be overridden for local development only: a script that set it elsewhere would get every request */
+  let o=""; try{ o=localStorage.getItem("hlCmApi")||""; }catch(e){} if(!/^(?:https?:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?|https:\/\/[a-z0-9-]+\.haslalab\.workers\.dev)\/?$/.test(o))o="";
   const base=(o||COMMUNITY_API).replace(/\/+$/,"");
   return base==="https://haslalab-community.haslalab.workers.dev"?COMMUNITY_API:base;
 }
@@ -9543,13 +9577,14 @@ function cmConsentHtml(){const C=CMT[lang].consent;return `<fieldset class="cmco
   <label class="chk"><input type="checkbox" name="cPrivacy"> <span>${C.privacy}</span></label>
   <label class="chk" data-age hidden><input type="checkbox" name="cAge"> <span>${C.age}</span></label>
   <label class="chk"><input type="checkbox" name="cTrain"> <span>${C.train}</span></label>
+  <label class="chk"><input type="checkbox" name="cAiTrain"> <span>${C.aiTrain}</span></label>
   <small class="cmai">${C.ai}</small></fieldset>`;}
 /* returns read(): the body's consent field, or throws {code} for what is missing (the server checks the same) */
 function cmConsentWire(box){
   let age=false;const row=box.querySelector("[data-age]"),on=n=>!!box.querySelector(`[name=${n}]`)?.checked;
   cmConsentInfo().then(i=>{age=!!i.age_required;if(row)row.hidden=!age;});
   return()=>{if(!on("cTerms")||!on("cPrivacy"))throw{code:"consent_required"};if(age&&!on("cAge"))throw{code:"age_required"};
-    return{terms:true,privacy:true,age14:on("cAge"),train:on("cTrain")};};
+    return{terms:true,privacy:true,age14:on("cAge"),train:on("cTrain"),aiTrain:on("cAiTrain")};};
 }
 /* an account without consent to the current terms (one from before them, or after a new version) is asked as soon as
    it is known to be signed in; the server refuses grading until then. A social sign-up agrees on its username step. */
@@ -9582,6 +9617,20 @@ async function cmTrainToggle(box,known){
     <p style="font-size:12px;margin:8px 0 0"><a href="terms.html${lang==="en"?"#en":""}" target="_blank" rel="noopener">${C.policies.split(" · ")[0]}</a> · <a href="privacy.html${lang==="en"?"#en":""}" target="_blank" rel="noopener">${C.policies.split(" · ")[1]}</a></p>`;
     box.querySelector("[data-train]").onclick=async()=>{
       try{const r=await cmApi("POST","/me/consent/train",{train:!on});on=r.train_ok===true;if(cm.me)cm.me.train_ok=on;draw(on?C.trainGiven:C.trainWithdrawn);}
+      catch(e){box.querySelector(".cmerr").textContent=cmErr(e);}
+    };};
+  draw();
+}
+/* the optional Hasla AI chat box, on the profile page: withdrawing deletes the kept chats at once */
+async function cmAiTrainToggle(box){
+  if(!box||!cm.me)return;
+  const C=CMT[lang].consent,hide=()=>{box.hidden=true;};let on=false;
+  try{const st=await cmApi("GET","/me/consent");if(st.consent_required)return hide();on=st.ai_train_ok===true;}catch(e){return hide();}
+  const draw=msg=>{box.innerHTML=`<h3 style="font-size:15px;margin:0 0 6px">${C.aiTrainH}</h3><p style="font-size:13px;color:var(--graphite);margin:0 0 8px">${C.aiTrainHelp}</p>
+    <div class="row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-size:13px">${on?C.trainOn:C.trainOff}</b><span style="flex:1"></span>
+    <button class="cmbtn" type="button" data-ai-train>${on?C.trainWithdraw:C.trainGive}</button></div><span class="cmerr" style="color:${msg?"var(--graphite)":""}">${msg||""}</span>`;
+    box.querySelector("[data-ai-train]").onclick=async()=>{
+      try{const r=await cmApi("POST","/me/consent/ai-train",{on:!on});on=r.ai_train_ok===true;draw(on?C.aiTrainGiven:C.aiTrainWithdrawn);}
       catch(e){box.querySelector(".cmerr").textContent=cmErr(e);}
     };};
   draw();
@@ -9623,6 +9672,8 @@ function cmSignup(root){
       <label>${T.nickname}<input type="text" name="nickname" autocomplete="nickname" required minlength="2" maxlength="16"><small>${T.nicknameHelp}</small><span class="cmnick" id="cmSnick"></span></label>
       <label>${T.password}<input type="password" name="password" autocomplete="new-password" required minlength="8"><small>${T.passwordHelp}</small></label>
       <label>${T.password2}<input type="password" name="password2" autocomplete="new-password" required minlength="8"></label>
+      <label>${T.email}<span class="cmmail"><input type="email" name="email" autocomplete="email" maxlength="254"><button type="button" class="cmbtn" data-code>${T.sendCode}</button></span><small>${T.emailHelp}</small></label>
+      <label>${T.code}<input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7"><small data-codeinfo>${T.codeHelp}</small></label>
       <ol class="rules">${T.rules.map(r=>`<li>${r}</li>`).join("")}</ol>
       <label class="chk"><input type="checkbox" name="agree"> ${T.agree}</label>
       ${cmConsentHtml()}
@@ -9632,14 +9683,33 @@ function cmSignup(root){
     <p class="alt">${T.haveAcc} <a href="#/community/login">${T.login}</a></p></div></div>`;
   const f=root.querySelector("#cmS"), err=f.querySelector(".cmerr"), consentOf=cmConsentWire(f);
   const nickFree=cmNickCheck(f.nickname, root.querySelector("#cmSnick"));
+  /* a password account is made only for an address its owner reads: the server mails a 6-digit code (10 minutes,
+     5 tries) and the sign-up spends it. The button waits a minute between sends; the server allows 5 an hour.
+     The two fields carry no `required`: the script checks them after the name, so a taken nickname is still the first thing said */
+  const send=f.querySelector("[data-code]"), info=f.querySelector("[data-codeinfo]"), digits=v=>v.replace(/\s+/g,"");
+  let wait=0, timer=null;
+  const count=()=>{ if(!send.isConnected||--wait<=0){ clearInterval(timer); timer=null; send.disabled=false; send.textContent=T.resendCode; } else send.textContent=T.resendIn.replace("{s}",wait); };
+  send.onclick=async()=>{
+    err.textContent=""; const email=f.email.value.trim();
+    if(!email||!f.email.checkValidity()){ err.textContent=cmErr({code:"bad_email"}); f.email.focus(); return; }
+    send.disabled=true;
+    try{ await cmApi("POST","/signup/email-code",{email,lang}); info.textContent=T.codeSent; info.className="cmnick ok";
+      wait=61; count(); timer=setInterval(count,1000); f.code.focus(); }
+    catch(er){ send.disabled=false; err.textContent=cmErr(er); if(er.code==="bad_email"||er.code==="email_taken") f.email.focus(); }
+  };
   f.onsubmit=async e=>{
     e.preventDefault();
     if(await nickFree()===false){ err.textContent=cmErr({code:"nickname_taken"}); f.nickname.focus(); return; }
     if(f.password.value!==f.password2.value){ err.textContent=T.pwMismatch; return; }
     if(!f.agree.checked){ err.textContent=T.mustAgree; return; }
     let consent; try{ consent=consentOf(); }catch(er){ err.textContent=cmErr(er); return; }
-    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent})); }
-    catch(er){ err.textContent=cmErr(er); if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); } }
+    const email=f.email.value.trim(), code=digits(f.code.value);
+    if(!email||!f.email.checkValidity()){ err.textContent=cmErr({code:"bad_email"}); f.email.focus(); return; }
+    if(!/^\d{6}$/.test(code)){ err.textContent=cmErr({code:"code_required"}); f.code.focus(); return; }
+    try{ cmAuthDone(await cmApi("POST","/signup",{username:f.username.value.trim(),nickname:f.nickname.value.trim(),password:f.password.value,consent,email,code})); }
+    catch(er){ err.textContent=cmErr(er);
+      if(er.code==="nickname_taken"||er.code==="bad_nickname"){ const o=root.querySelector("#cmSnick"); o.className="cmnick no"; o.textContent=cmErr(er); f.nickname.focus(); }
+      else if(/^code_/.test(er.code)) f.code.focus(); else if(er.code==="bad_email"||er.code==="email_taken") f.email.focus(); }
   };
   arOauth(root);
 }
@@ -9784,6 +9854,7 @@ async function cmAccount(root, alive){
     <div class="cmbh"><h2 style="font-size:1rem">${T.myPosts}</h2></div><div id="cmMine"><p class="cmempty">${T.loading}</p></div>
     <div id="cmSecurity" style="border-top:8px solid var(--cm-soft)"></div>
     <div class="cmform" id="cmTrain" style="border-top:8px solid var(--cm-soft)"></div>
+    <div class="cmform" id="cmAiTrain" style="border-top:8px solid var(--cm-soft)"></div>
     <div class="cmform" style="border-top:8px solid var(--cm-soft)">
       <h3 style="font-size:15px">${T.delAcc}</h3>
       <p style="font-size:13px;color:var(--graphite);margin:0">${T.delAccHelp}</p>
@@ -9802,6 +9873,7 @@ async function cmAccount(root, alive){
   };
   cmAccountSecurity(root.querySelector('#cmSecurity'));
   cmTrainToggle(root.querySelector('#cmTrain'));
+  cmAiTrainToggle(root.querySelector('#cmAiTrain'));
   root.querySelector("#cmDelAcc").onclick=async()=>{
     if(!confirm(T.confirmDelAcc)) return;
     try{ await cmApi("DELETE","/me"); cmTok(null); cm.me=null; location.hash="#/community"; }catch(e){ cmToast(cmErr(e)); }
@@ -9937,6 +10009,7 @@ function render(){
   else if(first==="comps"){       html=viewComps(second);  active="comps"; }
   else if(first==="community"){   html=viewCommunity(); active="community"; }
   else if(["monthly","weekly","rank","me","login","signup","oauth","lab"].includes(first)){ html=viewArena(first); active=first==="lab"?"comps":"weekly"; }
+  else if(first && DATA[first] && !compShown(first)){ const to="#/comps/"+subjOf(first); try{history.replaceState(null,"",to);}catch(e){location.hash=to;return;} return render(); }
   else if(first && DATA[first]){  html=second==="exam"||second==="review"?viewComp(first,studyMode):second?viewYear(first,second,studyMode):viewComp(first); active="comps"; }
   else {                          html=viewHome();   active="home";  }
   document.body.dataset.siteRoute=active==="comps"?"archive":active;

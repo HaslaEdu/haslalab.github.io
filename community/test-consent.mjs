@@ -6,6 +6,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import worker from './src/index.js';
 import {TERMS_VERSION,readConsent,consentInfo,consentOf,CONSENT_SQL} from './src/consent.js';
 import {LAB_TRAIN_SQL} from './src/lab-train.js';
+import {signupCode} from './fixtures/signup-code.mjs';
 const fail=code=>{throw Object.assign(new Error(code),{code})};
 const AGREE={terms:true,privacy:true,age14:true,train:false};
 function setup(){
@@ -34,7 +35,9 @@ function setup(){
     if(country)Object.defineProperty(request,'cf',{value:{country}});
     const response=await worker.fetch(request,env,{waitUntil(){}});return{status:response.status,data:await response.json()};
   };
-  return{sql,env,api,close(){sql.close()}};
+  // a password sign-up also carries a mailed code (signup-email.js): `coded` adds a fresh address and its code row
+  const coded=async body=>({...body,...await signupCode(sql)});
+  return{sql,env,api,coded,close(){sql.close()}};
 }
 const t=()=>Math.floor(Date.now()/1000);
 async function legacyUser(s,name){       // an account from before the terms: a user and a session, no consent row
@@ -51,8 +54,9 @@ test('the validator takes only literal true for terms and privacy, and asks the 
   assert.throws(()=>readConsent([true],null,fail),{code:'consent_required'});
   assert.throws(()=>readConsent({terms:true,privacy:true},'KR',fail),{code:'age_required'});
   assert.throws(()=>readConsent({terms:true,privacy:true,age14:'yes'},'KR',fail),{code:'age_required'});
-  assert.deepEqual(readConsent({terms:true,privacy:true},'US',fail),{age14:false,train:false,country:'US'});
-  assert.deepEqual(readConsent({terms:true,privacy:true,age14:true,train:true},'KR',fail),{age14:true,train:true,country:'KR'});
+  assert.deepEqual(readConsent({terms:true,privacy:true},'US',fail),{age14:false,train:false,aiTrain:false,country:'US'});
+  assert.deepEqual(readConsent({terms:true,privacy:true,age14:true,train:true},'KR',fail),{age14:true,train:true,aiTrain:false,country:'KR'});
+  assert.deepEqual(readConsent({terms:true,privacy:true,aiTrain:true},'US',fail),{age14:false,train:false,aiTrain:true,country:'US'});
   assert.deepEqual(consentInfo({cf:{country:'KR'}}),{version:TERMS_VERSION,country:'KR',age_required:true});
   assert.deepEqual(consentInfo({}),{version:TERMS_VERSION,country:null,age_required:false});
   assert.deepEqual(consentOf(null),{consent_required:true,train_ok:false});
@@ -70,9 +74,9 @@ test('sign-up needs the terms, privacy and (from Korea) the age; a refusal leave
     assert.deepEqual((await s.api('GET','/consent/info',null,null,'KR')).data,{version:TERMS_VERSION,country:'KR',age_required:true});
     assert.equal((await s.api('GET','/consent/info')).data.age_required,false);
     // outside Korea the age box is not required
-    const abroad=await s.api('POST','/signup',{username:'consent_b',nickname:'Abroad user',password:'fixture-password',consent:{terms:true,privacy:true}},null,'US');
+    const abroad=await s.api('POST','/signup',await s.coded({username:'consent_b',nickname:'Abroad user',password:'fixture-password',consent:{terms:true,privacy:true}}),null,'US');
     assert.equal(abroad.status,200);assert.equal(abroad.data.user.consent_required,undefined);assert.equal(abroad.data.user.train_ok,false);
-    const kr=await s.api('POST','/signup',{...form,consent:{...AGREE,train:true}},null,'KR');assert.equal(kr.status,200);
+    const kr=await s.api('POST','/signup',await s.coded({...form,consent:{...AGREE,train:true}}),null,'KR');assert.equal(kr.status,200);
     const row=s.sql.prepare('SELECT * FROM user_consents WHERE user_id=?').get(kr.data.user.id);
     assert.equal(row.terms_version,TERMS_VERSION);assert.equal(row.age_ok,1);assert.equal(row.train_ok,1);assert.equal(row.country,'KR');assert.ok(row.agreed_at>0);
     const me=(await s.api('GET','/me',null,kr.data.token)).data.user;assert.equal(me.consent_required,undefined);assert.equal(me.train_ok,true);
@@ -105,8 +109,8 @@ test('an account without current consent is told so, cannot start grading, and a
 
 test('training consent toggles; withdrawing deletes only this user\'s captured rows; capture rows expire after a year',async()=>{
   const s=setup();try{
-    const a=await s.api('POST','/signup',{username:'train_a',nickname:'Train A',password:'fixture-password',consent:{...AGREE,train:true}});
-    const b=await s.api('POST','/signup',{username:'train_b',nickname:'Train B',password:'fixture-password',consent:{...AGREE,train:true}});
+    const a=await s.api('POST','/signup',await s.coded({username:'train_a',nickname:'Train A',password:'fixture-password',consent:{...AGREE,train:true}}));
+    const b=await s.api('POST','/signup',await s.coded({username:'train_b',nickname:'Train B',password:'fixture-password',consent:{...AGREE,train:true}}));
     s.sql.exec(LAB_TRAIN_SQL);
     const sitting=id=>Number(s.sql.prepare("INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,started_at,ended_at,scan_until,upload_hash,status,created_at) VALUES(?,'ipho2019','ipho',2019,'[\"T1\"]',?,?,0,'void:'||random(),'graded',?)").run(id,t(),t(),t()).lastInsertRowid);
     const sa=sitting(a.data.user.id),sb=sitting(b.data.user.id);
@@ -132,7 +136,7 @@ test('training consent toggles; withdrawing deletes only this user\'s captured r
 
 test('account deletion removes the consent row, training copies and bench rows of the sittings',async()=>{
   const s=setup();try{
-    const a=await s.api('POST','/signup',{username:'gone_a',nickname:'Gone A',password:'fixture-password',consent:{...AGREE,train:true}});
+    const a=await s.api('POST','/signup',await s.coded({username:'gone_a',nickname:'Gone A',password:'fixture-password',consent:{...AGREE,train:true}}));
     s.sql.exec(LAB_TRAIN_SQL);
     s.sql.exec("CREATE TABLE IF NOT EXISTS lab_bench (id INTEGER PRIMARY KEY AUTOINCREMENT, session_id INTEGER NOT NULL, spec TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending', output TEXT, created_at INTEGER NOT NULL DEFAULT (unixepoch()), finished_at INTEGER)");
     const sid=Number(s.sql.prepare("INSERT INTO lab_sessions(user_id,exam_key,comp,year,tasks,started_at,ended_at,scan_until,upload_hash,status,created_at) VALUES(?,'ipho2019','ipho',2019,'[\"T1\"]',?,?,0,'void:'||random(),'graded',?)").run(a.data.user.id,t(),t(),t()).lastInsertRowid);
@@ -169,4 +173,25 @@ test("the country comes from request.cf, or from Cloudflare's CF-IPCountry heade
   assert.equal(requestCountry({ headers: new Headers({ "CF-IPCountry": "KR" }) }), "KR");
   assert.equal(requestCountry({ headers: new Headers({ "CF-IPCountry": "T1" }) }), null);
   assert.equal(requestCountry({ headers: new Headers() }), null);
+});
+
+test('the AI-chat box is asked at sign-up, read back, toggled on its own, and withdrawing deletes the kept chats',async()=>{
+  const {logMemberChat}=await import('./src/ai-memory.js');
+  const s=setup();try{
+    const su=await s.api('POST','/signup',await s.coded({username:'ai_consent',nickname:'AI 동의',password:'fixture-password',consent:{terms:true,privacy:true,aiTrain:true}}),null,'US');
+    assert.equal(su.status,200);
+    const id=su.data.user.id,tok=su.data.token;
+    const row=s.sql.prepare('SELECT ai_train_ok,ai_train_at,train_ok FROM user_consents WHERE user_id=?').get(id);
+    assert.equal(row.ai_train_ok,1);assert.ok(row.ai_train_at>0);assert.equal(row.train_ok,0,'the grading box is a separate choice');
+    assert.equal((await s.api('GET','/me/consent',null,tok)).data.ai_train_ok,true);
+    // a kept chat, then withdrawal from the chat window or the profile
+    const db={prepare:q=>{const st=s.sql.prepare(q);const mk=a=>({bind:(...v)=>mk(v),first:async()=>st.get(...a)||null,all:async()=>({results:st.all(...a)}),run:async()=>{const o=st.run(...a);return{meta:{changes:Number(o.changes)}}}});return mk([]);}};
+    await logMemberChat(db,{user_id:id,history:[{role:'user',content:'질문'}],answer:'답',route:'chat',style:'default'});
+    assert.equal(s.sql.prepare("SELECT count(*) n FROM ai_eval WHERE kind='member'").get().n,1);
+    assert.equal((await s.api('POST','/me/consent/ai-train',{on:'no'},tok)).status,400);
+    const off=await s.api('POST','/me/consent/ai-train',{on:false},tok);assert.equal(off.status,200);assert.equal(off.data.ai_train_ok,false);
+    assert.equal(s.sql.prepare("SELECT count(*) n FROM ai_eval WHERE kind='member'").get().n,0);
+    assert.equal((await s.api('GET','/me/consent',null,tok)).data.ai_train_ok,false);
+    assert.equal((await s.api('POST','/me/consent/ai-train',{on:true},tok)).data.ai_train_ok,true);
+  }finally{s.close()}
 });

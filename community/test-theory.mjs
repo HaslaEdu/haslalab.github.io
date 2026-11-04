@@ -3,6 +3,7 @@
 // the page reading and grading speak of a theory paper.  Against `npm run dev` with test-lab-mock.mjs and the 6-second
 // clock of test-lab.mjs:  node test-theory.mjs
 import { execSync } from "node:child_process";
+import { devSignupCode } from "./fixtures/signup-code.mjs";   // password sign-up needs a mailed code: the row goes into the local D1
 const API = process.env.API || "http://127.0.0.1:8787", B = API + "/api", MOCK = "http://127.0.0.1:8799";
 const call = async (m, p, body, tok) => { const r = await fetch(B + p, { method: m, headers: { "Content-Type": "application/json", ...(tok ? { Authorization: "Bearer " + tok } : {}) }, body: body ? JSON.stringify(body) : undefined }); return [r.status, await r.json().catch(() => ({}))]; };
 const up = async (key, task, kind, bytes) => { const r = await fetch(B + `/lab/up/${sid}/pages?task=${task}&kind=${kind}`, { method: "PUT", headers: { "Content-Type": "image/png", "X-Lab-Token": key }, body: bytes }); return [r.status, await r.json().catch(() => ({}))]; };
@@ -10,7 +11,7 @@ let fails = 0;
 const ok = (c, msg) => { if (!c) fails++; console.log((c ? "PASS " : "FAIL ") + msg); };
 const rnd = Math.random().toString(36).slice(2, 7);
 const sql = q => execSync(`npx wrangler d1 execute haslalab-community --local --command "${q}"`, { cwd: new URL(".", import.meta.url).pathname, stdio: "ignore" });
-const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true } }))[1].token;
+const sign = async u => (await call("POST", "/signup", { username: u + rnd, nickname: u + rnd, password: "password1", consent: { terms: true, privacy: true, age14: true }, ...await devSignupCode() }))[1].token;
 const png = Buffer.from("89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D49444154789C6360000002000154A24F5D0000000049454E44AE426082", "hex");
 const seen = async () => (await fetch(MOCK + "/seen")).json();
 
