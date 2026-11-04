@@ -73,7 +73,11 @@ const JUDGE = `You grade a tutor's answer to a student's question about an olymp
 is the physics or mathematics right, does the final result agree with the official one when it was asked for, is it
 clear and correct in the student's language, without invented facts. Return only JSON:
 {"score": <0-10>, "correct": <true|false>, "issues": ["<short issue>"], "reason": "<one or two sentences>"}`;
-export async function trial(env, role, candidate, rand = Math.random) {
+/* the role's adapter keys pinned to exactly these settings ('' clears one), so neither the promoted settings nor a
+   leftover key leaks into the side being tested */
+const roleKeys = role => SETTING_KEYS.filter(k => k.startsWith(`AI_${role.toUpperCase()}_`));
+export const pinned = (env, role, settings) => ({...env, ...Object.fromEntries(roleKeys(role).map(k => [k, settings[k] || '']))});
+export async function trial(env, role, candidate, rand = Math.random, base = null) {
   const p = await pickBankProblem(env, env.DB, rand);
   const question = `이 문제 풀이 과정을 설명해 주세요.\n\n${clip(p.text, 3400)}`;
   const route = role === 'solver' ? 'solve' : 'explain';
@@ -82,9 +86,9 @@ export async function trial(env, role, candidate, rand = Math.random) {
       {role: 'user', content: `Problem:\n${clip(p.text, 5000)}\n\nOfficial solution:\n${clip(p.solution, 6000)}\n\nTutor's answer:\n${clip(text, 6000)}`}]}, 4096)).text);
     return v ? v.score : null;
   };
-  const base = await answer(env, [{role: 'user', content: question}], {route, memory: false});
-  const cand = await answer(withSettings(env, candidate), [{role: 'user', content: question}], {route, memory: false});
-  const [b, c] = await Promise.all([grade(base.answer), grade(cand.answer)]);
+  const before = await answer(base ? pinned(env, role, base) : env, [{role: 'user', content: question}], {route, memory: false});
+  const after = await answer(pinned(env, role, candidate), [{role: 'user', content: question}], {route, memory: false});
+  const [b, c] = await Promise.all([grade(before.answer), grade(after.answer)]);
   return {ref: p.id, base: b, cand: c};
 }
 
@@ -144,7 +148,19 @@ export function createAiTrainRouter({HttpError, currentUser}) {
       const candidate = cleanCandidate(body.candidate, role);
       if (!Object.keys(candidate).length) throw new HttpError(400, 'invalid_candidate');
       const current = await aiSettings(db);
-      return trial(withSettings(env, current), role, candidate);
+      // base: the settings to compare against (after a promotion, the ones it replaced; {} is the untuned model)
+      return trial(withSettings(env, current), role, candidate, Math.random, body.base && typeof body.base === 'object' ? cleanCandidate(body.base, role) : null);
+    }
+    /* does the new adapter answer at all, without the fallback to the untuned model hiding a failure? */
+    if (p === AI_TRAIN_PATH + '/ping' && m === 'POST') {
+      const candidate = cleanCandidate(body.candidate, role);
+      if (!Object.keys(candidate).length) throw new HttpError(400, 'invalid_candidate');
+      const probe = pinned(env, role, candidate);
+      if (role === 'chat') probe.AI = {run: async () => { throw new Error('the remote endpoint did not answer'); }};
+      try {
+        const r = readCompletion(await runModel(probe, role === 'chat' ? 'CHAT' : 'SOLVER', {messages: [{role: 'user', content: '1+1은? 숫자만 답해.'}]}, role === 'chat' ? 32 : 2048));
+        return {ok: !!r.text.trim(), text: clip(r.text, 200)};
+      } catch (e) { return {ok: false, error: clip(e?.message || e, 300)}; }
     }
     const act = /\/(promote|rollback)$/.exec(p);
     if (act && p.startsWith(AI_TRAIN_PATH) && m === 'POST') {

@@ -7,8 +7,9 @@ For each role (solver: QwQ 32B on Workers AI; chat: Gemma 4 26B-A4B on CoreWeave
   3. waits for it, and always removes the pod at the end (also on failure), noting the GPU cost
   4. makes the adapter usable: solver → `wrangler ai finetune create` on Workers AI; chat → served by W&B Inference
      (the Worker secret AI_CHAT_KEY is the W&B key)
-  5. tries it: the same problems answered with the current setting and with the new adapter, graded by the judge
-  6. promotes it only when it scores better; every step is recorded and shown on ai-review.html (with a rollback)
+  5. checks that it answers, and puts it in use at once
+  6. compares it with the setting it replaced on the same problems (graded by the judge) and rolls it back by itself
+     when it is clearly worse; every step is recorded and shown on ai-review.html (with a manual rollback too)
   7. replaces the run's key with a random one, so it is good for this run only
 
 Secrets: RUNPOD_API_KEY, WANDB_API_KEY, HF_TOKEN, CLOUDFLARE_API_TOKEN (the deploy token, which can set Worker secrets),
@@ -36,7 +37,7 @@ GPU = E.get('GPU') or 'NVIDIA A100 80GB PCIe'
 IMAGE = E.get('IMAGE') or 'runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04'
 FORCE = E.get('FORCE') == 'true'
 DRY = E.get('DRY_RUN') == 'true'
-MARGIN = 0.02            # the candidate must beat the current setting by this much (on a 0–1 scale)
+ROLLBACK_DROP = 0.1      # after it is in use: scoring this much worse than before (0–1 scale) rolls it back
 TRAIN_TIMEOUT = 5 * 3600
 SUMMARY = []
 
@@ -181,28 +182,38 @@ def train_role(w, key, role, entity):
                      'AI_CHAT_PROJECT': f'{entity}/hasla-ai'}
     w.record(run, role, 'testing', candidate=candidate)
 
+    # 5. a quick check that it answers at all, then it is used at once
+    ping = w.post('/ping', {'role': role, 'candidate': candidate}, timeout=300)
+    if not ping.get('ok'):
+        w.record(run, role, 'failed', note='the new adapter did not answer: ' + str(ping.get('error') or ping.get('text'))[:500])
+        raise RuntimeError(f'the new adapter did not answer: {ping}')
+    w.post('/promote', {'run': run})
+    say(f'✓ {role}: {run} is in use')
+    prev = json.loads(next((r for r in w.get('/status').json()['runs'] if r['run'] == run), {}).get('prev') or '{}')
+
+    # 6. the same problems with the setting it replaced and with the new one; clearly worse → rolled back by itself
     base, cand = [], []
     for i in range(TRIALS):
         try:
-            t = w.post('/trial', {'role': role, 'candidate': candidate}, timeout=900)
+            t = w.post('/trial', {'role': role, 'candidate': candidate, 'base': prev}, timeout=900)
         except Exception as e:
             say(f'  trial {i + 1}: failed ({e})')
             continue
         if t.get('base') is not None and t.get('cand') is not None:
             base.append(t['base']); cand.append(t['cand'])
-            say(f'  trial {i + 1}: current {t["base"]:.2f}  new {t["cand"]:.2f}  ({t.get("ref")})')
+            say(f'  trial {i + 1}: before {t["base"]:.2f}  new {t["cand"]:.2f}  ({t.get("ref")})')
     if len(base) < max(3, TRIALS // 2):
-        w.record(run, role, 'rejected', trials=len(base), note='too few trials finished to judge')
-        say(f'· {role}: only {len(base)} trials finished; not promoted')
+        w.record(run, role, 'promoted', trials=len(base), note='kept in use; too few trials finished to compare')
+        say(f'· {role}: only {len(base)} trials finished; the new adapter stays in use')
         return
     b, c = sum(base) / len(base), sum(cand) / len(cand)
-    w.record(run, role, 'tested', base_score=round(b, 3), cand_score=round(c, 3), trials=len(base))
-    if c >= b + MARGIN:
-        w.post('/promote', {'run': run})
-        say(f'✓ {role}: new adapter {c:.2f} vs current {b:.2f} → promoted ({run})')
+    w.record(run, role, 'promoted', base_score=round(b, 3), cand_score=round(c, 3), trials=len(base))
+    if c < b - ROLLBACK_DROP:
+        w.post('/rollback', {'run': run})
+        w.record(run, role, 'rolled_back', note=f'rolled back by itself: {c:.2f} against {b:.2f} before')
+        say(f'✗ {role}: new adapter {c:.2f} vs {b:.2f} before → rolled back')
     else:
-        w.record(run, role, 'rejected')
-        say(f'· {role}: new adapter {c:.2f} vs current {b:.2f} → kept the current one')
+        say(f'✓ {role}: new adapter {c:.2f} vs {b:.2f} before → stays in use')
 
 
 def main():

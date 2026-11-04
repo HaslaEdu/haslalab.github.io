@@ -94,3 +94,25 @@ test('a run is recorded, tried against the current setting, promoted, used by an
   assert.equal((await call('/status')).runs[0].status, 'rolled_back');
   forgetSettings();
 });
+
+test('a new adapter is checked to answer, used at once, and compared with what it replaced', async t => {
+  const {DB, env, call} = setup();
+  // the solver adapter answers on Workers AI
+  const ok = await call('/ping', {method: 'POST', body: {role: 'solver', candidate: {AI_SOLVER_LORA: 'hasla-solver-1'}}});
+  assert.equal(ok.ok, true);
+  assert.equal(env.AI.calls.at(-1).input.lora, 'hasla-solver-1');
+  // the chat adapter's endpoint is down: the untuned fallback must not hide that
+  t.mock.method(globalThis, 'fetch', async () => new Response('down', {status: 503}));
+  env.AI_CHAT_KEY = 'k';
+  const down = await call('/ping', {method: 'POST', body: {role: 'chat', candidate: {AI_CHAT_URL: 'https://api.inference.wandb.ai/v1', AI_CHAT_REMOTE: 'wandb-artifact:///e/p/a:latest'}}});
+  assert.equal(down.ok, false);
+  t.mock.restoreAll();
+  // in use, then a trial against the setting it replaced ({} = untuned): the two sides really differ
+  await call('/record', {method: 'POST', body: {run: 'run-solver-2', role: 'solver', status: 'testing', candidate: {AI_SOLVER_LORA: 'hasla-solver-2'}}});
+  await call('/promote', {method: 'POST', body: {run: 'run-solver-2'}});
+  env.AI.calls.length = 0;
+  const tr = await call('/trial', {method: 'POST', body: {role: 'solver', candidate: {AI_SOLVER_LORA: 'hasla-solver-2'}, base: {}}});
+  assert.deepEqual(env.AI.calls.filter(c => c.model === SOLVER_MODEL).map(c => c.input.lora || null), [null, 'hasla-solver-2'], 'the promoted adapter does not leak into the "before" side');
+  assert.deepEqual([tr.base, tr.cand], [0.6, 0.9]);
+  forgetSettings();
+});

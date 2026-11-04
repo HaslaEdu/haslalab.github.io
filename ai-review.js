@@ -88,7 +88,7 @@
       const pct = v => (v == null ? '–' : (v * 10).toFixed(1));
       $('train').replaceChildren(...d.runs.map(x => {
         const act = x.promoted ? el('button', {type: 'button', textContent: '되돌리기', onclick: () => trainAct('rollback', x.run)})
-          : x.status === 'rejected' && x.candidate ? el('button', {type: 'button', textContent: '그래도 적용', onclick: () => trainAct('promote', x.run)}) : null;
+          : (x.status === 'rejected' || x.status === 'rolled_back') && x.candidate ? el('button', {type: 'button', textContent: '그래도 적용', onclick: () => trainAct('promote', x.run)}) : null;
         return el('tr', {title: x.note || ''}, ...[x.run, x.role === 'solver' ? '풀이 (QwQ)' : '총괄 (Gemma 4)', RUN_STATUS[x.status] || x.status,
           x.examples ?? '–', `${pct(x.base_score)} → ${pct(x.cand_score)}${x.trials ? ` (${x.trials}문제)` : ''}`, x.cost == null ? '–' : '$' + x.cost].map(v => el('td', {}, String(v))), el('td', {}, act));
       }));
