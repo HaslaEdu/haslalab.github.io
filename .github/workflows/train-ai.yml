@@ -1,72 +1,74 @@
-# Hasla AI's automatic training (tools/ai/autotrain.py): when enough newly approved conversations have built up, a
-# RunPod GPU trains a LoRA for each role and the adapter is in use as soon as it answers; it is then compared with the
-# setting it replaced on the same problems and rolled back by itself when clearly worse. Checks every day at 03:17
-# Korean time (it trains only with enough new data), or by hand (Actions → Train Hasla AI → Run workflow); "dry run"
-# only checks the keys and the data.
-# Repository secrets: RUNPOD_API_KEY, WANDB_API_KEY, HF_TOKEN, and the deploy token CLOUDFLARE_API_TOKEN (it sets the
-# run's key on the Worker); CLOUDFLARE_AI_TOKEN (a token from the Workers AI page) uploads the solver adapter, or the
-# deploy token does it if it has Workers AI · Read and Edit.
-name: Train Hasla AI
-
+name: Hasla private corpus pilot
+run-name: Private textbook pilot (preflight=${{ inputs.preflight_only }})
 on:
-  schedule:
-    - cron: "17 18 * * *"
   workflow_dispatch:
     inputs:
-      role:
-        description: "which model to train"
-        type: choice
-        options: [both, solver, chat]
-        default: both
-      min_examples:
-        description: "train only with at least this many new approved conversations"
-        default: "200"
-      trials:
-        description: "problems to compare the new adapter on"
-        default: "8"
-      gpu:
-        description: "RunPod GPU type"
-        default: "NVIDIA A100 80GB PCIe"
-      force:
-        description: "train even with fewer new conversations"
+      preflight_only:
+        description: "Verify credentials/privacy/budget without starting a GPU"
         type: boolean
-        default: false
-      dry_run:
-        description: "only check the keys and the data (no GPU, no cost)"
-        type: boolean
-        default: false
-
+        default: true
+permissions:
+  contents: read
 concurrency:
-  group: train-ai
+  group: hasla-private-book-training
   cancel-in-progress: false
-
 jobs:
-  train:
+  private-pilot:
     runs-on: ubuntu-latest
-    timeout-minutes: 380
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: community/package-lock.json
-      - run: npm ci
-        working-directory: community
+          sparse-checkout: tools/ai
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install requests wandb
-      - run: python tools/ai/autotrain.py
+      - run: pip install --quiet requests wandb
+      - name: Validate and run one private pilot
+        timeout-minutes: 65
+        run: python tools/ai/private_corpus_run.py
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_AI_TOKEN: ${{ secrets.CLOUDFLARE_AI_TOKEN }}
-          ROLE: ${{ inputs.role || 'both' }}
-          MIN_EXAMPLES: ${{ inputs.min_examples || '200' }}
-          TRIALS: ${{ inputs.trials || '8' }}
-          GPU: ${{ inputs.gpu || 'NVIDIA A100 80GB PCIe' }}
-          FORCE: ${{ inputs.force && 'true' || 'false' }}
-          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          HASLA_CORPUS_MANIFEST: ${{ secrets.HASLA_CORPUS_MANIFEST }}
+          HASLA_PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
+          HASLA_DATA_00: ${{ secrets.HASLA_DATA_00 }}
+          HASLA_DATA_01: ${{ secrets.HASLA_DATA_01 }}
+          HASLA_DATA_02: ${{ secrets.HASLA_DATA_02 }}
+          HASLA_DATA_03: ${{ secrets.HASLA_DATA_03 }}
+          HASLA_DATA_04: ${{ secrets.HASLA_DATA_04 }}
+          HASLA_DATA_05: ${{ secrets.HASLA_DATA_05 }}
+          HASLA_DATA_06: ${{ secrets.HASLA_DATA_06 }}
+          HASLA_DATA_07: ${{ secrets.HASLA_DATA_07 }}
+          HASLA_DATA_08: ${{ secrets.HASLA_DATA_08 }}
+          HASLA_DATA_09: ${{ secrets.HASLA_DATA_09 }}
+          HASLA_DATA_10: ${{ secrets.HASLA_DATA_10 }}
+          HASLA_DATA_11: ${{ secrets.HASLA_DATA_11 }}
+          HASLA_DATA_12: ${{ secrets.HASLA_DATA_12 }}
+          HASLA_DATA_13: ${{ secrets.HASLA_DATA_13 }}
+          HASLA_DATA_14: ${{ secrets.HASLA_DATA_14 }}
+          HASLA_DATA_15: ${{ secrets.HASLA_DATA_15 }}
+          HASLA_VALIDATION_00: ${{ secrets.HASLA_VALIDATION_00 }}
+          HASLA_VALIDATION_01: ${{ secrets.HASLA_VALIDATION_01 }}
+          HASLA_VALIDATION_02: ${{ secrets.HASLA_VALIDATION_02 }}
+          HASLA_VALIDATION_03: ${{ secrets.HASLA_VALIDATION_03 }}
+          HASLA_VALIDATION_04: ${{ secrets.HASLA_VALIDATION_04 }}
+          HASLA_VALIDATION_05: ${{ secrets.HASLA_VALIDATION_05 }}
+          HASLA_VALIDATION_06: ${{ secrets.HASLA_VALIDATION_06 }}
+          HASLA_VALIDATION_07: ${{ secrets.HASLA_VALIDATION_07 }}
+          HASLA_VALIDATION_08: ${{ secrets.HASLA_VALIDATION_08 }}
+          HASLA_VALIDATION_09: ${{ secrets.HASLA_VALIDATION_09 }}
+          HASLA_VALIDATION_10: ${{ secrets.HASLA_VALIDATION_10 }}
+          HASLA_VALIDATION_11: ${{ secrets.HASLA_VALIDATION_11 }}
+          HASLA_VALIDATION_12: ${{ secrets.HASLA_VALIDATION_12 }}
+          HASLA_VALIDATION_13: ${{ secrets.HASLA_VALIDATION_13 }}
+          HASLA_VALIDATION_14: ${{ secrets.HASLA_VALIDATION_14 }}
+          HASLA_VALIDATION_15: ${{ secrets.HASLA_VALIDATION_15 }}
+      - name: Confirm no pilot GPU remains
+        if: ${{ always() }}
+        timeout-minutes: 5
+        run: python tools/ai/private_corpus_run.py --cleanup
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
