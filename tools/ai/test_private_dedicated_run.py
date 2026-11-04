@@ -1,5 +1,7 @@
 """Offline checks for two separately allocated GPUs sharing one hard budget."""
 import contextlib
+import copy
+import hashlib
 import io
 import json
 import os
@@ -36,17 +38,21 @@ class DedicatedGpuTests(unittest.TestCase):
             patch.object(runner.cloud.requests, method, side_effect=AssertionError('external I/O forbidden')).start()
 
     @contextlib.contextmanager
-    def ready(self, *, failed_role=None, creation_failure=None, overprice_role=None, ended=False):
+    def ready(self, *, failed_role=None, creation_failure=None, overprice_role=None, ended=False,
+              existing=(), late_existing=None):
         trace, environments, pod_names = [], {}, {}
+        listings = 0
         def pod(role):
             return {'id': role + '-pod', 'name': pod_names[role], 'costPerHr': '9.99' if role == overprice_role else '3.99',
                     'containerDiskInGb': 200, 'volumeInGb': 0,
                     'gpu': {'id': runner.cloud.GPU_IDS[2], 'count': 1},
                     'desiredStatus': 'EXITED' if ended else 'RUNNING'}
         def api(method, path, **kwargs):
+            nonlocal listings
             trace.append((method, path))
             if path == '/pods':
-                return []
+                listings += 1
+                return list(existing if listings == 1 or late_existing is None else late_existing)
             role = path.rsplit('/', 1)[-1].removesuffix('-pod')
             return pod(role)
         def create(name, env, command, gpu_id):
@@ -211,6 +217,179 @@ class DedicatedGpuTests(unittest.TestCase):
                 self.assertEqual(runner.main(), 1)
         self.assertNotIn(('RESULT', 'chat'), state.trace)
         self.assertIn(('RESULT', 'solver'), state.trace)
+
+    def opt_in_sibling(self):
+        # Only synthetic identities occur in source. The actual private spec is
+        # supplied out of band and pinned in production by its canonical hash.
+        spec = {'version': 1, 'run_id': '11111', 'role': 'solver', 'pod_id': 'fixtureSibling',
+                'pod_name': 'hasla-private-books-11111-solver', 'gpu_id': runner.cloud.GPU_IDS[1],
+                'gpu_count': 1, 'runtime_cap_seconds': 2400, 'cleanup_grace_seconds': 120,
+                'gpu_usd_per_hour_upper': '4', 'reserved_upper_krw': 6488}
+        digest = hashlib.sha256(json.dumps(spec, ensure_ascii=True, sort_keys=True,
+                                          separators=(',', ':')).encode()).hexdigest()
+        patch.object(runner, 'SIBLING_SPEC_SHA256', digest).start()
+        self.manifest.update(selected_roles=['chat'], sibling_allowance=spec, prior_upper_krw=52842,
+                             budget_breakdown={'closed_upper_krw': 43410, 'held_ocr_upper_krw': 2944,
+                                               'active_sibling_upper_krw': 6488})
+        os.environ['HASLA_TRAINING_ROLE'] = 'chat'
+        self.sync_manifest()
+        return {'id': spec['pod_id'], 'name': spec['pod_name'], 'costPerHr': '1.79',
+                'containerDiskInGb': 200, 'volumeInGb': 0,
+                'gpu': {'id': spec['gpu_id'], 'count': 1}, 'desiredStatus': 'RUNNING'}
+
+    def sync_manifest(self):
+        os.environ['HASLA_DUAL_MANIFEST'] = json.dumps(self.manifest)
+
+    def test_only_fixed_sibling_may_coexist_new_chat_has_own_pod_and_cleanup(self):
+        sibling = self.opt_in_sibling()
+        with self.ready(existing=[sibling]) as state, contextlib.redirect_stdout(io.StringIO()), \
+                patch.object(runner, 'verify_reserved_funding') as funds:
+            self.assertEqual(runner.main(), 0)
+        self.assertEqual([r for e, r in state.trace if e == 'CREATE'], ['chat'])
+        state.delete.assert_called_once_with('chat-pod')
+        self.assertEqual(funds.call_args.args[1], 6488)
+        ledger = funds.call_args.args[0]
+        self.assertEqual(ledger.prior_spend_krw, 52842)
+        self.assertEqual(ledger.reserved_krw, 4944)
+        self.assertLessEqual(ledger.prior_spend_krw + ledger.reserved_krw + 5000, 100000)
+        self.assertEqual(state.trace.count(('GET', '/pods')), 2)
+
+    def test_legacy_default_still_rejects_any_earlier_private_pod(self):
+        old = {'id': 'fixtureOld', 'name': 'hasla-private-books-11111-solver'}
+        with self.ready(existing=[old]) as state, self.assertRaisesRegex(RuntimeError, 'earlier private Pod'):
+            runner.main()
+        state.create.assert_not_called()
+        state.publish.assert_not_called()
+        state.delete.assert_not_called()
+
+    def test_explicit_workflow_role_mismatch_fails_before_provider_inventory(self):
+        for value in ('chat', 'solver', 'unknown'):
+            with self.subTest(value=value), patch.dict(os.environ, {'HASLA_TRAINING_ROLE': value}), \
+                    self.ready() as state, self.assertRaises(ValueError):
+                runner.main()
+            self.assertEqual(state.trace, [])
+            state.create.assert_not_called()
+
+    def test_isolated_queue_without_allowance_cannot_race_the_legacy_queue(self):
+        self.manifest['selected_roles'] = ['chat']
+        self.sync_manifest()
+        os.environ['HASLA_TRAINING_ROLE'] = 'chat'
+        with self.ready() as state, self.assertRaisesRegex(ValueError, 'isolated role queue'):
+            runner.main()
+        self.assertEqual(state.trace, [])
+        state.create.assert_not_called()
+
+    def test_reviewed_sibling_must_remain_present_and_running(self):
+        pod = self.opt_in_sibling()
+        spec = self.manifest['sibling_allowance']
+        for rows in ([], [{**pod, 'desiredStatus': 'EXITED'}], [{**pod, 'desiredStatus': None}]):
+            with self.subTest(rows=rows), self.assertRaises(RuntimeError):
+                runner.verify_existing_pods(rows, spec)
+        with self.ready(existing=[pod], late_existing=[]) as state, contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(runner.main(), 1)
+        state.create.assert_not_called()
+        state.delete.assert_not_called()
+
+    def test_allowance_requires_exact_reviewed_spec_and_explicit_chat(self):
+        self.opt_in_sibling()
+        original = copy.deepcopy(self.manifest)
+        changes = [('pod_id', 'other'), ('run_id', '22222'), ('gpu_count', 2), ('gpu_count', True),
+                   ('reserved_upper_krw', 1), ('runtime_cap_seconds', 2401),
+                   ('gpu_usd_per_hour_upper', '3.99'), ('extra', 'unreviewed')]
+        for key, value in changes:
+            manifest = copy.deepcopy(original)
+            manifest['sibling_allowance'][key] = value
+            with self.subTest(key=key, value=value), self.assertRaises(ValueError):
+                runner.sibling_allowance(os.environ, manifest)
+        for role in ('both', 'solver'):
+            with patch.dict(os.environ, {'HASLA_TRAINING_ROLE': role}), self.assertRaises(ValueError):
+                runner.sibling_allowance(os.environ, original)
+        with patch.dict(os.environ, {'GITHUB_RUN_ID': '11111'}), self.assertRaises(ValueError):
+            runner.sibling_allowance(os.environ, original)
+
+    def test_sibling_breakdown_cannot_omit_closed_ocr_or_active_reservation(self):
+        self.opt_in_sibling()
+        original = copy.deepcopy(self.manifest)
+        for key, value in [('closed_upper_krw', 43409), ('held_ocr_upper_krw', 0),
+                           ('active_sibling_upper_krw', 6487), ('active_sibling_upper_krw', True)]:
+            manifest = copy.deepcopy(original)
+            manifest['budget_breakdown'][key] = value
+            manifest['prior_upper_krw'] = sum(manifest['budget_breakdown'].values())
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                runner.sibling_allowance(os.environ, manifest)
+        manifest = copy.deepcopy(original)
+        manifest['prior_upper_krw'] -= 1
+        with self.assertRaises(ValueError):
+            runner.sibling_allowance(os.environ, manifest)
+        manifest = copy.deepcopy(original)
+        manifest.pop('budget_breakdown')
+        with self.assertRaises(ValueError):
+            runner.sibling_allowance(os.environ, manifest)
+
+    def test_sibling_observation_rejects_identity_resource_and_unknown_changes(self):
+        pod = self.opt_in_sibling()
+        spec = self.manifest['sibling_allowance']
+        changes = [{'id': 'wrong'}, {'name': pod['name'] + '-wrong'},
+                   {'gpu': {'id': runner.cloud.GPU_IDS[2], 'count': 1}},
+                   {'gpu': {'id': spec['gpu_id'], 'count': 2}}, {'costPerHr': '4.01'},
+                   {'adjustedCostPerHr': '5'}, {'costPerHr': 'NaN'},
+                   {'containerDiskInGb': 201}, {'volumeInGb': 1}, {'networkVolumeId': 'unexpected'},
+                   {'costPerHr': None}, {'gpu': None}]
+        for change in changes:
+            with self.subTest(change=change), self.assertRaises((ValueError, RuntimeError, runner.BudgetError)):
+                runner.verify_existing_pods([{**pod, **change}], spec)
+        extra = {'id': 'other', 'name': 'hasla-private-books-22222-chat'}
+        for rows in ([pod, extra], [pod, pod], None, [{}]):
+            with self.subTest(rows=rows), self.assertRaises(RuntimeError):
+                runner.verify_existing_pods(rows, spec)
+
+    def test_late_unexpected_private_pod_blocks_creation_without_touching_sibling(self):
+        pod = self.opt_in_sibling()
+        extra = {'id': 'other', 'name': 'hasla-private-books-22222-chat'}
+        with self.ready(existing=[pod], late_existing=[pod, extra]) as state, \
+                contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(runner.main(), 1)
+        state.create.assert_not_called()
+        state.delete.assert_not_called()
+
+    def test_provider_cannot_reuse_preexisting_sibling_id_or_cleanup_it(self):
+        pod = self.opt_in_sibling()
+        with self.ready(existing=[pod]) as state, \
+                patch.object(runner.cloud, 'graphql_create_pod', return_value=pod), \
+                contextlib.redirect_stdout(io.StringIO()), self.assertRaisesRegex(RuntimeError, 'still need cleanup'):
+            runner.main()
+        state.delete.assert_not_called()
+        renamed = {**pod, 'name': 'hasla-private-books-12345-chat'}
+        with patch.object(runner.cloud, 'runpod', return_value=[renamed]), \
+                patch.object(runner.cloud, 'delete_and_confirm') as delete, \
+                self.assertRaisesRegex(RuntimeError, 'protected sibling'):
+            runner.cleanup(os.environ)
+        delete.assert_not_called()
+
+    def test_sibling_funding_includes_both_full_caps(self):
+        ledger = SimpleNamespace(reserved_krw=Decimal('4944'), policy=SimpleNamespace(
+            fx_krw_per_usd_upper=Decimal('2000'), tax_multiplier=Decimal('1.15')))
+        for balance, passes in [('3', False), ('4.97', False), ('5', True)]:
+            response = SimpleNamespace(ok=True, close=lambda: None,
+                json=lambda: {'data': {'myself': {'clientBalance': balance, 'underBalance': False}}})
+            with self.subTest(balance=balance), patch.object(runner.cloud, 'E', self.env), \
+                    patch.object(runner.cloud.requests, 'post', return_value=response), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                if passes:
+                    runner.verify_reserved_funding(ledger, 6488)
+                else:
+                    with self.assertRaises(RuntimeError):
+                        runner.verify_reserved_funding(ledger, 6488)
+
+    def test_workflow_keeps_legacy_queue_and_passes_role_to_training_and_cleanup(self):
+        workflow = Path(__file__).resolve().parents[2] / '.github/workflows/train-ai-private.yml'
+        source = workflow.read_text(encoding='utf8')
+        training = source.split('  private-pilot:', 1)[1].split('  collect-patterns:', 1)[0]
+        self.assertIn("inputs.training_role == 'chat' && 'hasla-private-book-training-chat'", training)
+        self.assertIn("inputs.training_role == 'solver' && 'hasla-private-book-training-solver'", training)
+        self.assertIn("|| 'hasla-private-book-training'", training)
+        self.assertEqual(training.count("HASLA_TRAINING_ROLE: ${{ inputs.training_role || 'both' }}"), 2)
+        self.assertIn('default: both', source.split('      preflight_only:', 1)[0])
 
 
 if __name__ == '__main__':

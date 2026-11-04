@@ -1,5 +1,6 @@
 """One separately bounded GPU Pod per model, sharing one authorized budget ledger."""
 import json
+import hashlib
 from dataclasses import replace
 from decimal import Decimal
 import os
@@ -13,7 +14,96 @@ import time
 import private_corpus_run as cloud
 import private_dual_run as inputs
 from role_config import get_role_config
-from training_budget import BudgetError, reserve_run, settle_run, should_stop, validate_observed_pod
+from training_budget import BudgetError, PodQuote, RunPlan, reserve_run, settle_run, should_stop, validate_observed_pod
+
+
+# One explicitly reviewed private sibling specification; no provider identifier
+# or wildcard allowlist is published. Any later sibling requires a new review.
+SIBLING_SPEC_SHA256 = '987a632e27ebcbf2b0984b832c3cda0fc256192145ee2a04ae9c56f0b97e3708'
+
+
+def sibling_allowance(env, manifest):
+    """Bind an opt-in chat run to one private, already reserved solver Pod."""
+    workflow_role = env.get('HASLA_TRAINING_ROLE', 'both')
+    if workflow_role not in ('both', 'chat', 'solver'):
+        raise ValueError('invalid workflow training role')
+    roles = manifest['selected_roles']
+    if workflow_role != 'both' and roles != [workflow_role]:
+        raise ValueError('workflow role differs from selected manifest roles')
+    spec = manifest.get('sibling_allowance')
+    if spec is None:
+        if workflow_role != 'both':
+            raise ValueError('isolated role queue requires the reviewed active sibling allowance')
+        if 'budget_breakdown' in manifest:
+            raise ValueError('sibling budget breakdown requires an explicit allowance')
+        return None
+    keys = {'version', 'run_id', 'role', 'pod_id', 'pod_name', 'gpu_id', 'gpu_count',
+            'runtime_cap_seconds', 'cleanup_grace_seconds', 'gpu_usd_per_hour_upper', 'reserved_upper_krw'}
+    if (type(spec) is not dict or set(spec) != keys or workflow_role != 'chat' or roles != ['chat']
+            or manifest['roles']['chat'].get('runtime_seconds') != 1800):
+        raise ValueError('parallel allowance requires one explicit 1800-second chat run')
+    for key in ('version', 'gpu_count', 'runtime_cap_seconds', 'cleanup_grace_seconds', 'reserved_upper_krw'):
+        if type(spec[key]) is not int or spec[key] <= 0:
+            raise ValueError('invalid sibling numeric field')
+    if (spec['version'] != 1 or spec['role'] != 'solver' or spec['gpu_count'] != 1
+            or not isinstance(spec['run_id'], str) or not re.fullmatch(r'[0-9]{1,32}', spec['run_id'])
+            or spec['run_id'] == env.get('GITHUB_RUN_ID')
+            or not isinstance(spec['pod_id'], str) or not re.fullmatch(r'[A-Za-z0-9]{1,64}', spec['pod_id'])
+            or spec['pod_name'] != cloud.PREFIX + spec['run_id'] + '-solver'
+            or spec['gpu_id'] not in cloud.GPU_IDS or type(spec['gpu_usd_per_hour_upper']) is not str):
+        raise ValueError('invalid sibling identity or resources')
+    digest = hashlib.sha256(json.dumps(spec, ensure_ascii=True, sort_keys=True,
+                                      separators=(',', ':')).encode('utf8')).hexdigest()
+    if digest != SIBLING_SPEC_SHA256:
+        raise ValueError('sibling allowance is not the reviewed fixed specification')
+    breakdown = manifest.get('budget_breakdown')
+    if (type(breakdown) is not dict or set(breakdown) != {
+            'closed_upper_krw', 'held_ocr_upper_krw', 'active_sibling_upper_krw'}
+            or any(type(v) is not int or v < 0 for v in breakdown.values())
+            or breakdown['closed_upper_krw'] < 43410 or breakdown['held_ocr_upper_krw'] < 2944
+            or breakdown['active_sibling_upper_krw'] != spec['reserved_upper_krw']
+            or type(manifest.get('prior_upper_krw')) is not int
+            or sum(breakdown.values()) != manifest['prior_upper_krw']
+            or manifest.get('budget_krw') != 100000 or manifest.get('authorized_budget_krw') != 100000):
+        raise ValueError('parallel budget must include closed, held OCR, and full sibling reservation')
+    # Shared billable-resource validation covers compute, disk, volumes, count,
+    # and unknown/nonfinite numeric values. This plan never releases the hold.
+    quote = PodQuote(gpu_usd_per_hour_upper=spec['gpu_usd_per_hour_upper'], gpu_count=1,
+                     container_disk_gb=200, volume_disk_gb=0)
+    hourly = quote.hourly_usd_upper * Decimal(2000) * Decimal('1.15')
+    RunPlan(spec['pod_name'], 'solver', quote, 0, spec['runtime_cap_seconds'],
+            spec['cleanup_grace_seconds'], hourly, spec['reserved_upper_krw'])
+    return spec
+
+
+def verify_existing_pods(pods, sibling):
+    if not isinstance(pods, list) or any(not isinstance(p, dict) for p in pods):
+        raise RuntimeError('private Pod inventory is unknown')
+    seen, matched_sibling = set(), False
+    for pod in pods:
+        identity = pod.get('id')
+        if not isinstance(identity, str) or not identity or identity in seen:
+            raise RuntimeError('private Pod inventory identities are unknown')
+        seen.add(identity)
+        allowed = sibling and (identity == sibling['pod_id'] or pod.get('name') == sibling['pod_name'])
+        if allowed:
+            if identity != sibling['pod_id'] or pod.get('name') != sibling['pod_name']:
+                raise RuntimeError('sibling Pod identity changed')
+            quote = PodQuote(gpu_usd_per_hour_upper=sibling['gpu_usd_per_hour_upper'], gpu_count=1)
+            plan = RunPlan(sibling['pod_name'], 'solver', quote, 0, sibling['runtime_cap_seconds'],
+                           sibling['cleanup_grace_seconds'],
+                           quote.hourly_usd_upper * Decimal(2000) * Decimal('1.15'), sibling['reserved_upper_krw'])
+            validate_observed_pod(plan, pod)
+            if (pod.get('gpu') or {}).get('id') != sibling['gpu_id']:
+                raise RuntimeError('sibling GPU identity changed')
+            if pod.get('desiredStatus') != 'RUNNING':
+                raise RuntimeError('the allowed sibling is not confirmed running')
+            matched_sibling = True
+        elif str(pod.get('name', '')).startswith(cloud.PREFIX):
+            raise RuntimeError('an earlier private Pod still needs confirmed cleanup')
+    if sibling and not matched_sibling:
+        raise RuntimeError('the reviewed active sibling is absent or unknown')
+    return seen
 
 
 def target_names(run_id):
@@ -26,12 +116,15 @@ def target_names(run_id):
 def cleanup(env):
     """Delete only the two exact dedicated names belonging to this workflow."""
     names = target_names(env.get('GITHUB_RUN_ID', ''))
+    sibling = sibling_allowance(env, json.loads(env['HASLA_DUAL_MANIFEST'])) if env.get('HASLA_DUAL_MANIFEST') else None
     matches = []
     for attempt in range(4):
         matches = [pod for pod in cloud.runpod('GET', '/pods') if pod.get('name') in names]
         if matches or attempt == 3:
             break
         time.sleep(5)
+    if sibling and any(pod.get('id') == sibling['pod_id'] for pod in matches):
+        raise RuntimeError('cleanup cannot delete the protected sibling Pod')
     confirmed = all([cloud.delete_and_confirm(pod['id']) for pod in matches])
     pending = Path('private-dedicated-pending.json')
     if pending.exists():
@@ -70,9 +163,12 @@ def pod_command(env, manifest, seconds):
     return 'bash -lc ' + shlex.quote(f'timeout --signal=TERM --kill-after=30s {seconds - 120}s bash -lc ' + shlex.quote(start))
 
 
-def verify_reserved_funding(ledger):
+def verify_reserved_funding(ledger, additional_reserved_krw=0):
     """Require prepaid coverage of every full planned Pod cap before creation."""
-    required = ledger.reserved_krw / ledger.policy.fx_krw_per_usd_upper / ledger.policy.tax_multiplier
+    additional = Decimal(str(additional_reserved_krw))
+    if not additional.is_finite() or additional < 0:
+        raise ValueError('invalid active sibling funding reservation')
+    required = (ledger.reserved_krw + additional) / ledger.policy.fx_krw_per_usd_upper / ledger.policy.tax_multiplier
     response = cloud.requests.post('https://api.runpod.io/graphql',
         json={'query': 'query { myself { clientBalance underBalance } }'},
         headers={'Authorization': 'Bearer ' + cloud.E['RUNPOD_API_KEY']}, timeout=20)
@@ -89,7 +185,7 @@ def verify_reserved_funding(ledger):
     finally:
         response.close()
     cloud.safe_event('reserved_funding_check', sufficient_for_full_caps=sufficient,
-                     balance_disclosed=False, gpu_creation_performed=False)
+                     active_sibling_included=additional > 0, balance_disclosed=False, gpu_creation_performed=False)
     if not sufficient:
         raise RuntimeError('prepaid funds do not cover the full reserved Pod caps')
 
@@ -102,12 +198,12 @@ def main():
     manifest, payloads = inputs.load_inputs(env)
     roles = manifest['selected_roles']
     target_names(env.get('GITHUB_RUN_ID', ''))
+    sibling = sibling_allowance(env, manifest)
     for key in ('RUNPOD_API_KEY', 'WANDB_API_KEY', 'HF_TOKEN'):
         if not env.get(key):
             raise ValueError('missing training credential')
     inputs.verify_pinned_scripts(manifest, env['GITHUB_SHA'])
-    if any(str(pod.get('name', '')).startswith(cloud.PREFIX) for pod in cloud.runpod('GET', '/pods')):
-        raise RuntimeError('an earlier private Pod still needs confirmed cleanup')
+    preexisting_ids = verify_existing_pods(cloud.runpod('GET', '/pods'), sibling)
     entity = cloud.private_project()
     inputs.verify_staged_inputs(manifest, payloads, env, entity)
     ledger = None
@@ -130,7 +226,7 @@ def main():
         plans[role] = ledger.runs[-1].plan
         if plans[role].run_seconds < 660:
             raise ValueError('the combined budget cannot cover a selected model')
-    verify_reserved_funding(ledger)
+    verify_reserved_funding(ledger, sibling['reserved_upper_krw'] if sibling else 0)
     cloud.safe_event('dual_preflight', selected_roles=roles, dedicated_pods=True,
                      budget_krw=int(ledger.policy.budget_krw), prior_upper_krw=str(ledger.prior_spend_krw),
                      roles={r: {'format': manifest['roles'][r]['format'],
@@ -154,6 +250,9 @@ def main():
         if role in closed:
             return
         matches = [pods[role]] if role in pods else cloud.reconcile_created_pods(base + '-' + role)
+        if any(pod.get('id') in preexisting_ids for pod in matches):
+            Path('private-dedicated-pending.json').write_text(json.dumps([base + '-' + role]), encoding='utf8')
+            raise RuntimeError('a preexisting Pod cannot be reused or deleted by this run')
         if not matches and role in uncertain:
             Path('private-dedicated-pending.json').write_text(json.dumps([base + '-' + r for r in uncertain]), encoding='utf8')
             raise RuntimeError('unknown creation outcome is not confirmed deletion')
@@ -179,9 +278,15 @@ def main():
                                         references[role], remaining)
             cloud.safe_event('gpu_request', api='rest_v2', gpu=gpus[role], roles=[role], dedicated_pod=True)
             try:
+                if sibling:
+                    # Refresh immediately before the only new paid creation;
+                    # another unexpected private Pod keeps this run fail-closed.
+                    preexisting_ids.update(verify_existing_pods(cloud.runpod('GET', '/pods'), sibling))
                 uncertain.add(role)
                 pod = cloud.graphql_create_pod(base + '-' + role, child_env,
                     pod_command(env, manifest, remaining), gpu_id=gpus[role])
+                if pod.get('id') in preexisting_ids:
+                    raise RuntimeError('provider returned a preexisting Pod instead of a dedicated new Pod')
                 pods[role] = pod
                 uncertain.discard(role)
                 pod = cloud.runpod('GET', '/pods/' + pod['id'])

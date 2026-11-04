@@ -1,8 +1,16 @@
 name: Hasla Gemma and QwQ private pilot
-run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }}, source-inspect=${{ inputs.ocr_source_inspect_only }}, contest-fetch=${{ inputs.contest_fetch_only }}, private-ocr=${{ inputs.ocr_batch_only }}, contest-delta=${{ inputs.contest_delta_inspect_only }}, contest-prepare=${{ inputs.contest_delta_prepare_only }}, ocr-reconcile=${{ inputs.ocr_reconcile_run_id }})
+run-name: Hasla dual-model pilot (training-role=${{ inputs.training_role || 'both' }}, preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }}, source-inspect=${{ inputs.ocr_source_inspect_only }}, contest-fetch=${{ inputs.contest_fetch_only }}, private-ocr=${{ inputs.ocr_batch_only }}, contest-delta=${{ inputs.contest_delta_inspect_only }}, contest-prepare=${{ inputs.contest_delta_prepare_only }}, ocr-reconcile=${{ inputs.ocr_reconcile_run_id }})
 on:
   workflow_dispatch:
     inputs:
+      training_role:
+        description: "Dedicated training role; both preserves the legacy global queue"
+        type: choice
+        options:
+          - both
+          - chat
+          - solver
+        default: both
       preflight_only:
         description: "Verify the two private corpora and accounts without creating a GPU"
         type: boolean
@@ -77,7 +85,7 @@ jobs:
   private-pilot:
     if: ${{ !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
-      group: hasla-private-book-training
+      group: ${{ inputs.training_role == 'chat' && 'hasla-private-book-training-chat' || inputs.training_role == 'solver' && 'hasla-private-book-training-solver' || 'hasla-private-book-training' }}
       cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 270
@@ -99,6 +107,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
           HASLA_PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
+          HASLA_TRAINING_ROLE: ${{ inputs.training_role || 'both' }}
           HASLA_CHAT_DATA_00: ${{ secrets.HASLA_CHAT_DATA_00 }}
           HASLA_CHAT_DATA_01: ${{ secrets.HASLA_CHAT_DATA_01 }}
           HASLA_CHAT_DATA_02: ${{ secrets.HASLA_CHAT_DATA_02 }}
@@ -137,6 +146,8 @@ jobs:
         run: python tools/ai/private_dedicated_run.py --cleanup
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
+          HASLA_TRAINING_ROLE: ${{ inputs.training_role || 'both' }}
   collect-patterns:
     if: ${{ inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
