@@ -9,7 +9,7 @@ import { LAB_TRAIN_SQL, gradeTrainInput, gradeTrainTarget, chatLine, vertexReadL
 import { gcpConfig, gcpToken, gcsPut, startTuning, tuningStatus } from "./vertex-tuning.js";
 import { backupTick } from "./drive-backup.js";
 import { reservedName } from "./reserved-names.js";
-import { tidySchemeItems, cleanParts, cappedSum, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
+import { tidySchemeItems, cleanParts, cappedSum, headingTotal, finalAnswerFull, impliedSteps, INHERENT, schemeTotal, oneMethod, answeredOnSheet, numbersIn, sameNumber, samePrefixed, restoreLatex, quoteOnPage, refTolerance, valueMatches, withRelTol, checkSchemeCode, applySchemeReview, ownDataWindows, continuedRows, fitsItem, labelNames, tableContinuations, slopeWindow, inSlopeWindow, slopeInText } from "./lab-scheme-items.js";
 import { WORDS_SCHEMA, schemeWords, translationPrompt, checkTranslation, localizeItems } from "./lab-localize.js";
 import { CONTEST_REG, contestMeta, contestPublic, contestRoute, contestGradeTask } from "./contest.js";
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
@@ -2116,6 +2116,10 @@ function settleScheme(sc) {
   sc.parts = cleanParts(sc.parts);
   /* a printed total only trims a small excess (10.1 → 10); one far below the items is a misread heading, not the total */
   { const listed = cappedSum(oneMethod(sc.items).kept, sc.parts, null); if (!(+sc.total > 0) || +sc.total < .9 * listed || +sc.total > 1.1 * listed) delete sc.total; }   // a misread heading, not the paper's total
+  /* headings that hold every item and are filled by them outweigh a total below their sum (IPhO 2015 T2/T3, APhO 2022
+     T2/T3 and ISPhO 2026 T2 read 9 or 9.5 over headings adding to 10). Only that way: a total above the headings is kept,
+     since a heading the scheme missed leaves them short (IPhO 2025 T1 has 9.4 of headings under its printed 10). */
+  { const kept = oneMethod(sc.items).kept, heads = headingTotal(kept, sc.parts); if (heads && +sc.total > 0 && heads > 1.02 * +sc.total) delete sc.total; }
   sc.points = schemeTotal(sc);
   return sc;
 }

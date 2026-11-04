@@ -112,6 +112,17 @@ export function cappedSum(items, parts, total, value = i => i.points) {
   return +Math.min(+total > 0 ? +total : Infinity, sum).toFixed(2);
 }
 
+/* the sum of the top-level printed headings when they hold every item and the items fill them, else null: the paper's own
+   outline, read part by part: a printed total below it was misread (ISPhO 2026 T2's scheme said 9 over headings A 2.0,
+   B 2.0, C 3.0, D 3.0, and every item sat under one of them) */
+export function headingTotal(items, parts) {
+  const list = cleanParts(parts).map(p => ({ ...p, t: tokens(p.id) }));
+  const tops = list.filter(p => !list.some(q => q !== p && startsWith(p.t, q.t) && q.t.length < p.t.length));
+  const kept = items || [];
+  if (!tops.length || !kept.length || !kept.every(it => { const t = tokens(it.id); return tops.some(p => startsWith(t, p.t) || same(t, p.t)); })) return null;
+  const sum = tops.reduce((a, p) => a + p.points, 0), raw = kept.reduce((a, it) => a + (+it.points || 0), 0);
+  return raw >= .98 * sum ? +sum.toFixed(2) : null;
+}
 /* the paper's points: its items, bounded by the printed headings and total */
 /* the paper's points: its items bounded by the printed headings and total; a printed total is the paper's maximum even
    when the scheme missed an item under it (IPhO 2025 T3 came out at 9.9 when one 0.1-pt item was not listed) */

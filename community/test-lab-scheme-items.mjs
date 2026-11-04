@@ -254,3 +254,14 @@ test("a paper's own tolerance for numerical answers (unit_rule ±N%) is used whe
   assert.ok(!valueMatches(sc.items[0], 0.9e-23), "outside ±10%");
   assert.ok(!valueMatches({ type: "value", ref: "1.04e-23", tol: "default" }, 1.0e-23), "without the paper's rule the 2% default stands");
 });
+
+test('headings that hold and fill every item give the total when a single read total disagrees (ISPhO 2026 T2: 9 over 2+2+3+3)', async () => {
+  const { headingTotal } = await import('./src/lab-scheme-items.js');
+  const parts = [{ id: 'A1', points: 1 }, { id: 'A2', points: 1 }, { id: 'B1', points: 3 }, { id: 'C1', points: 5 }];
+  const items = [{ id: 'A1.1', points: .6 }, { id: 'A1.2', points: .4 }, { id: 'A2', points: 1 }, { id: 'B1.1', points: 3 }, { id: 'C1.1', points: 4 }, { id: 'C1.2', points: 1.3 }];
+  assert.equal(headingTotal(items, parts), 10);
+  assert.equal(headingTotal([...items, { id: 'D1', points: 1 }], parts), null, 'an item outside every heading: the headings are not the whole paper');
+  assert.equal(headingTotal(items.slice(0, 3), parts), null, 'items far short of the headings: a heading may be misread high');
+  assert.equal(headingTotal(items, []), null);
+  assert.equal(headingTotal([{ id: 'A.1.1', points: 2 }], [{ id: 'A', points: 2 }, { id: 'A.1', points: 2 }]), 2, 'a sub-heading is not added to its parent');
+});
