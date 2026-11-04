@@ -2659,11 +2659,11 @@ export function labScore(scheme, raw, pages, opts = {}) {
       const unitSlip = !!it.unit && (units ? !units.same : g.unit_ok === false);   // no unit written: the grader knows whether the sheet prints it
       if (unitSlip && opts.family === "answer") return zero("R3");
       const w = units?.same ? v * units.factor : g.value_in_unit != null && Number.isFinite(+g.value_in_unit) ? +g.value_in_unit : v;   // in the scheme's unit (cm -> m)
-      let pts = 0;
+      let pts = 0, relative = false;
       if (interval) {
         if (w >= Math.min(it.full_min, it.full_max) && w <= Math.max(it.full_min, it.full_max)) pts = it.points;
         else for (const p of it.partial || []) if (w >= Math.min(p.min, p.max) && w <= Math.max(p.min, p.max)) pts = Math.max(pts, Math.min(it.points, p.points));
-        if (!pts && relativeKept(it, g, pg, v)) { const sure = relativeMatches(it, v); pts = sure ? it.points : Math.min(it.points, +g.score); res.by = sure ? "code" : "model"; }
+        if (!pts && relativeKept(it, g, pg, v)) { const sure = relativeMatches(it, v); pts = sure ? it.points : Math.min(it.points, +g.score); res.by = sure ? "code" : "model"; relative = true; }
       } else if (valueMatches(it, w)) pts = it.points;                                   // R12 in code: the official value and its tolerance
       else {
         /* the grader's reported number can drop the mantissa of what is written (1.04·10⁻²³ on the page, 1e-23 reported:
@@ -2679,10 +2679,11 @@ export function labScore(scheme, raw, pages, opts = {}) {
         /* an uncertainty or range given relative to the quantity (δμ = 0.40 μ_s, 20 %) is not a number to hold against the
            official absolute one: where the page writes the reported number as a coefficient of a symbol or a percentage,
            the grader's own mark from the photo and the scheme stands (APhO 2022 T1 H.1: ±0.40 μ_s for ±0.42·10⁻²³, zeroed) */
-        else if (relativeKept(it, g, pg, v)) { const sure = relativeMatches(it, v); pts = sure ? it.points : Math.min(it.points, +g.score); res.by = sure ? "code" : "model"; res.value = v; }
+        else if (relativeKept(it, g, pg, v)) { const sure = relativeMatches(it, v); pts = sure ? it.points : Math.min(it.points, +g.score); res.by = sure ? "code" : "model"; res.value = v; relative = true; }
         else rules.add("R12");
       }
-      if (unitSlip && pts > 0) { pts = Math.max(0, pts - (Number.isFinite(+it.unit_penalty) ? +it.unit_penalty : 0.1)); rules.add("R3"); }
+      /* a relative answer (0.40 μ_s) carries its unit in the symbol: no unit slip */
+      if (unitSlip && pts > 0 && !relative) { pts = Math.max(0, pts - (Number.isFinite(+it.unit_penalty) ? +it.unit_penalty : 0.1)); rules.add("R3"); }
       res.got = pts;
     } else if (it.type === "graph" && Array.isArray(it.checks) && it.checks.length) {
       const gr = pick("graph");
