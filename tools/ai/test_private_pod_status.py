@@ -123,7 +123,8 @@ class PrivatePodStatusTests(unittest.TestCase):
             event = status.collect_status("41810732513", api=lambda method, path: [], env={**self.env, "WANDB_API_KEY": "PRIVATE_WANDB_KEY", "HF_TOKEN": "PRIVATE_UNUSED_HF"}, wandb_query=query)
         self.assertEqual(len(calls), 2)
         self.assertEqual(event["training"][0], {"role": "chat", "state": "finished", "status": "uploaded", "private_training_result": {
-            "steps_completed": 1, "weights_updated": True, "artifact": artifact, "train_loss": 1.4, "eval_loss": 1.6}})
+            "steps_completed": 1, "weights_updated": True, "artifact": artifact, "train_loss": 1.4, "eval_loss": 1.6},
+            "summary_key_shape": {"status": "string", "private_training_result": "object"}})
         self.assertEqual(event["training"][1]["state"], "not_started_or_not_initialized")
         self.assertNotIn("PRIVATE_", json.dumps(event))
 
@@ -159,8 +160,41 @@ class PrivatePodStatusTests(unittest.TestCase):
         summary = {"status": "PRIVATE_STAGE", "private_training_result": {"steps_completed": True, "weights_updated": True,
                    "artifact": "PRIVATE_ARTIFACT", "train_loss": float("nan"), "eval_loss": "PRIVATE_LOSS"}}
         row = status._training_row({"state": "PRIVATE_STATE", "summaryMetrics": summary}, "fixture-entity", self.name + "-chat", "chat")
-        self.assertEqual(row, {"role": "chat", "state": "unknown", "status": "unreported"})
+        self.assertEqual(row, {"role": "chat", "state": "unknown", "status": "unreported",
+                              "summary_key_shape": {"status": "string", "private_training_result": "object"}})
         self.assertNotIn("PRIVATE_", json.dumps(row, allow_nan=False))
+
+    def test_failed_training_emits_known_stage_error_without_step_evidence(self):
+        failure = {"status": "failed", "stage": "training", "error_code": "trainer_process_failed",
+                   "trace": [{"file": "PRIVATE_FILENAME"}], "env": "PRIVATE_SECRET"}
+        variants = [
+            {"status": "failed", "private_training_result": failure},
+            {"status": "failed", "private_training_result": json.dumps(failure)},
+            {"status": "failed", "private_training_result_json": json.dumps(json.dumps(failure))},
+            {"status": "failed", **{"private_training_result." + key: failure[key] for key in ("status", "stage", "error_code")}},
+            {"status": "failed", **{"private_training_result/" + key: failure[key] for key in ("status", "stage", "error_code")}},
+        ]
+        for summary in variants:
+            with self.subTest(summary_keys=list(summary)):
+                row = status._training_row({"state": "failed", "summaryMetrics": json.dumps(json.dumps(summary))}, "fixture-entity", self.name + "-chat", "chat")
+                self.assertEqual(row["private_training_result"], {"status": "failed", "stage": "training", "error_code": "trainer_process_failed"})
+                self.assertNotIn("steps_completed", row["private_training_result"])
+                self.assertNotIn("weights_updated", row["private_training_result"])
+                self.assertNotIn("PRIVATE_", json.dumps(row))
+
+    def test_failure_codes_and_summary_shape_have_no_arbitrary_key_or_value_pass(self):
+        summary = {"status": "failed", "PRIVATE_KEY_SECRET": "PRIVATE_DATA", "private_training_result_json": json.dumps({
+            "status": "failed", "stage": "training_code_verification", "error_code": "training_code_hash_mismatch", "PRIVATE_NESTED_KEY": "PRIVATE_TOKEN"}),
+            "private_training_result/PRIVATE_PATH_SECRET": "PRIVATE_VALUE"}
+        row = status._training_row({"state": "failed", "summaryMetrics": summary}, "fixture-entity", self.name + "-chat", "chat")
+        self.assertEqual(row["private_training_result"]["error_code"], "training_code_hash_mismatch")
+        self.assertEqual(row["summary_key_shape"], {"status": "string", "private_training_result_json": "string",
+                         "private_training_result_json.status": "string", "private_training_result_json.stage": "string", "private_training_result_json.error_code": "string"})
+        self.assertNotIn("PRIVATE_", json.dumps(row))
+        for error in ("PRIVATE_EXCEPTION_WITH_KEY", "RuntimeError: PRIVATE_SECRET", True, {"secret": "PRIVATE"}):
+            result = status._safe_training_result({"stage": "training", "error_code": error}, "fixture-entity", self.name + "-chat", "chat")
+            self.assertEqual(result, {"stage": "training"})
+        self.assertEqual(status._safe_training_result({"error_code": "RuntimeError"}, "fixture-entity", self.name + "-chat", "chat"), {"error_code": "RuntimeError"})
 
     def stream(self, events=None, raw=None, error=None):
         class Response:

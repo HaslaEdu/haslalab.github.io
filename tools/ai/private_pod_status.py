@@ -86,12 +86,90 @@ _STAGES = frozenset({
     "adapter_validation", "uploading_adapter", "uploaded", "failed",
 })
 _RUN_STATES = frozenset({"running", "finished", "failed", "crashed", "killed", "pending", "preempted", "queued"})
+_ERROR_CODES = frozenset({
+    "missing_or_invalid_run_identity", "missing_payload_shards", "noncontiguous_payload_shards",
+    "payload_part_count_mismatch", "missing_or_invalid_payload_hash", "invalid_payload_encoding",
+    "compressed_payload_limit", "invalid_payload_gzip", "uncompressed_payload_limit", "payload_hash_mismatch",
+    "unsupported_payload_format", "payload_not_utf8", "payload_invalid_jsonl", "payload_invalid_record",
+    "payload_invalid_text_record", "payload_invalid_chat_record", "payload_invalid_metadata",
+    "test_or_wrong_split_in_payload", "payload_has_no_records", "training_validation_group_overlap",
+    "training_validation_content_overlap", "missing_or_invalid_training_role_format", "role_format_mismatch",
+    "payload_training_role_mismatch", "solver_chat_requires_verified_solution",
+    "missing_or_invalid_wandb_configuration", "wandb_privacy_check_failed", "wandb_project_not_verified",
+    "wandb_project_not_private", "input_artifact_outside_private_project", "input_artifact_requires_exact_version",
+    "input_artifact_directory_already_exists", "input_artifact_identity_mismatch", "input_artifact_links_not_allowed",
+    "input_artifact_unexpected_files", "input_artifact_external_reference", "input_artifact_file_size_limit",
+    "input_artifact_unsafe_download_path", "input_artifact_unsafe_file", "missing_or_invalid_pinned_training_code",
+    "training_code_download_failed", "training_code_hash_mismatch", "invalid_pinned_role_configuration",
+    "training_role_precision_mismatch", "validated_role_configuration_required", "invalid_validated_training_row_count",
+    "expected_adapter_file_missing", "invalid_adapter_size", "adapter_base_model_mismatch", "adapter_type_mismatch",
+    "adapter_rank_mismatch", "verified_training_report_missing", "training_report_role_or_input_mismatch",
+    "training_report_has_no_bounded_weight_update", "training_report_invalid_loss", "missing_huggingface_credential",
+    "workspace_not_found", "adapter_output_already_exists", "invalid_training_timeout", "trainer_process_failed",
+    "artifact_exact_version_missing", "invalid_role_workspace",
+    "RuntimeError", "ValueError", "TypeError", "KeyError", "IndexError", "AttributeError", "AssertionError",
+    "OSError", "IOError", "FileNotFoundError", "PermissionError", "IsADirectoryError", "NotADirectoryError",
+    "TimeoutError", "TimeoutExpired", "ConnectionError", "HTTPError", "URLError", "RequestException",
+    "ReadTimeout", "ConnectTimeout", "SSLError", "ImportError", "ModuleNotFoundError", "MemoryError",
+    "OverflowError", "UnicodeDecodeError", "JSONDecodeError", "CalledProcessError", "CommError", "UsageError",
+})
+
+
+def _decode_mapping(value):
+    for _ in range(3):
+        if isinstance(value, dict):
+            return value
+        if not isinstance(value, str) or len(value) > 1048576:
+            return None
+        try:
+            value = json.loads(value)
+        except (ValueError, UnicodeError):
+            return None
+    return value if isinstance(value, dict) else None
+
+
+def _value_type(value):
+    if value is None:
+        return "null"
+    if isinstance(value, bool):
+        return "boolean"
+    if isinstance(value, str):
+        return "string"
+    if isinstance(value, dict):
+        return "object"
+    if isinstance(value, list):
+        return "array"
+    if isinstance(value, (int, float)):
+        return "number"
+    return "other"
+
+
+def _summary_shape(summary):
+    shape = {}
+    for key in ("status", "stage", "error_code", "private_training_result", "private_training_result_json"):
+        if key in summary:
+            shape[key] = _value_type(summary[key])
+    for root in ("private_training_result", "private_training_result_json"):
+        nested = _decode_mapping(summary.get(root))
+        for leaf in ("status", "stage", "error_code"):
+            if nested is not None and leaf in nested:
+                shape[root + "." + leaf] = _value_type(nested[leaf])
+            for separator in (".", "/"):
+                key = root + separator + leaf
+                if key in summary:
+                    shape[key] = _value_type(summary[key])
+    return shape
 
 
 def _safe_training_result(value, entity, run_name, role):
-    if not isinstance(value, dict) or value.get("role", role) != role:
+    value = _decode_mapping(value)
+    if value is None or value.get("role", role) != role:
         return None
     result = {}
+    for key, allowed in (("status", _STAGES), ("stage", _STAGES), ("error_code", _ERROR_CODES)):
+        entry = value.get(key)
+        if isinstance(entry, str) and entry in allowed:
+            result[key] = entry
     steps = value.get("steps_completed")
     if type(steps) is int and 0 <= steps <= 100000:
         result["steps_completed"] = steps
@@ -116,19 +194,27 @@ def _training_row(row, entity, run_name, role):
         raise StatusError("invalid_training_status")
     state = row.get("state")
     state = state.lower() if isinstance(state, str) else "unknown"
-    summary = row.get("summaryMetrics")
-    if isinstance(summary, str):
-        if len(summary) > 1048576:
-            raise StatusError("invalid_training_status")
-        summary = json.loads(summary)
+    raw_summary = row.get("summaryMetrics")
+    summary = {} if raw_summary is None else _decode_mapping(raw_summary)
     if summary is None:
-        summary = {}
-    if not isinstance(summary, dict):
         raise StatusError("invalid_training_status")
     stage = summary.get("status")
     result = {"role": role, "state": state if state in _RUN_STATES else "unknown",
               "status": stage if isinstance(stage, str) and stage in _STAGES else "unreported"}
-    training = _safe_training_result(summary.get("private_training_result"), entity, run_name, role)
+    shape = _summary_shape(summary)
+    if shape:
+        result["summary_key_shape"] = shape
+    candidates = [summary.get("private_training_result"), summary.get("private_training_result_json")]
+    for root in ("private_training_result", "private_training_result_json"):
+        for separator in (".", "/"):
+            candidates.append({key: summary[root + separator + key] for key in ("status", "stage", "error_code")
+                               if root + separator + key in summary})
+    candidates.append({key: summary[key] for key in ("stage", "error_code") if key in summary})
+    training = {}
+    for candidate in candidates:
+        safe = _safe_training_result(candidate, entity, run_name, role)
+        for key, value in (safe or {}).items():
+            training.setdefault(key, value)
     if training:
         result["private_training_result"] = training
     return result
