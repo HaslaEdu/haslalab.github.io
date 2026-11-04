@@ -1,0 +1,247 @@
+[
+ {
+  "id": "a1",
+  "name": "벽에서의 힘과 관성모멘트 / Wall forces and moment of inertia",
+  "max": 3,
+  "requirement": "While sliding: normal force F_n = m v^2/(R - r) (centre moves on radius R - r; R is accepted since R >> r and it cancels), kinetic friction F_t = mu F_n, puck moment of inertia I = m r^2/2.",
+  "partial": "1 each for F_n, F_t = mu F_n during sliding, and I. Friction taken as mu m g (gravity as the normal force): 0 for the friction point and no later carry-forward credit for the exponential law."
+ },
+ {
+  "id": "a2",
+  "name": "병진·회전 방정식과 결합량 / Translation/rotation equations and combination",
+  "max": 3,
+  "requirement": "m dv/dt = -mu F_n and I d omega/dt = + r mu F_n (friction slows translation and spins the puck up counterclockwise); eliminating friction gives v + r omega/2 = v_0 (a consequence of the two equations, not vector-momentum conservation).",
+  "partial": "2 for both equations with consistent signs, 1 for the conserved combination. One sign error: -1 and the combination point is lost. Justifying v + r omega/2 = v0 by linear or angular momentum conservation: 0 for the combination point."
+ },
+ {
+  "id": "a3",
+  "name": "미끄러짐 구간의 해 / Solution while sliding",
+  "max": 3,
+  "requirement": "With d phi/dt = v/(R - r): dv/d phi = -mu v, so v = v_0 exp(-mu phi) and r omega = 2 v_0 (1 - exp(-mu phi)). A time solution converted correctly to angle is equivalent.",
+  "partial": "2 for v(phi), 1 for r omega(phi). Exponent with a wrong factor (e.g. -2 mu phi, or using R/r): v(phi) point lost; consistent carry-forward to r omega keeps its point."
+ },
+ {
+  "id": "a4",
+  "name": "미끄러짐 정지 조건 / Slip-cessation condition",
+  "max": 2,
+  "requirement": "Contact slip relative to the wall u = v - r omega = 3v - 2v_0 vanishes when v = 2v_0/3, i.e. at phi_c = ln(3/2)/mu.",
+  "partial": "1 if the rolling condition v = r omega is used but solved incorrectly. Stopping condition v = 0, v = r omega/2, or v + r omega = 0: 0."
+ },
+ {
+  "id": "a5",
+  "name": "임계 마찰계수 / Critical friction coefficient",
+  "max": 2,
+  "requirement": "Setting phi_c = pi: mu_c = ln(3/2)/pi = 0.129 (0.12906; accept 0.128-0.130).",
+  "partial": "1 for phi_c = pi applied to a stopping angle carried forward with an error from a4."
+ },
+ {
+  "id": "a6",
+  "name": "출구 속력 / Exit speed",
+  "max": 2,
+  "requirement": "v_e = v_0 max(exp(-pi mu), 2/3): v_0 exp(-pi mu) for mu <= mu_c, and 2v_0/3 for mu >= mu_c, because once v = r omega no tangential force is needed (the normal force only turns the velocity) so rolling persists to the exit.",
+  "partial": "1 if only one branch is given, or both branches without the persistence argument. Claiming the puck keeps decelerating after slip stops: max 1."
+ },
+ {
+  "id": "b1",
+  "name": "법선 충격량 / Normal impulse",
+  "max": 3,
+  "requirement": "Normal momentum and unit restitution along the contact normal: m v cos(theta) = m v_n' + (m/N) V_n', V_n' - v_n' = v cos(theta), so J_n = 2 m v cos(theta)/(N + 1) and V_n' = 2N v cos(theta)/(N+1). Energy plus momentum conservation is an equivalent method.",
+  "partial": "1 for the correct conservation and restitution equations not solved; 1 if the target mass is taken as m (J_n = m v cos(theta)). Restitution applied along the velocity instead of the normal: 0."
+ },
+ {
+  "id": "b2",
+  "name": "출사 속도 성분 / Outgoing velocity components",
+  "max": 2,
+  "requirement": "No tangential impulse and no spin: v_t' = v sin(theta), v_n' = (N - 1) v cos(theta)/(N + 1).",
+  "partial": "1 for one correct component."
+ },
+ {
+  "id": "b3",
+  "name": "출사 속력 / Outgoing speed",
+  "max": 2,
+  "requirement": "v' = v sqrt(1 - 4N cos^2(theta)/(N+1)^2), equivalently v sqrt(sin^2 theta + ((N-1)/(N+1))^2 cos^2 theta).",
+  "partial": "1 for an algebra slip after correct components; components carried from b2 with an error and combined correctly: 1."
+ },
+ {
+  "id": "b4",
+  "name": "부호 있는 편향각 / Signed deflection",
+  "max": 3,
+  "requirement": "Clockwise deflection delta = arctan[ (N+1) tan(theta)/(N-1) ] - theta (> 0 for a target on the puck's left), equivalently tan(delta) = sin(2theta)/(N - cos 2theta); both outgoing local components are positive so there is no quadrant ambiguity. The identity sin(2theta + delta) = N sin(delta) is optional.",
+  "partial": "2 for the correct magnitude with the wrong sign convention; 1 for an inverted ratio (N-1)/(N+1) or a complementary-angle error; 1 for a correct angle relation left unsolved. theta measured from the tangent is accepted only if converted consistently."
+ },
+ {
+  "id": "c1",
+  "name": "반원 간격과 대칭 조건 / Semicircle spacing and symmetry",
+  "max": 2,
+  "requirement": "K = N^2 targets on a semicircle: angular spacing h = pi/N^2 (not 2pi/N^2); the rotationally symmetric orbit has equal incidence angles and delta_k = h for every collision.",
+  "partial": "1 for the spacing only, 1 for delta_k = h. Spacing 2pi/N^2: 0 for this criterion; later values are then judged by method only."
+ },
+ {
+  "id": "c2",
+  "name": "입사각 방정식 / Equation for the incidence angle",
+  "max": 4,
+  "requirement": "Equate the single-collision deflection of (b) to h: sin(2 theta + h) = N sin(h), equivalently tan(h) = sin(2theta)/(N - cos 2theta), derived.",
+  "partial": "2 if delta(theta) = h is set up with (b) but not reduced to a solvable equation; 1 for a numerical root only. Deflection set equal to the polar angle of a target instead of h: 0."
+ },
+ {
+  "id": "c3",
+  "name": "큰 입사각과 존재 조건 / Larger root and existence",
+  "max": 3,
+  "requirement": "theta_N = [pi - arcsin(N sin(pi/N^2)) - pi/N^2]/2 (the grazing root; the other root is [arcsin(N sin h) - h]/2). Existence needs N sin(h) <= 1, true for N >= 4 since N sin(pi/N^2) < pi/N < 1 (N = 3 fails: 3 sin(pi/9) = 1.026). Example: N = 10 gives theta = 1.3953 rad.",
+  "partial": "2 for the exact larger root without the existence/branch remark. 1 for the smaller root, or for the leading approximation pi/2 - pi(N+1)/(2N^2) presented as the exact answer."
+ },
+ {
+  "id": "c4",
+  "name": "충돌 한 번의 속력비 / Speed ratio per collision",
+  "max": 4,
+  "requirement": "Elastic speed ratio on the grazing branch: q_+ = v'/v = [N cos(h) + sqrt(1 - N^2 sin^2 h)]/(N + 1) (from the velocity circle of radius v/(N+1) about Nv/(N+1)), or equivalently sqrt(1 - 4N cos^2(theta_N)/(N+1)^2) with theta_N from c3.",
+  "partial": "Equivalent unsimplified forms earn full marks. Minus branch q_- for the larger angle: 2. Correct (b) speed formula evaluated at a wrong theta carried from c3: 3."
+ },
+ {
+  "id": "c5",
+  "name": "최종 속력 / Final speed",
+  "max": 2,
+  "requirement": "v_f(N) = v_0 q_+^{N^2} (N^2 identical collisions); e.g. N = 10: v_f = 0.60275 v_0 (accept 0.6027-0.6028). The final velocity -v_f X-hat (opposite to the incoming direction) is optional.",
+  "partial": "1 for the product structure with a wrong exponent (N, N^2 - 1, 2N^2)."
+ },
+ {
+  "id": "c6",
+  "name": "총편향각 / Total deflection",
+  "max": 1,
+  "requirement": "delta_f(N) = N^2 h = pi exactly for the symmetric orbit.",
+  "partial": "All or nothing."
+ },
+ {
+  "id": "c7",
+  "name": "N→∞ 극한 / Limits as N -> infinity",
+  "max": 4,
+  "requirement": "theta_N -> pi/2 (cos theta_N = (N+1)h/2 + O(N^-3)); ln q_+ = -pi^2/(2N^3) + O(N^-5), so N^2 ln q_+ = -pi^2/(2N) -> 0 and v_f -> v_0; delta_f -> pi. Any valid asymptotic estimate of N^2 ln q_+ is accepted; discussion of the smaller branch is optional.",
+  "partial": "1 for theta -> pi/2; 2 for v_f -> v_0 (1 for a valid estimate showing N^2 ln q -> 0, 1 for the conclusion); 1 for delta_f -> pi. v_f -> v_0 asserted with no estimate: 1 of the 2 speed points. v_f -> 0 or exp(-pi) v_0: 0 for both speed points."
+ },
+ {
+  "id": "d1",
+  "name": "법선 충격량과 관성모멘트 / Normal impulse and moments of inertia",
+  "max": 2,
+  "requirement": "Spin does not enter normal restitution, so J_n = 2 m v cos(theta)/(N+1) as in (b); I = m r^2/2 for the puck and I_T = (m/N) a^2/2 = m a^2/(2N) for the target.",
+  "partial": "1 for J_n unchanged, 1 for both moments of inertia."
+ },
+ {
+  "id": "d2",
+  "name": "원판의 접선 충격량 방정식 / Puck tangential impulse equations",
+  "max": 3,
+  "requirement": "With J_t the signed tangential impulse on the target: v_x' = v sin(theta) - J_t/m and r omega' = r omega + 2 J_t/m (consistent orientation; equivalent sign conventions accepted).",
+  "partial": "2 with one sign error, 1 for translation only. Spin update using I = m r^2: 1."
+ },
+ {
+  "id": "d3",
+  "name": "표적의 병진·회전 / Target translation and spin",
+  "max": 3,
+  "requirement": "Target: V_x' = N J_t/m and a Omega' = 2N J_t/m (from (m/N) V_x' = J_t and I_T Omega' = a J_t, same torque sign as the puck).",
+  "partial": "1 if target spin is omitted (translation only); 2 for one sign or inertia error."
+ },
+ {
+  "id": "d4",
+  "name": "접촉점 상대 미끄러짐 / Relative slip of the moving contacts",
+  "max": 4,
+  "requirement": "Slip compares both moving contact points: u = v sin(theta) - r omega; u' = (v_x' - r omega') - (V_x' + a Omega') = u - 3(N+1) J_t/m.",
+  "partial": "2 for the correct method with the target spin omitted (u' = u - (N+3) J_t/m) or one wrong term; 1 for comparing with a fixed wall (u' = v' - r omega', factor 3). Inherited target-spin omission from d3 is judged here by method only (2)."
+ },
+ {
+  "id": "d5",
+  "name": "정지 충격량 / Stopping impulse",
+  "max": 2,
+  "requirement": "Impulse that ends sliding exactly: J_t* = m u/[3(N+1)].",
+  "partial": "1 for a stopping impulse consistent with a factor carried from d4."
+ },
+ {
+  "id": "d6",
+  "name": "쿨롱 마찰 제한 / Coulomb clipping",
+  "max": 2,
+  "requirement": "J_t = clip(J_t*, -mu J_n, mu J_n): sliding throughout if |J_t*| > mu J_n (J_t = mu J_n sign(u)); otherwise J_t = J_t* exactly, with sliding stopped (equality included) and no further tangential impulse (no tangential rebound).",
+  "partial": "1 if only one sign of u is treated, or the stopped branch (J_t = J_t*) is missing."
+ },
+ {
+  "id": "d7",
+  "name": "출사 속력 / Outgoing speed",
+  "max": 1,
+  "requirement": "v' = sqrt[ (v sin(theta) - J_t/m)^2 + ((N-1) v cos(theta)/(N+1))^2 ] with J_t from d6.",
+  "partial": "All or nothing (carry-forward J_t accepted)."
+ },
+ {
+  "id": "d8",
+  "name": "출사 각속도 / Outgoing angular velocity",
+  "max": 1,
+  "requirement": "omega' = omega + 2 J_t/(m r) (counterclockwise positive).",
+  "partial": "All or nothing (carry-forward J_t accepted)."
+ },
+ {
+  "id": "d9",
+  "name": "부호 있는 편향각 / Signed deflection",
+  "max": 2,
+  "requirement": "delta = atan2( J_n sin(theta) - J_t cos(theta), m v - J_t sin(theta) - J_n cos(theta) ) or any quadrant-correct equivalent (e.g. pi/2 - theta - arccos[(v sin(theta) - J_t/m)/v']); it can be negative for large incoming spin and reduces to (b) when mu = 0.",
+  "partial": "1 for a bare arctangent of the ratio that loses allowed quadrants, or a correct angle in the local frame not converted to deflection."
+ },
+ {
+  "id": "e1",
+  "name": "초기 조건과 방향 갱신 / Initial line and direction update",
+  "max": 3,
+  "requirement": "Keep the target centres and incoming line of (c) (theta_1 = theta_N, first contact as in (c)); track the travel direction in fixed axes, e.g. eta_{k+1} = eta_k + h - delta_k with eta_k = beta_k + phi_k, or an equivalent fixed-coordinate direction update.",
+  "partial": "1 for the initial incidence/line from (c), 2 for the direction update. Holding theta_k = theta_N fixed for all collisions: 0 for the update."
+ },
+ {
+  "id": "e2",
+  "name": "다음 접촉의 기하 / Next-contact geometry",
+  "max": 4,
+  "requirement": "Exact next incidence: sin(theta_{k+1}) = sin(theta_k + delta_k) + lambda[cos eta_{k+1} - cos(eta_{k+1} - h)], lambda = R/(r+a), with forward flight l_k > 0 and the branch valid only if the right side lies in (0,1) (else the target is missed); or an equivalent ray-circle intersection l = q.d - sqrt(s^2 - b^2), s = r + a, choosing the nearest unhit target.",
+  "partial": "2 for a correct general construction (ray-circle intersection described) without a usable formula; 1 for the formula without the forward-flight/miss conditions. Constant incidence angle assumed: 0."
+ },
+ {
+  "id": "e3",
+  "name": "충돌 점화식 / Impact recurrence",
+  "max": 5,
+  "requirement": "For k = 1..K (K = N^2), from (d): J_n,k = 2m v_{k-1} cos(theta_k)/(N+1), u_k = v_{k-1} sin(theta_k) - r omega_{k-1}, J_t,k = clip(m u_k/(3(N+1)), -mu J_n,k, mu J_n,k), then v_k, omega_k and delta_k; every target is fresh, so u_k is recomputed even after slip has stopped on the previous one.",
+  "partial": "2 for state-dependent impulses (J_n, u, clipping); 1 for refreshing the slip at each target; 1 for the speed update; 1 for spin and deflection updates. A constant-ratio (geometric) solution: max 1."
+ },
+ {
+  "id": "e4",
+  "name": "유한 N 최종 상태 / Finite-N final state",
+  "max": 3,
+  "requirement": "Exact output of the recurrence: v_f(N) = v_K, delta_f(N) = sum_k delta_k (= pi + eta_1 - eta_{K+1}), vector v_f = v_K (cos(delta_f) X-hat - sin(delta_f) Y-hat); in general delta_f != pi at finite N.",
+  "partial": "1 for v_f = v_K, 1 for delta_f as the sum (or telescope), 1 for the vector. Setting delta_f = pi at finite N: 0 for that point."
+ },
+ {
+  "id": "e5",
+  "name": "허용 충돌열과 μ_c(N) / Admissible sequence and mu_c(N)",
+  "max": 4,
+  "requirement": "Define the admissible set A_N (ordered, left-sided, every target hit). Final-impact stopping: |J_t*| <= mu J_n,K, i.e. G_N(mu) = 6 mu v_{K-1} cos(theta_K) - |v_{K-1} sin(theta_K) - r omega_{K-1}| >= 0 with the mu-dependent incoming state; mu_c(N) = min{mu in A_N : G_N(mu) >= 0} when attained (may not exist; depends on R/r, a/r; no monotonicity assumed).",
+  "partial": "1 for the admissibility/order domain; 2 for the last-impact condition with the mu-dependent state; 1 for the minimum and possible non-existence. Using the first stopping impact instead of the last: 0 for the condition."
+ },
+ {
+  "id": "e6",
+  "name": "스치는 기하의 균일 제어 / Uniform control of grazing geometry",
+  "max": 4,
+  "requirement": "For fixed Lambda = R/r > 1 and a_N <= r/N^2, show incidence stays grazing uniformly over all N^2 impacts, e.g. eps_k = eps_* + O(N^-2), eta_k = eta_* + O(N^-2) via contraction of the geometry map (M_N = I + H/N, eigenvalues of H: -2 +- 2i sqrt(Lambda-1)) or an equivalent stability argument; hence the full ordered sequence exists for large N and delta_f -> pi.",
+  "partial": "2 for a substantive uniform-control argument; 1 for existence of the ordered sequence at large N; 1 for delta_f -> pi. Constant theta simply assumed: 0 for the control points, at most 1 (the deflection limit)."
+ },
+ {
+  "id": "e7",
+  "name": "병진·자전 연속극한 / Continuum limit of translation and spin",
+  "max": 4,
+  "requirement": "Impulse control h_k = J_n,k/(m v_{k-1}) = h + O(N^-3), accumulated error O(v_0/N), giving v + r omega/2 = v_0 + O(v_0/N); during positive slip v(phi) = v_0 exp(-mu phi), r omega = 2v_0(1 - exp(-mu phi)); transition at phi_c = ln(3/2)/mu.",
+  "partial": "1 for the error/impulse control; 1 for v(phi), 1 for r omega(phi); 1 for the transition angle. The fixed-wall result of (a) quoted without the limit argument: max 2."
+ },
+ {
+  "id": "e8",
+  "name": "포화 속력과 속도 극한 / Saturation and velocity limit",
+  "max": 4,
+  "requirement": "After the transition the refreshed slip stays O(v_0/N) (it is not assumed zero at each fresh target), so v, r omega -> 2v_0/3; lim v_f(N) = -v_0 max(exp(-pi mu), 2/3) X-hat, including the equality case mu = ln(3/2)/pi.",
+  "partial": "2 for a justified saturation argument (1 if only by analogy with the fixed wall); 1 for the piecewise speed limit; 1 for the direction -X-hat and the equality case."
+ },
+ {
+  "id": "e9",
+  "name": "μ_c(N)의 극한 / Limit of mu_c(N)",
+  "max": 4,
+  "requirement": "lim mu_c(N) = ln(3/2)/pi = 0.129 (0.12906). Lower bound: for mu <= mu_* - eps the final slip stays positive. Upper bound: for mu >= mu_* + eps the final slip is O(v_0/N^2), below the threshold 6 mu v cos(theta_K) ~ v_0/N, so G_N > 0; continuity of G_N gives an attained minimum and mu_* - eps < mu_c(N) <= mu_* + eps.",
+  "partial": "1 for the correct limit; 1 for the lower exclusion; 1 for a last-impact estimate stronger than O(v_0/N); 1 for the continuity/existence squeeze. Inferring final stopping from an earlier stop: lose the upper-bound point."
+ }
+]

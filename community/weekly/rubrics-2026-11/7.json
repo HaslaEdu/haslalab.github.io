@@ -1,0 +1,303 @@
+[
+ {
+  "id": "16.1",
+  "name": "태양 상수 / Solar constant",
+  "max": 2,
+  "requirement": "S_0 = sigma T_S^4 (R_S/d)^2 = 1.35e3 W m^-2 (1353.08; accept 1.34e3-1.36e3).",
+  "partial": "1 for the correct expression with an arithmetic slip; a value outside the range used consistently later is not penalised again."
+ },
+ {
+  "id": "16.2",
+  "name": "원판의 복사 수지 / Disk radiative budget",
+  "max": 3,
+  "requirement": "Disk at z = 0 absorbs pi R_E^2 S_0 on the Sun-facing face and emits from both faces 2 pi R_E^2 sigma T_0^4, so T_0 = (S_0/(2 sigma))^{1/4}. Zero albedo for the disk.",
+  "partial": "Emitting area pi R_E^2 (one face, T_0 = (S_0/sigma)^{1/4} = 393 K): 1. Emitting area 4 pi R_E^2 or albedo 0.30 applied to the disk: 0."
+ },
+ {
+  "id": "16.3",
+  "name": "T_0 수치 / Value of T_0",
+  "max": 2,
+  "requirement": "T_0 = 331 K (330.504 K; accept 330-332 K).",
+  "partial": "1 for a value off only through a carried S_0 error. Bare number with no budget: 0 here and in 16.2."
+ },
+ {
+  "id": "16.4",
+  "name": "비교 구의 복사 수지 / Comparison-sphere budget",
+  "max": 2,
+  "requirement": "(1 - alpha) pi R_E^2 S_0 = 4 pi R_E^2 sigma T_g0^4, so T_g0 = [(1 - alpha) S_0/(4 sigma)]^{1/4}.",
+  "partial": "1 if alpha is applied to emission instead of absorption, or the absorbing area is 2 pi R_E^2."
+ },
+ {
+  "id": "16.5",
+  "name": "T_g0 수치 / Value of T_g0",
+  "max": 1,
+  "requirement": "T_g0 = 254 K (254.211 K; accept 253-255 K).",
+  "partial": "All or nothing; a consistent carried S_0 error is accepted."
+ },
+ {
+  "id": "16.6",
+  "name": "기하 인자와 알베도 인자 / Geometric and albedo factors",
+  "max": 2,
+  "requirement": "With T_s0 = (S_0/(4 sigma))^{1/4} = 278 K: G_geom = T_0/T_s0 = 2^{1/4} = 1.19 (1.18921); G_alb = T_s0/T_g0 = (1 - alpha)^{-1/4} = 1.09 (1.09327). Accept +-1 in the third significant figure.",
+  "partial": "1 each. Ratios inverted: 0 for that factor."
+ },
+ {
+  "id": "16.7",
+  "name": "두 인자의 곱과 온도 비 / Product and temperature ratio",
+  "max": 2,
+  "requirement": "G_geom G_alb = [2/(1 - alpha)]^{1/4} = 1.30 (1.30012) = T_0/T_g0; accept 1.29-1.31.",
+  "partial": "1 for the numerical ratio T_0/T_g0 without identifying it with the product (or vice versa)."
+ },
+ {
+  "id": "17.1",
+  "name": "기하 설정 / Geometric set-up",
+  "max": 4,
+  "requirement": "Unit vectors about N: S = (sin eps_p, 0, cos eps_p), Z = (sin eps_p cos phi, sin eps_p sin phi, cos eps_p) with Z = S at phi = 0; or the spherical triangle N-S-Z with sides eps_p, eps_p and included angle phi at N; or an equivalent rotation argument.",
+  "partial": "2 for a correct triangle/vector picture with one misidentified side or angle. No geometric set-up (formula quoted): 0 here."
+ },
+ {
+  "id": "17.2",
+  "name": "cos z 식 / Expression for cos z",
+  "max": 4,
+  "requirement": "cos z = S . Z = cos^2(eps_p) + sin^2(eps_p) cos(phi) (spherical cosine rule with a = b = eps_p, C = phi).",
+  "partial": "2 for a sign/phase error inconsistent with Z = S at t = 0 (e.g. cos^2 eps - sin^2 eps cos phi): 1. Error carried from 17.1 with consistent algebra: 2."
+ },
+ {
+  "id": "17.3",
+  "name": "천정거리 z / Zenith angle z",
+  "max": 2,
+  "requirement": "z(eps_p, phi) = arccos[ cos^2(eps_p) + sin^2(eps_p) cos(phi) ] on the principal branch 0 <= z <= pi.",
+  "partial": "Only cos z given (z itself not stated): 0 for this criterion."
+ },
+ {
+  "id": "17.4",
+  "name": "z의 범위 / Range of z",
+  "max": 2,
+  "requirement": "z_min = 0 at phi = 0; z_max = 2 eps_p = 47.0 deg (0.820 rad) at phi = pi; z < 90 deg so the face is always lit.",
+  "partial": "1 each for the minimum and the maximum."
+ },
+ {
+  "id": "17.5",
+  "name": "투영 면적 수지 / Projected-area balance",
+  "max": 2,
+  "requirement": "pi R_E^2 S_0 cos z = 2 pi R_E^2 sigma T^4 (projected absorbing area, two emitting faces).",
+  "partial": "1 if the projection factor is cos^2 z or sin z; 0 if the emitting area is not 2 pi R_E^2 (unless carried from 16.2, then 1)."
+ },
+ {
+  "id": "17.6",
+  "name": "세차 온도 / Precessing temperature",
+  "max": 2,
+  "requirement": "T = T_0 [cos^2(eps_p) + sin^2(eps_p) cos(phi)]^{1/4}.",
+  "partial": "T = T_0 (cos z)^{1/4} without expressing it in eps_p and phi: 1."
+ },
+ {
+  "id": "18.1",
+  "name": "냉각 조건 / Cooling condition",
+  "max": 4,
+  "requirement": "Set T(phi_*) = T_0 - Delta T: (1 - Delta T/T_0)^4 = cos^2(eps_p) + sin^2(eps_p) cos(phi_*).",
+  "partial": "2 for a linearised condition (e.g. 4 Delta T/T_0 = sin^2 eps (1 - cos phi)) stated as an approximation; 0 for a heat-capacity or cooling-rate model."
+ },
+ {
+  "id": "18.2",
+  "name": "대수적 역산 / Algebraic inversion",
+  "max": 5,
+  "requirement": "Delta t = (P/(2 pi)) arccos{ [ (1 - Delta T/T_0)^4 - cos^2(eps_p) ] / sin^2(eps_p) }, symbolic in T_0, Delta T, eps_p, P.",
+  "partial": "3 for an algebra slip in the inversion; 2 for a wrong time scaling (e.g. P/pi). A justified small-angle inversion Delta t = (P/(2pi)) sqrt(8 Delta T/T_0)/sin(eps_p): 3."
+ },
+ {
+  "id": "18.3",
+  "name": "최초 냉각 구간의 가지 / First-cooling branch",
+  "max": 3,
+  "requirement": "The first future cooling crossing lies in 0 < phi_* < pi, so the principal arccos is taken; 2 pi - phi_* is the warming crossing.",
+  "partial": "1 if the principal value is used without justification. Choosing 2 pi - phi_* (Delta t ~ 24.2 kyr): 0."
+ },
+ {
+  "id": "18.4",
+  "name": "위상의 수치 / Phase value",
+  "max": 3,
+  "requirement": "phi_* = 0.392 rad (0.39179 rad = 22.4 deg), with trigonometric functions evaluated consistently in radians or degrees.",
+  "partial": "2 if a degree/radian mix-up is the only error; accept 0.391-0.393 rad."
+ },
+ {
+  "id": "18.5",
+  "name": "Δt 수치 / Value of Delta t",
+  "max": 4,
+  "requirement": "Delta t = 1.61e3 yr (1608.76 yr; accept 1.60e3-1.62e3 yr, which also covers T_0 rounded to 330 or 331 K). A stated small-angle approximation giving 1.60e3 yr (1602 yr) is accepted.",
+  "partial": "2 for the correct method with a unit slip (e.g. result in units of P not converted, or seconds); 0 for an unrelated cooling model."
+ },
+ {
+  "id": "19.1",
+  "name": "최저 조건 / Minimum condition",
+  "max": 3,
+  "requirement": "T is minimal where cos z is minimal: cos(phi) = -1, phi = pi (z = 2 eps_p).",
+  "partial": "1 if phi = pi is stated without any argument."
+ },
+ {
+  "id": "19.2",
+  "name": "T_min 식 / Expression for T_min",
+  "max": 2,
+  "requirement": "T_min = T_0 (cos^2 eps_p - sin^2 eps_p)^{1/4} = T_0 (cos 2 eps_p)^{1/4}.",
+  "partial": "Either form earns 2. 1 for a power error (e.g. exponent 1/2) or a sign error inside the bracket."
+ },
+ {
+  "id": "19.3",
+  "name": "T_min 수치 / Value of T_min",
+  "max": 2,
+  "requirement": "T_min = 300 K (300.347 K; accept 300-301 K, the upper end from T_0 rounded to 331 K).",
+  "partial": "All or nothing; a carried T_0 error used consistently is accepted."
+ },
+ {
+  "id": "19.4",
+  "name": "최대 온도 강하 / Largest fall",
+  "max": 2,
+  "requirement": "T_0 - T_min = 30.2 K (30.1576 K; accept 30.0-30.4 K).",
+  "partial": "30 K or 31 K obtained only by subtracting temperatures already rounded to 3 s.f.: 1."
+ },
+ {
+  "id": "19.5",
+  "name": "최저 온도의 최초 시각 / First time of the minimum",
+  "max": 2,
+  "requirement": "t = P/2 = 1.29e4 yr (12900 yr).",
+  "partial": "P (25800 yr) or P/4: 0."
+ },
+ {
+  "id": "20a.1",
+  "name": "원판·대기층 수지식 / Budgets of disk and layers",
+  "max": 3,
+  "requirement": "With eps = 1 - t_lw, F = sigma T^4, A_+- = sigma T_A+-^4: front layer 2 eps A_+ = eps F + (1 - t_sw) S_0; rear layer 2 eps A_- = eps F; disk 2F = t_sw S_0 + eps (A_+ + A_-). A summed atmospheric budget is equivalent if solar absorption is counted once.",
+  "partial": "1 per correct budget. Layer emissivity set to 1, or sunlight sent to both layers: that budget 0."
+ },
+ {
+  "id": "20a.2",
+  "name": "T_E^flat 식 / Expression for T_E^flat",
+  "max": 2,
+  "requirement": "Elimination gives (1 + t_lw) F = (1 + t_sw) S_0/2, so T_E^flat = [ (1 + t_sw) S_0 / (2 sigma (1 + t_lw)) ]^{1/4}.",
+  "partial": "1 for an elimination slip after correct budgets; consistent carry-forward from one wrong budget: 1."
+ },
+ {
+  "id": "20a.3",
+  "name": "T_E^flat 수치 / Value of T_E^flat",
+  "max": 2,
+  "requirement": "T_E^flat = 371 K (370.741 K; accept 370-372 K).",
+  "partial": "Value consistent with a carried formula error: 1."
+ },
+ {
+  "id": "20b.1",
+  "name": "구형 지표·대기 수지식 / Sphere surface and atmosphere budgets",
+  "max": 3,
+  "requirement": "Post-albedo input J = (1 - alpha) S_0/4; atmosphere 2 eps A = eps F_s + (1 - t_sw) J; surface F_s = t_sw J + eps A.",
+  "partial": "1 for J, 1 per correct budget. Albedo applied twice (again at the surface) or unspecified surface reflection recycled: 0 for the affected budget."
+ },
+ {
+  "id": "20b.2",
+  "name": "T_E^sph 식 / Expression for T_E^sph",
+  "max": 2,
+  "requirement": "T_E^sph = [ (1 - alpha)(1 + t_sw) S_0 / (4 sigma (1 + t_lw)) ]^{1/4}.",
+  "partial": "1 for an elimination slip; consistent carry-forward: 1."
+ },
+ {
+  "id": "20b.3",
+  "name": "T_E^sph 수치 / Value of T_E^sph",
+  "max": 2,
+  "requirement": "T_E^sph = 285 K (285.159 K; accept 284-286 K).",
+  "partial": "Value consistent with a carried formula error: 1."
+ },
+ {
+  "id": "20c.1",
+  "name": "공통 인자와 비 / Common factor and ratio",
+  "max": 2,
+  "requirement": "H_atm = [ (1 + t_sw)/(1 + t_lw) ]^{1/4} = 1.12 (1.12174); R = T_E^flat/T_E^sph = [2/(1 - alpha)]^{1/4} = 1.30 (1.30012).",
+  "partial": "1 each."
+ },
+ {
+  "id": "20c.2",
+  "name": "로그 민감도 / Logarithmic sensitivities",
+  "max": 2,
+  "requirement": "d ln T_E^flat/d t_sw = 1/[4(1 + t_sw)] = 0.132 (0.131579); d ln T_E^flat/d t_lw = -1/[4(1 + t_lw)] = -0.208 (-0.208333).",
+  "partial": "1 each; a missing minus sign on the t_lw derivative loses that point."
+ },
+ {
+  "id": "20c.3",
+  "name": "온도 변화 / Temperature changes",
+  "max": 3,
+  "requirement": "First order: Delta T = T_E^flat (d ln T/d t) (0.010): +0.488 K for t_sw only, -0.772 K for t_lw only (accept +-0.002 K, or the exact finite changes +0.487 K and -0.768 K).",
+  "partial": "1 for the linearisation method, 1 for each signed value. Wrong sign: 0 for that value. The two increments applied simultaneously as one answer: -1."
+ },
+ {
+  "id": "21a.1",
+  "name": "기록의 반복 간격 / Record repeat interval",
+  "max": 2,
+  "requirement": "P_rec ~ 100 kyr read from successive peaks (e.g. about 123, 237, 330, 410 kyr BP) or troughs of the bottom curve; accept justified readings 80-120 kyr.",
+  "partial": "1 for a value in range with no stated reading method. A value outside 80-120 kyr (e.g. 41 or 23 kyr from the upper panels): 0."
+ },
+ {
+  "id": "21a.2",
+  "name": "기록의 온도 폭 / Record temperature range",
+  "max": 2,
+  "requirement": "A_rec ~ 10 K peak-to-trough (the curve spans about +3.6 to -8.2 deg C); accept justified readings 8-13 K.",
+  "partial": "1 for an amplitude (half range) of 4-6.5 K given instead of peak-to-trough."
+ },
+ {
+  "id": "21a.3",
+  "name": "주기 비 / Period ratio",
+  "max": 1,
+  "requirement": "P_rec/(23 kyr) ~ 4.35, consistent with the student's own P_rec (e.g. 3.5-5.2 for 80-120 kyr).",
+  "partial": "All or nothing; must be consistent with 21a.1."
+ },
+ {
+  "id": "21b.1",
+  "name": "원판 모형의 기본 주기 / Disk fundamental period",
+  "max": 2,
+  "requirement": "T depends on t only through cos(2 pi t/P), so P_disk = P = 25.8 kyr.",
+  "partial": "P/2 = 12.9 kyr: 0."
+ },
+ {
+  "id": "21b.2",
+  "name": "원판 모형의 온도 폭 / Disk temperature range",
+  "max": 1,
+  "requirement": "A_disk = T_0 - T_min = 30.2 K (from (d); accept 30.0-30.4 K or a value carried from 19.4).",
+  "partial": "All or nothing."
+ },
+ {
+  "id": "21b.3",
+  "name": "두 통과 시각의 합 / Sum of the two crossing times",
+  "max": 2,
+  "requirement": "Equal-temperature phases are phi_c and 2pi - phi_c (T(P - t) = T(t)), so t_c + t_w = P = 25800 yr for every T_min < T_* < T_0.",
+  "partial": "1 for the symmetry stated without the sum, or the sum stated without the symmetry."
+ },
+ {
+  "id": "21b.4",
+  "name": "기록과의 비 / Ratios to the record",
+  "max": 2,
+  "requirement": "P_disk/P_rec ~ 0.258 and A_disk/A_rec ~ 3.02 for P_rec = 100 kyr, A_rec = 10 K; any values consistent with the student's own 21a readings are accepted.",
+  "partial": "1 each."
+ },
+ {
+  "id": "21c.1",
+  "name": "구형의 흡수 플럭스 / Sphere absorbed flux",
+  "max": 2,
+  "requirement": "F_sph = (1 - alpha) pi R_E^2 S_0/(4 pi R_E^2) = (1 - alpha) S_0/4 = 237 W m^-2 (236.788; accept 236-238), independent of phi, so m_sph = 0.",
+  "partial": "1 for F_sph, 1 for m_sph = 0."
+ },
+ {
+  "id": "21c.2",
+  "name": "원판의 흡수 플럭스 / Disk absorbed flux",
+  "max": 2,
+  "requirement": "F_disk(phi) = pi R_E^2 S_0 cos z/(2 pi R_E^2) = (S_0/2)[cos^2(eps_p) + sin^2(eps_p) cos(phi)].",
+  "partial": "1 if normalised by the absorbing area (S_0 cos z) instead of the emitting area."
+ },
+ {
+  "id": "21c.3",
+  "name": "원판의 상대 변동 폭 / Disk relative variation",
+  "max": 1,
+  "requirement": "m_disk = (F_max - F_min)/F_max = 1 - cos(2 eps_p) = 2 sin^2(eps_p) = 0.318 (0.318002).",
+  "partial": "All or nothing."
+ },
+ {
+  "id": "21c.4",
+  "name": "위상 평균과 비 / Phase average and ratio",
+  "max": 2,
+  "requirement": "<F_disk> = (S_0/2) cos^2(eps_p) = 569 W m^-2 (568.97; accept 568-570); <F_disk>/F_sph = 2 cos^2(eps_p)/(1 - alpha) = 2.40 (2.4029).",
+  "partial": "1 each. Averaging temperature instead of flux: 0."
+ }
+]

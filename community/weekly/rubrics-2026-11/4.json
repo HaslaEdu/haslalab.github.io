@@ -1,0 +1,226 @@
+[
+ {
+  "id": "a.exact",
+  "name": "정확한 운동방정식 / Exact equation of motion",
+  "max": 4,
+  "requirement": "Sum the Coulomb forces of all left and right neighbours with their displaced distances: m*xddot_j = alpha*sum_{k=1}^inf [ 1/(ka + x_j - x_{j-k})^2 - 1/(ka + x_{j+k} - x_j)^2 ] (left neighbours push to +x, right neighbours to -x). Equivalent dimensionless form: chiddot_j = (alpha/(m a^3)) sum_k [ (k+chi_j-chi_{j-k})^-2 - (k+chi_{j+k}-chi_j)^-2 ]. The physical distance is ka for every image; only displacement indices are periodic (x_{j+N}=x_j).",
+  "partial": "4 for the full infinite sum with both displaced distances and correct directions. Typical errors: a single k (or nearest neighbours) only: max 2; sum cut at N, N/2 or with k reduced modulo N in the distance: max 2; one side with the wrong force direction: -2; undisplaced distances (no x terms): 0; missing alpha or a dimension error: -1."
+ },
+ {
+  "id": "a.expand",
+  "name": "1차 전개와 상수항 상쇄 / First-order expansion and cancellation",
+  "max": 2,
+  "requirement": "For |delta|<<k: 1/(k+delta)^2 = 1/k^2 - 2 delta/k^3 + O(delta^2/k^4), applied to both terms with delta = chi_j - chi_{j-k} and chi_{j+k} - chi_j; the constant 1/k^2 terms (equilibrium forces) cancel between left and right.",
+  "partial": "1 if the expansion is correct but the cancellation of the k^-2 terms is not stated or shown. Expansion coefficient -delta/k^3 or -2delta/k^2: 0 here (the resulting prefactor error is judged once more only in a.linear, as a wrong final equation)."
+ },
+ {
+  "id": "a.linear",
+  "name": "선형화된 χ 방정식 / Linearized equation in chi",
+  "max": 4,
+  "requirement": "chiddot_j = -(2 alpha/(m a^3)) sum_{k=1}^inf (2 chi_j - chi_{j+k} - chi_{j-k})/k^3, equivalently +(2alpha/(ma^3)) sum (chi_{j+k}+chi_{j-k}-2chi_j)/k^3. The dimensional form m xddot_j = -(2alpha/a^3) sum (2x_j-x_{j+k}-x_{j-k})/k^3 is equivalent but the statement asks for chi.",
+  "partial": "Correct dimensional form only, not converted to chi: 3. Correct structure with one wrong prefactor (missing 2, a^2 for a^3, missing m) or an anti-restoring overall sign: 2. Nearest-neighbour or truncated sum: 0 (already a.exact error; do not award structure here). A final equation with no supporting expansion: max 2."
+ },
+ {
+  "id": "b.subst",
+  "name": "평면파 대입 / Plane-wave substitution",
+  "max": 4,
+  "requirement": "Substitute chi_j = A exp[i(qja - omega t)] into the linear equation of (a): chiddot_j = -omega^2 chi_j and chi_{j+-k} = chi_j exp(+-ikqa), giving -omega^2 = -(2alpha/(ma^3)) sum_k (2 - e^{ikqa} - e^{-ikqa})/k^3 after cancelling chi_j.",
+  "partial": "2 if only one of the two replacements (time derivative or neighbour phase factor) is correct. Using an equation carried forward from (a) with a wrong prefactor: full 4 if the substitution itself is correct. A bare final result with no substitution shown: 0 here."
+ },
+ {
+  "id": "b.simplify",
+  "name": "지수항의 실수화 / Reducing the exponentials",
+  "max": 4,
+  "requirement": "2 - e^{ikqa} - e^{-ikqa} = 2(1 - cos kqa) = 4 sin^2(kqa/2), with the common factor cancelled, to give a real non-negative k-sum.",
+  "partial": "2 if the cosine identity is used but a factor 2 is lost (e.g. 1 - cos kqa written for 2 - 2cos kqa); 1 if the expression is left complex but the algebra is otherwise right. Inherited prefactor errors from (a) do not cost points here."
+ },
+ {
+  "id": "b.result",
+  "name": "분산관계 / Dispersion relation",
+  "max": 5,
+  "requirement": "omega^2(q) = (4alpha/(m a^3)) sum_{k=1}^inf (1 - cos kqa)/k^3 = (8alpha/(m a^3)) sum_{k=1}^inf sin^2(kqa/2)/k^3, omega = non-negative square root. Either form, or its square root, is accepted. The sum must run over all k >= 1.",
+  "partial": "Error only inherited from a.linear and carried consistently: 2. Own factor-2 or sign error introduced in (b): 1. Truncated sum (nearest neighbours, k <= N or N/2): 0. Correct formula without the derivation the statement asks for: max 2 (and 0 for b.subst, b.simplify)."
+ },
+ {
+  "id": "c.qs",
+  "name": "허용 파수 / Allowed wave numbers",
+  "max": 3,
+  "requirement": "Periodicity chi_{j+N} = chi_j gives exp(iqNa) = 1, so q_s = 2 pi s/(N a) = 2 pi s/L, s = -N/2+1, ..., N/2 (exactly N values in -pi < qa <= pi). Any equivalent N-member set in that zone is accepted.",
+  "partial": "2 for q_s = 2pi s/(Na) with a missing or wrong index range (e.g. s = 0..N-1 not mapped to the zone, or both s = +-N/2 giving N+1 values); 1 for the condition exp(iqNa)=1 only. Using (N-1)a for the period: max 1. Confusing mode index s with neighbour index k: -1."
+ },
+ {
+  "id": "c.w0",
+  "name": "균일 모드 / Uniform mode",
+  "max": 1,
+  "requirement": "omega(0) = 0: at q = 0 all particles move together, separations do not change (also immediate from the dispersion relation).",
+  "partial": "All or nothing."
+ },
+ {
+  "id": "c.zeta",
+  "name": "홀수 항 제타 합 / Odd-k zeta sum",
+  "max": 2,
+  "requirement": "At qa = pi, sin^2(k pi/2) = 1 for odd k and 0 for even k, so sum_k sin^2(k pi/2)/k^3 = sum_{k odd} k^-3 = (1 - 2^-3) zeta(3) = (7/8) zeta(3) = 1.0518 (using zeta(3) = 1.2020569).",
+  "partial": "1 if only odd terms are recognised but the sum is evaluated wrongly (e.g. zeta(3)/8, zeta(3)/2, or 3/4 zeta(3))."
+ },
+ {
+  "id": "c.wmax",
+  "name": "최대 각진동수 / Maximum angular frequency",
+  "max": 2,
+  "requirement": "Using the given monotonicity, the maximum is at qa = pi: omega_max = sqrt(7 alpha zeta(3)/(m a^3)) ~= 2.90 sqrt(alpha/(m a^3)) [omega_max^2 = 8.414 alpha/(m a^3)]. The exact zeta form, or a numerical coefficient 2.89-2.91 (+-1 in the last digit), is accepted.",
+  "partial": "Correct location qa = pi but sum not reduced to zeta(3): 1. Prefactor error inherited from (b) and carried consistently: 1. Maximum placed at another qa (e.g. pi/2): 0."
+ },
+ {
+  "id": "c.phase",
+  "name": "인접 입자 위상차 / Phase difference of neighbours",
+  "max": 2,
+  "requirement": "In the omega_max mode the neighbour phase difference is qa = pi (equivalently -pi): chi_{j+1} = -chi_j, neighbours move in antiphase.",
+  "partial": "2 for pi (or 'antiphase' with chi_{j+1} = -chi_j); 0 for any other value."
+ },
+ {
+  "id": "d.eom",
+  "name": "감쇠·구동 운동방정식 / Damped driven equation",
+  "max": 5,
+  "requirement": "Linear driven damped equation: chiddot_j + 2 gamma chidot_j + (2alpha/(ma^3)) sum_k (2chi_j - chi_{j+k} - chi_{j-k})/k^3 = e E_j(t)/(m a), equivalently m xddot_j + 2m gamma xdot_j + (2alpha/a^3) sum(...) = e E_j(t).",
+  "partial": "Deduct 2 for each wrong term, minimum 0: drive normalisation (e.g. eE/m in the chi equation, i.e. missing 1/a), damping (gamma instead of 2gamma, or wrong sign), interaction term inconsistent with (a). Drive omitted: 0. An interaction prefactor error inherited from (a) is not deducted again."
+ },
+ {
+  "id": "d.mode",
+  "name": "정규 모드로의 환원 / Reduction to the driven mode",
+  "max": 5,
+  "requirement": "With the complex field E0 exp[i(qja - nu t)] (physical field = real part) and the ansatz chi_j = chi~ exp[i(qja - nu t)], the neighbour sum becomes omega^2(q) chi_j (from (b)), d/dt -> -i nu, d^2/dt^2 -> -nu^2, giving [omega^2(q) - nu^2 - 2i gamma nu] chi~ = e E0/(m a). q is an allowed q_s, so E_{j+N} = E_j.",
+  "partial": "3 if the reduction to omega^2(q) is correct but the time-derivative factors do not match the stated exponential convention; 2 if the interaction term is replaced by omega^2(q) without any justification and the rest is correct. Real cosine ansatz solved with correct amplitude-phase algebra is an equivalent method (full credit)."
+ },
+ {
+  "id": "d.result",
+  "name": "복소진폭 / Complex amplitude",
+  "max": 7,
+  "requirement": "chi~(q,nu) = e E0 / { m a [omega^2(q) - nu^2 - 2 i gamma nu] }, with omega^2(q) from (b). Equivalent: (eE0/(ma)) [omega^2 - nu^2 + 2i gamma nu]/[(omega^2-nu^2)^2 + 4 gamma^2 nu^2], or |chi~| = eE0/(ma sqrt((omega^2-nu^2)^2+4gamma^2nu^2)) with phase tan(phi) = 2gamma nu/(omega^2-nu^2), phi in (0, pi). chi~ is dimensionless.",
+  "partial": "Conjugate sign (+2i gamma nu) with the stated e^{-i nu t} ansatz: 5 (full 7 if the ansatz was explicitly conjugated). Length amplitude a*chi~ given as chi~ (missing 1/a): 5. Missing e or E0: 3. Error carried from d.eom (e.g. gamma for 2gamma) and solved consistently: 5. Correct expression without a derivation: max 3."
+ },
+ {
+  "id": "e.avg",
+  "name": "실수량의 시간 평균 / Time average of real quantities",
+  "max": 3,
+  "requirement": "Average real quantities: x_j = a|chi~| cos(qja - nu t + phi) and E_j = E0 cos(qja - nu t), with <cos^2> = 1/2; equivalently pbar = (1/2) e E0 nu a Im(chi~), or the steady-state identity pbar = 2 m gamma <xdot_j^2> = m gamma a^2 nu^2 |chi~|^2.",
+  "partial": "1 if a product of complex exponentials is averaged without taking real parts, or the factor 1/2 of the average is lost (a factor-2 error). Method absent (power stated directly): 0."
+ },
+ {
+  "id": "e.power",
+  "name": "평균 흡수 일률 / Mean absorbed power",
+  "max": 4,
+  "requirement": "pbar = e^2 E0^2 gamma nu^2 / { m [ (omega^2(q) - nu^2)^2 + 4 gamma^2 nu^2 ] } (per proton).",
+  "partial": "Correct up to an overall constant factor (2, 1/2, a^2, from the averaging error): 2. Correct method applied to a chi~ carried forward from (d) with an error: 3. Expression unrelated to the averaging (e.g. |chi~|^2 alone): 0."
+ },
+ {
+  "id": "e.res",
+  "name": "흡수 공명 조건 / Absorption-resonance condition",
+  "max": 3,
+  "requirement": "For fixed q != 0, maximise over nu: with r = nu^2, B = omega^2(q), d/dr [ r/((B-r)^2 + 4gamma^2 r) ] has numerator B^2 - r^2, so the maximum is at nu = omega(q), independent of gamma; equivalently pbar = e^2E0^2 gamma/(m[(omega^2/nu - nu)^2 + 4gamma^2]) is maximal when omega^2/nu = nu.",
+  "partial": "1 for nu = omega(q) stated without a derivative or equivalent argument. Amplitude resonance sqrt(omega^2 - 2gamma^2) or sqrt(omega^2 - gamma^2): 0."
+ },
+ {
+  "id": "f.phys",
+  "name": "균일 변위와 복원력 부재 / Uniform displacement and no restoring force",
+  "max": 3,
+  "requirement": "q = 0 means all protons are displaced equally: separations do not change, so the Coulomb interaction gives no restoring force (the uniform background gives none either); omega(0) = 0 and the equation becomes xddot + 2 gamma xdot = (e E0/m) cos(nu t).",
+  "partial": "2 for the physical reason (rigid translation, unchanged separations), 1 for omega(0) = 0 or the reduced equation of motion."
+ },
+ {
+  "id": "f.power",
+  "name": "q=0 흡수 일률 / Absorbed power at q=0",
+  "max": 2,
+  "requirement": "Setting omega(0) = 0 in (e): pbar(q=0) = e^2 E0^2 gamma / [ m (nu^2 + 4 gamma^2) ] for nu > 0 (or an equivalent direct solution).",
+  "partial": "1 for consistent substitution into a power formula carried forward from (e) with an error."
+ },
+ {
+  "id": "f.concl",
+  "name": "공명 부재 판정 / No-resonance conclusion",
+  "max": 2,
+  "requirement": "pbar(q=0) decreases monotonically for nu > 0 (its supremum is only approached as nu -> 0), so there is no absorption resonance at any finite positive driving frequency.",
+  "partial": "1 for 'no resonance' supported only by a qualitative argument (no natural frequency) without the monotonic decrease. Bare 'no', or 'yes'/'resonance at nu = 0 counts': 0."
+ },
+ {
+  "id": "g.norm",
+  "name": "확률의 규격화 / Normalising the distribution",
+  "max": 3,
+  "requirement": "With z = exp[-hbar omega/(k_B T)], 0 < z < 1: sum_p z^p = 1/(1-z), so P_p = (1-z) z^p (equivalently a partition function Z = 1/(1-z)).",
+  "partial": "1 if a normalisation/partition sum is written but not evaluated or evaluated wrongly."
+ },
+ {
+  "id": "g.sum",
+  "name": "가중 급수의 계산 / Weighted series",
+  "max": 4,
+  "requirement": "<E> = hbar omega sum_p p P_p = hbar omega (1-z) sum_p p z^p = hbar omega z/(1-z), using the given series (or <E> = -d ln Z/d beta).",
+  "partial": "2 for the correct set-up <E> = sum_p p hbar omega P_p with an error in evaluating the series."
+ },
+ {
+  "id": "g.result",
+  "name": "모드 평균 에너지 / Mean mode energy",
+  "max": 3,
+  "requirement": "E(omega,T) = hbar omega / [ exp(hbar omega/(k_B T)) - 1 ], with no zero-point term.",
+  "partial": "Extra hbar omega/2 (excluded by the statement) with otherwise correct work: 1. Correct final formula with no derivation: 3 here, 0 for g.norm and g.sum."
+ },
+ {
+  "id": "h.spacing",
+  "name": "파수 간격 / Wave-number spacing",
+  "max": 2,
+  "requirement": "Allowed q are spaced by 2pi/L = 2pi/(N a), so the positive interval [q, q+Delta q] contains L Delta q/(2 pi) modes.",
+  "partial": "1 for the spacing alone. Using (N-1)a or a for the period: 0."
+ },
+ {
+  "id": "h.both",
+  "name": "양·음 파수 모두 계산 / Counting both signs",
+  "max": 2,
+  "requirement": "The corresponding negative interval contributes the same number; +q and -q are independent modes (equivalently sine and cosine standing waves), so both are counted, with no double counting of endpoints.",
+  "partial": "1 if the doubling is applied without saying why the negative interval is independent. Counting only positive q: 0."
+ },
+ {
+  "id": "h.result",
+  "name": "모드 수 / Mode count",
+  "max": 2,
+  "requirement": "Delta n = (L/pi) Delta q = (N a/pi) Delta q.",
+  "partial": "L Delta q/(2pi) as the total (positive only): 0. Double-doubling 2L Delta q/pi: 0."
+ },
+ {
+  "id": "i.dos",
+  "name": "모드 밀도 / Density of modes",
+  "max": 3,
+  "requirement": "g(omega) d omega = Delta n with Delta q = |dq/d omega| d omega: g(omega) = (L/pi) |dq/d omega| = (N a/pi)/|d omega/dq| per periodic cell, for 0 < omega < omega_max (omega(q) monotonic on 0 < q < pi/a); integral of g over (0, omega_max) equals N.",
+  "partial": "Factor inherited from (h) used consistently: full 3 (not penalised again). 1 if g is given per unit q (no Jacobian) or per unit length instead of per cell."
+ },
+ {
+  "id": "i.integral",
+  "name": "전체 진동 에너지 적분 / Integral for E_T",
+  "max": 4,
+  "requirement": "E_T(T) ~= int_0^{omega_max} g(omega) hbar omega/[exp(hbar omega/(k_B T)) - 1] d omega = (L/pi) int_0^{pi/a} hbar omega(q)/[exp(hbar omega(q)/(k_B T)) - 1] dq, no zero-point term; it need not be evaluated. The exact sum over s != 0 of the same mode energy is the discrete equivalent.",
+  "partial": "Integrand right but limits wrong or missing (e.g. to infinity, or -pi/a..pi/a together with the doubled g): 2. Zero-point energy included: 2. Only the exact discrete sum, not converted to an integral: 2. Inherited factor from (h)/(i.dos): no further deduction."
+ },
+ {
+  "id": "j.equi",
+  "name": "고온 극한의 모드 에너지 / High-temperature mode energy",
+  "max": 2,
+  "requirement": "For k_B T >> hbar omega_max, exp(x) - 1 ~= x gives E(omega,T) -> k_B T for every internal mode.",
+  "partial": "1 for k_B T per mode asserted without the limit condition or expansion. k_B T/2 per mode: 0."
+ },
+ {
+  "id": "j.cv",
+  "name": "고온 몰열용량 / High-temperature molar heat capacity",
+  "max": 3,
+  "requirement": "E_T ~= (N-1) k_B T (N-1 internal modes, q=0 excluded), so C_V = (N_A/N)(N-1) k_B = (1 - 1/N) R -> R for N >> 1. Either the finite-N form or R is accepted.",
+  "partial": "Correct E_T but the N_A/N normalisation misapplied: 1. 3R (3-D result), R/2 or 3R/2: 0."
+ },
+ {
+  "id": "j.balance",
+  "name": "셀의 에너지 수지 / Energy balance of a cell",
+  "max": 2,
+  "requirement": "Each of the N protons in a cell absorbs pbar; with rapid redistribution and no loss, dE_T/dt = N pbar (equivalently per particle: (1-1/N) k_B dT/dt = pbar).",
+  "partial": "Mixing cell energy with one proton's power (dE_T/dt = pbar), or per-particle energy with cell power: 0."
+ },
+ {
+  "id": "j.time",
+  "name": "가열 시간 / Heating time",
+  "max": 3,
+  "requirement": "t_12 = [(N-1)/N] (k_B/pbar)(T_2 - T_1) ~= k_B (T_2 - T_1)/pbar for N >> 1, with pbar from (e) (symbolic or substituted).",
+  "partial": "Consistent carry-forward of a wrong C_V (e.g. 3R giving 3 k_B Delta T/pbar) with a correct balance: 2. Factor-N error from the power/energy mismatch in j.balance: 0. Correct t_12 without any energy-balance argument: 1."
+ }
+]
