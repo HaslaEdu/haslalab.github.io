@@ -4991,6 +4991,15 @@ async function oauthRoute(req, env, url) {
   /* callback */
   const st = await env.DB.prepare("DELETE FROM oauth_states WHERE state=? AND provider=? RETURNING *").bind(url.searchParams.get("state") || "", prov).first();
   if (!st || st.created_at < now() - 600) return new Response("This sign-in link has expired. Please try again.", { status: 400 });
+  /* from here the browser always goes back to the site with a reason, never to a bare error page on the Worker's address */
+  try { return await oauthCallback(req, env, url, prov, P, keys, redirectUri, st); }
+  catch (e) {
+    if (e && e.status === 429) return oauthBack(env, st.return_to, "e=signup_limit");
+    console.error("oauth callback", prov, e && e.stack || e);
+    return oauthBack(env, st.return_to, "e=oauth_failed&d=server-" + String(e && e.code || "error").replace(/[^a-z0-9_]+/gi, "_").slice(0, 40));
+  }
+}
+async function oauthCallback(req, env, url, prov, P, keys, redirectUri, st) {
   const code = url.searchParams.get("code");
   if (!code) return oauthBack(env,st.return_to, "e=oauth_cancelled");
   const form = new URLSearchParams({ grant_type: "authorization_code", code, client_id: keys.id, client_secret: keys.secret, redirect_uri: redirectUri });
