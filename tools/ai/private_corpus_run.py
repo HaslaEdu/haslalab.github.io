@@ -16,6 +16,7 @@ import signal
 import subprocess
 import sys
 import time
+import traceback
 
 import requests
 
@@ -244,5 +245,7 @@ if __name__ == '__main__':
         raise SystemExit(main())
     except Exception as exc:
         # Exception strings from third parties might contain a payload: print only the class.
-        safe_event('failed', error_class=type(exc).__name__, weights_updated=False)
+        frames = [{'file': Path(f.filename).name, 'line': f.lineno, 'function': f.name}
+                  for f in traceback.extract_tb(exc.__traceback__)[-6:]]
+        safe_event('failed', error_class=type(exc).__name__, trace=frames, weights_updated=False)
         raise SystemExit(1)
