@@ -8,6 +8,7 @@ from copy import deepcopy
 
 
 GEMMA_26B_QLORA_V1 = 'gemma-26b-qlora-v1'
+QWQ_32B_QLORA_48GB_V1 = 'qwq-32b-qlora-48gb-v1'
 
 
 _ROLES = {
@@ -49,10 +50,14 @@ def get_role_config(role, training_profile=None):
         raise ValueError("unknown training role")
     config = deepcopy(_ROLES[role])
     if training_profile is not None:
-        if role != 'chat' or training_profile != GEMMA_26B_QLORA_V1:
+        if (role, training_profile) not in (('chat', GEMMA_26B_QLORA_V1), ('solver', QWQ_32B_QLORA_48GB_V1)):
             raise ValueError('unknown or incompatible training profile')
         config.update(training_profile=training_profile, precision='4bit', training_method='qlora',
                       load_in_4bit=True, load_in_16bit=False, supported_gpu_memory_gb=[40, 48])
+        if training_profile == QWQ_32B_QLORA_48GB_V1:
+            # The bounded 48GB trial covers native text1024, not the separate
+            # default solver chat4096 path. Never truncate a longer SFT source.
+            config.update(allowed_formats=['text'], default_format='text')
     return config
 
 

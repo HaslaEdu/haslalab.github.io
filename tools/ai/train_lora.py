@@ -29,7 +29,7 @@ from pathlib import Path
 import re
 import time
 
-from role_config import BASES, GEMMA_26B_QLORA_V1, get_role_config, validate_role_format
+from role_config import BASES, GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1, get_role_config, validate_role_format
 
 
 def valid_messages(messages):
@@ -183,8 +183,10 @@ def loader_kwargs(config, max_length, bf16_dtype):
                'full_finetuning': False}
     if config['precision'] == 'bf16':
         options['dtype'] = bf16_dtype
-    if config.get('training_profile') == GEMMA_26B_QLORA_V1:
+    if config.get('training_profile') in (GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1):
         options.update(dtype=bf16_dtype, fast_inference=False, device_map={'': 0}, use_exact_model_name=True)
+    if config.get('training_profile') == QWQ_32B_QLORA_48GB_V1:
+        options['offload_embedding'] = False
     return options
 
 
@@ -223,6 +225,46 @@ def gemma_moe_patch_provenance(module, installed_version):
         raise ValueError('Gemma MoE quantizer source provenance is unavailable')
     return {'expert_quantizer_module_sha256': file_sha256(source), 'unsloth_zoo_version': installed_version,
             'expert_quantizer_upstream_fix': '9adee9372d5d86749e757d5a91c6bfa30c2ff674'}
+
+
+def qwq_quantized_linear_proof(model, params4bit_type):
+    """Verify dense QwQ's actual frozen CUDA NF4 projections, not a loader flag.
+
+    This opt-in trial uses standard NF4 of the exact Qwen base. Dynamic quants
+    that leave a projection in BF16 are deliberately outside this contract.
+    First-step memory evidence is still required; CPU checks prove no GPU fit.
+    """
+    config = model.config
+    expected_config = {'model_type': 'qwen2', 'num_hidden_layers': 64, 'hidden_size': 5120,
+                       'intermediate_size': 27648, 'num_attention_heads': 40, 'num_key_value_heads': 8}
+    if not isinstance(params4bit_type, type) or any(getattr(config, k, None) != v for k, v in expected_config.items()):
+        raise ValueError('QwQ low-memory profile requires the exact dense 32B architecture')
+    shapes = {'self_attn.q_proj': (5120, 5120), 'self_attn.k_proj': (1024, 5120),
+              'self_attn.v_proj': (1024, 5120), 'self_attn.o_proj': (5120, 5120),
+              'mlp.gate_proj': (27648, 5120), 'mlp.up_proj': (27648, 5120), 'mlp.down_proj': (5120, 27648)}
+    found, weights = set(), set()
+    for name, module in model.named_modules():
+        match = re.search(r'(?:^|\.)layers\.([0-9]+)\.(self_attn\.[qkvo]_proj|mlp\.(?:gate|up|down)_proj)$', name)
+        if not match:
+            continue
+        key = (int(match[1]), match[2])
+        weight = getattr(module, 'weight', None)
+        state = getattr(weight, 'quant_state', None)
+        shape = shapes[match[2]]
+        logical = getattr(state, 'shape', None)
+        if (key in found or not 0 <= key[0] < 64 or id(weight) in weights
+                or not isinstance(weight, params4bit_type) or state is None or tuple(logical or ()) != shape
+                or getattr(state, 'quant_type', None) != 'nf4' or weight.requires_grad
+                or weight.numel() * weight.element_size() > math.prod(shape)
+                or getattr(weight.device, 'type', None) != 'cuda' or getattr(weight.device, 'index', None) != 0):
+            raise ValueError('QwQ projections are not verified packed frozen CUDA NF4')
+        found.add(key)
+        weights.add(id(weight))
+    if found != {(layer, name) for layer in range(64) for name in shapes}:
+        raise ValueError('QwQ low-memory profile requires all 448 dense NF4 projections')
+    validate_loaded_adapter_trainability(model)
+    return {'dense_quantization_verified': True, 'dense_layers': 64, 'quantized_linear_tensors': len(found),
+            'base_parameters_frozen': True}
 
 
 def gemma_single_gpu_proof(torch_module, model=None):
@@ -422,7 +464,7 @@ def progress_callback(callback_type, path, *, started, wall_seconds=None, clock=
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', choices=BASES, default='chat')
-    ap.add_argument('--training-profile', choices=(GEMMA_26B_QLORA_V1,), default=None)
+    ap.add_argument('--training-profile', choices=(GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1), default=None)
     ap.add_argument('data')
     ap.add_argument('out')
     ap.add_argument('--rank', type=int)
@@ -448,8 +490,8 @@ def main(argv=None):
         ap.error('invalid training hyperparameters')
     if a.train_wall_seconds is not None and (a.train_wall_seconds < 30 or not a.progress_json):
         ap.error('a wall-time allowance requires private progress output and at least 30 seconds')
-    if a.training_profile and (a.rank != 8 or a.max_len != 1024):
-        ap.error('Gemma QLoRA profile requires rank8 and length1024')
+    if a.training_profile and (a.rank != config['default_rank'] or a.max_len != 1024):
+        ap.error('low-memory QLoRA profile requires its fixed rank and length1024')
 
     train, held = load(a.data, a.holdout, a.format, a.validation_data, role=a.base)
     summary = dataset_summary(train, held, a.format)
@@ -466,7 +508,9 @@ def main(argv=None):
     if a.training_profile:
         summary['training_profile'] = a.training_profile
     initial_path, initial_sha = initial_adapter(a.resume_adapter, config, a.rank, a.out) if a.resume_adapter else (None, None)
-    summary.update(initial_adapter_model_sha256=initial_sha, optimizer_state_restored=False)
+    initial_config_sha = file_sha256(initial_path / 'adapter_config.json') if initial_path else None
+    summary.update(initial_adapter_model_sha256=initial_sha, initial_adapter_config_sha256=initial_config_sha,
+                   optimizer_state_restored=False)
     print(json.dumps(summary, ensure_ascii=False), flush=True)
     if a.prepare_only:
         return
@@ -482,26 +526,43 @@ def main(argv=None):
 
     bf16 = unsloth.is_bfloat16_supported()
     if (config['precision'] == 'bf16' or a.training_profile) and not bf16:
-        raise ValueError('chat BF16 LoRA requires a BF16-capable GPU; precision is not downgraded automatically')
+        raise ValueError('this training contract requires a BF16-capable GPU; precision is not downgraded automatically')
     if a.training_profile:
-        from importlib.metadata import version
-        from unsloth_zoo.temporary_patches import moe_utils_bnb4bit
         from bitsandbytes.nn import Params4bit
-        summary.update(gemma_moe_patch_provenance(moe_utils_bnb4bit, version('unsloth_zoo')))
+        if a.training_profile == GEMMA_26B_QLORA_V1:
+            from importlib.metadata import version
+            from unsloth_zoo.temporary_patches import moe_utils_bnb4bit
+            summary.update(gemma_moe_patch_provenance(moe_utils_bnb4bit, version('unsloth_zoo')))
         summary.update(gemma_single_gpu_proof(torch))
         torch.cuda.reset_peak_memory_stats(0)
     loader = choose_loader(unsloth, config)
     options = loader_kwargs(config, a.max_len, torch.bfloat16)
-    if initial_path:
+    canonical_continuation = initial_path is not None and a.training_profile == QWQ_32B_QLORA_48GB_V1
+    if initial_path and not canonical_continuation:
         options['model_name'] = str(initial_path)
     model, tok = loader.from_pretrained(**options)
-    if a.training_profile:
+    if canonical_continuation:
+        # An adapter's recorded alias may name a dynamic quant. Load the exact
+        # Qwen base above, then attach the unchanged original private adapter.
+        # Match Unsloth's own adapter loader: PEFT attach followed by its k-bit
+        # training patch, never get_peft_model (which could initialize anew).
+        # https://github.com/unslothai/unsloth/blob/main/unsloth/models/loader.py
+        from peft import PeftModel
+        model = PeftModel.from_pretrained(model, str(initial_path), is_trainable=True, local_files_only=True)
+        model = loader.patch_peft_model(model, use_gradient_checkpointing='unsloth')
+        if (file_sha256(initial_path / 'adapter_config.json') != initial_config_sha
+                or file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha):
+            raise ValueError('initial adapter files changed while attaching continuation')
+    if a.training_profile == GEMMA_26B_QLORA_V1:
         summary.update(gemma_single_gpu_proof(torch, model))
         summary.update(gemma_quantized_expert_proof(model, Params4bit))
     if initial_path:
         validate_loaded_adapter_trainability(model)
     else:
         model = loader.get_peft_model(model, **peft_kwargs(config, a.rank, a.max_len))
+    if a.training_profile == QWQ_32B_QLORA_48GB_V1:
+        summary.update(gemma_single_gpu_proof(torch, model))
+        summary.update(qwq_quantized_linear_proof(model, Params4bit))
     mask_enabled, patched_template, mask_reason = False, None, 'plain_text_full_sequence_loss'
     if a.format == 'chat' and a.assistant_only_loss != 'off':
         try:
@@ -530,6 +591,10 @@ def main(argv=None):
                            dataset_text_field='text', max_length=a.max_len, max_steps=a.max_steps,
                            eval_strategy='epoch' if held else 'no', report_to='none')
     training_options.update(warmup_training_options(a.max_steps, SFTConfig))
+    if a.training_profile == QWQ_32B_QLORA_48GB_V1:
+        # Transformers otherwise defaults evaluation to a larger batch than
+        # this bounded single-example training profile.
+        training_options['per_device_eval_batch_size'] = 1
     if 'assistant_only_loss' in inspect.signature(SFTConfig).parameters:
         training_options['assistant_only_loss'] = mask_enabled
     trainer = SFTTrainer(model=model, processing_class=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
@@ -550,18 +615,20 @@ def main(argv=None):
     if a.max_steps > 0 and summary['steps_completed'] > a.max_steps:
         raise ValueError('trainer exceeded its requested optimizer-step limit')
     if a.training_profile and summary.get('first_optimizer_step_completed') is not True:
-        raise ValueError('Gemma QLoRA first optimizer-step proof is missing')
+        raise ValueError('QLoRA first optimizer-step proof is missing')
     if a.max_steps == -1:
         scheduled_steps = getattr(trainer.state, 'max_steps', None)
         if type(scheduled_steps) is int and scheduled_steps > 0:
             summary['warmup_steps'] = math.ceil(0.05 * scheduled_steps)
     summary.update(safe_loss_metrics(getattr(trainer.state, 'log_history', []),
                                     getattr(training_result, 'metrics', None)))
-    if initial_path and file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha:
+    if initial_path and (file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha
+                         or file_sha256(initial_path / 'adapter_config.json') != initial_config_sha):
         raise ValueError('initial adapter file changed during continuation')
     model.save_pretrained(a.out)      # adapter_config.json + adapter_model.safetensors
     tok.save_pretrained(a.out)
-    if initial_path and file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha:
+    if initial_path and (file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha
+                         or file_sha256(initial_path / 'adapter_config.json') != initial_config_sha):
         raise ValueError('initial adapter file changed while saving continuation')
     summary['weights_updated'] = True
     Path(a.out, 'hasla_training_manifest.json').write_text(json.dumps(summary, indent=2), encoding='utf-8')

@@ -1,5 +1,6 @@
 """One dedicated, bounded Pod per selected model; cumulative batch accounting."""
 import hashlib
+from decimal import Decimal
 import json
 import os
 from pathlib import Path
@@ -373,6 +374,8 @@ def resource_settings(manifest, role):
     # Pure profile validation precedes any provider or corpus request.
     profile = spec.get('training_profile')
     get_role_config(role, profile)
+    if profile == 'qwq-32b-qlora-48gb-v1' and spec.get('format') != 'text':
+        raise ValueError('QwQ low-memory profile requires native text1024')
     maximum = (3600 if profile == 'gemma-26b-qlora-v1' else 1800) if role == 'chat' else 14400
     seconds = spec.get('runtime_seconds', 1800 if role == 'chat' else 3600)
     if type(seconds) is not int or not 660 <= seconds <= maximum:
@@ -389,10 +392,10 @@ def resource_settings(manifest, role):
         raise ValueError('only configured training GPUs may be preferred')
     if (profile is not None and any(gpu not in low_memory_gpus for gpu in gpu_ids)
             or profile is None and any(gpu in low_memory_gpus for gpu in gpu_ids)):
-        raise ValueError('40/48GB GPU eligibility requires the explicit low-memory Gemma profile')
+        raise ValueError('40/48GB GPU eligibility requires an explicit role-compatible low-memory profile')
     quote = PodQuote(gpu_usd_per_hour_upper=spec.get('gpu_usd_per_hour_upper', 4), container_disk_gb=200, volume_disk_gb=0)
-    ceiling = 6 if role == 'chat' and profile is None else 4
-    if quote.gpu_usd_per_hour_upper > ceiling:
+    ceiling = '1.2' if profile == 'qwq-32b-qlora-48gb-v1' else (6 if role == 'chat' and profile is None else 4)
+    if quote.gpu_usd_per_hour_upper > Decimal(str(ceiling)):
         raise ValueError(f'role GPU hourly ceiling exceeds USD{ceiling}')
     return ledger, quote, seconds, gpu_ids
 

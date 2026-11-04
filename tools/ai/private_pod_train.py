@@ -352,7 +352,8 @@ def pinned_role_settings(path, role, data_format, training_profile=None):
             or any(not isinstance(alias, str) or not alias for alias in config["base_aliases"])):
         raise PilotError("invalid_pinned_role_configuration")
     low_memory = training_profile == 'gemma-26b-qlora-v1' and role == 'chat'
-    if training_profile is not None and (not low_memory or config.get('training_profile') != training_profile):
+    low_memory_solver = training_profile == 'qwq-32b-qlora-48gb-v1' and role == 'solver' and data_format == 'text'
+    if training_profile is not None and (not (low_memory or low_memory_solver) or config.get('training_profile') != training_profile):
         raise PilotError('training_profile_mismatch')
     expected_precision = "bf16" if role == "chat" and not low_memory else "4bit"
     quantized = role == 'solver' or low_memory
@@ -444,6 +445,17 @@ def adapter_inventory(adapter, config=None):
     return files, sha_bytes(json.dumps(files, sort_keys=True, separators=(",", ":")).encode())
 
 
+def runtime_profile_proof_keys(profile):
+    common = ('first_optimizer_step_completed', 'gpu_count', 'gpu_name', 'physical_vram_bytes',
+              'cpu_or_disk_offload_used', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')
+    if profile == 'gemma-26b-qlora-v1':
+        return common + ('expert_quantization_verified', 'expert_blocks', 'quantized_expert_tensors',
+                         'expert_quantizer_module_sha256', 'unsloth_zoo_version', 'expert_quantizer_upstream_fix')
+    if profile == 'qwq-32b-qlora-48gb-v1':
+        return common + ('dense_quantization_verified', 'dense_layers', 'quantized_linear_tensors', 'base_parameters_frozen')
+    raise PilotError('training_profile_mismatch')
+
+
 def training_report(adapter, config, data_format, training_sha, validation_sha, initial_model_sha=None):
     path = Path(adapter) / "hasla_training_manifest.json"
     if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= 64 * 1024:
@@ -462,9 +474,15 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
         raise PilotError('training_profile_mismatch')
     proof = {}
     if config.get('training_profile') is not None:
-        for key, value in {'expert_quantization_verified': True, 'expert_blocks': 30,
-                           'quantized_expert_tensors': 60, 'first_optimizer_step_completed': True,
-                           'gpu_count': 1, 'cpu_or_disk_offload_used': False}.items():
+        fixed = {'first_optimizer_step_completed': True, 'gpu_count': 1, 'cpu_or_disk_offload_used': False}
+        if config['training_profile'] == 'qwq-32b-qlora-48gb-v1':
+            fixed.update(dense_quantization_verified=True, dense_layers=64, quantized_linear_tensors=448,
+                         base_parameters_frozen=True)
+        elif config['training_profile'] == 'gemma-26b-qlora-v1':
+            fixed.update(expert_quantization_verified=True, expert_blocks=30, quantized_expert_tensors=60)
+        else:
+            raise PilotError('training_profile_mismatch')
+        for key, value in fixed.items():
             if type(report.get(key)) is not type(value) or report[key] != value:
                 raise PilotError('training_profile_runtime_proof_missing')
             proof[key] = value
@@ -478,14 +496,15 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
             raise PilotError('training_profile_runtime_memory_proof_missing')
         proof.update({k: report[k] for k in ('gpu_name', 'physical_vram_bytes',
                       'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')})
-        if (not isinstance(report.get('expert_quantizer_module_sha256'), str)
+        if config['training_profile'] == 'gemma-26b-qlora-v1' and (not isinstance(report.get('expert_quantizer_module_sha256'), str)
                 or not SHA_PATTERN.fullmatch(report['expert_quantizer_module_sha256'])
                 or not isinstance(report.get('unsloth_zoo_version'), str)
                 or not re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', report['unsloth_zoo_version'])
                 or report.get('expert_quantizer_upstream_fix') != '9adee9372d5d86749e757d5a91c6bfa30c2ff674'):
             raise PilotError('training_profile_quantizer_provenance_missing')
-        proof.update({k: report[k] for k in ('expert_quantizer_module_sha256', 'unsloth_zoo_version',
-                                            'expert_quantizer_upstream_fix')})
+        if config['training_profile'] == 'gemma-26b-qlora-v1':
+            proof.update({k: report[k] for k in ('expert_quantizer_module_sha256', 'unsloth_zoo_version',
+                                                'expert_quantizer_upstream_fix')})
     if report.get('initial_adapter_model_sha256') != initial_model_sha or report.get('optimizer_state_restored') is True:
         raise PilotError('training_report_initial_adapter_mismatch')
     steps = report.get("steps_completed")
@@ -871,11 +890,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             "test_records_used": 0, "private": True, "promoted": False})
         if config.get('training_profile') is not None:
             artifact.metadata['training_profile'] = config['training_profile']
-            artifact.metadata['runtime_profile_proof'] = {k: report[k] for k in (
-                'expert_quantization_verified', 'expert_blocks', 'quantized_expert_tensors',
-                'first_optimizer_step_completed', 'gpu_count', 'gpu_name', 'physical_vram_bytes',
-                'cpu_or_disk_offload_used', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes',
-                'expert_quantizer_module_sha256', 'unsloth_zoo_version', 'expert_quantizer_upstream_fix')}
+            artifact.metadata['runtime_profile_proof'] = {k: report[k] for k in runtime_profile_proof_keys(config['training_profile'])}
         if initial_spec:
             artifact.metadata.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                                      initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)

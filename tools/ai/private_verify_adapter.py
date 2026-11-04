@@ -193,11 +193,17 @@ def expected_result(result, entity, run_id, role):
         require(result.get('precision') == config['precision']
                 and result.get('training_method') == config['training_method'], 'result_training_profile_invalid')
         proof = result.get('runtime_profile_proof')
-        fixed = {'expert_quantization_verified': True, 'expert_blocks': 30, 'quantized_expert_tensors': 60,
-                 'first_optimizer_step_completed': True, 'gpu_count': 1, 'cpu_or_disk_offload_used': False}
+        fixed = {'first_optimizer_step_completed': True, 'gpu_count': 1, 'cpu_or_disk_offload_used': False}
         extra = {'gpu_name', 'physical_vram_bytes', 'first_step_peak_allocated_bytes',
-                 'first_step_peak_reserved_bytes', 'expert_quantizer_module_sha256', 'unsloth_zoo_version',
-                 'expert_quantizer_upstream_fix'}
+                 'first_step_peak_reserved_bytes'}
+        dense = result['training_profile'] == 'qwq-32b-qlora-48gb-v1'
+        if dense:
+            require(result.get('format') == 'text', 'result_training_profile_invalid')
+            fixed.update(dense_quantization_verified=True, dense_layers=64, quantized_linear_tensors=448,
+                         base_parameters_frozen=True)
+        else:
+            fixed.update(expert_quantization_verified=True, expert_blocks=30, quantized_expert_tensors=60)
+            extra.update(('expert_quantizer_module_sha256', 'unsloth_zoo_version', 'expert_quantizer_upstream_fix'))
         require(isinstance(proof, dict) and set(proof) == set(fixed) | extra
                 and all(type(proof.get(k)) is type(v) and proof[k] == v for k, v in fixed.items()),
                 'result_training_profile_proof_invalid')
@@ -205,8 +211,10 @@ def expected_result(result, entity, run_id, role):
                                          'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')]
         require(proof['gpu_name'] in ('NVIDIA A100-PCIE-40GB', 'NVIDIA L40S', 'NVIDIA L40', 'NVIDIA A40')
                 and all(type(v) is int for v in (physical, allocated, reserved))
-                and 37 * 1024**3 <= physical <= 49 * 1024**3 and 0 < allocated <= reserved <= physical
-                and isinstance(proof['expert_quantizer_module_sha256'], str)
+                and 37 * 1024**3 <= physical <= 49 * 1024**3 and 0 < allocated <= reserved <= physical,
+                'result_training_profile_proof_invalid')
+        if not dense:
+            require(isinstance(proof['expert_quantizer_module_sha256'], str)
                 and re.fullmatch(r'[0-9a-f]{64}', proof['expert_quantizer_module_sha256'])
                 and isinstance(proof['unsloth_zoo_version'], str)
                 and re.fullmatch(r'[0-9A-Za-z.+_-]{1,80}', proof['unsloth_zoo_version'])

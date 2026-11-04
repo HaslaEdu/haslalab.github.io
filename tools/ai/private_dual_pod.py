@@ -23,8 +23,11 @@ def role_jobs(env):
         if job.get('format') not in expected_formats[role]:
             raise ValueError('role and data format do not match')
         profile = job.get('training_profile')
-        if profile is not None and (role != 'chat' or profile != 'gemma-26b-qlora-v1'):
+        if profile is not None and (role, profile) not in (('chat', 'gemma-26b-qlora-v1'),
+                                                         ('solver', 'qwq-32b-qlora-48gb-v1')):
             raise ValueError('unknown or incompatible training profile')
+        if profile == 'qwq-32b-qlora-48gb-v1' and job['format'] != 'text':
+            raise ValueError('QwQ low-memory profile requires native text1024')
         run_id = job.get('run')
         if not isinstance(run_id, str) or not re.fullmatch(r'[A-Za-z0-9_.-]{1,120}', run_id) or run_id in seen_runs:
             raise ValueError('invalid private run identity')
