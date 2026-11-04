@@ -1,5 +1,5 @@
 name: Hasla Gemma and QwQ private pilot
-run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }})
+run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }})
 on:
   workflow_dispatch:
     inputs:
@@ -15,11 +15,19 @@ on:
         description: "Read-only GPU status for an existing pilot run ID; never creates a GPU"
         type: string
         default: ""
+      verify_run_id:
+        description: "CPU-only verification of existing private adapter weights; never creates a GPU"
+        type: string
+        default: ""
+      verify_roles:
+        description: "Comma-separated roles to verify: chat, solver, or chat,solver"
+        type: string
+        default: "chat,solver"
 permissions:
   contents: read
 jobs:
   private-pilot:
-    if: ${{ !inputs.collection_only && inputs.status_run_id == '' }}
+    if: ${{ !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' }}
     concurrency:
       group: hasla-private-book-training
       cancel-in-progress: false
@@ -82,7 +90,7 @@ jobs:
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
   collect-patterns:
-    if: ${{ inputs.collection_only && inputs.status_run_id == '' }}
+    if: ${{ inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' }}
     concurrency:
       group: hasla-private-pattern-collection
       cancel-in-progress: false
@@ -105,7 +113,7 @@ jobs:
           HASLA_PATTERN_CURSORS: ${{ secrets.HASLA_PATTERN_CURSORS }}
           HASLA_PATTERN_OBSERVED_LISTING_URLS: ${{ secrets.HASLA_PATTERN_OBSERVED_LISTING_URLS }}
   inspect-gpu:
-    if: ${{ inputs.status_run_id != '' }}
+    if: ${{ inputs.status_run_id != '' && inputs.verify_run_id == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -123,3 +131,23 @@ jobs:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           HASLA_STATUS_RUN_ID: ${{ inputs.status_run_id }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+  verify-adapters:
+    if: ${{ inputs.verify_run_id != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ai
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install --quiet wandb requests
+      - name: Verify stored private adapter weights on CPU
+        timeout-minutes: 25
+        run: python tools/ai/private_verify_adapter.py --run-id "$HASLA_VERIFY_RUN_ID" --roles "$HASLA_VERIFY_ROLES"
+        env:
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+          HASLA_VERIFY_RUN_ID: ${{ inputs.verify_run_id }}
+          HASLA_VERIFY_ROLES: ${{ inputs.verify_roles }}

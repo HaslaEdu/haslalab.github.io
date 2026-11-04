@@ -247,6 +247,34 @@ def safe_loss_metrics(history, final_metrics=None):
     return result
 
 
+def warmup_policy(max_steps):
+    """Keep a one/two-step pilot's first optimizer update at a positive LR.
+
+    HF rounds proportional warmup up: 5% of one step becomes one warmup step,
+    and its cosine scheduler initializes that sole optimizer update at LR=0.
+    Bounded runs therefore use explicit integer steps, with no warmup for tiny
+    pilots. Unbounded epoch mode retains the original 5% warmup policy.
+    """
+    if type(max_steps) is not int or max_steps == 0 or max_steps < -1:
+        raise ValueError('invalid maximum step count for warmup')
+    if max_steps == -1:
+        return {'warmup_steps': None, 'warmup_ratio': 0.05, 'warmup_mode': 'epoch_ratio'}
+    count = 0 if max_steps <= 2 else min(max_steps - 1, math.ceil(0.05 * max_steps))
+    return {'warmup_steps': count, 'warmup_ratio': None, 'warmup_mode': 'bounded_integer'}
+
+
+def warmup_training_options(max_steps, config_type):
+    policy = warmup_policy(max_steps)
+    if policy['warmup_steps'] is not None:
+        return {'warmup_steps': policy['warmup_steps']}
+    # Current HF uses fractional warmup_steps; older TrainingArguments/TRL
+    # releases expose warmup_ratio explicitly. Preserve epoch-mode semantics
+    # through the installed API rather than sending an unsupported keyword.
+    if 'warmup_ratio' in inspect.signature(config_type).parameters:
+        return {'warmup_ratio': policy['warmup_ratio']}
+    return {'warmup_steps': policy['warmup_ratio']}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', choices=BASES, default='chat')
@@ -282,6 +310,7 @@ def main(argv=None):
                    validation_dataset_sha256=selected_dataset_sha256(held, a.format) if held else None,
                    assistant_only_loss=False, assistant_loss_status='not_checked_in_prepare_only',
                    test_records_used=0, train_loss=None, eval_loss=None)
+    summary.update(warmup_policy(a.max_steps))
     print(json.dumps(summary, ensure_ascii=False), flush=True)
     if a.prepare_only:
         return
@@ -321,10 +350,11 @@ def main(argv=None):
             return Dataset.from_list([{'messages': r['messages']} for r in rows])
         return Dataset.from_list([{'text': r['text'] + (tok.eos_token or '')} for r in rows])
     training_options = dict(output_dir=a.out + '-run', num_train_epochs=a.epochs, learning_rate=a.lr,
-                           per_device_train_batch_size=1, gradient_accumulation_steps=8, warmup_ratio=0.05,
+                           per_device_train_batch_size=1, gradient_accumulation_steps=8,
                            lr_scheduler_type='cosine', logging_steps=5, save_strategy='no', bf16=bf16, fp16=not bf16,
                            dataset_text_field='text', max_length=a.max_len, max_steps=a.max_steps,
                            eval_strategy='epoch' if held else 'no', report_to='none')
+    training_options.update(warmup_training_options(a.max_steps, SFTConfig))
     if 'assistant_only_loss' in inspect.signature(SFTConfig).parameters:
         training_options['assistant_only_loss'] = mask_enabled
     trainer = SFTTrainer(model=model, processing_class=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
@@ -335,6 +365,10 @@ def main(argv=None):
         raise ValueError('trainer completed no optimizer steps')
     if a.max_steps > 0 and summary['steps_completed'] > a.max_steps:
         raise ValueError('trainer exceeded its requested optimizer-step limit')
+    if a.max_steps == -1:
+        scheduled_steps = getattr(trainer.state, 'max_steps', None)
+        if type(scheduled_steps) is int and scheduled_steps > 0:
+            summary['warmup_steps'] = math.ceil(0.05 * scheduled_steps)
     summary.update(safe_loss_metrics(getattr(trainer.state, 'log_history', []),
                                     getattr(training_result, 'metrics', None)))
     model.save_pretrained(a.out)      # adapter_config.json + adapter_model.safetensors

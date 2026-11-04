@@ -2,6 +2,7 @@
 import contextlib
 import io
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -123,6 +124,8 @@ class DatasetChecks(unittest.TestCase):
                          ('chat', 'FastModel', 'bf16', 8))
         self.assertEqual(report['max_length'], 1024)
         self.assertEqual(report['max_steps'], 8)
+        self.assertEqual(report['warmup_steps'], 1)
+        self.assertEqual(report['warmup_mode'], 'bounded_integer')
         self.assertNotIn('A synthetic answer.', result.stdout + result.stderr)
         self.assertFalse((self.root / 'adapter').exists())
 
@@ -218,7 +221,9 @@ class DatasetChecks(unittest.TestCase):
                 calls['trainer'] = kwargs
                 self.state = SimpleNamespace(global_step=0, log_history=[])
             def train(self):
-                self.state.global_step = calls['training_options']['max_steps']
+                scheduled_steps = calls['training_options']['max_steps']
+                self.state.max_steps = scheduled_steps if scheduled_steps > 0 else 40
+                self.state.global_step = self.state.max_steps
                 self.state.log_history = [{'loss': 2.0}, {'loss': 1.5}, {'eval_loss': 1.8, 'arbitrary': 'not copied'}]
                 return SimpleNamespace(metrics={'train_loss': 1.6, 'other_field': 'not copied'})
         modules = {
@@ -251,6 +256,8 @@ class DatasetChecks(unittest.TestCase):
         self.assertNotIn('A synthetic answer.', json.dumps(manifest))
         self.assertEqual(manifest['train_loss'], 1.6)
         self.assertEqual(manifest['eval_loss'], 1.8)
+        self.assertEqual(calls['training_options']['warmup_steps'], 1)
+        self.assertEqual(manifest['warmup_steps'], 1)
         self.assertNotIn('arbitrary', manifest)
 
     def test_mocked_solver_text_training_keeps_qlora_and_full_sequence_loss(self):
@@ -265,6 +272,9 @@ class DatasetChecks(unittest.TestCase):
         self.assertEqual(manifest['precision'], '4bit')
         self.assertEqual(manifest['training_method'], 'qlora')
         self.assertEqual(manifest['steps_completed'], 32)
+        self.assertEqual(calls['training_options']['warmup_steps'], 2)
+        self.assertNotIn('warmup_ratio', calls['training_options'])
+        self.assertEqual(manifest['warmup_steps'], 2)
         self.assertFalse(manifest['assistant_only_loss'])
         self.assertEqual(set(calls['trainer']['train_dataset'][0]), {'text'})
 
@@ -283,6 +293,65 @@ class DatasetChecks(unittest.TestCase):
             {'train_loss': 1.7, 'sample': 'PRIVATE_TEXT'})
         self.assertEqual(metrics, {'train_loss': 1.7, 'eval_loss': 1.9})
         self.assertNotIn('PRIVATE_TEXT', json.dumps(metrics))
+
+    def test_short_pilot_warmup_keeps_first_cosine_optimizer_lr_positive(self):
+        # HF's cosine initialization evaluates the lambda at current_step=0,
+        # before optimizer.step; this numerical check needs no torch/model.
+        def initial_cosine_multiplier(warmup, total):
+            if 0 < warmup:
+                return 0.0 / max(1, warmup)
+            progress = (0 - warmup) / max(1, total - warmup)
+            return max(0.0, 0.5 * (1.0 + math.cos(math.pi * progress)))
+        for total in (1, 2):
+            with self.subTest(steps=total):
+                warmup = train_lora.warmup_policy(total)['warmup_steps']
+                self.assertEqual(warmup, 0)
+                self.assertGreater(initial_cosine_multiplier(warmup, total), 0)
+                self.assertEqual(initial_cosine_multiplier(math.ceil(total * 0.05), total), 0)
+        self.assertEqual(train_lora.warmup_policy(32)['warmup_steps'], 2)
+        for total in (3, 8, 19, 20, 21, 32, 1000):
+            self.assertLess(train_lora.warmup_policy(total)['warmup_steps'], total)
+        for invalid in (0, -2, True, 1.5):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                train_lora.warmup_policy(invalid)
+
+    def test_unbounded_epochs_use_the_supported_warmup_api_without_changing_ratio(self):
+        def old_config(warmup_ratio=0.0, warmup_steps=0):
+            pass
+        def current_config(warmup_steps=0):
+            pass
+        self.assertEqual(train_lora.warmup_training_options(-1, old_config), {'warmup_ratio': 0.05})
+        self.assertEqual(train_lora.warmup_training_options(-1, current_config), {'warmup_steps': 0.05})
+        self.assertEqual(train_lora.warmup_training_options(1, old_config), {'warmup_steps': 0})
+        self.assertEqual(train_lora.warmup_training_options(32, current_config), {'warmup_steps': 2})
+        self.assertIsNone(train_lora.warmup_policy(-1)['warmup_steps'])
+
+    def test_mocked_one_step_chat_passes_zero_integer_warmup_and_records_it(self):
+        path = self.write('one-step-chat.jsonl', [self.chat_row('one-step')])
+        out = self.root / 'one-step-adapter'
+        modules, calls = self.fake_training_modules()
+        with patch.dict(sys.modules, modules), contextlib.redirect_stdout(io.StringIO()):
+            train_lora.main(['--base', 'chat', '--format', 'chat', '--max-steps', '1', '--holdout', '0',
+                             str(path), str(out)])
+        manifest = json.loads((out / 'hasla_training_manifest.json').read_text())
+        self.assertIs(type(calls['training_options']['warmup_steps']), int)
+        self.assertEqual(calls['training_options']['warmup_steps'], 0)
+        self.assertNotIn('warmup_ratio', calls['training_options'])
+        self.assertEqual(manifest['warmup_steps'], 0)
+        self.assertEqual(manifest['steps_completed'], 1)
+        self.assertEqual(manifest['warmup_mode'], 'bounded_integer')
+
+    def test_mocked_epoch_training_retains_ratio_and_records_resolved_steps(self):
+        path = self.write('epoch-chat.jsonl', [self.chat_row('epoch-mode')])
+        out = self.root / 'epoch-adapter'
+        modules, calls = self.fake_training_modules()
+        with patch.dict(sys.modules, modules), contextlib.redirect_stdout(io.StringIO()):
+            train_lora.main(['--base', 'chat', '--holdout', '0', str(path), str(out)])
+        manifest = json.loads((out / 'hasla_training_manifest.json').read_text())
+        self.assertEqual(calls['training_options']['warmup_steps'], 0.05)
+        self.assertEqual(manifest['warmup_mode'], 'epoch_ratio')
+        self.assertEqual(manifest['warmup_ratio'], 0.05)
+        self.assertEqual(manifest['warmup_steps'], 2)
 
 
 if __name__ == '__main__':
