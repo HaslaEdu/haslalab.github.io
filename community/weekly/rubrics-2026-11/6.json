@@ -1,0 +1,219 @@
+[
+ {
+  "id": "A.1.1",
+  "name": "임의 매개변수의 광학 경로 / Optical path with a free parameter",
+  "max": 4,
+  "requirement": "Write the optical path with an arbitrary parameter lambda and fixed endpoints: L = int n(r) |dr/dlambda| dlambda, integrand F = n(r)|rdot| (or, e.g., n sqrt(1 + y'^2 + z'^2) with x as parameter). A Huygens/eikonal method (|grad S| = n, dr/dl = grad S/n) is an equivalent route and is marked step by step in the same way.",
+  "partial": "Unit speed |rdot| = 1 imposed before varying (F = n(r) only): 1. Endpoints or the stationarity condition not stated: -1."
+ },
+ {
+  "id": "A.1.2",
+  "name": "오일러-라그랑주 미분 / Euler-Lagrange derivatives",
+  "max": 5,
+  "requirement": "dF/drdot = n rdot/|rdot|, dF/dr = |rdot| grad n, so d/dlambda( n rdot/|rdot| ) = |rdot| grad n. (Eikonal route: d/dl grad S = (1/n)(grad S . grad) grad S = grad n.)",
+  "partial": "3 if one of the two derivatives is correct; -2 for a missing |rdot| factor in dF/dr. Euler-Lagrange equation quoted with the wrong sign: -2."
+ },
+ {
+  "id": "A.1.3",
+  "name": "호의 길이로 변환 / Conversion to arc length",
+  "max": 4,
+  "requirement": "Divide by dl/dlambda = |rdot|: d/dl ( n dr/dl ) = grad n.",
+  "partial": "2 for the correct ray equation with the change of parameter not justified. The ray equation stated with no variational or wavefront derivation: 1 for this criterion and 0 for A.1.1-A.1.2."
+ },
+ {
+  "id": "A.1.4",
+  "name": "단위 접선 조건 / Unit tangent normalisation",
+  "max": 2,
+  "requirement": "|dr/dl| = 1 because dl = |dr| (l is arc length).",
+  "partial": "All or nothing."
+ },
+ {
+  "id": "A.2.1",
+  "name": "연쇄 법칙 / Chain rule",
+  "max": 4,
+  "requirement": "From dl = n ds: d/ds = n d/dl, so dr/ds = n dr/dl.",
+  "partial": "2 if the relation is inverted (dr/ds = (1/n) dr/dl), with later steps then judged by method."
+ },
+ {
+  "id": "A.2.2",
+  "name": "|dr/ds|의 값 / Value of |dr/ds|",
+  "max": 4,
+  "requirement": "|dr/ds| = n |dr/dl| = n (not 1, contrary to the supplied photograph).",
+  "partial": "|dr/ds| = 1 or 1/n: 0. Correct value with no justification: 2."
+ },
+ {
+  "id": "A.2.3",
+  "name": "매개변수 s의 운동방정식 / Equation of motion in s",
+  "max": 5,
+  "requirement": "d^2r/ds^2 = n d/dl ( n dr/dl ) = n grad n, using the ray equation of A.1.",
+  "partial": "3 if d/ds = n d/dl is applied correctly but A.1 is not invoked properly; 2 for a product-rule error that leaves an extra term such as (dn/dl) dr/dl."
+ },
+ {
+  "id": "A.2.4",
+  "name": "기울기 형태 / Gradient form",
+  "max": 2,
+  "requirement": "n grad n = grad(n^2/2), giving d^2r/ds^2 = grad(n^2/2). (s is not physical time: dt/ds = n^2 with c = 1; not required.)",
+  "partial": "All or nothing."
+ },
+ {
+  "id": "A.3.1",
+  "name": "중심력 형태와 극좌표 가속도 / Central form and polar acceleration",
+  "max": 3,
+  "requirement": "For n = n(r): grad(n^2/2) = n (dn/dr) r-hat (radial only); polar components of r'' are (r'' - r phi'^2) radial and (r phi'' + 2 r' phi') transverse, primes = d/ds.",
+  "partial": "1 for the radial force, 2 for both acceleration components (1 if one is wrong)."
+ },
+ {
+  "id": "A.3.2",
+  "name": "반지름 방향 방정식 / Radial equation",
+  "max": 4,
+  "requirement": "r'' - r phi'^2 = n dn/dr.",
+  "partial": "2 for a sign error or a missing centripetal term; 1 for the right structure with n^2 dn/dr or dn/dr only."
+ },
+ {
+  "id": "A.3.3",
+  "name": "각도 방향 방정식 / Angular equation",
+  "max": 4,
+  "requirement": "r phi'' + 2 r' phi' = 0 (no transverse force).",
+  "partial": "2 for a factor error (e.g. r' phi' instead of 2r' phi')."
+ },
+ {
+  "id": "A.3.4",
+  "name": "L_z 보존 증명 / Proof that L_z is conserved",
+  "max": 4,
+  "requirement": "(1/r) d(r^2 phi')/ds = r phi'' + 2 r' phi' = 0, hence L_z = r^2 phi' is constant; equivalently d(r x r')/ds = r x r'' = 0 for a radial r''.",
+  "partial": "Conservation asserted ('central force') without the derivative or torque argument: 1. Conserved quantity written as r phi' or r^2 dphi/dt with physical time: 1."
+ },
+ {
+  "id": "B.1.1",
+  "name": "무한원에서의 속력 / Speed at infinity",
+  "max": 4,
+  "requirement": "Far from the source n -> n0 and, from A.2, |r'| = |dr/ds| = n0 (not the physical light speed 1/n0, and not 1).",
+  "partial": "Using 1/n0 or 1: 0."
+ },
+ {
+  "id": "B.1.2",
+  "name": "충돌 매개변수와 팔 길이 / Lever arm from the impact parameter",
+  "max": 3,
+  "requirement": "Along the straight incoming asymptote |r x r'| = b |r'|, the perpendicular distance being b.",
+  "partial": "All or nothing; a correct lever arm combined with a wrong speed still earns these 3."
+ },
+ {
+  "id": "B.1.3",
+  "name": "|L_z|의 결과 / Result for |L_z|",
+  "max": 3,
+  "requirement": "|L_z| = b n0 (either sign convention; e.g. L_z = b n0 > 0 by orientation).",
+  "partial": "Bare result with no reasoning: 3 here, 0 for B.1.1-B.1.2. b/n0 or b: 0."
+ },
+ {
+  "id": "B.2.1",
+  "name": "유효 힘 / Effective force",
+  "max": 4,
+  "requirement": "With n = n0 + k/r, k = Delta n R = -n0/xi: n dn/dr = -n0 k/r^2 - k^2/r^3 (the quadratic term must be kept).",
+  "partial": "2 if the k^2/r^3 term is dropped here (the coefficient of u in B.2.4 then cannot be right). Sign error in dn/dr: 1."
+ },
+ {
+  "id": "B.2.2",
+  "name": "비네 변환 / Binet transformation",
+  "max": 5,
+  "requirement": "With u = 1/r and phi' = L u^2: r' = -L du/dphi, r'' = -L^2 u^2 d^2u/dphi^2, so r'' - r phi'^2 = -L^2 u^2 (u_phiphi + u).",
+  "partial": "3 if one derivative has a sign or power error; 2 if the Binet form is quoted from mechanics without adapting it to s and L = r^2 phi'."
+ },
+ {
+  "id": "B.2.3",
+  "name": "u에 대한 방정식 / Equation for u",
+  "max": 4,
+  "requirement": "Equating: u_phiphi + u = (n0 k + k^2 u)/L^2.",
+  "partial": "2 for a sign error on the right-hand side. Consistent carry-forward of a B.2.1 error: 2."
+ },
+ {
+  "id": "B.2.4",
+  "name": "요구된 형태로 대입 / Substitution to the required form",
+  "max": 2,
+  "requirement": "With L^2 = b^2 n0^2 and k = -n0/xi: u_phiphi + u(1 - 1/(b^2 xi^2)) = -1/(b^2 xi).",
+  "partial": "1 for a consistent carry-forward of an L error from B.1 (B.2.1-B.2.3 are then not penalised)."
+ },
+ {
+  "id": "B.3.1",
+  "name": "약한 산란 근사와 해 / Weak-field reduction and solution",
+  "max": 3,
+  "requirement": "For |b xi| >> 1 neglect the 1/(b^2 xi^2) correction: u_phiphi + u = -1/(b^2 xi), solution u = C cos(phi - phi0) - 1/(b^2 xi). A straight-line transverse-impulse method is an equivalent route.",
+  "partial": "2 if the solution is written without justifying the dropped term; 1 for the reduced equation only."
+ },
+ {
+  "id": "B.3.2",
+  "name": "적분 상수 / Integration constant",
+  "max": 3,
+  "requirement": "From |r'|^2 = n^2 (consistently truncated: u_phi^2 + u^2 + 2u/(b^2 xi) = 1/b^2) or the incoming conditions: C = (1/b) sqrt(1 + 1/(b^2 xi^2)) ~= 1/b. Impulse route: Delta r'_perp = int n0 k b (x^2 + b^2)^{-3/2} dx/n0 = 2k/b.",
+  "partial": "2 for C ~= 1/b with only a leading-order argument; 1 for C stated without any condition."
+ },
+ {
+  "id": "B.3.3",
+  "name": "산란각 / Scattering angle",
+  "max": 4,
+  "requirement": "Asymptotes at u = 0 give theta = 2 arctan(1/|b xi|) in the Coulomb approximation, i.e. theta ~= 2/|b xi| = 2|Delta n| R/(n0 b) to leading order; inward for Delta n > 0, outward for Delta n < 0.",
+  "partial": "Factor-2 error (theta = 1/|b xi|): 1. Correct value without derivation: 1. Either the arctan or the leading form earns full marks."
+ },
+ {
+  "id": "B.3.4",
+  "name": "단면적의 정의와 야코비안 / Cross-section definition and Jacobian",
+  "max": 3,
+  "requirement": "Axial symmetry: d sigma = 2 pi b |db|, d Omega = 2 pi sin(theta) d theta, so d sigma/d Omega = (b/sin theta) |db/d theta| (energy flux per solid angle over incident flux per area).",
+  "partial": "1 if sin(theta) is replaced by theta without saying small angle is assumed; 1 for the definition only."
+ },
+ {
+  "id": "B.3.5",
+  "name": "미분 단면적 / Differential cross-section",
+  "max": 4,
+  "requirement": "With b = |xi|^-1 cot(theta/2): d sigma/d Omega = 1/(4 xi^2 sin^4(theta/2)) (Rutherford form, Coulomb approximation); small-angle leading form 4/(xi^2 theta^4) from b = 2/(|xi| theta). Either form is accepted if its approximation is stated.",
+  "partial": "2 for the right method with a factor or power error; 2 for a correct method applied to a theta(b) carried forward from B.3.3."
+ },
+ {
+  "id": "B.3.6",
+  "name": "근사의 적용 범위 / Range of validity",
+  "max": 3,
+  "requirement": "State: (i) |b xi| >> 1, i.e. weak deflection theta << 1, so the 1/(b^2 xi^2) term is negligible; (ii) the ray stays far outside the source, r_min >> R, where n(r) = n0 + Delta n R/r holds and n > 0; (iii) the arctan/csc^4 forms are exact only for the truncated Coulomb model (and geometrical optics: wavelength small).",
+  "partial": "1 per distinct correct condition, up to 3."
+ },
+ {
+  "id": "B.4.1",
+  "name": "속도 대응 / Velocity correspondence",
+  "max": 2,
+  "requirement": "Mechanical dr/dt corresponds to dr/ds, of magnitude n (n0 at infinity); the actual light speed is 1/n (c = 1), and s is not time.",
+  "partial": "1 if the correspondence is given but parameter speed and actual light speed are not distinguished."
+ },
+ {
+  "id": "B.4.2",
+  "name": "퍼텐셜과 에너지 / Potential and energy",
+  "max": 2,
+  "requirement": "Unit mass: U_opt = -n^2/2 + const; with zero at infinity U = n0^2/2 - n^2/2 = -n0 k/r - k^2/(2r^2), the Coulomb term C/r with C = -n0 k = n0^2/xi. Total energy E = n0^2/2 (or 0 with U = -n^2/2).",
+  "partial": "1 for the potential or the energy alone, or for conventions that are not consistent."
+ },
+ {
+  "id": "B.4.3",
+  "name": "각운동량 대응 / Angular momentum correspondence",
+  "max": 1,
+  "requirement": "b v_inf (per unit mass) corresponds to b n0.",
+  "partial": "All or nothing."
+ },
+ {
+  "id": "B.4.4",
+  "name": "최근접 거리 / Closest approach",
+  "max": 2,
+  "requirement": "Original index model: turning point n r = b n0 gives r_min = b + 1/xi (= b - k/n0, if positive and outside the source); Coulomb approximation: sqrt(b^2 + xi^-2) + 1/xi, the mechanical sqrt(b^2 + (C/2E)^2) + C/(2E). The model of each must be identified.",
+  "partial": "1 for either form without saying which model it belongs to."
+ },
+ {
+  "id": "B.4.5",
+  "name": "산란각·미분 단면적 대응 / Angle and differential cross-section",
+  "max": 1,
+  "requirement": "2 arctan(|C|/(2E b)) maps to 2 arctan(1/|b xi|); (C/(4E))^2 csc^4(theta/2) maps to (1/(2xi))^2 csc^4(theta/2).",
+  "partial": "All or nothing (both maps needed)."
+ },
+ {
+  "id": "B.4.6",
+  "name": "전체 단면적 / Total cross-section",
+  "max": 2,
+  "requirement": "Both ideal unscreened long-range fields give a divergent total cross-section (forward angles); a finite value needs a cutoff, e.g. sigma(theta >= theta_min) = pi xi^-2 cot^2(theta_min/2).",
+  "partial": "1 for 'divergent' without a reason or cutoff. A finite uncut total cross-section: 0."
+ }
+]

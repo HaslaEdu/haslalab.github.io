@@ -598,7 +598,9 @@ function arSheetT() {
 }
 function arSheetPartLabel(part) { const id = String(part.displayId || part.id), label = (lang === "en" ? part.label_en : part.label_ko); return label ? `${id.includes(".") ? id : "("+id+")"} ${label}` : id; }
 function arMonthlyPartNumber(problem,id,displayId) {
-  const part = problem?.answerSheet?.parts?.find(part => part.id === id);
+  /* a criterion belongs to the part whose id starts it (a.exact, 16.3 under part 16), as the grader's guard maps it */
+  const parts = [...(problem?.answerSheet?.parts || [])].sort((x, y) => String(y.id).length - String(x.id).length);
+  const part = parts.find(part => part.id === id) || parts.find(part => String(id).startsWith(String(part.id)));
   const displayed = displayId || part?.displayId;
   return displayed ? (String(displayed).includes(".") ? String(displayed) : "("+displayed+")") : String(id);
 }

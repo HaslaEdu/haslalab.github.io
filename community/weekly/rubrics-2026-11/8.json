@@ -1,0 +1,261 @@
+[
+ {
+  "id": "A.1.cal0",
+  "name": "기준압 0 kPa 보정 자료 / Calibration data at 0 kPa",
+  "max": 1,
+  "requirement": "The A.1 answer cites at least one CAL ID recorded at 0.0 kPa with readings r_i(0) for all eight sensors, consistent with the server-recorded CAL records. One acquisition is sufficient; no repeat count is required.",
+  "partial": "0 if readings are missing for any sensor, the cited CAL ID is not a 0 kPa record, or the values contradict the record. Server-recorded observations alone, not cited in A.1, earn nothing."
+ },
+ {
+  "id": "A.1.cal200",
+  "name": "기준압 200 kPa 보정 자료 / Calibration data at 200 kPa",
+  "max": 1,
+  "requirement": "The A.1 answer cites at least one CAL ID recorded at 200.0 kPa with readings r_i(200) for all eight sensors, consistent with the server-recorded CAL records.",
+  "partial": "0 if readings are missing for any sensor, the cited CAL ID is not a 200 kPa record, or the values contradict the record."
+ },
+ {
+  "id": "A.1.table",
+  "name": "보정 자료 표 / Calibration table",
+  "max": 2,
+  "requirement": "A table of r_i(0) and r_i(200) for S_0-S_7 with CAL IDs and units (kPa), readable and complete.",
+  "partial": "1 if the table lacks CAL IDs or units, or one or two sensors are missing; 0 if more are missing."
+ },
+ {
+  "id": "A.1.coefficients",
+  "name": "감도와 영점 / Sensitivity and offset",
+  "max": 2,
+  "requirement": "b_i = r_i(0) and g_i = [r_i(200) - r_i(0)]/(200.0 kPa) for every sensor (means of repeated readings accepted), numerically consistent with the cited readings (gains near 1, offsets of a few tenths of kPa).",
+  "partial": "1 for correct formulas with numerical slips for some sensors, or values for only some sensors. Gain computed as r_i(200)/200 (offset ignored): 0."
+ },
+ {
+  "id": "A.1.uncertainty",
+  "name": "보정 불확도 / Calibration uncertainty",
+  "max": 2,
+  "requirement": "Uncertainties u[r_i(0)], u[r_i(200)] (and hence u(g_i)) from the data and the 0.1 kPa display resolution, e.g. 0.1/sqrt(12) = 0.029 kPa for a single reading or the sample scatter for repeated readings; a single reading is not given zero uncertainty.",
+  "partial": "1 for an uncertainty stated without a basis, or a resolution-only estimate applied inconsistently. Zero uncertainty, or marks claimed for the number of repeats: 0."
+ },
+ {
+  "id": "A.1.conversion",
+  "name": "압력 진폭 변환식 / Conversion to pressure amplitude",
+  "max": 2,
+  "requirement": "P_i = Delta r_i/g_i: the offset b_i cancels in a difference of readings on the same sensor.",
+  "partial": "1 for P_i = (Delta r_i - b_i)/g_i (offset subtracted twice) or Delta r_i g_i (inverted gain). 0 if no expression."
+ },
+ {
+  "id": "A.2.records",
+  "name": "2 ms 도달 시각 자료 / Arrival-time data at 2 ms",
+  "max": 3,
+  "requirement": "A RUN ID acquired at closure time 2 ms is cited, with Q_0 and the arrival times t_i of all eight sensors, consistent with the server-recorded run.",
+  "partial": "2 if one or two sensors are missing or one value contradicts the record; 1 if the closure time of the cited run is not 2 ms but the data are otherwise complete; 0 without a cited valid run."
+ },
+ {
+  "id": "A.2.summary",
+  "name": "자료 정리와 불확도 근거 / Data table and uncertainty basis",
+  "max": 3,
+  "requirement": "Table of x_i, t_i (ms) and Q_0 (L s^-1) with the RUN ID, units, and an uncertainty basis (0.1 ms trigger resolution, 0.0001 L/s flow resolution, or scatter of repeated runs).",
+  "partial": "1 each for: complete table with units; RUN ID; uncertainty basis. Zero uncertainty claimed: lose the last point."
+ },
+ {
+  "id": "A.2.graph",
+  "name": "도달 시각 그래프 / Arrival-time graph",
+  "max": 3,
+  "requirement": "t against x with all eight points, labelled axes with units and scales, error bars (or a statement that they are smaller than the symbols), and the fitted straight line.",
+  "partial": "1 each for: points with labelled axes/units; error bars or their size stated; fitted line. A graph that cannot be seen in the submission (missing photo/plot) earns 0."
+ },
+ {
+  "id": "A.2.fit",
+  "name": "직선 맞춤 / Straight-line fit",
+  "max": 2,
+  "requirement": "Fit t_i = alpha x_i + beta with a free intercept (least squares or a justified graphical fit): slope alpha and t_off = beta. Reference t_off = t_off_ms in the private session reference (0.30 ms nominal); accept +-0.10 ms.",
+  "partial": "1 if the line is forced through the origin (or two points only are used without justification), or t_off is missing or outside tolerance."
+ },
+ {
+  "id": "A.2.cK",
+  "name": "파속과 체적 탄성률 / Wave speed and bulk modulus",
+  "max": 4,
+  "requirement": "c = 1/alpha with ms -> s conversion and K = rho c^2. Compare with c_m_s and K_Pa in the private session reference (nominal 1483 m/s, 2.20e9 Pa): accept c within 1% and K within 3%. Units m s^-1 and Pa.",
+  "partial": "2 for c (1 if formula right but value outside 1%), 2 for K (1 if formula right but value outside 3%, or consistent with an out-of-tolerance c). A unit error by a factor 1000 costs that quantity's value point."
+ },
+ {
+  "id": "B.1.echo",
+  "name": "직접파·반사파 시간차 / Direct/reflected time difference",
+  "max": 3,
+  "requirement": "Direct path x and first reservoir-reflection path 2L - x give Delta t(x) = (2L - x)/c - x/c = 2(L - x)/c.",
+  "partial": "1 for the two path lengths without the difference; 1 for 2(L - x)/c stated without the paths. (2L - x)/c given as Delta t: 1."
+ },
+ {
+  "id": "B.1.s7",
+  "name": "S_7의 시간차 / Time difference at S_7",
+  "max": 2,
+  "requirement": "Delta t_7 = 2(L - 105 m)/c = 30 m/c using the student's c (nominal 20.23 ms); compare with 30 m/c_m_s from the private session reference, accept within 1% (the c tolerance).",
+  "partial": "1 for the right expression with a numerical or unit slip. A fixed nominal value not computed from the measured c is accepted only if it agrees within 1% with this session."
+ },
+ {
+  "id": "B.1.closure",
+  "name": "폐쇄 시간 상한 / Closure-time upper bound",
+  "max": 2,
+  "requirement": "The rise (duration tau) plus the 3.0 ms window must end before the reflection: tau + 3.0 ms < Delta t_7, so tau < Delta t_7 - 3.0 ms (nominal 17.23 ms; tau_echo_max_ms in the private session reference, accept 1%).",
+  "partial": "1 if the 3.0 ms window is omitted (tau < Delta t_7) or the bound is numerically off beyond 1%. A non-strict inequality alone is not penalised."
+ },
+ {
+  "id": "B.1.window",
+  "name": "읽기 구간 선택 / Choice of reading window",
+  "max": 2,
+  "requirement": "Pressures are averaged over 3.0 ms after the rise has finished and before the reflection, using records marked as isolated, relative to the pre-closure reading (mean over -3.0 to 0 ms).",
+  "partial": "1 if the window is described but includes part of the rise or the reflection for some sensor, or the baseline is not the pre-closure reading. 0 if peak values or post-reflection values are used."
+ },
+ {
+  "id": "B.1.pressure",
+  "name": "보정된 압력 진폭 표 / Table of calibrated amplitudes",
+  "max": 1,
+  "requirement": "Table of P_i = Delta r_i/g_i with u(P_i) in kPa for all sensors, from the cited 2 ms RUN; P_0 consistent with P0_kPa in the private session reference within 1% (nominal 113.3 kPa).",
+  "partial": "All or nothing; uncalibrated Delta r_i tabulated as P_i: 0."
+ },
+ {
+  "id": "B.2.d0formula",
+  "name": "D_0 식 / Formula for D_0",
+  "max": 4,
+  "requirement": "From P_0 = rho c u_0, Q_0 = A_0 u_0 and A_0 = pi D_0^2/4: D_0 = sqrt( 4 rho c Q_0 / (pi P_0) ), derived by combining the relations.",
+  "partial": "2 for combining two of the three relations correctly; 1 for D_0 written with pi D_0^2 replaced by D_0^2 (area error). Bare formula with no combination shown: 2."
+ },
+ {
+  "id": "B.2.d0value",
+  "name": "D_0 수치 / Value of D_0",
+  "max": 4,
+  "requirement": "D_0 from the student's own Q_0, c and P_0 with SI conversion; compare with D0_mm in the private session reference (nominal 50.0 mm): accept within 1%; result in mm.",
+  "partial": "3 if within 2%, or exactly consistent with an out-of-tolerance c or P_0 carried from earlier parts; 1 for correct substitution with a power-of-ten unit error in the result; 0 for no numerical value."
+ },
+ {
+  "id": "B.2.relative",
+  "name": "P(x)와 D(x)의 관계 / Relation between P(x) and D(x)",
+  "max": 4,
+  "requirement": "Constant energy flux A P^2/(rho c) gives A(x) P(x)^2 = A_0 P_0^2; with A proportional to D^2 and positive amplitudes, D(x) P(x) = D_0 P_0, i.e. D_i = D_0 P_0/P_i.",
+  "partial": "2 for A P^2 = const without converting to D; 1 for D proportional to 1/P^2 or 1/sqrt(P) stated (exponent error); 0 for D proportional to P."
+ },
+ {
+  "id": "B.2.sensors",
+  "name": "센서별 지름 / Diameters at the sensors",
+  "max": 4,
+  "requirement": "D_i at all eight sensors in mm from calibrated P_i; each agrees with sensor_table D_mm in the private session reference within 1% (or follows consistently from the student's own D_0 and P_i).",
+  "partial": "Integer marks by count of correct D_i: 8 -> 4, 6-7 -> 3, 4-5 -> 2, 2-3 -> 1, 0-1 -> 0. Uncalibrated Delta r_i used for P_i: max 2."
+ },
+ {
+  "id": "B.2.units",
+  "name": "단위 변환 / Unit conversion",
+  "max": 2,
+  "requirement": "Q_0 in L s^-1 converted to m^3 s^-1 (x 1e-3), P in kPa to Pa (x 1e3), final diameters in mm.",
+  "partial": "1 if one conversion is wrong or unstated but the final unit is right; 0 if diameters are given without units."
+ },
+ {
+  "id": "B.2.precision",
+  "name": "분해능과 유효숫자 / Resolution and significant figures",
+  "max": 2,
+  "requirement": "States the units and resolutions of the data used (pressure 0.1 kPa, flow 0.0001 L s^-1) and gives D_i with significant figures and an uncertainty consistent with them (not exactly zero).",
+  "partial": "1 for resolutions stated but no uncertainty/precision reasoning for D_i, or for excessive or too few digits. Zero uncertainty claimed: 0."
+ },
+ {
+  "id": "B.3.method",
+  "name": "맞춤 방법과 사용 자료 / Fitting method and data used",
+  "max": 5,
+  "requirement": "Uses only S_0, S_2, S_4, S_6 with u = x/L: fits D = A + B u + C u^2 (least squares or exact solution of the four-point system, method stated), then D_0 = A, a = B/A, b = C/A.",
+  "partial": "3 if the method is correct but the conversion to a, b (division by A) is missing or wrong; 2 if held-out sensors S_1/S_3/S_5/S_7 are included in the fit; 1 for a fit described without the data used. Linear fit only: 1."
+ },
+ {
+  "id": "B.3.parameters",
+  "name": "D_0, a, b 추정값 / Estimates of D_0, a, b",
+  "max": 5,
+  "requirement": "D_0 within 1% of D0_mm, and a, b each within 0.02 of a, b in the private session reference (nominal 50.0 mm, 0.080, 0.040); or, if a or b is outside 0.02, the recovered function has RMS relative error <= 1.5% against the reference D(x) over 0 <= x <= L.",
+  "partial": "2 for D_0, 3 for a and b together (or for the RMS criterion). Parameters consistent with the student's own out-of-tolerance D_i (carry-forward): 3 of 5."
+ },
+ {
+  "id": "B.3.graph",
+  "name": "지름 그래프 / Diameter graph",
+  "max": 5,
+  "requirement": "x-D graph with the four fitted measurements and the fitted curve drawn and distinguished, labelled axes with units and scales, error bars or their size stated.",
+  "partial": "1 each for: measured points; fitted curve; points and curve distinguished; labelled axes, units and scales; error bars or stated size. A graph not visible in the submission: 0."
+ },
+ {
+  "id": "B.3.function",
+  "name": "최종 지름 함수 / Final diameter function",
+  "max": 3,
+  "requirement": "D(x) = D_0[1 + a(x/L) + b(x/L)^2] with numerical D_0 (mm), a, b, L = 120.0 m, x in metres, domain 0 <= x <= 120.0 m.",
+  "partial": "1 each for: numerical function; units (mm, x in m); domain."
+ },
+ {
+  "id": "B.3.consistency",
+  "name": "자료·방법의 일관성 / Consistency of data and method",
+  "max": 2,
+  "requirement": "The D_i used match B.2 (calibrated amplitudes, same run), the fit reproduces the used points (residuals shown or stated), and uncorrected display readings are not treated as diameters or pressures.",
+  "partial": "1 for minor inconsistencies (e.g. one value copied wrongly); 0 if raw readings are used directly."
+ },
+ {
+  "id": "C.1.holdout",
+  "name": "독립 센서 예측 표 / Held-out prediction table",
+  "max": 3,
+  "requirement": "Table for S_1, S_3, S_5, S_7: x_i, measured D_i from B.2, predicted D_fit(x_i) from B.3, and relative difference (D_fit - D_i)/D_i.",
+  "partial": "1 each for: predictions; measured values; relative differences. Fitted sensors used instead of held-out ones: 0."
+ },
+ {
+  "id": "C.1.rms",
+  "name": "검증 RMS η / Validation RMS eta",
+  "max": 3,
+  "requirement": "eta = sqrt( (1/4) sum_{i=1,3,5,7} [ (D_fit(x_i) - D_i)/D_i ]^2 ), computed from the table; a small non-zero value (typically below 1%) is expected.",
+  "partial": "2 for a correct method with an arithmetic slip; 1 for a different average (e.g. mean absolute difference) or RMS of pressures instead of diameters. Claiming eta = 0 by construction: 0."
+ },
+ {
+  "id": "C.1.locations",
+  "name": "D(60 m)와 D(120 m) / D(60 m) and D(120 m)",
+  "max": 2,
+  "requirement": "D(60.0 m) and D(120.0 m) in mm from the student's function; compare with D60_mm and D120_mm in the private session reference (nominal 52.5 and 56.0 mm), accept within 1%, or exactly consistent with the student's own B.3 function.",
+  "partial": "1 each."
+ },
+ {
+  "id": "C.1.comparison",
+  "name": "독립 검증의 해석 / Interpretation of the validation",
+  "max": 2,
+  "requirement": "States that S_1, S_3, S_5, S_7 were not used in the fit and compares the relative differences and eta numerically with the expected measurement uncertainty (e.g. the uncertainty of D_i).",
+  "partial": "1 for a comparison without any uncertainty level, or an uncertainty statement without comparison."
+ },
+ {
+  "id": "C.2.gradient",
+  "name": "최대 |d ln A/dx| / Maximum |d ln A/dx|",
+  "max": 3,
+  "requirement": "|d ln A/dx| = (2/L) |a + 2bu|/|1 + au + bu^2| from the student's coefficients, maximised over 0 <= u <= 1 (at u = 1 when increasing); nominal 1/420 = 2.381e-3 m^-1. Accept within 2% of the value for the student's own a, b, and expect consistency with max_dlnA_dx_per_m in the private session reference within the a, b tolerance.",
+  "partial": "2 for the correct expression evaluated at the wrong point (e.g. u = 0) or with a factor-2 error (d ln D instead of d ln A); 1 for the expression only. Unit not m^-1: -1."
+ },
+ {
+  "id": "C.2.bounds",
+  "name": "두 조건의 τ 범위 / tau range from both conditions",
+  "max": 3,
+  "requirement": "eps condition: tau <= 0.020/(c max|d ln A/dx|) (nominal 5.66 ms; tau_model_max_ms in the private session reference); reflection condition for every sensor: tau < min_i 2(L - x_i)/c - 3.0 ms = Delta t_7 - 3.0 ms (nominal 17.23 ms; tau_echo_max_ms); allowed range is their intersection.",
+  "partial": "1 each for the eps bound, the reflection bound, and the intersection. Values that follow consistently from the student's own c and coefficients are accepted."
+ },
+ {
+  "id": "C.2.choice",
+  "name": "폐쇄 시간 선택 / Selected closure time",
+  "max": 2,
+  "requirement": "The slowest of 2, 5, 10, 20, 50 ms satisfying both conditions; it must equal selected_tau_ms in the private session reference (2 or 5 ms depending on the session), or follow consistently from the student's in-tolerance bounds in a borderline case.",
+  "partial": "0 for a candidate violating the student's own bounds, or for a fixed 5 ms not supported by this session's bounds."
+ },
+ {
+  "id": "C.2.validation",
+  "name": "새 검증 자료 / Fresh validation data",
+  "max": 3,
+  "requirement": "New RUN IDs acquired at the selected closure time, separate from the runs used in A.2-B.3 (new IDs even if the selected time is again 2 ms), with the Delta r_i readings tabulated, consistent with the server records.",
+  "partial": "2 if the data are fresh but incomplete (one or two sensors missing); 1 if the run is fresh but at a non-selected closure time; 0 if the initial runs are reused."
+ },
+ {
+  "id": "C.2.refit",
+  "name": "재맞춤과 계수 비교 / Refit and comparison of coefficients",
+  "max": 2,
+  "requirement": "The same function is refitted from the new data and the new D_0, a, b are compared numerically with the initial values.",
+  "partial": "1 for a refit without numerical comparison, or a comparison of only some coefficients."
+ },
+ {
+  "id": "C.2.uncertainty",
+  "name": "검증 결과의 불확도 / Uncertainty of the validation",
+  "max": 2,
+  "requirement": "Uncertainties of the refitted D_0, a, b (or of the diameter function) evaluated from data and instrument resolution, and the initial/new difference judged against them; non-zero uncertainty.",
+  "partial": "1 for uncertainties stated without using them in the comparison; 0 for zero uncertainty or none."
+ }
+]
