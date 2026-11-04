@@ -122,3 +122,4 @@ jobs:
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           HASLA_STATUS_RUN_ID: ${{ inputs.status_run_id }}
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}

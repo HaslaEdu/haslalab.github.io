@@ -11,8 +11,11 @@ import private_pod_status as status
 
 class PrivatePodStatusTests(unittest.TestCase):
     def setUp(self):
-        self.env = {"RUNPOD_API_KEY": "fixture-runpod-secret", "WANDB_API_KEY": "fixture-unused-wandb", "HF_TOKEN": "fixture-unused-hf"}
+        self.env = {"RUNPOD_API_KEY": "fixture-runpod-secret"}
         self.name = status.cloud.PREFIX + "41810732513"
+        self.addCleanup(patch.stopall)
+        for method in ("request", "get", "post", "patch", "delete"):
+            patch.object(status.cloud.requests, method, side_effect=AssertionError("external I/O forbidden")).start()
 
     def pod(self, **fields):
         return {"id": "fixture-pod", "name": self.name, "gpu": {"id": status.cloud.GPU_IDS[0], "count": 1},
@@ -95,6 +98,69 @@ class PrivatePodStatusTests(unittest.TestCase):
         api.assert_not_called()
         self.assertEqual(json.loads(output.getvalue())["error"], "invalid_run_id")
         self.assertNotIn("PRIVATE_BAD_ID", output.getvalue())
+
+    def test_v2_runtime_metrics_normalize_without_network_fields(self):
+        pod = self.pod(runtime={"uptime": 123, "gpus": [{"util": 18.5, "memoryUtil": 72, "address": "PRIVATE_IP"}], "ssh": "PRIVATE_SSH"})
+        event = status.collect_status("41810732513", api=lambda method, path: [pod] if path == "/pods" else pod, env=self.env)
+        self.assertEqual(event["pods"][0]["runtime"], {"uptimeInSeconds": 123, "gpuUtilPercent": [18.5], "memoryUtilPercent": [72]})
+        self.assertNotIn("PRIVATE_", json.dumps(event))
+
+    def test_optional_training_query_is_read_only_private_and_allowlisted(self):
+        calls = []
+        run_name = self.name + "-chat"
+        artifact = "fixture-entity/" + status.cloud.PROJECT + "/" + run_name + "-lora:v2"
+        def query(document, variables=None):
+            self.assertNotIn("mutation", document.lower())
+            calls.append((document, variables))
+            if variables is None:
+                return {"viewer": {"entity": "fixture-entity"}}
+            self.assertEqual(variables, {"e": "fixture-entity", "p": status.cloud.PROJECT, "chat": self.name + "-chat", "solver": self.name + "-solver"})
+            summary = {"status": "uploaded", "PRIVATE_ARBITRARY": "PRIVATE_TEXT", "private_training_result": {
+                "role": "chat", "steps_completed": 1, "weights_updated": True, "artifact": artifact,
+                "train_loss": 1.4, "eval_loss": 1.6, "env": {"token": "PRIVATE_TOKEN"}, "trace": "PRIVATE_TRACE"}}
+            return {"project": {"access": "PRIVATE", "chat": {"state": "finished", "summaryMetrics": json.dumps(summary)}, "solver": None}}
+        with patch.object(status.cloud, "private_project", side_effect=AssertionError("W&B writes forbidden")):
+            event = status.collect_status("41810732513", api=lambda method, path: [], env={**self.env, "WANDB_API_KEY": "PRIVATE_WANDB_KEY", "HF_TOKEN": "PRIVATE_UNUSED_HF"}, wandb_query=query)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(event["training"][0], {"role": "chat", "state": "finished", "status": "uploaded", "private_training_result": {
+            "steps_completed": 1, "weights_updated": True, "artifact": artifact, "train_loss": 1.4, "eval_loss": 1.6}})
+        self.assertEqual(event["training"][1]["state"], "not_started_or_not_initialized")
+        self.assertNotIn("PRIVATE_", json.dumps(event))
+
+    def test_training_no_key_does_not_query_and_failures_do_not_claim_absence(self):
+        with patch.object(status.cloud, "wandb_query", side_effect=AssertionError("optional query forbidden")) as query:
+            event = status.collect_status("41810732513", api=lambda method, path: [], env=self.env)
+        self.assertNotIn("training", event)
+        query.assert_not_called()
+        output, errors = io.StringIO(), io.StringIO()
+        def broken(document, variables=None):
+            print("PRIVATE_DIAGNOSTIC")
+            print("PRIVATE_ERROR", file=status.sys.stderr)
+            raise RuntimeError("PRIVATE_CREDENTIAL")
+        with contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
+            training = status.collect_training_status("41810732513", query=broken)
+        self.assertEqual(output.getvalue() + errors.getvalue(), "")
+        self.assertTrue(all(row["state"] == "monitoring_unavailable" for row in training))
+
+    def test_training_nonprivate_schema_and_bad_summary_are_unavailable(self):
+        for project in [{"access": "PUBLIC", "chat": None, "solver": None}, {"access": "PRIVATE"}, None]:
+            def query(document, variables=None):
+                return {"viewer": {"entity": "fixture-entity"}} if variables is None else {"project": project}
+            with self.subTest(project=project):
+                rows = status.collect_training_status("41810732513", query=query)
+                self.assertTrue(all(row["state"] == "monitoring_unavailable" for row in rows))
+        def malformed(document, variables=None):
+            return {"viewer": {"entity": "fixture-entity"}} if variables is None else {"project": {"access": "PRIVATE", "chat": {"state": "running", "summaryMetrics": "PRIVATE_INVALID_JSON"}, "solver": None}}
+        rows = status.collect_training_status("41810732513", query=malformed)
+        self.assertEqual(rows[0]["state"], "monitoring_unavailable")
+        self.assertEqual(rows[1]["state"], "not_started_or_not_initialized")
+
+    def test_training_rejects_arbitrary_result_strings_and_false_step_evidence(self):
+        summary = {"status": "PRIVATE_STAGE", "private_training_result": {"steps_completed": True, "weights_updated": True,
+                   "artifact": "PRIVATE_ARTIFACT", "train_loss": float("nan"), "eval_loss": "PRIVATE_LOSS"}}
+        row = status._training_row({"state": "PRIVATE_STATE", "summaryMetrics": summary}, "fixture-entity", self.name + "-chat", "chat")
+        self.assertEqual(row, {"role": "chat", "state": "unknown", "status": "unreported"})
+        self.assertNotIn("PRIVATE_", json.dumps(row, allow_nan=False))
 
 
 if __name__ == "__main__":
