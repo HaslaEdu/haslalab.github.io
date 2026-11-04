@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter } from './src/ai-assistant.js';
+import { readCompletion, findOlympiadProblems, cleanHistory, answer, createAiAssistantRouter, webSearch } from './src/ai-assistant.js';
 
 const GUARD = '@cf/meta/llama-guard-3-8b';
 function fakeAI(script, {unsafe = false} = {}) {
@@ -81,4 +81,23 @@ test('the route is for members, checks the body and rate-limits', async () => {
   assert.equal(r.answer, '안녕하세요');
   assert.deepEqual(limits, ['ai:m:7', 'ai:d:7']);
   await assert.rejects(route(new Request('https://x/api/ai/chat'), env), e => e.status === 405);
+});
+
+test('web search tries Tavily, then Brave, then Cloudflare, and never sends one key to the other', async t => {
+  const seen = [];
+  t.mock.method(globalThis, 'fetch', async (url, init = {}) => {
+    seen.push({url: String(url), headers: init.headers || {}});
+    if (String(url).startsWith('https://api.tavily.com/')) return new Response('{}', {status: 432});
+    return Response.json({web: {results: [{title: 'IPhO 2026', url: 'https://ipho2026.example', description: 'host'}]}});
+  });
+  const env = {TAVILY_API_KEY: 'tvly-x', BRAVE_SEARCH_KEY: 'brave-y', AI: {websearch: async () => { throw new Error('not reached'); }}};
+  const r = await webSearch(env, {query: 'IPhO 2026 host'});
+  assert.equal(r.provider, 'brave');
+  assert.deepEqual(r.results, [{title: 'IPhO 2026', url: 'https://ipho2026.example', snippet: 'host'}]);
+  assert.equal(seen[0].headers.Authorization, 'Bearer tvly-x');
+  assert.equal(seen[1].headers['X-Subscription-Token'], 'brave-y');
+  assert.ok(!JSON.stringify(seen[1]).includes('tvly-x'));
+  const cf = await webSearch({AI: {websearch: async () => Response.json({results: [{title: 'a', url: 'https://a', snippet: 's'}]})}}, {query: 'q'});
+  assert.equal(cf.provider, 'cloudflare');
+  assert.match((await webSearch({}, {query: 'q'})).error, /unavailable/);
 });

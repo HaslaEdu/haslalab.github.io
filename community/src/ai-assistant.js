@@ -3,7 +3,7 @@
 //   find_olympiad_problem — the site's competition catalogue (MODEL_TEST_EXAMS), a plain search, no model
 //   search_problem_bank   — the problem bank Worker (haslalab-problem-bank) through its service binding
 //   search_community      — public posts, with the same visibility rules as the boards (readPublicPosts)
-//   web_search            — Cloudflare's web search (env.AI.websearch)
+//   web_search            — Tavily, then Brave, then Cloudflare's web search (TAVILY_API_KEY, BRAVE_SEARCH_KEY secrets)
 //   solve_problem         — a larger reasoning model for worked solutions and explanations
 // Safety: Llama Guard checks the member's message before anything runs and the answer before it is
 // returned; the tools only read; members only, rate limited per member.
@@ -113,12 +113,41 @@ async function searchCommunity(env, {query = ''}) {
   return {posts: out.slice(0, 6)};
 }
 
-async function webSearch(env, {query = ''}) {
-  if (typeof env.AI.websearch !== 'function') return {error: 'web search unavailable'};
-  const r = await env.AI.websearch({gatewayId: env.AI_GATEWAY || 'default', query: String(query).slice(0, 1000), limit: 5});
-  const data = typeof r?.json === 'function' ? await r.json() : r;
-  const list = data?.results || data?.result?.results || data?.web?.results || [];
-  return {results: list.slice(0, 5).map(x => ({title: x.title, url: x.url || x.link, snippet: String(x.snippet || x.description || x.content || '').slice(0, 400)}))};
+/* web search: Tavily first (it returns page extracts made for models), then Brave, then Cloudflare's own search;
+   each provider is used only when its key or binding is there, and a failure falls through to the next */
+const clip = (v, n) => String(v || '').slice(0, n);
+const SEARCHERS = [
+  ['tavily', env => env.TAVILY_API_KEY, async (env, q) => {
+    const r = await fetch('https://api.tavily.com/search', {method: 'POST',
+      headers: {'Content-Type': 'application/json', Authorization: `Bearer ${env.TAVILY_API_KEY}`},
+      body: JSON.stringify({query: q, max_results: 5, search_depth: 'basic'}), signal: AbortSignal.timeout(15000)});
+    if (!r.ok) throw new Error(`tavily ${r.status}`);
+    return ((await r.json()).results || []).map(x => ({title: x.title, url: x.url, snippet: clip(x.content, 600)}));
+  }],
+  ['brave', env => env.BRAVE_SEARCH_KEY, async (env, q) => {
+    const r = await fetch(`https://api.search.brave.com/res/v1/web/search?${new URLSearchParams({q, count: '5'})}`, {
+      headers: {Accept: 'application/json', 'X-Subscription-Token': env.BRAVE_SEARCH_KEY}, signal: AbortSignal.timeout(15000)});
+    if (!r.ok) throw new Error(`brave ${r.status}`);
+    return ((await r.json()).web?.results || []).map(x => ({title: x.title, url: x.url, snippet: clip(x.description, 400)}));
+  }],
+  ['cloudflare', env => typeof env.AI?.websearch === 'function', async (env, q) => {
+    const r = await env.AI.websearch({gatewayId: env.AI_GATEWAY || 'default', query: q, limit: 5});
+    const data = typeof r?.json === 'function' ? await r.json() : r;
+    return (data?.results || data?.result?.results || data?.web?.results || [])
+      .map(x => ({title: x.title, url: x.url || x.link, snippet: clip(x.snippet || x.description || x.content, 400)}));
+  }],
+];
+export async function webSearch(env, {query = ''}) {
+  const q = clip(query, 400), failed = [];
+  for (const [name, enabled, search] of SEARCHERS) {
+    if (!enabled(env)) continue;
+    try {
+      const results = (await search(env, q)).filter(x => x.url).slice(0, 5);
+      if (results.length) return {provider: name, results};
+      failed.push(`${name}: no results`);
+    } catch (e) { failed.push(clip(e?.message || e, 80)); }
+  }
+  return {error: failed.length ? failed.join('; ') : 'web search unavailable', results: []};
 }
 
 async function solveProblem(env, {problem = '', context = ''}) {
