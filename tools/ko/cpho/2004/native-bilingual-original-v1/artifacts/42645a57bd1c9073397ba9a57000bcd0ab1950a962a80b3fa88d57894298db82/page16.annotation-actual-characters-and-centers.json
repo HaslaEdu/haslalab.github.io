@@ -1,0 +1,80 @@
+{
+  "proof_sha256": "e7a853325f2434b5af45c67894187290abea3a6cf8b62aee6fbe18092fc4519e",
+  "layout_sha256": "cf1088b4105c689ae117b8929fe8d72a21aca8e5773744bba9e5d9b2cb9b3b67",
+  "source_sha256": "88ce9d79f80b87bef5b73afef7dfe392905e2ee01c7fed4cdc9b50f5ad0ec359",
+  "actual_font_program_GIDs_points_baselines_centers_and_paint": {
+    "glyph_paints_checked": 150,
+    "errors": [],
+    "analysis_only_annotation_alias_normalization": [
+      {
+        "alias": "/TSScanBodySimSunAnnotation",
+        "recorded_basefont": "/Batang Regular",
+        "actual_embedded_postscript_name": "Batang",
+        "actual_font_program_sha256": "5c8e6beb0fb43926232e5483a2728f57dcc88ef29e1ffaca9a6caa2ea10f084e",
+        "analysis_only": true,
+        "delivered_pdf_modified": false
+      }
+    ],
+    "independent_exact_annotation_characters_GIDs_points_and_centers": [
+      {
+        "source_label": "annotation-encounter-b",
+        "source_CJK_word": "遇",
+        "literal_expected_translation": "때",
+        "source_center": 574.875,
+        "actual_advance_center": 574.875,
+        "serialized_widths_independently_derived_from_actual_TTF": [
+          {
+            "c": "때",
+            "gid": 10146,
+            "expected_hmtx_integer_PDF_width": 1000,
+            "actual_serialized_PDF_width": 1000.0
+          }
+        ],
+        "expected_actual_font_GIDs_and_origins": [
+          {
+            "c": "때",
+            "gid": 10146,
+            "origin": [
+              568.75,
+              508.0
+            ],
+            "size": 12.25
+          }
+        ],
+        "actual_glyphs": [
+          {
+            "c": "때",
+            "gid": 10146,
+            "font": "Batang",
+            "size": 12.25,
+            "origin": [
+              568.75,
+              508.0
+            ],
+            "bbox": [
+              568.75,
+              497.4789733886719,
+              581.0,
+              509.7289733886719
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/Batang",
+            "font_program_sha256": "5c8e6beb0fb43926232e5483a2728f57dcc88ef29e1ffaca9a6caa2ea10f084e",
+            "encoded_code": 10146
+          }
+        ],
+        "errors": [],
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "passed": true,
+  "delivered_pdf_modified": false
+}

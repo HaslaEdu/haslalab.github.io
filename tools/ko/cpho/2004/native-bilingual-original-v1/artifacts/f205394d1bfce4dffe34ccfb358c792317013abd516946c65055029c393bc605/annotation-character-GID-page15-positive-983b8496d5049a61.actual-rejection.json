@@ -1,0 +1,660 @@
+{
+  "kind": "annotation-character-GID",
+  "source_page": 15,
+  "phase": "style",
+  "source_sha256": "88ce9d79f80b87bef5b73afef7dfe392905e2ee01c7fed4cdc9b50f5ad0ec359",
+  "positive_proof_sha256": "983b8496d5049a612eec31defcb7feb423fbee630330216350a123b0ac7a2544",
+  "actual_bad_PDF": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\actual-negative-PDF-controls\\annotation-character-GID-page15-positive-983b8496d5049a61.pdf",
+  "actual_bad_PDF_sha256": "e78edd7fe10197b6d8e0475cc2231f09156dfb1e323ad9b5ecb764d464490578",
+  "actual_bad_PDF_bytes": 1351915,
+  "mutation": {
+    "first_original_CID": 68,
+    "mutant_CID": 73,
+    "positive_literal_word": "at",
+    "mutant_literal_word": "ft"
+  },
+  "actual_damaged_PDF_rejected": true,
+  "positive_proof_and_original_source_unchanged": true,
+  "actual_rejection_audit": {
+    "glyph_paints_checked": 296,
+    "errors": [
+      {
+        "reason": "Actual annotation character/GID/source point/baseline/center differs",
+        "expected": {
+          "c": "a",
+          "gid": 68,
+          "origin": [
+            574.4915,
+            120.0
+          ],
+          "size": 12.35
+        },
+        "actual": {
+          "c": "f",
+          "gid": 73,
+          "font": "TimesNewRomanPSMT",
+          "size": 12.350000381469727,
+          "origin": [
+            574.4915161132812,
+            120.0
+          ],
+          "bbox": [
+            574.4915161132812,
+            110.05975341796875,
+            578.6041870117188,
+            122.40975952148438
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 2,
+          "font_alias": "/TSScanBodySimSunAnnotation",
+          "font_basefont": "/TimesNewRomanPSMT",
+          "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+          "encoded_code": 73
+        }
+      },
+      {
+        "reason": "Actual annotation character/GID/source point/baseline/center differs",
+        "expected": {
+          "c": "t",
+          "gid": 87,
+          "origin": [
+            579.96255,
+            120.0
+          ],
+          "size": 12.35
+        },
+        "actual": {
+          "c": "t",
+          "gid": 87,
+          "font": "TimesNewRomanPSMT",
+          "size": 12.350000381469727,
+          "origin": [
+            578.6040649414062,
+            120.0
+          ],
+          "bbox": [
+            578.6040649414062,
+            110.05975341796875,
+            582.0352783203125,
+            122.40975952148438
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 2,
+          "font_alias": "/TSScanBodySimSunAnnotation",
+          "font_basefont": "/TimesNewRomanPSMT",
+          "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+          "encoded_code": 87
+        }
+      }
+    ],
+    "analysis_only_annotation_alias_normalization": [
+      {
+        "alias": "/TSScanBodySimSunAnnotation",
+        "recorded_basefont": "/Times New Roman Regular",
+        "actual_embedded_postscript_name": "TimesNewRomanPSMT",
+        "actual_font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+        "analysis_only": true,
+        "delivered_pdf_modified": false
+      }
+    ],
+    "independent_exact_annotation_characters_GIDs_points_and_centers": [
+      {
+        "source_label": "annotation-encounter-b",
+        "source_CJK_word": "遇",
+        "literal_expected_translation": "at",
+        "source_center": 578.9375,
+        "actual_advance_center": 578.9375161132813,
+        "serialized_widths_independently_derived_from_actual_TTF": [
+          {
+            "c": "a",
+            "gid": 68,
+            "expected_hmtx_integer_PDF_width": 443,
+            "actual_serialized_PDF_width": 443.0
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "expected_hmtx_integer_PDF_width": 277,
+            "actual_serialized_PDF_width": 277.0
+          }
+        ],
+        "expected_actual_font_GIDs_and_origins": [
+          {
+            "c": "a",
+            "gid": 68,
+            "origin": [
+              574.4915,
+              120.0
+            ],
+            "size": 12.35
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "origin": [
+              579.96255,
+              120.0
+            ],
+            "size": 12.35
+          }
+        ],
+        "actual_glyphs": [
+          {
+            "c": "f",
+            "gid": 73,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.350000381469727,
+            "origin": [
+              574.4915161132812,
+              120.0
+            ],
+            "bbox": [
+              574.4915161132812,
+              110.05975341796875,
+              578.6041870117188,
+              122.40975952148438
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 73
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.350000381469727,
+            "origin": [
+              578.6040649414062,
+              120.0
+            ],
+            "bbox": [
+              578.6040649414062,
+              110.05975341796875,
+              582.0352783203125,
+              122.40975952148438
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 87
+          }
+        ],
+        "errors": [
+          {
+            "reason": "Actual annotation character/GID/source point/baseline/center differs",
+            "expected": {
+              "c": "a",
+              "gid": 68,
+              "origin": [
+                574.4915,
+                120.0
+              ],
+              "size": 12.35
+            },
+            "actual": {
+              "c": "f",
+              "gid": 73,
+              "font": "TimesNewRomanPSMT",
+              "size": 12.350000381469727,
+              "origin": [
+                574.4915161132812,
+                120.0
+              ],
+              "bbox": [
+                574.4915161132812,
+                110.05975341796875,
+                578.6041870117188,
+                122.40975952148438
+              ],
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "render_type": 2,
+              "font_alias": "/TSScanBodySimSunAnnotation",
+              "font_basefont": "/TimesNewRomanPSMT",
+              "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+              "encoded_code": 73
+            }
+          },
+          {
+            "reason": "Actual annotation character/GID/source point/baseline/center differs",
+            "expected": {
+              "c": "t",
+              "gid": 87,
+              "origin": [
+                579.96255,
+                120.0
+              ],
+              "size": 12.35
+            },
+            "actual": {
+              "c": "t",
+              "gid": 87,
+              "font": "TimesNewRomanPSMT",
+              "size": 12.350000381469727,
+              "origin": [
+                578.6040649414062,
+                120.0
+              ],
+              "bbox": [
+                578.6040649414062,
+                110.05975341796875,
+                582.0352783203125,
+                122.40975952148438
+              ],
+              "color": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "render_type": 2,
+              "font_alias": "/TSScanBodySimSunAnnotation",
+              "font_basefont": "/TimesNewRomanPSMT",
+              "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+              "encoded_code": 87
+            }
+          }
+        ],
+        "passed": false
+      },
+      {
+        "source_label": "annotation-encounter-c",
+        "source_CJK_word": "遇",
+        "literal_expected_translation": "at",
+        "source_center": 578.9375,
+        "actual_advance_center": 578.9375268554687,
+        "serialized_widths_independently_derived_from_actual_TTF": [
+          {
+            "c": "a",
+            "gid": 68,
+            "expected_hmtx_integer_PDF_width": 443,
+            "actual_serialized_PDF_width": 443.0
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "expected_hmtx_integer_PDF_width": 277,
+            "actual_serialized_PDF_width": 277.0
+          }
+        ],
+        "expected_actual_font_GIDs_and_origins": [
+          {
+            "c": "a",
+            "gid": 68,
+            "origin": [
+              574.5275,
+              157.25
+            ],
+            "size": 12.25
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "origin": [
+              579.95425,
+              157.25
+            ],
+            "size": 12.25
+          }
+        ],
+        "actual_glyphs": [
+          {
+            "c": "a",
+            "gid": 68,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.25,
+            "origin": [
+              574.5275268554688,
+              157.25
+            ],
+            "bbox": [
+              574.5275268554688,
+              147.39024353027344,
+              579.9646606445312,
+              159.64024353027344
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 68
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.25,
+            "origin": [
+              579.9542846679688,
+              157.25
+            ],
+            "bbox": [
+              579.9542846679688,
+              147.39024353027344,
+              583.3577270507812,
+              159.64024353027344
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 87
+          }
+        ],
+        "errors": [],
+        "passed": true
+      },
+      {
+        "source_label": "annotation-after-b",
+        "source_CJK_word": "后",
+        "literal_expected_translation": "aft",
+        "source_center": 578.9375,
+        "actual_advance_center": 578.9375265625,
+        "serialized_widths_independently_derived_from_actual_TTF": [
+          {
+            "c": "a",
+            "gid": 68,
+            "expected_hmtx_integer_PDF_width": 443,
+            "actual_serialized_PDF_width": 443.0
+          },
+          {
+            "c": "f",
+            "gid": 73,
+            "expected_hmtx_integer_PDF_width": 333,
+            "actual_serialized_PDF_width": 333.0
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "expected_hmtx_integer_PDF_width": 277,
+            "actual_serialized_PDF_width": 277.0
+          }
+        ],
+        "expected_actual_font_GIDs_and_origins": [
+          {
+            "c": "a",
+            "gid": 68,
+            "origin": [
+              572.25095,
+              226.5
+            ],
+            "size": 12.7
+          },
+          {
+            "c": "f",
+            "gid": 73,
+            "origin": [
+              577.8770499999999,
+              226.5
+            ],
+            "size": 12.7
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "origin": [
+              582.10615,
+              226.5
+            ],
+            "size": 12.7
+          }
+        ],
+        "actual_glyphs": [
+          {
+            "c": "a",
+            "gid": 68,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.699999809265137,
+            "origin": [
+              572.2509765625,
+              226.5
+            ],
+            "bbox": [
+              572.2509765625,
+              216.27804565429688,
+              577.8878173828125,
+              228.97804260253906
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 68
+          },
+          {
+            "c": "f",
+            "gid": 73,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.699999809265137,
+            "origin": [
+              577.8770751953125,
+              226.5
+            ],
+            "bbox": [
+              577.8770751953125,
+              216.27804565429688,
+              582.1062622070312,
+              228.97804260253906
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 73
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.699999809265137,
+            "origin": [
+              582.106201171875,
+              226.5
+            ],
+            "bbox": [
+              582.106201171875,
+              216.27804565429688,
+              585.6346435546875,
+              228.97804260253906
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 87
+          }
+        ],
+        "errors": [],
+        "passed": true
+      },
+      {
+        "source_label": "annotation-after-c",
+        "source_CJK_word": "后",
+        "literal_expected_translation": "aft",
+        "source_center": 578.625,
+        "actual_advance_center": 578.624984375,
+        "serialized_widths_independently_derived_from_actual_TTF": [
+          {
+            "c": "a",
+            "gid": 68,
+            "expected_hmtx_integer_PDF_width": 443,
+            "actual_serialized_PDF_width": 443.0
+          },
+          {
+            "c": "f",
+            "gid": 73,
+            "expected_hmtx_integer_PDF_width": 333,
+            "actual_serialized_PDF_width": 333.0
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "expected_hmtx_integer_PDF_width": 277,
+            "actual_serialized_PDF_width": 277.0
+          }
+        ],
+        "expected_actual_font_GIDs_and_origins": [
+          {
+            "c": "a",
+            "gid": 68,
+            "origin": [
+              571.912125,
+              258.25
+            ],
+            "size": 12.75
+          },
+          {
+            "c": "f",
+            "gid": 73,
+            "origin": [
+              577.5603749999999,
+              258.25
+            ],
+            "size": 12.75
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "origin": [
+              581.806125,
+              258.25
+            ],
+            "size": 12.75
+          }
+        ],
+        "actual_glyphs": [
+          {
+            "c": "a",
+            "gid": 68,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.75,
+            "origin": [
+              571.912109375,
+              258.25
+            ],
+            "bbox": [
+              571.912109375,
+              247.98780822753906,
+              577.5711669921875,
+              260.73779296875
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 68
+          },
+          {
+            "c": "f",
+            "gid": 73,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.75,
+            "origin": [
+              577.5603637695312,
+              258.25
+            ],
+            "bbox": [
+              577.5603637695312,
+              247.98780822753906,
+              581.8062133789062,
+              260.73779296875
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 73
+          },
+          {
+            "c": "t",
+            "gid": 87,
+            "font": "TimesNewRomanPSMT",
+            "size": 12.75,
+            "origin": [
+              581.8060913085938,
+              258.25
+            ],
+            "bbox": [
+              581.8060913085938,
+              247.98780822753906,
+              585.3484497070312,
+              260.73779296875
+            ],
+            "color": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "render_type": 2,
+            "font_alias": "/TSScanBodySimSunAnnotation",
+            "font_basefont": "/TimesNewRomanPSMT",
+            "font_program_sha256": "3167201d2cb0fe6f38784af648f25bd84f1441546b52fb01fc00bd1b735b005b",
+            "encoded_code": 87
+          }
+        ],
+        "errors": [],
+        "passed": true
+      }
+    ],
+    "passed": false
+  },
+  "actual_rejection_exception": null
+}

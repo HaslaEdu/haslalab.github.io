@@ -1,0 +1,64 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),helper=require('./helpers/cpho-2004-source-native-design.cjs'),bridge=require('./helpers/cpho2004-native-bilingual-publication.cjs');
+const sha=x=>crypto.createHash('sha256').update(x).digest('hex'),clone=x=>JSON.parse(JSON.stringify(x));
+const items=JSON.parse(fs.readFileSync(path.join(root,'tools/original_style_publication.json'),'utf8')).filter(i=>i.audit_schema==='cpho2004-native-bilingual-original-v1');assert.equal(items.length,4);
+const qa=JSON.parse(fs.readFileSync(path.join(root,items[0].qa),'utf8')),link=qa.source_native_contract;
+const base=JSON.parse(bridge.readBound(root,link).toString('utf8')),paths=new Map(link.artifact_bindings.map(a=>[a.id,a])),cache=new Map();
+let cachedBytes=0;const cacheLimit=16*1024*1024;
+function raw(id){if(cache.has(id))return cache.get(id);const a=paths.get(id);assert.ok(a,id);const bytes=bridge.readBound(root,a);if(bytes.length<=cacheLimit){while(cachedBytes+bytes.length>cacheLimit){const first=cache.keys().next().value;cachedBytes-=cache.get(first).length;cache.delete(first);}cache.set(id,bytes);cachedBytes+=bytes.length;}return bytes;}
+function reader(overrides=new Map()){return a=>overrides.has(a.id)?overrides.get(a.id):raw(a.id);}
+for(const item of items){const q=JSON.parse(fs.readFileSync(path.join(root,item.qa),'utf8'));assert.equal(bridge(root,q,item),true);}
+const tests=[];
+function positive(name,bundle=base,item=base.editions[0],overrides=new Map()){assert.equal(helper.validateEdition(bundle,item,{readArtifact:reader(overrides)}),true);tests.push({name,passed:true,expected:'actual-artifact-positive'});}
+function negative(name,change){const bundle=clone(base),overrides=new Map();let item=clone(bundle.editions[0]);const context={bundle,overrides,item,rebaseJSON(id,fn){const value=JSON.parse(raw(id).toString('utf8'));fn(value);const bytes=Buffer.from(JSON.stringify(value,null,2)+'\n');const a=bundle.artifacts.find(a=>a.id===id);a.sha256=sha(bytes);a.bytes=bytes.length;overrides.set(id,bytes);},rebaseBytes(id,bytes){const a=bundle.artifacts.find(a=>a.id===id);a.sha256=sha(bytes);a.bytes=bytes.length;overrides.set(id,bytes);}};change(context);assert.throws(()=>helper.validateEdition(bundle,item,{readArtifact:reader(overrides)}));tests.push({name,passed:true,expected:'rejected-coherent-rebased-actual-evidence-mutation'});}
+for(const edition of base.editions)positive('all-actual-artifacts-'+edition.file,base,edition);
+const unavailable=clone(base);for(const a of unavailable.artifacts)a.source_path='Z:/unavailable-private-path/'+a.id;positive('private-paths-never-authoritative',unavailable);
+negative('wrong-full-original-source-pin',({bundle})=>{bundle.source_sha256='0'.repeat(64);});
+negative('wrong-native-guard-pin',({bundle})=>{bundle.guard_sha256='1'.repeat(64);});
+negative('wrong-edition-file',({item})=>{item.file='foreign.pdf';});
+negative('wrong-edition-proof-hash',({item})=>{item.sha256='2'.repeat(64);});
+negative('missing-original-blank-physical-tail',({bundle})=>{bundle.classification.TS_source_pages.pop();});
+negative('claim-corrected-original-footer',({bundle})=>{bundle.classification.original_wrong28th_footer_literal=false;});
+negative('missing-full-source-coverage-artifact',({bundle})=>{bundle.artifacts=bundle.artifacts.filter(a=>a.id!=='all18-complete-bilingual-prose-coverage');});
+negative('actual-original-PDF-byte-mutation-rebased',({rebaseBytes})=>rebaseBytes('original-source',Buffer.concat([raw('original-source'),Buffer.from('\n% actual-control-wrong-original\n')])));
+negative('actual-proof-PDF-byte-mutation-rebased',({rebaseBytes})=>rebaseBytes('p15-en-proof',Buffer.concat([raw('p15-en-proof'),Buffer.from('\n% actual-control-wrong-proof\n')])));
+negative('actual-font-role-point-metadata-rebased',({rebaseJSON})=>rebaseJSON('p15-en-source-qa',q=>{q.actual_prose_font_point_baseline_and_paint.errors.push({reason:'actual point changed'});q.passed=true;}));
+negative('actual-native-font-GID-point-error-rebased',({rebaseJSON})=>rebaseJSON('p03-en-native-source-qa',q=>{q.metadata_errors.push({reason:'actual source GID differs'});q.passed=true;}));
+negative('original-bar-geometry-error-rebased',({rebaseJSON})=>rebaseJSON('p03-en-native-source-qa',q=>{q.independent_source_native_paths[1].geometry_preserved=false;q.passed=true;}));
+negative('original-native-covered-ink-error-rebased',({rebaseJSON})=>rebaseJSON('p03-en-native-source-qa',q=>{q.independent_source_outline_ink.newly_missing_native_ink_pixels=1;q.passed=true;}));
+negative('original-source-math-coverage-error-rebased',({rebaseJSON})=>rebaseJSON('p15-en-source-qa',q=>{q.independent_protected_source_ink_lost.pixels=1;q.passed=true;}));
+negative('whole-source-formula-RGB-error-rebased',({rebaseJSON})=>rebaseJSON('p17-en-source-qa',q=>{q.actual_final_math_single_native_source_controls.RGB_errors=1;q.passed=true;}));
+negative('Poppler-two-pale-pixel-error-rebased',({rebaseJSON})=>rebaseJSON('p17-en-poppler-qa',q=>{q.actual_math_RGB_errors=2;q.passed=true;}));
+negative('stationary-nonlabel-one-pixel-damage-rebased',({rebaseJSON})=>rebaseJSON('p15-en-stationary-protected-rgb',q=>{q.records[0].RGB_errors=1;q.passed=true;}));
+negative('annotation-actual-character-GID-error-rebased',({rebaseJSON})=>rebaseJSON('p15-en-actual-annotation-character-GID-center',q=>{q.actual_font_program_GIDs_points_baselines_centers_and_paint.independent_exact_annotation_characters_GIDs_points_and_centers[0].actual_glyphs[0].gid++;q.passed=true;}));
+negative('annotation-actual-font-point-error-rebased',({rebaseJSON})=>rebaseJSON('p15-en-actual-annotation-character-GID-center',q=>{q.actual_font_program_GIDs_points_baselines_centers_and_paint.independent_exact_annotation_characters_GIDs_points_and_centers[0].actual_glyphs[0].size+=.1;q.passed=true;}));
+negative('annotation-actual-source-center-error-rebased',({rebaseJSON})=>rebaseJSON('p15-en-actual-annotation-character-GID-center',q=>{q.actual_font_program_GIDs_points_baselines_centers_and_paint.independent_exact_annotation_characters_GIDs_points_and_centers[0].actual_advance_center+=.1;q.passed=true;}));
+negative('annotation-actual-serialized-width-error-rebased',({rebaseJSON})=>rebaseJSON('p15-en-actual-annotation-character-GID-center',q=>{q.actual_font_program_GIDs_points_baselines_centers_and_paint.independent_exact_annotation_characters_GIDs_points_and_centers[0].serialized_widths_independently_derived_from_actual_TTF[0].actual_serialized_PDF_width++;q.passed=true;}));
+negative('annotation-actual-literal-reference-proof-binding-error-rebased',({rebaseJSON})=>rebaseJSON('p15-en-literal-annotation-reference-provenance',q=>{q.proof_sha256='3'.repeat(64);}));
+negative('annotation-original-parenthesis-loss-rebased',({rebaseJSON})=>rebaseJSON('p15-en-source-qa',q=>{q.closed_source_original_CJK_language_annotation_audit.complete_original_mathematical_parentheses[0].RGB_errors=1;q.passed=true;}));
+negative('annotation-new-label-over-original-math-rebased',({rebaseJSON})=>rebaseJSON('p15-en-poppler-qa',q=>{q.closed_source_original_CJK_language_annotation_audit.new_label_over_original_nonlanguage_foreground.pixels=1;q.passed=true;}));
+negative('annotation-mask-coverage-widened-rebased',({rebaseJSON})=>rebaseJSON('source15-plan',q=>{q.rows.find(r=>r.is_bitmap_math_language_annotation).erase_rects[0][0]-=2;}));
+negative('source-font-point-fit-plan-rebased',({rebaseJSON})=>rebaseJSON('source15-plan',q=>{q.rows[0].size-=.25;}));
+negative('source-word-gap-expanded-plan-rebased',({rebaseJSON})=>rebaseJSON('p15-en-composition',q=>{q.body_placements[0].word_space*=2;}));
+negative('source-policy-provenance-mutated-rebased',({rebaseJSON})=>rebaseJSON('eight-original-CJK-word-policy',q=>{q.source_sha256='4'.repeat(64);}));
+negative('complete-source-prose-coverage-removed-rebased',({rebaseJSON})=>rebaseJSON('all18-complete-bilingual-prose-coverage',q=>{q.pages.splice(10,1);q.passed=true;}));
+negative('false-actual-damaged-PDF-rejection-rebased',({rebaseJSON})=>rebaseJSON('all9-actual-negative-PDFs',q=>{q.actual_independently_mutated_PDFs[0].actual_damaged_PDF_rejected=false;q.passed=true;}));
+negative('bad-PDF-control-replaced-with-positive-rebased',({rebaseBytes})=>rebaseBytes('actual-bad-PDF-0',raw('p15-en-proof')));
+negative('final-append-RGB-damage-rebased',({rebaseJSON})=>rebaseJSON('all4-final-native-append',q=>{q.editions[0].pages[0].Poppler144_changed_RGB_pixels=1;q.passed=true;}));
+negative('final-append-program-resource-graph-removed-rebased',({rebaseJSON})=>rebaseJSON('all4-final-native-append',q=>{q.editions[0].pages[0].exact_decoded_and_encoded_page_program_resource_graph_sha256='';q.passed=true;}));
+negative('source05-KO-historical-producing-plan-rebound-to-new-EN-recipe',({bundle})=>{bundle.actual_per_proof_producing_plans['p05-ko']=bundle.actual_per_proof_producing_plans['p05-en'];});
+negative('source05-original-KO-recipe-mutated-rebased',({rebaseJSON})=>rebaseJSON('p05-ko-actual-producing-plan',q=>{q.rows[3].math_after_gaps_by_language={ko:{fig1:.55}};}));
+negative('source10-whole-original-background-block-moved-rebased',({rebaseJSON})=>rebaseJSON('p10-en-composition',q=>{q.source_background_restore_atoms[0].dx=1;}));
+negative('source10-protected-original-math-ROI-narrowed-rebased',({rebaseJSON})=>rebaseJSON('source10-plan',q=>{q.protected_source_display_and_figure_rects[2][3]=161.5;}));
+assert.equal(tests.length,42);
+negative('boundary-public-artifact-role-cannot-be-reclassified-private',({bundle})=>{bundle.artifacts.find(a=>a.id==='p15-en-proof').role='frozen-private-source-native-and-independent-QA-engine';});
+negative('boundary-private-input-hash-mutation-rejected',({bundle})=>{bundle.artifacts.find(a=>a.id==='engine-cpho2004_native.py').sha256='5'.repeat(64);});
+negative('boundary-private-input-ID-mutation-rejected',({bundle})=>{bundle.artifacts.find(a=>a.id==='engine-cpho2004_native.py').id='engine-private-new-unpinned.py';});
+negative('boundary-private-input-role-mutation-rejected',({bundle})=>{bundle.artifacts.find(a=>a.id==='engine-cpho2004_native.py').role='foreign-role';});
+negative('boundary-public-ID-cannot-be-added-to-private-fixed-set',({bundle})=>{bundle.artifacts.find(a=>a.id==='p15-en-proof').id='engine-cpho2004_native.py';});
+assert.throws(()=>helper.validateEdition(base,base.editions[0],{readArtifact:a=>{if(a.id==='p15-en-proof')throw new Error('Missing actual public payload');return raw(a.id);}}));tests.push({name:'boundary-missing-actual-public-payload-rejected',passed:true,expected:'missing-actual-public-bytes'});
+const privateIds=new Set(helper.privateInputIds),requested=new Set();
+assert.equal(helper.validateEdition(base,base.editions[0],{readArtifact:a=>{assert.ok(!privateIds.has(a.id),'Private bytes must never be read');requested.add(a.id);return raw(a.id);}}),true);
+assert.equal(requested.size,2586);assert.equal(privateIds.size,162);tests.push({name:'boundary-all2586-public-and-no162-private-raw-inputs',passed:true,expected:'actual-public-only-reader'});
+assert.equal(tests.length,49);console.log('C04_ACTUAL_PUBLIC_LEDGER_SOURCE_NATIVE_CONTRACTS',tests.length,'public artifacts',paths.size,'private inventory',helper.privateInputIds.length,'all passed');

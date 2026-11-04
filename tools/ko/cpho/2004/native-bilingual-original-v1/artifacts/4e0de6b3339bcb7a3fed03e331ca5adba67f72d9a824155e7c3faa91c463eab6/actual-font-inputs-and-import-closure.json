@@ -1,0 +1,566 @@
+{
+  "source_font_inputs": [
+    {
+      "original_read_only_path": "C:\\Windows\\Fonts\\simsun.ttc",
+      "actual_original_sha256": "1526ac24375f51f6eb73bc2d3f8072dbe4a80a3a65217677c9d9a84f67dab2ab",
+      "frozen_owned_copy": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\inputs\\actual-source-fonts-and-runtime\\1526ac24375f51f6-simsun.ttc",
+      "bytes": 18316748,
+      "roles": [
+        {
+          "language": "en",
+          "source_face_role": "SimSun"
+        }
+      ],
+      "actual_original_font_file_preserved_without_modification": true
+    },
+    {
+      "original_read_only_path": "D:\\CodexBuilds\\Hasla-original-style-20261031\\official-hans-fonts\\faces\\simhei.ttf",
+      "actual_original_sha256": "aa4560dd8fe5645745fed3ffa301c3ca4d6c03cbd738145b613303961ba733b8",
+      "frozen_owned_copy": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\inputs\\actual-source-fonts-and-runtime\\aa4560dd8fe56457-simhei.ttf",
+      "bytes": 9753388,
+      "roles": [
+        {
+          "language": "en",
+          "source_face_role": "SimHei"
+        }
+      ],
+      "actual_original_font_file_preserved_without_modification": true
+    },
+    {
+      "original_read_only_path": "C:\\Windows\\Fonts\\times.ttf",
+      "actual_original_sha256": "0bf1b21b27b370039b60eca23d532c3fe3fb308750d8f13816db70a6cb666804",
+      "frozen_owned_copy": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\inputs\\actual-source-fonts-and-runtime\\0bf1b21b27b37003-times.ttf",
+      "bytes": 1190952,
+      "roles": [
+        {
+          "language": "en",
+          "source_face_role": "SimSunAnnotation"
+        }
+      ],
+      "actual_original_font_file_preserved_without_modification": true
+    },
+    {
+      "original_read_only_path": "C:\\Windows\\Fonts\\batang.ttc",
+      "actual_original_sha256": "51d9a8d4205239c865e24b6eb7e6e6dbacfd59c3e2c46f623db0af45e169c9d8",
+      "frozen_owned_copy": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\inputs\\actual-source-fonts-and-runtime\\51d9a8d4205239c8-batang.ttc",
+      "bytes": 16273348,
+      "roles": [
+        {
+          "language": "ko",
+          "source_face_role": "SimSun"
+        },
+        {
+          "language": "ko",
+          "source_face_role": "SimSunAnnotation"
+        }
+      ],
+      "actual_original_font_file_preserved_without_modification": true
+    },
+    {
+      "original_read_only_path": "C:\\Users\\andre\\CodexWork\\HaslaLab\\haslalab\\tools\\ko\\fonts\\NotoSansCJKkr-Regular.otf",
+      "actual_original_sha256": "6bcb2a0703aa137e874fc2dffa85f6c21ba9a67fa329e81b8c801663af7e992a",
+      "frozen_owned_copy": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\inputs\\actual-source-fonts-and-runtime\\6bcb2a0703aa137e-NotoSansCJKkr-Regular.otf",
+      "bytes": 16433112,
+      "roles": [
+        {
+          "language": "ko",
+          "source_face_role": "SimHei"
+        }
+      ],
+      "actual_original_font_file_preserved_without_modification": true
+    }
+  ],
+  "exact_private_engine_import_closure": [
+    {
+      "module": "cpho2004_annotation_language_policy",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_annotation_language_policy.py",
+      "sha256": "3f5db7d2748d6d3eb9e9f432383aca90d558be929880b65a9bfa4f1025102953",
+      "imports": [
+        "cpho2004_compose",
+        "fontTools",
+        "hashlib",
+        "io",
+        "json",
+        "math",
+        "numpy",
+        "pathlib",
+        "pdf_original_raster_math",
+        "pdf_original_text_ops",
+        "pdf_scanned_translation_ink_qa",
+        "pikepdf",
+        "pymupdf",
+        "zlib"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_compose",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_compose.py",
+      "sha256": "7d1ec7114cbc2769c5d2a4abed12e8c1a5f05e106c835715df668934b5afab78",
+      "imports": [
+        "argparse",
+        "cpho2004_annotation_language_policy",
+        "cpho2004_native",
+        "cpho2004_paths",
+        "cpho2004_stationary_source_program",
+        "fontTools",
+        "functools",
+        "hashlib",
+        "io",
+        "json",
+        "pathlib",
+        "pdf_memory_gate",
+        "pdf_native_inline_reposition",
+        "pdf_original_raster_math",
+        "pikepdf",
+        "pymupdf",
+        "re",
+        "sys"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_native",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_native.py",
+      "sha256": "8d1aa2d99674035d11d9f87262161f019c59d3b3ba5bfebce0ca289eb0be9d62",
+      "imports": [
+        "cpho2004_compose",
+        "cpho2004_paths",
+        "hashlib",
+        "json",
+        "pathlib",
+        "pdf_native_inline_reposition",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_native_change_regions",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_native_change_regions.py",
+      "sha256": "9c9508ac1ed9bdba3a0c338fdf44037cfda44348742ee126174ffa7d99e14541",
+      "imports": [
+        "cpho2004_paths",
+        "hashlib",
+        "json",
+        "pathlib"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_native_qa",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_native_qa.py",
+      "sha256": "4601c37438ef3535e5f9199bdc858f5cb212f50706987d28054395690ba1d4fc",
+      "imports": [
+        "collections",
+        "cpho2004_annotation_language_policy",
+        "cpho2004_compose",
+        "cpho2004_paths",
+        "fontTools",
+        "hashlib",
+        "io",
+        "izho_new_prose_outline_qa",
+        "json",
+        "math",
+        "pathlib",
+        "pdf_moved_native_ink",
+        "pdf_native_inline_reposition",
+        "pdf_original_text_ops",
+        "pikepdf",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_paths",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_paths.py",
+      "sha256": "acc6a72c8a81676dfedfdd62d86422454e00b79c1eee63b9d6665b069b619004",
+      "imports": [
+        "os",
+        "pathlib",
+        "shutil"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_poppler_qa",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_poppler_qa.py",
+      "sha256": "6c1933ed5fa3f019a1d59b5bc6bebebf6e57fb9f47557ca319591cd8c9c151ac",
+      "imports": [
+        "PIL",
+        "argparse",
+        "cpho2004_annotation_language_policy",
+        "cpho2004_compose",
+        "cpho2004_native_change_regions",
+        "cpho2004_paths",
+        "cpho2004_qa",
+        "json",
+        "math",
+        "numpy",
+        "pathlib",
+        "pdf_scanned_translation_ink_qa",
+        "pymupdf",
+        "subprocess",
+        "sys"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_producing_plan_lineage",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_producing_plan_lineage.py",
+      "sha256": "934f88c1d36f3a4cbb070f279ef8b1daaee0b889ca325bfea7855564340e4fb6",
+      "imports": [
+        "copy",
+        "cpho2004_paths",
+        "hashlib",
+        "json",
+        "pathlib"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_qa",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_qa.py",
+      "sha256": "0c69a15a234c7f77569db98ee74937df0afacc87be6efa392d626328830652a0",
+      "imports": [
+        "PIL",
+        "argparse",
+        "collections",
+        "cpho2004_annotation_language_policy",
+        "cpho2004_compose",
+        "cpho2004_native_change_regions",
+        "cpho2004_paths",
+        "fontTools",
+        "hashlib",
+        "io",
+        "izho_new_prose_outline_qa",
+        "json",
+        "math",
+        "numpy",
+        "pathlib",
+        "pdf_memory_gate",
+        "pdf_new_prose_outlines",
+        "pdf_original_raster_math",
+        "pdf_scanned_translation_ink_qa",
+        "pikepdf",
+        "pymupdf",
+        "re",
+        "sys"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_stationary_protected_rgb",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_stationary_protected_rgb.py",
+      "sha256": "cef19351b4637a4433a725a6c316c63a4a9c96c8a0274271e96cf6901b4837c7",
+      "imports": [
+        "PIL",
+        "cpho2004_annotation_language_policy",
+        "cpho2004_compose",
+        "cpho2004_paths",
+        "hashlib",
+        "json",
+        "math",
+        "numpy",
+        "pathlib",
+        "pymupdf"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "cpho2004_stationary_source_program",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\cpho2004_stationary_source_program.py",
+      "sha256": "14a6eaf9a27e3a8fd987704b7920a3b7c74f3a7572502e3264891ab59c3ffa44",
+      "imports": [
+        "cpho2004_compose",
+        "hashlib",
+        "io",
+        "pdf_original_raster_math",
+        "pikepdf"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "izho_extract_word",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\izho_extract_word.py",
+      "sha256": "aedeccb07ee61b780d26442a16583cce394b1fd75b0b9acdab0cf0d63f827e1e",
+      "imports": [
+        "argparse",
+        "hashlib",
+        "json",
+        "pathlib",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "izho_math_clean",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\izho_math_clean.py",
+      "sha256": "a1cee3088c0ce15a84fee9663fb08c37e1a353da7c81c147ac0ec217a3471d65",
+      "imports": [
+        "PIL",
+        "copy",
+        "hashlib",
+        "izho_extract_word",
+        "pymupdf",
+        "re",
+        "xml"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "izho_native_math_audit",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\izho_native_math_audit.py",
+      "sha256": "cd4646a3d9e50d4190e8fb61d36c90b66cb5692f1f6234e3d7d3bfb6f4bca9a8",
+      "imports": [
+        "PIL",
+        "argparse",
+        "hashlib",
+        "izho_extract_word",
+        "izho_translate",
+        "json",
+        "numpy",
+        "pathlib",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "izho_new_prose_outline_qa",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\izho_new_prose_outline_qa.py",
+      "sha256": "d5179636471831cb20e0fd7130fdabd2207c89a98b02bb98a26535bebfe545b9",
+      "imports": [
+        "argparse",
+        "collections",
+        "fontTools",
+        "gc",
+        "hashlib",
+        "html",
+        "io",
+        "json",
+        "pathlib",
+        "pdf_original_style_audit",
+        "pdf_original_text_ops",
+        "pikepdf",
+        "pymupdf",
+        "re",
+        "xml"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "izho_translate",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\izho_translate.py",
+      "sha256": "427d82a96553884cb357c952af6fc0ad75409e48afe5a9eec590cb75dcd3c23e",
+      "imports": [
+        "PIL",
+        "__future__",
+        "argparse",
+        "collections",
+        "hashlib",
+        "html",
+        "izho_extract_word",
+        "izho_math_clean",
+        "json",
+        "numpy",
+        "pathlib",
+        "pymupdf",
+        "re",
+        "urllib"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_hangul_visibility",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_hangul_visibility.py",
+      "sha256": "ed23ca5378c27a7ee40c11398c98a516753c9108347cb6bd28281dbc16a89473",
+      "imports": [
+        "PIL",
+        "argparse",
+        "hashlib",
+        "html",
+        "izho_native_math_audit",
+        "json",
+        "numpy",
+        "pathlib",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_moved_native_ink",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_moved_native_ink.py",
+      "sha256": "45059a23e3c9bb88836792ef24990bf1da01bbe2d025e6489585cc8a4fe9eb26",
+      "imports": [
+        "collections",
+        "copy",
+        "hashlib",
+        "math",
+        "numpy",
+        "pathlib",
+        "pdf_native_inline_reposition",
+        "pdf_original_text_ops",
+        "pymupdf",
+        "re",
+        "xml"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_native_inline_reposition",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_native_inline_reposition.py",
+      "sha256": "ab04f78a8de1845269742c3e95828c635ee5b3d5bd957d226577390bfe25279f",
+      "imports": [
+        "collections",
+        "hashlib",
+        "io",
+        "math",
+        "pathlib",
+        "pdf_original_text_ops",
+        "pikepdf",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_new_prose_outlines",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_new_prose_outlines.py",
+      "sha256": "5b64e4d427aee21cf07350d6bb0c6886d32e125f00925a78a91d1991cf03e90f",
+      "imports": [
+        "argparse",
+        "fontTools",
+        "hashlib",
+        "io",
+        "izho_new_prose_outline_qa",
+        "json",
+        "pathlib",
+        "pikepdf",
+        "pymupdf"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_original_raster_math",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_original_raster_math.py",
+      "sha256": "9a6670706909dbe36d54db0d0e215156aeb290c0e83ee620607c46fa3624db26",
+      "imports": [
+        "collections",
+        "hashlib",
+        "io",
+        "json",
+        "math",
+        "numpy",
+        "pathlib",
+        "pdf_native_inline_reposition",
+        "pikepdf",
+        "pymupdf"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_original_style_audit",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_original_style_audit.py",
+      "sha256": "9b9b268b20f426d9f4a54b88ff1673e9afe9fffeabbe636ee9a95685173b5514",
+      "imports": [
+        "argparse",
+        "collections",
+        "cv2",
+        "hashlib",
+        "json",
+        "math",
+        "numpy",
+        "pathlib",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_original_text_ops",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_original_text_ops.py",
+      "sha256": "b8519eb3194be410d342ba89778dfbf7270464b5ed5e8bf641d1441c655ed230",
+      "imports": [
+        "collections",
+        "io",
+        "pikepdf",
+        "pymupdf",
+        "re"
+      ],
+      "all_private_house_module_imports_closed": true
+    },
+    {
+      "module": "pdf_scanned_translation_ink_qa",
+      "actual_file": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\engine\\pdf_scanned_translation_ink_qa.py",
+      "sha256": "c63550511796b21b586bbabee5e2b776e86f076df6dd3ab8c228db53a423b41d",
+      "imports": [
+        "collections",
+        "hashlib",
+        "math",
+        "numpy",
+        "pathlib",
+        "pdf_native_inline_reposition",
+        "pdf_original_raster_math",
+        "pikepdf",
+        "pymupdf"
+      ],
+      "all_private_house_module_imports_closed": true
+    }
+  ],
+  "source_plan_root": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual",
+  "derived_output_root": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1",
+  "actual_runtime_profile_environment": {
+    "C04_DERIVED_ROOT": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1",
+    "C04_STORAGE_POLICY": "d-only-new-jobs-c128-d256-v2",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TEMP": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-final-20261104T122234Z",
+    "TMP": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-final-20261104T122234Z",
+    "TMPDIR": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-final-20261104T122234Z",
+    "NODE_COMPILE_CACHE": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-final-20261104T122234Z\\node-cache"
+  },
+  "actual_runtime_packages": [
+    {
+      "distribution": "PyMuPDF",
+      "version": "1.28.2",
+      "import_origin": "C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\pymupdf\\__init__.py",
+      "import_origin_sha256": "e8cdb45ed0afa21f919cec30e69b7b572c3db7bc80d203e4e07e4c7ea2b19cce"
+    },
+    {
+      "distribution": "pikepdf",
+      "version": "10.12.0",
+      "import_origin": "C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\pikepdf\\__init__.py",
+      "import_origin_sha256": "f5628e5d8793f4a869f1a722eca5328f6eaa69a98ccb50a44bbb062c2e382491"
+    },
+    {
+      "distribution": "numpy",
+      "version": "2.5.2",
+      "import_origin": "C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\numpy\\__init__.py",
+      "import_origin_sha256": "a6958cb364663b7acce81ccfd58eeb65a2b34d5376157f924777b97211a73be4"
+    },
+    {
+      "distribution": "fonttools",
+      "version": "4.63.0",
+      "import_origin": "C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\fontTools\\__init__.py",
+      "import_origin_sha256": "3269bfaa5cba0fc3b96d727aa619347db46bfda3c2ae1b06f6f388a953abbbc4"
+    },
+    {
+      "distribution": "Pillow",
+      "version": "12.2.0",
+      "import_origin": "C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\Lib\\site-packages\\PIL\\__init__.py",
+      "import_origin_sha256": "3fffff8502f4b59ca61d39cce713d55ffef046954262fce1abac3e97f3803734"
+    }
+  ],
+  "global_gate_actual_path": "D:\\CodexBuilds\\Hasla-publish-20261031\\tools\\pdf_memory_gate.py",
+  "global_gate_sha256": "8a2601b9f6308c2c2f3c17c866974e15ac2b48d8e0d5af1d42633886bf272436",
+  "global_gate_frozen_copy": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\inputs\\actual-source-fonts-and-runtime\\pdf_memory_gate.py",
+  "global_gate_was_not_shadowed_or_changed": true,
+  "Poppler_executable": "C:\\Users\\andre\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\poppler\\Library\\bin\\pdftoppm.exe",
+  "Poppler_executable_sha256": "8a7c0aa1cb5b4da26a922938693a87a6f9b5ee589aaeca705b8d44a42aac1eb7",
+  "Python_executable": "C:\\Users\\andre\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+  "Python_version": "3.14.6 (tags/v3.14.6:c63aec6, Jun 10 2026, 10:26:10) [MSC v.1944 64 bit (AMD64)]",
+  "all_owned_font_copies_exact": true
+}

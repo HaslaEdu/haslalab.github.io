@@ -1,0 +1,1208 @@
+{
+  "kind": "one-original-native-counter-point",
+  "source_page": 3,
+  "phase": "native",
+  "source_sha256": "88ce9d79f80b87bef5b73afef7dfe392905e2ee01c7fed4cdc9b50f5ad0ec359",
+  "positive_proof_sha256": "d745c5d35e9a2921d72ed7d80a29b231d0e37a9ff8409a762ed806e14d8c80cf",
+  "actual_bad_PDF": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\actual-negative-PDF-controls\\one-original-native-counter-point-page03-positive-d745c5d35e9a2921.pdf",
+  "actual_bad_PDF_sha256": "fce36cdcf69101a32f05fa201b08f60b00be450f6c533b4fac59edfe4c31b1fd",
+  "actual_bad_PDF_bytes": 2797110,
+  "mutation": {
+    "actual_original_native_Tf_delta_pt": 0.25,
+    "font_alias": "/F1"
+  },
+  "actual_damaged_PDF_rejected": true,
+  "positive_proof_and_original_source_unchanged": true,
+  "actual_rejection_audit": {
+    "source_sha256": "88ce9d79f80b87bef5b73afef7dfe392905e2ee01c7fed4cdc9b50f5ad0ec359",
+    "source_page": 3,
+    "language": "en",
+    "proof_sha256": "fce36cdcf69101a32f05fa201b08f60b00be450f6c533b4fac59edfe4c31b1fd",
+    "original_native_font_program_glyphs_checked": 137,
+    "metadata_errors": [
+      {
+        "reason": "Original raw font program/GID/point/paint/origin not uniquely retained",
+        "glyph": {
+          "c": "2",
+          "gid": 21,
+          "font": "TimesNewRomanPSMT",
+          "size": 9.0,
+          "origin": [
+            256.010009765625,
+            37.44000244140625
+          ],
+          "bbox": [
+            256.010009765625,
+            30.19610023498535,
+            260.510009765625,
+            39.19609832763672
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0,
+          "font_alias": "/F1",
+          "font_basefont": "/BCDEEE+TimesNewRomanPSMT",
+          "font_program_sha256": "5388738341e7e930e932353b2d0e04a998f4bee7721053489841e1c07b8965a5",
+          "encoded_code": 21
+        },
+        "expected_origin": [
+          227.9300079345703,
+          37.44000244140625
+        ],
+        "matches": 0
+      },
+      {
+        "reason": "Original raw font program/GID/point/paint/origin not uniquely retained",
+        "glyph": {
+          "c": "1",
+          "gid": 20,
+          "font": "TimesNewRomanPSMT",
+          "size": 9.0,
+          "origin": [
+            260.57000732421875,
+            37.44000244140625
+          ],
+          "bbox": [
+            260.57000732421875,
+            30.19610023498535,
+            265.07000732421875,
+            39.19609832763672
+          ],
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "render_type": 0,
+          "font_alias": "/F1",
+          "font_basefont": "/BCDEEE+TimesNewRomanPSMT",
+          "font_program_sha256": "5388738341e7e930e932353b2d0e04a998f4bee7721053489841e1c07b8965a5",
+          "encoded_code": 20
+        },
+        "expected_origin": [
+          232.49000549316406,
+          37.44000244140625
+        ],
+        "matches": 0
+      }
+    ],
+    "independent_source_outline_ink": {
+      "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\source\\CPhO_2004_combined_ZH.pdf",
+      "source_page": 3,
+      "final": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\actual-negative-PDF-controls\\one-original-native-counter-point-page03-positive-d745c5d35e9a2921.pdf",
+      "final_page": 1,
+      "source_sha256": "88ce9d79f80b87bef5b73afef7dfe392905e2ee01c7fed4cdc9b50f5ad0ec359",
+      "output_sha256": "fce36cdcf69101a32f05fa201b08f60b00be450f6c533b4fac59edfe4c31b1fd",
+      "scale": 4,
+      "position_tolerance_pt": 0.001,
+      "protected_native_glyphs": 137,
+      "missing_requested_source_glyphs": [],
+      "missing_final_native_glyphs": [
+        {
+          "c": "2",
+          "font": "TimesNewRomanPSMT",
+          "gid": 21,
+          "expected_origin": [
+            227.9300079345703,
+            37.44000244140625
+          ]
+        },
+        {
+          "c": "1",
+          "font": "TimesNewRomanPSMT",
+          "gid": 20,
+          "expected_origin": [
+            232.49000549316406,
+            37.44000244140625
+          ]
+        }
+      ],
+      "source_outline_audit": {
+        "protected_physical_glyphs": 137,
+        "expected_signature_count": 137,
+        "matched_outline_uses": 137,
+        "missing_source_outline_signatures": [],
+        "ancestor_transforms_flattened": true,
+        "passed": true
+      },
+      "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+      "passed": false
+    },
+    "source_whitespace_outline_proof": {
+      "records": [
+        {
+          "source_font": "BCDGEE+TimesNewRomanPSMT",
+          "source_font_alias": "/F3",
+          "source_font_program_sha256": "5388738341e7e930e932353b2d0e04a998f4bee7721053489841e1c07b8965a5",
+          "source_gid": 3,
+          "glyph_name": "space",
+          "outline_bounds": null,
+          "empty": true
+        },
+        {
+          "source_font": "BCDIEE+DengXian-Bold",
+          "source_font_alias": "/F5",
+          "source_font_program_sha256": "633bc931b4b2dc1e97e4defc6132de7d930c17953209a2244115336a3e8b08be",
+          "source_gid": 28564,
+          "glyph_name": "space",
+          "outline_bounds": null,
+          "empty": true
+        }
+      ],
+      "passed": true,
+      "reason": "Every ignored original Unicode whitespace GID is independently proved to have no original font outline. Painted-space arrows cannot be excluded by Unicode."
+    },
+    "source_semantic_math_punctuation": {
+      "records": [
+        {
+          "source_row": "n03",
+          "literal_source_pattern": "D1、D2",
+          "source_glyphs": 5,
+          "erased_original_math_glyphs": [],
+          "common_dx": -27.223888635635376,
+          "dx_spread": 0.0
+        },
+        {
+          "source_row": "n03",
+          "literal_source_pattern": "C1、C2",
+          "source_glyphs": 5,
+          "erased_original_math_glyphs": [],
+          "common_dx": -87.63389563560486,
+          "dx_spread": 0.0
+        },
+        {
+          "source_row": "n11",
+          "literal_source_pattern": "（3cm，3cm）",
+          "source_glyphs": 9,
+          "erased_original_math_glyphs": [],
+          "common_dx": -57.45172333717346,
+          "dx_spread": 0.0
+        }
+      ],
+      "source_only_atomic_geometry": [
+        {
+          "source_atom": "n00a0",
+          "source_glyphs": 2,
+          "common_dx": -28.080001831054688,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n01a0",
+          "source_glyphs": 2,
+          "common_dx": -13.22400164604187,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n02a0",
+          "source_glyphs": 1,
+          "common_dx": -52.340003967285156,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n03a0",
+          "source_glyphs": 1,
+          "common_dx": -15.503997802734375,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n03a1",
+          "source_glyphs": 1,
+          "common_dx": -17.53999638557434,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n03a2",
+          "source_glyphs": 2,
+          "common_dx": -27.223888635635376,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n03a3",
+          "source_glyphs": 2,
+          "common_dx": -27.223888635635376,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n03a4",
+          "source_glyphs": 2,
+          "common_dx": -87.63389563560486,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n03a5",
+          "source_glyphs": 2,
+          "common_dx": -87.63389563560486,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n04a0",
+          "source_glyphs": 2,
+          "common_dx": -34.704002380371094,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n04a1",
+          "source_glyphs": 2,
+          "common_dx": -17.77999496459961,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n04a2",
+          "source_glyphs": 1,
+          "common_dx": -41.45000433921814,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n04a3",
+          "source_glyphs": 13,
+          "common_dx": -25.456084489822388,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n04a4",
+          "source_glyphs": 1,
+          "common_dx": 16.34048366546631,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n05a0",
+          "source_glyphs": 1,
+          "common_dx": 29.930028200149536,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n05a1",
+          "source_glyphs": 2,
+          "common_dx": -54.27387881278992,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n06a0",
+          "source_glyphs": 2,
+          "common_dx": 37.535993814468384,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n06a1",
+          "source_glyphs": 3,
+          "common_dx": -80.66000366210938,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n06a2",
+          "source_glyphs": 1,
+          "common_dx": -50.93000507354736,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n06a3",
+          "source_glyphs": 1,
+          "common_dx": -90.2360942363739,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n06a4",
+          "source_glyphs": 18,
+          "common_dx": -120.90998959541321,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n07a0",
+          "source_glyphs": 11,
+          "common_dx": -87.02000427246094,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n07a1",
+          "source_glyphs": 1,
+          "common_dx": -95.30000667572023,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n07a2",
+          "source_glyphs": 1,
+          "common_dx": -42.793906497955334,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n07a3",
+          "source_glyphs": 1,
+          "common_dx": 51.93220348358153,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n08a0",
+          "source_glyphs": 1,
+          "common_dx": -45.86000061035156,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n08a1",
+          "source_glyphs": 1,
+          "common_dx": -92.8595221042633,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n09a0",
+          "source_glyphs": 3,
+          "common_dx": -10.463998079299927,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n09a1",
+          "source_glyphs": 2,
+          "common_dx": -10.803359031677246,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n09a2",
+          "source_glyphs": 1,
+          "common_dx": -57.92743372917175,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n09a3",
+          "source_glyphs": 3,
+          "common_dx": -58.18036651611328,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n09a4",
+          "source_glyphs": 2,
+          "common_dx": -108.22036790847778,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n09a5",
+          "source_glyphs": 2,
+          "common_dx": -115.21037125587463,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n09a6",
+          "source_glyphs": 2,
+          "common_dx": -25.33038592338562,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n10a0",
+          "source_glyphs": 6,
+          "common_dx": -0.5040018558502197,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n10a1",
+          "source_glyphs": 2,
+          "common_dx": -43.22032332420349,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n10a2",
+          "source_glyphs": 2,
+          "common_dx": -48.380335330963135,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n10a3",
+          "source_glyphs": 7,
+          "common_dx": -51.40031862258911,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n10a4",
+          "source_glyphs": 2,
+          "common_dx": -104.59034156799316,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n11a0",
+          "source_glyphs": 1,
+          "common_dx": 0.0,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n11a1",
+          "source_glyphs": 1,
+          "common_dx": 63.52609133720398,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n11a2",
+          "source_glyphs": 3,
+          "common_dx": -57.45172333717346,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n11a3",
+          "source_glyphs": 3,
+          "common_dx": -57.45172333717346,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n11a4",
+          "source_glyphs": 1,
+          "common_dx": -161.81781649589539,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n11a5",
+          "source_glyphs": 1,
+          "common_dx": -51.48171830177307,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n12a0",
+          "source_glyphs": 1,
+          "common_dx": -81.14000463485718,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n12a1",
+          "source_glyphs": 2,
+          "common_dx": -75.343909740448,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n12a2",
+          "source_glyphs": 3,
+          "common_dx": 67.50205850601196,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n13a0",
+          "source_glyphs": 2,
+          "common_dx": -6.739990234375,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n13a1",
+          "source_glyphs": 1,
+          "common_dx": 26.959991455078125,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        },
+        {
+          "source_atom": "n13a2",
+          "source_glyphs": 1,
+          "common_dx": 8.959991455078125,
+          "dx_spread": 0.0,
+          "erased_original_glyphs": []
+        }
+      ],
+      "independent_complete_fraction_packets": [
+        {
+          "source_row": "n04",
+          "source_atom": "n04a3",
+          "original_native_glyphs": 13,
+          "required_original_vector_programs": [
+            [
+              917,
+              918,
+              919
+            ]
+          ],
+          "common_dx": -25.456084489822388,
+          "dx_spread": 0.0
+        },
+        {
+          "source_row": "n06",
+          "source_atom": "n06a4",
+          "original_native_glyphs": 18,
+          "required_original_vector_programs": [
+            [
+              1418,
+              1419,
+              1420
+            ],
+            [
+              1493,
+              1494,
+              1495
+            ]
+          ],
+          "common_dx": -120.90998959541321,
+          "dx_spread": 0.0
+        },
+        {
+          "source_row": "n07",
+          "source_atom": "n07a0",
+          "original_native_glyphs": 11,
+          "required_original_vector_programs": [
+            [
+              1608,
+              1609,
+              1610
+            ],
+            [
+              1611,
+              1612,
+              1613
+            ],
+            [
+              1614,
+              1615,
+              1616
+            ],
+            [
+              1617,
+              1618,
+              1619
+            ],
+            [
+              1648,
+              1649,
+              1650
+            ],
+            [
+              1737,
+              1738,
+              1739
+            ]
+          ],
+          "common_dx": -87.02000427246094,
+          "dx_spread": 0.0
+        }
+      ],
+      "errors": [],
+      "passed": true
+    },
+    "independent_source_native_paths": [
+      {
+        "source_vector_index": 0,
+        "source_operator_indices": [
+          47,
+          48
+        ],
+        "source_rect": [
+          55.2,
+          41.03997802734375,
+          540.1,
+          41.75997802734378
+        ],
+        "common_dx": 0,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "f",
+          "color": null,
+          "fill": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width": null,
+          "lineCap": null,
+          "lineJoin": null,
+          "dashes": null,
+          "closePath": null,
+          "fill_opacity": 1.0,
+          "stroke_opacity": null,
+          "even_odd": true
+        },
+        "actual_paint_style": {
+          "type": "f",
+          "color": null,
+          "fill": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "width": null,
+          "lineCap": null,
+          "lineJoin": null,
+          "dashes": null,
+          "closePath": null,
+          "fill_opacity": 1.0,
+          "stroke_opacity": null,
+          "even_odd": true
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 1,
+        "source_operator_indices": [
+          917,
+          918,
+          919
+        ],
+        "source_rect": [
+          405.19,
+          204.13997802734377,
+          415.75,
+          204.13997802734377
+        ],
+        "common_dx": -25.456084489822388,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 2,
+        "source_operator_indices": [
+          1418,
+          1419,
+          1420
+        ],
+        "source_rect": [
+          453.7,
+          250.9699780273437,
+          464.26,
+          250.9699780273437
+        ],
+        "common_dx": -120.90998959541321,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 3,
+        "source_operator_indices": [
+          1493,
+          1494,
+          1495
+        ],
+        "source_rect": [
+          482.98,
+          250.9699780273437,
+          488.26,
+          250.9699780273437
+        ],
+        "common_dx": -120.90998959541321,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 4,
+        "source_operator_indices": [
+          1608,
+          1609,
+          1610
+        ],
+        "source_rect": [
+          164.06,
+          276.16997802734375,
+          165.38,
+          276.8899780273438
+        ],
+        "common_dx": -87.02000427246094,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 5,
+        "source_operator_indices": [
+          1611,
+          1612,
+          1613
+        ],
+        "source_rect": [
+          165.38,
+          276.16997802734375,
+          168.62,
+          282.8899780273438
+        ],
+        "common_dx": -87.02000427246094,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 6,
+        "source_operator_indices": [
+          1614,
+          1615,
+          1616
+        ],
+        "source_rect": [
+          168.62,
+          270.8899780273438,
+          170.66,
+          282.8899780273438
+        ],
+        "common_dx": -87.02000427246094,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 7,
+        "source_operator_indices": [
+          1617,
+          1618,
+          1619
+        ],
+        "source_rect": [
+          170.66,
+          270.8899780273438,
+          175.94,
+          270.8899780273438
+        ],
+        "common_dx": -87.02000427246094,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 8,
+        "source_operator_indices": [
+          1648,
+          1649,
+          1650
+        ],
+        "source_rect": [
+          163.94,
+          283.1299780273438,
+          176.78,
+          283.1299780273438
+        ],
+        "common_dx": -87.02000427246094,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      },
+      {
+        "source_vector_index": 9,
+        "source_operator_indices": [
+          1737,
+          1738,
+          1739
+        ],
+        "source_rect": [
+          200.09,
+          283.1299780273438,
+          209.45,
+          283.1299780273438
+        ],
+        "common_dx": -87.02000427246094,
+        "geometry_preserved": true,
+        "source_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "actual_paint_style": {
+          "type": "s",
+          "color": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "fill": null,
+          "width": 0.7200000286102295,
+          "lineCap": [
+            0,
+            0,
+            0
+          ],
+          "lineJoin": 1.0,
+          "dashes": "[] 0",
+          "closePath": false,
+          "fill_opacity": null,
+          "stroke_opacity": 1.0,
+          "even_odd": null
+        },
+        "paint_preserved": true
+      }
+    ],
+    "scope": "Original raw font programs, GIDs, exact fractional points and paints, original source outlines, Unicode whitespace outlines, intrinsic original mathematical punctuation and every original native pure vector program. Source paths are independently matched to actual final draw programs; a bar-only or numerator-only move cannot pass.",
+    "passed": false
+  },
+  "actual_rejection_exception": null
+}

@@ -1,0 +1,148 @@
+{
+  "source_sha256": "88ce9d79f80b87bef5b73afef7dfe392905e2ee01c7fed4cdc9b50f5ad0ec359",
+  "source_page": 7,
+  "language": "ko",
+  "proof_sha256": "c5c591de9579131d1051b670e0cca9772825034e6a5af799299ac79829af1eaa",
+  "original_native_font_program_glyphs_checked": 7,
+  "metadata_errors": [],
+  "independent_source_outline_ink": {
+    "source": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\source\\CPhO_2004_combined_ZH.pdf",
+    "source_page": 7,
+    "final": "C:\\Users\\andre\\CodexWork\\HaslaLab\\translation-builds\\cpho2004-original-style-bilingual\\proofs\\ko\\page07.pdf",
+    "final_page": 1,
+    "source_sha256": "88ce9d79f80b87bef5b73afef7dfe392905e2ee01c7fed4cdc9b50f5ad0ec359",
+    "output_sha256": "c5c591de9579131d1051b670e0cca9772825034e6a5af799299ac79829af1eaa",
+    "scale": 4,
+    "position_tolerance_pt": 0.001,
+    "protected_native_glyphs": 7,
+    "missing_requested_source_glyphs": [],
+    "missing_final_native_glyphs": [],
+    "source_outline_audit": {
+      "protected_physical_glyphs": 7,
+      "expected_signature_count": 7,
+      "matched_outline_uses": 7,
+      "missing_source_outline_signatures": [],
+      "ancestor_transforms_flattened": true,
+      "passed": true
+    },
+    "method": "Original input glyph outlines with composed SVG ancestor transforms, shifted independently and rendered without text clips; reference<32 versus actual minRGB<220.",
+    "expected_native_dark_pixels": 482,
+    "inherited_stationary_source_occluded_pixels": 0,
+    "newly_missing_native_ink_pixels": 0,
+    "passed": true
+  },
+  "source_whitespace_outline_proof": {
+    "records": [
+      {
+        "source_font": "BCDGEE+TimesNewRomanPSMT",
+        "source_font_alias": "/F3",
+        "source_font_program_sha256": "5388738341e7e930e932353b2d0e04a998f4bee7721053489841e1c07b8965a5",
+        "source_gid": 3,
+        "glyph_name": "space",
+        "outline_bounds": null,
+        "empty": true
+      },
+      {
+        "source_font": "BCDKEE+TimesNewRomanPS-BoldMT",
+        "source_font_alias": "/F7",
+        "source_font_program_sha256": "7805c09abad6bc56296a82b612b43013fa4398867f8329cb9024118abca3320a",
+        "source_gid": 3,
+        "glyph_name": "space",
+        "outline_bounds": null,
+        "empty": true
+      }
+    ],
+    "passed": true,
+    "reason": "Every ignored original Unicode whitespace GID is independently proved to have no original font outline. Painted-space arrows cannot be excluded by Unicode."
+  },
+  "source_semantic_math_punctuation": {
+    "records": [],
+    "source_only_atomic_geometry": [
+      {
+        "source_atom": "n00a0",
+        "source_glyphs": 2,
+        "common_dx": 1.1699981689453125,
+        "dx_spread": 0.0,
+        "erased_original_glyphs": []
+      },
+      {
+        "source_atom": "n01a0",
+        "source_glyphs": 2,
+        "common_dx": 5.6949920654296875,
+        "dx_spread": 0.0,
+        "erased_original_glyphs": []
+      },
+      {
+        "source_atom": "n01a1",
+        "source_glyphs": 1,
+        "common_dx": 5.6450042724609375,
+        "dx_spread": 0.0,
+        "erased_original_glyphs": []
+      },
+      {
+        "source_atom": "n01a2",
+        "source_glyphs": 2,
+        "common_dx": -3.3549957275390625,
+        "dx_spread": 0.0,
+        "erased_original_glyphs": []
+      }
+    ],
+    "independent_complete_fraction_packets": [],
+    "errors": [],
+    "passed": true
+  },
+  "independent_source_native_paths": [
+    {
+      "source_vector_index": 0,
+      "source_operator_indices": [
+        47,
+        48
+      ],
+      "source_rect": [
+        55.2,
+        41.04000732421878,
+        786.84,
+        41.760007324218805
+      ],
+      "common_dx": 0,
+      "geometry_preserved": true,
+      "source_paint_style": {
+        "type": "f",
+        "color": null,
+        "fill": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": null,
+        "lineCap": null,
+        "lineJoin": null,
+        "dashes": null,
+        "closePath": null,
+        "fill_opacity": 1.0,
+        "stroke_opacity": null,
+        "even_odd": true
+      },
+      "actual_paint_style": {
+        "type": "f",
+        "color": null,
+        "fill": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "width": null,
+        "lineCap": null,
+        "lineJoin": null,
+        "dashes": null,
+        "closePath": null,
+        "fill_opacity": 1.0,
+        "stroke_opacity": null,
+        "even_odd": true
+      },
+      "paint_preserved": true
+    }
+  ],
+  "scope": "Original raw font programs, GIDs, exact fractional points and paints, original source outlines, Unicode whitespace outlines, intrinsic original mathematical punctuation and every original native pure vector program. Source paths are independently matched to actual final draw programs; a bar-only or numerator-only move cannot pass.",
+  "passed": true
+}

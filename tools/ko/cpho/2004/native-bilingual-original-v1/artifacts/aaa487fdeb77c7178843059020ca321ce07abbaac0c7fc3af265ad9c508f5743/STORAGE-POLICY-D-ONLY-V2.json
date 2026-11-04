@@ -1,0 +1,24 @@
+{
+  "kind": "cpho2004-new-D-only-output-storage-policy-v2",
+  "root_authorized_policy": true,
+  "scope": "All new output, font cache, render, temp, contract and closure files are D04; C source/plan/proof/history inputs read only.",
+  "initial_profile_config_sha256": "efe8384324c08b1814ef2704efb459c036a3438365b010727ebe190573ae4443",
+  "source_C_evidence_system_floor_bytes": 134217728,
+  "derived_D_floor_bytes": 268435456,
+  "estimated_contract_new_write_bytes": 33554432,
+  "actual_C_free": 160870400,
+  "actual_D_free": 4010803200,
+  "environment": {
+    "C04_DERIVED_ROOT": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1",
+    "C04_STORAGE_POLICY": "d-only-new-jobs-c128-d256-v2",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "TEMP": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-20261104T121628Z",
+    "TMP": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-20261104T121628Z",
+    "TMPDIR": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-20261104T121628Z",
+    "NODE_COMPILE_CACHE": "D:\\CodexBuilds\\Hasla-original-style-20261031\\cpho2004-native-derived-v1\\temporary-runs\\contract-20261104T121628Z\\node-cache"
+  },
+  "shared_page_worker_unchanged": true,
+  "native_ab04_guard_unchanged": true,
+  "no_native_or_memory_QA_threshold_change": true,
+  "resource_errors_never_count_as_negative_pass": true
+}
