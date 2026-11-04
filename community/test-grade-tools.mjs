@@ -133,6 +133,9 @@ test("labScore: a relative uncertainty keeps the grader's mark; an absolute wron
   assert.equal(by(.3).got, .3); assert.equal(by(.3).by, "model", "a ratio code cannot confirm: the grader's mark of at least half stands");
   assert.equal(at(rel, 0).got, .3, "0.40 × 1.04 = 0.416 is the official ±0.42: code credits it whatever the grader gave");
   assert.equal(at(rel, 0).by, "code");
+  const withUnit = { items: [{ ...scheme.items[0], unit: "J·T^-1" }] };
+  const noUnit = labScore(withUnit, { items: [{ id: "H.1.a", found: true, page: 2, value: .4, score: 0, unit_ok: false }] }, [{ no: 2, kind: "working", task: "T1", ocr: rel, read: JSON.stringify({ items: [] }) }], { theory: true }).items[0];
+  assert.equal(noUnit.got, .3, "a relative answer carries its unit in the symbol: no R3 deduction"); assert.ok(!noUnit.rules.includes("R3"));
   const off = String.raw`\delta\mu_S = 0.10\mu_S`;
   assert.equal(labScore(scheme, { items: [{ id: "H.1.a", found: true, page: 2, value: .1, score: .1 }] }, [{ no: 2, kind: "working", task: "T1", ocr: off, read: JSON.stringify({ items: [] }) }], { theory: true }).items[0].got, 0, "a relative uncertainty that does not match, and a grader under half: nothing");
   assert.equal(at(String.raw`\delta\mu_S = 0.40 \text{ J/T}`, .3).got, 0, "an absolute number off the range stays wrong");
