@@ -24,8 +24,10 @@ import hashlib
 import inspect
 import json
 import math
+import os
 from pathlib import Path
 import re
+import time
 
 from role_config import BASES, get_role_config, validate_role_format
 
@@ -275,6 +277,44 @@ def warmup_training_options(max_steps, config_type):
     return {'warmup_steps': policy['warmup_ratio']}
 
 
+def progress_callback(callback_type, path, *, started, wall_seconds=None, clock=time.monotonic):
+    """Expose only atomic numeric progress, never text or arbitrary trainer logs."""
+    path = Path(path)
+    if wall_seconds is not None and (type(wall_seconds) is not int or wall_seconds < 30):
+        raise ValueError('invalid training wall-time allowance')
+
+    class Progress(callback_type):
+        def write(self, state, phase, logs=None):
+            step = getattr(state, 'global_step', 0)
+            maximum = getattr(state, 'max_steps', 0)
+            if type(step) is not int or type(maximum) is not int or not 0 <= step <= maximum:
+                raise ValueError('invalid trainer progress')
+            value = {'schema_version': 1, 'phase': phase, 'steps_completed': step,
+                     'max_steps': maximum, 'elapsed_seconds': max(0, int(clock() - started))}
+            value.update({key: number for key, number in safe_loss_metrics([logs or {}]).items()
+                          if number is not None})
+            temporary = path.with_name(path.name + '.tmp')
+            temporary.write_text(json.dumps(value, allow_nan=False), encoding='utf8')
+            os.replace(temporary, path)
+
+        def on_train_begin(self, args, state, control, **kwargs):
+            self.write(state, 'training')
+
+        def on_step_end(self, args, state, control, **kwargs):
+            self.write(state, 'training')
+            if wall_seconds is not None and state.global_step > 0 and clock() - started >= wall_seconds:
+                control.should_training_stop = True
+            return control
+
+        def on_log(self, args, state, control, logs=None, **kwargs):
+            self.write(state, 'training', logs)
+
+        def on_train_end(self, args, state, control, **kwargs):
+            self.write(state, 'training_ended')
+
+    return Progress()
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--base', choices=BASES, default='chat')
@@ -290,6 +330,8 @@ def main(argv=None):
     ap.add_argument('--validation-data', help='separately prepared validation JSONL; never use the test set')
     ap.add_argument('--prepare-only', action='store_true', help='validate/summarize without model downloads or GPU work')
     ap.add_argument('--max-steps', type=int, default=-1, help='bound a first GPU experiment; -1 uses epochs')
+    ap.add_argument('--progress-json', help='private numeric-only progress file for the supervising worker')
+    ap.add_argument('--train-wall-seconds', type=int, help='stop cleanly after a completed optimizer step, leaving time to save')
     ap.add_argument('--assistant-only-loss', choices=('auto', 'required', 'off'), default='auto',
                     help='use only officially supported generation masks for chat; never handcraft masks')
     a = ap.parse_args(argv)
@@ -298,6 +340,8 @@ def main(argv=None):
     a.max_len = config['max_length'] if a.max_len is None else a.max_len
     if not 1 <= a.rank <= 32 or a.max_len < 1 or a.max_steps == 0 or a.max_steps < -1 or a.epochs <= 0 or a.lr <= 0:
         ap.error('invalid training hyperparameters')
+    if a.train_wall_seconds is not None and (a.train_wall_seconds < 30 or not a.progress_json):
+        ap.error('a wall-time allowance requires private progress output and at least 30 seconds')
 
     train, held = load(a.data, a.holdout, a.format, a.validation_data, role=a.base)
     summary = dataset_summary(train, held, a.format)
@@ -315,6 +359,9 @@ def main(argv=None):
     if a.prepare_only:
         return
     private_adapter_output(a.out)
+    if a.progress_json:
+        private_adapter_output(a.progress_json)
+    started = time.monotonic()
 
     import unsloth
     import torch
@@ -359,8 +406,13 @@ def main(argv=None):
         training_options['assistant_only_loss'] = mask_enabled
     trainer = SFTTrainer(model=model, processing_class=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
                          args=SFTConfig(**training_options))
+    if a.progress_json:
+        from transformers import TrainerCallback
+        trainer.add_callback(progress_callback(TrainerCallback, a.progress_json, started=started,
+                                              wall_seconds=a.train_wall_seconds))
     training_result = trainer.train()
     summary['steps_completed'] = int(trainer.state.global_step)
+    summary['scheduled_steps_completed'] = a.max_steps > 0 and summary['steps_completed'] == a.max_steps
     if summary['steps_completed'] < 1:
         raise ValueError('trainer completed no optimizer steps')
     if a.max_steps > 0 and summary['steps_completed'] > a.max_steps:

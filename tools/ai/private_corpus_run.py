@@ -269,7 +269,10 @@ def data_environment():
 
 
 def result_for(entity, run_id, timeout=20):
-    # Query only a fixed safe summary field; never fetch console output or private data.
+    # Only the child's explicit result is decisive. W&B's native run state can
+    # time out independently of the trainer; callers retain their original
+    # budget deadline and check the actual Pod lifecycle when no result exists.
+    # Never fetch console output or private data.
     data = wandb_query('query($e:String!,$p:String!,$r:String!){project(name:$p,entityName:$e){run(name:$r){state summaryMetrics}}}',
                        {'e': entity, 'p': PROJECT, 'r': run_id}, timeout=timeout)
     row = (data.get('project') or {}).get('run')
@@ -277,7 +280,12 @@ def result_for(entity, run_id, timeout=20):
         return None
     summary = row.get('summaryMetrics') or '{}'
     if isinstance(summary, str):
-        summary = json.loads(summary)
+        try:
+            summary = json.loads(summary)
+        except ValueError:
+            return None
+    if not isinstance(summary, dict):
+        return None
     for key in ('private_training_result_json', 'private_training_result'):
         result = summary.get(key)
         for _ in range(2):
@@ -298,9 +306,6 @@ def result_for(entity, run_id, timeout=20):
                 flattened[field] = summary[key]
     if flattened.get('status') == 'failed':
         return flattened
-    if str(row.get('state', '')).lower() in ('failed', 'crashed', 'killed', 'finished'):
-        return {'status': 'failed', 'stage': 'result_verification',
-                'error_code': 'terminal_run_without_verified_result'}
     return None
 
 

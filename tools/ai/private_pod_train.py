@@ -21,9 +21,11 @@ import math
 import os
 from pathlib import Path
 import re
+import signal
 import subprocess
 import sys
 import tempfile
+import time
 import traceback
 import urllib.request
 
@@ -460,7 +462,7 @@ def training_report(adapter, config, data_format, training_sha, validation_sha):
             losses[name] = float(value)
         else:
             losses[name] = None
-    return {**expected, "steps_completed": steps, **losses}
+    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses}
 
 
 def safe_failure(error, stage):
@@ -545,6 +547,67 @@ def diagnostic_from_private_stderr(stream):
         return classify_trainer_stderr(stream.read(MAX_TRAINER_DIAGNOSTIC_BYTES))
     except (OSError, ValueError):
         return {"trainer_error_kind": "unclassified", "trainer_error_subject": "not_disclosed"}
+
+
+def read_numeric_progress(path):
+    """Read a tiny fixed schema from our trainer; discard unexpected fields."""
+    try:
+        path = Path(path)
+        if path.is_symlink() or not path.is_file() or path.stat().st_size > 8192:
+            return None
+        value = json.loads(path.read_text(encoding='utf8'))
+        if (not isinstance(value, dict) or type(value.get('schema_version')) is not int or value['schema_version'] != 1
+                or value.get('phase') not in ('training', 'training_ended')
+                or type(value.get('max_steps')) is not int or not 1 <= value['max_steps'] <= 32768
+                or type(value.get('steps_completed')) is not int
+                or not 0 <= value['steps_completed'] <= value['max_steps']
+                or type(value.get('elapsed_seconds')) is not int or not 0 <= value['elapsed_seconds'] <= 18000):
+            return None
+        result = {key: value[key] for key in ('schema_version', 'phase', 'max_steps', 'steps_completed', 'elapsed_seconds')}
+        for key in ('train_loss', 'eval_loss'):
+            number = value.get(key)
+            if type(number) in (int, float) and math.isfinite(number) and abs(number) <= 1000000:
+                result[key] = number
+        return result
+    except (OSError, ValueError, TypeError):
+        return None
+
+
+def supervise_training(command, *, cwd, env, stderr, timeout, run, progress_path,
+                       popen=subprocess.Popen, clock=time.monotonic, interval=30):
+    """Send safe heartbeats while waiting; kill and reap on timeout or error."""
+    started = clock()
+    process = popen(command, cwd=cwd, env=env, stdout=subprocess.DEVNULL, stderr=stderr,
+                    start_new_session=os.name == 'posix')
+    try:
+        while True:
+            remaining = timeout - (clock() - started)
+            if remaining <= 0:
+                raise subprocess.TimeoutExpired(command, timeout)
+            try:
+                code = process.wait(timeout=min(interval, remaining))
+                return subprocess.CompletedProcess(command, code)
+            except subprocess.TimeoutExpired:
+                progress = read_numeric_progress(progress_path)
+                heartbeat = {'worker_supervisor_alive_seconds': max(0, int(clock() - started))}
+                if progress:
+                    heartbeat['optimizer_steps_completed'] = progress['steps_completed']
+                try:
+                    if progress:
+                        run.summary['optimizer_progress_json'] = json.dumps(progress, allow_nan=False)
+                    run.log(heartbeat, commit=True)
+                except Exception:
+                    pass
+    finally:
+        if process.poll() is None:
+            if os.name == 'posix' and type(getattr(process, 'pid', None)) is int:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            else:
+                process.kill()
+            process.wait()
 
 
 def store_private_result(run, result):
@@ -698,9 +761,16 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         # temporary; only a classified tail (never raw text) can leave this scope.
         with tempfile.SpooledTemporaryFile(max_size=MAX_TRAINER_DIAGNOSTIC_BYTES, mode="w+b") as private_stderr:
             try:
-                completed = (runner or subprocess.run)(training_command(script, data_path, adapter, validation_path, config, data_format),
-                    cwd=str(workspace), env=training_environment(env), stdout=subprocess.DEVNULL,
-                    stderr=private_stderr, timeout=timeout, check=False)
+                command = training_command(script, data_path, adapter, validation_path, config, data_format)
+                if runner is not None:
+                    completed = runner(command, cwd=str(workspace), env=training_environment(env),
+                        stdout=subprocess.DEVNULL, stderr=private_stderr, timeout=timeout, check=False)
+                else:
+                    progress_path = workspace / 'optimizer-progress.json'
+                    command.extend(['--progress-json', str(progress_path),
+                                    '--train-wall-seconds', str(max(30, timeout - 600))])
+                    completed = supervise_training(command, cwd=str(workspace), env=training_environment(env),
+                        stderr=private_stderr, timeout=timeout, run=run, progress_path=progress_path)
             except Exception:
                 trainer_diagnostic = diagnostic_from_private_stderr(private_stderr)
                 raise
@@ -723,6 +793,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             "rank": config["default_rank"], "max_steps": config["max_steps"],
             "role_max_steps": config["role_max_steps"], "effective_batch_rows": config["effective_batch_rows"],
             "steps_completed": report["steps_completed"],
+            "scheduled_steps_completed": report['scheduled_steps_completed'],
             "train_loss": report["train_loss"], "eval_loss": report["eval_loss"],
             "training_records": len(training), "validation_records": len(validation),
             "training_sha256": sha_bytes(data), "adapter_sha256": adapter_sha,
@@ -742,6 +813,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                   "rank": config["default_rank"], "max_steps": config["max_steps"],
                   "role_max_steps": config["role_max_steps"], "effective_batch_rows": config["effective_batch_rows"],
                   "steps_completed": report["steps_completed"],
+                  "scheduled_steps_completed": report['scheduled_steps_completed'],
                   "train_loss": report["train_loss"], "eval_loss": report["eval_loss"],
                   "adapter_files": files, "training_records": len(training),
                   "validation_records": len(validation), "training_sha256": sha_bytes(data),

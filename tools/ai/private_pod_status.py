@@ -177,6 +177,8 @@ def _safe_training_result(value, entity, run_name, role):
     updated = value.get("weights_updated")
     if type(updated) is bool and (updated is False or result.get("steps_completed", 0) > 0):
         result["weights_updated"] = updated
+    if type(value.get('scheduled_steps_completed')) is bool:
+        result['scheduled_steps_completed'] = value['scheduled_steps_completed']
     artifact = value.get("artifact")
     expected = entity + "/" + cloud.PROJECT + "/" + run_name + "-lora:"
     if isinstance(artifact, str) and re.fullmatch(re.escape(expected) + r"v[0-9]{1,10}", artifact):
@@ -218,6 +220,17 @@ def _training_row(row, entity, run_name, role):
             training.setdefault(key, value)
     if training:
         result["private_training_result"] = training
+    try:
+        progress = _decode_mapping(summary.get('optimizer_progress_json'))
+        if (isinstance(progress, dict) and type(progress.get('schema_version')) is int and progress['schema_version'] == 1
+                and type(progress.get('steps_completed')) is int and type(progress.get('max_steps')) is int
+                and 0 <= progress['steps_completed'] <= progress['max_steps'] <= 32768
+                and type(progress.get('elapsed_seconds')) is int and 0 <= progress['elapsed_seconds'] <= 18000
+                and progress.get('phase') in ('training', 'training_ended')):
+            result['optimizer_progress'] = {key: progress[key] for key in
+                ('phase', 'steps_completed', 'max_steps', 'elapsed_seconds')}
+    except (ValueError, TypeError):
+        pass
     return result
 
 

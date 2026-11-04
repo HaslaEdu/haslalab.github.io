@@ -176,17 +176,43 @@ class PrivateCorpusRunnerTests(unittest.TestCase):
         self.assertNotIn(PRIVATE_TEXT, str(caught.exception))
         self.assertNotIn(FAKE_KEY, str(caught.exception))
 
-    def test_model_results_accept_scalar_json_and_terminal_failure_never_waits_forever(self):
+    def test_model_results_accept_explicit_failures_even_when_native_state_is_running(self):
         failed={'status':'failed','stage':'training','error_code':'trainer_process_failed'}
         for summary in ({'private_training_result':failed}, {'private_training_result_json':json.dumps(failed)},
                         {'private_training_result.status':'failed','private_training_result.stage':'training','private_training_result.error_code':'trainer_process_failed'}):
             with self.subTest(summary=summary), patch.object(runner,'wandb_query',return_value={
-                    'project':{'run':{'state':'failed','summaryMetrics':json.dumps(summary)}}}):
+                    'project':{'run':{'state':'running','summaryMetrics':json.dumps(summary)}}}):
                 self.assertEqual(runner.result_for('fixture','fixture-run'),failed)
-        with patch.object(runner,'wandb_query',return_value={'project':{'run':{'state':'failed','summaryMetrics':'{}'}}}):
-            self.assertEqual(runner.result_for('fixture','fixture-run')['error_code'],'terminal_run_without_verified_result')
-        with patch.object(runner,'wandb_query',return_value={'project':{'run':{'state':'running','summaryMetrics':'{}'}}}):
-            self.assertIsNone(runner.result_for('fixture','fixture-run'))
+
+    def test_native_wandb_state_alone_is_not_a_verified_training_result(self):
+        # W&B can declare a heartbeat timeout while the independent trainer
+        # remains active. The caller must still inspect its Pod and deadline.
+        for state in ('running', 'failed', 'crashed', 'killed', 'finished'):
+            for summary in ({}, {'status': 'training'}):
+                with self.subTest(state=state, summary=summary), patch.object(runner, 'wandb_query', return_value={
+                        'project': {'run': {'state': state, 'summaryMetrics': json.dumps(summary)}}}) as query:
+                    self.assertIsNone(runner.result_for('fixture', 'fixture-run', timeout=7))
+                self.assertEqual(query.call_args.kwargs['timeout'], 7)
+
+    def test_crashed_native_run_can_later_publish_its_explicit_result(self):
+        uploaded = {'status': 'uploaded', 'artifact': 'fixture-lora:v0', 'steps_completed': 3}
+        observations = [
+            {'project': {'run': {'state': 'crashed', 'summaryMetrics': '{"status":"training"}'}}},
+            {'project': {'run': {'state': 'crashed', 'summaryMetrics': json.dumps({
+                'private_training_result_json': json.dumps(uploaded)})}}},
+        ]
+        with patch.object(runner, 'wandb_query', side_effect=observations), \
+                patch.object(runner, 'delete_and_confirm') as delete, contextlib.redirect_stdout(io.StringIO()) as output:
+            self.assertIsNone(runner.result_for('fixture', 'fixture-run'))
+            self.assertEqual(runner.result_for('fixture', 'fixture-run'), uploaded)
+        delete.assert_not_called()
+        self.assertEqual(output.getvalue(), '')
+
+    def test_missing_or_invalid_summary_does_not_invent_a_terminal_failure(self):
+        for summary in ('not-json', '[]', 'null', [], 42):
+            with self.subTest(summary=summary), patch.object(runner, 'wandb_query', return_value={
+                    'project': {'run': {'state': 'crashed', 'summaryMetrics': summary}}}):
+                self.assertIsNone(runner.result_for('fixture', 'fixture-run'))
 
     def test_v2_list_and_single_billing_fields_normalize_without_losing_storage(self):
         raw = {"id": "fixture-pod", "name": "fixture", "cost": 2.5, "disk": 200,
