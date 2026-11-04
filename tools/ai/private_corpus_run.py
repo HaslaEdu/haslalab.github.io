@@ -40,6 +40,20 @@ def runpod(method, path, **kwargs):
                                 timeout=timeout, **kwargs)
     if response.status_code >= 400:
         # An upstream error can echo the request's secret dataset/environment.
+        body = response.text.lower()
+        if any(word in body for word in ('insufficient credit', 'insufficient fund', 'balance', 'add funds', 'deposit')):
+            category = 'account_funding'
+        elif any(word in body for word in ('no available', 'not available', 'no longer available', 'capacity', 'out of stock')):
+            category = 'gpu_capacity'
+        elif response.status_code == 413 or ('env' in body and any(w in body for w in ('length', 'large', 'limit', 'size'))):
+            category = 'request_size'
+        elif response.status_code in (401, 403):
+            category = 'authorization'
+        elif response.status_code in (400, 422):
+            category = 'request_validation'
+        else:
+            category = 'provider_error'
+        safe_event('runpod_api_error', method=method, http_status=response.status_code, category=category)
         raise RuntimeError(f'RunPod {method} status {response.status_code}')
     return response.json() if response.content else None
 
@@ -173,7 +187,8 @@ def main():
     entity = private_project()
     policy = BudgetPolicy(fx_krw_per_usd_upper=2000, budget_krw=30000, reserve_krw=5000, tax_multiplier='1.15')
     quote = PodQuote(gpu_usd_per_hour_upper=3, container_disk_gb=200, volume_disk_gb=0)
-    ledger = reserve_run(BudgetLedger(policy), run_id, 'solver', quote, time.monotonic(), 3600, 3600)
+    ledger = reserve_run(BudgetLedger(policy, prior_spend_krw=manifest.get('prior_upper_krw', 0)),
+                         run_id, 'solver', quote, time.monotonic(), 3600, 3600)
     plan = ledger.runs[-1].plan
     safe_event('preflight', training_records=manifest['train']['records'], validation_records=manifest['validation']['records'],
                budget_krw=30000, reserved_upper_krw=str(plan.reserved_krw), runtime_seconds=plan.run_seconds,
