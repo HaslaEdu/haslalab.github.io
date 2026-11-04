@@ -2132,21 +2132,33 @@ export async function workersAiGrade(env, g, system, input) {
       { role: 'user', content: input + '\n\nAnswer with JSON only, no other text: {"items":[{"id":"<scheme item id>","score":<points awarded>}, …]} with one entry per scheme item.' }],
     ...(chat ? { max_completion_tokens: 16384 } : { max_tokens: 16384 }), temperature: 0,
     ...(/^@cf\/google\/gemma-4/.test(model) && g.thinking !== 'on' ? { chat_template_kwargs: { enable_thinking: false } } : {}),
+    /* g.effort: the thinking level of a model that takes one (Qwen 3.8, GLM-5.3: low | medium/high | …); g.templateKwargs
+       for one that takes it in its chat template instead (Nemotron 3) */
+    ...(['low', 'medium', 'high', 'xhigh', 'max'].includes(g.effort) ? { reasoning_effort: g.effort } : {}),
+    ...(g.templateKwargs && typeof g.templateKwargs === 'object' ? { chat_template_kwargs: g.templateKwargs } : {}),
     /* g.stream: the answer comes back piece by piece, so a reasoning model's long thinking (QwQ 32B) does not run into the
        request timeout (3046) a one-shot answer meets */
     ...(g.stream ? { stream: true } : {}) });
-  let full = '', usage = null;
-  if (g.stream && res && typeof res.getReader === 'function') for await (const p of sseTexts(res)) { full += p.text || ''; if (p.usage) usage = p.usage; }
-  else { full = readCompletion(res).text; usage = res?.usage || null; }
-  const text = stripThinking(full).replace(/^```(?:json)?\s*|\s*```$/g, '');
+  let full = '', usage = null, thought = '', finish = null, pieces = 0, bad = 0;
+  if (g.stream && res && typeof res.getReader === 'function') for await (const p of sseTexts(res)) {
+    pieces++; full += p.text || ''; thought += p.reasoning || ''; if (p.usage) usage = p.usage; if (p.finish) finish = p.finish; if (p.bad) bad++;
+  } else {
+    full = readCompletion(res).text; usage = res?.usage || null;
+    const m = res?.choices?.[0]; thought = String(m?.message?.reasoning_content ?? m?.message?.reasoning ?? ''); finish = m?.finish_reason ?? null;
+  }
+  /* the marks are the answer; when the answer is empty (the thinking took every token), what the thinking last said */
+  const text = stripThinking(full).replace(/^```(?:json)?\s*|\s*```$/g, '') || (readMarkLines(thought.slice(-6000)).length ? thought.slice(-6000) : '');
+  const diag = `pieces=${pieces} answer=${full.length} thinking=${thought.length} finish=${finish} bad=${bad}`;
   const a = text.indexOf('{'), b = text.lastIndexOf('}');
   let raw = null; try { raw = JSON.parse(text.slice(a, b + 1)); } catch {
     /* QwQ 32B, streamed, wrote the marks with its quotes out of place ({"items:[{id:A1.1,score":.3},…): the id and score
        pairs are still there, so they are read one by one */
     const items = [...text.matchAll(/"?id"?\s*:\s*"?([\w.\/-]+)"?\s*,\s*"?score"?\s*:\s*"?(-?\d*\.?\d+)/g)].map(m => ({ id: m[1], score: +m[2] }));
-    if (!items.length) throw new Error('workers_ai_bad_json:' + text.slice(0, 200));
-    raw = { items, repaired: true };
+    const lines = items.length ? items : readMarkLines(text);
+    if (!lines.length) throw new Error(`workers_ai_bad_json:${diag}:` + (text || thought.slice(-160)).slice(0, 200));
+    raw = { items: lines, repaired: true };
   }
+  if (raw && !raw.repaired && !Array.isArray(raw.items)) throw new Error(`workers_ai_no_items:${diag}`);
   const u = usage || {};
   return { raw, model, usage: { input_tokens: u.prompt_tokens ?? null, output_tokens: u.completion_tokens ?? null } };
 }

@@ -103,3 +103,19 @@ test('the Workers AI grading bench reads id/score pairs out of JSON whose quotes
   const r = await workersAiGrade(env, { model: '@cf/qwen/qwq-32b' }, 's', 'i');
   assert.deepEqual(r.raw.items, [{ id: 'A1.1', score: 0.3 }, { id: 'A1.2', score: 0 }, { id: 'B.1.2/1', score: 0.25 }]);
 });
+
+test('the Workers AI grading bench reads a chat-schema reasoning model: thinking in its own field, the effort passed, a diagnosis when nothing comes', async () => {
+  const { workersAiGrade } = await import('./src/index.js');
+  const sse = parts => new ReadableStream({ start(c) { for (const p of parts) c.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(p)}\n`)); c.enqueue(new TextEncoder().encode('data: [DONE]\n')); c.close(); } });
+  let seen;
+  const env = { AI: { async run(m, i) { seen = i; return sse([{ choices: [{ delta: { reasoning_content: 'A1.1 looks right' } }] }, { choices: [{ delta: { content: '{"items":[{"id":"A1.1","score":0.3}]}' }, finish_reason: 'stop' }] }]); } } };
+  const r = await workersAiGrade(env, { model: '@cf/zai-org/glm-5.3-flash', stream: true, effort: 'low' }, 's', 'i');
+  assert.deepEqual(r.raw.items, [{ id: 'A1.1', score: 0.3 }]);
+  assert.equal(seen.reasoning_effort, 'low');
+  const nk = await workersAiGrade({ AI: { async run(m, i) { seen = i; return sse([{ choices: [{ delta: { reasoning_content: '…\nA1.1 0.2\nA1.2 0' }, finish_reason: 'length' }] }]); } } },
+    { model: '@cf/nvidia/nemotron-3-120b-a12b', stream: true, templateKwargs: { enable_thinking: true } }, 's', 'i');
+  assert.deepEqual(nk.raw.items, [{ id: 'A1.1', score: 0.2 }, { id: 'A1.2', score: 0 }], 'cut off in its thinking: the marks it last wrote there');
+  assert.deepEqual(seen.chat_template_kwargs, { enable_thinking: true });
+  await assert.rejects(workersAiGrade({ AI: { async run() { return sse([{ choices: [{ delta: { reasoning_content: 'hmm' }, finish_reason: 'length' }] }]); } } }, { model: '@cf/qwen/qwen3.8-27b', stream: true }, 's', 'i'),
+    /workers_ai_bad_json:pieces=1 answer=0 thinking=3 finish=length/);
+});
