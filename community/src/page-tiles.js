@@ -65,7 +65,17 @@ export function reencodeJpeg(bytes, quality) {
 export function fitPhoto(img, mime, allowance) {
   const b = img instanceof Uint8Array ? img : new Uint8Array(img);
   if (b.byteLength * 4 / 3 <= allowance) return b;
-  if (mime !== 'image/jpeg') return null;
+  if (mime !== 'image/jpeg') { console.warn(`[page-tiles] ${mime || 'non-JPEG'} page of ${b.byteLength} bytes is over its ${Math.round(allowance)}-byte share and cannot be made smaller here (no PNG/WebP decoder)`); return null; }
   for (const q of [60, 45, 32]) { const small = reencodeJpeg(b, q); if (small && small.byteLength * 4 / 3 <= allowance) return small; }
   return null;
+}
+
+/* The browser sends every answer page as JPEG (encodeUpload in sim/labscan/scanner.js). A PNG or WebP that still arrives
+   (an old cached page, a browser that could not decode the file) is kept with its own MIME and graded from the whole
+   photo, but it gets none of the above: no strips, no zoom crops, no size fitting. Said once per stored page, so a drop
+   in reading accuracy can be traced to it. */
+export function warnNotJpeg(where, mime, bytes) {
+  if (mime === 'image/jpeg') return false;
+  console.warn(`[${where}] stored ${mime || 'an unknown'} page of ${bytes} bytes as it is: no strips, zoom crops or size fitting (the Worker decodes JPEG only)`);
+  return true;
 }

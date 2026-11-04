@@ -1387,7 +1387,7 @@ export function detectQuad(canvas) {
 export async function detectDocumentQuad(canvas, options = {}) {
   if (typeof Worker !== 'undefined' && typeof createImageBitmap === 'function') {
     try {
-      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=dda686b6c637', import.meta.url));
+      const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=2d410ba50bfe', import.meta.url));
       return await getDocumentDetector().detect(canvas, options);
     } catch (error) { if (error?.name === 'AbortError') throw error; }
   }
@@ -1408,14 +1408,14 @@ export async function detectOnProbe(canvas, options = {}) {
 
 export async function warmDocumentDetector(options) {
   if (typeof Worker === 'undefined') return false;
-  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=dda686b6c637', import.meta.url)); await getDocumentDetector().warm(options); return true; }
+  try { const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=2d410ba50bfe', import.meta.url)); await getDocumentDetector().warm(options); return true; }
   catch { return false; }
 }
 
 async function renderInWorker(base, corners, mode, dpi, inset, pageFormat, signal, includeBaseline = false) {
   if (typeof Worker === 'undefined' || typeof createImageBitmap !== 'function') return null;
   try {
-    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=dda686b6c637', import.meta.url));
+    const { getDocumentDetector } = await import(new URL('./document-detector.mjs?v=2d410ba50bfe', import.meta.url));
     return await getDocumentDetector().render(base, { corners, mode, outW: dpiToWidth(dpi), inset, pageFormat, includeBaseline }, { signal });
   } catch (error) { if (error?.name === 'AbortError') throw error; return null; }
 }
@@ -1488,28 +1488,35 @@ const inspectDocument = canvas => {
   return inspectDocumentPixels(img.data, canvas.width, canvas.height);
 };
 
-/** Keep PNG/B&W and already-small JPEG/WebP bytes intact. For oversized photos,
- * try JPEG qualities at the same resolution before a single 2400→2339px step.
- * Never repeatedly shrink an A4 page below the scanner's 200dpi output. */
+/** Every answer page goes up as JPEG: the server's strips, zoom crops and size fitting decode JPEG only (jpeg-js; a
+ * Worker has no PNG/WebP decoder), so a PNG screenshot, a WebP or a mono/original scan sent as it was read from the
+ * whole page alone (read about 88% right, against 97% with strips) and an oversized one fell out of grading.
+ * A JPEG under the limit keeps its bytes. Anything else is drawn upright (EXIF orientation, loadBitmap) onto white
+ * (a transparent PNG must not turn black) at the scanner's quality. Oversized photos try JPEG qualities at the same
+ * resolution before a single 2400→2339px step, never shrinking an A4 page below the scanner's 200dpi output.
+ * Without a canvas or a decoder for the file a small non-JPEG goes as it is: the server keeps and grades it whole. */
 export async function encodeUpload(blob, { maxBytes = 1850000 } = {}) {
   if (!blob || !/^image\/(jpeg|png|webp)$/.test(blob.type)) throw { code: 'bad_image' };
-  if (blob.size <= maxBytes) return blob;
-  if (!canProcess()) throw { code: 'image_too_big' };
-  const bmp = await loadBitmap(blob);
+  const fits = blob.size <= maxBytes;
+  if (fits && blob.type === 'image/jpeg') return blob;
+  if (!canProcess()) { if (fits) return blob; throw { code: 'image_too_big' }; }
+  let bmp;
+  try { bmp = await loadBitmap(blob); } catch { if (fits) return blob; throw { code: 'bad_image' }; }
   try {
-    const longSide = Math.max(bmp.width, bmp.height);
-    const sides = [Math.min(WORK_MAX_SIDE, longSide)];
-    const a4Side = Math.round(dpiToWidth(DEFAULT_DPI) * A4_RATIO);
-    if (sides[0] > a4Side) sides.push(a4Side);
-    for (const side of sides) {
+    const longSide = Math.max(bmp.width, bmp.height), ladder = [0.92, 0.88, 0.84, 0.8, 0.76];
+    const work = Math.min(WORK_MAX_SIDE, longSide), a4Side = Math.round(dpiToWidth(DEFAULT_DPI) * A4_RATIO);
+    /* a page that already fits is only converted, at its own size and the quality the scanner encodes at */
+    const tries = [...fits ? [[Math.min(SOURCE_MAX_SIDE, longSide), [PAGE_JPEG_QUALITY]]] : [], [work, ladder], ...work > a4Side ? [[a4Side, ladder]] : []];
+    for (const [side, qualities] of tries) {
       const canvas = toCanvas(bmp, side), ctx = canvas.getContext('2d');
       ctx.globalCompositeOperation = 'destination-over';
       ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-      for (const quality of [0.92, 0.88, 0.84, 0.8, 0.76]) {
+      for (const quality of qualities) {
         const out = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', quality));
-        if (out && out.size <= maxBytes) return out;
+        if (out && out.type === 'image/jpeg' && out.size <= maxBytes) return out;
       }
     }
+    if (fits) return blob;
     throw { code: 'image_too_big' };
   } finally { try { bmp.close?.(); } catch { /* release decoded camera pixels */ } }
 }

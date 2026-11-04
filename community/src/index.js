@@ -42,7 +42,7 @@ import { LAB_PAGE_PRICES, labCallUsd, summarizeLabCalls, fullSitting } from './l
 import { VISION_MODELS, visionCapabilities, visionProvider, requireVisionProvider, visionJSON, visionTranscript, VisionProviderError, benchModel, listProviderModels, providerKeys } from './vision-provider.js';
 import {referenceImages,referenceText} from './reference-images.js';
 import { compareExpr, describeCheck, schemeSymbols } from './expr-check.js';
-import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto } from './page-tiles.js';
+import { pageStrips, cropJpeg, reencodeJpeg, fitPhoto, warnNotJpeg } from './page-tiles.js';
 import { upstageParse, upstageTunedRead } from './upstage-ocr.js';
 import { createProblemBankOcrRouter, PROBLEM_BANK_OCR_PATH } from './problem-bank-ocr.js';
 import { mathpixRead, simpletexRead, ocrEngineKeys } from './ocr-engines.js';
@@ -1271,6 +1271,7 @@ async function arena(p, m, body, me, req, env, url) {
     if(usage.n>=VISION_PHOTO_MAX||usage.bytes+f.size>VISION_PHOTO_BYTES)throw new HttpError(413,'photo_storage_limit');
     const result=await ocr(env,f,url.searchParams.get('mode')==='math'?'math':'text',null,provider);
     const bytes=new Uint8Array(await f.arrayBuffer()),mime=imageType(bytes.subarray(0,16));
+    warnNotJpeg("monthly ocr photo",mime,bytes.length);
     return {...result,provider,photo_id:await storeVisionPhoto(env,me.id,pid,provider,bytes,mime)};
   }
   if (p === "/api/rank" && m === "GET") {
@@ -2831,7 +2832,7 @@ async function labChatGrade(env, s, task, mine, scheme, lang, m, { reads = true,
   for (const p of order) {
     parts.push({ text: `[Student page ${p.no}: ${p.kind === "answer" ? "answer sheet" : p.kind === "working" ? "working sheet" : p.kind}]` + (reads && p.ocr ? `\nTranscript:\n${p.ocr}` : "") });
     const row = await env.DB.prepare("SELECT * FROM lab_pages WHERE id=?").bind(p.id).first(), raw = row && row.mime !== "text/plain" ? await labPageBytes(env, row) : null;
-    const img = raw && fitPhoto(raw, row.mime, budget / Math.max(1, left--));      // every page within the request's image budget
+    const img = raw && (fitPhoto(raw, row.mime, budget / Math.max(1, left--)) || (row.mime !== 'image/jpeg' && raw.byteLength * 4 / 3 <= budget ? raw : null));   // within the image budget; a PNG/WebP over its share cannot be shrunk here, so it goes whole while the budget allows
     if (img) { budget -= img.byteLength * 4 / 3; parts.push({ inline_data: { mime_type: row.mime, data: b64(img) }, label: `Student page ${p.no}` }); }
   }
   const sheet = scheme.items.map(it => `${it.id} | ${it.points} | ${String(it.what || "").slice(0, 220)}${it.alt ? ` (alternative method ${it.alt}: marks only for the method the student used)` : ""}`);
@@ -4194,6 +4195,7 @@ async function lab(p, m, body, me, req, env, url) {
       SELECT ?,COALESCE(MAX(no),0)+1,?,?,?,?,?,?,?,?,?,?,?${r2 ? ",?" : ""} FROM lab_pages WHERE session_id=?`)
       .bind(s.id, tk, kd, mime, r2 ? new Uint8Array(0) : buf, ocrText ?? text, conf, status, text, read, legible, t, ...(r2 ? [r2] : []), s.id).run();
     const no = (await env.DB.prepare("SELECT no FROM lab_pages WHERE id=?").bind(res.meta.last_row_id).first()).no;
+    warnNotJpeg(`lab page ${s.id}/${no}`, mime, buf.length);                    // the mime is stored as found; the page is still read and graded
     if (s.charged) await labQueueOcr(env, s, [res.meta.last_row_id]);
     return { id: res.meta.last_row_id, no, task: tk, kind: kd, ocr_status: status, legible, items: read ? JSON.parse(read).items.length : 0,
       chars: (text ?? ocrText ?? "").length, moved: tk !== task || kd !== kind, queued: !!s.charged };
