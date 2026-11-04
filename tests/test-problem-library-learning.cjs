@@ -35,7 +35,7 @@ test('Learn retains Studio and sends reading to Archive without a bank tile or f
       const html=a.run(`viewLearnSubject(${JSON.stringify(subject)})`);assert.doesNotMatch(html,/문제은행|Problem library|data-learn-tool="library"|<iframe/);
       assert.match(html,new RegExp('href="#/archive/books/'+(subject==='physics'?'phys':'astro')+'"'));
     }
-    assert.match(a.run('viewLearnSubject("physics")'),/href="#\/learn\/physics\/studio"/);
+    a.run('cm.me={id:1,role:"admin"}');assert.match(a.run('viewLearnSubject("physics")'),/href="#\/learn\/physics\/studio"/);a.run('cm.me=null');
     assert.doesNotMatch(a.run('viewLearn()'),/문제은행|Problem library/);
   }
   assert.doesNotMatch(read('index.html'),/learnLibraryFrame|function viewLearnLibrary|hl-bank-settings/);

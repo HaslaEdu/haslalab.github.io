@@ -94,6 +94,10 @@ LAB_FOCUS_READ = "on"
 # answer photos are kept after grading (the owner's decision, 2026-11-02): they are the evaluation and training set for
 # reading and grading. Overrides any dashboard value; a deleted account still removes its pages.
 LAB_KEEP_HOURS = "off"
+# the problem studio (studio-gateway.js: digitize, generate, restore) is for administrators only
+STUDIO_ACCESS = "admin"
+# photo problem search (problem-bank-ocr.js): the photo is transcribed by this Gemini model
+BANK_OCR_MODEL = "gemini-3.1-flash-lite"
 # weekly Google Drive backup (src/drive-backup.js): Sunday 18:00 UTC, a gzipped SQL dump (newest 8 kept) and each answer
 # photo once, removed from Drive when the site lets it go. Needs the secrets GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET and
 # GDRIVE_REFRESH_TOKEN (scope drive.file); without them nothing runs. "off" stops it.

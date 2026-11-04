@@ -45,8 +45,11 @@ test('physics publishes only its internal studio while other subjects keep place
     a.run(`lang=${JSON.stringify(language)}`);
     const html=a.run(`viewLearnSubject(${JSON.stringify(key)})`);
     if(key==='physics'){
-      assert.match(html,language==='ko'?/문제 제작소/:/Problem Studio/);
-      assert.ok(links(html).includes('#/learn/physics/studio'));
+      /* the studio is for administrators: a visitor's physics page has no studio card */
+      assert.ok(!links(html).includes('#/learn/physics/studio'));
+      a.run('cm.me={id:1,role:"admin"}');const admin=a.run(`viewLearnSubject("physics")`);a.run('cm.me=null');
+      assert.match(admin,language==='ko'?/문제 제작소/:/Problem Studio/);
+      assert.ok(links(admin).includes('#/learn/physics/studio'));
       assert.doesNotMatch(html,/learn-pending/);
     }else if(key==='astronomy')assert.ok(links(html).includes('#/archive/books/astro'));else assert.match(html,language==='ko'?/준비중/:/Coming soon/);
     assert.ok(links(html).every(href=>href.startsWith('#/learn')||href.startsWith('#/archive/books/')));

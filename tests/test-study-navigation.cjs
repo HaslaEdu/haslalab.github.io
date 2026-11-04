@@ -27,8 +27,12 @@ function sessionLinks(html){
 
 test('learning physics opens the native studio with physics, creation and current language/theme',()=>{
   const a=app();a.context.document.documentElement.dataset={theme:'dark'};a.run("lang='ko'");
+  /* the studio is for administrators only: its card shows only to them */
+  assert.doesNotMatch(a.run('viewLearnSubject("physics")'),/learn\/physics\/studio/);
+  a.run('cm.me={id:1,role:"admin"}');
   assert.match(a.run('viewLearnSubject("physics")'),/href="#\/learn\/physics\/studio"/);
   assert.match(a.run('viewLearnSubject("physics")'),/문제 제작소/);
+  a.run('cm.me=null');
   assert.match(a.run('viewLearnSubject("chemistry")'),/learn-pending/);
   for(const language of ['ko','en']){
     a.run(`lang='${language}'`);
