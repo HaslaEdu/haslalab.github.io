@@ -118,7 +118,7 @@ jobs:
           python-version: "3.11"
       - run: pip install --quiet requests
       - name: Read exact pilot GPU status
-        run: python tools/ai/private_pod_status.py --run-id "$HASLA_STATUS_RUN_ID"
+        run: python tools/ai/private_pod_status.py --run-id "$HASLA_STATUS_RUN_ID" --system-logs
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           HASLA_STATUS_RUN_ID: ${{ inputs.status_run_id }}
