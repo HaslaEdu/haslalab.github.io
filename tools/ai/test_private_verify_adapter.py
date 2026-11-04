@@ -114,6 +114,18 @@ class Fixture:
 
 
 class SafetensorsTests(unittest.TestCase):
+    def test_legacy_result_cannot_hide_unknown_or_stripped_artifact_profile(self):
+        for extra in ({'training_profile': 'unknown'},
+                      {'training_profile': 'gemma-26b-qlora-v1'},
+                      {'runtime_profile_proof': {'arbitrary_raw_text': 'synthetic-private-must-not-emit'}}):
+            fixture = Fixture()
+            artifact = fixture.artifacts[fixture.results['chat']['artifact']]
+            artifact.metadata.update(extra)
+            outcome = fixture.run()
+            self.assertEqual(outcome['roles'][0]['code'], 'artifact_training_profile_mismatch')
+            self.assertEqual(fixture.downloads, [])
+            self.assertNotIn('synthetic-private-must-not-emit', json.dumps(outcome))
+
     def test_chat_quantized_profile_verifies_same_base_weights_and_binds_private_proof(self):
         fixture = Fixture()
         profile = 'gemma-26b-qlora-v1'

@@ -431,7 +431,12 @@ def verify_role(reader, api, entity, run_id, role, root):
             and all(metadata.get(key) == result[key] for key in
                     ("role", "base_model", "rank", "steps_completed", "adapter_sha256")),
             "artifact_metadata_mismatch")
-    if result.get('training_profile') is not None:
+    require(metadata.get('training_profile') == result.get('training_profile'),
+            'artifact_training_profile_mismatch')
+    if result.get('training_profile') is None:
+        require('runtime_profile_proof' not in result and 'runtime_profile_proof' not in metadata,
+                'artifact_training_profile_mismatch')
+    else:
         require(all(metadata.get(k) == result.get(k) for k in ('training_profile', 'runtime_profile_proof',
                     'precision', 'training_method')), 'artifact_training_profile_mismatch')
     entries = artifact.manifest.entries
