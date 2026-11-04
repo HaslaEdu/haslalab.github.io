@@ -17,6 +17,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import hashlib
+from http.client import HTTPException, IncompleteRead
 from html.parser import HTMLParser
 import json
 from pathlib import Path
@@ -31,6 +32,7 @@ USER_AGENT = "HaslaPatternResearch/0.1 (purpose=abstract-pattern-extraction-for-
 AI_AGENTS = ("GPTBot", "ClaudeBot", "anthropic-ai", "Claude-Web", "Google-Extended",
              "Applebot-Extended", "CCBot", "Bytespider", "Amazonbot",
              "Meta-ExternalAgent", "cohere-ai", "PerplexityBot")
+SKIPPABLE_THREAD_FAILURES = frozenset(("http_404", "http_410", "redirect_outside_public_source"))
 DEFAULT_SOURCES = {
     "dcinside": {"origin": "https://gall.dcinside.com",
                  "seed": "https://gall.dcinside.com/mgallery/board/lists/?id=physics"},
@@ -272,6 +274,11 @@ class BoundedClient:
             # Error pages are neither parsed nor retained. Never retry 403/429.
             result = Response(url, exc.code, headers={k.casefold(): v for k, v in exc.headers.items()})
             exc.close()
+        except IncompleteRead:
+            # A partial chunked response is not a complete page and is discarded.
+            result = Response(url, failure="network_incomplete_response")
+        except HTTPException:
+            result = Response(url, failure="network_protocol_error")
         except (error.URLError, TimeoutError, OSError):
             result = Response(url, failure="network_error")
         self.requests.append({"url": url, "status": result.status,
@@ -517,8 +524,10 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
             if report.get("reason"):
                 summary["reason"] = report["reason"]
             summary["checkpoint"] = {"created_at": datetime.now(timezone.utc).isoformat(),
+                                     "checkpoint_contains_full_abstract_patterns": True,
                                      "training_performed": False, "raw_content_saved": False,
                                      "pattern_records": len(patterns), "sources": reports,
+                                     "patterns": list(patterns),
                                      "source_hashes": [{"source_id": record["source_id"], "url": record["source_url"],
                                                         "content_sha256": record["body"]["content_sha256"]}
                                                        for record in patterns]}
@@ -534,6 +543,7 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
                   "patterns": 0, "thread_requests": 0, "status": "not_started",
                   "listing_results": [], "thread_results": [], "discovered_thread_urls": [],
                   "excluded_or_duplicate_links": 0, "qa_candidates": []}
+        report["skipped_thread_failures"] = {}
         report["skipped_listing_promotions"] = 0
         report["skipped_other_board_links"] = 0
         reports.append(report)
@@ -593,12 +603,18 @@ def collect(sources, max_posts=10, metadata=None, client=None, max_pages=1, excl
                 decision = robots_decision(robots_text, url)
                 if not decision["allowed"]:
                     report["thread_results"].append({"url": url, "status": decision["reason"]})
-                    continue
+                    report["reason"] = decision["reason"]
+                    break
                 attempted += 1
                 report["thread_requests"] += 1
                 response, reason = fetch_public(client, url, source, robots_text)
                 if reason:
                     report["thread_results"].append({"url": url, "status": reason})
+                    if reason in SKIPPABLE_THREAD_FAILURES:
+                        report["skipped_thread_failures"][reason] = report["skipped_thread_failures"].get(reason, 0) + 1
+                        report["status"] = "collecting_after_skipped_thread"
+                        emit(report)
+                        continue
                     report["reason"] = reason
                     break
                 record = extract_pattern(source_id, url, response.text(), rights)
@@ -660,7 +676,7 @@ def progress_writer(path):
         summary = dict(status)
         snapshot = summary.pop("checkpoint")
         temporary = path.with_name(path.name + ".tmp")
-        temporary.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2), encoding="utf-8")
+        temporary.write_bytes(json.dumps(snapshot, ensure_ascii=False, indent=2).encode("utf-8"))
         temporary.replace(path)
         print(json.dumps({"event": "collection_progress", **summary}, ensure_ascii=False), flush=True)
     return update

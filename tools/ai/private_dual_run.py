@@ -81,6 +81,18 @@ def load_inputs(env):
     return manifest, payloads
 
 
+def verify_pinned_scripts(manifest, commit):
+    files = {'train_script_sha256': 'train_lora.py', 'role_config_sha256': 'role_config.py',
+             'pod_script_sha256': 'private_pod_train.py', 'dual_pod_sha256': 'private_dual_pod.py'}
+    for key, filename in files.items():
+        url = f'https://raw.githubusercontent.com/HaslaEdu/haslalab.github.io/{commit}/tools/ai/{filename}'
+        response = cloud.requests.get(url, timeout=20)
+        if (response.status_code != 200 or len(response.content) > 256 * 1024
+                or hashlib.sha256(response.content).hexdigest() != manifest[key]):
+            raise ValueError('pinned public code checksum mismatch: ' + filename)
+    cloud.safe_event('public_code_verified', files=len(files), commit=commit)
+
+
 def main():
     env = os.environ
     cloud.E = env
@@ -90,6 +102,7 @@ def main():
     for key in ('RUNPOD_API_KEY', 'WANDB_API_KEY', 'HF_TOKEN'):
         if not env.get(key):
             raise ValueError('missing required training credential')
+    verify_pinned_scripts(manifest, env['GITHUB_SHA'])
     run_id = cloud.PREFIX + env['GITHUB_RUN_ID']
     if any(p.get('name') == run_id for p in cloud.runpod('GET', '/pods')):
         raise RuntimeError('a Pod already exists for this run')

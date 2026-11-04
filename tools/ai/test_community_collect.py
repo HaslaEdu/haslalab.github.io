@@ -1,11 +1,14 @@
 """Offline fixture tests; these tests must never contact community websites."""
 import io
 import hashlib
+import contextlib
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 from urllib import error
+from http.client import IncompleteRead
 
 import community_collect as collector
 
@@ -211,6 +214,55 @@ class CommunityCollectorTests(unittest.TestCase):
         self.assertEqual(result["sources"][0]["status"], "source_stopped")
         self.assertEqual(result["sources"][0]["reason"], "http_403")
 
+    def test_missing_gone_and_external_redirect_threads_are_skipped_without_retry_or_follow(self):
+        origin = "https://orbi.kr"
+        for status, headers, reason in ((404, {}, "http_404"), (410, {}, "http_410"),
+                                        (302, {"location": "https://other.example/private"}, "redirect_outside_public_source")):
+            with self.subTest(status=status):
+                routes = {origin + "/robots.txt": response(origin + "/robots.txt", "User-agent: *\nAllow: /\n"),
+                          origin + "/list": response(origin + "/list", '<a href="/0006658324">old</a><a href="/0006658325">next</a>'),
+                          origin + "/0006658324": response(origin + "/0006658324", "", status, headers),
+                          origin + "/0006658325": response(origin + "/0006658325", orbi_post("정상 본문입니다."))}
+                client = FakeClient(routes)
+                result = collector.collect(["orbi"], client=client)
+                self.assertEqual(result["pattern_records"], 1)
+                self.assertEqual(result["sources"][0]["skipped_thread_failures"], {reason: 1})
+                self.assertNotIn("reason", result["sources"][0])
+                self.assertEqual(len(client.requests), 4)
+
+    def test_rate_limit_challenge_login_and_robots_stop_entire_source(self):
+        origin = "https://orbi.kr"
+        cases = [(429, "", "User-agent: *\nAllow: /\n", "http_429"),
+                 (200, "<title>Just a moment</title>", "User-agent: *\nAllow: /\n", "challenge_or_access_block"),
+                 (200, '<input type="password">', "User-agent: *\nAllow: /\n", "login_required"),
+                 (200, "unused", "User-agent: *\nDisallow: /0006658324\nAllow: /\n", "robots_denied")]
+        for status, body, robots, reason in cases:
+            with self.subTest(reason=reason):
+                routes = {origin + "/robots.txt": response(origin + "/robots.txt", robots),
+                          origin + "/list": response(origin + "/list", '<a href="/0006658324">first</a><a href="/0006658325">never</a>'),
+                          origin + "/0006658324": response(origin + "/0006658324", body, status)}
+                client = FakeClient(routes)
+                result = collector.collect(["orbi"], client=client)
+                self.assertEqual(result["sources"][0]["reason"], reason)
+                self.assertNotIn(origin + "/0006658325", [row["url"] for row in client.requests])
+
+    def test_atomic_checkpoint_retains_full_abstract_rows_after_later_disk_failure(self):
+        with tempfile.TemporaryDirectory() as root:
+            target = Path(root) / "progress.json"
+            writer = collector.progress_writer(target)
+            row = collector.extract_pattern("orbi", "https://orbi.kr/0006658324", orbi_post("왜 맞나요?"), collector.source_metadata("orbi"))
+            status = {"source_id": "orbi", "checkpoint": {"patterns": [row], "pattern_records": 1,
+                        "raw_content_saved": False, "checkpoint_contains_full_abstract_patterns": True}}
+            with contextlib.redirect_stdout(io.StringIO()):
+                writer(status)
+            previous = target.read_bytes()
+            with patch.object(Path, "write_bytes", side_effect=OSError(28, "No space left")), self.assertRaises(OSError):
+                writer({"checkpoint": {"patterns": [row, row], "pattern_records": 2}})
+            self.assertEqual(target.read_bytes(), previous)
+            restored = json.loads(previous)
+            self.assertEqual(restored["patterns"][0]["body"]["content_sha256"], row["body"]["content_sha256"])
+            self.assertIsInstance(restored["patterns"][0]["body"], dict)
+
     def test_challenge_login_and_oversized_pages_are_never_parsed(self):
         for html, expected in (("<title>Just a moment...</title>", "challenge_or_access_block"),
                                ('<form><input type="password"></form>', "login_required")):
@@ -259,6 +311,24 @@ class CommunityCollectorTests(unittest.TestCase):
         self.assertEqual(sleeps, [5.0])
         self.assertTrue(first.oversized)
         self.assertEqual(len(first.body), 1024)
+
+    def test_truncated_chunked_response_is_discarded_recorded_and_not_retried(self):
+        class Truncated(io.BytesIO):
+            status, headers = 200, {"Content-Type": "text/html"}
+            def read(self, size=-1):
+                raise IncompleteRead(b"PRIVATE PARTIAL HTML", 100)
+        class Opener:
+            calls = 0
+            def open(self, req, timeout):
+                self.calls += 1
+                return Truncated()
+        opener = Opener()
+        client = collector.BoundedClient(opener=opener)
+        result = client.get("https://orbi.kr/list")
+        self.assertEqual(result.failure, "network_incomplete_response")
+        self.assertEqual(result.body, b"")
+        self.assertEqual(opener.calls, 1)
+        self.assertNotIn("PRIVATE PARTIAL HTML", json.dumps(client.requests))
 
     def test_output_validation_and_zero_record_report(self):
         with self.assertRaises(ValueError):

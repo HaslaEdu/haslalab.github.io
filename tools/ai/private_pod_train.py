@@ -446,6 +446,51 @@ def safe_failure(error, stage):
             "deployed": False, "promoted": False}
 
 
+def publish_early_failure(env, workspace, private, result, wandb_module=None, opener=None):
+    """Expose a pre-trainer failure to the parent only in a verified PRIVATE run.
+
+    Code/input failures can occur before the normal model run is initialized.
+    Publishing this minimal fixed-code summary lets the parent stop the paid Pod
+    promptly. It never creates a project, changes visibility, or uploads data.
+    A missing/unverified configuration performs no reporting network operation.
+    """
+    if not isinstance(private, dict) or private.get("access") != "PRIVATE":
+        return
+    try:
+        role, data_format = role_input(env)
+        run_id = required_name(env, "RUN")
+        required_name(env, "ARTIFACT")
+        entity, project = required_name(env, "WANDB_ENTITY"), required_name(env, "WANDB_PROJECT")
+        base = env.get("WANDB_BASE_URL", "https://api.wandb.ai").rstrip("/")
+        if (private.get("entity") != entity or private.get("project") != project
+                or private.get("base_url") != base or base not in ALLOWED_WANDB_BASES
+                or not env.get("WANDB_API_KEY") or result.get("status") != "failed"):
+            return
+        # Verify again immediately before initializing the minimal reporting run.
+        if assert_private_project(env, opener) != private:
+            return
+        os.environ.update({"WANDB_CONSOLE": "off", "WANDB_DISABLE_CODE": "true",
+                           "WANDB_SILENT": "true", "WANDB_BASE_URL": private["base_url"]})
+        if wandb_module is None:
+            import wandb as wandb_module
+        settings = wandb_module.Settings(console="off", disable_code=True, save_code=False,
+                                         disable_git=True, disable_job_creation=True,
+                                         x_disable_meta=True, x_disable_stats=True, silent=True,
+                                         base_url=private["base_url"])
+        run = wandb_module.init(entity=entity, project=project, id=run_id, name=run_id,
+                                resume="never", job_type="private-" + role + "-pilot-early-failure",
+                                config={"role": role, "format": data_format, "private": True,
+                                        "training_started": False, "weights_updated": False,
+                                        "test_records_used": 0, "deploy": False, "promote": False},
+                                settings=settings, dir=str(workspace))
+        run.summary["private_training_result"] = {**result, "training_started": False, "weights_updated": False}
+        run.summary["status"] = "failed"
+        run.finish(exit_code=1)
+    except Exception:
+        # Reporting is best effort; never expose an SDK's echoed request/secret.
+        return
+
+
 def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
               opener=None, runner=None):
     env = dict(os.environ if env is None else env)
@@ -582,7 +627,10 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
     except Exception as error:
         result = safe_failure(error, stage)
         if workspace.is_dir():
-            result_path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+            try:
+                result_path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+            except OSError:
+                pass
         if run is not None:
             try:
                 run.summary["private_training_result"] = result
@@ -590,6 +638,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                 run.finish(exit_code=1)
             except Exception:
                 pass
+        else:
+            publish_early_failure(env, workspace, private, result, wandb_module, opener)
         return result
 
 

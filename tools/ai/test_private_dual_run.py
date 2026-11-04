@@ -97,7 +97,8 @@ class PrivateDualParentTests(unittest.TestCase):
                    patch.object(dual.cloud.requests, "head", return_value=SimpleNamespace(ok=True)),
                    patch.object(dual.cloud, "publish_private_input", side_effect=publish),
                    patch.object(dual.cloud, "result_for", side_effect=result),
-                   patch.object(dual.cloud, "delete_and_confirm", return_value=True)]
+                   patch.object(dual.cloud, "delete_and_confirm", return_value=True),
+                   patch.object(dual, "verify_pinned_scripts")]
         mocks = [p.start() for p in patches]
         try:
             yield SimpleNamespace(operations=operations, api=mocks[0], create=mocks[1], publish=mocks[5],
@@ -139,6 +140,24 @@ class PrivateDualParentTests(unittest.TestCase):
         event = next(json.loads(line) for line in output.getvalue().splitlines() if json.loads(line)["event"] == "dual_preflight")
         self.assertEqual(event["runtime_seconds"], 7200)
         self.assertLess(int(event["reserved_upper_krw"]) + 5000 + 10, 30000)
+
+    def test_remote_line_endings_are_verified_before_any_gpu_or_private_upload(self):
+        public_code = b'print("fixture")\n'
+        pinned = {key: hashlib.sha256(public_code).hexdigest() for key in
+                  ('train_script_sha256','role_config_sha256','pod_script_sha256','dual_pod_sha256')}
+        with patch.object(dual.cloud.requests, 'get', return_value=SimpleNamespace(status_code=200,content=public_code)) as get, \
+                contextlib.redirect_stdout(io.StringIO()):
+            dual.verify_pinned_scripts(pinned, 'a' * 40)
+            self.assertEqual(get.call_count, 4)
+        with patch.object(dual.cloud.requests, 'get', return_value=SimpleNamespace(status_code=200,content=public_code.replace(b'\n',b'\r\n'))), \
+                self.assertRaisesRegex(ValueError,'checksum mismatch'):
+            dual.verify_pinned_scripts(pinned, 'a' * 40)
+        with patch.object(dual,'verify_pinned_scripts',side_effect=ValueError('checksum mismatch')), \
+                patch.object(dual.cloud,'runpod') as resource, patch.object(dual.cloud,'publish_private_input') as upload, \
+                self.assertRaisesRegex(ValueError,'checksum mismatch'):
+            dual.main()
+        resource.assert_not_called()
+        upload.assert_not_called()
 
     def test_authored_seed_or_source_less_book_cannot_masquerade_as_collected_material(self):
         for role in ('chat', 'solver'):

@@ -162,6 +162,91 @@ class PrivatePodStatusTests(unittest.TestCase):
         self.assertEqual(row, {"role": "chat", "state": "unknown", "status": "unreported"})
         self.assertNotIn("PRIVATE_", json.dumps(row, allow_nan=False))
 
+    def stream(self, events=None, raw=None, error=None):
+        class Response:
+            status_code = 200
+            closed = False
+            def iter_content(self, chunk_size):
+                self.chunk_size = chunk_size
+                if error:
+                    raise error
+                body = raw if raw is not None else b"".join(
+                    ("data: " + json.dumps(event) + "\n\n").encode() for event in events)
+                for byte in body:
+                    yield bytes([byte])
+            def close(self):
+                self.closed = True
+        return Response()
+
+    def test_system_sse_gets_exact_pod_and_never_outputs_raw_or_container_logs(self):
+        secret = "PRIVATE_POD_HF_SECRET"
+        pod = self.pod(env={"HF_TOKEN": secret})
+        response = self.stream([
+            {"source": "container", "line": "PRIVATE_DATASET pulling image failed " + secret},
+            {"source": "system", "line": "Pulling image 24% https://private.example/secret 10.1.2.3 " + secret},
+            {"source": "system", "line": "Extracting layer 56% rp_abcdefghijklmnop"},
+            {"source": "system", "line": "Container started PRIVATE_COMMAND python train PRIVATE_DATA"},
+            {"source": "system", "line": "PRIVATE_UNKNOWN_MESSAGE"},
+        ])
+        requests = []
+        def get(url, **kwargs):
+            requests.append((url, kwargs))
+            self.assertEqual(url, status.cloud.REST + "/pods/fixture-pod/logs")
+            self.assertEqual(kwargs["params"], {"source": "system", "tail": 40})
+            self.assertTrue(kwargs["stream"])
+            self.assertFalse(kwargs["allow_redirects"])
+            self.assertTrue(all(0 < value <= 5 for value in kwargs["timeout"]))
+            return response
+        event = status.collect_status("41810732513", api=lambda method, path: [pod] if path == "/pods" else pod,
+                                      env=self.env, system_logs=True, log_get=get, clock=lambda: 0)
+        self.assertEqual(len(requests), 1)
+        self.assertTrue(response.closed)
+        self.assertEqual(event["pods"][0]["system"]["stages"], [
+            {"code": "pulling_image", "progress_percent": 24.0},
+            {"code": "extracting_image", "progress_percent": 56.0}, {"code": "container_started"}])
+        for forbidden in ("PRIVATE_", "private.example", "10.1.2.3", "rp_abcdefghijklmnop"):
+            self.assertNotIn(forbidden, json.dumps(event))
+
+    def test_system_stage_secrets_are_removed_before_classification(self):
+        self.assertIsNone(status._system_stage("image pull failed", ["image pull failed"]))
+        self.assertEqual(status._system_stage("Failed to pull image PRIVATE_VALUE", []), {"code": "image_pull_failed"})
+        self.assertEqual(status._system_stage("OCI runtime create failed PRIVATE_COMMAND", []), {"code": "runtime_error"})
+        self.assertEqual(status._system_stage("Starting container", []), {"code": "container_starting"})
+        self.assertEqual(status._system_stage("Container exited with code 0", []), {"code": "container_exited"})
+
+    def test_system_deadline_event_and_byte_limits_always_close(self):
+        for mode in ("deadline", "events", "bytes"):
+            with self.subTest(mode=mode):
+                response = self.stream(events=[{"source": "system", "line": "pulling image"}] * 45,
+                                       raw=b"x" * 40000 if mode == "bytes" else None)
+                ticks = iter([0, 0, 9])
+                clock = (lambda: next(ticks, 9)) if mode == "deadline" else (lambda: 0)
+                result = status.collect_system_status(self.pod(), self.env, get=lambda *args, **kwargs: response, clock=clock)
+                self.assertTrue(response.closed)
+                self.assertEqual(result["stop"], {"deadline": "deadline", "events": "event_limit", "bytes": "byte_limit"}[mode])
+                self.assertLessEqual(result["events_read"], 40)
+
+    def test_system_timeout_and_http_errors_are_silent_and_always_close(self):
+        for http_error in (False, True):
+            response = self.stream(events=[], error=RuntimeError("PRIVATE_EXCEPTION"))
+            if http_error:
+                response.status_code = 403
+            output, errors = io.StringIO(), io.StringIO()
+            with contextlib.redirect_stdout(output), contextlib.redirect_stderr(errors):
+                result = status.collect_system_status(self.pod(), self.env, get=lambda *args, **kwargs: response, clock=lambda: 0)
+            self.assertTrue(response.closed)
+            self.assertEqual(output.getvalue() + errors.getvalue(), "")
+            self.assertNotIn("PRIVATE_", json.dumps(result))
+            self.assertEqual(result["state"], "monitoring_unavailable" if http_error else "no_known_system_stage")
+
+    def test_system_logs_are_opt_in_and_cli_flag_is_forwarded(self):
+        with patch.object(status, "collect_system_status", side_effect=AssertionError("logs not opted in")):
+            status.collect_status("41810732513", api=lambda method, path: [], env=self.env)
+        output = io.StringIO()
+        with patch.object(status, "collect_status", return_value={"event": "pod_status", "pods": []}) as collect, contextlib.redirect_stdout(output):
+            self.assertEqual(status.main(["--run-id", "41810732513", "--system-logs"]), 0)
+        collect.assert_called_once_with("41810732513", system_logs=True)
+
 
 if __name__ == "__main__":
     unittest.main()

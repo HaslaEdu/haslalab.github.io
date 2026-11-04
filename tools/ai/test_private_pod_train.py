@@ -244,6 +244,50 @@ class PrivatePodTests(unittest.TestCase):
         result = pod.run_pilot(self.env, self.root, self.wandb, self.opener, self.runner)
         self.assertEqual(result["error_code"], "training_code_hash_mismatch")
         self.assertFalse(self.calls)
+        self.assertEqual(self.wandb.init_kwargs["id"], self.env["RUN"])
+        self.assertEqual(self.wandb.init_kwargs["job_type"], "private-solver-pilot-early-failure")
+        logged = self.wandb.run.summary["private_training_result"]
+        self.assertEqual(logged["status"], "failed")
+        self.assertEqual(logged["stage"], "training_code_verification")
+        self.assertFalse(logged["training_started"])
+        self.assertFalse(logged["weights_updated"])
+        self.assertFalse(self.wandb.run.artifacts)
+        self.assertEqual(self.wandb.run.exit_codes, [1])
+        serialized = json.dumps({"config": self.wandb.init_kwargs["config"], "summary": self.wandb.run.summary})
+        self.assertNotIn(self.secret_text, serialized)
+        self.assertNotIn(self.env["WANDB_API_KEY"], serialized)
+        self.assertNotIn(self.env["HF_TOKEN"], serialized)
+        for key in ("console", "disable_code", "save_code", "disable_git", "disable_job_creation", "x_disable_meta", "x_disable_stats"):
+            self.assertEqual(self.wandb.init_kwargs["settings"][key], "off" if key == "console" else False if key == "save_code" else True)
+        self.assertEqual(sum(r.full_url.endswith("/graphql") for r in self.requests), 2)
+
+    def test_early_failure_is_not_published_if_project_privacy_changed(self):
+        self.env["HASLA_TRAIN_SCRIPT_SHA256"] = "0" * 64
+        privacy_checks = []
+        def changed_privacy(request, timeout):
+            if request.full_url.endswith("/graphql"):
+                privacy_checks.append(request)
+                access = "PRIVATE" if len(privacy_checks) == 1 else "PUBLIC"
+                return io.BytesIO(json.dumps({"data": {"project": {"name": "private-project", "access": access}}}).encode())
+            return self.opener(request, timeout)
+        result = pod.run_pilot(self.env, self.root, self.wandb, changed_privacy, self.runner)
+        self.assertEqual(result["error_code"], "training_code_hash_mismatch")
+        self.assertEqual(len(privacy_checks), 2)
+        self.assertIsNone(self.wandb.init_kwargs)
+        self.assertFalse(self.calls)
+
+    def test_missing_or_unverified_early_failure_configuration_never_contacts_reporter(self):
+        private = {"entity": "fixture-entity", "project": "private-project",
+                   "base_url": "https://api.wandb.ai", "access": "PRIVATE"}
+        result = pod.safe_failure(pod.PilotError("training_code_hash_mismatch"), "training_code_verification")
+        for state, env in ((None, self.env), ({**private, "access": "PUBLIC"}, self.env),
+                           (private, {**self.env, "RUN": "../unsafe"}),
+                           (private, {**self.env, "WANDB_API_KEY": ""}),
+                           (private, {**self.env, "ROLE": "invalid"})):
+            with self.subTest(state=state, run=env.get("RUN")):
+                pod.publish_early_failure(env, self.root, state, result, self.wandb, self.opener)
+        self.assertFalse(self.requests)
+        self.assertIsNone(self.wandb.init_kwargs)
 
     def test_unexpected_exception_text_is_not_logged(self):
         def failing_runner(*args, **kwargs):
@@ -507,7 +551,8 @@ class PrivatePodTests(unittest.TestCase):
         self.assertEqual(result["stage"], "role_config_verification")
         self.assertEqual(result["error_code"], "training_code_hash_mismatch")
         self.assertFalse(self.calls)
-        self.assertIsNone(self.wandb.init_kwargs)
+        self.assertEqual(self.wandb.run.summary["private_training_result"]["stage"], "role_config_verification")
+        self.assertFalse(self.wandb.run.summary["private_training_result"]["training_started"])
 
     def test_adapter_cross_role_base_and_incorrect_rank_are_rejected(self):
         self.runner([], env={})

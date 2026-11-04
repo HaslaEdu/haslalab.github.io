@@ -8,13 +8,20 @@ import json
 import math
 import os
 import re
+import signal
 import sys
+import threading
+import time
 
 import private_corpus_run as cloud
 
 
 class StatusError(ValueError):
     """An error code that is safe to print without upstream exception text."""
+
+
+class _StreamDeadline(TimeoutError):
+    pass
 
 
 class _Discard:
@@ -160,6 +167,124 @@ def collect_training_status(run_id, *, query=None):
             return unavailable
 
 
+def _system_stage(value, secrets):
+    """Classify transient system text; never return any text from the provider."""
+    if not isinstance(value, str):
+        return None
+    line = value[:8192]
+    for secret in sorted((str(item) for item in secrets if item), key=len, reverse=True):
+        line = line.replace(secret, "[redacted]")
+    line = re.sub(r"(?i)(?:hf_|rpa_|rp_|wandb_)[A-Za-z0-9_-]{8,}", "[redacted]", line)
+    line = re.sub(r"(?i)https?://\S+", "[url]", line)
+    line = re.sub(r"(?<!\w)(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?(?!\w)", "[ip]", line)
+    line = re.sub(r"\[[0-9a-fA-F:]+\](?::\d+)?|\b(?:[0-9a-fA-F]{0,4}:){2,}[0-9a-fA-F]{0,4}\b", "[ip]", line)
+    lowered = line.lower()
+    if any(term in lowered for term in ("failed to pull", "error pulling", "pull access denied", "manifest unknown", "image pull failed")):
+        code = "image_pull_failed"
+    elif any(term in lowered for term in ("failed to create", "failed to start", "runtime error", "runtimeerror", "oci runtime", "out of memory")):
+        code = "runtime_error"
+    elif "container exited" in lowered:
+        code = "container_exited"
+    elif "container started" in lowered:
+        code = "container_started"
+    elif any(term in lowered for term in ("starting container", "start container")):
+        code = "container_starting"
+    elif any(term in lowered for term in ("extracting", "unpacking", "decompressing")):
+        code = "extracting_image"
+    elif any(term in lowered for term in ("pull complete", "download complete", "image is up to date", "downloaded newer image")):
+        code = "image_ready"
+    elif any(term in lowered for term in ("pulling", "downloading", "pull image")):
+        code = "pulling_image"
+    else:
+        return None
+    result = {"code": code}
+    percent = re.search(r"(?<![\d.])([0-9]{1,3}(?:\.[0-9]{1,2})?)\s*%", line)
+    if percent and float(percent.group(1)) <= 100:
+        result["progress_percent"] = float(percent.group(1))
+    return result
+
+
+def collect_system_status(pod, env, *, get=None, clock=None, deadline=None):
+    """Bounded SSE observation of a previously identity-checked pod's system log."""
+    get = cloud.requests.get if get is None else get
+    clock = time.monotonic if clock is None else clock
+    deadline = clock() + 8 if deadline is None else deadline
+    secrets = list((pod.get("env") or {}).values()) if isinstance(pod.get("env"), dict) else []
+    secrets.extend(value for key, value in env.items() if re.search(r"KEY|TOKEN|SECRET|PASSWORD", key, re.I))
+    response, stages, total, events, buffered, data = None, [], 0, 0, b"", []
+    alarm_handler = None
+    stop = "stream_ended"
+    with contextlib.redirect_stdout(_Discard()), contextlib.redirect_stderr(_Discard()):
+        try:
+            remaining = deadline - clock()
+            if remaining <= 0:
+                return {"state": "bounded", "stop": "deadline", "events_read": 0, "stages": []}
+            # The dedicated Linux CI command can interrupt a blocked socket at
+            # the overall deadline, rather than waiting for another read timeout.
+            # Other platforms retain the monotonic checks and bounded sockets.
+            if (hasattr(signal, "setitimer") and threading.current_thread() is threading.main_thread()
+                    and signal.getitimer(signal.ITIMER_REAL)[0] == 0):
+                def expired(signum, frame):
+                    raise _StreamDeadline()
+                alarm_handler = signal.getsignal(signal.SIGALRM)
+                signal.signal(signal.SIGALRM, expired)
+                signal.setitimer(signal.ITIMER_REAL, remaining)
+            response = get(cloud.REST + "/pods/" + pod["id"] + "/logs", params={"source": "system", "tail": 40},
+                           headers={"Authorization": "Bearer " + env["RUNPOD_API_KEY"], "Accept": "text/event-stream"},
+                           stream=True, timeout=(min(5, remaining), min(5, remaining)), allow_redirects=False)
+            if response.status_code != 200:
+                return {"state": "monitoring_unavailable", "stages": []}
+            # One-byte reads expose short SSE events immediately and avoid buffering
+            # indefinitely while a live stream waits to fill a large read chunk.
+            for chunk in response.iter_content(chunk_size=1):
+                if clock() >= deadline:
+                    stop = "deadline"
+                    break
+                if not isinstance(chunk, bytes):
+                    continue
+                total += len(chunk)
+                if total > 32768:
+                    stop = "byte_limit"
+                    break
+                buffered += chunk
+                while b"\n" in buffered:
+                    line, buffered = buffered.split(b"\n", 1)
+                    line = line.rstrip(b"\r")
+                    if line.startswith(b"data:"):
+                        data.append(line[5:].lstrip())
+                    elif not line and data:
+                        events += 1
+                        try:
+                            event = json.loads(b"\n".join(data))
+                            if isinstance(event, dict) and event.get("source") == "system":
+                                stage = _system_stage(event.get("line"), secrets)
+                                if stage and stage not in stages:
+                                    stages.append(stage)
+                        except (ValueError, UnicodeError):
+                            pass
+                        data = []
+                        if events >= 40:
+                            stop = "event_limit"
+                            break
+                if stop == "event_limit":
+                    break
+        except _StreamDeadline:
+            stop = "deadline"
+        except Exception:
+            stop = "read_timeout_or_error"
+        finally:
+            if alarm_handler is not None:
+                signal.setitimer(signal.ITIMER_REAL, 0)
+                signal.signal(signal.SIGALRM, alarm_handler)
+            if response is not None:
+                try:
+                    response.close()
+                except Exception:
+                    pass
+    return {"state": "observed" if stages else "no_known_system_stage", "stop": stop,
+            "events_read": events, "stages": stages}
+
+
 def _safe_pod(pod, pod_id, expected_name):
     if not isinstance(pod, dict) or pod.get("id") != pod_id or pod.get("name") != expected_name:
         raise StatusError("pod_identity_mismatch")
@@ -187,7 +312,7 @@ def _safe_pod(pod, pod_id, expected_name):
     return result
 
 
-def collect_status(run_id, *, api=None, env=None, wandb_query=None):
+def collect_status(run_id, *, api=None, env=None, wandb_query=None, system_logs=False, log_get=None, clock=None):
     """Resolve exact-name matches and fetch their details, without mutations."""
     run_id = validate_run_id(run_id)
     env = os.environ if env is None else env
@@ -209,7 +334,16 @@ def collect_status(run_id, *, api=None, env=None, wandb_query=None):
                 raise StatusError("invalid_pod_id")
             if pod_id not in pod_ids:
                 pod_ids.append(pod_id)
-        pods = [_safe_pod(api("GET", "/pods/" + pod_id), pod_id, name) for pod_id in pod_ids]
+        pods, raw_pods = [], []
+        for pod_id in pod_ids:
+            raw = api("GET", "/pods/" + pod_id)
+            pods.append(_safe_pod(raw, pod_id, name))
+            raw_pods.append(raw)
+        if system_logs:
+            now = time.monotonic if clock is None else clock
+            deadline = now() + 8
+            for safe, raw in zip(pods, raw_pods):
+                safe["system"] = collect_system_status(raw, env, get=log_get, clock=now, deadline=deadline)
     result = {"event": "pod_status", "run_id": run_id, "state": "present" if pods else "absent", "pods": pods}
     if isinstance(env.get("WANDB_API_KEY"), str) and env["WANDB_API_KEY"].strip():
         result["training"] = collect_training_status(run_id, query=wandb_query)
@@ -220,10 +354,10 @@ def main(argv=None):
     args = sys.argv[1:] if argv is None else argv
     run_id = None
     try:
-        if len(args) != 2 or args[0] != "--run-id":
+        if len(args) not in (2, 3) or args[0] != "--run-id" or (len(args) == 3 and args[2] != "--system-logs"):
             raise StatusError("invalid_arguments")
         run_id = validate_run_id(args[1])
-        event = collect_status(run_id)
+        event = collect_status(run_id, system_logs=len(args) == 3)
         code = 0
     except StatusError as error:
         event = {"event": "pod_status", "state": "error", "error": str(error)}
