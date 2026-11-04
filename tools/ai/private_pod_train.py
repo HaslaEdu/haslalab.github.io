@@ -445,6 +445,38 @@ def adapter_inventory(adapter, config=None):
     return files, sha_bytes(json.dumps(files, sort_keys=True, separators=(",", ":")).encode())
 
 
+def validated_label_diagnostics(value, data_format):
+    statuses = {'plain_text_full_sequence_loss', 'explicit_full_sequence_loss',
+                'template_has_no_generation_markers', 'generation_mask_not_available',
+                'generation_mask_not_selective', 'generation_mask_shape_invalid', 'generation_mask_check_failed',
+                'library_generation_mask_verified', 'installed_trl_has_no_assistant_only_loss'}
+    numbers = ('mask_probe_dimensions', 'mask_probe_batch_size', 'mask_probe_token_count', 'mask_probe_assistant_tokens')
+    keys = {'version', 'assistant_only_loss', 'assistant_loss_status', 'selected_template_sha256',
+            'processor_class', 'tokenizer_class', *numbers}
+    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] != 1
+            or type(value['assistant_only_loss']) is not bool or not isinstance(value['assistant_loss_status'], str)
+            or value['assistant_loss_status'] not in statuses
+            or data_format not in ('text', 'chat')):
+        raise ValueError('invalid_label_diagnostics')
+    template = value['selected_template_sha256']
+    if not (isinstance(template, str) and re.fullmatch(r'[a-f0-9]{64}', template) or template is None and data_format == 'text'):
+        raise ValueError('invalid_label_diagnostics')
+    if any(not isinstance(value[k], str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,79}', value[k])
+           for k in ('processor_class', 'tokenizer_class')):
+        raise ValueError('invalid_label_diagnostics')
+    if any(type(value[k]) is not int or not 0 <= value[k] <= 4096 for k in numbers):
+        raise ValueError('invalid_label_diagnostics')
+    dimensions, batch, tokens, selected = [value[k] for k in numbers]
+    if (dimensions not in (0, 1, 2) or selected > tokens or dimensions == 0 and (batch or tokens or selected)
+            or dimensions == 1 and batch != 1 or tokens and batch != 1):
+        raise ValueError('invalid_label_diagnostics')
+    verified = value['assistant_loss_status'] == 'library_generation_mask_verified'
+    if value['assistant_only_loss'] != verified or verified and not (dimensions in (1, 2) and batch == 1 and 0 < selected < tokens):
+        raise ValueError('invalid_label_diagnostics')
+    if ((data_format == 'text') != (value['assistant_loss_status'] == 'plain_text_full_sequence_loss')
+            or data_format == 'text' and (dimensions or batch or tokens or selected)):
+        raise ValueError('invalid_label_diagnostics')
+    return dict(value)
 def runtime_profile_proof_keys(profile):
     common = ('first_optimizer_step_completed', 'gpu_count', 'gpu_name', 'physical_vram_bytes',
               'cpu_or_disk_offload_used', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')
@@ -519,7 +551,13 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
             losses[name] = float(value)
         else:
             losses[name] = None
-    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses, **proof}
+    diagnostics = {}
+    if 'label_diagnostics' in report:
+        try:
+            diagnostics['label_diagnostics'] = validated_label_diagnostics(report['label_diagnostics'], data_format)
+        except ValueError:
+            raise PilotError('training_label_diagnostics_invalid') from None
+    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses, **proof, **diagnostics}
 
 
 def safe_failure(error, stage):
@@ -891,6 +929,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         if config.get('training_profile') is not None:
             artifact.metadata['training_profile'] = config['training_profile']
             artifact.metadata['runtime_profile_proof'] = {k: report[k] for k in runtime_profile_proof_keys(config['training_profile'])}
+        if 'label_diagnostics' in report:
+            artifact.metadata['label_diagnostics'] = report['label_diagnostics']
         if initial_spec:
             artifact.metadata.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                                      initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
@@ -917,6 +957,8 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         if config.get('training_profile') is not None:
             result['training_profile'] = config['training_profile']
             result['runtime_profile_proof'] = artifact.metadata['runtime_profile_proof']
+        if 'label_diagnostics' in report:
+            result['label_diagnostics'] = report['label_diagnostics']
         if initial_spec:
             result.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                           initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)

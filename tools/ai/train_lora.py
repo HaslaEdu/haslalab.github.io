@@ -348,12 +348,15 @@ def peft_kwargs(config, rank, max_length):
     return options
 
 
-def assistant_loss_support(processor, template_provider=None):
+def assistant_loss_support(processor, template_provider=None, probe=None):
     """Use only library-provided generation masks, verified on nonsensitive text.
 
     TRL's documented get_training_chat_template recognizes supported families.
     We never insert custom Jinja spans or infer token boundaries ourselves.
     """
+    probe = {} if probe is None else probe
+    probe.update(mask_probe_dimensions=0, mask_probe_batch_size=0,
+                 mask_probe_token_count=0, mask_probe_assistant_tokens=0)
     template = getattr(processor, 'chat_template', None)
     if not isinstance(template, str) and hasattr(processor, 'tokenizer'):
         template = getattr(processor.tokenizer, 'chat_template', None)
@@ -371,15 +374,46 @@ def assistant_loss_support(processor, template_provider=None):
               {'role': 'assistant', 'content': 'Synthetic mask check answer.'}]
     try:
         encoded = processor.apply_chat_template(sample, tokenize=True, return_dict=True,
-                    add_generation_prompt=False, return_assistant_tokens_mask=True, chat_template=candidate)
+                    add_generation_prompt=False, return_assistant_tokens_mask=True, return_tensors=None, chat_template=candidate)
         mask, tokens = encoded.get('assistant_masks'), encoded.get('input_ids')
-        if not isinstance(mask, (list, tuple)) or not isinstance(tokens, (list, tuple)) or len(mask) != len(tokens):
+        if not isinstance(mask, (list, tuple)) or not isinstance(tokens, (list, tuple)):
             return False, None, 'generation_mask_not_available'
-        if not mask or not all(value in (0, 1) for value in mask) or not 0 < sum(mask) < len(mask):
+        nested = any(isinstance(value, (list, tuple)) for value in [*mask, *tokens])
+        if nested:
+            probe.update(mask_probe_dimensions=2, mask_probe_batch_size=min(len(tokens), 4096))
+            if len(mask) != 1 or len(tokens) != 1 or not isinstance(mask[0], (list, tuple)) or not isinstance(tokens[0], (list, tuple)):
+                return False, None, 'generation_mask_shape_invalid'
+            mask, tokens = mask[0], tokens[0]
+        else:
+            probe.update(mask_probe_dimensions=1, mask_probe_batch_size=1)
+        if (len(mask) != len(tokens) or len(tokens) > 4096
+                or any(type(value) is not int or value < 0 for value in tokens)
+                or any(type(value) is not int or value not in (0, 1) for value in mask)):
+            return False, None, 'generation_mask_shape_invalid'
+        probe.update(mask_probe_token_count=len(tokens), mask_probe_assistant_tokens=sum(mask))
+        if not mask or not 0 < sum(mask) < len(mask):
             return False, None, 'generation_mask_not_selective'
     except Exception:
         return False, None, 'generation_mask_check_failed'
     return True, candidate, 'library_generation_mask_verified'
+
+
+def label_diagnostics(processor, enabled, reason, probe, data_format):
+    """Only hashes, fixed statuses, class names and numeric synthetic-probe counts."""
+    tokenizer = getattr(processor, 'tokenizer', processor)
+    template = getattr(processor, 'chat_template', None)
+    if template is None:
+        template = getattr(tokenizer, 'chat_template', None)
+    if isinstance(template, dict):
+        template = template.get('default')
+    if data_format == 'chat' and (not isinstance(template, str) or not 0 < len(template.encode()) <= 256 * 1024):
+        raise ValueError('selected chat template cannot be identified')
+    def class_name(value):
+        name = type(value).__name__
+        return name if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,79}', name) else 'unknown'
+    return {'version': 1, 'assistant_only_loss': enabled, 'assistant_loss_status': reason,
+            'selected_template_sha256': hashlib.sha256(template.encode()).hexdigest() if isinstance(template, str) else None,
+            'processor_class': class_name(processor), 'tokenizer_class': class_name(tokenizer), **probe}
 
 
 def safe_loss_metrics(history, final_metrics=None):
@@ -564,12 +598,14 @@ def main(argv=None):
         summary.update(gemma_single_gpu_proof(torch, model))
         summary.update(qwq_quantized_linear_proof(model, Params4bit))
     mask_enabled, patched_template, mask_reason = False, None, 'plain_text_full_sequence_loss'
+    mask_probe = {'mask_probe_dimensions': 0, 'mask_probe_batch_size': 0,
+                  'mask_probe_token_count': 0, 'mask_probe_assistant_tokens': 0}
     if a.format == 'chat' and a.assistant_only_loss != 'off':
         try:
             from trl import get_training_chat_template
         except ImportError:
             get_training_chat_template = None
-        mask_enabled, patched_template, mask_reason = assistant_loss_support(tok, get_training_chat_template)
+        mask_enabled, patched_template, mask_reason = assistant_loss_support(tok, get_training_chat_template, mask_probe)
         if mask_enabled and 'assistant_only_loss' not in inspect.signature(SFTConfig).parameters:
             mask_enabled, patched_template, mask_reason = False, None, 'installed_trl_has_no_assistant_only_loss'
         if a.assistant_only_loss == 'required' and not mask_enabled:
@@ -599,6 +635,13 @@ def main(argv=None):
         training_options['assistant_only_loss'] = mask_enabled
     trainer = SFTTrainer(model=model, processing_class=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
                          args=SFTConfig(**training_options))
+    effective_mask = getattr(getattr(trainer, 'args', None), 'assistant_only_loss', mask_enabled)
+    if type(effective_mask) is not bool or effective_mask != mask_enabled:
+        raise ValueError('trainer assistant masking configuration changed unexpectedly')
+    summary['label_diagnostics'] = label_diagnostics(getattr(trainer, 'processing_class', tok), effective_mask,
+                                                     mask_reason, mask_probe, a.format)
+    if mask_enabled and summary['label_diagnostics']['selected_template_sha256'] != hashlib.sha256(patched_template.encode()).hexdigest():
+        raise ValueError('trainer changed the probed assistant-loss template')
     if a.training_profile:
         from transformers import TrainerCallback
         gemma_single_gpu_proof(torch, model)

@@ -296,7 +296,7 @@ class GemmaTrainingProfileTests(unittest.TestCase):
             Path(out).mkdir()
             (Path(out) / 'adapter_model.safetensors').write_bytes(b'synthetic-not-real-weights')
         model.save_pretrained = save
-        processor = NS(eos_token='<eos>', save_pretrained=lambda _: None)
+        processor = NS(eos_token='<eos>', chat_template='synthetic CPU-only template', save_pretrained=lambda _: None)
         class Loader:
             @staticmethod
             def from_pretrained(**kwargs):
@@ -340,6 +340,9 @@ class GemmaTrainingProfileTests(unittest.TestCase):
         self.assertFalse(calls['loader']['load_in_16bit'])
         self.assertTrue(calls['trainer']['args'].bf16)
         self.assertTrue(report['weights_updated'])
+        self.assertEqual(report['label_diagnostics']['assistant_loss_status'], 'explicit_full_sequence_loss')
+        self.assertEqual(report['label_diagnostics']['selected_template_sha256'],
+                         hashlib.sha256(processor.chat_template.encode()).hexdigest())
 
 
 if __name__ == '__main__':
