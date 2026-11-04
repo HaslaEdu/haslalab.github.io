@@ -122,6 +122,16 @@ class ParentTests(unittest.TestCase):
             REAL_VERIFY_SOURCE(self.job,self.env)
         self.assertEqual(opened.call_args.kwargs['expected_hash'],self.job['source_manifest_sha256'])
 
+    def test_preflight_full_manifest_hash_changes_when_accounting_changes_with_same_job(self):
+        first=self.execute(preflight=True)
+        self.assertEqual(first['manifest_sha256'],hashlib.sha256(parent.canonical(self.manifest)).hexdigest())
+        updated={**self.manifest,'prior_closed_krw':self.manifest['prior_closed_krw']+1}
+        self.env['HASLA_OCR_BATCH_MANIFEST']=json.dumps(updated)
+        second=self.execute(preflight=True)
+        self.assertEqual(first['job_sha256'],second['job_sha256'])
+        self.assertNotEqual(first['manifest_sha256'],second['manifest_sha256'])
+        self.assertFalse(any(method=='POST' for method,_,_ in self.calls))
+
     def test_manifest_preflight_passes_only_wandb_credentials_to_strict_source_reader(self):
         observed=[]
         def opened(reference,env,*args,**kwargs):

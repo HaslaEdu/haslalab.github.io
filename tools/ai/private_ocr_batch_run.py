@@ -434,7 +434,8 @@ def execute(env=None,*,preflight=False,clock=time.monotonic,wall_clock=time.time
     guard.update(guard_prior_upper_krw=str(ledger.prior_spend_krw),probe_reserved_upper_krw=str(plan.reserved_krw),
         budget_krw=str(ledger.policy.budget_krw),total_runtime_seconds=manifest['total_runtime_seconds'],gpu_hourly_ceiling=str(quote.gpu_usd_per_hour_upper),
         calibration_pages=len(manifest['job']['page_keys']),source_count=manifest['job']['expected_source_count'],
-        source_manifest_sha256=manifest['job']['source_manifest_sha256'],job_sha256=manifest['job_sha256'])
+        source_manifest_sha256=manifest['job']['source_manifest_sha256'],job_sha256=manifest['job_sha256'],
+        manifest_sha256=hashlib.sha256(canonical(manifest)).hexdigest())
     if preflight:return {'event':KIND,'status':'preflight_ready','gpu_creation_attempted':False,'pdfs_downloaded':0,'gpu':gpu,**guard}
     pod=None;value=None;outcome=None;attempted=False;code=None;last_phase={'phase':'bootstrap','status':'unreported','code':'awaiting_bootstrap_heartbeat'}
     try:
