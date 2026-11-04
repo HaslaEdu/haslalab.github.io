@@ -316,7 +316,9 @@ async function arOauth(root) {
 async function arOauthBack(root) {
   const T = arT(), q = new URLSearchParams(location.hash.split("?")[1] || "");
   history.replaceState(null, "", location.pathname + location.search + "#/oauth");
-  if (q.get("e") || !q.get("c")) { root.innerHTML = `<div class="cmauth"><div class="card"><p class="cmerr">${esc(arErr({code: q.get("e") || "bad_code"}))}</p><a class="cmbtn pri" href="#/login">${T.login}</a></div></div>`; return; }
+  /* the provider's side of a failure (the step, its status and error code, e.g. token-401-invalid_client), shown small so it can be reported */
+  const why = (q.get("d") || "").replace(/[^a-z0-9_-]/gi, "").slice(0, 60);
+  if (q.get("e") || !q.get("c")) { root.innerHTML = `<div class="cmauth"><div class="card"><p class="cmerr">${esc(arErr({code: q.get("e") || "bad_code"}))}</p>${why ? `<p class="arnote" data-oauth-why>${lang === "en" ? "Error code" : "오류 코드"}: <code>${esc(why)}</code></p>` : ""}<a class="cmbtn pri" href="#/login">${T.login}</a></div></div>`; return; }
   try {
     const r = await cmApi("POST", "/oauth/redeem", {code: q.get("c")});
     cmTok(r.token); cm.me = r.user; cm.meChecked = true; arChip();
