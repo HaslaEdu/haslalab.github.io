@@ -103,7 +103,7 @@ def main():
             raise RuntimeError('base model access check failed')
     entity = cloud.private_project()
     policy = BudgetPolicy(fx_krw_per_usd_upper=2000, budget_krw=30000, reserve_krw=5000, tax_multiplier='1.15')
-    quote = PodQuote(gpu_usd_per_hour_upper=3, container_disk_gb=200, volume_disk_gb=0)
+    quote = PodQuote(gpu_usd_per_hour_upper=4, container_disk_gb=200, volume_disk_gb=0)
     ledger = reserve_run(BudgetLedger(policy, prior_spend_krw=manifest.get('prior_upper_krw', 10)),
                          run_id, 'dual', quote, time.monotonic(), 7200, 7200)
     plan = ledger.runs[-1].plan

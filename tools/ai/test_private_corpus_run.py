@@ -209,9 +209,9 @@ class PrivateCorpusRunnerTests(unittest.TestCase):
                 contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(runner.capacity_preflight(), runner.GPU_IDS[0])
             catalog["gpus"][1]["availability"] = "NONE"
-            with self.assertRaisesRegex(RuntimeError, "No A100"):
+            with self.assertRaisesRegex(RuntimeError, "No supported GPU"):
                 runner.capacity_preflight()
-            catalog['gpus'][0].update(availability='HIGH', price={'secure': 3.01})
+            catalog['gpus'][0].update(availability='HIGH', price={'secure': 4.01})
             with self.assertRaisesRegex(RuntimeError, 'ceiling'):
                 runner.capacity_preflight()
 

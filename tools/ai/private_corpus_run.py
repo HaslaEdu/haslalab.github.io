@@ -30,7 +30,8 @@ REST = 'https://api.runpod.io/v2'
 PROJECT = 'hasla-ai-private-training'
 PREFIX = 'hasla-private-books-'
 E = os.environ
-GPU_IDS = ('NVIDIA A100 80GB PCIe', 'NVIDIA A100-SXM4-80GB')
+GPU_IDS = ('NVIDIA A100 80GB PCIe', 'NVIDIA A100-SXM4-80GB',
+           'NVIDIA H100 80GB HBM3', 'NVIDIA H100 PCIe', 'NVIDIA H100 NVL')
 
 
 def normalized_pod(value):
@@ -138,23 +139,23 @@ def capacity_preflight():
     safe_event('runpod_readonly_preflight', funded=funded, quotes=quotes)
     if not funded:
         raise RuntimeError('RunPod account needs prepaid funds; no payment or GPU creation attempted')
-    for gpu_id in reversed(GPU_IDS):
+    for gpu_id in (GPU_IDS[1], GPU_IDS[0], *GPU_IDS[2:]):
         for row in quotes:
             try:
                 price = Decimal(str(row['hourly_usd']))
             except InvalidOperation:
                 continue
             if (row['gpu'] == gpu_id and str(row['stock']).upper() in ('LOW', 'MEDIUM', 'HIGH')
-                    and price.is_finite() and 0 < price <= 3):
+                    and price.is_finite() and 0 < price <= 4):
                 return gpu_id
-    raise RuntimeError('No A100 80GB is available within the reserved USD3 hourly ceiling')
+    raise RuntimeError('No supported GPU is available within the reserved USD4 hourly ceiling')
 
 
 def graphql_create_pod(name, env, command, gpu_id=GPU_IDS[1]):
     # Compatibility name for callers; provisioning now uses the current REST v2.
     # Make exactly one creation request, then reconcile by exact name on failure.
     if gpu_id not in GPU_IDS:
-        raise ValueError('Only an A100 80GB is authorized for this pilot')
+        raise ValueError('Only the configured A100/H100 training GPUs are allowed for this pilot')
     return runpod('POST', '/pods', json={
         'name': name, 'cloud': 'SECURE', 'gpu': {'id': gpu_id, 'count': 1},
         'disk': 200, 'image': 'runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404',
