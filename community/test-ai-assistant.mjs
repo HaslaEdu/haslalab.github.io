@@ -302,6 +302,11 @@ test('the route: visitors get two messages, members no quota but a flood guard; 
   assert.equal(DB.sql.prepare('SELECT verdict FROM ai_eval WHERE id=?').get(done.data.id).verdict, 'bad');
   const other = createAiAssistantRouter({HttpError, currentUser: async () => ({id: 8}), needUser: u => u, limit: async () => {}, trainAllowed: async () => true});
   await assert.rejects(other(post({id: done.data.id, good: true}, true, '/api/ai/feedback'), env), e => e.status === 404);
+  // a deleted (or edited) exchange leaves the review queue; another member's ids are left alone
+  const kept2 = (await route(post({messages: [{role: 'user', content: '또 질문'}]}), env)).id;
+  assert.deepEqual(await other(post({remove: [kept2]}, true, '/api/ai/feedback'), env), {ok: true, removed: 0});
+  assert.deepEqual(await route(post({remove: [kept2, 'x']}, true, '/api/ai/feedback'), env), {ok: true, removed: 1});
+  assert.equal(DB.sql.prepare('SELECT count(*) n FROM ai_eval WHERE id=?').get(kept2).n, 0);
   // withdrawing the permission removes the member's kept chats
   await route(post({}, true, '/api/ai/forget'), env);
   assert.equal(DB.sql.prepare("SELECT count(*) n FROM ai_eval WHERE kind='member'").get().n, 0);

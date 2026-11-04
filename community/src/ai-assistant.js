@@ -11,7 +11,7 @@
 // members only, with a flood guard but no quota.
 import { MODEL_TEST_EXAMS } from './model-test-catalog.js';
 import { readPublicPosts } from './public-data.js';
-import { recall, logUsage, fastAllowed, logMemberChat, memberFeedback, forgetMember } from './ai-memory.js';
+import { recall, logUsage, fastAllowed, logMemberChat, memberFeedback, forgetMember, forgetMemberChat } from './ai-memory.js';
 
 export const AI_ASSISTANT_PATH = '/api/ai/chat';
 const SITE = 'https://haslalab.org/';
@@ -562,6 +562,10 @@ export function createAiAssistantRouter({HttpError, currentUser, needUser, limit
     const me = user || path !== AI_ASSISTANT_PATH ? needUser(user) : null;   // a visitor may only ask
     const body = await req.json().catch(() => null);
     if (path === AI_FORGET_PATH) { if (env.DB) await forgetMember(env.DB, me.id); return {ok: true}; }   // the member withdrew the chat's learning permission
+    if (path === AI_FEEDBACK_PATH && Array.isArray(body?.remove)) {   // exchanges the member deleted or edited away in the chat
+      const ids = body.remove.map(Number).filter(Number.isInteger).slice(0, 50);
+      return {ok: true, removed: await forgetMemberChat(env.DB, me.id, ids)};
+    }
     if (path === AI_FEEDBACK_PATH) {
       const id = +body?.id;
       if (!Number.isInteger(id) || typeof body?.good !== 'boolean') throw new HttpError(400, 'invalid_feedback');
