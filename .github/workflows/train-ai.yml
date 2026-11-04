@@ -1,5 +1,5 @@
 name: Hasla Gemma and QwQ private pilot
-run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }})
+run-name: Hasla dual-model pilot (preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }})
 on:
   workflow_dispatch:
     inputs:
@@ -11,11 +11,15 @@ on:
         description: "Collect the next private community pattern batch on CPU only"
         type: boolean
         default: false
+      status_run_id:
+        description: "Read-only GPU status for an existing pilot run ID; never creates a GPU"
+        type: string
+        default: ""
 permissions:
   contents: read
 jobs:
   private-pilot:
-    if: ${{ !inputs.collection_only }}
+    if: ${{ !inputs.collection_only && inputs.status_run_id == '' }}
     concurrency:
       group: hasla-private-book-training
       cancel-in-progress: false
@@ -78,7 +82,7 @@ jobs:
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
   collect-patterns:
-    if: ${{ inputs.collection_only }}
+    if: ${{ inputs.collection_only && inputs.status_run_id == '' }}
     concurrency:
       group: hasla-private-pattern-collection
       cancel-in-progress: false
@@ -100,3 +104,21 @@ jobs:
           HASLA_PATTERN_EXCLUDED_URLS: ${{ secrets.HASLA_PATTERN_EXCLUDED_URLS }}
           HASLA_PATTERN_CURSORS: ${{ secrets.HASLA_PATTERN_CURSORS }}
           HASLA_PATTERN_OBSERVED_LISTING_URLS: ${{ secrets.HASLA_PATTERN_OBSERVED_LISTING_URLS }}
+  inspect-gpu:
+    if: ${{ inputs.status_run_id != '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ai
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install --quiet requests
+      - name: Read exact pilot GPU status
+        run: python tools/ai/private_pod_status.py --run-id "$HASLA_STATUS_RUN_ID"
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          HASLA_STATUS_RUN_ID: ${{ inputs.status_run_id }}
