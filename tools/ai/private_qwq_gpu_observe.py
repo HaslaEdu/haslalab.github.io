@@ -21,6 +21,18 @@ EXCEPTIONS = ('ModuleNotFoundError', 'ImportError', 'RuntimeError', 'MemoryError
               'AssertionError', 'PermissionError', 'TimeoutError', 'CUDAOutOfMemoryError')
 
 
+def bounded_lines(response, deadline, clock):
+    total, pending = 0, b''
+    for chunk in response.iter_content(chunk_size=1024):
+        total += len(chunk)
+        if clock() >= deadline or total > 65536:
+            break
+        pending += chunk
+        while b'\n' in pending:
+            line, pending = pending.split(b'\n', 1)
+            yield line.rstrip(b'\r')
+
+
 def system_signal(line):
     if not isinstance(line, str):
         return None
@@ -64,7 +76,7 @@ def system_status(pod, env, *, get=None, clock=time.monotonic):
                 timeout=(3, 3), headers={'Authorization': 'Bearer ' + env['RUNPOD_API_KEY']})
             if response.status_code != 200:
                 return result
-            for raw in response.iter_lines(chunk_size=1024):
+            for raw in bounded_lines(response, deadline, clock):
                 total += len(raw)
                 if clock() >= deadline or total > 65536 or events >= 64:
                     break
