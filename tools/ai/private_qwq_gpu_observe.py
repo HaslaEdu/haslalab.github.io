@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import signal
 import time
+from datetime import datetime, timezone
 
 import private_qwq_gpu_run as parent
 import private_qwq_gpu_eval as worker
@@ -19,6 +20,49 @@ POD_NAME = parent.PREFIX + TARGET
 HELPER_PINS = {'private_qwq_gpu_run.py': '3aa81faf66827d1b864697252dccbd01f903589aa2ed9307d11373ce2355fe57', 'private_qwq_gpu_eval.py': '34c09c2a2db22f9b4c525030736e61039b6c2d72ddcc2d55d9bb888e635de0af', 'private_qwq_comparison.py': '280bfeef08d8bd9d26feddc784cf4724687373ae4c186302bc0d171b103298db', 'private_resume_adapter.py': 'e52f9e5c31d938c98b7f3215761e3a3ccee616c645b74bd4cfa899cb34b551af', 'private_verify_adapter.py': 'e349889bbbd25fc5aa80ff32f43c2a3911a3f21ca0fd6f8b530d9b82142063a9', 'role_config.py': 'fde4850efcb0002d3458772956fcf61398c705814e1d6534981404ae495eac03', 'private_corpus_run.py': '8fdbdfa9748f0d2c526cb4212b9b033878ec2847625adefc27091d66f0319888', 'private_pod_train.py': '52e40d98d532b2e4bf0ab686f65ad72ad5286f866b2146cc2cff10c65efaaef5', 'training_budget.py': '6727d8089e55289b89c6e750820ed3275b76fa5a991b324c089251c58d17c46f', 'private_dedicated_run.py': 'a62082d48d415197701397aea9d494793c18345919ab1649d1566a370a514963', 'private_dual_run.py': 'ec3c8e586ebc8f252ee1cdfbc0d4e619f60d1f6209bc07f2172d84cbfe70f49b'}
 EXCEPTIONS = ('ModuleNotFoundError', 'ImportError', 'RuntimeError', 'MemoryError',
               'AssertionError', 'PermissionError', 'TimeoutError', 'CUDAOutOfMemoryError')
+LOG_TOKENS = ('start', 'stop', 'exit', 'die', 'error', 'fail', 'kill', 'restart', 'oom',
+              'space', 'image', 'pull', 'download', 'pip', 'bash', 'timeout', 'exec',
+              'container', 'mount', 'runtime', 'nvidia', 'cuda')
+
+
+def iso_timestamp(value):
+    if not isinstance(value, str) or not re.fullmatch(
+        r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,9})?(?:Z|[+-][0-9]{2}:[0-9]{2})', value):
+        return None
+    try:
+        return datetime.fromisoformat(value.replace('Z', '+00:00')).astimezone(timezone.utc).isoformat().replace('+00:00', 'Z')
+    except ValueError:
+        return None
+
+
+def diagnostic_line(event):
+    line = event.get('line')
+    if not isinstance(line, str):
+        return None
+    text = line[:8192]
+    flags = {word: True for word in LOG_TOKENS if word in text.lower()}
+    signal_fields = system_signal(text) or {}
+    if not flags and not signal_fields:
+        return None
+    row = {'sha256_prefix': hashlib.sha256(line.encode('utf8')).hexdigest()[:16], 'features': flags, **signal_fields}
+    for key in ('timestamp', 'time', 'createdAt'):
+        value = iso_timestamp(event.get(key))
+        if value is not None:
+            row['event_time_utc'] = value
+            break
+    return row
+
+
+def bounded_lines(response, deadline, clock):
+    total, pending = 0, b''
+    for chunk in response.iter_content(chunk_size=1024):
+        total += len(chunk)
+        if clock() >= deadline or total > 65536:
+            break
+        pending += chunk
+        while b'\n' in pending:
+            line, pending = pending.split(b'\n', 1)
+            yield line.rstrip(b'\r')
 
 
 def system_signal(line):
@@ -45,11 +89,12 @@ def system_signal(line):
     return result or None
 
 
-def system_status(pod, env, *, get=None, clock=time.monotonic):
+def system_status(pod, env, *, source='system', get=None, clock=time.monotonic):
     """Only system-source SSE, at most six seconds/64 KiB/64 events, RAM only."""
     get = get or parent.cloud.requests.get
+    parent.require(source in ('system', 'container'), 'log_source_invalid')
     response, old_handler = None, None
-    stages, total, events = [], 0, 0
+    stages, diagnostics, events = [], [], 0
     deadline = clock() + 6
     result = {'state': 'unavailable', 'signals': []}
     try:
@@ -60,13 +105,12 @@ def system_status(pod, env, *, get=None, clock=time.monotonic):
             signal.setitimer(signal.ITIMER_REAL, 6)
         with resume._quiet():
             response = get(parent.cloud.REST + '/pods/' + pod['id'] + '/logs',
-                params={'source': 'system', 'tail': 60}, stream=True, allow_redirects=False,
+                params={'source': source, 'tail': 60}, stream=True, allow_redirects=False,
                 timeout=(3, 3), headers={'Authorization': 'Bearer ' + env['RUNPOD_API_KEY']})
             if response.status_code != 200:
-                return result
-            for raw in response.iter_lines(chunk_size=1024):
-                total += len(raw)
-                if clock() >= deadline or total > 65536 or events >= 64:
+                return {**result, 'http_status': response.status_code if type(response.status_code) is int else 0}
+            for raw in bounded_lines(response, deadline, clock):
+                if events >= 64:
                     break
                 if not raw.startswith(b'data:'):
                     continue
@@ -75,13 +119,19 @@ def system_status(pod, env, *, get=None, clock=time.monotonic):
                 except (ValueError, UnicodeError):
                     continue
                 events += 1
-                if isinstance(value, dict) and value.get('source') == 'system':
+                allowed = ('system',) if source == 'system' else ('container', 'stdout', 'stderr')
+                if isinstance(value, dict) and value.get('source') in allowed:
                     stage = system_signal(value.get('line'))
                     if stage and stage not in stages:
                         stages.append(stage)
-        result = {'state': 'observed' if stages else 'no_known_signal', 'signals': stages, 'events_read': events}
+                    row = diagnostic_line(value)
+                    if row is not None and len(diagnostics) < 32:
+                        diagnostics.append(row)
+        result = {'state': 'observed' if stages or diagnostics else 'no_known_signal', 'signals': stages,
+                  'events_read': events, 'diagnostics': diagnostics}
     except Exception:
-        result = {'state': 'partial' if stages else 'unavailable', 'signals': stages, 'events_read': events}
+        result = {'state': 'partial' if stages or diagnostics else 'unavailable', 'signals': stages,
+                  'events_read': events, 'diagnostics': diagnostics}
     finally:
         if response is not None:
             response.close()
@@ -105,11 +155,17 @@ def pod_projection(pod):
     safe = {'id': pod['id'], 'name': POD_NAME, 'gpu_id': 'NVIDIA A40', 'gpu_count': 1,
         'hourly_usd': str(pod['costPerHr']), 'status': status if status in
         {'RUNNING', 'STOPPED', 'EXITED', 'TERMINATED', 'CREATED', 'PENDING', 'STARTING'} else 'unknown'}
+    changed_at = iso_timestamp(pod.get('lastStatusChange'))
+    if changed_at is not None:
+        safe['last_status_change_utc'] = changed_at
     runtime = pod.get('runtime')
+    safe['runtime_object_present'] = isinstance(runtime, dict)
+    safe['uptime_observed'] = False
     if isinstance(runtime, dict):
         uptime = numeric(runtime.get('uptimeInSeconds', runtime.get('uptime')), 1000000)
         if uptime is not None:
             safe['uptime_seconds'] = uptime
+            safe['uptime_observed'] = True
         gpus = runtime.get('gpus')
         if isinstance(gpus, list) and len(gpus) == 1 and isinstance(gpus[0], dict):
             for field, key, alternate in (('gpu_util_percent', 'util', 'gpuUtilPercent'),
@@ -146,7 +202,8 @@ def observe(env, *, services=None, system=system_status):
                            and detail.get('name') == POD_NAME, 'pod_detail_identity_changed')
             event['pod'] = pod_projection(detail)
             event['pod_source'] = 'exact_id_detail'
-            event['system'] = system(detail, env)
+            event['system'] = system(detail, env, source='system')
+            event['container'] = system(detail, env, source='container')
     except Exception:
         event['failure_codes'].append('provider_or_resource_observation_unavailable')
     try:
