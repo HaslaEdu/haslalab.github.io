@@ -46,7 +46,7 @@ def system_signal(line):
 
 
 def system_status(pod, env, *, get=None, clock=time.monotonic):
-    """Only system-source SSE, at most six seconds/64 KiB/32 events, RAM only."""
+    """Only system-source SSE, at most six seconds/64 KiB/64 events, RAM only."""
     get = get or parent.cloud.requests.get
     response, old_handler = None, None
     stages, total, events = [], 0, 0
@@ -60,13 +60,13 @@ def system_status(pod, env, *, get=None, clock=time.monotonic):
             signal.setitimer(signal.ITIMER_REAL, 6)
         with resume._quiet():
             response = get(parent.cloud.REST + '/pods/' + pod['id'] + '/logs',
-                params={'source': 'system', 'tail': 20}, stream=True, allow_redirects=False,
+                params={'source': 'system', 'tail': 60}, stream=True, allow_redirects=False,
                 timeout=(3, 3), headers={'Authorization': 'Bearer ' + env['RUNPOD_API_KEY']})
             if response.status_code != 200:
                 return result
             for raw in response.iter_lines(chunk_size=1024):
                 total += len(raw)
-                if clock() >= deadline or total > 65536 or events >= 32:
+                if clock() >= deadline or total > 65536 or events >= 64:
                     break
                 if not raw.startswith(b'data:'):
                     continue
@@ -112,8 +112,9 @@ def pod_projection(pod):
             safe['uptime_seconds'] = uptime
         gpus = runtime.get('gpus')
         if isinstance(gpus, list) and len(gpus) == 1 and isinstance(gpus[0], dict):
-            for field, key in (('gpu_util_percent', 'util'), ('memory_util_percent', 'memoryUtil')):
-                value = numeric(gpus[0].get(key), 100)
+            for field, key, alternate in (('gpu_util_percent', 'util', 'gpuUtilPercent'),
+                                           ('memory_util_percent', 'memoryUtil', 'memoryUtilPercent')):
+                value = numeric(gpus[0].get(key, gpus[0].get(alternate)), 100)
                 if value is not None:
                     safe[field] = value
     return safe
@@ -136,8 +137,16 @@ def observe(env, *, services=None, system=system_status):
         parent.require(len(matches) <= 1, 'duplicate_target_pods')
         event['provider_read_succeeded'] = True
         if matches:
-            event['pod'] = pod_projection(matches[0])
-            event['system'] = system(matches[0], env)
+            listed = matches[0]
+            # The list payload can omit runtime. Only the same exact Pod's GET
+            # response may supply health data; never widen the name/ID scope.
+            pod_projection(listed)
+            detail = services.pod(listed['id'], 20)
+            parent.require(isinstance(detail, dict) and detail.get('id') == listed['id']
+                           and detail.get('name') == POD_NAME, 'pod_detail_identity_changed')
+            event['pod'] = pod_projection(detail)
+            event['pod_source'] = 'exact_id_detail'
+            event['system'] = system(detail, env)
     except Exception:
         event['failure_codes'].append('provider_or_resource_observation_unavailable')
     try:
