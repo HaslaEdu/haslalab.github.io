@@ -41,8 +41,8 @@ class PreparationTests(unittest.TestCase):
         from role_config import get_role_config
         from private_resume_adapter import validate_spec
         checked = validate_spec(copy.deepcopy(prep.ADAPTER_SPEC), get_role_config('solver'))
-        self.assertEqual(checked['source_training_run_id'], '41919750109')
-        self.assertEqual(checked['prior_verification_run_id'], '41927293867')
+        self.assertEqual(checked['source_training_run_id'], '41931877157')
+        self.assertEqual(checked['prior_verification_run_id'], '41943069583')
         self.assertEqual(checked['rank'], 16)
         self.assertTrue(checked['artifact'].endswith(':v0'))
         self.assertEqual([r['name'] for r in checked['files']],

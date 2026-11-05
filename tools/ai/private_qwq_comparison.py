@@ -18,10 +18,10 @@ from pathlib import Path
 from typing import Any, Callable
 
 FOUNDATION = "Qwen/QwQ-32B"
-ADAPTER_RUN = "41919750109"
+ADAPTER_RUN = "41931877157"
 ADAPTER_ARTIFACT = (
     "mimgyuson-haslaedu/hasla-ai-private-training/"
-    "hasla-private-books-41919750109-solver-lora:v0"
+    "hasla-private-books-41931877157-solver-lora:v0"
 )
 SETTINGS = {
     "do_sample": False, "seed": 20261105, "max_new_tokens": 1024,

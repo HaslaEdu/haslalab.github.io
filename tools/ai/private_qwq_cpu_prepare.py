@@ -43,16 +43,16 @@ PUBLIC_FILES = (
 ADAPTER_SPEC = {
     'kind': 'private_adapter_continuation', 'version': 1, 'role': 'solver',
     'base_model': 'Qwen/QwQ-32B', 'rank': 16,
-    'source_training_run_id': '41919750109', 'prior_verification_run_id': '41927293867',
+    'source_training_run_id': '41931877157', 'prior_verification_run_id': '41943069583',
     'entity': ENTITY,
-    'artifact': ENTITY + '/' + resume.PROJECT + '/hasla-private-books-41919750109-solver-lora:v0',
+    'artifact': ENTITY + '/' + resume.PROJECT + '/hasla-private-books-41931877157-solver-lora:v0',
     'files': [
         {'name': 'adapter_config.json', 'bytes': 1322,
-         'sha256': 'f9392d8f82273d1142deee6742dbf6c38697697c00264a7257c1582676f50372'},
+         'sha256': '1954f97392fb7b1873ad5f399febbb894a79a387b5dbf98785434d850a02801e'},
         {'name': 'adapter_model.safetensors', 'bytes': 536991984,
-         'sha256': 'c3821d50ae7255e7fc296a421af7e7c9c2677ad530a1b9895c616ff9bf208bd9'},
+         'sha256': '5b4c2e755930a30298927cdf905fd158c4745473eea7c41f87630183729d0112'},
     ],
-    'adapter_inventory_sha256': '36d6116f3ac8e78d207dfc045c9f33e00a342c978041adc5b54cec23f0d0a9b8',
+    'adapter_inventory_sha256': 'c295c61015ebc1d1b1e32cfe7f535c1336ba536c4902645146f15a5f0df5de8f',
 }
 
 
