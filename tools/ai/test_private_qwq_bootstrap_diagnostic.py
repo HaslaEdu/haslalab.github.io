@@ -126,7 +126,8 @@ class Tests(unittest.TestCase):
                     self.assertFalse(summary)
                 else:
                     self.assertEqual(n['publish'](job,Path(directory),lambda env:(None,privacy,sdk)),1)
-                    value=summary['private_qwq_gpu_bootstrap_result_json']
+                    self.assertIs(type(summary['private_qwq_gpu_bootstrap_result_json']),str)
+                    value=json.loads(summary['private_qwq_gpu_bootstrap_result_json'])
                     self.assertEqual(set(artifacts[0].paths),{'diagnostics.json','traceback.txt'})
                     self.assertEqual(actions[:2],['privacy','init']); self.assertEqual(actions[-1],'finish')
                     self.assertNotIn('sanitized_private_trace',json.dumps(value)); self.assertEqual(value['status'],'failed')

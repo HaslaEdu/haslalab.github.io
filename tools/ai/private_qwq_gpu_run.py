@@ -278,7 +278,12 @@ def write_state(state, path):
     path.write_text(json.dumps(state, sort_keys=True), encoding='utf8')
 
 
-def cleanup(env, services=None, *, state_path=STATE, emit=cloud.safe_event):
+def emit_event(event_name, **fields):
+    """Keep the validated result's kind field distinct from its event name."""
+    print(json.dumps({'event': event_name, **fields}, ensure_ascii=True, allow_nan=False), flush=True)
+
+
+def cleanup(env, services=None, *, state_path=STATE, emit=emit_event):
     if not state_path.exists():
         emit('private_qwq_gpu_cleanup', attempted=False, deletion_confirmed=True, matched_pods=0)
         return True
@@ -465,7 +470,7 @@ def verify_script_pins(manifest, root=None):
 
 
 def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep=time.sleep,
-        state_path=STATE, emit=cloud.safe_event, result_validator=None):
+        state_path=STATE, emit=emit_event, result_validator=None):
     raw = env.get('HASLA_QWQ_GPU_EVAL_MANIFEST', '')
     require(type(raw) is str and len(raw.encode()) <= 32768, 'manifest_missing_or_oversized')
     manifest = validate_manifest(resume._json(raw))

@@ -107,7 +107,7 @@ def publish(job, root, clients):
         private()
         result = {'version':1,'run_id':job['run_id'],'code_commit':job['code_commit'],'status':'passed' if value['passed'] else 'failed','stages':[{'stage':r['stage'],'status':r['status'],'exit_code':r['exit_code'],'exception_type':r['exception_type']} for r in stages],'artifact':saved.qualified_name,'files':files,'model_calls':0}
         PHASE = 'summary'
-        run.summary.update({'private_qwq_gpu_bootstrap_result_json':result})
+        run.summary.update({'private_qwq_gpu_bootstrap_result_json':json.dumps(result,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False)})
         return 0 if value['passed'] else 1
     finally:
         primary_failure = sys.exc_info()[0] is not None

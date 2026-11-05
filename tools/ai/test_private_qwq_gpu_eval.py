@@ -407,7 +407,8 @@ class GpuEvaluationTests(unittest.TestCase):
             self.assertNotIn("HIDDEN_REASONING", (output / "report.json").read_text())
             self.assertNotIn("HIDDEN_REASONING", json.dumps(summary))
             gpu.validate_outputs(output)
-            self.assertEqual(summary["private_qwq_gpu_result_json"]["status"], "uploaded")
+            self.assertIs(type(summary["private_qwq_gpu_result_json"]), str)
+            self.assertEqual(json.loads(summary["private_qwq_gpu_result_json"])["status"], "uploaded")
             gpu.validate_result(result, "123456789")
             for kind in ("raw", "wrong_run", "wrong_plan", "wrong_file", "raw_metric"):
                 changed = deepcopy(result)

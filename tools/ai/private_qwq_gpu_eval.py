@@ -441,7 +441,7 @@ def execute(job, output, *, clients=private_clients, imports=None, clock=time.mo
                         "paired_completed_cases": value["paired_completed_cases"],
                         "evaluation_only": True, "weights_updated": False}
                 with resume._quiet():
-                    run.summary.update({"private_qwq_gpu_progress": safe})
+                    run.summary.update({"private_qwq_gpu_progress": canonical(safe).decode()})
                 print(json.dumps(safe), flush=True)
             progress({"phase": "downloading_source", "completed_attempts": 0, "paired_completed_cases": 0})
             directory = root / "source-adapter"
@@ -556,11 +556,11 @@ def execute(job, output, *, clients=private_clients, imports=None, clock=time.mo
                 artifact_reference = reference
                 result = result_event(job, metadata, report, root, artifact_reference)
                 with resume._quiet():
-                    run.summary.update({"private_qwq_gpu_result_json": result,
-                        "private_qwq_gpu_progress": {"phase": "uploaded", "case_id": None, "mode": None,
+                    run.summary.update({"private_qwq_gpu_result_json": canonical(result).decode(),
+                        "private_qwq_gpu_progress": canonical({"phase": "uploaded", "case_id": None, "mode": None,
                             "completed_attempts": 2 * metadata.get("paired_completed_cases", 0),
                             "paired_completed_cases": metadata.get("paired_completed_cases", 0),
-                            "evaluation_only": True, "weights_updated": False}})
+                            "evaluation_only": True, "weights_updated": False}).decode()})
             except Exception:
                 metadata["publication_failed"] = True
             finally:
