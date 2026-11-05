@@ -85,6 +85,32 @@ class TeacherControllerTests(unittest.TestCase):
         self.assertNotIn('private bearer', str(raised.exception))
         self.assertTrue(response.closed)
 
+    def test_cloudflare_null_or_malformed_errors_do_not_break_success_or_failure(self):
+        for errors in (None, {}, 'private-error', 42, False):
+            for status in (200, 400):
+                with self.subTest(errors=errors, status=status):
+                    response = Reply({'success': status == 200, 'result': {'ok': True}, 'errors': errors}, status)
+                    client = control.Cloudflare('fixture-key', SimpleNamespace(request=lambda *a, **k: response))
+                    if status == 200:
+                        self.assertEqual(client.call('GET', '/workers/scripts/haslalab-community/settings'), {'ok': True})
+                    else:
+                        with self.assertRaises(control.TeacherControlError) as raised:
+                            client.call('GET', '/workers/scripts/haslalab-community/settings')
+                        self.assertEqual(raised.exception.cloudflare_error_codes, [])
+                    self.assertTrue(response.closed)
+
+    def test_unexpected_exception_frames_include_only_function_and_line(self):
+        def fixture_failure():
+            secret = 'private exception message and local'
+            raise TypeError(secret)
+        try:
+            fixture_failure()
+        except TypeError as error:
+            frames = control.safe_exception_frames(error)
+        self.assertEqual(frames[-1]['function'], 'fixture_failure')
+        self.assertTrue(all(set(frame) == {'function', 'line'} and type(frame['line']) is int for frame in frames))
+        self.assertNotIn('private exception', json.dumps(frames))
+
     def test_uploaded_source_manifest_distinguishes_handler_from_entry_shim(self):
         source = b'export default {}'
         manifest = control.source_manifest(source)

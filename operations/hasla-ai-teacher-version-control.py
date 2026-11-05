@@ -65,6 +65,16 @@ def require(value, code):
         raise TeacherControlError(code)
 
 
+def safe_exception_frames(error):
+    """Expose code locations only; never messages, source text, or frame locals."""
+    frames = []
+    trace = error.__traceback__
+    while trace is not None:
+        frames.append({'function': trace.tb_frame.f_code.co_name, 'line': trace.tb_lineno})
+        trace = trace.tb_next
+    return frames[-4:]
+
+
 def canonical(value):
     return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()
 
@@ -108,8 +118,10 @@ class Cloudflare:
                 value = response.json()
             except ValueError:
                 value = {}
-            codes = sorted({e['code'] for e in value.get('errors', []) if isinstance(e, dict)
-                            and type(e.get('code')) is int and 0 <= e['code'] <= 999999999}) if isinstance(value, dict) else []
+            errors = value.get('errors') if isinstance(value, dict) else None
+            errors = errors if isinstance(errors, list) else []
+            codes = sorted({e['code'] for e in errors if isinstance(e, dict)
+                            and type(e.get('code')) is int and 0 <= e['code'] <= 999999999})
             if response.status_code not in (200, 201):
                 raise TeacherControlError('cloudflare_http_' + str(response.status_code), phase=phase,
                                          http_status=response.status_code, cloudflare_error_codes=codes)
@@ -372,5 +384,6 @@ if __name__ == '__main__':
         raise SystemExit(1)
     except Exception as error:
         # Never print exceptions carrying provider responses, prompts or secrets.
-        print(json.dumps({'event': 'hasla_teacher_private_failed', 'code': type(error).__name__, 'gpu_used': False}))
+        print(json.dumps({'event': 'hasla_teacher_private_failed', 'code': type(error).__name__, 'gpu_used': False,
+                          'exception_frames': safe_exception_frames(error)}))
         raise SystemExit(1)
