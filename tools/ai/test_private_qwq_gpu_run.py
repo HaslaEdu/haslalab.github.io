@@ -2,9 +2,12 @@ from copy import deepcopy
 from decimal import Decimal
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import shlex
 import tempfile
+import subprocess
 import unittest
 
 import private_qwq_gpu_run as parent
@@ -48,7 +51,7 @@ class FakeServices:
         return self.price
     def funding(self, ledger):
         self.calls.append('funding')
-        assert ledger.reserved_krw == 1457
+        assert ledger.reserved_krw == 1296
         if self.funding_error:
             raise parent.EvaluationError('funding_fixture_blocked')
     def create(self, name, env, command):
@@ -68,6 +71,9 @@ class FakeServices:
     def pod(self, identity, timeout):
         self.calls.append('pod')
         return deepcopy(self.pod_value)
+    def bootstrap_summary(self, run_id, timeout):
+        self.calls.append('bootstrap_summary')
+        return {'private_qwq_gpu_bootstrap_result_json': diagnostic_fixture(run_id)}
     def bootstrap(self, identity, timeout):
         self.calls.append(('bootstrap', identity))
         return self.bootstrap_value
@@ -82,6 +88,15 @@ class FakeServices:
             result['private_qwq_gpu_result_json'] = {'status': 'uploaded', 'execution_status': 'completed',
                                                    'run_id': run_id}
         return result
+
+
+def diagnostic_fixture(run_id='123'):
+    return {'version':1,'run_id':run_id,'code_commit':'a'*40,'status':'passed',
+        'stages':[{'stage':s,'status':'passed','exit_code':0,'exception_type':None}
+                  for s in ('core_compare','module_import','GPU_check')],
+        'artifact':parent.ENTITY+'/'+parent.resume.PROJECT+'/hasla-qwq-bootstrap-'+run_id+':v0',
+        'files':[{'name':n,'bytes':10,'sha256':'0'*64} for n in ('diagnostics.json','traceback.txt')],
+        'model_calls':0}
 
 
 class ParentTests(unittest.TestCase):
@@ -114,17 +129,17 @@ class ParentTests(unittest.TestCase):
         checked = parent.validate_manifest(self.manifest)
         self.assertEqual(parent.comparison_plan_sha256(), 'b22d2a1430b009930331d16933b76db30c2807a09cbea77d359bc6a9c27c8c24')
         ledger = parent.budget_plan(checked, 'fixture', 0)
-        self.assertEqual(ledger.reserved_krw, 1457)
-        self.assertEqual(ledger.available_krw, 20494)
-        self.assertLessEqual(ledger.reserved_krw, 1492)
-        self.assertEqual(checked['previous_eval_upper_krw'] + ledger.reserved_krw, 2965)
+        self.assertEqual(ledger.reserved_krw, 1296)
+        self.assertEqual(ledger.available_krw, 20505)
+        self.assertLessEqual(ledger.reserved_krw, 1342)
+        self.assertEqual(checked['previous_eval_upper_krw'] + ledger.reserved_krw, 2954)
         self.assertEqual(ledger.policy.fx_krw_per_usd_upper, 2000)
 
     def test_policy_changes_unknown_fields_source_and_plan_tampering_fail_closed(self):
-        for key, value in [('gpu_id', 'NVIDIA L40S'), ('gpu_count', 2), ('runtime_seconds', 3501),
+        for key, value in [('gpu_id', 'NVIDIA L40S'), ('gpu_count', 2), ('runtime_seconds', 3101),
             ('child_runtime_seconds', 3000), ('gpu_usd_per_hour_upper', '0.61'),
-            ('prior_upper_krw', 73048), ('reserved_upper_krw', 2922), ('optimizer_steps', 1),
-            ('authorized_total', 100001), ('version', True), ('additional_limit_krw', 1493),
+            ('prior_upper_krw', 73198), ('reserved_upper_krw', 2922), ('optimizer_steps', 1),
+            ('authorized_total', 100001), ('version', True), ('additional_limit_krw', 1343),
             ('comparison_plan_sha256', '0' * 64), ('source_adapter', {})]:
             with self.subTest(key=key), self.assertRaises(Exception):
                 parent.validate_manifest({**self.manifest, key: value})
@@ -137,7 +152,7 @@ class ParentTests(unittest.TestCase):
         self.assertFalse(self.state.exists())
         event = self.events[0]
         self.assertEqual(event['event'], 'private_qwq_gpu_preflight')
-        self.assertEqual(event['remaining_budget_krw'], 20494)
+        self.assertEqual(event['remaining_budget_krw'], 20505)
         self.assertEqual(event['source_adapter_files'], parent.SOURCE_ADAPTER['files'])
         self.assertFalse(event['gpu_creation_performed'])
 
@@ -174,7 +189,7 @@ class ParentTests(unittest.TestCase):
         self.assertNotIn('PROVIDER_SECRET', json.dumps(child))
         self.assertNotIn('HF_TOKEN', child)
         job = json.loads(child['HASLA_QWQ_GPU_EVAL_JOB'])
-        self.assertEqual(job['deadline_unix'], 2000003200)
+        self.assertEqual(job['deadline_unix'], 2000002800)
         self.assertEqual(job['runtime_seconds'], 2700)
         self.assertEqual(set(job['script_sha256']), set(parent.CHILD_SCRIPTS))
         self.assertEqual(job['optimizer_steps'], 0)
@@ -219,10 +234,10 @@ class ParentTests(unittest.TestCase):
     def test_deadline_stops_lost_child_and_confirms_cleanup_before_cost(self):
         self.paid(); self.services.no_result = True
         with self.assertRaisesRegex(parent.EvaluationError, 'parent_deadline'):self.execute()
-        self.assertEqual(self.clock.now, 3480)
+        self.assertEqual(self.clock.now, 3080)
         self.assertIn(('delete', 'new-eval-pod'), self.services.calls)
         cost = [x for x in self.events if x['event']=='private_qwq_gpu_cost'][-1]
-        self.assertLessEqual(cost['run_upper_krw'], 1457)
+        self.assertLessEqual(cost['run_upper_krw'], 1296)
         self.assertTrue(cost['deletion_confirmed'])
 
     def test_unconfirmed_delete_has_no_settlement_event(self):
@@ -250,13 +265,51 @@ class ParentTests(unittest.TestCase):
         self.assertNotIn('--upgrade',command)
         self.assertNotIn('pip install -q unsloth',command)
         self.assertIn('import unsloth, bitsandbytes, peft, torch, wandb',command)
-        self.assertIn('torch.cuda.device_count() == 1',command)
-        self.assertIn('3200s',command)
+        self.assertIn('core_compare',command)
+        self.assertIn('GPU_check',command)
+        self.assertIn('torch.cuda.device_count()',command)
+        self.assertIn('2800s',command)
         self.assertIn('sleep 120',command)
         self.assertIn('private_qwq_gpu_bootstrap',command)
         self.assertIn('qwq-eval-core.json',command)
         self.assertIn('unsloth_zoo',command)
         self.assertLess(command.index('pip install'),command.index('-B private_qwq_gpu_eval.py'))
+        self.assertLess(command.index('def diagnose'),command.index('-B private_qwq_gpu_eval.py'))
+        self.assertLess(command.index('compgen -e'),command.index('pip install'))
+
+    def test_injected_pod_credentials_removed_from_parent_shell_and_child_process(self):
+        bash=Path(r'C:\Program Files\Git\bin\bash.exe') if os.name=='nt' else Path('/bin/bash')
+        if not bash.is_file():self.skipTest('Bash not installed')
+        script=parent.pod_credential_cleanup()+''';
+        [[ ! -v RUNPOD_API_KEY && ! -v injectedRunpodToken && ! -v HF_TOKEN && ! -v HF_HUB_TOKEN && -v WANDB_API_KEY && -v RUNPOD_POD_ID ]] || exit 7;
+        export -p | grep -q 'WANDB_API_KEY' || exit 8;
+        /bin/bash -c '[[ ! -v RUNPOD_API_KEY && ! -v HF_TOKEN && -v WANDB_API_KEY && -v RUNPOD_POD_ID ]]' '''
+        env={'WANDB_API_KEY':'synthetic-storage','RUNPOD_API_KEY':'synthetic-provider',
+             'injectedRunpodToken':'synthetic-provider','HF_TOKEN':'synthetic-hf','HF_HUB_TOKEN':'synthetic-hf',
+             'RUNPOD_POD_ID':'synthetic-pod'}
+        if os.name=='nt':env['SystemRoot']=os.environ['SystemRoot']
+        result=subprocess.run([str(bash),'-c',script],env=env,capture_output=True,timeout=10)
+        self.assertEqual(result.returncode,0)
+        self.assertEqual(result.stdout,b'');self.assertEqual(result.stderr,b'')
+
+    def test_only_the_four_approved_optional_packages_are_removed_before_sdk(self):
+        inner=shlex.split(parent.pod_command(self.manifest))[-1]
+        uninstall=[c.strip() for c in inner.split(';') if '-m pip uninstall' in c]
+        self.assertEqual(len(uninstall),1)
+        args=shlex.split(uninstall[0].split(' >',1)[0])
+        self.assertEqual(args,[parent.PYTHON,'-m','pip','uninstall','-y','vllm','torchcodec','mistral-common','decord'])
+        self.assertNotIn('torch',args);self.assertNotIn('transformers',args)
+        self.assertLess(inner.index('pip uninstall'),inner.index('pip install'))
+        self.assertLess(inner.index('qwq-eval-core.json'),inner.index('pip uninstall'))
+
+    def test_complete_inline_bootstrap_and_outer_wrapper_have_valid_bash_syntax(self):
+        bash=Path(r'C:\Program Files\Git\bin\bash.exe') if os.name=='nt' else Path('/bin/bash')
+        if not bash.is_file():self.skipTest('Bash not installed')
+        command=parent.pod_command(self.manifest)
+        for name,script in [('outer',command),('inner',shlex.split(command)[-1])]:
+            path=Path(self.tmp.name)/(name+'.sh');path.write_text(script,encoding='utf8',newline='\n')
+            checked=subprocess.run([str(bash),'-n',path.as_posix()],capture_output=True,timeout=10)
+            self.assertEqual(checked.returncode,0);self.assertEqual(checked.stderr,b'')
 
     def test_bootstrap_markers_reject_raw_extra_keys_and_bad_codes(self):
         good={'event':'private_qwq_gpu_bootstrap','stage':'failed','exit_code':7}
@@ -332,6 +385,29 @@ class ParentTests(unittest.TestCase):
         self.assertEqual(body['gpu'],{'id':'NVIDIA A40','count':1,'minCudaVersion':'12.8'})
         self.assertEqual(body['env'],{'UNSLOTH_SKIP_NOTEBOOK_SYNC':'1'})
         self.assertFalse(body['startSsh']);self.assertEqual(body['ports'],[])
+
+    def test_private_bootstrap_safe_projection_and_identity_fail_closed(self):
+        good=diagnostic_fixture()
+        self.assertEqual(parent.safe_bootstrap_result({'private_qwq_gpu_bootstrap_result_json':good},'123','a'*40),good)
+        for key,value in [('run_id','124'),('code_commit','f'*40),('model_calls',1),('artifact','public/unsafe:v0'),('raw','SECRET')]:
+            with self.subTest(key=key),self.assertRaises(parent.EvaluationError):
+                parent.safe_bootstrap_result({'private_qwq_gpu_bootstrap_result_json':{**good,key:value}},'123','a'*40)
+        bad=deepcopy(good);bad['stages'][1]['observations']={'raw':'SECRET'}
+        with self.assertRaises(parent.EvaluationError):parent.safe_bootstrap_result({'private_qwq_gpu_bootstrap_result_json':bad},'123','a'*40)
+
+    def test_private_bootstrap_failure_retains_safe_artifact_evidence_then_deletes(self):
+        self.paid();self.services.no_result=True
+        bad=diagnostic_fixture();bad['status']='failed';bad['stages'][1].update(status='failed',exit_code=1,exception_type='ImportError')
+        self.services.bootstrap_summary=lambda *args:{'private_qwq_gpu_bootstrap_result_json':bad}
+        with self.assertRaisesRegex(parent.EvaluationError,'bootstrap_diagnostic_failed'):self.execute()
+        event=next(e for e in self.events if e['event']=='private_qwq_gpu_bootstrap_diagnostic')
+        self.assertEqual(event['artifact'],bad['artifact']);self.assertNotIn('observations',json.dumps(event))
+        self.assertIn(('delete','new-eval-pod'),self.services.calls)
+
+    def test_uploaded_evaluation_without_committed_private_bootstrap_receipt_is_rejected(self):
+        self.paid();self.services.bootstrap_summary=lambda *args:{}
+        with self.assertRaisesRegex(parent.EvaluationError,'bootstrap_receipt_unavailable'):self.execute()
+        self.assertIn(('delete','new-eval-pod'),self.services.calls)
 
     def test_script_checksum_failure_blocks_services_and_no_state_written(self):
         data=json.loads(self.env['HASLA_QWQ_GPU_EVAL_MANIFEST']);data['script_sha256']['role_config.py']='0'*64
