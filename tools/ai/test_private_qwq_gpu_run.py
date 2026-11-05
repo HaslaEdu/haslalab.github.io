@@ -32,6 +32,8 @@ class FakeServices:
         self.existing = [{'id': 'keep-user-pod', 'name': 'unrelated-user-pod'}]
         self.source_error = False
         self.funding_error = False
+        self.no_progress = False
+        self.bootstrap_value = None
     def pods(self):
         self.calls.append('pods')
         return deepcopy(self.existing)
@@ -46,7 +48,7 @@ class FakeServices:
         return self.price
     def funding(self, ledger):
         self.calls.append('funding')
-        assert ledger.reserved_krw == 1497
+        assert ledger.reserved_krw == 1457
         if self.funding_error:
             raise parent.EvaluationError('funding_fixture_blocked')
     def create(self, name, env, command):
@@ -66,11 +68,16 @@ class FakeServices:
     def pod(self, identity, timeout):
         self.calls.append('pod')
         return deepcopy(self.pod_value)
+    def bootstrap(self, identity, timeout):
+        self.calls.append(('bootstrap', identity))
+        return self.bootstrap_value
     def summary(self, run_id, timeout):
         self.calls.append('summary')
         result = {'private_qwq_gpu_progress': {'phase': 'evaluating', 'case_id': 'momentum_energy',
             'mode': 'base', 'completed_attempts': 0, 'paired_completed_cases': 0,
             'evaluation_only': True, 'weights_updated': False, 'arbitrary_raw_text': 'DO_NOT_LOG'}}
+        if self.no_progress:
+            result = {}
         if not self.no_result:
             result['private_qwq_gpu_result_json'] = {'status': 'uploaded', 'execution_status': 'completed',
                                                    'run_id': run_id}
@@ -107,17 +114,17 @@ class ParentTests(unittest.TestCase):
         checked = parent.validate_manifest(self.manifest)
         self.assertEqual(parent.comparison_plan_sha256(), 'b22d2a1430b009930331d16933b76db30c2807a09cbea77d359bc6a9c27c8c24')
         ledger = parent.budget_plan(checked, 'fixture', 0)
-        self.assertEqual(ledger.reserved_krw, 1497)
-        self.assertEqual(ledger.available_krw, 20963)
-        self.assertLessEqual(ledger.reserved_krw, 2001)
-        self.assertEqual(checked['previous_eval_upper_krw'] + ledger.reserved_krw, 2496)
+        self.assertEqual(ledger.reserved_krw, 1457)
+        self.assertEqual(ledger.available_krw, 20494)
+        self.assertLessEqual(ledger.reserved_krw, 1492)
+        self.assertEqual(checked['previous_eval_upper_krw'] + ledger.reserved_krw, 2965)
         self.assertEqual(ledger.policy.fx_krw_per_usd_upper, 2000)
 
     def test_policy_changes_unknown_fields_source_and_plan_tampering_fail_closed(self):
-        for key, value in [('gpu_id', 'NVIDIA L40S'), ('gpu_count', 2), ('runtime_seconds', 3601),
+        for key, value in [('gpu_id', 'NVIDIA L40S'), ('gpu_count', 2), ('runtime_seconds', 3501),
             ('child_runtime_seconds', 3000), ('gpu_usd_per_hour_upper', '0.61'),
-            ('prior_upper_krw', 72539), ('reserved_upper_krw', 2922), ('optimizer_steps', 1),
-            ('authorized_total', 100001), ('version', True), ('additional_limit_krw', 2002),
+            ('prior_upper_krw', 73048), ('reserved_upper_krw', 2922), ('optimizer_steps', 1),
+            ('authorized_total', 100001), ('version', True), ('additional_limit_krw', 1493),
             ('comparison_plan_sha256', '0' * 64), ('source_adapter', {})]:
             with self.subTest(key=key), self.assertRaises(Exception):
                 parent.validate_manifest({**self.manifest, key: value})
@@ -130,7 +137,7 @@ class ParentTests(unittest.TestCase):
         self.assertFalse(self.state.exists())
         event = self.events[0]
         self.assertEqual(event['event'], 'private_qwq_gpu_preflight')
-        self.assertEqual(event['remaining_budget_krw'], 20963)
+        self.assertEqual(event['remaining_budget_krw'], 20494)
         self.assertEqual(event['source_adapter_files'], parent.SOURCE_ADAPTER['files'])
         self.assertFalse(event['gpu_creation_performed'])
 
@@ -167,10 +174,11 @@ class ParentTests(unittest.TestCase):
         self.assertNotIn('PROVIDER_SECRET', json.dumps(child))
         self.assertNotIn('HF_TOKEN', child)
         job = json.loads(child['HASLA_QWQ_GPU_EVAL_JOB'])
-        self.assertEqual(job['deadline_unix'], 2000003300)
+        self.assertEqual(job['deadline_unix'], 2000003200)
         self.assertEqual(job['runtime_seconds'], 2700)
         self.assertEqual(set(job['script_sha256']), set(parent.CHILD_SCRIPTS))
         self.assertEqual(job['optimizer_steps'], 0)
+        self.assertEqual(child['UNSLOTH_SKIP_NOTEBOOK_SYNC'], '1')
         self.assertEqual([x for x in self.services.calls if isinstance(x, tuple) and x[0]=='delete'],
                          [('delete', 'new-eval-pod')])
         self.assertTrue(json.loads(self.state.read_bytes())['closed'])
@@ -211,10 +219,10 @@ class ParentTests(unittest.TestCase):
     def test_deadline_stops_lost_child_and_confirms_cleanup_before_cost(self):
         self.paid(); self.services.no_result = True
         with self.assertRaisesRegex(parent.EvaluationError, 'parent_deadline'):self.execute()
-        self.assertEqual(self.clock.now, 3580)
+        self.assertEqual(self.clock.now, 3480)
         self.assertIn(('delete', 'new-eval-pod'), self.services.calls)
         cost = [x for x in self.events if x['event']=='private_qwq_gpu_cost'][-1]
-        self.assertLessEqual(cost['run_upper_krw'], 1497)
+        self.assertLessEqual(cost['run_upper_krw'], 1457)
         self.assertTrue(cost['deletion_confirmed'])
 
     def test_unconfirmed_delete_has_no_settlement_event(self):
@@ -236,14 +244,94 @@ class ParentTests(unittest.TestCase):
             bad=deepcopy(good);bad['private_qwq_gpu_progress'][key]=value
             with self.assertRaises(parent.EvaluationError):parent.safe_progress(bad)
 
-    def test_bootstrap_installs_the_successful_unsloth_recipe_before_worker(self):
+    def test_bootstrap_preserves_image_core_and_reports_only_fixed_stages(self):
         command=parent.pod_command(self.manifest)
-        self.assertIn('pip install -q --upgrade unsloth trl datasets wandb',command)
-        self.assertIn('import unsloth, bitsandbytes, peft, torch',command)
+        self.assertIn('/opt/unsloth-venv/bin/python -m pip install -q wandb==0.31.0',command)
+        self.assertNotIn('--upgrade',command)
+        self.assertNotIn('pip install -q unsloth',command)
+        self.assertIn('import unsloth, bitsandbytes, peft, torch, wandb',command)
         self.assertIn('torch.cuda.device_count() == 1',command)
-        self.assertLess(command.index('pip install'),command.index('python -B private_qwq_gpu_eval.py'))
-        self.assertNotIn('transformers==4.57.6',command)
-        self.assertIn('3300s',command)
+        self.assertIn('3200s',command)
+        self.assertIn('sleep 120',command)
+        self.assertIn('private_qwq_gpu_bootstrap',command)
+        self.assertIn('qwq-eval-core.json',command)
+        self.assertIn('unsloth_zoo',command)
+        self.assertLess(command.index('pip install'),command.index('-B private_qwq_gpu_eval.py'))
+
+    def test_bootstrap_markers_reject_raw_extra_keys_and_bad_codes(self):
+        good={'event':'private_qwq_gpu_bootstrap','stage':'failed','exit_code':7}
+        self.assertEqual(parent.bootstrap_marker(json.dumps(good)),{'stage':'failed','exit_code':7})
+        for bad in ['private secret', '{}', json.dumps({**good,'raw':'secret'}),
+                    json.dumps({**good,'exit_code':True}),json.dumps({**good,'exit_code':256}),
+                    json.dumps({**good,'stage':'private-secret'}),json.dumps({**good,'stage':[]})]:
+            self.assertIsNone(parent.bootstrap_marker(bad))
+
+    def test_bootstrap_get_exact_owned_pod_is_bounded_and_never_returns_raw_lines(self):
+        from contextlib import nullcontext
+        from unittest.mock import patch
+        import private_qwq_gpu_eval as worker
+        class Response:
+            status_code=200
+            closed=False
+            def close(self):self.closed=True
+            def iter_content(self,chunk_size):
+                self.chunk_size=chunk_size
+                for line in ['PRIVATE_SECRET raw stderr', json.dumps({'event':'private_qwq_gpu_bootstrap','stage':'sdk'}),
+                             json.dumps({'event':'private_qwq_gpu_bootstrap','stage':'failed','exit_code':9})]:
+                    yield b'data:'+json.dumps({'source':'container','line':line}).encode()+b'\n'
+        response=Response();calls=[]
+        def get(url,**kwargs):calls.append((url,kwargs));return response
+        with patch.object(parent.cloud.requests,'get',side_effect=get),patch.object(worker,'hard_wall',lambda s:nullcontext()):
+            result=parent.Services(self.env).bootstrap('new-eval-pod',6)
+        self.assertEqual(result,{'stage':'failed','exit_code':9})
+        self.assertTrue(response.closed);self.assertEqual(response.chunk_size,1024)
+        self.assertEqual(calls[0][0],parent.cloud.REST+'/pods/new-eval-pod/logs')
+        self.assertFalse(calls[0][1]['allow_redirects'])
+        self.assertEqual(calls[0][1]['params'],{'source':'container','tail':60})
+        self.assertNotIn('PRIVATE_SECRET',json.dumps(result))
+
+    def test_bootstrap_oversized_single_stream_chunk_cannot_smuggle_marker(self):
+        from contextlib import nullcontext
+        from unittest.mock import patch
+        import private_qwq_gpu_eval as worker
+        class Response:
+            status_code=200
+            def close(self):pass
+            def iter_content(self,chunk_size):
+                yield b'x'*65537+b'\ndata:'+json.dumps({'source':'container','line':json.dumps({'event':'private_qwq_gpu_bootstrap','stage':'sdk'})}).encode()+b'\n'
+        with patch.object(parent.cloud.requests,'get',return_value=Response()),patch.object(worker,'hard_wall',lambda s:nullcontext()):
+            self.assertIsNone(parent.Services(self.env).bootstrap('new-eval-pod',6))
+
+    def test_startup_unknown_is_bounded_to_1500_and_deleted(self):
+        self.paid();self.services.no_result=True;self.services.no_progress=True
+        with self.assertRaisesRegex(parent.EvaluationError,'startup_unobserved'):self.execute()
+        self.assertEqual(self.clock.now,100+1500)
+        self.assertIn(('delete','new-eval-pod'),self.services.calls)
+        self.assertTrue(any(e['event']=='private_qwq_gpu_cost' for e in self.events))
+
+    def test_bootstrap_failure_cleans_up_early_and_drops_arbitrary_strings(self):
+        self.paid();self.services.no_result=True;self.services.no_progress=True
+        self.services.bootstrap_value={'stage':'failed','exit_code':7}
+        with self.assertRaisesRegex(parent.EvaluationError,'bootstrap_failed'):self.execute()
+        self.assertEqual(self.clock.now,100)
+        self.assertIn(('delete','new-eval-pod'),self.services.calls)
+        self.assertEqual(next(e for e in self.events if e['event']=='private_qwq_gpu_bootstrap'),
+                         {'event':'private_qwq_gpu_bootstrap','run_id':'123','stage':'failed','exit_code':7})
+
+    def test_create_preserves_official_entrypoint_exact_cmd_and_environment(self):
+        from unittest.mock import patch
+        captured=[]
+        with patch.object(parent.cloud,'runpod',side_effect=lambda *args,**kwargs:captured.append((args,kwargs))):
+            parent.Services(self.env).create('exact',{'UNSLOTH_SKIP_NOTEBOOK_SYNC':'1'},'safe command')
+        args,kw=captured[0]
+        self.assertEqual(args,('POST','/pods'))
+        body=kw['json']
+        self.assertNotIn('entrypoint',body)
+        self.assertEqual(body['image'],parent.IMAGE)
+        self.assertEqual(body['cmd'],['/bin/bash','-lc','safe command'])
+        self.assertEqual(body['gpu'],{'id':'NVIDIA A40','count':1,'minCudaVersion':'12.8'})
+        self.assertEqual(body['env'],{'UNSLOTH_SKIP_NOTEBOOK_SYNC':'1'})
+        self.assertFalse(body['startSsh']);self.assertEqual(body['ports'],[])
 
     def test_script_checksum_failure_blocks_services_and_no_state_written(self):
         data=json.loads(self.env['HASLA_QWQ_GPU_EVAL_MANIFEST']);data['script_sha256']['role_config.py']='0'*64

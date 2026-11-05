@@ -43,9 +43,12 @@ SOURCE_ADAPTER = {'kind': 'private_adapter_continuation', 'version': 1, 'role': 
                'sha256': '5b4c2e755930a30298927cdf905fd158c4745473eea7c41f87630183729d0112'}],
     'adapter_inventory_sha256': 'c295c61015ebc1d1b1e32cfe7f535c1336ba536c4902645146f15a5f0df5de8f'}
 ADAPTER_SPEC = SOURCE_ADAPTER
-FIXED = {'version': 2, 'kind': 'private_qwq_gpu_evaluation_v2', 'authorized_total': 100000,
-    'previous_eval_upper_krw': 999, 'prior_upper_krw': 72540, 'reserve_krw': 5000, 'additional_limit_krw': 2001,
-    'reserved_upper_krw': 1497, 'runtime_seconds': 3600, 'child_runtime_seconds': 2700,
+IMAGE = 'unsloth/unsloth@sha256:9e12ff9201f4753ae7290ba45b0ca681a010575d925a53dffd13b8a7829e295b'
+PYTHON = '/opt/unsloth-venv/bin/python'
+STARTUP_CAP_SECONDS = 1500
+FIXED = {'version': 3, 'kind': 'private_qwq_gpu_evaluation_v3', 'authorized_total': 100000,
+    'previous_eval_upper_krw': 1508, 'prior_upper_krw': 73049, 'reserve_krw': 5000, 'additional_limit_krw': 1492,
+    'reserved_upper_krw': 1457, 'runtime_seconds': 3500, 'child_runtime_seconds': 2700,
     'cleanup_grace_seconds': 120, 'gpu_id': 'NVIDIA A40', 'gpu_count': 1,
     'gpu_usd_per_hour_upper': '0.60', 'container_disk_gb': 200, 'volume_gb': 0,
     'optimizer_steps': 0}
@@ -90,11 +93,11 @@ def validate_manifest(manifest):
     require(manifest['case_set_sha256'] == plan['comparison']['case_set_sha256'] and
             manifest['comparison_plan_sha256'] == hashlib.sha256(canonical(plan)).hexdigest(), 'comparison_plan_mismatch')
     ledger = budget_plan(manifest, 'manifest-validation', 0)
-    require(int(ledger.reserved_krw) == 1497 and ledger.reserved_krw <= manifest['additional_limit_krw'],
+    require(int(ledger.reserved_krw) == 1457 and ledger.reserved_krw <= manifest['additional_limit_krw'],
             'additional_budget_exceeded')
     require(manifest['prior_upper_krw'] == 71541 + manifest['previous_eval_upper_krw']
             and manifest['additional_limit_krw'] == 3000 - manifest['previous_eval_upper_krw']
-            and manifest['previous_eval_upper_krw'] + ledger.reserved_krw <= 3000, 'two_attempt_budget_exceeded')
+            and manifest['previous_eval_upper_krw'] + ledger.reserved_krw <= 3000, 'evaluation_cohort_budget_exceeded')
     return deepcopy(manifest)
 
 
@@ -104,7 +107,7 @@ def budget_plan(manifest, run_id, now):
     ledger = BudgetLedger(policy, prior_spend_krw=manifest['prior_upper_krw'])
     quote = PodQuote(gpu_usd_per_hour_upper=manifest['gpu_usd_per_hour_upper'],
                      container_disk_gb=200, volume_disk_gb=0, gpu_count=1)
-    return reserve_run(ledger, run_id, 'solver', quote, now, 3600, 3600, cleanup_grace_seconds=120)
+    return reserve_run(ledger, run_id, 'solver', quote, now, 3500, 3500, cleanup_grace_seconds=120)
 
 
 def inventory(pods):
@@ -173,7 +176,55 @@ class Services:
 
     def create(self, name, env, command):
         with resume._quiet():
-            return cloud.graphql_create_pod(name, env, command, gpu_id='NVIDIA A40')
+            # Preserve the official image entrypoint: it initializes the fixed venv.
+            return cloud.runpod('POST', '/pods', json={
+                'name': name, 'cloud': 'SECURE',
+                'gpu': {'id': 'NVIDIA A40', 'count': 1, 'minCudaVersion': '12.8'},
+                'disk': 200, 'image': IMAGE, 'cmd': ['/bin/bash', '-lc', command],
+                'ports': [], 'env': env, 'startSsh': False, 'startJupyter': False})
+
+    def bootstrap(self, identity, timeout):
+        """Read only fixed JSON markers, discarding every other container byte."""
+        from private_qwq_gpu_eval import hard_wall
+        response = None
+        found = None
+        stop = time.monotonic() + min(6, timeout)
+        try:
+            with hard_wall(max(1, min(6, timeout))), resume._quiet():
+                response = cloud.requests.get(cloud.REST + '/pods/' + identity + '/logs',
+                    params={'source': 'container', 'tail': 60}, stream=True,
+                    headers={'Authorization': 'Bearer ' + self.env['RUNPOD_API_KEY']},
+                    allow_redirects=False, timeout=(3, 3))
+                if response.status_code != 200:
+                    return None
+                total, buffer, events = 0, b'', 0
+                for chunk in response.iter_content(chunk_size=1024):
+                    total += len(chunk)
+                    if total > 65536 or time.monotonic() >= stop:
+                        break
+                    buffer += chunk
+                    while b'\n' in buffer:
+                        line, buffer = buffer.split(b'\n', 1)
+                        if not line.startswith(b'data:'):
+                            continue
+                        events += 1
+                        if events > 64:
+                            return found
+                        try:
+                            event = json.loads(line[5:])
+                            if (isinstance(event, dict) and event.get('source') in ('container', 'stdout', 'stderr')
+                                    and type(event.get('line')) is str):
+                                marker = bootstrap_marker(event['line'])
+                                if marker is not None:
+                                    found = marker
+                        except (ValueError, TypeError):
+                            pass
+                return found
+        except Exception:
+            return found
+        finally:
+            if response is not None:
+                response.close()
 
     def reconcile(self, name):
         with resume._quiet():
@@ -247,20 +298,55 @@ def child_environment(manifest, env, run_id, deadline_unix):
     job['deadline_unix'] = deadline_unix
     return {'WANDB_API_KEY': env['WANDB_API_KEY'], 'WANDB_ENTITY': ENTITY,
             'WANDB_PROJECT': resume.PROJECT, 'WANDB_CONSOLE': 'off',
-            'WANDB_DISABLE_CODE': 'true', 'HASLA_QWQ_GPU_EVAL_JOB': canonical(job).decode()}
+            'WANDB_DISABLE_CODE': 'true', 'UNSLOTH_SKIP_NOTEBOOK_SYNC': '1',
+            'HASLA_QWQ_GPU_EVAL_JOB': canonical(job).decode()}
 
 
 def pod_command(manifest):
     base = 'https://raw.githubusercontent.com/HaslaEdu/haslalab.github.io/' + manifest['code_commit'] + '/tools/ai/'
-    commands = ['set -eu', 'mkdir -p /workspace/qwq-eval', 'cd /workspace/qwq-eval',
+    core = "from importlib.metadata import version; import json; from pathlib import Path; names=('torch','transformers','unsloth','unsloth_zoo','peft','bitsandbytes','trl'); "
+    before = core + "Path('/workspace/qwq-eval-core.json').write_text(json.dumps({n:version(n) for n in names},sort_keys=True))"
+    after = core + "assert json.loads(Path('/workspace/qwq-eval-core.json').read_text()) == {n:version(n) for n in names}"
+    failed = '{"event":"private_qwq_gpu_bootstrap","stage":"failed","exit_code":%d}\\n'
+    failure_trap = 'code=$?; trap - ERR; printf ' + shlex.quote(failed) + ' "$code"; sleep 120; exit "$code"'
+    def stage(value):
+        return 'printf ' + shlex.quote('{"event":"private_qwq_gpu_bootstrap","stage":"' + value + '"}\\n')
+    commands = ['set -Eeuo pipefail', 'trap ' + shlex.quote(failure_trap) + ' ERR', stage('starting'),
+        'mkdir -p /workspace/qwq-eval', 'cd /workspace/qwq-eval',
         'export PIP_DISABLE_PIP_VERSION_CHECK=1',
-        'pip install -q --upgrade unsloth trl datasets wandb >/workspace/qwq-eval-install.log 2>&1',
-        'python -c "import unsloth, bitsandbytes, peft, torch; assert torch.cuda.is_available(); assert torch.cuda.device_count() == 1" >/workspace/qwq-eval-dependencies.log 2>&1']
+        PYTHON + ' -c ' + shlex.quote(before) + ' >/workspace/qwq-eval-core.log 2>&1',
+        stage('sdk'),
+        PYTHON + ' -m pip install -q wandb==0.31.0 >/workspace/qwq-eval-install.log 2>&1',
+        stage('dependencies'),
+        PYTHON + ' -c ' + shlex.quote(after) + ' >>/workspace/qwq-eval-core.log 2>&1',
+        PYTHON + ' -c "import unsloth, bitsandbytes, peft, torch, wandb; assert torch.cuda.is_available(); assert torch.cuda.device_count() == 1; assert wandb.__version__ == \'0.31.0\'" >/workspace/qwq-eval-dependencies.log 2>&1',
+        stage('source')]
     for name in CHILD_SCRIPTS:
         commands += ['curl -fsSL --max-time 60 ' + shlex.quote(base + name) + ' -o ' + shlex.quote(name),
                      'echo ' + shlex.quote(manifest['script_sha256'][name] + '  ' + name) + ' | sha256sum -c - >/dev/null']
-    commands += ['python -B private_qwq_gpu_eval.py >/workspace/qwq-eval-worker.log 2>&1']
-    return 'timeout --signal=TERM --kill-after=30s 3300s bash -lc ' + shlex.quote('; '.join(commands))
+    commands += [stage('worker'), PYTHON + ' -B private_qwq_gpu_eval.py >/workspace/qwq-eval-worker.log 2>&1',
+                 stage('completed')]
+    return 'timeout --signal=TERM --kill-after=30s 3200s /bin/bash -lc ' + shlex.quote('; '.join(commands))
+
+
+def bootstrap_marker(line):
+    if type(line) is not str or len(line) > 256:
+        return None
+    try:
+        value = json.loads(line)
+    except (ValueError, TypeError):
+        return None
+    if type(value) is not dict or value.get('event') != 'private_qwq_gpu_bootstrap':
+        return None
+    stage = value.get('stage')
+    if type(stage) is not str:
+        return None
+    if stage == 'failed':
+        if set(value) == {'event', 'stage', 'exit_code'} and type(value['exit_code']) is int and 1 <= value['exit_code'] <= 255:
+            return {'stage': stage, 'exit_code': value['exit_code']}
+    elif stage in {'starting', 'sdk', 'dependencies', 'source', 'worker', 'completed'} and set(value) == {'event', 'stage'}:
+        return {'stage': stage}
+    return None
 
 
 def safe_progress(summary):
@@ -324,6 +410,7 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
         quoted_hourly_usd=str(quoted), remaining_budget_krw=int(ledger.available_krw),
         private_project_verified=True, source_metadata_verified=True, live_funding_sufficient=True,
         capacity_verified=True, existing_private_pods=0, gpu_creation_performed=False,
+        container_image=IMAGE, startup_cap_seconds=STARTUP_CAP_SECONDS,
         **{k: manifest[k] for k in FIXED if k not in ('version', 'kind', 'optimizer_steps')})
     if env['HASLA_PREFLIGHT_ONLY'] == 'true':
         return {'status': 'preflight_ready'}
@@ -345,7 +432,8 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
         for sig in (signal.SIGTERM, signal.SIGINT):
             previous_handlers[sig] = signal.signal(sig, interrupted)
         emit('private_qwq_gpu_requested', run_id=run_id, pod_name=state['pod_name'], gpu_id='NVIDIA A40',
-             gpu_count=1, reserved_upper_krw=1497, runtime_seconds=3600)
+             gpu_count=1, reserved_upper_krw=1457, runtime_seconds=3500)
+        startup_started = clock()
         try:
             pod = services.create(state['pod_name'], child_environment(manifest, env, run_id,
                 int(wall_clock()) + manifest['runtime_seconds'] - 300), pod_command(manifest))
@@ -358,12 +446,15 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
         write_state(state, state_path)
         emit('private_qwq_gpu_started', run_id=run_id, pod_id=pod['id'], pod_name=pod['name'],
              gpu_id='NVIDIA A40', gpu_count=1, observed_hourly_usd=str(pod['costPerHr']))
-        previous = None
+        previous, previous_bootstrap = None, None
+        worker_observed = False
         while clock() < float(plan.deadline_monotonic) - 120:
             remaining = float(plan.deadline_monotonic) - 120 - clock()
             identity(services.pod(pod['id'], max(1, min(20, remaining))), state, plan)
             summary = services.summary(run_id, max(1, min(20, remaining)))
             progress = safe_progress(summary)
+            if progress:
+                worker_observed = True
             if progress and progress != previous:
                 emit('private_qwq_gpu_progress', run_id=run_id, **progress)
                 previous = progress
@@ -373,6 +464,13 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
             if isinstance(value, dict) and value.get('status') in ('uploaded', 'failed'):
                 result = value
                 break
+            if not worker_observed:
+                marker = services.bootstrap(pod['id'], max(1, min(6, remaining)))
+                if marker is not None and marker != previous_bootstrap:
+                    emit('private_qwq_gpu_bootstrap', run_id=run_id, **marker)
+                    previous_bootstrap = marker
+                require(marker is None or marker.get('stage') != 'failed', 'evaluation_bootstrap_failed')
+                require(clock() - startup_started < STARTUP_CAP_SECONDS, 'evaluation_startup_unobserved')
             sleep(max(0, min(20, float(plan.deadline_monotonic) - 120 - clock())))
         require(result is not None, 'evaluation_parent_deadline')
         require(result.get('status') == 'uploaded', 'evaluation_child_failed')
@@ -396,8 +494,8 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
     if cleanup_ok:
         ledger = settle_run(ledger, PREFIX + run_id, clock(), deletion_confirmed=True)
         emit('private_qwq_gpu_cost', run_id=run_id, aggregate_upper_krw=int(ledger.spent_krw),
-             run_upper_krw=int(ledger.spent_krw - ledger.prior_spend_krw), reserved_upper_krw=1497,
-             authorized_total=100000, additional_limit_krw=2001, previous_eval_upper_krw=999, deletion_confirmed=True)
+             run_upper_krw=int(ledger.spent_krw - ledger.prior_spend_krw), reserved_upper_krw=1457,
+             authorized_total=100000, additional_limit_krw=1492, previous_eval_upper_krw=1508, deletion_confirmed=True)
     require(cleanup_ok, 'evaluation_cleanup_unconfirmed')
     require(failure is None, failure or 'evaluation_parent_failed')
     return result
