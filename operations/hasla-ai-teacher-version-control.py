@@ -347,7 +347,7 @@ def main(argv=None):
     # Exactly one request; transport failures are never retried because billing
     # may have started even when the client receives no result.
     response = session.post(url, data=body, headers={'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'},
-                            timeout=240, allow_redirects=False)
+                            timeout=720, allow_redirects=False)
     try:
         result = bounded_result(response, args.task, nonce)
     finally:

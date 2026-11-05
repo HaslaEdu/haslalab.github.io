@@ -8,7 +8,7 @@
 
 export const TEACHER_MODELS=Object.freeze({deepseek:'deepseek-v4-pro',openai:'gpt-6.1-terra'});
 // Operational spend/memory ceilings only: no desired teacher-answer length.
-export const TEACHER_LIMITS=Object.freeze({outputTokens:32768,requestBytes:1024,providerRequestBytes:12288,responseBytes:524288,timeoutMs:120000});
+export const TEACHER_LIMITS=Object.freeze({outputTokens:32768,requestBytes:1024,providerRequestBytes:12288,responseBytes:524288,timeoutMs:600000});
 const URLS=Object.freeze({deepseek:'https://api.deepseek.com/chat/completions',openai:'https://api.openai.com/v1/responses'});
 const KEY_NAMES=Object.freeze({deepseek:'DEEPSEEK_API_KEY',openai:'OPENAI_API_KEY'});
 // Effort labels are provider-specific; record requested settings rather than
@@ -177,7 +177,7 @@ export async function handleTeacherRequest(request,env,expectedTokenDigest,optio
     let body;try{body=JSON.parse(raw);}catch{throw new TeacherError(400,'teacher_invalid_request');}
     check(exact(body,['task','nonce'])&&Object.hasOwn(TASKS,body.task)&&/^[a-f0-9]{32,64}$/.test(body.nonce),400,'teacher_task_not_allowed');
     const timeoutMs=options.timeoutMs??TEACHER_LIMITS.timeoutMs;
-    check(Number.isInteger(timeoutMs)&&timeoutMs>=1&&timeoutMs<=180000,500,'teacher_timeout_config_invalid');
+    check(Number.isInteger(timeoutMs)&&timeoutMs>=1&&timeoutMs<=600000,500,'teacher_timeout_config_invalid');
     const fixture=Object.hasOwn(options,'fetchImpl');
     const replayKey=expectedTokenDigest+':'+env.HASLA_TEACHER_REQUEST_SHA256+':'+body.nonce+':'+fixture;
     // This collapses concurrent/repeated calls in one isolate. The short-lived
