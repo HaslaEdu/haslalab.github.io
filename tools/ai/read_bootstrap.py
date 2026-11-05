@@ -37,19 +37,23 @@ def artifact_files(api,root):
     rows=meta['files']; require(type(rows) is list and len(rows)==2 and [r.get('name') for r in rows if type(r) is dict]==['diagnostics.json','traceback.txt'])
     entries=artifact.manifest.entries; require(type(entries) is dict and set(entries)=={'diagnostics.json','traceback.txt'})
     creator=artifact.logged_by(); require(creator is not None and creator.id==NAME and creator.entity==ENTITY and creator.project==PROJECT)
-    files=[]
+    files=[]; manifest_diagnostics=[]
     for row in rows:
         require(set(row)=={'name','bytes','sha256'} and type(row['bytes']) is int and 0<=row['bytes']<=32768 and type(row['sha256']) is str and re.fullmatch('[0-9a-f]{64}',row['sha256']))
         entry=entries[row['name']]; require(entry.path==row['name'] and entry.size==row['bytes'] and not getattr(entry,'ref',None))
         fresh=artifact.get_entry(row['name']); require(fresh.path==row['name'] and fresh.size==row['bytes'] and not getattr(fresh,'ref',None))
         path=Path(fresh.download(root=str(root),skip_cache=True)); require(path.absolute()==(root/row['name']).absolute() and not path.is_symlink() and path.is_file() and path.resolve()==(root/row['name']).resolve() and path.stat().st_size==row['bytes'])
         raw=path.read_bytes(); require(sha(raw)==row['sha256'])
+        md5=base64.b64encode(hashlib.md5(raw).digest()).decode()
+        digest=getattr(entry,'digest',None); fresh_digest=getattr(fresh,'digest',None)
+        require(all(d is None or type(d) is str and re.fullmatch('[A-Za-z0-9+/=:_-]{1,160}',d) for d in (digest,fresh_digest)))
+        manifest_diagnostics.append({'path':str(entry.path),'size':entry.size,'digest':digest,'ref_present':bool(getattr(entry,'ref',None)),'fresh_entry_digest':fresh_digest,'computed_md5_base64':md5,'computed_sha256':sha(raw),'manifest_digest_matches_md5':digest==md5,'fresh_digest_matches_md5':fresh_digest==md5})
         if row['name']=='diagnostics.json':
             body=json.loads(raw); require(type(body) is dict and body.get('run_id')==RUN and body.get('code_commit')==COMMIT and body.get('kind')=='private_qwq_bootstrap_diagnostic' and body.get('model_calls')==0)
         else: require(len(raw)<=12288); raw.decode('utf8')
         files.append({**row,'base64':base64.b64encode(raw).decode()})
     require({p.name for p in root.iterdir()}=={'diagnostics.json','traceback.txt'})
-    return {'state':'committed_verified','reference':REFERENCE,'metadata':meta,'files':files,'parent_receipt_fabricated':False}
+    return {'state':'committed_verified','reference':REFERENCE,'metadata':meta,'files':files,'manifest_diagnostics':manifest_diagnostics,'parent_receipt_fabricated':False}
 def discover(api,query,env):
     row=query(env)
     result={'version':1,'kind':'private_qwq_bootstrap_discovery','run_id':RUN,'code_commit':COMMIT,'launch_id':NONCE,'terminal_proof_sha256':TERMINAL_PROOF_SHA,'private_project_verified':True,'parent_bootstrap_receipt_present':False,'run_state':'absent','artifact':{'state':'not_queried','files':[]},'output_log':None,'model_calls':0,'provider_calls':0}
