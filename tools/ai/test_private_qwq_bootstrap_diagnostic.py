@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 from types import SimpleNamespace
 import tempfile
+import subprocess
 import unittest
 from unittest.mock import patch
 
@@ -21,6 +22,32 @@ def namespace():
 
 
 class Tests(unittest.TestCase):
+    def test_completed_import_with_shutdown_hook_is_not_misclassified_as_timeout(self):
+        n=namespace()
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);modules=root/'modules';modules.mkdir()
+            for name in (*n['CORE'],'wandb'):
+                version='0.31.0' if name=='wandb' else '1.0'
+                package=modules/name;package.mkdir()
+                body='import atexit,time; atexit.register(lambda:time.sleep(3))' if name=='unsloth' else ''
+                (package/'__init__.py').write_text(body)
+                dist=modules/(name+'-'+version+'.dist-info');dist.mkdir()
+                (dist/'METADATA').write_text('Metadata-Version: 2.1\nName: '+name+'\nVersion: '+version+'\n')
+            env={'PYTHONPATH':str(modules)}
+            if os.name=='nt':env['SystemRoot']=os.environ['SystemRoot']
+            def actual(command,**kwargs):
+                self.assertTrue(command[2].endswith('; import os; os._exit(0)'))
+                return subprocess.run(command,**{**kwargs,'timeout':1,'env':env})
+            row,_=n['probe']('module_import',root,actual)
+            self.assertEqual(row['status'],'passed');self.assertEqual(row['exit_code'],0)
+            self.assertEqual(row['observations']['wandb'],'0.31.0')
+            def prior(command,**kwargs):
+                command=[*command];command[2]=command[2].removesuffix('; import os; os._exit(0)')
+                return subprocess.run(command,**{**kwargs,'timeout':1,'env':env})
+            row,_=n['probe']('module_import',root,prior)
+            self.assertEqual(row['status'],'failed');self.assertEqual(row['exception_type'],'TimeoutExpired')
+            self.assertEqual(row['observations']['wandb'],'0.31.0')
+
     def test_inline_is_self_contained_and_redacts_bounded_private_trace(self):
         n = namespace()
         text = 'PRIVATE_VALUE\nTOKEN="new secret text"\nhttps://example.com/private\nBearer ABC\n'
@@ -106,6 +133,7 @@ class Tests(unittest.TestCase):
 
     def test_privacy_failure_before_initialization_and_public_error_is_fixed(self):
         n=namespace(); called=[]
+        n['diagnose']=lambda root:([], '')
         def clients(env):
             called.append('clients'); raise RuntimeError('PRIVATE_RAW_KEY_ERROR')
         fake=SimpleNamespace(private_clients=clients)
@@ -114,13 +142,24 @@ class Tests(unittest.TestCase):
         with patch.dict(os.environ,env),patch.dict(n['sys'].modules,{'private_qwq_gpu_eval':fake}),patch.object(n['signal'],'signal'),patch.object(n['signal'],'alarm',create=True),patch.object(n['signal'],'SIGALRM',14,create=True),redirect_stdout(output):
             self.assertEqual(n['main'](),1)
         event=json.loads(output.getvalue())
-        self.assertEqual(event,{'event':'private_qwq_gpu_bootstrap_diagnostic','status':'failed','exception_type':'RuntimeError','exit_code':1})
+        self.assertEqual(event,{'event':'private_qwq_gpu_bootstrap_diagnostic','status':'failed','phase':'clients','exception_type':'RuntimeError','exit_code':1})
         self.assertEqual(called,['clients']); self.assertNotIn('PRIVATE_RAW_KEY_ERROR',output.getvalue())
         for privacy in (False,None,{'entity':n['ENTITY'],'project':n['PROJECT'],'access':'PUBLIC'}):
             with self.subTest(privacy=privacy),tempfile.TemporaryDirectory() as directory:
                 sdk=SimpleNamespace(init=lambda **_: self.fail('SDK init before PRIVATE proof'))
                 with self.assertRaises(ValueError):
                     n['publish']({'run_id':'41956885560','code_commit':'a'*40},Path(directory),lambda env:(None,lambda _:privacy,sdk))
+
+    def test_client_failure_is_labeled_without_starting_later_probes(self):
+        n=namespace();order=[]
+        n['diagnose']=lambda root:(order.append('local_probes') or [], 'local_synthetic_trace')
+        with tempfile.TemporaryDirectory() as directory:
+            def clients(env):
+                order.append('clients')
+                self.assertFalse((Path(directory)/'diagnostics.json').exists())
+                raise RuntimeError('PRIVATE_RAW')
+            with self.assertRaises(RuntimeError):n['publish']({'run_id':'41956885560','code_commit':'a'*40},Path(directory),clients)
+        self.assertEqual(order,['clients']);self.assertEqual(n['PHASE'],'clients')
 
     def test_injected_provider_hf_names_removed_before_sdk_and_all_fresh_probes(self):
         n=namespace(); sdk_calls=[]; probe_calls=[]

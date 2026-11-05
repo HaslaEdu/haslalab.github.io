@@ -46,10 +46,15 @@ ADAPTER_SPEC = SOURCE_ADAPTER
 IMAGE = 'unsloth/unsloth@sha256:9e12ff9201f4753ae7290ba45b0ca681a010575d925a53dffd13b8a7829e295b'
 PYTHON = '/opt/unsloth-venv/bin/python'
 STARTUP_CAP_SECONDS = 1500
-FIXED = {'version': 4, 'kind': 'private_qwq_gpu_evaluation_v4', 'authorized_total': 100000,
+DIAGNOSTIC_ERRORS = {'AssertionError', 'ImportError', 'ModuleNotFoundError', 'RuntimeError', 'ValueError',
+    'TypeError', 'AttributeError', 'OSError', 'TimeoutExpired', 'TimeoutError', 'ValidationError', 'UsageError',
+    'CommError', 'AuthenticationError', 'HTTPError', 'SSLError', 'ConnectionError', 'VerificationError', 'ResumeError', 'OtherError'}
+DIAGNOSTIC_PHASES = {'job_validation', 'local_probes', 'clients', 'project_privacy', 'sdk_init',
+                     'artifact_create', 'artifact_wait', 'artifact_verify', 'summary', 'finish'}
+FIXED = {'version': 5, 'kind': 'private_qwq_gpu_evaluation_v5', 'authorized_total': 100000,
     'scope': 'paired_inference_with_bounded_private_bootstrap_diagnostics',
-    'previous_eval_upper_krw': 1658, 'prior_upper_krw': 73199, 'reserve_krw': 5000, 'additional_limit_krw': 1342,
-    'reserved_upper_krw': 1296, 'runtime_seconds': 3100, 'child_runtime_seconds': 2700,
+    'previous_eval_upper_krw': 1797, 'prior_upper_krw': 73338, 'reserve_krw': 5000, 'additional_limit_krw': 1203,
+    'reserved_upper_krw': 1175, 'runtime_seconds': 2800, 'child_runtime_seconds': 2400,
     'cleanup_grace_seconds': 120, 'gpu_id': 'NVIDIA A40', 'gpu_count': 1,
     'gpu_usd_per_hour_upper': '0.60', 'container_disk_gb': 200, 'volume_gb': 0,
     'optimizer_steps': 0}
@@ -94,7 +99,7 @@ def validate_manifest(manifest):
     require(manifest['case_set_sha256'] == plan['comparison']['case_set_sha256'] and
             manifest['comparison_plan_sha256'] == hashlib.sha256(canonical(plan)).hexdigest(), 'comparison_plan_mismatch')
     ledger = budget_plan(manifest, 'manifest-validation', 0)
-    require(int(ledger.reserved_krw) == 1296 and ledger.reserved_krw <= manifest['additional_limit_krw'],
+    require(int(ledger.reserved_krw) == 1175 and ledger.reserved_krw <= manifest['additional_limit_krw'],
             'additional_budget_exceeded')
     require(manifest['prior_upper_krw'] == 71541 + manifest['previous_eval_upper_krw']
             and manifest['additional_limit_krw'] == 3000 - manifest['previous_eval_upper_krw']
@@ -108,7 +113,7 @@ def budget_plan(manifest, run_id, now):
     ledger = BudgetLedger(policy, prior_spend_krw=manifest['prior_upper_krw'])
     quote = PodQuote(gpu_usd_per_hour_upper=manifest['gpu_usd_per_hour_upper'],
                      container_disk_gb=200, volume_disk_gb=0, gpu_count=1)
-    return reserve_run(ledger, run_id, 'solver', quote, now, 3100, 3100, cleanup_grace_seconds=120)
+    return reserve_run(ledger, run_id, 'solver', quote, now, 2800, 2800, cleanup_grace_seconds=120)
 
 
 def inventory(pods):
@@ -215,8 +220,11 @@ class Services:
                             event = json.loads(line[5:])
                             if (isinstance(event, dict) and event.get('source') in ('container', 'stdout', 'stderr')
                                     and type(event.get('line')) is str):
+                                diagnostic = diagnostic_failure_marker(event['line'])
+                                if diagnostic is not None:
+                                    found = diagnostic
                                 marker = bootstrap_marker(event['line'])
-                                if marker is not None:
+                                if marker is not None and not (found and found.get('stage') == 'diagnostic_failed'):
                                     found = marker
                         except (ValueError, TypeError):
                             pass
@@ -339,11 +347,21 @@ def pod_command(manifest):
     for name in CHILD_SCRIPTS:
         commands += ['curl -fsSL --max-time 60 ' + shlex.quote(base + name) + ' -o ' + shlex.quote(name),
                      'echo ' + shlex.quote(manifest['script_sha256'][name] + '  ' + name) + ' | sha256sum -c - >/dev/null']
-    commands += [stage('diagnostics'), PYTHON + ' -c ' + shlex.quote(bootstrap_diagnostic_source())
-                    + ' >/workspace/qwq-eval-dependencies.log 2>&1',
+    relay = ("import json; from pathlib import Path; "
+             "phases=" + repr(sorted(DIAGNOSTIC_PHASES)) + "; errors=" + repr(sorted(DIAGNOSTIC_ERRORS)) + "; "
+             "\nwith Path('/workspace/qwq-eval-dependencies.log').open('rb') as f:\n f.seek(0,2); f.seek(max(0,f.tell()-65536)); data=f.read(65536)\n"
+             "\nfor line in data.splitlines():\n"
+             " try:\n  v=json.loads(line)\n"
+             "  if type(v) is dict and set(v)=={'event','status','phase','exception_type','exit_code'} and v['event']=='private_qwq_gpu_bootstrap_diagnostic' and v['status']=='failed' and v['phase'] in phases and v['exception_type'] in errors and type(v['exit_code']) is int and 1<=v['exit_code']<=255: print(json.dumps(v,sort_keys=True),flush=True)\n"
+             " except Exception: pass\n")
+    diagnostic = PYTHON + ' -c ' + shlex.quote(bootstrap_diagnostic_source()) + ' >/workspace/qwq-eval-dependencies.log 2>&1'
+    failed_diagnostic = 'code="$diagnostic_exit"; trap - ERR; printf ' + shlex.quote(failed) + ' "$code"; sleep 120; exit "$code"'
+    commands += [stage('diagnostics'), 'if ' + diagnostic + '; then diagnostic_exit=0; else diagnostic_exit=$?; fi',
+                 PYTHON + ' -c ' + shlex.quote(relay),
+                 'if [ "$diagnostic_exit" -ne 0 ]; then ' + failed_diagnostic + '; fi',
                  stage('worker'), PYTHON + ' -B private_qwq_gpu_eval.py >/workspace/qwq-eval-worker.log 2>&1',
                  stage('completed')]
-    return 'timeout --signal=TERM --kill-after=30s 2800s /bin/bash -lc ' + shlex.quote('; '.join(commands))
+    return 'timeout --signal=TERM --kill-after=30s 2500s /bin/bash -lc ' + shlex.quote('; '.join(commands))
 
 
 def bootstrap_marker(line):
@@ -358,6 +376,9 @@ def bootstrap_marker(line):
     stage = value.get('stage')
     if type(stage) is not str:
         return None
+    if stage == 'diagnostic_failed' and set(value) == {'event', 'stage', 'phase', 'exception_type', 'exit_code'}:
+        return diagnostic_failure_marker(json.dumps({'event': 'private_qwq_gpu_bootstrap_diagnostic',
+            'status': 'failed', 'phase': value['phase'], 'exception_type': value['exception_type'], 'exit_code': value['exit_code']}))
     if stage == 'failed':
         if set(value) == {'event', 'stage', 'exit_code'} and type(value['exit_code']) is int and 1 <= value['exit_code'] <= 255:
             return {'stage': stage, 'exit_code': value['exit_code']}
@@ -365,6 +386,22 @@ def bootstrap_marker(line):
         return {'stage': stage}
     return None
 
+
+def diagnostic_failure_marker(line):
+    if type(line) is not str or len(line) > 512:
+        return None
+    try:
+        value = json.loads(line)
+    except (ValueError, TypeError):
+        return None
+    if type(value) is dict and set(value) == {'event', 'status', 'phase', 'exception_type', 'exit_code'}:
+        if (value['event'] == 'private_qwq_gpu_bootstrap_diagnostic' and value['status'] == 'failed'
+                and type(value['phase']) is str and value['phase'] in DIAGNOSTIC_PHASES
+                and type(value['exception_type']) is str and value['exception_type'] in DIAGNOSTIC_ERRORS
+                and type(value['exit_code']) is int and 1 <= value['exit_code'] <= 255):
+            return {'stage': 'diagnostic_failed', 'phase': value['phase'],
+                    'exception_type': value['exception_type'], 'exit_code': value['exit_code']}
+    return None
 
 def safe_bootstrap_result(summary, run_id, commit):
     value = summary.get('private_qwq_gpu_bootstrap_result_json')
@@ -378,8 +415,7 @@ def safe_bootstrap_result(summary, run_id, commit):
             and value['status'] in ('passed', 'failed'), 'bootstrap_identity_invalid')
     stages = value['stages']
     require(type(stages) is list and len(stages) == 3, 'bootstrap_stages_invalid')
-    errors = {'AssertionError', 'ImportError', 'ModuleNotFoundError', 'RuntimeError', 'ValueError', 'TypeError',
-              'AttributeError', 'OSError', 'TimeoutExpired', 'TimeoutError', 'OtherError', None}
+    errors = DIAGNOSTIC_ERRORS | {None}
     for row, name in zip(stages, ('core_compare', 'module_import', 'GPU_check')):
         require(type(row) is dict and set(row) == {'stage', 'status', 'exit_code', 'exception_type'}
                 and row['stage'] == name and row['status'] in ('passed', 'failed') and type(row['exit_code']) is int
@@ -480,7 +516,7 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
         for sig in (signal.SIGTERM, signal.SIGINT):
             previous_handlers[sig] = signal.signal(sig, interrupted)
         emit('private_qwq_gpu_requested', run_id=run_id, pod_name=state['pod_name'], gpu_id='NVIDIA A40',
-             gpu_count=1, reserved_upper_krw=1296, runtime_seconds=3100)
+             gpu_count=1, reserved_upper_krw=1175, runtime_seconds=2800)
         startup_started = clock()
         try:
             pod = services.create(state['pod_name'], child_environment(manifest, env, run_id,
@@ -526,7 +562,14 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
                 if marker is not None and marker != previous_bootstrap:
                     emit('private_qwq_gpu_bootstrap', run_id=run_id, **marker)
                     previous_bootstrap = marker
-                require(marker is None or marker.get('stage') != 'failed', 'evaluation_bootstrap_failed')
+                if marker is not None and marker.get('stage') in ('failed', 'diagnostic_failed'):
+                    # A committed summary can lag its producer's final stderr.
+                    diagnostic = safe_bootstrap_result(services.bootstrap_summary(run_id, max(1, min(6, remaining))),
+                                                       run_id, manifest['code_commit'])
+                    if diagnostic is not None and diagnostic != previous_diagnostic:
+                        emit('private_qwq_gpu_bootstrap_diagnostic', **diagnostic)
+                        previous_diagnostic = diagnostic
+                    raise EvaluationError('evaluation_bootstrap_failed')
                 require(clock() - startup_started < STARTUP_CAP_SECONDS, 'evaluation_startup_unobserved')
             sleep(max(0, min(20, float(plan.deadline_monotonic) - 120 - clock())))
         require(result is not None, 'evaluation_parent_deadline')
@@ -551,8 +594,8 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
     if cleanup_ok:
         ledger = settle_run(ledger, PREFIX + run_id, clock(), deletion_confirmed=True)
         emit('private_qwq_gpu_cost', run_id=run_id, aggregate_upper_krw=int(ledger.spent_krw),
-             run_upper_krw=int(ledger.spent_krw - ledger.prior_spend_krw), reserved_upper_krw=1296,
-             authorized_total=100000, additional_limit_krw=1342, previous_eval_upper_krw=1658, deletion_confirmed=True)
+             run_upper_krw=int(ledger.spent_krw - ledger.prior_spend_krw), reserved_upper_krw=1175,
+             authorized_total=100000, additional_limit_krw=1203, previous_eval_upper_krw=1797, deletion_confirmed=True)
     require(cleanup_ok, 'evaluation_cleanup_unconfirmed')
     require(failure is None, failure or 'evaluation_parent_failed')
     return result

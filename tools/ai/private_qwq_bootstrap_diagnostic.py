@@ -7,9 +7,10 @@ import base64, contextlib, hashlib, json, os, re, signal, subprocess, sys, tempf
 from pathlib import Path
 
 CORE = ('torch','transformers','unsloth','unsloth_zoo','peft','bitsandbytes','trl')
-ERRORS = {'AssertionError','ImportError','ModuleNotFoundError','RuntimeError','ValueError','TypeError','AttributeError','OSError','TimeoutExpired','TimeoutError'}
+ERRORS = {'AssertionError','ImportError','ModuleNotFoundError','RuntimeError','ValueError','TypeError','AttributeError','OSError','TimeoutExpired','TimeoutError','ValidationError','UsageError','CommError','AuthenticationError','HTTPError','SSLError','ConnectionError','VerificationError','ResumeError'}
 ENTITY, PROJECT = 'mimgyuson-haslaedu', 'hasla-ai-private-training'
 VERSION = r'[A-Za-z0-9.+_-]{1,100}'
+PHASE = 'job_validation'
 HF_CREDENTIALS = {'HF_TOKEN','HF_API_TOKEN','HUGGING_FACE_HUB_TOKEN','HUGGINGFACE_TOKEN','HUGGINGFACEHUB_API_TOKEN','HUGGINGFACE_API_KEY','HF_API_KEY','HF_HUB_TOKEN'}
 
 def sanitize_environment(env):
@@ -41,6 +42,7 @@ def probe(stage, root, runner=subprocess.run):
     else:
         require(stage == 'GPU_check')
         code = "import torch; "+common+"available=torch.cuda.is_available(); count=torch.cuda.device_count(); name=torch.cuda.get_device_name(0) if available and count else None; value={'available':available,'count':count,'name':name if name in (None,'NVIDIA A40') else 'other','compiled_cuda':torch.version.cuda}; out.write_text(json.dumps(value)); assert available and count==1 and name=='NVIDIA A40'"
+    code += '; import os; os._exit(0)'
     with log.open('wb') as handle:
         try:
             result = runner([sys.executable,'-c',code,str(output)],stdout=handle,stderr=subprocess.STDOUT,timeout=30,check=False)
@@ -76,32 +78,47 @@ def diagnose(root, runner=subprocess.run):
     return stages, '\n'.join(logs).encode('utf8','replace')[-12288:].decode('utf8','ignore')
 
 def publish(job, root, clients):
+    global PHASE
+    PHASE = 'clients'
     api, privacy, sdk = clients(os.environ)
     def private(): require(privacy(ENTITY)=={'entity':ENTITY,'project':PROJECT,'access':'PRIVATE'})
+    PHASE = 'project_privacy'
     private()
     name = 'hasla-qwq-bootstrap-'+job['run_id']
+    PHASE = 'sdk_init'
     run = sdk.init(entity=ENTITY,project=PROJECT,id=name,name=name,resume='never',job_type='bootstrap-diagnostic',settings=sdk.Settings(init_timeout=20,console='off',disable_code=True,disable_git=True))
     try:
+        PHASE = 'local_probes'
         stages, trace = diagnose(root)
         value = {'version':1,'kind':'private_qwq_bootstrap_diagnostic','run_id':job['run_id'],'code_commit':job['code_commit'],'model_calls':0,'optimizer_steps':0,'stages':stages,'passed':len(stages)==3 and all(r['status']=='passed' for r in stages)}
         (root/'diagnostics.json').write_text(json.dumps(value,sort_keys=True,allow_nan=False),encoding='utf8'); (root/'traceback.txt').write_text(trace,encoding='utf8')
         files = [{'name':n,'bytes':(root/n).stat().st_size,'sha256':hashlib.sha256((root/n).read_bytes()).hexdigest()} for n in ('diagnostics.json','traceback.txt')]
+        PHASE = 'artifact_create'
         private()
         artifact = sdk.Artifact(name,type='bootstrap-diagnostic',metadata={'private':True,'run_id':job['run_id'],'code_commit':job['code_commit'],'model_calls':0,'files':files})
         for row in files: artifact.add_file(str(root/row['name']),name=row['name'])
+        PHASE = 'artifact_wait'
         saved = run.log_artifact(artifact).wait(timeout=30)
+        PHASE = 'artifact_verify'
         require(saved.state=='COMMITTED' and saved.type=='bootstrap-diagnostic' and saved.metadata==artifact.metadata and re.fullmatch(re.escape(ENTITY+'/'+PROJECT+'/'+name)+r':v[0-9]+',saved.qualified_name) and set(saved.manifest.entries)=={r['name'] for r in files})
         for row in files:
             entry = saved.manifest.entries[row['name']]
             require(entry.size==row['bytes'] and not getattr(entry,'ref',None) and entry.digest==base64.b64encode(hashlib.md5((root/row['name']).read_bytes()).digest()).decode())
         private()
         result = {'version':1,'run_id':job['run_id'],'code_commit':job['code_commit'],'status':'passed' if value['passed'] else 'failed','stages':[{'stage':r['stage'],'status':r['status'],'exit_code':r['exit_code'],'exception_type':r['exception_type']} for r in stages],'artifact':saved.qualified_name,'files':files,'model_calls':0}
+        PHASE = 'summary'
         run.summary.update({'private_qwq_gpu_bootstrap_result_json':result})
         return 0 if value['passed'] else 1
     finally:
-        run.finish()
+        primary_failure = sys.exc_info()[0] is not None
+        try: run.finish()
+        except Exception:
+            if not primary_failure:
+                PHASE = 'finish'
+                raise
 
 def main():
+    global PHASE
     sanitize_environment(os.environ)
     signal.signal(signal.SIGALRM,lambda *_: (_ for _ in ()).throw(TimeoutError('bootstrap_deadline'))); signal.alarm(180)
     try:
@@ -112,7 +129,7 @@ def main():
             return publish(job,Path(directory),private_clients)
     except Exception as error:
         kind = type(error).__name__ if type(error).__name__ in ERRORS else 'OtherError'
-        print(json.dumps({'event':'private_qwq_gpu_bootstrap_diagnostic','status':'failed','exception_type':kind,'exit_code':1},sort_keys=True))
+        print(json.dumps({'event':'private_qwq_gpu_bootstrap_diagnostic','status':'failed','phase':PHASE,'exception_type':kind,'exit_code':1},sort_keys=True))
         return 1
     finally: signal.alarm(0)
 
