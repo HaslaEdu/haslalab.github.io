@@ -1,54 +1,104 @@
-name: QwQ H100 source and teacher training
-run-name: Hasla QwQ H100 continuation (training-role=both, launch=${{ inputs.launch_id }}, preflight=${{ inputs.preflight_only }})
+name: Verify completed QwQ training weights on CPU
+run-name: QwQ three-way CPU verification (target=41985817184, source=a80ab6d5, launch=${{ inputs.launch_id }})
 on:
   workflow_dispatch:
     inputs:
       launch_id:
         type: string
         required: true
-      preflight_only:
-        type: boolean
-        default: true
 permissions:
   contents: read
 jobs:
-  private-pilot:
-    concurrency:
-      group: hasla-private-book-training
-      cancel-in-progress: false
+  verify-qwq-three-way:
     runs-on: ubuntu-24.04
-    timeout-minutes: 250
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: tools/ai
+          ref: a80ab6d59c9243c18a21328aa2292ca9491f5d38
+          sparse-checkout: |
+            tools/ai/private_verify_adapter.py
+            tools/ai/private_resume_adapter.py
+            tools/ai/role_config.py
+          sparse-checkout-cone-mode: false
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install --quiet requests wandb
-      - name: Continue source SFT and actual teacher preference training
-        timeout-minutes: 230
+      - name: Validate exact public CPU verifier bytes
         run: |
-          python -c "import os,hashlib; assert hashlib.sha256(os.environ['HASLA_DUAL_MANIFEST'].encode()).hexdigest()==os.environ['HASLA_EXPECTED_MANIFEST_SHA256']"
-          python -B tools/ai/private_dedicated_run.py
+          python -B - <<'PY'
+          import hashlib,pathlib
+          expected={'private_verify_adapter.py':'06f79a3222ac9edd72fd37758233e1a67b674c45a395fb367c655f99932eaa36','private_resume_adapter.py':'e52f9e5c31d938c98b7f3215761e3a3ccee616c645b74bd4cfa899cb34b551af','role_config.py':'fde4850efcb0002d3458772956fcf61398c705814e1d6534981404ae495eac03'}
+          assert all(hashlib.sha256(pathlib.Path('tools/ai',n).read_bytes()).hexdigest()==s for n,s in expected.items()),'cpu_source_pin_mismatch'
+          print('cpu_source_pins_verified')
+          PY
+      - run: python -m pip install --quiet requests 'wandb==0.31.0' numpy safetensors
+      - name: Read private immutable adapter and compare prior B weights
+        run: |
+          python -B - <<'PY'
+          import json,os,re,sys
+          sys.path.insert(0,'tools/ai')
+          import private_verify_adapter as v
+          TARGET='41985817184'
+          CODE='a80ab6d59c9243c18a21328aa2292ca9491f5d38'
+          TRAINING_LAUNCH='84eb6cb39a0ea9511566b7cd906c8823'
+          MANIFEST='ee331fd1a45f35354184135a223e6910aaa67fcd8a7a259bc3c55cf366318c3a'
+          class BoundReader(v.PrivateReader):
+              def result(self,entity,run_id,role):
+                  v.require(run_id==TARGET and role=='solver','fixed_verification_target_mismatch')
+                  result=super().result(entity,run_id,role)
+                  if not result or result.get('status')=='failed':return result
+                  initial=result.get('initial_adapter') or {}
+                  v.require(result.get('training_sha256')=='47e180fac8a2193974c3458608540609a563d506775430fe33a274a450f3d0bf'
+                      and result.get('training_records')==28 and result.get('validation_records')==4
+                      and result.get('training_profile') is None and result.get('epochs')==3
+                      and result.get('steps_completed')==12 and result.get('max_steps')==-1
+                      and initial.get('source_training_run_id')=='41931877157'
+                      and initial.get('prior_verification_run_id')=='41943069583'
+                      and initial.get('adapter_inventory_sha256')=='c295c61015ebc1d1b1e32cfe7f535c1336ba536c4902645146f15a5f0df5de8f'
+                      and initial.get('files')==[
+                          {'bytes':1322,'name':'adapter_config.json','sha256':'1954f97392fb7b1873ad5f399febbb894a79a387b5dbf98785434d850a02801e'},
+                          {'bytes':536991984,'name':'adapter_model.safetensors','sha256':'5b4c2e755930a30298927cdf905fd158c4745473eea7c41f87630183729d0112'}]
+                      and (result.get('label_diagnostics') or {}).get('assistant_loss_status')=='official_qwq_public_rationale_responses_only_verified'
+                      and (result.get('offline_dpo_training') or {}).get('data_sha256')=='1d7d8fab0fac3b0756f6b5693409e373cdd2bda65474b15c3542d4ea3d738b5a'
+                      and result['offline_dpo_training'].get('review_sha256')=='c0d32fd8922bfd32a59e748985bcda5674318c1c8563a7888125459cff14174a'
+                      and result['offline_dpo_training'].get('helper_sha256')=='150d2a73cc11ad7fdc783099ed747526e992f4b3a621e6dd07bf8516027e8fa7'
+                      and result['offline_dpo_training'].get('pairs')==7 and result['offline_dpo_training'].get('optimizer_steps_completed')==21,
+                      'fixed_training_identity_or_source_mismatch')
+                  data=self.query('query($e:String!,$p:String!,$r:String!){project(name:$p,entityName:$e){run(name:$r){config}}}',{'e':entity,'p':v.PROJECT,'r':f'hasla-private-books-{TARGET}-solver'})
+                  raw=((data.get('project') or {}).get('run') or {}).get('config')
+                  config=v.decoded_dict(raw)
+                  def field(key):
+                      value=config.get(key) if isinstance(config,dict) else None
+                      return value.get('value') if isinstance(value,dict) and 'value' in value else value
+                  v.require(field('repo_sha')==CODE and field('training_sha256')=='47e180fac8a2193974c3458608540609a563d506775430fe33a274a450f3d0bf'
+                      and field('validation_sha256')=='9bf3a713894ef32a82019e9c268532aa7fe825f54894b526d712cd94bf71f2c5'
+                      and field('training_code_sha256')=='2f72635846c151a9f384319f264644338379de425c860af97a0f8b7333c43e2a'
+                      and field('epochs')==3 and field('test_records_used')==0,'private_training_config_binding_failed')
+                  return result
+          try:
+              launch=os.environ.get('HASLA_CPU_VERIFY_LAUNCH_ID','')
+              v.require(os.environ.get('GITHUB_ACTIONS')=='true'
+                  and os.environ.get('GITHUB_REPOSITORY','').lower()=='haslaedu/haslalab.github.io'
+                  and re.fullmatch('[0-9a-f]{32}',launch),'verification_launch_context_invalid')
+              v.require(not any(os.environ.get(k) for k in ('RUNPOD_API_KEY','HF_TOKEN','HF_HUB_TOKEN','GCP_SA_KEY','GEMINI_API_KEY','OPENAI_API_KEY','DEEPSEEK_API_KEY')),'unexpected_provider_credential')
+              event=v.verify(TARGET,'solver',reader_factory=BoundReader,continuation_inventory=True)
+              event.update(verification_code_commit=CODE,training_code_commit=CODE,
+                  training_launch_id=TRAINING_LAUNCH,training_manifest_sha256=MANIFEST,verification_launch_id=launch)
+          except v.VerificationError as error:
+              event={'event':'private_adapter_verification','run_id':TARGET,'roles':[],
+                     'all_verified':False,'quality_verified':False,'code':error.code}
+          except Exception:
+              event={'event':'private_adapter_verification','run_id':TARGET,'roles':[],
+                     'all_verified':False,'quality_verified':False,'code':'private_reader_failed'}
+          print(json.dumps(event,sort_keys=True,separators=(',',':')))
+          raise SystemExit(0 if event['all_verified'] else 2 if event['roles'] and all(r['status']=='pending' for r in event['roles']) else 1)
+          PY
         env:
-          HASLA_EXPECTED_MANIFEST_SHA256: ee331fd1a45f35354184135a223e6910aaa67fcd8a7a259bc3c55cf366318c3a
-          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
-          HASLA_SOLVER_DATA_00: ${{ secrets.HASLA_SOLVER_DATA_00 }}
-          HASLA_SOLVER_DATA_01: ${{ secrets.HASLA_SOLVER_DATA_01 }}
-          HASLA_SOLVER_VALIDATION_00: ${{ secrets.HASLA_SOLVER_VALIDATION_00 }}
-          HASLA_SOLVER_DPO_00: ${{ secrets.HASLA_SOLVER_DPO_00 }}
-          HASLA_PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
-          HASLA_TRAINING_ROLE: both
-      - name: Confirm this training GPU is removed
-        if: ${{ always() }}
-        timeout-minutes: 5
-        run: python -B tools/ai/private_dedicated_run.py --cleanup
-        env:
-          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
-          HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
-          HASLA_TRAINING_ROLE: both
+          HASLA_CPU_VERIFY_LAUNCH_ID: ${{ inputs.launch_id }}
+          WANDB_CONSOLE: 'off'
+          WANDB_SILENT: 'true'
+          HF_HUB_OFFLINE: '1'
+          TRANSFORMERS_OFFLINE: '1'
