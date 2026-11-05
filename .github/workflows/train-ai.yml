@@ -1,5 +1,5 @@
 name: Hasla Gemma and QwQ private pilot
-run-name: Hasla dual-model pilot (training-role=${{ inputs.training_role || 'both' }}, launch=${{ inputs.launch_id }}, preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }}, source-inspect=${{ inputs.ocr_source_inspect_only }}, contest-fetch=${{ inputs.contest_fetch_only }}, private-ocr=${{ inputs.ocr_batch_only }}, contest-delta=${{ inputs.contest_delta_inspect_only }}, contest-prepare=${{ inputs.contest_delta_prepare_only }}, ocr-reconcile=${{ inputs.ocr_reconcile_run_id }}, cpu-compare=${{ inputs.compare_qwq_cpu || false }})
+run-name: Hasla dual-model pilot (training-role=${{ inputs.training_role || 'both' }}, launch=${{ inputs.launch_id }}, preflight=${{ inputs.preflight_only }}, collection=${{ inputs.collection_only }}, status=${{ inputs.status_run_id }}, verify=${{ inputs.verify_run_id }}, stage=${{ inputs.stage_only }}, ocr=${{ inputs.ocr_probe_only }}, ocr-stage=${{ inputs.ocr_stage_only }}, bundle=${{ inputs.ocr_stage_bundle_id }}, gpu-ocr=${{ inputs.ocr_gpu_probe_only }}, source-inspect=${{ inputs.ocr_source_inspect_only }}, contest-fetch=${{ inputs.contest_fetch_only }}, private-ocr=${{ inputs.ocr_batch_only }}, contest-delta=${{ inputs.contest_delta_inspect_only }}, contest-prepare=${{ inputs.contest_delta_prepare_only }}, ocr-reconcile=${{ inputs.ocr_reconcile_run_id }}, cpu-compare=${{ inputs.compare_qwq_cpu || false }}, gpu-compare=${{ inputs.compare_qwq_gpu || false }})
 on:
   workflow_dispatch:
     inputs:
@@ -19,6 +19,10 @@ on:
         description: "Verify the two private corpora and accounts without creating a GPU"
         type: boolean
         default: true
+      compare_qwq_gpu:
+        description: "One explicitly budgeted A40 QwQ comparison; no model training"
+        type: boolean
+        default: false
       compare_qwq_cpu:
         description: "CPU-only fixed QwQ base-versus-adapter comparison; no RunPod or training"
         type: boolean
@@ -91,7 +95,7 @@ permissions:
   contents: read
 jobs:
   private-pilot:
-    if: ${{ !inputs.compare_qwq_cpu && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: ${{ inputs.training_role == 'chat' && 'hasla-private-book-training-chat' || inputs.training_role == 'solver' && 'hasla-private-book-training-solver' || 'hasla-private-book-training' }}
       cancel-in-progress: false
@@ -157,7 +161,7 @@ jobs:
           HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
           HASLA_TRAINING_ROLE: ${{ inputs.training_role || 'both' }}
   collect-patterns:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-pattern-collection
       cancel-in-progress: false
@@ -180,7 +184,7 @@ jobs:
           HASLA_PATTERN_CURSORS: ${{ secrets.HASLA_PATTERN_CURSORS }}
           HASLA_PATTERN_OBSERVED_LISTING_URLS: ${{ secrets.HASLA_PATTERN_OBSERVED_LISTING_URLS }}
   inspect-gpu:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.status_run_id != '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.status_run_id != '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
@@ -199,7 +203,7 @@ jobs:
           HASLA_STATUS_RUN_ID: ${{ inputs.status_run_id }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
   verify-adapters:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.verify_run_id != '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.verify_run_id != '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -225,7 +229,7 @@ jobs:
           HASLA_VERIFY_ROLES: ${{ inputs.verify_roles }}
           HASLA_VERIFY_CONTINUATION_INVENTORY: ${{ inputs.verify_continuation_inventory }}
   stage-corpus:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-corpus-staging
       cancel-in-progress: false
@@ -247,7 +251,7 @@ jobs:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
           HASLA_STAGE_INPUT: ${{ secrets.HASLA_STAGE_INPUT }}
   public-ocr-probe:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -267,7 +271,7 @@ jobs:
         timeout-minutes: 27
         run: python tools/ai/private_ocr_probe.py --run --output "$RUNNER_TEMP/ocr-probe-summary.json"
   stage-ocr-sources:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-ocr-source-staging
       cancel-in-progress: false
@@ -290,7 +294,7 @@ jobs:
           HASLA_OCR_STAGE_INPUT: ${{ secrets.HASLA_OCR_STAGE_INPUT }}
           HASLA_OCR_STAGE_BUNDLE_ID: ${{ inputs.ocr_stage_bundle_id }}
   public-gpu-ocr-probe:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-public-gpu-ocr-probe
       cancel-in-progress: false
@@ -325,7 +329,7 @@ jobs:
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
   inspect-ocr-sources:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -344,7 +348,7 @@ jobs:
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
           HASLA_OCR_SOURCE_ARTIFACT: ${{ secrets.HASLA_OCR_SOURCE_ARTIFACT }}
   fetch-contest-sources:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-contest-source-fetch
       cancel-in-progress: false
@@ -388,7 +392,7 @@ jobs:
           HASLA_CONTEST_FETCH_PLAN_14: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_14 }}
           HASLA_CONTEST_FETCH_PLAN_15: ${{ secrets.HASLA_CONTEST_FETCH_PLAN_15 }}
   private-gpu-ocr-calibration:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.ocr_batch_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.ocr_batch_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-ocr-calibration
       cancel-in-progress: false
@@ -423,7 +427,7 @@ jobs:
         env:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
   inspect-contest-delta:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.contest_delta_inspect_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.contest_delta_inspect_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -449,7 +453,7 @@ jobs:
           HASLA_CONTEST_INVENTORY_EXPORT_PUBLIC_KEY: ${{ secrets.HASLA_CONTEST_INVENTORY_EXPORT_PUBLIC_KEY }}
           HASLA_CONTEST_INVENTORY_EXPORT_SHA256: ${{ secrets.HASLA_CONTEST_INVENTORY_EXPORT_SHA256 }}
   prepare-contest-delta:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.contest_delta_prepare_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.contest_delta_prepare_only && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-native-delta-preparation
       cancel-in-progress: false
@@ -474,7 +478,7 @@ jobs:
           WANDB_DIR: ${{ runner.temp }}/private-native-delta
           HASLA_CONTEST_DELTA_MANIFEST: ${{ secrets.HASLA_CONTEST_DELTA_MANIFEST }}
   reconcile-private-ocr:
-    if: ${{ !inputs.compare_qwq_cpu && inputs.ocr_reconcile_run_id != '' && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only }}
+    if: ${{ !inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.ocr_reconcile_run_id != '' && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only }}
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
@@ -493,7 +497,7 @@ jobs:
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           HASLA_OCR_RECONCILE_RUN_ID: ${{ inputs.ocr_reconcile_run_id }}
   compare-qwq-cpu:
-    if: ${{ inputs.compare_qwq_cpu && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    if: ${{ !inputs.compare_qwq_gpu && inputs.compare_qwq_cpu && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
     concurrency:
       group: hasla-private-qwq-cpu-comparison
       cancel-in-progress: false
@@ -539,3 +543,36 @@ jobs:
           WANDB_ENTITY: mimgyuson-haslaedu
           WANDB_DIR: ${{ runner.temp }}/qwq-cpu-private-wandb
           HASLA_CPU_COMPARE_LAUNCH_ID: ${{ inputs.launch_id }}
+  compare-qwq-gpu:
+    if: ${{ inputs.compare_qwq_gpu && !inputs.compare_qwq_cpu && inputs.training_role == 'both' && !inputs.collection_only && inputs.status_run_id == '' && inputs.verify_run_id == '' && !inputs.stage_only && !inputs.ocr_probe_only && !inputs.ocr_stage_only && !inputs.ocr_gpu_probe_only && !inputs.ocr_source_inspect_only && !inputs.contest_fetch_only && !inputs.ocr_batch_only && !inputs.contest_delta_inspect_only && !inputs.contest_delta_prepare_only && inputs.ocr_reconcile_run_id == '' }}
+    concurrency:
+      group: hasla-private-qwq-gpu-evaluation
+      cancel-in-progress: false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: tools/ai
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --quiet requests wandb
+      - name: Preflight or execute one bounded A40 comparison
+        timeout-minutes: 65
+        run: python -B tools/ai/private_qwq_gpu_run.py
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
+          WANDB_ENTITY: mimgyuson-haslaedu
+          HASLA_QWQ_GPU_EVAL_MANIFEST: ${{ secrets.HASLA_QWQ_GPU_EVAL_MANIFEST }}
+          HASLA_QWQ_GPU_EVAL_LAUNCH_ID: ${{ inputs.launch_id }}
+          HASLA_PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
+      - name: Confirm the exact evaluation Pod was deleted
+        if: ${{ always() }}
+        timeout-minutes: 5
+        run: python -B tools/ai/private_qwq_gpu_run.py --cleanup
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+
