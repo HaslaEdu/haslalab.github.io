@@ -195,11 +195,29 @@ def validate_authored_chat(row):
         and _authored_chat_sha(row) == trusted['row_sha256'][row['id']])
 
 
+
+_FUNCTIONAL_CHAT_COHORT = {'dataset_version': 'gemma-functional-selective-loss-repair-v1-20261105', 'kind': 'private_gemma_functional_exact_cohort_v1', 'review_receipt_sha256': 'e1727fdb1ef8795e4e5b8c6ebe956780b8ca957a56fbb3ca3c4f64c07d242f5e', 'row_sha256': {'authored-gemma-role-v6-0017': '623371c61f6e496ade2962dcb3861d412a14c9be9a7ae1ae466f3d89d7401b66', 'authored-gemma-role-v6-0018': 'e6f8fbfb485dd80f57a871119c5f43ce6ffc7db6a451cef4c4044b61584a53cd', 'authored-gemma-role-v6-0019': '09dc66c2585908fb2132acef56b70bffe5aa1f68e7acd8422132d4ff508a2e0a', 'authored-gemma-role-v6-0020': 'c3b721ae27722f7f3cfc7db6845000776fc6f0bea4cc96af73d221c9ead71a08', 'authored-gemma-role-v6-0021': '62777db55aab18ae572bfc373c0d49dc2ef61d20ef4a9932d1d750c892669ca5', 'authored-gemma-role-v6-0022': '0b59dfc0f6f95c005e5dbb27e23959b76259f0ad0ab743a2bc68ad6a6085220d', 'authored-gemma-role-v6-0023': '13707adf81e091eec991f99e612307679b925ecb77530033c085ed9f60f69e6e', 'authored-gemma-role-v6-0024': 'fd4be005c539c4136a6fd3451f99c8f208cee572cbc14f5861917a057c2f8a2e', 'authored-gemma-role-v6-0025': '12718af54d2dc41b3417fd8507b9c26ee96aee4c0bd04c1bd0a218c6675d90db', 'authored-gemma-role-v6-0026': '7219986cec6871e0c75bc3a7acfe2da29d9ef7a4aa80a5674a3a2120d3d7b8ab', 'authored-gemma-role-v6-0027': '0bc927b81b9c621a2c2a115c527a63692004b2b023cbe9503186899499cf0289', 'authored-gemma-role-v6-0028': 'b52b6172c189331ea194e440c47145f9a088eec2f039d73a23a5402ac0e44a6f', 'authored-gemma-role-v6-0029': 'da140e92dee92219c2f6b5f8bbf0ce1caf1de879b45d47ccaf926ca9cc187b7a', 'authored-gemma-role-v6-0030': '1fca0954cf450e73de35b6eab14708000c8512de0cd108b481d90e38cbd495d8', 'authored-gemma-role-v6-0033': 'a4e2cd20b1bbf5e34e25067804f637cd590953791a27a9b23ee751eb98b7232d', 'authored-gemma-role-v6-0034': '6d3561429f79e703fe673e19b98870294a63df469f2d1316b34306957b698537', 'authored-gemma-role-v6-0035': 'd429762ce86dae37541637f0f3cd8d52c5bc5eb9eb770da28478fa83f65fe03e', 'authored-gemma-role-v6-0036': '31c0c15cd166d918a6e9aed568fb1ceec8f2c060af39506d4528f2f44c3ee635', 'authored-gemma-role-v6-0037': 'b016ae0ca2659a89ff8915ab91784518fc69dcc7d2e8cdd1f1fbe3f8b1b710c4', 'authored-gemma-role-v6-0038': 'cd1ec4bd61ed02899010300e88a68c03e611b30de339905983cac5425a0a00af', 'authored-gemma-role-v6-0039': '79a22917aa10e64f4861864aac45407ed315a5d79b4125d7c080b3794b6457d6', 'authored-gemma-role-v6-0040': '8287562291fc044d5cb8a31b19eb46d2879204733bec7a0f48948ef15ce4592b', 'authored-gemma-role-v6-0041': '7fb918a62ea61e9edd25387e84f05a96d2a4d8cd4bc0c965f709ceaf522f4ab6', 'authored-gemma-role-v6-0042': '1a8264d958197028980e142a68d96b3ad5c4b20571bc08d16733460d53483cd9', 'authored-gemma-role-v6-0043': 'c5db4c1c179279a6f46fd9e464f418d38146c260c4c183d2f3d54cdf732fa878', 'authored-gemma-role-v6-0044': 'f0bc67f0454e8aa8f00f340248e0ab48673095f6af2b843e89af11116c39591a', 'authored-gemma-role-v6-0045': 'beb4dfa15d28f0fe5269532d4598ee78137dd86aa59be9352dd5d47cb1b84512', 'authored-gemma-role-v6-0046': '9019f309aac6aea6055ab00e782bc773419fb8e75e1d1a15149f5d26614f1225', 'authored-gemma-role-v6-0047': '9f215f0ee1f6022b1f3453e4d3e5a49a5e922f46f1b0d95c050755c2379ed744', 'authored-gemma-role-v6-0048': 'bbd120c58ba24d56b9ed0df718f685e864e8c85e5ae7b76af1d0c201c1a18868', 'new-functional-routing-validation-20261105-01': '75951cb37c51d10e669f83d8a2a0386ddad3076b31e00c7ce1739e1fa22ffb84', 'new-functional-routing-validation-20261105-02': 'f21d8202295e2d3cff2704513fe2216f386fdde15a30c3fb16b04b9dad499186', 'new-functional-routing-validation-20261105-03': '0dc75bf854ef48fd3702d262e4aed2f0ed31341d277f06c9be084965c2058d7b', 'new-functional-routing-validation-20261105-04': '4c2b2dfdd163c2293a167478aacdd5ddc43ac87500fa6d37f68434b0cd2f27dd', 'new-functional-routing-validation-20261105-05': '17be7f428a7579c8436c734ac30382d70a1d45bbeea012881a21fb4dd8b7d099', 'new-functional-routing-validation-20261105-06': '2adffe11b8e745a6b440c8869831143906d63cee8fdad25a96f8519a766fb673', 'new-functional-routing-validation-20261105-07': '24a496c87ee2426ad41f61c7cba82529e9f1f1bc29cdc76a9a6ed8b7e8456d8c', 'new-functional-routing-validation-20261105-08': '0eeb45f76721b1d7ac2323f682cfdcacf1e24a2a0ae71f1f771d7f8ed1a4939b'}, 'source_manifest_sha256': '1624c398c56eabdcc52c691b2458ba058aee48c7e1e45443421c9debe0d0eda8', 'splits': {'authored-gemma-role-v6-0017': 'train', 'authored-gemma-role-v6-0018': 'train', 'authored-gemma-role-v6-0019': 'train', 'authored-gemma-role-v6-0020': 'train', 'authored-gemma-role-v6-0021': 'train', 'authored-gemma-role-v6-0022': 'train', 'authored-gemma-role-v6-0023': 'train', 'authored-gemma-role-v6-0024': 'train', 'authored-gemma-role-v6-0025': 'train', 'authored-gemma-role-v6-0026': 'train', 'authored-gemma-role-v6-0027': 'train', 'authored-gemma-role-v6-0028': 'train', 'authored-gemma-role-v6-0029': 'train', 'authored-gemma-role-v6-0030': 'train', 'authored-gemma-role-v6-0033': 'train', 'authored-gemma-role-v6-0034': 'train', 'authored-gemma-role-v6-0035': 'train', 'authored-gemma-role-v6-0036': 'train', 'authored-gemma-role-v6-0037': 'train', 'authored-gemma-role-v6-0038': 'train', 'authored-gemma-role-v6-0039': 'train', 'authored-gemma-role-v6-0040': 'train', 'authored-gemma-role-v6-0041': 'train', 'authored-gemma-role-v6-0042': 'train', 'authored-gemma-role-v6-0043': 'train', 'authored-gemma-role-v6-0044': 'train', 'authored-gemma-role-v6-0045': 'train', 'authored-gemma-role-v6-0046': 'train', 'authored-gemma-role-v6-0047': 'train', 'authored-gemma-role-v6-0048': 'train', 'new-functional-routing-validation-20261105-01': 'validation', 'new-functional-routing-validation-20261105-02': 'validation', 'new-functional-routing-validation-20261105-03': 'validation', 'new-functional-routing-validation-20261105-04': 'validation', 'new-functional-routing-validation-20261105-05': 'validation', 'new-functional-routing-validation-20261105-06': 'validation', 'new-functional-routing-validation-20261105-07': 'validation', 'new-functional-routing-validation-20261105-08': 'validation'}}
+
+def validate_functional_chat(row):
+    meta = row.get('metadata') or {}
+    trusted = _FUNCTIONAL_CHAT_COHORT
+    if (row.get('id') not in trusted['row_sha256']
+            or meta.get('dataset_version') != trusted['dataset_version']
+            or meta.get('review_receipt_sha256') != trusted['review_receipt_sha256']
+            or row.get('review_status') != 'approved' or meta.get('review_status') != 'approved'
+            or meta.get('split') != trusted['splits'].get(row.get('id'))
+            or meta.get('provenance_type') not in ('authored_role_curriculum_v1', 'authored_runtime_routing_diagnostic_v1')
+            or _authored_chat_sha(row) != trusted['row_sha256'][row['id']]):
+        raise ValueError('functional Gemma rows require the exact independently reviewed cohort')
+
 def validate_source_lineage(rows, role):
     """Require observed chat exchanges or traceable HaslaLab educational sources."""
     for row in rows:
         meta = row.get('metadata') or {}
         if role == 'chat':
+            if meta.get('dataset_version') == _FUNCTIONAL_CHAT_COHORT['dataset_version']:
+                validate_functional_chat(row)
+                continue
             if 'provenance_type' in meta:
                 if meta['provenance_type'] != 'authored_role_curriculum_v1':
                     raise ValueError('unknown Gemma chat provenance type')
@@ -374,6 +392,10 @@ def resource_settings(manifest, role):
     # Pure profile validation precedes any provider or corpus request.
     profile = spec.get('training_profile')
     get_role_config(role, profile)
+    requirement = spec.get('assistant_only_loss')
+    if requirement is not None and (requirement != 'required' or role != 'chat'
+            or profile != 'gemma-26b-qlora-v1' or spec.get('format') != 'chat'):
+        raise ValueError('explicit assistant-only loss requires the supported Gemma chat profile')
     if profile == 'qwq-32b-qlora-48gb-v1' and spec.get('format') != 'text':
         raise ValueError('QwQ low-memory profile requires native text1024')
     maximum = (3600 if profile == 'gemma-26b-qlora-v1' else 1800) if role == 'chat' else 14400
@@ -397,6 +419,25 @@ def resource_settings(manifest, role):
     ceiling = '1.2' if profile == 'qwq-32b-qlora-48gb-v1' else (6 if role == 'chat' and profile is None else 4)
     if quote.gpu_usd_per_hour_upper > Decimal(str(ceiling)):
         raise ValueError(f'role GPU hourly ceiling exceeds USD{ceiling}')
+    usd_policy = manifest.get('runpod_usd_policy')
+    if usd_policy is not None:
+        if (type(usd_policy) is not dict or set(usd_policy) != {'total_limit', 'cycle_limit', 'prior_spent_or_reserved'}
+                or usd_policy['total_limit'] != '60' or usd_policy['cycle_limit'] != '3'
+                or type(usd_policy['prior_spent_or_reserved']) is not str
+                or manifest.get('selected_roles') != ['chat'] or requirement != 'required'
+                or seconds > 3600 or quote.gpu_usd_per_hour_upper > Decimal('0.7')
+                or any(gpu not in ('NVIDIA A40', 'NVIDIA L40S') for gpu in gpu_ids)
+                or 'sibling_allowance' in manifest or 'budget_breakdown' in manifest):
+            raise ValueError('invalid bounded Gemma functional pilot policy')
+        try:
+            prior = Decimal(usd_policy['prior_spent_or_reserved'])
+        except Exception:
+            raise ValueError('invalid independent RunPod USD budget') from None
+        # The existing runner conservatively reserves a full runtime again
+        # for cleanup. Include compute, disk and tax in the independent cap.
+        cycle = quote.hourly_usd_upper * Decimal(seconds * 2) / Decimal(3600) * policy.tax_multiplier
+        if not prior.is_finite() or prior < 0 or cycle > Decimal('3') or prior + cycle > Decimal('60'):
+            raise ValueError('RunPod USD cycle or total budget exceeded')
     return ledger, quote, seconds, gpu_ids
 
 

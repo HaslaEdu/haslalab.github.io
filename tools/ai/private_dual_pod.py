@@ -23,6 +23,9 @@ def role_jobs(env):
         if job.get('format') not in expected_formats[role]:
             raise ValueError('role and data format do not match')
         profile = job.get('training_profile')
+        if job.get('assistant_only_loss') is not None and (job['assistant_only_loss'] != 'required'
+                or role != 'chat' or job['format'] != 'chat' or profile != 'gemma-26b-qlora-v1'):
+            raise ValueError('unsupported assistant-only loss job requirement')
         if profile is not None and (role, profile) not in (('chat', 'gemma-26b-qlora-v1'),
                                                          ('solver', 'qwq-32b-qlora-48gb-v1')):
             raise ValueError('unknown or incompatible training profile')
@@ -68,7 +71,7 @@ def main():
     any_failed = False
     for job in jobs:
         runtime = job.get('runtime_seconds', 1200 if job['role'] == 'chat' else 2700)
-        child = {k: v for k, v in env.items() if k not in ('HASLA_ROLE_JOBS', 'HASLA_TRAINING_PROFILE')}
+        child = {k: v for k, v in env.items() if k not in ('HASLA_ROLE_JOBS', 'HASLA_TRAINING_PROFILE', 'HASLA_ASSISTANT_ONLY_LOSS')}
         child.update({'ROLE': job['role'], 'HASLA_DATA_FORMAT': job['format'],
                       'HASLA_INPUT_ARTIFACT': job['input_artifact'],
                       'HASLA_DATA_SHA256': job['training_sha256'],
@@ -78,6 +81,8 @@ def main():
                       'HASLA_TRAIN_TIMEOUT_SECONDS': str(runtime)})
         if job.get('training_profile') is not None:
             child['HASLA_TRAINING_PROFILE'] = job['training_profile']
+        if job.get('assistant_only_loss') is not None:
+            child['HASLA_ASSISTANT_ONLY_LOSS'] = job['assistant_only_loss']
         if job.get('initial_adapter') is not None:
             child['HASLA_INITIAL_ADAPTER'] = json.dumps(job['initial_adapter'], separators=(',', ':'))
         try:

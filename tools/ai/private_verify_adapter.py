@@ -179,7 +179,7 @@ def summary_result(summary):
               "training_profile", "precision", "training_method", "runtime_profile_proof", "format", "label_diagnostics",
               "adapter_files", "adapter_sha256", "initial_adapter", "resume_script_sha256",
               "initial_adapter_model_sha256", "optimizer_state_restored", "formatter_provenance", "baseline_evaluation",
-              "training_records", "validation_records")
+              "training_records", "validation_records", "functional_evaluation")
     for field in fields:
         for separator in (".", "/"):
             key = "private_training_result" + separator + field
@@ -193,11 +193,16 @@ def validated_label_diagnostics(value, data_format):
     statuses = {'plain_text_full_sequence_loss', 'explicit_full_sequence_loss',
                 'template_has_no_generation_markers', 'generation_mask_not_available',
                 'generation_mask_not_selective', 'generation_mask_shape_invalid', 'generation_mask_check_failed',
-                'library_generation_mask_verified', 'installed_trl_has_no_assistant_only_loss'}
+                'library_generation_mask_verified', 'installed_trl_has_no_assistant_only_loss',
+                'official_gemma_responses_only_verified'}
     numbers = ('mask_probe_dimensions', 'mask_probe_batch_size', 'mask_probe_token_count', 'mask_probe_assistant_tokens')
     keys = {'version', 'assistant_only_loss', 'assistant_loss_status', 'selected_template_sha256',
             'processor_class', 'tokenizer_class', *numbers}
-    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] != 1
+    version = value.get('version') if isinstance(value, dict) else None
+    if version == 2:
+        keys |= {'mask_method', 'mask_helper_sha256', 'records_verified',
+                 'trainer_assistant_only_loss', 'trainer_completion_only_loss'}
+    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] not in (1, 2)
             or type(value['assistant_only_loss']) is not bool or not isinstance(value['assistant_loss_status'], str)
             or value['assistant_loss_status'] not in statuses
             or data_format not in ('text', 'chat')):
@@ -214,15 +219,59 @@ def validated_label_diagnostics(value, data_format):
     if (dimensions not in (0, 1, 2) or selected > tokens or dimensions == 0 and (batch or tokens or selected)
             or dimensions == 1 and batch != 1 or tokens and batch != 1):
         raise ValueError('invalid_label_diagnostics')
-    verified = value['assistant_loss_status'] == 'library_generation_mask_verified'
+    responses_only = value['assistant_loss_status'] == 'official_gemma_responses_only_verified'
+    if responses_only != (version == 2):
+        raise ValueError('invalid_label_diagnostics')
+    if responses_only and (value['mask_method'] != 'official_gemma_responses_only'
+            or not isinstance(value['mask_helper_sha256'], str) or not re.fullmatch('[a-f0-9]{64}', value['mask_helper_sha256'])
+            or value['selected_template_sha256'] != '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1'
+            or type(value['records_verified']) is not int or not 1 <= value['records_verified'] <= 250000
+            or value['trainer_assistant_only_loss'] is not False or value['trainer_completion_only_loss'] is not False):
+        raise ValueError('invalid_label_diagnostics')
+    verified = value['assistant_loss_status'] == 'library_generation_mask_verified' or responses_only
     if value['assistant_only_loss'] != verified or verified and not (dimensions in (1, 2) and batch == 1 and 0 < selected < tokens):
         raise ValueError('invalid_label_diagnostics')
     if ((data_format == 'text') != (value['assistant_loss_status'] == 'plain_text_full_sequence_loss')
             or data_format == 'text' and (dimensions or batch or tokens or selected)):
         raise ValueError('invalid_label_diagnostics')
     return dict(value)
+def validated_functional_evaluation(value, validation_sha, validation_records):
+    allowed = {'create', 'solve', 'explain', 'concept', 'grade', 'feedback', 'site', 'web', 'chat', 'off'}
+    if (not isinstance(value, dict) or set(value) != {'version', 'method', 'validation_sha256', 'validation_records', 'max_new_tokens', 'before', 'after'}
+            or type(value['version']) is not int or value['version'] != 1
+            or value['method'] != 'native_gemma_greedy_routing_v1' or value['validation_sha256'] != validation_sha
+            or type(value['validation_records']) is not int or value['validation_records'] != validation_records or validation_records != 8
+            or type(value['max_new_tokens']) is not int or value['max_new_tokens'] != 16):
+        raise ValueError('invalid_functional_evaluation')
+    identities = []
+    for mode in ('before', 'after'):
+        result = value[mode]
+        if (not isinstance(result, dict) or set(result) != {'correct', 'valid_labels', 'cases'}
+                or not isinstance(result['cases'], list) or len(result['cases']) != 8):
+            raise ValueError('invalid_functional_evaluation')
+        keys = []
+        for case in result['cases']:
+            if (not isinstance(case, dict) or set(case) != {'id_sha256', 'target', 'prediction', 'generated_tokens', 'correct'}
+                    or not isinstance(case['id_sha256'], str) or not re.fullmatch('[0-9a-f]{64}', case['id_sha256'])
+                    or not isinstance(case['target'], str) or case['target'] not in allowed
+                    or case['prediction'] is not None and (not isinstance(case['prediction'], str) or case['prediction'] not in allowed)
+                    or type(case['generated_tokens']) is not int or not 1 <= case['generated_tokens'] <= 16
+                    or type(case['correct']) is not bool or case['correct'] != (case['prediction'] == case['target'])):
+                raise ValueError('invalid_functional_evaluation')
+            keys.append((case['id_sha256'], case['target']))
+        if (len(set(keys)) != 8 or type(result['correct']) is not int or result['correct'] != sum(c['correct'] for c in result['cases'])
+                or type(result['valid_labels']) is not int or result['valid_labels'] != sum(c['prediction'] is not None for c in result['cases'])):
+            raise ValueError('invalid_functional_evaluation')
+        identities.append(keys)
+    if identities[0] != identities[1]:
+        raise ValueError('invalid_functional_evaluation')
+    return dict(value)
+
 def validated_gemma_receipts(report, role, profile, training_records, validation_records, validation_sha=None):
-    names = ('formatter_provenance', 'baseline_evaluation')
+    if ((report.get('label_diagnostics') or {}).get('assistant_loss_status') == 'official_gemma_responses_only_verified'
+            and 'functional_evaluation' not in report):
+        raise ValueError('required_functional_evaluation_missing')
+    names = ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation')
     if not any(name in report for name in names):
         return {}
     if role != 'chat' or profile != 'gemma-26b-qlora-v1' or 'formatter_provenance' not in report:
@@ -276,6 +325,8 @@ def validated_gemma_receipts(report, role, profile, training_records, validation
                     or report.get('optimizer_state_restored') is not False):
                 raise ValueError('invalid_gemma_receipts')
             clean['baseline_evaluation'] = dict(baseline)
+            if 'functional_evaluation' in report:
+                clean['functional_evaluation'] = validated_functional_evaluation(report['functional_evaluation'], value['validation_sha256'], validation_records)
             return clean
         required = {'version', 'baseline_eval_loss', 'baseline_method', 'same_validation_sha256', 'validation_records', 'zero_b_tensors'}
         if (not isinstance(baseline, dict) or set(baseline) != required
@@ -290,6 +341,8 @@ def validated_gemma_receipts(report, role, profile, training_records, validation
         clean['baseline_evaluation'] = dict(baseline)
     elif validation_records:
         raise ValueError('invalid_gemma_receipts')
+    if 'functional_evaluation' in report:
+        clean['functional_evaluation'] = validated_functional_evaluation(report['functional_evaluation'], value['validation_sha256'], validation_records)
     return clean
 def expected_result(result, entity, run_id, role):
     baseline = result.get('baseline_evaluation')
@@ -303,6 +356,9 @@ def expected_result(result, entity, run_id, role):
     if 'label_diagnostics' in result:
         try:
             validated_label_diagnostics(result['label_diagnostics'], result.get('format'))
+            if result['label_diagnostics']['version'] == 2 and (role != 'chat'
+                    or result.get('training_profile') != 'gemma-26b-qlora-v1'):
+                raise ValueError('Gemma selective loss proof is role-specific')
         except ValueError:
             raise VerificationError('result_label_diagnostics_invalid') from None
     try:
@@ -569,7 +625,7 @@ def verify_role(reader, api, entity, run_id, role, root):
             and metadata.get('label_diagnostics') == result.get('label_diagnostics'),
             'artifact_label_diagnostics_mismatch')
     require(all((k in metadata) == (k in result) and metadata.get(k) == result.get(k)
-                for k in ('formatter_provenance', 'baseline_evaluation')), 'artifact_gemma_receipts_mismatch')
+                for k in ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation')), 'artifact_gemma_receipts_mismatch')
     if result.get('training_profile') is None:
         require('runtime_profile_proof' not in result and 'runtime_profile_proof' not in metadata,
                 'artifact_training_profile_mismatch')

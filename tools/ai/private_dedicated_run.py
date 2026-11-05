@@ -143,6 +143,8 @@ def pod_environment(env, manifest, entity, role, run_name, reference, seconds):
            'validation_sha256': spec['validation']['raw_sha256'], 'runtime_seconds': seconds - 600}
     if spec.get('training_profile') is not None:
         job['training_profile'] = spec['training_profile']
+    if spec.get('assistant_only_loss') is not None:
+        job['assistant_only_loss'] = spec['assistant_only_loss']
     if spec.get('initial_adapter'):
         job['initial_adapter'] = spec['initial_adapter']
     child = {'HASLA_ROLE_JOBS': json.dumps([job], separators=(',', ':')), 'REPO_SHA': env['GITHUB_SHA'],

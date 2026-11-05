@@ -484,6 +484,102 @@ def label_diagnostics(processor, enabled, reason, probe, data_format):
 GEMMA_FORMATTER_TEMPLATE_SHA256 = '6971ec85ae5b8a161889e66720199f18ccf0ff8232909a01e0bdce244e507ab1'
 GEMMA_SOURCE_TEMPLATE_SHA256 = 'ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4'
 
+GEMMA_RESPONSE_PREFIX = '<|turn>model\n<|channel>thought\n<channel|>'
+
+
+def gemma_response_only_rows(processor, rows, helper, max_length):
+    """Mask native Gemma turns using the official helper, without editing text."""
+    template = getattr(processor, 'chat_template', None)
+    if (not isinstance(template, str)
+            or hashlib.sha256(template.encode()).hexdigest() != GEMMA_FORMATTER_TEMPLATE_SHA256
+            or not callable(helper)):
+        raise ValueError('reviewed official Gemma template and response masker are required')
+    masker = helper(None, tokenizer=processor, instruction_part='<|turn>user\n',
+                    response_part=GEMMA_RESPONSE_PREFIX, force_match=True, return_function=True)
+    if not callable(masker):
+        raise ValueError('official Gemma response masker is unavailable')
+    tokenizer = getattr(processor, 'tokenizer', processor)
+    prepared = []
+    for row in rows:
+        messages = row['messages']
+        if [m.get('role') for m in messages] not in (['user', 'assistant'], ['system', 'user', 'assistant']):
+            raise ValueError('Gemma selective-loss pilot requires a single reviewed assistant turn')
+        if any(re.search(r'<\|[^\n]*?\|>|</?think>|<turn\|>|<channel\|>', m['content']) for m in messages):
+            raise ValueError('Gemma source contains a control or reasoning-channel token')
+        kwargs = dict(tokenize=False, enable_thinking=False, preserve_thinking=False)
+        prompt = processor.apply_chat_template(messages[:-1], add_generation_prompt=True, **kwargs)
+        full = processor.apply_chat_template(messages, add_generation_prompt=False, **kwargs)
+        if (not isinstance(prompt, str) or not isinstance(full, str)
+                or not prompt.endswith(GEMMA_RESPONSE_PREFIX) or not full.startswith(prompt)
+                or not full.endswith('<turn|>\n')):
+            raise ValueError('native Gemma generation prompt is not the complete answer prefix')
+        ids, prefix = tokenizer.encode(full, add_special_tokens=False), tokenizer.encode(prompt, add_special_tokens=False)
+        if (not isinstance(ids, list) or not isinstance(prefix, list) or not prefix
+                or not len(prefix) < len(ids) <= max_length or ids[:len(prefix)] != prefix
+                or any(type(v) is not int or v < 0 for v in ids)):
+            raise ValueError('Gemma answer has an invalid token prefix or exceeds the no-truncation limit')
+        expected = [-100] * len(prefix) + ids[len(prefix):]
+        masked = masker({'input_ids': [ids]})
+        if not isinstance(masked, dict) or masked.get('labels') != [expected]:
+            raise ValueError('official Gemma mask changed the complete prompt or answer supervision')
+        prepared.append({'input_ids': ids, 'attention_mask': [1] * len(ids), 'labels': expected})
+    if getattr(processor, 'chat_template', None) != template:
+        raise ValueError('Gemma response masking changed the official template')
+    return prepared
+
+
+def verify_response_only_collation(collator, rows):
+    """Check actual batch labels, including padding, before any optimizer step."""
+    for row in rows:
+        batch = collator([{k: list(v) for k, v in row.items()}])
+        def as_list(value):
+            return value.tolist() if callable(getattr(value, 'tolist', None)) else value
+        ids, labels = as_list(batch.get('input_ids')), as_list(batch.get('labels'))
+        if (not isinstance(ids, list) or not isinstance(labels, list) or len(ids) != 1 or len(labels) != 1
+                or ids[0][:len(row['input_ids'])] != row['input_ids']
+                or labels[0][:len(row['labels'])] != row['labels']
+                or any(v != -100 for v in labels[0][len(row['labels']):])):
+            raise ValueError('actual Gemma collator changed verified response-only labels')
+
+
+def evaluate_gemma_routing(model, processor, torch_module, rows, prepared):
+    """Generate at most 16 tokens on the eight supplied routing holdouts."""
+    allowed = {'create', 'solve', 'explain', 'concept', 'grade', 'feedback', 'site', 'web', 'chat', 'off'}
+    if len(rows) != 8 or len(prepared) != 8 or any(
+            row['messages'][-1]['content'] not in allowed
+            or row.get('metadata', {}).get('curriculum_mode') != 'intent_classifier' for row in rows):
+        raise ValueError('functional evaluation requires eight explicit routing validation cases')
+    tokenizer = getattr(processor, 'tokenizer', processor)
+    parameters = list(model.parameters())
+    flags = [p.requires_grad for p in parameters]
+    was_training = model.training
+    cases = []
+    try:
+        model.eval()
+        for row, item in zip(rows, prepared):
+            boundary = next(i for i, v in enumerate(item['labels']) if v != -100)
+            prompt = item['input_ids'][:boundary]
+            ids = torch_module.tensor([prompt], dtype=torch_module.long, device='cuda:0')
+            with torch_module.no_grad():
+                output = model.generate(input_ids=ids, attention_mask=torch_module.ones_like(ids),
+                                        max_new_tokens=16, do_sample=False, use_cache=True)
+            values = output.tolist()
+            if (len(values) != 1 or values[0][:len(prompt)] != prompt
+                    or not 1 <= len(values[0]) - len(prompt) <= 16):
+                raise ValueError('bounded Gemma routing generation changed its prompt or limit')
+            generated = values[0][len(prompt):]
+            text = tokenizer.decode(generated, skip_special_tokens=True).strip()
+            prediction = text if text in allowed else None
+            cases.append({'id_sha256': hashlib.sha256(row['id'].encode()).hexdigest(),
+                          'target': row['messages'][-1]['content'], 'prediction': prediction,
+                          'generated_tokens': len(generated), 'correct': prediction == row['messages'][-1]['content']})
+    finally:
+        for parameter, flag in zip(parameters, flags):
+            parameter.requires_grad_(flag)
+        model.train(was_training)
+    return {'correct': sum(case['correct'] for case in cases),
+            'valid_labels': sum(case['prediction'] is not None for case in cases), 'cases': cases}
+
 
 def configure_gemma_formatter(processor, train_rows, validation_rows, validation_sha, module, installed_version):
     """Use only Unsloth's official helper; never inject or edit Jinja ourselves.
@@ -791,7 +887,25 @@ def main(argv=None):
     mask_enabled, patched_template, mask_reason = False, None, 'plain_text_full_sequence_loss'
     mask_probe = {'mask_probe_dimensions': 0, 'mask_probe_batch_size': 0,
                   'mask_probe_token_count': 0, 'mask_probe_assistant_tokens': 0}
-    if a.format == 'chat' and a.assistant_only_loss != 'off':
+    responses_only = a.base == 'chat' and a.training_profile == GEMMA_26B_QLORA_V1 and a.assistant_only_loss == 'required'
+    response_train, response_held, response_collator = None, None, None
+    if responses_only:
+        from unsloth.chat_templates import train_on_responses_only
+        from transformers import DataCollatorForSeq2Seq
+        helper_path = inspect.getsourcefile(inspect.unwrap(train_on_responses_only))
+        if not helper_path or not Path(helper_path).is_file():
+            raise ValueError('official Gemma masking helper provenance is unavailable')
+        response_train = gemma_response_only_rows(tok, train, train_on_responses_only, a.max_len)
+        response_held = gemma_response_only_rows(tok, held, train_on_responses_only, a.max_len)
+        probe_labels = response_train[0]['labels']
+        mask_probe.update(mask_probe_dimensions=2, mask_probe_batch_size=1,
+                          mask_probe_token_count=len(probe_labels),
+                          mask_probe_assistant_tokens=sum(v != -100 for v in probe_labels))
+        response_collator = DataCollatorForSeq2Seq(tokenizer=getattr(tok, 'tokenizer', tok),
+                                                  label_pad_token_id=-100, return_tensors='pt')
+        verify_response_only_collation(response_collator, response_train + response_held)
+        mask_reason = 'official_gemma_responses_only_verified'
+    elif a.format == 'chat' and a.assistant_only_loss != 'off':
         try:
             from trl import get_training_chat_template
         except ImportError:
@@ -807,7 +921,7 @@ def main(argv=None):
         tok.chat_template = patched_template
         if hasattr(tok, 'tokenizer'):
             tok.tokenizer.chat_template = patched_template
-    summary.update(assistant_only_loss=mask_enabled, assistant_loss_status=mask_reason)
+    summary.update(assistant_only_loss=mask_enabled or responses_only, assistant_loss_status=mask_reason)
     def fmt(rows):
         if a.format == 'chat':
             return Dataset.from_list([{'messages': r['messages']} for r in rows])
@@ -824,13 +938,32 @@ def main(argv=None):
         training_options['per_device_eval_batch_size'] = 1
     if 'assistant_only_loss' in inspect.signature(SFTConfig).parameters:
         training_options['assistant_only_loss'] = mask_enabled
-    trainer = SFTTrainer(model=model, processing_class=tok, train_dataset=fmt(train), eval_dataset=fmt(held) if held else None,
-                         args=SFTConfig(**training_options))
+    trainer_options = {}
+    if responses_only:
+        training_options.update(packing=False)
+        trainer_options['data_collator'] = response_collator
+    trainer = SFTTrainer(model=model, processing_class=tok,
+                         train_dataset=Dataset.from_list(response_train) if responses_only else fmt(train),
+                         eval_dataset=(Dataset.from_list(response_held) if responses_only else fmt(held)) if held else None,
+                         args=SFTConfig(**training_options), **trainer_options)
     effective_mask = getattr(getattr(trainer, 'args', None), 'assistant_only_loss', mask_enabled)
     if type(effective_mask) is not bool or effective_mask != mask_enabled:
         raise ValueError('trainer assistant masking configuration changed unexpectedly')
     summary['label_diagnostics'] = label_diagnostics(getattr(trainer, 'processing_class', tok), effective_mask,
                                                      mask_reason, mask_probe, a.format)
+    if responses_only:
+        for actual, expected in ((trainer.train_dataset, response_train), (trainer.eval_dataset, response_held)):
+            if expected and (len(actual) != len(expected) or any(
+                    any(row.get(k) != reference[k] for k in ('input_ids', 'attention_mask', 'labels'))
+                    for row, reference in zip(actual, expected))):
+                raise ValueError('trainer changed the verified native Gemma token dataset')
+        if getattr(trainer.args, 'completion_only_loss', False) not in (None, False):
+            raise ValueError('trainer enabled an unexpected second completion mask')
+        verify_response_only_collation(trainer.data_collator, response_train + response_held)
+        summary['label_diagnostics'].update(version=2, assistant_only_loss=True,
+            mask_method='official_gemma_responses_only', mask_helper_sha256=file_sha256(helper_path),
+            records_verified=len(response_train) + len(response_held),
+            trainer_assistant_only_loss=False, trainer_completion_only_loss=False)
     if mask_enabled and summary['label_diagnostics']['selected_template_sha256'] != hashlib.sha256(patched_template.encode()).hexdigest():
         raise ValueError('trainer changed the probed assistant-loss template')
     if a.training_profile == GEMMA_26B_QLORA_V1:
@@ -852,6 +985,10 @@ def main(argv=None):
         from transformers import TrainerCallback
         trainer.add_callback(progress_callback(TrainerCallback, a.progress_json, started=started,
                                               wall_seconds=a.train_wall_seconds))
+    if responses_only:
+        summary['functional_evaluation'] = {'version': 1, 'method': 'native_gemma_greedy_routing_v1',
+            'validation_sha256': summary['validation_sha256'], 'validation_records': len(held),
+            'max_new_tokens': 16, 'before': evaluate_gemma_routing(model, tok, torch, held, response_held)}
     training_result = trainer.train()
     summary['steps_completed'] = int(trainer.state.global_step)
     summary['scheduled_steps_completed'] = a.max_steps > 0 and summary['steps_completed'] == a.max_steps
@@ -867,6 +1004,8 @@ def main(argv=None):
             summary['warmup_steps'] = math.ceil(0.05 * scheduled_steps)
     summary.update(safe_loss_metrics(getattr(trainer.state, 'log_history', []),
                                     getattr(training_result, 'metrics', None)))
+    if responses_only:
+        summary['functional_evaluation']['after'] = evaluate_gemma_routing(model, tok, torch, held, response_held)
     if initial_path and (file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha
                          or file_sha256(initial_path / 'adapter_config.json') != initial_config_sha):
         raise ValueError('initial adapter file changed during continuation')
