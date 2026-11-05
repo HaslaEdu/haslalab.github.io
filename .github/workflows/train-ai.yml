@@ -1,52 +1,91 @@
-name: Bounded Gemma functional mask repair
-run-name: Hasla Gemma functional pilot (training-role=both, launch=${{ inputs.launch_id }}, preflight=${{ inputs.preflight_only }})
+name: Verify functional Gemma adapter on CPU
+run-name: Gemma CPU verification (target=41976037145, source=e2d701ff, launch=${{ inputs.launch_id }})
 on:
   workflow_dispatch:
     inputs:
       launch_id:
         type: string
         required: true
-      preflight_only:
-        type: boolean
-        default: true
 permissions:
   contents: read
 jobs:
-  private-pilot:
-    concurrency:
-      group: hasla-private-book-training
-      cancel-in-progress: false
+  verify-gemma-functional:
     runs-on: ubuntu-24.04
-    timeout-minutes: 75
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: tools/ai
+          ref: e2d701ffbb242694a27e2c3b21a8bf63b39807c6
+          sparse-checkout: |
+            tools/ai/private_verify_adapter.py
+            tools/ai/private_resume_adapter.py
+            tools/ai/role_config.py
+          sparse-checkout-cone-mode: false
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install --quiet requests wandb
-      - name: Check frozen manifest and run one Gemma pilot
-        timeout-minutes: 65
+      - name: Validate exact public CPU verifier bytes
         run: |
-          python -c "import os,hashlib; assert hashlib.sha256(os.environ['HASLA_DUAL_MANIFEST'].encode()).hexdigest()==os.environ['HASLA_EXPECTED_MANIFEST_SHA256']"
-          python -B tools/ai/private_dedicated_run.py
+          python -B - <<'PY'
+          import hashlib,pathlib
+          expected={'private_verify_adapter.py':'3aedf22b93911ee90c1ea26ae38a1bfe57b4c12b056ca6c805601a4da73707e3','private_resume_adapter.py':'e52f9e5c31d938c98b7f3215761e3a3ccee616c645b74bd4cfa899cb34b551af','role_config.py':'fde4850efcb0002d3458772956fcf61398c705814e1d6534981404ae495eac03'}
+          assert all(hashlib.sha256(pathlib.Path('tools/ai',n).read_bytes()).hexdigest()==s for n,s in expected.items()),'cpu_source_pin_mismatch'
+          print('cpu_source_pins_verified')
+          PY
+      - run: python -m pip install --quiet requests 'wandb==0.31.0' numpy safetensors
+      - name: Read private immutable adapter and compare prior B weights
+        run: |
+          python -B - <<'PY'
+          import json,os,re,sys
+          sys.path.insert(0,'tools/ai')
+          import private_verify_adapter as v
+          TARGET='41976037145'
+          CODE='e2d701ffbb242694a27e2c3b21a8bf63b39807c6'
+          TRAINING_LAUNCH='5752a5e524e56de11baf3c10178578b4'
+          MANIFEST='86ee32ae2334c377d59aba7189531cc043f6aa3e9c63ce0e804b6fdb74c3c352'
+          class BoundReader(v.PrivateReader):
+              def result(self,entity,run_id,role):
+                  v.require(run_id==TARGET and role=='chat','fixed_verification_target_mismatch')
+                  result=super().result(entity,run_id,role)
+                  if not result or result.get('status')=='failed':return result
+                  initial=result.get('initial_adapter') or {}
+                  v.require(result.get('training_sha256')=='808914aeb016cd319b0e2214573217e1d5f6b0c0c12c432ebe141aef1ad5d057'
+                      and result.get('training_records')==30 and result.get('validation_records')==8
+                      and result.get('training_profile')=='gemma-26b-qlora-v1'
+                      and result.get('steps_completed')==4 and result.get('max_steps')==4
+                      and initial.get('source_training_run_id')=='41939107059'
+                      and initial.get('prior_verification_run_id')=='41941692887'
+                      and initial.get('adapter_inventory_sha256')=='97bb308a1adec64880ecebdf465fc5a909aeac760e9ad80978cd01c697428d73'
+                      and initial.get('files')==[
+                          {'bytes':2387,'name':'adapter_config.json','sha256':'586825641a876800d1681c4f7dbf0d499b1d95246421fdb2f246ee1c5c13afe3'},
+                          {'bytes':988832952,'name':'adapter_model.safetensors','sha256':'20d145c7213af0e0003fe3c632587381b304bed46fd933eee0045f829793d7ca'}]
+                      and (result.get('label_diagnostics') or {}).get('assistant_loss_status')=='official_gemma_responses_only_verified'
+                      and (result.get('functional_evaluation') or {}).get('validation_sha256')=='62a01aedf0bb196e39c21c7537f6ddbac1da43a46d213be2cc7e191c8e71509f',
+                      'fixed_training_identity_or_source_mismatch')
+                  return result
+          try:
+              launch=os.environ.get('HASLA_CPU_VERIFY_LAUNCH_ID','')
+              v.require(os.environ.get('GITHUB_ACTIONS')=='true'
+                  and os.environ.get('GITHUB_REPOSITORY','').lower()=='haslaedu/haslalab.github.io'
+                  and re.fullmatch('[0-9a-f]{32}',launch),'verification_launch_context_invalid')
+              v.require(not any(os.environ.get(k) for k in ('RUNPOD_API_KEY','HF_TOKEN','HF_HUB_TOKEN','GCP_SA_KEY','GEMINI_API_KEY','OPENAI_API_KEY','DEEPSEEK_API_KEY')),'unexpected_provider_credential')
+              event=v.verify(TARGET,'chat',reader_factory=BoundReader,continuation_inventory=True)
+              event.update(verification_code_commit=CODE,training_code_commit=CODE,
+                  training_launch_id=TRAINING_LAUNCH,training_manifest_sha256=MANIFEST,verification_launch_id=launch)
+          except v.VerificationError as error:
+              event={'event':'private_adapter_verification','run_id':TARGET,'roles':[],
+                     'all_verified':False,'quality_verified':False,'code':error.code}
+          except Exception:
+              event={'event':'private_adapter_verification','run_id':TARGET,'roles':[],
+                     'all_verified':False,'quality_verified':False,'code':'private_reader_failed'}
+          print(json.dumps(event,sort_keys=True,separators=(',',':')))
+          raise SystemExit(0 if event['all_verified'] else 2 if event['roles'] and all(r['status']=='pending' for r in event['roles']) else 1)
+          PY
         env:
-          HASLA_EXPECTED_MANIFEST_SHA256: 86ee32ae2334c377d59aba7189531cc043f6aa3e9c63ce0e804b6fdb74c3c352
-          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
-          HASLA_CHAT_DATA_00: ${{ secrets.HASLA_CHAT_DATA_00 }}
-          HASLA_CHAT_VALIDATION_00: ${{ secrets.HASLA_CHAT_VALIDATION_00 }}
-          HASLA_PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
-          HASLA_TRAINING_ROLE: both
-      - name: Confirm this pilot GPU is removed
-        if: ${{ always() }}
-        timeout-minutes: 5
-        run: python -B tools/ai/private_dedicated_run.py --cleanup
-        env:
-          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
-          HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
-          HASLA_TRAINING_ROLE: both
+          HASLA_CPU_VERIFY_LAUNCH_ID: ${{ inputs.launch_id }}
+          WANDB_CONSOLE: 'off'
+          WANDB_SILENT: 'true'
+          HF_HUB_OFFLINE: '1'
+          TRANSFORMERS_OFFLINE: '1'
