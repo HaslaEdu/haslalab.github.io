@@ -132,6 +132,44 @@ def pod_projection(pod):
     return safe
 
 
+def summary_aliases(summary):
+    """Restore only observed W&B dot paths; never invent or overwrite values."""
+    parent.require(type(summary) is dict and len(parent.canonical(summary)) <= 524288, 'summary_bounds_invalid')
+    result = dict(summary)
+    for prefix in ('private_qwq_gpu_bootstrap_result_json', 'private_qwq_gpu_progress', 'private_qwq_gpu_result_json'):
+        entries = [(key[len(prefix)+1:], value) for key, value in summary.items() if type(key) is str and key.startswith(prefix+'.')]
+        if not entries:
+            continue
+        parent.require(len(entries) <= 256, 'summary_alias_bounds_invalid')
+        alias, leaves = {}, []
+        for suffix, value in entries:
+            parts = suffix.split('.')
+            parent.require(1 <= len(parts) <= 8 and all(re.fullmatch('[a-z][a-z0-9_]{0,63}', part) for part in parts), 'summary_alias_path_invalid')
+            parent.require(not any(parts[:len(path)] == path or path[:len(parts)] == parts for path in leaves), 'summary_alias_collision')
+            leaves.append(parts)
+            node = alias
+            for part in parts[:-1]:
+                if part not in node:
+                    node[part] = {}
+                parent.require(type(node[part]) is dict, 'summary_alias_collision')
+                node = node[part]
+            parent.require(parts[-1] not in node, 'summary_alias_collision')
+            node[parts[-1]] = value
+        if prefix in result:
+            nested = resume._json(result[prefix]) if type(result[prefix]) is str else result[prefix]
+            parent.require(parent.canonical(nested) == parent.canonical(alias), 'summary_alias_collision')
+        if prefix == 'private_qwq_gpu_bootstrap_result_json':
+            parent.safe_bootstrap_result({prefix: alias}, TARGET, TARGET_COMMIT)
+        elif prefix == 'private_qwq_gpu_progress':
+            required = {'phase', 'completed_attempts', 'paired_completed_cases', 'evaluation_only', 'weights_updated'}
+            parent.require(required <= set(alias) <= required | {'case_id', 'mode'} and alias.get('mode') in (None, 'base', 'adapted'), 'summary_progress_shape_invalid')
+            parent.safe_progress({prefix: alias})
+        else:
+            worker.validate_result(alias, TARGET)
+        result[prefix] = alias
+    return result
+
+
 def observe(env, *, services=None, system=system_status):
     for name, digest in HELPER_PINS.items():
         parent.require(hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() == digest,
@@ -167,8 +205,8 @@ def observe(env, *, services=None, system=system_status):
     try:
         services.private()
         event['private_project_verified'] = True
-        event['bootstrap_diagnostic'] = parent.safe_bootstrap_result(services.bootstrap_summary(TARGET, 20), TARGET, TARGET_COMMIT)
-        summary = services.summary(TARGET, 20)
+        event['bootstrap_diagnostic'] = parent.safe_bootstrap_result(summary_aliases(services.bootstrap_summary(TARGET, 20)), TARGET, TARGET_COMMIT)
+        summary = summary_aliases(services.summary(TARGET, 20))
         event['progress'] = parent.safe_progress(summary)
         raw = summary.get('private_qwq_gpu_result_json')
         if isinstance(raw, str):
