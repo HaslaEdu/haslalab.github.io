@@ -76,6 +76,17 @@ def fake_torch(model=None):
                            inference_mode=lambda: nullcontext(), full=lambda shape, value, **kwargs: [value] * shape[0])
 
 
+class FakePeftOuter:
+    """PEFT shape: weight delegates; compute_dtype belongs to base_layer only."""
+    def __init__(self, base):
+        self.base_layer = SimpleNamespace(weight=base.weight, compute_dtype=base.compute_dtype)
+        self.lora_A, self.lora_B = base.lora_A, base.lora_B
+        self.disable_adapters, self.merged, self.merged_adapters = False, False, []
+    @property
+    def weight(self): return self.base_layer.weight
+    def get_base_layer(self): return self.base_layer
+
+
 class GpuEvaluationTests(unittest.TestCase):
     def test_versioned_plan_preserves_cpu_global_settings_and_all_eight_case_hashes(self):
         import private_qwq_comparison as cpu
@@ -150,6 +161,19 @@ class GpuEvaluationTests(unittest.TestCase):
         model.rows[0][1].merged = True
         with self.assertRaises(gpu.EvaluationError): gpu.adapter_state(model, False)
 
+    def test_peft_wrapper_base_compute_dtype_and_same_weight_identity(self):
+        model = FakeModel()
+        _, retained = gpu.nf4_proof(model, FakeWeight, "bf16")
+        model.rows = [(name, FakePeftOuter(base)) for name, base in model.rows]
+        self.assertFalse(hasattr(model.rows[0][1], "compute_dtype"))
+        gpu.nf4_proof(model, FakeWeight, "bf16", retained)
+        model.rows[0][1].base_layer.compute_dtype = "fp16"
+        with self.assertRaises(gpu.EvaluationError): gpu.nf4_proof(model, FakeWeight, "bf16", retained)
+        model.rows[0][1].base_layer.compute_dtype = "bf16"
+        model.rows[0][1].get_base_layer = lambda: SimpleNamespace(
+            weight=FakeWeight((5120, 5120)), compute_dtype="bf16")
+        with self.assertRaises(gpu.EvaluationError): gpu.nf4_proof(model, FakeWeight, "bf16", retained)
+
     def test_loader_exact_foundation_revision_explicit_quant_configuration(self):
         marker = object(); options = gpu.loader_options(fake_torch(), marker)
         self.assertEqual(options["model_name"], "Qwen/QwQ-32B")
@@ -217,6 +241,47 @@ class GpuEvaluationTests(unittest.TestCase):
         self.assertEqual(partial["paired_completed_cases"], 1)
         self.assertFalse(partial["coverage_complete"])
 
+    def test_peft_context_reenable_gradients_are_refrozen_on_success_and_exception(self):
+        class ReenablingModel(FakeModel):
+            def __init__(self):
+                super().__init__()
+                self.adapter_parameters = [FakeWeight((2, 2)), FakeWeight((2, 2))]
+                for parameter in self.adapter_parameters: parameter.requires_grad = True
+            def parameters(self): return super().parameters() + self.adapter_parameters
+            @contextmanager
+            def disable_adapter(self):
+                try:
+                    with super().disable_adapter(): yield
+                finally:
+                    # Match PEFT enable_adapters(True) -> set_adapter() behavior.
+                    for parameter in self.adapter_parameters: parameter.requires_grad = True
+        class Tensor:
+            shape = (1, 5)
+            def to(self, device): return self
+            def detach(self): return self
+            def cpu(self): return self
+            def tolist(self): return [50, 151645]
+        class Generated:
+            def __getitem__(self, index): return Tensor()
+        tokenizer = SimpleNamespace(pad_token_id=151643,
+            apply_chat_template=lambda messages, tokenize, **kwargs:
+                {"input_ids": Tensor()} if tokenize else "<|im_start|>assistant\n<think>\n",
+            decode=lambda ids, **kwargs: "reason</think>answer")
+        for mode, raises in (("base", False), ("base", True), ("adapted", False), ("adapted", True)):
+            model = ReenablingModel()
+            def generate(**kwargs):
+                self.assertTrue(all(not parameter.requires_grad for parameter in model.parameters()))
+                if raises: raise RuntimeError("synthetic generation failure")
+                return Generated()
+            model.generate = generate
+            if raises:
+                with self.assertRaisesRegex(RuntimeError, "synthetic generation failure"):
+                    gpu.generate_one(model, tokenizer, [], mode, 100, fake_torch(), object, list, clock=lambda: 0)
+            else:
+                gpu.generate_one(model, tokenizer, [], mode, 100, fake_torch(), object, list, clock=lambda: 0)
+            self.assertTrue(all(not parameter.requires_grad for parameter in model.parameters()))
+            gpu.adapter_state(model, False)
+
     def test_loaded_adapter_values_exact_source_not_only_nonzero(self):
         import numpy as np
         rows = {}
@@ -248,6 +313,39 @@ class GpuEvaluationTests(unittest.TestCase):
             with self.assertRaises(gpu.EvaluationError): gpu.execute(bad, output, clients=clients)
             clients.assert_not_called(); self.assertFalse(output.exists())
 
+    def test_fp32_checkpoint_preserved_before_load_onto_bf16_base(self):
+        import numpy as np
+        originals = {}
+        for index in range(448):
+            for letter, shape in (("A", (16, 2)), ("B", (2, 16))):
+                originals[f"base_model.model.layers.{index}.q.lora_{letter}.weight"] = np.full(shape, 1.0001, dtype=np.float32)
+        class Parameter:
+            requires_grad = False
+            def __init__(self, value): self.value = value; self.dtype = value.dtype; self.shape = value.shape
+            def detach(self): return self
+            def cpu(self): return self
+        @contextmanager
+        def source_file(*args, **kwargs):
+            yield SimpleNamespace(keys=lambda: originals.keys(), get_tensor=lambda name: Parameter(originals[name]))
+        torch = SimpleNamespace(isfinite=lambda value: np.isfinite(value.value),
+                                equal=lambda a, b: np.array_equal(a.value, b.value))
+        # PEFT's default upcast creates FP32 adapter destinations before loading
+        # an FP32 checkpoint. Turning it off can round into BF16 first; even a
+        # subsequent FP32 upcast cannot recover the checkpoint's original bits.
+        def load(autocast_adapter_dtype):
+            require_base = SimpleNamespace(compute_dtype="bf16")
+            self.assertEqual(require_base.compute_dtype, "bf16")
+            runtime = {}
+            for name, original in originals.items():
+                value = original.copy()
+                if not autocast_adapter_dtype:
+                    value = (value.view(np.uint32) & np.uint32(0xffff0000)).view(np.float32)
+                runtime[name.replace(".weight", ".default.weight")] = Parameter(value)
+            return SimpleNamespace(named_parameters=lambda: runtime.items())
+        gpu.exact_loaded_adapter(load(True), Path("synthetic"), torch, source_file)
+        with self.assertRaisesRegex(gpu.EvaluationError, "values_changed"):
+            gpu.exact_loaded_adapter(load(False), Path("synthetic"), torch, source_file)
+
     def test_whole_fake_pipeline_load_once_attach_once_no_optimizer_private_only_two_files(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary); output = root / "result"; snapshot = root / "snapshot"; snapshot.mkdir()
@@ -255,7 +353,13 @@ class GpuEvaluationTests(unittest.TestCase):
             model, torch = FakeModel(), fake_torch()
             tokenizer = SimpleNamespace(chat_template="synthetic-official-template")
             loader = SimpleNamespace(from_pretrained=Mock(return_value=(model, object())), for_inference=Mock())
-            peft = SimpleNamespace(from_pretrained=Mock(return_value=model))
+            def attach(base, *args, **kwargs):
+                self.assertIs(base, model)
+                self.assertTrue(kwargs["autocast_adapter_dtype"])
+                self.assertEqual(model.rows[0][1].compute_dtype, "bf16")
+                model.rows = [(name, FakePeftOuter(layer)) for name, layer in model.rows]
+                return model
+            peft = SimpleNamespace(from_pretrained=Mock(side_effect=attach))
             summary = {}; artifact_files = []
             saved = SimpleNamespace(state="COMMITTED", qualified_name=
                 gpu.ENTITY + "/" + gpu.resume.PROJECT + "/hasla-qwq-gpu-comparison-123456789:v0")

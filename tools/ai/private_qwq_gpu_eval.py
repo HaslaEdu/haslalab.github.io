@@ -189,12 +189,17 @@ def nf4_proof(model, params4bit, bf16, retained=None):
         if not match:
             continue
         key, weight = (int(match[1]), match[2]), getattr(module, "weight", None)
+        # PEFT Linear4bit exposes weight but keeps compute_dtype on its wrapped
+        # bitsandbytes layer. Verify that both paths identify the same weight.
+        getter = getattr(module, "get_base_layer", None)
+        base_layer = getter() if callable(getter) else module
         state = getattr(weight, "quant_state", None)
         shape = shapes[match[2]]
         require(key not in found and 0 <= key[0] < 64 and isinstance(weight, params4bit)
                 and state is not None and tuple(getattr(state, "shape", ())) == shape
                 and getattr(state, "quant_type", None) == "nf4" and getattr(state, "nested", None) is True
-                and getattr(state, "state2", None) is not None and getattr(module, "compute_dtype", None) == bf16
+                and getattr(state, "state2", None) is not None and getattr(base_layer, "weight", None) is weight
+                and getattr(base_layer, "compute_dtype", None) == bf16
                 and weight.numel() * weight.element_size() <= math.prod(shape) and not weight.requires_grad
                 and weight.device.type == "cuda" and weight.device.index == 0,
                 "dense_projection_not_frozen_bf16_double_nf4")
@@ -328,11 +333,18 @@ def generate_one(model, tokenizer, messages, mode, deadline, torch, stopping_cla
                "pad_token_id": tokenizer.pad_token_id or eos[0],
                "stopping_criteria": stopping_list([deadline_criterion(torch, stopping_class, deadline, clock)])}
     context = model.disable_adapter() if mode == "base" else _enabled_adapter(model)
-    with context:
-        adapter_state(model, mode == "base")
-        with torch.inference_mode():
-            generated = model.generate(**encoded, **options)
-    adapter_state(model, False)
+    try:
+        with context:
+            for parameter in model.parameters(): parameter.requires_grad_(False)
+            adapter_state(model, mode == "base")
+            with torch.inference_mode():
+                generated = model.generate(**encoded, **options)
+    finally:
+        # PEFT re-enables adapter gradients while restoring active adapters.
+        # Evaluation keeps both the foundation and loaded adapter immutable,
+        # including when generation or context restoration raises.
+        for parameter in model.parameters(): parameter.requires_grad_(False)
+        adapter_state(model, False)
     ids = generated[0, prompt_length:].detach().cpu().tolist()
     reason = "timeout" if clock() >= deadline else "stop" if ids and ids[-1] in eos else "length"
     # Decoding only new tokens retains the official </think> boundary, while
@@ -468,7 +480,7 @@ def execute(job, output, *, clients=private_clients, imports=None, clock=time.mo
                 for parameter in model.parameters(): parameter.requires_grad_(False)
                 _, retained = nf4_proof(model, imports["Params4bit"], torch.bfloat16)
                 model = imports["PeftModel"].from_pretrained(model, str(directory), is_trainable=False,
-                    local_files_only=True, trust_remote_code=False, autocast_adapter_dtype=False)
+                    local_files_only=True, trust_remote_code=False, autocast_adapter_dtype=True)
                 for parameter in model.parameters(): parameter.requires_grad_(False)
                 loader.for_inference(model)
                 model.eval()

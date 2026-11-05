@@ -43,11 +43,11 @@ SOURCE_ADAPTER = {'kind': 'private_adapter_continuation', 'version': 1, 'role': 
                'sha256': '5b4c2e755930a30298927cdf905fd158c4745473eea7c41f87630183729d0112'}],
     'adapter_inventory_sha256': 'c295c61015ebc1d1b1e32cfe7f535c1336ba536c4902645146f15a5f0df5de8f'}
 ADAPTER_SPEC = SOURCE_ADAPTER
-FIXED = {'version': 1, 'kind': 'private_qwq_gpu_evaluation', 'authorized_total': 100000,
-    'prior_upper_krw': 71541, 'reserve_krw': 5000, 'additional_limit_krw': 3000,
-    'reserved_upper_krw': 2923, 'runtime_seconds': 3600, 'child_runtime_seconds': 2700,
+FIXED = {'version': 2, 'kind': 'private_qwq_gpu_evaluation_v2', 'authorized_total': 100000,
+    'previous_eval_upper_krw': 999, 'prior_upper_krw': 72540, 'reserve_krw': 5000, 'additional_limit_krw': 2001,
+    'reserved_upper_krw': 1497, 'runtime_seconds': 3600, 'child_runtime_seconds': 2700,
     'cleanup_grace_seconds': 120, 'gpu_id': 'NVIDIA A40', 'gpu_count': 1,
-    'gpu_usd_per_hour_upper': '1.2', 'container_disk_gb': 200, 'volume_gb': 0,
+    'gpu_usd_per_hour_upper': '0.60', 'container_disk_gb': 200, 'volume_gb': 0,
     'optimizer_steps': 0}
 
 
@@ -90,8 +90,11 @@ def validate_manifest(manifest):
     require(manifest['case_set_sha256'] == plan['comparison']['case_set_sha256'] and
             manifest['comparison_plan_sha256'] == hashlib.sha256(canonical(plan)).hexdigest(), 'comparison_plan_mismatch')
     ledger = budget_plan(manifest, 'manifest-validation', 0)
-    require(int(ledger.reserved_krw) == 2923 and ledger.reserved_krw <= manifest['additional_limit_krw'],
+    require(int(ledger.reserved_krw) == 1497 and ledger.reserved_krw <= manifest['additional_limit_krw'],
             'additional_budget_exceeded')
+    require(manifest['prior_upper_krw'] == 71541 + manifest['previous_eval_upper_krw']
+            and manifest['additional_limit_krw'] == 3000 - manifest['previous_eval_upper_krw']
+            and manifest['previous_eval_upper_krw'] + ledger.reserved_krw <= 3000, 'two_attempt_budget_exceeded')
     return deepcopy(manifest)
 
 
@@ -154,13 +157,13 @@ class Services:
 
     def quote(self):
         with resume._quiet():
-            selected = cloud.capacity_preflight(['NVIDIA A40'], Decimal('1.2'))
+            selected = cloud.capacity_preflight(['NVIDIA A40'], Decimal('0.60'))
             catalog = cloud.runpod('GET', '/catalog/gpus?include=AVAILABILITY&product=POD&count=1&cloud=SECURE&minCudaVersion=12.8')
         require(selected == 'NVIDIA A40', 'capacity_gpu_mismatch')
         rows = [r for r in catalog.get('gpus', []) if r.get('id') == 'NVIDIA A40']
         require(len(rows) == 1, 'capacity_quote_unknown')
         price = Decimal(str((rows[0].get('price') or {}).get('secure')))
-        require(price.is_finite() and 0 < price <= Decimal('1.2')
+        require(price.is_finite() and 0 < price <= Decimal('0.60')
                 and str(rows[0].get('availability')).upper() in ('LOW', 'MEDIUM', 'HIGH'), 'capacity_unavailable')
         return price
 
@@ -307,7 +310,7 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
     protected = inventory(services.pods())
     services.source()
     quoted = services.quote()
-    require(isinstance(quoted, Decimal) and quoted.is_finite() and 0 < quoted <= Decimal('1.2'), 'capacity_quote_invalid')
+    require(isinstance(quoted, Decimal) and quoted.is_finite() and 0 < quoted <= Decimal('0.60'), 'capacity_quote_invalid')
     ledger = budget_plan(manifest, PREFIX + run_id, clock())
     services.funding(ledger)
     plan = ledger.runs[0].plan
@@ -342,7 +345,7 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
         for sig in (signal.SIGTERM, signal.SIGINT):
             previous_handlers[sig] = signal.signal(sig, interrupted)
         emit('private_qwq_gpu_requested', run_id=run_id, pod_name=state['pod_name'], gpu_id='NVIDIA A40',
-             gpu_count=1, reserved_upper_krw=2923, runtime_seconds=3600)
+             gpu_count=1, reserved_upper_krw=1497, runtime_seconds=3600)
         try:
             pod = services.create(state['pod_name'], child_environment(manifest, env, run_id,
                 int(wall_clock()) + manifest['runtime_seconds'] - 300), pod_command(manifest))
@@ -393,8 +396,8 @@ def run(env, services=None, *, clock=time.monotonic, wall_clock=time.time, sleep
     if cleanup_ok:
         ledger = settle_run(ledger, PREFIX + run_id, clock(), deletion_confirmed=True)
         emit('private_qwq_gpu_cost', run_id=run_id, aggregate_upper_krw=int(ledger.spent_krw),
-             run_upper_krw=int(ledger.spent_krw - ledger.prior_spend_krw), reserved_upper_krw=2923,
-             authorized_total=100000, additional_limit_krw=3000, deletion_confirmed=True)
+             run_upper_krw=int(ledger.spent_krw - ledger.prior_spend_krw), reserved_upper_krw=1497,
+             authorized_total=100000, additional_limit_krw=2001, previous_eval_upper_krw=999, deletion_confirmed=True)
     require(cleanup_ok, 'evaluation_cleanup_unconfirmed')
     require(failure is None, failure or 'evaluation_parent_failed')
     return result

@@ -46,7 +46,7 @@ class FakeServices:
         return self.price
     def funding(self, ledger):
         self.calls.append('funding')
-        assert ledger.reserved_krw == 2923
+        assert ledger.reserved_krw == 1497
         if self.funding_error:
             raise parent.EvaluationError('funding_fixture_blocked')
     def create(self, name, env, command):
@@ -107,16 +107,17 @@ class ParentTests(unittest.TestCase):
         checked = parent.validate_manifest(self.manifest)
         self.assertEqual(parent.comparison_plan_sha256(), 'b22d2a1430b009930331d16933b76db30c2807a09cbea77d359bc6a9c27c8c24')
         ledger = parent.budget_plan(checked, 'fixture', 0)
-        self.assertEqual(ledger.reserved_krw, 2923)
-        self.assertEqual(ledger.available_krw, 20536)
-        self.assertLessEqual(ledger.reserved_krw, 3000)
+        self.assertEqual(ledger.reserved_krw, 1497)
+        self.assertEqual(ledger.available_krw, 20963)
+        self.assertLessEqual(ledger.reserved_krw, 2001)
+        self.assertEqual(checked['previous_eval_upper_krw'] + ledger.reserved_krw, 2496)
         self.assertEqual(ledger.policy.fx_krw_per_usd_upper, 2000)
 
     def test_policy_changes_unknown_fields_source_and_plan_tampering_fail_closed(self):
         for key, value in [('gpu_id', 'NVIDIA L40S'), ('gpu_count', 2), ('runtime_seconds', 3601),
-            ('child_runtime_seconds', 3000), ('gpu_usd_per_hour_upper', '1.21'),
-            ('prior_upper_krw', 71540), ('reserved_upper_krw', 2922), ('optimizer_steps', 1),
-            ('authorized_total', 100001), ('version', True), ('additional_limit_krw', 3001),
+            ('child_runtime_seconds', 3000), ('gpu_usd_per_hour_upper', '0.61'),
+            ('prior_upper_krw', 72539), ('reserved_upper_krw', 2922), ('optimizer_steps', 1),
+            ('authorized_total', 100001), ('version', True), ('additional_limit_krw', 2002),
             ('comparison_plan_sha256', '0' * 64), ('source_adapter', {})]:
             with self.subTest(key=key), self.assertRaises(Exception):
                 parent.validate_manifest({**self.manifest, key: value})
@@ -129,7 +130,7 @@ class ParentTests(unittest.TestCase):
         self.assertFalse(self.state.exists())
         event = self.events[0]
         self.assertEqual(event['event'], 'private_qwq_gpu_preflight')
-        self.assertEqual(event['remaining_budget_krw'], 20536)
+        self.assertEqual(event['remaining_budget_krw'], 20963)
         self.assertEqual(event['source_adapter_files'], parent.SOURCE_ADAPTER['files'])
         self.assertFalse(event['gpu_creation_performed'])
 
@@ -151,7 +152,7 @@ class ParentTests(unittest.TestCase):
                 parent.inventory(rows)
 
     def test_quote_over_ceiling_rejected_before_creation(self):
-        self.services.price = Decimal('1.20001')
+        self.services.price = Decimal('0.60001')
         with self.assertRaisesRegex(parent.EvaluationError, 'capacity_quote_invalid'):
             self.execute()
         self.assertNotIn('funding', self.services.calls)
@@ -177,7 +178,7 @@ class ParentTests(unittest.TestCase):
 
     def test_observed_wrong_gpu_price_disk_or_count_is_deleted_not_used(self):
         self.paid()
-        for bad in ({'costPerHr': '1.21'}, {'gpu': {'id':'NVIDIA L40S','count':1}},
+        for bad in ({'costPerHr': '0.60001'}, {'gpu': {'id':'NVIDIA L40S','count':1}},
                     {'gpu': {'id':'NVIDIA A40','count':2}}, {'containerDiskInGb': 201},
                     {'volumeInGb': 1}, {'networkVolume': True}):
             self.services = FakeServices(); self.services.bad_resource = bad
@@ -213,7 +214,7 @@ class ParentTests(unittest.TestCase):
         self.assertEqual(self.clock.now, 3580)
         self.assertIn(('delete', 'new-eval-pod'), self.services.calls)
         cost = [x for x in self.events if x['event']=='private_qwq_gpu_cost'][-1]
-        self.assertLessEqual(cost['run_upper_krw'], 2923)
+        self.assertLessEqual(cost['run_upper_krw'], 1497)
         self.assertTrue(cost['deletion_confirmed'])
 
     def test_unconfirmed_delete_has_no_settlement_event(self):
