@@ -129,7 +129,7 @@ async function callProvider(provider,task,env,options){
     const serialized=JSON.stringify(body);result.request_bytes=encoder.encode(serialized).byteLength;
     check(result.request_bytes<=TEACHER_LIMITS.providerRequestBytes,502,'teacher_request_size_limit');
     result.request_sha256=await teacherDigest(serialized);result.attempted=true;
-    const response=await options.fetchImpl(URLS[provider],{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:serialized,redirect:'manual',signal:controller.signal});
+    const response=await Reflect.apply(options.fetchImpl,globalThis,[URLS[provider],{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:serialized,redirect:'manual',signal:controller.signal}]);
     result.http_status=response.status;
     if(!response.ok){try{await response.body?.cancel();}catch{}throw new TeacherError(502,providerCode(response.status));}
     let data;try{data=JSON.parse(await boundedText(response,TEACHER_LIMITS.responseBytes));}catch(error){if(error instanceof TeacherError)throw error;throw new TeacherError(502,'teacher_invalid_response');}

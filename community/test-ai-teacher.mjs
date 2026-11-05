@@ -60,6 +60,13 @@ test('one bounded fixed-model request per provider; only public final JSON and s
   const rendered=JSON.stringify(value);assert.ok(!rendered.includes('PRIVATE_REASONING'));assert.ok(!rendered.includes('fixture_openai_secret_key'));assert.ok(!rendered.includes('fixture_deepseek_secret_key'));
   assert.equal(value.mathematics_verified,false);assert.equal(value.admitted_to_training,false);
 });
+test('the Worker fetch receiver is globalThis, including injected receiver-sensitive fetches',async()=>{
+  const f=await fixture();let calls=0;
+  const result=await handleTeacherRequest(f.request(),f.env,f.digest,{fetchImpl:async function(url){
+    assert.equal(this,globalThis);calls++;return response(url.includes('openai')?'openai':'deepseek');}});
+  assert.equal(result.status,200);assert.equal(calls,2);
+});
+
 test('fixed tasks include numeric cases and schema forbids arbitrary fields',async()=>{
   for(const task of ['heat_exchange_n2','heat_exchange_n10000']){
     const f=await fixture({task}),r=await handleTeacherRequest(f.request(),f.env,f.digest,{fetchImpl:async url=>response(url.includes('openai')?'openai':'deepseek',output(task))});
