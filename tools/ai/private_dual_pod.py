@@ -23,9 +23,15 @@ def role_jobs(env):
         if job.get('format') not in expected_formats[role]:
             raise ValueError('role and data format do not match')
         profile = job.get('training_profile')
+        public_sft = role == 'solver' and job['format'] == 'chat' and profile is None and job.get('sft_epochs') == 3
         if job.get('assistant_only_loss') is not None and (job['assistant_only_loss'] != 'required'
-                or role != 'chat' or job['format'] != 'chat' or profile != 'gemma-26b-qlora-v1'):
+                or not (role == 'chat' and job['format'] == 'chat' and profile == 'gemma-26b-qlora-v1' or public_sft)):
             raise ValueError('unsupported assistant-only loss job requirement')
+        if 'sft_epochs' in job and (type(job['sft_epochs']) is not int or not public_sft or job.get('assistant_only_loss') != 'required'
+                or any(not re.fullmatch('[a-f0-9]{64}', env.get(key, '')) for key in
+                    ('HASLA_PUBLIC_RATIONALE_SCRIPT_SHA256', 'HASLA_OFFLINE_DPO_SCRIPT_SHA256'))
+                or type(job.get('offline_dpo')) is not dict):
+            raise ValueError('public-rationale SFT needs fixed epochs and pinned helpers')
         if profile is not None and (role, profile) not in (('chat', 'gemma-26b-qlora-v1'),
                                                          ('solver', 'qwq-32b-qlora-48gb-v1')):
             raise ValueError('unknown or incompatible training profile')
@@ -71,7 +77,7 @@ def main():
     any_failed = False
     for job in jobs:
         runtime = job.get('runtime_seconds', 1200 if job['role'] == 'chat' else 2700)
-        child = {k: v for k, v in env.items() if k not in ('HASLA_ROLE_JOBS', 'HASLA_TRAINING_PROFILE', 'HASLA_ASSISTANT_ONLY_LOSS')}
+        child = {k: v for k, v in env.items() if k not in ('HASLA_ROLE_JOBS', 'HASLA_TRAINING_PROFILE', 'HASLA_ASSISTANT_ONLY_LOSS', 'HASLA_SFT_EPOCHS')}
         child.update({'ROLE': job['role'], 'HASLA_DATA_FORMAT': job['format'],
                       'HASLA_INPUT_ARTIFACT': job['input_artifact'],
                       'HASLA_DATA_SHA256': job['training_sha256'],
@@ -83,6 +89,9 @@ def main():
             child['HASLA_TRAINING_PROFILE'] = job['training_profile']
         if job.get('assistant_only_loss') is not None:
             child['HASLA_ASSISTANT_ONLY_LOSS'] = job['assistant_only_loss']
+        if job.get('sft_epochs') is not None:
+            child['HASLA_SFT_EPOCHS'] = str(job['sft_epochs'])
+            child['HASLA_OFFLINE_DPO_META'] = json.dumps(job['offline_dpo'], separators=(',', ':'))
         if job.get('initial_adapter') is not None:
             child['HASLA_INITIAL_ADAPTER'] = json.dumps(job['initial_adapter'], separators=(',', ':'))
         try:

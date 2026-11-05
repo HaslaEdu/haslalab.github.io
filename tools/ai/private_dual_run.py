@@ -210,6 +210,21 @@ def validate_functional_chat(row):
             or _authored_chat_sha(row) != trusted['row_sha256'][row['id']]):
         raise ValueError('functional Gemma rows require the exact independently reviewed cohort')
 
+
+_QWQ_PUBLIC_SFT_COHORT = {'approved_cohort_version': 'qwq-native-public-rationale-repair-v2-20261105', 'dataset_version': 'qwq-native-public-rationale-repair-v1-20261105', 'manifest_sha256': '3855e11a43186b44e30a310fa18d3c307e1328637e02ac9923a9b364bb26b43a', 'row_sha256': {'diagnostic-expansion-en': 'd885156e866f9a6fd3c1f9befcd750f1c0250a511e1171aa309c4c0333189354', 'diagnostic-isochoric-en': '1a3806e81484d00a97ccb6bece97475dffeef009375e6c1a1cf96a984828b0df', 'haslalab-reference-05af502ebd8184ea0270a3974736952a791d8ce28ebc8189c3f2e3bf3396923e': '127f9d436955ef34078331b66d0b4dcb71df3341b011d50f865705ba4a7ecb21', 'haslalab-reference-1210f23c77825a2ea4bcba87b8ae0bf1f562b58a9b22537e876a488b23c72fb2': '41ed927c89643a29c330365e30e93d6b6deb10f4733ca0343788d013fbd0b977', 'haslalab-reference-19be2767975c69c908c97edf3073c0fad23e1bf2691cde6cc501fd06b79f908f': 'ad19e6fd167e54de96b3e52ce015351587191e086079eda7f317cf09d1c89381', 'haslalab-reference-21588ab4a44e0d6f4bb89bfaf128cca6f8fb2007cfd7785ddd42e97d6cbac69e': 'a74c07cce60803f50534b853446d74b9aa6525c55b713887a7611cefc4741dbd', 'haslalab-reference-233589be43a40befe2463ff05fe6384f66ff8f6cc8ae359ee647c471fafbf617': '9daaf11cc80572f04b4033fd931b580da74ffbb4cdc3e764dbb5f31591bdb8f4', 'haslalab-reference-288214f212c90213ced5cb5918a5652d5faef9e33d7eb45d088946786a2b6b28': '896d48ca855e51e2af99a285332d676e2c90c6d9a33b4fe21be5e23e664e12ad', 'haslalab-reference-2e92906af7ecec9bddcf667d0fe557dc00f1f852ee4ec04caa0846c391035d19': 'a95944f8d8a55ccd785d6158a5a0ba32b724cdd79687eb66d02427d7a6bd82ca', 'haslalab-reference-35cd8e0f3c179059c37f497449813e5b48cde8e0b63570e8a816d94aa632c395': '1ae8653d191d78fbd11087134a8a430cd53cbbbaededa3c44986ae8730c6dc3a', 'haslalab-reference-4302034658d366be25b7da2968e1520b6bb921e013dc7ea614df9af20211595b': '0eca41ecfe97f3b5d32d516df169dd2273a18dbf1304d2c6262d170ff84c17b3', 'haslalab-reference-47a3f3c65c2184ad4caf5d484fa94ed6d61c035ba8e469e6cd2717126e15f9e6': '943923a5a4dc6dd956cabe7d252fed7976abe49d01683aa4778c066eaf8d36e0', 'haslalab-reference-6eefc9e615983de96ad3f8856400838034a336e4f46be94d28337194fc851b9d': '9849ce5f7a300257cff8072a2acfe9eedf4caa1e5f51482b5e1fbbbfc69772ba', 'haslalab-reference-7e2e403129b567e3a861f5695450da3ef57d5600c9f6632f10222fcc66fb2871': '4c860e5a75a668a42f2a8b0fb396604f7dfac469761c3ed756c3c42a96518af6', 'haslalab-reference-80b3a915499691b3af4ff18b67a342258f018643cc5f6e598449dc36d5cfefdb': 'd6b3e6251a5a6a1d2407aa88fbc710c8987d39f99e80f31edc37613d1f40dfaf', 'haslalab-reference-89b5e0e136fc7b958e7bb38bb2070cd38e3ff8917a4e3b65e4513e8331a5b587': '62d012af7efb7fb5c431fb9e1b641b688e5d6231e7ab7e0f05ba25f281b2461e', 'haslalab-reference-8fd8f9e1e634e01d0cf9796f0aec17e8f91eddb215d621aca50054373900ffe6': 'c66acdee9655c7c8e7e965a0c510ad7eae86ab4334abf119488d0fc04df4ea9e', 'haslalab-reference-a92188503e0d64a5d39337151f284c244e6a25691a1fd5e9dd98af693519058b': '43a66ed6dcae3b51e5f4f4f7f7b823e34044a4c55476055f81bca6a0c98cab22', 'haslalab-reference-b288fb39deaf9bd3ad750b45ace717c5bc12f4003933b1459f1565244f91bb97': '998d98ddda2c1a22959b67a8c13b531fb7a67b5c4c6b679672f7f7708d7e160a', 'haslalab-reference-b5d63a7f08cad1862cdb7641897d24d49c49fed6759c9343b6d00dc981264dc3': '7af9ed2fc186df38e5e2bc84a0d15e5ba5adbf9fb6a85854f8bbd5768b881ef3', 'haslalab-reference-bdaa904467a8c7a9fc6c9009ae0f8c4d102cb6ec16e55d77a04aeb31da903189': '0d5b6f6a7de73f812f57bcad28183c461c1f91d1aa286d02ae894fd10355bd61', 'haslalab-reference-c457b46d5e57237d7c7638cd021fff109b92f5f99a40db9a13cc9fd05a0d93ad': '503bb90cd64672d11ca9ccd38c070aed7d9739a7aa5fd6016dc85b7e51d603fd', 'haslalab-reference-e375c637fde823094db4fcd39c04c461ebea68cccfc6a7ce56e8895f87991fc9': 'a0772f67e06888d99fce45ab51ef4a5f0096df1b0cb3034f2e52f632bd67e311', 'haslalab-reference-e5297ec8875f3f29fb23715146678d43b639dfa7e6c3208a1c181d62305b29d3': 'fdfcab9b144caf70a00cd3ce81e796353fcef16e4cdbca558812665ee67f2dfe', 'haslalab-reference-ed63839cbd51cfb5f28855de17a6acb2c57f3cc5551fa201a2449d99b48b76a4': '46174da8f87911e30c22aaab057c67ed7bb2f4931adc2cda477534b6157a095e', 'haslalab-reference-f61fcb7693a9ad5bc67cd5e50237e6a7fa80c6365d27101d7b5e598c0e0b1e07': 'dc8a193e1bda60b931150e533ee6621feef6a92783ff6f1b680a8ee2c218701c', 'haslalab-reference-fe16578239213f293af7a866491909121fc89c1113ba1b0e065e2beaaabeb55d': 'd9f52e3faf482eabd69405e57fbf4743bba4f6a861d6bead01586caee1722e28', 'heat-counterexample-concept-en': '9f2a2f83d7559d9524c3feb2b30ea86e082f5dcb5551128a11502978f865a665', 'heat-counterexample-solve-en': 'eaa84160ffe76e7a4a9c259e14a6be1b5fd924f58bd3259daa2ac5721ce2039c', 'heat-numerical-100-en': '0ee08318f9bf7586d14bfa8cad385bf0ef506dfebcbdc673003db196484d9591', 'heat-one-sided-splitting-en': '1dcef4d0402c22c4fa1a44c5d08c9dcd657ec64141e002de97e1568a6643c4e5', 'heat-unequal-capacity-energy-en': '1050686cb8e37f77ad1c12ad21a04798cef9de65c8a7e07f20a23fc17bef2030'}, 'splits': {'diagnostic-expansion-en': 'validation', 'diagnostic-isochoric-en': 'validation', 'haslalab-reference-05af502ebd8184ea0270a3974736952a791d8ce28ebc8189c3f2e3bf3396923e': 'train', 'haslalab-reference-1210f23c77825a2ea4bcba87b8ae0bf1f562b58a9b22537e876a488b23c72fb2': 'train', 'haslalab-reference-19be2767975c69c908c97edf3073c0fad23e1bf2691cde6cc501fd06b79f908f': 'train', 'haslalab-reference-21588ab4a44e0d6f4bb89bfaf128cca6f8fb2007cfd7785ddd42e97d6cbac69e': 'train', 'haslalab-reference-233589be43a40befe2463ff05fe6384f66ff8f6cc8ae359ee647c471fafbf617': 'train', 'haslalab-reference-288214f212c90213ced5cb5918a5652d5faef9e33d7eb45d088946786a2b6b28': 'validation', 'haslalab-reference-2e92906af7ecec9bddcf667d0fe557dc00f1f852ee4ec04caa0846c391035d19': 'validation', 'haslalab-reference-35cd8e0f3c179059c37f497449813e5b48cde8e0b63570e8a816d94aa632c395': 'train', 'haslalab-reference-4302034658d366be25b7da2968e1520b6bb921e013dc7ea614df9af20211595b': 'train', 'haslalab-reference-47a3f3c65c2184ad4caf5d484fa94ed6d61c035ba8e469e6cd2717126e15f9e6': 'train', 'haslalab-reference-6eefc9e615983de96ad3f8856400838034a336e4f46be94d28337194fc851b9d': 'train', 'haslalab-reference-7e2e403129b567e3a861f5695450da3ef57d5600c9f6632f10222fcc66fb2871': 'train', 'haslalab-reference-80b3a915499691b3af4ff18b67a342258f018643cc5f6e598449dc36d5cfefdb': 'train', 'haslalab-reference-89b5e0e136fc7b958e7bb38bb2070cd38e3ff8917a4e3b65e4513e8331a5b587': 'train', 'haslalab-reference-8fd8f9e1e634e01d0cf9796f0aec17e8f91eddb215d621aca50054373900ffe6': 'train', 'haslalab-reference-a92188503e0d64a5d39337151f284c244e6a25691a1fd5e9dd98af693519058b': 'train', 'haslalab-reference-b288fb39deaf9bd3ad750b45ace717c5bc12f4003933b1459f1565244f91bb97': 'train', 'haslalab-reference-b5d63a7f08cad1862cdb7641897d24d49c49fed6759c9343b6d00dc981264dc3': 'train', 'haslalab-reference-bdaa904467a8c7a9fc6c9009ae0f8c4d102cb6ec16e55d77a04aeb31da903189': 'train', 'haslalab-reference-c457b46d5e57237d7c7638cd021fff109b92f5f99a40db9a13cc9fd05a0d93ad': 'train', 'haslalab-reference-e375c637fde823094db4fcd39c04c461ebea68cccfc6a7ce56e8895f87991fc9': 'train', 'haslalab-reference-e5297ec8875f3f29fb23715146678d43b639dfa7e6c3208a1c181d62305b29d3': 'train', 'haslalab-reference-ed63839cbd51cfb5f28855de17a6acb2c57f3cc5551fa201a2449d99b48b76a4': 'train', 'haslalab-reference-f61fcb7693a9ad5bc67cd5e50237e6a7fa80c6365d27101d7b5e598c0e0b1e07': 'train', 'haslalab-reference-fe16578239213f293af7a866491909121fc89c1113ba1b0e065e2beaaabeb55d': 'train', 'heat-counterexample-concept-en': 'train', 'heat-counterexample-solve-en': 'train', 'heat-numerical-100-en': 'train', 'heat-one-sided-splitting-en': 'train', 'heat-unequal-capacity-energy-en': 'train'}}
+
+def validate_qwq_public_sft_row(row):
+    meta = row.get('metadata') or {}
+    trusted = _QWQ_PUBLIC_SFT_COHORT
+    if (row.get('id') not in trusted['row_sha256']
+            or meta.get('dataset_version') != trusted['dataset_version']
+            or row.get('split') != trusted['splits'].get(row.get('id'))
+            or meta.get('split') != row.get('split')
+            or row.get('role') != 'solver' or meta.get('target_role') != 'solver'
+            or row.get('review_status') not in (None, 'verified') or meta.get('review_status') != 'verified'
+            or _authored_chat_sha(row) != trusted['row_sha256'][row['id']]):
+        raise ValueError('public-rationale QwQ rows require the exact reviewed source cohort')
+
 def validate_source_lineage(rows, role):
     """Require observed chat exchanges or traceable HaslaLab educational sources."""
     for row in rows:
@@ -245,6 +260,9 @@ def validate_source_lineage(rows, role):
                            for key in ('question_sha256', 'answer_sha256'))):
                 raise ValueError('Gemma requires source-grounded exchanges with the current author exclusion checks')
         else:
+            if meta.get('dataset_version') == _QWQ_PUBLIC_SFT_COHORT['dataset_version']:
+                validate_qwq_public_sft_row(row)
+                continue
             drive = meta.get('drive_provenance')
             drive_ok = (isinstance(drive, dict) and bool(drive.get('drive_file_id'))
                         and re.fullmatch(r'[a-f0-9]{64}', str(drive.get('local_original_pdf_sha256', '')))
@@ -263,6 +281,31 @@ def validate_source_lineage(rows, role):
                 raise ValueError('QwQ requires native text or canonical source bodies with checked provenance')
 
 
+def load_offline_preferences(env, manifest, role):
+    spec = manifest['roles'][role].get('offline_dpo')
+    if spec is None:
+        return None
+    from pathlib import Path
+    import importlib.util
+    helper_path = Path(__file__).with_name('qwq_offline_dpo.py')
+    digest = manifest.get('offline_dpo_script_sha256')
+    if not isinstance(digest, str) or not re.fullmatch('[a-f0-9]{64}', digest) or hashlib.sha256(helper_path.read_bytes()).hexdigest() != digest:
+        raise ValueError('offline preference helper pin mismatch')
+    module_spec = importlib.util.spec_from_file_location('_hasla_dpo_input_' + digest, helper_path)
+    helper = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(helper)
+    values = [env.get(f'HASLA_SOLVER_DPO_{i:02d}', '') for i in range(spec['parts'])]
+    if any(not isinstance(value, str) or not 0 < len(value) <= 40000 for value in values) or hashlib.sha256(''.join(values).encode()).hexdigest() != spec['encoded_sha256']:
+        raise ValueError('offline preference encoded payload mismatch')
+    data = {f'HASLA_DPO_DATA_{i:02d}': value for i, value in enumerate(values)}
+    data.update(HASLA_DPO_DATA_PARTS=str(spec['parts']), HASLA_DPO_DATA_SHA256=spec['raw_sha256'])
+    raw = decode_payload(data, 'HASLA_DPO_DATA', max_raw=16 * 1024**2)
+    rows = helper.validate_rows([json.loads(line) for line in raw.decode('utf8').splitlines() if line.strip()])
+    if len(raw) != spec['raw_bytes'] or len(rows) != spec['records']:
+        raise ValueError('offline preference inventory mismatch')
+    return raw
+
+
 def load_inputs(env):
     manifest = json.loads(env['HASLA_DUAL_MANIFEST'])
     if not isinstance(manifest, dict) or not isinstance(manifest.get('roles'), dict):
@@ -275,6 +318,7 @@ def load_inputs(env):
         raise ValueError('selected model input is missing')
     for role in selected:
         resource_settings(manifest, role)
+        load_offline_preferences(env, manifest, role)
         initial = manifest['roles'][role].get('initial_adapter')
         if initial is not None:
             from private_resume_adapter import validate_spec
@@ -393,9 +437,20 @@ def resource_settings(manifest, role):
     profile = spec.get('training_profile')
     get_role_config(role, profile)
     requirement = spec.get('assistant_only_loss')
-    if requirement is not None and (requirement != 'required' or role != 'chat'
-            or profile != 'gemma-26b-qlora-v1' or spec.get('format') != 'chat'):
+    public_sft = role == 'solver' and profile is None and spec.get('format') == 'chat' and spec.get('sft_epochs') == 3
+    if requirement is not None and (requirement != 'required' or spec.get('format') != 'chat'
+            or not (role == 'chat' and profile == 'gemma-26b-qlora-v1' or public_sft)):
         raise ValueError('explicit assistant-only loss requires the supported Gemma chat profile')
+    if 'sft_epochs' in spec and (type(spec['sft_epochs']) is not int or not public_sft or requirement != 'required'):
+        raise ValueError('the bounded public-rationale SFT requires three explicit epochs')
+    if public_sft:
+        dpo = spec.get('offline_dpo')
+        if (type(dpo) is not dict or set(dpo) != {'parts', 'encoded_sha256', 'raw_sha256', 'raw_bytes', 'records', 'review_sha256'}
+                or any(not re.fullmatch('[a-f0-9]{64}', str(dpo.get(k, ''))) for k in ('encoded_sha256', 'raw_sha256', 'review_sha256'))
+                or type(dpo['parts']) is not int or not 1 <= dpo['parts'] <= 16
+                or type(dpo['raw_bytes']) is not int or not 0 < dpo['raw_bytes'] <= 16 * 1024**2
+                or type(dpo['records']) is not int or dpo['records'] < 2):
+            raise ValueError('source training must include the real reviewed offline preference stage')
     if profile == 'qwq-32b-qlora-48gb-v1' and spec.get('format') != 'text':
         raise ValueError('QwQ low-memory profile requires native text1024')
     maximum = (3600 if profile == 'gemma-26b-qlora-v1' else 1800) if role == 'chat' else 14400
@@ -421,14 +476,15 @@ def resource_settings(manifest, role):
         raise ValueError(f'role GPU hourly ceiling exceeds USD{ceiling}')
     usd_policy = manifest.get('runpod_usd_policy')
     if usd_policy is not None:
-        if (type(usd_policy) is not dict or set(usd_policy) != {'total_limit', 'cycle_limit', 'prior_spent_or_reserved'}
-                or usd_policy['total_limit'] != '60' or usd_policy['cycle_limit'] != '3'
+        if (type(usd_policy) is not dict or set(usd_policy) != ({'total_limit', 'prior_spent_or_reserved'} if public_sft else {'total_limit', 'cycle_limit', 'prior_spent_or_reserved'})
+                or usd_policy['total_limit'] != '60' or not public_sft and usd_policy['cycle_limit'] != '3'
                 or type(usd_policy['prior_spent_or_reserved']) is not str
-                or manifest.get('selected_roles') != ['chat'] or requirement != 'required'
-                or seconds > 3600 or quote.gpu_usd_per_hour_upper > Decimal('0.7')
-                or any(gpu not in ('NVIDIA A40', 'NVIDIA L40S') for gpu in gpu_ids)
+                or manifest.get('selected_roles') != [role] or requirement != 'required'
+                or not public_sft and seconds > 3600
+                or quote.gpu_usd_per_hour_upper > Decimal('4' if public_sft else '0.7')
+                or any(gpu not in (('NVIDIA H100 80GB HBM3', 'NVIDIA H100 PCIe') if public_sft else ('NVIDIA A40', 'NVIDIA L40S')) for gpu in gpu_ids)
                 or 'sibling_allowance' in manifest or 'budget_breakdown' in manifest):
-            raise ValueError('invalid bounded Gemma functional pilot policy')
+            raise ValueError('invalid independent RunPod pool policy')
         try:
             prior = Decimal(usd_policy['prior_spent_or_reserved'])
         except Exception:
@@ -436,8 +492,11 @@ def resource_settings(manifest, role):
         # The existing runner conservatively reserves a full runtime again
         # for cleanup. Include compute, disk and tax in the independent cap.
         cycle = quote.hourly_usd_upper * Decimal(seconds * 2) / Decimal(3600) * policy.tax_multiplier
-        if not prior.is_finite() or prior < 0 or cycle > Decimal('3') or prior + cycle > Decimal('60'):
+        if (not prior.is_finite() or prior < 0 or not public_sft and cycle > Decimal(usd_policy['cycle_limit'])
+                or prior + cycle > Decimal('60')):
             raise ValueError('RunPod USD cycle or total budget exceeded')
+    if public_sft and usd_policy is None:
+        raise ValueError('H100 public-rationale SFT requires the independent RunPod USD policy')
     return ledger, quote, seconds, gpu_ids
 
 
@@ -447,6 +506,11 @@ def verify_pinned_scripts(manifest, commit):
     if any(manifest['roles'][role].get('initial_adapter')
            for role in manifest.get('selected_roles', list(manifest.get('roles', {})))):
         files['resume_script_sha256'] = 'private_resume_adapter.py'
+    if any(manifest['roles'][role].get('sft_epochs') == 3 for role in manifest.get('selected_roles', [])):
+        files['public_rationale_script_sha256'] = 'qwq_public_rationale.py'
+        files['offline_dpo_script_sha256'] = 'qwq_offline_dpo.py'
+        if any(not re.fullmatch('[a-f0-9]{64}', str(manifest.get(key, ''))) for key in files):
+            raise ValueError('all public-rationale SFT and evaluation helpers must be pinned')
     for key, filename in files.items():
         url = f'https://raw.githubusercontent.com/HaslaEdu/haslalab.github.io/{commit}/tools/ai/{filename}'
         response = cloud.requests.get(url, timeout=20)

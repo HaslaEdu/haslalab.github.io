@@ -287,6 +287,23 @@ def gemma_single_gpu_proof(torch_module, model=None):
             'cpu_or_disk_offload_used': False}
 
 
+def qwq_h100_proof(torch_module, model=None):
+    cuda = torch_module.cuda
+    if not cuda.is_available() or cuda.device_count() != 1:
+        raise ValueError('QwQ training requires one H100 GPU')
+    props = cuda.get_device_properties(0)
+    if ('H100' not in props.name or type(props.total_memory) is not int
+            or not 72 * 1024**3 <= props.total_memory <= 85 * 1024**3):
+        raise ValueError('QwQ training hardware differs from the single H10080 policy')
+    if model is not None:
+        mapping = getattr(model, 'hf_device_map', None)
+        if (mapping is not None and (not isinstance(mapping, dict) or any(str(v) not in ('0', 'cuda', 'cuda:0') for v in mapping.values()))
+                or any(getattr(p.device, 'type', None) != 'cuda' or getattr(p.device, 'index', None) != 0 for p in model.parameters())):
+            raise ValueError('QwQ training cannot silently offload model parameters')
+    return {'gpu_count': 1, 'gpu_name': props.name, 'physical_vram_bytes': props.total_memory,
+            'cpu_or_disk_offload_used': False}
+
+
 def gemma_first_step_callback(callback_type, summary, torch_module):
     class Proof(callback_type):
         def on_step_end(self, args, state, control, **kwargs):
@@ -786,6 +803,9 @@ def main(argv=None):
     ap.add_argument('--progress-json', help='private numeric-only progress file for the supervising worker')
     ap.add_argument('--train-wall-seconds', type=int, help='stop cleanly after a completed optimizer step, leaving time to save')
     ap.add_argument('--resume-adapter', help='continue a pinned private role adapter with a fresh optimizer')
+    ap.add_argument('--offline-dpo-data', help='reviewed private teacher preferences, consumed only after source SFT')
+    ap.add_argument('--offline-dpo-sha256')
+    ap.add_argument('--offline-dpo-review-sha256')
     ap.add_argument('--assistant-only-loss', choices=('auto', 'required', 'off'), default='auto',
                     help='use only officially supported generation masks for chat; never handcraft masks')
     a = ap.parse_args(argv)
@@ -814,6 +834,14 @@ def main(argv=None):
     if a.training_profile:
         summary['training_profile'] = a.training_profile
     initial_path, initial_sha = initial_adapter(a.resume_adapter, config, a.rank, a.out) if a.resume_adapter else (None, None)
+    qwq_public_sft = a.base == 'solver' and a.format == 'chat' and a.assistant_only_loss == 'required'
+    if qwq_public_sft and (a.epochs != 3 or a.max_steps != -1 or initial_path is None or a.training_profile is not None):
+        ap.error('source-public QwQ repair requires the continued adapter and natural three-epoch training')
+    if qwq_public_sft and (not a.offline_dpo_data or not re.fullmatch('[a-f0-9]{64}', a.offline_dpo_sha256 or '')
+            or not re.fullmatch('[a-f0-9]{64}', a.offline_dpo_review_sha256 or '')):
+        ap.error('real reviewed offline teacher preferences are required after source SFT')
+    if not qwq_public_sft and any((a.offline_dpo_data, a.offline_dpo_sha256, a.offline_dpo_review_sha256)):
+        ap.error('offline preferences belong only to the explicit QwQ training sequence')
     initial_config_sha = file_sha256(initial_path / 'adapter_config.json') if initial_path else None
     summary.update(initial_adapter_model_sha256=initial_sha, initial_adapter_config_sha256=initial_config_sha,
                    optimizer_state_restored=False)
@@ -831,19 +859,23 @@ def main(argv=None):
     from trl import SFTConfig, SFTTrainer
 
     bf16 = unsloth.is_bfloat16_supported()
-    if (config['precision'] == 'bf16' or a.training_profile) and not bf16:
+    if (config['precision'] == 'bf16' or a.training_profile or qwq_public_sft) and not bf16:
         raise ValueError('this training contract requires a BF16-capable GPU; precision is not downgraded automatically')
-    if a.training_profile:
+    if a.training_profile or qwq_public_sft:
         from bitsandbytes.nn import Params4bit
         if a.training_profile == GEMMA_26B_QLORA_V1:
             from importlib.metadata import version
             from unsloth_zoo.temporary_patches import moe_utils_bnb4bit
             summary.update(gemma_moe_patch_provenance(moe_utils_bnb4bit, version('unsloth_zoo')))
-        summary.update(gemma_single_gpu_proof(torch))
+        summary.update(qwq_h100_proof(torch) if qwq_public_sft else gemma_single_gpu_proof(torch))
         torch.cuda.reset_peak_memory_stats(0)
     loader = choose_loader(unsloth, config)
     options = loader_kwargs(config, a.max_len, torch.bfloat16)
-    canonical_continuation = initial_path is not None and a.training_profile in (GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1)
+    if qwq_public_sft:
+        options.update(model_name='Qwen/QwQ-32B', revision='976055f8c83f394f35dbd3ab09a285a984907bd0',
+                       dtype=torch.bfloat16, fast_inference=False, device_map={'': 0}, use_exact_model_name=True,
+                       offload_embedding=False, token=False)
+    canonical_continuation = initial_path is not None and (qwq_public_sft or a.training_profile in (GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1))
     if initial_path and not canonical_continuation:
         options['model_name'] = str(initial_path)
     model, tok = loader.from_pretrained(**options)
@@ -881,13 +913,13 @@ def main(argv=None):
         validate_loaded_adapter_trainability(model)
     else:
         model = loader.get_peft_model(model, **peft_kwargs(config, a.rank, a.max_len))
-    if a.training_profile == QWQ_32B_QLORA_48GB_V1:
-        summary.update(gemma_single_gpu_proof(torch, model))
+    if a.training_profile == QWQ_32B_QLORA_48GB_V1 or qwq_public_sft:
+        summary.update(qwq_h100_proof(torch, model) if qwq_public_sft else gemma_single_gpu_proof(torch, model))
         summary.update(qwq_quantized_linear_proof(model, Params4bit))
     mask_enabled, patched_template, mask_reason = False, None, 'plain_text_full_sequence_loss'
     mask_probe = {'mask_probe_dimensions': 0, 'mask_probe_batch_size': 0,
                   'mask_probe_token_count': 0, 'mask_probe_assistant_tokens': 0}
-    responses_only = a.base == 'chat' and a.training_profile == GEMMA_26B_QLORA_V1 and a.assistant_only_loss == 'required'
+    responses_only = qwq_public_sft or a.base == 'chat' and a.training_profile == GEMMA_26B_QLORA_V1 and a.assistant_only_loss == 'required'
     response_train, response_held, response_collator = None, None, None
     if responses_only:
         from unsloth.chat_templates import train_on_responses_only
@@ -895,8 +927,19 @@ def main(argv=None):
         helper_path = inspect.getsourcefile(inspect.unwrap(train_on_responses_only))
         if not helper_path or not Path(helper_path).is_file():
             raise ValueError('official Gemma masking helper provenance is unavailable')
-        response_train = gemma_response_only_rows(tok, train, train_on_responses_only, a.max_len)
-        response_held = gemma_response_only_rows(tok, held, train_on_responses_only, a.max_len)
+        if qwq_public_sft:
+            from qwq_public_rationale import prepare_response_only_rows
+            rationale_path = inspect.getsourcefile(prepare_response_only_rows)
+            if not rationale_path:
+                raise ValueError('pinned QwQ public-rationale helpers are unavailable')
+            response_train = prepare_response_only_rows(tok, train, train_on_responses_only, a.max_len)
+            response_held = prepare_response_only_rows(tok, held, train_on_responses_only, a.max_len)
+            import qwq_offline_dpo as offline_dpo
+            preference_rows = offline_dpo.read_rows(a.offline_dpo_data, a.offline_dpo_sha256)
+            prepared_preferences = offline_dpo.prepare_pairs(tok, preference_rows, train_on_responses_only, max_length=a.max_len)
+        else:
+            response_train = gemma_response_only_rows(tok, train, train_on_responses_only, a.max_len)
+            response_held = gemma_response_only_rows(tok, held, train_on_responses_only, a.max_len)
         probe_labels = response_train[0]['labels']
         mask_probe.update(mask_probe_dimensions=2, mask_probe_batch_size=1,
                           mask_probe_token_count=len(probe_labels),
@@ -904,7 +947,7 @@ def main(argv=None):
         response_collator = DataCollatorForSeq2Seq(tokenizer=getattr(tok, 'tokenizer', tok),
                                                   label_pad_token_id=-100, return_tensors='pt')
         verify_response_only_collation(response_collator, response_train + response_held)
-        mask_reason = 'official_gemma_responses_only_verified'
+        mask_reason = 'official_qwq_public_rationale_responses_only_verified' if qwq_public_sft else 'official_gemma_responses_only_verified'
     elif a.format == 'chat' and a.assistant_only_loss != 'off':
         try:
             from trl import get_training_chat_template
@@ -932,10 +975,12 @@ def main(argv=None):
                            dataset_text_field='text', max_length=a.max_len, max_steps=a.max_steps,
                            eval_strategy='epoch' if held else 'no', report_to='none')
     training_options.update(warmup_training_options(a.max_steps, SFTConfig))
-    if a.training_profile in (GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1):
+    if qwq_public_sft or a.training_profile in (GEMMA_26B_QLORA_V1, QWQ_32B_QLORA_48GB_V1):
         # Transformers otherwise defaults evaluation to a larger batch than
         # this bounded single-example training profile.
         training_options['per_device_eval_batch_size'] = 1
+    if qwq_public_sft:
+        training_options['eval_strategy'] = 'no'
     if 'assistant_only_loss' in inspect.signature(SFTConfig).parameters:
         training_options['assistant_only_loss'] = mask_enabled
     trainer_options = {}
@@ -964,6 +1009,9 @@ def main(argv=None):
             mask_method='official_gemma_responses_only', mask_helper_sha256=file_sha256(helper_path),
             records_verified=len(response_train) + len(response_held),
             trainer_assistant_only_loss=False, trainer_completion_only_loss=False)
+        if qwq_public_sft:
+            summary['label_diagnostics'].update(version=3, mask_method='official_qwq_public_rationale_responses_only',
+                public_rationale_helper_sha256=file_sha256(rationale_path))
     if mask_enabled and summary['label_diagnostics']['selected_template_sha256'] != hashlib.sha256(patched_template.encode()).hexdigest():
         raise ValueError('trainer changed the probed assistant-loss template')
     if a.training_profile == GEMMA_26B_QLORA_V1:
@@ -977,15 +1025,15 @@ def main(argv=None):
                     'initial_adapter_model_sha256': initial_sha, 'reason': 'nonzero_adapter_continuation'}
             else:
                 summary['baseline_evaluation'] = evaluate_fresh_gemma_baseline(trainer, model, summary['validation_sha256'], len(held))
-    if a.training_profile:
+    if a.training_profile or qwq_public_sft:
         from transformers import TrainerCallback
-        gemma_single_gpu_proof(torch, model)
+        qwq_h100_proof(torch, model) if qwq_public_sft else gemma_single_gpu_proof(torch, model)
         trainer.add_callback(gemma_first_step_callback(TrainerCallback, summary, torch))
     if a.progress_json:
         from transformers import TrainerCallback
         trainer.add_callback(progress_callback(TrainerCallback, a.progress_json, started=started,
                                               wall_seconds=a.train_wall_seconds))
-    if responses_only:
+    if responses_only and not qwq_public_sft:
         summary['functional_evaluation'] = {'version': 1, 'method': 'native_gemma_greedy_routing_v1',
             'validation_sha256': summary['validation_sha256'], 'validation_records': len(held),
             'max_new_tokens': 16, 'before': evaluate_gemma_routing(model, tok, torch, held, response_held)}
@@ -996,7 +1044,14 @@ def main(argv=None):
         raise ValueError('trainer completed no optimizer steps')
     if a.max_steps > 0 and summary['steps_completed'] > a.max_steps:
         raise ValueError('trainer exceeded its requested optimizer-step limit')
-    if a.training_profile and summary.get('first_optimizer_step_completed') is not True:
+    if qwq_public_sft and (not math.isfinite(float(trainer.state.epoch))
+            or abs(float(trainer.state.epoch) - 3.0) > 1e-6
+            or summary['steps_completed'] != ((len(train) + 7) // 8) * 3):
+        partial = Path(a.out).with_name(Path(a.out).name + '-source-sft-partial')
+        private_adapter_output(partial)
+        model.save_pretrained(str(partial))
+        raise ValueError('source_sft_incomplete_before_teacher_optimizer')
+    if (a.training_profile or qwq_public_sft) and summary.get('first_optimizer_step_completed') is not True:
         raise ValueError('QLoRA first optimizer-step proof is missing')
     if a.max_steps == -1:
         scheduled_steps = getattr(trainer.state, 'max_steps', None)
@@ -1004,13 +1059,38 @@ def main(argv=None):
             summary['warmup_steps'] = math.ceil(0.05 * scheduled_steps)
     summary.update(safe_loss_metrics(getattr(trainer.state, 'log_history', []),
                                     getattr(training_result, 'metrics', None)))
-    if responses_only:
+    if qwq_public_sft:
+        reference_directory = Path(a.out).with_name(Path(a.out).name + '-post-sft-reference')
+        private_adapter_output(reference_directory)
+        summary['offline_dpo_training'] = offline_dpo.train_offline_dpo(model, tok, torch, prepared_preferences,
+                                                                      reference_directory, a.offline_dpo_sha256)
+        summary['offline_dpo_training'].update(review_sha256=a.offline_dpo_review_sha256,
+                                              helper_sha256=file_sha256(offline_dpo.__file__))
+        summary['qwq_sft_provenance'] = {'version': 1, 'foundation_revision': '976055f8c83f394f35dbd3ab09a285a984907bd0',
+            'public_rationale_helper_sha256': file_sha256(rationale_path), 'epochs_requested': 3,
+            'model_evaluations_performed': 0, 'quality_evaluation_deferred': True,
+            'epochs_completed': float(trainer.state.epoch), 'trainer_max_steps': -1,
+            'training_records': len(train), 'validation_records': len(held),
+            'data_derived_optimizer_steps_upper': ((len(train) + 7) // 8) * 3,
+            'runtime': {k: summary[k] for k in ('gpu_count', 'gpu_name', 'physical_vram_bytes', 'cpu_or_disk_offload_used',
+                'dense_quantization_verified', 'dense_layers', 'quantized_linear_tensors', 'base_parameters_frozen',
+                'first_optimizer_step_completed', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')}}
+    elif responses_only:
         summary['functional_evaluation']['after'] = evaluate_gemma_routing(model, tok, torch, held, response_held)
     if initial_path and (file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha
                          or file_sha256(initial_path / 'adapter_config.json') != initial_config_sha):
         raise ValueError('initial adapter file changed during continuation')
     model.save_pretrained(a.out)      # adapter_config.json + adapter_model.safetensors
     tok.save_pretrained(a.out)
+    if qwq_public_sft:
+        import private_resume_adapter as continuation
+        evidence = continuation.compare_lora_b(reference_directory / 'adapter_model.safetensors',
+                                               Path(a.out) / 'adapter_model.safetensors', rank=a.rank)
+        if evidence.get('relative_weight_change_verified') is not True or evidence.get('weights_updated') is not True:
+            raise ValueError('offline preference updates did not change the post-SFT LoRA B weights')
+        summary['offline_dpo_training'].update(relative_weight_change_verified=True,
+            final_adapter_model_sha256=file_sha256(Path(a.out) / 'adapter_model.safetensors'),
+            b_changed_tensors=evidence['b_changed_tensors'], b_changed_elements=evidence['b_changed_elements'])
     if initial_path and (file_sha256(initial_path / 'adapter_model.safetensors') != initial_sha
                          or file_sha256(initial_path / 'adapter_config.json') != initial_config_sha):
         raise ValueError('initial adapter file changed while saving continuation')

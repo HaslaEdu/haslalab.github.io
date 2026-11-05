@@ -179,7 +179,7 @@ def summary_result(summary):
               "training_profile", "precision", "training_method", "runtime_profile_proof", "format", "label_diagnostics",
               "adapter_files", "adapter_sha256", "initial_adapter", "resume_script_sha256",
               "initial_adapter_model_sha256", "optimizer_state_restored", "formatter_provenance", "baseline_evaluation",
-              "training_records", "validation_records", "functional_evaluation")
+              "training_records", "validation_records", "functional_evaluation", "qwq_sft_provenance", "epochs", "offline_dpo_training", "post_sft_reference_artifact")
     for field in fields:
         for separator in (".", "/"):
             key = "private_training_result" + separator + field
@@ -194,15 +194,17 @@ def validated_label_diagnostics(value, data_format):
                 'template_has_no_generation_markers', 'generation_mask_not_available',
                 'generation_mask_not_selective', 'generation_mask_shape_invalid', 'generation_mask_check_failed',
                 'library_generation_mask_verified', 'installed_trl_has_no_assistant_only_loss',
-                'official_gemma_responses_only_verified'}
+                'official_gemma_responses_only_verified', 'official_qwq_public_rationale_responses_only_verified'}
     numbers = ('mask_probe_dimensions', 'mask_probe_batch_size', 'mask_probe_token_count', 'mask_probe_assistant_tokens')
     keys = {'version', 'assistant_only_loss', 'assistant_loss_status', 'selected_template_sha256',
             'processor_class', 'tokenizer_class', *numbers}
     version = value.get('version') if isinstance(value, dict) else None
-    if version == 2:
+    if version in (2, 3):
         keys |= {'mask_method', 'mask_helper_sha256', 'records_verified',
                  'trainer_assistant_only_loss', 'trainer_completion_only_loss'}
-    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] not in (1, 2)
+    if version == 3:
+        keys.add('public_rationale_helper_sha256')
+    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] not in (1, 2, 3)
             or type(value['assistant_only_loss']) is not bool or not isinstance(value['assistant_loss_status'], str)
             or value['assistant_loss_status'] not in statuses
             or data_format not in ('text', 'chat')):
@@ -220,7 +222,8 @@ def validated_label_diagnostics(value, data_format):
             or dimensions == 1 and batch != 1 or tokens and batch != 1):
         raise ValueError('invalid_label_diagnostics')
     responses_only = value['assistant_loss_status'] == 'official_gemma_responses_only_verified'
-    if responses_only != (version == 2):
+    public_rationale = value['assistant_loss_status'] == 'official_qwq_public_rationale_responses_only_verified'
+    if responses_only != (version == 2) or public_rationale != (version == 3):
         raise ValueError('invalid_label_diagnostics')
     if responses_only and (value['mask_method'] != 'official_gemma_responses_only'
             or not isinstance(value['mask_helper_sha256'], str) or not re.fullmatch('[a-f0-9]{64}', value['mask_helper_sha256'])
@@ -228,13 +231,88 @@ def validated_label_diagnostics(value, data_format):
             or type(value['records_verified']) is not int or not 1 <= value['records_verified'] <= 250000
             or value['trainer_assistant_only_loss'] is not False or value['trainer_completion_only_loss'] is not False):
         raise ValueError('invalid_label_diagnostics')
-    verified = value['assistant_loss_status'] == 'library_generation_mask_verified' or responses_only
+    if public_rationale and (value['mask_method'] != 'official_qwq_public_rationale_responses_only'
+            or any(not isinstance(value[k], str) or not re.fullmatch('[a-f0-9]{64}', value[k]) for k in ('mask_helper_sha256', 'public_rationale_helper_sha256'))
+            or value['selected_template_sha256'] != '16488ad69d85833e5f66c50174f39834b688343337e9337f018deaa21b354117'
+            or type(value['records_verified']) is not int or not 1 <= value['records_verified'] <= 250000
+            or value['trainer_assistant_only_loss'] is not False or value['trainer_completion_only_loss'] is not False):
+        raise ValueError('invalid_label_diagnostics')
+    verified = value['assistant_loss_status'] == 'library_generation_mask_verified' or responses_only or public_rationale
     if value['assistant_only_loss'] != verified or verified and not (dimensions in (1, 2) and batch == 1 and 0 < selected < tokens):
         raise ValueError('invalid_label_diagnostics')
     if ((data_format == 'text') != (value['assistant_loss_status'] == 'plain_text_full_sequence_loss')
             or data_format == 'text' and (dimensions or batch or tokens or selected)):
         raise ValueError('invalid_label_diagnostics')
     return dict(value)
+def validated_qwq_sft_receipts(report, role):
+    label = report.get('label_diagnostics') or {}
+    names = ('qwq_sft_provenance',)
+    if 'qwq_matched_evaluation' in report:
+        raise ValueError('model_evaluation_not_authorized_in_source_sft')
+    required = label.get('version') == 3
+    if not required and not any(name in report for name in names):
+        return {}
+    value = report.get('qwq_sft_provenance')
+    keys = {'version', 'foundation_revision', 'public_rationale_helper_sha256', 'model_evaluations_performed', 'quality_evaluation_deferred', 'epochs_requested', 'epochs_completed', 'trainer_max_steps',
+            'training_records', 'validation_records', 'data_derived_optimizer_steps_upper', 'runtime'}
+    if (not required or role != 'solver' or report.get('training_profile') is not None
+            or not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] != 1
+            or value['foundation_revision'] != '976055f8c83f394f35dbd3ab09a285a984907bd0'
+            or value['public_rationale_helper_sha256'] != label.get('public_rationale_helper_sha256')
+            or type(value['model_evaluations_performed']) is not int or value['model_evaluations_performed'] != 0
+            or value['quality_evaluation_deferred'] is not True
+            or type(value['epochs_requested']) is not int or value['epochs_requested'] != 3
+            or type(value['trainer_max_steps']) is not int or value['trainer_max_steps'] != -1
+            or type(value['epochs_completed']) not in (int, float) or not math.isfinite(value['epochs_completed']) or abs(value['epochs_completed'] - 3.0) > 1e-6
+            or type(value['training_records']) is not int or value['training_records'] != report.get('training_records')
+            or type(value['validation_records']) is not int or value['validation_records'] != report.get('validation_records')
+            or value['training_records'] < 1 or value['validation_records'] < 1
+            or type(value['data_derived_optimizer_steps_upper']) is not int or value['data_derived_optimizer_steps_upper'] != ((value['training_records'] + 7) // 8) * 3
+            or report.get('steps_completed') != value['data_derived_optimizer_steps_upper']
+            or label.get('records_verified') != value['training_records'] + value['validation_records']
+            or report.get('initial_adapter_model_sha256') != '5b4c2e755930a30298927cdf905fd158c4745473eea7c41f87630183729d0112'):
+        raise ValueError('invalid_qwq_public_sft_receipts')
+    runtime = value['runtime']
+    fixed = {'gpu_count': 1, 'cpu_or_disk_offload_used': False, 'dense_quantization_verified': True,
+             'dense_layers': 64, 'quantized_linear_tensors': 448, 'base_parameters_frozen': True, 'first_optimizer_step_completed': True}
+    numeric = ('physical_vram_bytes', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')
+    if (not isinstance(runtime, dict) or set(runtime) != set(fixed) | {'gpu_name', *numeric}
+            or any(type(runtime.get(k)) is not type(v) or runtime[k] != v for k, v in fixed.items())
+            or not isinstance(runtime['gpu_name'], str) or 'H100' not in runtime['gpu_name']
+            or any(type(runtime[k]) is not int for k in numeric)
+            or not 72 * 1024**3 <= runtime['physical_vram_bytes'] <= 85 * 1024**3
+            or not 0 < runtime['first_step_peak_allocated_bytes'] <= runtime['first_step_peak_reserved_bytes'] <= runtime['physical_vram_bytes']):
+        raise ValueError('invalid_qwq_public_sft_runtime')
+    return {names[0]: dict(value)}
+
+def validated_offline_dpo_receipt(value):
+    fixed = {'version': 1, 'method': 'post_sft_frozen_reference_offline_dpo_v1', 'epochs': 3, 'beta': 0.1,
+             'learning_rate': 5e-7, 'reference_kind': 'same_active_post_sft_adapter_cached_sum_logps',
+             'reference_cached_before_optimizer': True, 'dropout_disabled_during_reference_and_policy': True,
+             'weights_updated': True, 'model_generation_calls': 0, 'performance_evaluations': 0,
+             'quality_verified': False, 'production_promoted': False, 'relative_weight_change_verified': True}
+    hashes = ('data_sha256', 'reference_adapter_parameter_sha256', 'reference_after_cache_parameter_sha256',
+              'final_adapter_parameter_sha256', 'reference_logps_sha256', 'review_sha256', 'helper_sha256', 'final_adapter_model_sha256')
+    counts = ('pairs', 'optimizer_steps_completed', 'expected_optimizer_steps', 'trainable_lora_tensors', 'b_changed_tensors', 'b_changed_elements')
+    scalars = ('loss_last', 'loss_mean', 'gradient_norm_min', 'gradient_norm_max')
+    if (not isinstance(value, dict) or set(value) != set(fixed) | set(hashes) | set(counts) | set(scalars) | {'reference_files'}
+            or any(type(value.get(k)) is not type(v) or value[k] != v for k, v in fixed.items())
+            or any(not isinstance(value[k], str) or not re.fullmatch('[a-f0-9]{64}', value[k]) for k in hashes)
+            or any(type(value[k]) is not int or value[k] <= 0 for k in counts)
+            or value['optimizer_steps_completed'] != value['expected_optimizer_steps'] or value['expected_optimizer_steps'] != 3 * value['pairs']
+            or value['reference_adapter_parameter_sha256'] != value['reference_after_cache_parameter_sha256']
+            or value['final_adapter_parameter_sha256'] == value['reference_adapter_parameter_sha256']
+            or any(type(value[k]) not in (int, float) or not math.isfinite(value[k]) or value[k] < 0 for k in scalars)
+            or not 0 < value['gradient_norm_min'] <= value['gradient_norm_max']):
+        raise ValueError('invalid_offline_dpo_training_receipt')
+    files = value['reference_files']
+    if (not isinstance(files, list) or len(files) != 2 or any(not isinstance(row, dict) or set(row) != {'name', 'bytes', 'sha256'}
+            or row['name'] != name or type(row['bytes']) is not int or not 0 < row['bytes'] <= limit
+            or not isinstance(row['sha256'], str) or not re.fullmatch('[a-f0-9]{64}', row['sha256'])
+            for row, name, limit in zip(files, ('adapter_config.json', 'adapter_model.safetensors'), (1024**2, 2 * 1024**3)))):
+        raise ValueError('invalid_post_sft_reference_inventory')
+    return dict(value)
+
 def validated_functional_evaluation(value, validation_sha, validation_records):
     allowed = {'create', 'solve', 'explain', 'concept', 'grade', 'feedback', 'site', 'web', 'chat', 'off'}
     if (not isinstance(value, dict) or set(value) != {'version', 'method', 'validation_sha256', 'validation_records', 'max_new_tokens', 'before', 'after'}
@@ -351,6 +429,9 @@ def expected_result(result, entity, run_id, role):
     try:
         validated_gemma_receipts(result, role, result.get('training_profile'),
                                  result.get('training_records'), result.get('validation_records'))
+        validated_qwq_sft_receipts(result, role)
+        if (result.get('label_diagnostics') or {}).get('version') == 3:
+            validated_offline_dpo_receipt(result.get('offline_dpo_training'))
     except ValueError:
         raise VerificationError('result_gemma_receipts_invalid') from None
     if 'label_diagnostics' in result:
@@ -359,6 +440,8 @@ def expected_result(result, entity, run_id, role):
             if result['label_diagnostics']['version'] == 2 and (role != 'chat'
                     or result.get('training_profile') != 'gemma-26b-qlora-v1'):
                 raise ValueError('Gemma selective loss proof is role-specific')
+            if result['label_diagnostics']['version'] == 3 and (role != 'solver' or result.get('training_profile') is not None):
+                raise ValueError('QwQ selective loss proof is role-specific')
         except ValueError:
             raise VerificationError('result_label_diagnostics_invalid') from None
     try:
@@ -594,6 +677,41 @@ def private_temp_parent():
     return parent
 
 
+def verify_post_sft_reference(reader, api, entity, run_id, role, result, root):
+    receipt = validated_offline_dpo_receipt(result.get('offline_dpo_training'))
+    reference = result.get('post_sft_reference_artifact')
+    prefix = f'{entity}/{PROJECT}/hasla-private-books-{run_id}-{role}-lora-post-sft-reference:'
+    require(role == 'solver' and isinstance(reference, str) and reference.startswith(prefix)
+            and re.fullmatch(r'v[0-9]+', reference[len(prefix):]), 'post_sft_reference_identity_invalid')
+    reader.assert_private(entity)
+    artifact = api.artifact(reference, type='lora-reference')
+    require(artifact.qualified_name == reference and artifact.type == 'lora-reference' and artifact.state == 'COMMITTED'
+            and not artifact.is_link and isinstance(artifact.metadata, dict) and artifact.metadata.get('private') is True
+            and artifact.metadata.get('phase') == 'post_source_sft_before_offline_dpo'
+            and artifact.metadata.get('run') == f'hasla-private-books-{run_id}-{role}'
+            and artifact.metadata.get('files') == receipt['reference_files'], 'post_sft_reference_artifact_invalid')
+    entries = artifact.manifest.entries
+    require(isinstance(entries, dict) and set(entries) == set(FILES), 'post_sft_reference_files_invalid')
+    directory = root.parent / (role + '-post-sft-reference')
+    directory.mkdir()
+    for row in receipt['reference_files']:
+        reader.assert_private(entity)
+        entry = artifact.get_entry(row['name'])
+        require(str(entry.path) == row['name'] and entry.ref is None and type(entry.size) is int and entry.size == row['bytes'], 'post_sft_reference_entry_invalid')
+        path = Path(entry.download(root=str(directory), skip_cache=True))
+        require(path.absolute() == (directory / row['name']).absolute() and not path.is_symlink()
+                and path.is_file() and path.stat().st_size == row['bytes'] and sha_file(path) == row['sha256'], 'post_sft_reference_hash_mismatch')
+    import private_resume_adapter as continuation
+    try:
+        evidence = continuation.compare_lora_b(directory / FILES[1], root / FILES[1], rank=16)
+    except continuation.ResumeError:
+        raise VerificationError('offline_dpo_relative_verification_failed') from None
+    require(evidence.get('relative_weight_change_verified') is True and evidence.get('weights_updated') is True
+            and sha_file(root / FILES[1]) == receipt['final_adapter_model_sha256'], 'offline_dpo_delta_unverified')
+    return {'post_sft_reference_artifact': reference, 'dpo_relative_weight_change_verified': True,
+            'dpo_b_changed_tensors': evidence['b_changed_tensors'], 'dpo_b_changed_elements': evidence['b_changed_elements']}
+
+
 def verify_role(reader, api, entity, run_id, role, root):
     result = reader.result(entity, run_id, role)
     output = {"role": role, "status": "pending", "code": "checkpoint_pending",
@@ -609,6 +727,9 @@ def verify_role(reader, api, entity, run_id, role, root):
         output['label_diagnostics'] = validated_label_diagnostics(result['label_diagnostics'], result.get('format'))
     output.update(validated_gemma_receipts(result, role, result.get('training_profile'),
                                            result.get('training_records'), result.get('validation_records')))
+    output.update(validated_qwq_sft_receipts(result, role))
+    if 'offline_dpo_training' in result:
+        output['offline_dpo_training'] = validated_offline_dpo_receipt(result['offline_dpo_training'])
     output["artifact"] = reference
     reader.assert_private(entity)
     artifact = api.artifact(reference, type="lora")
@@ -625,7 +746,7 @@ def verify_role(reader, api, entity, run_id, role, root):
             and metadata.get('label_diagnostics') == result.get('label_diagnostics'),
             'artifact_label_diagnostics_mismatch')
     require(all((k in metadata) == (k in result) and metadata.get(k) == result.get(k)
-                for k in ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation')), 'artifact_gemma_receipts_mismatch')
+                for k in ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation', 'qwq_sft_provenance', 'epochs', 'offline_dpo_training', 'post_sft_reference_artifact')), 'artifact_gemma_receipts_mismatch')
     if result.get('training_profile') is None:
         require('runtime_profile_proof' not in result and 'runtime_profile_proof' not in metadata,
                 'artifact_training_profile_mismatch')
@@ -668,6 +789,8 @@ def verify_role(reader, api, entity, run_id, role, root):
     output.update(counts, config_bytes=inventory[0]["bytes"], zero_initializer=zero_initializer,
                   steps_completed=result["steps_completed"], base_model=result['base_model'], rank=result['rank'],
                   adapter_files=inventory, adapter_inventory_sha256=result['adapter_sha256'])
+    if 'offline_dpo_training' in result:
+        output.update(verify_post_sft_reference(reader, api, entity, run_id, role, result, root))
     if initial is not None:
         require(role in ('solver', 'chat') and result.get('optimizer_state_restored') is False
                 and metadata.get('optimizer_state_restored') is False, 'continuation_contract_invalid')
@@ -690,6 +813,14 @@ def verify_role(reader, api, entity, run_id, role, root):
             baseline = root.parent / (role + '-initial')
             continuation.download_initial_adapter(spec, config, baseline, api, checked_initial_privacy)
             evidence = continuation.compare_lora_b(baseline / FILES[1], root / FILES[1], rank=result['rank'])
+            if 'offline_dpo_training' in result:
+                source_evidence = continuation.compare_lora_b(baseline / FILES[1],
+                    root.parent / (role + '-post-sft-reference') / FILES[1], rank=result['rank'])
+                require(source_evidence.get('relative_weight_change_verified') is True and source_evidence.get('weights_updated') is True,
+                        'source_sft_relative_delta_unverified')
+                output.update(source_sft_relative_weight_change_verified=True,
+                              source_sft_b_changed_tensors=source_evidence['b_changed_tensors'],
+                              source_sft_b_changed_elements=source_evidence['b_changed_elements'])
         except continuation.ResumeError:
             raise VerificationError('continuation_verification_failed') from None
         output.update(evidence, zero_initializer=False, configured_peft_initializer_is_zero=zero_initializer,

@@ -145,6 +145,9 @@ def pod_environment(env, manifest, entity, role, run_name, reference, seconds):
         job['training_profile'] = spec['training_profile']
     if spec.get('assistant_only_loss') is not None:
         job['assistant_only_loss'] = spec['assistant_only_loss']
+    if spec.get('sft_epochs') is not None:
+        job['sft_epochs'] = spec['sft_epochs']
+        job['offline_dpo'] = spec['offline_dpo']
     if spec.get('initial_adapter'):
         job['initial_adapter'] = spec['initial_adapter']
     child = {'HASLA_ROLE_JOBS': json.dumps([job], separators=(',', ':')), 'REPO_SHA': env['GITHUB_SHA'],
@@ -156,6 +159,14 @@ def pod_environment(env, manifest, entity, role, run_name, reference, seconds):
             'WANDB_CONSOLE': 'off', 'WANDB_DISABLE_CODE': 'true'}
     if spec.get('initial_adapter'):
         child['HASLA_RESUME_SCRIPT_SHA256'] = manifest['resume_script_sha256']
+    if spec.get('sft_epochs') == 3:
+        for field, target in (('public_rationale_script_sha256', 'HASLA_PUBLIC_RATIONALE_SCRIPT_SHA256'),):
+            child[target] = manifest[field]
+        child['HASLA_OFFLINE_DPO_SCRIPT_SHA256'] = manifest['offline_dpo_script_sha256']
+        child['HASLA_DPO_DATA_PARTS'] = str(spec['offline_dpo']['parts'])
+        child['HASLA_DPO_DATA_SHA256'] = spec['offline_dpo']['raw_sha256']
+        for index in range(spec['offline_dpo']['parts']):
+            child[f'HASLA_DPO_DATA_{index:02d}'] = env[f'HASLA_SOLVER_DPO_{index:02d}']
     return child
 
 

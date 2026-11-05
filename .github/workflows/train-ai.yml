@@ -1,5 +1,5 @@
-name: Bounded Gemma functional mask repair
-run-name: Hasla Gemma functional pilot (training-role=both, launch=${{ inputs.launch_id }}, preflight=${{ inputs.preflight_only }})
+name: QwQ H100 source and teacher training
+run-name: Hasla QwQ H100 continuation (training-role=both, launch=${{ inputs.launch_id }}, preflight=${{ inputs.preflight_only }})
 on:
   workflow_dispatch:
     inputs:
@@ -17,7 +17,7 @@ jobs:
       group: hasla-private-book-training
       cancel-in-progress: false
     runs-on: ubuntu-24.04
-    timeout-minutes: 75
+    timeout-minutes: 250
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,22 +27,24 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install --quiet requests wandb
-      - name: Check frozen manifest and run one Gemma pilot
-        timeout-minutes: 65
+      - name: Continue source SFT and actual teacher preference training
+        timeout-minutes: 230
         run: |
           python -c "import os,hashlib; assert hashlib.sha256(os.environ['HASLA_DUAL_MANIFEST'].encode()).hexdigest()==os.environ['HASLA_EXPECTED_MANIFEST_SHA256']"
           python -B tools/ai/private_dedicated_run.py
         env:
-          HASLA_EXPECTED_MANIFEST_SHA256: 86ee32ae2334c377d59aba7189531cc043f6aa3e9c63ce0e804b6fdb74c3c352
+          HASLA_EXPECTED_MANIFEST_SHA256: ee331fd1a45f35354184135a223e6910aaa67fcd8a7a259bc3c55cf366318c3a
           RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HASLA_DUAL_MANIFEST: ${{ secrets.HASLA_DUAL_MANIFEST }}
-          HASLA_CHAT_DATA_00: ${{ secrets.HASLA_CHAT_DATA_00 }}
-          HASLA_CHAT_VALIDATION_00: ${{ secrets.HASLA_CHAT_VALIDATION_00 }}
+          HASLA_SOLVER_DATA_00: ${{ secrets.HASLA_SOLVER_DATA_00 }}
+          HASLA_SOLVER_DATA_01: ${{ secrets.HASLA_SOLVER_DATA_01 }}
+          HASLA_SOLVER_VALIDATION_00: ${{ secrets.HASLA_SOLVER_VALIDATION_00 }}
+          HASLA_SOLVER_DPO_00: ${{ secrets.HASLA_SOLVER_DPO_00 }}
           HASLA_PREFLIGHT_ONLY: ${{ inputs.preflight_only }}
           HASLA_TRAINING_ROLE: both
-      - name: Confirm this pilot GPU is removed
+      - name: Confirm this training GPU is removed
         if: ${{ always() }}
         timeout-minutes: 5
         run: python -B tools/ai/private_dedicated_run.py --cleanup

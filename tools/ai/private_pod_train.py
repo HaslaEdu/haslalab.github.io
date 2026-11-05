@@ -370,20 +370,25 @@ def training_command(script, data, adapter, validation=None, config=None, data_f
         raise PilotError("validated_role_configuration_required")
     command = [sys.executable, str(script), "--base", config["role"], "--format", data_format,
                "--rank", str(config["default_rank"]), "--max-steps", str(config["max_steps"]),
-               "--epochs", "1", "--lr", "1e-5", "--max-len", str(config["max_length"]),
+               "--epochs", str(config.get('sft_epochs', 1)), "--lr", "1e-5", "--max-len", str(config["max_length"]),
                "--holdout", "0", str(data), str(adapter)]
     if validation is not None:
         command.extend(["--validation-data", str(validation)])
     if config.get('training_profile') is not None:
         command.extend(['--training-profile', config['training_profile']])
-    if config.get('assistant_only_loss_required'):
-        if config['role'] != 'chat' or data_format != 'chat' or config.get('training_profile') != 'gemma-26b-qlora-v1':
+    if config.get('assistant_only_loss_required') or config.get('public_rationale_required'):
+        if data_format != 'chat' or not (config['role'] == 'chat' and config.get('training_profile') == 'gemma-26b-qlora-v1'
+                or config['role'] == 'solver' and config.get('public_rationale_required') is True and config.get('sft_epochs') == 3):
             raise PilotError('invalid_assistant_only_loss_requirement')
         command.extend(['--assistant-only-loss', 'required'])
+    if config.get('public_rationale_required'):
+        command.extend(['--offline-dpo-data', config['offline_dpo_path'],
+                        '--offline-dpo-sha256', config['offline_dpo_sha256'],
+                        '--offline-dpo-review-sha256', config['offline_dpo_review_sha256']])
     return command
 
 
-def data_bounded_settings(config, training_rows):
+def data_bounded_settings(config, training_rows, epochs=1):
     """Cap a pilot at approximately one pass over the validated input rows.
 
     A copied configuration drives the trainer command, report verification and
@@ -392,20 +397,26 @@ def data_bounded_settings(config, training_rows):
     """
     if type(training_rows) is not int or training_rows < 1:
         raise PilotError("invalid_validated_training_row_count")
+    if type(epochs) is not int or epochs not in (1, 3) or epochs == 3 and (config['role'] != 'solver' or config.get('training_profile') is not None):
+        raise PilotError('invalid_bounded_sft_epochs')
     if type(config.get("max_steps")) is not int or not 1 <= config["max_steps"] <= 32768:
         raise PilotError("invalid_pinned_role_configuration")
     bounded = dict(config)
     bounded["role_max_steps"] = config["max_steps"]
     bounded["effective_batch_rows"] = PILOT_EFFECTIVE_BATCH_ROWS
     bounded["max_steps"] = min(config["max_steps"],
-                               (training_rows + PILOT_EFFECTIVE_BATCH_ROWS - 1) // PILOT_EFFECTIVE_BATCH_ROWS)
+                               ((training_rows + PILOT_EFFECTIVE_BATCH_ROWS - 1) // PILOT_EFFECTIVE_BATCH_ROWS) * epochs)
+    if epochs == 3:
+        bounded['sft_epochs'] = 3
+        bounded['data_derived_optimizer_steps_upper'] = bounded['max_steps']
+        bounded['max_steps'] = -1
     return bounded
 
 
 def training_environment(env):
     # Only the local JSONL file is needed by the trainer; do not forward corpus shards.
     child = {key: value for key, value in env.items()
-             if not key.startswith(("HASLA_DATA_", "HASLA_VALIDATION_"))
+             if not key.startswith(("HASLA_DATA_", "HASLA_VALIDATION_", "HASLA_DPO_DATA_"))
              and key not in ("WANDB_API_KEY", "RUNPOD_API_KEY", "HASLA_INPUT_ARTIFACT", "HASLA_INITIAL_ADAPTER",
                              "HASLA_RESUME_SCRIPT_SHA256")}
     child.update({"WANDB_MODE": "disabled", "WANDB_DISABLED": "true", "WANDB_CONSOLE": "off",
@@ -454,15 +465,17 @@ def validated_label_diagnostics(value, data_format):
                 'template_has_no_generation_markers', 'generation_mask_not_available',
                 'generation_mask_not_selective', 'generation_mask_shape_invalid', 'generation_mask_check_failed',
                 'library_generation_mask_verified', 'installed_trl_has_no_assistant_only_loss',
-                'official_gemma_responses_only_verified'}
+                'official_gemma_responses_only_verified', 'official_qwq_public_rationale_responses_only_verified'}
     numbers = ('mask_probe_dimensions', 'mask_probe_batch_size', 'mask_probe_token_count', 'mask_probe_assistant_tokens')
     keys = {'version', 'assistant_only_loss', 'assistant_loss_status', 'selected_template_sha256',
             'processor_class', 'tokenizer_class', *numbers}
     version = value.get('version') if isinstance(value, dict) else None
-    if version == 2:
+    if version in (2, 3):
         keys |= {'mask_method', 'mask_helper_sha256', 'records_verified',
                  'trainer_assistant_only_loss', 'trainer_completion_only_loss'}
-    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] not in (1, 2)
+    if version == 3:
+        keys.add('public_rationale_helper_sha256')
+    if (not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] not in (1, 2, 3)
             or type(value['assistant_only_loss']) is not bool or not isinstance(value['assistant_loss_status'], str)
             or value['assistant_loss_status'] not in statuses
             or data_format not in ('text', 'chat')):
@@ -480,7 +493,8 @@ def validated_label_diagnostics(value, data_format):
             or dimensions == 1 and batch != 1 or tokens and batch != 1):
         raise ValueError('invalid_label_diagnostics')
     responses_only = value['assistant_loss_status'] == 'official_gemma_responses_only_verified'
-    if responses_only != (version == 2):
+    public_rationale = value['assistant_loss_status'] == 'official_qwq_public_rationale_responses_only_verified'
+    if responses_only != (version == 2) or public_rationale != (version == 3):
         raise ValueError('invalid_label_diagnostics')
     if responses_only and (value['mask_method'] != 'official_gemma_responses_only'
             or not isinstance(value['mask_helper_sha256'], str) or not SHA_PATTERN.fullmatch(value['mask_helper_sha256'])
@@ -488,12 +502,89 @@ def validated_label_diagnostics(value, data_format):
             or type(value['records_verified']) is not int or not 1 <= value['records_verified'] <= 250000
             or value['trainer_assistant_only_loss'] is not False or value['trainer_completion_only_loss'] is not False):
         raise ValueError('invalid_label_diagnostics')
-    verified = value['assistant_loss_status'] == 'library_generation_mask_verified' or responses_only
+    if public_rationale and (value['mask_method'] != 'official_qwq_public_rationale_responses_only'
+            or any(not isinstance(value[k], str) or not SHA_PATTERN.fullmatch(value[k]) for k in ('mask_helper_sha256', 'public_rationale_helper_sha256'))
+            or value['selected_template_sha256'] != '16488ad69d85833e5f66c50174f39834b688343337e9337f018deaa21b354117'
+            or type(value['records_verified']) is not int or not 1 <= value['records_verified'] <= 250000
+            or value['trainer_assistant_only_loss'] is not False or value['trainer_completion_only_loss'] is not False):
+        raise ValueError('invalid_label_diagnostics')
+    verified = value['assistant_loss_status'] == 'library_generation_mask_verified' or responses_only or public_rationale
     if value['assistant_only_loss'] != verified or verified and not (dimensions in (1, 2) and batch == 1 and 0 < selected < tokens):
         raise ValueError('invalid_label_diagnostics')
     if ((data_format == 'text') != (value['assistant_loss_status'] == 'plain_text_full_sequence_loss')
             or data_format == 'text' and (dimensions or batch or tokens or selected)):
         raise ValueError('invalid_label_diagnostics')
+    return dict(value)
+
+
+def validated_qwq_sft_receipts(report, role):
+    label = report.get('label_diagnostics') or {}
+    names = ('qwq_sft_provenance',)
+    if 'qwq_matched_evaluation' in report:
+        raise ValueError('model_evaluation_not_authorized_in_source_sft')
+    required = label.get('version') == 3
+    if not required and not any(name in report for name in names):
+        return {}
+    value = report.get('qwq_sft_provenance')
+    keys = {'version', 'foundation_revision', 'public_rationale_helper_sha256', 'model_evaluations_performed', 'quality_evaluation_deferred', 'epochs_requested', 'epochs_completed', 'trainer_max_steps',
+            'training_records', 'validation_records', 'data_derived_optimizer_steps_upper', 'runtime'}
+    if (not required or role != 'solver' or report.get('training_profile') is not None
+            or not isinstance(value, dict) or set(value) != keys or type(value['version']) is not int or value['version'] != 1
+            or value['foundation_revision'] != '976055f8c83f394f35dbd3ab09a285a984907bd0'
+            or value['public_rationale_helper_sha256'] != label.get('public_rationale_helper_sha256')
+            or type(value['model_evaluations_performed']) is not int or value['model_evaluations_performed'] != 0
+            or value['quality_evaluation_deferred'] is not True
+            or type(value['epochs_requested']) is not int or value['epochs_requested'] != 3
+            or type(value['trainer_max_steps']) is not int or value['trainer_max_steps'] != -1
+            or type(value['epochs_completed']) not in (int, float) or not math.isfinite(value['epochs_completed']) or abs(value['epochs_completed'] - 3.0) > 1e-6
+            or type(value['training_records']) is not int or value['training_records'] != report.get('training_records')
+            or type(value['validation_records']) is not int or value['validation_records'] != report.get('validation_records')
+            or value['training_records'] < 1 or value['validation_records'] < 1
+            or type(value['data_derived_optimizer_steps_upper']) is not int or value['data_derived_optimizer_steps_upper'] != ((value['training_records'] + 7) // 8) * 3
+            or report.get('steps_completed') != value['data_derived_optimizer_steps_upper']
+            or label.get('records_verified') != value['training_records'] + value['validation_records']
+            or report.get('initial_adapter_model_sha256') != '5b4c2e755930a30298927cdf905fd158c4745473eea7c41f87630183729d0112'):
+        raise ValueError('invalid_qwq_public_sft_receipts')
+    runtime = value['runtime']
+    fixed = {'gpu_count': 1, 'cpu_or_disk_offload_used': False, 'dense_quantization_verified': True,
+             'dense_layers': 64, 'quantized_linear_tensors': 448, 'base_parameters_frozen': True, 'first_optimizer_step_completed': True}
+    numeric = ('physical_vram_bytes', 'first_step_peak_allocated_bytes', 'first_step_peak_reserved_bytes')
+    if (not isinstance(runtime, dict) or set(runtime) != set(fixed) | {'gpu_name', *numeric}
+            or any(type(runtime.get(k)) is not type(v) or runtime[k] != v for k, v in fixed.items())
+            or not isinstance(runtime['gpu_name'], str) or 'H100' not in runtime['gpu_name']
+            or any(type(runtime[k]) is not int for k in numeric)
+            or not 72 * 1024**3 <= runtime['physical_vram_bytes'] <= 85 * 1024**3
+            or not 0 < runtime['first_step_peak_allocated_bytes'] <= runtime['first_step_peak_reserved_bytes'] <= runtime['physical_vram_bytes']):
+        raise ValueError('invalid_qwq_public_sft_runtime')
+    return {names[0]: dict(value)}
+
+
+def validated_offline_dpo_receipt(value):
+    fixed = {'version': 1, 'method': 'post_sft_frozen_reference_offline_dpo_v1', 'epochs': 3, 'beta': 0.1,
+             'learning_rate': 5e-7, 'reference_kind': 'same_active_post_sft_adapter_cached_sum_logps',
+             'reference_cached_before_optimizer': True, 'dropout_disabled_during_reference_and_policy': True,
+             'weights_updated': True, 'model_generation_calls': 0, 'performance_evaluations': 0,
+             'quality_verified': False, 'production_promoted': False, 'relative_weight_change_verified': True}
+    hashes = ('data_sha256', 'reference_adapter_parameter_sha256', 'reference_after_cache_parameter_sha256',
+              'final_adapter_parameter_sha256', 'reference_logps_sha256', 'review_sha256', 'helper_sha256', 'final_adapter_model_sha256')
+    counts = ('pairs', 'optimizer_steps_completed', 'expected_optimizer_steps', 'trainable_lora_tensors', 'b_changed_tensors', 'b_changed_elements')
+    scalars = ('loss_last', 'loss_mean', 'gradient_norm_min', 'gradient_norm_max')
+    if (not isinstance(value, dict) or set(value) != set(fixed) | set(hashes) | set(counts) | set(scalars) | {'reference_files'}
+            or any(type(value.get(k)) is not type(v) or value[k] != v for k, v in fixed.items())
+            or any(not isinstance(value[k], str) or not re.fullmatch('[a-f0-9]{64}', value[k]) for k in hashes)
+            or any(type(value[k]) is not int or value[k] <= 0 for k in counts)
+            or value['optimizer_steps_completed'] != value['expected_optimizer_steps'] or value['expected_optimizer_steps'] != 3 * value['pairs']
+            or value['reference_adapter_parameter_sha256'] != value['reference_after_cache_parameter_sha256']
+            or value['final_adapter_parameter_sha256'] == value['reference_adapter_parameter_sha256']
+            or any(type(value[k]) not in (int, float) or not math.isfinite(value[k]) or value[k] < 0 for k in scalars)
+            or not 0 < value['gradient_norm_min'] <= value['gradient_norm_max']):
+        raise ValueError('invalid_offline_dpo_training_receipt')
+    files = value['reference_files']
+    if (not isinstance(files, list) or len(files) != 2 or any(not isinstance(row, dict) or set(row) != {'name', 'bytes', 'sha256'}
+            or row['name'] != name or type(row['bytes']) is not int or not 0 < row['bytes'] <= limit
+            or not isinstance(row['sha256'], str) or not re.fullmatch('[a-f0-9]{64}', row['sha256'])
+            for row, name, limit in zip(files, ('adapter_config.json', 'adapter_model.safetensors'), (1024**2, 2 * 1024**3)))):
+        raise ValueError('invalid_post_sft_reference_inventory')
     return dict(value)
 def validated_functional_evaluation(value, validation_sha, validation_records):
     allowed = {'create', 'solve', 'explain', 'concept', 'grade', 'feedback', 'site', 'web', 'chat', 'off'}
@@ -619,7 +710,7 @@ def runtime_profile_proof_keys(profile):
 def training_report(adapter, config, data_format, training_sha, validation_sha, initial_model_sha=None,
                     *, training_records=None, validation_records=None):
     path = Path(adapter) / "hasla_training_manifest.json"
-    if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= 64 * 1024:
+    if not path.is_file() or path.is_symlink() or not 0 < path.stat().st_size <= (1024 * 1024 if config.get('public_rationale_required') else 64 * 1024):
         raise PilotError("verified_training_report_missing")
     report = json.loads(path.read_text(encoding="utf-8"))
     expected = {"role": config["role"], "base_model": config["base_model"],
@@ -629,6 +720,8 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
                 "training_sha256": training_sha, "validation_sha256": validation_sha}
     if config.get('training_profile') is not None:
         expected['training_profile'] = config['training_profile']
+    if config.get('public_rationale_required'):
+        expected['epochs'] = 3
     if not isinstance(report, dict) or any(report.get(k) != value for k, value in expected.items()):
         raise PilotError("training_report_role_or_input_mismatch")
     if report.get('training_profile') != config.get('training_profile'):
@@ -669,7 +762,8 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
     if report.get('initial_adapter_model_sha256') != initial_model_sha or report.get('optimizer_state_restored') is True:
         raise PilotError('training_report_initial_adapter_mismatch')
     steps = report.get("steps_completed")
-    if report.get("weights_updated") is not True or type(steps) is not int or not 1 <= steps <= config["max_steps"]:
+    step_upper = config.get('data_derived_optimizer_steps_upper', config['max_steps'])
+    if report.get("weights_updated") is not True or type(steps) is not int or not 1 <= steps <= step_upper:
         raise PilotError("training_report_has_no_bounded_weight_update")
     losses = {}
     for name in ("train_loss", "eval_loss"):
@@ -687,6 +781,9 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
             if diagnostics['label_diagnostics']['version'] == 2 and (config['role'] != 'chat'
                     or config.get('training_profile') != 'gemma-26b-qlora-v1'):
                 raise ValueError('Gemma selective loss proof is role-specific')
+            if diagnostics['label_diagnostics']['version'] == 3 and (config['role'] != 'solver'
+                    or not config.get('public_rationale_required')):
+                raise ValueError('QwQ selective loss proof is source-rationale specific')
         except ValueError:
             raise PilotError('training_label_diagnostics_invalid') from None
     if config.get('assistant_only_loss_required'):
@@ -699,9 +796,20 @@ def training_report(adapter, config, data_format, training_sha, validation_sha, 
     try:
         receipts = validated_gemma_receipts(report, config['role'], config.get('training_profile'),
                                            training_records, validation_records, validation_sha)
+        if config.get('public_rationale_required'):
+            if (report.get('training_records') != training_records or report.get('validation_records') != validation_records
+                    or diagnostics.get('label_diagnostics', {}).get('public_rationale_helper_sha256') != config['public_rationale_script_sha256']):
+                raise ValueError('source-rationale pilot receipt differs from its job')
+        receipts.update(validated_qwq_sft_receipts(report, config['role']))
+        if config.get('public_rationale_required'):
+            dpo = validated_offline_dpo_receipt(report.get('offline_dpo_training'))
+            if (dpo['data_sha256'] != config['offline_dpo_sha256'] or dpo['review_sha256'] != config['offline_dpo_review_sha256']
+                    or dpo['helper_sha256'] != config['offline_dpo_script_sha256']):
+                raise ValueError('offline preference training differs from the verified job')
+            receipts['offline_dpo_training'] = dpo
     except ValueError:
         raise PilotError('training_gemma_receipts_invalid') from None
-    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == config['max_steps'], **losses, **proof, **diagnostics, **receipts}
+    return {**expected, "steps_completed": steps, "scheduled_steps_completed": steps == step_upper, **losses, **proof, **diagnostics, **receipts}
 
 
 def safe_failure(error, stage):
@@ -909,12 +1017,52 @@ def publish_early_failure(env, workspace, private, result, wandb_module=None, op
         return
 
 
+def preserve_failure_checkpoint(env, workspace, private, run, wandb_module, config, opener=None):
+    """Keep available private source weights without claiming completion."""
+    if not isinstance(config, dict) or not config.get('public_rationale_required') or run is None:
+        return None
+    selected = None
+    for name, phase in (('adapter-post-sft-reference', 'post_source_sft_before_offline_dpo'),
+                        ('adapter-source-sft-partial', 'source_sft_incomplete')):
+        directory = Path(workspace) / name
+        if directory.is_dir() and not directory.is_symlink() and all((directory / file).is_file() for file in ('adapter_config.json', 'adapter_model.safetensors')):
+            selected = directory, phase
+            break
+    if selected is None:
+        return None
+    directory, phase = selected
+    inventory = []
+    for name, maximum in (('adapter_config.json', 1024**2), ('adapter_model.safetensors', 2 * 1024**3)):
+        path = directory / name
+        if path.is_symlink() or not 0 < path.stat().st_size <= maximum:
+            raise PilotError('failure_checkpoint_file_invalid')
+        with path.open('rb') as stream:
+            digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+        inventory.append({'name': name, 'bytes': path.stat().st_size, 'sha256': digest})
+    assert_private_project(env, opener)
+    artifact = wandb_module.Artifact(env['ARTIFACT'] + '-failure-checkpoint', type='lora-failure-checkpoint', metadata={
+        'private': True, 'run': env['RUN'], 'role': config['role'], 'base_model': config['base_model'],
+        'source_phase': phase, 'training_complete': False, 'quality_verified': False, 'tensor_verification_pending': True,
+        'training_sha256': env['HASLA_DATA_SHA256'], 'offline_dpo_sha256': config['offline_dpo_sha256'], 'files': inventory})
+    for row in inventory:
+        artifact.add_file(str(directory / row['name']), name=row['name'])
+    run.log_artifact(artifact)
+    artifact.wait(timeout=120)
+    prefix = f"{private['entity']}/{private['project']}/{env['ARTIFACT']}-failure-checkpoint:"
+    exact = artifact.qualified_name
+    if not isinstance(exact, str) or not exact.startswith(prefix) or not re.fullmatch(r'v[0-9]+', exact[len(prefix):]):
+        raise PilotError('failure_checkpoint_version_missing')
+    assert_private_project(env, opener)
+    return {'artifact': exact, 'source_phase': phase, 'training_complete': False, 'tensor_verification_pending': True, 'files': inventory}
+
+
 def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
               opener=None, runner=None):
     env = dict(os.environ if env is None else env)
     workspace = Path(workspace)
     run, stage, private = None, "configuration", None
     trainer_diagnostic = None
+    config = None
     verified_training = None
     initial_spec, initial_directory, resume_sha = None, None, None
     result_path = workspace / "result.json"
@@ -956,14 +1104,41 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         stage = "role_config_verification"
         role_path = workspace / "role_config.py"
         role_sha = fetch_role_config(env, role_path, opener)
+        epochs_raw = env.get('HASLA_SFT_EPOCHS')
+        if epochs_raw is not None and (epochs_raw != '3' or role != 'solver' or data_format != 'chat'):
+            raise PilotError('invalid_bounded_sft_epochs')
         config = data_bounded_settings(pinned_role_settings(role_path, role, data_format,
-                                      env.get('HASLA_TRAINING_PROFILE')), len(training))
+                                      env.get('HASLA_TRAINING_PROFILE')), len(training), 3 if epochs_raw else 1)
         requirement = env.get('HASLA_ASSISTANT_ONLY_LOSS')
         if requirement is not None:
-            if (requirement != 'required' or role != 'chat' or data_format != 'chat'
-                    or config.get('training_profile') != 'gemma-26b-qlora-v1'):
+            public_sft = role == 'solver' and data_format == 'chat' and config.get('sft_epochs') == 3 and config.get('training_profile') is None
+            if (requirement != 'required' or data_format != 'chat'
+                    or not (role == 'chat' and config.get('training_profile') == 'gemma-26b-qlora-v1' or public_sft)):
                 raise PilotError('invalid_assistant_only_loss_requirement')
-            config['assistant_only_loss_required'] = True
+            if public_sft:
+                config['public_rationale_required'] = True
+                for filename, field, environment in (
+                        ('qwq_public_rationale.py', 'public_rationale_script_sha256', 'HASLA_PUBLIC_RATIONALE_SCRIPT_SHA256'),
+                        ('qwq_offline_dpo.py', 'offline_dpo_script_sha256', 'HASLA_OFFLINE_DPO_SCRIPT_SHA256')):
+                    config[field] = fetch_pinned_code(env, workspace / filename, filename, environment, opener)
+                dpo_raw = decode_payload(env, 'HASLA_DPO_DATA', max_raw=16 * 1024**2)
+                dpo_meta = json.loads(env['HASLA_OFFLINE_DPO_META'])
+                if len(dpo_raw) != dpo_meta['raw_bytes'] or sha_bytes(dpo_raw) != dpo_meta['raw_sha256']:
+                    raise PilotError('offline_preference_payload_mismatch')
+                module_spec = importlib.util.spec_from_file_location('_hasla_dpo_' + config['offline_dpo_script_sha256'], workspace / 'qwq_offline_dpo.py')
+                module = importlib.util.module_from_spec(module_spec)
+                module_spec.loader.exec_module(module)
+                dpo_rows = module.validate_rows([json.loads(line) for line in dpo_raw.decode('utf8').splitlines() if line.strip()])
+                if len(dpo_rows) != dpo_meta['records']:
+                    raise PilotError('offline_preference_record_mismatch')
+                dpo_path = workspace / 'offline-dpo.train.jsonl'
+                dpo_path.write_bytes(dpo_raw)
+                config.update(offline_dpo_path=str(dpo_path), offline_dpo_sha256=dpo_meta['raw_sha256'],
+                              offline_dpo_review_sha256=dpo_meta['review_sha256'])
+            else:
+                config['assistant_only_loss_required'] = True
+        elif epochs_raw:
+            raise PilotError('public_rationale_sft_requires_selective_loss')
         if env.get('HASLA_INITIAL_ADAPTER') is not None:
             stage = 'initial_adapter_verification'
             try:
@@ -1012,7 +1187,7 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
                        "precision": config["precision"], "training_method": config["training_method"],
                        "rank": config["default_rank"], "max_steps": config["max_steps"],
                        "role_max_steps": config["role_max_steps"], "effective_batch_rows": config["effective_batch_rows"],
-                       "epochs": 1, "learning_rate": 1e-5, "max_length": config["max_length"],
+                       "epochs": config.get('sft_epochs', 1), "learning_rate": 1e-5, "max_length": config["max_length"],
                        "training_records": len(training), "validation_records": len(validation),
                        "training_sha256": sha_bytes(data),
                        "input_artifact": env.get("HASLA_INPUT_ARTIFACT"),
@@ -1064,6 +1239,30 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         files, adapter_sha = adapter_inventory(adapter, config)
         # Check again immediately before uploading an adapter; never change project visibility here.
         assert_private_project(env, opener)
+        reference_artifact_name = None
+        if 'offline_dpo_training' in report:
+            stage = 'uploading_post_sft_reference'
+            reference_directory = adapter.with_name(adapter.name + '-post-sft-reference')
+            inventory = report['offline_dpo_training']['reference_files']
+            for item in inventory:
+                path = reference_directory / item['name']
+                if path.is_symlink() or not path.is_file() or path.stat().st_size != item['bytes']:
+                    raise PilotError('post_sft_reference_changed')
+                with path.open('rb') as stream:
+                    if hashlib.file_digest(stream, 'sha256').hexdigest() != item['sha256']:
+                        raise PilotError('post_sft_reference_changed')
+            reference = wandb_module.Artifact(env['ARTIFACT'] + '-post-sft-reference', type='lora-reference', metadata={
+                'private': True, 'role': role, 'base_model': config['base_model'], 'rank': config['default_rank'],
+                'phase': 'post_source_sft_before_offline_dpo', 'run': env['RUN'], 'files': inventory})
+            for item in inventory:
+                reference.add_file(str(reference_directory / item['name']), name=item['name'])
+            run.log_artifact(reference)
+            reference.wait(timeout=600)
+            reference_artifact_name = reference.qualified_name
+            prefix = f"{private['entity']}/{private['project']}/{env['ARTIFACT']}-post-sft-reference:"
+            if not isinstance(reference_artifact_name, str) or not reference_artifact_name.startswith(prefix) or not re.fullmatch(r'v[0-9]+', reference_artifact_name[len(prefix):]):
+                raise PilotError('post_sft_reference_version_missing')
+            assert_private_project(env, opener)
         stage = "uploading_adapter"
         run.summary["status"] = stage
         artifact = wandb_module.Artifact(env["ARTIFACT"], type="lora", metadata={
@@ -1082,7 +1281,10 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             artifact.metadata['runtime_profile_proof'] = {k: report[k] for k in runtime_profile_proof_keys(config['training_profile'])}
         if 'label_diagnostics' in report:
             artifact.metadata['label_diagnostics'] = report['label_diagnostics']
-        artifact.metadata.update({k: report[k] for k in ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation') if k in report})
+        artifact.metadata.update({k: report[k] for k in ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation',
+                                                       'qwq_sft_provenance', 'offline_dpo_training', 'epochs') if k in report})
+        if reference_artifact_name:
+            artifact.metadata['post_sft_reference_artifact'] = reference_artifact_name
         if initial_spec:
             artifact.metadata.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                                      initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
@@ -1111,7 +1313,10 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
             result['runtime_profile_proof'] = artifact.metadata['runtime_profile_proof']
         if 'label_diagnostics' in report:
             result['label_diagnostics'] = report['label_diagnostics']
-        result.update({k: report[k] for k in ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation') if k in report})
+        result.update({k: report[k] for k in ('formatter_provenance', 'baseline_evaluation', 'functional_evaluation',
+                                           'qwq_sft_provenance', 'offline_dpo_training', 'epochs') if k in report})
+        if reference_artifact_name:
+            result['post_sft_reference_artifact'] = reference_artifact_name
         if initial_spec:
             result.update(initial_adapter=initial_spec, resume_script_sha256=resume_sha,
                           initial_adapter_model_sha256=initial_spec['files'][1]['sha256'], optimizer_state_restored=False)
@@ -1122,6 +1327,12 @@ def run_pilot(env=None, workspace=Path("/workspace"), wandb_module=None,
         return result
     except Exception as error:
         result = safe_failure(error, stage)
+        try:
+            checkpoint = preserve_failure_checkpoint(env, workspace, private, run, wandb_module, config, opener)
+            if checkpoint is not None:
+                result['failure_checkpoint'] = checkpoint
+        except Exception:
+            result['failure_checkpoint_saved'] = False
         if trainer_diagnostic is not None:
             result.update(trainer_diagnostic)
         if verified_training is not None:
